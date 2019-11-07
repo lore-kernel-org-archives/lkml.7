@@ -2,244 +2,138 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198F8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760FAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F2021882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A5E20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="QkHBMifE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bz3+znqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbfKGDh5 (ORCPT
+        id S1733156AbfKGDj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:37:57 -0500
-Received: from gateway30.websitewelcome.com ([192.185.152.11]:38974 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733051AbfKGDhy (ORCPT
+        Wed, 6 Nov 2019 22:39:28 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41640 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727751AbfKGDj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:37:54 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 888E7C96C
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 21:17:29 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id SYIbizHTJOdBHSYIbiFm3A; Wed, 06 Nov 2019 21:17:29 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rfUlDakKv5yVKMK73mGLsSF6+WI5OQYJrDn/ijazhPA=; b=QkHBMifEMcHExUDuUGfwXNaKfY
-        hKT+6KIIriJQihBxwYACxo1FGNNx0w317oQUVNkv58MZit2h3nhk2IMbPKjBDvEvaw5OshPxhGv0L
-        gdBmXbU2xuq+wagcEiTNLxta0Ge50JIgs6LrEd+wrb0Qo24g8W5IEPjjg9DmYwbe3Qw+ox+DhyJ2V
-        tXCtyh+s4JYMoYaNgl4ty1VdxZkRKCK+0+DocUMKE69kAvRj8q5/GuOwOX2n6JZye1TyLDep7p8yN
-        5nyPE8N/R3rAW8pMZEyz6f6GzWAyQZtF4sRHuSOJ7VQqmMa+mJ7d4xE61UCItlco/WjMbQZsjFuSP
-        J7fLAbnQ==;
-Received: from [191.31.194.59] (port=34854 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iSYIa-000Mrk-LD; Thu, 07 Nov 2019 00:17:29 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v6 4/5] power: supply: max17040: Config alert SOC low level threshold from FDT
-Date:   Thu,  7 Nov 2019 00:17:09 -0300
-Message-Id: <20191107031710.5672-5-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191107031710.5672-1-matheus@castello.eng.br>
-References: <20191105095905.GA31721@pi3>
- <20191107031710.5672-1-matheus@castello.eng.br>
+        Wed, 6 Nov 2019 22:39:27 -0500
+Received: by mail-ed1-f67.google.com with SMTP id a21so671807edj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 19:39:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4QNlRTLGQr37mhizIFRLl8TgY9SBjAFUyhyF2JeZyVA=;
+        b=Bz3+znqk7TnIZHoZzBYIEZeHa1gUhSjnWdchWVDNXV5CRRegeHogkTvHi39lad8Gde
+         +AMSXXKWIiBiFwAEAJKqT1UDffdQSrskvm9w+5o8hjOGVEeFLYyCKwhNOZyaJyOHlMmF
+         97U6Blkq786w6QCPKD5KWleQKeLEKx/N//Po8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4QNlRTLGQr37mhizIFRLl8TgY9SBjAFUyhyF2JeZyVA=;
+        b=K221PG1k2kIExPgNZRebqBgU/JzAaB6aoZjzM0CaKjHit0JqbTM8zhuPPQdE0qQPa3
+         hGwYoW3MwhGrfQ9fp8lrrIsxz4ijsHPw6QS12PQc+FYMGMgLGnC4MMSfMF0orIAPOu9a
+         o65X/lV8fxFv11ZQFIZs9iW/lIJB5qil8ARIUpuPU83WCu0hiy7TlVuSqk0yylOLvffX
+         MR/nisPJdNieBLgEBBWqHn2BiHwQptGPU0wfsuDwb6YXUAPlbRsC9bwmZgONbItTnIyt
+         4q4FoOdUSQYRl22t1vTDrfFUYrEfvgxA6MS8dlwlFMhU02VO7EfJu+/0zHZNgTFloMeC
+         TG9w==
+X-Gm-Message-State: APjAAAXtTxeytiDR+5O4gWcSKNa90lpEBwHh7w39uxcAdoUnhuEhgPxZ
+        CoNvxYgaXcrvSa5bnAFmLG78k/xmZPFfBw==
+X-Google-Smtp-Source: APXvYqzEoSVA6x4MbGG4iurGD+4UPPe09ugi2189c5gnGFeLnQ0MKb1BIBe+3oy+621/R2s2s0k32g==
+X-Received: by 2002:a17:906:448:: with SMTP id e8mr979839eja.326.1573097965040;
+        Wed, 06 Nov 2019 19:39:25 -0800 (PST)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id z4sm22518edx.7.2019.11.06.19.39.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 19:39:24 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id t26so743319wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 19:39:24 -0800 (PST)
+X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr816484wmi.64.1573097963552;
+ Wed, 06 Nov 2019 19:39:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.194.59
-X-Source-L: No
-X-Exim-ID: 1iSYIa-000Mrk-LD
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.194.59]:34854
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 60
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+References: <20191107033057.238603-1-hiroh@chromium.org>
+In-Reply-To: <20191107033057.238603-1-hiroh@chromium.org>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 7 Nov 2019 12:39:12 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5Buphd-1Z7+AjQ8fpdvMYY7QWPJBAYRTFF-46KM1LZ4GQ@mail.gmail.com>
+Message-ID: <CAAFQd5Buphd-1Z7+AjQ8fpdvMYY7QWPJBAYRTFF-46KM1LZ4GQ@mail.gmail.com>
+Subject: Re: [PATCH] media: mtk-vcodec: Remove extra area allocation in an
+ input buffer on encoding
+To:     Hirokazu Honda <hiroh@chromium.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
+        <tiffany.lin@mediatek.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For configuration of fuel gauge alert for a low level state of charge
-interrupt we add a function to config level threshold and a device tree
-binding property to set it in flatned device tree node.
+On Thu, Nov 7, 2019 at 12:31 PM Hirokazu Honda <hiroh@chromium.org> wrote:
+>
+> MediaTek encoder allocates non pixel data area for an input buffer every
+> plane. As the input buffer should be read-only, the driver should not write
+> anything in the buffer. Therefore, the extra data should be unnecessary.
+>
+> Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
+> ---
+>  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> index fd8de027e83e..6aad53d97d74 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> @@ -332,14 +332,12 @@ static int vidioc_try_fmt(struct v4l2_format *f,
+>
+>                 pix_fmt_mp->num_planes = fmt->num_planes;
+>                 pix_fmt_mp->plane_fmt[0].sizeimage =
+> -                               pix_fmt_mp->width * pix_fmt_mp->height +
+> -                               ((ALIGN(pix_fmt_mp->width, 16) * 2) * 16);
+> +                       pix_fmt_mp->width * pix_fmt_mp->height;
+>                 pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width;
+>
+>                 if (pix_fmt_mp->num_planes == 2) {
+>                         pix_fmt_mp->plane_fmt[1].sizeimage =
+> -                               (pix_fmt_mp->width * pix_fmt_mp->height) / 2 +
+> -                               (ALIGN(pix_fmt_mp->width, 16) * 16);
+> +                               (pix_fmt_mp->width * pix_fmt_mp->height) / 2;
+>                         pix_fmt_mp->plane_fmt[2].sizeimage = 0;
+>                         pix_fmt_mp->plane_fmt[1].bytesperline =
+>                                                         pix_fmt_mp->width;
+> @@ -347,8 +345,7 @@ static int vidioc_try_fmt(struct v4l2_format *f,
+>                 } else if (pix_fmt_mp->num_planes == 3) {
+>                         pix_fmt_mp->plane_fmt[1].sizeimage =
+>                         pix_fmt_mp->plane_fmt[2].sizeimage =
+> -                               (pix_fmt_mp->width * pix_fmt_mp->height) / 4 +
+> -                               ((ALIGN(pix_fmt_mp->width, 16) / 2) * 16);
+> +                               (pix_fmt_mp->width * pix_fmt_mp->height) / 4;
+>                         pix_fmt_mp->plane_fmt[1].bytesperline =
+>                                 pix_fmt_mp->plane_fmt[2].bytesperline =
+>                                 pix_fmt_mp->width / 2;
+> --
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+>
 
-Now we can use "maxim,alert-low-soc-level" property with the values from
-1% up to 32% to configure alert interrupt threshold.
+Thanks for the patch!
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 75 ++++++++++++++++++++++---
- 1 file changed, 67 insertions(+), 8 deletions(-)
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 9909f8cd7b5d..3fc9e1c7b257 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -29,6 +29,9 @@
- #define MAX17040_DELAY		1000
- #define MAX17040_BATTERY_FULL	95
+Now I'd also appreciate if there is anyone who could help testing this
+further, especially on a platform that is not a Chromebook.
 
-+#define MAX17040_ATHD_MASK		0xFFC0
-+#define MAX17040_ATHD_DEFAULT_POWER_UP	4
-+
- struct max17040_chip {
- 	struct i2c_client		*client;
- 	struct delayed_work		work;
-@@ -43,6 +46,8 @@ struct max17040_chip {
- 	int soc;
- 	/* State Of Charge */
- 	int status;
-+	/* Low alert threshold from 32% to 1% of the State of Charge */
-+	u32 low_soc_alert;
- };
-
- static int max17040_get_property(struct power_supply *psy,
-@@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
- 	max17040_write_reg(client, MAX17040_CMD, 0x0054);
- }
-
-+static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
-+{
-+	int ret;
-+	u16 data;
-+
-+	level = 32 - level;
-+	data = max17040_read_reg(client, MAX17040_RCOMP);
-+	/* clear the alrt bit and set LSb 5 bits */
-+	data &= MAX17040_ATHD_MASK;
-+	data |= level;
-+	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-+
-+	return ret;
-+}
-+
- static void max17040_get_vcell(struct i2c_client *client)
- {
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-@@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
- 	u16 soc;
-
- 	soc = max17040_read_reg(client, MAX17040_SOC);
--
- 	chip->soc = (soc >> 8);
- }
-
-@@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
- }
-
-+static int max17040_get_of_data(struct max17040_chip *chip)
-+{
-+	struct device *dev = &chip->client->dev;
-+	struct device_node *np = dev->of_node;
-+	int ret = 0;
-+
-+	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-+				 &chip->low_soc_alert)) {
-+		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
-+	} else if (chip->low_soc_alert <= 0 ||
-+			chip->low_soc_alert >= 33) {
-+		/* low_soc_alert is not between 1% and 32% */
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- static void max17040_check_changes(struct i2c_client *client)
- {
- 	max17040_get_vcell(client);
-@@ -192,6 +229,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
- 	/* send uevent */
- 	power_supply_changed(chip->battery);
-
-+	/* reset alert bit */
-+	max17040_set_low_soc_alert(client, chip->low_soc_alert);
-+
- 	return IRQ_HANDLED;
- }
-
-@@ -230,6 +270,7 @@ static int max17040_probe(struct i2c_client *client,
- 	struct i2c_adapter *adapter = client->adapter;
- 	struct power_supply_config psy_cfg = {};
- 	struct max17040_chip *chip;
-+	int ret;
-
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
- 		return -EIO;
-@@ -240,6 +281,12 @@ static int max17040_probe(struct i2c_client *client,
-
- 	chip->client = client;
- 	chip->pdata = client->dev.platform_data;
-+	ret = max17040_get_of_data(chip);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"failed: low SOC alert OF data out of bounds\n");
-+		return ret;
-+	}
-
- 	i2c_set_clientdata(client, chip);
- 	psy_cfg.drv_data = chip;
-@@ -256,14 +303,26 @@ static int max17040_probe(struct i2c_client *client,
-
- 	/* check interrupt */
- 	if (client->irq) {
--		int ret;
--
--		ret = max17040_enable_alert_irq(chip);
--
--		if (ret) {
--			client->irq = 0;
-+		if (of_device_is_compatible(client->dev.of_node,
-+					    "maxim,max77836-battery")) {
-+			ret = max17040_set_low_soc_alert(client,
-+							 chip->low_soc_alert);
-+			if (ret) {
-+				dev_err(&client->dev,
-+					"Failed to set low SOC alert: err %d\n",
-+					ret);
-+				return ret;
-+			}
-+
-+			ret = max17040_enable_alert_irq(chip);
-+			if (ret) {
-+				client->irq = 0;
-+				dev_warn(&client->dev,
-+					 "Failed to get IRQ err %d\n", ret);
-+			}
-+		} else {
- 			dev_warn(&client->dev,
--				 "Failed to get IRQ err %d\n", ret);
-+				 "Device not compatible for IRQ");
- 		}
- 	}
-
---
-2.24.0.rc2
-
+Best regards,
+Tomasz
