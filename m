@@ -2,117 +2,270 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E61FFC6197
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B0BFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BB92178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5015E2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KqlFBmFe"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mBe+dGi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388480AbfKGKcQ (ORCPT
+        id S2388514AbfKGKcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:32:16 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.124]:20298 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387796AbfKGKbX (ORCPT
+        Thu, 7 Nov 2019 05:32:25 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15568 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387796AbfKGKcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:31:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573122680;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=IlCRjv0CTyLkVn2wwwsmH6O8lEqmq9Ui0QvF+uYgs+E=;
-        b=KqlFBmFeyylH5lFRJAur66h4jD6eh9/q9XidKY7YOW1LurwlYqEyxvBc7D4DBzz3QY
-        8Xcykm88Kd0wQ7QZ5LdRDDxXDv5qJWre6W180WmSL8VKXT81A2LH5zFF8UxmmsOmXhGW
-        yTiS2tIp3F0hCsvLxk8jde1YP4oQ2t2BQNgf8QpXow92t1HaH6rJVT9MAXiP3SOb5l8h
-        tPZmuhzwdkFHqT3yUw1wA7w2Z94pEdWYf+FLnl/fHTXwHtE2TeGdk6rI+F7yg6pb8hkZ
-        JHoSxmlxlEVLsKzMWhXAsRDHjyOrtdW3ur6aHbcIOdPJXbulddWBs3YHPKuuZWIgyRqc
-        5kAA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vA7AUsdS2
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 11:30:54 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Subject: [PATCH v3 09/12] mmc: sdio: fix wl1251 vendor id
-Date:   Thu,  7 Nov 2019 11:30:42 +0100
-Message-Id: <e3342a0118feb492a2e2af57956093511232f1d6.1573122644.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1573122644.git.hns@goldelico.com>
-References: <cover.1573122644.git.hns@goldelico.com>
+        Thu, 7 Nov 2019 05:32:24 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc3f27a0000>; Thu, 07 Nov 2019 02:31:22 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 07 Nov 2019 02:32:22 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 07 Nov 2019 02:32:22 -0800
+Received: from [10.26.11.187] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 Nov
+ 2019 10:32:18 +0000
+Subject: Re: [PATCH v4 2/2] gpio: Add xgs-iproc driver
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191024202703.8017-1-chris.packham@alliedtelesis.co.nz>
+ <20191024202703.8017-3-chris.packham@alliedtelesis.co.nz>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a2d82f20-a559-c3b9-f7b1-0e488b75f7e6@nvidia.com>
+Date:   Thu, 7 Nov 2019 10:32:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191024202703.8017-3-chris.packham@alliedtelesis.co.nz>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573122682; bh=vlL4FFSlaCHxygpXvqXKdAedbg7/9JjZ1VuXUKB8qfk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mBe+dGi/qz/+XmLSgjEIzPi7Og1wAUH/XpvopBVOPmTg5gh5D4dYoMvfz8Jx4VO0V
+         guHbznWjjesTmS7pG121QnpKssxnqiAAKHzIBb0BR5yETCZCbHwbNToTxJ7WwMwJQS
+         0ulnXw/Ov0riCTDiL2b2ei/2JlrXcicxsxvtQINsdfWVO+ZW64+IakoFivdtpUzgKR
+         Ul5QCCi7cOOMKI8RtTB+qZEBcriRNZdU/2CKhD8TB/O3vRbgIQ2DgzqO+goLV7E9DY
+         YiDWUBr0RdaqSqr+TCK8xdoXlSYa/Pp70rWx9uogtsNgFp3eZsrnrtNGO3aEgXhFFO
+         U9uElbUOrbHhg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4.11-rc1 did introduce a patch series that rearranged the
-sdio quirks into a header file. Unfortunately this did forget
-to handle SDIO_VENDOR_ID_TI differently between wl1251 and
-wl1271 with the result that although the wl1251 was found on
-the sdio bus, the firmware did not load any more and there was
-no interface registration.
 
-This patch defines separate constants to be used by sdio quirks
-and drivers.
+On 24/10/2019 21:27, Chris Packham wrote:
+> This driver supports the Chip Common A GPIO controller present on a
+> number of Broadcom switch ASICs with integrated SoCs. The controller is
+> similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
+> different enough that a separate driver is required.
+> 
+> This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
+> support (pinctrl-iproc-gpio covers CCB).
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>     Changes in v4:
+>     - rename the config option to GPIO_BCM_XGS_IPROC and place alphabetically
+>     - sort #includes alphabetically
+>     
+>     Changes in v3:
+>     - prefix local #defines with 'IPROC'
+>     - use {readl,writel}_relaxed
+>     - remove unnecessary headers
+>     - actually use spinlock to guard hardware accesses
+>     
+>     Changes in v2:
+>     - use more of the generic infrastructure for gpio chips
+>     - handling the root interrupt is still done manually due to sharing with uart0.
+> 
+>  drivers/gpio/Kconfig          |   9 +
+>  drivers/gpio/Makefile         |   1 +
+>  drivers/gpio/gpio-xgs-iproc.c | 321 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 331 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-xgs-iproc.c
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 38e096e6925f..04396787fbb0 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -147,6 +147,15 @@ config GPIO_BCM_KONA
+>  	help
+>  	  Turn on GPIO support for Broadcom "Kona" chips.
+>  
+> +config GPIO_BCM_XGS_IPROC
+> +	tristate "BRCM XGS iProc GPIO support"
+> +	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
+> +	select GPIO_GENERIC
+> +	select GPIOLIB_IRQCHIP
+> +	default ARCH_BCM_IPROC
+> +	help
+> +	  Say yes here to enable GPIO support for Broadcom XGS iProc SoCs.
+> +
+>  config GPIO_BRCMSTB
+>  	tristate "BRCMSTB GPIO support"
+>  	default y if (ARCH_BRCMSTB || BMIPS_GENERIC)
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index d2fd19c15bae..8725d158a964 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
+>  obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
+>  obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
+>  obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
+> +obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+= gpio-xgs-iproc.o
+>  obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
+>  obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
+>  obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
+> diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.c
+> new file mode 100644
+> index 000000000000..a3fdd95cc9e6
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-xgs-iproc.c
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+...
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # 4.11.0
----
- include/linux/mmc/sdio_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+> +static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst = {
+> +	{ .compatible = "brcm,iproc-gpio-cca" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
 
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index d1a5d5df02f5..08b25c02b5a1 100644
---- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -71,6 +71,8 @@
- 
- #define SDIO_VENDOR_ID_TI			0x0097
- #define SDIO_DEVICE_ID_TI_WL1271		0x4076
-+#define SDIO_VENDOR_ID_TI_WL1251		0x104c
-+#define SDIO_DEVICE_ID_TI_WL1251		0x9066
- 
- #define SDIO_VENDOR_ID_STE			0x0020
- #define SDIO_DEVICE_ID_STE_CW1200		0x2280
+This patch is generating the following warning when built as a module ...
+
+MODPOST vmlinux.o
+WARNING: vmlinux.o(.data+0x834d0): Section mismatch in reference from the variable bcm_iproc_gpio_driver to the variable .init.rodata:bcm_iproc_gpio_of_match
+The variable bcm_iproc_gpio_driver references
+the variable __initconst bcm_iproc_gpio_of_match
+If the reference is valid then annotate the
+variable with __init* or __refdata (see linux/init.h) or name the variable:
+*_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+
+
+This then leads to the following crash on boot ...
+
+[   13.586799] ------------[ cut here ]------------
+
+[   13.591406] Ignoring spurious kernel translation fault at virtual address ffff80001139a990
+
+[   13.599659] WARNING: CPU: 0 PID: 5 at /home/jonathanh/workdir/tegra/mlt-linux_next/kernel/arch/arm64/mm/fault.c:302 __do_kernel_fault+0xd0/0x128
+
+[   13.612582] Modules linked in: ina3221(+) ip_tables x_tables ipv6 nf_defrag_ipv6
+
+[   13.619966] CPU: 0 PID: 5 Comm: kworker/0:0 Tainted: G S                5.4.0-rc1-00031-g6a41b6c5fc20 #11
+
+[   13.629509] Hardware name: NVIDIA Jetson TX2 Developer Kit (DT)
+
+[   13.635416] Workqueue: events deferred_probe_work_func
+
+[   13.640540] pstate: 40000085 (nZcv daIf -PAN -UAO)
+
+[   13.645318] pc : __do_kernel_fault+0xd0/0x128
+
+[   13.649663] lr : __do_kernel_fault+0xd0/0x128
+
+[   13.654006] sp : ffff800010073a10
+
+[   13.657308] x29: ffff800010073a10 x28: ffff0001f5ccb700 
+
+[   13.662605] x27: ffff0001f7185730 x26: ffff8000117aff28 
+
+[   13.667901] x25: 0000000000000000 x24: 0000000000000025 
+
+[   13.673198] x23: 0000000060000085 x22: ffff80001139a990 
+
+[   13.678495] x21: ffff800010073a80 x20: 0000000000000025 
+
+[   13.683792] x19: 0000000096000007 x18: ffffffffffffffff 
+
+[   13.689089] x17: 0000000000000000 x16: 0000000000000000 
+
+[   13.694386] x15: ffff8000117998c8 x14: 3131303030386666 
+
+[   13.699681] x13: 6666207373657264 x12: 6461206c61757472 
+
+[   13.704978] x11: 697620746120746c x10: 756166206e6f6974 
+
+[   13.710274] x9 : 616c736e61727420 x8 : 6c656e72656b2073 
+
+[   13.715570] x7 : 0000000000000160 x6 : ffff0001f717c180 
+
+[   13.720867] x5 : 0000000000000001 x4 : ffff0001f717c180 
+
+[   13.726162] x3 : 0000000000000006 x2 : 0000000000000007 
+
+[   13.731458] x1 : aa4a2528bb290a00 x0 : 0000000000000000 
+
+[   13.736756] Call trace:
+
+[   13.739194]  __do_kernel_fault+0xd0/0x128
+
+[   13.743192]  do_translation_fault+0x40/0x70
+
+[   13.747363]  do_mem_abort+0x3c/0x98
+
+[   13.750839]  el1_da+0x20/0x94
+
+[   13.753799]  __of_match_node+0x40/0x88
+
+[   13.757535]  of_match_node+0x3c/0x60
+
+[   13.761099]  of_match_device+0x18/0x28
+
+[   13.764837]  platform_match+0x4c/0xd0
+
+[   13.768488]  __device_attach_driver+0x34/0xc0
+
+[   13.772832]  bus_for_each_drv+0x70/0xc8
+
+[   13.776655]  __device_attach+0xdc/0x140
+
+[   13.780479]  device_initial_probe+0x10/0x18
+
+[   13.784649]  bus_probe_device+0x94/0xa0
+
+[   13.788471]  deferred_probe_work_func+0x6c/0xa0
+
+[   13.792990]  process_one_work+0x1c8/0x358
+
+[   13.796986]  worker_thread+0x48/0x460
+
+[   13.800637]  kthread+0xf0/0x120
+
+[   13.803767]  ret_from_fork+0x10/0x1c
+
+[   13.807331] ---[ end trace ce728f2656bbae67 ]---
+
+
+I think we need to drop the __initconst from the match table.
+
+I will send a patch.
+
+Cheers
+Jon
+
 -- 
-2.23.0
-
+nvpublic
