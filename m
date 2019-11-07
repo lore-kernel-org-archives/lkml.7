@@ -2,103 +2,114 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CC8FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29086C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5AE2166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573116781;
-	bh=atNfkvWqHmIDqLBv86TZs4C30jzzuzCcG/ghR09esKA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=EW0yoWcrs+GcAxyS4tNpzxKuvuJEIExktVrM6RsPiQq/ySPZIh1pQ4WTXPEUOx4Rt
-	 PZyZklEuYLQ08zvNC+PCup2QEErKaWprmIRFDQnE+3e1rz71ukkqyhnoUFul3Kjj0e
-	 B6OH/00jz0fs0iuucQa8y4QNIbqEJuZrKbUro3Kw=
+	by mail.kernel.org (Postfix) with ESMTP id DF8542166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:53:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Nf9DBQGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387588AbfKGIw7 (ORCPT
+        id S2387641AbfKGIxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:52:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733238AbfKGIw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:52:59 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [109.144.217.237])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 223D62077C;
-        Thu,  7 Nov 2019 08:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573116778;
-        bh=atNfkvWqHmIDqLBv86TZs4C30jzzuzCcG/ghR09esKA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=N7p8iKhXD7qMUIc0Kc48NqghvP37TKKdvsyPGXuC9QLTBsdANK8T1abwIYv4GvbZf
-         HALn3YEjWZ/T4Syc1ONWryy8bSOJuL+pwfcY0EagM30R0/BsbnWeuKwSw/PyQ+sC3y
-         VG3pBmbXTWwWDLIabQjqa0loryPex93TBVkwUjTs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8E51035227FC; Thu,  7 Nov 2019 00:52:55 -0800 (PST)
-Date:   Thu, 7 Nov 2019 00:52:55 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        syzbot <syzkaller@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: timers/core] hrtimer: Annotate lockless access to
- timer->state
-Message-ID: <20191107085255.GK20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191106174804.74723-1-edumazet@google.com>
- <157307905904.29376.8711513726869840596.tip-bot2@tip-bot2>
- <CANn89iKXi3rWWruKoBwQ8rncwLvkbzjZJWuJL3K05fjAhcySwg@mail.gmail.com>
- <CANn89iL=xPxejRPC=wHY7q27fLOvFBK-7HtqU_HJo+go3S9UXA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iL=xPxejRPC=wHY7q27fLOvFBK-7HtqU_HJo+go3S9UXA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 7 Nov 2019 03:53:22 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39059 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733209AbfKGIxW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:53:22 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x28so2128440pfo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=rTp8veXsbPSlIboKUPW27VEfaouXwybhFA3W6d1O8fo=;
+        b=Nf9DBQGuiPv+DM370AIy9xr6rpoQTSkVEgQIjOjzF27ommG1tr9FxySdRD8FhsNjNH
+         ag+mnLngc3Jagt6yR26vyv0BzdjXJ+24xdnO/Q4eFGlFMZOYgO7urSdkfRK1ndlofOAK
+         lcepW1ADDTvPU5uyralgOwXE7UWiuZikY4+Onzim+MJWJ7lEl0TH9/6iLgbtMWMvdRZo
+         9pKJu/admijRQcr1C2a8ycejgE396VPhIhplbgEb77lkcivKsrC6u2MNH9EAVZriy4uT
+         Ll+IQr8zv8sfrHVPPHx5vAntlpIPhzvQp+S1oomn4RjbE6gy9Sv2Hz+HS2DRgRZNqG+L
+         tSVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=rTp8veXsbPSlIboKUPW27VEfaouXwybhFA3W6d1O8fo=;
+        b=Jr6dszPup8N0pSDDR4CeMh6oMPU+opYvG0JC97saMKLYMGSAvEHvUZ/hxpXsUmGCN8
+         Sm05oQfCVrxgXyl3E2lY6sG1O7ThSLfLfm681/I5xdIvh8UhoOfM6o8Rr8b4AaYDHKps
+         On1OrZl8o2lhRSqucsxAdU2gbvbCAucqZvVwsmxd4BixMZYiB+ElrPV5JI+0ELW59OZP
+         d6SuGSIR3HoD/2EoL8BPMGwMB6jTzUfMX+GwiIUGBq/Nt+Gl6xwT9F21Ks2jOLj5IQEl
+         Q9GpjfGKs14q6J0eOyy8hmylfetMBkfzo/HKkElZZGjTlv71jika+iBWPQ0qZDalnUAJ
+         tJfQ==
+X-Gm-Message-State: APjAAAU1BKKHX0PDxM6vhrhu9fWDoDbiPtFuVXNGNNcL029/elLuERUY
+        OIflSTS77/H3TkYC4MecHpUEMg==
+X-Google-Smtp-Source: APXvYqwjonCLe6lKUq8m5TTtxhcWb55hteTieYRwORhrcDOmYcewk+My9YdyJjeoZwrBij17ZnLBQA==
+X-Received: by 2002:a63:cf45:: with SMTP id b5mr3072879pgj.36.1573116801206;
+        Thu, 07 Nov 2019 00:53:21 -0800 (PST)
+Received: from localhost.localdomain (36-228-119-18.dynamic-ip.hinet.net. [36.228.119.18])
+        by smtp.gmail.com with ESMTPSA id a33sm2402361pgb.57.2019.11.07.00.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 00:53:20 -0800 (PST)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 2/4] riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
+Date:   Thu,  7 Nov 2019 16:49:20 +0800
+Message-Id: <20191107084955.7580-3-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191107084955.7580-1-green.wan@sifive.com>
+References: <20191107084955.7580-1-green.wan@sifive.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 02:59:36PM -0800, Eric Dumazet wrote:
-> On Wed, Nov 6, 2019 at 2:53 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Wed, Nov 6, 2019 at 2:24 PM tip-bot2 for Eric Dumazet
-> > <tip-bot2@linutronix.de> wrote:
-> > >
-> > > The following commit has been merged into the timers/core branch of tip:
-> > >
-> > > Commit-ID:     56144737e67329c9aaed15f942d46a6302e2e3d8
-> > > Gitweb:        https://git.kernel.org/tip/56144737e67329c9aaed15f942d46a6302e2e3d8
-> > > Author:        Eric Dumazet <edumazet@google.com>
-> > > AuthorDate:    Wed, 06 Nov 2019 09:48:04 -08:00
-> > > Committer:     Thomas Gleixner <tglx@linutronix.de>
-> > > CommitterDate: Wed, 06 Nov 2019 23:18:31 +01:00
-> > >
-> > > hrtimer: Annotate lockless access to timer->state
-> > >
-> >
-> > I guess we also need to fix timer_pending(), since timer->entry.pprev
-> > could change while we read it.
-> 
-> It is interesting seeing hlist_add_head() has a WRITE_ONCE(h->first, n);,
-> but no WRITE_ONCE() for the pprev change.
-> 
-> The WRITE_ONCE() was added in commit 1c97be677f72b3c338312aecd36d8fff20322f32
-> ("list: Use WRITE_ONCE() when adding to lists and hlists")
+Add PDMA support to (arch/riscv/boot/dts/sifive/fu540-c000.dtsi)
 
-The theory is that while the ->next pointer is concurrently accessed by
-RCU readers, the ->pprev pointer is accessed only by updaters, who need
-to supply sufficient synchronization.
+Signed-off-by: Green Wan <green.wan@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-But what is this theory missing in practice?
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index afa43c7ea369..70a1891e7cd0 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -162,6 +162,13 @@
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
+ 			status = "disabled";
+ 		};
++		dma: dma@3000000 {
++			compatible = "sifive,fu540-c000-pdma";
++			reg = <0x0 0x3000000 0x0 0x8000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <23 24 25 26 27 28 29 30>;
++			#dma-cells = <1>;
++		};
+ 		uart1: serial@10011000 {
+ 			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
+ 			reg = <0x0 0x10011000 0x0 0x1000>;
+-- 
+2.17.1
 
-							Thanx, Paul
