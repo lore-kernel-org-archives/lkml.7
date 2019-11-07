@@ -2,170 +2,255 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92478C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39AAC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D1820869
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66C520869
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfKGSI5 (ORCPT
+        id S1730031AbfKGSKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:08:57 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23336 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725710AbfKGSI5 (ORCPT
+        Thu, 7 Nov 2019 13:10:22 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51900 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfKGSKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:08:57 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7I7L7I031779
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 13:08:55 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4qcf2dps-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 13:08:55 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Thu, 7 Nov 2019 18:08:52 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 18:08:43 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7I86IF10486184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 18:08:06 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F06D64C044;
-        Thu,  7 Nov 2019 18:08:41 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BFE874C04E;
-        Thu,  7 Nov 2019 18:08:40 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.15.120])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 18:08:40 +0000 (GMT)
-Subject: Re: [PATCH 10/10] ocxl: Conditionally bind SCM devices to the generic
- OCXL driver
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
- <20191025044721.16617-11-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Thu, 7 Nov 2019 19:08:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 7 Nov 2019 13:10:22 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 4DD55290AD6
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 43D1B48009B; Thu,  7 Nov 2019 19:10:17 +0100 (CET)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ahmet Inan <inan@distec.de>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv1 2/2] Input: EXC3000: Add support to query model and fw_version
+Date:   Thu,  7 Nov 2019 19:10:10 +0100
+Message-Id: <20191107181010.17211-2-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.24.0.rc1
+In-Reply-To: <20191107181010.17211-1-sebastian.reichel@collabora.com>
+References: <20191107181010.17211-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025044721.16617-11-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110718-0012-0000-0000-00000361A638
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110718-0013-0000-0000-0000219D084A
-Message-Id: <b70644d6-2c71-cd71-5d00-e25d99beea91@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Expose model and fw_version via sysfs. Also query the model
+in probe to make sure, that the I2C communication with the
+device works before successfully probing the driver.
 
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/input/touchscreen/exc3000.c | 136 ++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
 
-Le 25/10/2019 à 06:47, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This patch allows the user to bind OpenCAPI SCM devices to the generic OCXL
-> driver.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
-
-
-I'm wondering if we should upstream this. Is it of any use outside of 
-some serious debug session for a developer?
-Also we would now have 2 drivers picking up the same device ID, since 
-the SCM driver is always registering for that ID, irrespective of 
-CONFIG_OCXL_SCM_GENERIC
-
-   Fred
-
-
->   drivers/misc/ocxl/Kconfig | 7 +++++++
->   drivers/misc/ocxl/pci.c   | 3 +++
->   2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/misc/ocxl/Kconfig b/drivers/misc/ocxl/Kconfig
-> index 1916fa65f2f2..8a683715c97c 100644
-> --- a/drivers/misc/ocxl/Kconfig
-> +++ b/drivers/misc/ocxl/Kconfig
-> @@ -29,3 +29,10 @@ config OCXL
->   	  dedicated OpenCAPI link, and don't follow the same protocol.
->   
->   	  If unsure, say N.
-> +
-> +config OCXL_SCM_GENERIC
-> +	bool "Treat OpenCAPI Storage Class Memory as a generic OpenCAPI device"
-> +	default n
-> +	help
-> +	  Select this option to treat OpenCAPI Storage Class Memory
-> +	  devices an generic OpenCAPI devices.
-> diff --git a/drivers/misc/ocxl/pci.c b/drivers/misc/ocxl/pci.c
-> index cb920aa88d3a..7137055c1883 100644
-> --- a/drivers/misc/ocxl/pci.c
-> +++ b/drivers/misc/ocxl/pci.c
-> @@ -10,6 +10,9 @@
->    */
->   static const struct pci_device_id ocxl_pci_tbl[] = {
->   	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x062B), },
-> +#ifdef CONFIG_OCXL_SCM_GENERIC
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
-> +#endif
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(pci, ocxl_pci_tbl);
-> 
+diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
+index 7d695022082c..4c9f132629b9 100644
+--- a/drivers/input/touchscreen/exc3000.c
++++ b/drivers/input/touchscreen/exc3000.c
+@@ -41,6 +41,11 @@ struct exc3000_data {
+ 	struct touchscreen_properties prop;
+ 	struct timer_list timer;
+ 	u8 buf[2 * EXC3000_LEN_FRAME];
++	char model[11];
++	char fw_version[6];
++	struct completion wait_event;
++	struct mutex query_lock;
++	int query_result;
+ };
+ 
+ static void exc3000_report_slots(struct input_dev *input,
+@@ -121,6 +126,35 @@ static int exc3000_read_data(struct i2c_client *client,
+ 	return 0;
+ }
+ 
++static void exc3000_query_interrupt(struct exc3000_data *data)
++{
++	u8 *buf = data->buf;
++	int err;
++
++	data->query_result = 0;
++
++	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
++	if (err < 0) {
++		data->query_result = err;
++		goto out;
++	}
++
++	if (buf[0] == 0x42 && buf[4] == 'E') {
++		memcpy(data->model, buf+5, 10);
++		data->model[10] = '\0';
++		goto out;
++	} else if (buf[0] == 0x42 && buf[4] == 'D') {
++		memcpy(data->fw_version, buf+5, 5);
++		data->fw_version[5] = '\0';
++		goto out;
++	}
++
++	data->query_result = -EPROTO;
++
++out:
++	complete(&data->wait_event);
++}
++
+ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+ {
+ 	struct exc3000_data *data = dev_id;
+@@ -129,6 +163,11 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+ 	int slots, total_slots;
+ 	int error;
+ 
++	if (mutex_is_locked(&data->query_lock)) {
++		exc3000_query_interrupt(data);
++		goto out;
++	}
++
+ 	error = exc3000_read_data(data->client, buf, &total_slots);
+ 	if (error) {
+ 		/* Schedule a timer to release "stuck" contacts */
+@@ -156,12 +195,92 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
++static int exc3000_get_fw_version(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct exc3000_data *data = dev_get_drvdata(dev);
++	static const u8 request[68] =
++		{0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'D', 0x00};
++	struct i2c_client *client = data->client;
++	int err;
++
++	mutex_lock(&data->query_lock);
++
++	data->query_result = -ETIMEDOUT;
++	reinit_completion(&data->wait_event);
++
++	err = i2c_master_send(client, request, sizeof(request));
++	if (err < 0) {
++		mutex_unlock(&data->query_lock);
++		return err;
++	}
++
++	wait_for_completion_interruptible_timeout(&data->wait_event, 1*HZ);
++	mutex_unlock(&data->query_lock);
++
++	if (data->query_result < 0)
++		return data->query_result;
++
++	return sprintf(buf, "%s\n", data->fw_version);
++}
++static DEVICE_ATTR(fw_version, S_IRUGO, exc3000_get_fw_version, NULL);
++
++static ssize_t exc3000_get_model(struct exc3000_data *data)
++{
++	static const u8 request[68] =
++		{0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'E', 0x00};
++	struct i2c_client *client = data->client;
++	int err;
++
++	mutex_lock(&data->query_lock);
++	data->query_result = -ETIMEDOUT;
++	reinit_completion(&data->wait_event);
++
++	err = i2c_master_send(client, request, sizeof(request));
++	if (err < 0) {
++		mutex_unlock(&data->query_lock);
++		return err;
++	}
++
++	wait_for_completion_interruptible_timeout(&data->wait_event, 1*HZ);
++	mutex_unlock(&data->query_lock);
++
++	return data->query_result;
++}
++
++static ssize_t exc3000_get_model_sysfs(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct exc3000_data *data = dev_get_drvdata(dev);
++	int err = exc3000_get_model(data);
++
++	if (err < 0)
++		return err;
++
++	return sprintf(buf, "%s\n", data->model);
++}
++static DEVICE_ATTR(model, S_IRUGO, exc3000_get_model_sysfs, NULL);
++
++static struct attribute *sysfs_attrs[] = {
++	&dev_attr_model.attr,
++	&dev_attr_fw_version.attr,
++	NULL
++};
++
++static struct attribute_group exc3000_attribute_group = {
++	.attrs = sysfs_attrs
++};
++
++static const struct attribute_group *exc3000_attribute_groups[] = {
++	&exc3000_attribute_group,
++	NULL
++};
++
+ static int exc3000_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+ 	struct exc3000_data *data;
+ 	struct input_dev *input;
+ 	int error;
++	int retry;
+ 
+ 	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+@@ -170,15 +289,19 @@ static int exc3000_probe(struct i2c_client *client,
+ 	data->client = client;
+ 	data->type = id->driver_data;
+ 	timer_setup(&data->timer, exc3000_timer, 0);
++	init_completion(&data->wait_event);
++	mutex_init(&data->query_lock);
+ 
+ 	input = devm_input_allocate_device(&client->dev);
+ 	if (!input)
+ 		return -ENOMEM;
+ 
+ 	data->input = input;
++	input_set_drvdata(input, data);
+ 
+ 	input->name = "EETI EXC3000 Touch Screen";
+ 	input->id.bustype = BUS_I2C;
++	input->dev.groups = exc3000_attribute_groups;
+ 
+ 	if (data->type == EETI_EXC80Hxx) {
+ 		input_set_abs_params(input, ABS_MT_POSITION_X, 0, 16383, 0, 0);
+@@ -204,6 +327,19 @@ static int exc3000_probe(struct i2c_client *client,
+ 	if (error)
+ 		return error;
+ 
++	for (retry = 0; retry < 3; ++retry) {
++		error = exc3000_get_model(data);
++		if (!error) {
++			break;
++		}
++		dev_warn(&client->dev, "Retry %d get EETI EXC3000 model: %d\n", retry + 1, error);
++	}
++
++	if (error)
++		return error;
++
++	dev_dbg(&client->dev, "TS Model: %s", data->model);
++
+ 	return 0;
+ }
+ 
+-- 
+2.24.0.rc1
 
