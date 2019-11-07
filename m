@@ -2,458 +2,409 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C673C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C35FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685F22187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E66E21D7F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:15:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsGHu2VD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389588AbfKGOPD (ORCPT
+        id S2389606AbfKGOPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:15:03 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:41921 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389510AbfKGOOz (ORCPT
+        Thu, 7 Nov 2019 09:15:05 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34213 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389533AbfKGOO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:14:55 -0500
-Received: from localhost.localdomain ([78.238.229.36]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1M28O9-1iVCPk2Lyz-002ZYk; Thu, 07 Nov 2019 15:03:10 +0100
-From:   Laurent Vivier <laurent@vivier.eu>
+        Thu, 7 Nov 2019 09:14:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id e6so3253986wrw.1;
+        Thu, 07 Nov 2019 06:14:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Ha5IlEhJUKA4EU8NTC6VSC4fZ/nNaY5kGJON4kbmZRg=;
+        b=BsGHu2VDz/mQkg7CFdmtb16igvW3Ve5jcu8TphWb/43L2CdgFXRYO9NAX4WcI8+9NW
+         KPFbdhNbBI/5hGdrkb2NMOdTkAmLszIbUPLYYUaRZkDftSLH8RSLm8AUqENboNwE/Evr
+         0ddtfpaZyq0Q1VkaXTCceFLeBlO3x8TbXYIaPsCd2WTE+fMpXAcIcnG0PcyY0LOjD0WX
+         JmLTAhPmJo562KIis7Bz6qyVZ42Wg2G0T2e59mX3Y0QRAc9mFzpaBmg5QHxKHb3pwBfF
+         j3lWC6Y42E49bxMLgOsAS7iNAQeVApeVgAh3cx11GruyqlG0Sc+4TwCiiXChazoroNwA
+         Olpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Ha5IlEhJUKA4EU8NTC6VSC4fZ/nNaY5kGJON4kbmZRg=;
+        b=l1wjCap/kuyPYX3N8rwPSuQdrEygGregKUJjyGeVlf+TQ/npWQltEn+V/xElU4l9MO
+         Kmh3RMrvAlcOogKs490tnb8j1w6/zPXOeeVrGpeZ6i4T2AWc7SxvVSBNqqj9BnVUc/JF
+         /GY9uT6NuuQX5sxJyRVPo0/i4o+XBNvkb/9I5zdKFskUzVgGSXDoF/nE+nYRs+hKKl7l
+         lHNRKZEF89xG0dtvGMYJf6QnS0Jh8tvfnmqA6DUX2p9HWEPRVDy+tIXwUPAyIb5eleKB
+         zKtkRgKo14DIEImSmt/9A20Gr+fomhG9i8F9KQ+K6RvNVcdG5fqi+HPsLhzwEOBbIHLl
+         jGhw==
+X-Gm-Message-State: APjAAAUkPmOIGOOYeQs5IDKhvxXTsionVkbejWhtqREshv6zFwos6jp4
+        aVPRxiBLNcVVBX/D+Hc8m689XDoPpFA=
+X-Google-Smtp-Source: APXvYqzNV+wsomr5kXBfLkZ4LoK67Rwo5hFGAQtCObNTKLf8Uhx27O8L9wTBmbF3QbDxbkptkzRKqg==
+X-Received: by 2002:a5d:4803:: with SMTP id l3mr3131071wrq.381.1573136094755;
+        Thu, 07 Nov 2019 06:14:54 -0800 (PST)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id b1sm2453888wrw.77.2019.11.07.06.14.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 06:14:54 -0800 (PST)
+From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <dima@arista.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        linux-fsdevel@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-api@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Greg Kurz <groug@kaod.org>, Jann Horn <jannh@google.com>,
-        containers@lists.linux-foundation.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Laurent Vivier <laurent@vivier.eu>
-Subject: [PATCH v7 1/1] ns: add binfmt_misc to the user namespace
-Date:   Thu,  7 Nov 2019 15:03:04 +0100
-Message-Id: <20191107140304.8426-2-laurent@vivier.eu>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191107140304.8426-1-laurent@vivier.eu>
-References: <20191107140304.8426-1-laurent@vivier.eu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4iHpdG1rXpay6u5XOIjiSlQbsHmLFPUeXLo66HYY0tRMmj2W3qP
- TaPaEMZwVb9DryHf1jwLWA6gHC8Kr0BNIhhM2muxlVrSEfbRn6k2SSGwasZgQ6KMGXJY3wb
- l4p9ndsmeXzeA19qD0/FVskIuuKbX2+v6QUIQLJYeRqVdR5eYqZ6fA4L8SDOKufy5g3yVcY
- tUAaRrqDrJcV2ZBPsE6zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7NnKeG6QPg4=:3/v8s3dqLoZkazhTNhPeSN
- 32IlaviKqasO02dQrrkH3FnrvMxtHomjdzm9XvAAvHGGrnSN9mb92FS8PrqRyxuUZ0l2hSYRL
- utwq9RX9CLl7nsusGULi9wnYXEZFionk45zQ32X/pXLAgAARyn/swtPQ4hoqkEWAR7MykJrSq
- s1ZkBvm0JRYxWCRPPEseEMIjhWmbq0if5STFumJT4WXiSVhOQRkq2nCRJPe2sXCM7Bo70+Uak
- VT/RYSB3IUVL+CQVMD8eaMnDtlRIom6VIlBq9hWoJeBBa4bUif58Hx6e9mxNxbqQbb8mUmLHU
- //DPX/wW7O3CWv+pwJmpUNzDyhe5JXjb/n0Qf59tccB/Ew1AZx0Y/NK0VcYysKiS6TtABH+Gn
- yYcdwpaF/OO+0YE2D8FcMl/JrYFima7IIdUo20/jOM1qeFl3dVAayjEV02nlGYQ8VnZ5oyg7Z
- 3FgJkkfMlEu05xDm1hTky/8/3GSgK865R12O+21/xEPKwSV2aiw+wDMWVMi0xHAmBtgSVEVXh
- JXF6BUtbncRedsBtX69nIslxXY/e5lxCqWMUgiR5KTAnvha7xhR6hEnBHFxUz2qXikJTsw8oL
- vIHjK1Redniv6cK2a1skl3ZA0EYNZO/jznf6fp2BLBRQvI8JIvrBL0pEdGCw8cjKjhW4HqQjw
- TTS5jstbbDbLUOEbmJqFfsYdXmLeadAzhJqGbSowFt81fTXj8miZ4Qvx9c1bUl7oMpM05+lUu
- fjrnf1Jes7Gh6hp4PWYJNp+dXeVAL6UD468lRq3hT6Ub3cmh3oChq+g0b135WbyuSGQoW//yX
- cg9GUEw3Z3Qt0GXwBTzZgvjNl8ubQlPzlft6AUZoYqIZtMc8xy2+DJlAUYD9Sd5KZIPMC1uyh
- eDLKh41Y5beipYNZIqwg==
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH 13/13] phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
+Date:   Thu,  7 Nov 2019 09:13:39 -0500
+Message-Id: <20191107141339.6079-14-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191107141339.6079-1-alcooperx@gmail.com>
+References: <20191107141339.6079-1-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows to have a different binfmt_misc configuration
-for each new user namespace. By default, the binfmt_misc configuration
-is the one of the previous level, but if the binfmt_misc filesystem is
-mounted in the new namespace a new empty binfmt instance is created and
-used in this namespace.
+Add support for 7211 USB wake. Disable all possible 7211 USB logic
+for S2/S5 if USB wake is not enabled.
 
-For instance, using "unshare" we can start a chroot of another
-architecture and configure the binfmt_misc interpreter without being root
-to run the binaries in this chroot.
+On the 7211, the XHCI wake signal was not connected properly and
+only goes to the USB1_USB1_CTRL_TP_DIAG1 diagonstic register.
+The workaround is to have VPU code running that polls for the
+proper bit in the DIAG register and to wake the system when
+the bit is asserted.
 
-Signed-off-by: Laurent Vivier <laurent@vivier.eu>
-Acked-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- fs/binfmt_misc.c               | 115 +++++++++++++++++++++++++--------
- include/linux/user_namespace.h |  15 +++++
- kernel/user.c                  |  14 ++++
- kernel/user_namespace.c        |   3 +
- 4 files changed, 119 insertions(+), 28 deletions(-)
+ .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 77 +++++++++++++++++--
+ drivers/phy/broadcom/phy-brcm-usb-init.c      | 26 ++++---
+ drivers/phy/broadcom/phy-brcm-usb-init.h      | 11 +--
+ drivers/phy/broadcom/phy-brcm-usb.c           | 25 ++++--
+ 4 files changed, 105 insertions(+), 34 deletions(-)
 
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index cdb45829354d..ba5f0d2ade96 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -40,9 +40,6 @@ enum {
- 	VERBOSE_STATUS = 1 /* make it zero to save 400 bytes kernel memory */
- };
+diff --git a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
+index c6504649d307..a2f96fce8c2f 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
++++ b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
+@@ -26,7 +26,6 @@
+ #define   PIARBCTL_MISC_CAM1_MEM_PAGE_MASK		0x00000f00
+ #define   PIARBCTL_MISC_CAM0_MEM_PAGE_MASK		0x000000f0
+ #define   PIARBCTL_MISC_SATA_PRIORITY_MASK		0x0000000f
+-#define PIARBCTL_USB_M_ASB_CTRL		0x10
  
--static LIST_HEAD(entries);
--static int enabled = 1;
+ #define PIARBCTL_MISC_USB_ONLY_MASK		\
+ 	(PIARBCTL_MISC_USB_SELECT_MASK |	\
+@@ -51,14 +50,27 @@
+ #define USB_CTRL_USB_PM_STATUS		0x08
+ #define USB_CTRL_USB_DEVICE_CTL1	0x10
+ #define   USB_CTRL_USB_DEVICE_CTL1_PORT_MODE_MASK	0x00000003
++#define USB_CTRL_TEST_PORT_CTL		0x30
++#define   USB_CTRL_TEST_PORT_CTL_TPOUT_SEL_MASK	0x000000ff
++#define   USB_CTRL_TEST_PORT_CTL_TPOUT_SEL_PME_GEN_MASK	0x0000002e
++#define USB_CTRL_TP_DIAG1		0x34
++#define   USB_CTLR_TP_DIAG1_wake_MASK	0x00000002
++#define USB_CTRL_CTLR_CSHCR		0x50
++#define   USB_CTRL_CTLR_CSHCR_ctl_pme_en_MASK	0x00040000
+ 
+ /* Register definitions for the USB_PHY block in 7211b0 */
++#define USB_PHY_PLL_CTL			0x00
++#define   USB_PHY_PLL_CTL_PLL_RESETB_MASK		0x40000000
+ #define USB_PHY_PLL_LDO_CTL		0x08
+ #define   USB_PHY_PLL_LDO_CTL_AFE_CORERDY_MASK		0x00000004
++#define   USB_PHY_PLL_LDO_CTL_AFE_LDO_PWRDWNB_MASK	0x00000002
++#define   USB_PHY_PLL_LDO_CTL_AFE_BG_PWRDWNB_MASK	0x00000001
+ #define USB_PHY_UTMI_CTL_1		0x04
+ #define   USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK	0x00000800
+ #define   USB_PHY_UTMI_CTL_1_PHY_MODE_MASK		0x0000000c
+ #define   USB_PHY_UTMI_CTL_1_PHY_MODE_SHIFT		2
++#define USB_PHY_IDDQ			0x1c
++#define   USB_PHY_IDDQ_phy_iddq_MASK			0x00000001
+ #define USB_PHY_STATUS			0x20
+ #define   USB_PHY_STATUS_pll_lock_MASK			0x00000001
+ 
+@@ -199,6 +211,17 @@ static void usb_init_common(struct brcm_usb_init_params *params)
+ 	}
+ }
+ 
++static void usb_wake_enable_7211b0(struct brcm_usb_init_params *params,
++				   bool enable)
++{
++	void __iomem *ctrl = params->regs[BRCM_REGS_CTRL];
++
++	if (enable)
++		USB_CTRL_SET(ctrl, CTLR_CSHCR, ctl_pme_en);
++	else
++		USB_CTRL_UNSET(ctrl, CTLR_CSHCR, ctl_pme_en);
++}
++
+ static void usb_init_common_7211b0(struct brcm_usb_init_params *params)
+ {
+ 	void __iomem *ctrl = params->regs[BRCM_REGS_CTRL];
+@@ -210,9 +233,27 @@ static void usb_init_common_7211b0(struct brcm_usb_init_params *params)
+ 	if (params->syscon_piarbctl)
+ 		syscon_piarbctl_init(params->syscon_piarbctl);
+ 
++	USB_CTRL_UNSET(ctrl, USB_PM, USB_PWRDN);
++
++	usb_wake_enable_7211b0(params, false);
++	if (!params->wake_enabled) {
++
++		/* undo possible suspend settings */
++		brcm_usb_writel(0, usb_phy + USB_PHY_IDDQ);
++		reg = brcm_usb_readl(usb_phy + USB_PHY_PLL_CTL);
++		reg |= USB_PHY_PLL_CTL_PLL_RESETB_MASK;
++		brcm_usb_writel(reg, usb_phy + USB_PHY_PLL_CTL);
++
++		/* temporarily enable FSM so PHY comes up properly */
++		reg = brcm_usb_readl(usb_phy + USB_PHY_UTMI_CTL_1);
++		reg |= USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK;
++		brcm_usb_writel(reg, usb_phy + USB_PHY_UTMI_CTL_1);
++	}
++
+ 	/* Init the PHY */
+-	reg = brcm_usb_readl(usb_phy + USB_PHY_PLL_LDO_CTL);
+-	reg |= USB_PHY_PLL_LDO_CTL_AFE_CORERDY_MASK;
++	reg = USB_PHY_PLL_LDO_CTL_AFE_CORERDY_MASK |
++		USB_PHY_PLL_LDO_CTL_AFE_LDO_PWRDWNB_MASK |
++		USB_PHY_PLL_LDO_CTL_AFE_BG_PWRDWNB_MASK;
+ 	brcm_usb_writel(reg, usb_phy + USB_PHY_PLL_LDO_CTL);
+ 
+ 	/* wait for lock */
+@@ -276,12 +317,36 @@ static void usb_uninit_common(struct brcm_usb_init_params *params)
+ 
+ }
+ 
++static void usb_uninit_common_7211b0(struct brcm_usb_init_params *params)
++{
++	void __iomem *ctrl = params->regs[BRCM_REGS_CTRL];
++	void __iomem *usb_phy = params->regs[BRCM_REGS_USB_PHY];
++	u32 reg;
++
++	pr_debug("%s\n", __func__);
++
++	if (params->wake_enabled) {
++		USB_CTRL_SET(ctrl, TEST_PORT_CTL, TPOUT_SEL_PME_GEN);
++		usb_wake_enable_7211b0(params, true);
++	} else {
++		USB_CTRL_SET(ctrl, USB_PM, USB_PWRDN);
++		brcm_usb_writel(0, usb_phy + USB_PHY_PLL_LDO_CTL);
++		reg = brcm_usb_readl(usb_phy + USB_PHY_PLL_CTL);
++		reg &= ~USB_PHY_PLL_CTL_PLL_RESETB_MASK;
++		brcm_usb_writel(reg, usb_phy + USB_PHY_PLL_CTL);
++		brcm_usb_writel(USB_PHY_IDDQ_phy_iddq_MASK,
++				usb_phy + USB_PHY_IDDQ);
++	}
++
++}
++
+ static void usb_uninit_xhci(struct brcm_usb_init_params *params)
+ {
+ 
+ 	pr_debug("%s\n", __func__);
+ 
+-	xhci_soft_reset(params, 1);
++	if (!params->wake_enabled)
++		xhci_soft_reset(params, 1);
+ }
+ 
+ static int usb_get_dual_select(struct brcm_usb_init_params *params)
+@@ -309,7 +374,6 @@ static void usb_set_dual_select(struct brcm_usb_init_params *params, int mode)
+ 	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+ }
+ 
 -
- enum {Enabled, Magic};
- #define MISC_FMT_PRESERVE_ARGV0 (1 << 31)
- #define MISC_FMT_OPEN_BINARY (1 << 30)
-@@ -62,10 +59,7 @@ typedef struct {
- 	struct file *interp_file;
- } Node;
+ static const struct brcm_usb_init_ops bcm7216_ops = {
+ 	.init_ipp = usb_init_ipp,
+ 	.init_common = usb_init_common,
+@@ -324,7 +388,7 @@ static const struct brcm_usb_init_ops bcm7211b0_ops = {
+ 	.init_ipp = usb_init_ipp,
+ 	.init_common = usb_init_common_7211b0,
+ 	.init_xhci = usb_init_xhci,
+-	.uninit_common = usb_uninit_common,
++	.uninit_common = usb_uninit_common_7211b0,
+ 	.uninit_xhci = usb_uninit_xhci,
+ 	.get_dual_select = usb_get_dual_select,
+ 	.set_dual_select = usb_set_dual_select,
+@@ -346,4 +410,5 @@ void brcm_usb_dvr_init_7211b0(struct brcm_usb_init_params *params)
  
--static DEFINE_RWLOCK(entries_lock);
- static struct file_system_type bm_fs_type;
--static struct vfsmount *bm_mnt;
--static int entry_count;
+ 	params->family_name = "7211";
+ 	params->ops = &bcm7211b0_ops;
++	params->suspend_with_clocks = true;
+ }
+diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.c b/drivers/phy/broadcom/phy-brcm-usb-init.c
+index e28e4b1a3f21..b477c1684825 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb-init.c
++++ b/drivers/phy/broadcom/phy-brcm-usb-init.c
+@@ -783,12 +783,24 @@ static void usb_init_ipp(struct brcm_usb_init_params *params)
+ 		msleep(50);
+ }
  
- /*
-  * Max length of the register string.  Determined by:
-@@ -82,18 +76,37 @@ static int entry_count;
-  */
- #define MAX_REGISTER_LENGTH 1920
- 
-+static struct binfmt_namespace *binfmt_ns(struct user_namespace *ns)
++static void usb_wake_enable(struct brcm_usb_init_params *params,
++			  bool enable)
 +{
-+	struct binfmt_namespace *b_ns;
++	void __iomem *ctrl = params->regs[BRCM_REGS_CTRL];
 +
-+	while (ns) {
-+		b_ns = READ_ONCE(ns->binfmt_ns);
-+		if (b_ns)
-+			return b_ns;
-+		ns = ns->parent;
-+	}
-+	/* as the first user namespace is initialized with
-+	 * &init_binfmt_ns we should never come here
-+	 * but we try to stay safe by logging a warning
-+	 * and returning a sane value
-+	 */
-+	WARN_ON_ONCE(1);
-+	return &init_binfmt_ns;
++	if (enable)
++		USB_CTRL_SET(ctrl, USB_PM, RMTWKUP_EN);
++	else
++		USB_CTRL_UNSET(ctrl, USB_PM, RMTWKUP_EN);
 +}
 +
- /*
-  * Check if we support the binfmt
-  * if we do, return the node, else NULL
-  * locking is done in load_misc_binary
-  */
--static Node *check_file(struct linux_binprm *bprm)
-+static Node *check_file(struct binfmt_namespace *ns, struct linux_binprm *bprm)
+ static void usb_init_common(struct brcm_usb_init_params *params)
  {
- 	char *p = strrchr(bprm->interp, '.');
- 	struct list_head *l;
+ 	u32 reg;
+ 	void __iomem *ctrl = params->regs[BRCM_REGS_CTRL];
  
- 	/* Walk all the registered handlers. */
--	list_for_each(l, &entries) {
-+	list_for_each(l, &ns->entries) {
- 		Node *e = list_entry(l, Node, list);
- 		char *s;
- 		int j;
-@@ -135,17 +148,18 @@ static int load_misc_binary(struct linux_binprm *bprm)
- 	struct file *interp_file = NULL;
- 	int retval;
- 	int fd_binary = -1;
-+	struct binfmt_namespace *ns = binfmt_ns(current_user_ns());
+ 	/* Clear any pending wake conditions */
++	usb_wake_enable(params, false);
+ 	reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_PM_STATUS));
+ 	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_PM_STATUS));
  
- 	retval = -ENOEXEC;
--	if (!enabled)
-+	if (!ns->enabled)
- 		return retval;
+@@ -935,6 +947,8 @@ static void usb_uninit_common(struct brcm_usb_init_params *params)
  
- 	/* to keep locking time low, we copy the interpreter string */
--	read_lock(&entries_lock);
--	fmt = check_file(bprm);
-+	read_lock(&ns->entries_lock);
-+	fmt = check_file(ns, bprm);
- 	if (fmt)
- 		dget(fmt->dentry);
--	read_unlock(&entries_lock);
-+	read_unlock(&ns->entries_lock);
- 	if (!fmt)
- 		return retval;
- 
-@@ -611,19 +625,19 @@ static void bm_evict_inode(struct inode *inode)
- 	kfree(e);
+ 	if (USB_CTRL_MASK_FAMILY(params, PLL_CTL, PLL_IDDQ_PWRDN))
+ 		USB_CTRL_SET_FAMILY(params, PLL_CTL, PLL_IDDQ_PWRDN);
++	if (params->wake_enabled)
++		usb_wake_enable(params, true);
  }
  
--static void kill_node(Node *e)
-+static void kill_node(struct binfmt_namespace *ns, Node *e)
- {
- 	struct dentry *dentry;
- 
--	write_lock(&entries_lock);
-+	write_lock(&ns->entries_lock);
- 	list_del_init(&e->list);
--	write_unlock(&entries_lock);
-+	write_unlock(&ns->entries_lock);
- 
- 	dentry = e->dentry;
- 	drop_nlink(d_inode(dentry));
- 	d_drop(dentry);
- 	dput(dentry);
--	simple_release_fs(&bm_mnt, &entry_count);
-+	simple_release_fs(&ns->bm_mnt, &ns->entry_count);
+ static void usb_uninit_eohci(struct brcm_usb_init_params *params)
+@@ -978,17 +992,6 @@ static void usb_set_dual_select(struct brcm_usb_init_params *params, int mode)
+ 	}
  }
  
- /* /<entry> */
-@@ -653,6 +667,9 @@ static ssize_t bm_entry_write(struct file *file, const char __user *buffer,
- 	struct dentry *root;
- 	Node *e = file_inode(file)->i_private;
- 	int res = parse_command(buffer, count);
-+	struct binfmt_namespace *ns;
-+
-+	ns = binfmt_ns(file->f_path.dentry->d_sb->s_user_ns);
- 
- 	switch (res) {
- 	case 1:
-@@ -669,7 +686,7 @@ static ssize_t bm_entry_write(struct file *file, const char __user *buffer,
- 		inode_lock(d_inode(root));
- 
- 		if (!list_empty(&e->list))
--			kill_node(e);
-+			kill_node(ns, e);
- 
- 		inode_unlock(d_inode(root));
- 		break;
-@@ -695,6 +712,7 @@ static ssize_t bm_register_write(struct file *file, const char __user *buffer,
- 	struct inode *inode;
- 	struct super_block *sb = file_inode(file)->i_sb;
- 	struct dentry *root = sb->s_root, *dentry;
-+	struct binfmt_namespace *ns;
- 	int err = 0;
- 
- 	e = create_entry(buffer, count);
-@@ -718,7 +736,9 @@ static ssize_t bm_register_write(struct file *file, const char __user *buffer,
- 	if (!inode)
- 		goto out2;
- 
--	err = simple_pin_fs(&bm_fs_type, &bm_mnt, &entry_count);
-+	ns = binfmt_ns(file->f_path.dentry->d_sb->s_user_ns);
-+	err = simple_pin_fs(&bm_fs_type, &ns->bm_mnt,
-+			    &ns->entry_count);
- 	if (err) {
- 		iput(inode);
- 		inode = NULL;
-@@ -727,12 +747,16 @@ static ssize_t bm_register_write(struct file *file, const char __user *buffer,
- 
- 	if (e->flags & MISC_FMT_OPEN_FILE) {
- 		struct file *f;
-+		const struct cred *old_cred;
- 
-+		old_cred = override_creds(file->f_cred);
- 		f = open_exec(e->interpreter);
-+		revert_creds(old_cred);
- 		if (IS_ERR(f)) {
- 			err = PTR_ERR(f);
- 			pr_notice("register: failed to install interpreter file %s\n", e->interpreter);
--			simple_release_fs(&bm_mnt, &entry_count);
-+			simple_release_fs(&ns->bm_mnt,
-+					  &ns->entry_count);
- 			iput(inode);
- 			inode = NULL;
- 			goto out2;
-@@ -745,9 +769,9 @@ static ssize_t bm_register_write(struct file *file, const char __user *buffer,
- 	inode->i_fop = &bm_entry_operations;
- 
- 	d_instantiate(dentry, inode);
--	write_lock(&entries_lock);
--	list_add(&e->list, &entries);
--	write_unlock(&entries_lock);
-+	write_lock(&ns->entries_lock);
-+	list_add(&e->list, &ns->entries);
-+	write_unlock(&ns->entries_lock);
- 
- 	err = 0;
- out2:
-@@ -772,7 +796,9 @@ static const struct file_operations bm_register_operations = {
- static ssize_t
- bm_status_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- {
--	char *s = enabled ? "enabled\n" : "disabled\n";
-+	struct binfmt_namespace *ns =
-+				binfmt_ns(file->f_path.dentry->d_sb->s_user_ns);
-+	char *s = ns->enabled ? "enabled\n" : "disabled\n";
- 
- 	return simple_read_from_buffer(buf, nbytes, ppos, s, strlen(s));
- }
-@@ -780,25 +806,28 @@ bm_status_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- static ssize_t bm_status_write(struct file *file, const char __user *buffer,
- 		size_t count, loff_t *ppos)
- {
-+	struct binfmt_namespace *ns;
- 	int res = parse_command(buffer, count);
- 	struct dentry *root;
- 
-+	ns = binfmt_ns(file->f_path.dentry->d_sb->s_user_ns);
- 	switch (res) {
- 	case 1:
- 		/* Disable all handlers. */
--		enabled = 0;
-+		ns->enabled = 0;
- 		break;
- 	case 2:
- 		/* Enable all handlers. */
--		enabled = 1;
-+		ns->enabled = 1;
- 		break;
- 	case 3:
- 		/* Delete all handlers. */
- 		root = file_inode(file)->i_sb->s_root;
- 		inode_lock(d_inode(root));
- 
--		while (!list_empty(&entries))
--			kill_node(list_first_entry(&entries, Node, list));
-+		while (!list_empty(&ns->entries))
-+			kill_node(ns, list_first_entry(&ns->entries,
-+						       Node, list));
- 
- 		inode_unlock(d_inode(root));
- 		break;
-@@ -825,24 +854,53 @@ static const struct super_operations s_ops = {
- static int bm_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	int err;
-+	struct user_namespace *ns = sb->s_user_ns;
- 	static const struct tree_descr bm_files[] = {
- 		[2] = {"status", &bm_status_operations, S_IWUSR|S_IRUGO},
- 		[3] = {"register", &bm_register_operations, S_IWUSR},
- 		/* last one */ {""}
- 	};
- 
-+	/* create a new binfmt namespace
-+	 * if we are not in the first user namespace
-+	 * but the binfmt namespace is the first one
-+	 */
-+	if (READ_ONCE(ns->binfmt_ns) == NULL) {
-+		struct binfmt_namespace *new_ns;
-+
-+		new_ns = kmalloc(sizeof(struct binfmt_namespace),
-+				 GFP_KERNEL);
-+		if (new_ns == NULL)
-+			return -ENOMEM;
-+		INIT_LIST_HEAD(&new_ns->entries);
-+		new_ns->enabled = 1;
-+		rwlock_init(&new_ns->entries_lock);
-+		new_ns->bm_mnt = NULL;
-+		new_ns->entry_count = 0;
-+		/* ensure new_ns is completely initialized before sharing it */
-+		smp_wmb();
-+		WRITE_ONCE(ns->binfmt_ns, new_ns);
-+	}
-+
- 	err = simple_fill_super(sb, BINFMTFS_MAGIC, bm_files);
- 	if (!err)
- 		sb->s_op = &s_ops;
- 	return err;
- }
- 
-+static void bm_free(struct fs_context *fc)
-+{
-+	if (fc->s_fs_info)
-+		put_user_ns(fc->s_fs_info);
-+}
-+
- static int bm_get_tree(struct fs_context *fc)
- {
--	return get_tree_single(fc, bm_fill_super);
-+	return get_tree_keyed(fc, bm_fill_super, get_user_ns(fc->user_ns));
- }
- 
- static const struct fs_context_operations bm_context_ops = {
-+	.free		= bm_free,
- 	.get_tree	= bm_get_tree,
+-static void usb_wake_enable(struct brcm_usb_init_params *params,
+-			  int enable)
+-{
+-	void __iomem *ctrl = params->regs[BRCM_REGS_CTRL];
+-
+-	if (enable)
+-		USB_CTRL_SET(ctrl, USB_PM, RMTWKUP_EN);
+-	else
+-		USB_CTRL_UNSET(ctrl, USB_PM, RMTWKUP_EN);
+-}
+-
+ static const struct brcm_usb_init_ops bcm7445_ops = {
+ 	.init_ipp = usb_init_ipp,
+ 	.init_common = usb_init_common,
+@@ -999,7 +1002,6 @@ static const struct brcm_usb_init_ops bcm7445_ops = {
+ 	.uninit_xhci = usb_uninit_xhci,
+ 	.get_dual_select = usb_get_dual_select,
+ 	.set_dual_select = usb_set_dual_select,
+-	.wake_enable = usb_wake_enable,
  };
  
-@@ -861,6 +919,7 @@ static struct file_system_type bm_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "binfmt_misc",
- 	.init_fs_context = bm_init_fs_context,
-+	.fs_flags	= FS_USERNS_MOUNT,
- 	.kill_sb	= kill_litter_super,
- };
- MODULE_ALIAS_FS("binfmt_misc");
-diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
-index fb9f4f799554..16e6f3a97a01 100644
---- a/include/linux/user_namespace.h
-+++ b/include/linux/user_namespace.h
-@@ -52,6 +52,18 @@ enum ucount_type {
- 	UCOUNT_COUNTS,
+ void brcm_usb_dvr_init_7445(struct brcm_usb_init_params *params)
+diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.h b/drivers/phy/broadcom/phy-brcm-usb-init.h
+index 570bd9d8c9ec..2955fdc8479b 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb-init.h
++++ b/drivers/phy/broadcom/phy-brcm-usb-init.h
+@@ -46,8 +46,6 @@ struct brcm_usb_init_ops {
+ 	void (*uninit_xhci)(struct brcm_usb_init_params *params);
+ 	int  (*get_dual_select)(struct brcm_usb_init_params *params);
+ 	void (*set_dual_select)(struct brcm_usb_init_params *params, int mode);
+-	void (*wake_enable)(struct brcm_usb_init_params *params,
+-			    int enable);
  };
  
-+#if IS_ENABLED(CONFIG_BINFMT_MISC)
-+struct binfmt_namespace {
-+	struct list_head entries;
-+	rwlock_t entries_lock;
-+	int enabled;
-+	struct vfsmount *bm_mnt;
-+	int entry_count;
-+} __randomize_layout;
-+
-+extern struct binfmt_namespace init_binfmt_ns;
-+#endif
-+
- struct user_namespace {
- 	struct uid_gid_map	uid_map;
- 	struct uid_gid_map	gid_map;
-@@ -86,6 +98,9 @@ struct user_namespace {
- #endif
- 	struct ucounts		*ucounts;
- 	int ucount_max[UCOUNT_COUNTS];
-+#if IS_ENABLED(CONFIG_BINFMT_MISC)
-+	struct binfmt_namespace *binfmt_ns;
-+#endif
- } __randomize_layout;
- 
- struct ucounts {
-diff --git a/kernel/user.c b/kernel/user.c
-index 5235d7f49982..092b2b4d47a6 100644
---- a/kernel/user.c
-+++ b/kernel/user.c
-@@ -20,6 +20,17 @@
- #include <linux/user_namespace.h>
- #include <linux/proc_ns.h>
- 
-+#if IS_ENABLED(CONFIG_BINFMT_MISC)
-+struct binfmt_namespace init_binfmt_ns = {
-+	.entries = LIST_HEAD_INIT(init_binfmt_ns.entries),
-+	.enabled = 1,
-+	.entries_lock = __RW_LOCK_UNLOCKED(init_binfmt_ns.entries_lock),
-+	.bm_mnt = NULL,
-+	.entry_count = 0,
-+};
-+EXPORT_SYMBOL_GPL(init_binfmt_ns);
-+#endif
-+
- /*
-  * userns count is 1 for root user, 1 for init_uts_ns,
-  * and 1 for... ?
-@@ -67,6 +78,9 @@ struct user_namespace init_user_ns = {
- 	.keyring_name_list = LIST_HEAD_INIT(init_user_ns.keyring_name_list),
- 	.keyring_sem = __RWSEM_INITIALIZER(init_user_ns.keyring_sem),
- #endif
-+#if IS_ENABLED(CONFIG_BINFMT_MISC)
-+	.binfmt_ns = &init_binfmt_ns,
-+#endif
+ struct  brcm_usb_init_params {
+@@ -62,6 +60,8 @@ struct  brcm_usb_init_params {
+ 	const u32 *usb_reg_bits_map;
+ 	const struct brcm_usb_init_ops *ops;
+ 	struct regmap *syscon_piarbctl;
++	bool wake_enabled;
++	bool suspend_with_clocks;
  };
- EXPORT_SYMBOL_GPL(init_user_ns);
  
-diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 8eadadc478f9..f42c32269e20 100644
---- a/kernel/user_namespace.c
-+++ b/kernel/user_namespace.c
-@@ -191,6 +191,9 @@ static void free_user_ns(struct work_struct *work)
- 			kfree(ns->projid_map.forward);
- 			kfree(ns->projid_map.reverse);
+ void brcm_usb_dvr_init_7445(struct brcm_usb_init_params *params);
+@@ -145,13 +145,6 @@ static inline void brcm_usb_uninit_xhci(struct brcm_usb_init_params *ini)
+ 		ini->ops->uninit_xhci(ini);
+ }
+ 
+-static inline void brcm_usb_wake_enable(struct brcm_usb_init_params *ini,
+-	int enable)
+-{
+-	if (ini->ops->wake_enable)
+-		ini->ops->wake_enable(ini, enable);
+-}
+-
+ static inline int brcm_usb_get_dual_select(struct brcm_usb_init_params *ini)
+ {
+ 	if (ini->ops->get_dual_select)
+diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
+index 86d7ba7c3af3..a1de565c2f21 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb.c
++++ b/drivers/phy/broadcom/phy-brcm-usb.c
+@@ -530,16 +530,26 @@ static int brcm_usb_phy_suspend(struct device *dev)
+ 	struct brcm_usb_phy_data *priv = dev_get_drvdata(dev);
+ 
+ 	if (priv->init_count) {
++		priv->ini.wake_enabled = device_may_wakeup(dev);
+ 		if (priv->phys[BRCM_USB_PHY_3_0].inited)
+ 			brcm_usb_uninit_xhci(&priv->ini);
+ 		if (priv->phys[BRCM_USB_PHY_2_0].inited)
+ 			brcm_usb_uninit_eohci(&priv->ini);
+ 		brcm_usb_uninit_common(&priv->ini);
+-		brcm_usb_wake_enable(&priv->ini, true);
+-		if (priv->phys[BRCM_USB_PHY_3_0].inited)
+-			clk_disable_unprepare(priv->usb_30_clk);
+-		if (priv->phys[BRCM_USB_PHY_2_0].inited || !priv->has_eohci)
+-			clk_disable_unprepare(priv->usb_20_clk);
++
++		/*
++		 * Handle the clocks unless needed for wake. This has
++		 * to work for both older XHCI->3.0-clks, EOHCI->2.0-clks
++		 * and newer XHCI->2.0-clks/3.0-clks.
++		 */
++
++		if (!priv->ini.suspend_with_clocks) {
++			if (priv->phys[BRCM_USB_PHY_3_0].inited)
++				clk_disable_unprepare(priv->usb_30_clk);
++			if (priv->phys[BRCM_USB_PHY_2_0].inited ||
++			    !priv->has_eohci)
++				clk_disable_unprepare(priv->usb_20_clk);
++		}
+ 		if (priv->wake_irq >= 0)
+ 			enable_irq_wake(priv->wake_irq);
+ 	}
+@@ -552,7 +562,6 @@ static int brcm_usb_phy_resume(struct device *dev)
+ 
+ 	clk_prepare_enable(priv->usb_20_clk);
+ 	clk_prepare_enable(priv->usb_30_clk);
+-	brcm_usb_wake_enable(&priv->ini, false);
+ 	brcm_usb_init_ipp(&priv->ini);
+ 
+ 	/*
+@@ -574,6 +583,8 @@ static int brcm_usb_phy_resume(struct device *dev)
+ 		} else if (priv->has_xhci) {
+ 			brcm_usb_uninit_xhci(&priv->ini);
+ 			clk_disable_unprepare(priv->usb_30_clk);
++			if (!priv->has_eohci)
++				clk_disable_unprepare(priv->usb_20_clk);
  		}
-+#if IS_ENABLED(CONFIG_BINFMT_MISC)
-+		kfree(ns->binfmt_ns);
-+#endif
- 		retire_userns_sysctls(ns);
- 		key_free_user_ns(ns);
- 		ns_free_inum(&ns->ns);
+ 	} else {
+ 		if (priv->has_xhci)
+@@ -584,7 +595,7 @@ static int brcm_usb_phy_resume(struct device *dev)
+ 		clk_disable_unprepare(priv->usb_20_clk);
+ 		clk_disable_unprepare(priv->usb_30_clk);
+ 	}
+-
++	priv->ini.wake_enabled = false;
+ 	return 0;
+ }
+ #endif /* CONFIG_PM_SLEEP */
 -- 
-2.21.0
+2.17.1
 
