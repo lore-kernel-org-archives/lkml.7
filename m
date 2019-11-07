@@ -2,112 +2,90 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688F3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B152C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D892084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153694;
-	bh=GKA5r3QdsSXmNwNcoySiknXQGXR+yp7lsgBPHWUINbI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DeL7P9MsJsO3H4tbb2U0rjn338NaEpeBfUZRrnHrQ0yKwwoi2hYs1qJA8uDzrXApc
-	 Lrw7ytOTLwtg4a8Voai71uKmvIFxqTdmITVzwgXPQNNMNabqWz0EXN1d14hMCQKdxU
-	 LDL9VbRB9GuX2Zs6cIEhYlvKb98AYmb1W++IdRXg=
+	by mail.kernel.org (Postfix) with ESMTP id 712DC2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LgVB184n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbfKGTIM (ORCPT
+        id S1731027AbfKGTIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:08:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727963AbfKGTIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:08:11 -0500
-Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 549BF2085B;
-        Thu,  7 Nov 2019 19:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153691;
-        bh=GKA5r3QdsSXmNwNcoySiknXQGXR+yp7lsgBPHWUINbI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCCxKQ5r4WWfW1teHigzPbOX0lP576h2/7xi0LZD7bzDTZwhUFGkTorgbcQtxaWEv
-         UnU8JKGI3Ca+yscYpz6yw7mPFGZjW5sBxpWnHmr5DPV0EIbVG9NcnKVbiRjpq5eQdb
-         UqhHsSorT3Ndffykd0JvLEx5keTfN1dSRuZnmDwM=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 48/63] perf machine: Add kernel_dso() method
-Date:   Thu,  7 Nov 2019 15:59:56 -0300
-Message-Id: <20191107190011.23924-49-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
-References: <20191107190011.23924-1-acme@kernel.org>
+        Thu, 7 Nov 2019 14:08:21 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37217 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbfKGTIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:08:20 -0500
+Received: by mail-io1-f67.google.com with SMTP id 1so3532507iou.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:08:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6tc+3dFnObbCsZTOmcaVyw6tfhQMQsGco5do8dKeQEQ=;
+        b=LgVB184nuWNpFfGTtXqtzbPQCgBsxaiS3I2ido28o3uv6Be63L007ZEgJmeI4p0/bU
+         gZ6XCsGvaUXpCS9kQrcCCvJGsC6gBbU5UgGuwiQXUL2Yq7wIEFglIILOgZw8P9sQ59j7
+         DVtDRA39e/w+eVu+5Fh80AmOIS+cIts7L5UOC6aEPlA7E1tDZ3rxeD/TiAUidkN3wOUr
+         1nHZaIYFTXT5S+tb7PTGosHYi4WLU/P4nMLLf2YXPVRMFdaZd4mZ8LM0dz/v2xb6ZclM
+         3VZLjZEqUWsplJQaLrY2K2NJQ4QLwMKeezr3/t5BIKT6nsMzzJ4vjASSNPhTr64cZv0u
+         0dSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6tc+3dFnObbCsZTOmcaVyw6tfhQMQsGco5do8dKeQEQ=;
+        b=ctKAEVqy6FVcMnIhg0famrhr9PVB9MJM/tahC+A0PzeQx7c+P8eqwSkR5aUKGEB671
+         7X2/csNKwXCc/3irWUs+LH1pCriNFcmCIXAn55HolmkGdn7JPdOPw8q2HSk4rFGMo3Tx
+         FKRMwz+faISn/GPWiLDld8CBKgCQdx9Nr1mtHl4dM6Lj0qV3gv3G5O5t1sybiWF2Ies3
+         fK2j+ov8sXCcb3N4vfEjuy0qBKoOc/X96keogM8qzkY70mpdeap6LwEPs3LM04qiP1rZ
+         9rQn2KevRJwVfMUgvu/QqZg8SSHDR7LfWtTXAvQhOKPltYzcaH2NH7NM6umNIT9dkP70
+         jV7g==
+X-Gm-Message-State: APjAAAVSD2FzCdd61CwKYWa0+yYooJlb0BHOR38/gPC2cmy8v8qFZ5d1
+        RLGcgFIk8YVR+2MwGfp9q+PzVw==
+X-Google-Smtp-Source: APXvYqx5C+YXiG1tSukATm3surkdJTv8OYGBUPh1k6tE3QzNgmrmLWbq9IaV79OTLCPZKjDdSzPfLA==
+X-Received: by 2002:a02:b710:: with SMTP id g16mr3463376jam.111.1573153698830;
+        Thu, 07 Nov 2019 11:08:18 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r1sm237453iod.69.2019.11.07.11.08.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 11:08:17 -0800 (PST)
+Subject: Re: [PATCH 0.5/5] bfq-iosched: relocate bfqg_*rwstat*() helpers
+To:     Tejun Heo <tj@kernel.org>
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, kernel-team@fb.com
+References: <20191106215838.3973497-1-tj@kernel.org>
+ <20191107190459.GA3622521@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4d34b6a3-b141-f0fe-c7e1-e68e0fa52cfb@kernel.dk>
+Date:   Thu, 7 Nov 2019 12:08:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191107190459.GA3622521@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 11/7/19 12:04 PM, Tejun Heo wrote:
+> Jens, this is an extra patch to help fixing the build bug when
+> !CONFIG_BFQ_CGROUP_DEBUG.  The git tree has been updated accordingly.
+> Please let me know if you want the whole series reposted.
 
-To reduce boilerplate in some places.
+I seem to run into issues applying the series with the 0.5 added first
+and with the updated patch 1. So maybe a resend isn't a bad idea :-)
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-9s1bgoxxhlnu037e1nqx0tw3@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/machine.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 24d9e284daad..e768ef24633f 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -42,6 +42,11 @@
- 
- static void __machine__remove_thread(struct machine *machine, struct thread *th, bool lock);
- 
-+static struct dso *machine__kernel_dso(struct machine *machine)
-+{
-+	return machine->vmlinux_map->dso;
-+}
-+
- static void dsos__init(struct dsos *dsos)
- {
- 	INIT_LIST_HEAD(&dsos->head);
-@@ -861,7 +866,7 @@ size_t machine__fprintf_vmlinux_path(struct machine *machine, FILE *fp)
- {
- 	int i;
- 	size_t printed = 0;
--	struct dso *kdso = machine__kernel_map(machine)->dso;
-+	struct dso *kdso = machine__kernel_dso(machine);
- 
- 	if (kdso->has_build_id) {
- 		char filename[PATH_MAX];
-@@ -1543,8 +1548,7 @@ static bool perf_event__is_extra_kernel_mmap(struct machine *machine,
- static int machine__process_extra_kernel_map(struct machine *machine,
- 					     union perf_event *event)
- {
--	struct map *kernel_map = machine__kernel_map(machine);
--	struct dso *kernel = kernel_map ? kernel_map->dso : NULL;
-+	struct dso *kernel = machine__kernel_dso(machine);
- 	struct extra_kernel_map xm = {
- 		.start = event->mmap.start,
- 		.end   = event->mmap.start + event->mmap.len,
 -- 
-2.21.0
+Jens Axboe
 
