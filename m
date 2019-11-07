@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B9AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F61C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AEF20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC452067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbfKGNBu (ORCPT
+        id S2388961AbfKGNCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:01:50 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:55149 "EHLO
+        Thu, 7 Nov 2019 08:02:13 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:58211 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfKGNBt (ORCPT
+        with ESMTP id S1726873AbfKGNCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:01:49 -0500
+        Thu, 7 Nov 2019 08:02:12 -0500
 Received: from localhost ([46.78.193.225]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MPoTl-1iGNUE2fiN-00MvAj; Thu, 07 Nov 2019 14:01:17 +0100
-Date:   Thu, 7 Nov 2019 14:01:11 +0100
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M3DBb-1iU4q23Lif-003eaF; Thu, 07 Nov 2019 14:00:08 +0100
+Date:   Thu, 7 Nov 2019 14:00:05 +0100
 From:   Andreas Klinger <ak@it-klinger.de>
 To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
 Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
@@ -35,81 +35,54 @@ Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
         davem@davemloft.net, paulmck@linux.ibm.com,
         devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] iio: add ping sensors to kernel configuration
-Message-ID: <20191107130108.p6maggrs2m7va5pf@arbad>
+Subject: [PATCH 1/5] dt-bindings: add vendor prefix parallax
+Message-ID: <20191107130003.m6ul3klzmv2g2sbd@arbad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:YnPKCWkI+oAHGK0oBCaxn9+OMKi/PZRgpNNf4njdogAkiOtTNnG
- nIU9ZLRabqjm6ssy5vI3auwnqlfrU4Vnd/LTcJd+DnZd+XYzsCMvCvzSiggzVypuSPsVT2z
- UYlViD2P9SzwGGn1e4enBckIzmythSqrSHekYYdo9wgWB+dAxNxTlwEeTWN8H5GcV5KFACt
- XSwoFP3jiNK40N0279tJg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vXoEMobgM+k=:NzkB7c1Kh44XwZRNWoRiRq
- dCXV8pFhpFi8/S5WW3ZkAOC15NTIb1EEzi2+I+ddhefBe/CZN7jkasMjA01Git3bGUj7ltsYW
- ni/B1+S1upIOR0++NYhurkvRpbMNKJnrdiIPhATyWBdP84ic/aU1P9mEIPbLfWx5745xR+FNt
- bue6SIR7DNeT8TmjzZ40RbLw8TYJ63ShDGrPhMzKE7Q/gjNVNYDyN9J2VnFi4tbz5uMYNLQzz
- NJAffcjXU4+9fKeXh+WddIgC5YcEkz02C9PzzdNA1HrKftGrBaS51LbuR6v7y5Uq5MqZsf40r
- At/NRRjN8hMjPcqSmNgIFdRJI/ajl/V0qg+NM7ZxSkzmnl3VKMKBr/T4v1PYQa2neYPL3IaRW
- MPwZAYsN6Gb3okFvkRVud5+83nVcUyWsac7xibNg4sxgmGjno2l/ITavUn1HOCJkcx2WURNli
- 7VslmVubSyoPp76zrkm1Xwu0JDNY/5rI+kWI2PVRMWDMgYD98NwSaDbSC/idNNpXGA+TSIcZ3
- VuCebnFRCZHJ8et2VnGV2vy06xoK9IaxPMygs3ID77nP23G8zUayXVRPfEQZzBFknXOSBreJP
- +44WsmuRkcWQAcQuvEDsz4Elwl24mMN8UXn6WYiWXb956CIGgDCRylGTDj2BC1+AqR2cJr0qf
- GAJS8bkM5ZZKDpjXVw5rhfMkKfJJGhkPMl33u7FgnV37aBJ2duY+Gg64JswUXM2hEDGjl2NVb
- yEHVyaRC1oNI3rp7lzUjeepmG3K8LWrXS7ohNCNqAreoSlq1+kmPmSngnWGegXknJRCeUio/z
- Hibu8Bu1489U8ddZUDNh/UPncHpyJkQ2mSBADIA+aMUQA4CvE1PfBf1lZpNxhRxvPLHPI/PQP
- gJOvN57SIs77985jP6vA==
+X-Provags-ID: V03:K1:C8IX4KdRmZEk6Z1ftKghKP5WhDeC1HAho2hptIwhg03itfX28K5
+ lc5HmJpLEkeM6YsYzsdC+yQbqlHpPqsnG52s/6txbNzsFteh96kfsJ9xthD+ey6/ykNbwSu
+ QzDqp92HVmdqOPiXaJR22TewJPtzaY7EIOAIpm7B6e+62n9CJv+LXUNtxHyUb8cH4sJtEWW
+ /elcDwQ70aljywhAYF+1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ITQGoTZy2B4=:tzABNfQqv5gz/B7DJ+4lOn
+ IQKJwWy2x3whNLzk0E+i3VTumuWdeA6FYk17ZHZj4NYGC0M1v6CYu5OvitKJvGj2AwLkA3xEG
+ 7TjsNwvNfUdK1/4YFoTrZ/wGeleqZv84LVZZEBhICgdEdOJzLxTaUgxGZS9QEmlTP49yHoY05
+ swSKIp4vGYeJvJxOI5XPunIVFNnENMM71cPh6xo9flo1/dPDLZWRrynsT543mvw1XJqlz02Hw
+ K1QTDfUVfcIPP7LsVqRvZiLEEOB62nWGyxaf60wBZx2FOtwr+8c/kRIMMqHWk/zXZqF//zipc
+ jKB5kE4MkR3zEMCZidBqlI0nAfNhu7EzomO9mliH9XgxREi6mT+4ACrymsEevtEctrIpIdlxP
+ b9++PCKLXa2p4WeWs76emn0bo42SeiRz/pUvGMt1FfUsVE/dEt/ypWDPkn2N4zAhsgc3sEoBO
+ yEhLOXgvAfxjjRemm3LR/kuNfWHwvbjRR8o5XBpbtm+TxXPdbVsJlGovLSrRcanjIVJvWOa3I
+ Zadh3DPHz6QL1a+5artch818Gify7IuLyduZAD/NHBU9MJwd/w5ZAld220/mqjeyNHWc55yhx
+ 2vWn6DHMobtlMeThS31PErW+BPC0PmcqTAeZ1XjyqvRpvEv9ywKUEpr6e46PIMd0WcjrI/QiF
+ XHctthFnuIxVz8qyhKboNgiP3qTou5wXaXn51llPkBMXh70aDHpo3a37UcXKzoRFOAeWNOcpb
+ KL4JvNiFLkoQRq52sZw44mHGYFB0wAPCboBoOWDG7e3gzWg2K1yH0Wj8HmXnxYg9nschN8rtM
+ ykbJ+MPdvEtLTyHGHQ5iqAHYeplO07NEbPkx577jkwEEMijIwJ2zdNg5aAyHHYcjeAtzLfifx
+ Za3OoghaosvGOrkEV7lA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new configuration variable CONFIG_PING for the newly supported
-parallax ping sensors.
+Add new vendor prefix parallax for newly created ping iio sensors.
 
 Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- drivers/iio/proximity/Kconfig  | 15 +++++++++++++++
- drivers/iio/proximity/Makefile |  1 +
- 2 files changed, 16 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index d53601447da4..37606d400805 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -58,6 +58,21 @@ config MB1232
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called mb1232.
- 
-+config PING
-+	tristate "Parallax GPIO bitbanged ranger sensors"
-+	depends on GPIOLIB
-+	help
-+	  Say Y here to build a driver for GPIO bitbanged ranger sensors
-+	  with just one GPIO for the trigger and echo. This driver can be
-+	  used to measure the distance of objects.
-+
-+	  Actually supported are:
-+	  - Parallax PING))) (ultrasonic)
-+	  - Parallax LaserPING (time-of-flight)
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ping.
-+
- config RFD77402
- 	tristate "RFD77402 ToF sensor"
- 	depends on I2C
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 0bb5f9de13d6..c591b019304e 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_AS3935)		+= as3935.o
- obj-$(CONFIG_ISL29501)		+= isl29501.o
- obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
- obj-$(CONFIG_MB1232)		+= mb1232.o
-+obj-$(CONFIG_PING)		+= ping.o
- obj-$(CONFIG_RFD77402)		+= rfd77402.o
- obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 967e78c5ec0a..d3f9690e1e4b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -713,6 +713,8 @@ patternProperties:
+     description: Panasonic Corporation
+   "^parade,.*":
+     description: Parade Technologies Inc.
++  "^parallax,.*":
++    description: Parallax Inc.
+   "^pda,.*":
+     description: Precision Design Associates, Inc.
+   "^pericom,.*":
 -- 
 2.11.0
