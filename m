@@ -2,136 +2,142 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51AAC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27531C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A8A207FA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE260207FA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jV1JYaW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389412AbfKGObH (ORCPT
+        id S2389461AbfKGObS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:31:07 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726033AbfKGObH (ORCPT
+        Thu, 7 Nov 2019 09:31:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50003 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389191AbfKGObR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:31:07 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7EPH7r120325
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 09:31:05 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4jw4qcjb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:31:05 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Thu, 7 Nov 2019 14:31:03 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 14:30:59 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7EUweZ13041862
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 14:30:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72424AE05D;
-        Thu,  7 Nov 2019 14:30:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44EC0AE065;
-        Thu,  7 Nov 2019 14:30:54 +0000 (GMT)
-Received: from [9.199.52.7] (unknown [9.199.52.7])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 14:30:53 +0000 (GMT)
-Subject: Re: [PATCH v6 0/7] Powerpc/Watchpoint: Few important fixes
-To:     mpe@ellerman.id.au
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>, mikey@neuling.org,
-        npiggin@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
-        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20191017093204.7511-1-ravi.bangoria@linux.ibm.com>
- <10cce8b1-8142-39d3-cd91-58b85dac7c8c@linux.ibm.com>
- <ecb3eda1-f111-9485-c28c-e20020ae1d46@c-s.fr>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Thu, 7 Nov 2019 20:00:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 7 Nov 2019 09:31:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573137075;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QrHdD94AcwG1Ax7bWiCTd//fNTx3IE4kMIx+0uxwiSM=;
+        b=jV1JYaW0VsH7Gd4vmhJWhnK8LnielSO2GRGYcm0fak8Qt9+rRQcqVICU3Wa7d/Foh+uvIu
+        oEGOlK96X7HQzoGjVyXsw3UtCLY6tVSNHMUf1fxHJea3WWO34FGW3zMHdApN6YuWA3mrlY
+        HbGi4sf3B7QNxsic6ZRIlXI0jAexYns=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-SpgoB20dMl6mpmpHXbbyGA-1; Thu, 07 Nov 2019 09:31:10 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33BB0477;
+        Thu,  7 Nov 2019 14:31:06 +0000 (UTC)
+Received: from [10.72.12.21] (ovpn-12-21.pek2.redhat.com [10.72.12.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBAAB5D6D8;
+        Thu,  7 Nov 2019 14:30:39 +0000 (UTC)
+Subject: Re: [PATCH V9 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191106070548.18980-1-jasowang@redhat.com>
+ <20191106070548.18980-7-jasowang@redhat.com>
+ <88efad07-70aa-3879-31e7-ace4d2ad63a1@infradead.org>
+ <20191106155800.0b8418ec@x1.home>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1b26d298-0223-c5cc-9dd6-c4005139e32a@redhat.com>
+Date:   Thu, 7 Nov 2019 22:30:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <ecb3eda1-f111-9485-c28c-e20020ae1d46@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191106155800.0b8418ec@x1.home>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110714-0008-0000-0000-0000032C6F23
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110714-0009-0000-0000-00004A4B7495
-Message-Id: <047a102b-9578-88cc-872f-06c2952fb74c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=875 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070143
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: SpgoB20dMl6mpmpHXbbyGA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 10/29/19 7:31 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 29/10/2019 à 05:54, Ravi Bangoria a écrit :
+On 2019/11/7 =E4=B8=8A=E5=8D=886:58, Alex Williamson wrote:
+> On Wed, 6 Nov 2019 14:50:30 -0800
+> Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+>> On 11/5/19 11:05 PM, Jason Wang wrote:
+>>> diff --git a/samples/Kconfig b/samples/Kconfig
+>>> index c8dacb4dda80..13a2443e18e0 100644
+>>> --- a/samples/Kconfig
+>>> +++ b/samples/Kconfig
+>>> @@ -131,6 +131,16 @@ config SAMPLE_VFIO_MDEV_MDPY
+>>>   =09  mediated device.  It is a simple framebuffer and supports
+>>>   =09  the region display interface (VFIO_GFX_PLANE_TYPE_REGION).
+>>>  =20
+>>> +config SAMPLE_VIRTIO_MDEV_NET
+>>> +=09tristate "Build VIRTIO net example mediated device sample code -- l=
+oadable modules only"
+>>> +=09depends on VIRTIO_MDEV && VHOST_RING && m
+>>> +=09help
+>>> +=09  Build a networking sample device for use as a virtio
+>>> +=09  mediated device. The device coopreates with virtio-mdev bus
+>> typo here:
+>> =09                              cooperates
 >>
->>
->> On 10/17/19 3:01 PM, Ravi Bangoria wrote:
->>> v5: https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-October/198069.html
->>>
->>> v5->v6:
->>>   - patch 6/7: mpe reported that the perf-hwbreak.c doesn't compile with older
->>>     gcc:
->>>          perf-hwbreak.c:182:2: error: dereferencing type-punned pointer will
->>>          break strict-aliasing rules [-Werror=strict-aliasing]
->>>              temp16 = *((__u16 *)target);
->>>              ^
->>>     Fixed that.
->>>
->>
->> Hi Christophe, Are you ok with the series wrt 8xx?
-> 
-> Yes it looks ok on my 885:
-> 
-> root@vgoip:~# ./ptrace-hwbreak
-> test: ptrace-hwbreak
-> tags: git_version:v5.4-rc4-835-gb235e63aa9f0-dirty
-> PTRACE_SET_DEBUGREG, WO, len: 1: Ok
-> PTRACE_SET_DEBUGREG, WO, len: 2: Ok
-> PTRACE_SET_DEBUGREG, WO, len: 4: Ok
-> PTRACE_SET_DEBUGREG, WO, len: 8: Ok
-> PTRACE_SET_DEBUGREG, RO, len: 1: Ok
-> PTRACE_SET_DEBUGREG, RO, len: 2: Ok
-> PTRACE_SET_DEBUGREG, RO, len: 4: Ok
-> PTRACE_SET_DEBUGREG, RO, len: 8: Ok
-> PTRACE_SET_DEBUGREG, RW, len: 1: Ok
-> PTRACE_SET_DEBUGREG, RW, len: 2: Ok
-> PTRACE_SET_DEBUGREG, RW, len: 4: Ok
-> PTRACE_SET_DEBUGREG, RW, len: 8: Ok
-> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
-> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
-> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
-> success: ptrace-hwbreak
-> 
-> Also ok on book3s/32:
+> I can fix this on commit relative to V10 if there are no other issues
+> raised:
+>
+> diff --git a/samples/Kconfig b/samples/Kconfig
+> index 13a2443e18e0..b7116d97cbbe 100644
+> --- a/samples/Kconfig
+> +++ b/samples/Kconfig
+> @@ -136,7 +136,7 @@ config SAMPLE_VIRTIO_MDEV_NET
+>          depends on VIRTIO_MDEV && VHOST_RING && m
+>          help
+>            Build a networking sample device for use as a virtio
+> -         mediated device. The device coopreates with virtio-mdev bus
+> +         mediated device. The device cooperates with virtio-mdev bus
+>            driver to present an virtio ethernet driver for
+>            kernel. It simply loopbacks all packets from its TX
+>            virtqueue to its RX virtqueue.
+>
+> Thanks,
+> Alex
 
-mpe, Can you please pull the series.
 
-Ravi
+Thanks, per Michael request, I would rename mvnet and include this fix=20
+in V11.
+
+
+>
 
