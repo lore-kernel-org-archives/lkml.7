@@ -2,88 +2,100 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44F5C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6340EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36EE2166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FD02166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TzkUMsHf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k75OSHpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389747AbfKGRyw (ORCPT
+        id S2389914AbfKGRzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:54:52 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35384 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730884AbfKGRyw (ORCPT
+        Thu, 7 Nov 2019 12:55:11 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43498 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730510AbfKGRzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:54:52 -0500
-Received: by mail-pl1-f193.google.com with SMTP id s10so2025031plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:54:51 -0800 (PST)
+        Thu, 7 Nov 2019 12:55:10 -0500
+Received: by mail-lf1-f68.google.com with SMTP id j5so2268589lfh.10;
+        Thu, 07 Nov 2019 09:55:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:to:cc:user-agent:date;
-        bh=6n3o5+JOCVKLO8hHkLjsEkjuqiaK3IiXNN/Cf3cZ2IY=;
-        b=TzkUMsHfydzu4SypLTCWeCrneyVNJ1wxVaQV/RBifHHe/SItQXYDGGwDWl5WNCyQeh
-         4tW5bUU5CG8Q6AEnVd6HtB5QOLZZDIJYeoL1loQGUm7g2gst9EY0bzBhEtUDjS1wVK91
-         lW8Fi21Xi15D3bfct2FgSsEDnxmp9osL2x4BY=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=prR1UZMSOAIrk4Kkrqgk3cxz5XFMU7J1f+HLAmadmHc=;
+        b=k75OSHpXO01QPTNNrLLjcYsPg4Lq1iLJ5pUFGKwsVISN6U88T+jICyzwrViqzUD6SN
+         RLUj8YwJ1vaafHNz3LLrSfZc+K9Pb39jEmAshvPYYoKGwZthzMcwUJtJloCF6qj0F6pE
+         f9v2iCHusvJkCuhsLI/S1e3Pn1pFBj0uSNzCrr7XQFt88RZm51Cfq/9t2OIRtZy6aNto
+         AeEhcsN2ene/7REGpIRR17I5DzWAz55YgC4aPx+1GwaCQnhcGRnkyFXJxriQn0Mz8SiQ
+         G2NylxlyYe8lKFBGyh6EMfIh7GdpPqR/lbMxxc/g1A49ger/q5xZHN2GaSpJ3fYHMhRt
+         +ZhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
-         :user-agent:date;
-        bh=6n3o5+JOCVKLO8hHkLjsEkjuqiaK3IiXNN/Cf3cZ2IY=;
-        b=Or40ybRNmAiSDpcDcODmVbv2+qLF/rEySlO5wlEEhv4KUotdOTUtMCrV33MIHgwtDN
-         1E+FpfEsBO4cYZYl8BdFB6rjbIcnfq9/4KjRjlJzxbPBxiHOGBj6o9OmpzKtwXPN2y7h
-         UAn2Nf5FaRhNs1ZfS2wkmutEAOB5wy9Fa6pH2T4cvSTHBHVi2q43v7M2tXamLKv3k8nw
-         P8yGDfpddMkkCjPwnlfvj8ADZdx8mSkJKhWqnZsXi9jTD8q5BsgKLLi4RyPPhamxlY/2
-         KyJk5fZug4K5YXl04YT/vfcuzXEnHc6KBy5Yyld/mawLOhE+7PJjmPDY9wU3aj/jerMh
-         DA3Q==
-X-Gm-Message-State: APjAAAVbmrALvav3dC9qytBGr9RWU+R3kQ1Uz0w5nNifnQGTvHD2RlgE
-        d7GnlMtIiecKiDEHeH/fNDpYMQ==
-X-Google-Smtp-Source: APXvYqzTXBrRZGyIzbAN9SNYwElgXMzMY1DfyZuzzmgKZjy60pLIhia1ZoLOO63kaie+gIKLbD+MzQ==
-X-Received: by 2002:a17:90a:d152:: with SMTP id t18mr6795829pjw.119.1573149291566;
-        Thu, 07 Nov 2019 09:54:51 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id n21sm1295810pjq.13.2019.11.07.09.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 09:54:50 -0800 (PST)
-Message-ID: <5dc45a6a.1c69fb81.bbfed.2d61@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=prR1UZMSOAIrk4Kkrqgk3cxz5XFMU7J1f+HLAmadmHc=;
+        b=CwOb6vSvofIw6hqN6eo41agi7xHATmhhi0E1a9xqr6fDzuaVluOy2obP88/mCgUOKo
+         e48EIQ1esOwh85jP2znKZ5EokVggOXAcS3lb0t+8cj3MoXjcVPfqBEUaZHKgnAn3gtZN
+         cy+Y2xqk6XZ9s1cUbiE0SHGWCCbqChqbOBgQIWYFl8HrDbar+e8DSh5OPt4m8MSrmNv6
+         OFiPfRnq/ztWL/Tp4S0hPmcrN/rmUV2xmARchkUWrssTOPuwlgYdOTLQxrLa1kScyTIK
+         J0bsyrEVmsFM4aEp0iA04LoGYW2oqU52lKv3qYzK8b072LGxgIO017stMI5tWfgUC0tv
+         fPdA==
+X-Gm-Message-State: APjAAAUf4M8EttAZHhaqiT7ArLsXaaGRGH9L+rSDjpipDHhmCAI7HiaG
+        ZkFwo6nGX5mq4xFHR/YR4u5ef2J6ejSXso4FnbIbzP9x
+X-Google-Smtp-Source: APXvYqygRVVB9PzC/Yvc/jx8dk3X3dFH27ADz1C3x4fCebkohaUkCT0r8xkMa+S4mRPGUaKaD+a7MrbpcQ0EU4Jkjtg=
+X-Received: by 2002:ac2:5c1b:: with SMTP id r27mr3194178lfp.172.1573149308049;
+ Thu, 07 Nov 2019 09:55:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191106065017.22144-11-rnayak@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-11-rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 10/14] arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter device
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 09:54:50 -0800
+References: <20191107125224.29616-1-anders.roxell@linaro.org>
+In-Reply-To: <20191107125224.29616-1-anders.roxell@linaro.org>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 7 Nov 2019 09:54:56 -0800
+Message-ID: <CAPhsuW4B_Y+xOTaSFPWm0szn1exjucwL5KBsExWxq4tn_3NSbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] selftests: bpf: test_lwt_ip_encap: add missing object
+ file to TEST_FILES
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-05 22:50:13)
-> From: Kiran Gunda <kgunda@codeaurora.org>
->=20
-> Add SPMI PMIC arbiter device to communicate with PMICs
-> attached to SPMI bus.
->=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+On Thu, Nov 7, 2019 at 4:53 AM Anders Roxell <anders.roxell@linaro.org> wrote:
+>
+> When installing kselftests to its own directory and running the
+> test_lwt_ip_encap.sh it will complain that test_lwt_ip_encap.o can't be
+> find.
+>
+> $ ./test_lwt_ip_encap.sh
+> starting egress IPv4 encap test
+> Error opening object test_lwt_ip_encap.o: No such file or directory
+> Object hashing failed!
+> Cannot initialize ELF context!
+> Failed to parse eBPF program: Invalid argument
+>
+> Rework to add test_lwt_ip_encap.o to TEST_FILES so the object file gets
+> installed when installing kselftest.
+>
+> Fixes: 74b5a5968fe8 ("selftests/bpf: Replace test_progs and test_maps w/ general rule")
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Please highlight that this set is on top of bpf-next tree with
+"[PATCH bpf-next 1/2]".
 
+Otherwise, looks good to me.
+
+Acked-by: Song Liu <songliubraving@fb.com>
