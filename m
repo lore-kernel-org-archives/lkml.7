@@ -2,114 +2,181 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22625C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E5CC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E223D2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838E421D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LUayqOWn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YYdbeUut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389426AbfKGPg6 (ORCPT
+        id S2388860AbfKGPiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:36:58 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46024 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729873AbfKGPg5 (ORCPT
+        Thu, 7 Nov 2019 10:38:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42501 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388230AbfKGPiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:36:57 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k2so2280736oij.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:36:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b/0QmpTHdszdDld83EaT+X3ggfjq8Mz3NqPw6QuTcas=;
-        b=LUayqOWnipTR/TKkaWPhaTduXoy5QCegWpfsPLfgBcJmoE1C0X3HrcxQ4isHywgNSC
-         jgODxHj/POkEtoGl77mRxsMP95EOxnO65OBfTqkbTen7ITdqYrCq3WZbaiOVAfj/Ace5
-         g6gQmdNGfOJu28fIoz9WdBB0ECsA6wA63yPF6ix0C5R92oIHsNab0Gm1vYwkdyBB0Ncz
-         GKFVEtV2E9CqYeGqOqb0C51pNZLqsIF7RMSRjkzRXhg15m8PeWc1m/o953q1NsGCh9HY
-         iigMR+4gIK4jXifI2ofGojyEwyDB35ytI5PCNotABtOyz10gkojvZSN9DlX7TlzWK33o
-         IoRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b/0QmpTHdszdDld83EaT+X3ggfjq8Mz3NqPw6QuTcas=;
-        b=BkFyU6V+fmPtGo2OmTDhV/rHJvWeORMaLolIV/IUVcXWyetsXnQFBUHpz09YlfM7jZ
-         5zJrfCHoI4kBwjTDlJM2JYrdjKTxAE1TxW1Ei3jQuIgxZ8dROxx5rpI6z2P6Pz8yIhhU
-         yGX11Jv/beLZQx4Aq01wuhCdPCfwFUaeYOmFupjwejj54FH8KMIF4M41RGruYm8gwBo6
-         oY81MQyAC9jS6wLSn8hj+8ZKvq0xgloE9a00gG7X6aux10+HEayUxX0y3rcpKOc9H11r
-         C0uAmgNXBTB8I90rfDtKkLrdhPnUJOWpMDEh2xrzcvU4lITQB9w7VeIHmZMXDOirPsF5
-         Ql6w==
-X-Gm-Message-State: APjAAAVa7EKR/TE8Ayg7HlXHXFDK3ShJYrqSdRXCLms7Z2YfG2BQAqUo
-        MQoo1/v/O8OmXN+7c7LvGB7arT3PHwLLipabr+WaJw==
-X-Google-Smtp-Source: APXvYqxk2byGngdnsr1kXeFkXsy1rs64Bm6zy01FhFd1GqpN0XN2vjw4Tyi2B3rFKGm0E+66W6Hwbx9AGQ5+o0WYshc=
-X-Received: by 2002:aca:55c1:: with SMTP id j184mr4254618oib.105.1573141016670;
- Thu, 07 Nov 2019 07:36:56 -0800 (PST)
+        Thu, 7 Nov 2019 10:38:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573141093;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZlnYjNYTseMGbHaFbgcXIvub57cEgCnxRgcSJ+6+lDM=;
+        b=YYdbeUutbhPDzbEXPvBWXimFL4ip25HgjYt5gaf0PMmJ8eWUM7z2BGUShJF+u2Rlf+Zsaf
+        j2M+dnPXN3Sr+7eEw7jNoslJJS7RGNtEMHlYMA7CQ2Yc525cgexhlbw75l6UUa9ufYHi6j
+        CV5mnYghhKPFcKvEahRHGPWekRJLw1M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-171-18FDT1idPRKsX84YKyOzuA-1; Thu, 07 Nov 2019 10:38:04 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A9EC477;
+        Thu,  7 Nov 2019 15:38:03 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3F89608AC;
+        Thu,  7 Nov 2019 15:38:02 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 10:38:01 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
+ UFFD_FEATURE_EVENT_FORK
+Message-ID: <20191107153801.GF17896@redhat.com>
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
+ <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <20191105162424.GH30717@redhat.com>
+ <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
+ <20191107083902.GB3247@linux.ibm.com>
+ <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
- <20191106170727.14457-2-sean.j.christopherson@intel.com> <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
- <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com> <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
- <20191106233913.GC21617@linux.intel.com> <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
- <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com> <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
-In-Reply-To: <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 7 Nov 2019 07:36:45 -0800
-Message-ID: <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 18FDT1idPRKsX84YKyOzuA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 3:12 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 07/11/19 06:48, Dan Williams wrote:
-> >> How do mmu notifiers get held off by page references and does that
-> >> machinery work with ZONE_DEVICE? Why is this not a concern for the
-> >> VM_IO and VM_PFNMAP case?
-> > Put another way, I see no protection against truncate/invalidate
-> > afforded by a page pin. If you need guarantees that the page remains
-> > valid in the VMA until KVM can install a mmu notifier that needs to
-> > happen under the mmap_sem as far as I can see. Otherwise gup just
-> > weakly asserts "this pinned page was valid in this vma at one point in
-> > time".
->
-> The MMU notifier is installed before gup, so any invalidation will be
-> preceded by a call to the MMU notifier.  In turn,
-> invalidate_range_start/end is called with mmap_sem held so there should
-> be no race.
->
-> However, as Sean mentioned, early put_page of ZONE_DEVICE pages would be
-> racy, because we need to keep the reference between the gup and the last
-> time we use the corresponding struct page.
+Hello,
 
-If KVM is establishing the mmu_notifier before gup then there is
-nothing left to do with that ZONE_DEVICE page, so I'm struggling to
-see what further qualification of kvm_is_reserved_pfn() buys the
-implementation.
+On Thu, Nov 07, 2019 at 12:54:59AM -0800, Daniel Colascione wrote:
+> On Thu, Nov 7, 2019 at 12:39 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > On Tue, Nov 05, 2019 at 08:41:18AM -0800, Daniel Colascione wrote:
+> > > On Tue, Nov 5, 2019 at 8:24 AM Andrea Arcangeli <aarcange@redhat.com>=
+ wrote:
+> > > > The long term plan is to introduce UFFD_FEATURE_EVENT_FORK2 feature
+> > > > flag that uses the ioctl to receive the child uffd, it'll consume m=
+ore
+> > > > CPU, but it wouldn't require the PTRACE privilege anymore.
+> > >
+> > > Why not just have callers retrieve FDs using recvmsg? This way, you
+> > > retrieve the message packet and the file descriptor at the same time
+> > > and you don't need any appreciable extra CPU use.
+> >
+> > I don't follow you here. Can you elaborate on how recvmsg would be used=
+ in
+> > this case?
+>=20
+> Imagine an AF_UNIX SOCK_DGRAM socket. You call recvmsg(). You get a
+> blob of regular data along with some ancillary data. The ancillary
+> data may include some file descriptors or it may not. Isn't the UFFD
+> message model the same thing? You'd call recvmsg() on a UFFD and get
+> back a uffd_msg data structure. If that uffd_msg came with file
+> descriptors, these descriptors would be in ancillary data. If you
+> didn't reserve enough space for the message or enough space for its
+> ancillary data, the recvmsg() call would fail cleanly with MSG_TRUNC
+> or MSG_CTRUNC.
 
-However, if you're attracted to the explicitness of Sean's approach
-can I at least ask for comments asserting that KVM knows it already
-holds a reference on that page so the is_zone_device_page() usage is
-safe?
+Having to check for truncation is just a slowdown doesn't sound a
+feature here but just a complication and unnecessary branches. You can
+already read as much as you want in multiples of the uffd size.
 
-David and I are otherwise trying to reduce is_zone_device_page() to
-easy to audit "obviously safe" cases and converting the others with
-additional synchronization.
+> The nice thing about using recvmsg() for this purpose is that there's
+> tons of existing code for dealing with recvmsg()'s calling convention
+> and its ancillary data. You can, for example, use recvmsg out of the
+> box in a Python script. You could make an ioctl that also returned a
+> data blob plus some optional file descriptors, but if recvmsg already
+> does exactly that job and it's well-understood, why not just reuse the
+> recvmsg interface?
+
+uffd can't become an plain AF_UNIX because on the other end there's no
+other process but the kernel. Even if it could the fact it'd
+facilitate a pure python backend isn't relevant because handling page
+faults is a performance critical system activity, and rust can do the
+ioctl like it can do poll/epoll without mio/tokyo by just calling
+glibc. We can't write kernel code in python either for the same
+reason.
+
+> How practical is it to actually support recvmsg without being a
+> socket? How hard would it be to just become a socket? I don't know. My
+
+AF_UINIX has more features than we need (credentials) and dealing with
+skbs and truncation would slow down the protocol. The objective is to
+get the highest performance possible out of the uffd API so that it
+performs as close as possible to running page faults in the kernel.
+
+So even if we could avoid a syscall in CRIU, but we'd be slowing down
+QEMU and all other normal cooperative usages if we made uffd a
+socket. So overall it would be a net loss.
+
+> point is only that *from a userspace API* point of view, recvmsg()
+> seems ideal.
+
+Now thinking about this, the semantics of the ancillary data seems to
+be per socket family. So what does prevent you to create an AF_UNIX
+socket, send it to a SCM_RIGHTS receiving daemon unaware that it is
+getting an AF_UNIX socket. The daemon is calling recvmsg on the fd it
+receives from SCM_RIGHTS in order to receive ancillary data from
+another non-AF_UNIX family instead (it is irrelevant what the
+semantics of the ancillary data are but they're not AF_UNIX). So the
+daemon calls recvmsg and it will not understand that the fd in the
+ancillary data represents an installed "fd" in the fd space and in
+turn still gets the fd involuntary installed with the exact same side
+effects of what we're fixing in the uffd fork event read?
+
+I guess there shall be something somewhere that prevents recvmsg to
+run on anything but an AF_UNIX if msg_control isn't NULL and
+msg_controllen > 0? Otherwise even if we implemented the uffd fork
+event with recvmsg, we would be back to square one.
+
+As a corollary this could also imply we don't need the ptrace check
+after all if the same thing can happen already to SCM_RIGHTS receiving
+daemon expecting to receive ancillary data from AF_SOMETHING but
+getting an AF_UNIX instead through SCM_RIGHTS (just like the uffd
+example was expecting to call read() on a normal fd and instead it got
+an uffd).
+
+I'm sure there's something stopping SCM_RIGHTS to have the same
+pitfalls of uffd event fork and that makes recvmsg safe unlike read()
+but then it's not immediately clear what it is.
+
+Thanks,
+Andrea
+
