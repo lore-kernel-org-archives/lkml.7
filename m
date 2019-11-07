@@ -2,164 +2,200 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B66FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571ABFC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99F321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE1C206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RaToiqBW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dUp2mThS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbfKGRpo (ORCPT
+        id S1730852AbfKGRq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:45:44 -0500
-Received: from mout.gmx.net ([212.227.17.22]:46439 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbfKGRpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:45:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1573148643;
-        bh=BhpscKNMNJ87cTBKp5GFtuoSxVbnh8ZvmC4Rf1n+h38=;
-        h=X-UI-Sender-Class:From:Subject:To:Cc:References:Date:In-Reply-To;
-        b=RaToiqBWCAvSxDaMxZRFSFymlKvGhbrAenAP9CjmQ9ncFWyjKTrmLlqqMTP540Oiw
-         wZgzk/QLak/osdn1/7tehwKUse8hKft4poRlu0GHyBgVgI/rQx4lxlokIv1yWRSryu
-         8FpJim92Vtuq8yXqBT8AZVneXuE0dwCshusY6gMQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.167] ([37.4.249.112]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MfpOT-1i0ZgY1UD3-00gJwl; Thu, 07
- Nov 2019 18:44:03 +0100
-From:   Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 2/4] ARM: dts: bcm2711: Enable PCIe controller
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     f.fainelli@gmail.com, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, mbrugger@suse.com,
-        james.quinlan@broadcom.com
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
- <20191106214527.18736-3-nsaenzjulienne@suse.de>
-Message-ID: <50074e33-17bf-d555-cbf6-4ec079472ecd@gmx.net>
-Date:   Thu, 7 Nov 2019 18:44:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 12:46:57 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35423 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730571AbfKGRq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 12:46:56 -0500
+Received: by mail-pl1-f194.google.com with SMTP id s10so2009034plp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:46:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:to:cc:user-agent:date;
+        bh=+ZwOLuGlKSzdj2JTU0dldwC9xvDia0GK/gPydTupk/c=;
+        b=dUp2mThS12TwVoXD+I4Rq2uQAwHCC+nxojkmXTzLuYbI4+dhtR/0rN1ubSLQZZVC+n
+         ut/gZft31QNvv/ck8yT8G/M0tn7sHDmLpVqX7/h6GOY979GRuU+uRj27RkkLZ4cwBrJT
+         EKgfvLWQ1WHA+ZEywsj2hUxoOiGMWmaP8sbvc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
+         :user-agent:date;
+        bh=+ZwOLuGlKSzdj2JTU0dldwC9xvDia0GK/gPydTupk/c=;
+        b=WV5SvevgwWpu2OaUAwz8/rMjNOT4AAgVViR7WcYdWX9fQZ8p+VvvqDa7GfD4S1AqRz
+         oEH5buCYKNHkYgrVSQHBNctxyW29IMm32jiF03SgF47WcmlVYCCfBVxlf0rYncXCREGo
+         KExocEgWn9BHReOcSbOqnpYNSVe2FJqUbeaI+A/lz9NU0ikeerf7surMp8Xi/Gat6i1C
+         qOxGXP+JWIGEoOxY+Mc7F0YFLnbtkTaOF8a5MxKvOfgNdMWDSbxFQWoo5kNU6dDzwxZC
+         3QYJMmfOPEp+mG3wxeNGQnY5RNOvfk8Fi8/0zISOy+PquYobkUjJmIKL1SXPpk5Yae/1
+         jovA==
+X-Gm-Message-State: APjAAAW3li3uXv0uCqZRiMOXouTh+n77FfUFV6b6Md1poss6ry/TINMM
+        diwdKv8Y2CylaQfijsnzvERcrQ==
+X-Google-Smtp-Source: APXvYqz+SL+SdaRe23Rq1F7L3NNUusbktvP72V1HILQfIv5KqscbVRKRxiP/6TTsehOEgopyPnJ+7g==
+X-Received: by 2002:a17:902:b282:: with SMTP id u2mr5042248plr.301.1573148814972;
+        Thu, 07 Nov 2019 09:46:54 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b200sm3256834pfb.86.2019.11.07.09.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 09:46:54 -0800 (PST)
+Message-ID: <5dc4588e.1c69fb81.5f75c.83ad@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191106214527.18736-3-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:J71S5xLJO6+jUF9K+xjRD+Q+1zl0v7N17CIk7oTTAhAWdhfX9iE
- 6oV3FcP2aidfN0utB8aFh+mDNyaafkadl5gfTeyt9zWl6bH0UCIecQmnTbhQeh06zo0qeaf
- +6aULk0CUOYAJeZkUgiqlqlkMej3uezBZhTIo57FltmjGnlGXEb/HMjecy8NVmRmWPFdRPb
- UigCrTZFbF+asJHhfzQEg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:veosRUOBoV8=:/i04foybdF2ZZJ9IZydkIN
- 5cXsh7t5WZLGlAvkV26q6iMgU/QY689bUjOp67Z3KB/EU7Myouui3LQAttxgtiPmZb7w9/a8m
- 91X7W3+92k7n7hVcPVvKSum7i5K7B+pxXFog3bZ/9UQoFc/PSqKkWdgKppEtybTuMfk8YUoup
- 7WfWY/x1FwYQKh4Vl79DIOHGtXyiK89vnuOcqrvCa8Ib60A649HwGO6DyESwweQk2GG+mWbT0
- 24X4m/noEWY7HhNzIqL6NCN5ecxGybXDVPg5QbzvYU7hTG9XwNw+AYQ4BoqwLiVPfhFoSEIyX
- +ib8FnlMnfPNZI5a7eurMQmmON9tTc1TOL9xqy4KPu7hIvHnc4JQvsTtBQOGpp0h1rGWfzKbl
- J9vWFaU92Te50zr8sFhDEovEPK+M+CtbAsyYa/f4ffVvnP/68qh8tHWTyJgSGqFqc10qdEwct
- igAReQTBz29K5uyNpF0pnuyttmFUBfV1ErUdobF0b+tBDLu7B4waIZwapOfVTMjo/BCLCTDht
- Q5ZyzJOJKD6y8+0kUQb/pJGx73nEc53BB5AchLiPXi5Wq3GI+TFkr1gLZqBLfaprui0zYjB/P
- H071biwr68rUmihQuZNbhXog6apcGIz5P3aIrQxo5PqYHh5ukyliaZDIyzvHvA0O9j7P3Grun
- MtKrbkIuQ5L1AkqeKhxFvrOcJ1dTAt+YEKZLHrGUioYJmECfP1fVxzlIoKwJiyrSoWFbAq958
- yaMROACMVsw4eKHgsVnUakAUosllI9S3yzK2FkYo2GSxZkov5zZuAOeA/46LM9YxN89J94Lb1
- b6cZt31IAAT21Nc7UKyzCt2oNOIhwXeGmMuGawJe6OnzQYM/VMh9BFIcCT7NVBJTmgzxM83Is
- cprUHlCOWjamThbIfRp4k8RbprXWQmIeoF9nldnT+jivSCC79f5vTxnc/zWBYXV84yfvtubRT
- RfXHb/ziuGNyzcktf2GEJMhY4DNr7DiFVA4GYjJxIj+4tVgWv/M4fGTBvqodNIeKhgGxiTmkl
- 6+Qtx1Zg9yWN3CBStG71oBIuq6JOQmX4BrKiDB2dulf/kl5FrnFS9gyt44tih8Jk4k0nlvK7o
- 04Dj0s7ijfkoMc7uIjKYhTIOwjmhnlY88GoJ7vEeRiGViTiG1psynfT7dS/3V4jYTQpNG19iD
- doY9ArT1FyY4sdaidh3fntp90pdd6UXnADGtEXDBpAJoQC9ShmSf1MFeygAFIyvumGiQS/TTj
- v/eCbK7W71PgkjLyHzKBOy+sTUVJ1B3pqYmC1kUX/s0iTWpDCn9sdzPQU9TI=
+In-Reply-To: <20191106065017.22144-3-rnayak@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-3-rnayak@codeaurora.org>
+Subject: Re: [PATCH v4 02/14] arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 09:46:53 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Quoting Rajendra Nayak (2019-11-05 22:50:05)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> new file mode 100644
+> index 000000000000..17870dd67390
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -0,0 +1,299 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * SC7180 SoC device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +       interrupt-parent =3D <&intc>;
+> +
+> +       #address-cells =3D <2>;
+> +       #size-cells =3D <2>;
+> +
+> +       chosen { };
+> +
+> +       clocks {
+> +               xo_board: xo-board {
+> +                       compatible =3D "fixed-clock";
+> +                       clock-frequency =3D <38400000>;
+> +                       #clock-cells =3D <0>;
+> +               };
+> +
+> +               sleep_clk: sleep-clk {
+> +                       compatible =3D "fixed-clock";
+> +                       clock-frequency =3D <32764>;
+> +                       clock-output-names =3D "sleep_clk";
 
-please move this patch behind the driver patches, which is the better orde=
-r.
+Remove this one too?
 
-Am 06.11.19 um 22:45 schrieb Nicolas Saenz Julienne:
-> This enables bcm2711's PCIe bus, wich is hardwired to a VIA Technologies
-> XHCI USB 3.0 controller.
-AFAIU this only applies to the Raspberry Pi 4, since the VIA is outside
-of the SoC.
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  arch/arm/boot/dts/bcm2711.dtsi | 47 ++++++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.=
-dtsi
-> index a9d84e28f245..c7b2e7b57da6 100644
-> --- a/arch/arm/boot/dts/bcm2711.dtsi
-> +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> @@ -288,6 +288,53 @@
->  		arm,cpu-registers-not-fw-configured;
->  	};
->
-> +	scb {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <1>;
+> +                       #clock-cells =3D <0>;
+> +               };
+> +       };
 > +
-> +		ranges =3D <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
-> +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
+[...]
+> +       memory@80000000 {
+> +               device_type =3D "memory";
+> +               /* We expect the bootloader to fill in the size */
+> +               reg =3D <0 0x80000000 0 0>;
+> +       };
 > +
-> +		pcie_0: pcie@7d500000 {
-> +			compatible =3D "brcm,bcm2711-pcie";
-> +			reg =3D <0x0 0x7d500000 0x9310>;
-> +			msi-controller;
-> +			msi-parent =3D <&pcie_0>;
-> +			#address-cells =3D <3>;
-> +			#interrupt-cells =3D <1>;
-> +			#size-cells =3D <2>;
-> +			linux,pci-domain =3D <0>;
-> +			brcm,enable-ssc;
-> +			interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names =3D "pcie", "msi";
-> +			interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
-> +			interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
-> +							IRQ_TYPE_LEVEL_HIGH
-> +					 0 0 0 2 &gicv2 GIC_SPI 144
-> +							IRQ_TYPE_LEVEL_HIGH
-> +					 0 0 0 3 &gicv2 GIC_SPI 145
-> +							IRQ_TYPE_LEVEL_HIGH
-> +					 0 0 0 4 &gicv2 GIC_SPI 146
-> +							IRQ_TYPE_LEVEL_HIGH>;
+> +       pmu {
+> +               compatible =3D "arm,armv8-pmuv3";
+> +               interrupts =3D <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> +       };
 > +
-> +			ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x00000000
-> +				  0x0 0x04000000>;
-> +			/*
-> +			 * The wrapper around the PCIe block has a bug
-> +			 * preventing it from accessing beyond the first 3GB of
-> +			 * memory. As the bus DMA mask is rounded up to the
-> +			 * closest power of two of the dma-range size, we're
-> +			 * forced to set the limit at 2GB. This can be
-> +			 * harmlessly changed in the future once the DMA code
-> +			 * handles non power of two DMA limits.
-> +			 */
-> +			dma-ranges =3D <0x02000000 0x0 0x00000000 0x0 0x00000000
-> +				      0x0 0x80000000>;
-In case this bug will ever be fixed, do you see this as a future proof
-practical solution?
-> +		};
-> +	};
+> +       psci {
+> +               compatible =3D "arm,psci-1.0";
+> +               method =3D "smc";
+> +       };
 > +
->  	cpus: cpus {
->  		#address-cells =3D <1>;
->  		#size-cells =3D <0>;
+> +       soc: soc {
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <2>;
+> +               ranges =3D <0 0 0 0 0x10 0>;
+> +               dma-ranges =3D <0 0 0 0 0x10 0>;
+> +               compatible =3D "simple-bus";
+> +
+> +               gcc: clock-controller@100000 {
+> +                       compatible =3D "qcom,gcc-sc7180";
+> +                       reg =3D <0 0x00100000 0 0x1f0000>;
+> +                       #clock-cells =3D <1>;
+> +                       #reset-cells =3D <1>;
+> +                       #power-domain-cells =3D <1>;
+> +               };
+> +
+> +               qupv3_id_1: geniqup@ac0000 {
+> +                       compatible =3D "qcom,geni-se-qup";
+> +                       reg =3D <0 0x00ac0000 0 0x6000>;
+> +                       clock-names =3D "m-ahb", "s-ahb";
+> +                       clocks =3D <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+> +                                <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+> +                       #address-cells =3D <2>;
+> +                       #size-cells =3D <2>;
+> +                       ranges;
+> +                       status =3D "disabled";
+> +
+> +                       uart8: serial@a88000 {
+> +                               compatible =3D "qcom,geni-debug-uart";
+> +                               reg =3D <0 0x00a88000 0 0x4000>;
+> +                               clock-names =3D "se";
+> +                               clocks =3D <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+> +                               pinctrl-names =3D "default";
+> +                               pinctrl-0 =3D <&qup_uart8_default>;
+> +                               interrupts =3D <GIC_SPI 355 IRQ_TYPE_LEVE=
+L_HIGH>;
+> +                               status =3D "disabled";
+> +                       };
+> +               };
+> +
+> +               tlmm: pinctrl@3500000 {
+> +                       compatible =3D "qcom,sc7180-pinctrl";
+> +                       reg =3D <0 0x03500000 0 0x300000>,
+> +                             <0 0x03900000 0 0x300000>,
+> +                             <0 0x03d00000 0 0x300000>;
+> +                       reg-names =3D "west", "north", "south";
+> +                       interrupts =3D <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells =3D <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <2>;
+> +                       gpio-ranges =3D <&tlmm 0 0 120>;
+> +
+> +                       qup_uart8_default: qup-uart8-default {
+> +                               pinmux {
+> +                                       pins =3D "gpio44", "gpio45";
+> +                                       function =3D "qup12";
+
+That looks weird to have qup12 function on uart8. It's right?
+
+> +                               };
+> +                       };
+> +               };
+> +
