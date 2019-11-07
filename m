@@ -2,51 +2,51 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487F0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED47DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D262077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01512077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbfKGRD1 (ORCPT
+        id S2389496AbfKGRDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:03:27 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727606AbfKGRD1 (ORCPT
+        Thu, 7 Nov 2019 12:03:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19620 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730605AbfKGRD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:03:27 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7GsG0T144728;
-        Thu, 7 Nov 2019 12:03:12 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4nfans6p-1
+        Thu, 7 Nov 2019 12:03:29 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7GsCgB129980;
+        Thu, 7 Nov 2019 12:03:15 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4pm22093-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Nov 2019 12:03:10 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA7H1Yvb030675;
-        Thu, 7 Nov 2019 17:03:04 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 2w41ujmptj-1
+        Thu, 07 Nov 2019 12:03:15 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA7H1Zw3006129;
+        Thu, 7 Nov 2019 17:03:03 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02wdc.us.ibm.com with ESMTP id 2w41ujt4mb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Nov 2019 17:03:04 +0000
+        Thu, 07 Nov 2019 17:03:03 +0000
 Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7H34CT52167014
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7H32io39649542
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 17:03:04 GMT
+        Thu, 7 Nov 2019 17:03:02 GMT
 Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAADCAE064;
-        Thu,  7 Nov 2019 17:03:03 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D78E8AE060;
+        by IMSVA (Postfix) with ESMTP id 91B20AE064;
         Thu,  7 Nov 2019 17:03:02 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77DBFAE05C;
+        Thu,  7 Nov 2019 17:03:01 +0000 (GMT)
 Received: from LeoBras.br.ibm.com (unknown [9.18.235.40])
         by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 17:03:02 +0000 (GMT)
+        Thu,  7 Nov 2019 17:03:01 +0000 (GMT)
 From:   Leonardo Bras <leonardo@linux.ibm.com>
 To:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
@@ -54,56 +54,62 @@ Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
         Paul Mackerras <paulus@ozlabs.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v2 1/4] powerpc/kvm/book3s: Fixes possible 'use after release' of kvm
-Date:   Thu,  7 Nov 2019 14:02:55 -0300
-Message-Id: <20191107170258.36379-2-leonardo@linux.ibm.com>
+Subject: [PATCH v2 0/4] Replace current->mm by kvm->mm on powerpc/kvm
+Date:   Thu,  7 Nov 2019 14:02:54 -0300
+Message-Id: <20191107170258.36379-1-leonardo@linux.ibm.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191107170258.36379-1-leonardo@linux.ibm.com>
-References: <20191107170258.36379-1-leonardo@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=887 adultscore=0 classifier=spam adjust=0 reason=mlx
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=697 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1910280000 definitions=main-1911070159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes a possible 'use after free' of kvm variable in
+By replacing, we would reduce the use of 'global' current on code,
+relying more in the contents of kvm struct.
+
+On code, I found that in kvm_create_vm() there is:
+kvm->mm = current->mm;
+
+And that on every kvm_*_ioctl we have tests like that:
+if (kvm->mm != current->mm)
+        return -EIO;
+
+So this change would be safe.
+
+Also, I fixed a possible 'use after free' of kvm variable in
 kvm_vm_ioctl_create_spapr_tce, where it does a mutex_unlock(&kvm->lock)
 after a kvm_put_kvm(kvm).
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_64_vio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Changes since v1:
+- Fixes possible 'use after free' on kvm_spapr_tce_release (from v1)
+- Fixes possible 'use after free' on kvm_vm_ioctl_create_spapr_tce
+- Fixes undeclared variable error
 
-diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
-index 5834db0a54c6..a402ead833b6 100644
---- a/arch/powerpc/kvm/book3s_64_vio.c
-+++ b/arch/powerpc/kvm/book3s_64_vio.c
-@@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
- 
- 	if (ret >= 0)
- 		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
--	else
--		kvm_put_kvm(kvm);
- 
- 	mutex_unlock(&kvm->lock);
- 
- 	if (ret >= 0)
- 		return ret;
- 
-+	kvm_put_kvm(kvm);
- 	kfree(stt);
-  fail_acct:
- 	account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
+Build test:
+- https://travis-ci.org/LeoBras/linux-ppc/builds/608807573
+
+Leonardo Bras (4):
+  powerpc/kvm/book3s: Fixes possible 'use after release' of kvm
+  powerpc/kvm/book3s: Replace current->mm by kvm->mm
+  powerpc/kvm/book3e: Replace current->mm by kvm->mm
+  powerpc/kvm/e500: Replace current->mm by kvm->mm
+
+ arch/powerpc/kvm/book3s_64_mmu_hv.c | 10 +++++-----
+ arch/powerpc/kvm/book3s_64_vio.c    | 13 +++++++------
+ arch/powerpc/kvm/book3s_hv.c        | 10 +++++-----
+ arch/powerpc/kvm/booke.c            |  2 +-
+ arch/powerpc/kvm/e500_mmu_host.c    |  6 +++---
+ 5 files changed, 21 insertions(+), 20 deletions(-)
+
 -- 
 2.23.0
 
