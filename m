@@ -2,107 +2,119 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7041AFC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55E3FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9B9217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822A7206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ybz76JqW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDoDOczY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfKGAVY (ORCPT
+        id S1728025AbfKGAWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:21:24 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:35294 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfKGAVX (ORCPT
+        Wed, 6 Nov 2019 19:22:04 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:34430 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727228AbfKGAWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 19:21:23 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C964720B7192;
-        Wed,  6 Nov 2019 16:21:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C964720B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573086082;
-        bh=eEEXoIsgjYfls0Ada3aH4Nvwgp+zX0ZpkvcRvWey2wE=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=Ybz76JqWo8S/SHKczbTAnnAXEvfdR+hU62S0BJ/UxhSd5gDkGnszsim7VpPJcygU7
-         U8jVE5gwHgLRpjKITVm1b5P//2fZtD/6xm+wSHPTR4+CPJeG57p+hUnJ03jsiDDffc
-         Wcd8Sc8rXFowL6qc3poi7EjfClSfg6d3kcmjgVjY=
-Subject: Re: [PATCH v4 01/10] IMA: Defined an IMA hook to measure keys on key
- create or update
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191106190116.2578-1-nramas@linux.microsoft.com>
- <20191106190116.2578-2-nramas@linux.microsoft.com>
- <1573080189.5028.313.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <c838a233-28fb-cad2-4694-18366c2643a4@linux.microsoft.com>
-Date:   Wed, 6 Nov 2019 16:21:43 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 6 Nov 2019 19:22:04 -0500
+Received: by mail-yw1-f68.google.com with SMTP id y18so25170ywk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 16:22:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IoBKiF8gKZ9/YDxTbalV/OjHsBLCzrm1vO49Me9eDAI=;
+        b=EDoDOczYRYd4+XNT+wFjozTXCFmMi8WfCp99vh5Y6lxe35MMRziQr69H7Ln1xuu4Hj
+         N+esKa18r9/P8Zexe9oAdTuMWOtWl2t/Pu31Tpgv+iSSwjIJm0LcpkwuzZ3fPpD2Axvs
+         Jy7mhaVl5EDe7AuktWs1agsAQlW0LVm2+g/CkIiF9KZT9S+5OkNgbrnqkhd9cREnafKt
+         vZfNdZosd7c7o4ZAaehQnl8UIrrLEL3wHpAIdsggYgzM8stayD20TUSSUV85YvXa7Sn0
+         1PJ3EpWioqkNTqfmCNUiRis3fhGlPwsjXk/BtUDRGXNVY8A1CElFPqgams6RyVT9XlKY
+         ClmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IoBKiF8gKZ9/YDxTbalV/OjHsBLCzrm1vO49Me9eDAI=;
+        b=DFZn4AGktgrvg8ACdZr+HQXyi6Z5bd2l1rTMrLDX0YS7tOVVyXAdvZA9P5vCV8avZV
+         dvLvNZ6QjLbWAEe6VsW7lFzagcPR4xpxsf+C3QfNly9+vwA7+11Q+wQpzyIWD1Fn2GlK
+         lIV+NchLHsmecC2+CTzhPhz1MKPwUvGnNz/mlMq9YAcnNWoy7AFmUD/KtdHDsdYqWI3K
+         luaYwzhJ4k3eJqyqcYJveUqJ2LGnnPWMikMR+jpNF1oX+Gvs7HRyA7payx/IigPIqDwk
+         JkqheOnEzM61u3sGRmVAdAHH8moa5y2aOUlKtk2dO743vlwBZI25l+slSqKRsnzhJ5R1
+         C68Q==
+X-Gm-Message-State: APjAAAVKY9c2l3xd6rIJyN1Ag4IfcLbu6HYUto/W/Fvp8RxBC9HBDgex
+        Q1wlnh704UEP78sAlX3ucEuVEdOgKVQs2uM5Z/U=
+X-Google-Smtp-Source: APXvYqyvX1NrX3ydfgyd4RGYuuWRxDsJYwAtqNxFwCWks7zkHFlIpNFvBvqii1uenGKfhv+H3DdrBFoQsL4aYFTWlT8=
+X-Received: by 2002:a81:8415:: with SMTP id u21mr268081ywf.129.1573086122063;
+ Wed, 06 Nov 2019 16:22:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1573080189.5028.313.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191106181617.1832-1-jcmvbkbc@gmail.com> <a9e2f6b65d4c098ab027ea849120d3cf61858e67.camel@perches.com>
+In-Reply-To: <a9e2f6b65d4c098ab027ea849120d3cf61858e67.camel@perches.com>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Wed, 6 Nov 2019 16:21:51 -0800
+Message-ID: <CAMo8BfLmcCOAinyjB3iEuOF36TYBig=724=s9b6EKr3LzwF5QQ@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: improve stack dumping
+To:     Joe Perches <joe@perches.com>
+Cc:     "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Chris Zankel <chris@zankel.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <dima@arista.com>,
+        Petr Mladek <pmladek@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 6, 2019 at 2:34 PM Joe Perches <joe@perches.com> wrote:
+> > @@ -512,10 +510,12 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+> >       for (i = 0; i < kstack_depth_to_print; i++) {
+> >               if (kstack_end(sp))
+> >                       break;
+> > -             pr_cont(" %08lx", *sp++);
+> > +             sprintf(buf + (i % 8) * 9, " %08lx", *sp++);
+> >               if (i % 8 == 7)
+> > -                     pr_cont("\n");
+> > +                     pr_info("%s\n", buf);
+> >       }
+> > +     if (i % 8)
+> > +             pr_info("%s\n", buf);
+>
+> Could this be done using hex_dump_to_buffer
+> by precalculating kstack_end ?
 
-On 11/6/2019 2:43 PM, Mimi Zohar wrote:
+I've got this, but it doesn't look very attractive to me:
 
->> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
->> +				   unsigned long flags, bool create)
->> +{
->> +	if ((keyring != NULL) && (key != NULL))
->> +		return;
-> 
-> I would move the patch that defines the "keyring=" policy option prior
-> to this one.  Include the call to process_buffer_measurement() in this
-> patch.  A subsequent patch would add support to defer measuring the
-> key, by calling a function named something like
-> ima_queue_key_measurement().
-> 
-> Mimi
+void show_stack(struct task_struct *task, unsigned long *sp)
+{
+        unsigned long *stack;
+        int len;
 
-As I'd stated in the other response, I wanted to isolate all key related 
-code in a separate C file and build it if and only if all CONFIG 
-dependencies are met.
+        if (!sp)
+                sp = stack_pointer(task);
+        stack = sp;
 
-I can do the following:
+        len = min((-(unsigned long)stack) & (THREAD_SIZE - 4),
+                  kstack_depth_to_print * 4ul);
 
-=> Define the IMA hook in ima_asymmetric_keys.c instead of ima_main.c
+        pr_info("Stack:\n");
 
-=> In include/linux/ima.h declare the IMA hook if 
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is enabled.
-Else, NOP it.
+        for (; len > 0; len -= 32) {
+                char buf[9 * 8 + 1];
 
-#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
-extern void ima_post_key_create_or_update(struct key *keyring,
-					  struct key *key,
-					  unsigned long flags,
-                                           bool create);
-#else
-static inline void ima_post_key_create_or_update(struct key *keyring,
-						 struct key *key,
-						 unsigned long flags,
-						 bool create) {}
-#endif
+                hex_dump_to_buffer(sp, min(len, 32), 32, 4,
+                                   buf, sizeof(buf), false);
+                pr_info(" %08lx:  %s\n", (unsigned long)sp, buf);
+                sp += 8;
+        }
+        show_trace(task, stack);
+}
 
-Would that be acceptable?
-
-thanks,
-  -lakshmi
-
-
+-- 
+Thanks.
+-- Max
