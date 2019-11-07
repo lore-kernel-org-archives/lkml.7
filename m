@@ -2,543 +2,146 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05BEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B71C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A57206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:38:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjrRNvr+"
+	by mail.kernel.org (Postfix) with ESMTP id 3D20E206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbfKGQie (ORCPT
+        id S2388065AbfKGQjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:38:34 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46296 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKGQie (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:38:34 -0500
-Received: by mail-qt1-f195.google.com with SMTP id u22so2998007qtq.13;
-        Thu, 07 Nov 2019 08:38:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6vcWfXvLf5NBE6KQFw2/jxcs+T3gd1Cd+gSmdg14gvI=;
-        b=VjrRNvr+vBU3qoS5r8Q2KPg/zIPW3MYg/spEFXojZZpC8ugI2lOyFPP0mCkAqVtZXU
-         iqOGn4OMIx11Oolv7TpeEGkzyAXUp9cWp1hrqVSl7ty2nAjAn4bO4I1q9ZSUAs2BDQ+c
-         lT8xANn0dQKaJsUuzHriCi3osJu8f9RXeJAWLTkcr5FWHhECNtFgbeCq9vVlM6NbWFCv
-         jqxYirid9dUigTVx5/R0Z3zLfItJADymZhvP4LQtWFTDoZ8M8e0v4nBFfg2CXBoeqrbW
-         0D+Z72QhsP6yDzzpRbVVOJGbF6/tiexqRzebTQINtNSBGCJgKzID9BAnmNthvIBzn7MA
-         FhHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6vcWfXvLf5NBE6KQFw2/jxcs+T3gd1Cd+gSmdg14gvI=;
-        b=R18MSef+iaEarssLC2bbcsHiyTcInG1Q85xnMI660Wps30xvgz6/To4TmtutfTM8DF
-         Aenh3eD9ODu0gOVzKd3LfFsNMVPrNdGmqJUvisbhchBfqtvhOtab2qA2PFpIIEaeSdu/
-         qz9loOlRfJ1LwnO4affMsrLSqSzn6E9IQjU1ojoN0/jfociprpZIneXoEOxjNME+dxzG
-         kA3sTOOW5W+IEi3U6kbkHtGgfSHqEEjIQUCa23T4lc+4pXP59de5KkNIr8CCCPTPtlE7
-         FxYINR6zLLABXfKe4yt2kg0zryrnESmY/aFgkDmKeTzSRIP9V0HliMcFy810z1Z8qm1L
-         KYew==
-X-Gm-Message-State: APjAAAWxV8lnqXiaZNvD5/3UalBk5uOwyWCFX4lOX9XwR3FT8zTEko7R
-        jx3iV/RDPxXbOnqp91P6bIU=
-X-Google-Smtp-Source: APXvYqx/RLCGLzmR3LdSOeHMfMS3QzS9tet6wE+91iHkuQ0XQsYPHqasPgZRuBGNAmx1Og8RonpiOA==
-X-Received: by 2002:ac8:524a:: with SMTP id y10mr4653390qtn.325.1573144711208;
-        Thu, 07 Nov 2019 08:38:31 -0800 (PST)
-Received: from smtp.gmail.com (191-0-9-231.user3g.veloxzone.com.br. [191.0.9.231])
-        by smtp.gmail.com with ESMTPSA id s75sm1399321qke.14.2019.11.07.08.38.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 08:38:30 -0800 (PST)
-Date:   Thu, 7 Nov 2019 13:38:25 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     robh@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v3 2/2] iio: adc: Add driver support for AD7292
-Message-ID: <20191107163822.setkes3jmrrnlfew@smtp.gmail.com>
-References: <cover.1572614297.git.marcelo.schmitt1@gmail.com>
- <9f8eccec804b398c73450911f97a4b250f6067da.1572614297.git.marcelo.schmitt1@gmail.com>
- <20191103115205.2dde1959@archlinux>
+        Thu, 7 Nov 2019 11:39:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:58956 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726877AbfKGQjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 11:39:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14B1830E;
+        Thu,  7 Nov 2019 08:39:48 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DC7A3F71A;
+        Thu,  7 Nov 2019 08:39:46 -0800 (PST)
+Date:   Thu, 7 Nov 2019 16:39:44 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v5 1/6] sched/pelt.c: Add support to track thermal
+ pressure
+Message-ID: <20191107163942.74bfnsabh4dyvlo5@e107158-lin.cambridge.arm.com>
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+ <1572979786-20361-2-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191103115205.2dde1959@archlinux>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1572979786-20361-2-git-send-email-thara.gopinath@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Thara
 
-I'll respin for the dt-schema. Thus, I can add brackets to macro
-parameters. I think I found another couple of brackets missing.
-Comments inline.
+On 11/05/19 13:49, Thara Gopinath wrote:
+> Extrapolating on the exisiting framework to track rt/dl utilization using
+> pelt signals, add a similar mechanism to track thermal pressure. The
+> difference here from rt/dl utilization tracking is that, instead of
+> tracking time spent by a cpu running a rt/dl task through util_avg,
+> the average thermal pressure is tracked through load_avg. This is
+> because thermal pressure signal is weighted "delta" capacity
+> and is not binary(util_avg is binary). "delta capacity" here
+> means delta between the actual capacity of a cpu and the decreased
+> capacity a cpu due to a thermal event.
+> In order to track average thermal pressure, a new sched_avg variable
+> avg_thermal is introduced. Function update_thermal_load_avg can be called
+> to do the periodic bookeeping (accumulate, decay and average)
+> of the thermal pressure.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  kernel/sched/pelt.c  | 13 +++++++++++++
+>  kernel/sched/pelt.h  |  7 +++++++
+>  kernel/sched/sched.h |  1 +
+>  3 files changed, 21 insertions(+)
+> 
+> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> index a96db50..3821069 100644
+> --- a/kernel/sched/pelt.c
+> +++ b/kernel/sched/pelt.c
+> @@ -353,6 +353,19 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+>  	return 0;
+>  }
+>  
+> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> +{
+> +	if (___update_load_sum(now, &rq->avg_thermal,
+> +			       capacity,
+> +			       capacity,
+> +			       capacity)) {
+> +		___update_load_avg(&rq->avg_thermal, 1, 1);
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
 
-Thanks,
+Care to add a tracepoint to this new signal like we now have for the other
+ones?
 
-Marcelo
+Thanks
 
-On 11/03, Jonathan Cameron wrote:
-> On Fri, 1 Nov 2019 13:24:26 -0300
-> Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
-> 
-> > The AD7292 is a 10-bit monitor and control system with ADC, DACs,
-> > temperature sensor, and GPIOs.
-> > 
-> > Configure AD7292 devices in direct access mode, enabling single-ended
-> > ADC readings.
-> > 
-> > Datasheet:
-> > Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> > 
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> One totally trivial thing inline if you happen to be respinning.
-> Otherwise I'll fix up when applying.
-> 
-> I would like to give a bit of time for others to comment, particularly on the dt
-> bindings as I frequently miss problems in them. Hence I won't be applying it today
-> but may pick it up later in the week or next weekend.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> 
-> > ---
-> > Changelog V2 -> V3:
-> > - fix up a typo in channel macros
-> > 
-> >  MAINTAINERS              |   1 +
-> >  drivers/iio/adc/Kconfig  |  10 ++
-> >  drivers/iio/adc/Makefile |   1 +
-> >  drivers/iio/adc/ad7292.c | 350 +++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 362 insertions(+)
-> >  create mode 100644 drivers/iio/adc/ad7292.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 5d00e871c4c6..5941cfc0d6f7 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -818,6 +818,7 @@ M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> >  L:	linux-iio@vger.kernel.org
-> >  W:	http://ez.analog.com/community/linux-device-drivers
-> >  S:	Supported
-> > +F:	drivers/iio/adc/ad7292.c
-> >  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> >  
-> >  ANALOG DEVICES INC AD7606 DRIVER
-> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > index 632b331429c6..02587c990cb5 100644
-> > --- a/drivers/iio/adc/Kconfig
-> > +++ b/drivers/iio/adc/Kconfig
-> > @@ -59,6 +59,16 @@ config AD7291
-> >  	  To compile this driver as a module, choose M here: the
-> >  	  module will be called ad7291.
-> >  
-> > +config AD7292
-> > +	tristate "Analog Devices AD7292 ADC driver"
-> > +	depends on SPI
-> > +	help
-> > +	  Say yes here to build support for Analog Devices AD7292
-> > +	  8 Channel ADC with temperature sensor.
-> > +
-> > +	  To compile this driver as a module, choose M here: the
-> > +	  module will be called ad7292.
-> > +
-> >  config AD7298
-> >  	tristate "Analog Devices AD7298 ADC driver"
-> >  	depends on SPI
-> > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> > index 4779ab3ff8fb..1818f2f66566 100644
-> > --- a/drivers/iio/adc/Makefile
-> > +++ b/drivers/iio/adc/Makefile
-> > @@ -11,6 +11,7 @@ obj-$(CONFIG_AD7124) += ad7124.o
-> >  obj-$(CONFIG_AD7173) += ad7173.o
-> >  obj-$(CONFIG_AD7266) += ad7266.o
-> >  obj-$(CONFIG_AD7291) += ad7291.o
-> > +obj-$(CONFIG_AD7292) += ad7292.o
-> >  obj-$(CONFIG_AD7298) += ad7298.o
-> >  obj-$(CONFIG_AD738X) += ad738x.o
-> >  obj-$(CONFIG_AD7768) += ad7768-1.o
-> > diff --git a/drivers/iio/adc/ad7292.c b/drivers/iio/adc/ad7292.c
-> > new file mode 100644
-> > index 000000000000..e2badf6ac10d
-> > --- /dev/null
-> > +++ b/drivers/iio/adc/ad7292.c
-> > @@ -0,0 +1,350 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Analog Devices AD7292 SPI ADC driver
-> > + *
-> > + * Copyright 2019 Analog Devices Inc.
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <linux/spi/spi.h>
-> > +
-> > +#include <linux/iio/iio.h>
-> > +
-> > +#define ADI_VENDOR_ID 0x0018
-> > +
-> > +/* AD7292 registers definition */
-> > +#define AD7292_REG_VENDOR_ID		0x00
-> > +#define AD7292_REG_CONF_BANK		0x05
-> > +#define AD7292_REG_CONV_COMM		0x0E
-> > +#define AD7292_REG_ADC_CH(x)		(0x10 + (x))
-> > +
-> > +/* AD7292 configuration bank subregisters definition */
-> > +#define AD7292_BANK_REG_VIN_RNG0	0x10
-> > +#define AD7292_BANK_REG_VIN_RNG1	0x11
-> > +#define AD7292_BANK_REG_SAMP_MODE	0x12
-> > +
-> > +#define AD7292_RD_FLAG_MSK(x)		(BIT(7) | ((x) & 0x3F))
-> > +
-> > +/* AD7292_REG_ADC_CONVERSION */
-> > +#define AD7292_ADC_DATA_MASK		GENMASK(15, 6)
-> > +#define AD7292_ADC_DATA(x)		FIELD_GET(AD7292_ADC_DATA_MASK, x)
-> > +
-> > +/* AD7292_CHANNEL_SAMPLING_MODE */
-> > +#define AD7292_CH_SAMP_MODE(reg, ch)	((reg >> 8) & BIT(ch))
+--
+Qais Yousef
 
-Maybe this one would also need to be changed for the same reason: 
-(((reg) >> 8) & BIT(ch)).
- 
-> > +
-> > +/* AD7292_CHANNEL_VIN_RANGE */
-> > +#define AD7292_CH_VIN_RANGE(reg, ch)	(reg & BIT(ch))
-> 
-> Trivial but all macro parameters should be in brackets to prevent
-> weirdness if some sticks a parameter with higher precedence in there
-> so ((reg) & BIT(ch)).
-> 
-> I can fix this up if the rest is fine.
-
-Since I'll be respinning, I can add the brackets.
-
-> 
-> > +
-> > +#define AD7292_VOLTAGE_CHAN(_chan)					\
-> > +{									\
-> > +	.type = IIO_VOLTAGE,						\
-> > +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
-> > +			      BIT(IIO_CHAN_INFO_SCALE),			\
-> > +	.indexed = 1,							\
-> > +	.channel = _chan,						\
-> > +}
-> > +
-> > +static const struct iio_chan_spec ad7292_channels[] = {
-> > +	AD7292_VOLTAGE_CHAN(0),
-> > +	AD7292_VOLTAGE_CHAN(1),
-> > +	AD7292_VOLTAGE_CHAN(2),
-> > +	AD7292_VOLTAGE_CHAN(3),
-> > +	AD7292_VOLTAGE_CHAN(4),
-> > +	AD7292_VOLTAGE_CHAN(5),
-> > +	AD7292_VOLTAGE_CHAN(6),
-> > +	AD7292_VOLTAGE_CHAN(7)
-> > +};
-> > +
-> > +static const struct iio_chan_spec ad7292_channels_diff[] = {
-> > +	{
-> > +		.type = IIO_VOLTAGE,
-> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> > +		.indexed = 1,
-> > +		.differential = 1,
-> > +		.channel = 0,
-> > +		.channel2 = 1,
-> > +	},
-> > +	AD7292_VOLTAGE_CHAN(2),
-> > +	AD7292_VOLTAGE_CHAN(3),
-> > +	AD7292_VOLTAGE_CHAN(4),
-> > +	AD7292_VOLTAGE_CHAN(5),
-> > +	AD7292_VOLTAGE_CHAN(6),
-> > +	AD7292_VOLTAGE_CHAN(7)
-> > +};
-> > +
-> > +struct ad7292_state {
-> > +	struct spi_device *spi;
-> > +	struct regulator *reg;
-> > +	unsigned short vref_mv;
-> > +
-> > +	__be16 d16 ____cacheline_aligned;
-> > +	u8 d8[2];
-> > +};
-> > +
-> > +static int ad7292_spi_reg_read(struct ad7292_state *st, unsigned int addr)
-> > +{
-> > +	int ret;
-> > +
-> > +	st->d8[0] = AD7292_RD_FLAG_MSK(addr);
-> > +
-> > +	ret = spi_write_then_read(st->spi, st->d8, 1, &st->d16, 2);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return be16_to_cpu(st->d16);
-> > +}
-> > +
-> > +static int ad7292_spi_subreg_read(struct ad7292_state *st, unsigned int addr,
-> > +				  unsigned int sub_addr, unsigned int len)
-> > +{
-> > +	unsigned int shift = 16 - (8 * len);
-> > +	int ret;
-> > +
-> > +	st->d8[0] = AD7292_RD_FLAG_MSK(addr);
-> > +	st->d8[1] = sub_addr;
-> > +
-> > +	ret = spi_write_then_read(st->spi, st->d8, 2, &st->d16, len);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return (be16_to_cpu(st->d16) >> shift);
-> > +}
-> > +
-> > +static int ad7292_single_conversion(struct ad7292_state *st,
-> > +				    unsigned int chan_addr)
-> > +{
-> > +	int ret;
-> > +
-> > +	struct spi_transfer t[] = {
-> > +		{
-> > +			.tx_buf = &st->d8,
-> > +			.len = 4,
-> > +			.delay_usecs = 6,
-> > +		}, {
-> > +			.rx_buf = &st->d16,
-> > +			.len = 2,
-> > +		},
-> > +	};
-> > +
-> > +	st->d8[0] = chan_addr;
-> > +	st->d8[1] = AD7292_RD_FLAG_MSK(AD7292_REG_CONV_COMM);
-> > +
-> > +	ret = spi_sync_transfer(st->spi, t, ARRAY_SIZE(t));
-> > +
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return be16_to_cpu(st->d16);
-> > +}
-> > +
-> > +static int ad7292_vin_range_multiplier(struct ad7292_state *st, int channel)
-> > +{
-> > +	int samp_mode, range0, range1, factor = 1;
-> > +
-> > +	/*
-> > +	 * Every AD7292 ADC channel may have its input range adjusted according
-> > +	 * to the settings at the ADC sampling mode and VIN range subregisters.
-> > +	 * For a given channel, the minimum input range is equal to Vref, and it
-> > +	 * may be increased by a multiplier factor of 2 or 4 according to the
-> > +	 * following rule:
-> > +	 * If channel is being sampled with respect to AGND:
-> > +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
-> > +	 *	factor = 2 if only one of VIN ranges equal 1
-> > +	 *	factor = 1 if both VIN range0 and VIN range1 equal 1
-> > +	 * If channel is being sampled with respect to AVDD:
-> > +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
-> > +	 *	Behavior is undefined if any of VIN range doesn't equal 0
-> > +	 */
-> > +
-> > +	samp_mode = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
-> > +					   AD7292_BANK_REG_SAMP_MODE, 2);
-> > +
-> > +	if (samp_mode < 0)
-> > +		return samp_mode;
-> > +
-> > +	range0 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
-> > +					AD7292_BANK_REG_VIN_RNG0, 2);
-> > +
-> > +	if (range0 < 0)
-> > +		return range0;
-> > +
-> > +	range1 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
-> > +					AD7292_BANK_REG_VIN_RNG1, 2);
-> > +
-> > +	if (range1 < 0)
-> > +		return range1;
-> > +
-> > +	if (AD7292_CH_SAMP_MODE(samp_mode, channel)) {
-> > +		/* Sampling with respect to AGND */
-> > +		if (!AD7292_CH_VIN_RANGE(range0, channel))
-> > +			factor *= 2;
-> > +
-> > +		if (!AD7292_CH_VIN_RANGE(range1, channel))
-> > +			factor *= 2;
-> > +
-> > +	} else {
-> > +		/* Sampling with respect to AVDD */
-> > +		if (AD7292_CH_VIN_RANGE(range0, channel) ||
-> > +		    AD7292_CH_VIN_RANGE(range1, channel))
-> > +			return -EPERM;
-> > +
-> > +		factor = 4;
-> > +	}
-> > +
-> > +	return factor;
-> > +}
-> > +
-> > +static int ad7292_read_raw(struct iio_dev *indio_dev,
-> > +			   const struct iio_chan_spec *chan,
-> > +			   int *val, int *val2, long info)
-> > +{
-> > +	struct ad7292_state *st = iio_priv(indio_dev);
-> > +	unsigned int ch_addr;
-> > +	int ret;
-> > +
-> > +	switch (info) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		ch_addr = AD7292_REG_ADC_CH(chan->channel);
-> > +		ret = ad7292_single_conversion(st, ch_addr);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +
-> > +		*val = AD7292_ADC_DATA(ret);
-> > +
-> > +		return IIO_VAL_INT;
-> > +	case IIO_CHAN_INFO_SCALE:
-> > +		/*
-> > +		 * To convert a raw value to standard units, the IIO defines
-> > +		 * this formula: Scaled value = (raw + offset) * scale.
-> > +		 * For the scale to be a correct multiplier for (raw + offset),
-> > +		 * it must be calculated as the input range divided by the
-> > +		 * number of possible distinct input values. Given the ADC data
-> > +		 * is 10 bit long, it may assume 2^10 distinct values.
-> > +		 * Hence, scale = range / 2^10. The IIO_VAL_FRACTIONAL_LOG2
-> > +		 * return type indicates to the IIO API to divide *val by 2 to
-> > +		 * the power of *val2 when returning from read_raw.
-> > +		 */
-> > +
-> > +		ret = ad7292_vin_range_multiplier(st, chan->channel);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +
-> > +		*val = st->vref_mv * ret;
-> > +		*val2 = 10;
-> > +		return IIO_VAL_FRACTIONAL_LOG2;
-> > +	default:
-> > +		break;
-> > +	}
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static const struct iio_info ad7292_info = {
-> > +	.read_raw = ad7292_read_raw,
-> > +};
-> > +
-> > +static void ad7292_regulator_disable(void *data)
-> > +{
-> > +	struct ad7292_state *st = data;
-> > +
-> > +	regulator_disable(st->reg);
-> > +}
-> > +
-> > +static int ad7292_probe(struct spi_device *spi)
-> > +{
-> > +	struct ad7292_state *st;
-> > +	struct iio_dev *indio_dev;
-> > +	struct device_node *child;
-> > +	bool diff_channels = 0;
-> > +	int ret;
-> > +
-> > +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> > +	if (!indio_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	st = iio_priv(indio_dev);
-> > +	st->spi = spi;
-> > +
-> > +	ret = ad7292_spi_reg_read(st, AD7292_REG_VENDOR_ID);
-> > +	if (ret != ADI_VENDOR_ID) {
-> > +		dev_err(&spi->dev, "Wrong vendor id 0x%x\n", ret);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	spi_set_drvdata(spi, indio_dev);
-> > +
-> > +	st->reg = devm_regulator_get_optional(&spi->dev, "vref");
-> > +	if (!IS_ERR(st->reg)) {
-> > +		ret = regulator_enable(st->reg);
-> > +		if (ret) {
-> > +			dev_err(&spi->dev,
-> > +				"Failed to enable external vref supply\n");
-> > +			return ret;
-> > +		}
-> > +
-> > +		ret = devm_add_action_or_reset(&spi->dev,
-> > +					       ad7292_regulator_disable, st);
-> > +		if (ret) {
-> > +			regulator_disable(st->reg);
-> > +			return ret;
-> > +		}
-> > +
-> > +		ret = regulator_get_voltage(st->reg);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +
-> > +		st->vref_mv = ret / 1000;
-> > +	} else {
-> > +		/* Use the internal voltage reference. */
-> > +		st->vref_mv = 1250;
-> > +	}
-> > +
-> > +	indio_dev->dev.parent = &spi->dev;
-> > +	indio_dev->name = spi_get_device_id(spi)->name;
-> > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > +	indio_dev->info = &ad7292_info;
-> > +
-> > +	for_each_available_child_of_node(spi->dev.of_node, child) {
-> > +		diff_channels = of_property_read_bool(child, "diff-channels");
-> > +		if (diff_channels)
-> > +			break;
-> > +	}
-> > +
-> > +	if (diff_channels) {
-> > +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels_diff);
-> > +		indio_dev->channels = ad7292_channels_diff;
-> > +	} else {
-> > +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels);
-> > +		indio_dev->channels = ad7292_channels;
-> > +	}
-> > +
-> > +	return devm_iio_device_register(&spi->dev, indio_dev);
-> > +}
-> > +
-> > +static const struct spi_device_id ad7292_id_table[] = {
-> > +	{ "ad7292", 0 },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(spi, ad7292_id_table);
-> > +
-> > +static const struct of_device_id ad7292_of_match[] = {
-> > +	{ .compatible = "adi,ad7292" },
-> > +	{ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ad7292_of_match);
-> > +
-> > +static struct spi_driver ad7292_driver = {
-> > +	.driver = {
-> > +		.name = "ad7292",
-> > +		.of_match_table = ad7292_of_match,
-> > +	},
-> > +	.probe = ad7292_probe,
-> > +	.id_table = ad7292_id_table,
-> > +};
-> > +module_spi_driver(ad7292_driver);
-> > +
-> > +MODULE_AUTHOR("Marcelo Schmitt <marcelo.schmitt1@gmail.com>");
-> > +MODULE_DESCRIPTION("Analog Devices AD7292 ADC driver");
-> > +MODULE_LICENSE("GPL v2");
+> +
+>  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+>  /*
+>   * irq:
+> diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
+> index afff644..c74226d 100644
+> --- a/kernel/sched/pelt.h
+> +++ b/kernel/sched/pelt.h
+> @@ -6,6 +6,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
+>  int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
+>  int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
+>  int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
+> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity);
+>  
+>  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+>  int update_irq_load_avg(struct rq *rq, u64 running);
+> @@ -159,6 +160,12 @@ update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+>  }
+>  
+>  static inline int
+> +update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int
+>  update_irq_load_avg(struct rq *rq, u64 running)
+>  {
+>  	return 0;
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 0db2c1b..d5d82c8 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -944,6 +944,7 @@ struct rq {
+>  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+>  	struct sched_avg	avg_irq;
+>  #endif
+> +	struct sched_avg	avg_thermal;
+>  	u64			idle_stamp;
+>  	u64			avg_idle;
+>  
+> -- 
+> 2.1.4
 > 
