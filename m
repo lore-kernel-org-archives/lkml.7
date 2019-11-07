@@ -2,141 +2,117 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A56C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE65C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D0A214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100AB2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:03:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=c0d3.blue header.i=@c0d3.blue header.b="dYwqJQkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbfKGODa convert rfc822-to-8bit (ORCPT
+        id S2389004AbfKGODi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:03:30 -0500
-Received: from ox4u.de ([212.118.221.216]:54322 "EHLO s1.ox4u.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfKGODa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:03:30 -0500
-X-Greylist: delayed 514 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Nov 2019 09:03:29 EST
-Received: by s1.ox4u.de (Postfix, from userid 65534)
-        id D9EFB26012A; Thu,  7 Nov 2019 14:54:53 +0100 (CET)
-Received: from ws-140106.localnet (unknown [212.185.67.146])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by s1.ox4u.de (Postfix) with ESMTPSA id 0A753260113;
-        Thu,  7 Nov 2019 14:54:52 +0100 (CET)
-From:   Alexander Stein <alexander.stein@systec-electronic.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] iio: core: Fix fractional format generation
-Date:   Thu, 07 Nov 2019 14:54:52 +0100
-Message-ID: <4116142.9TFg0imz4M@ws-140106>
-In-Reply-To: <20190822060607.25339-1-alexander.stein@systec-electronic.com>
-References: <20190822060607.25339-1-alexander.stein@systec-electronic.com>
+        Thu, 7 Nov 2019 09:03:38 -0500
+Received: from mail.aperture-lab.de ([138.201.29.205]:38906 "EHLO
+        mail.aperture-lab.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387662AbfKGODi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:03:38 -0500
+Date:   Thu, 7 Nov 2019 15:03:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue; s=2018;
+        t=1573135414;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sVnu6nCQ25Lb7LRGNb26Av76cKgMfU15iK7bwIMmrkQ=;
+        b=dYwqJQkwh4WV7+jIWWMyyAf4ucAUIhVJrLGYNADu4ppqY0960M1DIF1mShrpRVQARoaF1R
+        ABE+moZw9r24XKdGiE4vj+gTAJN0ulxg3NZwzuMcXs4IU/k+7UN8jRxfVbP0Kij/JIUNtS
+        Ao2Obm4TPa/OoVid/jAjtWsiCXjaFbgsK5q+olzKybAPsmiwtoyVw0e0+6VP0mQEaD95fK
+        N97ngKZkvoJgQaWTpJ7WPvMg+v3Y1ldKNn5uP0tr1wMYFJLhgNo2SplymeWhgAz4lTRSFk
+        IwxMHX9greRFCrwGjw2MJ2yOJZsp6F1bhAsjmeElLe2RO6wZetmGNJkK3LchQg==
+From:   Linus =?utf-8?Q?L=C3=BCssing?= <linus.luessing@c0d3.blue>
+To:     Ben Greear <greearb@candelatech.com>
+Cc:     Linus =?utf-8?Q?L=C3=BCssing?= <ll@simonwunderlich.de>,
+        ath10k@lists.infradead.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] ath10k: fix RX of frames with broken FCS in
+ monitor mode
+Message-ID: <20191107140149.GB19482@otheros>
+References: <20191105164932.11799-1-linus.luessing@c0d3.blue>
+ <927cea69-7afc-5c35-df8d-9813392e8928@candelatech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <927cea69-7afc-5c35-df8d-9813392e8928@candelatech.com>
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue;
+        s=2018; t=1573135414;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sVnu6nCQ25Lb7LRGNb26Av76cKgMfU15iK7bwIMmrkQ=;
+        b=pH7WY4TroqspfcVfiNfk4KF2KGn4YJqmi3dA4tuxptME+Hwrjl1w83PTsY8oUwJ/qR81i8
+        NBNIN9LoYylB2UpMzQU0lVkuEIt0mNBOshzxuyUdbcI/yNsWmmGkpJaHH4rDK+4Chr+LjD
+        6FaRkZdEfQHwqyg9WSpOcAhhnAUuTssNhHbp3zjDvIHiLnwVKcG/ZWvXsQ10fAioL1O762
+        aeTzx5BMGWroW0N924bOV9bzUPItQCKdpDsvDC3TjKbLJPVJbXh2Cs5xVadw0CspiS/jHv
+        YlD0ujULBQa8RMsp/1Gi2tmlfshKXhFHDBBNl6YNjDTAOie6+NF138Y+kVfM5Q==
+ARC-Seal: i=1; s=2018; d=c0d3.blue; t=1573135414; a=rsa-sha256; cv=none;
+        b=ojLgZKgBfl52b4RxlLVRGRhHIpo/O3YWrsNgNoHy4/Cx3XnFKTiuCZyxp0QWBaWN91QJLI
+        M0ntFuUrIRXGKw6DnsF4CZJ4j9VB/vxa/xkA+2v0zdY72Fs73U1L+5OIZW9sEznBHUbj9Z
+        HvlAqoA7JskhU2ou7UmkV3cDYADkKMst3/9pQsVvdDHneOi1IRD7hsHAwPdLEOi5y6Oujd
+        ErDjYV6t1kEDkPRkPk0F5wkfKO9t1JjOhkiBHyAbYpypBGJe0GCSiWw+w88vcqA+U8Vzqy
+        mtJYoYCCKfYiCaZFMJ64p3wnxRcumvidJHuBAD2iZtPvUIAtCrxjhHI97/hCng==
+ARC-Authentication-Results: i=1;
+        ORIGINATING;
+        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
+Authentication-Results: ORIGINATING;
+        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gentle ping
+On Tue, Nov 05, 2019 at 09:19:20AM -0800, Ben Greear wrote:
+> Thanks for adding the counter.  Since it us u32, I doubt you need the spin lock
+> below?
 
-On Thursday, August 22, 2019, 8:06:07 AM CET Alexander Stein wrote:
-> In case the result is -0.3252 tmp0 is 0 after the div_s64_rem, so tmp0 is
-> non-negative which results in an output of 0.3252.
-> Fix this by explicitly handling the negative sign ourselves.
+Ok, I can remove the spin-lock.
+
+Just for clarification though, if I recall correctly then an increment operator
+is not guaranteed to work atomically. But you think it's unlikely
+to race with a concurrent ++ and therefore it's fine for just a debug counter?
+(and if it were racing, it'd just be a missed +1)
+
+Or is there another mechanism that avoids concurrency in the
+ath10k RX path?
+
+
 > 
-> Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
-> ---
-> Changes in v2:
-> * Support vals[0] >= and vals[1] < 0 in IIO_VAL_FRACTIONAL
-> * Note: IIO_VAL_FRACTIONAL is untested, as I lack hardware
-> * Note2: Currently IIO_VAL_FRACTIONAL is only called with vals[1] from
->          in-kernel drivers AFAICS
+> --Ben
 > 
->  drivers/iio/industrialio-core.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+> > +	if (!(ar->filter_flags & FIF_FCSFAIL) &&
+> > +	    status->flag & RX_FLAG_FAILED_FCS_CRC) {
+> > +		spin_lock_bh(&ar->data_lock);
+> > +		ar->stats.rx_crc_err_drop++;
+> > +		spin_unlock_bh(&ar->data_lock);
+> > +
+> > +		dev_kfree_skb_any(skb);
+> > +		return;
+> > +	}
+> > +
+> >   	ath10k_dbg(ar, ATH10K_DBG_DATA,
+> >   		   "rx skb %pK len %u peer %pM %s %s sn %u %s%s%s%s%s%s %srate_idx %u vht_nss %u freq %u band %u flag 0x%x fcs-err %i mic-err %i amsdu-more %i\n",
+> >   		   skb,
+> > 
 > 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 245b5844028d..247338142c87 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -568,6 +568,7 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
->  {
->  	unsigned long long tmp;
->  	int tmp0, tmp1;
-> +	char *sign;
->  	bool scale_db = false;
->  
->  	switch (type) {
-> @@ -593,11 +594,17 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
->  		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
->  		tmp1 = vals[1];
->  		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
-> -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
-> +		if (vals[1] < 0) {
-> +			sign = vals[0] >= 0 ? "-" : "";
-> +		} else {
-> +			sign = vals[0] < 0 ? "-" : "";
-> +		}
-> +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
->  	case IIO_VAL_FRACTIONAL_LOG2:
-> +		sign = vals[0] < 0 ? "-" : "";
->  		tmp = shift_right((s64)vals[0] * 1000000000LL, vals[1]);
->  		tmp0 = (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
-> -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
-> +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
->  	case IIO_VAL_INT_MULTIPLE:
->  	{
->  		int i;
 > 
-
-
--- 
-Dipl-Inf. Alexander Stein
-
-SYS TEC electronic AG
-Am Windrad 2
-08468 Heinsdorfergrund
-Germany
-Tel: +49-3765-38600-0, Fax: +49-3765-38600-4100
-Email   : alexander.stein@systec-electronic.com
-Internet: http://www.systec-electronic.com
-
-Board of Directors: Dipl.-Ing. Ronald Sieber, Dipl.-Ing. Dirk Bause
-Chairman of the Supervisory Board: Dipl.-Phys. Siegmar Schmidt
-Commercial registry: Amtsgericht Chemnitz, HRB 32220; USt.-Id Nr. 
-DE150534010
-
---------------------------------------------------------------------------
-
-Diese E-Mail enthält vertrauliche und/oder rechtlich geschützte 
-Informationen.
-
-Wenn Sie nicht der richtige Adressat sind oder diese E-Mail irrtümlich 
-erhalten haben, informieren Sie bitte sofort den Absender und vernichten 
-Sie diese Mail.
-
-Das unerlaubte Kopieren sowie die unbefugte Weitergabe dieser Mail sind 
-nicht gestattet.
-
---------------------------------------------------------------------------
-
-This e-mail may contain confidential and/or privileged information.
-
-If you are not the intended recipient (or have received this e-mail in 
-error) please notify the sender immediately and destroy this e-mail.
-
-Any unauthorized copying, disclosure or distribution of the material in 
-this e-mail is strictly forbidden.
-
---------------------------------------------------------------------------
-
-
+> -- 
+> Ben Greear <greearb@candelatech.com>
+> Candela Technologies Inc  http://www.candelatech.com
+> 
