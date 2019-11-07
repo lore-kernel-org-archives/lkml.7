@@ -2,129 +2,101 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E23FC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258ECFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68D8217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E132F217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M0ssWjRB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8gbdzYI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfKGBZi (ORCPT
+        id S1728612AbfKGBZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:25:38 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46093 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbfKGBZi (ORCPT
+        Wed, 6 Nov 2019 20:25:57 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34856 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbfKGBZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:25:38 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so470804oie.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:25:38 -0800 (PST)
+        Wed, 6 Nov 2019 20:25:57 -0500
+Received: by mail-pl1-f194.google.com with SMTP id s10so272396plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:25:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MGf1G/Idf98+jw/3Ou5BEwGK66KdVONOwSI1GdIY6gk=;
-        b=M0ssWjRBobxfWKaBwwLCqTSQ0mWBLINVZ7SKXHwBkJpuz65tBoHNLZG1DdIpEeMsrZ
-         lt+bf1gcUy8X8L+EQ/pamaZKRrbvJzyG5+w6Hf40F+cVHayFBaFbvoPdK/kxs3TiQ9Rd
-         ALuFh7usFL1WUkHc9qPwfJHpVQIuM124Tq7/2PYOrfjEmgnTxWl7UVh0jbvc7W2EV3PL
-         Mg8Yt0EyO4vCpfw45aQqv4J4fXyRNDu4mV0gVVfMBiPK3OBKumk8sZ/oh6C+uBoRd55K
-         yOWfkpzem5vEpHy0RPtOnHVxe+YSgPuRHXEHVhGEN4cEcX/d/gPEHHDQkiSnuhZDy6Kz
-         DIyg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HZQZ+QN8IcCANweURFLD872HZDrHwnyJPcIvgEMxFVY=;
+        b=M8gbdzYICn+MWkDBFF1+lka3iIWAzt7qryGm8rBazx27eQHBbnvYwX0ERS4Uzp0eRu
+         CKjC/Dzb9uKHPWEZCHx6XQLu3hT2/dyAt2ysz98WXGrTYvTY1s9mreG/GSAc+ieaa9ab
+         l0Mi04rAS48fy+ccnCbqTAE/sUNR8am7Kl1sqxG2The+epIIo+fwNdnk9azL7aW77xhm
+         gaD/th52AiSNNpgy10cyoWWmry4+R6PpQLVJiEr8De+r7XHD3RDyML5lxSuDPDyNV+Hn
+         EYrNh0K5TtYQbaJoKxc9Tfh7iJu4clg9GLvXKpFkmNYI7Wo/mOM17TUudk5oGEnPnyvd
+         ssGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MGf1G/Idf98+jw/3Ou5BEwGK66KdVONOwSI1GdIY6gk=;
-        b=kUxvNw0FUNCQIvFjdpTwHu6yx86+DWu8RDWghkNy/YPA0bGM+25mv47vZSqyI2mhJb
-         Q4l4Y/uGfuVAzgeApGHu+7/wsWZh9V35nIOJ7pcKcePpKdpIb/JNXCpJC3nQ50/bDPKw
-         SpsDKmDGYaE84h0ihELj9/6EzcOZnXdrp/MInE8WdzNOveRrX20PLmiGDM639FUS4/a5
-         BKcrFGNd0XEucSZgNwgp6AvWMqZThPYecajv492Mhnc9R3Y21aiSc0ays9DmEk4XQnkz
-         R/wFILqPipPA7bCvemesy39XAEThBYDcd+BRsU5VHreVhXFWhl38pCznOMqyBdKoMSN+
-         dGuQ==
-X-Gm-Message-State: APjAAAXWNdjm+rfFUWg/Pr4qYMP1BgYXmUiV5lbFC6VQ4ywWC8FhBi+o
-        cYEvNC5Yi54m4tY2XYZar2AuBCi3c5I0jHmDSxLZSw==
-X-Google-Smtp-Source: APXvYqw6efiJ0PRxdXQPobN4uLlaNjVFitxn3Vfc1xdL/4tlbdvE69PO+yIpW5h94B0crbZydjt09kDflTuKR59Nq9c=
-X-Received: by 2002:aca:4fce:: with SMTP id d197mr959325oib.142.1573089937164;
- Wed, 06 Nov 2019 17:25:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20191106225131.3543616-1-guro@fb.com> <20191107002204.GA96548@cmpxchg.org>
-In-Reply-To: <20191107002204.GA96548@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 6 Nov 2019 17:25:26 -0800
-Message-ID: <CALvZod5=g230Lwnjh7qXyLkoknZJpOiv-nLJ4XYC9rSSzL=e6w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in get_mem_cgroup_from_mm()
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>, stable@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HZQZ+QN8IcCANweURFLD872HZDrHwnyJPcIvgEMxFVY=;
+        b=fUTgdahgKgiYWlqs1fSFOJ/5puSBkRkJmidDrjlgKJmLRJiaiokzWLC47q3fWUAa5f
+         9xRNWD9QFGzb/Z+pzvQr9Y1GNJdxGzpuXdViZ1L0OaRuc4lwJ1xSYISPjKZpQwP/V1LJ
+         uSNn+js5VstDESxkViwxojn/Xa4eg7EiX7zgepkEw8kOUXhmfYb6tofH5aVgIKt4rbQM
+         4N/ga2dAj/nd6sPdrkLmiu8YfVuwesQU73XzVFfE0ke6kKn9ZF0LQViaNy9Zt8Lhyb8f
+         U8jgemHec6t8MvXVAp1Rfh3RiPUc3DOTqnmOWfv7ZQD6eo08UXTZbV9hR8IhFY3LE4jc
+         o1sA==
+X-Gm-Message-State: APjAAAVOFs6bO73vCQt1+q/2MaX5Hp957yZ5eN/APr4Cuy6nWSfl1Qah
+        B/9ScW9oj7oosfT/VCfqbWo=
+X-Google-Smtp-Source: APXvYqxb5Z3SzzsKZj4I9XTqCntS3cUrEObLSUKeJxUhmcwdCT6pqmuUbVdL6m/VxPFXGcu4UobIyw==
+X-Received: by 2002:a17:902:a717:: with SMTP id w23mr731086plq.177.1573089955342;
+        Wed, 06 Nov 2019 17:25:55 -0800 (PST)
+Received: from localhost ([103.102.7.162])
+        by smtp.gmail.com with ESMTPSA id b82sm250215pfb.33.2019.11.06.17.25.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 17:25:54 -0800 (PST)
+From:   Cheng Chao <cs.os.kernel@gmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, nico@fluxnic.net,
+        textshell@uchuujin.de, sam@ravnborg.org, daniel.vetter@ffwll.ch,
+        mpatocka@redhat.com, ghalat@redhat.com
+Cc:     linux-kernel@vger.kernel.org, Cheng Chao <cs.os.kernel@gmail.com>
+Subject: [PATCH] tty: fill console_driver->driver_name
+Date:   Thu,  7 Nov 2019 09:25:48 +0800
+Message-Id: <1573089948-5944-1-git-send-email-cs.os.kernel@gmail.com>
+X-Mailer: git-send-email 2.4.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 4:22 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin wrote:
-> > We've encountered a rcu stall in get_mem_cgroup_from_mm():
-> >
-> >  rcu: INFO: rcu_sched self-detected stall on CPU
-> >  rcu: 33-....: (21000 ticks this GP) idle=6c6/1/0x4000000000000002 softirq=35441/35441 fqs=5017
-> >  (t=21031 jiffies g=324821 q=95837) NMI backtrace for cpu 33
-> >  <...>
-> >  RIP: 0010:get_mem_cgroup_from_mm+0x2f/0x90
-> >  <...>
-> >  __memcg_kmem_charge+0x55/0x140
-> >  __alloc_pages_nodemask+0x267/0x320
-> >  pipe_write+0x1ad/0x400
-> >  new_sync_write+0x127/0x1c0
-> >  __kernel_write+0x4f/0xf0
-> >  dump_emit+0x91/0xc0
-> >  writenote+0xa0/0xc0
-> >  elf_core_dump+0x11af/0x1430
-> >  do_coredump+0xc65/0xee0
-> >  ? unix_stream_sendmsg+0x37d/0x3b0
-> >  get_signal+0x132/0x7c0
-> >  do_signal+0x36/0x640
-> >  ? recalc_sigpending+0x17/0x50
-> >  exit_to_usermode_loop+0x61/0xd0
-> >  do_syscall_64+0xd4/0x100
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > The problem is caused by an exiting task which is associated with
-> > an offline memcg. We're iterating over and over in the
-> > do {} while (!css_tryget_online()) loop, but obviously the memcg won't
-> > become online and the exiting task won't be migrated to a live memcg.
-> >
-> > Let's fix it by switching from css_tryget_online() to css_tryget().
-> >
-> > As css_tryget_online() cannot guarantee that the memcg won't go
-> > offline, the check is usually useless, except some rare cases
-> > when for example it determines if something should be presented
-> > to a user.
-> >
-> > A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
-> > css_tryget() instead of css_tryget_online() in task_get_css()").
-> >
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Cc: stable@vger.kernel.org
-> > Cc: Tejun Heo <tj@kernel.org>
->
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->
-> The bug aside, it doesn't matter whether the cgroup is online for the
-> callers. It used to matter when offlining needed to evacuate all
-> charges from the memcg, and so needed to prevent new ones from showing
-> up, but we don't care now.
+cat /proc/tty/drivers
+...
+unknown              /dev/tty        4 1-63 console
 
-Should get_mem_cgroup_from_current() and get_mem_cgroup_from_page() be
-switched to css_tryget() as well then?
+----------------------------------
+after this patch:
+
+cat /proc/tty/drivers
+...
+console              /dev/tty        4 1-63 console
+
+Signed-off-by: Cheng Chao <cs.os.kernel@gmail.com>
+---
+ drivers/tty/vt/vt.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 34aa39d..981eee9 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3440,6 +3440,7 @@ int __init vty_init(const struct file_operations *console_fops)
+ 	if (!console_driver)
+ 		panic("Couldn't allocate console driver\n");
+ 
++	console_driver->driver_name = "console";
+ 	console_driver->name = "tty";
+ 	console_driver->name_base = 1;
+ 	console_driver->major = TTY_MAJOR;
+-- 
+2.4.11
+
