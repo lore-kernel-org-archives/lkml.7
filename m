@@ -2,87 +2,87 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23390C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05B0FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD6A2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94226222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388663AbfKGM7m (ORCPT
+        id S2388721AbfKGNAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:59:42 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55297 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfKGM7m (ORCPT
+        Thu, 7 Nov 2019 08:00:16 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:34209 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfKGNAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:59:42 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iShNt-0008Ok-BL; Thu, 07 Nov 2019 13:59:33 +0100
-Message-ID: <1bacac547977493e50bb1fadfaf4b9ad5b4fdf0c.camel@pengutronix.de>
-Subject: Re: [PATCH v5 0/3] reset: npcm: add NPCM reset driver support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Tomer Maimon <tmaimon77@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, yuenn@google.com, venture@google.com,
-        benjaminfair@google.com, avifishman70@gmail.com, joel@jms.id.au
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Thu, 07 Nov 2019 13:59:32 +0100
-In-Reply-To: <20191106145331.25740-1-tmaimon77@gmail.com>
-References: <20191106145331.25740-1-tmaimon77@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 7 Nov 2019 08:00:16 -0500
+Received: from localhost ([46.78.193.225]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MVdYY-1iItlD1uIm-00RbhR; Thu, 07 Nov 2019 13:59:43 +0100
+Date:   Thu, 7 Nov 2019 13:59:38 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
+Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
+        tglx@linutronix.de, mchehab+samsung@kernel.org,
+        davem@davemloft.net, paulmck@linux.ibm.com,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] iio: add driver for ping))) and laserping sensors
+Message-ID: <20191107125936.ylsfkerxi5tfiaoc@arbad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:dQQZLcFHM0gjAQfgLrHIW/FPizZ3tzk9WpK/cOCGEdlA5djD9RE
+ GDegTPWzUrbwQvF44FOeQmrQW5001GzXlwlc6b2yIwO9qAIO9NPaax++0rPXyJUxg9bvT6S
+ c2Zzow360wsYlKH0/tgq9gm7TcIZejzZORtVbThmduyzRoTeH7Kc5AgrCn7EVUaP3W2KFsC
+ XQvNySdzd3GOPEuOwaBmQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2MhI4ECH7Y4=:bh88XNQu7ElxS5Lc71VJ0c
+ rvppYyzIUqrLSgyIaFy4cYTKqaGlXBMUmAwrxn4VmmhvQwpWq6tQCy376dfNFRxiBOnySFdYS
+ U+IU8INrboXrCNw7uSd1xpiru3BhIXWsEbQI3ueyWaBF5nVU7ur8VvRxwWGFc17CH7tfua9zD
+ 4jdknih01C6ughY8Q6XovO0PjEeL1G9LDQ3allL7hUsmBnG8ypFOxo2v8EcAc2rPRVtBwgmo7
+ vD8C1OZHRt/1GtPMP5ZSYMPi8jGvbsLokfBA/FFGYCfKalPg7WQIDuWjQV3NetTAcMmGjhNim
+ OpZBaS2C0OCqGBucaM3IVZPHVfqbYgWniwS5zLGb7aNpa5Dd2FxaJHl6xeJYnEnMQKYT2uxSR
+ 8saU4+nFdG7bREnTPQ65UVb3EMgI+NWrtXwzWE/IsGxLtqcKEaB8sWBhScP8QV7h3ICfpf/km
+ fwDHPq5TzcaVLJMTXNc2XWHxYTpcp4D1QUMC6Pvmjb03+vHQKbiJkP2plVGQnsES/FtpgrixJ
+ uMRQiYb9QcsRgui3asBsFir2FcOsKlHgxTpSaPwkepNFUelfuA5EWhhlXeeCVNZt+sxH/+FgK
+ 0ShVff2oxuCKWClphHk9pK9LKBCODO1BACPPytDR1q0QV34Jj8L0Dx53Dohxa5tfW8JxIsbKl
+ +ybbdbCeTn4CSiB0yQUHqtPSzWsowqNUiQm6TIH6MpaFhH55g84nfV60PwGkaoqrHypRFHJ8Q
+ m0KdKeDnZfrcmwCAeNA2STcovuXBjEAOYFxmz+r5ry+LGXCmZiJ2joGLkKj3TegGPEJt0rNEV
+ /hq5PQDMzJUO35b35fq2Ty7mLMGmVhKo5Afutlq3VO18p2OtZNs+pUO8jVRF+UeUCucKpxL1m
+ CoOpogdFZsek/SESDDmg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomer,
+This patchset adds support for parallax PING))) and LaserPING sensors as
+iio driver. The driver is derived from srf04 but the device is using only
+one GPIO for both triggering and the echo.
 
-On Wed, 2019-11-06 at 16:53 +0200, Tomer Maimon wrote:
-> This patch set adds reset controller support 
-> for the Nuvoton NPCM Baseboard Management Controller (BMC).
-> 
-> Apart of controlling all NPCM BMC reset module lines the NPCM reset driver
-> support NPCM BMC software reset to restarting the NPCM BMC.
-> 
-> Supporting NPCM USB-PHY reset as follow:
-> 
-> NPCM BMC USB-PHY connected to two modules USB device (UDC) and USB host.
-> 
-> If we will restart the USB-PHY at the UDC probe and later the 
-> USB host probe will restart USB-PHY again it will disable the UDC
-> and vice versa.
-> 
-> The solution is to reset the USB-PHY at the reset probe stage before 
-> the UDC and the USB host are initializing.
-> 
-> NPCM reset driver tested on NPCM750 evaluation board.
-> 
-> Addressed comments from:.
->  - Philipp Zabel
-> 
-> Changes since version 4:
->  - Check for stored GCR string in the of_device_id->data to gain
->    GCR regmap access. 
->  - Adding check if the user used undefined reset pins
->    in the of_xlate function.
->  - Remove nr_resets initialization since it of_xlate replaced 
->    with the custom version.
+Andreas Klinger (5):
+  dt-bindings: add vendor prefix parallax
+  dt-bindings: add parallax ping sensors
+  iio: ping: add parallax ping sensors
+  iio: add ping sensors to kernel configuration
+  MAINTAINERS: add maintainer for ping iio sensors
 
-Thanks, all three applied to reset/next with Rob's R-b.
+ .../bindings/iio/proximity/parallax-ping.yaml      |  51 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ MAINTAINERS                                        |   7 +
+ drivers/iio/proximity/Kconfig                      |  15 +
+ drivers/iio/proximity/Makefile                     |   1 +
+ drivers/iio/proximity/ping.c                       | 336 +++++++++++++++++++++
+ 6 files changed, 412 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
+ create mode 100644 drivers/iio/proximity/ping.c
 
-regards
-Philipp
-
+-- 
+2.11.0
