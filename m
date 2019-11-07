@@ -2,185 +2,70 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3797BFC6196
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169A1FC6194
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128C42178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65B22178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733030AbfKGB5j (ORCPT
+        id S1733045AbfKGB5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:57:39 -0500
-Received: from mga18.intel.com ([134.134.136.126]:60459 "EHLO mga18.intel.com"
+        Wed, 6 Nov 2019 20:57:45 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:34432 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfKGB5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:57:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 17:57:38 -0800
-X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
-   d="scan'208";a="214448319"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 17:57:37 -0800
-Subject: [PATCH v8 06/12] arm/efi: EFI soft reservation to memblock
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     mingo@redhat.com
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        peterz@infradead.org, vishal.l.verma@intel.com,
-        dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-efi@vger.kernel.org
-Date:   Wed, 06 Nov 2019 17:43:21 -0800
-Message-ID: <157309100134.1579826.12497928378034505817.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157309097008.1579826.12818463304589384434.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157309097008.1579826.12818463304589384434.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S1727328AbfKGB5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:57:44 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 54AA120014E;
+        Thu,  7 Nov 2019 02:57:42 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 42DCC20014B;
+        Thu,  7 Nov 2019 02:57:36 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7C6D2402B7;
+        Thu,  7 Nov 2019 09:57:28 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] ARM: dts: imx6sx-sdb-reva: Add revision in board compatible string
+Date:   Thu,  7 Nov 2019 09:56:03 +0800
+Message-Id: <1573091764-20483-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-interpretation of the EFI Memory Types as "reserved for a specific
-purpose".
+i.MX6SX SDB Rev-A board should use its own board compatible
+string instead of default i.MX6SX SDB board.
 
-The proposed Linux behavior for specific purpose memory is that it is
-reserved for direct-access (device-dax) by default and not available for
-any kernel usage, not even as an OOM fallback.  Later, through udev
-scripts or another init mechanism, these device-dax claimed ranges can
-be reconfigured and hot-added to the available System-RAM with a unique
-node identifier. This device-dax management scheme implements "soft" in
-the "soft reserved" designation by allowing some or all of the
-reservation to be recovered as typical memory. This policy can be
-disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
-efi=nosoftreserve.
-
-For this patch, update the ARM paths that consider
-EFI_CONVENTIONAL_MEMORY to optionally take the EFI_MEMORY_SP attribute
-into account as a reservation indicator. Publish the soft reservation as
-IORES_DESC_SOFT_RESERVED memory, similar to x86.
-
-(Based on an original patch by Ard)
-
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/mm/mmu.c                       |    2 ++
- drivers/firmware/efi/arm-init.c           |    9 +++++++++
- drivers/firmware/efi/arm-runtime.c        |   24 ++++++++++++++++++++++++
- drivers/firmware/efi/libstub/arm32-stub.c |    5 +++++
- drivers/firmware/efi/libstub/random.c     |    4 ++++
- 5 files changed, 44 insertions(+)
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 60c929f3683b..2c385fe05fde 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1061,6 +1061,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
- 			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+index f1830ed..2b29ed2 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -6,6 +6,7 @@
  
-+	memblock_clear_nomap(start, size);
-+
- 	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
- 			   restrictions);
- }
-diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-index 311cd349a862..904fa09e6a6b 100644
---- a/drivers/firmware/efi/arm-init.c
-+++ b/drivers/firmware/efi/arm-init.c
-@@ -163,6 +163,15 @@ static __init int is_usable_memory(efi_memory_desc_t *md)
- 	case EFI_BOOT_SERVICES_DATA:
- 	case EFI_CONVENTIONAL_MEMORY:
- 	case EFI_PERSISTENT_MEMORY:
-+		/*
-+		 * Special purpose memory is 'soft reserved', which means it
-+		 * is set aside initially, but can be hotplugged back in or
-+		 * be assigned to the dax driver after boot.
-+		 */
-+		if (efi_soft_reserve_enabled() &&
-+		    (md->attribute & EFI_MEMORY_SP))
-+			return false;
-+
- 		/*
- 		 * According to the spec, these regions are no longer reserved
- 		 * after calling ExitBootServices(). However, we can only use
-diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
-index e2ac5fa5531b..899b803842bb 100644
---- a/drivers/firmware/efi/arm-runtime.c
-+++ b/drivers/firmware/efi/arm-runtime.c
-@@ -121,6 +121,30 @@ static int __init arm_enable_runtime_services(void)
- 		return 0;
- 	}
+ / {
+ 	model = "Freescale i.MX6 SoloX SDB RevA Board";
++	compatible = "fsl,imx6sx-sdb-reva", "fsl,imx6sx";
+ };
  
-+	if (efi_soft_reserve_enabled()) {
-+		efi_memory_desc_t *md;
-+
-+		for_each_efi_memory_desc(md) {
-+			int md_size = md->num_pages << EFI_PAGE_SHIFT;
-+			struct resource *res;
-+
-+			if (!(md->attribute & EFI_MEMORY_SP))
-+				continue;
-+
-+			res = kzalloc(sizeof(*res), GFP_KERNEL);
-+			if (WARN_ON(!res))
-+				break;
-+
-+			res->start	= md->phys_addr;
-+			res->end	= md->phys_addr + md_size - 1;
-+			res->name	= "Soft Reserved";
-+			res->flags	= IORESOURCE_MEM;
-+			res->desc	= IORES_DESC_SOFT_RESERVED;
-+
-+			insert_resource(&iomem_resource, res);
-+		}
-+	}
-+
- 	if (efi_runtime_disabled()) {
- 		pr_info("EFI runtime services will be disabled.\n");
- 		return 0;
-diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
-index 41213bf5fcf5..4566640de650 100644
---- a/drivers/firmware/efi/libstub/arm32-stub.c
-+++ b/drivers/firmware/efi/libstub/arm32-stub.c
-@@ -146,6 +146,11 @@ static efi_status_t reserve_kernel_base(efi_system_table_t *sys_table_arg,
- 			continue;
- 
- 		case EFI_CONVENTIONAL_MEMORY:
-+			/* Skip soft reserved conventional memory */
-+			if (efi_soft_reserve_enabled() &&
-+			    (desc->attribute & EFI_MEMORY_SP))
-+				continue;
-+
- 			/*
- 			 * Reserve the intersection between this entry and the
- 			 * region.
-diff --git a/drivers/firmware/efi/libstub/random.c b/drivers/firmware/efi/libstub/random.c
-index b4b1d1dcb5fd..6c188695e730 100644
---- a/drivers/firmware/efi/libstub/random.c
-+++ b/drivers/firmware/efi/libstub/random.c
-@@ -46,6 +46,10 @@ static unsigned long get_entry_num_slots(efi_memory_desc_t *md,
- 	if (md->type != EFI_CONVENTIONAL_MEMORY)
- 		return 0;
- 
-+	if (efi_soft_reserve_enabled() &&
-+	    (md->attribute & EFI_MEMORY_SP))
-+		return 0;
-+
- 	region_end = min((u64)ULONG_MAX, md->phys_addr + md->num_pages*EFI_PAGE_SIZE - 1);
- 
- 	first_slot = round_up(md->phys_addr, align);
+ &i2c1 {
+-- 
+2.7.4
 
