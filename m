@@ -2,84 +2,160 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46DAC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DA8C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74A72187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573136477;
-	bh=zrIHF7T3paXEpcMq7MV6AOWqqxFyxj9f/j+Oa24JGp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=in+NE9upwbNYvn10O1oI552JUGLrankPYRCiGlumbH+yjLAIdn5l5HF3gRqsFQaHV
-	 7kLYCHa9jyd0LbvewjsbNXZBvxixlpvxPdbSFX0EHpePormIUB7d352PTUywap3AHB
-	 pBOTFUNO2P45jLFF7l1IxEfUi2Qk6Nj8h0kLjtQI=
+	by mail.kernel.org (Postfix) with ESMTP id 16280207FA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F38MnjzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389347AbfKGOVQ (ORCPT
+        id S2389288AbfKGOVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:21:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbfKGOVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:21:14 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 7 Nov 2019 09:21:47 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59011 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731026AbfKGOVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:21:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573136505;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DrmPAze8Ac5FFece7lozmX/b+JhD3npiUhbXA+xlp7o=;
+        b=F38MnjzJMtKn5UUaMAKqCJX7HmlRIV6jh4/ETG4k76uGASUAN5UMZBJHzeC4ZXcYb5t8T4
+        VUpOK6wLbteMugv+ZYidrmeCoBZz3+FB43BhJrnyr+GeogzM/tZCuudjfimrYxQDna3RFB
+        YF2MP+bBHc8nnx18FlouSISWZoAVIEs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-J1OMK1x0NCiU9HfU4rkiww-1; Thu, 07 Nov 2019 09:21:42 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C65207FA;
-        Thu,  7 Nov 2019 14:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573136474;
-        bh=zrIHF7T3paXEpcMq7MV6AOWqqxFyxj9f/j+Oa24JGp8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c4HeHac8PTx6WMnMwd4fYMcUhf0YK8e2NA/osYMyZyT5GirPSPLMf4wqToyntz14B
-         1tnzc4TOoCO0XFtpTbbP1v5pvS3uaA5NfJq8p3Et7QytccOqsVO1upZbHVw7nR9nBd
-         gNgy/hYr3h71tN6nqmf1Ptiopzilxl7IQkIeehAY=
-Date:   Thu, 7 Nov 2019 15:21:11 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] interconnect changes for 5.5
-Message-ID: <20191107142111.GB109902@kroah.com>
-References: <5123bf54-5d62-fc5c-8838-17bc34487d83@linaro.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DEFA1005500;
+        Thu,  7 Nov 2019 14:21:38 +0000 (UTC)
+Received: from [10.72.12.21] (ovpn-12-21.pek2.redhat.com [10.72.12.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C818C608B6;
+        Thu,  7 Nov 2019 14:20:45 +0000 (UTC)
+Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191106133531.693-1-jasowang@redhat.com>
+ <20191106133531.693-7-jasowang@redhat.com>
+ <20191107040700-mutt-send-email-mst@kernel.org>
+ <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
+ <20191107061942-mutt-send-email-mst@kernel.org>
+ <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+ <20191107080834-mutt-send-email-mst@kernel.org>
+ <b2265e3a-6f86-c21a-2ebd-d0e4eea2886f@redhat.com>
+ <20191107085013-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3440c55b-bbb9-fd4d-7c06-f45860fb4bd3@redhat.com>
+Date:   Thu, 7 Nov 2019 22:20:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5123bf54-5d62-fc5c-8838-17bc34487d83@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191107085013-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: J1OMK1x0NCiU9HfU4rkiww-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 02:46:53PM +0200, Georgi Djakov wrote:
-> Hi Greg,
-> 
-> This is a pull request with interconnect patches for the 5.5 merge window.
-> All patches have been for a while in linux-next without reported issues. The
-> details are in the signed tag. Please consider pulling into char-misc-next.
 
-I don't know about
-0003-interconnect-Disallow-interconnect-core-to-be-built-.patch here.
-Shouldn't you just fix up the dependancies of subsystems that rely on
-this?  We are moving more and more to kernels that "just work" with
-everything as modules, even on arm64 systems.  So forbiding the
-interconnect code from being able to be built as a module does not feel
-good to me at all.
+On 2019/11/7 =E4=B8=8B=E5=8D=889:50, Michael S. Tsirkin wrote:
+> On Thu, Nov 07, 2019 at 09:32:29PM +0800, Jason Wang wrote:
+>> On 2019/11/7 =E4=B8=8B=E5=8D=889:08, Michael S. Tsirkin wrote:
+>>> On Thu, Nov 07, 2019 at 08:43:29PM +0800, Jason Wang wrote:
+>>>> On 2019/11/7 =E4=B8=8B=E5=8D=887:21, Michael S. Tsirkin wrote:
+>>>>> On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
+>>>>>> On 2019/11/7 =E4=B8=8B=E5=8D=885:08, Michael S. Tsirkin wrote:
+>>>>>>> On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
+>>>>>>>> This sample driver creates mdev device that simulate virtio net de=
+vice
+>>>>>>>> over virtio mdev transport. The device is implemented through vrin=
+gh
+>>>>>>>> and workqueue. A device specific dma ops is to make sure HVA is us=
+ed
+>>>>>>>> directly as the IOVA. This should be sufficient for kernel virtio
+>>>>>>>> driver to work.
+>>>>>>>>
+>>>>>>>> Only 'virtio' type is supported right now. I plan to add 'vhost' t=
+ype
+>>>>>>>> on top which requires some virtual IOMMU implemented in this sampl=
+e
+>>>>>>>> driver.
+>>>>>>>>
+>>>>>>>> Acked-by: Cornelia Huck<cohuck@redhat.com>
+>>>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>>>>> I'd prefer it that we call this something else, e.g.
+>>>>>>> mvnet-loopback. Just so people don't expect a fully
+>>>>>>> functional device somehow. Can be renamed when applying?
+>>>>>> Actually, I plan to extend it as another standard network interface =
+for
+>>>>>> kernel. It could be either a standalone pseudo device or a stack dev=
+ice.
+>>>>>> Does this sounds good to you?
+>>>>>>
+>>>>>> Thanks
+>>>>> That's a big change in an interface so it's a good reason
+>>>>> to rename the driver at that point right?
+>>>>> Oherwise users of an old kernel would expect a stacked driver
+>>>>> and get a loopback instead.
+>>>>>
+>>>>> Or did I miss something?
+>>>> My understanding is that it was a sample driver in /doc. It should not=
+ be
+>>>> used in production environment. Otherwise we need to move it to
+>>>> driver/virtio.
+>>>>
+>>>> But if you insist, I can post a V11.
+>>>>
+>>>> Thanks
+>>> this can be a patch on top.
+>> Then maybe it's better just extend it to work as a normal networking dev=
+ice
+>> on top?
+>>
+>> Thanks
+> That would be a substantial change. Maybe drop 6/6 for now until
+> we have a better handle on this?
+>
 
-Same for
-0007-interconnect-Remove-unused-module-exit-code-from-cor.patch, we are
-adding module_init/exit() calls to modules, do not remove them!
+Ok, consider the change should be small, I will post V11 where I can fix=20
+the typos spotted.
 
+Thanks
 
-Can you drop those two patches and resend?  Or I can just take these out
-of the pull request and apply the rest as patches for now, if that's
-easier for you to handle.
-
-thanks,
-
-greg k-h
