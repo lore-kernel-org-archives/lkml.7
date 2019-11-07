@@ -2,66 +2,136 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753F9C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36978C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443832084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1D42084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387932AbfKGKOw (ORCPT
+        id S2387994AbfKGKPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:14:52 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:14650 "EHLO 1wt.eu"
+        Thu, 7 Nov 2019 05:15:31 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:37428 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727434AbfKGKOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:14:51 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id xA7ADvMK015622;
-        Thu, 7 Nov 2019 11:13:57 +0100
-Date:   Thu, 7 Nov 2019 11:13:57 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        id S1733142AbfKGKPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:15:30 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3AA3C2022D;
+        Thu,  7 Nov 2019 11:15:27 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 1ADA120189;
+        Thu,  7 Nov 2019 11:15:27 +0100 (CET)
+Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
- further
-Message-ID: <20191107101357.GC15536@1wt.eu>
-References: <20191106193459.581614484@linutronix.de>
- <20191106202806.241007755@linutronix.de>
- <CAHk-=wjXcS--G3Wd8ZGEOdCNRAWPaUneyN1ryShQL-_yi1kvOA@mail.gmail.com>
- <20191107082541.GF30739@gmail.com>
- <20191107091704.GA15536@1wt.eu>
- <alpine.DEB.2.21.1911071058260.4256@nanos.tec.linutronix.de>
+        stable <stable@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <8f15abf9-80bc-9767-e61c-6e0455effbf0@free.fr>
+Date:   Thu, 7 Nov 2019 11:15:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911071058260.4256@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Nov  7 11:15:27 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 11:00:27AM +0100, Thomas Gleixner wrote:
-> Changing ioperm(single port, port range) to be ioperm(all) is going to
-> break a bunch of test cases which actually check whether the permission is
-> restricted to a single I/O port or the requested port range.
+On 02/11/2019 01:24, Bjorn Andersson wrote:
 
-But out of curiosity, are these solely test cases or things that real
-applications do ? We could imagine having a sysctl entry to indicate
-whether or not we want strict compatibility with older code in which
-case we'd take the slow path, or a modernized behavior using only the
-fast path. If we managed to deal with mmap_min_addr over time, I think
-it should be manageable to deal with the rare applications using ioperm().
+> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
+> bridges.
 
-Willy
+Hey, git blames me! Why didn't you CC me? :-)
+
+Commit 322f03436692481993d389f539c016d20bb0fa1d
+PCI: qcom: Use default config space read function
+
+The patch's history is of interest:
+https://lkml.org/lkml/2019/3/11/614
+https://www.spinics.net/lists/linux-arm-msm/msg49090.html
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
+>  include/linux/pci_ids.h                | 2 ++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 35f4980480bb..b91abf4d4905 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>  {
+>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>  }
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
+>  
+>  static struct platform_driver qcom_pcie_driver = {
+>  	.probe = qcom_pcie_probe,
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 21a572469a4e..3d0724ee4d2f 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2413,6 +2413,8 @@
+>  #define PCI_VENDOR_ID_LENOVO		0x17aa
+>  
+>  #define PCI_VENDOR_ID_QCOM		0x17cb
+> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
+> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
+
+I don't think the fixup is required for 0x106 and 0x107...
+
+In v1, I wrote:
+FWIW, this quirk is no longer required on recent chips:
+msm8996 (tested by Stanimir), msm8998 (tested by me), sdm845 (untested) are unaffected
+apq/ipq8064 is affected => what is the device ID for these chips?
+others?
+
+IIRC, 0x0101 requires the fixup because
+dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+is broken on that platform (grrr, HW devs)
+(See my v3, tested by Srinivas)
+
+Stan wrote:
+
+Yes it is good but to avoid breaking another SoCs could you add fixups
+for the following SoCs:
+
+SoC		device ID
+ipq4019 	0x1001
+ipq8064		0x101
+ipq8074		0x108
+
+ipq8064 has the same device ID as apq8064, but I'm not sure do we need
+defines per SoC or just rename DEV_ID_8064 ? I'm fine with both ways.
+
+
+In conclusion, my analysis in v5 was wrong
+"Changes from v4 to v5: Apply fixup to all qcom chips, the same way it was before
+(thus the code remains functionally equivalent)"
+=> The fixup was applied *more widely* than before, so not functionally equivalent.
+
+Regards.
