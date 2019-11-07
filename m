@@ -2,86 +2,87 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A52C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECAAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41FD92087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F222087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="MLjoN28E"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SNApodmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbfKGPYM (ORCPT
+        id S2388407AbfKGPZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:24:12 -0500
-Received: from mail2.candelatech.com ([208.74.158.173]:43182 "EHLO
-        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727727AbfKGPYL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:24:11 -0500
-Received: from [192.168.1.47] (unknown [50.34.216.97])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail3.candelatech.com (Postfix) with ESMTPSA id A4F4413C358;
-        Thu,  7 Nov 2019 07:24:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com A4F4413C358
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-        s=default; t=1573140251;
-        bh=51W91Kw2UqEb8Wlp1490MubzBtLUcquzz36+dIa/yk8=;
-        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
-        b=MLjoN28EsJ7Hcrq5iM3T9oJvb3rV4Ko1evC6v41M1C1VxFkNS9bml8tMltAtqXLBn
-         kfvP/Q95avdsMtK5oWprw9vOTXtUs1W11hsFbL8z4sgdCNWO2r0sNR14LpKng3IeRT
-         r37iAX7JwcSVkDbw9zxUGpSVfE7XdpZEhIyUWU4U=
-Subject: Re: [PATCH net-next] ath10k: fix RX of frames with broken FCS in
- monitor mode
-To:     =?UTF-8?Q?Linus_L=c3=bcssing?= <linus.luessing@c0d3.blue>
-References: <20191105164932.11799-1-linus.luessing@c0d3.blue>
- <927cea69-7afc-5c35-df8d-9813392e8928@candelatech.com>
- <20191107140149.GB19482@otheros>
-Cc:     =?UTF-8?Q?Linus_L=c3=bcssing?= <ll@simonwunderlich.de>,
-        ath10k@lists.infradead.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Ben Greear <greearb@candelatech.com>
-Message-ID: <6ca7e338-d14d-49f6-f51c-600856b59767@candelatech.com>
-Date:   Thu, 7 Nov 2019 07:24:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Thu, 7 Nov 2019 10:25:35 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:54464 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727142AbfKGPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 10:25:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=VHLQviatAs9ZqQQx5vMAJFgFa1NM1ztWGrBG/mJfE5Y=; b=SNApodmS+wmwSmGN98S/JbBJcL
+        ok9iCajzq0gFB9BtWRnzQ5ZgCyMvhJ8K2aDsBm6JK0LWuGxYTA68Z6stS2PcDaMZVa9K1xxLmgNZv
+        AEWqR2tS/OuvaWCjybh4X/ydcWIdgsKLxRfWWbUZc5ErVPxKLw2yx+jZALgfj0aOCvOU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iSjfA-0006jB-3F; Thu, 07 Nov 2019 16:25:32 +0100
+Date:   Thu, 7 Nov 2019 16:25:32 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] enetc: add ioctl() support for PHY-related ops
+Message-ID: <20191107152532.GD7344@lunn.ch>
+References: <20191107083937.18228-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20191107140149.GB19482@otheros>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107083937.18228-1-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 07, 2019 at 09:39:37AM +0100, Michael Walle wrote:
+> If there is an attached PHY try to handle the requested ioctl with its
+> handler, which allows the userspace to access PHY registers, for
+> example. This will make mii-diag and similar tools work.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/net/ethernet/freescale/enetc/enetc.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+> index b6ff89307409..25af207f1962 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+> @@ -1599,7 +1599,10 @@ int enetc_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
+>  	if (cmd == SIOCGHWTSTAMP)
+>  		return enetc_hwtstamp_get(ndev, rq);
+>  #endif
+> -	return -EINVAL;
+> +
+> +	if (!ndev->phydev)
+> +		return -EINVAL;
 
+Hi Michael
 
-On 11/07/2019 06:03 AM, Linus Lüssing wrote:
-> On Tue, Nov 05, 2019 at 09:19:20AM -0800, Ben Greear wrote:
->> Thanks for adding the counter.  Since it us u32, I doubt you need the spin lock
->> below?
->
-> Ok, I can remove the spin-lock.
->
-> Just for clarification though, if I recall correctly then an increment operator
-> is not guaranteed to work atomically. But you think it's unlikely
-> to race with a concurrent ++ and therefore it's fine for just a debug counter?
-> (and if it were racing, it'd just be a missed +1)
+I think EOPNOTSUPP is normal. Yes, you are just moving around what was
+there before, but you could make this improvement as well.
 
-I think it is fine to be off-by-one, and u32 is atomic so you would never read a really
-weird number, like you can if u64 is non-atomically being incremented.
+If you don't want to:
 
-Thanks,
-Ben
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-
--- 
-Ben Greear <greearb@candelatech.com>
-Candela Technologies Inc  http://www.candelatech.com
+    Andrew
