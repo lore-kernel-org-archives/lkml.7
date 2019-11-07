@@ -2,112 +2,151 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34354C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD97C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0450A2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318602087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnsaizJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388347AbfKGLMK (ORCPT
+        id S2388149AbfKGLOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:12:10 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:33310 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388225AbfKGLMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:12:09 -0500
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 06FF77C0B8
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 11:12:09 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id 199so888982wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 03:12:08 -0800 (PST)
+        Thu, 7 Nov 2019 06:14:03 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46302 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728183AbfKGLOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:14:02 -0500
+Received: by mail-qt1-f196.google.com with SMTP id u22so1903141qtq.13
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 03:14:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lyoKYhruCXtXlSxyKmofty3V/5Ux1OewKAWp0cBjjOk=;
+        b=SnsaizJEVn4hd48OZGCHcsXB0TloFYJUE4Vgp7rsMS5PXFGs0P6wFzXlDZO0Eu0SDb
+         hHSKxt0uu9EqFCbk5Y0S+yh8eweYJPR1bauYyh8lsDHj+wa8afwsTuSDk1Fj8GA850LK
+         XrLMp40TmO/TfvdI15UuOrsdl5MMScvkz+gpR3DUiGazQAgOUXj+47ofSu5l3PlYcwaB
+         GQTr48MfnrIrTBoRwA2uoZrYoPp3909UJBG966z0tmAGqNolAFVVguk0+FCjrEH3Qj9e
+         VadllTvF02ehjzIpPli3aKiOxR2UuBhWLgv1Bao4w77tdISNBtWhmWq5VH7TCsr3mXZd
+         6EHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wb7dO8DsKF7yscVCT8cl3F3QgHxyR2FGMLetiHh29tE=;
-        b=ZWigWptvMnIxcdKST+Tp0QCBDE5YVV7zZYdjz51VUXK5yDodXSx01mhWDs1Ck5R6e2
-         gJ0O8ANZJxTAO01GwYTp3MVtcNpoxAxgblF00H9DtCR2uKeooMEpWbyrm04auKdV9bA7
-         hPaJ5UpbUx6hzH9CHPBDK0AimXvnW6vnFIYxEQ6w7451NWxrvJiQzGkWD2r1f4eMJFLd
-         a469ENf2djJZrz5MCXOMqkCTvcD8A4idbpuseD5zXHp+B+g+eBBIVq3cDzEBSqQHHMMm
-         4UaeSR0XYkJIlln9t1SFZze28C3gv7eFe3GoItftnSqTX1EGzq4B6b8n6MC3NbBZL0FR
-         90rA==
-X-Gm-Message-State: APjAAAVZ372Ck0zP305CA2ZygWzIrECS5J5lh3YX7rdc3YLyRSeJC4q6
-        SXf9a960zgrZfdEsR5CAwMKg2ujJnarNvZVcAepcwDZcJM/nx+Ot4hGjGOikh5WsP2pi0Ag9Cgc
-        bMmExZ0PoAEXT/LSJflhDog+T
-X-Received: by 2002:adf:ea42:: with SMTP id j2mr2286529wrn.384.1573125127617;
-        Thu, 07 Nov 2019 03:12:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzsSQDxaFh5QeJ49rl6vQ2cGJ313lfE7wHNWd3mB8/6HiMhtvtIu+qvazulIg9vS3Pv7aJksw==
-X-Received: by 2002:adf:ea42:: with SMTP id j2mr2286502wrn.384.1573125127327;
-        Thu, 07 Nov 2019 03:12:07 -0800 (PST)
-Received: from [10.201.49.199] (nat-pool-mxp-u.redhat.com. [149.6.153.187])
-        by smtp.gmail.com with ESMTPSA id w19sm1678225wmk.36.2019.11.07.03.12.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Nov 2019 03:12:06 -0800 (PST)
-Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
- reserved
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>
-References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
- <20191106170727.14457-2-sean.j.christopherson@intel.com>
- <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
- <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
- <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
- <20191106233913.GC21617@linux.intel.com>
- <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
- <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
-Date:   Thu, 7 Nov 2019 12:12:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lyoKYhruCXtXlSxyKmofty3V/5Ux1OewKAWp0cBjjOk=;
+        b=i6e9fTBVq9XN+jFBxpOyNAIz5lBN3CH4bB7vtas6CkSZuVItdP9vVjqraOaDrmIEWW
+         +iuKbhylwnm2bbKNYJnXYUB4KN55tP1im6+KelltFZYgzsYopA6x+idwF6Zr24wSEg+h
+         SzOnHxuxXq3fLHVcpDk2RAJqB11YgY60Gd4i1dgXAklE8394dSw6ttWaWfKAKeSlcujq
+         P75ooykfxOZn55p8+brMt58flqDQroYnvSNgDxks7ShE6dbW1cwscQkYOD5XPKsLYIfF
+         MaBV0um3wRpjtkjJUUjznyNEy/JQEHy9CRgXVu9H/vRrtPd7GU+2lMXFSubn/YTDREqe
+         V5Zw==
+X-Gm-Message-State: APjAAAU7PDjMkA/xTpkqfHZUoX4Od6X7j8TG9WYBhhPyD7IqH0YpNi2R
+        CEhk0ioiFJM9cD72eRmAAlo=
+X-Google-Smtp-Source: APXvYqwySJ0cAy6fjP1KY1LxLGYyLu4llKd5Zo/VrArJm+A4Z19vLVn9LHxTuMtCzXBCxcrAIYyQ+g==
+X-Received: by 2002:ac8:1814:: with SMTP id q20mr3216882qtj.38.1573125239942;
+        Thu, 07 Nov 2019 03:13:59 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id o13sm1026814qto.96.2019.11.07.03.13.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 03:13:58 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7910A40B1D; Thu,  7 Nov 2019 08:13:56 -0300 (-03)
+Date:   Thu, 7 Nov 2019 08:13:56 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     jsun4 <jiwei.sun@windriver.com>, acme@redhat.com,
+        arnaldo.melo@gmail.com, linux-kernel@vger.kernel.org,
+        alexander.shishkin@linux.intel.com, mpetlan@redhat.com,
+        namhyung@kernel.org, a.p.zijlstra@chello.nl,
+        adrian.hunter@intel.com, Richard.Danter@windriver.com,
+        jiwei.sun.bj@qq.com
+Subject: Re: [PATCH v5] perf record: Add support for limit perf output file
+ size
+Message-ID: <20191107111356.GA23651@kernel.org>
+References: <20191022080901.3841-1-jiwei.sun@windriver.com>
+ <20191101081300.GA2172@krava>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101081300.GA2172@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/11/19 06:48, Dan Williams wrote:
->> How do mmu notifiers get held off by page references and does that
->> machinery work with ZONE_DEVICE? Why is this not a concern for the
->> VM_IO and VM_PFNMAP case?
-> Put another way, I see no protection against truncate/invalidate
-> afforded by a page pin. If you need guarantees that the page remains
-> valid in the VMA until KVM can install a mmu notifier that needs to
-> happen under the mmap_sem as far as I can see. Otherwise gup just
-> weakly asserts "this pinned page was valid in this vma at one point in
-> time".
+Em Fri, Nov 01, 2019 at 09:13:00AM +0100, Jiri Olsa escreveu:
+> On Tue, Oct 22, 2019 at 04:09:01PM +0800, jsun4 wrote:
+> > The patch adds a new option to limit the output file size, then based
+> > on it, we can create a wrapper of the perf command that uses the option
+> > to avoid exhausting the disk space by the unconscious user.
+> > 
+> > In order to make the perf.data parsable, we just limit the sample data
+> > size, since the perf.data consists of many headers and sample data and
+> > other data, the actual size of the recorded file will bigger than the
+> > setting value.
+> > 
+> > Testing it:
+> > 
+> >  # ./perf record -a -g --max-size=10M
+> >  Couldn't synthesize bpf events.
+> >  [ perf record: perf size limit reached (10249 KB), stopping session ]
+> >  [ perf record: Woken up 32 times to write data ]
+> >  [ perf record: Captured and wrote 10.133 MB perf.data (71964 samples) ]
+> > 
+> >  # ls -lh perf.data
+> >  -rw------- 1 root root 11M Oct 22 14:32 perf.data
+> > 
+> >  # ./perf record -a -g --max-size=10K
+> >  [ perf record: perf size limit reached (10 KB), stopping session ]
+> >  Couldn't synthesize bpf events.
+> >  [ perf record: Woken up 0 times to write data ]
+> >  [ perf record: Captured and wrote 1.546 MB perf.data (69 samples) ]
+> > 
+> >  # ls -l perf.data
+> >  -rw------- 1 root root 1626952 Oct 22 14:36 perf.data
+> > 
+> > Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
+> > ---
+> > v5 changes:
+> >   - Change the output format like [ perf record: perf size limit XX ]
+> >   - change the killing perf way from "raise(SIGTERM)" to set "done == 1"
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-The MMU notifier is installed before gup, so any invalidation will be
-preceded by a call to the MMU notifier.  In turn,
-invalidate_range_start/end is called with mmap_sem held so there should
-be no race.
+So, had to add this on top to fix the build on multiple building
+environments, rec->bytes_written is an u64, so we must use PRIu64 or
+else get errors like:
 
-However, as Sean mentioned, early put_page of ZONE_DEVICE pages would be
-racy, because we need to keep the reference between the gup and the last
-time we use the corresponding struct page.
+  builtin-record.c: In function 'record__write':
+  builtin-record.c:150:5: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'u64' [-Werror=format=]
+       rec->bytes_written >> 10);
+       ^
+    CC       /tmp/build/pe
 
-Based on this, I think Sean's patches should work fine, and I prefer
-them over David's approach.  Either way, adding some documentation is in
-order.
 
-Paolo
+- Arnaldo
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index b9ddfcda9611..b95c000c1ed9 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -145,7 +145,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+ 	rec->bytes_written += size;
+ 
+ 	if (record__output_max_size_exceeded(rec) && !done) {
+-		fprintf(stderr, "[ perf record: perf size limit reached (%lu KB),"
++		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
+ 				" stopping session ]\n",
+ 				rec->bytes_written >> 10);
+ 		done = 1;
