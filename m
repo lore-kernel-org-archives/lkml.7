@@ -2,180 +2,103 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDB5C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0687DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC4821882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AD22085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153506;
-	bh=MhnpgA7Kq4kbS8LrDMHw1jC0IlfelzPYlfzzoAJqYf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x1re5vKySx2xRqTTfA/dq7Fp/dUMAkvfAAotpnYiE26YBpDdEMvOlNqqZjX/0VmrZ
-	 jdX52xBmL4VuMKMQqzrDHwP0/oppp1MzZ7bZzfs85I5VuT5rRQtSHrd/XHD+q1jxXW
-	 2b0cOU+K/4BlT/8mv8hZ/uAQPU+AGp70Bx/05DZs=
+	s=default; t=1573153511;
+	bh=dzxy8kBIvfQifHvGvvtKttTSsparh5xInh7f2n9OBX8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sOwgqsTz8SSY+kPqDcAYAwz0q65jGkdyoI8aoru7hPRvMr3Xrl6LUG5ySSZYW7LtU
+	 TwQ2T/AmYVY4z6lIv6PxO8B74/6FC5WxzpGbzAPnIpBBEgRzjq86l24wo3dab512He
+	 HELTtr+OqD0xaIwE/G8TitZdfxxPPtUEvWv3JD9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfKGTFF (ORCPT
+        id S1728492AbfKGTFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:05:05 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33453 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730178AbfKGTFE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:05:04 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 71so3026442qkl.0;
-        Thu, 07 Nov 2019 11:05:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D2aZYGhhhD0fueEZXuZZtBxsPvMYXcl+9GQ42VL43KI=;
-        b=QMrL5nCAR853//4IbtMGC+V9cyv4Cci7a5ZLezHlo8P+sBwSZ7sdElMR64J11gVzVy
-         +jwOVFRlQ856q0LydViBktS8UwVaYvjFOE8Hshwk2Kg7vFAvvi4cycqMZn6M4UAWCAOk
-         PeT1uWVTEy/ffwMqLCnEsdpXLFwX2HCynQx+JcUjU+LUgFlomDNbysXZjfEQjPhC59zw
-         O2XpzH5to18sUHc//d8yst74RbREs30kLGGRa/MLmBzkn8XRbti2wLANRh0SLmW0ZnAY
-         IQNiOZe+U5oyogrSXJDnBlKz0bgOZnAV3g17MmtlrW7o0HwvJmZA2ABKMPy4EkCZv3fy
-         jLpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D2aZYGhhhD0fueEZXuZZtBxsPvMYXcl+9GQ42VL43KI=;
-        b=PK5hs8P2lyeP0ENI0SJmWxb0lSmVUlD2kOy7ThllAhp4CJSkQMGX2fXsW+O6a+8E2f
-         7Zg1I9qSpbd0JXrAZhgZR03iCXILa4Lxr4D4ec+wFtEKh4vZhbUbytiHME/6ilD/9/2B
-         IGAVH1vmNAPbng0sKfmlAXbDiMXGowClvX+N8VX+4FxROJP9s8mhxPH5kxQXKhkQ9+xP
-         QIvPyknFDLAgcLJQual4cqzepl4r+T9yZA1KVz2BYMqg1klF5wSvoSnHpU2ksPkuUq3n
-         n3WgLWfV7t1WArgjUrjULui1W4MQfiFcxW5v83pNX1l5ohDI83l/jpKoLatXrwxMXvKm
-         1v1Q==
-X-Gm-Message-State: APjAAAWFgCxEJHle384Ak6iCZeqgiJympf0iesSWBH7oy2r8pecQoyPA
-        fjHI/lMa5qw6HWHLdyAlUJk=
-X-Google-Smtp-Source: APXvYqzl96Q5hW2MM5DuIR0U3yR8pKDS3P3ZF244FehkB7rIAWEa59eSpL/t9gsb+/nHA8O5jAi9gg==
-X-Received: by 2002:a37:4654:: with SMTP id t81mr4466141qka.0.1573153502452;
-        Thu, 07 Nov 2019 11:05:02 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:3f13])
-        by smtp.gmail.com with ESMTPSA id b2sm1834935qtc.21.2019.11.07.11.05.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Nov 2019 11:05:01 -0800 (PST)
-Date:   Thu, 7 Nov 2019 11:04:59 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, kernel-team@fb.com
-Subject: [PATCH 0.5/5] bfq-iosched: relocate bfqg_*rwstat*() helpers
-Message-ID: <20191107190459.GA3622521@devbig004.ftw2.facebook.com>
-References: <20191106215838.3973497-1-tj@kernel.org>
+        Thu, 7 Nov 2019 14:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727680AbfKGTFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:05:09 -0500
+Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022FA218AE;
+        Thu,  7 Nov 2019 19:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573153508;
+        bh=dzxy8kBIvfQifHvGvvtKttTSsparh5xInh7f2n9OBX8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fQ6w8aF8tCRkhoPVAK2fcYndBmIGxWF8B/QALl4wYhvov5ug0PZKv8YJeZiRarR5v
+         hYUkGQV9UJw3rKfIFfHcjWTJxsyg/OeNETUeicR9rsXw+CTRMYqIO/6XNtfq+ng0M7
+         eeUn9XdCpYeKDTyd8Dp0gStY12MuQ2Ck/taSs0lg=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        James Clark <James.Clark@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, nd <nd@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 33/63] libsubcmd: Use -O0 with DEBUG=1
+Date:   Thu,  7 Nov 2019 15:59:41 -0300
+Message-Id: <20191107190011.23924-34-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
+References: <20191107190011.23924-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106215838.3973497-1-tj@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From a7b9100d72d75a1472bed130b6edd271b734776f Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Thu, 7 Nov 2019 11:01:19 -0800
+From: James Clark <James.Clark@arm.com>
 
-Collect them right under #ifdef CONFIG_BFQ_CGROUP_DEBUG.  The next
-patch will use them from !DEBUG path and this makes it easy to move
-them out of the ifdef block.
+When a 'make DEBUG=1' build is done, the command parser is still built
+with -O6 and is hard to step through, fix it making it use -O0 in that
+case.
 
-This is pure code reorganization.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: nd <nd@arm.com>
+Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
+[ split from a larger patch ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
-Jens, this is an extra patch to help fixing the build bug when
-!CONFIG_BFQ_CGROUP_DEBUG.  The git tree has been updated accordingly.
-Please let me know if you want the whole series reposted.
+ tools/lib/subcmd/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks.
-
- block/bfq-cgroup.c | 46 +++++++++++++++++++++++-----------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 86a607cf19a1..d4755d4ad009 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -1058,17 +1058,34 @@ static ssize_t bfq_io_set_weight(struct kernfs_open_file *of,
- }
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 352c6062deba..1c777a72bb39 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -27,7 +27,9 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
  
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
--static int bfqg_print_stat(struct seq_file *sf, void *v)
-+static int bfqg_print_rwstat(struct seq_file *sf, void *v)
- {
--	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_stat,
--			  &blkcg_policy_bfq, seq_cft(sf)->private, false);
-+	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_rwstat,
-+			  &blkcg_policy_bfq, seq_cft(sf)->private, true);
- 	return 0;
- }
- 
--static int bfqg_print_rwstat(struct seq_file *sf, void *v)
-+static u64 bfqg_prfill_rwstat_recursive(struct seq_file *sf,
-+					struct blkg_policy_data *pd, int off)
- {
--	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_rwstat,
--			  &blkcg_policy_bfq, seq_cft(sf)->private, true);
-+	struct blkg_rwstat_sample sum;
-+
-+	blkg_rwstat_recursive_sum(pd_to_blkg(pd), &blkcg_policy_bfq, off, &sum);
-+	return __blkg_prfill_rwstat(sf, pd, &sum);
-+}
-+
-+static int bfqg_print_rwstat_recursive(struct seq_file *sf, void *v)
-+{
-+	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)),
-+			  bfqg_prfill_rwstat_recursive, &blkcg_policy_bfq,
-+			  seq_cft(sf)->private, true);
-+	return 0;
-+}
-+
-+static int bfqg_print_stat(struct seq_file *sf, void *v)
-+{
-+	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_stat,
-+			  &blkcg_policy_bfq, seq_cft(sf)->private, false);
- 	return 0;
- }
- 
-@@ -1097,15 +1114,6 @@ static u64 bfqg_prfill_stat_recursive(struct seq_file *sf,
- 	return __blkg_prfill_u64(sf, pd, sum);
- }
- 
--static u64 bfqg_prfill_rwstat_recursive(struct seq_file *sf,
--					struct blkg_policy_data *pd, int off)
--{
--	struct blkg_rwstat_sample sum;
--
--	blkg_rwstat_recursive_sum(pd_to_blkg(pd), &blkcg_policy_bfq, off, &sum);
--	return __blkg_prfill_rwstat(sf, pd, &sum);
--}
--
- static int bfqg_print_stat_recursive(struct seq_file *sf, void *v)
- {
- 	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)),
-@@ -1114,14 +1122,6 @@ static int bfqg_print_stat_recursive(struct seq_file *sf, void *v)
- 	return 0;
- }
- 
--static int bfqg_print_rwstat_recursive(struct seq_file *sf, void *v)
--{
--	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)),
--			  bfqg_prfill_rwstat_recursive, &blkcg_policy_bfq,
--			  seq_cft(sf)->private, true);
--	return 0;
--}
--
- static u64 bfqg_prfill_sectors(struct seq_file *sf, struct blkg_policy_data *pd,
- 			       int off)
- {
+-ifeq ($(CC_NO_CLANG), 0)
++ifeq ($(DEBUG),1)
++  CFLAGS += -O0
++else ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
+ else
+   CFLAGS += -O6
 -- 
-2.17.1
+2.21.0
+
