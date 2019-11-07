@@ -2,167 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F957C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3484C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841BC206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F036206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gxccqK4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfKGSYK (ORCPT
+        id S1728032AbfKGSYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:24:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42680 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbfKGSYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:24:10 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 707D4ACA5;
-        Thu,  7 Nov 2019 18:24:07 +0000 (UTC)
-Message-ID: <2dcc3fca914a454006bcf2e9bd4479a30228e9fa.camel@suse.de>
-Subject: Re: [PATCH 2/4] ARM: dts: bcm2711: Enable PCIe controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     f.fainelli@gmail.com, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, mbrugger@suse.com,
-        james.quinlan@broadcom.com
-Date:   Thu, 07 Nov 2019 19:24:03 +0100
-In-Reply-To: <50074e33-17bf-d555-cbf6-4ec079472ecd@gmx.net>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-3-nsaenzjulienne@suse.de>
-         <50074e33-17bf-d555-cbf6-4ec079472ecd@gmx.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-TlMxNcfADV/A26dcLaFO"
-User-Agent: Evolution 3.34.1 
+        Thu, 7 Nov 2019 13:24:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48317 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727485AbfKGSYS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 13:24:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573151056;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rq286i/rn9P6qBg6Lj1S41KuQGmj4Rym9Rza+pzwTUU=;
+        b=gxccqK4SlQB7fbgoLZbNR17gvVHcFYwcWo9ZYqgYukcWr1lfjURrpiKP1rbzVawzJWNkX3
+        JdAujPtINmJRpIEKN+Bztp1l3bbrb5Cyrbtxt44wDtrFRm8HoyBIhvpqlFbKMcjYS1xRyS
+        2Idj1FpLMXe8iFUvqySM3RpEPHTSWjk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-431-pb7rxykWNYyYpdYIKUe7Iw-1; Thu, 07 Nov 2019 13:23:10 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D6421005500;
+        Thu,  7 Nov 2019 18:23:08 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD28A60BEC;
+        Thu,  7 Nov 2019 18:23:05 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CALCETrWszYm9=-WEgSbhmGc3DYCvY6q3W4Lezm6YtKnGtRs_5g@mail.gmail.com>
+References: <CALCETrWszYm9=-WEgSbhmGc3DYCvY6q3W4Lezm6YtKnGtRs_5g@mail.gmail.com> <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk> <157313379331.29677.5209561321495531328.stgit@warthog.procyon.org.uk>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 08/14] pipe: Allow buffers to be marked read-whole-or-error for notifications [ver #2]
 MIME-Version: 1.0
+Content-ID: <4648.1573150984.1@warthog.procyon.org.uk>
+Date:   Thu, 07 Nov 2019 18:23:04 +0000
+Message-ID: <4649.1573150984@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: pb7rxykWNYyYpdYIKUe7Iw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andy Lutomirski <luto@kernel.org> wrote:
 
---=-TlMxNcfADV/A26dcLaFO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-11-07 at 18:44 +0100, Stefan Wahren wrote:
-> Hi Nicolas,
+> > Allow a buffer to be marked such that read() must return the entire buf=
+fer
+> > in one go or return ENOBUFS.  Multiple buffers can be amalgamated into =
+a
+> > single read, but a short read will occur if the next "whole" buffer won=
+'t
+> > fit.
+> >
+> > This is useful for watch queue notifications to make sure we don't spli=
+t a
+> > notification across multiple reads, especially given that we need to
+> > fabricate an overrun record under some circumstances - and that isn't i=
+n
+> > the buffers.
 >=20
-> please move this patch behind the driver patches, which is the better ord=
-er.
->=20
-> Am 06.11.19 um 22:45 schrieb Nicolas Saenz Julienne:
-> > This enables bcm2711's PCIe bus, wich is hardwired to a VIA Technologie=
-s
-> > XHCI USB 3.0 controller.
-> AFAIU this only applies to the Raspberry Pi 4, since the VIA is outside
-> of the SoC.
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  arch/arm/boot/dts/bcm2711.dtsi | 47 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
-.dtsi
-> > index a9d84e28f245..c7b2e7b57da6 100644
-> > --- a/arch/arm/boot/dts/bcm2711.dtsi
-> > +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> > @@ -288,6 +288,53 @@
-> >  		arm,cpu-registers-not-fw-configured;
-> >  	};
-> >=20
-> > +	scb {
-> > +		compatible =3D "simple-bus";
-> > +		#address-cells =3D <2>;
-> > +		#size-cells =3D <1>;
-> > +
-> > +		ranges =3D <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
-> > +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
-> > +
-> > +		pcie_0: pcie@7d500000 {
-> > +			compatible =3D "brcm,bcm2711-pcie";
-> > +			reg =3D <0x0 0x7d500000 0x9310>;
-> > +			msi-controller;
-> > +			msi-parent =3D <&pcie_0>;
-> > +			#address-cells =3D <3>;
-> > +			#interrupt-cells =3D <1>;
-> > +			#size-cells =3D <2>;
-> > +			linux,pci-domain =3D <0>;
-> > +			brcm,enable-ssc;
-> > +			interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names =3D "pcie", "msi";
-> > +			interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
-> > +			interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
-> > +							IRQ_TYPE_LEVEL_HIGH
-> > +					 0 0 0 2 &gicv2 GIC_SPI 144
-> > +							IRQ_TYPE_LEVEL_HIGH
-> > +					 0 0 0 3 &gicv2 GIC_SPI 145
-> > +							IRQ_TYPE_LEVEL_HIGH
-> > +					 0 0 0 4 &gicv2 GIC_SPI 146
-> > +							IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +			ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x00000000
-> > +				  0x0 0x04000000>;
-> > +			/*
-> > +			 * The wrapper around the PCIe block has a bug
-> > +			 * preventing it from accessing beyond the first 3GB of
-> > +			 * memory. As the bus DMA mask is rounded up to the
-> > +			 * closest power of two of the dma-range size, we're
-> > +			 * forced to set the limit at 2GB. This can be
-> > +			 * harmlessly changed in the future once the DMA code
-> > +			 * handles non power of two DMA limits.
-> > +			 */
-> > +			dma-ranges =3D <0x02000000 0x0 0x00000000 0x0 0x00000000
-> > +				      0x0 0x80000000>;
-> In case this bug will ever be fixed, do you see this as a future proof
-> practical solution?
+> Hmm.  I'm not totally in love with introducing a new error code like
+> this for read(), especially if it could affect the kind of pipe that
+> is bound to a file in a filesystem.  But maybe it's not a problem.
 
-The dts I provide should work on any bcm2711 (fixed or not) and any future
-kernel, with the downside that we'll perform some unnecessary buffer bounci=
-ng.
+EMSGSIZE might be better?
 
-If we were able to address the whole 32bit address space on some future bcm=
-2711
-we'd be forced to update the dma-ranges in the bootloader based on the SoC
-revision.
-
-The driver should work with any sensible dma-range, I even did a test emula=
-ting
-the 4GB inbound memory setup.
-
-Regards,
-Nicolas
-
-
---=-TlMxNcfADV/A26dcLaFO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3EYUMACgkQlfZmHno8
-x/7I8gf+Krf4eAVjY+gGoFj4B/+Wk2M4/i71Ubp+SIWiZarPgzumoZIAaDv91+YO
-qwHAuQGIEnx8YvltDs3CkbNUJBzwuQAZQ9Ve652E8P/f4+wM+XVegdIWTk3M1G2/
-t2N8OH87E+Ag8pGV9bfAtFi7oyFC3a+HDGLTAN1RezBLzlnn1EhN7fr4xXT7lQA7
-HPmn9BjtUkQaXDMSghNPH9TaEVpEVxeRx9pXrDVaNQGeQN3RtfpznjbQj7GFHnG/
-HYtWFf8ha82VlW+9EoWIXxKx0GQgZq9pehmr3cFgETyxUFf0AQCgVE0yhOXW/f5X
-4xQXvqZLhwYBafJgw6LKn6qwz0vlpw==
-=9wr0
------END PGP SIGNATURE-----
-
---=-TlMxNcfADV/A26dcLaFO--
+David
 
