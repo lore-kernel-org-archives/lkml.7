@@ -2,139 +2,116 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6970EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDD7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33189218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B68218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k5dSx3sX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KZsXsO0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKGGnA (ORCPT
+        id S1727137AbfKGGoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:43:00 -0500
-Received: from mail-eopbgr130071.outbound.protection.outlook.com ([40.107.13.71]:37878
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726618AbfKGGnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:43:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XA2v9zxEKh/rlQ8CmPk+mH7eFSI/p4dCcMH77v88vBb5o5iaympjSAkIr4wOGUQOjFmdKQoEIlAo+CrTJRiDFkwriAPEraXU+tdxgOBie7yLINifzdJzNe23CkvAoUHACCWWUlansPmYBPQwCzNdBNgpt0o/tbuCDVIQ/CrwwFLMXyc7/a8zqyBLEKwrootdALAGgLmGBGmsQjaWUmBkUKvLXZ09SdhmDftpGqYxejUR0+P+7WogFDRDTlHTeeyBergaD6dQqPQzwNj1y3ODbNIN2JD1iwzw1iIRxfYGEYuwoX9Sj9x8DnRlQlXZE+T7LXkjp0sMWCux5P6pGexyPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EsO+SdgsQJ0vwcXoJVGCZfTI5XlTpf1HLFWL+goIKJ0=;
- b=VUJgtEyMHSqEYqchqMSKf7EdrKjEQ4nToJWveAxmsC5gGe0zUJLI19qmIniDjjuZ+l0yx0PRwXJbzA60dYjEKoWQRtKO/dDUgvI1wmFMHCw5q3VIlEQVb7ybaFHdjyQ7Q6iHrKBaaD/NCM7epnDsmnvnx6IZVB3Cr1Zpepelkf/vf74nsLxNOrglNGLSe5Q0pCwxc0eBPC6OGV8ce9XHaFTTpbDejsjUlKKksgDjg1cvswjHrPg/ZgOfAdCtXMlHHwpJLytZWf4D9NEfzxfFIeYmRhlc6rSl6a1eLWB7tAmCQTnKuAK7BTDd+9d2gEUyqGb96hHdgrGar91/LHGBsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EsO+SdgsQJ0vwcXoJVGCZfTI5XlTpf1HLFWL+goIKJ0=;
- b=k5dSx3sXyCarXVjFTx7te3yIHomfbfTsR6AQBS7XtZIf5JD79rsIsCVBO9ncl6fk0CbY/3WPb9RLNx1y4WezFi5roghTTwy/b2wXFCf6r4uL/zd6tpU0Sq9tFuhUb9N78bUgZf2MKApJwL99m7LpOyZUgKpF3G22L6chMXykxHY=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6596.eurprd04.prod.outlook.com (20.179.254.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Thu, 7 Nov 2019 06:42:53 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2430.023; Thu, 7 Nov 2019
- 06:42:53 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2] tty: serial: imx: use the sg count from dma_map_sg
-Thread-Topic: [PATCH V2] tty: serial: imx: use the sg count from dma_map_sg
-Thread-Index: AQHVlTaUfY6m2IkKwUycHbunFPNYCw==
-Date:   Thu, 7 Nov 2019 06:42:53 +0000
-Message-ID: <1573108875-26530-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR04CA0080.apcprd04.prod.outlook.com
- (2603:1096:202:15::24) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0ef5c962-c809-4412-60e8-08d7634db71a
-x-ms-traffictypediagnostic: AM0PR04MB6596:|AM0PR04MB6596:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6596ED7349B35A87703572FE88780@AM0PR04MB6596.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:568;
-x-forefront-prvs: 0214EB3F68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(39860400002)(396003)(136003)(189003)(199004)(66556008)(66066001)(66446008)(2616005)(71190400001)(71200400001)(6512007)(6116002)(478600001)(66946007)(66476007)(50226002)(6486002)(64756008)(386003)(6436002)(6506007)(54906003)(3846002)(14454004)(110136005)(305945005)(36756003)(7736002)(2501003)(8936002)(14444005)(2906002)(186003)(102836004)(81156014)(81166006)(5660300002)(99286004)(2201001)(4744005)(25786009)(52116002)(44832011)(476003)(486006)(316002)(4326008)(86362001)(26005)(8676002)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6596;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uh6TNZI9/LOoedT31UHjdlCLIk5xzcIwMzDsCU3sDZbUpaOji/SVdNfcS2YOHS+l3c4qaNafudB/aUbOUReInROeg9SA+y8quTKsz3xVfXrT3hRul5MqIjboacOk2PM1qtcixmnN4BT9kGN44D3xsxGlvImVN6M4tyD2yZRxwVPBEEkR+50/R2jb7el3hJjXAwekeRmoPF0eQam1q3r2aAYrrxAVfZTBXc7Wgd777Wj5VWhUq0Kw//Hc8D1OlRKjdgfOF1Rd7RoZWyQsiRnFPAodZrPKHnbtT6+WAArEfxh/R0HE1PVshkBlBx84BnnJoJjS7bYTbmd/SfzRg+mQx/PYagUFXV2KbNpHRxPAPOb9n/jE7BgX8jmwpKBlVDWoZmUyWLzBk2FFnWMQV94HR00MeKxYD9euFELlg9dgJ4fLhiRwxP5wHZde0NP42pXK
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 7 Nov 2019 01:44:18 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:59676 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfKGGoS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 01:44:18 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA76hurQ192453;
+        Thu, 7 Nov 2019 06:44:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=0rpg1HEjwlssesUt/BwllmUuPcZcgM6B4yGQ7s6Gc3U=;
+ b=KZsXsO0P9TNx2Zr63cEODUxYO2XDKxi3Ss32yNKlEYh6DEPWDtj/S/KD5boEYCo3i0CW
+ YYPmldxYKl21iwi7I2xIOsg3JlDZzubtSb6nh7Mb5vdCymDva9beeKWGCwpGBXoskP0m
+ ACcHsr0vPvtxpMXvbHZpIwTn5etoHTnXquE6aVR0uKovykPTqMoYGyqchHKh9XgkjD1y
+ AUhdVnPnjV28WgeYZIfwvRQ/D9Dp8AMiklwTS5J847hXa1Tu3XTL6blAbIZx+aLmZJ+W
+ Of142e4lNM/Y8/4uDDaj0Bw0mgdDMC5965YI+2oN7cY7/Z02upbPrrpxkXfKM4/bDETx /g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2w41w0uvgk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 06:44:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA76hqWk191719;
+        Thu, 7 Nov 2019 06:44:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2w41wgd3kn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 06:44:13 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA76iBWE000681;
+        Thu, 7 Nov 2019 06:44:12 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 22:44:11 -0800
+Date:   Thu, 7 Nov 2019 09:44:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] xfs: remove redundant assignment to variable error
+Message-ID: <20191107064404.GL10409@kadam>
+References: <20191106155248.266489-1-colin.king@canonical.com>
+ <20191106155631.GJ4153244@magnolia>
+ <cbb99652-c6b2-c81c-128d-6d85be04fddc@canonical.com>
+ <a77fff95-0591-bcca-2541-3fd68c0da908@sandeen.net>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ef5c962-c809-4412-60e8-08d7634db71a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 06:42:53.7112
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DPeBOibxEGQVitDnHknaati+64s+e4AXKPZvkVE5JDbe95tDvPGag2lsx1ZYd+5a7Zll7XZURkPlDOLSS+Z52g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6596
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a77fff95-0591-bcca-2541-3fd68c0da908@sandeen.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911070068
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911070068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Wed, Nov 06, 2019 at 10:19:18AM -0600, Eric Sandeen wrote:
+> 
+> 
+> On 11/6/19 9:59 AM, Colin Ian King wrote:
+> > On 06/11/2019 15:56, Darrick J. Wong wrote:
+> >> On Wed, Nov 06, 2019 at 03:52:48PM +0000, Colin King wrote:
+> >>> From: Colin Ian King <colin.king@canonical.com>
+> >>>
+> >>> Variable error is being initialized with a value that is never read
+> >>> and is being re-assigned a couple of statements later on. The
+> >>> assignment is redundant and hence can be removed.
+> >>>
+> >>> Addresses-Coverity: ("Unused value")
+> >>
+> >> Er... is there a coverity id that goes with this?
+> > 
+> > Unfortunately it is a private one, so it does not make sense to use it.
+> 
+> If it's not in the upstream coverity scan (and AFAICT it's not),
+> it makes no sense to reference coverity in the commit log.
+> It's not useful to anyone IMHO.
+> 
 
-The dmaengine_prep_slave_sg needs to use sg count returned
-by dma_map_sg, not use sport->dma_tx_nents, because the return
-value of dma_map_sg is not always same with "nents".
+It's sort of useful if want to see how the bug was found or if you want
+to count how many bugs coverity finds...  I'm pretty sure I remember
+someone complaining that it wasn't mentioned in the commit.
 
-Fixes: b4cdc8f61beb("serial: imx: add DMA support for imx6q")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
-
-V2:
- Update commit log
- Drop assigning ret to sport->dma_tx_nents, it is wrong.
-
- drivers/tty/serial/imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 87c58f9f6390..f1ddb2cae31e 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -619,7 +619,7 @@ static void imx_uart_dma_tx(struct imx_port *sport)
- 		dev_err(dev, "DMA mapping error for TX.\n");
- 		return;
- 	}
--	desc =3D dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
-+	desc =3D dmaengine_prep_slave_sg(chan, sgl, ret,
- 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
- 	if (!desc) {
- 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents,
---=20
-2.16.4
-
+regards,
+dan carpenter
