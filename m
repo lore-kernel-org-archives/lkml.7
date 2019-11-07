@@ -2,89 +2,148 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7374CFC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D971C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40ADF21D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:52:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RDPZUhW2"
+	by mail.kernel.org (Postfix) with ESMTP id 2E1D321882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfKGSwz (ORCPT
+        id S1727341AbfKGSyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:52:55 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42668 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKGSwy (ORCPT
+        Thu, 7 Nov 2019 13:54:11 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:54918 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfKGSyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:52:54 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q17so2576615pgt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:to:cc:user-agent:date;
-        bh=C1Udvg9FMxOUFKtX1EFlPrYF5BAQ0Gfet99gcsH4OkQ=;
-        b=RDPZUhW2GMjZQNBzTRog95xYEqHC62R7wRvDFPcNSjTizh86M+UZMspV5nR41HzlAd
-         223mequfRm19yKEKUWwXh6h57DPhTChHueGRlIKa0HqVRf7jWS+M1s3ER2zzuf3FRZdX
-         5H7SMfWCVsqRSRbgZAnAwW2fgNSCcOrlkOE0s=
+        Thu, 7 Nov 2019 13:54:11 -0500
+Received: by mail-il1-f198.google.com with SMTP id t67so3560363ill.21
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:54:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
-         :user-agent:date;
-        bh=C1Udvg9FMxOUFKtX1EFlPrYF5BAQ0Gfet99gcsH4OkQ=;
-        b=r7Ep8hp+zeTf0Zlr1hzemj1WicHFnfoCNabzH0QRxVIDivSLiPsDimfzO/k19HY0Uy
-         OoYXZy5uDtOd/O2e7zLGKIxk9X+LSkgYaLOAQWedrqU0NJXnBbXlQoEiVb6EXSFuYzwt
-         B7ycSgJAYGToVTuyjlKvGL2gAWcdDkaKrMXJMVmDnxOgwKDY44DRK/+3D0GxVuGeMZTz
-         YSZSkHuCjsNU8aTxF5/KiE1/mG9F/6rKSqBKXg2uaXm2CMNMARubRlMxO9LjUhcYMwze
-         TlVbM9rYYDV94kdMlL86jLYHFDHO6Dc6PRyQtHQDsP/1KQHLREeR9n0SoaS2FwbCoauI
-         XLxA==
-X-Gm-Message-State: APjAAAX6etQkJnr0JV6jEOZmmLObm15gPhILis0ECTu5VNPyd4/JBJD8
-        Uo13ClckV2ydME/ynJwd/WQb3FUh+42THw==
-X-Google-Smtp-Source: APXvYqyB1ZNXurx6OgmgxRyU2jt7yTNA6aM9Et3IiaHkfKyaOSY9/xmUAbjYahGijJqorxavaS49yQ==
-X-Received: by 2002:a62:1ad6:: with SMTP id a205mr5975230pfa.64.1573152773805;
-        Thu, 07 Nov 2019 10:52:53 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r15sm692550pfh.81.2019.11.07.10.52.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 10:52:53 -0800 (PST)
-Message-ID: <5dc46805.1c69fb81.7b5fa.1eea@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=m2Qa1E1MJM3JwHE0ZbVyKXnicQ++QYA8NZNL8xEGd0k=;
+        b=St25L0lgkUhLP7VEkg96K9pEZKjPgAqHeXoCPDLwZWcUboReoCLA/Y6rymrANVBj9M
+         KEKHRQZgVjEHjV/wypETHaz6CNnlS7HKIufngA0T74LQT41rQZo5p49Ht5QUxRa+xk6s
+         H6DAjkmM6a05E9kah50RD+qL0ucfl5mz2wj6/L9td1iZHnMzVBbUmfWU4u3fEmWtOMpe
+         MGUPOOE1PHaabYmhk3vH3V68qqfX1eEWtxi5YH79DpdBQNUwh4FozApVmhIEZnKsr7Sg
+         m2tGChaA16gxymXK0e2dcRJykc2jvxrUfrSzOi0P+N7F3CmakRaadBHKl5Fc2GIVxHkF
+         Bilg==
+X-Gm-Message-State: APjAAAXHgmgHCqb6MNwiDD4zleD2daTV0E9wZpd35amOuJW3tadpHegA
+        PQr9aT9V4tfue3YHXU4fUv8hZ8h21QPtokXvXfz6iDfSFqX8
+X-Google-Smtp-Source: APXvYqyEE3VyCBIcL7gUe9uBCXoJUzB4GHP/i130evFYgnvcyekpRWdvKhZjT4ksDss52iO6eeW/umQvYPF63zDyDa+CTIC1S2/t
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191106065017.22144-15-rnayak@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-15-rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 14/14] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 10:52:52 -0800
+X-Received: by 2002:a92:c08c:: with SMTP id h12mr6144591ile.183.1573152850575;
+ Thu, 07 Nov 2019 10:54:10 -0800 (PST)
+Date:   Thu, 07 Nov 2019 10:54:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d60aa50596c63063@google.com>
+Subject: WARNING in iov_iter_pipe
+From:   syzbot <syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com>
+To:     jack@suse.cz, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mbobrowski@mbobrowski.org,
+        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-05 22:50:17)
-> From: Roja Rani Yarubandi <rojay@codeaurora.org>
->=20
-> Add QUP SE instances configuration for sc7180.
->=20
-> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+Hello,
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+syzbot found the following crash on:
 
-It has the weird qup numbering too, but I guess it's correct somehow.
+HEAD commit:    c68c5373 Add linux-next specific files for 20191107
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13d6bcfce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
+dashboard link: https://syzkaller.appspot.com/bug?extid=991400e8eba7e00a26e1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1529829ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a55c0ce00000
 
+The bug was bisected to:
+
+commit b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
+Author: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Date:   Tue Nov 5 12:01:37 2019 +0000
+
+     ext4: introduce direct I/O read using iomap infrastructure
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1176cffae00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1376cffae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1576cffae00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com
+Fixes: b1b4705d54ab ("ext4: introduce direct I/O read using iomap  
+infrastructure")
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 8715 at lib/iov_iter.c:1162 iov_iter_pipe+0x25b/0x2f0  
+lib/iov_iter.c:1162
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8715 Comm: syz-executor719 Not tainted 5.4.0-rc6-next-20191107  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x35 kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:iov_iter_pipe+0x25b/0x2f0 lib/iov_iter.c:1162
+Code: 83 c0 03 38 d0 7c 04 84 d2 75 33 44 89 63 24 48 83 c4 10 5b 41 5c 41  
+5d 41 5e 41 5f 5d c3 e8 ac ba 2e fe 0f 0b e8 a5 ba 2e fe <0f> 0b e9 53 fe  
+ff ff 4c 89 f7 e8 46 e5 6a fe e9 f5 fd ff ff e8 dc
+RSP: 0018:ffff8880a0b4f988 EFLAGS: 00010293
+RAX: ffff88808f1602c0 RBX: ffff8880a0b4fa18 RCX: ffffffff8344ac89
+RDX: 0000000000000000 RSI: ffffffff8344ae3b RDI: 0000000000000004
+RBP: ffff8880a0b4f9c0 R08: ffff88808f1602c0 R09: 0000000000000000
+R10: fffffbfff1390168 R11: ffffffff89c80b47 R12: ffff88808f121c00
+R13: 0000000000000010 R14: ffff88808f121cc8 R15: ffff88808f121cd0
+  generic_file_splice_read+0xa7/0x800 fs/splice.c:303
+  do_splice_to+0x127/0x180 fs/splice.c:877
+  splice_direct_to_actor+0x2d3/0x970 fs/splice.c:955
+  do_splice_direct+0x1da/0x2a0 fs/splice.c:1064
+  do_sendfile+0x597/0xd00 fs/read_write.c:1464
+  __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446969
+Code: e8 4c b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f05c41b8ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00000000006dbc58 RCX: 0000000000446969
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000005
+RBP: 00000000006dbc50 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00000000006dbc5c
+R13: 00007fffb77353df R14: 00007f05c41b99c0 R15: 20c49ba5e353f7cf
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
