@@ -2,93 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAE5FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1196FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46CC217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EBA2075C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732831AbfKGB3x (ORCPT
+        id S1732899AbfKGBby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:29:53 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6164 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728129AbfKGB3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:29:53 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3161EDFB9257EB2A553C;
-        Thu,  7 Nov 2019 09:29:51 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 7 Nov 2019 09:29:45 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net] net: hns3: add compatible handling for command HCLGE_OPC_PF_RST_DONE
-Date:   Thu, 7 Nov 2019 09:30:19 +0800
-Message-ID: <1573090219-9785-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 6 Nov 2019 20:31:54 -0500
+Received: from mga06.intel.com ([134.134.136.31]:30274 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727798AbfKGBby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:31:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 17:31:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
+   d="scan'208";a="212905617"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Nov 2019 17:31:53 -0800
+Date:   Wed, 6 Nov 2019 17:31:36 -0800
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     "Moger, Babu" <Babu.Moger@amd.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "bshanks@codeweavers.com" <bshanks@codeweavers.com>
+Subject: Re: [PATCH v3 1/2] x86/Kconfig: Rename UMIP config parameter
+Message-ID: <20191107013136.GA9028@ranerica-svr.sc.intel.com>
+References: <157298900783.17462.2778215498449243912.stgit@naples-babu.amd.com>
+ <157298912544.17462.2018334793891409521.stgit@naples-babu.amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157298912544.17462.2018334793891409521.stgit@naples-babu.amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since old firmware does not support HCLGE_OPC_PF_RST_DONE, it will
-return -EOPNOTSUPP to the driver when received this command. So
-for this case, it should just print a warning and return success
-to the caller.
+On Tue, Nov 05, 2019 at 09:25:32PM +0000, Moger, Babu wrote:
+> AMD 2nd generation EPYC processors support the UMIP (User-Mode
+> Instruction Prevention) feature. So, rename X86_INTEL_UMIP to
+> generic X86_UMIP and modify the text to cover both Intel and AMD.
+> 
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+>  arch/x86/Kconfig                         |   10 +++++-----
+>  arch/x86/include/asm/disabled-features.h |    2 +-
+>  arch/x86/include/asm/umip.h              |    4 ++--
+>  arch/x86/kernel/Makefile                 |    2 +-
+>  4 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index d6e1faa28c58..b7fb285d7c0f 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1880,13 +1880,13 @@ config X86_SMAP
+>  
+>  	  If unsure, say Y.
+>  
+> -config X86_INTEL_UMIP
+> +config X86_UMIP
+>  	def_bool y
+> -	depends on CPU_SUP_INTEL
+> -	prompt "Intel User Mode Instruction Prevention" if EXPERT
+> +	depends on CPU_SUP_INTEL || CPU_SUP_AMD
+> +	prompt "User Mode Instruction Prevention" if EXPERT
+>  	---help---
+> -	  The User Mode Instruction Prevention (UMIP) is a security
+> -	  feature in newer Intel processors. If enabled, a general
+> +	  User Mode Instruction Prevention (UMIP) is a security
+> +	  feature in newer x86 processors. If enabled, a general
 
-Fixes: 72e2fb07997c ("net: hns3: clear reset interrupt status in hclge_irq_handle()")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+Better to say certain x86 processors? Intel and AMD have it but what
+about others?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index e02e01b..16f7d0e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3587,12 +3587,28 @@ static int hclge_set_rst_done(struct hclge_dev *hdev)
- {
- 	struct hclge_pf_rst_done_cmd *req;
- 	struct hclge_desc desc;
-+	int ret;
- 
- 	req = (struct hclge_pf_rst_done_cmd *)desc.data;
- 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_PF_RST_DONE, false);
- 	req->pf_rst_done |= HCLGE_PF_RESET_DONE_BIT;
- 
--	return hclge_cmd_send(&hdev->hw, &desc, 1);
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	/* To be compatible with the old firmware, which does not support
-+	 * command HCLGE_OPC_PF_RST_DONE, just print a warning and
-+	 * return success
-+	 */
-+	if (ret == -EOPNOTSUPP) {
-+		dev_warn(&hdev->pdev->dev,
-+			 "current firmware does not support command(0x%x)!\n",
-+			 HCLGE_OPC_PF_RST_DONE);
-+		return 0;
-+	} else if (ret) {
-+		dev_err(&hdev->pdev->dev, "assert PF reset done fail %d!\n",
-+			ret);
-+	}
-+
-+	return ret;
- }
- 
- static int hclge_reset_prepare_up(struct hclge_dev *hdev)
--- 
-2.7.4
-
+Thanks and BR,
+Ricardo
