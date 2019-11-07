@@ -2,223 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DEBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D5AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925D62178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iyEKvbJs"
+	by mail.kernel.org (Postfix) with ESMTP id E9E702178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbfKGSAz (ORCPT
+        id S1726052AbfKGSCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:00:55 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60012 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfKGSAz (ORCPT
+        Thu, 7 Nov 2019 13:02:36 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48969 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfKGSCg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:00:55 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 79C1471D;
-        Thu,  7 Nov 2019 19:00:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1573149652;
-        bh=3pKlQ2PufFLvWrmoVgmkXG3/3S10PQWiYBpBD09aE54=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iyEKvbJs3KEBvDfeOnA0pTJzY1F+ToTQ2w+jDj4HDf/uRmBeumbalauALcypmCoto
-         RARi6QIfbY9Q+p/IZn9OKpNjSfWDMuS7AikhFfHfED2nZn+SJ9osv/v9ojQyQLT73g
-         Q/Dj3WGnp8gK6P+0wyogsGdyt/RzegPzuHr0JaWE=
-Date:   Thu, 7 Nov 2019 20:00:43 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS
- bus-timings
-Message-ID: <20191107180043.GA24231@pendragon.ideasonboard.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
- <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+        Thu, 7 Nov 2019 13:02:36 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iSm77-0002uf-C2; Thu, 07 Nov 2019 19:02:33 +0100
+Date:   Thu, 7 Nov 2019 19:02:27 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
+ further
+In-Reply-To: <20191107081635.GE30739@gmail.com>
+Message-ID: <alpine.DEB.2.21.1911071856420.27903@nanos.tec.linutronix.de>
+References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de> <20191107081635.GE30739@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Fabrizio,
+On Thu, 7 Nov 2019, Ingo Molnar wrote:
+> * Thomas Gleixner <tglx@linutronix.de> wrote:
+> This might seem like a small detail, but since we do the range tracking 
+> and copying at byte granularity anyway, why not do the zero range search 
+> at byte granularity as well?
+> 
+> I bet it's faster and simpler as well than the bit-searching.
 
-On Thu, Aug 29, 2019 at 02:38:06PM +0000, Fabrizio Castro wrote:
-> On 29 August 2019 15:03 Rob Herring wrote:
-> > On Wed, Aug 28, 2019 at 1:36 PM Fabrizio Castro wrote:
-> >>
-> >> Dual-LVDS connections need markers in the DT, this patch adds
-> >> some common documentation to be referenced by both panels and
-> >> bridges.
-> >>
-> >> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >>
-> >> ---
-> >> v2->v3:
-> >> * new patch
-> >> ---
-> >>  .../bindings/display/bus-timings/lvds.yaml         | 38 ++++++++++++++++++++++
-> >>  1 file changed, 38 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> >> new file mode 100644
-> >> index 0000000..f35b55a
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> >> @@ -0,0 +1,38 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> > 
-> > (GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
-> > 
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/display/bus-timings/lvds.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Common Properties for bus timings of LVDS interfaces
-> >> +
-> >> +maintainers:
-> >> +  - Thierry Reding <thierry.reding@gmail.com>
-> >> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >> +
-> >> +description: |
-> >> +  This document defines device tree properties common to LVDS and dual-LVDS
-> >> +  interfaces, where a dual-LVDS interface is a dual-link connection with even
-> >> +  pixels traveling on one connection, and with odd pixels traveling on the other
-> >> +  connection.
+Not necessarily. The bitmap search uses unsigned long internally at least
+to the point where it finds a zero bit.
 
-As you define a dual-LVDS interface as "a dual-link connection", should
-this be "even pixels traveling on one link, and with odd pixels
-traveling on the other link" ?
+But probably we should just ditch that optimization and rather have the
+sequence number to figure out whether something needs to be copied at all.
 
-> >> +  This document doesn't constitue a device tree binding specification by itself
-> > 
-> > typo: constitute
+> > +	if (first >= IO_BITMAP_BITS) {
+> > +		/*
+> > +		 * If the resulting bitmap has all permissions dropped, clear
+> > +		 * TIF_IO_BITMAP and set the IO bitmap offset in the TSS to
+> > +		 * invalid. Deallocate both the new and the thread's bitmap.
+> > +		 */
+> > +		clear_thread_flag(TIF_IO_BITMAP);
+> > +		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
+> > +		tofree = bitmap;
+> > +		bitmap = NULL;
 > 
-> Well spotted!
-> 
-> >> +  but is meant to be referenced by device tree bindings.
-> >> +  When referenced from panel or bridge device tree bindings, the properties
-> >> +  defined in this document are defined as follows. The panel and bridge device
-> >> +  tree bindings are responsible for defining whether each property is required
-> >> +  or optional.
-> >> +
-> >> +properties:
-> >> +  dual-lvds-even-pixels:
-> >> +    type: boolean
-> >> +    description:
-> >> +      This property is specific to an input port of a sink device. When
-> > 
-> > The schema should define what nodes these go in. The description seems
-> > to indicate in 'port' nodes (or endpoint?), but your use in the panel
-> > binding puts them in the parent.
-> 
-> Did you manage to read this?
-> https://patchwork.kernel.org/cover/11119607/
-> 
-> Could you please advice on how to do this properly?
-> 
-> >> +      specified, it marks the port as recipient of even-pixels.
-> >> +
-> >> +  dual-lvds-odd-pixels:
-> >> +    type: boolean
-> >> +    description:
-> >> +      This property is specific to an input port of a sink device. When
-> >> +      specified, it marks the port as recipient of odd-pixels.
-> > 
-> > However, I don't think you even need these. A panel's port numbers are
-> > fixed can imply even or odd. For example port@0 can be even and port@1
-> > can be odd. The port numbering is typically panel specific, but we may
-> > be able to define the numbering generically if we don't already have
-> > panels with multiple ports.
-> > 
-> > Also, aren't there dual link DSI panels?
-> 
-> This is the result of a discussion on here:
-> https://patchwork.kernel.org/patch/11095547/
-> 
-> Have you come across it?
+> BTW., wouldn't it be simpler to just say that if a thread uses IO ops 
+> even once, it gets a bitmap and that's it? I.e. we could further simplify 
+> this seldom used piece of code.
 
-Let me repeat my comments from that thread for Rob in order to
-centralize the discussion here.
-
-> Taking one step back to look at the big picture, what we need is for the
-> source to know what pixel (odd or even) to send on each LVDS output. For
-> that it needs to know what pixel is expected by the sink the the inputs
-> connected to the source's outputs. From each source output we can easily
-> locate the DT nodes corresponding to the connected sink's input ports,
-> but that doesn't give us enough information. From there, we could
+Maybe.
+ 
+> > +	} else {
+> >  		/*
+> > +		 * I/O bitmap contains zero bits. Set TIF_IO_BITMAP, make
+> > +		 * the bitmap offset valid and make sure that the TSS limit
+> > +		 * is correct. It might have been wreckaged by a VMEXiT.
+> >  		 */
+> > +		set_thread_flag(TIF_IO_BITMAP);
+> > +		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
+> >  		refresh_tss_limit();
+> >  	}
 > 
-> - Infer the odd/even pixel expected by the source based on the port
->   numbers. This would require common DT bindings for all dual-link LVDS
->   sinks that specify the port ordering (for instance the bindings could
->   mandate that lowest numbered port correspond to even pixels).
-> 
-> - Read the odd/even pixel expected by the source from an explicit DT
->   property, as proposed above. This would also require common DT
->   bindings for all dual-link LVDS sinks that define these new
->   properties. This would I think be better than implicitly infering it
->   from DT port numbers.
-> 
-> - Retrieve the information from the sink drm_bridge at runtime. This
->   would require a way to query the bridge for the mapping from port
->   number to odd/even pixel. The DRM_LINK_DUAL_LVDS_ODD_EVEN flag could
->   be used for that, and would then be defined as "the lowest numbered
->   port corresponds to odd pixels and the highest numbered port
->   corresponds to even pixels".
-> 
-> The second and third options would both work I think. The third one is
-> roughly what you've implemented, except that I think the flag
-> description should be clarified.
+> I'm wondering, shouldn't we call refresh_tss_limit() in both branches, or 
+> is a VMEXIT-wreckaged TSS limit harmless if we otherwise have 
+> io_bitmap_base set to IO_BITMAP_OFFSET_INVALID?
 
-Rob, what's your opinion ? We could certainly, in the context of a
-panel, decide of a fixed mapping of port numbers to odd/even pixels, but
-the issue is that sources need to know which pixels to send on which
-link (assuming of course that this can be configured on the source
-side). We thus need a way for the source to answer, at runtime, the
-question "which of ports A and B of the sink correspond to even and odd
-pixels ?". This can't be inferred by the source from the sink port
-numbers, as the mapping between port number and odd/even pixels is
-specific to each sink. We thus need to either store that property in the
-DT node of the sink (option 2) or query it at runtime from the sink
-(option 3).
+Yes. because the VMEXIT wreckage restricts TSS limit to 0x67 which is the
+end of the hardware tss struct. As the invalid offset points in any case
+outside the TSS limit it does not matter. It always #GP's when an I/O
+access happens in user space.
 
-I like option 2 as it's more explicit, but option 3 minimizes the
-required properties in DT, which is always good. Patch 3/8 introduces a
-helper that abstracts this from a sink point of view (which I think is a
-very good idea), so once we decide which option to use, only 3/8 may
-need to be adapted, the other patches should hopefully not require
-rework.
+Thanks,
 
--- 
-Regards,
-
-Laurent Pinchart
+	tglx
