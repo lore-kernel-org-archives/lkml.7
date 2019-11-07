@@ -2,73 +2,70 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3BCFC6197
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F1AFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB0A2077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E328A2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uSDVaazM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DEq2d9wP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732992AbfKGC21 (ORCPT
+        id S1732987AbfKGCcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:28:27 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41954 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfKGC21 (ORCPT
+        Wed, 6 Nov 2019 21:32:08 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34505 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbfKGCcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:28:27 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 94so663246oty.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:28:25 -0800 (PST)
+        Wed, 6 Nov 2019 21:32:08 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so649718oig.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:32:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wS6OdC+S2z/PBQgR4YDbDDYhyL0XvvxGi7c5qPyDE0Y=;
-        b=uSDVaazM9cyqGwRXCwrtjFi/nHUtZ2J26+AP1pK5t+J0d+/Tj7/Z1yUPw5jdywtHtw
-         9HQP5ZcwqS0nMABJOIGE5EnPGMvomAgZELvKeJYd8O3dlqz9ZYsSGyWRiBuBUoSeBl6U
-         vCRHFFi3U5GslJ40zsWHEcZlIrh6664iU/1LGaiAmEtJtacFVvswhNjlN0e3klHMBTdv
-         YXlYs16vjS6IC9YLlku6Q2dYcySVxTO6pVtV7DLXuTbP5LimO/KlLarf7UmNGnKq8Hln
-         uz0tuIjijpI1f8Z2Ul6YaCIva9zraCKef9iJ0Egiw+E6ilQSWVpHbCqAfn2vS/AAeTAj
-         MeCA==
+        bh=AHeH+k3q1YGRdVcK71lwkaCtcvgP7dVsV5GnTtoj2xs=;
+        b=DEq2d9wPFiLHlbBQh4T+yaRBQsYILaoQXq1yI4S1YiUQbtgMwYBgOoYV88hwOdZMU5
+         GHnkt3p84ev9URkfVlSTUApIfb/xp6J1w6wbf46IFkrE2Uxi1de+IGf2+F/G3Skls/0Z
+         h8H060f0oB8KOVdroNFU9e3cmJh4yB18mqmI6UcP7NAgoNNy+AYMzlK/Ti9N0lVdmrW4
+         +J+jisaNy7CTzmhSNNM7yNU5UDAMsZQEsTKcmn1S3cqaefQc5PxCFavlItazoFxA8BEq
+         QUAXc5NnNs0sbaxmyPfFC326BfQypv4XYu8MYRzOmSzdgHUETuJdpFv9Me35Ho33B8sT
+         +RVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wS6OdC+S2z/PBQgR4YDbDDYhyL0XvvxGi7c5qPyDE0Y=;
-        b=b1bIIWzbh14qaC/dkNgCiml43OYL9ogch5xm4arYgvIAFLsC07E3xPUBVn/eap241t
-         piOINn7gNXUh8TK7ocZun7RZFFuEduCsKdC23o58Ey6D0ZXSiEFfsoeuo66coHThEs8A
-         +044q73YXXGuaJvTmDTSv4No/5usK8FSt5g4Xa7tTLy663QlJc6eZCky3t6tR+U4U0ig
-         ISaHs/0hWqZD5q4BM73Sns97gh+2nnxq0rRyz42dyxzeXkHSOIO4+rru74QEtE8KYguU
-         GvRy6kmgfx4WKBwdRx2iG6eT0ORYP1GTM68creVOUZYGcz5ACNo0Kc11MEO4AVBp/WKc
-         hPBQ==
-X-Gm-Message-State: APjAAAVGTR/0xeE5rjkNWyl/RVP+votl8Fdmfsnv/xOSCFsrr9K542ar
-        HfjsbdW0M8hQsgA57euSWS2JyJjJVUuJOK685ODtJg==
-X-Google-Smtp-Source: APXvYqxM3DVIoAFqmXRE/YkhMyMJgK2jWrlkdOL0UapC3KZIYGFGZxk0cHboKIbfF893h/cqlowss7WaPRbfFTJZrKk=
-X-Received: by 2002:a9d:5e10:: with SMTP id d16mr812912oti.191.1573093704582;
- Wed, 06 Nov 2019 18:28:24 -0800 (PST)
+        bh=AHeH+k3q1YGRdVcK71lwkaCtcvgP7dVsV5GnTtoj2xs=;
+        b=BlMY+cMxV74eFH3TLVQQvAlToEWi5SFtdx+Refd3IqQrtpPUNseMSwWlmCpqo17T9X
+         7zW4FvpgJabS+vNFo7bCoTLV7llN9/4fhBDoFY3DfLqLHkSlvOZTMhS/sh+v53lTacq3
+         orRXFaQ6QEAKhhQV5hk55OcZOw+PrzipBQP+2xCt8cLKVNZCfpESs82mZKCNlnVTsA3H
+         DvllqY/voT6Maq1qI6LBIldKqZCMJDiKPpiEBxc61xs0Kjx54mV3NJ3xx+2dB9U1xsKC
+         tjDAPPthjCjezyTsCOOTLc8SGglf6KLMGIoEsS/NaiusPLboQ5UUE/oAM0tgNHlkywqO
+         QU0g==
+X-Gm-Message-State: APjAAAUUs9ZuFZspBvcEUcSUOgdLRaVuvRExTa2xFPOwWPjZ6cQe6jeI
+        Qn3EIA/mEmeWeFya4wal2LmC1RCC+ysbcrbZH7/3RA==
+X-Google-Smtp-Source: APXvYqztwmeiDA0mnICKAU44hM1wSeOw3WVwMf8C7tYj7HDrnvdXLqu1dNly6uEYJyDZNXKBi9CKk4/YwHZaxpI2HLo=
+X-Received: by 2002:a05:6808:9ae:: with SMTP id e14mr1055079oig.79.1573093927619;
+ Wed, 06 Nov 2019 18:32:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106225131.3543616-1-guro@fb.com> <20191107002204.GA96548@cmpxchg.org>
- <CALvZod5=g230Lwnjh7qXyLkoknZJpOiv-nLJ4XYC9rSSzL=e6w@mail.gmail.com>
- <20191107014307.GA1158@castle.dhcp.thefacebook.com> <CALvZod43v4Xx6YzhN8ku3=YrPVGJoK-8mUejg1f29a1jxL1-ug@mail.gmail.com>
-In-Reply-To: <CALvZod43v4Xx6YzhN8ku3=YrPVGJoK-8mUejg1f29a1jxL1-ug@mail.gmail.com>
+References: <20191106225131.3543616-1-guro@fb.com> <20191106225131.3543616-2-guro@fb.com>
+In-Reply-To: <20191106225131.3543616-2-guro@fb.com>
 From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 6 Nov 2019 18:28:13 -0800
-Message-ID: <CALvZod7ucfCd+TodJVt2oJEKaWg827h9VCEDBJw4+iwnC1BnAw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in get_mem_cgroup_from_mm()
+Date:   Wed, 6 Nov 2019 18:31:56 -0800
+Message-ID: <CALvZod7ickiX_D=7cJ_q4qjXebr93B7kh+WU61dagskA3Ye+0Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm: hugetlb: switch to css_tryget() in hugetlb_cgroup_charge_cgroup()
 To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
+Cc:     Linux MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>, stable@vger.kernel.org,
         Tejun Heo <tj@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,79 +73,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 6:21 PM Shakeel Butt <shakeelb@google.com> wrote:
+On Wed, Nov 6, 2019 at 2:53 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> On Wed, Nov 6, 2019 at 5:43 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > On Wed, Nov 06, 2019 at 05:25:26PM -0800, Shakeel Butt wrote:
-> > > On Wed, Nov 6, 2019 at 4:22 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > > >
-> > > > On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin wrote:
-> > > > > We've encountered a rcu stall in get_mem_cgroup_from_mm():
-> > > > >
-> > > > >  rcu: INFO: rcu_sched self-detected stall on CPU
-> > > > >  rcu: 33-....: (21000 ticks this GP) idle=6c6/1/0x4000000000000002 softirq=35441/35441 fqs=5017
-> > > > >  (t=21031 jiffies g=324821 q=95837) NMI backtrace for cpu 33
-> > > > >  <...>
-> > > > >  RIP: 0010:get_mem_cgroup_from_mm+0x2f/0x90
-> > > > >  <...>
-> > > > >  __memcg_kmem_charge+0x55/0x140
-> > > > >  __alloc_pages_nodemask+0x267/0x320
-> > > > >  pipe_write+0x1ad/0x400
-> > > > >  new_sync_write+0x127/0x1c0
-> > > > >  __kernel_write+0x4f/0xf0
-> > > > >  dump_emit+0x91/0xc0
-> > > > >  writenote+0xa0/0xc0
-> > > > >  elf_core_dump+0x11af/0x1430
-> > > > >  do_coredump+0xc65/0xee0
-> > > > >  ? unix_stream_sendmsg+0x37d/0x3b0
-> > > > >  get_signal+0x132/0x7c0
-> > > > >  do_signal+0x36/0x640
-> > > > >  ? recalc_sigpending+0x17/0x50
-> > > > >  exit_to_usermode_loop+0x61/0xd0
-> > > > >  do_syscall_64+0xd4/0x100
-> > > > >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > >
-> > > > > The problem is caused by an exiting task which is associated with
-> > > > > an offline memcg. We're iterating over and over in the
-> > > > > do {} while (!css_tryget_online()) loop, but obviously the memcg won't
-> > > > > become online and the exiting task won't be migrated to a live memcg.
-> > > > >
-> > > > > Let's fix it by switching from css_tryget_online() to css_tryget().
-> > > > >
-> > > > > As css_tryget_online() cannot guarantee that the memcg won't go
-> > > > > offline, the check is usually useless, except some rare cases
-> > > > > when for example it determines if something should be presented
-> > > > > to a user.
-> > > > >
-> > > > > A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
-> > > > > css_tryget() instead of css_tryget_online() in task_get_css()").
-> > > > >
-> > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
-
-Forgot to add:
-
-Reviewed-by: Shakeel Butt <shakeeb@google.com>
-
-> > > > > Cc: stable@vger.kernel.org
-> > > > > Cc: Tejun Heo <tj@kernel.org>
-> > > >
-> > > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > >
-> > > > The bug aside, it doesn't matter whether the cgroup is online for the
-> > > > callers. It used to matter when offlining needed to evacuate all
-> > > > charges from the memcg, and so needed to prevent new ones from showing
-> > > > up, but we don't care now.
-> > >
-> > > Should get_mem_cgroup_from_current() and get_mem_cgroup_from_page() be
-> > > switched to css_tryget() as well then?
-> >
-> > In those case it can't cause a rcu stall, so it's not a so urgent.
-> > But you are right, we should probably do the same here. I'll look
-> > at all remaining callers and prepare the patchset.
-> >
-> > I'll also probably rename it to css_tryget_if_online() to make obvious
-> > that it doesn't hold the cgroup from being onlined.
-> >
+> An exiting task might belong to an offline cgroup. In this case
+> an attempt to grab a cgroup reference from the task can end up
+> with an infinite loop in hugetlb_cgroup_charge_cgroup(), because
+> neither the cgroup will become online, neither the task will
+> be migrated to a live cgroup.
 >
-> SGTM
+> Fix this by switching over to css_tryget(). As css_tryget_online()
+> can't guarantee that the cgroup won't go offline, in most cases
+> the check doesn't make sense. In this particular case users of
+> hugetlb_cgroup_charge_cgroup() are not affected by this change.
+>
+> A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
+> css_tryget() instead of css_tryget_online() in task_get_css()").
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+
+> Cc: stable@vger.kernel.org
+> Cc: Tejun Heo <tj@kernel.org>
+> ---
+>  mm/hugetlb_cgroup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+> index f1930fa0b445..2ac38bdc18a1 100644
+> --- a/mm/hugetlb_cgroup.c
+> +++ b/mm/hugetlb_cgroup.c
+> @@ -196,7 +196,7 @@ int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+>  again:
+>         rcu_read_lock();
+>         h_cg = hugetlb_cgroup_from_task(current);
+> -       if (!css_tryget_online(&h_cg->css)) {
+> +       if (!css_tryget(&h_cg->css)) {
+>                 rcu_read_unlock();
+>                 goto again;
+>         }
+> --
+> 2.17.1
+>
