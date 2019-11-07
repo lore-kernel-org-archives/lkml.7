@@ -2,96 +2,139 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D806EC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BF2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD14F2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EBB72178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WPK4hB4o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="U91k772f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733108AbfKGEBa (ORCPT
+        id S1733129AbfKGEC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:01:30 -0500
-Received: from ozlabs.org ([203.11.71.1]:44885 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfKGEBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 23:01:30 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 477qTL4DFsz9sR3;
-        Thu,  7 Nov 2019 15:01:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573099287;
-        bh=ZkjztmTuOdqEDx/B5InDVQPntONR40/RXou+29jYrHM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WPK4hB4oFHVU4FmONb/Oyiez6NFoYsjl0jAj1X/7swN8s1dfpxGoQKuNbEv2O0zfW
-         1p8R3rJ4L8aBQsyRJxbWOF6eihCwWWRmBmPdxakZVnhwIeWmQ4OOlRAdKYnF8DeVof
-         Setfa3wP8/JmmLOccPKrqQ68/POAfuaECAftFL45SvhTMepM5xqDDjdkpY+mc0HACg
-         0v6Utnvd+itzHPi8E5cjsstP0RC0aSavdO7LPbSczh7VaR8SwmRJ1A3aSMTfkTzhT6
-         40nSN+/mS5ivqoSgXAKd3G5ydZVh2m+Mkqg3m6DI+V3XmDtE9ZtcxOq+OMlrCBQIe8
-         KaRFap6Aq1slQ==
-Date:   Thu, 7 Nov 2019 15:01:23 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>
-Subject: linux-next: build warning after merge of the scsi tree
-Message-ID: <20191107145523.1792cafb@canb.auug.org.au>
+        Wed, 6 Nov 2019 23:02:58 -0500
+Received: from gateway36.websitewelcome.com ([192.185.198.13]:31258 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733028AbfKGEC5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:02:57 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 2761B40DBF88A
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 20:25:57 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id SYIVi85tQiJ43SYIVihaC5; Wed, 06 Nov 2019 21:17:23 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=H+g7AYW8DqVIzvI+3N37//r3zkgiBk8GNs4olp1Yr9M=; b=U91k772fD8fY5roAOyl7gkffgL
+        x8A2ije+wEM1tu4ATFKlH0qHZbnChSsjYPrL7vMsFUIBY82XoKdRlOJkxurc6nFMs+NUWvVSRTP9K
+        C5x5j6++848Zc2f/m5w4dt5dQPc71ppSqARGSS1o3TbIF+hfjQrHvZ0v4LkpUZVEtM5kFo0s2eg0i
+        i76o/pNsumT2sdPXsdDeIcpm12S71VQbdzxudC/VgASYt+uvv+2uXd2sE9kWdDiM/LRVhgjTQpOj6
+        LIe3iK5CIWNARfoKn+VpHOifp3BoKrkXvlqs9c3U73NEccnVjoxVNHDkXcqro/A0AJNCltaqJJwFf
+        zmJ1A08A==;
+Received: from [191.31.194.59] (port=34854 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iSYIU-000Mrk-9w; Thu, 07 Nov 2019 00:17:22 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v6 2/5] dt-bindings: power: supply: Max17040: Add DT bindings for max17040 fuel gauge
+Date:   Thu,  7 Nov 2019 00:17:07 -0300
+Message-Id: <20191107031710.5672-3-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191107031710.5672-1-matheus@castello.eng.br>
+References: <20191105095905.GA31721@pi3>
+ <20191107031710.5672-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bgX3.mYz/YLz1Iri_cSeN.I";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.194.59
+X-Source-L: No
+X-Exim-ID: 1iSYIU-000Mrk-9w
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.194.59]:34854
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 38
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bgX3.mYz/YLz1Iri_cSeN.I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Documentation of max17040 based fuel gauge characteristics.
+For configure low level state of charge threshold alert signaled from
+max17043/max17044 we add "maxim,alert-low-soc-level" property.
 
-Hi all,
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
 
-After merging the scsi tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+new file mode 100644
+index 000000000000..f2d0b22b5f79
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+@@ -0,0 +1,33 @@
++max17040_battery
++~~~~~~~~~~~~~~~~
++
++Required properties :
++ - compatible : "maxim,max17040" or "maxim,max77836-battery"
++ - reg: i2c slave address
++
++Optional properties :
++- maxim,alert-low-soc-level :	The alert threshold that sets the state of
++ 				charge level (%) where an interrupt is
++				generated. Can be configured from 1 up to 32
++				(%). If skipped the power up default value of
++				4 (%) will be used.
++- interrupts : 			Interrupt line see Documentation/devicetree/
++				bindings/interrupt-controller/interrupts.txt
++- wakeup-source :		This device has wakeup capabilities. Use this
++				property to use alert low SOC level interrupt
++				as wake up source.
++
++Optional properties support interrupt functionality for alert low state of
++charge level, present in some ICs in the same family, and should be used with
++compatible "maxim,max77836-battery".
++
++Example:
++
++	battery-fuel-gauge@36 {
++		compatible = "maxim,max77836-battery";
++		reg = <0x36>;
++		maxim,alert-low-soc-level = <10>;
++		interrupt-parent = <&gpio7>;
++		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-source;
++	};
+--
+2.24.0.rc2
 
-drivers/scsi/lpfc/lpfc_init.c: In function 'lpfc_cpumask_of_node_init':
-drivers/scsi/lpfc/lpfc_init.c:6020:6: warning: the address of 'cpu_all_bits=
-' will always evaluate as 'true' [-Waddress]
- 6020 |  if (!cpumask_of_node(numa_node))
-      |      ^
-
-Introduced by commit
-
-  dcaa21367938 ("scsi: lpfc: Change default IRQ model on AMD architectures")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bgX3.mYz/YLz1Iri_cSeN.I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3DlxMACgkQAVBC80lX
-0GyMBgf+MTvhlwTtGAP7Nvjrtexn1tRvM1SnvLMSouD/2kqNejkmyjkH1u+PEiGK
-UyFH48OLVPha1inAIFWcaqilD8JaQ2qWjR64+pDIRsirCiaf7NQ/zQM9EF8KyKjv
-Tejb1xu6UGko6rNzRNt/fSdZaSjcl2ZB9wXO35IqKKiNvpU1LBBR5k5MBZ7fg9to
-HjskRB9digUnuOR4W6l8eR87P24fYuyXe/yVE+bi9QyKFnmqdwomMg+EfRwHOMR3
-HCaca5pvWkHrk4bAN+NmpzImlbzp8CtMNc+YhREsd1swg0KkfcqAcBxNGlbvgNMm
-SAXr5lFfD7uDtBnOh8FX8OD63WzueQ==
-=MGMv
------END PGP SIGNATURE-----
-
---Sig_/bgX3.mYz/YLz1Iri_cSeN.I--
