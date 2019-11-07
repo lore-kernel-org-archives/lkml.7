@@ -2,143 +2,148 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB4FFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F638C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E501321882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JyLxr2bS"
+	by mail.kernel.org (Postfix) with ESMTP id DC04B21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfKGGF7 (ORCPT
+        id S1726565AbfKGGLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:05:59 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57202 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfKGGF7 (ORCPT
+        Thu, 7 Nov 2019 01:11:24 -0500
+Received: from smtprelay0249.hostedemail.com ([216.40.44.249]:35822 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725763AbfKGGLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:05:59 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA765W3J009455;
-        Thu, 7 Nov 2019 00:05:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573106732;
-        bh=YkH6IrLLDyFL1c+gPK30RscWok8biguT1gLAoAK04AQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JyLxr2bSWrMfVthmAEKDODjrRZchD+nNQJMItKW8Ks3I7yHaZWFw/NTIXH9LXMMTV
-         AWIDb9F9kpT/SN5TyhUkE9A3n9+YvhAFnqXIVAhig0y+YtQuKiXYnB8pXVCcFtPIRZ
-         hkM+tcR7Sy5I+tIxRrSnbGDOEawmANuil8TnT33M=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA765W5w098483;
-        Thu, 7 Nov 2019 00:05:32 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 7 Nov
- 2019 00:05:16 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 7 Nov 2019 00:05:16 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA765RSj099257;
-        Thu, 7 Nov 2019 00:05:28 -0600
-Subject: Re: [PATCH 1/2] mtd: mtk-quadspi: add support for memory-mapped flash
- reading
-To:     Chuanhong Guo <gch981213@gmail.com>,
-        <linux-mtd@lists.infradead.org>
-CC:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191106140748.13100-1-gch981213@gmail.com>
- <20191106140748.13100-2-gch981213@gmail.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <bc917a56-e688-d701-2279-87df460d6055@ti.com>
-Date:   Thu, 7 Nov 2019 11:36:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 01:11:24 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 459952471;
+        Thu,  7 Nov 2019 06:11:23 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: paint27_bfd63cc44947
+X-Filterd-Recvd-Size: 4632
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  7 Nov 2019 06:11:22 +0000 (UTC)
+Message-ID: <1cc2ec36b5eedefc44826bb173a40528a4badca6.camel@perches.com>
+Subject: [PATCH] NFS: Correct comment tyops -> typos
+From:   Joe Perches <joe@perches.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 06 Nov 2019 22:11:09 -0800
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20191106140748.13100-2-gch981213@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Just fix the typos checkpatch notices...
 
-On 06/11/19 7:37 PM, Chuanhong Guo wrote:
-> PIO reading mode on this controller is ridiculously inefficient
-> (one cmd+addr+dummy sequence reads only one byte)
-> This patch adds support for reading from memory-mapped flash area
-> which increases reading speed from 1MB/s to 5.6MB/s
-> 
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> ---
->  drivers/mtd/spi-nor/mtk-quadspi.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
-> index 34db01ab6cab..ba8b3be39896 100644
-> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
-> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
-> @@ -106,6 +106,7 @@ struct mtk_nor {
->  	struct spi_nor nor;
->  	struct device *dev;
->  	void __iomem *base;	/* nor flash base address */
-> +	void __iomem *flash_base;
->  	struct clk *spi_clk;
->  	struct clk *nor_clk;
->  };
-> @@ -272,6 +273,11 @@ static ssize_t mtk_nor_read(struct spi_nor *nor, loff_t from, size_t length,
->  	mtk_nor_set_read_mode(mtk_nor);
->  	mtk_nor_set_addr(mtk_nor, addr);
->  
-> +	if (mtk_nor->flash_base) {
-> +		memcpy_fromio(buffer, mtk_nor->flash_base + from, length);
-> +		return length;
-> +	}
-> +
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ fs/nfs/export.c                        | 2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c | 2 +-
+ fs/nfs/nfs4_fs.h                       | 2 +-
+ fs/nfs/nfs4proc.c                      | 4 ++--
+ fs/nfs/nfs4xdr.c                       | 2 +-
+ fs/nfs/pnfs.c                          | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
 
-Don't you need to check if access is still within valid memory mapped
-window?
+diff --git a/fs/nfs/export.c b/fs/nfs/export.c
+index deecb6..c54cc1d 100644
+--- a/fs/nfs/export.c
++++ b/fs/nfs/export.c
+@@ -18,7 +18,7 @@ enum {
+ 	FILEID_HIGH_OFF = 0,	/* inode fileid high */
+ 	FILEID_LOW_OFF,		/* inode fileid low */
+ 	FILE_I_TYPE_OFF,	/* inode type */
+-	EMBED_FH_OFF		/* embeded server fh */
++	EMBED_FH_OFF		/* embedded server fh */
+ };
+ 
+ 
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 5657b7f..ca4cc6 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -123,7 +123,7 @@ static int decode_nfs_fh(struct xdr_stream *xdr, struct nfs_fh *fh)
+  * I.e., kerberos is not supported to the DSes, so no pricipals.
+  *
+  * That means that one common function will suffice, but when
+- * principals are added, this should be split to accomodate
++ * principals are added, this should be split to accommodate
+  * calls to both nfs_map_name_to_uid() and nfs_map_group_to_gid().
+  */
+ static int
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 16b2e5..25eebd 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -345,7 +345,7 @@ _nfs4_state_protect(struct nfs_client *clp, unsigned long sp4_mode,
+ 	if (sp4_mode == NFS_SP4_MACH_CRED_CLEANUP ||
+ 	    sp4_mode == NFS_SP4_MACH_CRED_PNFS_CLEANUP) {
+ 		/* Using machine creds for cleanup operations
+-		 * is only relevent if the client credentials
++		 * is only relevant if the client credentials
+ 		 * might expire. So don't bother for
+ 		 * RPC_AUTH_UNIX.  If file was only exported to
+ 		 * sec=sys, the PUTFH would fail anyway.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index caacf5..420b3f 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7701,7 +7701,7 @@ int nfs4_proc_fsid_present(struct inode *inode, const struct cred *cred)
+ }
+ 
+ /*
+- * If 'use_integrity' is true and the state managment nfs_client
++ * If 'use_integrity' is true and the state management nfs_client
+  * cl_rpcclient is using krb5i/p, use the integrity protected cl_rpcclient
+  * and the machine credential as per RFC3530bis and RFC5661 Security
+  * Considerations sections. Otherwise, just use the user cred with the
+@@ -9411,7 +9411,7 @@ nfs4_proc_layoutcommit(struct nfs4_layoutcommit_data *data, bool sync)
+ }
+ 
+ /*
+- * Use the state managment nfs_client cl_rpcclient, which uses krb5i (if
++ * Use the state management nfs_client cl_rpcclient, which uses krb5i (if
+  * possible) as per RFC3530bis and RFC5661 Security Considerations sections
+  */
+ static int
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index ab07db..4befb5a 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4768,7 +4768,7 @@ static int decode_attr_pnfstype(struct xdr_stream *xdr, uint32_t *bitmap,
+ }
+ 
+ /*
+- * The prefered block size for layout directed io
++ * The preferred block size for layout directed io
+  */
+ static int decode_attr_layout_blksize(struct xdr_stream *xdr, uint32_t *bitmap,
+ 				      uint32_t *res)
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index bb80034..378a672 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1873,7 +1873,7 @@ static void _add_to_server_list(struct pnfs_layout_hdr *lo,
+ }
+ 
+ /*
+- * Layout segment is retreived from the server if not cached.
++ * Layout segment is retrieved from the server if not cached.
+  * The appropriate layout segment is referenced and returned to the caller.
+  */
+ struct pnfs_layout_segment *
 
->  	for (i = 0; i < length; i++) {
->  		ret = mtk_nor_execute_cmd(mtk_nor, MTK_NOR_PIO_READ_CMD);
->  		if (ret < 0)
-> @@ -475,6 +481,11 @@ static int mtk_nor_drv_probe(struct platform_device *pdev)
->  	if (IS_ERR(mtk_nor->base))
->  		return PTR_ERR(mtk_nor->base);
->  
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	mtk_nor->flash_base = devm_ioremap_resource(&pdev->dev, res);
 
-There is a single API now: devm_platform_ioremap_resource().
-
-> +	if (IS_ERR(mtk_nor->flash_base))
-> +		mtk_nor->flash_base = NULL;
-> +
->  	mtk_nor->spi_clk = devm_clk_get(&pdev->dev, "spi");
->  	if (IS_ERR(mtk_nor->spi_clk))
->  		return PTR_ERR(mtk_nor->spi_clk);
-> 
-
--- 
-Regards
-Vignesh
