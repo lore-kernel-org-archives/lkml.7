@@ -2,158 +2,99 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8B3C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F32C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92D7217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AF721882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Vp+bEi+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733125AbfKGDcR (ORCPT
+        id S1733137AbfKGDc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:32:17 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:38126 "EHLO inva020.nxp.com"
+        Wed, 6 Nov 2019 22:32:58 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:40787 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733028AbfKGDcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:32:17 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6E41A1A0697;
-        Thu,  7 Nov 2019 04:32:14 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 26CD11A0511;
-        Thu,  7 Nov 2019 04:32:08 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 26DB0402B1;
-        Thu,  7 Nov 2019 11:32:00 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        aisheng.dong@nxp.com, daniel.baluta@nxp.com, peng.fan@nxp.com,
-        fugang.duan@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] arm64: dts: imx8qxp: Remove unnecessary "interrupt-parent" property
-Date:   Thu,  7 Nov 2019 11:30:35 +0800
-Message-Id: <1573097435-19814-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1733028AbfKGDc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 22:32:58 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 477pns2cxLzJb;
+        Thu,  7 Nov 2019 04:30:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1573097441; bh=vZsP+gC6xjkhdwkU8RmUdpu99NTy+OKDeJJ+3qq5kYI=;
+        h=Date:From:Subject:To:Cc:From;
+        b=Vp+bEi+GUhpQ5WfPDWNZMnazNS1UYkrwJF8PI1MnS9Xx+cYCK1n7+HhCneO2qFKxH
+         ZIwc+TA5Yr/9I+0ORz59LVWSibS/faCpvKg61RK3aQYU1duQVIst7+lV9babK6QI4G
+         pIQakIJjInH2J5yFhngG4ucKz3nq5HyYI0HqTuykeDPXLjCpmQ8MXBMst6eFquJr7m
+         LPOjCI2/dTx/LVW1AowrEliT4dS/VI8g0lqbeEFvYO/zjIO4NhjulLY8QySAm9ObNO
+         QQzg2QVVy/cQMrNYKmgStqkkx8Qn3wb9F7JCAVrshzi7pjyKUy8i9KUR2zQgibWGqW
+         eGMz8tAmwRYKw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Thu, 07 Nov 2019 04:32:53 +0100
+Message-Id: <a47522045d251146c8f7daaeb18a32716bfc3397.1573097536.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH RESEND] ata_piix: remove open-coded dmi_match(DMI_OEM_STRING)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-ide@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gic is appointed as default interrupt parent for devices, so no need
-to specify it again in device nodes which use it as interrupt parent.
+Since de40614de99 ("firmware: dmi_scan: Add DMI_OEM_STRING support to
+dmi_matches") dmi_check_system() can match OEM_STRINGs itself.
+Use the feature.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 12 ------------
- 1 file changed, 12 deletions(-)
+ drivers/ata/ata_piix.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 9646a41..fb5f752 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -250,7 +250,6 @@
- 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg = <0x5a060000 0x1000>;
- 			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_IPG_CLK>,
- 				 <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
- 			clock-names = "ipg", "baud";
-@@ -262,7 +261,6 @@
- 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg = <0x5a070000 0x1000>;
- 			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART1_IPG_CLK>,
- 				 <&adma_lpcg IMX_ADMA_LPCG_UART1_BAUD_CLK>;
- 			clock-names = "ipg", "baud";
-@@ -274,7 +272,6 @@
- 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg = <0x5a080000 0x1000>;
- 			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART2_IPG_CLK>,
- 				 <&adma_lpcg IMX_ADMA_LPCG_UART2_BAUD_CLK>;
- 			clock-names = "ipg", "baud";
-@@ -286,7 +283,6 @@
- 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg = <0x5a090000 0x1000>;
- 			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART3_IPG_CLK>,
- 				 <&adma_lpcg IMX_ADMA_LPCG_UART3_BAUD_CLK>;
- 			clock-names = "ipg", "baud";
-@@ -298,7 +294,6 @@
- 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
- 			reg = <0x5a800000 0x4000>;
- 			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
- 			clock-names = "per";
- 			assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
-@@ -311,7 +306,6 @@
- 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
- 			reg = <0x5a810000 0x4000>;
- 			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
- 			clock-names = "per";
- 			assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
-@@ -324,7 +318,6 @@
- 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
- 			reg = <0x5a820000 0x4000>;
- 			interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
- 			clock-names = "per";
- 			assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
-@@ -337,7 +330,6 @@
- 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
- 			reg = <0x5a830000 0x4000>;
- 			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-parent = <&gic>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
- 			clock-names = "per";
- 			assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
-@@ -361,7 +353,6 @@
+diff --git a/drivers/ata/ata_piix.c b/drivers/ata/ata_piix.c
+index e4da725381d3..3ca7720e7d8f 100644
+--- a/drivers/ata/ata_piix.c
++++ b/drivers/ata/ata_piix.c
+@@ -840,6 +840,12 @@ static int piix_broken_suspend(void)
+ 				DMI_MATCH(DMI_PRODUCT_NAME, "Tecra M3"),
+ 			},
+ 		},
++		{
++			.ident = "TECRA M3",
++			.matches = {
++				DMI_MATCH(DMI_OEM_STRING, "Tecra M3,"),
++			},
++		},
+ 		{
+ 			.ident = "TECRA M4",
+ 			.matches = {
+@@ -955,18 +961,10 @@ static int piix_broken_suspend(void)
  
- 		usdhc1: mmc@5b010000 {
- 			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
--			interrupt-parent = <&gic>;
- 			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
- 			reg = <0x5b010000 0x10000>;
- 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
-@@ -374,7 +365,6 @@
- 
- 		usdhc2: mmc@5b020000 {
- 			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
--			interrupt-parent = <&gic>;
- 			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
- 			reg = <0x5b020000 0x10000>;
- 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
-@@ -389,7 +379,6 @@
- 
- 		usdhc3: mmc@5b030000 {
- 			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
--			interrupt-parent = <&gic>;
- 			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
- 			reg = <0x5b030000 0x10000>;
- 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
-@@ -446,7 +435,6 @@
- 		ddr-pmu@5c020000 {
- 			compatible = "fsl,imx8-ddr-pmu";
- 			reg = <0x5c020000 0x10000>;
--			interrupt-parent = <&gic>;
- 			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+ 		{ }	/* terminate list */
  	};
+-	static const char *oemstrs[] = {
+-		"Tecra M3,",
+-	};
+-	int i;
+ 
+ 	if (dmi_check_system(sysids))
+ 		return 1;
+ 
+-	for (i = 0; i < ARRAY_SIZE(oemstrs); i++)
+-		if (dmi_find_device(DMI_DEV_TYPE_OEM_STRING, oemstrs[i], NULL))
+-			return 1;
+-
+ 	/* TECRA M4 sometimes forgets its identify and reports bogus
+ 	 * DMI information.  As the bogus information is a bit
+ 	 * generic, match as many entries as possible.  This manual
 -- 
-2.7.4
+2.20.1
 
