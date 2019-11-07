@@ -2,149 +2,288 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E2EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D256FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7FD2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE062178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388108AbfKGKkY convert rfc822-to-8bit (ORCPT
+        id S2387753AbfKGKmO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:40:24 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:41846 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387629AbfKGKkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:40:23 -0500
-IronPort-SDR: T32BGUkZFNm0bKBA/2RE18PDSr8SiUb+Qupng5eHdFpdVj2Rmo3UJQ13oYYykPw2+iOV+s3gZS
- WoU3tHZgVi+sXqZ8Gbm1UXb1zL5xeR3r1NRBewcmnpgxzLE9AGssvT14sHUtBjafni3Rmd0urp
- staaDk7PxMOdOzVhWXz5L+12O2JW2WkAmF3FdthnA9DkKnQfCslRcZmhFMzI/4nhozZSwn+iyY
- +Bc3s9iKsSiCPIR7cDR5iasEDsFRCXSvWELARpgP5HhW7JIximMOlsYFTVjptMqqfz835bw8Iz
- jx8=
-X-IronPort-AV: E=Sophos;i="5.68,277,1569312000"; 
-   d="scan'208";a="44803419"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 07 Nov 2019 02:40:22 -0800
-IronPort-SDR: OBXVEr84vlljD/nalAp8A54rljQ2SYQlCGJOD7FZyWqXJyhLonDrJXg+JubTVGgu/BD0W6L+Og
- MlW8sYfsHBfVKIk5GuAuwvy6Q2JQ/Jtm/0FjaHWrja+slybzu/Gg0lr3lnj1bISWkDO9U9z9SZ
- p3DRxXJaLZJGJQkjVPJjJ+DvSZaf7DXe+QZsjyerr2PDizCU2kWtgMRgYgUWV/ZQr0Lrw0asAW
- ZZDmUTmzhsOoTSZ0A9lFXPIAHBxhJ9dT006b9tKCofLuI+DQnfJ/VDaHZK7b2H9l7I3HKmpbNq
- a9o=
-From:   "Gabbasov, Andrew" <Andrew_Gabbasov@mentor.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jaroslav Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Timo Wischer <twischer@de.adit-jv.com>
-Subject: RE: [PATCH v2 8/8] ALSA: aloop: Support runtime change of snd_timer
- via info interface
-Thread-Topic: [PATCH v2 8/8] ALSA: aloop: Support runtime change of snd_timer
- via info interface
-Thread-Index: AQHVk+YoG5RC36oMHkeh2PePUSo5Rqd/XLQAgAAn8wA=
-Date:   Thu, 7 Nov 2019 10:40:18 +0000
-Message-ID: <2dc6e7841e97441aa3b91fca8e5629e9@svr-ies-mbx-02.mgc.mentorg.com>
-References: <20191105143218.5948-1-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-2-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-3-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-4-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-5-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-6-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-7-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-8-andrew_gabbasov@mentor.com>
-        <20191105143218.5948-9-andrew_gabbasov@mentor.com>
- <s5hk18c860t.wl-tiwai@suse.de>
-In-Reply-To: <s5hk18c860t.wl-tiwai@suse.de>
-Accept-Language: en-US, en-IE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 7 Nov 2019 05:42:14 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57376 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727278AbfKGKmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:42:14 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 666DCAF57;
+        Thu,  7 Nov 2019 10:42:11 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 11:42:09 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, <linux-mips@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Yinglu Yang <yangyinglu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH] MIPS: Scan the DMI system information
+Message-ID: <20191107114209.5e4cfa4d@endymion>
+In-Reply-To: <5c042bd8-40ad-e84f-588d-f3ee56f7216d@loongson.cn>
+References: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
+        <5c042bd8-40ad-e84f-588d-f3ee56f7216d@loongson.cn>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Takashi,
-
-Thank you very much for your feedback!
-
-> -----Original Message-----
-> From: Takashi Iwai [mailto:tiwai@suse.de]
-> Sent: Thursday, November 07, 2019 11:06 AM
-> To: Gabbasov, Andrew
-> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
-> Kysela; Takashi Iwai; Timo Wischer
-> Subject: Re: [PATCH v2 8/8] ALSA: aloop: Support runtime change of
-> snd_timer via info interface
+On Thu, 7 Nov 2019 17:26:58 +0800, Tiezhu Yang wrote:
+> Sorry to resend this email because the mail list server was denied
+> due to it is not plain text.
 > 
-> On Tue, 05 Nov 2019 15:32:18 +0100,
-> Andrew Gabbasov wrote:
-> >
-> > Show and change sound card timer source with read-write info
-> > file in proc filesystem. Initial string can still be set as
-> > module parameter.
-> >
-> > The timer source string value can be changed at any time,
-> > but it is latched by PCM substream open callback (the first one
-> > for a particular cable). At this point it is actually used, that
-> > is the string is parsed, and the timer is looked up and opened.
-> >
-> > The timer source is set for a loopback card (the same as initial
-> > setting by module parameter), but every cable uses the value,
-> > current at the moment of open.
-> >
-> > Setting the value to empty string switches the timer to jiffies.
-> >
-> > Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+> On 11/07/2019 11:42 AM, Jiaxun Yang wrote:
+> > 于 2019年11月7日 GMT+08:00 上午10:42:23, Tiezhu Yang<yangtiezhu@loongson.cn>  写到:  
+> >> On 11/07/2019 08:35 AM, Jiaxun Yang wrote:  
+> >>> 于 2019年11月7日 GMT+08:00 上午12:05:41, Tiezhu Yang  
+> >> <yangtiezhu@loongson.cn>  写到:  
+> >>>> Enable DMI scanning on the MIPS architecture, this setups DMI
+> >>>> identifiers
+> >>>> (dmi_system_id) for printing it out on task dumps and prepares DIMM
+> >>>> entry
+> >>>> information (dmi_memdev_info) from the SMBIOS table. With this  
+> >> patch,  
+> >>>> the
+> >>>> driver can easily match various of mainboards.
+> >>>>
+> >>>> In the SMBIOS reference specification, the table anchor string  
+> >> "_SM_"  
+> >>>> is
+> >>>> present in the address range 0xF0000 to 0xFFFFF on a 16-byte  
+> >> boundary,  
+> >>>> but there exists a special case for loongson platform, when call
+> >>>> function
+> >>>> dmi_early_remap, it should specify the start address to 0xFFFE000  
+> >> due  
+> >>>> to
+> >>>> it is reserved for SMBIOS and can be normally access in the BIOS.
+> >>>>
+> >>>> Co-developed-by: Yinglu Yang<yangyinglu@loongson.cn>
+> >>>> Signed-off-by: Yinglu Yang<yangyinglu@loongson.cn>
+> >>>> Signed-off-by: Tiezhu Yang<yangtiezhu@loongson.cn>
+> >>>> ---
+> >>>> arch/mips/Kconfig           | 12 ++++++++++++
+> >>>> arch/mips/include/asm/dmi.h | 43
+> >>>> +++++++++++++++++++++++++++++++++++++++++++
+> >>>> arch/mips/kernel/setup.c    |  2 ++
+> >>>> 3 files changed, 57 insertions(+)
+> >>>> create mode 100644 arch/mips/include/asm/dmi.h
+> >>>>
+> >>>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> >>>> index 7cb8947..0a67b18 100644
+> >>>> --- a/arch/mips/Kconfig
+> >>>> +++ b/arch/mips/Kconfig
+> >>>> @@ -2757,6 +2757,18 @@ config HW_PERF_EVENTS
+> >>>> 	  Enable hardware performance counter support for perf events. If
+> >>>> 	  disabled, perf events will use software events only.
+> >>>>
+> >>>> +# Mark as expert because too many people got it wrong.
+> >>>> +# The code disables itself when not needed.
+> >>>> +config DMI
+> >>>> +	default y
+> >>>> +	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+> >>>> +	bool "Enable DMI scanning" if EXPERT
+> >>>> +	help
+> >>>> +	  Enabled scanning of DMI to identify machine quirks. Say Y
+> >>>> +	  here unless you have verified that your setup is not
+> >>>> +	  affected by entries in the DMI blacklist. Required by PNP
+> >>>> +	  BIOS code.
+> >>>> +
+> >>>> config SMP
+> >>>> 	bool "Multi-Processing support"
+> >>>> 	depends on SYS_SUPPORTS_SMP
+> >>>> diff --git a/arch/mips/include/asm/dmi.h  
+> >> b/arch/mips/include/asm/dmi.h  
+> >>>> new file mode 100644
+> >>>> index 0000000..1f3da37
+> >>>> --- /dev/null
+> >>>> +++ b/arch/mips/include/asm/dmi.h
+> >>>> @@ -0,0 +1,43 @@
+> >>>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>>> +#ifndef _ASM_MIPS_DMI_H
+> >>>> +#define _ASM_MIPS_DMI_H
+> >>>> +
+> >>>> +#define dmi_early_remap		mips_early_memremap
+> >>>> +#define dmi_early_unmap		mips_early_memunmap
+> >>>> +#define dmi_remap(_x, _l)	mips_memremap(_x, _l, MEMREMAP_WB)
+> >>>> +#define dmi_unmap(_x)		mips_memunmap(_x)
+> >>>> +
+> >>>> +#define dmi_alloc(l)		memblock_alloc_low(l, PAGE_SIZE)
+> >>>> +
+> >>>> +void __init *mips_early_memremap(resource_size_t phys_addr,  
+> >> unsigned  
+> >>>> long size)
+> >>>> +{
+> >>>> +#if defined(CONFIG_MACH_LOONGSON64)
+> >>>> +	if (phys_addr == 0xF0000)
+> >>>> +		phys_addr = 0xFFFE000;
+> >>>> +
+> >>>> +	return (void *)TO_CAC(phys_addr);
+> >>>> +#else
+> >>>> +	return NULL;
+> >>>> +#endif
+> >>>> +}  
+> >>> Hi Tiezhu,
+> >>>
+> >>> It is really tricky to hijack dmi address here during remap.
+> >>> I think we should set the dmi table address at  dmi_scan.c by a marco  
+> >> or something else rather than hijack it during remap.
+> >>
+> >> Hi Jiaxun,
+> >>
+> >> Thanks for your review. I agree with you, let me think about it and try
+> >> to
+> >> find a proper way, and then I will send a v2 patch.  
 > 
-> Unfortunately the whole code here are racy.  It may lead to a crash or
-> use-after-free easily.  Some locking is needed definitely.
+> Hi Jiaxun,
+> 
+> It seems that there is no absolutely better way to handle this case.
+> 
+> 1. use conditional compilation in drivers/firmware/dmi_scan.c:
+> 
+> #if defined(CONFIG_MACH_LOONGSON64)
+> 
+> p = dmi_early_remap(0xFFFE000, 0x10000);
+> 
+> #else
+> 
+> p = dmi_early_remap(0xF0000, 0x10000);
+> 
+> #endif
+> 
+> 
+> This will influence the common code.
+> 
+> 2. use callback function in arch/mips/include/asm/dmi.h:
 
-You are right, using and changing of loopback->timer_source should be protected.
-I'll add locking with loopback->cable_lock to the bodies of print_timer_source_info()
-and change_timer_source_info() (like in the example diff below), similarly to other
-/proc files and mixer controls. All other uses of loopback->timer_source are already
-covered by loopback->cable_lock, except for loopback_set_timer_source() call from
-loopback_probe(), that is done at the very early stage and doesn't conflict with other
-uses. I think, in order to avoid racing problems, this will be enough, won't it?
+I see no reason to go that route if the decision can be made at build
+time. Callback functions are good when the decision is made at run time.
 
-Thanks.
+> 
+> struct plat_dmi_ops {
+> 
+>          void (*early_memremap)(void);
+> 
+>          void (*memremap)(void);
+> 
+> };
+> 
+> extern struct plat_dmi_ops *dmi_ops;
+> 
+> void __init *mips_early_memremap(resource_size_t phys_addr, unsigned long size)
+> 
+> {
+> 
+>          dmi_ops->early_memremap();
+> 
+> }
+> 
+> void *mips_memremap(resource_size_t offset, size_t size, unsigned long flags)
+> 
+> {
+> 
+>          dmi_ops->memremap();
+> 
+> }
+> 
+> 
+> we can implement the callback function in various of MIPS platforms,
+> like this:
+> 
+> struct plat_dmi_ops loongson3_dmi_ops = {
+> 
+>          .early_memremap = loongson3_early_memremap,
+> 
+>          .memremap = loongson3_memremap,
+> 
+> };
+> 
+> register_dmi_ops(&loongson3_dmi_ops);
+> 
+> #ifdef CONFIG_DMI
+> 
+> void __init *loongson3_early_memremap(resource_size_t phys_addr, unsigned long size)
+> 
+> {
+> 
+>          if (phys_addr == 0xF0000)
+> 
+>                  phys_addr = 0xfffe000;
+> 
+>          return (void *)TO_CAC(phys_addr);
+> 
+> }
+> 
+> void *loongson3_memremap(resource_size_t offset, size_t size, unsigned long flags)
+> 
+> {
+> 
+>          return (void *)TO_CAC(phys_addr);
+> 
+> }
+> 
+> #else
+> 
+> void __init __iomem *loongson3_early_memremap(u64 phys_addr, unsigned long size)
+> 
+> {
+> 
+>          return NULL;
+> 
+> }
+> 
+> void __init __iomem *loongson3_memremap(u64 phys_addr, unsigned long size)
+> 
+> {
+> 
+>          return NULL;
+> 
+> }
+> 
+> #endif
+> 
+> 
+> This will not influence the common code.
+> 
+> What do you think?
+> 
+> 
+> Hi Jean,
+> 
+> Could you give some suggestions?
 
-Best regards,
-Andrew
+What about:
 
-diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
-index 415128a97774..ca9307dd780e 100644
---- a/sound/drivers/aloop.c
-+++ b/sound/drivers/aloop.c
-@@ -1684,8 +1684,10 @@ static void print_timer_source_info(struct snd_info_entry *entry,
- {
-        struct loopback *loopback = entry->private_data;
+#if defined(CONFIG_MACH_LOONGSON64)
+#define SMBIOS_ENTRY_POINT_SCAN_START	0xFFFE000
+#else
+#define SMBIOS_ENTRY_POINT_SCAN_START	0xF0000
+#endif
 
-+       mutex_lock(&loopback->cable_lock);
-        snd_iprintf(buffer, "%s\n",
-                    loopback->timer_source ? loopback->timer_source : "");
-+       mutex_unlock(&loopback->cable_lock);
- }
+And then just use SMBIOS_ENTRY_POINT_SCAN_START instead of the raw
+address everywhere it is needed?
 
- static void change_timer_source_info(struct snd_info_entry *entry,
-@@ -1694,8 +1696,10 @@ static void change_timer_source_info(struct snd_info_entry *entry,
-        struct loopback *loopback = entry->private_data;
-        char line[64];
-
-+       mutex_lock(&loopback->cable_lock);
-        if (!snd_info_get_line(buffer, line, sizeof(line)))
-                loopback_set_timer_source(loopback, strim(line));
-+       mutex_unlock(&loopback->cable_lock);
- }
-
- static int loopback_timer_source_proc_new(struct loopback *loopback)
-
+-- 
+Jean Delvare
+SUSE L3 Support
