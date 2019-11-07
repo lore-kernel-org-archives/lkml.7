@@ -2,52 +2,53 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D971C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CFC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1D321882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608C421882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfKGSyL (ORCPT
+        id S1728105AbfKGSzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:54:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:54918 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKGSyL (ORCPT
+        Thu, 7 Nov 2019 13:55:12 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:41411 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbfKGSzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:54:11 -0500
-Received: by mail-il1-f198.google.com with SMTP id t67so3560363ill.21
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:54:10 -0800 (PST)
+        Thu, 7 Nov 2019 13:55:11 -0500
+Received: by mail-il1-f199.google.com with SMTP id o185so3593624ila.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:55:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=m2Qa1E1MJM3JwHE0ZbVyKXnicQ++QYA8NZNL8xEGd0k=;
-        b=St25L0lgkUhLP7VEkg96K9pEZKjPgAqHeXoCPDLwZWcUboReoCLA/Y6rymrANVBj9M
-         KEKHRQZgVjEHjV/wypETHaz6CNnlS7HKIufngA0T74LQT41rQZo5p49Ht5QUxRa+xk6s
-         H6DAjkmM6a05E9kah50RD+qL0ucfl5mz2wj6/L9td1iZHnMzVBbUmfWU4u3fEmWtOMpe
-         MGUPOOE1PHaabYmhk3vH3V68qqfX1eEWtxi5YH79DpdBQNUwh4FozApVmhIEZnKsr7Sg
-         m2tGChaA16gxymXK0e2dcRJykc2jvxrUfrSzOi0P+N7F3CmakRaadBHKl5Fc2GIVxHkF
-         Bilg==
-X-Gm-Message-State: APjAAAXHgmgHCqb6MNwiDD4zleD2daTV0E9wZpd35amOuJW3tadpHegA
-        PQr9aT9V4tfue3YHXU4fUv8hZ8h21QPtokXvXfz6iDfSFqX8
-X-Google-Smtp-Source: APXvYqyEE3VyCBIcL7gUe9uBCXoJUzB4GHP/i130evFYgnvcyekpRWdvKhZjT4ksDss52iO6eeW/umQvYPF63zDyDa+CTIC1S2/t
+        bh=CrOGoLpkQ7edTFXJaYgjIRwF9NvIsDG1DIF9OLeSRgU=;
+        b=A3ctZxwguu9s1geBjAk/VYFpYpiA9Jy1kvo6HA8kejKg7jXTSUxLuy1NF/+nIq/DaK
+         mL4hS1L64Ig+O3M7EBKuIVV6zXMTVWPN4pxRS+pQgziZNNezmQjexqNzN9nHvyEQIZgI
+         zRyla9pyIvwWiwaToLS/ftk50NWdeJwS73pY8tgKkXcdEXKp2hD7ca1ID0Le5TV/FnZL
+         lIkzayI0orbIBWYflwI/h84Yu52qNQBwswyt6TSx1IiIA6Q1WdJ+hFfSGJxKVNv26LXx
+         OlbckdCRsutfARDaaxJeDDMBDg7nvZE/wtHo/iiMndi3Hj6hLn0hCCORuCP8xzWOVFpq
+         Spng==
+X-Gm-Message-State: APjAAAWyAnBka8eR+CI63AXmoVesfv23GQlEXFTYwNgr79lyLdLsr/J7
+        A/rTHlxFho1474Sm3KDiwM2k9O2QUV96CeAl6bbo20U4/TK7
+X-Google-Smtp-Source: APXvYqy9T0uOUbjvUKq32W8sfGCq7RmnOHgddJurrEAce23apz1kVdNIWzPQYweYYrOKwQcSwgELG7ztymtwYMzR0LRR86KjnFl7
 MIME-Version: 1.0
-X-Received: by 2002:a92:c08c:: with SMTP id h12mr6144591ile.183.1573152850575;
- Thu, 07 Nov 2019 10:54:10 -0800 (PST)
-Date:   Thu, 07 Nov 2019 10:54:10 -0800
+X-Received: by 2002:a92:3651:: with SMTP id d17mr6511423ilf.268.1573152909219;
+ Thu, 07 Nov 2019 10:55:09 -0800 (PST)
+Date:   Thu, 07 Nov 2019 10:55:09 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d60aa50596c63063@google.com>
-Subject: WARNING in iov_iter_pipe
-From:   syzbot <syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com>
-To:     jack@suse.cz, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mbobrowski@mbobrowski.org,
-        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu, viro@zeniv.linux.org.uk
+Message-ID: <00000000000054e19d0596c63465@google.com>
+Subject: KCSAN: data-race in pcpu_alloc / pcpu_free_area (2)
+From:   syzbot <syzbot+0b3bfb9cbec193033650@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, elver@google.com,
+        fw@strlen.de, kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,83 +59,70 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    c68c5373 Add linux-next specific files for 20191107
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13d6bcfce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
-dashboard link: https://syzkaller.appspot.com/bug?extid=991400e8eba7e00a26e1
+HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=17f9952f600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=0b3bfb9cbec193033650
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1529829ae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a55c0ce00000
 
-The bug was bisected to:
-
-commit b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
-Author: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Date:   Tue Nov 5 12:01:37 2019 +0000
-
-     ext4: introduce direct I/O read using iomap infrastructure
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1176cffae00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1376cffae00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1576cffae00000
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com
-Fixes: b1b4705d54ab ("ext4: introduce direct I/O read using iomap  
-infrastructure")
+Reported-by: syzbot+0b3bfb9cbec193033650@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 8715 at lib/iov_iter.c:1162 iov_iter_pipe+0x25b/0x2f0  
-lib/iov_iter.c:1162
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8715 Comm: syz-executor719 Not tainted 5.4.0-rc6-next-20191107  
-#0
+IPv6: ADDRCONF(NETDEV_CHANGE): veth0_to_bridge: link becomes ready
+IPv6: ADDRCONF(NETDEV_CHANGE): bridge_slave_0: link becomes ready
+==================================================================
+BUG: KCSAN: data-race in pcpu_alloc / pcpu_free_area
+
+write to 0xffffffff86046740 of 4 bytes by task 7371 on cpu 0:
+  pcpu_update_empty_pages mm/percpu.c:575 [inline]
+  pcpu_block_update_hint_free mm/percpu.c:1012 [inline]
+  pcpu_free_area+0x448/0x6a0 mm/percpu.c:1267
+  free_percpu mm/percpu.c:1975 [inline]
+  free_percpu+0x152/0x440 mm/percpu.c:1955
+  xt_percpu_counter_free+0x82/0xa0 net/netfilter/x_tables.c:1862
+  cleanup_entry+0x12a/0x160 net/ipv6/netfilter/ip6_tables.c:672
+  __do_replace+0x439/0x510 net/ipv6/netfilter/ip6_tables.c:1102
+  do_replace net/ipv6/netfilter/ip6_tables.c:1157 [inline]
+  do_ip6t_set_ctl+0x26d/0x311 net/ipv6/netfilter/ip6_tables.c:1681
+  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
+  nf_setsockopt+0x6e/0xb0 net/netfilter/nf_sockopt.c:115
+  ipv6_setsockopt net/ipv6/ipv6_sockglue.c:949 [inline]
+  ipv6_setsockopt+0x119/0x130 net/ipv6/ipv6_sockglue.c:933
+  tcp_setsockopt net/ipv4/tcp.c:3148 [inline]
+  tcp_setsockopt+0x7c/0xc0 net/ipv4/tcp.c:3142
+  sock_common_setsockopt+0x67/0x90 net/core/sock.c:3147
+  __sys_setsockopt+0x1ce/0x370 net/socket.c:2084
+  __do_sys_setsockopt net/socket.c:2100 [inline]
+  __se_sys_setsockopt net/socket.c:2097 [inline]
+  __x64_sys_setsockopt+0x70/0x90 net/socket.c:2097
+  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffffffff86046740 of 4 bytes by task 44 on cpu 1:
+  pcpu_alloc+0x3b0/0xcf0 mm/percpu.c:1729
+  __alloc_percpu_gfp+0x31/0x50 mm/percpu.c:1783
+  fib_nh_common_init+0x58/0x1e0 net/ipv4/fib_semantics.c:572
+  fib6_nh_init+0x2aa/0xee0 net/ipv6/route.c:3466
+  ip6_route_info_create+0x913/0xd40 net/ipv6/route.c:3655
+  ip6_route_add+0x30/0xd0 net/ipv6/route.c:3695
+  addrconf_add_mroute+0x177/0x1a0 net/ipv6/addrconf.c:2459
+  addrconf_add_dev+0x100/0x170 net/ipv6/addrconf.c:2477
+  addrconf_dev_config+0x170/0x280 net/ipv6/addrconf.c:3351
+  addrconf_notify+0x1fa/0x1480 net/ipv6/addrconf.c:3595
+  notifier_call_chain+0xd7/0x160 kernel/notifier.c:95
+  __raw_notifier_call_chain kernel/notifier.c:396 [inline]
+  raw_notifier_call_chain+0x37/0x50 kernel/notifier.c:403
+  call_netdevice_notifiers_info+0x48/0xc0 net/core/dev.c:1749
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.4.0-rc3+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x35 kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:iov_iter_pipe+0x25b/0x2f0 lib/iov_iter.c:1162
-Code: 83 c0 03 38 d0 7c 04 84 d2 75 33 44 89 63 24 48 83 c4 10 5b 41 5c 41  
-5d 41 5e 41 5f 5d c3 e8 ac ba 2e fe 0f 0b e8 a5 ba 2e fe <0f> 0b e9 53 fe  
-ff ff 4c 89 f7 e8 46 e5 6a fe e9 f5 fd ff ff e8 dc
-RSP: 0018:ffff8880a0b4f988 EFLAGS: 00010293
-RAX: ffff88808f1602c0 RBX: ffff8880a0b4fa18 RCX: ffffffff8344ac89
-RDX: 0000000000000000 RSI: ffffffff8344ae3b RDI: 0000000000000004
-RBP: ffff8880a0b4f9c0 R08: ffff88808f1602c0 R09: 0000000000000000
-R10: fffffbfff1390168 R11: ffffffff89c80b47 R12: ffff88808f121c00
-R13: 0000000000000010 R14: ffff88808f121cc8 R15: ffff88808f121cd0
-  generic_file_splice_read+0xa7/0x800 fs/splice.c:303
-  do_splice_to+0x127/0x180 fs/splice.c:877
-  splice_direct_to_actor+0x2d3/0x970 fs/splice.c:955
-  do_splice_direct+0x1da/0x2a0 fs/splice.c:1064
-  do_sendfile+0x597/0xd00 fs/read_write.c:1464
-  __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446969
-Code: e8 4c b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f05c41b8ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00000000006dbc58 RCX: 0000000000446969
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000005
-RBP: 00000000006dbc50 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00000000006dbc5c
-R13: 00007fffb77353df R14: 00007f05c41b99c0 R15: 20c49ba5e353f7cf
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Workqueue: events linkwatch_event
+==================================================================
 
 
 ---
@@ -144,6 +132,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
