@@ -2,109 +2,115 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A7CC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33007C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B956A214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A1A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:11:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R/DXhK0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389643AbfKGQJY (ORCPT
+        id S2389257AbfKGQLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:09:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:58618 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389580AbfKGQJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:09:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB77B30E;
-        Thu,  7 Nov 2019 08:09:21 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 720B03F71A;
-        Thu,  7 Nov 2019 08:09:19 -0800 (PST)
-Date:   Thu, 7 Nov 2019 16:09:17 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Quentin Perret <qperret@google.com>,
-        linux-kernel@vger.kernel.org, aaron.lwe@gmail.com,
-        valentin.schneider@arm.com, mingo@kernel.org, pauld@redhat.com,
-        jdesfossez@digitalocean.com, naravamudan@digitalocean.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        juri.lelli@redhat.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, kernel-team@android.com, john.stultz@linaro.org
-Subject: Re: NULL pointer dereference in pick_next_task_fair
-Message-ID: <20191107160916.tf2hnho57ob6bm5n@e107158-lin.cambridge.arm.com>
-References: <20191028174603.GA246917@google.com>
- <20191106120525.GX4131@hirez.programming.kicks-ass.net>
- <33643a5b-1b83-8605-2347-acd1aea04f93@virtuozzo.com>
- <20191106165437.GX4114@hirez.programming.kicks-ass.net>
- <20191106172737.GM5671@hirez.programming.kicks-ass.net>
- <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
- <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
+        Thu, 7 Nov 2019 11:11:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36124 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388454AbfKGQLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 11:11:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573143065;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j9Yv2ADBEuYgu7K06bm3FCwi5kL7EfkBgwC6m+V6GpE=;
+        b=R/DXhK0xFWcwMuS7U1Kq0qkTX5Sz0mPlxlphtTW0RecuVyHrQHmGsyv0/iwbZC9rhmKV1r
+        3Q6woV75MjFUmg4fc8DPT5K6+PYuU4N6hHRnAA7omLr+ajNnBMmjQLPo2DKsc4NkVctKjx
+        qzipNouenVOzNEgRl2E1uNURgy6ifrI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-383-7T61eBXcOASiyFVjHgEPgA-1; Thu, 07 Nov 2019 11:11:02 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21EB41800D6B;
+        Thu,  7 Nov 2019 16:11:00 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-117-20.ams2.redhat.com [10.36.117.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 22B5B5D9E5;
+        Thu,  7 Nov 2019 16:10:52 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Jann Horn <jannh@google.com>
+Subject: Re: For review: documentation of clone3() system call
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+        <20191107151941.dw4gtul5lrtax4se@wittgenstein>
+Date:   Thu, 07 Nov 2019 17:10:51 +0100
+In-Reply-To: <20191107151941.dw4gtul5lrtax4se@wittgenstein> (Christian
+        Brauner's message of "Thu, 7 Nov 2019 16:19:43 +0100")
+Message-ID: <87y2wrbras.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: 7T61eBXcOASiyFVjHgEPgA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/07/19 14:26, Peter Zijlstra wrote:
-> On Thu, Nov 07, 2019 at 11:36:50AM +0300, Kirill Tkhai wrote:
-> > On 06.11.2019 20:27, Peter Zijlstra wrote:
-> > > On Wed, Nov 06, 2019 at 05:54:37PM +0100, Peter Zijlstra wrote:
-> > >> On Wed, Nov 06, 2019 at 06:51:40PM +0300, Kirill Tkhai wrote:
-> > >>>> +#ifdef CONFIG_SMP
-> > >>>> +	if (!rq->nr_running) {
-> > >>>> +		/*
-> > >>>> +		 * Make sure task_on_rq_curr() fails, such that we don't do
-> > >>>> +		 * put_prev_task() + set_next_task() on this task again.
-> > >>>> +		 */
-> > >>>> +		prev->on_cpu = 2;
-> > >>>>  		newidle_balance(rq, rf);
-> > >>>
-> > >>> Shouldn't we restore prev->on_cpu = 1 after newidle_balance()? Can't prev
-> > >>> become pickable again after newidle_balance() releases rq->lock, and we
-> > >>> take it again, so this on_cpu == 2 never will be cleared?
-> > >>
-> > >> Indeed so.
-> > > 
-> > > Oh wait, the way it was written this is not possible. Because
-> > > rq->nr_running == 0 and prev->on_cpu > 0 it means the current task is
-> > > going to sleep and cannot be woken back up.
-> > 
-> > I mostly mean throttling. AFAIR, tasks of throttled rt_rq are not accounted
-> > in rq->nr_running. But it seems rt_rq may become unthrottled again after
-> > newidle_balance() unlocks rq lock, and prev will become pickable again.
-> 
-> Urgh... throttling.
-> 
-> Bah.. I had just named the "->on_cpu = 2" thing leave_task(), to match
-> prepare_task() and finish_task(), but when we have to flip it back to 1
-> that doesn't really work.
-> 
-> Also, I'm still flip-flopping on where to place it. Yesterday I
-> suggested placing it before put_prev_task(), but then I went to write a
-> comment, and either way around put_prev_task() needs to be very careful.
-> 
-> So I went back to placing it after and putting lots of comments on.
-> 
-> How does the below look?
+* Christian Brauner:
 
-This looks good to me. But it makes me wonder, if there's no penalty to adding
-the leave_task() before put_prev_task(), and if it results on relaxing the
-requirement of 'no permanent state change before releasing the rq lock',
-shouldn't we just do it?
+> I've always been confused by the "..." for the glibc wrapper. The glibc
+> prototype in bits/sched.h also looks like this:
+>
+> extern int clone (int (*__fn) (void *__arg), void *__child_stack, int __f=
+lags, void *__arg, ...) __THROW;
+>
+> The additionl args parent_tid, tls, and child_tid are present in _all_
+> clone version in the same order. In fact the glibc wrapper here give the
+> illusion that it's parent_tid, tls, child_tid. The underlying syscall
+> has a different order parent_tidptr, child_tidptr, tls.
+>
+> Florian, can you advise what prototype we should mention for the glibc
+> clone() wrapper here. I'd like it to be as simple as possible and get
+> rid of the ...
+> Architectural differences are explained in detail below anyway.
 
-Anyways. I'll pick this version and spin it through my reproducer.
+Our header has:
 
-Thanks for fixing this!
+/* Clone current process.  */
+extern int clone (int (*__fn) (void *__arg), void *__child_stack,
+                  int __flags, void *__arg, ...) __THROW;
 
---
-Qais Yousef
+I have not checked all assembler implementations.  In theory there could
+be one that relies on the different calling convention for variadic
+functions (e.g., the existence of a parameter save area on POWER).  Or
+that swaps arguments in some architecure-specific way. 8-(
+
+I don't have much guidance on this matter, sorry.  I expect that for
+clone3, we'll provide a same-stack variant as well (for fork/vfork-like
+usage), which will be much closer to the kernel interface.  clone/clone2
+doesn't seem very fixable to me at this point.
+
+Thanks,
+Florian
+
