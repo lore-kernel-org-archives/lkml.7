@@ -2,100 +2,97 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5882C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1A4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B672B214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E097214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbfKGOiN (ORCPT
+        id S2389231AbfKGOi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:38:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40374 "EHLO mx1.suse.de"
+        Thu, 7 Nov 2019 09:38:57 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6169 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727849AbfKGOiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:38:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6C281ACA5;
-        Thu,  7 Nov 2019 14:38:11 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 15:38:10 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     Joe Perches <joe@perches.com>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Chris Zankel <chris@zankel.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH] xtensa: improve stack dumping
-Message-ID: <20191107143810.oon6bj7dc7xqcyxe@pathway.suse.cz>
-References: <20191106181617.1832-1-jcmvbkbc@gmail.com>
- <a9e2f6b65d4c098ab027ea849120d3cf61858e67.camel@perches.com>
- <CAMo8BfLmcCOAinyjB3iEuOF36TYBig=724=s9b6EKr3LzwF5QQ@mail.gmail.com>
+        id S1726033AbfKGOi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:38:57 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 57C3D9DAF4E7248871DB;
+        Thu,  7 Nov 2019 22:38:46 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 7 Nov 2019
+ 22:38:36 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <vishal@chelsio.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] cxgb4: Use match_string() helper to simplify the code
+Date:   Thu, 7 Nov 2019 22:35:58 +0800
+Message-ID: <20191107143558.44208-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMo8BfLmcCOAinyjB3iEuOF36TYBig=724=s9b6EKr3LzwF5QQ@mail.gmail.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-11-06 16:21:51, Max Filippov wrote:
-> On Wed, Nov 6, 2019 at 2:34 PM Joe Perches <joe@perches.com> wrote:
-> > > @@ -512,10 +510,12 @@ void show_stack(struct task_struct *task, unsigned long *sp)
-> > >       for (i = 0; i < kstack_depth_to_print; i++) {
-> > >               if (kstack_end(sp))
-> > >                       break;
-> > > -             pr_cont(" %08lx", *sp++);
-> > > +             sprintf(buf + (i % 8) * 9, " %08lx", *sp++);
-> > >               if (i % 8 == 7)
-> > > -                     pr_cont("\n");
-> > > +                     pr_info("%s\n", buf);
-> > >       }
-> > > +     if (i % 8)
-> > > +             pr_info("%s\n", buf);
-> >
-> > Could this be done using hex_dump_to_buffer
-> > by precalculating kstack_end ?
-> 
-> I've got this, but it doesn't look very attractive to me:
-> 
-> void show_stack(struct task_struct *task, unsigned long *sp)
-> {
->         unsigned long *stack;
->         int len;
-> 
->         if (!sp)
->                 sp = stack_pointer(task);
->         stack = sp;
-> 
->         len = min((-(unsigned long)stack) & (THREAD_SIZE - 4),
->                   kstack_depth_to_print * 4ul);
-> 
->         pr_info("Stack:\n");
-> 
->         for (; len > 0; len -= 32) {
->                 char buf[9 * 8 + 1];
-> 
->                 hex_dump_to_buffer(sp, min(len, 32), 32, 4,
->                                    buf, sizeof(buf), false);
->                 pr_info(" %08lx:  %s\n", (unsigned long)sp, buf);
->                 sp += 8;
->         }
+match_string() returns the array index of a matching string.
+Use it instead of the open-coded implementation.
 
-I wonder if the cycle actually could get replaced by a single call:
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_OFFSET,
-		       16, 1, sp, len, false);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
+index c2e9278..50ad135 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <linux/sort.h>
++#include <linux/string.h>
+ 
+ #include "t4_regs.h"
+ #include "cxgb4.h"
+@@ -776,24 +777,18 @@ static int cudbg_get_mem_region(struct adapter *padap,
+ 				struct cudbg_mem_desc *mem_desc)
+ {
+ 	u8 mc, found = 0;
+-	u32 i, idx = 0;
+-	int rc;
++	u32 idx = 0;
++	int rc, i;
+ 
+ 	rc = cudbg_meminfo_get_mem_index(padap, meminfo, mem_type, &mc);
+ 	if (rc)
+ 		return rc;
+ 
+-	for (i = 0; i < ARRAY_SIZE(cudbg_region); i++) {
+-		if (!strcmp(cudbg_region[i], region_name)) {
+-			found = 1;
+-			idx = i;
+-			break;
+-		}
+-	}
+-	if (!found)
++	i = match_string(cudbg_region, ARRAY_SIZE(cudbg_region), region_name);
++	if (i < 0)
+ 		return -EINVAL;
+ 
+-	found = 0;
++	idx = i;
+ 	for (i = 0; i < meminfo->mem_c; i++) {
+ 		if (meminfo->mem[i].idx >= ARRAY_SIZE(cudbg_region))
+ 			continue; /* Skip holes */
+-- 
+2.7.4
 
-print_hex_dump() currently does not allow to print 8 bytes per-line.
-Either 16 is acceptable or hex_dump() function could be updated.
 
-Best Regards,
-Petr
