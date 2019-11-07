@@ -6,155 +6,119 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C082DC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B11C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFC0214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9A2214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbfKGNuW (ORCPT
+        id S2388930AbfKGNuk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:50:22 -0500
-Received: from verein.lst.de ([213.95.11.211]:57376 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfKGNuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:50:22 -0500
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id 0A04068BE1; Thu,  7 Nov 2019 14:50:18 +0100 (CET)
-From:   Torsten Duwe <duwe@lst.de>
-Date:   Mon, 4 Nov 2019 11:34:23 +0100
-Subject: [PATCH v5 0/7][rebased] Add anx6345 DP/eDP bridge for Olimex Teres-I
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-Id: <20191107135018.0A04068BE1@verein.lst.de>
+        Thu, 7 Nov 2019 08:50:40 -0500
+Received: from mail-oln040092255024.outbound.protection.outlook.com ([40.92.255.24]:26028
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726754AbfKGNuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:50:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hyW4jD7c4aNhyBGCA/O9xmIUYbXzW79slfSIlIJUKIXVdnvj5fkuJsV2MsTorKxbrbJsTaEkDem+rRT82Bz4IGpwJuYx8jR4b1kSAFxfOClldRuqTKBO/81zLtZvopSsaWaoMhMvWDbh+ijuogkwtDUTTazcsqmvJXUrj3nFdZQu9ZQ/aN9ZbI5zl04+yKKCT1TIe03oLAVdAQ//t0AeFFnxryOQHujl+jEV7xxInwwd6Pl94q2BmrjTxR7ZKzRNFie6VCoNzacfzMVhbVd3YLyZoY96kd3B7w9bsB28Ct/mHIRldNVgvDd1eqSRYzbAj5Q685PETwSINBRuKDuzDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lL1zA+7xxsDjv1AoC7YE0ERD3trobstTIUiXUuSMPvY=;
+ b=gNZhEnmpHBJiIylDBqRKk4CxNTrS8LNyh0PeCCwJyTjAlHlvcbAAkkRJSis5YNikKxSUnMX1kaqZYHmINZ/ujJSCYtc0+H8siT4AhrmMIiTuzCT2NpfyDa/NLNjJwl5wS0YRJn94SOuxoOvdbcfAzCeJmlQGdpBIsUj7hS732iW78r6fP99xzQ2/HBNRtyqV6Om1QWu3RrgikTb5k2C5NVpUXC83VHW/u5PlHZyL4olQTCR1a654jhtxshqZ5pqGNfSXTlSGZGaoUbZ/vzto65KjdC9u+AHl/S6xsRQFnX9KTz+zQkcm6TPeCrSTX/UzxtXWAvnQUpAxvUhzs2dUkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT033.eop-APC01.prod.protection.outlook.com
+ (10.152.252.53) by PU1APC01HT128.eop-APC01.prod.protection.outlook.com
+ (10.152.253.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Thu, 7 Nov
+ 2019 13:50:35 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
+ PU1APC01FT033.mail.protection.outlook.com (10.152.252.223) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Thu, 7 Nov 2019 13:50:35 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2430.020; Thu, 7 Nov 2019
+ 13:50:35 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH 0/1] Fix bug resulting in double hpmemsize being assigned to
+ MMIO window
+Thread-Topic: [PATCH 0/1] Fix bug resulting in double hpmemsize being assigned
+ to MMIO window
+Thread-Index: AQHVlXJUhp9PbcoR4kC5jZUBBr2m9A==
+Date:   Thu, 7 Nov 2019 13:50:35 +0000
+Message-ID: <PS2P216MB075530CB1B7B099AAF9F42D580780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYBPR01CA0005.ausprd01.prod.outlook.com (2603:10c6:10::17)
+ To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (2603:1096:300:1c::13)
+x-incomingtopheadermarker: OriginalChecksum:4833630A5206E2BAAC844A20D74826C8B87B72E8CBF726BD549D133F4CD81F1B;UpperCasedChecksum:FA45B66410C2BB9C971AAE5F699130F017D86B9B335BFF3ECCF08B5CD4F4FB00;SizeAsReceived:7665;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [sbY4bW8gD5e+lSTvcFKb3azynKVSSTW4AH2T0YYK5b2xG4aQW+WS1YK5zYc5883REpecftTRPBo=]
+x-microsoft-original-message-id: <20191107135020.GA2223@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 06c526d2-e7b6-4704-6efd-08d7638976c0
+x-ms-exchange-slblob-mailprops: q+fD6XS3/UJ+cHfC79vTglgpmgHPQ8pO7kwHZOy/nL5Q8v/5m2RBRNEo5e0DEaYdXl7DHjrsOykSjswkNYnOLYaPlG6UExHe2D7YOu8hF48y1VPw54zXW6H3q/HnT98o7VwJUV8AUrNnTZPSJ+rPZFbk2MwFjtsmPgZbzQt6ur9H3H9/dt9w2QK+F/FImWMw9vFo7qCxaSE6kOl/3lfmcuvPqyaRkcjk2MC7P8IC3LsyS7B9k8t06nlcUchSLdel5OKg86m7OOYV7VnR10op8l8+g+0UA4rCCZUQMrAgD/djNHbGQ8nmVeaTK7OR51SW0gHsjb516qW3raae1us+jXya0sGTx9M3FQ3MmHST785eU96x8fsCB+ArPRa3+JGJzpr7hVcYsckwcEU6prTndFVwYpfBD8wII8MDn5oeJYh2ntx29dDMMpVcIarUz6r6DQntg1VdI0KC514kktC7ku4oOIzk6nR9uzsAI3L5mUNdUvaKxgT/qjUYpZoAi1NloRY0Q+QIwax42kkGYE2GBxqZmCJj8TXuZdYgzPfux7mGAN+oM9mV+ZCpjlFwMUhabGARcYwqtcT6Z1T8gH/oGu9qRBIvt5vCrZlm3yzfdAKsrOo1aheZ+7OE7QO0GwzBoH3WUkasY+Rx+sakJQwfKPy1tpWtzo1PSM48v5C4rwKHKNZ4CTCGGb7aY4eoH6KxEhDoFvfMS8ZtO7fNofC31A==
+x-ms-traffictypediagnostic: PU1APC01HT128:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: P7bipwHuplET77EHetdtuQFj+/2uGv4vwSXEQdLajNzjn9jnMf7uPFryZGGoxX2SFB09pbCJ7KZg8O0jhLCZ4clOzOHNyFf8TfKo9xW/WLuW2mMSOHzu/ENyAp+g4Fr2y1nSp59+vaKe1dNYMbN6FxY8SgYJXs6ElnVWCxmYa6htbcXoOyRx1sTJHYIC4yXK
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <190531C10E9ACD4091B7CD6D3345C048@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06c526d2-e7b6-4704-6efd-08d7638976c0
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 13:50:35.3355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 04:21:31PM +0100, Maxime Ripard wrote:
->
-> Please resend the whole series rebased on top of either linux-next or
-> drm-misc-next.
+I have split this patch off my main series, as I realised that it does 
+not need to be part of that series.
 
-Here it is. Applies cleanly to both, modulo those patches already in.
+I have made some recent improvements to add assurance against it 
+breaking existing behaviour. Instead of returning the first resource of 
+the desired type regardless of it being assigned, now it goes through 
+all of the resources and returns only those of type that are not 
+assigned. Only then does it go through and return the first resource of 
+desired type that is assigned. If none are found then it returns NULL as 
+usual.
 
-	Torsten
+I have made extensive changes to the patch notes, also.
 
----
+Logan Gunthorpe <logang@deltatee.com> has an alternative method of 
+fixing this same bug. Please also consider his patch and accept 
+whichever is best for Linux. All I care is that the bug be fixed.
 
-ANX6345 LVTTL->eDP video bridge, driver with device tree bindings.
+Nicholas Johnson (1):
+  PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
+    window
 
-Changes since v4:
-
-* enforce DT ports to be nodes and forbid additionalProperties.
-
-Changes since v3:
-
-* converted binding schema file to json-schema ("YAML")
-  It now validates (itself and the dts) like a charm ;-)
-  Input port0 is mandatory, output port1 is optional.
-
-* Enric Balletbo i Serra waived analogix-anx6345 module ownership to icenowy
-  <CAFqH_50s0J_NEevV9b5o-wq-bw+xGaUZ3WyhVDRZKyM2Yn-iVg@mail.gmail.com>
-  Since they both agree, I won't interfere.
-
-Changes from v2:
-
-* use SPDX-IDs throughout
-
-* removed the panel output again, as it was not what Maxime had in mind.
-  At least the Teres-I does very well without.
-
-* binding clarifications and cosmetic changes as suggested by Andrzej
-
-Changes from v1:
-
-* fixed up copyright information. Most code changes are only moves and thus
-  retain copyright and module ownership. Even the new analogix-anx6345.c originates
-  from the old 1495-line analogix-anx78xx.c, with 306 insertions and 987 deletions
-  (ignoring the trivial anx78xx -> anx6345 replacements) 306 new vs. 508 old...
-
-* fixed all minor formatting issues brought up
-
-* merged previously separate new analogix_dp_i2c module into existing analogix_dp
-
-* split additional defines into a preparatory patch
-
-* renamed the factored-out common functions anx_aux_* -> anx_dp_aux_*, because
-  anx_...aux_transfer was exported globally. Besides, it is now GPL-only exported.
-
-* moved chip ID read into a separate function.
-
-* keep the chip powered after a successful probe.
-  (There's a good chance that this is the only display during boot!)
-
-* updated the binding document: LVTTL input is now required, only the output side
-  description is optional.
-
- Laurent: I have also looked into the drm_panel_bridge infrastructure,
- but it's not that trivial to convert these drivers to it.
-
-Changes from the respective previous versions:
-
-* the reset polarity is corrected in DT and the driver;
-  things should be clearer now.
-
-* as requested, add a panel (the known innolux,n116bge) and connect
-  the ports.
-
-* renamed dvdd?? to *-supply to match the established scheme
-
-* trivial update to the #include list, to make it compile in 5.2
-
-Icenowy Zheng (4):
-  drm/bridge: move ANA78xx driver to analogix subdirectory
-  drm/bridge: split some definitions of ANX78xx to dedicated headers
-  drm/bridge: extract some Analogix I2C DP common code
-  drm/bridge: Add Analogix anx6345 support
-
-Torsten Duwe (3):
-  drm/bridge: Prepare Analogix anx6345 support
-  dt-bindings: Add ANX6345 DP/eDP transmitter binding
-  arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-
- .../bindings/display/bridge/anx6345.yaml           |  92 +++
- .../boot/dts/allwinner/sun50i-a64-teres-i.dts      |  45 +-
- drivers/gpu/drm/bridge/Kconfig                     |  10 -
- drivers/gpu/drm/bridge/Makefile                    |   4 +-
- drivers/gpu/drm/bridge/analogix-anx78xx.h          | 710 ------------------
- drivers/gpu/drm/bridge/analogix/Kconfig            |  22 +
- drivers/gpu/drm/bridge/analogix/Makefile           |   4 +-
- drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 793 +++++++++++++++++++++
- .../drm/bridge/{ => analogix}/analogix-anx78xx.c   | 146 +---
- drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h | 255 +++++++
- .../gpu/drm/bridge/analogix/analogix-i2c-dptx.c    | 165 +++++
- .../gpu/drm/bridge/analogix/analogix-i2c-dptx.h    | 258 +++++++
- .../drm/bridge/analogix/analogix-i2c-txcommon.h    | 236 ++++++
- 13 files changed, 1868 insertions(+), 872 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.yaml
- delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
- rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (90%)
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+ drivers/pci/setup-bus.c | 34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
 
 -- 
-2.16.4
+2.23.0
 
