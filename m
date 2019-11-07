@@ -2,202 +2,127 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70A9C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784E621D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F9321D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hX/QIOjt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FTyvXilm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfKGWq4 (ORCPT
+        id S1727752AbfKGWrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:46:56 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34184 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfKGWq4 (ORCPT
+        Thu, 7 Nov 2019 17:47:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48988 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725992AbfKGWrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:46:56 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l202so3565738oig.1;
-        Thu, 07 Nov 2019 14:46:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=amQWDmlGdEk6VIZvnzvC3PXl4QjX449VLWxbEA+kkns=;
-        b=hX/QIOjtVkzlExtn1LqyXrmyI9I9vZhyZHkCpvmC5Ale44vry7ayGIKDeCOW9S9eWE
-         JpeUDWKn0dzomnJvGQC6UlsW56ZHBQcAFlz9OGRK5JKMmF8OQJCvygqW3vGmRflED+jd
-         7TVoAMvk/E/hCIVf+TF4Rw15L3pIjoLxe6vzgKi3MMKtHJGRkQ4P3udSwk7lQ/KkFi1q
-         4+JwIHOVSXZPmO22hcGzdgMMwdD5dIgcqbDpY2MUuiExDnrRclHY9cxPzrywI1OJf+je
-         DHDOJuou1WQXs1iIbJn26gQ/7aneup7yHphtwjJ2VHCPP00fXPXSMgDrk47Jvp42ikcP
-         rLIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=amQWDmlGdEk6VIZvnzvC3PXl4QjX449VLWxbEA+kkns=;
-        b=kv5ry7P3CeYs2IUNiDHYP1YoOzaU5l4sYTVpZH8hQ6mfcbT9GSwEydPgovRgDYiOJr
-         KpbZxreDfnrxM6Uj86w1jiJtXy1AarpWdyKUVH+8BQGPYLY8aUBobu8a8xuS3llDdkES
-         1AvF2EuW/P5r82gi+UuqXvN5TjIVchPhHRTH4+/V1LrusDy2QODYKnujW2/mb1+nQLW9
-         wJEPYnofNSil0K5wKeEkbGl68xkUOQ6AyLgZd7C4JHdIQKiIyYyoi1WriIydc3duL0SH
-         mETUV88V7JmxobhLVdynCwkGc6TA7mEyiuz7hPETg5iJM1PeajhsiYVH8yFm+qoJKfuK
-         pN8g==
-X-Gm-Message-State: APjAAAXBlZqSjuNjvVcn+ckiUScICr1+JHxC3Sy2bvqnTJmcz2mokQXk
-        XGRY7qgn3NGZinFGDMFGQL49QPWyChzozKXEgfY=
-X-Google-Smtp-Source: APXvYqy7X5y3xi+caVjj34JWeqvFAD42ny9HBvVuYNQgKnsmmxiFAbNuD/jPPDzS6BjPiNY4G/MO7hwzdru7pOmcrd8=
-X-Received: by 2002:aca:2303:: with SMTP id e3mr5878670oie.162.1573166814674;
- Thu, 07 Nov 2019 14:46:54 -0800 (PST)
+        Thu, 7 Nov 2019 17:47:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573166873;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o0hSEf7cZiNsB/Oanv82zNpB8/hYX3vB1FUXpV/eRis=;
+        b=FTyvXilmNG0dDFZQn/xsVJ9UkDLG6zSb02aRe4wDTNUAFFACTAoZsR/sGumhD+q7HHL0qb
+        17cm0MKAAGm+eoDHGDQnE2hNP1ZsZgXBM1mdrkMrBeiBpI2TV+RicUsi39qR56c2BHlHDP
+        O/pczSyRRpmGeofycdY0qJyu5jyXC9o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-MJr50gAhPPqZCNT2ZuYxrA-1; Thu, 07 Nov 2019 17:47:50 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75F821800D6B;
+        Thu,  7 Nov 2019 22:47:49 +0000 (UTC)
+Received: from [10.36.116.80] (ovpn-116-80.ams2.redhat.com [10.36.116.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 461B65D9E5;
+        Thu,  7 Nov 2019 22:47:48 +0000 (UTC)
+Subject: Re: [PATCH] mm/memory_hotplug: move definitions of
+ {set,clear}_zone_contiguous
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        linux-kernel@lists.codethink.co.uk
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20191106123911.7435-1-ben.dooks@codethink.co.uk>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <a8bd4219-ed0d-dead-f326-6a68e44864e0@redhat.com>
+Date:   Thu, 7 Nov 2019 23:47:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
- <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com> <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
-In-Reply-To: <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Nov 2019 22:46:28 +0000
-Message-ID: <CA+V-a8sS4gX8o__R_pHK2Otb=s_aAWbtvDLfOhAQAJb77Jz_Sw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191106123911.7435-1-ben.dooks@codethink.co.uk>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: MJr50gAhPPqZCNT2ZuYxrA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On 06.11.19 13:39, Ben Dooks (Codethink) wrote:
+> The {set,clear}_zone_contiguous are built whatever the
+> configuraiton so move the definitions outside the current
+> ifdef to avoid the following compiler warnings:
+>=20
+> mm/page_alloc.c:1550:6: warning: no previous prototype for =C3=A2set_zone=
+_contiguous=C3=A2 [-Wmissing-prototypes]
+> mm/page_alloc.c:1571:6: warning: no previous prototype for =C3=A2clear_zo=
+ne_contiguous=C3=A2 [-Wmissing-prototypes]
+>=20
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   include/linux/memory_hotplug.h | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
+g.h
+> index f46ea71b4ffd..6a6456040802 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -229,9 +229,6 @@ void put_online_mems(void);
+>   void mem_hotplug_begin(void);
+>   void mem_hotplug_done(void);
+>  =20
+> -extern void set_zone_contiguous(struct zone *zone);
+> -extern void clear_zone_contiguous(struct zone *zone);
+> -
+>   #else /* ! CONFIG_MEMORY_HOTPLUG */
+>   #define pfn_to_online_page(pfn)=09=09=09\
+>   ({=09=09=09=09=09=09\
+> @@ -339,6 +336,9 @@ static inline int remove_memory(int nid, u64 start, u=
+64 size)
+>   static inline void __remove_memory(int nid, u64 start, u64 size) {}
+>   #endif /* CONFIG_MEMORY_HOTREMOVE */
+>  =20
+> +extern void set_zone_contiguous(struct zone *zone);
+> +extern void clear_zone_contiguous(struct zone *zone);
+> +
+>   extern void __ref free_area_init_core_hotplug(int nid);
+>   extern int __add_memory(int nid, u64 start, u64 size);
+>   extern int add_memory(int nid, u64 start, u64 size);
+>=20
 
-On Thu, Nov 7, 2019 at 8:08 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> > > >
-> > > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > > > @@ -0,0 +1,43 @@
-> > > > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > > > +
-> > > > +Required properties:
-> > > > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
-> > > > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > > > +                                    RZ/G2 compatible device.
-> > >
-> > > Unless I'm missing something, this is for the exact same hardware block as
-> > > Documentation/devicetree/bindings/pci/rcar-pci.txt?
-> > > So shouldn't you amend those bindings, instead of adding new compatible
-> > > values?
-> > > Please remember that DT describes hardware, not software policy.
-> > > So IMHO choosing between host and endpoint is purely a configuration
-> > > issue, and could be indicated by the presence or lack of some DT properties.
-> > > E.g. host mode requires both "bus-range" and "device_type" properties,
-> > > so their absence could indicate endpoint mode.
-> > >
-> > yes its the same hardware block as described in the rcar-pci.txt, I
-> > did think about amending it
-> > but  it might turn out to be bit messy,
-> >
-> > required properties host ======required properties Endpoint
-> > ====================||==================
-> > 1: reg                                || reg
-> > 2:bus-range                      || reg names
-> > 3: device_type                  || resets
-> > 4: ranges                          || clocks
-> > 5: dma-ranges                  || clock-names
-> > 6: interrupts                      ||
-> > 7: interrupt-cells               ||
-> > 8: interrupt-map-mask     ||
-> > 9: clocks                          ||
-> > 10: clock-names             ||
->
-> We have a similar situation with SPI, where a controller can operate in
-> master or slave mode, based on the absence or presence of the
-> "spi-slave" DT property.
->
-> > and if I go ahead with the same compatible string that would mean to
-> > add support for endpoint
-> > mode in the host driver itself. I did follow the examples of
->
-> You can still have two separate drivers, binding against the same
-> compatible value.  Just let the .probe() function return -ENODEV if it
-> discovers (by looking at DT properties) if the node is configured for
-> the other mode.
-> Which brings us to my next questions: is there any code that could be
-> shared between the drivers for the two modes?
->
-agreed driver probe could handle depending on the DT properties.
-yes there is bit of common code and the first patch of the series prepares
-for handling host and endpoint mode.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-> > rockchip/cadence/designware where
-> > its the same hardware block but has two different binding files one
-> > for host mode and other for
-> > endpoint mode.
->
-> Having two separate DT binding documents sounds fine to me, if unifying
-> them makes things too complex.
-> However, I think they should use the same compatible value, because the
-> hardware block is the same, but just used in a different mode.
->
-agreed.
+--=20
 
-> Rob/Mark: Any input from the DT maintainers?
->
-> > > > +- reg: Five register ranges as listed in the reg-names property
-> > > > +- reg-names: Must include the following names
-> > > > +       - "apb-base"
-> > > > +       - "memory0"
-> > > > +       - "memory1"
-> > > > +       - "memory2"
-> > > > +       - "memory3"
-> > >
-> > > What is the purpose of the last 4 regions?
-> > > Can they be chosen by the driver, at runtime?
-> > >
-> > no the driver cannot choose them at runtime, as these are the only
-> > PCIE memory(0/1/2/3) ranges
-> > in the AXI address space where host memory can be mapped.
->
-> Are they fixed by the PCIe hardware, i.e. could they be looked up by the
-> driver based on the compatible value?
->
-yes they are fixed by the PCIe hardware and could be looked up by the driver
-based on the compatible value.
+Thanks,
 
-Cheers,
---Prabhakar
+David / dhildenb
+
