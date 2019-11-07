@@ -2,113 +2,62 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD521C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A330C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B4D21D7F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573163708;
-	bh=UUglqZzopIUiqGxVkt/4w1NwkQQo7FHZlTLjnRJ8lm4=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=zJQ++IrrK+CXuB51GuF+hCx/B2/EqmHb6S+ATNq1F5yM9FFL2EbNdvCb0IGPDnzjg
-	 n3vFe8tGDGc+ZSttZd5Jwg4zhi+kPC6sMHsuEQR4Hx57IwzlbaBGvyYgAmG7G1Am02
-	 F9lSDu9s5qkZSzHud0Kww1xljfs3jqV2BRqrGlMc=
+	by mail.kernel.org (Postfix) with ESMTP id DA1E32084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfKGVzH (ORCPT
+        id S1726799AbfKGV42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 16:55:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfKGVzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:55:07 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBFA2084D;
-        Thu,  7 Nov 2019 21:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573163706;
-        bh=UUglqZzopIUiqGxVkt/4w1NwkQQo7FHZlTLjnRJ8lm4=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=KLE5nWe67i08olHh+IlmbQJLMFMAT2EaVEQ+74LXu2pix5Z0iHlwCZMqLXdcGeGLL
-         1/HHbmbO8FHaDT16sngT4diCa2qDDJV7VJj7N5yEqhtvioEiiILzVxLvVvbKWkOr63
-         YnRdqxeS54dwwc/IN719RKpYxsBEumG74c8KU3Eg=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 7 Nov 2019 16:56:28 -0500
+Received: from smtprelay0251.hostedemail.com ([216.40.44.251]:54424 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725882AbfKGV41 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 16:56:27 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 50C2F18038B42;
+        Thu,  7 Nov 2019 21:56:26 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: grass20_72512f48a5951
+X-Filterd-Recvd-Size: 1204
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  7 Nov 2019 21:56:25 +0000 (UTC)
+Message-ID: <e8187485a6ee7fffef738f90cddfa052ccdb927c.camel@perches.com>
+Subject: Re: [PATCH] xfs: Correct comment tyops -> typos
+From:   Joe Perches <joe@perches.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 07 Nov 2019 13:56:13 -0800
+In-Reply-To: <20191107212541.GF6219@magnolia>
+References: <0ceb6a89da4424a4500789610fae4d05ba45ba86.camel@perches.com>
+         <20191107212541.GF6219@magnolia>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1569959842-8399-1-git-send-email-jhugo@codeaurora.org>
-References: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org> <1569959842-8399-1-git-send-email-jhugo@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, mturquette@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v6 4/6] dt-bindings: clock: Add support for the MSM8998 mmcc
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 13:55:05 -0800
-Message-Id: <20191107215506.8FBFA2084D@mail.kernel.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-10-01 12:57:22)
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Docu=
-mentation/devicetree/bindings/clock/qcom,mmcc.txt
-> index 8b0f7841af8d..a92f3cbc9736 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-> @@ -10,11 +10,32 @@ Required properties :
->                         "qcom,mmcc-msm8960"
->                         "qcom,mmcc-msm8974"
->                         "qcom,mmcc-msm8996"
-> +                       "qcom,mmcc-msm8998"
+On Thu, 2019-11-07 at 13:25 -0800, Darrick J. Wong wrote:
+> On Wed, Nov 06, 2019 at 10:01:15PM -0800, Joe Perches wrote:
+> > Just fix the typos checkpatch notices...
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> 
+> Looks ok,
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Can you convert this binding to YAML? Makes it easier to validate it
-against the dts files.
+Darrick?  You are the listed maintainer here.
+Are you applying this or just reviewing it?
 
-> =20
->  - reg : shall contain base register location and length
->  - #clock-cells : shall contain 1
->  - #reset-cells : shall contain 1
-> =20
-> +For MSM8998 only:
-> +       - clocks: a list of phandles and clock-specifier pairs,
-> +                 one for each entry in clock-names.
-> +       - clock-names: "xo" for the xo clock.
-> +                      "gpll0" for the global pll 0 clock.
-> +                      "dsi0dsi" for the dsi0 pll dsi clock (required if =
-dsi is
-> +                               enabled, optional otherwise).
-> +                      "dsi0byte" for the dsi0 pll byte clock (required i=
-f dsi
-> +                               is enabled, optional otherwise).
-> +                      "dsi1dsi" for the dsi1 pll dsi clock (required if =
-dsi is
-> +                               enabled, optional otherwise).
-> +                      "dsi1byte" for the dsi1 pll byte clock (required i=
-f dsi
-> +                               is enabled, optional otherwise).
-> +                      "hdmipll" for the hdmi pll clock (required if hdmi=
- is
-> +                               enabled, optional otherwise).
-> +                      "dpvco" for the displayport pll vco clock (require=
-d if
-> +                               dp is enabled, optional otherwise).
-> +                      "dplink" for the displayport pll link clock (requi=
-red if
-> +                               dp is enabled, optional otherwise).
-
-I'm not sure why it's optional. The hardware is "fixed" in the sense
-that the dp phy is always there and connected to this hardware block.
-From a driver perspective I agree it's optional to be used, but from a
-DT perspective it's always there so it should be required.
 
