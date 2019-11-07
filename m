@@ -2,111 +2,194 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47011FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315A7FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1884421848
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:54:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCq9q+Fe"
+	by mail.kernel.org (Postfix) with ESMTP id F3BC2217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbfKGAyK (ORCPT
+        id S1732208AbfKGA44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:54:10 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35186 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbfKGAyJ (ORCPT
+        Wed, 6 Nov 2019 19:56:56 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41080 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKGA4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 19:54:09 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y6so183501lfj.2;
-        Wed, 06 Nov 2019 16:54:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WQhkDsKZrkd8TdxE2xc3dtoaBDRq8YTpJQNlzZYmMQw=;
-        b=GCq9q+Few97eqD4meVi9vr6WXF86OJWKPepBpJq2bST6zm532Bf+rW18Vv/GFWldBQ
-         x23hBWeI563PFN4/5Jz8qPQEa7utPzvJcVfne9cywHFgiRbhiYZJWpeupr4BpH86JubU
-         tX6S2yzfsKyboUJ5rfZpHNXbbRxr8ieGiQUMtHL4XtmJybGmuj4YuoDzwXQNWH7BBdMO
-         x39BGyk4Ap/TzrRuGrm8j+VR+7mO6B+u4Daz2AkfGT5LHRE+/7DJN2V3zyPppfE3rpgH
-         ++qtEMpxzSEfkUZUDvS9SMIO/FXadF6FirpIEV8EvaA2quWfJKFpSa+6APIpswftHG0V
-         sfiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WQhkDsKZrkd8TdxE2xc3dtoaBDRq8YTpJQNlzZYmMQw=;
-        b=TLdh/gNVKij56gmGcXENtWxZ+1GRIhP4yf9xY1xoTD4H2sStJlkBlUqBz4JWNEWflj
-         6shdtvkmwxlBX+WsxriXf9scKWZqDDCMKi+xJ80hf7XvPweR6nVfjIbfsmbGm0jD8hox
-         l29nDgPY7//Rq/qFyuXkAw8UMwXhgPJCRJoNQhkhcey6BrpOHJt+HnXe8tEXZmAoUnbs
-         IKUpWfcnuJfyRTeWf+WdEzOzOowE26RFmi8zrkPb6vZ2sVh175cZPUhEXwujje8uymqV
-         ogpn2J7jZi+Nl4RMskm5JmBiT9fVfvRfQ8CEEP9t9eu9BGdQinJb07QVM9QWWlhpjWH/
-         88fg==
-X-Gm-Message-State: APjAAAWOuEhrXjRb5wjvLpo7hR8nG8/hdDbvHFeDexQqOMBdv8MeptC1
-        SIo2LctMpM9zlGEAfJU+1ivsIP4x
-X-Google-Smtp-Source: APXvYqwSDxsXmzI4SWeAa6XTM1UPrLMKJFFjcYjACzxgTxJr0xgjPyPe8Ycsw9Y3hBHkx1n12bZAOA==
-X-Received: by 2002:a19:820e:: with SMTP id e14mr210299lfd.29.1573088046030;
-        Wed, 06 Nov 2019 16:54:06 -0800 (PST)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id f25sm198094lfm.26.2019.11.06.16.54.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 16:54:04 -0800 (PST)
-Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        jason@lakedaemon.net, jonathanh@nvidia.com,
-        linus.walleij@linaro.org, marc.zyngier@arm.com,
-        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
-        thierry.reding@gmail.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
- <1565984527-5272-8-git-send-email-skomatineni@nvidia.com>
- <20191106231005.F2CD820869@mail.kernel.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com>
-Date:   Thu, 7 Nov 2019 03:54:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 6 Nov 2019 19:56:55 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 3FCCA283C6D
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        zhengsq@rock-chips.com, Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH v10 00/11] Rockchip ISP Driver
+Date:   Wed,  6 Nov 2019 21:56:06 -0300
+Message-Id: <20191107005617.12302-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20191106231005.F2CD820869@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.11.2019 02:10, Stephen Boyd пишет:
-> Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
->> This patch adds an API clk_hw_get_parent_index to get index of the
->> clock parent to use during the clock restore operations on system
->> resume.
->  
-> Is there a reason we can't save the clk hw index at suspend time by
-> reading the hardware to understand the current parent? The parent index
-> typically doesn't matter unless we're trying to communicate something
-> from the framework to the provider driver. Put another way, I would
-> think the provider driver can figure out the index itself without having
-> to go through the framework to do so.
+Hello,
 
-Isn't it a bit wasteful to duplicate information about the parent within
-a provider if framework already has that info? The whole point of this
-new API is to allow providers to avoid that unnecessary duplication.
+This series adds the Rockchip Image Signal Processing Unit v1 driver to
+staging.
 
-Please note that clk_hw_get_parent_index is getting used only at the
-resume time and not at suspend.
+The main reason to be in staging is that people are already using it from the
+mailing list (including libcamera), and having it in mainlin makes the workflow
+easier. Also, it is easier for other people to contribute back (with code
+or testing the driver).
 
-[snip]
+We plan to actively work on this driver to get it our of staging.
+
+This patchset is also available at:
+https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v10
+
+Libcamera patched to work with this version:
+https://gitlab.collabora.com/koike/libcamera
+(also sent to the mailing list)
+
+The major difference in v10 are:
+* I splitted the patches again in different commits, since it was too big for
+the media mailing list and also it's easier to get dt-bindings approval.
+* We don't expose the metadata pixelformats to the uapi yet, so  patch
+"media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format" was
+removed from the series.
+* TODO list was updated to remind to test uapi structs in different
+architectures.
+
+This series only touches MAINTAINERS file and drivers/staging/
+
+MAINTAINERS
+drivers/staging/media/Kconfig
+drivers/staging/media/Makefile
+drivers/staging/media/phy-rockchip-dphy/Kconfig
+drivers/staging/media/phy-rockchip-dphy/Makefile
+drivers/staging/media/phy-rockchip-dphy/TODO
+drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
+drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+drivers/staging/media/rkisp1/Kconfig
+drivers/staging/media/rkisp1/Makefile
+drivers/staging/media/rkisp1/TODO
+drivers/staging/media/rkisp1/capture.c
+drivers/staging/media/rkisp1/capture.h
+drivers/staging/media/rkisp1/common.h
+drivers/staging/media/rkisp1/dev.c
+drivers/staging/media/rkisp1/dev.h
+drivers/staging/media/rkisp1/isp_params.c
+drivers/staging/media/rkisp1/isp_params.h
+drivers/staging/media/rkisp1/isp_stats.c
+drivers/staging/media/rkisp1/isp_stats.h
+drivers/staging/media/rkisp1/regs.c
+drivers/staging/media/rkisp1/regs.h
+drivers/staging/media/rkisp1/rkisp1.c
+drivers/staging/media/rkisp1/rkisp1.h
+drivers/staging/media/rkisp1/uapi/rkisp1-config.h
+
+Two drivers were added, including a TODO list for removing it from
+staging:
+
+* phy-rockchip-dphy: mipi dphy driver used by csi
+* rkisp1: the image signal processing unit driver
+
+Any feedback is welcome.
+
+Thanks,
+Helen
+
+Helen Koike (1):
+  MAINTAINERS: add entry for Rockchip ISP1 driver
+
+Jacob Chen (9):
+  media: staging: phy-rockchip-dphy: add Rockchip MIPI Synopsys DPHY
+    driver
+  media: staging: rkisp1: add document for rkisp1 meta buffer format
+  media: staging: rkisp1: add Rockchip ISP1 subdev driver
+  media: staging: rkisp1: add ISP1 statistics driver
+  media: staging: rkisp1: add ISP1 params driver
+  media: staging: rkisp1: add capture device driver
+  media: staging: rkisp1: add rockchip isp1 core driver
+  media: staging: dt-bindings: Document the Rockchip ISP1 bindings
+  media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY
+    bindings
+
+Jeffy Chen (1):
+  media: staging: rkisp1: add user space ABI definitions
+
+ MAINTAINERS                                   |    6 +
+ drivers/staging/media/Kconfig                 |    4 +
+ drivers/staging/media/Makefile                |    2 +
+ .../staging/media/phy-rockchip-dphy/Kconfig   |   11 +
+ .../staging/media/phy-rockchip-dphy/Makefile  |    2 +
+ drivers/staging/media/phy-rockchip-dphy/TODO  |    6 +
+ .../phy-rockchip-dphy/phy-rockchip-dphy.c     |  400 ++++
+ .../bindings/media/rockchip-isp1.txt          |   71 +
+ .../bindings/media/rockchip-mipi-dphy.txt     |   38 +
+ .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    |   23 +
+ .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      |   22 +
+ drivers/staging/media/rkisp1/Kconfig          |   13 +
+ drivers/staging/media/rkisp1/Makefile         |    7 +
+ drivers/staging/media/rkisp1/TODO             |   23 +
+ drivers/staging/media/rkisp1/capture.c        | 1869 +++++++++++++++++
+ drivers/staging/media/rkisp1/capture.h        |  164 ++
+ drivers/staging/media/rkisp1/common.h         |   98 +
+ drivers/staging/media/rkisp1/dev.c            |  439 ++++
+ drivers/staging/media/rkisp1/dev.h            |   67 +
+ drivers/staging/media/rkisp1/isp_params.c     | 1604 ++++++++++++++
+ drivers/staging/media/rkisp1/isp_params.h     |   50 +
+ drivers/staging/media/rkisp1/isp_stats.c      |  494 +++++
+ drivers/staging/media/rkisp1/isp_stats.h      |   60 +
+ drivers/staging/media/rkisp1/regs.c           |  224 ++
+ drivers/staging/media/rkisp1/regs.h           | 1525 ++++++++++++++
+ drivers/staging/media/rkisp1/rkisp1.c         | 1246 +++++++++++
+ drivers/staging/media/rkisp1/rkisp1.h         |   97 +
+ .../staging/media/rkisp1/uapi/rkisp1-config.h |  819 ++++++++
+ 28 files changed, 9384 insertions(+)
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Kconfig
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Makefile
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/TODO
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+ create mode 100644 drivers/staging/media/rkisp1/Kconfig
+ create mode 100644 drivers/staging/media/rkisp1/Makefile
+ create mode 100644 drivers/staging/media/rkisp1/TODO
+ create mode 100644 drivers/staging/media/rkisp1/capture.c
+ create mode 100644 drivers/staging/media/rkisp1/capture.h
+ create mode 100644 drivers/staging/media/rkisp1/common.h
+ create mode 100644 drivers/staging/media/rkisp1/dev.c
+ create mode 100644 drivers/staging/media/rkisp1/dev.h
+ create mode 100644 drivers/staging/media/rkisp1/isp_params.c
+ create mode 100644 drivers/staging/media/rkisp1/isp_params.h
+ create mode 100644 drivers/staging/media/rkisp1/isp_stats.c
+ create mode 100644 drivers/staging/media/rkisp1/isp_stats.h
+ create mode 100644 drivers/staging/media/rkisp1/regs.c
+ create mode 100644 drivers/staging/media/rkisp1/regs.h
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1.h
+ create mode 100644 drivers/staging/media/rkisp1/uapi/rkisp1-config.h
+
+-- 
+2.22.0
+
