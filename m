@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810A4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E154C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D9521882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502CA21D7B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:17:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fChiVLhY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J69UedwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfKGUR1 (ORCPT
+        id S1727458AbfKGURa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 15:17:27 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44309 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbfKGURR (ORCPT
+        Thu, 7 Nov 2019 15:17:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33176 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbfKGURP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 15:17:17 -0500
-Received: by mail-wr1-f67.google.com with SMTP id f2so4497360wrs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:17:15 -0800 (PST)
+        Thu, 7 Nov 2019 15:17:15 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a17so4944470wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:17:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IfBF8N8O1vGmVN86XMswrU/+wD8KeNGcTXaMDHv5bNc=;
-        b=fChiVLhYdW8MmlavzflarIALwM6oQ0oST9a0xpt5JGB0qZEOMP7X0WdzhndbJXFXKD
-         6k8LOvZvA/TsBMcho59C3LYvbxjYxz0B/Cy2BlH6plJHiYRj6Q8UZdvSDthBoHwHKpiN
-         lYU4B1emlpo79KIN0NkyazFGkzrtsvMP7v8jmv0bJiIGsicKBClB5c0w9mguUu2YQKrv
-         IfcsibvoqBXkS96uVqk0slcwOz7Ht0tocUPpxc34eo5loD6TpalowitM3JU1+OYEsyIo
-         fkw6xKIKLvF1OZmeSxx5MBOBO2rpemTZADULbrE++JP1JtBSnPL5q5NJuyJ8vihLnp/Y
-         gkKw==
+        bh=T+zsluzS/T4QlV+amlXXzj5zuhGksPk6IuGM8tASFHM=;
+        b=J69UedwDH6qm/d/QY5IaFKnLBYOqIVP0y9qtbza0hVQLaDDn7dW1HHq4iXHHLyTBzl
+         JzG4DDQFjUi576WuidaONs8q5hxghV9y8rlC42ZmP9n2OsIwUVPwixWPTssgCO9YMvNy
+         AoesUy4qA7O2zzgNtS25nLDcg1ZDEzqVmwEcYnC2AkDw90FIdravTeMVzm1qhn9Zy+0D
+         y26p6Cw4cEHXgX+8uwo6/w9xkh8XeGuJ89KNrHujCwCo6q0GNXGbht7l32zcYBNKClYn
+         LAVreQ2L6G19/YDVCyUnvStjOXvozavkSHR25B5mQYDeV6Cpt/k5Jlbte9FkaUBo8n5O
+         QoIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IfBF8N8O1vGmVN86XMswrU/+wD8KeNGcTXaMDHv5bNc=;
-        b=blQlkxcLih9+7yptZb9FaHptDo5i08+0jJfpqA1xv60Ht0Xv71cIQKLm3MzOB6BnbQ
-         fP02M/jZE0XkpjrsKOpWSp7VTxBrYufwXT4Z8Q6EzCuTqzPJbkIhG9+Fzo9wiMJomvFw
-         mGVSydYD+cHg4sqJXT4Gp1BxsKXmPVhM71ZqbIG6wfQuJ/Wy0K4KJmZn2COWT+BabcQm
-         TO8Bi+VO32ENBnTInP77yQaPuPFkSYc+5Mlwh1qxybZKXq2IdntudqYQJwQmwUOTKU/H
-         q0byx9z1UUKPsyP5tXO1D+qz18SxHIlJJrScsReRB+rn+8BBlFuLgFYh0GWqglrMaYol
-         QU9A==
-X-Gm-Message-State: APjAAAWNJCV6xVESldwNpxCstK13X+L48UfCKdYM2UBTQH9HK8UhKbtV
-        lS1PivvBxW/+sMTTbQ+OPIG4hQ==
-X-Google-Smtp-Source: APXvYqxLeJVGJOzI2ZwJzDDqNvlQyCV/uNdN9GYB084GYIYZxX5OgQ/rW6PhFKY71ZiiT24Rhit05g==
-X-Received: by 2002:adf:b686:: with SMTP id j6mr4742254wre.186.1573157834960;
+        bh=T+zsluzS/T4QlV+amlXXzj5zuhGksPk6IuGM8tASFHM=;
+        b=GvsB+0bthF0azLPug3IM6nkmWItGojnROsxmq2ayqjin+BgL3r8FLwhrXK/+Deuyfz
+         icviSc+PNiuWlg11C3++HJdY9VZGffSSgZZYDe90h9b2vBCLOP5R78wouEwMXFLXMDVI
+         LvJknm2ZA0xp6Ub8VQei74ZZ/r1oAs9UnPnsCW3G13c5sTjkwULjKqWEw6XRqHiJlfnU
+         LbdJ/6jWg1WqXdiUNyDiG2v3cWRX8axGP+Arly2KN+55WkEx96a7oBEWIUg8VI0DEKuU
+         z3d2xL8jgFtphejfSC+C5AqeNqFZ+YEYKGHSRcctzgYVNRV3ESys3v432tkEJ8bzPqFw
+         shVg==
+X-Gm-Message-State: APjAAAXBHaVxgmzudg1lPeyT/CFl0LctFxD0Gv66iZ+cOs7M5uU/m47i
+        CkZZH/pJeUoOZytAp/VCs1TQGA==
+X-Google-Smtp-Source: APXvYqyK+1+T6i/yZeGbXEMqaSWkBh7UUTFmvC0ZviyeqEbr6Z+uJWb/xiiKwTmnU2t6XRADAYsdzw==
+X-Received: by 2002:a1c:2155:: with SMTP id h82mr4601632wmh.94.1573157834195;
         Thu, 07 Nov 2019 12:17:14 -0800 (PST)
 Received: from localhost.localdomain ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id d11sm3215162wrn.28.2019.11.07.12.17.14
+        by smtp.gmail.com with ESMTPSA id d11sm3215162wrn.28.2019.11.07.12.17.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 12:17:14 -0800 (PST)
+        Thu, 07 Nov 2019 12:17:13 -0800 (PST)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@google.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sean Nyekjaer <sean@geanix.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 10/10] can: mcp251x: add support for mcp25625
-Date:   Thu,  7 Nov 2019 20:17:02 +0000
-Message-Id: <20191107201702.27023-10-lee.jones@linaro.org>
+Subject: [PATCH 09/10] ARM: davinci: da8xx: specify dma_coherent_mask for lcdc
+Date:   Thu,  7 Nov 2019 20:17:01 +0000
+Message-Id: <20191107201702.27023-9-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191107201702.27023-1-lee.jones@linaro.org>
 References: <20191107201702.27023-1-lee.jones@linaro.org>
@@ -76,136 +75,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Nyekjaer <sean@geanix.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit 35b7fa4d07c43ad79b88e6462119e7140eae955c ]
+[ Upstream commit 68f2515bb31a664ba3e2bc1eb78dd9f529b10067 ]
 
-Fully compatible with mcp2515, the mcp25625 have integrated transceiver.
+The lcdc device is missing the dma_coherent_mask definition causing the
+following warning on da850-evm:
 
-This patch adds support for the mcp25625 to the existing mcp251x driver.
+da8xx_lcdc da8xx_lcdc.0: found Sharp_LK043T1DG01 panel
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/dma/mapping.c:247 dma_alloc_attrs+0xc8/0x110
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.2.0-rc3-00077-g16d72dd4891f #18
+Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
+[<c000fce8>] (unwind_backtrace) from [<c000d900>] (show_stack+0x10/0x14)
+[<c000d900>] (show_stack) from [<c001a4f8>] (__warn+0xec/0x114)
+[<c001a4f8>] (__warn) from [<c001a634>] (warn_slowpath_null+0x3c/0x48)
+[<c001a634>] (warn_slowpath_null) from [<c0065860>] (dma_alloc_attrs+0xc8/0x110)
+[<c0065860>] (dma_alloc_attrs) from [<c02820f8>] (fb_probe+0x228/0x5a8)
+[<c02820f8>] (fb_probe) from [<c02d3e9c>] (platform_drv_probe+0x48/0x9c)
+[<c02d3e9c>] (platform_drv_probe) from [<c02d221c>] (really_probe+0x1d8/0x2d4)
+[<c02d221c>] (really_probe) from [<c02d2474>] (driver_probe_device+0x5c/0x168)
+[<c02d2474>] (driver_probe_device) from [<c02d2728>] (device_driver_attach+0x58/0x60)
+[<c02d2728>] (device_driver_attach) from [<c02d27b0>] (__driver_attach+0x80/0xbc)
+[<c02d27b0>] (__driver_attach) from [<c02d047c>] (bus_for_each_dev+0x64/0xb4)
+[<c02d047c>] (bus_for_each_dev) from [<c02d1590>] (bus_add_driver+0xe4/0x1d8)
+[<c02d1590>] (bus_add_driver) from [<c02d301c>] (driver_register+0x78/0x10c)
+[<c02d301c>] (driver_register) from [<c000a5c0>] (do_one_initcall+0x48/0x1bc)
+[<c000a5c0>] (do_one_initcall) from [<c05cae6c>] (kernel_init_freeable+0x10c/0x1d8)
+[<c05cae6c>] (kernel_init_freeable) from [<c048a000>] (kernel_init+0x8/0xf4)
+[<c048a000>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)
+Exception stack(0xc6837fb0 to 0xc6837ff8)
+7fa0:                                     00000000 00000000 00000000 00000000
+7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace 8a8073511be81dd2 ]---
 
-Signed-off-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Add a 32-bit mask to the platform device's definition.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Change-Id: I537254af4e09553f04873e3cf6be36dbbfc29c88
----
- drivers/net/can/spi/Kconfig   |  5 +++--
- drivers/net/can/spi/mcp251x.c | 25 ++++++++++++++++---------
- 2 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/can/spi/Kconfig b/drivers/net/can/spi/Kconfig
-index 148cae5871a6..249d2db7d600 100644
---- a/drivers/net/can/spi/Kconfig
-+++ b/drivers/net/can/spi/Kconfig
-@@ -2,9 +2,10 @@ menu "CAN SPI interfaces"
- 	depends on SPI
- 
- config CAN_MCP251X
--	tristate "Microchip MCP251x SPI CAN controllers"
-+	tristate "Microchip MCP251x and MCP25625 SPI CAN controllers"
- 	depends on HAS_DMA
- 	---help---
--	  Driver for the Microchip MCP251x SPI CAN controllers.
-+	  Driver for the Microchip MCP251x and MCP25625 SPI CAN
-+	  controllers.
- 
- endmenu
-diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-index c66d699640a9..6f86fdf6c9f1 100644
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -1,5 +1,5 @@
- /*
-- * CAN bus driver for Microchip 251x CAN Controller with SPI Interface
-+ * CAN bus driver for Microchip 251x/25625 CAN Controller with SPI Interface
-  *
-  * MCP2510 support and bug fixes by Christian Pellegrin
-  * <chripell@evolware.org>
-@@ -41,7 +41,7 @@
-  * static struct spi_board_info spi_board_info[] = {
-  *         {
-  *                 .modalias = "mcp2510",
-- *			// or "mcp2515" depending on your controller
-+ *			// "mcp2515" or "mcp25625" depending on your controller
-  *                 .platform_data = &mcp251x_info,
-  *                 .irq = IRQ_EINT13,
-  *                 .max_speed_hz = 2*1000*1000,
-@@ -237,6 +237,7 @@ static const struct can_bittiming_const mcp251x_bittiming_const = {
- enum mcp251x_model {
- 	CAN_MCP251X_MCP2510	= 0x2510,
- 	CAN_MCP251X_MCP2515	= 0x2515,
-+	CAN_MCP251X_MCP25625	= 0x25625,
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Change-Id: I835e72dbeb9ded2ffc7be0561f8f3544c3cc29ed
+---
+ arch/arm/mach-davinci/devices-da8xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index e83874ba6e6d..49716ba0bbb1 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -626,6 +626,9 @@ static struct platform_device da8xx_lcdc_device = {
+ 	.id		= 0,
+ 	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
+ 	.resource	= da8xx_lcdc_resources,
++	.dev		= {
++		.coherent_dma_mask	= DMA_BIT_MASK(32),
++	}
  };
  
- struct mcp251x_priv {
-@@ -279,7 +280,6 @@ static inline int mcp251x_is_##_model(struct spi_device *spi) \
- }
- 
- MCP251X_IS(2510);
--MCP251X_IS(2515);
- 
- static void mcp251x_clean(struct net_device *net)
- {
-@@ -639,7 +639,7 @@ static int mcp251x_hw_reset(struct spi_device *spi)
- 
- 	/* Wait for oscillator startup timer after reset */
- 	mdelay(MCP251X_OST_DELAY_MS);
--	
-+
- 	reg = mcp251x_read_reg(spi, CANSTAT);
- 	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
- 		return -ENODEV;
-@@ -820,9 +820,8 @@ static irqreturn_t mcp251x_can_ist(int irq, void *dev_id)
- 		/* receive buffer 0 */
- 		if (intf & CANINTF_RX0IF) {
- 			mcp251x_hw_rx(spi, 0);
--			/*
--			 * Free one buffer ASAP
--			 * (The MCP2515 does this automatically.)
-+			/* Free one buffer ASAP
-+			 * (The MCP2515/25625 does this automatically.)
- 			 */
- 			if (mcp251x_is_2510(spi))
- 				mcp251x_write_bits(spi, CANINTF, CANINTF_RX0IF, 0x00);
-@@ -831,7 +830,7 @@ static irqreturn_t mcp251x_can_ist(int irq, void *dev_id)
- 		/* receive buffer 1 */
- 		if (intf & CANINTF_RX1IF) {
- 			mcp251x_hw_rx(spi, 1);
--			/* the MCP2515 does this automatically */
-+			/* The MCP2515/25625 does this automatically. */
- 			if (mcp251x_is_2510(spi))
- 				clear_intf |= CANINTF_RX1IF;
- 		}
-@@ -1004,6 +1003,10 @@ static const struct of_device_id mcp251x_of_match[] = {
- 		.compatible	= "microchip,mcp2515",
- 		.data		= (void *)CAN_MCP251X_MCP2515,
- 	},
-+	{
-+		.compatible	= "microchip,mcp25625",
-+		.data		= (void *)CAN_MCP251X_MCP25625,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mcp251x_of_match);
-@@ -1017,6 +1020,10 @@ static const struct spi_device_id mcp251x_id_table[] = {
- 		.name		= "mcp2515",
- 		.driver_data	= (kernel_ulong_t)CAN_MCP251X_MCP2515,
- 	},
-+	{
-+		.name		= "mcp25625",
-+		.driver_data	= (kernel_ulong_t)CAN_MCP251X_MCP25625,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
-@@ -1254,5 +1261,5 @@ module_spi_driver(mcp251x_can_driver);
- 
- MODULE_AUTHOR("Chris Elston <celston@katalix.com>, "
- 	      "Christian Pellegrin <chripell@evolware.org>");
--MODULE_DESCRIPTION("Microchip 251x CAN driver");
-+MODULE_DESCRIPTION("Microchip 251x/25625 CAN driver");
- MODULE_LICENSE("GPL v2");
+ int __init da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata)
 -- 
 2.24.0
 
