@@ -2,288 +2,207 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D256FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FD0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE062178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCB2214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:49:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sx+eF8Wi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387753AbfKGKmO convert rfc822-to-8bit (ORCPT
+        id S2387847AbfKGKs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:42:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57376 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727278AbfKGKmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:42:14 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 666DCAF57;
-        Thu,  7 Nov 2019 10:42:11 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 11:42:09 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: Scan the DMI system information
-Message-ID: <20191107114209.5e4cfa4d@endymion>
-In-Reply-To: <5c042bd8-40ad-e84f-588d-f3ee56f7216d@loongson.cn>
-References: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
-        <5c042bd8-40ad-e84f-588d-f3ee56f7216d@loongson.cn>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Thu, 7 Nov 2019 05:48:59 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39709 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbfKGKs6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:48:58 -0500
+Received: by mail-lj1-f193.google.com with SMTP id p18so1720975ljc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 02:48:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IT22kOGDAtljK81pVJrF6m7J52zc/v0AXE8pR5gi9WM=;
+        b=sx+eF8WiH7x1S3cbNbtNKMOj/0P/3Tatbj+bf4L6zOJVk+cxbFO5R5F9wZvOGzxXrl
+         bfr94Y6zouFd93YwqnXNLC7vZS3U3SsHZK6GLKu2W6NpG8XHkNsbsDmNGp9ZKVwo7iwA
+         Ju0mIV5mxdU9aKbKu1d6xeacfZRApz6YdEHJmjSjxZD4csTnbM3Edrd4CBpDzkmK95Xx
+         JJEgPClqSJsiys0ze2fYXeuyhiRUr0yKGv7xGLupCnZKi14IJ5JU4ZmL1s9lqDSWez9D
+         LDreA+6oGZe35VA8x2VsIkAaHs3YBmsP5JdcBcndNhxlZvPySpq6rX5sv5ZyqSysoeH9
+         W0fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IT22kOGDAtljK81pVJrF6m7J52zc/v0AXE8pR5gi9WM=;
+        b=PCZLpYVb+lUB+mSv20Zz+YqMcipWmEsawD4q4egJV1oOur+p2Xl72pLhdIG4HRU8Om
+         HdkxPHTgmMZdYzYNUQahSBMnh+tDkVlE2TGSUr0wXs9c++Ol8CN+r+XyXfNbVZjJpwK9
+         PyJ4uLVz8duKWUSpRxeS74XxilIUxiGzRM4FTf9nm73S6bFErsr9B6uMz7s1joBBY/iO
+         /2TPJEbY6hQYVuNacUxinWm76gHilvGX/pYou9gZ8pjtVStl77VGrYMEzfekYkpsFOO3
+         9IOitJbhu2h+BC00nGBcB7+WyIYBfm7AKYCFmEnW11/Ubk1MGQgR9U0ErbrXx5w9caaz
+         TkjA==
+X-Gm-Message-State: APjAAAVw+lNry1kvZHx2mEOulJfvU+jze+jj/pwCMp+gQHmo1BDflIJQ
+        ufZcN7ALZTde45Z5U5dUufYiRJKT4ARvkJwggIGQkw==
+X-Google-Smtp-Source: APXvYqyOPL7YXqG7JWxF9jabb9/ZexZIhJi783Or1BlVDSHpbeYxjCCH4uU5z7vl6lLEy9GxjJVE4vUDr3KOIvQtfpc=
+X-Received: by 2002:a2e:b0fa:: with SMTP id h26mr1826318ljl.206.1573123736378;
+ Thu, 07 Nov 2019 02:48:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+ <1572979786-20361-3-git-send-email-thara.gopinath@linaro.org>
+ <20191105202037.GA17494@e108754-lin> <5DC1E348.2090104@linaro.org>
+ <20191105211446.GA25349@e108754-lin> <5DC1E9BC.1010001@linaro.org>
+ <20191105215233.GA6450@e108754-lin> <436ad772-c727-127e-1469-d99549db03fc@arm.com>
+ <5DC3088B.8070401@linaro.org> <943a8368-1f19-d981-7583-0db4e32895af@arm.com>
+In-Reply-To: <943a8368-1f19-d981-7583-0db4e32895af@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 7 Nov 2019 11:48:45 +0100
+Message-ID: <CAKfTPtBkDzYv5cFgCNjOHN53KBQZJBAJ77ft-CARo=g=GuZ8Sg@mail.gmail.com>
+Subject: Re: [Patch v5 2/6] sched/fair: Add infrastructure to store and update
+ instantaneous thermal pressure
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Quentin Perret <qperret@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 17:26:58 +0800, Tiezhu Yang wrote:
-> Sorry to resend this email because the mail list server was denied
-> due to it is not plain text.
-> 
-> On 11/07/2019 11:42 AM, Jiaxun Yang wrote:
-> > 于 2019年11月7日 GMT+08:00 上午10:42:23, Tiezhu Yang<yangtiezhu@loongson.cn>  写到:  
-> >> On 11/07/2019 08:35 AM, Jiaxun Yang wrote:  
-> >>> 于 2019年11月7日 GMT+08:00 上午12:05:41, Tiezhu Yang  
-> >> <yangtiezhu@loongson.cn>  写到:  
-> >>>> Enable DMI scanning on the MIPS architecture, this setups DMI
-> >>>> identifiers
-> >>>> (dmi_system_id) for printing it out on task dumps and prepares DIMM
-> >>>> entry
-> >>>> information (dmi_memdev_info) from the SMBIOS table. With this  
-> >> patch,  
-> >>>> the
-> >>>> driver can easily match various of mainboards.
+On Thu, 7 Nov 2019 at 10:32, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 06/11/2019 18:53, Thara Gopinath wrote:
+> > On 11/06/2019 07:50 AM, Dietmar Eggemann wrote:
+> >> On 05/11/2019 22:53, Ionela Voinescu wrote:
+> >>> On Tuesday 05 Nov 2019 at 16:29:32 (-0500), Thara Gopinath wrote:
+> >>>> On 11/05/2019 04:15 PM, Ionela Voinescu wrote:
+> >>>>> On Tuesday 05 Nov 2019 at 16:02:00 (-0500), Thara Gopinath wrote:
+> >>>>>> On 11/05/2019 03:21 PM, Ionela Voinescu wrote:
+> >>>>>>> Hi Thara,
+> >>>>>>>
+> >>>>>>> On Tuesday 05 Nov 2019 at 13:49:42 (-0500), Thara Gopinath wrote:
+> >>>>>>> [...]
+> >>>>>>>> +static void trigger_thermal_pressure_average(struct rq *rq)
+> >>>>>>>> +{
+> >>>>>>>> +#ifdef CONFIG_SMP
+> >>>>>>>> +      update_thermal_load_avg(rq_clock_task(rq), rq,
+> >>>>>>>> +                              per_cpu(thermal_pressure, cpu_of(rq)));
+> >>>>>>>> +#endif
+> >>>>>>>> +}
+> >>>>>>>
+> >>>>>>> Why did you decide to keep trigger_thermal_pressure_average and not
+> >>>>>>> call update_thermal_load_avg directly?
+> >>>>>>>
+> >>>>>>> For !CONFIG_SMP you already have an update_thermal_load_avg function
+> >>>>>>> that does nothing, in kernel/sched/pelt.h, so you don't need that
+> >>>>>>> ifdef.
+> >>>>>> Hi,
+> >>>>>>
+> >>>>>> Yes you are right. But later with the shift option added, I shift
+> >>>>>> rq_clock_task(rq) by the shift. I thought it is better to contain it in
+> >>>>>> a function that replicate it in three different places. I can remove the
+> >>>>>> CONFIG_SMP in the next version.
+> >>>>>
+> >>>>> You could still keep that in one place if you shift the now argument of
+> >>>>> ___update_load_sum instead.
 > >>>>
-> >>>> In the SMBIOS reference specification, the table anchor string  
-> >> "_SM_"  
-> >>>> is
-> >>>> present in the address range 0xF0000 to 0xFFFFF on a 16-byte  
-> >> boundary,  
-> >>>> but there exists a special case for loongson platform, when call
-> >>>> function
-> >>>> dmi_early_remap, it should specify the start address to 0xFFFE000  
-> >> due  
-> >>>> to
-> >>>> it is reserved for SMBIOS and can be normally access in the BIOS.
+> >>>> No. I cannot do this. The authors of the pelt framework  prefers not to
+> >>>> include a shift parameter there. I had discussed this with Vincent earlier.
 > >>>>
-> >>>> Co-developed-by: Yinglu Yang<yangyinglu@loongson.cn>
-> >>>> Signed-off-by: Yinglu Yang<yangyinglu@loongson.cn>
-> >>>> Signed-off-by: Tiezhu Yang<yangtiezhu@loongson.cn>
-> >>>> ---
-> >>>> arch/mips/Kconfig           | 12 ++++++++++++
-> >>>> arch/mips/include/asm/dmi.h | 43
-> >>>> +++++++++++++++++++++++++++++++++++++++++++
-> >>>> arch/mips/kernel/setup.c    |  2 ++
-> >>>> 3 files changed, 57 insertions(+)
-> >>>> create mode 100644 arch/mips/include/asm/dmi.h
-> >>>>
-> >>>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> >>>> index 7cb8947..0a67b18 100644
-> >>>> --- a/arch/mips/Kconfig
-> >>>> +++ b/arch/mips/Kconfig
-> >>>> @@ -2757,6 +2757,18 @@ config HW_PERF_EVENTS
-> >>>> 	  Enable hardware performance counter support for perf events. If
-> >>>> 	  disabled, perf events will use software events only.
-> >>>>
-> >>>> +# Mark as expert because too many people got it wrong.
-> >>>> +# The code disables itself when not needed.
-> >>>> +config DMI
-> >>>> +	default y
-> >>>> +	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-> >>>> +	bool "Enable DMI scanning" if EXPERT
-> >>>> +	help
-> >>>> +	  Enabled scanning of DMI to identify machine quirks. Say Y
-> >>>> +	  here unless you have verified that your setup is not
-> >>>> +	  affected by entries in the DMI blacklist. Required by PNP
-> >>>> +	  BIOS code.
-> >>>> +
-> >>>> config SMP
-> >>>> 	bool "Multi-Processing support"
-> >>>> 	depends on SYS_SUPPORTS_SMP
-> >>>> diff --git a/arch/mips/include/asm/dmi.h  
-> >> b/arch/mips/include/asm/dmi.h  
-> >>>> new file mode 100644
-> >>>> index 0000000..1f3da37
-> >>>> --- /dev/null
-> >>>> +++ b/arch/mips/include/asm/dmi.h
-> >>>> @@ -0,0 +1,43 @@
-> >>>> +/* SPDX-License-Identifier: GPL-2.0 */
-> >>>> +#ifndef _ASM_MIPS_DMI_H
-> >>>> +#define _ASM_MIPS_DMI_H
-> >>>> +
-> >>>> +#define dmi_early_remap		mips_early_memremap
-> >>>> +#define dmi_early_unmap		mips_early_memunmap
-> >>>> +#define dmi_remap(_x, _l)	mips_memremap(_x, _l, MEMREMAP_WB)
-> >>>> +#define dmi_unmap(_x)		mips_memunmap(_x)
-> >>>> +
-> >>>> +#define dmi_alloc(l)		memblock_alloc_low(l, PAGE_SIZE)
-> >>>> +
-> >>>> +void __init *mips_early_memremap(resource_size_t phys_addr,  
-> >> unsigned  
-> >>>> long size)
-> >>>> +{
-> >>>> +#if defined(CONFIG_MACH_LOONGSON64)
-> >>>> +	if (phys_addr == 0xF0000)
-> >>>> +		phys_addr = 0xFFFE000;
-> >>>> +
-> >>>> +	return (void *)TO_CAC(phys_addr);
-> >>>> +#else
-> >>>> +	return NULL;
-> >>>> +#endif
-> >>>> +}  
-> >>> Hi Tiezhu,
 > >>>
-> >>> It is really tricky to hijack dmi address here during remap.
-> >>> I think we should set the dmi table address at  dmi_scan.c by a marco  
-> >> or something else rather than hijack it during remap.
+> >>> Right! I missed Vincent's last comment on this in v4.
+> >>>
+> >>> I would argue that it's more of a PELT parameter than a CFS parameter
+> >>> :), where it's currently being used. I would also argue that's more of a
+> >>> PELT parameter than a thermal parameter. It controls the PELT time
+> >>> progression for the thermal signal, but it seems more to configure the
+> >>> PELT algorithm, rather than directly characterize thermals.
+> >>>
+> >>> In any case, it only seemed to me that adding a wrapper function for
+> >>> this purpose only was not worth doing.
 > >>
-> >> Hi Jiaxun,
+> >> Coming back to the v4 discussion
+> >> https://lore.kernel.org/r/379d23e5-79a5-9d90-0fb6-125d9be85e99@arm.com
 > >>
-> >> Thanks for your review. I agree with you, let me think about it and try
-> >> to
-> >> find a proper way, and then I will send a v2 patch.  
-> 
-> Hi Jiaxun,
-> 
-> It seems that there is no absolutely better way to handle this case.
-> 
-> 1. use conditional compilation in drivers/firmware/dmi_scan.c:
-> 
-> #if defined(CONFIG_MACH_LOONGSON64)
-> 
-> p = dmi_early_remap(0xFFFE000, 0x10000);
-> 
-> #else
-> 
-> p = dmi_early_remap(0xF0000, 0x10000);
-> 
-> #endif
-> 
-> 
-> This will influence the common code.
-> 
-> 2. use callback function in arch/mips/include/asm/dmi.h:
+> >> There is no API between pelt.c and other parts of the scheduler/kernel
+> >> so why should we keep an unnecessary parameter and wrapper functions?
+> >>
+> >> There is also no abstraction, update_thermal_load_avg() in pelt.c even
+> >> carries '_thermal_' in its name.
+> >>
+> >> So why not define this shift value '[sched_|pelt_]thermal_decay_shift'
+> >> there as well? It belongs to update_thermal_load_avg().
+> >>
+> >> All call sites of update_thermal_load_avg() use 'rq_clock_task(rq) >>
+> >> sched_thermal_decay_shift' so I don't see the need to pass it in.
+> >>
+> >> IMHO, preparing for eventual code changes (e.g. parsing different now
+> >> values) is not a good practice in the kernel. Keeping the code small and
+> >> tidy is.
+> >
+> > I think we are going in circles on this one. I acknowledge you have an
+> > issue. That being said, I also understand the need to keep the pelt
+> > framework code tight. Also Ionela pointed out that there could be a need
+> > for a faster decay in which case it could mean a left shift leading to
+> > further complications if defined in pelt.c (I am not saying that I will
+> > implement a faster decay in this patch set but it is more of a future
+> > extension if needed!)
+>
+> The issue still exists so why not discussing it here?
+>
+> Placing thermal related time shift operations in a
+> update_*thermal*_load_avg() PELT function look perfectly fine to me.
 
-I see no reason to go that route if the decision can be made at build
-time. Callback functions are good when the decision is made at run time.
+As already said, having thermal related clock shift operation in
+update_thermal_load_avg and pelt.c is a nack for me
 
-> 
-> struct plat_dmi_ops {
-> 
->          void (*early_memremap)(void);
-> 
->          void (*memremap)(void);
-> 
-> };
-> 
-> extern struct plat_dmi_ops *dmi_ops;
-> 
-> void __init *mips_early_memremap(resource_size_t phys_addr, unsigned long size)
-> 
-> {
-> 
->          dmi_ops->early_memremap();
-> 
-> }
-> 
-> void *mips_memremap(resource_size_t offset, size_t size, unsigned long flags)
-> 
-> {
-> 
->          dmi_ops->memremap();
-> 
-> }
-> 
-> 
-> we can implement the callback function in various of MIPS platforms,
-> like this:
-> 
-> struct plat_dmi_ops loongson3_dmi_ops = {
-> 
->          .early_memremap = loongson3_early_memremap,
-> 
->          .memremap = loongson3_memremap,
-> 
-> };
-> 
-> register_dmi_ops(&loongson3_dmi_ops);
-> 
-> #ifdef CONFIG_DMI
-> 
-> void __init *loongson3_early_memremap(resource_size_t phys_addr, unsigned long size)
-> 
-> {
-> 
->          if (phys_addr == 0xF0000)
-> 
->                  phys_addr = 0xfffe000;
-> 
->          return (void *)TO_CAC(phys_addr);
-> 
-> }
-> 
-> void *loongson3_memremap(resource_size_t offset, size_t size, unsigned long flags)
-> 
-> {
-> 
->          return (void *)TO_CAC(phys_addr);
-> 
-> }
-> 
-> #else
-> 
-> void __init __iomem *loongson3_early_memremap(u64 phys_addr, unsigned long size)
-> 
-> {
-> 
->          return NULL;
-> 
-> }
-> 
-> void __init __iomem *loongson3_memremap(u64 phys_addr, unsigned long size)
-> 
-> {
-> 
->          return NULL;
-> 
-> }
-> 
-> #endif
-> 
-> 
-> This will not influence the common code.
-> 
-> What do you think?
-> 
-> 
-> Hi Jean,
-> 
-> Could you give some suggestions?
+>
+> > I can make trigger_thermal_pressure_average inline if that will
+> > alleviate some of the concerns.
 
-What about:
+In fact, trigger_thermal_pressure_average is only there because of
+shifting the clock which is introduced only in patch 6.
+So remove trigger_thermal_pressure_average from this patch and call directly
 
-#if defined(CONFIG_MACH_LOONGSON64)
-#define SMBIOS_ENTRY_POINT_SCAN_START	0xFFFE000
-#else
-#define SMBIOS_ENTRY_POINT_SCAN_START	0xF0000
-#endif
++       update_thermal_load_avg(rq_clock_task(rq), rq,
++                               per_cpu(thermal_pressure, cpu_of(rq)));
 
-And then just use SMBIOS_ENTRY_POINT_SCAN_START instead of the raw
-address everywhere it is needed?
+in patch3
 
--- 
-Jean Delvare
-SUSE L3 Support
+>
+> That's not the issue here. The issue is the extra shim layer which is
+> unnecessary in the current implementation.
+>
+> update_blocked_averages()
+> {
+>     ...
+>     update_rt_rq_load_avg()
+>     update_dl_rq_load_avg()
+>     update_irq_load_avg()
+>     trigger_thermal_pressure_average() <--- ?
+>     ...
+> }
+>
+> Wouldn't a direct call to update_thermal_load_avg() here make things so
+> much more clear? And I'm not talking about today and about people
+> involved in this review.
+>
+> > I would also urge you to reconsider the merits of arguing this point
+> > back and forth.
+>
+> I just did.
+>
+> [...]
