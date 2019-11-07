@@ -2,116 +2,186 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E9CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E009C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EE32166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31EE21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUS/BWOo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUS6ek03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388028AbfKGMGu (ORCPT
+        id S2388204AbfKGMJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:06:50 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33450 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfKGMGt (ORCPT
+        Thu, 7 Nov 2019 07:09:31 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41028 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbfKGMJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:06:49 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 71so1747166qkl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 04:06:47 -0800 (PST)
+        Thu, 7 Nov 2019 07:09:31 -0500
+Received: by mail-wr1-f66.google.com with SMTP id p4so2727821wrm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 04:09:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Ut33lTd+bs8Wz+qNBreL2KP/eGD0cRKA6+sRfDain58=;
-        b=UUS/BWOoKdv92simHAjU0rbpLeFTOtR79KozGwf4SSe6hr9uddS5O4AcYwTVuHdOz0
-         gFJ/6LO8+a4OFT6VfiVfZmHnhohacQPKrSYhVlooFPvPauhtRhWmETh9SjQHtBVUd/tf
-         fU2xH5/bWFPGgx2azdxiu7SfCK1x2h3hZScURycY0vi4aKZrsfQ4yky+ytRee8D6xMaX
-         cEQOVEvmw2btwt+oJhH++wrv7V/lz4lLSkQ0LtnjKFZ0C6h+v2rLOxpTA45DqrbRaVGH
-         ocIdnX27+gmD1XLBKrs02zTXqY0gjoJNneYbjZMoIexD706u/axq1UiNR8srke7/zMTz
-         RQmg==
+        bh=+X5PB3/RS5wCFHmPJyZSxQgzB/KzYcqDr3Ujqj02UOU=;
+        b=AUS6ek03A3OnuO/uZoLjncpiKumtxzkQ2kDR8lQjnQZZn7YWajlJb5Pf0pepBt0E0L
+         fjGr0p9NCqqyX9GkLOIQpghHnczaYeFwlVy38iKSVIYTUZUCljhJvilHbeh4mRjzVPAe
+         kr1qBTAVklesaGUngown0QrqBlU0CVEtJDUEK9SFrq5vg7irADLOnx0VerXvSycYDID9
+         l0wDFHG8rM3zYDJ36ch7sYeJ122T74VRYVyk4jrFK2vkifh/wPy8sufEPm8qiOVppobt
+         MuK8y7p1rlNevlrtWPh1OWYhKh8Ptbaw0Ny3s9QTVNRAwS9ZgKG7bbsdN648G1FnzxRP
+         Llsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ut33lTd+bs8Wz+qNBreL2KP/eGD0cRKA6+sRfDain58=;
-        b=FxOw5Lq12wZBZW4qWPlIMUTnak50g0i4szPXfa4bOYuQ1YSCXD0nGId29WTxN/L4kZ
-         ZhCAjSBWcwSuo6OjIRz209hdZO++z19V4qhEywVl/347ctuJ+zNI0PnAaS7FHx0xBKUn
-         tNOCzI6q9PZC54gZ5UAuYqwZiLJChOPpAGqsTolNRhgZM86y0UGr+rToqz4p98kl4EhB
-         NkCGAemRHJmI0TLHtvgaUGoImDsF1L0Etgg8XqYveWCJbqmaxk9qU7iLpaxM20M31i23
-         5PGj07I2UlSYDULimVpfKUtTpSR4tEBegnkb7Rv2xlYwHgF3Om7a0SPCTLS0dXhla1Lz
-         Fi5w==
-X-Gm-Message-State: APjAAAXBaKI9hoLky4ds8IjjdwiqYtRF2p3QfbK4D4/GmK0iHiCclw6L
-        zxV1vmKB1msveGtWnKFG7HE=
-X-Google-Smtp-Source: APXvYqzAm+is0FBAMipnzM1bON0Y/8EfbeobYSb+HkXy8QiGVEFefywku1PIvgZQuCHHoGYyO0m2gg==
-X-Received: by 2002:a05:620a:13e2:: with SMTP id h2mr2487999qkl.114.1573128407008;
-        Thu, 07 Nov 2019 04:06:47 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id p66sm1154730qkd.1.2019.11.07.04.06.45
+        bh=+X5PB3/RS5wCFHmPJyZSxQgzB/KzYcqDr3Ujqj02UOU=;
+        b=nM534N/TJpHJZGHim7V0Tfzw71dV3XL2FGhc2Btv4+lQckSHObzCl9eWqepz2Afia6
+         9rJsBwG2soHfaT5U9dBnmw1omLH4jo0jzmLkMK4sWTlfPZ4s5S/x/5HqwOjCFkJe8D7V
+         QkVNZmnLnxSFIueLU9zoEvV7LMfiq8bt9MewLR+/PRfzCNH5tHzi3K0+eeEyjoTHbraL
+         CBDddu8q6SbScmPDWq4gqEC9aKudXP1ih6k3hwOO+Rt7AtmVTK+fLTkojGonblpr4eAb
+         oelNz/YQB4/f2sGmsNgLuhO+S06TclIUGaO/IwfAsc5k3ZhzCBUusFR4865Nn/KQfRpp
+         P16Q==
+X-Gm-Message-State: APjAAAVD4j4IIRP4HQkeOUdkbq9aUIbdP+2rSePsRg5Gfu0aPSm/t6x2
+        VtTYhPeizzkcJz6y0AOQWmyWsA==
+X-Google-Smtp-Source: APXvYqxKFNTXdLJBBbXJqwz0eq1z7m43VCuH7RGlkgfFABA1s6vtSmpLMSzmHfsTlmmmuRCJB4xzMQ==
+X-Received: by 2002:adf:b686:: with SMTP id j6mr2560177wre.186.1573128567622;
+        Thu, 07 Nov 2019 04:09:27 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id v16sm2615891wrc.84.2019.11.07.04.09.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 04:06:46 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9BF0440B1D; Thu,  7 Nov 2019 09:06:43 -0300 (-03)
-Date:   Thu, 7 Nov 2019 09:06:43 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Thu, 07 Nov 2019 04:09:26 -0800 (PST)
+Date:   Thu, 7 Nov 2019 12:09:22 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     kernel test robot <lkp@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH v2] perf tests: Fix out of bounds memory access
-Message-ID: <20191107120643.GA11372@kernel.org>
-References: <20191107020244.2427-1-leo.yan@linaro.org>
- <20191107094226.GC14657@krava>
- <20191107102029.GA32679@leoy-ThinkPad-X240s>
+        Aaron Lu <aaron.lwe@gmail.com>, Phil Auld <pauld@redhat.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, lkp@01.org,
+        kernel-team@android.com
+Subject: Re: [sched] 10e7071b2f: BUG:kernel_NULL_pointer_dereference,address
+Message-ID: <20191107120922.GA82729@google.com>
+References: <20191107090808.GW29418@shao2-debian>
+ <fc023bbd-e282-c986-b43b-18ac31b2e362@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191107102029.GA32679@leoy-ThinkPad-X240s>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <fc023bbd-e282-c986-b43b-18ac31b2e362@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Nov 07, 2019 at 06:20:29PM +0800, Leo Yan escreveu:
-> On Thu, Nov 07, 2019 at 10:42:26AM +0100, Jiri Olsa wrote:
- 
-> [...]
- 
-> > > To fix this issue, we will use evlist__open() and evlist__close() pair
-> > > functions to prepare and cleanup context for evlist; so 'evsel->id' and
-> > > 'evsel->ids' can be initialized properly when invoke do_test() and avoid
-> > > the out of bounds memory access.
- 
-> > right, we need to solve this on libperf level, so it's possible
-> > to call mmap/munmap multiple time without close/open.. I'll try
-> > to send something, but meanwhile this is good workaround
+On Thursday 07 Nov 2019 at 11:41:38 (+0000), Valentin Schneider wrote:
+> On 07/11/2019 09:08, kernel test robot wrote:
+> > [   84.432464] BUG: kernel NULL pointer dereference, address: 0000000000000064
+> > [   84.433700] #PF: supervisor read access in kernel mode
+> > [   84.434589] #PF: error_code(0x0000) - not-present page
+> > [   84.435499] PGD 0 P4D 0 
+> > [   84.435933] Oops: 0000 [#1] SMP PTI
+> > [   84.436581] CPU: 1 PID: 15 Comm: migration/1 Not tainted 5.3.0-rc1-00086-g10e7071b2f491 #1
+> > [   84.438004] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> > [   84.439461] RIP: 0010:pick_next_task_dl+0xe/0xf0
+> > [   84.440266] Code: ed bd 70 01 01 e8 42 2d fb ff 0f 0b e9 6b ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66 90 55 53 48 89 fb 48 83 ec 10 <8b> 46 64 85 c0 78 73 48 81 7e 78 a0 3f e2 a7 74 57 48 83 bb 10 09
+> > [   84.443485] RSP: 0000:ffffa5518008bd40 EFLAGS: 00010082
+> > [   84.444423] RAX: ffffffffa6eeeae0 RBX: ffff98ebbfd2b0c0 RCX: ffff98ebbfd2d040
+> > [   84.445641] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff98ebbfd2b0c0
+> > [   84.446877] RBP: ffffa5518008bdc0 R08: 0000001ac1016512 R09: 0000000000000001
+> > [   84.448128] R10: ffffffffa863e640 R11: 0000000000000003 R12: ffff98ebbfd2b0c0
+> > [   84.449349] R13: ffffffffa7e23fa0 R14: ffffffffa7e24060 R15: 0000000000000000
+> > [   84.450603] FS:  0000000000000000(0000) GS:ffff98ebbfd00000(0000) knlGS:0000000000000000
+> > [   84.452007] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   84.453022] CR2: 0000000000000064 CR3: 00000001aab84000 CR4: 00000000000406e0
+> > [   84.454244] Call Trace:
+> > [   84.455263]  ? update_rq_clock+0x6d/0xe0
+> > [   84.456081]  sched_cpu_dying+0x104/0x380
+> > [   84.456777]  ? sched_cpu_starting+0xf0/0xf0
+> > [   84.457510]  cpuhp_invoke_callback+0x86/0x5d0
+> > [   84.458279]  ? cpu_disable_common+0x292/0x2b0
+> > [   84.459047]  take_cpu_down+0x60/0xb0
+> > [   84.459649]  multi_cpu_stop+0x6b/0x100
+> > [   84.460339]  ? stop_machine_yield+0x10/0x10
+> > [   84.461078]  cpu_stopper_thread+0x9e/0x110
+> > [   84.461809]  ? smpboot_thread_fn+0x2f/0x1e0
+> > [   84.462539]  ? smpboot_thread_fn+0x74/0x1e0
+> > [   84.463280]  ? smpboot_thread_fn+0x14e/0x1e0
+> > [   84.464024]  smpboot_thread_fn+0x149/0x1e0
+> > [   84.464768]  ? sort_range+0x20/0x20
+> > [   84.465389]  kthread+0x11e/0x140
+> > [   84.465961]  ? kthread_park+0xa0/0xa0
+> > [   84.466605]  ret_from_fork+0x35/0x40
+> > [   84.467236] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver binfmt_misc intel_rapl_msr intel_rapl_common sr_mod crct10dif_pclmul cdrom crc32_pclmul sg crc32c_intel ghash_clmulni_intel ata_generic pata_acpi ppdev bochs_drm drm_vram_helper ttm drm_kms_helper syscopyarea sysfillrect snd_pcm sysimgblt fb_sys_fops drm aesni_intel snd_timer ata_piix crypto_simd snd cryptd glue_helper libata soundcore pcspkr joydev serio_raw parport_pc i2c_piix4 parport floppy ip_tables
+> > [   84.474471] CR2: 0000000000000064
+> > [   84.475066] ---[ end trace af8f1919a81ca744 ]---
 > > 
-> > Reviewed-by: Jiri Olsa <jolsa@kernel.org>
- 
-> Thanks for reviewing, Jiri.
- 
-> You are welcome to send us the fixing patches, I am glad to test it on
-> qemu_arm.
+> 
+> It would be really nice if the lkpbot could feed this through
+> scripts/decode_stracktrace.sh too.
+> 
+> 
+> AFAICT this is dying in __pick_migrate_task(), where we have a 
+> pick_next_task()/put_prev_task() dance. Sounds oddly familiar :-)
 
-Thanks, applied after adding:
+Argh, indeed :( For context, this has been reported too:
 
-Fixes: ee74701ed8ad ("perf tests: Add test to check backward ring buffer")
-Cc: stable@vger.kernel.org # v4.10+
+  https://lore.kernel.org/lkml/20191028174603.GA246917@google.com/
 
-Please consider doing it next time,
+> However I don't think we have an issue with the lock being released when
+> we reach pick_next_task_fair() - if we ever reach the newidle_balance()
+> in there it means we didn't have any CFS task to play with in the first
+> place.
+>
+> We *may* e.g. go through sched_move_task() on a task we'll end up picking
+> via active balance, but AFAICT that would be harmless:
 
-- Arnaldo
+sched_move_task() follows what Peter called the 'change' pattern, so I'm
+thinking this is most likely the same issue. Dropping the lock causes an
+unmitigated race between sched_move_task() and pick_next_task_dl(), so
+hilarity ensues (set_next_task() being called twice for instance).
+
+> __pick_migrate_task()
+>   ...
+>   pick_next_task_fair()
+>     newidle_balance()
+>       drop lock
+>                                   sched_move_task()
+>                                     put_prev_task()
+>                                     set_next_task()
+>   active balance
+>   ...
+>   put_prev_task()
+>
+> On top of that, the deathpoint seems to be select_task_rq_dl() which would
+> happen way before we reach fair. I don't see anything obvious by staring
+> at the old fake task pick loop vs __pick_migrate_task(). Lemme try to
+> reproduce.
+
+
+> 
+> > 
+> > To reproduce:
+> > 
+> >         # build kernel
+> > 	cd linux
+> > 	cp config-5.3.0-rc1-00086-g10e7071b2f491 .config
+> > 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage
+> > 
+> >         git clone https://github.com/intel/lkp-tests.git
+> >         cd lkp-tests
+> >         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> > 
+> > 
+> > 
+> > Thanks,
+> > lkp
+> > 
