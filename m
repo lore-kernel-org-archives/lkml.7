@@ -2,105 +2,107 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3484C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E5AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F036206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66B3206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gxccqK4S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="Qpcx2anj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfKGSYU (ORCPT
+        id S1727565AbfKGS1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:24:20 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48317 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727485AbfKGSYS (ORCPT
+        Thu, 7 Nov 2019 13:27:02 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:21572 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfKGS1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:24:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573151056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rq286i/rn9P6qBg6Lj1S41KuQGmj4Rym9Rza+pzwTUU=;
-        b=gxccqK4SlQB7fbgoLZbNR17gvVHcFYwcWo9ZYqgYukcWr1lfjURrpiKP1rbzVawzJWNkX3
-        JdAujPtINmJRpIEKN+Bztp1l3bbrb5Cyrbtxt44wDtrFRm8HoyBIhvpqlFbKMcjYS1xRyS
-        2Idj1FpLMXe8iFUvqySM3RpEPHTSWjk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-pb7rxykWNYyYpdYIKUe7Iw-1; Thu, 07 Nov 2019 13:23:10 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D6421005500;
-        Thu,  7 Nov 2019 18:23:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD28A60BEC;
-        Thu,  7 Nov 2019 18:23:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CALCETrWszYm9=-WEgSbhmGc3DYCvY6q3W4Lezm6YtKnGtRs_5g@mail.gmail.com>
-References: <CALCETrWszYm9=-WEgSbhmGc3DYCvY6q3W4Lezm6YtKnGtRs_5g@mail.gmail.com> <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk> <157313379331.29677.5209561321495531328.stgit@warthog.procyon.org.uk>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 08/14] pipe: Allow buffers to be marked read-whole-or-error for notifications [ver #2]
+        Thu, 7 Nov 2019 13:27:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573151218;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Oqhe1WXoIbq8yVt8OzlAqvdDOM9RGB7JcT21P0FRSQk=;
+        b=Qpcx2anj4TqpylsWHdwrCObqloiKcit4jenBhF9RfrxvPKRiLwEXPW9Gat1mtANi7X
+        61aOYge/Y3MZl4bqw3u+gTunbPbeE3JQEkiuUoQow282JoCkKePfEp1VHjhXFtM3KHbM
+        yoZWddnnfKH3DhwZsVSs68hFordkBJBNZsBwS/74CUNKZXfzEQjpv33rof57TxaXa5wS
+        eH7fgpQRYEQGM3SNDsEM0GUFJKzj3wY+mBr8s9R7v/111flyfJMFrfF2uK4/WuNXSSes
+        8pRGdyrdoIjg98x9Su/a85PGdGsVDnMCS+VS8IIoTTCF1xoUIZ5ld+8rhNyjiiWuSgmG
+        EUVQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJDd+zEsL6f"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vA7IQpoNh
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 7 Nov 2019 19:26:51 +0100 (CET)
+Date:   Thu, 7 Nov 2019 19:26:45 +0100
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     daniel.thompson@linaro.org, broonie@kernel.org, arnd@arndb.de,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, baohua@kernel.org,
+        Barry Song <Baohua.Song@csr.com>
+Subject: Re: [PATCH 1/1] mfd: mfd-core: Honour Device Tree's request to
+ disable a child-device
+Message-ID: <20191107182645.GA13813@gerhold.net>
+References: <20191107111950.1189-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-ID: <4648.1573150984.1@warthog.procyon.org.uk>
-Date:   Thu, 07 Nov 2019 18:23:04 +0000
-Message-ID: <4649.1573150984@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: pb7rxykWNYyYpdYIKUe7Iw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107111950.1189-1-lee.jones@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> wrote:
+On Thu, Nov 07, 2019 at 11:19:50AM +0000, Lee Jones wrote:
+> Until now, MFD has assumed all child devices passed to it (via
+> mfd_cells) are to be registered. It does not take into account
+> requests from Device Tree and the like to disable child devices
+> on a per-platform basis.
+> 
+> Well now it does.
+> 
+> Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
+> Link: https://lkml.org/lkml/2019/8/22/1350
+> 
+> Reported-by: Barry Song <Baohua.Song@csr.com>
+> Reported-by: Stephan Gerhold <stephan@gerhold.net>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-> > Allow a buffer to be marked such that read() must return the entire buf=
-fer
-> > in one go or return ENOBUFS.  Multiple buffers can be amalgamated into =
-a
-> > single read, but a short read will occur if the next "whole" buffer won=
-'t
-> > fit.
-> >
-> > This is useful for watch queue notifications to make sure we don't spli=
-t a
-> > notification across multiple reads, especially given that we need to
-> > fabricate an overrun record under some circumstances - and that isn't i=
-n
-> > the buffers.
->=20
-> Hmm.  I'm not totally in love with introducing a new error code like
-> this for read(), especially if it could affect the kind of pipe that
-> is bound to a file in a filesystem.  But maybe it's not a problem.
+Thanks for all your work on this issue!
 
-EMSGSIZE might be better?
+FWIW:
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
 
-David
-
+> ---
+>  drivers/mfd/mfd-core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index cb3e0a14bbdd..f5a73af60dd4 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -152,6 +152,11 @@ static int mfd_add_device(struct device *parent, int id,
+>  	if (parent->of_node && cell->of_compatible) {
+>  		for_each_child_of_node(parent->of_node, np) {
+>  			if (of_device_is_compatible(np, cell->of_compatible)) {
+> +				if (!of_device_is_available(np)) {
+> +					/* Ignore disabled devices error free */
+> +					ret = 0;
+> +					goto fail_alias;
+> +				}
+>  				pdev->dev.of_node = np;
+>  				pdev->dev.fwnode = &np->fwnode;
+>  				break;
+> -- 
+> 2.24.0
+> 
