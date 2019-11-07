@@ -2,167 +2,165 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F649C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF393C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B3B21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0842166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ifafetc6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nfaWlfTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKGThO (ORCPT
+        id S1727116AbfKGTho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:37:14 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10167 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfKGThN (ORCPT
+        Thu, 7 Nov 2019 14:37:44 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:33706 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfKGTho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:37:13 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dc4722b0000>; Thu, 07 Nov 2019 11:36:11 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 07 Nov 2019 11:37:11 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 07 Nov 2019 11:37:11 -0800
-Received: from [10.25.75.102] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 Nov
- 2019 19:36:46 +0000
-Subject: Re: [PATCH V11 2/6] modpost: add support for mdev class id
-To:     Jason Wang <jasowang@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <intel-gvt-dev@lists.freedesktop.org>,
-        <alex.williamson@redhat.com>, <mst@redhat.com>,
-        <tiwei.bie@intel.com>
-CC:     <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, <cohuck@redhat.com>,
-        <maxime.coquelin@redhat.com>, <cunming.liang@intel.com>,
-        <zhihong.wang@intel.com>, <rob.miller@broadcom.com>,
-        <xiao.w.wang@intel.com>, <haotian.wang@sifive.com>,
-        <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
-        <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
-        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <farman@linux.ibm.com>, <pasic@linux.ibm.com>,
-        <sebott@linux.ibm.com>, <oberpar@linux.ibm.com>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <akrowiak@linux.ibm.com>,
-        <freude@linux.ibm.com>, <lingshan.zhu@intel.com>,
-        <eperezma@redhat.com>, <lulu@redhat.com>, <parav@mellanox.com>,
-        <christophe.de.dinechin@gmail.com>, <kevin.tian@intel.com>,
-        <stefanha@redhat.com>, <rdunlap@infradead.org>
-References: <20191107151109.23261-1-jasowang@redhat.com>
- <20191107151109.23261-3-jasowang@redhat.com>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <89d87e49-e7ee-f3c4-0b81-1c5fba14959b@nvidia.com>
-Date:   Fri, 8 Nov 2019 01:06:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20191107151109.23261-3-jasowang@redhat.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573155371; bh=C2IiKLCi5MxuqQL+UTo7qPQFnl5cEfi56SIRvfy2YGM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ifafetc69TFDlF+u0W/mHtbNzRQR/osuovOIreTBgk1lhGdLJNjFu5Bk9mrqxjrEb
-         d1FRJReVeAsawZC6zhQags+JTG3PbB4NaENHsEBOVclHToJF9KJYSdYyTM3Z7wqYR5
-         Cu9861xR9tSSBHvKUTxcCRHz5x9gpw5qk6WPOuXEMV72OgwdkmPUN3jeB+StDQGHhb
-         +wKc7iPQF/2NZVTfiK+OWuFpP8SvJP0SX8lNSbUxipwIAHaqMSicwHEX95dJVMXWfD
-         AOKSQbVbqm5uT31bTnxX1B7X9/QhlnNUl9r6dHEo7JVXMUWexHbp1Po2Kr1dgK4HFH
-         UhKKQJREHZIgQ==
+        Thu, 7 Nov 2019 14:37:44 -0500
+Received: by mail-pg1-f201.google.com with SMTP id y22so2662222pgc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:37:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=LJ5qu1d1qYTmvRrw2/bIxoaJkdqKaiuo2RqaAL/gLjQ=;
+        b=nfaWlfTVssvz5xKSSFcy1G4yFKmpFodEY52ELUWfRbdELBywKboP3WuzeqObOCPVJ+
+         oibB5HCXQjUs6GGW1eBBLTPppMXXsLZPaPRTtLwL6w7ctbPO2FlLsZmKVJsaAGXkNHvy
+         tv7Bdb+8EXr9w8CPJg41av4kkucclnrfkQ9Ucf95GgLoPFGlr3xtQE0x/DP78CO70VD+
+         AfwMmNStevSZSvISY/QBZ2PKZ3M39VnXDG7Js8X5b25apb4AIR1MNVWs9abMFAVuVadg
+         zblVAYfF8BZenWVPnU3SRdE/5iK2Son+iGZJlVhgEVsbedn3OdLVJGUcrnWibxKg+1SN
+         YpFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=LJ5qu1d1qYTmvRrw2/bIxoaJkdqKaiuo2RqaAL/gLjQ=;
+        b=kE/YUNyaRMHukotUbbJ/yVAIsmYzMnGoBBJl0jr9AlH9HstEV9x6RtNreL5OHoGjSw
+         9LC8vfsYBpQ8TclahthEA9TW5FTAf0F7ZLvj8uK4QQ+VAcOJTaCbR4ZjWDPjTAFq4QfP
+         /JWIvCFeDWsfLv9fXP3PgptSjlYJLxXg3jQZ+BOlTd9f9TvfvIEdvRZycUhKU5Mc6Pux
+         FfKRiM/1/6ricHNODpK2RZp0CjVyw+bPxwGne8zORVDdMcNcDGQ3OMdNP4BALy7RKIyS
+         drS2W/C+4YzBjNvrwvNZW/D2rxsX/31+yEWJ+OedZGux9JJ9Hby25bFZHB4eeqXonuUJ
+         xIhw==
+X-Gm-Message-State: APjAAAXN/bKn+eIcHSYjHEXpkGdBLTTyViTElDBL2zc7NilLdqPnYrOO
+        cTr/sF73Fna1MqGMcsmpiRhKVGKIHYxEaQ==
+X-Google-Smtp-Source: APXvYqxghuocbGVy4JqgXYeLsYpAilxoAYqmI6RcKnNtzoZtYEiMAd5XWQfVYaD23hAG7YMa2GfMfnIGv619kg==
+X-Received: by 2002:a63:a5b:: with SMTP id z27mr6849735pgk.416.1573155461548;
+ Thu, 07 Nov 2019 11:37:41 -0800 (PST)
+Date:   Thu,  7 Nov 2019 11:37:37 -0800
+Message-Id: <20191107193738.195914-1-edumazet@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH 1/2] list: add hlist_unhashed_lockless()
+From:   Eric Dumazet <edumazet@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We would like to use hlist_unhashed() from timer_pending(),
+which runs without protection of a lock.
 
+Note that other callers might also want to use this variant.
 
-On 11/7/2019 8:41 PM, Jason Wang wrote:
-> Add support to parse mdev class id table.
-> 
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
+Instead of forcing a READ_ONCE() for all hlist_unhashed()
+callers, add a new helper with an explicit _lockless suffix
+in the name to better document what is going on.
 
-Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+Also add various WRITE_ONCE() in __hlist_del(), hlist_add_head()
+and hlist_add_before()/hlist_add_behind() to pair with
+the READ_ONCE().
 
-Thanks,
-Kirti
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/list.h | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-> ---
->   drivers/vfio/mdev/vfio_mdev.c     |  2 ++
->   scripts/mod/devicetable-offsets.c |  3 +++
->   scripts/mod/file2alias.c          | 11 +++++++++++
->   3 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-> index 38431e9ef7f5..a6641cd8b5a3 100644
-> --- a/drivers/vfio/mdev/vfio_mdev.c
-> +++ b/drivers/vfio/mdev/vfio_mdev.c
-> @@ -125,6 +125,8 @@ static const struct mdev_class_id vfio_id_table[] = {
->   	{ 0 },
->   };
->   
-> +MODULE_DEVICE_TABLE(mdev, vfio_id_table);
-> +
->   static struct mdev_driver vfio_mdev_driver = {
->   	.name	= "vfio_mdev",
->   	.probe	= vfio_mdev_probe,
-> diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
-> index 054405b90ba4..6cbb1062488a 100644
-> --- a/scripts/mod/devicetable-offsets.c
-> +++ b/scripts/mod/devicetable-offsets.c
-> @@ -231,5 +231,8 @@ int main(void)
->   	DEVID(wmi_device_id);
->   	DEVID_FIELD(wmi_device_id, guid_string);
->   
-> +	DEVID(mdev_class_id);
-> +	DEVID_FIELD(mdev_class_id, id);
-> +
->   	return 0;
->   }
-> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-> index c91eba751804..45f1c22f49be 100644
-> --- a/scripts/mod/file2alias.c
-> +++ b/scripts/mod/file2alias.c
-> @@ -1335,6 +1335,16 @@ static int do_wmi_entry(const char *filename, void *symval, char *alias)
->   	return 1;
->   }
->   
-> +/* looks like: "mdev:cN" */
-> +static int do_mdev_entry(const char *filename, void *symval, char *alias)
-> +{
-> +	DEF_FIELD(symval, mdev_class_id, id);
-> +
-> +	sprintf(alias, "mdev:c%02X", id);
-> +	add_wildcard(alias);
-> +	return 1;
-> +}
-> +
->   /* Does namelen bytes of name exactly match the symbol? */
->   static bool sym_is(const char *name, unsigned namelen, const char *symbol)
->   {
-> @@ -1407,6 +1417,7 @@ static const struct devtable devtable[] = {
->   	{"typec", SIZE_typec_device_id, do_typec_entry},
->   	{"tee", SIZE_tee_client_device_id, do_tee_entry},
->   	{"wmi", SIZE_wmi_device_id, do_wmi_entry},
-> +	{"mdev", SIZE_mdev_class_id, do_mdev_entry},
->   };
->   
->   /* Create MODULE_ALIAS() statements.
-> 
+diff --git a/include/linux/list.h b/include/linux/list.h
+index 85c92555e31f85f019354e54d6efb8e79c2aee17..61f5aaf96192cdc4c1644741a415590b63c3c201 100644
+--- a/include/linux/list.h
++++ b/include/linux/list.h
+@@ -749,6 +749,16 @@ static inline int hlist_unhashed(const struct hlist_node *h)
+ 	return !h->pprev;
+ }
+ 
++/* This variant of hlist_unhashed() must be used in lockless contexts
++ * to avoid potential load-tearing.
++ * The READ_ONCE() is paired with the various WRITE_ONCE() in hlist
++ * helpers that are defined below.
++ */
++static inline int hlist_unhashed_lockless(const struct hlist_node *h)
++{
++	return !READ_ONCE(h->pprev);
++}
++
+ static inline int hlist_empty(const struct hlist_head *h)
+ {
+ 	return !READ_ONCE(h->first);
+@@ -761,7 +771,7 @@ static inline void __hlist_del(struct hlist_node *n)
+ 
+ 	WRITE_ONCE(*pprev, next);
+ 	if (next)
+-		next->pprev = pprev;
++		WRITE_ONCE(next->pprev, pprev);
+ }
+ 
+ static inline void hlist_del(struct hlist_node *n)
+@@ -782,32 +792,32 @@ static inline void hlist_del_init(struct hlist_node *n)
+ static inline void hlist_add_head(struct hlist_node *n, struct hlist_head *h)
+ {
+ 	struct hlist_node *first = h->first;
+-	n->next = first;
++	WRITE_ONCE(n->next, first);
+ 	if (first)
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ 	WRITE_ONCE(h->first, n);
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ }
+ 
+ /* next must be != NULL */
+ static inline void hlist_add_before(struct hlist_node *n,
+ 					struct hlist_node *next)
+ {
+-	n->pprev = next->pprev;
+-	n->next = next;
+-	next->pprev = &n->next;
++	WRITE_ONCE(n->pprev, next->pprev);
++	WRITE_ONCE(n->next, next);
++	WRITE_ONCE(next->pprev, &n->next);
+ 	WRITE_ONCE(*(n->pprev), n);
+ }
+ 
+ static inline void hlist_add_behind(struct hlist_node *n,
+ 				    struct hlist_node *prev)
+ {
+-	n->next = prev->next;
+-	prev->next = n;
+-	n->pprev = &prev->next;
++	WRITE_ONCE(n->next, prev->next);
++	WRITE_ONCE(prev->next, n);
++	WRITE_ONCE(n->pprev, &prev->next);
+ 
+ 	if (n->next)
+-		n->next->pprev  = &n->next;
++		WRITE_ONCE(n->next->pprev, &n->next);
+ }
+ 
+ /* after that we'll appear to be on some hlist and hlist_del will work */
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
