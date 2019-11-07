@@ -2,355 +2,91 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D843FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B594C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E15F2166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CKVDolWA"
+	by mail.kernel.org (Postfix) with ESMTP id 739862075C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfKGWPs (ORCPT
+        id S1727790AbfKGWRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:15:48 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:41030 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727549AbfKGWOq (ORCPT
+        Thu, 7 Nov 2019 17:17:02 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50065 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfKGWRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:14:46 -0500
-Received: by mail-pg1-f201.google.com with SMTP id e6so2992316pgc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 14:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=MhcLOxBt6GI4murNgPPZOQuJK8208fS1NR4UI6STB1U=;
-        b=CKVDolWA+p3kkfPghwMaEeouiOr9zIFkoe4xVjnEevFStVKit+6ivCMCZpn4+mfibV
-         LBrc+ynSi8RG2wAqe1GeNVe96B+wVnTT+eiCsCYcaiA7T0bKC8PHdsK5Unm2VVw1GrfN
-         D4kNTjhdBXaJtrvyRElDYLf6P75BF4VahAnxwL2Qtfvs+7hqjCIN5k18gJv7NIkPRn22
-         r0raai/f0pY9TuHkx7j87N5iAIFKEhJAgP0Oh2Yj4iLmw/pbXuXZ85j+M7dKtaD6BhGZ
-         tblk/U98we9bZTJrGFxUvL0dBZ0+hyg0wQp8pdBZXiEkMI2nbdpeRRqQhAj/3Z1y5htJ
-         VkFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=MhcLOxBt6GI4murNgPPZOQuJK8208fS1NR4UI6STB1U=;
-        b=gZARDsN5PjlQwA0m8jBGUIWg4rckxcEj88BuPsWlt2Najc0J2TGcw2XQufowa0FQh8
-         1P6sdhfH1i1m0hl8+CloL4ezAGW2GG7Ezgw/ea7NkjzNB5yh7wu1mieUQ35NcNW21e/m
-         XVCSy8ryNKljTIRg8OSwlQIRsMIgs/Vyfew78cKbPtgA/vOG/a73lCTAAw7slvojwiBi
-         hPAmpIsXXC58F7dSjwD0rf5n0PugDC0cqqXTkF4QVdN+gQ0tqJ8OikGz4DZuSG/Kyutg
-         V1XkYGw/YN7UOkRncZpogGgFAg4pwB++AIUjJGWelhPCrxdTcQmEAKXN/rUjYKuL4TQX
-         IqhQ==
-X-Gm-Message-State: APjAAAWj9BCdRov6uHIPH1+YZp/ncMlTvi2+QpcWt9iZ1gTU7yQKMqa4
-        c0Pq7h62qgaI70XIU3p6NkniHuweKsqC
-X-Google-Smtp-Source: APXvYqxvZGbe/BmZIh/v10T741ET9dsJbeZX59ttedPmjzAJjSdkfqS8GpkPXwOnI/m6fEPPs2AF/3CAZPBk
-X-Received: by 2002:a63:4501:: with SMTP id s1mr7500493pga.5.1573164884254;
- Thu, 07 Nov 2019 14:14:44 -0800 (PST)
-Date:   Thu,  7 Nov 2019 14:14:19 -0800
-In-Reply-To: <20191107221428.168286-1-irogers@google.com>
-Message-Id: <20191107221428.168286-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20191030223448.12930-1-irogers@google.com> <20191107221428.168286-1-irogers@google.com>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v6 01/10] perf tools: add parse events handle error
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 Nov 2019 17:17:02 -0500
+X-Originating-IP: 92.184.100.203
+Received: from localhost (unknown [92.184.100.203])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D0629240005;
+        Thu,  7 Nov 2019 22:16:59 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 23:16:44 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: at91: Drivers for 5.5
+Message-ID: <20191107221644.GA201884@piout.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parse event error handling may overwrite one error string with another
-creating memory leaks. Introduce a helper routine that warns about
-multiple error messages as well as avoiding the memory leak.
+Arnd, Olof,
 
-A reproduction of this problem can be seen with:
-  perf stat -e c/c/
-After this change this produces:
-WARNING: multiple event parsing errors
-event syntax error: 'c/c/'
-                       \___ unknown term
+A single new driver and a bit of churn this cycle.
 
-valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
-Run 'perf list' for a list of valid events
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
- Usage: perf stat [<options>] [<command>]
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-    -e, --event <event>   event selector. use 'perf list' to list available events
+are available in the Git repository at:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.c | 82 +++++++++++++++++++++-------------
- tools/perf/util/parse-events.h |  2 +
- tools/perf/util/pmu.c          | 30 ++++++++-----
- 3 files changed, 71 insertions(+), 43 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.5-drivers
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index db882f630f7e..e9b958d6c534 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -182,6 +182,20 @@ static int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
- 
- #define MAX_EVENT_LENGTH 512
- 
-+void parse_events__handle_error(struct parse_events_error *err, int idx,
-+				char *str, char *help)
-+{
-+	if (WARN(!str, "WARNING: failed to provide error string\n")) {
-+		free(help);
-+		return;
-+	}
-+	WARN_ONCE(err->str, "WARNING: multiple event parsing errors\n");
-+	err->idx = idx;
-+	free(err->str);
-+	err->str = str;
-+	free(err->help);
-+	err->help = help;
-+}
- 
- struct tracepoint_path *tracepoint_id_to_path(u64 config)
- {
-@@ -932,11 +946,11 @@ static int check_type_val(struct parse_events_term *term,
- 		return 0;
- 
- 	if (err) {
--		err->idx = term->err_val;
--		if (type == PARSE_EVENTS__TERM_TYPE_NUM)
--			err->str = strdup("expected numeric value");
--		else
--			err->str = strdup("expected string value");
-+		parse_events__handle_error(err, term->err_val,
-+					type == PARSE_EVENTS__TERM_TYPE_NUM
-+					? strdup("expected numeric value")
-+					: strdup("expected string value"),
-+					NULL);
- 	}
- 	return -EINVAL;
- }
-@@ -972,8 +986,11 @@ static bool config_term_shrinked;
- static bool
- config_term_avail(int term_type, struct parse_events_error *err)
- {
-+	char *err_str;
-+
- 	if (term_type < 0 || term_type >= __PARSE_EVENTS__TERM_TYPE_NR) {
--		err->str = strdup("Invalid term_type");
-+		parse_events__handle_error(err, -1,
-+					strdup("Invalid term_type"), NULL);
- 		return false;
- 	}
- 	if (!config_term_shrinked)
-@@ -992,9 +1009,9 @@ config_term_avail(int term_type, struct parse_events_error *err)
- 			return false;
- 
- 		/* term_type is validated so indexing is safe */
--		if (asprintf(&err->str, "'%s' is not usable in 'perf stat'",
--			     config_term_names[term_type]) < 0)
--			err->str = NULL;
-+		if (asprintf(&err_str, "'%s' is not usable in 'perf stat'",
-+				config_term_names[term_type]) >= 0)
-+			parse_events__handle_error(err, -1, err_str, NULL);
- 		return false;
- 	}
- }
-@@ -1036,17 +1053,20 @@ do {									   \
- 	case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
- 		CHECK_TYPE_VAL(STR);
- 		if (strcmp(term->val.str, "no") &&
--		    parse_branch_str(term->val.str, &attr->branch_sample_type)) {
--			err->str = strdup("invalid branch sample type");
--			err->idx = term->err_val;
-+		    parse_branch_str(term->val.str,
-+				    &attr->branch_sample_type)) {
-+			parse_events__handle_error(err, term->err_val,
-+					strdup("invalid branch sample type"),
-+					NULL);
- 			return -EINVAL;
- 		}
- 		break;
- 	case PARSE_EVENTS__TERM_TYPE_TIME:
- 		CHECK_TYPE_VAL(NUM);
- 		if (term->val.num > 1) {
--			err->str = strdup("expected 0 or 1");
--			err->idx = term->err_val;
-+			parse_events__handle_error(err, term->err_val,
-+						strdup("expected 0 or 1"),
-+						NULL);
- 			return -EINVAL;
- 		}
- 		break;
-@@ -1080,8 +1100,9 @@ do {									   \
- 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
- 		CHECK_TYPE_VAL(NUM);
- 		if ((unsigned int)term->val.num > 1) {
--			err->str = strdup("expected 0 or 1");
--			err->idx = term->err_val;
-+			parse_events__handle_error(err, term->err_val,
-+						strdup("expected 0 or 1"),
-+						NULL);
- 			return -EINVAL;
- 		}
- 		break;
-@@ -1089,9 +1110,9 @@ do {									   \
- 		CHECK_TYPE_VAL(NUM);
- 		break;
- 	default:
--		err->str = strdup("unknown term");
--		err->idx = term->err_term;
--		err->help = parse_events_formats_error_string(NULL);
-+		parse_events__handle_error(err, term->err_term,
-+				strdup("unknown term"),
-+				parse_events_formats_error_string(NULL));
- 		return -EINVAL;
- 	}
- 
-@@ -1142,9 +1163,9 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 		return config_term_common(attr, term, err);
- 	default:
- 		if (err) {
--			err->idx = term->err_term;
--			err->str = strdup("unknown term");
--			err->help = strdup("valid terms: call-graph,stack-size\n");
-+			parse_events__handle_error(err, term->err_term,
-+				strdup("unknown term"),
-+				strdup("valid terms: call-graph,stack-size\n"));
- 		}
- 		return -EINVAL;
- 	}
-@@ -1323,10 +1344,12 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 
- 	pmu = perf_pmu__find(name);
- 	if (!pmu) {
--		if (asprintf(&err->str,
-+		char *err_str;
-+
-+		if (asprintf(&err_str,
- 				"Cannot find PMU `%s'. Missing kernel support?",
--				name) < 0)
--			err->str = NULL;
-+				name) >= 0)
-+			parse_events__handle_error(err, -1, err_str, NULL);
- 		return -EINVAL;
- 	}
- 
-@@ -2797,13 +2820,10 @@ void parse_events__clear_array(struct parse_events_array *a)
- void parse_events_evlist_error(struct parse_events_state *parse_state,
- 			       int idx, const char *str)
- {
--	struct parse_events_error *err = parse_state->error;
--
--	if (!err)
-+	if (!parse_state->error)
- 		return;
--	err->idx = idx;
--	err->str = strdup(str);
--	WARN_ONCE(!err->str, "WARNING: failed to allocate error string");
-+
-+	parse_events__handle_error(parse_state->error, idx, strdup(str), NULL);
- }
- 
- static void config_terms_list(char *buf, size_t buf_sz)
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 769e07cddaa2..34f58d24a06a 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -124,6 +124,8 @@ struct parse_events_state {
- 	struct list_head	  *terms;
- };
- 
-+void parse_events__handle_error(struct parse_events_error *err, int idx,
-+				char *str, char *help);
- void parse_events__shrink_config_terms(void);
- int parse_events__is_hardcoded_term(struct parse_events_term *term);
- int parse_events_term__num(struct parse_events_term **term,
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index adbe97e941dd..f9f427d4c313 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1050,9 +1050,9 @@ static int pmu_config_term(struct list_head *formats,
- 		if (err) {
- 			char *pmu_term = pmu_formats_string(formats);
- 
--			err->idx  = term->err_term;
--			err->str  = strdup("unknown term");
--			err->help = parse_events_formats_error_string(pmu_term);
-+			parse_events__handle_error(err, term->err_term,
-+				strdup("unknown term"),
-+				parse_events_formats_error_string(pmu_term));
- 			free(pmu_term);
- 		}
- 		return -EINVAL;
-@@ -1080,8 +1080,9 @@ static int pmu_config_term(struct list_head *formats,
- 		if (term->no_value &&
- 		    bitmap_weight(format->bits, PERF_PMU_FORMAT_BITS) > 1) {
- 			if (err) {
--				err->idx = term->err_val;
--				err->str = strdup("no value assigned for term");
-+				parse_events__handle_error(err, term->err_val,
-+					   strdup("no value assigned for term"),
-+					   NULL);
- 			}
- 			return -EINVAL;
- 		}
-@@ -1094,8 +1095,9 @@ static int pmu_config_term(struct list_head *formats,
- 						term->config, term->val.str);
- 			}
- 			if (err) {
--				err->idx = term->err_val;
--				err->str = strdup("expected numeric value");
-+				parse_events__handle_error(err, term->err_val,
-+					strdup("expected numeric value"),
-+					NULL);
- 			}
- 			return -EINVAL;
- 		}
-@@ -1108,11 +1110,15 @@ static int pmu_config_term(struct list_head *formats,
- 	max_val = pmu_format_max_value(format->bits);
- 	if (val > max_val) {
- 		if (err) {
--			err->idx = term->err_val;
--			if (asprintf(&err->str,
--				     "value too big for format, maximum is %llu",
--				     (unsigned long long)max_val) < 0)
--				err->str = strdup("value too big for format");
-+			char *err_str;
-+
-+			parse_events__handle_error(err, term->err_val,
-+				asprintf(&err_str,
-+				    "value too big for format, maximum is %llu",
-+				    (unsigned long long)max_val) < 0
-+				    ? strdup("value too big for format")
-+				    : err_str,
-+				    NULL);
- 			return -EINVAL;
- 		}
- 		/*
+for you to fetch changes up to c3277f8ee8cdadf011b8390dfdb4c44ecfaa1a7a:
+
+  soc: at91: Add Atmel SFR SN (Serial Number) support (2019-11-07 22:33:10 +0100)
+
+----------------------------------------------------------------
+AT91 drivers for 5.5
+
+ - a new driver exposing the serial number registers through nvmem
+ - a few documentation and definition changes
+
+----------------------------------------------------------------
+Kamel Bouhara (1):
+      soc: at91: Add Atmel SFR SN (Serial Number) support
+
+Nicolas Ferre (1):
+      ARM: at91: Documentation: update the sama5d3 and armv7m datasheets
+
+Tudor Ambarus (2):
+      memory: atmel-ebi: move NUM_CS definition inside EBI driver
+      memory: atmel-ebi: switch to SPDX license identifiers
+
+ Documentation/arm/microchip.rst         |  4 +-
+ drivers/memory/atmel-ebi.c              | 11 ++--
+ drivers/soc/atmel/Kconfig               | 11 ++++
+ drivers/soc/atmel/Makefile              |  1 +
+ drivers/soc/atmel/sfr.c                 | 99 +++++++++++++++++++++++++++++++++
+ include/linux/mfd/syscon/atmel-matrix.h |  1 -
+ 6 files changed, 118 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/soc/atmel/sfr.c
+
 -- 
-2.24.0.432.g9d3f5f5b63-goog
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
