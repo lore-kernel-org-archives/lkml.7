@@ -2,138 +2,98 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89842C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFC0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABBA20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573164386;
-	bh=zZLMhikB7hoRMy0ddDiquboV9T7zKWdmy9eBzZlKbdI=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=A9mKV7nOgNAwMfsmJL/emjqVNMp1ol21Li23+AHCSz6k4y4k9ZPLkiPa4t3ZQTZkV
-	 oNu+jxhWubrFwrlP0xoTKXjyVjapvhhww+SiE6vRWXyLRaQYFKqm0HYdFWLgq94StN
-	 rtL9UHKBsWeChLa4C//ZBLqHUnf9sp9Fb7cGAWpE=
+	by mail.kernel.org (Postfix) with ESMTP id 7EE4521D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKGWGZ (ORCPT
+        id S1727200AbfKGWHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:06:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36364 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 17:07:42 -0500
+Received: from mga09.intel.com ([134.134.136.24]:26151 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfKGWGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:06:25 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6B3C20679;
-        Thu,  7 Nov 2019 22:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573164383;
-        bh=zZLMhikB7hoRMy0ddDiquboV9T7zKWdmy9eBzZlKbdI=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=vDydn33R6r2YyJxuK/ZXTPXZLfSKWZSKF67wl4TnPapyOQh8IT6ugwqfhxDQZBkrK
-         wlBAB8X/c8hTlnShZ/aB4lSb1rayLDbhlZ+lQFtF5jzh7sVqtbd8DHdIuKJq4JvURV
-         bverMnUPRudM9WGenOYLko1yBT2oa7uPbIbYk+XA=
-Content-Type: text/plain; charset="utf-8"
+        id S1725946AbfKGWHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 17:07:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 14:07:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,279,1569308400"; 
+   d="scan'208";a="192966898"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 07 Nov 2019 14:07:41 -0800
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id A117E580108;
+        Thu,  7 Nov 2019 14:07:41 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
+ back old behavior
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191025202004.GA147688@google.com>
+ <1ade6a9f-9532-c400-9bb0-4e68ed5752ce@linux.intel.com>
+ <CAOesGMhdAUKj9f0=sVwH7kffr=P-LqWWqKxKK3N3e0MpcjLExw@mail.gmail.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
+Date:   Thu, 7 Nov 2019 14:05:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191105025032.GA7664@onstation.org>
-References: <20191006010100.32053-1-masneyb@onstation.org> <20191017181329.D593C21835@mail.kernel.org> <20191105025032.GA7664@onstation.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     mturquette@baylibre.com, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jonathan@marek.ca
-Subject: Re: [PATCH] clk: qcom: mmcc8974: add frequency table for gfx3d
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 14:06:22 -0800
-Message-Id: <20191107220623.B6B3C20679@mail.kernel.org>
+In-Reply-To: <CAOesGMhdAUKj9f0=sVwH7kffr=P-LqWWqKxKK3N3e0MpcjLExw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brian Masney (2019-11-04 18:50:32)
-> Hi Stephen,
->=20
-> On Thu, Oct 17, 2019 at 11:13:29AM -0700, Stephen Boyd wrote:
-> > Quoting Brian Masney (2019-10-05 18:01:00)
-> > > From: Jonathan Marek <jonathan@marek.ca>
-> > >=20
-> > > Add frequency table for the gfx3d clock that's needed in order to
-> > > support the GPU upstream on msm8974-based systems.
-> > >=20
-> > > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > ---
-> > >  drivers/clk/qcom/mmcc-msm8974.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >=20
-> > > diff --git a/drivers/clk/qcom/mmcc-msm8974.c b/drivers/clk/qcom/mmcc-=
-msm8974.c
-> > > index bcb0a397ef91..e70abfe2a792 100644
-> > > --- a/drivers/clk/qcom/mmcc-msm8974.c
-> > > +++ b/drivers/clk/qcom/mmcc-msm8974.c
-> > > @@ -452,10 +452,17 @@ static struct clk_rcg2 mdp_clk_src =3D {
-> > >         },
-> > >  };
-> > > =20
-> > > +static struct freq_tbl ftbl_gfx3d_clk_src[] =3D {
-> > > +       F(37500000, P_GPLL0, 16, 0, 0),
-> > > +       F(533000000, P_MMPLL0, 1.5, 0, 0),
-> > > +       { }
-> > > +};
-> >=20
-> > On msm-3.10 kernel the gpu clk seems to be controlled by the RPM[1].
-> > What is going on here? This code just looks wrong, but I think it was
-> > added as an rcg so that the branch wasn't orphaned and would have some
-> > sane frequency. Eventually we planned to parent it to a clk exposed in
-> > the RPM clk driver. It's been a while so I'm having a hard time
-> > remembering, but I think GPU clk on this device needed to be controlled
-> > by RPM so that DDR self refresh wouldn't interact badly with ocmem? Or
-> > maybe ocmem needed GPU to be enabled to work? Maybe there is some
-> > information in the 3.10 downstream kernel.
-> >=20
-> > [1] https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/arch/arm=
-/mach-msm/clock-rpm-8974.c?h=3Dmsm-3.10#n82
->=20
-> I looked in the MSM 3.4 and 3.10 sources and I can't find that gfx3d
-> clock in the mmss (the downstream name for the mmcc that's upstream). I
-> even looked through the git history in the 3.10 sources to see if it was
-> removed at some point.
->=20
-> The gfx3d_clk_src was added to mmcc-msm8974.c upstream at the time the
-> file was first introduced into the kernel:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Dd8b212014e69d6b6323773ce6898f224ef4ed0d6
-> I haven't been able to find anything else so far where that came from.
 
-Yes. I did that! :) I think it was to make sure there weren't any orphan
-clks in the tree, which is why I left the code in place to read the clk
-frequency but not change it by omitting a frequency table.
+On 11/7/19 12:09 PM, Olof Johansson wrote:
+> On Thu, Nov 7, 2019 at 12:02 PM Kuppuswamy Sathyanarayanan
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>> Hi,
+>>
+>> On 10/25/19 1:20 PM, Bjorn Helgaas wrote:
+>>> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
+>>>> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+>>>> the behavior was changed such that native (kernel) handling of DPC
+>>>> got tied to whether the kernel also handled AER. While this is what
+>>>> the standard recommends, there are BIOSes out there that lack the DPC
+>>>> handling since it was never required in the past.
+>>> Some systems do not grant OS control of AER via _OSC.  I guess the
+>>> problem is that on those systems, the OS DPC driver used to work, but
+>>> after eed85ff4c0da7, it does not.  Right?
+>> I need some clarification on this issue. Do you mean in these systems,
+>> firmware expects OS to handle DPC and AER, but it does not let OS know
+>> about it via _OSC ?
+> The OS and BIOS both assumed behavior as before eed85ff4c0da7 -- AER
+> handled by firmware but DPC handled by kernel.
+>
+> I.e. a classic case of "Sure, the spec says this, but in reality
+> implementations relied on actual behavior", and someone had a
+> regression and need a way to restore previous behavior.
 
->=20
-> The GPU works using kmscube and KDE Plasma Mobile with this patch
-> applied but won't work without it. As for the status of the GPU working
-> upstream for MSM8974: My OCMEM and interconnect patches are now in
-> linux-next and are queued for the next merge window. All that's left is
-> 1) iommu support, 2) this patch (or whatever it needs to become), and
-> 3) add the GPU nodes to device tree for this board.
->=20
-> Would you be willing to reconsider accepting this patch since its 8974
-> specific and is one of the pieces that gets the GPU working upstream?
->=20
+Got it. I don't know whether its good to add hacks to support products 
+that does not follow spec.
+But, do you think it would be useful to add some kind of warning message 
+when this option is
+enabled ? May be it could be useful in debugging.
 
-No? I don't believe the kernel should be controlling this clk through
-direct register read/writes. Instead, the GPU frequency should be
-controlled through an RPM clk. See oxili_gfx3d_clk_src in the link you
-mention above [1] and how it indirects to gfx3d_clk_src via
-RPM_MEM_CLK_TYPE and OXILI_ID. In the end, anything that's parented to
-this rcg in mmcc should probably just be parented to the RPM clk
-instead.
+>
+> -Olof
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
