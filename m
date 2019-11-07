@@ -2,152 +2,170 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0958C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92478C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B555620869
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:07:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="H3Ys3Y9i"
+	by mail.kernel.org (Postfix) with ESMTP id 69D1820869
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfKGSHy (ORCPT
+        id S1729632AbfKGSI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:07:54 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39185 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbfKGSHy (ORCPT
+        Thu, 7 Nov 2019 13:08:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23336 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725710AbfKGSI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:07:54 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o9so2035292plk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:07:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uOLEs/Ylzowrvsp32OIANhzhopJpqXzqpob5e3gHNYE=;
-        b=H3Ys3Y9iSkfRE4KsxqlDsTsW3qNKk0mS3MI3wfGz6aXqLvHeUsP3V+2MyZPPJnhqYY
-         x5r39yYrIrLDhMygYIe+zjcDQpNQfKxonbdBQ2vYPGTwQXLh0SHQx86n5ZuVyxjx0B6e
-         EQZUi+Dra8zss3AFzJYiPWDxR1wCG4vsDwNm4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uOLEs/Ylzowrvsp32OIANhzhopJpqXzqpob5e3gHNYE=;
-        b=AbmI8jsR7kArTdIWl4iGJW7XSyzDs0SZXEKG0yF/wXoAyqs7f5X5DmsG72dz7sbQVh
-         xWsefB0GMEIA0StL9yFtqNmBIpMSrrf49QInOj2uWAhSaq00AMo5zDXah1ZhCaDVLe3l
-         ZtVT3Xx5Rvh2DlUKBIhgIwx0NJpvKWHRETLyrSB0l1mgu1lpISYG35PWPepjUT6N1aHc
-         OG6YJwB/O+bfZy34OC7EKhU3tmMBO8f+feHk0K+7/aqlW61uQRYR8b0LzspIf2Ndwr97
-         HYczKyLWPfJkpMXol4OUr5NqT+ALvePRGfWCi4qB2nd+RND/+ybI1msGeYtHuIk93doo
-         nB2A==
-X-Gm-Message-State: APjAAAWM2Qd9OG68J35lz5XiYI4AqP7JzEC0hkx61vgLr830Ep2bzWgE
-        19q7/RNg9qtu6j/I6YnXB75icA==
-X-Google-Smtp-Source: APXvYqwl5+VGy63KgJVXB72ntOstsTKhQwWdAblR1MU+HZBKAOz0xs7UVTy3IO4zfFPaOVDD44GKtA==
-X-Received: by 2002:a17:90a:80cc:: with SMTP id k12mr7125259pjw.58.1573150073574;
-        Thu, 07 Nov 2019 10:07:53 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id f24sm2777882pjp.12.2019.11.07.10.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 10:07:52 -0800 (PST)
-Date:   Thu, 7 Nov 2019 13:07:51 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org, Ioannis Ilkos <ilkos@google.com>,
-        minchan@google.com, primiano@google.com, fmayer@google.com,
-        hjd@google.com, joaodias@google.com, lalitm@google.com,
-        rslawik@google.com, sspatil@google.com, timmurray@google.com,
+        Thu, 7 Nov 2019 13:08:57 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7I7L7I031779
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 13:08:55 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4qcf2dps-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 13:08:55 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Thu, 7 Nov 2019 18:08:52 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 7 Nov 2019 18:08:43 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7I86IF10486184
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 Nov 2019 18:08:06 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F06D64C044;
+        Thu,  7 Nov 2019 18:08:41 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFE874C04E;
+        Thu,  7 Nov 2019 18:08:40 +0000 (GMT)
+Received: from pic2.home (unknown [9.145.15.120])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  7 Nov 2019 18:08:40 +0000 (GMT)
+Subject: Re: [PATCH 10/10] ocxl: Conditionally bind SCM devices to the generic
+ OCXL driver
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
         Michal Hocko <mhocko@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] rss_stat: Add support to detect RSS updates of external
- mm
-Message-ID: <20191107180751.GA3846@google.com>
-References: <20191106024452.81923-1-joel@joelfernandes.org>
- <20191106085959.ae2dgvmny3njnk7n@pathway.suse.cz>
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+ <20191025044721.16617-11-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Thu, 7 Nov 2019 19:08:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106085959.ae2dgvmny3njnk7n@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191025044721.16617-11-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110718-0012-0000-0000-00000361A638
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110718-0013-0000-0000-0000219D084A
+Message-Id: <b70644d6-2c71-cd71-5d00-e25d99beea91@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911070167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 09:59:59AM +0100, Petr Mladek wrote:
-> On Tue 2019-11-05 21:44:51, Joel Fernandes (Google) wrote:
-> > Also vsprintf.c is refactored a bit to allow reuse of hashing code.
+
+
+Le 25/10/2019 à 06:47, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> I agree with Sergey that it would make sense to move this outside
-> vsprintf.c.
-
-I am of the opinion that its Ok to have it this way and I am not sure if
-another translation unit is worth it just for this. If we have more users,
-then yes we can consider splitting into its own translation unit at that
-time.
-
-If Andrew Morton objects, then I'll do it since the intention was for this
-patch to go through his tree and I believe he is Ok with it this way.
-
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index dee8fc467fcf..401baaac1813 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -761,11 +761,34 @@ static int __init initialize_ptr_random(void)
-> >  early_initcall(initialize_ptr_random);
-> >  
-> >  /* Maps a pointer to a 32 bit unique identifier. */
-> > +int ptr_to_hashval(const void *ptr, unsigned long *hashval_out)
-> > +{
-> > +	const char *str = sizeof(ptr) == 8 ? "(____ptrval____)" : "(ptrval)";
+> This patch allows the user to bind OpenCAPI SCM devices to the generic OCXL
+> driver.
 > 
-> str is unused.
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
 
-I believe Andrew has already fixed this in his tree.
 
-linux-next has local variable removed now:
-7422993b4f8e ("rss_stat-add-support-to-detect-rss-updates-of-external-mm-fix")
+I'm wondering if we should upstream this. Is it of any use outside of 
+some serious debug session for a developer?
+Also we would now have 2 drivers picking up the same device ID, since 
+the SCM driver is always registering for that ID, irrespective of 
+CONFIG_OCXL_SCM_GENERIC
 
-> > +	unsigned long hashval;
+   Fred
+
+
+>   drivers/misc/ocxl/Kconfig | 7 +++++++
+>   drivers/misc/ocxl/pci.c   | 3 +++
+>   2 files changed, 10 insertions(+)
 > 
-> IMHO, this local variable unnecessarily complicates the code.
-> I would use the pointer directly and let compiler to optimize.
-
-Agreed.
-
-thanks,
-
- - Joel
-
-
-> > +	if (static_branch_unlikely(&not_filled_random_ptr_key))
-> > +		return -EAGAIN;
-> > +
-> > +#ifdef CONFIG_64BIT
-> > +	hashval = (unsigned long)siphash_1u64((u64)ptr, &ptr_key);
-> > +	/*
-> > +	 * Mask off the first 32 bits, this makes explicit that we have
-> > +	 * modified the address (and 32 bits is plenty for a unique ID).
-> > +	 */
-> > +	hashval = hashval & 0xffffffff;
-> > +#else
-> > +	hashval = (unsigned long)siphash_1u32((u32)ptr, &ptr_key);
-> > +#endif
-> > +	*hashval_out = hashval;
-> > +	return 0;
-> > +}
+> diff --git a/drivers/misc/ocxl/Kconfig b/drivers/misc/ocxl/Kconfig
+> index 1916fa65f2f2..8a683715c97c 100644
+> --- a/drivers/misc/ocxl/Kconfig
+> +++ b/drivers/misc/ocxl/Kconfig
+> @@ -29,3 +29,10 @@ config OCXL
+>   	  dedicated OpenCAPI link, and don't follow the same protocol.
+>   
+>   	  If unsure, say N.
+> +
+> +config OCXL_SCM_GENERIC
+> +	bool "Treat OpenCAPI Storage Class Memory as a generic OpenCAPI device"
+> +	default n
+> +	help
+> +	  Select this option to treat OpenCAPI Storage Class Memory
+> +	  devices an generic OpenCAPI devices.
+> diff --git a/drivers/misc/ocxl/pci.c b/drivers/misc/ocxl/pci.c
+> index cb920aa88d3a..7137055c1883 100644
+> --- a/drivers/misc/ocxl/pci.c
+> +++ b/drivers/misc/ocxl/pci.c
+> @@ -10,6 +10,9 @@
+>    */
+>   static const struct pci_device_id ocxl_pci_tbl[] = {
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x062B), },
+> +#ifdef CONFIG_OCXL_SCM_GENERIC
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
+> +#endif
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(pci, ocxl_pci_tbl);
 > 
-> Best Regards,
-> Petr
+
