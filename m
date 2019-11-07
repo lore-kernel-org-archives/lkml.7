@@ -2,131 +2,127 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503A4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207FA2075C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SsRfk6xt"
+	by mail.kernel.org (Postfix) with ESMTP id 902072075C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573132416;
+	bh=S7EYAs7AgGc+0UCS2gMd+X4tdoJdJ5Mw1loVhaufYEI=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=xJsY6FFf0YVMW0OfTlKPsvXfbzlX6lOuKFKChj53RmeVkUf/n4hwvCnV1aQAhxd+i
+	 mYS8KhIyhFDnTjOZnxzzAUAZMBXnSO/1Z6OoAWkAcT+SNOmoTc6oziqHBl+TPLgXBX
+	 0d4JYlWpsE2U+pXlZWHkxfSPHznaWjIPoPSoN/SM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388799AbfKGNME (ORCPT
+        id S2388732AbfKGNNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:12:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58250 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388411AbfKGNMD (ORCPT
+        Thu, 7 Nov 2019 08:13:35 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39110 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKGNNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:12:03 -0500
+        Thu, 7 Nov 2019 08:13:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=r+oWhkAzpRy6WfnU7l9sRsKb3NK0JGxLsDSabun9rxU=; b=SsRfk6xtyoDRpBIx0scp64BWyz
-        lDzzvlnni0IS2C5bGQ5Mtk/Fp8v6ieIlvtHJclRD9AzA9iLS96dHZ56auFFki1TIyxyhCSHwTS4UX
-        ZPJ6AgIYm4AGsNm9qsGgUcez0VkE1OWDlBOm5Cpv18xBryGqfalerMrdn5xhtz6lPlI3RSdWauRX9
-        8mOtilJdjdy1FGo6VPOfykeMTor9k9NzYjb0stiflzACFK3xcku8RKult17/YCQJXQJ6FxE1/q/Y2
-        oE0KhCSyPHFbvIL3sMHiSm7gTyfmoSXWmH02lHqXyLcHwwWEG/hUuaeMAIiT9Qqd6rVcC239FYhpe
-        EN0D7rtQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iShZl-0006wl-7L; Thu, 07 Nov 2019 13:11:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66DB0300489;
-        Thu,  7 Nov 2019 14:10:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C09462025EDA7; Thu,  7 Nov 2019 14:11:46 +0100 (CET)
-Date:   Thu, 7 Nov 2019 14:11:46 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: core: fix compilation error when cgroup not
- selected
-Message-ID: <20191107131146.GJ4131@hirez.programming.kicks-ass.net>
-References: <20191105112212.596-1-qais.yousef@arm.com>
- <20191107072525.GA19642@darkstar>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191107072525.GA19642@darkstar>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=38fVbCceIZMgFEiWyCwsVp4ocXxtxsckHfbtPAIZshM=; b=NVVjdvdHpydf
+        Jg8UEgtoHhVS7JTGMxYG+urZTZu7suy/ZPmb6L1W86C8uTXI97K4KQsFTZ0Hjelk1Bcw42QXiuObJ
+        a/+NjDPadNodqtm43ozblqmeHMM/jixf5GI2eiiLQZzmS0gye9Nn/RHggORRiAbUsxCGYGeWPLFyN
+        /TQ+M=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iShbR-0004NN-8x; Thu, 07 Nov 2019 13:13:33 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id C869627431AF; Thu,  7 Nov 2019 13:13:32 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id" to the regulator tree
+In-Reply-To: <20191106173125.14496-2-stephan@gerhold.net>
+X-Patchwork-Hint: ignore
+Message-Id: <20191107131332.C869627431AF@ypsilon.sirena.org.uk>
+Date:   Thu,  7 Nov 2019 13:13:32 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 07:25:25AM +0000, Patrick Bellasi wrote:
-> [ +Randy ]
-> 
-> Hi Qais,
-> 
-> On 05-Nov 11:22, Qais Yousef wrote:
-> > When cgroup is disabled the following compilation error was hit
-> > 
-> > 	kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
-> > 	kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
-> > 	  struct css_task_iter it;
-> > 			       ^~
-> > 	kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
-> > 	  css_task_iter_start(css, 0, &it);
-> > 	  ^~~~~~~~~~~~~~~~~~~
-> > 	  __sg_page_iter_start
-> > 	kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
-> > 	  while ((p = css_task_iter_next(&it))) {
-> > 		      ^~~~~~~~~~~~~~~~~~
-> > 		      __sg_page_iter_next
-> > 	kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
-> > 	  css_task_iter_end(&it);
-> > 	  ^~~~~~~~~~~~~~~~~
-> > 	  get_task_cred
-> > 	kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
-> > 	  struct css_task_iter it;
-> > 			       ^~
-> > 	cc1: some warnings being treated as errors
-> > 	make[2]: *** [kernel/sched/core.o] Error 1
-> > 
-> > Fix by protetion uclamp_update_active_tasks() with
-> > CONFIG_UCLAMP_TASK_GROUP
-> > 
-> > Fixes: babbe170e053 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> 
-> Thanks for posting this again.
-> 
-> We now have three "versions" of this same fix, including:
->  - the original bug report by Randy and a fix from me here:
->    Message-ID: <8736gv2gbv.fsf@arm.com>
->    https://lore.kernel.org/linux-next/8736gv2gbv.fsf@arm.com/
->  - and a follow up patch from Arnd:
->    Message-ID: <20190918195957.2220297-1-arnd@arndb.de>
->    https://lore.kernel.org/lkml/20190918195957.2220297-1-arnd@arndb.de/
-> 
-> So, I guess now we just have to pick the one with the changelog we
-> prefer. :)
-> 
-> In all cases we should probably add:
-> 
->   Reported-by: Randy Dunlap <rdunlap@infradead.org>
->   Tested-by: Randy Dunlap <rdunlap@infradead.org>
+The patch
 
-Argh, ok, I missed them all too. Picked up this one for sched/urgent and
-added the above.
+   regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
 
-Thanks!
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 458ea3ad033fc86e291712ce50cbe60c3428cf30 Mon Sep 17 00:00:00 2001
+From: Stephan Gerhold <stephan@gerhold.net>
+Date: Wed, 6 Nov 2019 18:31:25 +0100
+Subject: [PATCH] regulator: ab8500: Remove SYSCLKREQ from enum
+ ab8505_regulator_id
+
+Those regulators are not actually supported by the AB8500 regulator
+driver. There is no ab8500_regulator_info for them and no entry in
+ab8505_regulator_match.
+
+As such, they cannot be registered successfully, and looking them
+up in ab8505_regulator_match causes an out-of-bounds array read.
+
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ include/linux/regulator/ab8500.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/include/linux/regulator/ab8500.h b/include/linux/regulator/ab8500.h
+index 505e94a6e3e8..3ab1ddf151a2 100644
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -42,8 +42,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_ANAMIC2,
+ 	AB8505_LDO_AUX8,
+ 	AB8505_LDO_ANA,
+-	AB8505_SYSCLKREQ_2,
+-	AB8505_SYSCLKREQ_4,
+ 	AB8505_NUM_REGULATORS,
+ };
+ 
+-- 
+2.20.1
+
