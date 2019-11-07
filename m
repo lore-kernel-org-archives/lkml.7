@@ -2,121 +2,84 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F24C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46DAC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA70E207FA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74A72187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573136477;
+	bh=zrIHF7T3paXEpcMq7MV6AOWqqxFyxj9f/j+Oa24JGp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=in+NE9upwbNYvn10O1oI552JUGLrankPYRCiGlumbH+yjLAIdn5l5HF3gRqsFQaHV
+	 7kLYCHa9jyd0LbvewjsbNXZBvxixlpvxPdbSFX0EHpePormIUB7d352PTUywap3AHB
+	 pBOTFUNO2P45jLFF7l1IxEfUi2Qk6Nj8h0kLjtQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389310AbfKGOVL (ORCPT
+        id S2389347AbfKGOVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:21:11 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2504 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726924AbfKGOVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:21:08 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 16F2A35A5CA297AD0A5C;
-        Thu,  7 Nov 2019 22:21:02 +0800 (CST)
-Received: from dggeme707-chm.china.huawei.com (10.1.199.103) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 7 Nov 2019 22:21:01 +0800
-Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
- dggeme707-chm.china.huawei.com (10.1.199.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 7 Nov 2019 22:20:59 +0800
-Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
- lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1713.004;
- Thu, 7 Nov 2019 14:20:57 +0000
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
-        "lipeng (Y)" <lipeng321@huawei.com>,
-        "mehta.salil@opnsrc.net" <mehta.salil@opnsrc.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH net] net: hns: Fix the stray netpoll locks causing
-  deadlock in NAPI path
-Thread-Topic: [PATCH net] net: hns: Fix the stray netpoll locks causing
-  deadlock in NAPI path
-Thread-Index: AQHVlXV9oPVhm3923UeaSbHNAy05jqd/v/1g
-Date:   Thu, 7 Nov 2019 14:20:57 +0000
-Message-ID: <9c15e61f739045ee876ae3fbb1e49446@huawei.com>
-References: <20191106185405.23112-1-salil.mehta@huawei.com>
- <a6f06cfc7ef91685746dfe5ab6c56401@www.loen.fr>
-In-Reply-To: <a6f06cfc7ef91685746dfe5ab6c56401@www.loen.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.226.45]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 7 Nov 2019 09:21:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726924AbfKGOVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:21:14 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7C65207FA;
+        Thu,  7 Nov 2019 14:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573136474;
+        bh=zrIHF7T3paXEpcMq7MV6AOWqqxFyxj9f/j+Oa24JGp8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c4HeHac8PTx6WMnMwd4fYMcUhf0YK8e2NA/osYMyZyT5GirPSPLMf4wqToyntz14B
+         1tnzc4TOoCO0XFtpTbbP1v5pvS3uaA5NfJq8p3Et7QytccOqsVO1upZbHVw7nR9nBd
+         gNgy/hYr3h71tN6nqmf1Ptiopzilxl7IQkIeehAY=
+Date:   Thu, 7 Nov 2019 15:21:11 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] interconnect changes for 5.5
+Message-ID: <20191107142111.GB109902@kroah.com>
+References: <5123bf54-5d62-fc5c-8838-17bc34487d83@linaro.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5123bf54-5d62-fc5c-8838-17bc34487d83@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyYywNCg0KPiBGcm9tOiBNYXJjIFp5bmdpZXIgW21haWx0bzptYXpAa2VybmVsLm9yZ10N
-Cj4gU2VudDogVGh1cnNkYXksIE5vdmVtYmVyIDcsIDIwMTkgMjoxMyBQTQ0KPiBUbzogU2FsaWwg
-TWVodGEgPHNhbGlsLm1laHRhQGh1YXdlaS5jb20+DQo+IA0KPiBIaSBTYWxpbCwNCj4gDQo+IE9u
-IDIwMTktMTEtMDYgMjA6MDMsIFNhbGlsIE1laHRhIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggZml4
-ZXMgdGhlIHByb2JsZW0gb2YgdGhlIHNwaW4gbG9ja3MsIG9yaWdpbmFsbHkNCj4gPiBtZWFudCBm
-b3IgdGhlIG5ldHBvbGwgcGF0aCBvZiBobnMgZHJpdmVyLCBjYXVzaW5nIGRlYWRsb2NrIGluDQo+
-ID4gdGhlIG5vcm1hbCBOQVBJIHBvbGwgcGF0aC4gVGhlIGlzc3VlIGhhcHBlbmVkIGR1ZSBwcmVz
-ZW5jZSBvZg0KPiA+IHRoZSBzdHJheSBsZWZ0b3ZlciBzcGluIGxvY2sgY29kZSByZWxhdGVkIHRv
-IHRoZSBuZXRwb2xsLA0KPiA+IHdob3NlIHN1cHBvcnQgd2FzIGVhcmxpZXIgcmVtb3ZlZCBmcm9t
-IHRoZSBITlNbMV0sIGdvdCBhY3RpdmF0ZWQNCj4gPiBkdWUgdG8gZW5hYmxpbmcgb2YgTkVUX1BP
-TExfQ09OVFJPTExFUiBzd2l0Y2guDQo+ID4NCj4gPiBFYXJsaWVyIGJhY2tncm91bmQ6DQo+ID4g
-VGhlIG5ldHBvbGwgaGFuZGxpbmcgY29kZSBvcmlnaW5hbGx5IGhhZCB0aGlzIGJ1ZyhhcyBpZGVu
-dGlmaWVkDQo+ID4gYnkgTWFyYyBaeW5naWVyWzJdKSBvZiB3cm9uZyBzcGluIGxvY2sgQVBJIGJl
-aW5nIHVzZWQgd2hpY2ggZGlkDQo+ID4gbm90IGRpc2FibGUgdGhlIGludGVycnVwdHMgYW5kIGhl
-bmNlIGNvdWxkIGNhdXNlIGxvY2tpbmcgaXNzdWVzLg0KPiA+IGkuZS4gaWYgdGhlIGxvY2sgd2Vy
-ZSBmaXJzdCBhY3F1aXJlZCBpbiBjb250ZXh0IHRvIHRocmVhZCBsaWtlDQo+ID4gJ2lwJyB1dGls
-IGFuZCB0aGlzIGxvY2sgaWYgZXZlciBnb3QgbGF0ZXIgYWNxdWlyZWQgYWdhaW4gaW4NCj4gPiBj
-b250ZXh0IHRvIHRoZSBpbnRlcnJ1cHQgY29udGV4dCBsaWtlIFRYL1JYIChJbnRlcnJ1cHRzIGNv
-dWxkDQo+ID4gYWx3YXlzIHByZS1lbXB0IHRoZSBsb2NrIGhvbGRpbmcgdGFzayBhbmQgYWNxdWly
-ZSB0aGUgbG9jayBhZ2FpbikNCj4gPiBhbmQgaGVuY2UgY291bGQgY2F1c2UgZGVhZGxvY2suDQo+
-ID4NCj4gPiBQcm9wb3NlZCBTb2x1dGlvbjoNCj4gPiAxLiBJZiB0aGUgbmV0cG9sbCB3YXMgZW5h
-YmxlZCBpbiB0aGUgSE5TIGRyaXZlciwgd2hpY2ggaXMgbm90DQo+ID4gICAgcmlnaHQgbm93LCB3
-ZSBjb3VsZCBoYXZlIHNpbXBseSB1c2VkIHNwaW5fW3VuXWxvY2tfaXJxc2F2ZSgpDQo+ID4gMi4g
-QnV0IGFzIG5ldHBvbGwgaXMgZGlzYWJsZWQsIHRoZXJlZm9yZSwgaXQgaXMgYmVzdCB0byBnZXQg
-cmlkDQo+ID4gICAgb2YgdGhlIGV4aXN0aW5nIGxvY2tzIGFuZCBzdHJheSBjb2RlIGZvciBub3cu
-IFRoaXMgc2hvdWxkDQo+ID4gICAgc29sdmUgdGhlIHByb2JsZW0gcmVwb3J0ZWQgYnkgTWFyYy4N
-Cj4gPg0KPiA+IEBNYXJjLA0KPiA+IENvdWxkIHlvdSBwbGVhc2UgdGVzdCB0aGlzIHBhdGNoIGFu
-ZCBjb25maXJtIGlmIHRoZSBwcm9ibGVtIGlzDQo+ID4gZml4ZWQgYXQgeW91ciBlbmQ/DQo+IA0K
-PiBZZXMsIHRoaXMgZml4ZXMgaXQsIGFsdGhvdWdoIHlvdSBtYXkgd2FudCB0byBmdWxseSBnZXQg
-cmlkIG9mDQo+IHRoZSBub3cgdXNlbGVzcyBsb2NrOg0KDQoNCk9vcHMuLm1pc3NlZCB0aGVtLiBJ
-IHdpbGwgZml4IHRoZXNlIGFzIHdlbGwgYW5kIGZsb2F0IFYyIHZlcnNpb24NCm9mIHRoaXMgcGF0
-Y2guDQoNCg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvaGlzaWxpY29uL2hu
-cy9obmFlLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9oaXNpbGljb24vaG5zL2huYWUuYw0K
-PiBpbmRleCA2ZDA0NTdlYjRmYWEuLjA4MzM5Mjc4YzcyMiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvaGlzaWxpY29uL2hucy9obmFlLmMNCj4gKysrIGIvZHJpdmVycy9uZXQv
-ZXRoZXJuZXQvaGlzaWxpY29uL2hucy9obmFlLmMNCj4gQEAgLTE5OSw3ICsxOTksNiBAQCBobmFl
-X2luaXRfcmluZyhzdHJ1Y3QgaG5hZV9xdWV1ZSAqcSwgc3RydWN0DQo+IGhuYWVfcmluZyAqcmlu
-ZywgaW50IGZsYWdzKQ0KPiANCj4gICAJcmluZy0+cSA9IHE7DQo+ICAgCXJpbmctPmZsYWdzID0g
-ZmxhZ3M7DQo+IC0Jc3Bpbl9sb2NrX2luaXQoJnJpbmctPmxvY2spOw0KPiAgIAlyaW5nLT5jb2Fs
-X3BhcmFtID0gcS0+aGFuZGxlLT5jb2FsX3BhcmFtOw0KPiAgIAlhc3NlcnQoIXJpbmctPmRlc2Mg
-JiYgIXJpbmctPmRlc2NfY2IgJiYgIXJpbmctPmRlc2NfZG1hX2FkZHIpOw0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2hpc2lsaWNvbi9obnMvaG5hZS5oDQo+IGIvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvaGlzaWxpY29uL2hucy9obmFlLmgNCj4gaW5kZXggZTljNjdjMDZi
-ZmQyLi42YWI5NDU4MzAyZTEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2hp
-c2lsaWNvbi9obnMvaG5hZS5oDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2hpc2lsaWNv
-bi9obnMvaG5hZS5oDQo+IEBAIC0yNzQsOSArMjc0LDYgQEAgc3RydWN0IGhuYWVfcmluZyB7DQo+
-ICAgCS8qIHN0YXRpc3RpYyAqLw0KPiAgIAlzdHJ1Y3QgcmluZ19zdGF0cyBzdGF0czsNCj4gDQo+
-IC0JLyogcmluZyBsb2NrIGZvciBwb2xsIG9uZSAqLw0KPiAtCXNwaW5sb2NrX3QgbG9jazsNCj4g
-LQ0KPiAgIAlkbWFfYWRkcl90IGRlc2NfZG1hX2FkZHI7DQo+ICAgCXUzMiBidWZfc2l6ZTsgICAg
-ICAgLyogc2l6ZSBmb3IgaG5hZV9kZXNjLT5hZGRyLCBwcmVzZXQgYnkgQUUgKi8NCj4gICAJdTE2
-IGRlc2NfbnVtOyAgICAgICAvKiB0b3RhbCBudW1iZXIgb2YgZGVzYyAqLw0KPiANCj4gV2l0aCB0
-aGF0Og0KPiANCj4gQWNrZWQtYnk6IE1hcmMgWnluZ2llciA8bWF6QGtlcm5lbC5vcmc+DQo+IFRl
-c3RlZC1ieTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KDQpNYW55IHRoYW5rcyBm
-b3IgeW91ciByZXZpZXcgYW5kIHRlc3RpbmcuDQoNCg0KQmVzdCBSZWdhcmRzDQpTYWxpbC4NCg==
+On Thu, Nov 07, 2019 at 02:46:53PM +0200, Georgi Djakov wrote:
+> Hi Greg,
+> 
+> This is a pull request with interconnect patches for the 5.5 merge window.
+> All patches have been for a while in linux-next without reported issues. The
+> details are in the signed tag. Please consider pulling into char-misc-next.
+
+I don't know about
+0003-interconnect-Disallow-interconnect-core-to-be-built-.patch here.
+Shouldn't you just fix up the dependancies of subsystems that rely on
+this?  We are moving more and more to kernels that "just work" with
+everything as modules, even on arm64 systems.  So forbiding the
+interconnect code from being able to be built as a module does not feel
+good to me at all.
+
+Same for
+0007-interconnect-Remove-unused-module-exit-code-from-cor.patch, we are
+adding module_init/exit() calls to modules, do not remove them!
+
+
+Can you drop those two patches and resend?  Or I can just take these out
+of the pull request and apply the rest as patches for now, if that's
+easier for you to handle.
+
+thanks,
+
+greg k-h
