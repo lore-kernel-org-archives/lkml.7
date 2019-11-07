@@ -2,130 +2,164 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F40C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E608C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819842178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:42:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="qI0AalYc"
+	by mail.kernel.org (Postfix) with ESMTP id E00D72178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733130AbfKGDmf (ORCPT
+        id S1733174AbfKGDmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:42:35 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.210]:23685 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727751AbfKGDmf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:42:35 -0500
-X-Greylist: delayed 1428 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 22:42:34 EST
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 022BC410316E4
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 21:17:17 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id SYIOiw6pmHunhSYIOiNF3X; Wed, 06 Nov 2019 21:17:17 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8sv29UR8E5pLNoh42IdLCVMD0V6+Oaujyjo0kbs91yg=; b=qI0AalYcgbXWWtVOpw90rjH8TD
-        0G8wU+FJ58A8UwnSGAQ2AAy4JPjk+lkzyVeHE1zRPoC+k39UJdmDWFobT/B5LQfL+rkpkSzotzxnP
-        ZW/HtA8uyC6YQ7BUtxLx2TBuTh+vah3Rkxfh2mVFAWvTvD9e1iN/AiC61qzRa0nLTd74y3GIqlhIt
-        rY7QOhfPfhvJLomvLYrsK5GLma/9/ucXBOSyf8f8wc3eHKuraPtLg5kbmCYtv9CdJ9qNxCdW5YbO4
-        fk+W/OOq8EvP6f0VXvYoLQa6MhZBBjAvks/5lcQlOVp4fqvKRTraEn5uDStaa+6sNUhpGvKCKaeqP
-        YzRksQQg==;
-Received: from [191.31.194.59] (port=34854 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iSYIN-000Mrk-V1; Thu, 07 Nov 2019 00:17:16 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v6 0/5] power: supply: MAX17040: Add IRQ for low level and alert SOC changes
-Date:   Thu,  7 Nov 2019 00:17:05 -0300
-Message-Id: <20191107031710.5672-1-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191105095905.GA31721@pi3>
-References: <20191105095905.GA31721@pi3>
+        Wed, 6 Nov 2019 22:42:38 -0500
+Received: from spam01.hygon.cn ([110.188.70.11]:46345 "EHLO spam1.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733028AbfKGDmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 22:42:37 -0500
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam1.hygon.cn with ESMTP id xA73ckpw000963;
+        Thu, 7 Nov 2019 11:38:46 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-FE.hygon.cn with ESMTP id xA73cf1v094565;
+        Thu, 7 Nov 2019 11:38:41 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from ubuntu.localdomain (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Thu, 7 Nov 2019
+ 11:38:42 +0800
+From:   Jiasen Lin <linjiasen@hygon.cn>
+To:     <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        <jdmason@kudzu.us>
+CC:     <allenbh@gmail.com>, <dave.jiang@intel.com>, <linjiasen@hygon.cn>
+Subject: [PATCH] NTB: ntb_perf: Fix address err in perf_copy_chunk
+Date:   Wed, 6 Nov 2019 19:38:33 -0800
+Message-ID: <1573097913-104555-1-git-send-email-linjiasen@hygon.cn>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.194.59
-X-Source-L: No
-X-Exim-ID: 1iSYIN-000Mrk-V1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.194.59]:34854
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 16
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam1.hygon.cn xA73ckpw000963
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series add IRQ handler for low level SOC alert, define a devicetree
-binding attribute to configure the alert level threshold and check for
-changes in SOC and power supply status for send uevents.
+peer->outbuf is a virtual address which is get by ioremap, it can not
+be converted to a physical address by virt_to_page and page_to_phys.
+This conversion will result in DMA error, because the destination address
+which is converted by page_to_phys is invalid.
 
-Max17043/17044 have a pin for alert host about low level state of charge and
-this alert can be configured in a threshold from 1% up to 32% of SOC.
+We Save the physical address in perf_setup_peer_mw, it is MMIO address
+of NTB BARx. Then fill the destination address of DMA descriptor with
+this physical address to guarantee that the address of memory write
+requests fall in memory window of NBT BARx.
 
-Tested on Toradex Colibri iMX7D, with a SparkFun Lipo Fuel Gauge module
-based on MAXIM MAX17043.
+Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
+---
+ drivers/ntb/test/ntb_perf.c | 28 +++++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-Thanks Krzysztof for your time reviewing it. Let me know what you think about
-the fixes.
-
-Changes since v5:
-(Suggested by Krzysztof Kozlowski)
-- Rearrange code and add max17040_enable_alert_irq on patch 1/5
-- Remove useless dev_info
-
-Changes since v4:
-(Suggested by Krzysztof Kozlowski)
-- Fix code style and alignment issues
-- Keep IRQF_TRIGGER_FALLING | IRQF_ONESHOT instead client->flags
-
-(Suggested by Rob Herring)
-- Add reference to the MFD description
-- Fix the dt-bindings commit description
-
-Matheus Castello (5):
-  power: supply: max17040: Add IRQ handler for low SOC alert
-  dt-bindings: power: supply: Max17040: Add DT bindings for max17040
-    fuel gauge
-  devicetree: mfd: max14577: Add reference to max14040_battery.txt
-    descriptions
-  power: supply: max17040: Config alert SOC low level threshold from FDT
-  power: supply: max17040: Send uevent in SOC and status change
-
- .../devicetree/bindings/mfd/max14577.txt      |   2 +
- .../power/supply/max17040_battery.txt         |  33 ++++
- drivers/power/supply/max17040_battery.c       | 141 +++++++++++++++++-
- 3 files changed, 171 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-
---
-2.24.0.rc2
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index e9b7c2d..1c2fd1a 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -149,6 +149,7 @@ struct perf_peer {
+ 	u64 outbuf_xlat;
+ 	resource_size_t outbuf_size;
+ 	void __iomem *outbuf;
++	phys_addr_t out_phys_addr;
+ 
+ 	/* Inbound MW params */
+ 	dma_addr_t inbuf_xlat;
+@@ -776,7 +777,8 @@ static void perf_dma_copy_callback(void *data)
+ }
+ 
+ static int perf_copy_chunk(struct perf_thread *pthr,
+-			   void __iomem *dst, void *src, size_t len)
++			   void __iomem *dst, void *src, size_t len,
++			   phys_addr_t dst_phys_addr)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+ 	struct dmaengine_unmap_data *unmap;
+@@ -807,8 +809,7 @@ static int perf_copy_chunk(struct perf_thread *pthr,
+ 	}
+ 	unmap->to_cnt = 1;
+ 
+-	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
+-		offset_in_page(dst), len, DMA_FROM_DEVICE);
++	unmap->addr[1] = dst_phys_addr;
+ 	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
+ 		ret = -EIO;
+ 		goto err_free_resource;
+@@ -901,6 +902,8 @@ static int perf_run_test(struct perf_thread *pthr)
+ 	u64 total_size, chunk_size;
+ 	void *flt_src;
+ 	int ret = 0;
++	phys_addr_t flt_phys_addr;
++	phys_addr_t bnd_phys_addr;
+ 
+ 	total_size = 1ULL << total_order;
+ 	chunk_size = 1ULL << chunk_order;
+@@ -909,12 +912,15 @@ static int perf_run_test(struct perf_thread *pthr)
+ 	flt_src = pthr->src;
+ 	bnd_dst = peer->outbuf + peer->outbuf_size;
+ 	flt_dst = peer->outbuf;
++	bnd_phys_addr = peer->out_phys_addr + peer->outbuf_size;
++	flt_phys_addr = peer->out_phys_addr;
+ 
+ 	pthr->duration = ktime_get();
+ 
+ 	/* Copied field is cleared on test launch stage */
+ 	while (pthr->copied < total_size) {
+-		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
++		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size,
++				flt_phys_addr);
+ 		if (ret) {
+ 			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
+ 				pthr->tidx, ret);
+@@ -925,8 +931,15 @@ static int perf_run_test(struct perf_thread *pthr)
+ 
+ 		flt_dst += chunk_size;
+ 		flt_src += chunk_size;
+-		if (flt_dst >= bnd_dst || flt_dst < peer->outbuf) {
++		flt_phys_addr += chunk_size;
++
++		if (flt_dst >= bnd_dst ||
++		    flt_dst < peer->outbuf ||
++		    flt_phys_addr >= bnd_phys_addr ||
++		    flt_phys_addr < peer->out_phys_addr) {
++
+ 			flt_dst = peer->outbuf;
++			flt_phys_addr = peer->out_phys_addr;
+ 			flt_src = pthr->src;
+ 		}
+ 
+@@ -1195,6 +1208,9 @@ static ssize_t perf_dbgfs_read_info(struct file *filep, char __user *ubuf,
+ 			"\tOut buffer addr 0x%pK\n", peer->outbuf);
+ 
+ 		pos += scnprintf(buf + pos, buf_size - pos,
++			"\tOut buff phys addr %pa[p]\n", &peer->out_phys_addr);
++
++		pos += scnprintf(buf + pos, buf_size - pos,
+ 			"\tOut buffer size %pa\n", &peer->outbuf_size);
+ 
+ 		pos += scnprintf(buf + pos, buf_size - pos,
+@@ -1388,6 +1404,8 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
+ 	if (!peer->outbuf)
+ 		return -ENOMEM;
+ 
++	peer->out_phys_addr = phys_addr;
++
+ 	if (max_mw_size && peer->outbuf_size > max_mw_size) {
+ 		peer->outbuf_size = max_mw_size;
+ 		dev_warn(&peer->perf->ntb->dev,
+-- 
+2.7.4
 
