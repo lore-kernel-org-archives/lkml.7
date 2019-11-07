@@ -2,91 +2,92 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B594C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA3EC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739862075C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F7C206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573165178;
+	bh=F7k9EZtZvvvemljU4hl3MjhGzHCnPTT9RJQ3cl2MyNA=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=MyABtEhncdBFhO12G/1HYqyNUAI4toL0Mg/kxMSuLcC5k0bWZyEnw4uQGMGvmsVAu
+	 HtPmx/M7MgzVLM38cVkuAeYcuLy2GjJ+tS21CpM+w44IzkuCmNWpmVfrvs2GlEpFFb
+	 YjkuQV3oHFLw5unk8ZZo9FXrbwWaZs2myYgCASVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfKGWRC (ORCPT
+        id S1727524AbfKGWTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:17:02 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50065 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfKGWRC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:17:02 -0500
-X-Originating-IP: 92.184.100.203
-Received: from localhost (unknown [92.184.100.203])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D0629240005;
-        Thu,  7 Nov 2019 22:16:59 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 23:16:44 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: at91: Drivers for 5.5
-Message-ID: <20191107221644.GA201884@piout.net>
+        Thu, 7 Nov 2019 17:19:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfKGWTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 17:19:37 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2A7F206C3;
+        Thu,  7 Nov 2019 22:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573165177;
+        bh=F7k9EZtZvvvemljU4hl3MjhGzHCnPTT9RJQ3cl2MyNA=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=xY0xzb0cnI1wYlyG2H+EItQZV6+dd5u/zZc6l3lYKjwO6Cd81xcYNVTsBRGmVfGQV
+         WKF8X22fByQfbWP5/gBWOwbd2N+9IwHEVIhdVKqW5DNG7Dpzn2J+/ekmB1g0uFn6zb
+         6Z7fKL7jnxpJ2VnzJ6YNbXxE4YDWYOhFaSZf2Rog=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190912141534.28870-6-jorge.ramirez-ortiz@linaro.org>
+References: <20190912141534.28870-1-jorge.ramirez-ortiz@linaro.org> <20190912141534.28870-6-jorge.ramirez-ortiz@linaro.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        jorge.ramirez-ortiz@linaro.org, mturquette@baylibre.com
+Cc:     niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] clk: qcom: apcs-msm8916: get parent clock names from DT
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 14:19:36 -0800
+Message-Id: <20191107221936.E2A7F206C3@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd, Olof,
+Quoting Jorge Ramirez-Ortiz (2019-09-12 07:15:34)
+> @@ -61,6 +62,9 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_=
+device *pdev)
+>         if (!a53cc)
+>                 return -ENOMEM;
+> =20
+> +       if (of_clk_parent_fill(parent->of_node, parents, 2) =3D=3D 2)
+> +               memcpy(gpll0_a53cc, parents, sizeof(parents));
+> +
+>         init.name =3D "a53mux";
+>         init.parent_names =3D gpll0_a53cc;
+>         init.num_parents =3D ARRAY_SIZE(gpll0_a53cc);
 
-A single new driver and a bit of churn this cycle.
+Why can't we use new way of specifying parents in this driver too?
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+> @@ -76,10 +80,11 @@ static int qcom_apcs_msm8916_clk_probe(struct platfor=
+m_device *pdev)
+>         a53cc->src_shift =3D 8;
+>         a53cc->parent_map =3D gpll0_a53cc_map;
+> =20
+> -       a53cc->pclk =3D devm_clk_get(parent, NULL);
+> +       a53cc->pclk =3D of_clk_get(parent->of_node, 0);
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+And then leave this one alone? clk_get() with a NULL id should use a DT
+index of 0 from what I can tell.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.5-drivers
-
-for you to fetch changes up to c3277f8ee8cdadf011b8390dfdb4c44ecfaa1a7a:
-
-  soc: at91: Add Atmel SFR SN (Serial Number) support (2019-11-07 22:33:10 +0100)
-
-----------------------------------------------------------------
-AT91 drivers for 5.5
-
- - a new driver exposing the serial number registers through nvmem
- - a few documentation and definition changes
-
-----------------------------------------------------------------
-Kamel Bouhara (1):
-      soc: at91: Add Atmel SFR SN (Serial Number) support
-
-Nicolas Ferre (1):
-      ARM: at91: Documentation: update the sama5d3 and armv7m datasheets
-
-Tudor Ambarus (2):
-      memory: atmel-ebi: move NUM_CS definition inside EBI driver
-      memory: atmel-ebi: switch to SPDX license identifiers
-
- Documentation/arm/microchip.rst         |  4 +-
- drivers/memory/atmel-ebi.c              | 11 ++--
- drivers/soc/atmel/Kconfig               | 11 ++++
- drivers/soc/atmel/Makefile              |  1 +
- drivers/soc/atmel/sfr.c                 | 99 +++++++++++++++++++++++++++++++++
- include/linux/mfd/syscon/atmel-matrix.h |  1 -
- 6 files changed, 118 insertions(+), 9 deletions(-)
- create mode 100644 drivers/soc/atmel/sfr.c
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>         if (IS_ERR(a53cc->pclk)) {
+>                 ret =3D PTR_ERR(a53cc->pclk);
+> -               dev_err(dev, "failed to get clk: %d\n", ret);
+> +               if (ret !=3D -EPROBE_DEFER)
+> +                       dev_err(dev, "failed to get clk: %d\n", ret);
+>                 return ret;
+>         }
+> =20
