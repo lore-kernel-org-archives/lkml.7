@@ -2,146 +2,115 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B71C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302FAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D20E206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DB32085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XHHvp/NM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388065AbfKGQjt (ORCPT
+        id S2389156AbfKGQj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:39:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:58956 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfKGQjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:39:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14B1830E;
-        Thu,  7 Nov 2019 08:39:48 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DC7A3F71A;
-        Thu,  7 Nov 2019 08:39:46 -0800 (PST)
-Date:   Thu, 7 Nov 2019 16:39:44 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        edubezval@gmail.com, qperret@google.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: Re: [Patch v5 1/6] sched/pelt.c: Add support to track thermal
- pressure
-Message-ID: <20191107163942.74bfnsabh4dyvlo5@e107158-lin.cambridge.arm.com>
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
- <1572979786-20361-2-git-send-email-thara.gopinath@linaro.org>
+        Thu, 7 Nov 2019 11:39:56 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32824 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729692AbfKGQj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 11:39:56 -0500
+Received: by mail-io1-f66.google.com with SMTP id j13so3028998ioe.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:39:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YmNJnREVJGnaaEVeLxsBm0Njwp2E0f+PM+J5gi1eqbs=;
+        b=XHHvp/NMTOUmt9odTSBMZfZ6Fd8oFGBV5ygxerSm6CUQkj7ciP+w9t/z9I7wZ+NKvR
+         sbhCHs533hdvNMpzNvR/eRFAC6rdZ+ayQz6cnV7+n4suiJP1wbEsHwXy++pN+cUxvwyC
+         wItRJCyzaUHuqZJVTFYiV/Xbog9iVK/UP+R/y8iCJaWeAIg1+rM5gXj9f5WukG8IEn+x
+         crAwkkOeooSkUZ6LceStLCHVMz+68i7i5aJmuCQ0oonZiiU3/Kl+XLd0CmLcpE7ow9KW
+         rV+jeXdW9KSB3aukqxaBiRMkKTZ5m2kwJKqzpfV8nxjyWyymINNvWJ5AJmf9E6l7g78V
+         Fzfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YmNJnREVJGnaaEVeLxsBm0Njwp2E0f+PM+J5gi1eqbs=;
+        b=bV57vfUJIcBlooeqPiMRdGqEK1dwiCzfw7SiktNE091L1edqwBtk7cbUlUL91BXFl1
+         Y6Q4c4T3/aCvp7Y8O319osM1KPaQn9IznHjETfZyymPmHPk45UuAMK0eE1Q2I9ieN+FF
+         FGCP4FHvEZ+FNivChXj9wLXgadrokDPmCZ+MczPV0qVOaMDpCVtwgFrz74PZNkUEHTWi
+         1XP1LEh1t+xWeKH+DogKrHPBgkEywwNW/C2OeDyEazWhBTRM4UfGVRK0JyVdiNqmPw7p
+         htje7ND+rCzeEK17olloV3cAafgR2JZCcNSDMeMlGsEL1hozqe4S5G9c9Ffu9YPcniO0
+         LYTQ==
+X-Gm-Message-State: APjAAAXs1uiM/DTxgMFG3Q9xHVrBjZaMQOQjYQ8cC40Jh52iXpwWX5tq
+        JK0I6BPa0cFfVWcaIjFMsYj5kFG587C9nD1xv7i2ld59P1g=
+X-Google-Smtp-Source: APXvYqzslK910HZvTjvVCrsgd+kx9xfNphXxsz58oNZsomQI4bmdNASCvBcGbeAVvq3dsumGbkFm/cFdjK2YxkqB1yE=
+X-Received: by 2002:a5d:8953:: with SMTP id b19mr4691034iot.168.1573144793781;
+ Thu, 07 Nov 2019 08:39:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1572979786-20361-2-git-send-email-thara.gopinath@linaro.org>
-User-Agent: NeoMutt/20171215
+References: <20191106174804.74723-1-edumazet@google.com> <157307905904.29376.8711513726869840596.tip-bot2@tip-bot2>
+ <CANn89iKXi3rWWruKoBwQ8rncwLvkbzjZJWuJL3K05fjAhcySwg@mail.gmail.com>
+ <CANn89iL=xPxejRPC=wHY7q27fLOvFBK-7HtqU_HJo+go3S9UXA@mail.gmail.com>
+ <20191107085255.GK20975@paulmck-ThinkPad-P72> <CANn89i+8Hq5j234zFRY05QxZU1n=Vr6S-kZCcvn3Z80xYaindg@mail.gmail.com>
+ <20191107161149.GQ20975@paulmck-ThinkPad-P72> <CANn89iLMD0=tiQ181qQ=qKo=Nom-XX4MqonZw6pKiYUzTDVjQg@mail.gmail.com>
+In-Reply-To: <CANn89iLMD0=tiQ181qQ=qKo=Nom-XX4MqonZw6pKiYUzTDVjQg@mail.gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 7 Nov 2019 08:39:42 -0800
+Message-ID: <CANn89iLqcqKLRgfn7TDnBr9ZatiJVyezXmmZaeN2f2BT=qFe7Q@mail.gmail.com>
+Subject: Re: [tip: timers/core] hrtimer: Annotate lockless access to timer->state
+To:     paulmck@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-tip-commits@vger.kernel.org,
+        syzbot <syzkaller@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara
+On Thu, Nov 7, 2019 at 8:35 AM Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Thu, Nov 7, 2019 at 8:11 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > OK, so this is due to timer_pending() lockless access to ->entry.pprev
+> > to determine whether or not the timer is on the list.  New one on me!
+> >
+> > Given that use case, I don't have an objection to your patch to list.h.
+> >
+> > Except...
+> >
+> > Would it make sense to add a READ_ONCE() to hlist_unhashed()
+> > and to then make timer_pending() invoke hlist_unhashed()?  That
+> > would better confine the needed uses of READ_ONCE().
+>
+> Sounds good to me, I had the same idea but was too lazy to look at the
+> history of timer_pending()
+> to check if the pprev pointer check was really the same underlying idea.
 
-On 11/05/19 13:49, Thara Gopinath wrote:
-> Extrapolating on the exisiting framework to track rt/dl utilization using
-> pelt signals, add a similar mechanism to track thermal pressure. The
-> difference here from rt/dl utilization tracking is that, instead of
-> tracking time spent by a cpu running a rt/dl task through util_avg,
-> the average thermal pressure is tracked through load_avg. This is
-> because thermal pressure signal is weighted "delta" capacity
-> and is not binary(util_avg is binary). "delta capacity" here
-> means delta between the actual capacity of a cpu and the decreased
-> capacity a cpu due to a thermal event.
-> In order to track average thermal pressure, a new sched_avg variable
-> avg_thermal is introduced. Function update_thermal_load_avg can be called
-> to do the periodic bookeeping (accumulate, decay and average)
-> of the thermal pressure.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  kernel/sched/pelt.c  | 13 +++++++++++++
->  kernel/sched/pelt.h  |  7 +++++++
->  kernel/sched/sched.h |  1 +
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> index a96db50..3821069 100644
-> --- a/kernel/sched/pelt.c
-> +++ b/kernel/sched/pelt.c
-> @@ -353,6 +353,19 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
->  	return 0;
->  }
->  
-> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
-> +{
-> +	if (___update_load_sum(now, &rq->avg_thermal,
-> +			       capacity,
-> +			       capacity,
-> +			       capacity)) {
-> +		___update_load_avg(&rq->avg_thermal, 1, 1);
-> +		return 1;
-> +	}
-> +
-> +	return 0;
-> +}
+Note that forcing READ_ONCE() in hlist_unhashed() might force the compiler
+to read the pprev pointer twice in some cases.
 
-Care to add a tracepoint to this new signal like we now have for the other
-ones?
+This was one of the reason for me to add skb_queue_empty_lockless()
+variant in include/linux/skbuff.h
 
-Thanks
+/**
+ * skb_queue_empty_lockless - check if a queue is empty
+ * @list: queue head
+ *
+ * Returns true if the queue is empty, false otherwise.
+ * This variant can be used in lockless contexts.
+ */
+static inline bool skb_queue_empty_lockless(const struct sk_buff_head *list)
+{
+return READ_ONCE(list->next) == (const struct sk_buff *) list;
+}
 
---
-Qais Yousef
-
-> +
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
->  /*
->   * irq:
-> diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
-> index afff644..c74226d 100644
-> --- a/kernel/sched/pelt.h
-> +++ b/kernel/sched/pelt.h
-> @@ -6,6 +6,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
->  int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
->  int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
->  int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
-> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity);
->  
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
->  int update_irq_load_avg(struct rq *rq, u64 running);
-> @@ -159,6 +160,12 @@ update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
->  }
->  
->  static inline int
-> +update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int
->  update_irq_load_avg(struct rq *rq, u64 running)
->  {
->  	return 0;
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 0db2c1b..d5d82c8 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -944,6 +944,7 @@ struct rq {
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
->  	struct sched_avg	avg_irq;
->  #endif
-> +	struct sched_avg	avg_thermal;
->  	u64			idle_stamp;
->  	u64			avg_idle;
->  
-> -- 
-> 2.1.4
-> 
+So maybe add a hlist_unhashed_lockless() to clearly document why
+callers are using the lockless variant ?
