@@ -2,41 +2,44 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52470C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA50C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7B2214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDDA21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbfKGSQz (ORCPT
+        id S1730188AbfKGSQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:16:55 -0500
-Received: from mga02.intel.com ([134.134.136.20]:55017 "EHLO mga02.intel.com"
+        Thu, 7 Nov 2019 13:16:53 -0500
+Received: from mga01.intel.com ([192.55.52.88]:60752 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfKGSQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727046AbfKGSQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 13:16:51 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 10:16:50 -0800
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 10:16:50 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
-   d="scan'208";a="213073202"
+   d="scan'208";a="286064057"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Nov 2019 10:16:49 -0800
+  by orsmga001.jf.intel.com with ESMTP; 07 Nov 2019 10:16:49 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 92C60301BE6; Thu,  7 Nov 2019 10:16:49 -0800 (PST)
+        id B3F72301BEB; Thu,  7 Nov 2019 10:16:49 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     jolsa@kernel.org
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org
-Subject: Optimize perf stat for large number of events/cpus
-Date:   Thu,  7 Nov 2019 10:16:33 -0800
-Message-Id: <20191107181646.506734-1-andi@firstfloor.org>
+Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v5 06/13] perf evsel: Add functions to close evsel on a CPU
+Date:   Thu,  7 Nov 2019 10:16:39 -0800
+Message-Id: <20191107181646.506734-7-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191107181646.506734-1-andi@firstfloor.org>
+References: <20191107181646.506734-1-andi@firstfloor.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,69 +47,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[v5: Address review feedback. Split patches.]
+From: Andi Kleen <ak@linux.intel.com>
 
-This patch kit optimizes perf stat for a large number of events 
-on systems with many CPUs and PMUs.
+Refactor the existing all CPU function to use the per CPU
+close internally.
 
-Some profiling shows that the most overhead is doing IPIs to
-all the target CPUs. We can optimize this by using sched_setaffinity
-to set the affinity to a target CPU once and then doing
-the perf operation for all events on that CPU. This requires
-some restructuring, but cuts the set up time quite a bit.
+Export APIs to close per CPU.
 
-In theory we could go further by parallelizing these setups
-too, but that would be much more complicated and for now just batching it
-per CPU seems to be sufficient. At some point with many more cores 
-parallelization or a better bulk perf setup API might be needed though.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/lib/evsel.c              | 27 +++++++++++++++++++++------
+ tools/perf/lib/include/perf/evsel.h |  1 +
+ 2 files changed, 22 insertions(+), 6 deletions(-)
 
-In addition perf does a lot of redundant /sys accesses with
-many PMUs, which can be also expensve. This is also optimized.
-
-On a large test case (>700 events with many weak groups) on a 94 CPU
-system I go from
-
-real	0m8.607s
-user	0m0.550s
-sys	0m8.041s
-
-to 
-
-real	0m3.269s
-user	0m0.760s
-sys	0m1.694s
-
-so shaving ~6 seconds of system time, at slightly more cost
-in perf stat itself. On a 4 socket system with the savings
-are more dramatic:
-
-real	0m15.641s
-user	0m0.873s
-sys	0m14.729s
-
-to 
-
-real	0m4.493s
-user	0m1.578s
-sys	0m2.444s
-
-so 11s difference in the user visible set up time.
-
-Also available in 
-
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc perf/stat-scale-8
-
-v1: Initial post.
-v2: Rebase. Fix some minor issues.
-v3: Rebase. Address review feedback. Fix one minor issue
-v4: Modified based on review feedback. Now it maintains
-all_cpus per evlist. There is still a need for cpu_index iteration
-to get the correct index for indexing the file descriptors.
-Fix bug with unsorted cpu maps, now they are always sorted.
-Some cleanups and refactoring.
-v5: Split patches. Redo loop iteration again. Fix cpu map
-merging for uncore. Remove duplicates from cpumaps. Add unit
-tests.
-
--Andi
+diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
+index 5a89857b0381..ea775dacbd2d 100644
+--- a/tools/perf/lib/evsel.c
++++ b/tools/perf/lib/evsel.c
+@@ -114,16 +114,23 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+ 	return err;
+ }
+ 
++static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
++{
++	int thread;
++
++	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
++		if (FD(evsel, cpu, thread) >= 0)
++			close(FD(evsel, cpu, thread));
++		FD(evsel, cpu, thread) = -1;
++	}
++}
++
+ void perf_evsel__close_fd(struct perf_evsel *evsel)
+ {
+-	int cpu, thread;
++	int cpu;
+ 
+ 	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
+-		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
+-			if (FD(evsel, cpu, thread) >= 0)
+-				close(FD(evsel, cpu, thread));
+-			FD(evsel, cpu, thread) = -1;
+-		}
++		perf_evsel__close_fd_cpu(evsel, cpu);
+ }
+ 
+ void perf_evsel__free_fd(struct perf_evsel *evsel)
+@@ -141,6 +148,14 @@ void perf_evsel__close(struct perf_evsel *evsel)
+ 	perf_evsel__free_fd(evsel);
+ }
+ 
++void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu)
++{
++	if (evsel->fd == NULL)
++		return;
++
++	perf_evsel__close_fd_cpu(evsel, cpu);
++}
++
+ int perf_evsel__read_size(struct perf_evsel *evsel)
+ {
+ 	u64 read_format = evsel->attr.read_format;
+diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
+index 557f5815a9c9..e7add554f861 100644
+--- a/tools/perf/lib/include/perf/evsel.h
++++ b/tools/perf/lib/include/perf/evsel.h
+@@ -26,6 +26,7 @@ LIBPERF_API void perf_evsel__delete(struct perf_evsel *evsel);
+ LIBPERF_API int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+ 				 struct perf_thread_map *threads);
+ LIBPERF_API void perf_evsel__close(struct perf_evsel *evsel);
++LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+ 				 struct perf_counts_values *count);
+ LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
+-- 
+2.23.0
 
