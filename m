@@ -2,237 +2,161 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA05CC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACEEC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0A32166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5272187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gv2Goyb6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QORicF9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388361AbfKGMaL (ORCPT
+        id S2388494AbfKGMcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:30:11 -0500
-Received: from mail-eopbgr130078.outbound.protection.outlook.com ([40.107.13.78]:1764
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726810AbfKGMaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:30:10 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SDnfF9LML+aFYs7BmMTrJkl45OVWEd+1rV9Pp+AlcH7Bm0cZccpVvM+7EyLXFkyarlFgdTH8pNuUD4XJpJ3ck7CVUbCeMvUsPwwF5vn7Ew0T5Ax80GKCWnedmZzOhCO/RzkmrYsw69bj6jwW1AXzig3plKFsdDRGkGi6/gpZS1T5PIxbBMzMjTfrCcT26c0GxLNBYHOHG1pQlc+vKMfh5uFRCuBfp6e3DK4rnNsPAYfXrDE0pMwmyS/nQD7ccCcqpiy1CopQWwuWlAomLXsQznYGPEnXhbsFZoiCRuadu/n21ckX89H3uMMiJDWKa2USEwrvJy7ZxKwh53YJF4nEVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hZbJhT9jifHvbT8ZNfXno8yVDDMYcndFmJiF1J+ZVK0=;
- b=Gpj0t6XzJFLMutfJNsf10e/y0ghqTQWGWMFGvTr6SSQQd6WNk8bw3OoVGzVaUBk+AH3TsWhwMy4fxr25mySUv8REKAAxyf4HCR9JBa2obg4j6MgS0DjIsWsh8GI2jUlF7DXYUVMXMqODJSgtbyXqZaZthBf1s4AabBRFaBD9oaBm/dMVVcrXioa6Pkdpe3Cgl150hADk9jjoS27ikywf2oxKGKyRK/ex0RWv2cy0ryhV4E+SmRXkCnbDTK9H3gBks9zgPvMY+6csQiEt4yrpQstNL8NM8dS5rsFYfHaIEeXyz8fXrBVuaFUm68xGp31MIr4jEpMvolIjEvhlAbbfow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hZbJhT9jifHvbT8ZNfXno8yVDDMYcndFmJiF1J+ZVK0=;
- b=gv2Goyb6X2Y/qRp4/tO/tkZzGI4LrwYAIaobGAsHwVxMfZhdWJFDQQk2790yzJaEy7NeBEHPWSg4qgSMjTDeRd5wfTIgexfxLm3dKw6m2LqM42DjhhbWcvn6chkoBGS0IvccEivy+IFUHe4GE3ZR2tOEoKmpbUW5TFjuEcCJrdw=
-Received: from DB7PR04MB5132.eurprd04.prod.outlook.com (20.176.233.76) by
- DB7PR04MB4137.eurprd04.prod.outlook.com (52.135.128.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Thu, 7 Nov 2019 12:30:06 +0000
-Received: from DB7PR04MB5132.eurprd04.prod.outlook.com
- ([fe80::799a:35e4:6fd7:60ea]) by DB7PR04MB5132.eurprd04.prod.outlook.com
- ([fe80::799a:35e4:6fd7:60ea%4]) with mapi id 15.20.2408.025; Thu, 7 Nov 2019
- 12:30:05 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Robin Murphy <robin.murphy@arm.com>, "hch@lst.de" <hch@lst.de>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-CC:     Leo Li <leoyang.li@nxp.com>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>
-Subject: Re: [PATCH v2 1/3] dma-mapping: introduce new dma unmap and sync api
- variants
-Thread-Topic: [PATCH v2 1/3] dma-mapping: introduce new dma unmap and sync api
- variants
-Thread-Index: AQHVimhiysgNu4P7eUCr9wwTZY4WUadwFlSAgA+iRgA=
-Date:   Thu, 7 Nov 2019 12:30:05 +0000
-Message-ID: <6ff880a9-16c6-4c25-251a-72bc2b169f34@nxp.com>
-References: <20191024124130.16871-1-laurentiu.tudor@nxp.com>
- <20191024124130.16871-2-laurentiu.tudor@nxp.com>
- <ffcdb378-85df-f662-4961-49ff280f39d9@arm.com>
-In-Reply-To: <ffcdb378-85df-f662-4961-49ff280f39d9@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cb146fd1-2055-4f93-4c98-08d7637e385c
-x-ms-traffictypediagnostic: DB7PR04MB4137:|DB7PR04MB4137:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB41370B206D8B346098C367EDEC780@DB7PR04MB4137.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0214EB3F68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(376002)(396003)(366004)(189003)(199004)(2201001)(2906002)(486006)(81166006)(71200400001)(71190400001)(31696002)(316002)(81156014)(8936002)(476003)(6506007)(54906003)(110136005)(6116002)(66066001)(186003)(3846002)(6486002)(229853002)(64756008)(66556008)(66476007)(102836004)(6436002)(26005)(44832011)(66446008)(76176011)(31686004)(8676002)(5660300002)(66946007)(478600001)(25786009)(91956017)(99286004)(2501003)(14454004)(36756003)(53546011)(6512007)(7736002)(305945005)(76116006)(86362001)(11346002)(4326008)(6636002)(6246003)(256004)(14444005)(446003)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4137;H:DB7PR04MB5132.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DTFf/MAuvsKcOfHLQCPwc4QI0cayvjpFzczOvhduA8vFIWB7eRjzIoWZU0+z5vd5NAgJqPmTnj0tiF+yn5c8Ob8+mbnIoNGkOm5iRZnUIyOtJBsnLHuUpF0/w8EK+CucN8mg0C2PyyEBGVUn67f8hTTCJ97T4MshkBplF6bRttj6Lj/ml4ygb+ZctL3oWLDwDZU74Slpv5LAfDIXxB9jYNuwk5K/rRh+mhAPdc+2NUXtyLrGDWMe+JEOTbsHVJ0163csvAjLXM1eStxKfxfKLjQPJXjFZkiP4kDPoQhQkCBhueEejb4Hu7ZrmD1qzo26lAALFavdyhkCQFj/lS652xzm6T5rWsVYjiyUzoR9+WTZEsIV3Pb7PXVaS3opxf/vDdiTBYZxNqCUryhU3QzD5U+Hra3FgCSjZEdAdsA57hdV2uoUSXQnKv8HRdewVORR
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <71C92C38123800488B01678631907BF2@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 7 Nov 2019 07:32:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43716 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbfKGMcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 07:32:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5b6dL4GU7b0E4m+87rHIiqniNskuz8XJPlTDMY3zCsI=; b=QORicF9PleMxv8poQOXsiir5J
+        1sBpNIs3/HKgGcSlGkkjPCArd7lTJ3NQI+txxI6GwMpcVaMyjWtACK2KlyPqXfuP/39LD8+ffKN9p
+        fB/x73hq9tYzxCBYGYNufCDbWOLmqxtHWxvWursQSwMSKVgLjqldH7LM94UhsTH4Vl2kZQ+eXOrEO
+        XQAIp1FFk/ZgutTuRWHIqXgHmF35kWbPvJdayt7DueI6Zh3uDG6rgnN5s0pwSlIaBnauPSftVYFCn
+        dcObLkppz20g10ag6fBJUCr6a30vuKGSYDXedxFEXyKsQxu/w0wluU0c19jq7v5JCCttgU65+aDPv
+        O5Npvlt8A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSgxf-00080d-5M; Thu, 07 Nov 2019 12:32:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DFAC0300692;
+        Thu,  7 Nov 2019 13:31:19 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 57BED2025EDB3; Thu,  7 Nov 2019 13:32:24 +0100 (CET)
+Date:   Thu, 7 Nov 2019 13:32:24 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, ltp@lists.linux.it,
+        viro@zeniv.linux.org.uk, kstewart@linuxfoundation.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, rfontana@redhat.com
+Subject: Re: [PATCH] kernel: use ktime_get_real_ts64() to calculate
+ acct.ac_btime
+Message-ID: <20191107123224.GA6315@hirez.programming.kicks-ass.net>
+References: <a87876829697e1b3c63601b1401a07af79eddae6.1572651216.git.jstancek@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb146fd1-2055-4f93-4c98-08d7637e385c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 12:30:05.7247
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: G+IMAJq/R6xqAaMfczYMh3nq5r6xOmH68PMLksm7CRq/XTJQpUiDToCcPAybmHXZJmIxr15f9bPbHV7mNNQJug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a87876829697e1b3c63601b1401a07af79eddae6.1572651216.git.jstancek@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iaW4sDQoNCk9uIDI4LjEwLjIwMTkgMTU6NDIsIFJvYmluIE11cnBoeSB3cm90ZToNCj4g
-T24gMjQvMTAvMjAxOSAxMzo0MSwgTGF1cmVudGl1IFR1ZG9yIHdyb3RlOg0KPj4gRnJvbTogTGF1
-cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUudHVkb3JAbnhwLmNvbT4NCj4+DQo+PiBJbnRyb2R1Y2Ug
-YSBmZXcgbmV3IGRtYSB1bm1hcCBhbmQgc3luYyB2YXJpYW50cyB0aGF0LCBvbiB0b3Agb2YgdGhl
-DQo+PiBvcmlnaW5hbCB2YXJpYW50cywgcmV0dXJuIHRoZSB2aXJ0dWFsIGFkZHJlc3MgY29ycmVz
-cG9uZGluZyB0byB0aGUNCj4+IGlucHV0IGRtYSBhZGRyZXNzLg0KPj4gSW4gb3JkZXIgdG8gaW1w
-bGVtZW50IHRoaXMgYSBuZXcgZG1hIG1hcCBvcCBpcyBhZGRlZCBhbmQgdXNlZDoNCj4+IMKgwqDC
-oMKgIHZvaWQgKmdldF92aXJ0X2FkZHIoZGV2LCBkbWFfaGFuZGxlKTsNCj4+IEl0IGRvZXMgdGhl
-IGFjdHVhbCBjb252ZXJzaW9uIG9mIGFuIGlucHV0IGRtYSBhZGRyZXNzIHRvIHRoZSBvdXRwdXQN
-Cj4+IHZpcnR1YWwgYWRkcmVzcy4NCj4gDQo+IEF0IHRoaXMgcG9pbnQsIEkgdGhpbmsgaXQgbWln
-aHQgYmUgYmV0dGVyIHRvIGp1c3QgY2hhbmdlIHRoZSBwcm90b3R5cGUgDQo+IG9mIHRoZSAudW5t
-YXBfcGFnZS8uc3luY19zaW5nbGVfZm9yX2NwdSBjYWxsYmFja3MgdGhlbXNlbHZlcy4gSW4gY2Fz
-ZXMgDQo+IHdoZXJlIC5nZXRfdmlydF9hZGRyIHdvdWxkIGJlIG5vbi10cml2aWFsLCBpdCdzIG1v
-c3QgbGlrZWx5IGR1cGxpY2F0aW5nIA0KPiB3b3JrIHRoYXQgdGhlIHJlbGV2YW50IGNhbGxiYWNr
-IGhhcyB0byBkbyBhbnl3YXkgKGkuZS4gd2hlcmUgdGhlIHZpcnR1YWwgDQo+IGFuZC9vciBwaHlz
-aWNhbCBhZGRyZXNzIGlzIG5lZWRlZCBpbnRlcm5hbGx5IGZvciBhIGNhY2hlIG1haW50ZW5hbmNl
-IG9yIA0KPiBib3VuY2UgYnVmZmVyIG9wZXJhdGlvbikuIA0KDQpMb29raW5nIGluIHRoZSBnZW5l
-cmljIGRtYS1pb21tdSwgSSBkaWRuJ3Qgc2VlIGFueSBtZWFuIG9mIGZyZWVseSANCmdldHRpbmcg
-dGhlIHBhIG9yIHZhIGJxY2tpbmcgdGhlIGlvdmEgc28gSSBjYW4ndCB0aGluayBvZiBhIHdheSBv
-ZiBkb2luZyANCnRoaXMgd2l0aG91dCBhZGRpbmcgYSBjYWxsIHRvIGlvbW11X2lvdmFfdG9fcGh5
-cygpIHNvbWV3aGVyZSBpbiB0aGUgDQp1bm1hcCBvcCBpbXBsZW1lbnRhdGlvbi4gT2J2aW91c2x5
-LCB0aGlzIHdvdWxkIGNvbWUgd2l0aCBhbiBvdmVyaGVhZCANCnRoYXQgd2lsbCBwcm9iYWJseSB1
-cHNldCBwZW9wbGUuDQpBdCB0aGUgbW9tZW50IEkgY2FuJ3QgdGhpbmsgYXQgYW4gb3B0aW9uIG90
-aGVyIHRoYW4gdGhlIGluaXRpYWwgb25lLCANCnRoYXQgaXMgYWRkaW5nIHRoZSAuZ2V0X3ZpcnRf
-YWRkciBvcC4gUGxlYXNlIGxldCBtZSBrbm93IHlvdXIgb3BpbmlvbnMgDQpvbiB0aGlzLg0KDQot
-LS0NClRoYW5rcyAmIEJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQoNCj4gSXQgd291bGQgYWxzbyBo
-ZWxwIGF2b2lkIGFueSBwb3NzaWJsZSANCj4gYW1iaWd1aXR5IGFib3V0IHdoZXRoZXIgLmdldF92
-aXJ0X2FkZHIgcmV0dXJucyB0aGUgVkEgY29ycmVzcG9uZGluZyANCj4gZG1hX2hhbmRsZSAoaWYg
-b25lIGV4aXN0cykgcmF0aGVyIHRoYW4gdGhlIFZBIG9mIHRoZSBidWZmZXIgKm1hcHBlZCB0byog
-DQo+IGRtYV9oYW5kbGUsIHdoaWNoIGZvciBhIGJvdW5jZS1idWZmZXJpbmcgaW1wbGVtZW50YXRp
-b24gd291bGQgYmUgDQo+IGRpZmZlcmVudCwgYW5kIHRoZSBvbmUgeW91IGFjdHVhbGx5IG5lZWQg
-LSBhIG5haXZlIA0KPiBwaHlzX3RvX3ZpcnQoZG1hX3RvX3BoeXMoZG1hX2hhbmRsZSkpIHdvdWxk
-IGxlYWQgeW91IHRvIHRoZSB3cm9uZyBwbGFjZSANCj4gKGluIGZhY3QgaXQgbG9va3MgbGlrZSBE
-UEFBMiB3b3VsZCBjdXJyZW50bHkgZ28gd3Jvbmcgd2l0aCANCj4gInN3aW90bGI9Zm9yY2UiIGFu
-ZCB0aGUgU01NVSBkaXNhYmxlZCBvciBpbiBwYXNzdGhyb3VnaCkuDQo+IA0KPiBPbmUgcXVlc3Rp
-b24gdGhlcmUgaXMgd2hldGhlciB3ZSdkIHdhbnQgY2FyZWZ1bCBzcGVjaWFsLWNhc2luZyB0byBh
-dm9pZCANCj4gaW50cm9kdWNpbmcgb3ZlcmhlYWQgd2hlcmUgdW5tYXAvc3luYyBhcmUgY3VycmVu
-dGx5IGNvbXBsZXRlIG5vLW9wcywgb3IgDQo+IHdoZXRoZXIgYW4gZXh0cmEgcGh5c190b192aXJ0
-KCkgb3Igc28gaW4gdGhvc2UgcGF0aHMgd291bGQgYmUgdG9sZXJhYmxlLg0KPiANCj4+IFNpZ25l
-ZC1vZmYtYnk6IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+PiAt
-LS0NCj4+IMKgIGluY2x1ZGUvbGludXgvZG1hLW1hcHBpbmcuaCB8IDU1ICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysNCj4+IMKgIDEgZmlsZSBjaGFuZ2VkLCA1NSBpbnNlcnRp
-b25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZG1hLW1hcHBpbmcuaCBi
-L2luY2x1ZGUvbGludXgvZG1hLW1hcHBpbmcuaA0KPj4gaW5kZXggNGExYzRmY2E0NzVhLi5hZTdi
-YjhhODRiOWQgMTAwNjQ0DQo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L2RtYS1tYXBwaW5nLmgNCj4+
-ICsrKyBiL2luY2x1ZGUvbGludXgvZG1hLW1hcHBpbmcuaA0KPj4gQEAgLTEzMiw2ICsxMzIsNyBA
-QCBzdHJ1Y3QgZG1hX21hcF9vcHMgew0KPj4gwqDCoMKgwqDCoCB1NjQgKCpnZXRfcmVxdWlyZWRf
-bWFzaykoc3RydWN0IGRldmljZSAqZGV2KTsNCj4+IMKgwqDCoMKgwqAgc2l6ZV90ICgqbWF4X21h
-cHBpbmdfc2l6ZSkoc3RydWN0IGRldmljZSAqZGV2KTsNCj4+IMKgwqDCoMKgwqAgdW5zaWduZWQg
-bG9uZyAoKmdldF9tZXJnZV9ib3VuZGFyeSkoc3RydWN0IGRldmljZSAqZGV2KTsNCj4+ICvCoMKg
-wqAgdm9pZCAqKCpnZXRfdmlydF9hZGRyKShzdHJ1Y3QgZGV2aWNlICpkZXYsIGRtYV9hZGRyX3Qg
-ZG1hX2hhbmRsZSk7DQo+PiDCoCB9Ow0KPj4gwqAgI2RlZmluZSBETUFfTUFQUElOR19FUlJPUsKg
-wqDCoMKgwqDCoMKgICh+KGRtYV9hZGRyX3QpMCkNCj4+IEBAIC0zMDQsNiArMzA1LDIxIEBAIHN0
-YXRpYyBpbmxpbmUgdm9pZCBkbWFfdW5tYXBfcGFnZV9hdHRycyhzdHJ1Y3QgDQo+PiBkZXZpY2Ug
-KmRldiwgZG1hX2FkZHJfdCBhZGRyLA0KPj4gwqDCoMKgwqDCoCBkZWJ1Z19kbWFfdW5tYXBfcGFn
-ZShkZXYsIGFkZHIsIHNpemUsIGRpcik7DQo+PiDCoCB9DQo+PiArc3RhdGljIGlubGluZSBzdHJ1
-Y3QgcGFnZSAqDQo+PiArZG1hX3VubWFwX3BhZ2VfYXR0cnNfZGVzYyhzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIGRtYV9hZGRyX3QgYWRkciwgc2l6ZV90IA0KPj4gc2l6ZSwNCj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBlbnVtIGRtYV9kYXRhX2RpcmVjdGlvbiBkaXIsIHVuc2lnbmVkIGxvbmcg
-YXR0cnMpDQo+PiArew0KPj4gK8KgwqDCoCBjb25zdCBzdHJ1Y3QgZG1hX21hcF9vcHMgKm9wcyA9
-IGdldF9kbWFfb3BzKGRldik7DQo+PiArwqDCoMKgIHZvaWQgKnB0ciA9IE5VTEw7DQo+PiArDQo+
-PiArwqDCoMKgIGlmIChvcHMgJiYgb3BzLT5nZXRfdmlydF9hZGRyKQ0KPj4gK8KgwqDCoMKgwqDC
-oMKgIHB0ciA9IG9wcy0+Z2V0X3ZpcnRfYWRkcihkZXYsIGFkZHIpOw0KPiANCj4gTm90ZSB0aGF0
-IHRoaXMgZG9lc24ndCB3b3JrIGZvciBkbWEtZGlyZWN0LCBidXQgZm9yIHRoZSBzYWtlIG9mIGFy
-bTY0IGF0IA0KPiBsZWFzdCBpdCBhbG1vc3QgY2VydGFpbmx5IHdhbnRzIHRvLg0KPiANCj4gUm9i
-aW4uDQo+IA0KPj4gK8KgwqDCoCBkbWFfdW5tYXBfcGFnZV9hdHRycyhkZXYsIGFkZHIsIHNpemUs
-IGRpciwgYXR0cnMpOw0KPj4gKw0KPj4gK8KgwqDCoCByZXR1cm4gcHRyID8gdmlydF90b19wYWdl
-KHB0cikgOiBOVUxMOw0KPj4gK30NCj4+ICsNCj4+IMKgIC8qDQo+PiDCoMKgICogZG1hX21hcHNf
-c2dfYXR0cnMgcmV0dXJucyAwIG9uIGVycm9yIGFuZCA+IDAgb24gc3VjY2Vzcy4NCj4+IMKgwqAg
-KiBJdCBzaG91bGQgbmV2ZXIgcmV0dXJuIGEgdmFsdWUgPCAwLg0KPj4gQEAgLTM5MCw2ICs0MDYs
-MjEgQEAgc3RhdGljIGlubGluZSB2b2lkIGRtYV9zeW5jX3NpbmdsZV9mb3JfY3B1KHN0cnVjdCAN
-Cj4+IGRldmljZSAqZGV2LCBkbWFfYWRkcl90IGFkZHIsDQo+PiDCoMKgwqDCoMKgIGRlYnVnX2Rt
-YV9zeW5jX3NpbmdsZV9mb3JfY3B1KGRldiwgYWRkciwgc2l6ZSwgZGlyKTsNCj4+IMKgIH0NCj4+
-ICtzdGF0aWMgaW5saW5lIHZvaWQgKg0KPj4gK2RtYV9zeW5jX3NpbmdsZV9mb3JfY3B1X2Rlc2Mo
-c3RydWN0IGRldmljZSAqZGV2LCBkbWFfYWRkcl90IGFkZHIsIA0KPj4gc2l6ZV90IHNpemUsDQo+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZW51bSBkbWFfZGF0YV9kaXJlY3Rp
-b24gZGlyKQ0KPj4gK3sNCj4+ICvCoMKgwqAgY29uc3Qgc3RydWN0IGRtYV9tYXBfb3BzICpvcHMg
-PSBnZXRfZG1hX29wcyhkZXYpOw0KPj4gK8KgwqDCoCB2b2lkICpwdHIgPSBOVUxMOw0KPj4gKw0K
-Pj4gK8KgwqDCoCBpZiAob3BzICYmIG9wcy0+Z2V0X3ZpcnRfYWRkcikNCj4+ICvCoMKgwqDCoMKg
-wqDCoCBwdHIgPSBvcHMtPmdldF92aXJ0X2FkZHIoZGV2LCBhZGRyKTsNCj4+ICsNCj4+ICvCoMKg
-wqAgZG1hX3N5bmNfc2luZ2xlX2Zvcl9jcHUoZGV2LCBhZGRyLCBzaXplLCBkaXIpOw0KPj4gKw0K
-Pj4gK8KgwqDCoCByZXR1cm4gcHRyOw0KPj4gK30NCj4+ICsNCj4+IMKgIHN0YXRpYyBpbmxpbmUg
-dm9pZCBkbWFfc3luY19zaW5nbGVfZm9yX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+PiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZG1h
-X2FkZHJfdCBhZGRyLCBzaXplX3Qgc2l6ZSwNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbnVtIGRtYV9kYXRhX2RpcmVjdGlvbiBkaXIp
-DQo+PiBAQCAtNTAwLDYgKzUzMSwxMiBAQCBzdGF0aWMgaW5saW5lIHZvaWQgZG1hX3N5bmNfc2lu
-Z2xlX2Zvcl9jcHUoc3RydWN0IA0KPj4gZGV2aWNlICpkZXYsIGRtYV9hZGRyX3QgYWRkciwNCj4+
-IMKgwqDCoMKgwqDCoMKgwqDCoCBzaXplX3Qgc2l6ZSwgZW51bSBkbWFfZGF0YV9kaXJlY3Rpb24g
-ZGlyKQ0KPj4gwqAgew0KPj4gwqAgfQ0KPj4gKw0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCAqDQo+
-PiArZG1hX3N5bmNfc2luZ2xlX2Zvcl9jcHVfZGVzYyhzdHJ1Y3QgZGV2aWNlICpkZXYsIGRtYV9h
-ZGRyX3QgYWRkciwgDQo+PiBzaXplX3Qgc2l6ZSwNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBlbnVtIGRtYV9kYXRhX2RpcmVjdGlvbiBkaXIpDQo+PiArew0KPj4gK30NCj4+
-IMKgIHN0YXRpYyBpbmxpbmUgdm9pZCBkbWFfc3luY19zaW5nbGVfZm9yX2RldmljZShzdHJ1Y3Qg
-ZGV2aWNlICpkZXYsDQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgZG1hX2FkZHJfdCBhZGRyLCBzaXpl
-X3Qgc2l6ZSwgZW51bSBkbWFfZGF0YV9kaXJlY3Rpb24gZGlyKQ0KPj4gwqAgew0KPj4gQEAgLTU5
-NCw2ICs2MzEsMjEgQEAgc3RhdGljIGlubGluZSB2b2lkIGRtYV91bm1hcF9zaW5nbGVfYXR0cnMo
-c3RydWN0IA0KPj4gZGV2aWNlICpkZXYsIGRtYV9hZGRyX3QgYWRkciwNCj4+IMKgwqDCoMKgwqAg
-cmV0dXJuIGRtYV91bm1hcF9wYWdlX2F0dHJzKGRldiwgYWRkciwgc2l6ZSwgZGlyLCBhdHRycyk7
-DQo+PiDCoCB9DQo+PiArc3RhdGljIGlubGluZSB2b2lkICoNCj4+ICtkbWFfdW5tYXBfc2luZ2xl
-X2F0dHJzX2Rlc2Moc3RydWN0IGRldmljZSAqZGV2LCBkbWFfYWRkcl90IGFkZHIsIA0KPj4gc2l6
-ZV90IHNpemUsDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVudW0gZG1hX2Rh
-dGFfZGlyZWN0aW9uIGRpciwgdW5zaWduZWQgbG9uZyBhdHRycykNCj4+ICt7DQo+PiArwqDCoMKg
-IGNvbnN0IHN0cnVjdCBkbWFfbWFwX29wcyAqb3BzID0gZ2V0X2RtYV9vcHMoZGV2KTsNCj4+ICvC
-oMKgwqAgdm9pZCAqcHRyID0gTlVMTDsNCj4+ICsNCj4+ICvCoMKgwqAgaWYgKG9wcyAmJiBvcHMt
-PmdldF92aXJ0X2FkZHIpDQo+PiArwqDCoMKgwqDCoMKgwqAgcHRyID0gb3BzLT5nZXRfdmlydF9h
-ZGRyKGRldiwgYWRkcik7DQo+PiArDQo+PiArwqDCoMKgIGRtYV91bm1hcF9zaW5nbGVfYXR0cnMo
-ZGV2LCBhZGRyLCBzaXplLCBkaXIsIGF0dHJzKTsNCj4+ICsNCj4+ICvCoMKgwqAgcmV0dXJuIHB0
-cjsNCj4+ICt9DQo+PiArDQo+PiDCoCBzdGF0aWMgaW5saW5lIHZvaWQgZG1hX3N5bmNfc2luZ2xl
-X3JhbmdlX2Zvcl9jcHUoc3RydWN0IGRldmljZSAqZGV2LA0KPj4gwqDCoMKgwqDCoMKgwqDCoMKg
-IGRtYV9hZGRyX3QgYWRkciwgdW5zaWduZWQgbG9uZyBvZmZzZXQsIHNpemVfdCBzaXplLA0KPj4g
-wqDCoMKgwqDCoMKgwqDCoMKgIGVudW0gZG1hX2RhdGFfZGlyZWN0aW9uIGRpcikNCj4+IEBAIC02
-MTAsMTAgKzY2MiwxMyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgDQo+PiBkbWFfc3luY19zaW5nbGVf
-cmFuZ2VfZm9yX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+PiDCoCAjZGVmaW5lIGRtYV9t
-YXBfc2luZ2xlKGQsIGEsIHMsIHIpIGRtYV9tYXBfc2luZ2xlX2F0dHJzKGQsIGEsIHMsIHIsIDAp
-DQo+PiDCoCAjZGVmaW5lIGRtYV91bm1hcF9zaW5nbGUoZCwgYSwgcywgcikgZG1hX3VubWFwX3Np
-bmdsZV9hdHRycyhkLCBhLCBzLCANCj4+IHIsIDApDQo+PiArI2RlZmluZSBkbWFfdW5tYXBfc2lu
-Z2xlX2Rlc2MoZCwgYSwgcywgcikgXA0KPj4gK8KgwqDCoMKgwqDCoMKgIGRtYV91bm1hcF9zaW5n
-bGVfYXR0cnNfZGVzYyhkLCBhLCBzLCByLCAwKQ0KPj4gwqAgI2RlZmluZSBkbWFfbWFwX3NnKGQs
-IHMsIG4sIHIpIGRtYV9tYXBfc2dfYXR0cnMoZCwgcywgbiwgciwgMCkNCj4+IMKgICNkZWZpbmUg
-ZG1hX3VubWFwX3NnKGQsIHMsIG4sIHIpIGRtYV91bm1hcF9zZ19hdHRycyhkLCBzLCBuLCByLCAw
-KQ0KPj4gwqAgI2RlZmluZSBkbWFfbWFwX3BhZ2UoZCwgcCwgbywgcywgcikgZG1hX21hcF9wYWdl
-X2F0dHJzKGQsIHAsIG8sIHMsIA0KPj4gciwgMCkNCj4+IMKgICNkZWZpbmUgZG1hX3VubWFwX3Bh
-Z2UoZCwgYSwgcywgcikgZG1hX3VubWFwX3BhZ2VfYXR0cnMoZCwgYSwgcywgciwgMCkNCj4+ICsj
-ZGVmaW5lIGRtYV91bm1hcF9wYWdlX2Rlc2MoZCwgYSwgcywgcikgZG1hX3VubWFwX3BhZ2VfYXR0
-cnNfZGVzYyhkLCANCj4+IGEsIHMsIHIsIDApDQo+PiDCoCAjZGVmaW5lIGRtYV9nZXRfc2d0YWJs
-ZShkLCB0LCB2LCBoLCBzKSBkbWFfZ2V0X3NndGFibGVfYXR0cnMoZCwgdCwgDQo+PiB2LCBoLCBz
-LCAwKQ0KPj4gwqAgI2RlZmluZSBkbWFfbW1hcF9jb2hlcmVudChkLCB2LCBjLCBoLCBzKSBkbWFf
-bW1hcF9hdHRycyhkLCB2LCBjLCBoLCANCj4+IHMsIDApDQo+Pg==
+On Sat, Nov 02, 2019 at 12:39:24AM +0100, Jan Stancek wrote:
+> fill_ac() calculates process creation time from current time as:
+>    ac->ac_btime = get_seconds() - elapsed
+> 
+> get_seconds() doesn't accumulate nanoseconds as regular time getters.
+> This creates race for user-space (e.g. LTP acct02), which typically
+> uses gettimeofday(), because process creation time sometimes appear
+> to be dated 'in past':
+> 
+>     acct("myfile");
+>     time_t start_time = time(NULL);
+>     if (fork()==0) {
+>         sleep(1);
+>         exit(0);
+>     }
+>     waitpid(NULL);
+>     acct(NULL);
+> 
+>     // acct.ac_btime == 1572616777
+>     // start_time == 1572616778
+> 
+
+Lets start by saying this accounting stuff is terrible crap and it
+deserves to fail and burn.
+
+The only spec I found for what it actually wants in those fields is
+Documentation/accounting/taskstats-struct.rst, that states:
+
+	/* The time when a task begins, in [secs] since 1970. */
+	__u32   ac_btime;               /* Begin time [sec since 1970] */
+
+	/* The elapsed time of a task, in [usec]. */
+	__u64   ac_etime;               /* Elapsed time [usec] */
+
+But that is not really well defined. As implemented etime does not
+include suspend time (maybe on purpose, maybe not).
+
+And what does btime want? As implemented it jumps around if you ask the
+question twice with an adjtime() call or suspend in between. Of course,
+if we take an actual CLOCK_REALTIME timestamp at fork() the value
+doesn't change, but then it can be in the future (DST,adjtime()), which
+is exactly the reason why CLOCK_REALTIME is absolute shit for timestamps
+(logging, accounting, etc.).
+
+And your 'fix' is pretty terible too. Arguably ktime_get_seconds() wants
+fixing for not having the ns accumulation and actually differing from
+tv_sec, but now you accrue one source of ns while still disregarding
+another (also, I friggin hate timespec, it's a terrible interface for
+time).
+
+All in all, I'm tempted to just declare this stuff broken and -EWONTFIX,
+but if we have to do something, something like the below is at least
+internally consistent.
+
+---
+diff --git a/kernel/tsacct.c b/kernel/tsacct.c
+index 7be3e7530841..76d6325c2724 100644
+--- a/kernel/tsacct.c
++++ b/kernel/tsacct.c
+@@ -23,18 +23,31 @@ void bacct_add_tsk(struct user_namespace *user_ns,
+ {
+ 	const struct cred *tcred;
+ 	u64 utime, stime, utimescaled, stimescaled;
+-	u64 delta;
++	u64 mono, real, btime;
+ 
+ 	BUILD_BUG_ON(TS_COMM_LEN < TASK_COMM_LEN);
+ 
++	mono = ktime_get_ns();
++	real = ktime_get_real_ns();
++
+ 	/* calculate task elapsed time in nsec */
+-	delta = ktime_get_ns() - tsk->start_time;
++	delta = mono - tsk->start_time;
+ 	/* Convert to micro seconds */
+ 	do_div(delta, NSEC_PER_USEC);
+ 	stats->ac_etime = delta;
+-	/* Convert to seconds for btime */
+-	do_div(delta, USEC_PER_SEC);
+-	stats->ac_btime = get_seconds() - delta;
++
++	/*
++	 * Compute btime by subtracting the elapsed time from the current
++	 * CLOCK_REALTIME.
++	 *
++	 * XXX totally buggered, because it changes results across
++	 * adjtime() calls and suspend/resume.
++	 */
++	delta = mono - tsk->start_time; // elapsed in ns
++	btime = real - delta;		// real ns - elapsed ns
++	do_div(btime, NSEC_PER_SEC);	// truncated to seconds
++	stats->ac_btime = btime;
++
+ 	if (thread_group_leader(tsk)) {
+ 		stats->ac_exitcode = tsk->exit_code;
+ 		if (tsk->flags & PF_FORKNOEXEC)
