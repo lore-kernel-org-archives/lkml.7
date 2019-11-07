@@ -2,84 +2,96 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397D2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDBDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5C02087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40112087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:23:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qEmmPweX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388746AbfKGPWx (ORCPT
+        id S2388934AbfKGPXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:22:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34446 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726877AbfKGPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:22:52 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 60973B280;
-        Thu,  7 Nov 2019 15:22:50 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 16:22:48 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Joe Perches <joe@perches.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH] MAINTAINERS: Add VSPRINTF
-Message-ID: <20191107152247.kg3k72n63svph4j2@pathway.suse.cz>
-References: <20191031133337.9306-1-pmladek@suse.com>
- <975eccc7-897c-fd14-ef4f-2486729eb67c@rasmusvillemoes.dk>
- <20191031145112.thphlpnjvnykbzyy@pathway.suse.cz>
- <20191031150952.3ag6qa5y4wvikd76@pathway.suse.cz>
- <CAHp75VcBL8XFBSUs=UrdbfUQw535gHbTKQkHLE4Oj3H2_UKiWg@mail.gmail.com>
+        Thu, 7 Nov 2019 10:23:09 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:33804 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfKGPXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 10:23:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2bEBCVEzj/UW4TTeCQCzfwpdXCg8fMIpoINpN+K/OOw=; b=qEmmPweXw7L/1q8f4gh06i9On
+        /ueo7gq/0dhyEkAkP6tqn894aUgZRKXLup7jGvLUz/TrKiyx/iWwjuAFO9pP/DrGdUGRebVW3Cc4w
+        OwLEPlne+3E9+1roX5A2rNumX1DIWknYRRPlYpeWzrbzMvcVehNu0q8MwQ13nj/TCwfD8erA3S1VT
+        NJQECMx+KNAxsQvL0iorTdPnqru2s/XJDD6vc3r8xeL8ZuRNK6CtfuDl8gMqC2laNszOrQs7vYG1O
+        czwvqnBznWAclenFOTXpY2B7ahPcapn8CQh+ZgV0QafkH2Uv6f1L6GVykH2jwU9IVGxUrS+FFN9qK
+        5VwH7G25g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSjcU-0000cB-Ms; Thu, 07 Nov 2019 15:22:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0AC5C300692;
+        Thu,  7 Nov 2019 16:21:40 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F5CE2B212C1C; Thu,  7 Nov 2019 16:22:44 +0100 (CET)
+Date:   Thu, 7 Nov 2019 16:22:44 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     shile.zhang@linux.alibaba.com
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] Speed booting by sorting ORC unwind tables at
+ build time
+Message-ID: <20191107152244.GD4114@hirez.programming.kicks-ass.net>
+References: <20191107143205.206606-1-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcBL8XFBSUs=UrdbfUQw535gHbTKQkHLE4Oj3H2_UKiWg@mail.gmail.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20191107143205.206606-1-shile.zhang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2019-11-02 12:18:18, Andy Shevchenko wrote:
-> On Thu, Oct 31, 2019 at 5:13 PM Petr Mladek <pmladek@suse.com> wrote:
-> > On Thu 2019-10-31 15:51:12, Petr Mladek wrote:
-> > > On Thu 2019-10-31 14:51:24, Rasmus Villemoes wrote:
-> > > > On 31/10/2019 14.33, Petr Mladek wrote:
-> > > > > printk maintainers have been reviewing patches against vsprintf code last
-> > > > > few years. Most changes have been committed via printk.git last two years.
-> > > > >
-> > > > > New group is used because printk() is not the only vsprintf() user.
-> > > > > Also the group of interested people is not the same.
-> > > >
-> > > > Can you add
-> > > >
-> > > > R: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> > >
-> > > Sure. The more reviewers the better :-)
-> >
-> > I acutally wanted to add also
-> >
-> > R: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thu, Nov 07, 2019 at 10:32:01PM +0800, shile.zhang@linux.alibaba.com wrote:
+> From: Shile Zhang <shile.zhang@linux.alibaba.com>
 > 
-> Ack
+> Hi,
+> 
+> I found the unwind_init taken long time (more than 90ms) in kernel
+> booting, mainly spent on sorting the two ORC unwind tables, orc_unwind
+> and orc_unwind_ip.
+> 
+> I also noticed that this issued has reported and discussed last year:
+> https://lkml.org/lkml/2018/10/8/342
+> But seems no final solution until now, I tried to sort the ORC tables at
+> build time, followed the helpful hints from Josh and Ingo in that thread.
+> And mainly referred the implementation of 'sortextable' tool:
+> https://lore.kernel.org/linux-mips/1334872799-14589-1-git-send-email-ddaney.cavm@gmail.com/
+> 
+> What I did:
+> 
+> - Add a Kconfig to control build-time sorting or runtime sorting;
+> - Referred 'sortextable', create a similar helper tool 'sortorctable',
+>   help to sort the ORC unwind tables at vmlinux link process.
 
-The updated patch is commited in printk.git, branch for-5.5.
+What is the build-time cost for doing this? The link phase is already a
+fairly big bottleneck for building a kernel.
 
-You can check it at
-https://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk.git/commit/?h=for-5.5&id=9d95f0ce36df70e6d7b1f658277c772f589acd84
-
-Best Regards,
-Petr
+Can sort{ex,orc}table() be ran concurrently? Do they want to be the same
+(threaded) tool?
