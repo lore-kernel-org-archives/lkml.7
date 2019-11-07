@@ -4,116 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A36C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13793C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A40214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1986214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388531AbfKGMTB (ORCPT
+        id S2388569AbfKGMTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:19:01 -0500
-Received: from mga18.intel.com ([134.134.136.126]:18274 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388319AbfKGMSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:18:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 04:18:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
-   d="scan'208";a="201023124"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Nov 2019 04:18:49 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 273A7FC; Thu,  7 Nov 2019 14:18:48 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] PCI: Introduce pcie_wait_for_link_delay()
-Date:   Thu,  7 Nov 2019 15:18:46 +0300
-Message-Id: <20191107121847.24781-2-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191107121847.24781-1-mika.westerberg@linux.intel.com>
-References: <20191107121847.24781-1-mika.westerberg@linux.intel.com>
+        Thu, 7 Nov 2019 07:19:07 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5742 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388319AbfKGMTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 07:19:05 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8DCB73B4000C330688B5;
+        Thu,  7 Nov 2019 20:19:02 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 7 Nov 2019 20:18:55 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH] net: dsa: mv88e6xxx: global2: Fix gcc compile error
+Date:   Thu, 7 Nov 2019 20:26:07 +0800
+Message-ID: <1573129568-94008-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is otherwise similar to pcie_wait_for_link() but allows passing
-custom activation delay in milliseconds.
+In commit c5f299d59261 ("net: dsa: mv88e6xxx: global1_atu: Add helper for
+get next"), it add a parameter in mv88e6xxx_g2_atu_stats_get only when
+CONFIG_NET_DSA_MV88E6XXX_GLOBAL2 enabled, it also should make the same
+change when CONFIG_NET_DSA_MV88E6XXX_GLOBAL2 disabled.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+drivers/net/dsa/mv88e6xxx/chip.c: In function mv88e6xxx_devlink_atu_bin_get:
+drivers/net/dsa/mv88e6xxx/chip.c:2752:8: error: too many arguments to function mv88e6xxx_g2_atu_stats_get
+  err = mv88e6xxx_g2_atu_stats_get(chip, &occupancy);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/net/dsa/mv88e6xxx/chip.c:36:0:
+drivers/net/dsa/mv88e6xxx/global2.h:535:19: note: declared here
+ static inline int mv88e6xxx_g2_atu_stats_get(struct mv88e6xxx_chip *chip)
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+make[4]: *** [drivers/net/dsa/mv88e6xxx/chip.o] Error 1
+
+Fixes: c5f299d59261 ("net: dsa: mv88e6xxx: global1_atu: Add helper for get next")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
 ---
- drivers/pci/pci.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/net/dsa/mv88e6xxx/global2.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ecc775793c3c..7083adc07f5c 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4588,14 +4588,17 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
- 
- 	return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
- }
-+
- /**
-- * pcie_wait_for_link - Wait until link is active or inactive
-+ * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-+ * @delay: Delay to wait after link has become active (in ms)
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
--bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
-+static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
-+				     int delay)
- {
- 	int timeout = 1000;
- 	bool ret;
-@@ -4632,13 +4635,25 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
- 		timeout -= 10;
- 	}
- 	if (active && ret)
--		msleep(100);
-+		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
- 			active ? "set" : "cleared");
- 	return ret == active;
+diff --git a/drivers/net/dsa/mv88e6xxx/global2.h b/drivers/net/dsa/mv88e6xxx/global2.h
+index d80ad20..1f42ee6 100644
+--- a/drivers/net/dsa/mv88e6xxx/global2.h
++++ b/drivers/net/dsa/mv88e6xxx/global2.h
+@@ -532,7 +532,8 @@ static inline int mv88e6xxx_g2_atu_stats_set(struct mv88e6xxx_chip *chip,
+ 	return -EOPNOTSUPP;
  }
  
-+/**
-+ * pcie_wait_for_link - Wait until link is active or inactive
-+ * @pdev: Bridge device
-+ * @active: waiting for active or inactive?
-+ *
-+ * Use this to wait till link becomes active or inactive.
-+ */
-+bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
-+{
-+	return pcie_wait_for_link_delay(pdev, active, 100);
-+}
-+
- void pci_reset_secondary_bus(struct pci_dev *dev)
+-static inline int mv88e6xxx_g2_atu_stats_get(struct mv88e6xxx_chip *chip)
++static inline int mv88e6xxx_g2_atu_stats_get(struct mv88e6xxx_chip *chip,
++					     u16 *stats)
  {
- 	u16 ctrl;
+ 	return -EOPNOTSUPP;
+ }
 -- 
-2.24.0.rc1
+2.7.4
 
