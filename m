@@ -2,149 +2,120 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E2AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E72C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D8421D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153599;
-	bh=jJTEj+RC34URrm6dmyaPlrShoJzL4K1WKRn4uzRNk/0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M75QKyzQd+gDK1flgCulOlO9hkyg8+wESjkTmQajHm9CldmOpywwz08k9p2Hmj9jR
-	 FKCPWa0zyyEkZ4hl73FZXb7G2nEotzI54h5hCSuXCbuAjlVm0s1KQ9GrwcgYbSUsF7
-	 Xqtm2bnCyQ30vI95m2CQdDW528jWAc/Tjk/PRMD0=
+	by mail.kernel.org (Postfix) with ESMTP id 1EBEA2166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/wAADw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfKGTGi (ORCPT
+        id S1729442AbfKGTGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:06:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfKGTGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:06:37 -0500
-Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 7 Nov 2019 14:06:45 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48848 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727451AbfKGTGo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:06:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573153604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=7V8vcRaNgCDHefA9Xbu64DZmBbu801jLK5Q2vpg+4R0=;
+        b=J/wAADw+GYodYVpL2qoAc7Itfch5a0P8LA+eB2+NNDOxU2mr7ky5RDKDEx7QwqtoF5w+Hq
+        DG8CpRV4hRPHnu9SIDgmi9Egq+7uf65ba0R3AMeGO4Odbur0Ekf/qIE5qZ46vRocDQnD1T
+        5VKXu3UXCnBS3G+SA2plQ5B9hezEJiU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-MGRb98xaODGOeml7zPUjJw-1; Thu, 07 Nov 2019 14:06:40 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B424421D6C;
-        Thu,  7 Nov 2019 19:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153596;
-        bh=jJTEj+RC34URrm6dmyaPlrShoJzL4K1WKRn4uzRNk/0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUCGO4FNQs4Sqb5v6XRMX6xgaCUbFwnJ+ZCHjwUXQ5uxOpRHFOkNs4I7zBhz391cL
-         D9iEnBzEBr2/gREhsVWTRooDWR5DdasmVEFwiJlPdWVMF8S+CaAfs0htJ885QmRntj
-         v2oS2Fcu7sTaiynXeU9YLCni0NvoV04rzrnpMrMU=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 40/63] perf inject: Make --strip keep evsels
-Date:   Thu,  7 Nov 2019 15:59:48 -0300
-Message-Id: <20191107190011.23924-41-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
-References: <20191107190011.23924-1-acme@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CE99107ACC3;
+        Thu,  7 Nov 2019 19:06:38 +0000 (UTC)
+Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9583F5C548;
+        Thu,  7 Nov 2019 19:06:34 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
+Date:   Thu,  7 Nov 2019 14:06:28 -0500
+Message-Id: <20191107190628.22667-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: MGRb98xaODGOeml7zPUjJw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+A customer with large SMP systems (up to 16 sockets) with application
+that uses large amount of static hugepages (~500-1500GB) are experiencing
+random multisecond delays. These delays was caused by the long time it
+took to scan the VMA interval tree with mmap_sem held.
 
-create_gcov (refer to the autofdo example in tools/perf/Documentation/intel-pt.txt)
-now needs the evsels to read the perf.data file. So don't strip them.
+The sharing of huge PMD does not require changes to the i_mmap at all.
+As a result, we can just take the read lock and let other threads
+searching for the right VMA to share in parallel. Once the right
+VMA is found, either the PMD lock (2M huge page for x86-64) or the
+mm->page_table_lock will be acquired to perform the actual PMD sharing.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191105100057.21465-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Lock contention, if present, will happen in the spinlock. That is much
+better than contention in the rwsem where the time needed to scan the
+the interval tree is indeterminate.
+
+With this patch applied, the customer is seeing significant improvements
+over the unpatched kernel.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- tools/perf/builtin-inject.c | 54 -------------------------------------
- 1 file changed, 54 deletions(-)
+ mm/hugetlb.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 372ecb3e2c06..1e5d28311e14 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -578,58 +578,6 @@ static void strip_init(struct perf_inject *inject)
- 		evsel->handler = drop_sample;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index b45a95363a84..087e7ff00137 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4842,7 +4842,11 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned=
+ long addr, pud_t *pud)
+ =09if (!vma_shareable(vma, addr))
+ =09=09return (pte_t *)pmd_alloc(mm, pud, addr);
+=20
+-=09i_mmap_lock_write(mapping);
++=09/*
++=09 * PMD sharing does not require changes to i_mmap. So a read lock
++=09 * is enuogh.
++=09 */
++=09i_mmap_lock_read(mapping);
+ =09vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
+ =09=09if (svma =3D=3D vma)
+ =09=09=09continue;
+@@ -4872,7 +4876,7 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned =
+long addr, pud_t *pud)
+ =09spin_unlock(ptl);
+ out:
+ =09pte =3D (pte_t *)pmd_alloc(mm, pud, addr);
+-=09i_mmap_unlock_write(mapping);
++=09i_mmap_unlock_read(mapping);
+ =09return pte;
  }
- 
--static bool has_tracking(struct evsel *evsel)
--{
--	return evsel->core.attr.mmap || evsel->core.attr.mmap2 || evsel->core.attr.comm ||
--	       evsel->core.attr.task;
--}
--
--#define COMPAT_MASK (PERF_SAMPLE_ID | PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
--		     PERF_SAMPLE_ID | PERF_SAMPLE_CPU | PERF_SAMPLE_IDENTIFIER)
--
--/*
-- * In order that the perf.data file is parsable, tracking events like MMAP need
-- * their selected event to exist, except if there is only 1 selected event left
-- * and it has a compatible sample type.
-- */
--static bool ok_to_remove(struct evlist *evlist,
--			 struct evsel *evsel_to_remove)
--{
--	struct evsel *evsel;
--	int cnt = 0;
--	bool ok = false;
--
--	if (!has_tracking(evsel_to_remove))
--		return true;
--
--	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->handler != drop_sample) {
--			cnt += 1;
--			if ((evsel->core.attr.sample_type & COMPAT_MASK) ==
--			    (evsel_to_remove->core.attr.sample_type & COMPAT_MASK))
--				ok = true;
--		}
--	}
--
--	return ok && cnt == 1;
--}
--
--static void strip_fini(struct perf_inject *inject)
--{
--	struct evlist *evlist = inject->session->evlist;
--	struct evsel *evsel, *tmp;
--
--	/* Remove non-synthesized evsels if possible */
--	evlist__for_each_entry_safe(evlist, tmp, evsel) {
--		if (evsel->handler == drop_sample &&
--		    ok_to_remove(evlist, evsel)) {
--			pr_debug("Deleting %s\n", perf_evsel__name(evsel));
--			evlist__remove(evlist, evsel);
--			evsel__delete(evsel);
--		}
--	}
--}
--
- static int __cmd_inject(struct perf_inject *inject)
- {
- 	int ret = -EINVAL;
-@@ -729,8 +677,6 @@ static int __cmd_inject(struct perf_inject *inject)
- 				evlist__remove(session->evlist, evsel);
- 				evsel__delete(evsel);
- 			}
--			if (inject->strip)
--				strip_fini(inject);
- 		}
- 		session->header.data_offset = output_data_offset;
- 		session->header.data_size = inject->bytes_written;
--- 
-2.21.0
+=20
+--=20
+2.18.1
 
