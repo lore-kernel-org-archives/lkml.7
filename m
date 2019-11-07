@@ -2,120 +2,106 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E766FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D573C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F788217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC63217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuVYeWAp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJcKaxPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733110AbfKGDen (ORCPT
+        id S1733146AbfKGDfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:34:43 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35607 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbfKGDen (ORCPT
+        Wed, 6 Nov 2019 22:35:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52806 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727279AbfKGDfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:34:43 -0500
-Received: by mail-io1-f65.google.com with SMTP id x21so713268iol.2;
-        Wed, 06 Nov 2019 19:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j00j0P5tg7ufiLDUoOnBdVRUf6hj9hF5UDph/p/NK68=;
-        b=HuVYeWApBFO+9D/Ggj+4qUY5unti4vS0dXk7MlI4Db3/qZV+3I4AlmGIXTH4c0Pbor
-         Ohju8tXGFXrjbLL15eFdQogG9VSPpgSD7eNLLGbrxmR3d2ORHI/IyT1R+m3hxZ6Awa3o
-         ge9NysOVl3U8sVP5UAbuKX6D9hsmOW1JwtWG672dko0/3YW2L7iUtC8a/z6E5/tGbd41
-         cvNXQgoo3/T3rd5tnlXFOuLLAI7s2/XlIgIfph5qnZdLTOcSe+rZZUwAWSFOMZf7Ezv1
-         sBJ0R3Tvper9gJYi7zv36leQkTCkamH39dLFU6i66FGwxe3T5rTMgyFl4mbKb1ifyneW
-         Ixcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j00j0P5tg7ufiLDUoOnBdVRUf6hj9hF5UDph/p/NK68=;
-        b=lMqPGrpFdvW7pme3cxF4FyPKxtw1CqEl+bOFo9QicHA2DK/JqXOJc0OCxURS+LVWh4
-         BOo1k6R9RLAUsiSF5BH+DPUo7zo+zWlPiyJM+GSbJeheUTvzBF79r3hHlvkJRbdiDKLD
-         sxkb+3bnuLVNb1J3eYQwjJv08sgxUBXN3yDjrb6ZbWvS7ul6DaR7r6BZu4KUrikfI+8q
-         sQRFWCBkooT9rAhtCvwawMCL6g/6toDafk9ifXTEYlJkVUVtGWm1ziajMJFtUcsDVHpp
-         u9uKWVnnG5kBvoA1nxtAO1CBLUVTToB+boVh6scx0R4UHVh2ta8LfpWG+R+zFMnax6sf
-         lrDg==
-X-Gm-Message-State: APjAAAXwP15FyW9NBIlKTiTlmG4ve1OcnD5c1OcYM8WWKmWuNYG9EI+O
-        ikXPIO81y4VVW/3yRswH8bUVvS3nArKpq60vqVc=
-X-Google-Smtp-Source: APXvYqxmxrcUqMIf+MxenLaiixpDBKSDY+CiliO91aSSQhnW/VD9p8c0URvnBnQ5MC999/3P1DmXVKNifyw+ZyDx0vE=
-X-Received: by 2002:a05:6638:20a:: with SMTP id e10mr1797639jaq.27.1573097681936;
- Wed, 06 Nov 2019 19:34:41 -0800 (PST)
+        Wed, 6 Nov 2019 22:35:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573097709;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RbBFAzU8gFLv11oHZoaqiXnPsseQp8Xs/d5KZuHznQM=;
+        b=ZJcKaxPsIrQluPzyema0uZ6fHAy2SSznWYOjlW+uDMjbL9zBpGkWAx4njUl5vJA+J0PKus
+        /aIZrJpvs2daxF5H5zj5UQVg9vwGSqM3JYERI6V0hRcDsE+qIaHMU9sgdOQZceKP5IgFOL
+        xny2ES0dCnzWj6+4NhX6vdSe0CjZKtA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-5ltiCimYNaSqKDlbgHnOhQ-1; Wed, 06 Nov 2019 22:35:06 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E76F800C61;
+        Thu,  7 Nov 2019 03:35:05 +0000 (UTC)
+Received: from treble (ovpn-122-162.rdu2.redhat.com [10.10.122.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B450C600CE;
+        Thu,  7 Nov 2019 03:34:59 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 21:34:58 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v2] x86/stacktrace: update kconfig help text for reliable
+ unwinders
+Message-ID: <20191107033458.ptvw6omypqndjt6d@treble>
+References: <20191107032958.14034-1-joe.lawrence@redhat.com>
 MIME-Version: 1.0
-References: <826310e5-e01c-38af-90df-c5630f761a4d@users.sourceforge.net> <24a10b1a-3b4a-da70-1670-23b4ec9abff8@users.sourceforge.net>
-In-Reply-To: <24a10b1a-3b4a-da70-1670-23b4ec9abff8@users.sourceforge.net>
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 6 Nov 2019 21:34:30 -0600
-Message-ID: <CAH2r5msOyZXi6msPOPNnM4pF_YJEEOkxFk=dScUW0ZMuEvHFaQ@mail.gmail.com>
-Subject: Re: [PATCH 6/8] CIFS: Return directly after a failed
- build_path_from_dentry() in cifs_do_create()
-To:     SF Markus Elfring <elfring@users.sourceforge.net>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        Steve French <sfrench@samba.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191107032958.14034-1-joe.lawrence@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 5ltiCimYNaSqKDlbgHnOhQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
-
-On Sun, Aug 20, 2017 at 11:40 AM SF Markus Elfring
-<elfring@users.sourceforge.net> wrote:
->
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sun, 20 Aug 2017 17:17:30 +0200
->
-> Return directly after a call of the function "build_path_from_dentry"
-> failed at the beginning.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+On Wed, Nov 06, 2019 at 10:29:58PM -0500, Joe Lawrence wrote:
+> commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
+> for the ORC unwinder") added the ORC unwinder as a "reliable" unwinder.
+> Update the help text to reflect that change: the frame pointer unwinder
+> is no longer the only one that can provide HAVE_RELIABLE_STACKTRACE.
+>=20
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 > ---
->  fs/cifs/dir.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/cifs/dir.c b/fs/cifs/dir.c
-> index 2c9cbd8393d6..248aead1f3f4 100644
-> --- a/fs/cifs/dir.c
-> +++ b/fs/cifs/dir.c
-> @@ -239,10 +239,8 @@ cifs_do_create(struct inode *inode, struct dentry *direntry, unsigned int xid,
->                 *oplock = REQ_OPLOCK;
->
->         full_path = build_path_from_dentry(direntry);
-> -       if (full_path == NULL) {
-> -               rc = -ENOMEM;
-> -               goto out;
-> -       }
-> +       if (!full_path)
-> +               return -ENOMEM;
->
->         if (tcon->unix_ext && cap_unix(tcon->ses) && !tcon->broken_posix_open &&
->             (CIFS_UNIX_POSIX_PATH_OPS_CAP &
-> --
-> 2.14.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-cifs" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> v2: dropped hunk that added unnecessary text to UNWIND_GUESS
+>=20
+>  arch/x86/Kconfig.debug | 4 ----
+>  1 file changed, 4 deletions(-)
+>=20
+> diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+> index bf9cd83de777..409c00f74e60 100644
+> --- a/arch/x86/Kconfig.debug
+> +++ b/arch/x86/Kconfig.debug
+> @@ -316,10 +316,6 @@ config UNWINDER_FRAME_POINTER
+>  =09  unwinder, but the kernel text size will grow by ~3% and the kernel'=
+s
+>  =09  overall performance will degrade by roughly 5-10%.
+> =20
+> -=09  This option is recommended if you want to use the livepatch
+> -=09  consistency model, as this is currently the only way to get a
+> -=09  reliable stack trace (CONFIG_HAVE_RELIABLE_STACKTRACE).
+> -
+>  config UNWINDER_GUESS
+>  =09bool "Guess unwinder"
+>  =09depends on EXPERT
+> --=20
+> 2.21.0
+>=20
 
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
+--=20
+Josh
 
--- 
-Thanks,
-
-Steve
