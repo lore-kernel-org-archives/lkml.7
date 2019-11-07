@@ -2,210 +2,177 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FFEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980A6C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D44217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AA4218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLpu8RsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387494AbfKGEMF (ORCPT
+        id S2387563AbfKGEMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:12:05 -0500
-Received: from mga12.intel.com ([192.55.52.136]:47274 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733289AbfKGEME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 23:12:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:12:04 -0800
-X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
-   d="scan'208";a="233120929"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:12:03 -0800
-Subject: [PATCH 13/16] acpi/mm: Up-level "map to online node" functionality
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, peterz@infradead.org,
-        vishal.l.verma@intel.com, dave.hansen@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Wed, 06 Nov 2019 19:57:47 -0800
-Message-ID: <157309906694.1582359.4777838043061104635.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Wed, 6 Nov 2019 23:12:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50947 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387501AbfKGEMI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:12:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573099927;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vy7XJKdY7uHiidwzfWnqy3jEytGSp6O8E3wPOjJLQeY=;
+        b=bLpu8RsTeegLIijJQ+AtutrfeZok3A+78Uuq1iPl+IxGd9vmj7KipONmHo4HIKKlQ0gJsa
+        /Lrs+3KHc08ZgXLcULahn6CtJU5NUbq+hxg5ouDvkEPK+59VzhJgoBbJYvUp+F6uSggSjr
+        sIZFT8u7flpmuBFlO/l/hAJbnwubwYY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-Y7iroPMHNZ6uJ8flJrTieg-1; Wed, 06 Nov 2019 23:12:03 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 258F9107ACC3;
+        Thu,  7 Nov 2019 04:11:59 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 390AD60870;
+        Thu,  7 Nov 2019 04:11:33 +0000 (UTC)
+Subject: Re: [PATCH V8 0/6] mdev based hardware virtio offloading support
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191105093240.5135-1-jasowang@redhat.com>
+ <20191105105834.469675f0@x1.home>
+ <393f2dc9-8c67-d3c9-6553-640b80c15aaf@redhat.com>
+ <20191106120312.77a6a318@x1.home>
+ <20191106142449-mutt-send-email-mst@kernel.org>
+ <20191106141318.150f3b9b@x1.home>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1c1126ec-94b8-5d1a-8ef6-616604e5a93f@redhat.com>
+Date:   Thu, 7 Nov 2019 12:11:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191106141318.150f3b9b@x1.home>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: Y7iroPMHNZ6uJ8flJrTieg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The acpi_map_pxm_to_online_node() helper is used to find the closest
-online node to a given proximity domain. This is used to map devices in
-a proximity domain with no online memory or cpus to the closest online
-node and populate a device's 'numa_node' property. The numa_node
-property allows applications to be migrated "close" to a resource.
 
-In preparation for providing a generic facility to optionally map an
-address range to its closest online node, or the node the range would
-represent were it to be onlined (target_node), up-level the core of
-acpi_map_pxm_to_online_node() to a generic mm/numa helper.
+On 2019/11/7 =E4=B8=8A=E5=8D=885:13, Alex Williamson wrote:
+> On Wed, 6 Nov 2019 14:25:23 -0500
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+>
+>> On Wed, Nov 06, 2019 at 12:03:12PM -0700, Alex Williamson wrote:
+>>> On Wed, 6 Nov 2019 11:56:46 +0800
+>>> Jason Wang <jasowang@redhat.com> wrote:
+>>>   =20
+>>>> On 2019/11/6 =E4=B8=8A=E5=8D=881:58, Alex Williamson wrote:
+>>>>> On Tue,  5 Nov 2019 17:32:34 +0800
+>>>>> Jason Wang <jasowang@redhat.com> wrote:
+>>>>>    =20
+>>>>>> Hi all:
+>>>>>>
+>>>>>> There are hardwares that can do virtio datapath offloading while
+>>>>>> having its own control path. This path tries to implement a mdev bas=
+ed
+>>>>>> unified API to support using kernel virtio driver to drive those
+>>>>>> devices. This is done by introducing a new mdev transport for virtio
+>>>>>> (virtio_mdev) and register itself as a new kind of mdev driver. Then
+>>>>>> it provides a unified way for kernel virtio driver to talk with mdev
+>>>>>> device implementation.
+>>>>>>
+>>>>>> Though the series only contains kernel driver support, the goal is t=
+o
+>>>>>> make the transport generic enough to support userspace drivers. This
+>>>>>> means vhost-mdev[1] could be built on top as well by resuing the
+>>>>>> transport.
+>>>>>>
+>>>>>> A sample driver is also implemented which simulate a virito-net
+>>>>>> loopback ethernet device on top of vringh + workqueue. This could be
+>>>>>> used as a reference implementation for real hardware driver.
+>>>>>>
+>>>>>> Also a real ICF VF driver was also posted here[2] which is a good
+>>>>>> reference for vendors who is interested in their own virtio datapath
+>>>>>> offloading product.
+>>>>>>
+>>>>>> Consider mdev framework only support VFIO device and driver right no=
+w,
+>>>>>> this series also extend it to support other types. This is done
+>>>>>> through introducing class id to the device and pairing it with
+>>>>>> id_talbe claimed by the driver. On top, this seris also decouple
+>>>>>> device specific parents ops out of the common ones.
+>>>>>>
+>>>>>> Pktgen test was done with virito-net + mvnet loop back device.
+>>>>>>
+>>>>>> Please review.
+>>>>>>
+>>>>>> [1] https://lkml.org/lkml/2019/10/31/440
+>>>>>> [2] https://lkml.org/lkml/2019/10/15/1226
+>>>>>>
+>>>>>> Changes from V7:
+>>>>>> - drop {set|get}_mdev_features for virtio
+>>>>>> - typo and comment style fixes
+>>>>> Seems we're nearly there, all the remaining comments are relatively
+>>>>> superficial, though I would appreciate a v9 addressing them as well a=
+s
+>>>>> the checkpatch warnings:
+>>>>>
+>>>>> https://patchwork.freedesktop.org/series/68977/
+>>>>
+>>>> Will do.
+>>>>
+>>>> Btw, do you plan to merge vhost-mdev patch on top? Or you prefer it to
+>>>> go through Michael's vhost tree?
+>>> I can include it if you wish.  The mdev changes are isolated enough in
+>>> that patch that I wouldn't presume it, but clearly it would require
+>>> less merge coordination to drop it in my tree.  Let me know.  Thanks,
+>>>
+>>> Alex
+>> I'm fine with merging through your tree. If you do, feel free to
+>> include
+>>
+>> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> AFAICT, it looks like we're expecting at least one more version of
+> Tiwei's patch after V5, so it'd probably be best to provide the ack and
+> go-ahead on that next version so there's no confusion.  Thanks,
+>
+> Alex
 
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/acpi/numa.c  |   41 -----------------------------------------
- include/linux/acpi.h |   23 ++++++++++++++++++++++-
- include/linux/numa.h |    2 ++
- mm/mempolicy.c       |   30 ++++++++++++++++++++++++++++++
- 4 files changed, 54 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
-index eadbf90e65d1..47b4969d9b93 100644
---- a/drivers/acpi/numa.c
-+++ b/drivers/acpi/numa.c
-@@ -72,47 +72,6 @@ int acpi_map_pxm_to_node(int pxm)
- }
- EXPORT_SYMBOL(acpi_map_pxm_to_node);
- 
--/**
-- * acpi_map_pxm_to_online_node - Map proximity ID to online node
-- * @pxm: ACPI proximity ID
-- *
-- * This is similar to acpi_map_pxm_to_node(), but always returns an online
-- * node.  When the mapped node from a given proximity ID is offline, it
-- * looks up the node distance table and returns the nearest online node.
-- *
-- * ACPI device drivers, which are called after the NUMA initialization has
-- * completed in the kernel, can call this interface to obtain their device
-- * NUMA topology from ACPI tables.  Such drivers do not have to deal with
-- * offline nodes.  A node may be offline when a device proximity ID is
-- * unique, SRAT memory entry does not exist, or NUMA is disabled, ex.
-- * "numa=off" on x86.
-- */
--int acpi_map_pxm_to_online_node(int pxm)
--{
--	int node, min_node;
--
--	node = acpi_map_pxm_to_node(pxm);
--
--	if (node == NUMA_NO_NODE)
--		node = 0;
--
--	min_node = node;
--	if (!node_online(node)) {
--		int min_dist = INT_MAX, dist, n;
--
--		for_each_online_node(n) {
--			dist = node_distance(node, n);
--			if (dist < min_dist) {
--				min_dist = dist;
--				min_node = n;
--			}
--		}
--	}
--
--	return min_node;
--}
--EXPORT_SYMBOL(acpi_map_pxm_to_online_node);
--
- static void __init
- acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- {
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 8b4e516bac00..aeedd09f2f71 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -401,9 +401,30 @@ extern void acpi_osi_setup(char *str);
- extern bool acpi_osi_is_win8(void);
- 
- #ifdef CONFIG_ACPI_NUMA
--int acpi_map_pxm_to_online_node(int pxm);
- int acpi_map_pxm_to_node(int pxm);
- int acpi_get_node(acpi_handle handle);
-+
-+/**
-+ * acpi_map_pxm_to_online_node - Map proximity ID to online node
-+ * @pxm: ACPI proximity ID
-+ *
-+ * This is similar to acpi_map_pxm_to_node(), but always returns an online
-+ * node.  When the mapped node from a given proximity ID is offline, it
-+ * looks up the node distance table and returns the nearest online node.
-+ *
-+ * ACPI device drivers, which are called after the NUMA initialization has
-+ * completed in the kernel, can call this interface to obtain their device
-+ * NUMA topology from ACPI tables.  Such drivers do not have to deal with
-+ * offline nodes.  A node may be offline when a device proximity ID is
-+ * unique, SRAT memory entry does not exist, or NUMA is disabled, ex.
-+ * "numa=off" on x86.
-+ */
-+static inline int acpi_map_pxm_to_online_node(int pxm)
-+{
-+	int node = acpi_map_pxm_to_node(pxm);
-+
-+	return numa_map_to_online_node(node);
-+}
- #else
- static inline int acpi_map_pxm_to_online_node(int pxm)
- {
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index 110b0e5d0fb0..4fd80f42be43 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -13,4 +13,6 @@
- 
- #define	NUMA_NO_NODE	(-1)
- 
-+int numa_map_to_online_node(int node);
-+
- #endif /* _LINUX_NUMA_H */
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 4ae967bcf954..e2d8dd21ce9d 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -127,6 +127,36 @@ static struct mempolicy default_policy = {
- 
- static struct mempolicy preferred_node_policy[MAX_NUMNODES];
- 
-+/**
-+ * numa_map_to_online_node - Find closest online node
-+ * @nid: Node id to start the search
-+ *
-+ * Lookup the next closest node by distance if @nid is not online.
-+ */
-+int numa_map_to_online_node(int node)
-+{
-+	int min_node;
-+
-+	if (node == NUMA_NO_NODE)
-+		node = 0;
-+
-+	min_node = node;
-+	if (!node_online(node)) {
-+		int min_dist = INT_MAX, dist, n;
-+
-+		for_each_online_node(n) {
-+			dist = node_distance(node, n);
-+			if (dist < min_dist) {
-+				min_dist = dist;
-+				min_node = n;
-+			}
-+		}
-+	}
-+
-+	return min_node;
-+}
-+EXPORT_SYMBOL_GPL(numa_map_to_online_node);
-+
- struct mempolicy *get_task_policy(struct task_struct *p)
- {
- 	struct mempolicy *pol = p->mempolicy;
+Yes, it's probably need a V6. Will give ack there.
+
+Thanks
 
