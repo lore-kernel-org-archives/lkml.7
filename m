@@ -2,112 +2,154 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0524BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20DE22087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD63021D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0L2NJu3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LlMKOilu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfKGVA0 (ORCPT
+        id S1727073AbfKGVDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 16:00:26 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36457 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfKGVA0 (ORCPT
+        Thu, 7 Nov 2019 16:03:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45749 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfKGVDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:00:26 -0500
-Received: by mail-io1-f67.google.com with SMTP id s3so3898536ioe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 13:00:26 -0800 (PST)
+        Thu, 7 Nov 2019 16:03:54 -0500
+Received: by mail-pg1-f193.google.com with SMTP id w11so2740242pga.12;
+        Thu, 07 Nov 2019 13:03:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N1kmrdQXG5vssjwCd67eTK4dWVDhQf2oRjU5ZbEWya4=;
-        b=d0L2NJu3gPoGrUeZiF8fvX69O8lD9EF9IDygPpfopNtglqZUGyJ1oom8QPjw8flAg+
-         XNVxK87p3Ti5+74nIUhY6IhruUapE1XKdqkQSOKaaBtGVqyjSDe/N92cA/6jiDgXW3YO
-         +FuexexIJ/EWzlCC+k7pZE1sRwB+OQiF9TROWcZ9L4Jn6WvMTV/2IhCjcY+o/RupSMPT
-         wH9G0EvaN7+okWhtfkXWip0lXr37mvB04AceBMaer98vIjrDDD4vzgVGiiZJyghqdfTL
-         lxKaeAKWMZVexLbr6yrOQcrEYXGyxk0GrBWtWhnJYU5xIFf5g6DxOdsI68uT9zGXevaT
-         FdHw==
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=dLyIngmz+BTvSBHC9yhtist9Z7w0m+jHBN6leCOiFg8=;
+        b=LlMKOilursif2cmk7KD4OrMaQwbo+qNMnCWkfsYZyZE2XJWunIKwegqFXgMNahIhkf
+         RQlqyz1FEaw5yyLtr0F4ekwHaFQZ8eH5Qr38Q9CvAs4dkMWUMp3hrIHtjzc5WCfccSEC
+         Ce40NfUh3piVu4h6wT3skKVlBvZMNE0mS2jX3Sk7FnmK3LcOmi6PjLaAfuX8U+y9lL4p
+         oCmPko9Ee0Bm9y9PhSG+3tBKxfRuh0rgIL3TrR647jXDh1ZdYkcfAOdpaWgzwVo03j7I
+         vtxyyGUdaiieqqL3GNuuibih1290irha5CUIPFO4DRTglvQFlf2/92MFExRkBItBkj5U
+         nHcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N1kmrdQXG5vssjwCd67eTK4dWVDhQf2oRjU5ZbEWya4=;
-        b=b40wxm7bFipRDA3dBPPa978/HJAlQis5avAC62Mz/4JZ4ALO6fySGzfndTamzRHkp+
-         ceRS2MXzCYeyM8RaOqbe2p9W+tGWZDNN6YmlwerHQskT43HmD9sne2itR2BM8uyVhLHd
-         EYwfZGqiEa5aB/eWyGjMfeZvsggc4/zSOFH+zFaDb9pYuVeXJ1/4l2Wlf2XODlJTLEt3
-         Yt/IKM2PFVGWrWGXD/yRilKKduc2eUPVvZb5qEW+NPKpfnGC/aR2jGWK6u8jhYh0+pl1
-         oBlfux7+Haucc9EYHg4TlCk2/f6B09B9g3PXzEZN+ksqsa87jWfPEkOxd9oMsu+Q9Nq3
-         LlHw==
-X-Gm-Message-State: APjAAAUggnUR9omYBwuyUugdwI679twnJfKsUmQXkAL3L9CiSKjUXfqR
-        MhPxuHpR6AtlrYSf+TVOb4hpRANBJohndU29lnWMzlVwzg==
-X-Google-Smtp-Source: APXvYqyXRBCUvK4O92YsEnNdlF6ZhgIfYKHOjIbyvZHjvmGcNqJJJCW15yULCpVho0gfHCcV5QJiRc6oLrKDBk0lU4k=
-X-Received: by 2002:a5d:8450:: with SMTP id w16mr5459728ior.11.1573160425402;
- Thu, 07 Nov 2019 13:00:25 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=dLyIngmz+BTvSBHC9yhtist9Z7w0m+jHBN6leCOiFg8=;
+        b=Q0G0vKKa6JufSt55foAz6hraxmdILk4++dIefDjgm5tdVwj+jX5LDWwbpH0DFdHjow
+         pOEdZtJORn9EJUbaDlu80suCRt/EvSVxmAs3CRc//uBrOim59WzP88FAqKz9N8rFI2cY
+         I3+5LTkVdEMBdefqQ0G7bRQNBgGjk762KWXUBSNHV7APmjXdryW1s7zO116u8cu9g4a/
+         G5AyNIuR11rZvkRusBnJVh6vWCIR+eqChhjdiGe+EV1dzRFQWHMU0WccVQlUoaDwyW4w
+         0gd0rDXLMm6M/lF3311X6e6JuwPrIVMt0i6mTL2bsOZHFMP/33bQCVVnPw9AJ8YgIMSy
+         5Q7w==
+X-Gm-Message-State: APjAAAXzbpbHL4wagVfWV4JB2D7JrvuSAQuFFBHA63eZQvNsnvlva5uR
+        4167VWpavMnW5h1BnXPKdGw=
+X-Google-Smtp-Source: APXvYqxm7LIR2q/HEZLQThakoI216kYyFPwG8AURuE+FFMJQzzJWAEiR9Q+EU3iZZjPTm/jlxqoycA==
+X-Received: by 2002:a65:6201:: with SMTP id d1mr6973175pgv.182.1573160633096;
+        Thu, 07 Nov 2019 13:03:53 -0800 (PST)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id g6sm3302210pfh.125.2019.11.07.13.03.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 13:03:52 -0800 (PST)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH v5 3/3] PCI: artpec6: Configure FTS with dwc helper
+ function
+Thread-Topic: [PATCH v5 3/3] PCI: artpec6: Configure FTS with dwc helper
+ function
+Thread-Index: AQHVlFSCgoYxKfQji0+JDeSIjacZDaeANQQr
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Thu, 7 Nov 2019 21:03:46 +0000
+Message-ID: <SL2P216MB010527F9E1C142F0A347ED63AA780@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <cover.1572950559.git.eswara.kota@linux.intel.com>
+ <90a64d72a32dbc75c03a58a1813f50e547170ff4.1572950559.git.eswara.kota@linux.intel.com>
+In-Reply-To: <90a64d72a32dbc75c03a58a1813f50e547170ff4.1572950559.git.eswara.kota@linux.intel.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de>
- <CAMzpN2juuUyLuQ-tiV7hKZvG4agsHKP=rRAt_V4sZhpZW7cv9g@mail.gmail.com> <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
-In-Reply-To: <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Thu, 7 Nov 2019 16:00:13 -0500
-Message-ID: <CAMzpN2gt4qM41=96GpNHL-kbgBsjD-zphq+5oK0BXqoCFN4F4Q@mail.gmail.com>
-Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage further
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 2:54 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, Nov 7, 2019 at 11:24 AM Brian Gerst <brgerst@gmail.com> wrote:
-> >
-> > Here is a different idea:  We already map the TSS virtually in
-> > cpu_entry_area.  Why not page-align the IO bitmap and remap it to the
-> > task's bitmap on task switch?  That would avoid all copying on task
-> > switch.
->
-> We map the tss _once_, statically, percpu, without ever changing it,
-> and then we just (potentially) change a couple of fields in it on
-> process switch.
->
-> Your idea isn't horrible, but it would involve a TLB flush for the
-> page when the io bitmap changes. Which is almost certainly more
-> expensive than just copying the bitmap intelligently.
->
-> Particularly since I do think that the copy can basically be done
-> effectively never, assuming there really aren't multiple concurrent
-> users of ioperm() (and iopl).
+On 11/5/19, 10:44 PM, Dilip Kota wrote:
+>=20
+> Utilize DesugnWare helper functions to configure Fast Training
 
-There wouldn't have to be a flush on every task switch.  If we make it
-so that tasks that don't use a bitmap just unmap the pages in the
-cpu_entry_area and set tss.io_bitmap_base to outside the segment
-limit, we would only have to flush when switching from a task using
-the bitmap (because the next task uses a different bitmap or we are
-unmapping it).  If the previous task doesn't have a bitmap the pages
-in cpu_entry_area were unmapped and can't be in the TLB, so no flush
-is needed.
+Nitpicking: Fix typo (DesugnWare --> DesignWare)
 
-Going a step further, we could track which task is mapped to the
-current cpu like proposed above, and only flush when a different task
-needs the IO bitmap, or when the bitmap is being freed on task exit.
+If possible, how about the following?
+Utilize DesignWare --> Use DesignWare
 
---
-Brian Gerst
+Best regards,
+Jingoo Han
+
+> Sequence. Drop the respective code in the driver.
+>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/cont=
+roller/dwc/pcie-artpec6.c
+> index d00252bd8fae..02d93b8c7942 100644
+> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
+> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+> @@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[=
+];
+>  #define ACK_N_FTS_MASK			GENMASK(15, 8)
+>  #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
+> =20
+> -#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
+> -#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
+> -
+>  /* ARTPEC-6 specific registers */
+>  #define PCIECFG				0x18
+>  #define  PCIECFG_DBG_OEN		BIT(24)
+> @@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pci=
+e *artpec6_pcie)
+>  	 * Set the Number of Fast Training Sequences that the core
+>  	 * advertises as its N_FTS during Gen2 or Gen3 link training.
+>  	 */
+> -	val =3D dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> -	val &=3D ~FAST_TRAINING_SEQ_MASK;
+> -	val |=3D FAST_TRAINING_SEQ(180);
+> -	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +	dw_pcie_link_set_n_fts(pci, 180);
+>  }
+>
+>  static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_=
+pcie)
+> --=20
+> 2.11.0
+
