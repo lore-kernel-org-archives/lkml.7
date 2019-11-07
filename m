@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B19DC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF2CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3670221D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8D521882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfKGSQw (ORCPT
+        id S1730716AbfKGSRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:16:52 -0500
-Received: from mga01.intel.com ([192.55.52.88]:60752 "EHLO mga01.intel.com"
+        Thu, 7 Nov 2019 13:17:05 -0500
+Received: from mga01.intel.com ([192.55.52.88]:60754 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729816AbfKGSQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:16:51 -0500
+        id S1729974AbfKGSQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 13:16:52 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 10:16:50 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 10:16:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
-   d="scan'208";a="286064056"
+   d="scan'208";a="286064060"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
   by orsmga001.jf.intel.com with ESMTP; 07 Nov 2019 10:16:49 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id A887F301BE8; Thu,  7 Nov 2019 10:16:49 -0800 (PST)
+        id D187F301BF1; Thu,  7 Nov 2019 10:16:49 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     jolsa@kernel.org
 Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v5 04/13] perf evlist: Maintain evlist->all_cpus
-Date:   Thu,  7 Nov 2019 10:16:37 -0800
-Message-Id: <20191107181646.506734-5-andi@firstfloor.org>
+Subject: [PATCH v5 11/13] perf stat: Use affinity for reading
+Date:   Thu,  7 Nov 2019 10:16:44 -0800
+Message-Id: <20191107181646.506734-12-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191107181646.506734-1-andi@firstfloor.org>
 References: <20191107181646.506734-1-andi@firstfloor.org>
@@ -49,170 +49,173 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Maintain a cpumap in the evlist that is the union of all the cpus
-of the events.
+Restructure event reading to use affinity to minimize the number
+of IPIs needed.
 
-This needs a cpumap merge operation, which is added together
-with tests.
+Before on a large test case with 94 CPUs:
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+  3.16    0.106079           4     22082           read
+
+After:
+
+  3.43    0.081295           3     22082           read
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-v2:
-Add tests for cpu map merge
-Fix handling of duplicates
-Rename _update to _merge
-Factor out sorting.
-Fix handling of NULL maps in merge
 ---
- tools/perf/lib/cpumap.c                  | 43 ++++++++++++++++++++++++
- tools/perf/lib/evlist.c                  |  1 +
- tools/perf/lib/include/internal/evlist.h |  1 +
- tools/perf/lib/include/perf/cpumap.h     |  2 ++
- tools/perf/tests/builtin-test.c          |  5 +++
- tools/perf/tests/cpumap.c                | 16 +++++++++
- tools/perf/tests/tests.h                 |  1 +
- 7 files changed, 69 insertions(+)
 
-diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
-index d81656b4635e..b9f573438b93 100644
---- a/tools/perf/lib/cpumap.c
-+++ b/tools/perf/lib/cpumap.c
-@@ -286,3 +286,46 @@ int perf_cpu_map__max(struct perf_cpu_map *map)
+v2: Use new iterator macros
+v3: Use new iterator macros
+v4: Change iterator macros even more
+---
+ tools/perf/builtin-stat.c | 94 ++++++++++++++++++++++-----------------
+ tools/perf/util/evsel.h   |  1 +
+ 2 files changed, 54 insertions(+), 41 deletions(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 7f9ec41d8f62..dff817d714f6 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -266,15 +266,10 @@ static int read_single_counter(struct evsel *counter, int cpu,
+  * Read out the results of a single counter:
+  * do not aggregate counts across CPUs in system-wide mode
+  */
+-static int read_counter(struct evsel *counter, struct timespec *rs)
++static int read_counter(struct evsel *counter, struct timespec *rs, int cpu)
+ {
+ 	int nthreads = perf_thread_map__nr(evsel_list->core.threads);
+-	int ncpus, cpu, thread;
+-
+-	if (target__has_cpu(&target) && !target__has_per_thread(&target))
+-		ncpus = perf_evsel__nr_cpus(counter);
+-	else
+-		ncpus = 1;
++	int thread;
  
- 	return max;
- }
-+
-+struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-+					 struct perf_cpu_map *other)
-+{
-+	int *tmp_cpus;
-+	int tmp_len;
-+	int i, j, k;
-+	struct perf_cpu_map *merged;
-+
-+	if (!orig && !other)
-+		return NULL;
-+	if (!orig) {
-+		perf_cpu_map__get(other);
-+		return other;
-+	}
-+	if (!other)
-+		return orig;
-+	if (orig->nr == other->nr &&
-+	    !memcmp(orig->map, other->map, orig->nr * sizeof(int)))
-+		return orig;
-+	tmp_len = orig->nr + other->nr;
-+	tmp_cpus = malloc(tmp_len * sizeof(int));
-+	if (!tmp_cpus)
-+		return NULL;
-+	i = j = k = 0;
-+	while (i < orig->nr && j < other->nr) {
-+		if (orig->map[i] <= other->map[j]) {
-+			if (orig->map[i] == other->map[j])
-+				j++;
-+			tmp_cpus[k++] = orig->map[i++];
-+		} else
-+			tmp_cpus[k++] = other->map[j++];
-+	}
-+	while (i < orig->nr)
-+		tmp_cpus[k++] = orig->map[i++];
-+	while (j < other->nr)
-+		tmp_cpus[k++] = other->map[j++];
-+	assert(k <= tmp_len);
-+	merged = cpu_map__trim_new(k, tmp_cpus);
-+	free(tmp_cpus);
-+	perf_cpu_map__put(orig);
-+	return merged;
-+}
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 205ddbb80bc1..ae9e65aa2491 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -54,6 +54,7 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 	if (!counter->supported)
+ 		return -ENOENT;
+@@ -283,40 +278,38 @@ static int read_counter(struct evsel *counter, struct timespec *rs)
+ 		nthreads = 1;
  
- 	perf_thread_map__put(evsel->threads);
- 	evsel->threads = perf_thread_map__get(evlist->threads);
-+	evlist->all_cpus = perf_cpu_map__merge(evlist->all_cpus, evsel->cpus);
- }
+ 	for (thread = 0; thread < nthreads; thread++) {
+-		for (cpu = 0; cpu < ncpus; cpu++) {
+-			struct perf_counts_values *count;
+-
+-			count = perf_counts(counter->counts, cpu, thread);
+-
+-			/*
+-			 * The leader's group read loads data into its group members
+-			 * (via perf_evsel__read_counter) and sets threir count->loaded.
+-			 */
+-			if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
+-			    read_single_counter(counter, cpu, thread, rs)) {
+-				counter->counts->scaled = -1;
+-				perf_counts(counter->counts, cpu, thread)->ena = 0;
+-				perf_counts(counter->counts, cpu, thread)->run = 0;
+-				return -1;
+-			}
++		struct perf_counts_values *count;
  
- static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index a2fbccf1922f..74dc8c3f0b66 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -18,6 +18,7 @@ struct perf_evlist {
- 	int			 nr_entries;
- 	bool			 has_user_cpus;
- 	struct perf_cpu_map	*cpus;
-+	struct perf_cpu_map	*all_cpus;
- 	struct perf_thread_map	*threads;
- 	int			 nr_mmaps;
- 	size_t			 mmap_len;
-diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
-index ac9aa497f84a..6a17ad730cbc 100644
---- a/tools/perf/lib/include/perf/cpumap.h
-+++ b/tools/perf/lib/include/perf/cpumap.h
-@@ -12,6 +12,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
-+LIBPERF_API struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-+						     struct perf_cpu_map *other);
- LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
- LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
- LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 8b286e9b7549..5fa37cf7f283 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -259,6 +259,11 @@ static struct test generic_tests[] = {
- 		.desc = "Print cpu map",
- 		.func = test__cpu_map_print,
- 	},
-+	{
-+		.desc = "Merge cpu map",
-+		.func = test__cpu_map_merge,
-+	},
+-			perf_counts__set_loaded(counter->counts, cpu, thread, false);
++		count = perf_counts(counter->counts, cpu, thread);
+ 
+-			if (STAT_RECORD) {
+-				if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
+-					pr_err("failed to write stat event\n");
+-					return -1;
+-				}
+-			}
++		/*
++		 * The leader's group read loads data into its group members
++		 * (via perf_evsel__read_counter) and sets threir count->loaded.
++		 */
++		if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
++		    read_single_counter(counter, cpu, thread, rs)) {
++			counter->counts->scaled = -1;
++			perf_counts(counter->counts, cpu, thread)->ena = 0;
++			perf_counts(counter->counts, cpu, thread)->run = 0;
++			return -1;
++		}
 +
- 	{
- 		.desc = "Probe SDT events",
- 		.func = test__sdt_event,
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 8a0d236202b0..4ac56741ac5f 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -120,3 +120,19 @@ int test__cpu_map_print(struct test *test __maybe_unused, int subtest __maybe_un
- 	TEST_ASSERT_VAL("failed to convert map", cpu_map_print("1-10,12-20,22-30,32-40"));
++		perf_counts__set_loaded(counter->counts, cpu, thread, false);
+ 
+-			if (verbose > 1) {
+-				fprintf(stat_config.output,
+-					"%s: %d: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
+-						perf_evsel__name(counter),
+-						cpu,
+-						count->val, count->ena, count->run);
++		if (STAT_RECORD) {
++			if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
++				pr_err("failed to write stat event\n");
++				return -1;
+ 			}
+ 		}
++
++		if (verbose > 1) {
++			fprintf(stat_config.output,
++				"%s: %d: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
++					perf_evsel__name(counter),
++					cpu,
++					count->val, count->ena, count->run);
++		}
+ 	}
+ 
  	return 0;
+@@ -325,15 +318,34 @@ static int read_counter(struct evsel *counter, struct timespec *rs)
+ static void read_counters(struct timespec *rs)
+ {
+ 	struct evsel *counter;
+-	int ret;
++	struct affinity affinity;
++	int i, ncpus, cpu;
++
++	if (affinity__setup(&affinity) < 0)
++		return;
++
++	ncpus = evsel_list->core.all_cpus->nr;
++	if (!(target__has_cpu(&target) && !target__has_per_thread(&target)))
++		ncpus = 1;
++	evlist__for_each_cpu (evsel_list, i, cpu) {
++		if (i >= ncpus)
++			break;
++		affinity__set(&affinity, cpu);
++
++		evlist__for_each_entry(evsel_list, counter) {
++			if (evsel__cpu_iter_skip(counter, cpu))
++				continue;
++			counter->err = read_counter(counter, rs, counter->cpu_iter - 1);
++		}
++	}
++	affinity__cleanup(&affinity);
+ 
+ 	evlist__for_each_entry(evsel_list, counter) {
+-		ret = read_counter(counter, rs);
+-		if (ret)
++		if (counter->err)
+ 			pr_debug("failed to read counter %s\n", counter->name);
+-
+-		if (ret == 0 && perf_stat_process_counter(&stat_config, counter))
++		if (counter->err == 0 && perf_stat_process_counter(&stat_config, counter))
+ 			pr_warning("failed to process counter %s\n", counter->name);
++		counter->err = 0;
+ 	}
  }
-+
-+int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-+	struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
-+	struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-+	char buf[100];
-+
-+	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
-+	cpu_map__snprint(c, buf, sizeof(buf));
-+	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
-+	perf_cpu_map__put(a);
-+	perf_cpu_map__put(b);
-+	perf_cpu_map__put(c);
-+	return 0;
-+}
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 9837b6e93023..44b184fd869f 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -98,6 +98,7 @@ int test__event_update(struct test *test, int subtest);
- int test__event_times(struct test *test, int subtest);
- int test__backward_ring_buffer(struct test *test, int subtest);
- int test__cpu_map_print(struct test *test, int subtest);
-+int test__cpu_map_merge(struct test *test, int subtest);
- int test__sdt_event(struct test *test, int subtest);
- int test__is_printable_array(struct test *test, int subtest);
- int test__bitmap_print(struct test *test, int subtest);
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index ca82a93960cd..c8af4bc23f8f 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -86,6 +86,7 @@ struct evsel {
+ 	struct list_head	config_terms;
+ 	struct bpf_object	*bpf_obj;
+ 	int			bpf_fd;
++	int			err;
+ 	bool			auto_merge_stats;
+ 	bool			merged_stat;
+ 	const char *		metric_expr;
 -- 
 2.23.0
 
