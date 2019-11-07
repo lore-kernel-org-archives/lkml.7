@@ -2,88 +2,124 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE941FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31FEFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88488217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97208217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:37:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zlF70s0+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="LZsgMkio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733159AbfKGDfW (ORCPT
+        id S1733121AbfKGDhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:35:22 -0500
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:47099 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733150AbfKGDfW (ORCPT
+        Wed, 6 Nov 2019 22:37:54 -0500
+Received: from gateway30.websitewelcome.com ([192.185.152.11]:48991 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733035AbfKGDhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:35:22 -0500
-Received: by mail-pf1-f181.google.com with SMTP id 193so1260348pfc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 19:35:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MTSqevB9eLaYfcqBeeI8DrNGQzdw1uX8E/KGdMxOgko=;
-        b=zlF70s0+khT1/SKNhBOSlJ24dS4oE7e8RIgO/HwP+ODMguxMDJT5+RSx3lyJsvLPlq
-         oS1s80+LjsNPcWTDyhoKfRaa//uuIxY7ABejlgv6Be53VQ1zIieogniHL+XHp8uyz+Wk
-         ZiEJTHc9LGFjzOXIqGzPnWL5T5gWyYrDlDZj2kozJyL9rlnKtpcvnOAOgQR+w1kfK9vS
-         nWwD9JeR3i0DpI0YgyPbfkcQLeUyJVLXQXe7dagc/EXL093xaHYHM7I3aGbA09xDun7b
-         VFIOa8+gr0pVsyjKSd0j1D30NaZmvWpzYj44ivfva9hi6o/l8avJOSVOAHT4qNY9cm54
-         2sFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MTSqevB9eLaYfcqBeeI8DrNGQzdw1uX8E/KGdMxOgko=;
-        b=EdGm5NLlbQb0bY7eJU5jF1BUcHtlomV0QDLchVjRJ1zbPh6jZfGyXb+c11SSUn+inB
-         xP8RSDh1X9m+BZUZjS9nkxBXPTVE8AUPyclajQIIR+3GEk8I50ZxXtinhsM5APwYsxJv
-         2IRy0sScpjttpSw6qD7l9jgMxUtx9zAeVLewzE+OmH2xtXYCnsoZlvpAFkxa8MPUUzcg
-         IVQaJj8M+4Rwp1leWsjnyRVCI2paaKVeEN5XFkwFxILbTe771bwOyEfiNnsWOf1Idf0b
-         sO4pkn+k2sAl4uiJYsaQlxbhxhIfN3fKc+cBEpPZusklWdADmH4XorQekv/geZ5E6SyE
-         SlEw==
-X-Gm-Message-State: APjAAAW1Rh/7EVe0UlpRC/EWYTlBq13YA9FNZ8GVbfoE26YH/9Za8nkx
-        GcU2xvPGEht/eF0zMdXCKvyd3N0QukI=
-X-Google-Smtp-Source: APXvYqwmh53QyrTU3Dw6PSgNxnGd1rebMHMeSfQoe3aY8m8YDDvGn4WVyLUO3m34TjppX9BGCicB4A==
-X-Received: by 2002:a17:90a:d205:: with SMTP id o5mr2038950pju.46.1573097719548;
-        Wed, 06 Nov 2019 19:35:19 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id c16sm465425pfo.34.2019.11.06.19.35.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 19:35:18 -0800 (PST)
-Subject: Re: [PATCH RESEND] ata_piix: remove open-coded
- dmi_match(DMI_OEM_STRING)
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-ide@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <a47522045d251146c8f7daaeb18a32716bfc3397.1573097536.git.mirq-linux@rere.qmqm.pl>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <caf4017a-4acf-864e-afd8-c6f66e92eac1@kernel.dk>
-Date:   Wed, 6 Nov 2019 20:35:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 22:37:54 -0500
+X-Greylist: delayed 1223 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 22:37:53 EST
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 8DF05CB40
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 21:17:32 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id SYIei861uiJ43SYIeihaKW; Wed, 06 Nov 2019 21:17:32 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Bpq1Lr0RjA7GEI60Pxufk6S9EZ2BnHAO3RgT1P1A6D4=; b=LZsgMkio4tf7pO2NZGhMKsSI0T
+        lNJUYc5xZfCTOFfq69ZD+Sd8zi0KdfyYrRCSehLzoYURzUrs1zKfyDtJZ6zJBwFt+6AeSV7nTuMst
+        an7IMo4yLDVxwXMMObK/Cn1RZkYFu+gT9m55Wj4RsuWUi0ZC77W6T82XSbtrgwaokZxZpmp/4XIVA
+        gIY8ZKptjxHMFtDkOf44i181t1qTm3MLSSB8A3nv/8A2SgzIQf9dQAX6HSf65uFIJSs0af0zVb4Qx
+        a0u9mHnWCmwvPwtIfjJg+JZqwG7q6ooDqdORoVZUGzATkNCPd0a3k8xF4sfMVxRI3iFGDPzAep0e8
+        yXa1QOsA==;
+Received: from [191.31.194.59] (port=34854 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iSYId-000Mrk-Kr; Thu, 07 Nov 2019 00:17:32 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v6 5/5] power: supply: max17040: Send uevent in SOC and status change
+Date:   Thu,  7 Nov 2019 00:17:10 -0300
+Message-Id: <20191107031710.5672-6-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191107031710.5672-1-matheus@castello.eng.br>
+References: <20191105095905.GA31721@pi3>
+ <20191107031710.5672-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-In-Reply-To: <a47522045d251146c8f7daaeb18a32716bfc3397.1573097536.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.194.59
+X-Source-L: No
+X-Exim-ID: 1iSYId-000Mrk-Kr
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.194.59]:34854
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 71
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 8:32 PM, Michał Mirosław wrote:
-> Since de40614de99 ("firmware: dmi_scan: Add DMI_OEM_STRING support to
-> dmi_matches") dmi_check_system() can match OEM_STRINGs itself.
-> Use the feature.
+Notify core through power_supply_changed() in case of changes in state
+of charge and power supply status. This is useful for user-space to
+efficiently update current battery level.
 
-Looks good, applied, thanks.
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/power/supply/max17040_battery.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
--- 
-Jens Axboe
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 3fc9e1c7b257..1f5afabdbabc 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -209,10 +209,19 @@ static void max17040_check_changes(struct i2c_client *client)
+ static void max17040_work(struct work_struct *work)
+ {
+ 	struct max17040_chip *chip;
++	int last_soc, last_status;
+
+ 	chip = container_of(work, struct max17040_chip, work.work);
++
++	/* store SOC and status to check changes */
++	last_soc = chip->soc;
++	last_status = chip->status;
+ 	max17040_check_changes(chip->client);
+
++	/* check changes and send uevent */
++	if (last_soc != chip->soc || last_status != chip->status)
++		power_supply_changed(chip->battery);
++
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+ }
+--
+2.24.0.rc2
 
