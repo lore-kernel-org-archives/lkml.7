@@ -2,253 +2,225 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2B9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A0AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAA4214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="jVJtjknC"
+	by mail.kernel.org (Postfix) with ESMTP id E2E0721882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfKGF7F (ORCPT
+        id S1726789AbfKGGBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 00:59:05 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33173 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfKGF7F (ORCPT
+        Thu, 7 Nov 2019 01:01:30 -0500
+Received: from smtprelay0228.hostedemail.com ([216.40.44.228]:40857 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725763AbfKGGBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 00:59:05 -0500
-Received: by mail-pf1-f193.google.com with SMTP id c184so1689683pfb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 21:59:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jEZVUx0Bokdy5jQIiZllK6O5/e8/p0QuHbwHLeGIlr4=;
-        b=jVJtjknCwoos57ZJWQVhH/BNsxOzmfC6fszZ9TdQsy0Wh32Fb7mWOETl5iJjLrAvvh
-         9C7KbbxXqRIHuPBo5o8KO+sgLcRTMgraKOCtIyCGKBV/f6gTFgeX0G2j8sCi21hLMY8x
-         kLv8uRN7C7m0RPo0dFu9ITVWdm0JXcjJpllEl3xpdiYr6rmlUkiyQzm/85IQFwQbUDWR
-         awmsIO2MFItlTwd9T6CCXA/1HLhNAKHu/NVVk54PS58TCDbSYGjUza3X7RtrsyterJMo
-         1xMyg5ykKLgFeTYuRxatG2vgsSPyqM2kfoc6nn//Kh3Lw3ffB5GKq95+jRg/1/UXbsfh
-         1Pzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=jEZVUx0Bokdy5jQIiZllK6O5/e8/p0QuHbwHLeGIlr4=;
-        b=KOw/yYwICTqPlWfWNyrI6nK/O6adhlxOzlwN/sQTT7UeOiO4QG2/U/O+Cs3uyPWoIG
-         mCiyp61mXTP4JPDMuWF+lHvNO/dWnffbx3vwPqH2hNNDJsZRuQfMjmIEs0vRzhW65tHj
-         90jrTt9QHBKUNxWmmDKyfEPLHS/rDzp1mXv1Ia2r3muK/PmyNXcvpwueUysIRBBnLKMw
-         +dF7c3mKWJpRSX5i07jGaxiI+bA5X0v0YjrzXSX2uW8TLd1/20ykFEvshIB69CgeI901
-         SZFOk5jxuunAClOYni13dXlsh/voPuTrDv500unRx5hlTs1i3dndDWIaB50DlE9Kr5hn
-         D1Rw==
-X-Gm-Message-State: APjAAAWaOu+eU2u1GmvLsI4k1Ut2uCA8VQ+TbLIS3UwSnsOgrclwQEoP
-        1cOEvKcR3SPm/bLI7/lfQuu9/W4ZUws=
-X-Google-Smtp-Source: APXvYqxx0EI5xrvDN32EQtXf6Dzvur0I3s23OvbPFG7lFSGdt6+yLU1fqzdTqCZ6g/43e/RAfmWPhA==
-X-Received: by 2002:a63:2e01:: with SMTP id u1mr2381713pgu.25.1573106343962;
-        Wed, 06 Nov 2019 21:59:03 -0800 (PST)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id 65sm1383578pff.2.2019.11.06.21.58.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 21:59:02 -0800 (PST)
-Subject: Re: [RFC v1 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
- with the hypervisor.
-To:     Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
-        david@gibson.dropbear.id.au, mpe@ellerman.id.au, paulus@ozlabs.org,
-        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
- <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
- <af0a236f-37b2-ee16-0ebd-576b4e12d8cd@ozlabs.ru>
- <20191106170153.GC5201@oc0525413822.ibm.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <6c367fc2-03f5-3ea4-3cd7-9c4af1df1d4c@ozlabs.ru>
-Date:   Thu, 7 Nov 2019 16:58:55 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 7 Nov 2019 01:01:30 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id EDACC182CED28;
+        Thu,  7 Nov 2019 06:01:28 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: oven08_470620914dc0d
+X-Filterd-Recvd-Size: 7435
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  7 Nov 2019 06:01:27 +0000 (UTC)
+Message-ID: <0ceb6a89da4424a4500789610fae4d05ba45ba86.camel@perches.com>
+Subject: [PATCH] xfs: Correct comment tyops -> typos
+From:   Joe Perches <joe@perches.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 06 Nov 2019 22:01:15 -0800
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20191106170153.GC5201@oc0525413822.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Just fix the typos checkpatch notices...
+
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ fs/xfs/kmem.c                  | 2 +-
+ fs/xfs/libxfs/xfs_alloc.c      | 2 +-
+ fs/xfs/libxfs/xfs_attr_leaf.c  | 2 +-
+ fs/xfs/libxfs/xfs_da_format.h  | 2 +-
+ fs/xfs/libxfs/xfs_fs.h         | 2 +-
+ fs/xfs/libxfs/xfs_log_format.h | 4 ++--
+ fs/xfs/xfs_buf.c               | 2 +-
+ fs/xfs/xfs_log_cil.c           | 4 ++--
+ fs/xfs/xfs_symlink.h           | 2 +-
+ fs/xfs/xfs_trans_ail.c         | 8 ++++----
+ 10 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
+index da031b9..1da942 100644
+--- a/fs/xfs/kmem.c
++++ b/fs/xfs/kmem.c
+@@ -32,7 +32,7 @@ kmem_alloc(size_t size, xfs_km_flags_t flags)
+ 
+ 
+ /*
+- * __vmalloc() will allocate data pages and auxillary structures (e.g.
++ * __vmalloc() will allocate data pages and auxiliary structures (e.g.
+  * pagetables) with GFP_KERNEL, yet we may be under GFP_NOFS context here. Hence
+  * we need to tell memory reclaim that we are in such a context via
+  * PF_MEMALLOC_NOFS to prevent memory reclaim re-entering the filesystem here
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index f7a4b5..b39bd8 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -1488,7 +1488,7 @@ xfs_alloc_ag_vextent_near(
+ 	dofirst = prandom_u32() & 1;
+ #endif
+ 
+-	/* handle unitialized agbno range so caller doesn't have to */
++	/* handle uninitialized agbno range so caller doesn't have to */
+ 	if (!args->min_agbno && !args->max_agbno)
+ 		args->max_agbno = args->mp->m_sb.sb_agblocks - 1;
+ 	ASSERT(args->min_agbno <= args->max_agbno);
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index dca884..8ba3ae8 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -829,7 +829,7 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
+ }
+ 
+ /*
+- * Retreive the attribute value and length.
++ * Retrieve the attribute value and length.
+  *
+  * If ATTR_KERNOVAL is specified, only the length needs to be returned.
+  * Unlike a lookup, we only return an error if the attribute does not
+diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+index ae654e0..6702a08 100644
+--- a/fs/xfs/libxfs/xfs_da_format.h
++++ b/fs/xfs/libxfs/xfs_da_format.h
+@@ -482,7 +482,7 @@ xfs_dir2_leaf_bests_p(struct xfs_dir2_leaf_tail *ltp)
+ }
+ 
+ /*
+- * Free space block defintions for the node format.
++ * Free space block definitions for the node format.
+  */
+ 
+ /*
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index e9371a..038a16a 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -416,7 +416,7 @@ struct xfs_bulkstat {
+ 
+ /*
+  * Project quota id helpers (previously projid was 16bit only
+- * and using two 16bit values to hold new 32bit projid was choosen
++ * and using two 16bit values to hold new 32bit projid was chosen
+  * to retain compatibility with "old" filesystems).
+  */
+ static inline uint32_t
+diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
+index e5f97c6..8ef31d7 100644
+--- a/fs/xfs/libxfs/xfs_log_format.h
++++ b/fs/xfs/libxfs/xfs_log_format.h
+@@ -432,9 +432,9 @@ static inline uint xfs_log_dinode_size(int version)
+ }
+ 
+ /*
+- * Buffer Log Format defintions
++ * Buffer Log Format definitions
+  *
+- * These are the physical dirty bitmap defintions for the log format structure.
++ * These are the physical dirty bitmap definitions for the log format structure.
+  */
+ #define	XFS_BLF_CHUNK		128
+ #define	XFS_BLF_SHIFT		7
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index 1e63dd3..2ed3c65 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -461,7 +461,7 @@ _xfs_buf_map_pages(
+ 		unsigned nofs_flag;
+ 
+ 		/*
+-		 * vm_map_ram() will allocate auxillary structures (e.g.
++		 * vm_map_ram() will allocate auxiliary structures (e.g.
+ 		 * pagetables) with GFP_KERNEL, yet we are likely to be under
+ 		 * GFP_NOFS context here. Hence we need to tell memory reclaim
+ 		 * that we are in such a context via PF_MEMALLOC_NOFS to prevent
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index a120442..48435c 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -179,7 +179,7 @@ xlog_cil_alloc_shadow_bufs(
+ 
+ 			/*
+ 			 * We free and allocate here as a realloc would copy
+-			 * unecessary data. We don't use kmem_zalloc() for the
++			 * unnecessary data. We don't use kmem_zalloc() for the
+ 			 * same reason - we don't need to zero the data area in
+ 			 * the buffer, only the log vector header and the iovec
+ 			 * storage.
+@@ -682,7 +682,7 @@ xlog_cil_push(
+ 	}
+ 
+ 
+-	/* check for a previously pushed seqeunce */
++	/* check for a previously pushed sequence */
+ 	if (push_seq < cil->xc_ctx->sequence) {
+ 		spin_unlock(&cil->xc_push_lock);
+ 		goto out_skip;
+diff --git a/fs/xfs/xfs_symlink.h b/fs/xfs/xfs_symlink.h
+index 9743d8c..b1fa09 100644
+--- a/fs/xfs/xfs_symlink.h
++++ b/fs/xfs/xfs_symlink.h
+@@ -5,7 +5,7 @@
+ #ifndef __XFS_SYMLINK_H
+ #define __XFS_SYMLINK_H 1
+ 
+-/* Kernel only symlink defintions */
++/* Kernel only symlink definitions */
+ 
+ int xfs_symlink(struct xfs_inode *dp, struct xfs_name *link_name,
+ 		const char *target_path, umode_t mode, struct xfs_inode **ipp);
+diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+index aea71e..00cc5b 100644
+--- a/fs/xfs/xfs_trans_ail.c
++++ b/fs/xfs/xfs_trans_ail.c
+@@ -427,15 +427,15 @@ xfsaild_push(
+ 
+ 		case XFS_ITEM_FLUSHING:
+ 			/*
+-			 * The item or its backing buffer is already beeing
++			 * The item or its backing buffer is already being
+ 			 * flushed.  The typical reason for that is that an
+ 			 * inode buffer is locked because we already pushed the
+ 			 * updates to it as part of inode clustering.
+ 			 *
+ 			 * We do not want to to stop flushing just because lots
+-			 * of items are already beeing flushed, but we need to
++			 * of items are already being flushed, but we need to
+ 			 * re-try the flushing relatively soon if most of the
+-			 * AIL is beeing flushed.
++			 * AIL is being flushed.
+ 			 */
+ 			XFS_STATS_INC(mp, xs_push_ail_flushing);
+ 			trace_xfs_ail_flushing(lip);
+@@ -612,7 +612,7 @@ xfsaild(
+  * The push is run asynchronously in a workqueue, which means the caller needs
+  * to handle waiting on the async flush for space to become available.
+  * We don't want to interrupt any push that is in progress, hence we only queue
+- * work if we set the pushing bit approriately.
++ * work if we set the pushing bit appropriately.
+  *
+  * We do this unlocked - we only need to know whether there is anything in the
+  * AIL at the time we are called. We don't need to access the contents of
 
 
-On 07/11/2019 04:01, Ram Pai wrote:
-> On Wed, Nov 06, 2019 at 12:58:50PM +1100, Alexey Kardashevskiy wrote:
->>
->>
->> On 05/11/2019 08:28, Ram Pai wrote:
->>> The hypervisor needs to access the contents of the page holding the TCE
->>> entries while setting up the TCE entries in the IOMMU's TCE table. For
->>> SecureVMs, since this page is encrypted, the hypervisor cannot access
->>> valid entries. Share the page with the hypervisor. This ensures that the
->>> hypervisor sees the valid entries.
->>>
->>> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
->>> ---
->>>  arch/powerpc/platforms/pseries/iommu.c | 20 +++++++++++++++++---
->>>  1 file changed, 17 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
->>> index 8d9c2b1..07f0847 100644
->>> --- a/arch/powerpc/platforms/pseries/iommu.c
->>> +++ b/arch/powerpc/platforms/pseries/iommu.c
->>> @@ -37,6 +37,7 @@
->>>  #include <asm/mmzone.h>
->>>  #include <asm/plpar_wrappers.h>
->>>  #include <asm/svm.h>
->>> +#include <asm/ultravisor.h>
->>>  
->>>  #include "pseries.h"
->>>  
->>> @@ -179,6 +180,19 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
->>>  
->>>  static DEFINE_PER_CPU(__be64 *, tce_page);
->>>  
->>> +/*
->>> + * Allocate a tce page.  If secure VM, share the page with the hypervisor.
->>> + */
->>> +static __be64 *alloc_tce_page(void)
->>> +{
->>> +	__be64 *tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
->>> +
->>> +	if (tcep && is_secure_guest())
->>> +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
->>
->>
->> There is no matching unshare in this patch.
-> 
-> The page is allocated and shared, and stays that way for the life of the
-> kernel. It is not explicitly unshared or freed.
-
-
-Ah, fair enough, I missed that, strange that we do not free it but ok. Thanks,
-
-
->  It is however
-> implicitly unshared by the guest kernel, through a UV_UNSHARE_ALL_PAGES ucall
-> when the guest kernel reboots. And it also gets implicitly unshared by
-> the Ultravisor/Hypervisor, if the SVM abruptly terminates.
-> 
->>
->>
->>> +
->>> +	return tcep;
->>> +}
->>> +
->>>  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->>>  				     long npages, unsigned long uaddr,
->>>  				     enum dma_data_direction direction,
->>> @@ -206,8 +220,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->>>  	 * from iommu_alloc{,_sg}()
->>>  	 */
->>>  	if (!tcep) {
->>> -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
->>> -		/* If allocation fails, fall back to the loop implementation */
->>> +		tcep = alloc_tce_page();
->>>  		if (!tcep) {
->>>  			local_irq_restore(flags);
->>>  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
->>> @@ -391,6 +404,7 @@ static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
->>>  	return rc;
->>>  }
->>>  
->>> +
->>
->> Unrelated.
-> 
-> yes. will fix it.
-> 
-> Thanks,
-> RP
-> 
-
--- 
-Alexey
