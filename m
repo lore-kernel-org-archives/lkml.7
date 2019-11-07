@@ -2,137 +2,122 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144D6FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4215FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD0C32084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073622084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1n5mZQR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733221AbfKGJgO (ORCPT
+        id S1733170AbfKGJi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:36:14 -0500
-Received: from mga01.intel.com ([192.55.52.88]:14474 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbfKGJgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:36:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 01:36:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,277,1569308400"; 
-   d="scan'208";a="205623884"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 07 Nov 2019 01:36:13 -0800
-Received: from [10.226.38.65] (unknown [10.226.38.65])
-        by linux.intel.com (Postfix) with ESMTP id 452DD5802C5;
-        Thu,  7 Nov 2019 01:36:09 -0800 (PST)
-Subject: Re: [PATCH v4 1/2] pinctrl: Add pinmux & GPIO controller driver for a
- new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
- <63273c2b9ad14dae2b74e27e679da4d60a67d284.1573111648.git.rahul.tanwar@linux.intel.com>
- <20191107090712.GV32742@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <59074c5d-fb80-cfbf-b54b-10d9fd14eac0@linux.intel.com>
-Date:   Thu, 7 Nov 2019 17:36:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 7 Nov 2019 04:38:28 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:58870 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfKGJi2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 04:38:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1BNGU8Je06pHaDCPvMWPgMGKRnIKHd1zkRfKCYgi8Yw=; b=1n5mZQR05hFiSJiILoYH7b4Yw
+        x4pvZm3CmP42TYeEJI4nG5s85/xm8UrMAKBB53EJs7EbedNco3LpyecdG3J9xdiuwY+IVKah1Y4eH
+        1sup1dGHvxPrdR1b6vHsV5iL1Nl2NFv2+lUiIZFOs/0FKTJkspVzfdEFa4g4wD2qCevORTDndqOf6
+        mUv2rd75RjFbdtXt1U76bQDz5j/Xe2P4qRo/L6QK0ljy5v0IGN1phuPlb5lKtAsH2PwywbiEiyvQ8
+        RAkeYxV2hvxwZzhrhbtCFzqZlUeQ2vP2DDTbEVgTbix2xt9458SOt1h/UNJ4nKTFHVJgSYQi3P6FF
+        KWd6CWTEA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSeFE-0002q4-E1; Thu, 07 Nov 2019 09:38:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8D39E300692;
+        Thu,  7 Nov 2019 10:37:18 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DBBBB203C2B8B; Thu,  7 Nov 2019 10:38:22 +0100 (CET)
+Date:   Thu, 7 Nov 2019 10:38:22 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <darren@dvhart.com>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Yang Tao <yang.tao172@zte.com.cn>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [patch 08/12] futex: Sanitize exit state handling
+Message-ID: <20191107093822.GD4131@hirez.programming.kicks-ass.net>
+References: <20191106215534.241796846@linutronix.de>
+ <20191106224556.645603214@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191107090712.GV32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106224556.645603214@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 06, 2019 at 10:55:42PM +0100, Thomas Gleixner wrote:
+> Instead of having a smp_mb() and an empty lock/unlock of task::pi_lock move
+> the state setting into to the lock section.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/futex.c |   17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> --- a/kernel/futex.c
+> +++ b/kernel/futex.c
+> @@ -3703,16 +3703,19 @@ void futex_exit_done(struct task_struct
+>  
+>  void futex_exit_release(struct task_struct *tsk)
+>  {
+> -	tsk->futex_state = FUTEX_STATE_EXITING;
+> -	/*
+> -	 * Ensure that all new tsk->pi_lock acquisitions must observe
+> -	 * FUTEX_STATE_EXITING. Serializes against attach_to_pi_owner().
+> -	 */
+> -	smp_mb();
+>  	/*
+> -	 * Ensure that we must observe the pi_state in exit_pi_state_list().
+> +	 * Switch the state to FUTEX_STATE_EXITING under tsk->pi_lock.
+> +	 *
+> +	 * This ensures that all subsequent checks of tsk->futex_state in
+> +	 * attach_to_pi_owner() must observe FUTEX_STATE_EXITING with
+> +	 * tsk->pi_lock held.
+> +	 *
+> +	 * It guarantees also that a pi_state which was queued right before
+> +	 * the state change under tsk->pi_lock by a concurrent waiter must
+> +	 * be observed in exit_pi_state_list().
+>  	 */
+>  	raw_spin_lock_irq(&tsk->pi_lock);
+> +	tsk->futex_state = FUTEX_STATE_EXITING;
+>  	raw_spin_unlock_irq(&tsk->pi_lock);
 
-Hi Andy,
+Right, much saner.
 
-On 7/11/2019 5:07 PM, Andy Shevchenko wrote:
-> On Thu, Nov 07, 2019 at 03:36:44PM +0800, Rahul Tanwar wrote:
-> +static void eqbr_gpio_mask_ack_irq(struct irq_data *d)
->> +{
->> +	eqbr_gpio_disable_irq(d);
->> +	eqbr_gpio_ack_irq(d);
-> Potential race?
->
->> +}
->> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
->> +			       unsigned int selector, unsigned int group)
->> +{
->> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
->> +	struct function_desc *func;
->> +	struct group_desc *grp;
->> +	unsigned int *pinmux;
->> +	int i;
->> +
->> +	func = pinmux_generic_get_function(pctldev, selector);
->> +	if (!func)
->> +		return -EINVAL;
->> +
->> +	grp = pinctrl_generic_get_group(pctldev, group);
->> +	if (!grp)
->> +		return -EINVAL;
->> +
->> +	pinmux = grp->data;
->> +	for (i = 0; i < grp->num_pins; i++)
->> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
-> What if in the middle of the loop mux of one of the pins be changed by parallel
-> thread?
+So this used to be:
 
-These are all ops called back from the core pinctrl framework.
-My understanding is that multi-threading serialization is provided by the
-pinctrl framework using mutex's. Drivers don't have to worry about that.
-Drivers only have to worry about multi-core serialization. I checked
-many other existing pinctrl drivers & all of them seem to use spin lock
-only for register accesses (not for serializing the ops itself).
+	exit_signals(tsk) /* sets PF_EXITING */
+	smp_mb();
+	raw_spin_unlock_wait(&tsk->pi_lock);
 
-Is this understanding incorrect ?
+Which is in fact (possibly) faster than the new sane code, since
+unlock_wait() only has to wait for any current lock holder to complete.
 
-
->
->> +	/* 0 mux is reserved for GPIO */
-> Perhaps
->
-> #define EQBR_GPIO_MODE	0
->
-> ?
-
-I had first used #define for this but removed it based on Rob Herring
-review feedback. I will add it back here but keep it as 0 in dt bindings..
-
->> +	return eqbr_set_pin_mux(pctl, 0, pin);
->> +}
->> +	for (i = 0; i < npins; i++) {
->> +		ret = eqbr_pinconf_set(pctldev, pins[i], configs, num_configs);
->> +		if (ret)
->> +			return ret;
-> What if in the middle of the loop settings of one of the pins be changed by
-> parallel thread?
-
-Same comments as above..
-
->
->> +		group.pins = devm_kcalloc(dev, group.num_pins,
->> +					  sizeof(*(group.pins)), GFP_KERNEL);
->> +		pinmux = devm_kcalloc(dev, group.num_pins,
->> +				      sizeof(*pinmux), GFP_KERNEL);
-> These can be rearranged.
-
-Lost you here. Please elaborate more on what you mean by rearranging. Thanks.
-
-Regards,
-Rahul
-
-
+However due to terrible semantics and implementation issues we got rid
+of *spin_unlock_wait() and well.. lets all forget this :-)
