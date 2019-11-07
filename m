@@ -2,59 +2,84 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7F7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E8CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFB312178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0E9222CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbfKGOya (ORCPT
+        id S2388273AbfKGOyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 7 Nov 2019 09:54:32 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63452 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387870AbfKGOya (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 09:54:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49064 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726640AbfKGOy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:54:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D7F90AD07;
-        Thu,  7 Nov 2019 14:54:27 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 15:54:27 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH v2] x86/stacktrace: update kconfig help text for reliable
- unwinders
-Message-ID: <20191107145427.7ycihdipfijwxenw@pathway.suse.cz>
-References: <20191107032958.14034-1-joe.lawrence@redhat.com>
- <20191107033458.ptvw6omypqndjt6d@treble>
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 2b552d6f1ba461aa; Thu, 7 Nov 2019 15:54:28 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, Keith Busch <keith.busch@intel.com>,
+        jglisse@redhat.com, linuxarm@huawei.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
+Date:   Thu, 07 Nov 2019 15:54:28 +0100
+Message-ID: <1768519.laKBN70clK@kreacher>
+In-Reply-To: <20191018134656.00000f70@huawei.com>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com> <1895971.7mY3IlW731@kreacher> <20191018134656.00000f70@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107033458.ptvw6omypqndjt6d@treble>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-11-06 21:34:58, Josh Poimboeuf wrote:
-> On Wed, Nov 06, 2019 at 10:29:58PM -0500, Joe Lawrence wrote:
-> > commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
-> > for the ORC unwinder") added the ORC unwinder as a "reliable" unwinder.
-> > Update the help text to reflect that change: the frame pointer unwinder
-> > is no longer the only one that can provide HAVE_RELIABLE_STACKTRACE.
-> > 
-> > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+On Friday, October 18, 2019 2:46:56 PM CET Jonathan Cameron wrote:
+> On Fri, 18 Oct 2019 12:18:33 +0200
+> "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
 > 
-> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > On Friday, October 4, 2019 1:43:27 PM CEST Jonathan Cameron wrote:
+> > > Generic Initiators are a new ACPI concept that allows for the
+> > > description of proximity domains that contain a device which
+> > > performs memory access (such as a network card) but neither
+> > > host CPU nor Memory.
+> > > 
+> > > This patch has the parsing code and provides the infrastructure
+> > > for an architecture to associate these new domains with their
+> > > nearest memory processing node.
+> > > 
+> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> > 
+> > This depends on the series from Dan at:
+> > 
+> > https://lore.kernel.org/linux-acpi/CAPcyv4gBSX58CWH4HZ28w0_cZRzJrhgdEFHa2g8KDqyv8aFqZQ@mail.gmail.com/T/#m1acce3ae8f29f680c0d95fd1e840e703949fbc48
+> > 
+> Hi Rafael,
+> 
+> Yes. Cover letter mentions it was rebased on v4 of that series.
+> 
+> > AFAICS, so please respin when that one hits the Linus' tree.
+> 
+> Sure, though that pushes it out another cycle and it's beginning to
+> get a bit silly (just rebases since April).
+> 
+> I guess it can't be helped given the series hits several trees.
 
-It is committed in livepatch.git, branch for-5.5/core.
+I've just applied the Dan's series and I can take patch [1/4] from this one,
+but for the [2-3/4] I'd like to get some ACKs from the arm64 and x86 people
+respectively.
 
-Best Regards,
-Petr
+Thanks!
+
+
+
