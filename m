@@ -2,97 +2,87 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5DC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40D2C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A002087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:17:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfEHg1PJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5E7742087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:19:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573121952;
+	bh=veSNy8fHpebcc4Qmp98qkfhKdLnCD3QplNB+Rkjzb38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W8g0E1YCz4zqKCMgPOlpusTuYiLN6RVr5I2a8YUjlalzo0Oo+DsUvQRRXwzmXKHf+
+	 lpv+FZudKxd08938Nil9wUuYUTpgrCRwIR8yYwYW2F4UBWu0XC6XZWMvik9+N8qrAf
+	 2ahHVZHpANihwP1W6Wo9/RXt2550+NzNQHFuKXFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387956AbfKGKRZ (ORCPT
+        id S2388031AbfKGKTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:17:25 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34825 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726866AbfKGKRX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:17:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573121841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JfV7Ui0H34lc92hzIDp9GSS0/7fG2fsW51TyX4HtAsI=;
-        b=CfEHg1PJYo5wBamWhOPfDIxIqwFz6blp3vY/u4lgx//DVMrfYJkwa60EBdjmhDq+fTuaTr
-        b5czqTM2Y3i98riOyNV67izXrxAjfwaZjdpeCr54vHYfzJhTrub1i4mK8hsk7iM6O+zjR/
-        A5sjC+b9Sk2FBTGqx1PJ8w2JIQ6FIFA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-DKf9nbPbNFy35g1M123gRg-1; Thu, 07 Nov 2019 05:17:18 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 7 Nov 2019 05:19:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727632AbfKGKTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:19:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D398F800C61;
-        Thu,  7 Nov 2019 10:17:16 +0000 (UTC)
-Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 446925C290;
-        Thu,  7 Nov 2019 10:16:49 +0000 (UTC)
-Subject: Re: [PATCH v6] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com, maxime.coquelin@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        by mail.kernel.org (Postfix) with ESMTPSA id 22BF42084D;
+        Thu,  7 Nov 2019 10:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573121949;
+        bh=veSNy8fHpebcc4Qmp98qkfhKdLnCD3QplNB+Rkjzb38=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o5HR5UtWgEVSoCewOeCOvQ+7niFoy1nWzZPd9rnyhJlit/8XKLlyRkgKP+RW4/ARv
+         HU7XR8MtpDVdY6aDdGNgaMpeCijUFZ4hKWFojxo61Cf2PySQZKiJkV6iRoJgNtfzRi
+         PZmi9vfl+T1Q3if4yW5hU8ym1X3VqIneyMPoJIaI=
+Date:   Thu, 7 Nov 2019 11:19:07 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-usb@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, lingshan.zhu@intel.com
-References: <20191107073530.15291-1-tiwei.bie@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1b60cc37-1c85-df85-1f4d-3f9a10ecef54@redhat.com>
-Date:   Thu, 7 Nov 2019 18:16:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v3 2/3] usb, kcov: collect coverage from hub_event
+Message-ID: <20191107101907.GA1365996@kroah.com>
+References: <cover.1572366574.git.andreyknvl@google.com>
+ <de4fe1c219db2d002d905dc1736e2a3bfa1db997.1572366574.git.andreyknvl@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191107073530.15291-1-tiwei.bie@intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: DKf9nbPbNFy35g1M123gRg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de4fe1c219db2d002d905dc1736e2a3bfa1db997.1572366574.git.andreyknvl@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/11/7 =E4=B8=8B=E5=8D=883:35, Tiwei Bie wrote:
-> This patch introduces a mdev based hardware vhost backend.
-> This backend is built on top of the same abstraction used
-> in virtio-mdev and provides a generic vhost interface for
-> userspace to accelerate the virtio devices in guest.
->
-> This backend is implemented as a mdev device driver on top
-> of the same mdev device ops used in virtio-mdev but using
-> a different mdev class id, and it will register the device
-> as a VFIO device for userspace to use. Userspace can setup
-> the IOMMU with the existing VFIO container/group APIs and
-> then get the device fd with the device name. After getting
-> the device fd, userspace can use vhost ioctls on top of it
-> to setup the backend.
->
-> Signed-off-by: Tiwei Bie<tiwei.bie@intel.com>
+On Tue, Oct 29, 2019 at 05:32:28PM +0100, Andrey Konovalov wrote:
+> This patch adds kcov_remote_start()/kcov_remote_stop() annotations to the
+> hub_event() function, which is responsible for processing events on USB
+> buses, in particular events that happen during USB device enumeration.
+> Since hub_event() is run in a global background kernel thread (see
+> Documentation/dev-tools/kcov.rst for details), each USB bus gets a unique
+> global handle from the USB subsystem kcov handle range. As the result kcov
+> can now be used to collect coverage from events that happen on a
+> particular USB bus.
+> 
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 > ---
-> This patch depends on below series:
-> https://lkml.org/lkml/2019/11/6/538
+>  drivers/usb/core/hub.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-Thanks!
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
