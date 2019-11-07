@@ -2,131 +2,123 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128BEC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C7C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4F221882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573125729;
-	bh=+CIQPZ+/8fpJy1L09YhNePzp1OmY7Y7silMp+Oka410=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xivTitEEzKtt+R9V9SfKnmvfcS4VALJyBn2FkyNFUx1hsUtbJrTGVNlFziX7o/fPm
-	 dWGjm6W+hiz99ZzCQ8mFq2JVIM8CnZntxB5O4jchm2UwFkS4iM0dxH60ddfXPYAf9N
-	 yENqGgxkyBiU7xY3UcBGN3d4L+LmRSDlxnabei/k=
+	by mail.kernel.org (Postfix) with ESMTP id 5CC7021882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="b6XWFLM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388449AbfKGLWI (ORCPT
+        id S2388199AbfKGL1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:22:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388412AbfKGLWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:22:08 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2353D207FA;
-        Thu,  7 Nov 2019 11:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573125726;
-        bh=+CIQPZ+/8fpJy1L09YhNePzp1OmY7Y7silMp+Oka410=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gAwmlkg+C1uqfpT4oaZ7vzWSd9xyvz0Bxo+zUKBL2Zrns5QwhTlbQvGPtAnKaSTcD
-         45jomg5haOVkPswa/+YSyM9Gom9rA+S7X2+q6BS43sx86egC5HVpnscjGEkBD4SNdw
-         Ftqww3kdxYvyK0M+2MLO/SOLEGqKgMiKvELJlT0g=
-Date:   Thu, 7 Nov 2019 11:22:01 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Manfred Spraul <manfred@colorfullife.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 1/5] smp_mb__{before,after}_atomic(): Update Documentation
-Message-ID: <20191107112200.GA11587@willie-the-truck>
-References: <20191020123305.14715-1-manfred@colorfullife.com>
- <20191020123305.14715-2-manfred@colorfullife.com>
- <20191101164948.GD3603@willie-the-truck>
- <65a187c2-80de-2c6f-5f80-48c51f973d08@colorfullife.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65a187c2-80de-2c6f-5f80-48c51f973d08@colorfullife.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 7 Nov 2019 06:27:36 -0500
+Received: from mail-m975.mail.163.com ([123.126.97.5]:47592 "EHLO
+        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfKGL1g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:27:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=VxXuxyye1MqjU+hDjg
+        02qbrKx1jLX10dIV/GDARuXpU=; b=b6XWFLM1DY02QNi+PAd31aRrO6jgY1b51z
+        UiunWg4MGfA6LGfW9dtQeS44ggK81ISAo3d/cBoRqO0KR+B3yIph2aZ2OiKLRr6m
+        jW65MQHNHjtcxF2DbkDaCdId16uGV6fd4mXFuA7MkaGAJM3laVsNWXn9IEIsIXYJ
+        IiVR1ElHI=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp5 (Coremail) with SMTP id HdxpCgCXTueP_8Nd8iYXAA--.227S3;
+        Thu, 07 Nov 2019 19:27:17 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Pan Bian <bianpan2016@163.com>
+Subject: [PATCH] dmaengine: sun6i: Fix use after free
+Date:   Thu,  7 Nov 2019 19:26:53 +0800
+Message-Id: <1573126013-17609-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: HdxpCgCXTueP_8Nd8iYXAA--.227S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr17Kr15JFy3XrWfGryfZwb_yoW8KF1kpF
+        43Ja4rur45tF1aga13Z348uF13KF4fJFyUCay5Gwn0vr9xXr1kGa17Aa4Fkr98JFn8CrWf
+        Xrs0gF1ruF4UGwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UypBhUUUUU=
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBzxVmclaD5QFnNAAAss
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manfred,
+The members in the LLI list is released in an incorrect way. Read and
+store the next member before releasing it to avoid accessing the freed
+memory.
 
-On Wed, Nov 06, 2019 at 08:23:03PM +0100, Manfred Spraul wrote:
-> From 8d2b219794221e3ef1a1ec90e0f4fe344af9a55d Mon Sep 17 00:00:00 2001
-> From: Manfred Spraul <manfred@colorfullife.com>
-> Date: Fri, 11 Oct 2019 10:33:26 +0200
-> Subject: [PATCH 1/5] smp_mb__{before,after}_atomic(): Update Documentation
-> 
-> When adding the _{acquire|release|relaxed}() variants of some atomic
-> operations, it was forgotten to update Documentation/memory_barrier.txt:
-> 
-> smp_mb__before_atomic and smp_mb__after_atomic can be combined with
-> all RMW operations that do not imply memory barriers.
-> 
-> In order to avoid that this happens again:
-> Remove the paragraph from Documentation/memory_barrier.txt, the functions
-> are sufficiently documented in Documentation/atomic_{t,bitops}.txt
-> 
-> Fixes: 654672d4ba1a ("locking/atomics: Add _{acquire|release|relaxed}() variants of some atomic operations")
-> 
-> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
-> Acked-by: Waiman Long <longman@redhat.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> ---
->  Documentation/memory-barriers.txt | 20 +-------------------
->  1 file changed, 1 insertion(+), 19 deletions(-)
-> 
-> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-> index 1adbb8a371c7..16dfb4cde1e1 100644
-> --- a/Documentation/memory-barriers.txt
-> +++ b/Documentation/memory-barriers.txt
-> @@ -1873,25 +1873,7 @@ There are some more advanced barrier functions:
->   (*) smp_mb__before_atomic();
->   (*) smp_mb__after_atomic();
->  
-> -     These are for use with atomic (such as add, subtract, increment and
-> -     decrement) functions that don't return a value, especially when used for
-> -     reference counting.  These functions do not imply memory barriers.
-> -
-> -     These are also used for atomic bitop functions that do not return a
-> -     value (such as set_bit and clear_bit).
-> -
-> -     As an example, consider a piece of code that marks an object as being dead
-> -     and then decrements the object's reference count:
-> -
-> -	obj->dead = 1;
-> -	smp_mb__before_atomic();
-> -	atomic_dec(&obj->ref_count);
-> -
-> -     This makes sure that the death mark on the object is perceived to be set
-> -     *before* the reference counter is decremented.
-> -
-> -     See Documentation/atomic_{t,bitops}.txt for more information.
-> -
-> +     See Documentation/atomic_{t,bitops}.txt for information.
->  
->   (*) dma_wmb();
->   (*) dma_rmb();
+Fixes: a90e173f3faf ("dmaengine: sun6i: Add cyclic capability")
 
-Thanks, I much prefer this approach:
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+---
+ drivers/dma/sun6i-dma.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-Acked-by: Will Deacon <will@kernel.org>
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 06cd7f867f7c..096aad7e75bb 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -687,7 +687,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+ 	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(chan->device);
+ 	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+ 	struct dma_slave_config *sconfig = &vchan->cfg;
+-	struct sun6i_dma_lli *v_lli, *prev = NULL;
++	struct sun6i_dma_lli *v_lli, *next, *prev = NULL;
+ 	struct sun6i_desc *txd;
+ 	struct scatterlist *sg;
+ 	dma_addr_t p_lli;
+@@ -752,8 +752,12 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+ 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+ 
+ err_lli_free:
+-	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+-		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
++	v_lli = txd->v_lli;
++	while (v_lli) {
++		next = v_lli->v_lli_next;
++		dma_pool_free(sdev->pool, v_lli, virt_to_phys(v_lli));
++		v_lli = next;
++	}
+ 	kfree(txd);
+ 	return NULL;
+ }
+@@ -769,7 +773,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(chan->device);
+ 	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+ 	struct dma_slave_config *sconfig = &vchan->cfg;
+-	struct sun6i_dma_lli *v_lli, *prev = NULL;
++	struct sun6i_dma_lli *v_lli, *next, *prev = NULL;
+ 	struct sun6i_desc *txd;
+ 	dma_addr_t p_lli;
+ 	u32 lli_cfg;
+@@ -820,8 +824,12 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+ 
+ err_lli_free:
+-	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+-		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
++	v_lli = txd->v_lli;
++	while (v_lli) {
++		next = v_lli->v_lli_next;
++		dma_pool_free(sdev->pool, v_lli, virt_to_phys(v_lli));
++		v_lli = next;
++	}
+ 	kfree(txd);
+ 	return NULL;
+ }
+-- 
+2.7.4
 
-Will
