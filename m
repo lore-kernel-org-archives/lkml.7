@@ -2,87 +2,194 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AC0FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A66C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437FD2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FBF52084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BnKFCdVT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="imXRr7Gk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfKGSuo (ORCPT
+        id S1727450AbfKGSvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:50:44 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45271 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfKGSuo (ORCPT
+        Thu, 7 Nov 2019 13:51:06 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34309 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfKGSvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:50:44 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z4so3095395pfn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:50:43 -0800 (PST)
+        Thu, 7 Nov 2019 13:51:05 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f5so2435276lfp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:51:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:to:cc:user-agent:date;
-        bh=C1WVX915fPdh/srtNce/iA7rehF3H9bggdi/Th19950=;
-        b=BnKFCdVTc1hnaaYgE2CPbWERaaKAAIdT05HgPAM4h2vuO+YFleEa2fKwcq/6/Gd5sR
-         CPiZMg/65hkMuMW5O6lLxjQka6L9JG43UhjpMNZXykK5vHW8d3kpRGonUfO7gQYPywJo
-         EgmCTZ8E9vES6oyhW1mkqUXGCEQbsSPgUdUp0=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GkjehHi85xXIeAmqIsUNqDZH/jMBWhdTR0KFAEgoRF8=;
+        b=imXRr7GkNBwE8ssccen69v7UhBqSwcwGow4PL5eAl5Sy1Trg5deD9ZqHW5uxKlPXC1
+         uG/d+bxygT/JQ9w+Y5zg1sql1eG626hOr0sakmOa65SQ5aX0CgesEw4UkCFKIaSts5n2
+         SNaz5EtU2ZimdRB9GsKU4CSZq+3JLRfpLiRCBVyimidejxy2kx3Y7tPyb7lSol8dPrZU
+         ld//gWqzftCmma1zPviuPalW3bRZ7YwvpSYsJfqD/jVZYWB99pmo4CibY2Lqw+pYxH9z
+         2wZfQr8bbFfDFeGcTtZda30u7mG1zAJp4s7qt3sZKLo+G9BF3YNezXUKnyjoDhs3sQk3
+         MCGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
-         :user-agent:date;
-        bh=C1WVX915fPdh/srtNce/iA7rehF3H9bggdi/Th19950=;
-        b=fk7ASt0MzhZzILL1iaGQ4gx8pxEyAA+yAob5wlxLE09KvjV4M1U3Bbz2iqreGiSe8J
-         RL9BDvtAFyqXaDzSHL52Q4050Vqd4C7sAZb3VPOlGCnxRMXM6c/1nKV2TpmWLSfCHM/5
-         K0NFh9WpLhwgOoZ8xpvXeoRUNd6xluzch5CI5iVBAJkYUsQkzWVL6HuTfceI71plZP5C
-         +YgSzMxjmOO4fkONuQWiChhcauoWQTOfS7C7kcVFkCj2jpoTyaQ0rNSlw8Azlorc3ns5
-         vVNXaKkBX0tlu3siSntA9PAXitBpGEkM0+62kb44kRy1pqVXtrNZn36T0JnTKIH56IX3
-         aHBQ==
-X-Gm-Message-State: APjAAAUkJSoDbnmMx4cvAQ0ZulRIkvf2a9Be3Akn3lhTnVLBq/LRm6YC
-        WqWgvlsKt+lDGCiZil1veJ5wMg==
-X-Google-Smtp-Source: APXvYqwXYon+nNFVYIt+LRRJ84g0KnEUdAh1JFByFpVa60fm9mh39498T+YM8DFuEp34dlBkoGGBww==
-X-Received: by 2002:a63:e84f:: with SMTP id a15mr6304654pgk.309.1573152643162;
-        Thu, 07 Nov 2019 10:50:43 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id f33sm3276919pgl.33.2019.11.07.10.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 10:50:42 -0800 (PST)
-Message-ID: <5dc46782.1c69fb81.3133c.8993@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GkjehHi85xXIeAmqIsUNqDZH/jMBWhdTR0KFAEgoRF8=;
+        b=D8rvQ0iiM9pQCQl3pEnyVBq0ybpdnYHOFcckhsvD0IIdEBpT9J41dKNap6Cy9LPhj5
+         RYSTEAX0xJttvSlSgcVUB9BNf/PVK2yX5udaC31BvrKbctPa8LAe1PEDNIcWWnUa9rSJ
+         1SvbXwwgOVHLl2hJQDDYBerYRU6H3/1k2KwKuwdUL93kp2PunOKY7unS3D4dyt4ItMqG
+         POnmvuyd4nZ+Mc8kO7stMDll7qHMwhpuapZwXafResEHdGyR8xKYLAFx9jw8CbLTpADX
+         x75zYHOzWKTBOwYyWQ4W5PHDjVLEyBHoYpTFNoKAMXhhDZJ94jbLXQy5OlpE5bjBnvAU
+         yZVQ==
+X-Gm-Message-State: APjAAAWcV4cExm9E7a2OX0AM0CwKgQT4ojg18TBTL9iaqnr1evH5c/3K
+        hnJgj/jSyDEU/wPkTfVQP1Tv6XAU6mFkeLn7/Glprg==
+X-Google-Smtp-Source: APXvYqyZmBlZ7Vly31efZ2QfWsCmfS3gd13tsQl1GGTIQ6M6H9fjnHhExntc9rdQWbhY0UeooAYZmOYtDfZsPGG75uM=
+X-Received: by 2002:ac2:5453:: with SMTP id d19mr3539669lfn.181.1573152662534;
+ Thu, 07 Nov 2019 10:51:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191106065017.22144-14-rnayak@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-14-rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 13/14] arm64: dts: qcom: SC7180: Add node for rpmhcc clock driver
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Taniya Das <tdas@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 10:50:41 -0800
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <20191105162424.GH30717@redhat.com> <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
+ <20191107083902.GB3247@linux.ibm.com> <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
+ <20191107153801.GF17896@redhat.com> <CAKOZueuKttjyRBgMkaBknzn+fzufZA+gJcd5wnKgiwmO37yN1g@mail.gmail.com>
+ <20191107182259.GK17896@redhat.com>
+In-Reply-To: <20191107182259.GK17896@redhat.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Thu, 7 Nov 2019 10:50:26 -0800
+Message-ID: <CAKOZueubtyuTZC5zPTL3qDpVS5RFYFMqx727Bj4fjMHDSY5rMg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-05 22:50:16)
-> From: Taniya Das <tdas@codeaurora.org>
->=20
-> Add node for rpmhcc clock driver.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+On Thu, Nov 7, 2019 at 10:23 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
+>
+> On Thu, Nov 07, 2019 at 08:15:53AM -0800, Daniel Colascione wrote:
+> > You're already paying for bounds checking. Receiving a message via a
+> > datagram socket is basically the same thing as what UFFD's read is
+> > doing anyway.
+>
+> Except it's synchronous and there are no dynamic allocations required
+> in uffd, while af_netlink and af_unix both all deal with queue of
+> events in skbs dynamically allocated.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Do you have any evidence that skb allocation is a significant cost
+compared to a page fault and schedule? Regardless: if you don't want
+to use skbs, don't. My point is that recvmsg is the ideal interface
+for UFFD and i'm agnostic on the implementation of this interface.
 
+> And should then eventfd also become a netlink then? I mean uffd was
+> supposed to work like eventfd except it requires specialized events.
+
+You've raised eventfd as a model for UFFD on several occasions. I
+don't think eventfd is a good reference point. An eventfd is a single
+object with 64 bits of state. It can notify interested parties in
+changes to that state. Eventfd does not provide a queue. UFFD,
+however, *is* a queue. It provides an arbitrary number of state change
+notifications to a reader. In this way, UFFD is much more like a
+socket than it's like eventfd. That is, eventfd is about level-change
+notifications, but UFFD is about sending messages.
+
+> > Programs generally don't go calling recvmsg() on random FDs they get
+> > from the outside world. They do call read() on those FDs, which is why
+>
+> That programs generally don't do something only means the attack is
+> less probable.
+>
+> Programs generally aren't suid. Programs generally don't use
+> SCM_RIGHTS. Programs generally don't ignore the retval of
+> open/socket/uffd syscalls. Programs generally don't make assumptions
+> on the fd ID after one of those syscalls that install fds.
+>
+> If all programs generally do the right thing (where the most important
+> is to not make assumptions on the fd IDs and to check all syscall
+> retvals), there was never an issue to begin with even in uffd API.
+
+"The right thing" is a matter of contracts. If a program calls read()
+and behaves as if read() has  only the effects read() is documented to
+have, that means that from the kernel's point of view, the program is
+doing the right thing. That you think certain practices are more
+prudent than others is irrelevant here. UFFD is a violation of
+read()'s *contract* and so if programs break after calling read(),
+it's the *kernel*'s fault.
+
+> > read() having unexpected side effects is terrible.
+>
+> If having unexpected side effects in read is "terrible" (i.e. I
+> personally prefer to use terms like terrible when there's at least
+> something that can be exploited in practice, not for theoretical
+> issues) for an SCM_RIGHTS receiving daemon, I just don't see how the
+> exact same unexpected (still theoretical) side effects in recvmsg with
+> an unexpected nested cmsg->cmsg_type == SCM_RIGHTS message being
+> returned, isn't terrible too.
+
+If a program calls recvmsg on an FD of unknown provenance, it *must*
+be prepared to receive file descriptors via SCM_RIGHTS. If it doesn't,
+it's a bug. The contract the kernel makes with userspace for recvmsg()
+includes the possibility of creating file descriptors. The contract
+the kernel makes with userspace for read() does not ordinarily involve
+creating file descriptors, so if the kernel does in fact do that, it's
+the kernel's problem.
+
+> > If you call it with a non-empty ancillary data buffer, you know to
+> > react to what you get. You're *opting into* the possibility of getting
+> > file descriptors. Sure, it's theoretically possible that a program
+> > calls recvmsg on random FDs it gets from unknown sources, sees
+> > SCM_RIGHTS unexpectedly, and just the SCM_RIGHTS message and its FD
+> > payload, but that's an outright bug, while calling read() on stdin is
+> > no bug.
+>
+> I'm not talking about stdin and suid. recvmsg might mitigate the
+> concern for suid (not certain, depends on the suid, if it's generally
+> doing what you expect most suid to be doing or not), I was talking
+> about the SCM_RIGHTS receiving daemon instead, the "worse" more
+> concerning case than the suid.
+>
+> I quote below Andy's relevant email:
+>
+> ======
+> It's worse if SCM_RIGHTS is involved.
+> ======
+>
+> Not all software will do this after calling recvmsg:
+>
+>     if (cmsg->cmsg_type == SCM_RIGHTS) {
+>       /* oops we got attacked and an fd was involountarily installed
+>          because we received another AF_UNIX from a malicious attacker
+>          in control of the other end of the SCM_RIGHTS-receiving
+>          AF_UNIX connection instead of our expected socket family
+>          which doesn't even support SCM_RIGHTS so we would never have
+>          noticed an fd was installed after recvmsg */
+>     }
+
+If a program omits this code after calling recvmsg on a file
+descriptor of unknown provenance and the program breaks, it's the
+program's fault. It's reasonable to epect that recvmsg might create
+file descriptors if you call it on an unknown FD. It's unreasonable to
+expect a program to consider the possibility of read() creating file
+descriptors because read isn't documented to do that.
+
+>
