@@ -2,131 +2,135 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC348FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6BD2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D082178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eUKKS4zX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388168AbfKGKi2 (ORCPT
+        id S2388188AbfKGKjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:38:28 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:46102 "EHLO mx1.redhat.com"
+        Thu, 7 Nov 2019 05:39:08 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46172 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbfKGKi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:38:28 -0500
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387728AbfKGKjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:39:08 -0500
+Received: from zn.tnic (p200300EC2F0EAD00D550E8D60855E7CD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:ad00:d550:e8d6:855:e7cd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98D4437F41
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 10:38:27 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id b4so744441wrn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 02:38:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=1cBytUypSmrDIXCTuphD26i91wQdyJsDQ/c6D49Q3/s=;
-        b=kE0PO/YLMKqY6vOpNZiC/H7SE9j1v5UbzexDCPWWuEH2b5IPmcDPTA5ehPXR+19IQO
-         mBEYM5W2Z/t+PwYPPTCi46LJfhkzEdku6NUHyzNgFcQ5U35SSoRnTFMOg38BydwGnQql
-         TDRG03wogMJsZyT+V/JiBFlWYrb7ZjzBiYTvHYVkv4OMICzcFOrKkCgyDF+j4+n4Zj7s
-         Zr8T38C8uDuacQDdYOzV+YVooO7EwrFnaEWbA4xdpEk6uqGdM3YMoWocQ5KUpQMlE/p5
-         KH6k24xlxIe6/dT29mIwvY4ix8hGNa967BVa49tNnwMAhKDBUqCcA93n0uJmFkhgHaug
-         3TfA==
-X-Gm-Message-State: APjAAAW+R2e43asdUurxRlNDSQMA7wQA05whfH3vr27N0wJD1QcC18kv
-        pCwryrhhnnv2wLwb9IjgKqD5KYEsKNSuRiMBk8a2If6fRuTqpFxXdW6QgjKp/x9bqY7tu0LRslQ
-        PEEzRBuZZInNUByyIECo3SAkd
-X-Received: by 2002:adf:ea50:: with SMTP id j16mr2050954wrn.295.1573123106316;
-        Thu, 07 Nov 2019 02:38:26 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy29JLKN+fQKhtAvQsjApYEtkKH0E4xyVUx/oPkr1HuCBG5qXWHjPsVEHaccFuX1Z35xiuEdQ==
-X-Received: by 2002:adf:ea50:: with SMTP id j16mr2050934wrn.295.1573123106058;
-        Thu, 07 Nov 2019 02:38:26 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id j14sm1756813wrp.16.2019.11.07.02.38.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 02:38:25 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Jim Mattson <jmattson@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is trustworthy
-In-Reply-To: <20191105232500.GA25887@linux.intel.com>
-References: <20191105161737.21395-1-vkuznets@redhat.com> <20191105193749.GA20225@linux.intel.com> <20191105232500.GA25887@linux.intel.com>
-Date:   Thu, 07 Nov 2019 11:38:24 +0100
-Message-ID: <87ftj0as4f.fsf@vitty.brq.redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AD56F1EC014A;
+        Thu,  7 Nov 2019 11:39:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573123142;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=oYXCV6R9J1ueEHLss+nq+10lxPXIIPwFikS8Q8Y6JkI=;
+        b=eUKKS4zXu3vliD5VNO8HgtmVb3xrphKFnuEHO6Kz2mwxUKh2oGYBmpCVQb+1SeYzqZtcOu
+        E9Wv6eL7HTgtGJXPdXRz7+e0osITvpvNAj60yvxrBQjTuv8L/iQ6nrPLKkmREeree31h0B
+        nyZbbjgmUeWEfTEqs7sCSaX7lqL9fVA=
+Date:   Thu, 7 Nov 2019 11:38:57 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Message-ID: <20191107103857.GC19501@zn.tnic>
+References: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
+ <20191106160607.GC28380@zn.tnic>
+ <SN6PR12MB26398D9E617DF8C0ABE0252CF8790@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191106195417.GF28380@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191106195417.GF28380@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Wed, Nov 06, 2019 at 08:54:17PM +0100, Borislav Petkov wrote:
+> which are also two attempts.
+> 
+> Anyway, I'll queue your set and I'll try to debug that thing because it
+> is getting on my nerves slowly...
 
-> On Tue, Nov 05, 2019 at 11:37:50AM -0800, Sean Christopherson wrote:
->> On Tue, Nov 05, 2019 at 05:17:37PM +0100, Vitaly Kuznetsov wrote:
->> > Virtualized guests may pick a different strategy to mitigate hardware
->> > vulnerabilities when it comes to hyper-threading: disable SMT completely,
->> > use core scheduling, or, for example, opt in for STIBP. Making the
->> > decision, however, requires an extra bit of information which is currently
->> > missing: does the topology the guest see match hardware or if it is 'fake'
->> > and two vCPUs which look like different cores from guest's perspective can
->> > actually be scheduled on the same physical core. Disabling SMT or doing
->> > core scheduling only makes sense when the topology is trustworthy.
->> > 
->> > Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the meaning
->> > that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the exposed SMT
->> > topology is actually trustworthy. It would, of course, be possible to get
->> > away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose backwards
->> > compatibility but the current approach looks more straightforward.
->> 
->> I'd stay away from "trustworthy", especially if this is controlled by
->> userspace.  Whether or not the hint is trustworthy is purely up to the
->> guest.  Right now it doesn't really matter, but that will change as we
->> start moving pieces of the host out of the guest's TCB.
->> 
->> It may make sense to split the two (or even three?) cases, e.g.
->> KVM_FEATURE_NO_SMT and KVM_FEATURE_ACCURATE_TOPOLOGY.  KVM can easily
->> enforce NO_SMT _today_, i.e. allow it to be set if and only if SMT is
->> truly disabled.  Verifying that the topology exposed to the guest is legit
->> is a completely different beast.
->
-> Scratch the ACCURATE_TOPOLOGY idea, I doubt there's a real use case for
-> setting ACCURATE_TOPOLOGY and not KVM_HINTS_REALTIME.  A feature flag to
-> state that SMT is disabled seems simple and useful.
+Yah, the problem is that because we have:
 
-You seem to have the most conservative ideas around)
+MODULE_DEVICE_TABLE(x86cpu, amd64_cpuids);
 
-I wasn't actually thinking about KVM enforcing anything here, my goal
-was to provide guest with enough information so it can adjust its SMT
-related settings accordingly. These could be:
-- 'nosmt'
-- STIBP
-- Core scheduling (not yet upstream afaik)
-- Manual vCPU pinning for certain tasks (including running nested
-guests). [E.g. nested Hyper-V hides 'md_clear' from its guests when it
-doesn't see 'NoNonarchitecturalCoreSharing' from the underlying
-hypervisor as it's pointless]
-- (Liran's idea): Using SMT information for better scheduling
+it gets tried on each CPU because an uevent gets dispatched for each
+device, and each CPU is a device.
 
-KVM_FEATURE_NO_SMT would cover one case, however, it's basically the
-same as not exposing hyperthreads by KVM userspace, just enforced. Do
-you think that such enforcement makes sense? What the guest is supposed
-to do when it sees the flag (compared to what's doing now)?
+That's why I see it twice on this box - it has two CPUs.
 
-('KVM_HINTS_REALTIME' may actually imply what we want, however, judging
-by its name it may gain additional meaning in the future like 'always do
-busy polling everywhere')
+And Greg says making it attempt once per system can't be done. Unless we
+start doing hacks with sending uevents per BSP only which is too much.
+Or we can remember the previous return value of the module init function
+into edac_core but that's nasty too.
+
+I'm thinking we should simply kill this fat ecc_msg thing which is not
+very useful and be done with it:
+
+[    5.697275] EDAC MC: Ver: 3.0.0
+[    5.909530] EDAC amd64: F10h detected (node 0).
+[    6.345231] EDAC amd64: Node 0: DRAM ECC disabled.
+[    6.370815] EDAC amd64: F10h detected (node 0).
+[    6.370929] EDAC amd64: Node 0: DRAM ECC disabled.
+
+That's probably still a bit annoying on a large machine but better than
+nothing.
+
+---
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 3aeb5173e200..0738237e3f09 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3188,18 +3188,6 @@ static void restore_ecc_error_reporting(struct ecc_settings *s, u16 nid,
+ 		amd64_warn("Error restoring NB MCGCTL settings!\n");
+ }
+ 
+-/*
+- * EDAC requires that the BIOS have ECC enabled before
+- * taking over the processing of ECC errors. A command line
+- * option allows to force-enable hardware ECC later in
+- * enable_ecc_error_reporting().
+- */
+-static const char *ecc_msg =
+-	"ECC disabled in the BIOS or no ECC capability, module will not load.\n"
+-	" Either enable ECC checking or force module loading by setting "
+-	"'ecc_enable_override'.\n"
+-	" (Note that use of the override may cause unknown side effects.)\n";
+-
+ static bool ecc_enabled(struct amd64_pvt *pvt)
+ {
+ 	u16 nid = pvt->mc_node_id;
+@@ -3246,11 +3234,10 @@ static bool ecc_enabled(struct amd64_pvt *pvt)
+ 	amd64_info("Node %d: DRAM ECC %s.\n",
+ 		   nid, (ecc_en ? "enabled" : "disabled"));
+ 
+-	if (!ecc_en || !nb_mce_en) {
+-		amd64_info("%s", ecc_msg);
++	if (!ecc_en || !nb_mce_en)
+ 		return false;
+-	}
+-	return true;
++	else
++		return true;
+ }
+ 
+ static inline void
 
 -- 
-Vitaly
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
