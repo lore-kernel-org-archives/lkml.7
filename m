@@ -2,128 +2,129 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE42FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E23FC6194
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B2A217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68D8217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WybOMlcE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M0ssWjRB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732801AbfKGBTj (ORCPT
+        id S1728259AbfKGBZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:19:39 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43221 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbfKGBTi (ORCPT
+        Wed, 6 Nov 2019 20:25:38 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46093 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbfKGBZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:19:38 -0500
-Received: by mail-ed1-f66.google.com with SMTP id w6so448887edx.10;
-        Wed, 06 Nov 2019 17:19:37 -0800 (PST)
+        Wed, 6 Nov 2019 20:25:38 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n14so470804oie.13
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:25:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=01gH6mza7gRt0mSaASLNbF4mMLN3fqC1wtVcO2OI7XE=;
-        b=WybOMlcEDhjLxs8fS5g1kAQ/8E6LxAjtuHZEHlCiws/lueLEoT76M918YPp+mdY7vI
-         7JhttppNJECSlZtaxuie0Z7pBH1zve8TqkucbUrpGwo8afa7FoO8p62je4JBUF2hvFjs
-         nNMU8EJ+owWTbUJuiG8YoYWMxbyJbd6j9IlyyBni5LPrxScV91s4HNEyRMTECxdJLjFn
-         drPeOpyhY/XbBCD60gCl2EYUbWz2R5m7LBreYs90OD8sTcjpNelpnB3pzWDqJ1UdxAL2
-         DG/4kMkuix+/uE2QUtI7DCGKDPgqSt+pPQIMFCuJeZ7uK5FmeAKTFRC+dMZx9uX0hOxI
-         e89A==
+        bh=MGf1G/Idf98+jw/3Ou5BEwGK66KdVONOwSI1GdIY6gk=;
+        b=M0ssWjRBobxfWKaBwwLCqTSQ0mWBLINVZ7SKXHwBkJpuz65tBoHNLZG1DdIpEeMsrZ
+         lt+bf1gcUy8X8L+EQ/pamaZKRrbvJzyG5+w6Hf40F+cVHayFBaFbvoPdK/kxs3TiQ9Rd
+         ALuFh7usFL1WUkHc9qPwfJHpVQIuM124Tq7/2PYOrfjEmgnTxWl7UVh0jbvc7W2EV3PL
+         Mg8Yt0EyO4vCpfw45aQqv4J4fXyRNDu4mV0gVVfMBiPK3OBKumk8sZ/oh6C+uBoRd55K
+         yOWfkpzem5vEpHy0RPtOnHVxe+YSgPuRHXEHVhGEN4cEcX/d/gPEHHDQkiSnuhZDy6Kz
+         DIyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=01gH6mza7gRt0mSaASLNbF4mMLN3fqC1wtVcO2OI7XE=;
-        b=Z7koPdq/Oxxfo506PVgudbQi24fd1i0njTWhmh27OCRgSGpGdp/8lzdfmfx+3Rk9PW
-         ocCqWxe10gnYA5mh4B/GJ2+OD+uhmF6a7um5woLMZWhAZLxZ1o+Q9pUCs9NSr/drgpRT
-         dX/wbgRZKfJoIELjV9PwHc1znF+7KMETsvsB3C3UVjGMHCptz0S39UmgojcH81mZDnIm
-         eLVxwBbhzvEwxxjtV/tghBC6JAerYjcVud3xlf+HHzC75BzIoKDPrdDWyz+AuxNC7gIr
-         rDnKQbzvcXUMIuyXXrxa+M4DXsYtRs3KqzEY7X+ZEodaifeLiAmiEh92FvEEjyzSyXwH
-         XI7Q==
-X-Gm-Message-State: APjAAAV8ZNVSRaPppA9bYJ4eNMtDK/rQ0dipC6wJ+CfQXMJGjqszs6al
-        PwDhVQ9+i4SSlx9qEGGts6JJxComYn8xiRw71jfuij6O9eY=
-X-Google-Smtp-Source: APXvYqwHpVx8zvfSTE96Rk7YcnyeKYzI/XT8zuroIijOODHGp7fF2QMdRi/BThgivPTFjisNMlrjwmUcvm5NxDeAnPQ=
-X-Received: by 2002:aa7:d4d8:: with SMTP id t24mr883728edr.40.1573089577113;
- Wed, 06 Nov 2019 17:19:37 -0800 (PST)
+        bh=MGf1G/Idf98+jw/3Ou5BEwGK66KdVONOwSI1GdIY6gk=;
+        b=kUxvNw0FUNCQIvFjdpTwHu6yx86+DWu8RDWghkNy/YPA0bGM+25mv47vZSqyI2mhJb
+         Q4l4Y/uGfuVAzgeApGHu+7/wsWZh9V35nIOJ7pcKcePpKdpIb/JNXCpJC3nQ50/bDPKw
+         SpsDKmDGYaE84h0ihELj9/6EzcOZnXdrp/MInE8WdzNOveRrX20PLmiGDM639FUS4/a5
+         BKcrFGNd0XEucSZgNwgp6AvWMqZThPYecajv492Mhnc9R3Y21aiSc0ays9DmEk4XQnkz
+         R/wFILqPipPA7bCvemesy39XAEThBYDcd+BRsU5VHreVhXFWhl38pCznOMqyBdKoMSN+
+         dGuQ==
+X-Gm-Message-State: APjAAAXWNdjm+rfFUWg/Pr4qYMP1BgYXmUiV5lbFC6VQ4ywWC8FhBi+o
+        cYEvNC5Yi54m4tY2XYZar2AuBCi3c5I0jHmDSxLZSw==
+X-Google-Smtp-Source: APXvYqw6efiJ0PRxdXQPobN4uLlaNjVFitxn3Vfc1xdL/4tlbdvE69PO+yIpW5h94B0crbZydjt09kDflTuKR59Nq9c=
+X-Received: by 2002:aca:4fce:: with SMTP id d197mr959325oib.142.1573089937164;
+ Wed, 06 Nov 2019 17:25:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106080128.23284-1-hslester96@gmail.com> <VI1PR0402MB3600F14956A82EF8D7B53CC4FF790@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <CANhBUQ1wZU92K=XTRCNU5HhOzZ761+S83zyjqOdZKpyQVuXrCw@mail.gmail.com> <VI1PR0402MB36000BE1C169ECA035BE3610FF790@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB36000BE1C169ECA035BE3610FF790@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Thu, 7 Nov 2019 09:19:25 +0800
-Message-ID: <CANhBUQ2qN+vLYiHdUFGH22LnTa3nuKMYncq3JHDJp=vM=ZvCPA@mail.gmail.com>
-Subject: Re: [EXT] [PATCH] net: fec: add a check for CONFIG_PM to avoid clock
- count mis-match
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191106225131.3543616-1-guro@fb.com> <20191107002204.GA96548@cmpxchg.org>
+In-Reply-To: <20191107002204.GA96548@cmpxchg.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 6 Nov 2019 17:25:26 -0800
+Message-ID: <CALvZod5=g230Lwnjh7qXyLkoknZJpOiv-nLJ4XYC9rSSzL=e6w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in get_mem_cgroup_from_mm()
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>, stable@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 6:17 PM Andy Duan <fugang.duan@nxp.com> wrote:
+On Wed, Nov 6, 2019 at 4:22 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
 >
-> From: Chuhong Yuan <hslester96@gmail.com> Sent: Wednesday, November 6, 2019 4:29 PM
-> > On Wed, Nov 6, 2019 at 4:13 PM Andy Duan <fugang.duan@nxp.com> wrote:
-> > >
-> > > From: Chuhong Yuan <hslester96@gmail.com> Sent: Wednesday, November
-> > 6,
-> > > 2019 4:01 PM
-> > > > If CONFIG_PM is enabled, runtime pm will work and call
-> > > > runtime_suspend automatically to disable clks.
-> > > > Therefore, remove only needs to disable clks when CONFIG_PM is
-> > disabled.
-> > > > Add this check to avoid clock count mis-match caused by double-disable.
-> > > >
-> > > > This patch depends on patch
-> > > > ("net: fec: add missed clk_disable_unprepare in remove").
-> > > >
-> > > Please add Fixes tag here.
-> > >
+> On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin wrote:
+> > We've encountered a rcu stall in get_mem_cgroup_from_mm():
 > >
-> > The previous patch has not been merged to linux, so I do not know which
-> > commit ID should be used.
->
-> It should be merged into net-next tree.
->
-
-I have searched in net-next but did not find it.
-
-> Andy
+> >  rcu: INFO: rcu_sched self-detected stall on CPU
+> >  rcu: 33-....: (21000 ticks this GP) idle=6c6/1/0x4000000000000002 softirq=35441/35441 fqs=5017
+> >  (t=21031 jiffies g=324821 q=95837) NMI backtrace for cpu 33
+> >  <...>
+> >  RIP: 0010:get_mem_cgroup_from_mm+0x2f/0x90
+> >  <...>
+> >  __memcg_kmem_charge+0x55/0x140
+> >  __alloc_pages_nodemask+0x267/0x320
+> >  pipe_write+0x1ad/0x400
+> >  new_sync_write+0x127/0x1c0
+> >  __kernel_write+0x4f/0xf0
+> >  dump_emit+0x91/0xc0
+> >  writenote+0xa0/0xc0
+> >  elf_core_dump+0x11af/0x1430
+> >  do_coredump+0xc65/0xee0
+> >  ? unix_stream_sendmsg+0x37d/0x3b0
+> >  get_signal+0x132/0x7c0
+> >  do_signal+0x36/0x640
+> >  ? recalc_sigpending+0x17/0x50
+> >  exit_to_usermode_loop+0x61/0xd0
+> >  do_syscall_64+0xd4/0x100
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 > >
-> > > Andy
-> > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > > ---
-> > > >  drivers/net/ethernet/freescale/fec_main.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/drivers/net/ethernet/freescale/fec_main.c
-> > > > b/drivers/net/ethernet/freescale/fec_main.c
-> > > > index a9c386b63581..696550f4972f 100644
-> > > > --- a/drivers/net/ethernet/freescale/fec_main.c
-> > > > +++ b/drivers/net/ethernet/freescale/fec_main.c
-> > > > @@ -3645,8 +3645,10 @@ fec_drv_remove(struct platform_device
-> > *pdev)
-> > > >                 regulator_disable(fep->reg_phy);
-> > > >         pm_runtime_put(&pdev->dev);
-> > > >         pm_runtime_disable(&pdev->dev);
-> > > > +#ifndef CONFIG_PM
-> > > >         clk_disable_unprepare(fep->clk_ahb);
-> > > >         clk_disable_unprepare(fep->clk_ipg);
-> > > > +#endif
-> > > >         if (of_phy_is_fixed_link(np))
-> > > >                 of_phy_deregister_fixed_link(np);
-> > > >         of_node_put(fep->phy_node);
-> > > > --
-> > > > 2.23.0
-> > >
+> > The problem is caused by an exiting task which is associated with
+> > an offline memcg. We're iterating over and over in the
+> > do {} while (!css_tryget_online()) loop, but obviously the memcg won't
+> > become online and the exiting task won't be migrated to a live memcg.
+> >
+> > Let's fix it by switching from css_tryget_online() to css_tryget().
+> >
+> > As css_tryget_online() cannot guarantee that the memcg won't go
+> > offline, the check is usually useless, except some rare cases
+> > when for example it determines if something should be presented
+> > to a user.
+> >
+> > A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
+> > css_tryget() instead of css_tryget_online() in task_get_css()").
+> >
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Cc: stable@vger.kernel.org
+> > Cc: Tejun Heo <tj@kernel.org>
+>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>
+> The bug aside, it doesn't matter whether the cgroup is online for the
+> callers. It used to matter when offlining needed to evacuate all
+> charges from the memcg, and so needed to prevent new ones from showing
+> up, but we don't care now.
+
+Should get_mem_cgroup_from_current() and get_mem_cgroup_from_page() be
+switched to css_tryget() as well then?
