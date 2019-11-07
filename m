@@ -4,53 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344E9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADE3C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5FB21D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208BA2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153379;
-	bh=XIcDjKwPZAi4BJmV1+5q/4+5JS1244q3K8I1KxoFbNM=;
+	s=default; t=1573153391;
+	bh=WQsm6XqG70t+XfvQv1jGxEyDb5o7ywD3/Cm2xSeLvLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vSYHbj/Dpqt7r5M9tbsuvNhp5JjvrpCpSTh1GnuqwD7d3JrWun3i9fpWB5huvYItJ
-	 71VPi8lPQanAT0Tsh4/mwwFvpHx1ASKjuBEZJCqfKWzFpXgP50Ok8hvLSmQVZyJQdy
-	 4wWRPmzLp2DMPvOCRNnLBRVn7X0VUecjZ44Gm6yo=
+	b=nDdrH4vA0dc8G8XaJvanNAQ6C7uRJS1/NSaxyrkmsgTvie7VT1nikJimwuALrolyf
+	 xpYLTQih3YIVwDSM1Mx6AmQPCf2a3XiwyBHG6M4ClBQ7rDMbki7BMuezpjEMFXcJOv
+	 Sc2+egb+IUC/MQCMecuuRwIbWH1KLZAvDNshp2oE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbfKGTC6 (ORCPT
+        id S1727629AbfKGTDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:02:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:03:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbfKGTC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:02:57 -0500
+        id S1725906AbfKGTDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:03:09 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8157F21D6C;
-        Thu,  7 Nov 2019 19:02:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FBBF218AE;
+        Thu,  7 Nov 2019 19:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153376;
-        bh=XIcDjKwPZAi4BJmV1+5q/4+5JS1244q3K8I1KxoFbNM=;
+        s=default; t=1573153388;
+        bh=WQsm6XqG70t+XfvQv1jGxEyDb5o7ywD3/Cm2xSeLvLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DKPf6mw9H00FQnw6nsVICiY0PiycZCX6uhA5I07bbQQRmam7tZ6YzynUsFrkmQ97S
-         WUqXY4iagMCHcod0xsz2Jy1172njYLsBE0wWzzF7b3AUy652UtVQML47SiIGk/P6Rm
-         1sYvJq/buEskL4+6WgievXRmAaQlTMy9ZHsyFoLk=
+        b=Vdnb5Vc4/zM3mbZwM2RMpZxww/LfAB67btTHfN5D5pYl6h5SRxtg2xpdd8M7DJOnY
+         4MbIMV/3shd0KrI4dGSWWKVujNLWkfxVypu4YV67qBYYCrH31PQ3j+kPXtShVKQS3o
+         iGPS/gtXSS8n55vV1JNEurcNTpBlMwWHruvIBEpY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
         Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Luke Mujica <lukemujica@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Zenghui Yu <yuzenghui@huawei.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 17/63] perf probe: Fix to show function entry line as probe-able
-Date:   Thu,  7 Nov 2019 15:59:25 -0300
-Message-Id: <20191107190011.23924-18-acme@kernel.org>
+Subject: [PATCH 18/63] perf jevents: Fix resource leak in process_mapfile() and main()
+Date:   Thu,  7 Nov 2019 15:59:26 -0300
+Message-Id: <20191107190011.23924-19-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -61,84 +71,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-Fix die_walk_lines() to list the function entry line correctly.  Since
-the dwarf_entrypc() does not return the entry pc if the DIE has only
-range attribute, __die_walk_funclines() fails to list the declaration
-line (entry line) in that case.
+There are memory leaks and file descriptor resource leaks in
+process_mapfile() and main().
 
-To solve this issue, this introduces die_entrypc() which correctly
-returns the entry PC (the first address range) even if the DIE has only
-range attribute. With this fix die_walk_lines() shows the function entry
-line is able to probe correctly.
+Fix this by adding free(), fclose() and free_arch_std_events() on the
+error paths.
 
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
+Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Luke Mujica <lukemujica@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190837419.1859.4619125803596816752.stgit@devnote2
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Zenghui Yu <yuzenghui@huawei.com>
+Link: http://lore.kernel.org/lkml/d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dwarf-aux.c | 24 +++++++++++++++++++++++-
- tools/perf/util/dwarf-aux.h |  3 +++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+ tools/perf/pmu-events/jevents.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 929b7c0567f4..063f71da6b63 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -307,6 +307,28 @@ bool die_is_func_def(Dwarf_Die *dw_die)
- 		dwarf_attr(dw_die, DW_AT_declaration, &attr) == NULL);
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 7d69727f44bd..079c77b6a2fd 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -772,6 +772,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	char *line, *p;
+ 	int line_num;
+ 	char *tblname;
++	int ret = 0;
+ 
+ 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
+ 
+@@ -783,6 +784,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	if (!mapfp) {
+ 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
+ 				fpath);
++		free(line);
+ 		return -1;
+ 	}
+ 
+@@ -809,7 +811,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 			/* TODO Deal with lines longer than 16K */
+ 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
+ 					prog, fpath, line_num);
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 		line[strlen(line)-1] = '\0';
+ 
+@@ -839,7 +842,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 
+ out:
+ 	print_mapping_table_suffix(outfp);
+-	return 0;
++	fclose(mapfp);
++	free(line);
++	return ret;
  }
  
-+/**
-+ * die_entrypc - Returns entry PC (the lowest address) of a DIE
-+ * @dw_die: a DIE
-+ * @addr: where to store entry PC
-+ *
-+ * Since dwarf_entrypc() does not return entry PC if the DIE has only address
-+ * range, we have to use this to retrieve the lowest address from the address
-+ * range attribute.
-+ */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
-+{
-+	Dwarf_Addr base, end;
-+
-+	if (!addr)
-+		return -EINVAL;
-+
-+	if (dwarf_entrypc(dw_die, addr) == 0)
-+		return 0;
-+
-+	return dwarf_ranges(dw_die, 0, &base, addr, &end) < 0 ? -ENOENT : 0;
-+}
-+
- /**
-  * die_is_func_instance - Ensure that this DIE is an instance of a subprogram
-  * @dw_die: a DIE
-@@ -713,7 +735,7 @@ static int __die_walk_funclines(Dwarf_Die *sp_die, bool recursive,
- 	/* Handle function declaration line */
- 	fname = dwarf_decl_file(sp_die);
- 	if (fname && dwarf_decl_line(sp_die, &lineno) == 0 &&
--	    dwarf_entrypc(sp_die, &addr) == 0) {
-+	    die_entrypc(sp_die, &addr) == 0) {
- 		lw.retval = callback(fname, lineno, addr, data);
- 		if (lw.retval != 0)
- 			goto done;
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index f204e5892403..506006e0cf66 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -29,6 +29,9 @@ int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
- /* Get DW_AT_linkage_name (should be NULL for C binary) */
- const char *die_get_linkage_name(Dwarf_Die *dw_die);
- 
-+/* Get the lowest PC in DIE (including range list) */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr);
-+
- /* Ensure that this DIE is a subprogram and definition (not declaration) */
- bool die_is_func_def(Dwarf_Die *dw_die);
+ /*
+@@ -1136,6 +1141,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1148,6 +1154,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1165,6 +1172,8 @@ int main(int argc, char *argv[])
+ 	if (process_mapfile(eventsfp, mapfile)) {
+ 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
+ 		/* Make build fail */
++		fclose(eventsfp);
++		free_arch_std_events();
+ 		return 1;
+ 	}
  
 -- 
 2.21.0
