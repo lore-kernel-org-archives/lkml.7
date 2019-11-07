@@ -2,109 +2,93 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD58C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB3DC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE99222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="lDt/eDrO"
+	by mail.kernel.org (Postfix) with ESMTP id 247EB21D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573116014;
+	bh=UXQJazaBfJV0zIWW7UEoQWPynSR/yhlKvrGLJ29hpro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y7s8V2mCi0/rPgfGTkD8POxpopSquFs9jNJqscx/XuhR1hsKdHQX4xKQ0ix/F8W6Q
+	 iSgK8YPPpDfui928u1I9qkMg8SQPy4RcTr56N2+IJR1tVrsZwxlZ42viNCpyn0LLpI
+	 jA2hi0WSaAzEGjOw+vUzBh4cWLHQorak8UtaBpJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733263AbfKGIkK (ORCPT
+        id S1733274AbfKGIkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:40:10 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:44143 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727563AbfKGIkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:40:10 -0500
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Thu, 7 Nov 2019 03:40:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733257AbfKGIkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:40:11 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 6D0CA23E3F;
-        Thu,  7 Nov 2019 09:40:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573116008;
-        bh=5cph/SLyE8KvobjPOBoizhynJ/npZwYxmZXosnmxrNc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lDt/eDrOH97tcR+0hC0TlrlnE/tje9eZrtyTZEQ/welHB4FZtUxy7FQnKs+NB72hG
-         YbCGMj/WC6OEMWsC7we0VzyjSmVNqVGEA/3be5sqqvjMuSmIz3mh+QH6qoLWchyeG1
-         9h9vKTd14qKKr7kDkiU7Bj9+U4Av+vuFvJ2WMrX0=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] enetc: ethtool: add wake-on-lan callbacks
-Date:   Thu,  7 Nov 2019 09:40:00 +0100
-Message-Id: <20191107084000.18375-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        by mail.kernel.org (Postfix) with ESMTPSA id D1E0C21D79;
+        Thu,  7 Nov 2019 08:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573116010;
+        bh=UXQJazaBfJV0zIWW7UEoQWPynSR/yhlKvrGLJ29hpro=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=omokBRfofB53Ei3yMrIzwz9Z22Rrk3t3SpYs1IPksEG+BpBfYj+fTGT/pWzSe0Ks3
+         8X1yjKW9hshlFJG0yVB3Zc98K0aegYpbp+yWGQ2hAjswx6P1cLApcvNc4jaVcFeV2w
+         UydpvdtPxRASerQVo0BvKeoXCBM8TaJsia3ZLpzM=
+Date:   Thu, 7 Nov 2019 09:40:07 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     gerg@kernel.org
+Cc:     devel@driverdev.osuosl.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        neil@brown.name, blogic@openwrt.org
+Subject: Re: [PATCH] mtd: rawnand: driver for Mediatek MT7621 SoC NAND flash
+ controller
+Message-ID: <20191107084007.GA1203521@kroah.com>
+References: <20191107073521.11413-1-gerg@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107073521.11413-1-gerg@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there is an external PHY, pass the wake-on-lan request to the PHY.
+On Thu, Nov 07, 2019 at 05:35:21PM +1000, gerg@kernel.org wrote:
+> From: Greg Ungerer <gerg@kernel.org>
+> 
+> Add a driver to support the NAND flash controller of the MediaTek MT7621
+> System-on-Chip device. (This one is the MIPS based parts from Mediatek).
+> 
+> This code is a re-working of the earlier patches for this hardware that
+> have been floating around the internet for years:
+> 
+> https://github.com/ReclaimYourPrivacy/cloak/blob/master/target/linux/ramips/patches-3.18/0045-mtd-add-mt7621-nand-support.patch
+> 
+> This is a much cleaned up version, put in staging to start with.
+> It does still have some problems, mainly that it still uses a lot of the
+> mtd raw nand legacy support.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- .../ethernet/freescale/enetc/enetc_ethtool.c  | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Is that an issue?  Why not just put it in the "real" part of the kernel
+then, if those apis are still in use?
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-index fcb52efec075..880a8ed8bb47 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-@@ -584,6 +584,31 @@ static int enetc_get_ts_info(struct net_device *ndev,
- 	return 0;
- }
- 
-+static void enetc_get_wol(struct net_device *dev,
-+			  struct ethtool_wolinfo *wol)
-+{
-+	wol->supported = 0;
-+	wol->wolopts = 0;
-+
-+	if (dev->phydev)
-+		phy_ethtool_get_wol(dev->phydev, wol);
-+}
-+
-+static int enetc_set_wol(struct net_device *dev,
-+			 struct ethtool_wolinfo *wol)
-+{
-+	int ret;
-+
-+	if (!dev->phydev)
-+		return -EOPNOTSUPP;
-+
-+	ret = phy_ethtool_set_wol(dev->phydev, wol);
-+	if (!ret)
-+		device_set_wakeup_enable(&dev->dev, wol->wolopts);
-+
-+	return ret;
-+}
-+
- static const struct ethtool_ops enetc_pf_ethtool_ops = {
- 	.get_regs_len = enetc_get_reglen,
- 	.get_regs = enetc_get_regs,
-@@ -601,6 +626,8 @@ static const struct ethtool_ops enetc_pf_ethtool_ops = {
- 	.set_link_ksettings = phy_ethtool_set_link_ksettings,
- 	.get_link = ethtool_op_get_link,
- 	.get_ts_info = enetc_get_ts_info,
-+	.get_wol = enetc_get_wol,
-+	.set_wol = enetc_set_wol,
- };
- 
- static const struct ethtool_ops enetc_vf_ethtool_ops = {
--- 
-2.20.1
+> The driver not only compiles, but it works well on the small range of
+> hardware platforms that it has been used on so far. I have been using
+> for quite a while now, cleaning up as I get time.
+> 
+> So... I am looking for comments on the best approach forward with this.
+> At least in staging it can get some more eyeballs going over it.
 
+staging will just nit-pick it to death for coding style issues, it's not
+going to be get any major api changes/cleanups there usually.  I'd
+recommend just merging this to the "real" part of the kernel now if it's
+working for you.
+
+thanks,
+
+greg k-h
