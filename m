@@ -2,119 +2,92 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2597AC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4B2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1EB20869
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA8820869
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573161236;
-	bh=IdWF991UEdSGL4LBEIj6ry547FfieomjyaLj+M/eKx8=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=HE1LvxRriNuA1By8QZiQD7hZuynGJzk1PAbTjbYtZn01U+Wnc7wMWxBhyd65/CykI
-	 ayxcmmnrWvvjcr4BGMP7aS7QA4CY7pEKaOJn10SXUg+MKIypsFgvEeyncGqdZve/3b
-	 mYF6G469PF4Ve7ZUCIDsdRPKt19D6mu/azmA2jXw=
+	s=default; t=1573161488;
+	bh=+J4FAIKTXaaTMUjiB9JwExcwXekKFRbj/8/L2DEZGfA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=BnBnZ6XVxtvuDpdmy97eGjF7Rl5YwaV22VVshi5MXvxcj/LyGtXe8qjE3oTaqiZAn
+	 PTnVNaP47sxMr2bfhGUvwyOMpIUuUsiw7cUjx7T0iBj6qB7FpYWAT5tI10JCZQH70V
+	 dgvIgWFtoL+xwBuduqG3odMGUsHBPRns7hvluH70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfKGVNz (ORCPT
+        id S1726296AbfKGVSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 16:13:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 16:18:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfKGVNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:13:54 -0500
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1725770AbfKGVSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 16:18:07 -0500
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15F62077C;
-        Thu,  7 Nov 2019 21:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5DC2077C;
+        Thu,  7 Nov 2019 21:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573161233;
-        bh=IdWF991UEdSGL4LBEIj6ry547FfieomjyaLj+M/eKx8=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=cp22OJTfDtOBrD/ep2jXPGD0RdytM46wTNahykngHb/V9ieXiP0kn8BDRvOamAMrF
-         a33cxnbOcChXdrOGc1yskmVi/uYTmzZxthMzayD/tTG71XBA+9zmwOxA3ru7wSExF4
-         knn3BRB0UgHpBGKNvH6N+ElHHxFCNjYEn3yp+tBo=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1573161486;
+        bh=+J4FAIKTXaaTMUjiB9JwExcwXekKFRbj/8/L2DEZGfA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gDEqAWSa5ZZIbcdBqNLxXP5Bq9FiF+tJfk5J7VKwv0fHvTOnAkwdeMMxvwyMmrE1u
+         M1soAbjwF54DNbKn+WpoBNaHdPDxHjCz7Zfmdng1PWtQW/HA03X/dNziBxwPOkPXG+
+         jxicxYHMDkodzwlwUgPlwUTwRQhvsAdsHL37JoII=
+Date:   Thu, 7 Nov 2019 15:18:01 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Olof Johansson <olof@lixom.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: linux-next: manual merge of the pci tree with the arm-soc tree
+Message-ID: <20191107211801.GA107543@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1572371299-16774-4-git-send-email-tdas@codeaurora.org>
-References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org> <1572371299-16774-4-git-send-email-tdas@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v2 3/3] clk: qcom: clk-rpmh: Add support for RPMHCC for SC7180
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 13:13:53 -0800
-Message-Id: <20191107211353.C15F62077C@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOesGMjVUCd9bN=pggS-ECjMR42b0SqXKewsp+NYFSVqRgSWrg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-10-29 10:48:19)
-> Add support for clock RPMh driver to vote for ARC and VRM managed
-> clock resources.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  drivers/clk/qcom/clk-rpmh.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->=20
-> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> index 20d4258..3f3e08b 100644
-> --- a/drivers/clk/qcom/clk-rpmh.c
-> +++ b/drivers/clk/qcom/clk-rpmh.c
-> @@ -391,6 +391,24 @@ static const struct clk_rpmh_desc clk_rpmh_sm8150 =
-=3D {
->         .num_clks =3D ARRAY_SIZE(sm8150_rpmh_clocks),
->  };
->=20
-> +static struct clk_hw *sc7180_rpmh_clocks[] =3D {
+On Thu, Nov 07, 2019 at 10:27:20AM -0800, Olof Johansson wrote:
+> On Wed, Nov 6, 2019 at 2:46 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > Today's linux-next merge of the pci tree got a conflict in:
+> >
+> >   arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >
+> > between commit:
+> >
+> >   68e36a429ef5 ("arm64: dts: ls1028a: Move thermal-zone out of SoC")
+> >
+> > from the arm-soc tree and commit:
+> >
+> >   8d49ebe713ab ("arm64: dts: ls1028a: Add PCIe controller DT nodes")
+> 
+> Bjorn, we ask that driver subsystem maintainers don't pick up DT
+> changes since it causes conflicts like these.
+> 
+> Is it easy for you to drop this patch, or are we stuck with it?
+> Ideally it should never have been sent to you in the first place. :(
 
-I don't think we need to duplicate this array either, unless somehow
-this driver is running on two different SoCs which seems highly
-unlikely.
+Lorenzo, is it feasible for you to drop it from your pci/layerscape
+branch and repush it?  If so, I can redo the merge into my "next"
+branch.
 
-> +       [RPMH_CXO_CLK]          =3D &sdm845_bi_tcxo.hw,
-> +       [RPMH_CXO_CLK_A]        =3D &sdm845_bi_tcxo_ao.hw,
-> +       [RPMH_LN_BB_CLK2]       =3D &sdm845_ln_bb_clk2.hw,
-> +       [RPMH_LN_BB_CLK2_A]     =3D &sdm845_ln_bb_clk2_ao.hw,
-> +       [RPMH_LN_BB_CLK3]       =3D &sdm845_ln_bb_clk3.hw,
-> +       [RPMH_LN_BB_CLK3_A]     =3D &sdm845_ln_bb_clk3_ao.hw,
-> +       [RPMH_RF_CLK1]          =3D &sdm845_rf_clk1.hw,
-> +       [RPMH_RF_CLK1_A]        =3D &sdm845_rf_clk1_ao.hw,
-> +       [RPMH_RF_CLK2]          =3D &sdm845_rf_clk2.hw,
-> +       [RPMH_RF_CLK2_A]        =3D &sdm845_rf_clk2_ao.hw,
-> +};
-> +
-> +static const struct clk_rpmh_desc clk_rpmh_sc7180 =3D {
-> +       .clks =3D sc7180_rpmh_clocks,
-> +       .num_clks =3D ARRAY_SIZE(sc7180_rpmh_clocks),
-> +};
-> +
->  static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
->                                          void *data)
->  {
-> @@ -471,6 +489,7 @@ static int clk_rpmh_probe(struct platform_device *pde=
-v)
->  static const struct of_device_id clk_rpmh_match_table[] =3D {
->         { .compatible =3D "qcom,sdm845-rpmh-clk", .data =3D &clk_rpmh_sdm=
-845},
->         { .compatible =3D "qcom,sm8150-rpmh-clk", .data =3D &clk_rpmh_sm8=
-150},
-> +       { .compatible =3D "qcom,sc7180-rpmh-clk", .data =3D &clk_rpmh_sc7=
-180},
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
+Bjorn
