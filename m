@@ -2,134 +2,112 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4138DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A09A2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DE22087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LR41t2IH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0L2NJu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbfKGU71 (ORCPT
+        id S1726829AbfKGVA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 15:59:27 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34679 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfKGU71 (ORCPT
+        Thu, 7 Nov 2019 16:00:26 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36457 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfKGVA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 15:59:27 -0500
-Received: by mail-pl1-f194.google.com with SMTP id k7so2451353pll.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:59:25 -0800 (PST)
+        Thu, 7 Nov 2019 16:00:26 -0500
+Received: by mail-io1-f67.google.com with SMTP id s3so3898536ioe.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 13:00:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nkNlMQRicaTR1gGQNB/Yzp0pHtByBTKEE9yOjF2k1pw=;
-        b=LR41t2IHZuly8gLcZ6UlBM3E62/6+qVvM+opJvCHaLiISAgNP1pKb7G2FH2kWI2CdE
-         m62M/ay9xo1VTApVdsTieVrf/lBa9CdDoPvCGx72us0Kan781R71Tb6wUUK9XZMelN6m
-         uvXvOhSrL0qouhPwru8vpSazs4yzxb8wNNg2mRWIp2IPGsAKMByVmRVg2ucbrM7kZosY
-         /IlrpkSSvCmMqK1OpHQyccRlApStn67UsOa4rPX3E+WAo20IBFFz8E8S0/hHV7El00QF
-         7AwSNyCipcN7xgYS1R2DLl/jqyKU6ADzOYVN9/jpJLW/HruToxlqjJg9Y1H+wGiownjt
-         UvDw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N1kmrdQXG5vssjwCd67eTK4dWVDhQf2oRjU5ZbEWya4=;
+        b=d0L2NJu3gPoGrUeZiF8fvX69O8lD9EF9IDygPpfopNtglqZUGyJ1oom8QPjw8flAg+
+         XNVxK87p3Ti5+74nIUhY6IhruUapE1XKdqkQSOKaaBtGVqyjSDe/N92cA/6jiDgXW3YO
+         +FuexexIJ/EWzlCC+k7pZE1sRwB+OQiF9TROWcZ9L4Jn6WvMTV/2IhCjcY+o/RupSMPT
+         wH9G0EvaN7+okWhtfkXWip0lXr37mvB04AceBMaer98vIjrDDD4vzgVGiiZJyghqdfTL
+         lxKaeAKWMZVexLbr6yrOQcrEYXGyxk0GrBWtWhnJYU5xIFf5g6DxOdsI68uT9zGXevaT
+         FdHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nkNlMQRicaTR1gGQNB/Yzp0pHtByBTKEE9yOjF2k1pw=;
-        b=h8vqwVTxXS83svKBvsEPqSEY7vjvh6FOz8AC5XK3isuAo7FWIqH+f046jdg1+g4b1X
-         c/n67uG40g2u9m/JpNKJGEZYLeD/QAm1qilSVB+I9G7Oj+Kz0QzbkxPFgJ5sSrF1UrpJ
-         aMW1DNrp918Ui0E/zAvT93KmeC8eco66lnktjwFXkH6IP5RzsQwLxBNNQ8KrEdyE8F9P
-         YKVUUTTw96Ubs/Lned61pfawxeOUJmpwCZuJ1fE+WN8HN/ccKc0zy8pjukvHvTUGV2MF
-         iuyrTUW7siNUd60+RY4NvdxDARisWyDzkUxenHvf/+MEjYKOc9Rvh3aiiFpwaS41Pkwk
-         JfWg==
-X-Gm-Message-State: APjAAAW//xVOEEIseRL4MzhCGfzvZvyWogCPDXDmctnjenEmeACqxjoi
-        Nht9/H8iasic4KRJbQmxV9skwv4I
-X-Google-Smtp-Source: APXvYqwzL/Wj+XAOZlYIn/t4S28COF7TlcVY2Id3cPe+aS2hzKfgJzYdRTLmSlib4FIOXFqqF6oyTw==
-X-Received: by 2002:a17:90a:bf8d:: with SMTP id d13mr8239219pjs.89.1573160365293;
-        Thu, 07 Nov 2019 12:59:25 -0800 (PST)
-Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id r68sm3499652pfr.78.2019.11.07.12.59.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 12:59:24 -0800 (PST)
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-To:     joro@8bytes.org, linux-kernel@vger.kernel.org
-Cc:     dwmw2@infradead.org, iommu@lists.linux-foundation.org
-Subject: [PATCH] intel-iommu: Turn off translations at shutdown
-Date:   Thu,  7 Nov 2019 12:59:14 -0800
-Message-Id: <20191107205914.10611-1-deepa.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N1kmrdQXG5vssjwCd67eTK4dWVDhQf2oRjU5ZbEWya4=;
+        b=b40wxm7bFipRDA3dBPPa978/HJAlQis5avAC62Mz/4JZ4ALO6fySGzfndTamzRHkp+
+         ceRS2MXzCYeyM8RaOqbe2p9W+tGWZDNN6YmlwerHQskT43HmD9sne2itR2BM8uyVhLHd
+         EYwfZGqiEa5aB/eWyGjMfeZvsggc4/zSOFH+zFaDb9pYuVeXJ1/4l2Wlf2XODlJTLEt3
+         Yt/IKM2PFVGWrWGXD/yRilKKduc2eUPVvZb5qEW+NPKpfnGC/aR2jGWK6u8jhYh0+pl1
+         oBlfux7+Haucc9EYHg4TlCk2/f6B09B9g3PXzEZN+ksqsa87jWfPEkOxd9oMsu+Q9Nq3
+         LlHw==
+X-Gm-Message-State: APjAAAUggnUR9omYBwuyUugdwI679twnJfKsUmQXkAL3L9CiSKjUXfqR
+        MhPxuHpR6AtlrYSf+TVOb4hpRANBJohndU29lnWMzlVwzg==
+X-Google-Smtp-Source: APXvYqyXRBCUvK4O92YsEnNdlF6ZhgIfYKHOjIbyvZHjvmGcNqJJJCW15yULCpVho0gfHCcV5QJiRc6oLrKDBk0lU4k=
+X-Received: by 2002:a5d:8450:: with SMTP id w16mr5459728ior.11.1573160425402;
+ Thu, 07 Nov 2019 13:00:25 -0800 (PST)
+MIME-Version: 1.0
+References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de>
+ <CAMzpN2juuUyLuQ-tiV7hKZvG4agsHKP=rRAt_V4sZhpZW7cv9g@mail.gmail.com> <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
+In-Reply-To: <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Thu, 7 Nov 2019 16:00:13 -0500
+Message-ID: <CAMzpN2gt4qM41=96GpNHL-kbgBsjD-zphq+5oK0BXqoCFN4F4Q@mail.gmail.com>
+Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage further
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The intel-iommu driver assumes that the iommu state is
-cleaned up at the start of the new kernel.
-But, when we try to kexec boot something other than the
-Linux kernel, the cleanup cannot be relied upon.
-Hence, cleanup before we go down for reboot.
+On Thu, Nov 7, 2019 at 2:54 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, Nov 7, 2019 at 11:24 AM Brian Gerst <brgerst@gmail.com> wrote:
+> >
+> > Here is a different idea:  We already map the TSS virtually in
+> > cpu_entry_area.  Why not page-align the IO bitmap and remap it to the
+> > task's bitmap on task switch?  That would avoid all copying on task
+> > switch.
+>
+> We map the tss _once_, statically, percpu, without ever changing it,
+> and then we just (potentially) change a couple of fields in it on
+> process switch.
+>
+> Your idea isn't horrible, but it would involve a TLB flush for the
+> page when the io bitmap changes. Which is almost certainly more
+> expensive than just copying the bitmap intelligently.
+>
+> Particularly since I do think that the copy can basically be done
+> effectively never, assuming there really aren't multiple concurrent
+> users of ioperm() (and iopl).
 
-Keeping the cleanup at initialization also, in case BIOS
-leaves the IOMMU enabled.
+There wouldn't have to be a flush on every task switch.  If we make it
+so that tasks that don't use a bitmap just unmap the pages in the
+cpu_entry_area and set tss.io_bitmap_base to outside the segment
+limit, we would only have to flush when switching from a task using
+the bitmap (because the next task uses a different bitmap or we are
+unmapping it).  If the previous task doesn't have a bitmap the pages
+in cpu_entry_area were unmapped and can't be in the TLB, so no flush
+is needed.
 
-I considered turning off iommu only during kexec reboot,
-but a clean shutdown seems always a good idea. But if
-someone wants to make it conditional, we can do that.
+Going a step further, we could track which task is mapped to the
+current cpu like proposed above, and only flush when a different task
+needs the IO bitmap, or when the bitmap is being freed on task exit.
 
-Tested that before, the info message
-'DMAR: Translation was enabled for <iommu> but we are not in kdump mode'
-would be reported for each iommu. The message will not appear when the
-DMA-remapping is not enabled on entry to the kernel.
-
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
----
- drivers/iommu/intel-iommu.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index fe8097078669..f0636b263722 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4764,6 +4764,26 @@ static void intel_disable_iommus(void)
- 		iommu_disable_translation(iommu);
- }
- 
-+static void intel_iommu_shutdown(void)
-+{
-+	struct dmar_drhd_unit *drhd;
-+	struct intel_iommu *iommu = NULL;
-+
-+	if (no_iommu || dmar_disabled)
-+		return;
-+
-+	down_write(&dmar_global_lock);
-+
-+	/* Disable PMRs explicitly here. */
-+	for_each_iommu(iommu, drhd)
-+		iommu_disable_protect_mem_regions(iommu);
-+
-+	/* Make sure the IOMMUs are switched off */
-+	intel_disable_iommus();
-+
-+	up_write(&dmar_global_lock);
-+}
-+
- static inline struct intel_iommu *dev_to_intel_iommu(struct device *dev)
- {
- 	struct iommu_device *iommu_dev = dev_to_iommu_device(dev);
-@@ -5013,6 +5033,8 @@ int __init intel_iommu_init(void)
- 	}
- 	up_write(&dmar_global_lock);
- 
-+	x86_platform.iommu_shutdown = intel_iommu_shutdown;
-+
- #if defined(CONFIG_X86) && defined(CONFIG_SWIOTLB)
- 	/*
- 	 * If the system has no untrusted device or the user has decided
--- 
-2.17.1
-
+--
+Brian Gerst
