@@ -2,161 +2,117 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11126C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9942BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBFD218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6677F218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e+dBQ6C4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIWMNYO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfKGGMd (ORCPT
+        id S1727005AbfKGGNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:12:33 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44699 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfKGGMd (ORCPT
+        Thu, 7 Nov 2019 01:13:21 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45259 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfKGGNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:12:33 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c19so1005181otr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 22:12:32 -0800 (PST)
+        Thu, 7 Nov 2019 01:13:20 -0500
+Received: by mail-ed1-f66.google.com with SMTP id b5so884968eds.12;
+        Wed, 06 Nov 2019 22:13:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wxgrq9s3ghC5A6WC6p6clH9tBiJhkp6+TNKHK4QLLHY=;
-        b=e+dBQ6C4ix+BTTNhqo+tLHnyci+m1UPStSy7INaJroD2T55ii/Uzk1drz9MtYdqH+Z
-         TN8JnIG2q9xtt+HnvQWf6/Itxfl7WVpgnKJ5qEWppqgeWzMPQpB99llfUEUdN7dM2sCc
-         0UHm8YFIIp+BpVIrty6HYJHhisRCmnRXMkqTvYi4+48X6UIDvSBmS+ZieSxCa4xxEPRZ
-         J7DQoyFDIsfKURj8V9vXWjYFTBWZwq2M06OhbeSu8q46U6/2LnXOk8yZtFg9srRxg6wm
-         aTjIuX+yZGTBGU8/U/dgVAPP64p1DagRdBmKmuf0OKdQ8X7mml0eEFVwJ6HbflQsHzeD
-         RGHw==
+        bh=b6XwzsC8T7k6SsHnaEqnkGYpU/j8kgJJS6Ga6U3GP2U=;
+        b=VIWMNYO2uJZ/ucdnjhZQPeoGhFSDz7GxnECCBYJyaZJo/aA767Fx5wQZ4G/kd3863l
+         WR+hwk509J/YPOvBRlwBfmWKJc4lub6uj+fHcMJDnxPfKLwVzsJP8m9F7TgmUe/ySThl
+         zbAwfLtePYTJyT8qGRn6P+d2j3706q2iMY1q841WLX7iBaLfO1hd2p5HJoao2wa4QT0X
+         mnASaMI2n5wraePRgoghikEcm95gEjyWQFfZjxHckPpJyD0HOlrKPZ9kSryeA/OA7uq1
+         bvA/UwDlyJOredDzeHpZaB4mqzuryo+geg847EC/h+YGoK2FAL2fPej4N0lfUZPjkPIa
+         2GRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wxgrq9s3ghC5A6WC6p6clH9tBiJhkp6+TNKHK4QLLHY=;
-        b=dEix4t87c1wh+UAtAepHHFFMzEaFLoUcmqtc16m0h+Y2VNF/hmX9NgMt5SOxykTgaP
-         0dcSsHdeBJHRsUamcu7fAPl5woriaEBQou1J5iD5ArIcz160w2ildb8tm9huOs5YpnmY
-         CddBIZMzEtIac4TG4Zi79pRmfJ0Yu6dRFQUW4QDfKL6t92ySLrDSJ+T3YTs4fKltkRH3
-         Y0Bb9e0GBIZIlzr5YVu18RXGHvW+Wv1AkveSIqLQ1/td8A5JL0qlM/UAfdt4iYyGatTV
-         szxbbXdltIEzdwd7MqYFCNhXMhbTdZEqqQG1sp0dOtg8pIxyQ50vdJTS71aRjYP7YU6v
-         zvbw==
-X-Gm-Message-State: APjAAAXwYpP5ic0QJzt6PpJs21eOAKeQXIHajRt3eyhyQaaFIHvhq93N
-        SiD+vFeHNC110jmnVG2dNgoO8PUmgz3m25AuaHTJgg==
-X-Google-Smtp-Source: APXvYqw5f32J/+2TKWy/1OIKDZl59KnLT7B0KOuaBdK9/MHs3hPr4NP61f3gzZiGyGTI66S83gA+NjtVIReAV3X7e78=
-X-Received: by 2002:a05:6830:1d71:: with SMTP id l17mr1410310oti.236.1573107151683;
- Wed, 06 Nov 2019 22:12:31 -0800 (PST)
+        bh=b6XwzsC8T7k6SsHnaEqnkGYpU/j8kgJJS6Ga6U3GP2U=;
+        b=lDTFys77s5QZksQoW1+vVyuWiKK6E79z7UTuaPThYeg7YbOkWlMI8t4iDEhFfZjFlf
+         A6YxEK8HqCH5z0QwHmfwQTm8n7a1RNQIRjEXnQuInAT9KXaUiu5ceL9eNiIzS+2KiiYH
+         8lk4hZOJRNU+TDLmkjQStrJetM+Bc6qHF2lSfX81Ys6IP6gCze7a/E6KjZQTtX/XsYHg
+         THAsVfHyN9+Ft2cYciwRI7nSClWzxVvSJ7mrPz9/iVFqFswkuyiiuyFoLIJUGj5Nxwzi
+         0QFnlbBozMDBQzFxEwTuaWfFQN1rKLLkl32ZZASaYGJ1/E7z4jsqFK99ohjPHORcOAni
+         25iw==
+X-Gm-Message-State: APjAAAXJL9vdiJv9Xc+N1rbvLNV8GcTM71tfPU5k/3DYI7iQoAGXK7Au
+        WMJcyMTH2hu8mdhrIlKnW8vfJDZjMp/LvIF1A6Q=
+X-Google-Smtp-Source: APXvYqxj/w79RiUGYwYctucmAuZQHkD9r7iRqtiJ1jcGgNDephBLrz0OaK8DOQ1VZYQaV1p3rxYY1qHMkE/UXCrdf8s=
+X-Received: by 2002:a17:906:698b:: with SMTP id i11mr1353680ejr.97.1573107198964;
+ Wed, 06 Nov 2019 22:13:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20191030145112.19738-1-will@kernel.org> <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
- <20191030155444.GC19096@willie-the-truck> <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
- <20191031193758.GA2607492@lophozonia> <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
- <6994ae35-2b89-2feb-2bcb-cffc5a01963c@huawei.com> <CAGETcx-9M8vvHA2Lykcv0hHWoC2OAw5kfBrjcNJN2CYCwR4eWQ@mail.gmail.com>
- <47418554-e7a7-f9f3-8852-60cecef3d5c7@huawei.com> <7e2429ed-6b25-a452-5e4d-51a5195b872f@arm.com>
-In-Reply-To: <7e2429ed-6b25-a452-5e4d-51a5195b872f@arm.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 6 Nov 2019 22:11:55 -0800
-Message-ID: <CAGETcx8QYBfGOBNtUTR+Lq_g+bmBxMOe0q=3U5UxvVqi+640Xw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190219012447.5900-1-sxauwsk@163.com> <CAKfKVtEwHcydp=+hNhG91h3qbMoYOPq7jEYjbuAVrWXT53DC3Q@mail.gmail.com>
+ <2019110516474778997625@163.com>
+In-Reply-To: <2019110516474778997625@163.com>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Thu, 7 Nov 2019 11:43:07 +0530
+Message-ID: <CAKfKVtH8OvA9Hku8V2CxRkX8hiouLzsEJTTDQWgBtQF8PGXyBQ@mail.gmail.com>
+Subject: Re: Re: [PATCH v2] i2c: cadence: try reset when master receive
+ arbitration lost
+To:     "sxauwsk@163.com" <sxauwsk@163.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 5:29 AM Robin Murphy <robin.murphy@arm.com> wrote:
+Hi Shikai,
+
+On Tue, Nov 5, 2019 at 2:18 PM sxauwsk@163.com <sxauwsk@163.com> wrote:
 >
-> On 04/11/2019 12:16, John Garry wrote:
-> > On 01/11/2019 21:13, Saravana Kannan wrote:
-> >> On Fri, Nov 1, 2019 at 3:28 AM John Garry <john.garry@huawei.com> wrote:
-> >>>
-> >>> On 31/10/2019 23:34, Saravana Kannan via iommu wrote:
-> >>>> I looked into the iommu-map property and it shouldn't be too hard to
-> >>>> add support for it. Looks like we can simply hold off on probing the
-> >>>> root bridge device till all the iommus in its iommu-map are probed and
-> >>>> we should be fine.
-> >>>>
-> >>>>> I'm also unsure about distro vendors agreeing to a mandatory kernel
-> >>>>> parameter (of_devlink). Do you plan to eventually enable it by
-> >>>>> default?
-> >>>>>
-> >>>>>> static const struct supplier_bindings of_supplier_bindings[] = {
-> >>>>>>           { .parse_prop = parse_clocks, },
-> >>>>>>           { .parse_prop = parse_interconnects, },
-> >>>>>>           { .parse_prop = parse_regulators, },
-> >>>>>> +        { .parse_prop = parse_iommus, },
-> >>>>>>           {},
-> >>>>>> };
-> >>>>>>
-> >>>>>> I plan to upstream this pretty soon, but I have other patches in
-> >>>>>> flight that touch the same file and I'm waiting for those to get
-> >>>>>> accepted. I also want to clean up the code a bit to reduce some
-> >>>>>> repetition before I add support for more bindings.
-> >>>>> I'm also wondering about ACPI support.
-> >>>> I'd love to add ACPI support too, but I have zero knowledge of ACPI.
-> >>>> I'd be happy to help anyone who wants to add ACPI support that allows
-> >>>> ACPI to add device links.
-> >>>
-> >>> If possible to add, that may be useful for remedying this:
-> >>>
-> >>> https://lore.kernel.org/linux-iommu/9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com/
-> >>>
+> >Hi Shikai,
+> >
+> >On Tue, Feb 19, 2019 at 8:19 AM Shikai Wang <sxauwsk@163.com> wrote:
 > >>
-> >> I'm happy that this change might fix that problem, but isn't the
-> >> problem reported in that thread more to do with child devices getting
-> >> added before the parent probes successfully? That doesn't make sense
-> >> to me.
+> >> When the adapter receive arbitration lost error interrupts,
+> >> cdns_i2c_master_xfer return to the caller directly instead of resetting
+> >> the adapter which resulted in the adapter being out of control.
+> >>
+> >> So when driver detect err_status such as arbitration lost,
+> >> then try to repair and fix it.
+> >>
+> >I am missing the issue that you are facing.
+> >You are having a multimaster scenario and getting arbitration lost.
 > >
-> > So the pcieport device and then the child device are added in the PCI
-> > scan, but only some time later do the device drivers probe for these
-> > devices; so it's not that the that pcieport driver creates the child
-> > device.
+> >the current code would attempt a retry did that lead to any issues?
 > >
-> > The problem then occurs in that the ordering the of device driver probe
-> > is such that we have this: pcieport probe + defer (as no IOMMU group
-> > registered), SMMU probe (registers the IOMMU group), child device probe,
-> > pcieport really probe.
-> >
-> > Can't the piceport driver not add its child devices before it
-> >> probes successfully? Or more specifically, who adds the child devices
-> >> of the pcieport before the pcieport itself probes?
-> >
-> > The devices are actually added in order pcieport, child device, but not
-> > really probed in that same order, as above.
+> >Can you explain the issue that you are facing?
 >
-> Right, in short the fundamental problem is that of_iommu_configure() now
-> does the wrong thing. Deferring probe of the entire host bridge/root
-> complex based on "iommu-map" would indeed happen to solve the problem by
-> brute force, I think, but could lead to a dependency cycle for PCI-based
-> IOMMUs as Jean points out.
+> Of cource,  The following describe my situation.
+>
+> In my product,  Touchscreen connect to zynq-7000 XC7Z010 by i2c bus( Just connect only one i2c-device of touchscreen),
+> when user tap Touchscreen, Touchscreen interrupt send to CPU and notifyed i2c-driver to obtain location data by i2c-bus,
 
-Sorry for the late reply. Got caught up on other work.
+So it is single master single slave.
+>
+> when Tap the screen frequently,  sometimes CPU get interrupt from touchscreen and try to obtain data,  then detect arbitration lost,
+the arbitration lost is surprising in non-multimaster scenario.
+Is there any other master in the configuration that we may not be triggering.
+Or can  you probe the lines?
 
-I didn't think the SMMU itself was PCI based in the example Jean gave.
-I thought it just happened to be the case where the SMMU probes after
-the pcieport but before the other children. If the SMMU itself is a
-child of the pcieport, how can it be required for the parent to
-function? How will suspend/resume even work?! I feel like I'm missing
-some context wrt to PCI that everyone else seems to know (which isn't
-surprising).
+> Although i2c-driver try three times,  it's useless.
 
-> I hope to have time this week to work a bit
-> more on pulling of_iommu_configure() apart to fix it properly, after
-> which of_devlink *should* only have to worry about the child devices
-> themselves...
-
-Worry about child devices in what sense? From a non-iommu perspective?
-
--Saravana
+You get bus busy? what is the issue.
+>
+> Actually i2c clock-line and data-line keep high, that mean i2c bus free.
+> Once this situation occur, i2c-control did't work anynay but cpu receive interrputs still.
+>
+> I am sorry that I have't found a good solution for this issuse;
