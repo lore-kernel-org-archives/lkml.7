@@ -2,133 +2,132 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F8FC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F0BC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB8621D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:15:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LN4Fbois"
+	by mail.kernel.org (Postfix) with ESMTP id AC78021882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573154290;
+	bh=Rc5lFoEyyypj6iZm/D0CseRC9XT0DtxI6A3R/nTYoik=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=X4krkrd4tUYvKS9hon/GOqZp4+17H1vQGWbtyucTygAHcIetrqZF3Yplaiybnoj7h
+	 EAdryn5qan+mf9QwzAdWEzYrww6KholGlktVrXGGP5TVGtfu8d9oH61AhTEpIyR40d
+	 Zq3pXlJ2uuOArz4pspM+9tIfYpS1jEC8thLrcmnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfKGTPw (ORCPT
+        id S1726260AbfKGTSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:15:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33505 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725871AbfKGTPv (ORCPT
+        Thu, 7 Nov 2019 14:18:09 -0500
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:37649 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfKGTSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:15:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573154150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G6D0OJgahd98JrkdYL9RHQVvVRXibXEjXiTY+dxNAhk=;
-        b=LN4Fbois/HMi0agT8txEeGiDCXxSbLugKcbsZkgVNMLS+oTYSosCal6rncEae9WWsySpO3
-        7uklQhNuUKx2SbZ/qgetvFKwsy7MjfflM2mqyaim2uQ0ZErI37KsaVBVo+oGZR18UmtXjw
-        aV/RCrp1puq/pgowuoeFEyQz/WrjNBw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-bXNoI1sLPQ6PUTEKxUAQtg-1; Thu, 07 Nov 2019 14:15:46 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56A13800C61;
-        Thu,  7 Nov 2019 19:15:45 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 859D610016DA;
-        Thu,  7 Nov 2019 19:15:44 +0000 (UTC)
-Subject: Re: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-References: <20191107190628.22667-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <cd7f02d2-7f20-4176-4d8a-9f663d6b8ba9@redhat.com>
-Date:   Thu, 7 Nov 2019 14:15:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20191107190628.22667-1-longman@redhat.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: bXNoI1sLPQ6PUTEKxUAQtg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 7 Nov 2019 14:18:09 -0500
+Received: by mail-qt1-f173.google.com with SMTP id g50so3606797qtb.4;
+        Thu, 07 Nov 2019 11:18:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=frzwKB0VNTg+ZAOVk2Hg0rgtTZGxKwYo7SANV2FiQrw=;
+        b=DOtNb0bgjksnLw/UHH2dC6pOHZ3neE0l5WG9BV60l4/UEztqwQIh3Pg8wei/4bfnwG
+         1/koANBb+xnwdqepckcyRxW7EZbM1yYcB8bDFXHcxqFGBFYWR4iU+WMfrZsOjMZ+fwUV
+         OUQIKOMoSdOOKaQYk8ot8vA+0aUqFHFToNT8yYqqBZSlq8IM3+umU2obkvdeVAng5xlX
+         d6VDCaVrc0TglUoj9RlpIRwN3JxRIGuABtOGAsznBkXRJGz8J99LsmyaCK7octLWtch0
+         ek+3emCiEQ6KPfRl3yVPqP8Js3Dhuz2LsjHUZf0tb8wnTgzoAyAYxH8Hh9oZnmqEd8Je
+         H2eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=frzwKB0VNTg+ZAOVk2Hg0rgtTZGxKwYo7SANV2FiQrw=;
+        b=DXuleNwnC8l6b9t1B7HXuCDcOwsFDvi1O1P1EQTL9Fl0a5aP3P8OJlh72w3dPerOwx
+         KN2ibrtyBHSbdF9pSOVR/iLJXqg44+O6HmEP9HPBTT1RolbgHkHAmwuwB7ipax66LcMV
+         C0CgLM84ZeYiD/3SDxKu3IK9b2puCuGW4eS+4cYayRo59gedZ2EMWvWdC2KLAwHyT3KE
+         oU+6yHlmQfVb9hHSLP2mkDDBK5V5LBcz74GztzUyi8uWFLVakMXEt7FrqHMorLM6L61m
+         zldqOV0OG+LdrmgUx4LXqg07nq6HSBLSxM5ZmBXOFLoYRTTHmC7VOHufDBJsSqFWN3mK
+         /4AQ==
+X-Gm-Message-State: APjAAAVSbMUVwjeQtm/5UE5KdpZ+kVUWU4DtNhKVmS4jtktxgUvt2apc
+        YTJd9/oz5ZUgIlkMAe9hR7U=
+X-Google-Smtp-Source: APXvYqzzHEdBlE4FlXU6EeSAp3KhSeG11aEuyOKLr+FosU7CaqQwF1C347fh6A/BzZUeR6wxjhUlSQ==
+X-Received: by 2002:ac8:23d3:: with SMTP id r19mr5815748qtr.297.1573154287844;
+        Thu, 07 Nov 2019 11:18:07 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:3f13])
+        by smtp.gmail.com with ESMTPSA id c20sm2037580qtc.13.2019.11.07.11.18.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 11:18:07 -0800 (PST)
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, kernel-team@fb.com
+Subject: [PATCHSET v2 block/for-next] blk-cgroup: use cgroup rstat for IO stats
+Date:   Thu,  7 Nov 2019 11:17:58 -0800
+Message-Id: <20191107191804.3735303-1-tj@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/7/19 2:06 PM, Waiman Long wrote:
-> A customer with large SMP systems (up to 16 sockets) with application
-> that uses large amount of static hugepages (~500-1500GB) are experiencing
-> random multisecond delays. These delays was caused by the long time it
-> took to scan the VMA interval tree with mmap_sem held.
->
-> The sharing of huge PMD does not require changes to the i_mmap at all.
-> As a result, we can just take the read lock and let other threads
-> searching for the right VMA to share in parallel. Once the right
-> VMA is found, either the PMD lock (2M huge page for x86-64) or the
-> mm->page_table_lock will be acquired to perform the actual PMD sharing.
->
-> Lock contention, if present, will happen in the spinlock. That is much
-> better than contention in the rwsem where the time needed to scan the
-> the interval tree is indeterminate.
->
-> With this patch applied, the customer is seeing significant improvements
-> over the unpatched kernel.
+Hello,
 
-Oh, I forgot to add
+v2: Build fix when !DEBUG.
 
-Suggested-by: Mike Kravetz <mike.kravetz@oracle.com>
+blk-cgroup IO stats currently use blkg_rwstat which unforutnately
+requires walking all descendants recursively on read.  On systems with
+a large number of cgroups (dead or alive), this can make each stat
+read a substantially expensive operation.
 
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  mm/hugetlb.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index b45a95363a84..087e7ff00137 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -4842,7 +4842,11 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsign=
-ed long addr, pud_t *pud)
->  =09if (!vma_shareable(vma, addr))
->  =09=09return (pte_t *)pmd_alloc(mm, pud, addr);
-> =20
-> -=09i_mmap_lock_write(mapping);
-> +=09/*
-> +=09 * PMD sharing does not require changes to i_mmap. So a read lock
-> +=09 * is enuogh.
-> +=09 */
-> +=09i_mmap_lock_read(mapping);
->  =09vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
->  =09=09if (svma =3D=3D vma)
->  =09=09=09continue;
-> @@ -4872,7 +4876,7 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigne=
-d long addr, pud_t *pud)
->  =09spin_unlock(ptl);
->  out:
->  =09pte =3D (pte_t *)pmd_alloc(mm, pud, addr);
-> -=09i_mmap_unlock_write(mapping);
-> +=09i_mmap_unlock_read(mapping);
->  =09return pte;
->  }
-> =20
+This patch updates blk-cgroup to use cgroup rstat which makes stat
+reading O(# descendants which have been active since last reading)
+instead of O(# descendants).
 
-Cheers,
-Longman
+ 0001-bfq-iosched-relocate-bfqg_-rwstat-helpers.patch
+ 0002-bfq-iosched-stop-using-blkg-stat_bytes-and-stat_ios.patch
+ 0003-blk-throtl-stop-using-blkg-stat_bytes-and-stat_ios.patch
+ 0004-blk-cgroup-remove-now-unused-blkg_print_stat_-bytes-.patch
+ 0005-blk-cgroup-reimplement-basic-IO-stats-using-cgroup-r.patch
+ 0006-blk-cgroup-separate-out-blkg_rwstat-under-CONFIG_BLK.patch
+
+0001-0003 make bfq-iosched and blk-throtl use their own blkg_rwstat to
+track basic IO stats on cgroup1 instead of sharing blk-cgroup core's.
+0004 is a follow-up cleanup.
+
+0005 switches blk-cgroup to cgroup rstat.
+
+0006 moves blkg_rwstat to its own files and gate it under a config
+option as it's now only used by blk-throtl and bfq-iosched.
+
+The patchset is on top of
+
+  block/for-next  40afbe18b03a ("Merge branch 'for-5.5/drivers-post' into for-next")
++ block/for-linus b0814361a25c ("blkcg: make blkcg_print_stat() print stats only for online blkgs")
+
+and also available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-blkcg-rstat
+
+Thanks.
+
+ block/Kconfig              |    4 
+ block/Kconfig.iosched      |    1 
+ block/Makefile             |    1 
+ block/bfq-cgroup.c         |   37 +++--
+ block/bfq-iosched.c        |    4 
+ block/bfq-iosched.h        |    6 
+ block/blk-cgroup-rwstat.c  |  129 +++++++++++++++++++
+ block/blk-cgroup-rwstat.h  |  149 ++++++++++++++++++++++
+ block/blk-cgroup.c         |  304 ++++++++++++++-------------------------------
+ block/blk-throttle.c       |   71 +++++++++-
+ include/linux/blk-cgroup.h |  198 +++++------------------------
+ 11 files changed, 517 insertions(+), 387 deletions(-)
+
+--
+tejun
+
+[1] http://lkml.kernel.org/r/20191105160951.GS3622521@devbig004.ftw2.facebook.com
 
