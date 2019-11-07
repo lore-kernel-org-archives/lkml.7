@@ -8,54 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF393C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F7AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0842166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1CD2166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nfaWlfTV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tztSAJOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKGTho (ORCPT
+        id S1727189AbfKGThr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:37:44 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:33706 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfKGTho (ORCPT
+        Thu, 7 Nov 2019 14:37:47 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:34784 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfKGThr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:37:44 -0500
-Received: by mail-pg1-f201.google.com with SMTP id y22so2662222pgc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:37:42 -0800 (PST)
+        Thu, 7 Nov 2019 14:37:47 -0500
+Received: by mail-pg1-f202.google.com with SMTP id w9so2657956pgl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:37:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=LJ5qu1d1qYTmvRrw2/bIxoaJkdqKaiuo2RqaAL/gLjQ=;
-        b=nfaWlfTVssvz5xKSSFcy1G4yFKmpFodEY52ELUWfRbdELBywKboP3WuzeqObOCPVJ+
-         oibB5HCXQjUs6GGW1eBBLTPppMXXsLZPaPRTtLwL6w7ctbPO2FlLsZmKVJsaAGXkNHvy
-         tv7Bdb+8EXr9w8CPJg41av4kkucclnrfkQ9Ucf95GgLoPFGlr3xtQE0x/DP78CO70VD+
-         AfwMmNStevSZSvISY/QBZ2PKZ3M39VnXDG7Js8X5b25apb4AIR1MNVWs9abMFAVuVadg
-         zblVAYfF8BZenWVPnU3SRdE/5iK2Son+iGZJlVhgEVsbedn3OdLVJGUcrnWibxKg+1SN
-         YpFQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=unu4a090GFms8fzkDfk3yCw2xwpt2ILomRsS9MTJjmw=;
+        b=tztSAJOdqWFAjlQZeJ+g2ugY8dqvavfCHvajgmArzYAyVt5OqD3tKZlBwlRpCUCl5W
+         IduHAGMCk1DqMLVdqFrt5E7dAUhfxJFZG1087/2NuDwjP3fLxGlfgGV+2/1pXK69w3OD
+         NhwjfDHu9oBZuWRZ/1LywFhPktYbWnuVdfPTUnt3+GJAfDAU65O+ijYS0x9NVJrAbTCj
+         NaXq81t/H3iNHla4zbIgk7N68+YsA2PFQk9v7Y3cWm83SVXRwkCy1kUmDyG7uL7wwAgh
+         xYkyiCBwmaV/5EI0DTI+qoyKZIw2L+gH+EHwmCfeZPy0kAcHJJ2OfXvpPZ0sgTVp1tFo
+         bLig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=LJ5qu1d1qYTmvRrw2/bIxoaJkdqKaiuo2RqaAL/gLjQ=;
-        b=kE/YUNyaRMHukotUbbJ/yVAIsmYzMnGoBBJl0jr9AlH9HstEV9x6RtNreL5OHoGjSw
-         9LC8vfsYBpQ8TclahthEA9TW5FTAf0F7ZLvj8uK4QQ+VAcOJTaCbR4ZjWDPjTAFq4QfP
-         /JWIvCFeDWsfLv9fXP3PgptSjlYJLxXg3jQZ+BOlTd9f9TvfvIEdvRZycUhKU5Mc6Pux
-         FfKRiM/1/6ricHNODpK2RZp0CjVyw+bPxwGne8zORVDdMcNcDGQ3OMdNP4BALy7RKIyS
-         drS2W/C+4YzBjNvrwvNZW/D2rxsX/31+yEWJ+OedZGux9JJ9Hby25bFZHB4eeqXonuUJ
-         xIhw==
-X-Gm-Message-State: APjAAAXN/bKn+eIcHSYjHEXpkGdBLTTyViTElDBL2zc7NilLdqPnYrOO
-        cTr/sF73Fna1MqGMcsmpiRhKVGKIHYxEaQ==
-X-Google-Smtp-Source: APXvYqxghuocbGVy4JqgXYeLsYpAilxoAYqmI6RcKnNtzoZtYEiMAd5XWQfVYaD23hAG7YMa2GfMfnIGv619kg==
-X-Received: by 2002:a63:a5b:: with SMTP id z27mr6849735pgk.416.1573155461548;
- Thu, 07 Nov 2019 11:37:41 -0800 (PST)
-Date:   Thu,  7 Nov 2019 11:37:37 -0800
-Message-Id: <20191107193738.195914-1-edumazet@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=unu4a090GFms8fzkDfk3yCw2xwpt2ILomRsS9MTJjmw=;
+        b=pNCs/VSz0Zju+nZCBzdHNTYxMH3B6AIlVzi1K06kmxbVkKQlfTZRTPBFGS1UKwdpwh
+         WNKlWkVHN2d+T4/Ve4SvuJOADzYpt9o4kXqyvxRjA3p4n5N63G5TqmPR2i1mrO6bAkmm
+         moo1XynVMrsJfjj8vfB+D5IYEJWGsja7EoURXy7hJ+JOSNPI+TdiT4KzxqMnE57kWyZ9
+         bGgNlvDy6rSkkgiT34WkHnPB+Th79dKa0NNPonPGT7Rt8pxufUSdbWF4XBT7mA7SCWxc
+         W1QKCuNcOO9GZnT7vA8UiLKEiVOSQPYRBz56jNwphwYxhRQVJceJrxKFyMGun4APiPEg
+         y9DA==
+X-Gm-Message-State: APjAAAUFYh24O1JnyNwrmtNV5/ggpv50X8bwTIoJLwoC8DjtoA9UlR8/
+        YpJOyaGufF7iZkov5TpH3uUjZpQbJcRaQw==
+X-Google-Smtp-Source: APXvYqzwd2kTTb0aa87G/qkJnXqolzk/oh6/R88LEMtF3YPIfAE9kXlFUO062dorQymzj/kL6q0rH9WXRQqwzg==
+X-Received: by 2002:a63:f25:: with SMTP id e37mr6572837pgl.269.1573155464916;
+ Thu, 07 Nov 2019 11:37:44 -0800 (PST)
+Date:   Thu,  7 Nov 2019 11:37:38 -0800
+In-Reply-To: <20191107193738.195914-1-edumazet@google.com>
+Message-Id: <20191107193738.195914-2-edumazet@google.com>
 Mime-Version: 1.0
+References: <20191107193738.195914-1-edumazet@google.com>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH 1/2] list: add hlist_unhashed_lockless()
+Subject: [PATCH 2/2] timer: use hlist_unhashed_lockless() in timer_pending()
 From:   Eric Dumazet <edumazet@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
@@ -68,99 +72,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We would like to use hlist_unhashed() from timer_pending(),
-which runs without protection of a lock.
+timer_pending() is mostly used in lockless contexts.
 
-Note that other callers might also want to use this variant.
+Without proper annotations, KCSAN might detect a data-race [1]
 
-Instead of forcing a READ_ONCE() for all hlist_unhashed()
-callers, add a new helper with an explicit _lockless suffix
-in the name to better document what is going on.
+Using hlist_unhashed_lockless() instead of hand-coding it
+seems appropriate (as suggested by Paul E. McKenney).
 
-Also add various WRITE_ONCE() in __hlist_del(), hlist_add_head()
-and hlist_add_before()/hlist_add_behind() to pair with
-the READ_ONCE().
+[1]
+
+BUG: KCSAN: data-race in del_timer / detach_if_pending
+
+write to 0xffff88808697d870 of 8 bytes by task 10 on cpu 0:
+ __hlist_del include/linux/list.h:764 [inline]
+ detach_timer kernel/time/timer.c:815 [inline]
+ detach_if_pending+0xcd/0x2d0 kernel/time/timer.c:832
+ try_to_del_timer_sync+0x60/0xb0 kernel/time/timer.c:1226
+ del_timer_sync+0x6b/0xa0 kernel/time/timer.c:1365
+ schedule_timeout+0x2d2/0x6e0 kernel/time/timer.c:1896
+ rcu_gp_fqs_loop+0x37c/0x580 kernel/rcu/tree.c:1639
+ rcu_gp_kthread+0x143/0x230 kernel/rcu/tree.c:1799
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+
+read to 0xffff88808697d870 of 8 bytes by task 12060 on cpu 1:
+ del_timer+0x3b/0xb0 kernel/time/timer.c:1198
+ sk_stop_timer+0x25/0x60 net/core/sock.c:2845
+ inet_csk_clear_xmit_timers+0x69/0xa0 net/ipv4/inet_connection_sock.c:523
+ tcp_clear_xmit_timers include/net/tcp.h:606 [inline]
+ tcp_v4_destroy_sock+0xa3/0x3f0 net/ipv4/tcp_ipv4.c:2096
+ inet_csk_destroy_sock+0xf4/0x250 net/ipv4/inet_connection_sock.c:836
+ tcp_close+0x6f3/0x970 net/ipv4/tcp.c:2497
+ inet_release+0x86/0x100 net/ipv4/af_inet.c:427
+ __sock_release+0x85/0x160 net/socket.c:590
+ sock_close+0x24/0x30 net/socket.c:1268
+ __fput+0x1e1/0x520 fs/file_table.c:280
+ ____fput+0x1f/0x30 fs/file_table.c:313
+ task_work_run+0xf6/0x130 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x2b4/0x2c0 arch/x86/entry/common.c:163
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 12060 Comm: syz-executor.5 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
 
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Cc: "Paul E. McKenney" <paulmck@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/list.h | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ include/linux/timer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/list.h b/include/linux/list.h
-index 85c92555e31f85f019354e54d6efb8e79c2aee17..61f5aaf96192cdc4c1644741a415590b63c3c201 100644
---- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -749,6 +749,16 @@ static inline int hlist_unhashed(const struct hlist_node *h)
- 	return !h->pprev;
- }
- 
-+/* This variant of hlist_unhashed() must be used in lockless contexts
-+ * to avoid potential load-tearing.
-+ * The READ_ONCE() is paired with the various WRITE_ONCE() in hlist
-+ * helpers that are defined below.
-+ */
-+static inline int hlist_unhashed_lockless(const struct hlist_node *h)
-+{
-+	return !READ_ONCE(h->pprev);
-+}
-+
- static inline int hlist_empty(const struct hlist_head *h)
+diff --git a/include/linux/timer.h b/include/linux/timer.h
+index 1e6650ed066d5d28251b0bd385fc37ef94c96532..0dc19a8c39c9e49a7cde3d34bfa4be8871cbc1c2 100644
+--- a/include/linux/timer.h
++++ b/include/linux/timer.h
+@@ -164,7 +164,7 @@ static inline void destroy_timer_on_stack(struct timer_list *timer) { }
+  */
+ static inline int timer_pending(const struct timer_list * timer)
  {
- 	return !READ_ONCE(h->first);
-@@ -761,7 +771,7 @@ static inline void __hlist_del(struct hlist_node *n)
- 
- 	WRITE_ONCE(*pprev, next);
- 	if (next)
--		next->pprev = pprev;
-+		WRITE_ONCE(next->pprev, pprev);
+-	return timer->entry.pprev != NULL;
++	return !hlist_unhashed_lockless(&timer->entry);
  }
  
- static inline void hlist_del(struct hlist_node *n)
-@@ -782,32 +792,32 @@ static inline void hlist_del_init(struct hlist_node *n)
- static inline void hlist_add_head(struct hlist_node *n, struct hlist_head *h)
- {
- 	struct hlist_node *first = h->first;
--	n->next = first;
-+	WRITE_ONCE(n->next, first);
- 	if (first)
--		first->pprev = &n->next;
-+		WRITE_ONCE(first->pprev, &n->next);
- 	WRITE_ONCE(h->first, n);
--	n->pprev = &h->first;
-+	WRITE_ONCE(n->pprev, &h->first);
- }
- 
- /* next must be != NULL */
- static inline void hlist_add_before(struct hlist_node *n,
- 					struct hlist_node *next)
- {
--	n->pprev = next->pprev;
--	n->next = next;
--	next->pprev = &n->next;
-+	WRITE_ONCE(n->pprev, next->pprev);
-+	WRITE_ONCE(n->next, next);
-+	WRITE_ONCE(next->pprev, &n->next);
- 	WRITE_ONCE(*(n->pprev), n);
- }
- 
- static inline void hlist_add_behind(struct hlist_node *n,
- 				    struct hlist_node *prev)
- {
--	n->next = prev->next;
--	prev->next = n;
--	n->pprev = &prev->next;
-+	WRITE_ONCE(n->next, prev->next);
-+	WRITE_ONCE(prev->next, n);
-+	WRITE_ONCE(n->pprev, &prev->next);
- 
- 	if (n->next)
--		n->next->pprev  = &n->next;
-+		WRITE_ONCE(n->next->pprev, &n->next);
- }
- 
- /* after that we'll appear to be on some hlist and hlist_del will work */
+ extern void add_timer_on(struct timer_list *timer, int cpu);
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
