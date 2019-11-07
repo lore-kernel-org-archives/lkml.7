@@ -2,118 +2,158 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9618C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1392FC6197
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E692084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5C5214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="PCr5ssze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387555AbfKGJjw (ORCPT
+        id S2387697AbfKGJkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:39:52 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:63390 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726734AbfKGJjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:39:52 -0500
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam2.hygon.cn with ESMTP id xA79aoag094479;
-        Thu, 7 Nov 2019 17:36:51 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id xA79aiNP024677;
-        Thu, 7 Nov 2019 17:36:44 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from ubuntu.localdomain (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Thu, 7 Nov 2019
- 17:36:46 +0800
-From:   Jiasen Lin <linjiasen@hygon.cn>
-To:     <jdmason@kudzu.us>, <Shyam-sundar.S-k@amd.com>,
-        <dave.jiang@intel.com>, <allenbh@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linjiasen@hygon.cn>, <linjiasen007@gmail.com>
-Subject: [PATCH] NTB: Fix an error in get link status
-Date:   Thu, 7 Nov 2019 01:35:36 -0800
-Message-ID: <1573119336-107732-1-git-send-email-linjiasen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Thu, 7 Nov 2019 04:40:24 -0500
+Received: from ns.mm-sol.com ([37.157.136.199]:49536 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbfKGJkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 04:40:24 -0500
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id E3ED6CF14;
+        Thu,  7 Nov 2019 11:40:20 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1573119620; bh=eBmqfUd/4ZBra2T7wKhywMoYF6nMhDd13uPF9iVNRds=;
+        h=Subject:From:To:Cc:Date:From;
+        b=PCr5ssze63Ie8kxLNYet0aQKWa/6hC3i04PTSKY2u/f99yNLkoEvos+CjK63vgIe0
+         cA3N0sAtASn4H1WgfHliB5K+OiZ7eUsL/U46mqgqlgxEo5jjuL3LXrJcFuq8FtTzln
+         eR3YrhWsGg1xQ09PMA+46ql0SVEK5TynfyNt3f+U3fJhNOKDj5kpnOp3Ad8xITHxv7
+         m/MvE8lL+xw8JfQlhbrsJlTcQ7tBkajC5EBySEi7+URtuBeJ6WBhtzIMU1nMjJ8tSl
+         NrwvyBBZ3osNXtrPuZsPwXB18oIP/T2Ir8W00U6uxRcYT8rRIXJ4NOmfGk8VwxQUPE
+         XLulgHadoFrWQ==
+Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+ <f1e89dcc-4d5f-cc1f-8036-dcb062645cb0@mm-sol.com>
+ <20191106202351.GE36595@minitux>
+ <87b791db-6e03-b1ab-934c-068521652117@mm-sol.com>
+Message-ID: <e93522bc-aa6e-5b6d-8dd0-c9c926d292c5@mm-sol.com>
+Date:   Thu, 7 Nov 2019 11:40:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn xA79aoag094479
-X-DNSRBL: 
+In-Reply-To: <87b791db-6e03-b1ab-934c-068521652117@mm-sol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The offset of PCIe Capability Header for AMD and HYGON NTB is 0x64,
-but the macro which named "AMD_LINK_STATUS_OFFSET" is defined as 0x68.
-It is offset of Device Capabilities Reg rather than Link Control Reg.
+Hi,
 
-This code trigger an error in get link statsus:
+On 11/7/19 11:32 AM, Stanimir Varbanov wrote:
+> Hi Bjorn,
+> 
+> On 11/6/19 10:23 PM, Bjorn Andersson wrote:
+>> On Mon 04 Nov 05:00 PST 2019, Stanimir Varbanov wrote:
+>>
+>>> Hi Bjorn,
+>>>
+>>> Thanks for the fix!
+>>>
+>>> On 11/2/19 2:24 AM, Bjorn Andersson wrote:
+>>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+>>>> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
+>>>> bridges.
+>>>
+>>> Are you sure that this will not break ops_1_0_0 (Qcom IP rev.: 1.0.0
+>>> Synopsys IP rev.: 4.11a) i.e. apq8084 ?
+> 
+> OK, I've checked DEVICE IDs for all supported SoCs in pcie-qcom driver:
+> 
+> apq8084 0x101
+> ipq8064 0x101
+> apq8064 0x101
+> msm8996 0x104
+> ipq8074 0x302
+> ipq4019 0x1001
+> qcs404  ??? (can you check for this SoC)
+> 
+> As you can see they are various, so I don't think we have to expose them
+> in pci_ids.h. See my proposal below.
+> 
+> Of course the last word will be from PCI maintainers.
+> 
+>>>
+>>
+>> I am not, I've only tested this on db820c and db845c. Unfortunately I'm
+>> unable to find a branch with the necessary dts snippets to test it. Do
+>> you perhaps have a branch somewhere?
+>>
+>> Regards,
+>> Bjorn
+>>
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>> ---
+>>>>  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
+>>>>  include/linux/pci_ids.h                | 2 ++
+>>>>  2 files changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> index 35f4980480bb..b91abf4d4905 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>>>  {
+>>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>>>  }
+>>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
+> 
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> 
+>>>>  
+>>>>  static struct platform_driver qcom_pcie_driver = {
+>>>>  	.probe = qcom_pcie_probe,
+>>>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>>>> index 21a572469a4e..3d0724ee4d2f 100644
+>>>> --- a/include/linux/pci_ids.h
+>>>> +++ b/include/linux/pci_ids.h
+>>>> @@ -2413,6 +2413,8 @@
+>>>>  #define PCI_VENDOR_ID_LENOVO		0x17aa
+>>>>  
+>>>>  #define PCI_VENDOR_ID_QCOM		0x17cb
+>>>> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
+>>>> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
 
-	cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
-		LNK STA -               0x8fa1
-		Link Status -           Up
-		Link Speed -            PCI-E Gen 0
-		Link Width -            x0
+I looked in pci_ids.h, and it looks like this is the right place for
+DEVICE_IDs so instead of pcie gen we could list the SoCs names?
 
-This patch use pcie_capability_read_dword to get link status.
-After fix this issue, we can get link status accurately:
+#define PCIE_DEVICE_ID_QCOM_APQ8084	0x0101
+#define PCIE_DEVICE_ID_QCOM_APQ8064	0x0101
+....
 
-	cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
-		LNK STA -               0x11030042
-		Link Status -           Up
-		Link Speed -            PCI-E Gen 3
-		Link Width -            x16
-
-Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
----
- drivers/ntb/hw/amd/ntb_hw_amd.c | 5 +++--
- drivers/ntb/hw/amd/ntb_hw_amd.h | 1 -
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-index 156c2a1..ae91105 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-@@ -855,8 +855,8 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
- 
- 	ndev->cntl_sta = reg;
- 
--	rc = pci_read_config_dword(ndev->ntb.pdev,
--				   AMD_LINK_STATUS_OFFSET, &stat);
-+	rc = pcie_capability_read_dword(ndev->ntb.pdev,
-+				   PCI_EXP_LNKCTL, &stat);
- 	if (rc)
- 		return 0;
- 	ndev->lnk_sta = stat;
-@@ -1139,6 +1139,7 @@ static const struct ntb_dev_data dev_data[] = {
- static const struct pci_device_id amd_ntb_pci_tbl[] = {
- 	{ PCI_VDEVICE(AMD, 0x145b), (kernel_ulong_t)&dev_data[0] },
- 	{ PCI_VDEVICE(AMD, 0x148b), (kernel_ulong_t)&dev_data[1] },
-+	{ PCI_VDEVICE(HYGON, 0x145b), (kernel_ulong_t)&dev_data[0] },
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, amd_ntb_pci_tbl);
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h b/drivers/ntb/hw/amd/ntb_hw_amd.h
-index 139a307..39e5d18 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.h
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
-@@ -53,7 +53,6 @@
- #include <linux/pci.h>
- 
- #define AMD_LINK_HB_TIMEOUT	msecs_to_jiffies(1000)
--#define AMD_LINK_STATUS_OFFSET	0x68
- #define NTB_LIN_STA_ACTIVE_BIT	0x00000002
- #define NTB_LNK_STA_SPEED_MASK	0x000F0000
- #define NTB_LNK_STA_WIDTH_MASK	0x03F00000
 -- 
-2.7.4
-
+regards,
+Stan
