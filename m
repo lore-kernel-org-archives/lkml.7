@@ -2,219 +2,119 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB4FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E86CC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEEE2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A77207FA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573148219;
+	bh=WYkdmBoVd2wyuEGWsQ+5wzEay2CjX7glRFYBTLk9U24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LYrbMhEAk+IrXskwYhBSQ/ZqVbtjrA3z+dfUW549YMnFLgBDjfnXKClrZrUrL4LNo
+	 KWhVGd/7SQ9Zwill2uHmwF8SQKegnTb0Na/8cQXEyfMhKYoZHh6zLrLK/SZ9pZqUSF
+	 cIRtRkFQ5dtBmJyFUWy+152msirwplh4oQX8kxGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfKGRbz (ORCPT
+        id S1730658AbfKGRg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:31:55 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46455 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727132AbfKGRbz (ORCPT
+        Thu, 7 Nov 2019 12:36:58 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:40895 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728847AbfKGRg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:31:55 -0500
-Received: from [109.168.11.45] (port=38784 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1iSldO-005JY8-Rn; Thu, 07 Nov 2019 18:31:50 +0100
-Subject: Re: [RFC PATCH 01/12] i2c: replace i2c_new_probed_device with an
- ERR_PTR variant
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org
-References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
- <20191106095033.25182-2-wsa+renesas@sang-engineering.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <cd25c799-bb10-aa59-8705-b079eff2165e@lucaceresoli.net>
-Date:   Thu, 7 Nov 2019 18:31:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 12:36:57 -0500
+Received: by mail-qv1-f68.google.com with SMTP id i3so931457qvv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:36:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jnz13T5PvKAXfEd7CGomZWIateMaBfjZihfFaSqZe+A=;
+        b=j8G3kn2DKWl7MPoDYCnrCS1bNY7JftX53zxK8B7X4p28wosoV2J6yUAnwY5gWr6AMy
+         TU2mDefL3rjbolgzJAJjCNjry7/emQ4X/0nnaYDiLtUYUERq33HItzdwoYtJ1y5GD4hA
+         qg2RwT1HQQGg+DnKTFES4jloEvwNg5pg4PepyI3yGccHH7M4aIkutJpZsm0dS7DWmpDO
+         GXRocwk4TiZpBeTlivSzzpNAMx+GSZVnNZucYHB6+Sl/KBARKClncHFJp7vjje+xdbRn
+         BRC4HMl3s1kWCl2qv2tcORllPW+K1k9s31lx5laTVrKvYtJvBQw1lgngXFW6AMeOKbVw
+         8feQ==
+X-Gm-Message-State: APjAAAXIPcYEgIkG0ub1mbnvBm6lEQ+sRb2cbX1LpIJHlRHwtGycrWeG
+        IE3l4Z1at7UJPtyTHO90RrMbw2RLWhA=
+X-Google-Smtp-Source: APXvYqxNG9Cczs1Pxdy0Pbc/LP+UYNN7aZFaWB0EOtvo6ib9mUP4KtrT3m0bEUYO9DWNI+rRFc23dA==
+X-Received: by 2002:a0c:b88f:: with SMTP id y15mr4639681qvf.161.1573148216795;
+        Thu, 07 Nov 2019 09:36:56 -0800 (PST)
+Received: from dennisz-mbp ([2620:10d:c091:500::3:db5f])
+        by smtp.gmail.com with ESMTPSA id u189sm1404705qkd.62.2019.11.07.09.36.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 09:36:55 -0800 (PST)
+Date:   Thu, 7 Nov 2019 12:36:53 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] percpu-refcount: Use normal instead of RCU-sched"
+Message-ID: <20191107173653.GA1242@dennisz-mbp>
+References: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
+ <20191107091319.6zf5tmdi54amtann@linutronix.de>
+ <20191107161749.GA93945@dennisz-mbp>
+ <20191107162842.2qgd3db2cjmmsxeh@linutronix.de>
+ <20191107165519.GA99408@dennisz-mbp>
+ <20191107172434.ylz4hyxw4rbmhre2@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191106095033.25182-2-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107172434.ylz4hyxw4rbmhre2@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
-
-On 06/11/19 10:50, Wolfram Sang wrote:
-> In the general move to have i2c_new_*_device functions which return
-> ERR_PTR instead of NULL, this patch converts i2c_new_probed_device().
+On Thu, Nov 07, 2019 at 06:24:34PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-11-07 11:55:19 [-0500], Dennis Zhou wrote:
+> > On Thu, Nov 07, 2019 at 05:28:42PM +0100, Sebastian Andrzej Siewior wrote:
+> > > > I just want to clarify a little bit. Is this patch aimed at fixing an
+> > > > issue with RT kernels specifically? 
+> > > 
+> > > Due to the implications of preempt_disable() on RT kernels it fixes
+> > > problems with RT kernels.
+> > > 
+> > 
+> > Great, do you mind adding this explanation with what the implications
+> > are in the commit message?
 > 
-> There are only few users, so this patch converts the I2C core and all
-> users in one go. The function gets renamed to i2c_new_scanned_device()
-> so out-of-tree users will get a build failure to understand they need to
-> adapt their error checking code.
+> some RCU section here invoke callbacks which acquire spinlock_t locks.
+> This does not work on RT with disabled preemption.
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  Documentation/i2c/instantiating-devices.rst | 10 ++++-----
->  Documentation/i2c/writing-clients.rst       |  8 +++----
->  drivers/i2c/i2c-core-base.c                 | 25 ++++++++++++++++-----
->  include/linux/i2c.h                         | 12 +++++++---
->  4 files changed, 37 insertions(+), 18 deletions(-)
+
+Yeah, so adding a bit in the commit message about why it's an issue for
+RT kernels with disabled preemption as I don't believe this is an issue
+for non-RT kernels.
+
+
+> > > > It'd also be nice to have the
+> > > > numbers as well as if the kernel was RT or non-RT.
+> > > 
+> > > The benchmark was done on a CONFIG_PREEMPT kernel. As said in the commit
+> > > log, the numbers were mostly the same, I can re-run the test and post
+> > > numbers if you want them.
+> > > This patch makes no difference on PREEMPT_NONE or PREEMPT_VOLUNTARY
+> > > kernels.
+> > > 
+> > 
+> > I think a more explicit explanation in the commit message would suffice.
 > 
-> diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
-> index 1238f1fa3382..875ebe9e78e3 100644
-> --- a/Documentation/i2c/instantiating-devices.rst
-> +++ b/Documentation/i2c/instantiating-devices.rst
-> @@ -123,7 +123,7 @@ present or not (for example for an optional feature which is not present
->  on cheap variants of a board but you have no way to tell them apart), or
->  it may have different addresses from one board to the next (manufacturer
->  changing its design without notice). In this case, you can call
-> -i2c_new_probed_device() instead of i2c_new_device().
-> +i2c_new_scanned_device() instead of i2c_new_device().
->  
->  Example (from the nxp OHCI driver)::
->  
-> @@ -139,8 +139,8 @@ Example (from the nxp OHCI driver)::
->  	i2c_adap = i2c_get_adapter(2);
->  	memset(&i2c_info, 0, sizeof(struct i2c_board_info));
->  	strscpy(i2c_info.type, "isp1301_nxp", sizeof(i2c_info.type));
-> -	isp1301_i2c_client = i2c_new_probed_device(i2c_adap, &i2c_info,
-> -						   normal_i2c, NULL);
-> +	isp1301_i2c_client = i2c_new_scanned_device(i2c_adap, &i2c_info,
-> +						    normal_i2c, NULL);
->  	i2c_put_adapter(i2c_adap);
->  	(...)
->    }
-> @@ -153,14 +153,14 @@ simply gives up.
->  The driver which instantiated the I2C device is responsible for destroying
->  it on cleanup. This is done by calling i2c_unregister_device() on the
->  pointer that was earlier returned by i2c_new_device() or
-> -i2c_new_probed_device().
-> +i2c_new_scanned_device().
->  
->  
->  Method 3: Probe an I2C bus for certain devices
->  ----------------------------------------------
->  
->  Sometimes you do not have enough information about an I2C device, not even
-> -to call i2c_new_probed_device(). The typical case is hardware monitoring
-> +to call i2c_new_scanned_device(). The typical case is hardware monitoring
->  chips on PC mainboards. There are several dozen models, which can live
->  at 25 different addresses. Given the huge number of mainboards out there,
->  it is next to impossible to build an exhaustive list of the hardware
-> diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
-> index dddf0a14ab7c..ced309b5e0cc 100644
-> --- a/Documentation/i2c/writing-clients.rst
-> +++ b/Documentation/i2c/writing-clients.rst
-> @@ -185,14 +185,14 @@ Sometimes you know that a device is connected to a given I2C bus, but you
->  don't know the exact address it uses.  This happens on TV adapters for
->  example, where the same driver supports dozens of slightly different
->  models, and I2C device addresses change from one model to the next.  In
-> -that case, you can use the i2c_new_probed_device() variant, which is
-> +that case, you can use the i2c_new_scanned_device() variant, which is
->  similar to i2c_new_device(), except that it takes an additional list of
->  possible I2C addresses to probe.  A device is created for the first
->  responsive address in the list.  If you expect more than one device to be
-> -present in the address range, simply call i2c_new_probed_device() that
-> +present in the address range, simply call i2c_new_scanned_device() that
->  many times.
->  
-> -The call to i2c_new_device() or i2c_new_probed_device() typically happens
-> +The call to i2c_new_device() or i2c_new_scanned_device() typically happens
->  in the I2C bus driver. You may want to save the returned i2c_client
->  reference for later use.
->  
-> @@ -237,7 +237,7 @@ Device Deletion
->  ---------------
->  
->  Each I2C device which has been created using i2c_new_device() or
-> -i2c_new_probed_device() can be unregistered by calling
-> +i2c_new_scanned_device() can be unregistered by calling
->  i2c_unregister_device().  If you don't call it explicitly, it will be
->  called automatically before the underlying I2C bus itself is removed, as a
->  device can't survive its parent in the device driver model.
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 6a5183cffdfc..380bde2dc23e 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -2277,10 +2277,10 @@ int i2c_probe_func_quick_read(struct i2c_adapter *adap, unsigned short addr)
->  EXPORT_SYMBOL_GPL(i2c_probe_func_quick_read);
->  
->  struct i2c_client *
-> -i2c_new_probed_device(struct i2c_adapter *adap,
-> -		      struct i2c_board_info *info,
-> -		      unsigned short const *addr_list,
-> -		      int (*probe)(struct i2c_adapter *adap, unsigned short addr))
-> +i2c_new_scanned_device(struct i2c_adapter *adap,
-> +		       struct i2c_board_info *info,
-> +		       unsigned short const *addr_list,
-> +		       int (*probe)(struct i2c_adapter *adap, unsigned short addr))
->  {
->  	int i;
->  
-> @@ -2310,11 +2310,24 @@ i2c_new_probed_device(struct i2c_adapter *adap,
->  
->  	if (addr_list[i] == I2C_CLIENT_END) {
->  		dev_dbg(&adap->dev, "Probing failed, no device found\n");
-> -		return NULL;
-> +		return ERR_PTR(-ENODEV);
->  	}
->  
->  	info->addr = addr_list[i];
-> -	return i2c_new_device(adap, info);
-> +	return i2c_new_client_device(adap, info);
-> +}
-> +EXPORT_SYMBOL_GPL(i2c_new_scanned_device);
-> +
-> +struct i2c_client *
-> +i2c_new_probed_device(struct i2c_adapter *adap,
-> +		      struct i2c_board_info *info,
-> +		      unsigned short const *addr_list,
-> +		      int (*probe)(struct i2c_adapter *adap, unsigned short addr))
-> +{
-> +	struct i2c_client *client;
-> +
-> +	client = i2c_new_scanned_device(adap, info, addr_list, probe);
-> +	return IS_ERR(client) ? NULL : client;
->  }
->  EXPORT_SYMBOL_GPL(i2c_new_probed_device);
->  
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index aaf57d9b41db..df3044513464 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -452,10 +452,16 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
->   * a default probing method is used.
->   */
->  extern struct i2c_client *
-> +i2c_new_scanned_device(struct i2c_adapter *adap,
-> +		       struct i2c_board_info *info,
-> +		       unsigned short const *addr_list,
-> +		       int (*probe)(struct i2c_adapter *adap, unsigned short addr));
-> +
-> +extern struct i2c_client *
+> What do you mean by "more explicit explanation"? The part with the
+> numbers or that it makes no difference for PREEMPT_NONE and
+> PREEMPT_VOLUNTARY?
+> 
 
-I beg your pardon for the newbie question, perhaps a stupid one, kind of
-nitpicking, and not even strictly related to this patch, but what's the
-reason for these functions being declared extern?
+I just meant the above, the benchmarking is fine.
 
-For the rest LGTM, I did some grep checks before/after the patchset, ran
-some build tests, and everything looks fine.
-
--- 
-Luca
+Thanks,
+Dennis
