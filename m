@@ -2,72 +2,157 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051D3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2B9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C213C214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBAA4214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zKOvttBm"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="jVJtjknC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfKGF6n (ORCPT
+        id S1726699AbfKGF7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 00:58:43 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36942 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfKGF6n (ORCPT
+        Thu, 7 Nov 2019 00:59:05 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33173 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfKGF7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 00:58:43 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA75wKIM089847;
-        Wed, 6 Nov 2019 23:58:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573106300;
-        bh=jtcXtrt/XDwk6BSUhAeIZP7HNrh+PkVsne/qDgcO6vE=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=zKOvttBmaqGMMkWIvhdYDoMbOrJNqeCRTEY7h8d53PdNc4vNJyHrLqoGZrY4UYslz
-         QH5BrwOqpaMQgMQ+vr2zYfp67G47/cmNesYMBwY/+mR+0rSwyWRA2k3QKd9UCKGfB7
-         lVhAx93kY9/CmiTnmSafhEw9As3gBbkA/MEPYqe0=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA75wKHh086371;
-        Wed, 6 Nov 2019 23:58:20 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 23:58:04 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 23:58:19 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA75wGDW122702;
-        Wed, 6 Nov 2019 23:58:17 -0600
-Subject: Re: [PATCH v4 12/20] mtd: spi-nor: Print debug message when the read
- back test fails
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
-CC:     <richard@nod.at>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <miquel.raynal@bootlin.com>
-References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
- <20191102112316.20715-13-tudor.ambarus@microchip.com>
- <9474c875-94a1-3d19-ddab-b90d352967a9@ti.com>
- <5abf94c6-f2bb-b317-4796-3f9ea1fbf55e@microchip.com>
- <ae91a133-590b-17a4-4a68-be1b8baccce9@ti.com>
-Message-ID: <b54c6e97-079e-7ec6-7f25-a70c031fd4a6@ti.com>
-Date:   Thu, 7 Nov 2019 11:28:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 00:59:05 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c184so1689683pfb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 21:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jEZVUx0Bokdy5jQIiZllK6O5/e8/p0QuHbwHLeGIlr4=;
+        b=jVJtjknCwoos57ZJWQVhH/BNsxOzmfC6fszZ9TdQsy0Wh32Fb7mWOETl5iJjLrAvvh
+         9C7KbbxXqRIHuPBo5o8KO+sgLcRTMgraKOCtIyCGKBV/f6gTFgeX0G2j8sCi21hLMY8x
+         kLv8uRN7C7m0RPo0dFu9ITVWdm0JXcjJpllEl3xpdiYr6rmlUkiyQzm/85IQFwQbUDWR
+         awmsIO2MFItlTwd9T6CCXA/1HLhNAKHu/NVVk54PS58TCDbSYGjUza3X7RtrsyterJMo
+         1xMyg5ykKLgFeTYuRxatG2vgsSPyqM2kfoc6nn//Kh3Lw3ffB5GKq95+jRg/1/UXbsfh
+         1Pzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jEZVUx0Bokdy5jQIiZllK6O5/e8/p0QuHbwHLeGIlr4=;
+        b=KOw/yYwICTqPlWfWNyrI6nK/O6adhlxOzlwN/sQTT7UeOiO4QG2/U/O+Cs3uyPWoIG
+         mCiyp61mXTP4JPDMuWF+lHvNO/dWnffbx3vwPqH2hNNDJsZRuQfMjmIEs0vRzhW65tHj
+         90jrTt9QHBKUNxWmmDKyfEPLHS/rDzp1mXv1Ia2r3muK/PmyNXcvpwueUysIRBBnLKMw
+         +dF7c3mKWJpRSX5i07jGaxiI+bA5X0v0YjrzXSX2uW8TLd1/20ykFEvshIB69CgeI901
+         SZFOk5jxuunAClOYni13dXlsh/voPuTrDv500unRx5hlTs1i3dndDWIaB50DlE9Kr5hn
+         D1Rw==
+X-Gm-Message-State: APjAAAWaOu+eU2u1GmvLsI4k1Ut2uCA8VQ+TbLIS3UwSnsOgrclwQEoP
+        1cOEvKcR3SPm/bLI7/lfQuu9/W4ZUws=
+X-Google-Smtp-Source: APXvYqxx0EI5xrvDN32EQtXf6Dzvur0I3s23OvbPFG7lFSGdt6+yLU1fqzdTqCZ6g/43e/RAfmWPhA==
+X-Received: by 2002:a63:2e01:: with SMTP id u1mr2381713pgu.25.1573106343962;
+        Wed, 06 Nov 2019 21:59:03 -0800 (PST)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id 65sm1383578pff.2.2019.11.06.21.58.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 21:59:02 -0800 (PST)
+Subject: Re: [RFC v1 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
+ with the hypervisor.
+To:     Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
+        david@gibson.dropbear.id.au, mpe@ellerman.id.au, paulus@ozlabs.org,
+        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
+        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
+ <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
+ <af0a236f-37b2-ee16-0ebd-576b4e12d8cd@ozlabs.ru>
+ <20191106170153.GC5201@oc0525413822.ibm.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <6c367fc2-03f5-3ea4-3cd7-9c4af1df1d4c@ozlabs.ru>
+Date:   Thu, 7 Nov 2019 16:58:55 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <ae91a133-590b-17a4-4a68-be1b8baccce9@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191106170153.GC5201@oc0525413822.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,40 +160,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 06/11/19 1:09 PM, Vignesh Raghavendra wrote:
-> 
-> 
-> On 06/11/19 12:54 PM, Tudor.Ambarus@microchip.com wrote:
+On 07/11/2019 04:01, Ram Pai wrote:
+> On Wed, Nov 06, 2019 at 12:58:50PM +1100, Alexey Kardashevskiy wrote:
 >>
 >>
->> On 11/05/2019 02:37 PM, Vignesh Raghavendra wrote:
->>> On 02/11/19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
->>>> From: Tudor Ambarus <tudor.ambarus@microchip.com>
->>>>
->>>> Demystify where the EIO error occurs.
->>>>
->>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
->>>> ---
->>> I think this is a small enough change that can be squashed into previous
->>> patch itself
+>> On 05/11/2019 08:28, Ram Pai wrote:
+>>> The hypervisor needs to access the contents of the page holding the TCE
+>>> entries while setting up the TCE entries in the IOMMU's TCE table. For
+>>> SecureVMs, since this page is encrypted, the hypervisor cannot access
+>>> valid entries. Share the page with the hypervisor. This ensures that the
+>>> hypervisor sees the valid entries.
 >>>
+>>> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+>>> ---
+>>>  arch/powerpc/platforms/pseries/iommu.c | 20 +++++++++++++++++---
+>>>  1 file changed, 17 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+>>> index 8d9c2b1..07f0847 100644
+>>> --- a/arch/powerpc/platforms/pseries/iommu.c
+>>> +++ b/arch/powerpc/platforms/pseries/iommu.c
+>>> @@ -37,6 +37,7 @@
+>>>  #include <asm/mmzone.h>
+>>>  #include <asm/plpar_wrappers.h>
+>>>  #include <asm/svm.h>
+>>> +#include <asm/ultravisor.h>
+>>>  
+>>>  #include "pseries.h"
+>>>  
+>>> @@ -179,6 +180,19 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
+>>>  
+>>>  static DEFINE_PER_CPU(__be64 *, tce_page);
+>>>  
+>>> +/*
+>>> + * Allocate a tce page.  If secure VM, share the page with the hypervisor.
+>>> + */
+>>> +static __be64 *alloc_tce_page(void)
+>>> +{
+>>> +	__be64 *tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+>>> +
+>>> +	if (tcep && is_secure_guest())
+>>> +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
 >>
->> I made separate patches because this is a separate logical change. The previous
->> patch extends the check on all bits of the Status Register, while this one
->> prints a debug message in case of EIO. Thus I tried to have a single logical
->> change contained in a single patch. I'm clearly no expert in this (Boris asked
->> me in v3 to split patches because I did too many things in one patch :) ), so I
->> would keep this as is, but if you still feel that it should be squashed, then
->> I'll do it. Please let me know.
 >>
+>> There is no matching unshare in this patch.
 > 
-> I am fine either way. I don't have a strong preference...
+> The page is allocated and shared, and stays that way for the life of the
+> kernel. It is not explicitly unshared or freed.
+
+
+Ah, fair enough, I missed that, strange that we do not free it but ok. Thanks,
+
+
+>  It is however
+> implicitly unshared by the guest kernel, through a UV_UNSHARE_ALL_PAGES ucall
+> when the guest kernel reboots. And it also gets implicitly unshared by
+> the Ultravisor/Hypervisor, if the SVM abruptly terminates.
+> 
+>>
+>>
+>>> +
+>>> +	return tcep;
+>>> +}
+>>> +
+>>>  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+>>>  				     long npages, unsigned long uaddr,
+>>>  				     enum dma_data_direction direction,
+>>> @@ -206,8 +220,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+>>>  	 * from iommu_alloc{,_sg}()
+>>>  	 */
+>>>  	if (!tcep) {
+>>> -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+>>> -		/* If allocation fails, fall back to the loop implementation */
+>>> +		tcep = alloc_tce_page();
+>>>  		if (!tcep) {
+>>>  			local_irq_restore(flags);
+>>>  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
+>>> @@ -391,6 +404,7 @@ static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
+>>>  	return rc;
+>>>  }
+>>>  
+>>> +
+>>
+>> Unrelated.
+> 
+> yes. will fix it.
+> 
+> Thanks,
+> RP
 > 
 
-If you want to keep these separate:
-
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
-
+-- 
+Alexey
