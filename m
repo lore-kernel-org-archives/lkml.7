@@ -2,170 +2,98 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EF0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB34C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6392178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F6B2166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IkSZJ7Lj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLnQadxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbfKGRwe (ORCPT
+        id S2389836AbfKGRxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:52:34 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:49400 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730400AbfKGRwe (ORCPT
+        Thu, 7 Nov 2019 12:53:32 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45632 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730531AbfKGRxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:52:34 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7Hj4pe030207;
-        Thu, 7 Nov 2019 17:51:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=R/fl3/e/tumWGOl5RHojvBvQAbaC+/s8svgyi4+7QQE=;
- b=IkSZJ7LjDeXHhL69M8xJ1VI8qKK4fDWGntUFwllKOKdt0l5n6Wajn+3AKw5Y2+hItWGz
- N654qokWH89wYyrDpZChgIo0EyZ1GuFkTNtbesNPJkhX+eUrsUSLMA9zqI5hMmt0S9dd
- gHjkQatl9DumgaMrYc8WftedoFbTpIdq8Q7V1W2j3zBd+ZhKy6RdIZpftl6pPugPCZhD
- 6ix1fgekERNzGAQAcWs2JVznCECtkW1iX/Vk/2EUz86KCn0icVpXsDni3gBAAdaC1mb1
- mZi/Qrs4SQcz5ha/C/k7xTis7rTZkpt3ipllC9UhqYMKxOnG5hl2SP8Bwozilb4egu8z kg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2w41w17xu5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 17:51:28 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7Hj2Ux083867;
-        Thu, 7 Nov 2019 17:51:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2w4k2w56h5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 17:51:27 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA7HpKHp007794;
-        Thu, 7 Nov 2019 17:51:20 GMT
-Received: from neelam.us.oracle.com (/10.152.128.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Nov 2019 09:51:20 -0800
-From:   Alex Kogan <alex.kogan@oracle.com>
-To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        alex.kogan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-Subject: [PATCH v6 2/5] locking/qspinlock: Refactor the qspinlock slow path
-Date:   Thu,  7 Nov 2019 12:46:19 -0500
-Message-Id: <20191107174622.61718-3-alex.kogan@oracle.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191107174622.61718-1-alex.kogan@oracle.com>
-References: <20191107174622.61718-1-alex.kogan@oracle.com>
+        Thu, 7 Nov 2019 12:53:32 -0500
+Received: by mail-pf1-f194.google.com with SMTP id z4so3014667pfn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:53:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:to:cc:user-agent:date;
+        bh=Z1meOcmCHhy99P4fXRI3J73L34xiXqPe78fR6qMJPVs=;
+        b=QLnQadxuoANQOJKtrxBWYRplFZhr5y7KH/jL1HZUfqjnpptx33kh5lUmPKfYMd9YVQ
+         bARtBN/NJhls2KvlTsfvyJOrlg7c5GH8m9iCM6lxowKjhJid9PCt9TaX3CaTIAuI5u2X
+         BavZrRK9riPOwopN+0xpaTTIfWJCOzob10/DA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
+         :user-agent:date;
+        bh=Z1meOcmCHhy99P4fXRI3J73L34xiXqPe78fR6qMJPVs=;
+        b=bKaeMnc8lTV817l9ZYAea/vd+7JpheaVelk5CIyw6xVJWv5nEx+Am6Jihf0bs7DlTr
+         Y6WIKbRl+ZCqgk47ucPZXyTZH3YxPd7ebUIsuEacEbHPQTY0UvNXqpFgg4ScgbfOieZD
+         NLvlqIHlQmLsJYmLTlo9K6WV8WtKAFWx8BdoK3zLiFUyIO2RlrNmHNYw1vxB4RpFnl79
+         I8gSD3uKEi3Ido2nTwyClN3tsa9ogld/VgMLoDntgIjKUExu9SFMnzu3RrbdE/c98CpZ
+         VZEItIgTFzDghMlNHzXpDX+aQyNNEfDMljI35Hso+IltSR4TABpiiJtgNhKOBi5Eu3I0
+         2rKQ==
+X-Gm-Message-State: APjAAAWxlIPD/jEZlz8z7+x20Qf7LpvooLeAKwsab53WwjtcmFdo5mX4
+        gdwz3U5UULalescva+Z74lbx/g==
+X-Google-Smtp-Source: APXvYqy2MPJnmW/pfuOQlOn68cLFkoKu7z0z/loK7nPIfMNOZ6qnq8Gov2lHnZCxa4/yKRoi7GNTAQ==
+X-Received: by 2002:aa7:83c2:: with SMTP id j2mr5709899pfn.225.1573149211214;
+        Thu, 07 Nov 2019 09:53:31 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id z1sm2579247pju.27.2019.11.07.09.53.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 09:53:30 -0800 (PST)
+Message-ID: <5dc45a1a.1c69fb81.62b3b.65c6@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070165
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191106065017.22144-7-rnayak@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-7-rnayak@codeaurora.org>
+Subject: Re: [PATCH v4 06/14] arm64: dts: qcom: sc7180: Add rpmh-rsc node
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 09:53:29 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move some of the code manipulating the spin lock into separate functions.
-This would allow easier integration of alternative ways to manipulate
-that lock.
+Quoting Rajendra Nayak (2019-11-05 22:50:09)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> index 61250560c7ef..98c8ab7d613c 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -387,6 +388,24 @@
+>                                 status =3D "disabled";
+>                         };
+>                 };
+> +
+> +               apps_rsc: rsc@18200000 {
 
-Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
----
- kernel/locking/qspinlock.c | 38 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+The node name is non-standard. This has been a problem since sdm845
+though so it would be nice if we can invent some new name for this that
+is standard at some point in the future.
 
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index 804c0fbd6328..c06d1e8075d9 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -288,6 +288,34 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
- #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
- #endif
- 
-+/*
-+ * __try_clear_tail - try to clear tail by setting the lock value to
-+ * _Q_LOCKED_VAL.
-+ * @lock: Pointer to the queued spinlock structure
-+ * @val: Current value of the lock
-+ * @node: Pointer to the MCS node of the lock holder
-+ */
-+static __always_inline bool __try_clear_tail(struct qspinlock *lock,
-+						   u32 val,
-+						   struct mcs_spinlock *node)
-+{
-+	return atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL);
-+}
-+
-+/*
-+ * __mcs_pass_lock - pass the MCS lock to the next waiter
-+ * @node: Pointer to the MCS node of the lock holder
-+ * @next: Pointer to the MCS node of the first waiter in the MCS queue
-+ */
-+static __always_inline void __mcs_pass_lock(struct mcs_spinlock *node,
-+					    struct mcs_spinlock *next)
-+{
-+	arch_mcs_pass_lock(&next->locked, 1);
-+}
-+
-+#define try_clear_tail	__try_clear_tail
-+#define mcs_pass_lock		__mcs_pass_lock
-+
- #endif /* _GEN_PV_LOCK_SLOWPATH */
- 
- /**
-@@ -532,7 +560,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	 *       PENDING will make the uncontended transition fail.
- 	 */
- 	if ((val & _Q_TAIL_MASK) == tail) {
--		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL))
-+		if (try_clear_tail(lock, val, node))
- 			goto release; /* No contention */
- 	}
- 
-@@ -549,7 +577,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	if (!next)
- 		next = smp_cond_load_relaxed(&node->next, (VAL));
- 
--	arch_mcs_pass_lock(&next->locked, 1);
-+	mcs_pass_lock(node, next);
- 	pv_kick_node(lock, next);
- 
- release:
-@@ -574,6 +602,12 @@ EXPORT_SYMBOL(queued_spin_lock_slowpath);
- #undef pv_kick_node
- #undef pv_wait_head_or_lock
- 
-+#undef try_clear_tail
-+#define try_clear_tail		__try_clear_tail
-+
-+#undef mcs_pass_lock
-+#define mcs_pass_lock			__mcs_pass_lock
-+
- #undef  queued_spin_lock_slowpath
- #define queued_spin_lock_slowpath	__pv_queued_spin_lock_slowpath
- 
--- 
-2.11.0 (Apple Git-81)
+> +                       label =3D "apps_rsc";
+
+Can we remove this property? The value seems minimal given that we can
+use the dev_name() and get the address in there instead of using a label.
 
