@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2F0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6D4C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC20206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE14B206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SK1wM51o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lcxWbUY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfKGIC0 (ORCPT
+        id S1727556AbfKGIDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:02:26 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33894 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfKGIC0 (ORCPT
+        Thu, 7 Nov 2019 03:03:08 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41635 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGIDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:02:26 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f5so867705lfp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:02:25 -0800 (PST)
+        Thu, 7 Nov 2019 03:03:08 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m9so1151721ljh.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:03:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=z9mPuhlzRf2U1OBIGxGX7HH1EXmPxl/x73E9K2ggUck=;
-        b=SK1wM51olND95PLqbjvST9iMNaroL73Er+3ZYIfE35j0Ls+YrZ6cWAjD56K7zsToZN
-         GeklTja+lPJOiQUls7RTUEAoveu6+klmDApv9axuWTeAu00VBLouumILMzEWhMMYqZgU
-         nmIwQL7U9Vm+Y8ESDHB7zKbE5dXgF+9n9FG1M7GjXEL6JYUXKaWGcy1XZOXb1LtX79Io
-         p7v7QxR1jKTSWl7YhdqIBu3OIqhSgaoTerqTiNvKU/USQftsBv8Yywza2YrfpNpWpHzT
-         5cmvJIQ7FLOnntktciK+I8+MQIsN5aBzeTiFEmTwZTSzWH/SYsjZ5Mazj3YR4DYLzefI
-         2y9A==
+        bh=Kmm/jBUyOVxQYEej8YoVC+NyodK4z5S7O58CZiY/vk4=;
+        b=lcxWbUY56TCq5OVhHvHP0fLd9Bnxpoto8fgVFrKDJpIxr3G9KHi3Pmy9oszlcNSXgo
+         t0YI2eSOCjOw6F3uNrPqnjVh7GN0eObzxtVPJZ31uKAuEK4RSUr85mIiDCZShGmKUDoQ
+         qTjbiNZTTyc8uZcFINlQ3Dx0xm0q4a4QMRb6gqBNz2VuiTME2L0TZn7aQ58d5uu1erAM
+         0xqVnN+znJy+EtBmwpxPP1CX03jiq0cpQZOvZqK9/405oBUdMUiFLMEAQiEPpw6NhHLS
+         NDHWrFBkfMw0NM5OGZdXgM+UKFRCGLrT0xv8SgtAXkwa8q382pidcHyxyCZiyfIfv+jQ
+         A8lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z9mPuhlzRf2U1OBIGxGX7HH1EXmPxl/x73E9K2ggUck=;
-        b=L4RpLhGYXbpK+9h1AI/gSCJD4RT4cCVvHixaBhGmSRJ7AOc58MCNCfQAf3Lh1s4jFY
-         9vFrsQs3vPeKiVOjA8pPZ3MFcHBwj99Q9VzlNh6PwHfIWErKUb+iPtzNOPBT6sOugTD7
-         LvKl8NjjTmxo4XPWVjnv70jMlu6tGn/xqbWS9ZaVkHY2wQ8StJpWIylRyO8IKCzoFOLe
-         5vmeT+oOXYoz32F4xgGLIodLcwWDHDdFxwJdC9KfINUfof0VlmYiqoF0GhR4/FNaOMaR
-         svxHzBuvmeOvTpP94iNHQnjce45ncaAlmGWhzkL2TXMs7AuI1dOmIuG4dMZ6ZOoCJYEV
-         SeBg==
-X-Gm-Message-State: APjAAAVh/BOCzH/b82WzP9mOmdq8PbM6aZlva2kIH+7qaaEgutPVNjsB
-        8Tb2AXPlYj7VW2VzuiHGF9BqMKgrz5ev44MDhSY/D4LeQKA=
-X-Google-Smtp-Source: APXvYqySKkpB4xIbWr6eEacadJzbolNXqXEmB3q4EFcgrcx8DRZkDbieVhG+JoaTMcRF0WdJY9AQ9FIiPS3W+AKwYWM=
-X-Received: by 2002:a19:651b:: with SMTP id z27mr1347399lfb.117.1573113744394;
- Thu, 07 Nov 2019 00:02:24 -0800 (PST)
+        bh=Kmm/jBUyOVxQYEej8YoVC+NyodK4z5S7O58CZiY/vk4=;
+        b=ubyRRwRher4E1s8DFd2MwRXRAbXe5fA7LJW0qWzBFn6sdxqgg388XH7pno6/f8f54D
+         MW8NbmTFalos5ezuaEiieTs8Hk59EEFljoPGjckmFgHxapdOonJxK5oLJRPIMxB1UxJB
+         Vpjd1CADsYuV2vQHeh0w726HrWSYNxA2fgWNU+TMDLIEyHsfThItyFjpeE8B9rfF42N5
+         6r6t16RXYJIPRJfX2KlTRv8FO9kG/nZemOB5rRMpKGjWGArIyx61h2cYySVSZ3LZRY8m
+         L+5671BhaYW2xOA0z58Ny8Z0zsGqEu6IhM3OckVGJlmPTuNmC/HVlYaCojK2C2Ee/M8z
+         5TLg==
+X-Gm-Message-State: APjAAAVrBL6KixfNAmzOWdZuIhj6utUYmFsPYhby/WAvQQzJLZjbcG2j
+        0XCLQKDpFQtb+xxtunliT1ahjyIHeeEIM5bgAYJHAg==
+X-Google-Smtp-Source: APXvYqwZVpbtOHL92iEyTM3EmkgPSjCx2Af+TdzU1057vZFBlyDBU0Xbub/hP3q/v8XmhDxndZmJPv23+9MTzdzI/9U=
+X-Received: by 2002:a2e:9784:: with SMTP id y4mr1318382lji.77.1573113786425;
+ Thu, 07 Nov 2019 00:03:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106173125.14496-1-stephan@gerhold.net>
-In-Reply-To: <20191106173125.14496-1-stephan@gerhold.net>
+References: <20191106173125.14496-1-stephan@gerhold.net> <20191106173125.14496-2-stephan@gerhold.net>
+In-Reply-To: <20191106173125.14496-2-stephan@gerhold.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 09:02:11 +0100
-Message-ID: <CACRpkdaH8ahbVKTrBHh7NKVZVg-PZvyKDKNityEyv5rL8=Qdag@mail.gmail.com>
-Subject: Re: [PATCH 1/2] regulator: ab8500: Remove AB8505 USB regulator
+Date:   Thu, 7 Nov 2019 09:02:55 +0100
+Message-ID: <CACRpkdZKRc1NLiWe9EnNxbFK8i4gNZ92oqtoGar-Pb3SCr6DGA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
 To:     Stephan Gerhold <stephan@gerhold.net>
 Cc:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -71,22 +71,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Nov 6, 2019 at 6:33 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-> The USB regulator was removed for AB8500 in
-> commit 41a06aa738ad ("regulator: ab8500: Remove USB regulator").
-> It was then added for AB8505 in
-> commit 547f384f33db ("regulator: ab8500: add support for ab8505").
+> Those regulators are not actually supported by the AB8500 regulator
+> driver. There is no ab8500_regulator_info for them and no entry in
+> ab8505_regulator_match.
 >
-> However, there was never an entry added for it in
-> ab8505_regulator_match. This causes all regulators after it
-> to be initialized with the wrong device tree data, eventually
-> leading to an out-of-bounds array read.
->
-> Given that it is not used anywhere in the kernel, it seems
-> likely that similar arguments against supporting it exist for
-> AB8505 (it is controlled by hardware).
->
-> Therefore, simply remove it like for AB8500 instead of adding
-> an entry in ab8505_regulator_match.
+> As such, they cannot be registered successfully, and looking them
+> up in ab8505_regulator_match causes an out-of-bounds array read.
 >
 > Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
 > Cc: Linus Walleij <linus.walleij@linaro.org>
