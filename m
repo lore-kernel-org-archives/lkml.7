@@ -2,171 +2,135 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398C0FC6197
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46175C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1701B21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1694821D7B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573112245;
+	bh=6uK+/VbIqFMwagWK76w0NKxiRn3WBCr2GqLJv4FoG6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nS6cHt1KQwHFvGIyrfOkq9w/yPnLA1dN1bOfk+DgtoMDwd45yxAdys/1Tr5ej8+ci
+	 WKEzh95pKQECnCkrX0JMRoCt7B3tjtzXpd/hTNIEZ7TmQpCBfJObHlV6DGOOJcDxTu
+	 8XSCOoVfQoGPFZE4tzfnf8jiUVRKb47pk7H6v96I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfKGHhC (ORCPT
+        id S1727515AbfKGHhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:37:02 -0500
-Received: from mga01.intel.com ([192.55.52.88]:5185 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfKGHhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:37:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 23:37:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,277,1569308400"; 
-   d="scan'208";a="285920100"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga001.jf.intel.com with ESMTP; 06 Nov 2019 23:36:57 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v4 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Thu,  7 Nov 2019 15:36:45 +0800
-Message-Id: <778f21b09fabd2fdafeeeb325b35df35ab222690.1573111648.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
+        Thu, 7 Nov 2019 02:37:24 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:40511 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfKGHhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 02:37:23 -0500
+Received: by mail-wr1-f48.google.com with SMTP id i10so1792539wrs.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:37:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Ib8Q2GU5PS/0gXUXAfkY/zu4kC9GCe7NHTO7scyBhJ0=;
+        b=O7d7WVuTZca4vJtGFzC4Qs2bNyl+ch261Zm640CyeDmiT/sCeRGMvnWx82dxVvUAnO
+         2mmcOvz4juCECx9gZ06trUKNwOYalMiRWxQFbCIXFvBZD3qJ5qjCt8HmTMPgDjWBR8y1
+         SnNTZmd5kRwV4/nUdZ8FgqixAGt0+XMzv0cG5zNHICxab89Eudl0f4n+y5EkktDShHX5
+         WftA9BPKa5Wj7fPdfeNYnT2PcDDoLyyrNlwWw5wcAC9rlsr9nmtEZlEkj6UgTtd9c8ZC
+         Yh253XgAxYtcg9N1b92CbUYb/rgGAcdz3qHxt8uWUUxWy9pSC8a7iyBxAd5k+mFDV793
+         RX0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=Ib8Q2GU5PS/0gXUXAfkY/zu4kC9GCe7NHTO7scyBhJ0=;
+        b=hE5dizQ9tdCuYWbjLD1/iRCNExEJvA5zH/R9TldZFjj2VuRKW50GAzJ3ikUc2SPawG
+         M8ojrbpzYEInCSM58BuyPGVYXd7sRXR0qWdb7+eXq1oiG/X4SNFR5zjpVhEmRZM8yN5K
+         Yx5+VACTY5rw3zANuG4zLR8VH9KQNhiXMTz86PaaF5SKBvzpb/MGQr0PohtBwEtYrq46
+         vsW4ogmzsDkT70sDD8zb0J9QAqUkr1dBVFl9irhbZ4tvzZ4ikVQr3hkPr31Gl4BQO/jd
+         OhepginS+C8K6bV5nf1LzPN0UFQG/fO3c4H5Ls8xaa1XWjkG+joWF4e3ftgXzjZhxVAZ
+         hlLg==
+X-Gm-Message-State: APjAAAX6RlrZrsEo3/weyNDTLqErgKLv+ZmsSRlZrl2rhE2mG4tG8NIq
+        KGSEAaTVFjum2dbRqo6D8p8=
+X-Google-Smtp-Source: APXvYqzamC0ZKnOCrythJmZr1H/nFODR73nzw2pBfb4FwYXuSBS+q6SqtDjIH88XFSRsYgRN4/akrg==
+X-Received: by 2002:a5d:4d0f:: with SMTP id z15mr1390908wrt.195.1573112242536;
+        Wed, 06 Nov 2019 23:37:22 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id i3sm1385216wrw.69.2019.11.06.23.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 23:37:22 -0800 (PST)
+Date:   Thu, 7 Nov 2019 08:37:20 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
+ further
+Message-ID: <20191107073719.GD30739@gmail.com>
+References: <20191106193459.581614484@linutronix.de>
+ <20191106202806.241007755@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191106202806.241007755@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 104 +++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..73e456ee0fc7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - enum:
-+              - 0 #PINMUX_GPIO
-+              - 1
-+              - 2
-+              - 3
-+              - 4
-+
-+      bias-pull-up:
-+        type: boolean
-+      bias-pull-down:
-+        type: boolean
-+      drive-strength:
-+        type: boolean
-+      slew-rate:
-+        type: boolean
-+      drive-open-drain:
-+        type: boolean
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0-pins: uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+> @@ -365,19 +365,19 @@ struct tss_struct {
+>  	struct x86_hw_tss	x86_tss;
+>  
+>  	/*
+> -	 * Store the dirty size of the last io bitmap offender. The next
+> -	 * one will have to do the cleanup as the switch out to a non
+> -	 * io bitmap user will just set x86_tss.io_bitmap_base to a value
+> -	 * outside of the TSS limit. So for sane tasks there is no need
+> -	 * to actually touch the io_bitmap at all.
+> +	 * Store the dirty byte range of the last io bitmap offender. The
+> +	 * next one will have to do the cleanup because the switch out to a
+> +	 * non I/O bitmap user will just set x86_tss.io_bitmap_base to a
+> +	 * value outside of the TSS limit to not penalize tasks which do
+> +	 * not use the I/O bitmap at all.
+>  	 */
+> -	unsigned int		io_bitmap_prev_max;
+> +	unsigned int		io_zerobits_start;
+> +	unsigned int		io_zerobits_end;
+>  
+>  	/*
+> -	 * The extra 1 is there because the CPU will access an
+> -	 * additional byte beyond the end of the IO permission
+> -	 * bitmap. The extra byte must be all 1 bits, and must
+> -	 * be within the limit.
+> +	 * The extra 1 is there because the CPU will access an additional
+> +	 * byte beyond the end of the I/O permission bitmap. The extra byte
+> +	 * must have all bits set and must be within the TSS limit.
+>  	 */
+>  	unsigned long		io_bitmap[IO_BITMAP_LONGS + 1];
+>  } __aligned(PAGE_SIZE);
 
+Note that on 32-bit kernels this blows up our CPU area calculations:
+
+./include/linux/compiler.h:350:38: error: call to ‘__compiletime_assert_181’ declared with attribute error: BUILD_BUG_ON failed: CPU_ENTRY_AREA_PAGES * PAGE_SIZE < CPU_ENTRY_AREA_MAP_SIZE
+./include/linux/compiler.h:331:4: note: in definition of macro ‘__compiletime_assert’
+./include/linux/compiler.h:350:2: note: in expansion of macro ‘_compiletime_assert’
+./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+arch/x86/mm/cpu_entry_area.c:181:2: note: in expansion of macro ‘BUILD_BUG_ON’
+make[2]: *** [scripts/Makefile.build:265: arch/x86/mm/cpu_entry_area.o] Error 1
+
+Thanks,
+
+	Ingo
