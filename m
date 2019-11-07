@@ -2,89 +2,125 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECC0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4EFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC9B2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BD620663
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:51:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TYWX6ZGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387408AbfKGPvO (ORCPT
+        id S2388317AbfKGPvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:51:14 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35486 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKGPvN (ORCPT
+        Thu, 7 Nov 2019 10:51:45 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42049 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727142AbfKGPvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:51:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s10so1765958plp.2;
-        Thu, 07 Nov 2019 07:51:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wCIUACXkFSlcAMRHFvS4hf99aXjQQqm2k7x2iKzum6Y=;
-        b=sQsJJP1IpNS6KPaBICnwPb2IN3ZG61vtfzY0w6UDKF/WiwUE/XGzLBbfH3DFROvMnw
-         424RnT5G3CiuZbO6fAR8T6fgRGbKBqDEa8/VzzCO0Kw+5b8rmRdVYve45Hd3/n0Q6dQZ
-         eO08SahznF1xNTUTnD2gHGm/PK6aCrdkjfpHETofobqxEkHRgRkpYjpxQ3PxZeTCKJFD
-         6NdcFokToxCirxYSU9FMT+3Jjp8PWw8v8NXqtkaDlLltG18kBok+EVnMzS7Q6aeRNFNd
-         sT7yKFb22jLZyhQ0JrPGlO0DKq9I/TAEPyZdszW6bYonQu1ZprfIZFkmEpuiu4s5Gcr2
-         4pbA==
-X-Gm-Message-State: APjAAAVhmp3F1iyQ65V2fuGccWMUiQ2ua5k5TVZ1y7sjaXHqk6Rw1PkH
-        wBTwp/J4042pJHHO6M32Tlc=
-X-Google-Smtp-Source: APXvYqw/q4umZFByQNDGLZ8+bRj+n23NNSNuRPxtTrQot1bJ78guoSBCKLcXYKEPv5ffr4D/JPfVhg==
-X-Received: by 2002:a17:902:bf0c:: with SMTP id bi12mr4165243plb.98.1573141872848;
-        Thu, 07 Nov 2019 07:51:12 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id t1sm3125408pgp.9.2019.11.07.07.51.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Nov 2019 07:51:12 -0800 (PST)
-Subject: Re: linux-next: build warning after merge of the scsi tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>
-References: <20191107145523.1792cafb@canb.auug.org.au>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <3a7be3f6-7aea-3660-bf20-dd2563d479bf@acm.org>
-Date:   Thu, 7 Nov 2019 07:51:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 10:51:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573141903;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mwYqD5W078qyciDk7k9AIq+YAsZM74It8HoGfRNTJNo=;
+        b=TYWX6ZGE4IJEAt1aJ/ZImSHHmMd4MjzLwhYtEESGP6zsIymlB9KgxO/dtfdl+ZcY7EqNVf
+        o/ZqbKbWvsiBnQn+D+jItihdcfRETBb6raXIosU/sixM7jbUy0MsucfBk9JZ1DTIbTsrvd
+        pGRae5VXBYe5Cu1wxV0QdkXe3XGIQ2w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-2iala_i5O12Cmv23G3z22Q-1; Thu, 07 Nov 2019 10:51:37 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3A1C477;
+        Thu,  7 Nov 2019 15:51:35 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id CE1C3100032F;
+        Thu,  7 Nov 2019 15:51:31 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  7 Nov 2019 16:51:35 +0100 (CET)
+Date:   Thu, 7 Nov 2019 16:51:30 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Keith Packard <keithp@keithp.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: handle_exit_race && PF_EXITING
+Message-ID: <20191107155130.GB24042@redhat.com>
+References: <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1911051959260.1869@nanos.tec.linutronix.de>
+ <20191106085529.GA12575@redhat.com>
+ <alpine.DEB.2.21.1911061028020.1869@nanos.tec.linutronix.de>
+ <20191106103509.GB12575@redhat.com>
+ <alpine.DEB.2.21.1911061154520.1869@nanos.tec.linutronix.de>
+ <20191106121111.GC12575@redhat.com>
+ <alpine.DEB.2.21.1911061808030.1869@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191107145523.1792cafb@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <alpine.DEB.2.21.1911061808030.1869@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 2iala_i5O12Cmv23G3z22Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 8:01 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the scsi tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
-> 
-> drivers/scsi/lpfc/lpfc_init.c: In function 'lpfc_cpumask_of_node_init':
-> drivers/scsi/lpfc/lpfc_init.c:6020:6: warning: the address of 'cpu_all_bits' will always evaluate as 'true' [-Waddress]
->   6020 |  if (!cpumask_of_node(numa_node))
->        |      ^
-> 
-> Introduced by commit
-> 
->    dcaa21367938 ("scsi: lpfc: Change default IRQ model on AMD architectures")
+On 11/06, Thomas Gleixner wrote:
+>
+> On Wed, 6 Nov 2019, Oleg Nesterov wrote:
+> >
+> > I think that (with or without this fix) handle_exit_race() logic needs
+> > cleanups, there is no reason for get_futex_value_locked(), we can drop
+> > ->pi_lock right after we see PF_EXITPIDONE. Lets discuss this later.
+>
+> Which still is in atomic because the hash bucket lock is held, ergo
+> get_futex_value_locked() needs to stay for now.
 
-Thanks Stephen for this report. A candidate fix has been posted: 
-https://lore.kernel.org/linux-scsi/20191107052158.25788-6-bvanassche@acm.org/T/#u
+Indeed, you are right.
 
-Bart.
+> Same explanation as before just not prosa this time:
+>
+> exit()=09=09=09=09=09lock_pi(futex2)
+>   exit_pi_state_list()
+>    lock(tsk->pi_lock)
+>    tsk->flags |=3D PF_EXITPIDONE;=09=09 attach_to_pi_owner()
+> =09=09=09=09=09  ...
+>   // Loop unrolled for clarity
+>   while(!list_empty())=09=09=09  lock(tsk->pi_lock);
+>      cleanup(futex1)
+>        unlock(tsk->pi_lock)
+         ^^^^^^^^^^^^^^^^^^^^
+Ah! Thanks.
 
+
+Hmm. In particular, exit_pi_state() drops pi_lock if refcount_inc_not_zero(=
+) fails.
+
+Isn't this another potential source of livelock ?
+
+Suppose that a realtime lock owner X sleeps somewhere, another task T
+calls put_pi_state(), refcount_dec_and_test() succeeds.
+
+What if, say, X is killed right after that and preempts T on the same
+CPU?
+
+Oleg.
 
