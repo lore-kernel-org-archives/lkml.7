@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BE7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB18C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1F92085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2439B2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153397;
-	bh=Cv7fP7lB++HEyfuo3xQse54iZKM9re7sKCqZgklI+4A=;
+	s=default; t=1573153404;
+	bh=7KI1VZDJfay6DUglYPSy+O3w4iEFOv5wwyfb8yRV5TM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3ESLrEmt/i4rggSn1yZStUFnjNPvOtrKp/F9ZC9PRhJRI36QNl2QGRIpAgNe+hkS
-	 BInLXp544UkNNaZWTlRm75y4oHSnjoTfj8/XeaYY9gb5PO3XYR2MvF1L5oZjDdY3rz
-	 15+5ndql7yXNZ15hflnZRLACuXgVrLVYXa19vy0c=
+	b=O1gSlp7Frx/otrR8Ywm6qnxTU3Gmv1DIiSVqHn8Gb388SnjLlLJDdsL+YGtr/RXYD
+	 Ogxhfad87Nj3d25twjTVvW15e6sBjs0AzTaI5xpetC+fOQAHg0jCMOsRnmGAeX/uLL
+	 sVH+D0LOIbOVWmIv6Xrjy2RpAjl5GEl4b6qh862A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfKGTDQ (ORCPT
+        id S1729532AbfKGTDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:03:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42324 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:03:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfKGTDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:03:15 -0500
+        id S1725906AbfKGTDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:03:22 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D00EC21882;
-        Thu,  7 Nov 2019 19:03:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C648621D6C;
+        Thu,  7 Nov 2019 19:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153394;
-        bh=Cv7fP7lB++HEyfuo3xQse54iZKM9re7sKCqZgklI+4A=;
+        s=default; t=1573153401;
+        bh=7KI1VZDJfay6DUglYPSy+O3w4iEFOv5wwyfb8yRV5TM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SyObW8LNDJ5hrCVv687rIyrzcbj2B8BZdT/i3VMZUNhgUWA8h8Ue9QmdEACfOxelW
-         +olhQwFTpOWE3ogfgDUJTZTMC18VL2f6OrZ7giXHpIvkxFQX+TeURLE4HyHACMT19J
-         Yu2hi/CF7rmmBMRaZAs8uvfEv+OifHSVcIUK4SRI=
+        b=rJGoLht7WPCNhH3OV+W7/NGLVT9ictw6H+ph99wvWAAuFyVOf4ePt7dfermlP/Lxk
+         EZSCnJ/DrYTUGwKmKXzyg3A6nbDQ6q3GsQB7aDiJiUFYS+89zXO/LN8Yl5j+Mwr9MN
+         bLJhiLv2OUJsNu48fqUnLYzjjl19Dbs+KJrvAfcE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 19/63] perf probe: Fix wrong address verification
-Date:   Thu,  7 Nov 2019 15:59:27 -0300
-Message-Id: <20191107190011.23924-20-acme@kernel.org>
+Subject: [PATCH 20/63] perf probe: Fix to probe a function which has no entry pc
+Date:   Thu,  7 Nov 2019 15:59:28 -0300
+Message-Id: <20191107190011.23924-21-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -64,123 +64,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Since there are some DIE which has only ranges instead of the
-combination of entrypc/highpc, address verification must use
-dwarf_haspc() instead of dwarf_entrypc/dwarf_highpc.
+Fix 'perf probe' to probe a function which has no entry pc or low pc but
+only has ranges attribute.
 
-Also, the ranges only DIE will have a partial code in different section
-(e.g. unlikely code will be in text.unlikely as "FUNC.cold" symbol). In
-that case, we can not use dwarf_entrypc() or die_entrypc(), because the
-offset from original DIE can be a minus value.
+probe_point_search_cb() uses dwarf_entrypc() to get the probe address,
+but that doesn't work for the function DIE which has only ranges
+attribute. Use die_entrypc() instead.
 
-Instead, this simply gets the symbol and offset from symtab.
+Without this fix:
 
-Without this patch;
-
-  # perf probe -D clear_tasks_mm_cpumask:1
-  Failed to get entry address of clear_tasks_mm_cpumask
+  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
+  Probe point 'clear_tasks_mm_cpumask' not found.
     Error: Failed to add events.
 
-And with this patch:
+With this:
 
-  # perf probe -D clear_tasks_mm_cpumask:1
+  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
   p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
-  p:probe/clear_tasks_mm_cpumask_1 clear_tasks_mm_cpumask+5
-  p:probe/clear_tasks_mm_cpumask_2 clear_tasks_mm_cpumask+8
-  p:probe/clear_tasks_mm_cpumask_3 clear_tasks_mm_cpumask+16
-  p:probe/clear_tasks_mm_cpumask_4 clear_tasks_mm_cpumask+82
 
 Committer testing:
 
-I managed to reproduce the above:
-
-  [root@quaco ~]# perf probe -D clear_tasks_mm_cpumask:1
-  p:probe/clear_tasks_mm_cpumask _text+919968
-  p:probe/clear_tasks_mm_cpumask_1 _text+919973
-  p:probe/clear_tasks_mm_cpumask_2 _text+919976
-  [root@quaco ~]#
-
-But then when trying to actually put the probe in place, it fails if I
-use :0 as the offset:
-
-  [root@quaco ~]# perf probe -L clear_tasks_mm_cpumask | head -5
-  <clear_tasks_mm_cpumask@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/kernel/cpu.c:0>
-        0  void clear_tasks_mm_cpumask(int cpu)
-        1  {
-        2  	struct task_struct *p;
+Before:
 
   [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
   Probe point 'clear_tasks_mm_cpumask' not found.
     Error: Failed to add events.
-  [root@quaco
+  [root@quaco ~]#
 
-The next patch is needed to fix this case.
+After:
 
-Fixes: 576b523721b7 ("perf probe: Fix probing symbols with optimization suffix")
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  [root@quaco ~]#
+
+Using it with 'perf trace':
+
+  [root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask
+
+Doesn't seem to be used in x86_64:
+
+  $ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
+  ./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
+  ./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
+  ./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
+  $ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
+  ./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
+  $ find . -name "*.S" | xargs grep clear_tasks_mm_cpumask
+  $
+
+Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
 Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199318513.8075.10463906803299647907.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157199319438.8075.4695576954550638618.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index cd9f95e5044e..2b6513e5725c 100644
+index 2b6513e5725c..71633f55f045 100644
 --- a/tools/perf/util/probe-finder.c
 +++ b/tools/perf/util/probe-finder.c
-@@ -604,38 +604,26 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
- 				  const char *function,
- 				  struct probe_trace_point *tp)
- {
--	Dwarf_Addr eaddr, highaddr;
-+	Dwarf_Addr eaddr;
- 	GElf_Sym sym;
- 	const char *symbol;
- 
- 	/* Verify the address is correct */
--	if (dwarf_entrypc(sp_die, &eaddr) != 0) {
--		pr_warning("Failed to get entry address of %s\n",
--			   dwarf_diename(sp_die));
--		return -ENOENT;
--	}
--	if (dwarf_highpc(sp_die, &highaddr) != 0) {
--		pr_warning("Failed to get end address of %s\n",
--			   dwarf_diename(sp_die));
--		return -ENOENT;
--	}
--	if (paddr > highaddr) {
--		pr_warning("Offset specified is greater than size of %s\n",
-+	if (!dwarf_haspc(sp_die, paddr)) {
-+		pr_warning("Specified offset is out of %s\n",
- 			   dwarf_diename(sp_die));
- 		return -EINVAL;
- 	}
- 
--	symbol = dwarf_diename(sp_die);
-+	/* Try to get actual symbol name from symtab */
-+	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
- 	if (!symbol) {
--		/* Try to get the symbol name from symtab */
--		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
--		if (!symbol) {
--			pr_warning("Failed to find symbol at 0x%lx\n",
--				   (unsigned long)paddr);
--			return -ENOENT;
--		}
--		eaddr = sym.st_value;
-+		pr_warning("Failed to find symbol at 0x%lx\n",
-+			   (unsigned long)paddr);
-+		return -ENOENT;
- 	}
-+	eaddr = sym.st_value;
-+
- 	tp->offset = (unsigned long)(paddr - eaddr);
- 	tp->address = (unsigned long)paddr;
- 	tp->symbol = strdup(symbol);
+@@ -982,7 +982,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
+ 		param->retval = find_probe_point_by_line(pf);
+ 	} else if (die_is_func_instance(sp_die)) {
+ 		/* Instances always have the entry address */
+-		dwarf_entrypc(sp_die, &pf->addr);
++		die_entrypc(sp_die, &pf->addr);
+ 		/* But in some case the entry address is 0 */
+ 		if (pf->addr == 0) {
+ 			pr_debug("%s has no entry PC. Skipped\n",
 -- 
 2.21.0
 
