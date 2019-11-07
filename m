@@ -2,114 +2,134 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0BFC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7BFC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019E42178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573117843;
-	bh=yenYJT5xWwnA7zEx1Ag7YzfGX1pWIW4nsVZ5Wm/3S28=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=FdlL4MDesU24MUX/BX41R34PKuwV1bypxsL3niqtYxDPD6C3150UuroKxF5tJSAuo
-	 ujSi+q9rt/HlrbfR1sIybAS3GEgjrekuzRO6oi/t3WHh7C/plByPA86Jqmhv65nbVg
-	 tbmSGY0qOMYzfnjIcrv9b/V1E2VFE2hBtEZVMRso=
+	by mail.kernel.org (Postfix) with ESMTP id 999EE2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:12:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387876AbfKGJKl (ORCPT
+        id S1733288AbfKGJMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:10:41 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37968 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733142AbfKGJKl (ORCPT
+        Thu, 7 Nov 2019 04:12:55 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54026 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbfKGJMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:10:41 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iSdoJ-0002WC-Ai; Thu, 07 Nov 2019 10:10:35 +0100
-To:     Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH v5 2/8] arm64: hyperv: Add hypercall and register access  functions
-X-PHP-Originating-Script: 0:main.inc
+        Thu, 7 Nov 2019 04:12:55 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iSdqX-0007ZD-9L; Thu, 07 Nov 2019 09:12:53 +0000
+Subject: Re: [PATCH] ovl: create UUIDs for file systems that do not set the
+ superblock UUID
+From:   Colin Ian King <colin.king@canonical.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20191106234301.283006-1-colin.king@canonical.com>
+ <CAOQ4uxhT4pFzHjjKyoMOc3xVXXqyqc37zd=-pCx2+keA4e6NAg@mail.gmail.com>
+ <02adb5f3-10be-1827-f48b-b621bd61783a@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f88a4ef7-3e2a-9e17-1573-3594288091cd@canonical.com>
+Date:   Thu, 7 Nov 2019 09:12:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <02adb5f3-10be-1827-f48b-b621bd61783a@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 07 Nov 2019 10:19:56 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <will@kernel.org>, <catalin.marinas@arm.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, <devel@linuxdriverproject.org>,
-        <olaf@aepfle.de>, <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, <jasowang@redhat.com>,
-        <marcelo.cerri@canonical.com>, KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "boqun.feng" <boqun.feng@gmail.com>
-In-Reply-To: <DM5PR21MB013730D09CB8BA7658DE57F7D7790@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <1570129355-16005-1-git-send-email-mikelley@microsoft.com>
- <1570129355-16005-3-git-send-email-mikelley@microsoft.com>
- <8cdc86e5bcf861c74069e0d349910c94@www.loen.fr>
- <DM5PR21MB013730D09CB8BA7658DE57F7D7790@DM5PR21MB0137.namprd21.prod.outlook.com>
-Message-ID: <c8403255bf874856c10f07189e27080a@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: mikelley@microsoft.com, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, devel@linuxdriverproject.org, olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com, jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-06 19:08, Michael Kelley wrote:
-> From: Marc Zyngier <maz@kernel.org>  Sent: Wednesday, November 6,
-> 2019 2:20 AM
+On 07/11/2019 08:45, Colin Ian King wrote:
+> On 07/11/2019 07:08, Amir Goldstein wrote:
+>> On Thu, Nov 7, 2019 at 1:43 AM Colin King <colin.king@canonical.com> wrote:
+>>>
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> Some file systems such as squashfs do not set the UUID in the
+>>> superblock resulting in a zero'd UUID.  In cases were two or more
+>>> of these file systems are overlayed on the lower layer we can hit
+>>> overlay corruption issues because identical zero'd overlayfs UUIDs
+>>> are impossible to differentiate between.  This can be fixed by
+>>> creating an overlayfs UUID based on the file system from the
+>>> superblock s_magic and s_dev fields.  (This currently seems like
+>>> enough information to be able create a UUID, but the could be
+>>> scope to use other super block fields such as the pointer s_fs_info
+>>> but may need some obfuscation).
+>>>
 >>
->> On 2019-10-03 20:12, Michael Kelley wrote:
->> > Add ARM64-specific code to make Hyper-V hypercalls and to
->> > access virtual processor synthetic registers via hypercalls.
->> > Hypercalls use a Hyper-V specific calling sequence with a non-zero
->> > immediate value per Section 2.9 of the SMC Calling Convention
->> > spec.
+>> The fix is incorrent. uuid stored in xattr needs to have persistent properties.
+>> In the use case that you describe, the origin file handle should simply be
+>> ignored.
 >>
->> I find this "following the spec by actively sidestepping it" counter
->> productive. You (or rather the Hyper-V people) are reinventing the
->> wheel (of the slightly square variety) instead of using the standard
->> that the whole of the ARM ecosystem seems happy to take advantage
->> of.
+>> Please test attached patch.
+> 
+> Thanks for the patch. Tested, and the error still occurs:
+> 
+> [  163.959633] overlayfs: invalid origin (etc/.pwd.lock, ftype=8000,
+> origin ftype=4000).
+
+Added debug, seems like nouuid is not being set to true, nouuid is false
+on the layers 0 and 1.
+
+> 
+> Colin
+> 
 >>
->> I wonder what is the rational for this. If something doesn't quite
->> work for Hyper-V, I think we'd all like to know.
+>> Thanks,
+>> Amir.
 >>
->
-> I'll go another round internally with the Hyper-V people on this
-> topic and impress upon them the desire of the Linux community to
-> have Hyper-V adopt the true spirit of the spec.  But I know they are
-> fairly set in their approach at this point, regardless of the 
-> technical
-> merits or lack thereof.  Hyper-V is shipping and in use as a 
-> commercial
-> product on ARM64 hardware, which makes it harder to change.  I
-> hope we can find a way to avoid a complete impasse ....
+> 
 
-Hyper-V shipping with their own calling convention is fine by me. Linux
-having to implement multiple calling conventions because the Hyper-V
-folks refuse (for undisclosed reason) to adopt the standard isn't fine 
-at
-all.
-
-HV can perfectly retain its interface for Windows or other things, but
-please *at least* implement the standard interface on which all 
-existing
-operating systems rely.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
