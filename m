@@ -2,136 +2,97 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36978C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5DC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1D42084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A002087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfEHg1PJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387994AbfKGKPb (ORCPT
+        id S2387956AbfKGKRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:15:31 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:37428 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733142AbfKGKPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:15:30 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 3AA3C2022D;
-        Thu,  7 Nov 2019 11:15:27 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 1ADA120189;
-        Thu,  7 Nov 2019 11:15:27 +0100 (CET)
-Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <8f15abf9-80bc-9767-e61c-6e0455effbf0@free.fr>
-Date:   Thu, 7 Nov 2019 11:15:27 +0100
+        Thu, 7 Nov 2019 05:17:25 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34825 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726866AbfKGKRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:17:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573121841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JfV7Ui0H34lc92hzIDp9GSS0/7fG2fsW51TyX4HtAsI=;
+        b=CfEHg1PJYo5wBamWhOPfDIxIqwFz6blp3vY/u4lgx//DVMrfYJkwa60EBdjmhDq+fTuaTr
+        b5czqTM2Y3i98riOyNV67izXrxAjfwaZjdpeCr54vHYfzJhTrub1i4mK8hsk7iM6O+zjR/
+        A5sjC+b9Sk2FBTGqx1PJ8w2JIQ6FIFA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-328-DKf9nbPbNFy35g1M123gRg-1; Thu, 07 Nov 2019 05:17:18 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D398F800C61;
+        Thu,  7 Nov 2019 10:17:16 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 446925C290;
+        Thu,  7 Nov 2019 10:16:49 +0000 (UTC)
+Subject: Re: [PATCH v6] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com, maxime.coquelin@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, lingshan.zhu@intel.com
+References: <20191107073530.15291-1-tiwei.bie@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1b60cc37-1c85-df85-1f4d-3f9a10ecef54@redhat.com>
+Date:   Thu, 7 Nov 2019 18:16:46 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191107073530.15291-1-tiwei.bie@intel.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Nov  7 11:15:27 2019 +0100 (CET)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: DKf9nbPbNFy35g1M123gRg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/11/2019 01:24, Bjorn Andersson wrote:
 
-> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
-> bridges.
-
-Hey, git blames me! Why didn't you CC me? :-)
-
-Commit 322f03436692481993d389f539c016d20bb0fa1d
-PCI: qcom: Use default config space read function
-
-The patch's history is of interest:
-https://lkml.org/lkml/2019/3/11/614
-https://www.spinics.net/lists/linux-arm-msm/msg49090.html
-
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 2019/11/7 =E4=B8=8B=E5=8D=883:35, Tiwei Bie wrote:
+> This patch introduces a mdev based hardware vhost backend.
+> This backend is built on top of the same abstraction used
+> in virtio-mdev and provides a generic vhost interface for
+> userspace to accelerate the virtio devices in guest.
+>
+> This backend is implemented as a mdev device driver on top
+> of the same mdev device ops used in virtio-mdev but using
+> a different mdev class id, and it will register the device
+> as a VFIO device for userspace to use. Userspace can setup
+> the IOMMU with the existing VFIO container/group APIs and
+> then get the device fd with the device name. After getting
+> the device fd, userspace can use vhost ioctls on top of it
+> to setup the backend.
+>
+> Signed-off-by: Tiwei Bie<tiwei.bie@intel.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
->  include/linux/pci_ids.h                | 2 ++
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 35f4980480bb..b91abf4d4905 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
->  {
->  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->  }
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
->  
->  static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 21a572469a4e..3d0724ee4d2f 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2413,6 +2413,8 @@
->  #define PCI_VENDOR_ID_LENOVO		0x17aa
->  
->  #define PCI_VENDOR_ID_QCOM		0x17cb
-> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
-> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
-
-I don't think the fixup is required for 0x106 and 0x107...
-
-In v1, I wrote:
-FWIW, this quirk is no longer required on recent chips:
-msm8996 (tested by Stanimir), msm8998 (tested by me), sdm845 (untested) are unaffected
-apq/ipq8064 is affected => what is the device ID for these chips?
-others?
-
-IIRC, 0x0101 requires the fixup because
-dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
-is broken on that platform (grrr, HW devs)
-(See my v3, tested by Srinivas)
-
-Stan wrote:
-
-Yes it is good but to avoid breaking another SoCs could you add fixups
-for the following SoCs:
-
-SoC		device ID
-ipq4019 	0x1001
-ipq8064		0x101
-ipq8074		0x108
-
-ipq8064 has the same device ID as apq8064, but I'm not sure do we need
-defines per SoC or just rename DEV_ID_8064 ? I'm fine with both ways.
+> This patch depends on below series:
+> https://lkml.org/lkml/2019/11/6/538
 
 
-In conclusion, my analysis in v5 was wrong
-"Changes from v4 to v5: Apply fixup to all qcom chips, the same way it was before
-(thus the code remains functionally equivalent)"
-=> The fixup was applied *more widely* than before, so not functionally equivalent.
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-Regards.
+Thanks!
+
