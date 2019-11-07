@@ -2,88 +2,223 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93035C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DEBC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630AF2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925D62178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OxGhg6Zo"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iyEKvbJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387403AbfKGR7t (ORCPT
+        id S1730528AbfKGSAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:59:49 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41338 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731171AbfKGR7s (ORCPT
+        Thu, 7 Nov 2019 13:00:55 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60012 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfKGSAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:59:48 -0500
-Received: by mail-pg1-f195.google.com with SMTP id h4so2508109pgv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:59:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:to:cc:user-agent:date;
-        bh=O6gBNRGhVZ1gdZRloCa4pu6sdIjr6Vbikqu0zr43xGE=;
-        b=OxGhg6ZoRHVSnJPS/KQ8rA72slPD0/uCvstdZnD41uuJR/XZ+uroAy0C2HsRi8TJEH
-         Ehivz8UEUDJWp/mtRdbhh2Ru2z40X6CTZgFSymicjTvrKVz3nyARqURphSni6IEb4ejJ
-         Gx1FErmbqtJ3pBj1kUb7zhFeX6MKw9dKBkMRs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
-         :user-agent:date;
-        bh=O6gBNRGhVZ1gdZRloCa4pu6sdIjr6Vbikqu0zr43xGE=;
-        b=Ad5OlVbIks7cqJMFT6oJUQaQd00z+8kz8ilEfnuYIXlrGAid0P/dAV1buNk68aUUy1
-         EC5EbZ9chpxH6gBhn4ntV1H3Fr+QVzSm4my/UyrCsW0VWR4DvDnPWamrRP6EHf9eY0E+
-         qQxqMBgQSRpheGMa7XNShtqRcnEVf/Uk3BfOHrwYsIQjwboQYpuYWltv44cRhe7j9VOx
-         P27hbbD9j6Qitl/hoXI6cJreI9KaXpB55eGAyi2tOYZMG2cQpSlURNMU36zOsZIv7ipj
-         UcPONymlfDmHJisbQUjrDpfeECLWXXPljMb9fR59YZBcnmgqDDmgiFuQZN7Tf3nSvgb5
-         1lbw==
-X-Gm-Message-State: APjAAAWfbeiljh7TkVpPEJCvKJdBZII8qe05HZgzOrTnE8w6qRdmxmoA
-        3w/lZXIRCcL4UpVJkZ947ifjPoPQxP15pg==
-X-Google-Smtp-Source: APXvYqyVCRadOx088g6lxPYOjNqiHOYdn+JqmwRs1jOGVb7nudBtoJQRBm1zQAzNz1+MhSrGJSPaug==
-X-Received: by 2002:a63:2f47:: with SMTP id v68mr6162731pgv.239.1573149587179;
-        Thu, 07 Nov 2019 09:59:47 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i187sm3674211pfc.177.2019.11.07.09.59.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 09:59:46 -0800 (PST)
-Message-ID: <5dc45b92.1c69fb81.99916.8f34@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 7 Nov 2019 13:00:55 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 79C1471D;
+        Thu,  7 Nov 2019 19:00:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1573149652;
+        bh=3pKlQ2PufFLvWrmoVgmkXG3/3S10PQWiYBpBD09aE54=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iyEKvbJs3KEBvDfeOnA0pTJzY1F+ToTQ2w+jDj4HDf/uRmBeumbalauALcypmCoto
+         RARi6QIfbY9Q+p/IZn9OKpNjSfWDMuS7AikhFfHfED2nZn+SJ9osv/v9ojQyQLT73g
+         Q/Dj3WGnp8gK6P+0wyogsGdyt/RzegPzuHr0JaWE=
+Date:   Thu, 7 Nov 2019 20:00:43 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS
+ bus-timings
+Message-ID: <20191107180043.GA24231@pendragon.ideasonboard.com>
+References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
+ <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191106065017.22144-12-rnayak@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-12-rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 11/14] arm64: dts: qcom: pm6150: Add PM6150/PM6150L PMIC peripherals
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 09:59:45 -0800
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-05 22:50:14)
-> From: Kiran Gunda <kgunda@codeaurora.org>
->=20
-> Add PM6150/PM6150L peripherals such as PON, GPIOs, ADC and other
-> PMIC infra modules.
->=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+Hello Fabrizio,
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On Thu, Aug 29, 2019 at 02:38:06PM +0000, Fabrizio Castro wrote:
+> On 29 August 2019 15:03 Rob Herring wrote:
+> > On Wed, Aug 28, 2019 at 1:36 PM Fabrizio Castro wrote:
+> >>
+> >> Dual-LVDS connections need markers in the DT, this patch adds
+> >> some common documentation to be referenced by both panels and
+> >> bridges.
+> >>
+> >> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >>
+> >> ---
+> >> v2->v3:
+> >> * new patch
+> >> ---
+> >>  .../bindings/display/bus-timings/lvds.yaml         | 38 ++++++++++++++++++++++
+> >>  1 file changed, 38 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
+> >> new file mode 100644
+> >> index 0000000..f35b55a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
+> >> @@ -0,0 +1,38 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> > 
+> > (GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
+> > 
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/display/bus-timings/lvds.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Common Properties for bus timings of LVDS interfaces
+> >> +
+> >> +maintainers:
+> >> +  - Thierry Reding <thierry.reding@gmail.com>
+> >> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >> +
+> >> +description: |
+> >> +  This document defines device tree properties common to LVDS and dual-LVDS
+> >> +  interfaces, where a dual-LVDS interface is a dual-link connection with even
+> >> +  pixels traveling on one connection, and with odd pixels traveling on the other
+> >> +  connection.
 
+As you define a dual-LVDS interface as "a dual-link connection", should
+this be "even pixels traveling on one link, and with odd pixels
+traveling on the other link" ?
+
+> >> +  This document doesn't constitue a device tree binding specification by itself
+> > 
+> > typo: constitute
+> 
+> Well spotted!
+> 
+> >> +  but is meant to be referenced by device tree bindings.
+> >> +  When referenced from panel or bridge device tree bindings, the properties
+> >> +  defined in this document are defined as follows. The panel and bridge device
+> >> +  tree bindings are responsible for defining whether each property is required
+> >> +  or optional.
+> >> +
+> >> +properties:
+> >> +  dual-lvds-even-pixels:
+> >> +    type: boolean
+> >> +    description:
+> >> +      This property is specific to an input port of a sink device. When
+> > 
+> > The schema should define what nodes these go in. The description seems
+> > to indicate in 'port' nodes (or endpoint?), but your use in the panel
+> > binding puts them in the parent.
+> 
+> Did you manage to read this?
+> https://patchwork.kernel.org/cover/11119607/
+> 
+> Could you please advice on how to do this properly?
+> 
+> >> +      specified, it marks the port as recipient of even-pixels.
+> >> +
+> >> +  dual-lvds-odd-pixels:
+> >> +    type: boolean
+> >> +    description:
+> >> +      This property is specific to an input port of a sink device. When
+> >> +      specified, it marks the port as recipient of odd-pixels.
+> > 
+> > However, I don't think you even need these. A panel's port numbers are
+> > fixed can imply even or odd. For example port@0 can be even and port@1
+> > can be odd. The port numbering is typically panel specific, but we may
+> > be able to define the numbering generically if we don't already have
+> > panels with multiple ports.
+> > 
+> > Also, aren't there dual link DSI panels?
+> 
+> This is the result of a discussion on here:
+> https://patchwork.kernel.org/patch/11095547/
+> 
+> Have you come across it?
+
+Let me repeat my comments from that thread for Rob in order to
+centralize the discussion here.
+
+> Taking one step back to look at the big picture, what we need is for the
+> source to know what pixel (odd or even) to send on each LVDS output. For
+> that it needs to know what pixel is expected by the sink the the inputs
+> connected to the source's outputs. From each source output we can easily
+> locate the DT nodes corresponding to the connected sink's input ports,
+> but that doesn't give us enough information. From there, we could
+> 
+> - Infer the odd/even pixel expected by the source based on the port
+>   numbers. This would require common DT bindings for all dual-link LVDS
+>   sinks that specify the port ordering (for instance the bindings could
+>   mandate that lowest numbered port correspond to even pixels).
+> 
+> - Read the odd/even pixel expected by the source from an explicit DT
+>   property, as proposed above. This would also require common DT
+>   bindings for all dual-link LVDS sinks that define these new
+>   properties. This would I think be better than implicitly infering it
+>   from DT port numbers.
+> 
+> - Retrieve the information from the sink drm_bridge at runtime. This
+>   would require a way to query the bridge for the mapping from port
+>   number to odd/even pixel. The DRM_LINK_DUAL_LVDS_ODD_EVEN flag could
+>   be used for that, and would then be defined as "the lowest numbered
+>   port corresponds to odd pixels and the highest numbered port
+>   corresponds to even pixels".
+> 
+> The second and third options would both work I think. The third one is
+> roughly what you've implemented, except that I think the flag
+> description should be clarified.
+
+Rob, what's your opinion ? We could certainly, in the context of a
+panel, decide of a fixed mapping of port numbers to odd/even pixels, but
+the issue is that sources need to know which pixels to send on which
+link (assuming of course that this can be configured on the source
+side). We thus need a way for the source to answer, at runtime, the
+question "which of ports A and B of the sink correspond to even and odd
+pixels ?". This can't be inferred by the source from the sink port
+numbers, as the mapping between port number and odd/even pixels is
+specific to each sink. We thus need to either store that property in the
+DT node of the sink (option 2) or query it at runtime from the sink
+(option 3).
+
+I like option 2 as it's more explicit, but option 3 minimizes the
+required properties in DT, which is always good. Patch 3/8 introduces a
+helper that abstracts this from a sink point of view (which I think is a
+very good idea), so once we decide which option to use, only 3/8 may
+need to be adapted, the other patches should hopefully not require
+rework.
+
+-- 
+Regards,
+
+Laurent Pinchart
