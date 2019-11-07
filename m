@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48114C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F19C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D5A2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CC12085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153732;
-	bh=/uCqjg7wtCfRzgq/VLmF5TtDcuXNk8W84DoByWC4AVY=;
+	s=default; t=1573153737;
+	bh=qOVNBNhh+a7Rh0A9ImEWgTHVRvvCQKJDJeLxlDGcj5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncrLE0IwxxoFFta+2eTx68+VpzqaTDzZn7TEuffJGxEOEQhqiDs2IAPU/jZ/oQbYL
-	 Sk379++lD3ZOpiJO5G7+alk6Hdfiqmi+mBTbMx60jMi8gYsGom7RbcWT8Y1FuOVC38
-	 nvsduG8olfggGL27pTi552CwJB5pUVOXV/PDgOCw=
+	b=WN3WhDaOTy+JQRUmhthIZkjRepPPwO9/u0IUZ1hZlTcTBeNL4QVJF2mMFt+H3doBd
+	 K+CKUp1SJ44lf14lR/O8UjNDPeXYgnJtiqYMH+iOd8LhBH90JNQcmIC48xGw7aKZR8
+	 7bA3khk0Nzy6U3uBdjuFRn0wM0PyCyZtCashec8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbfKGTIu (ORCPT
+        id S1731212AbfKGTIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:08:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:08:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731168AbfKGTIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:08:47 -0500
+        id S1728655AbfKGTIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:08:54 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B272085B;
-        Thu,  7 Nov 2019 19:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAA9621882;
+        Thu,  7 Nov 2019 19:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153726;
-        bh=/uCqjg7wtCfRzgq/VLmF5TtDcuXNk8W84DoByWC4AVY=;
+        s=default; t=1573153733;
+        bh=qOVNBNhh+a7Rh0A9ImEWgTHVRvvCQKJDJeLxlDGcj5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nX/gUa/dFx3jNkwomZIXjjIe9LkYt7XFxpKO/K2yLVwEcTOKNiULcttB4rm+ukk2T
-         tz9duMGFcB5CvscEhvW0XtjlAOp8M11CpiXdrT/eQZc74Tr9GNHUYvc1pAJVIaksXw
-         Yo618jouISUWFLe3uBiNX2OY3pTSbvXQIkHfz+3s=
+        b=noqcsVhmHUEcg6KmS15K0jAVEHZM2HDY06gaHsR1+buYpNM8Ox2o/T6gmCIZSvZpG
+         5U8ZfuEQH9gHP3cIAH2e5btgdSBKy4f9JYY07vXRWOWp7ls9hTu4Phya75pUHdwwud
+         wzgtxD2QtwvV20aOaHU8GLl49NBb6BTcSJ/V8uVk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Richard Danter <richard.danter@windriver.com>
-Subject: [PATCH 55/63] perf record: Add support for limit perf output file size
-Date:   Thu,  7 Nov 2019 16:00:03 -0300
-Message-Id: <20191107190011.23924-56-acme@kernel.org>
+        Wang Nan <wangnan0@huawei.com>, stable@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 56/63] perf tests: Fix out of bounds memory access
+Date:   Thu,  7 Nov 2019 16:00:04 -0300
+Message-Id: <20191107190011.23924-57-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -65,173 +65,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiwei Sun <jiwei.sun@windriver.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-The patch adds a new option to limit the output file size, then based on
-it, we can create a wrapper of the perf command that uses the option to
-avoid exhausting the disk space by the unconscious user.
+The test case 'Read backward ring buffer' failed on 32-bit architectures
+which were found by LKFT perf testing.  The test failed on arm32 x15
+device, qemu_arm32, qemu_i386, and found intermittent failure on i386;
+the failure log is as below:
 
-In order to make the perf.data parsable, we just limit the sample data
-size, since the perf.data consists of many headers and sample data and
-other data, the actual size of the recorded file will bigger than the
-setting value.
+  50: Read backward ring buffer                  :
+  --- start ---
+  test child forked, pid 510
+  Using CPUID GenuineIntel-6-9E-9
+  mmap size 1052672B
+  mmap size 8192B
+  Finished reading overwrite ring buffer: rewind
+  free(): invalid next size (fast)
+  test child interrupted
+  ---- end ----
+  Read backward ring buffer: FAILED!
 
-Testing it:
+The log hints there have issue for memory usage, thus free() reports
+error 'invalid next size' and directly exit for the case.  Finally, this
+issue is root caused as out of bounds memory access for the data array
+'evsel->id'.
 
-  # ./perf record -a -g --max-size=10M
-  Couldn't synthesize bpf events.
-  [ perf record: perf size limit reached (10249 KB), stopping session ]
-  [ perf record: Woken up 32 times to write data ]
-  [ perf record: Captured and wrote 10.133 MB perf.data (71964 samples) ]
+The backward ring buffer test invokes do_test() twice.  'evsel->id' is
+allocated at the first call with the flow:
 
-  # ls -lh perf.data
-  -rw------- 1 root root 11M Oct 22 14:32 perf.data
+  test__backward_ring_buffer()
+    `-> do_test()
+	  `-> evlist__mmap()
+	        `-> evlist__mmap_ex()
+	              `-> perf_evsel__alloc_id()
 
-  # ./perf record -a -g --max-size=10K
-  [ perf record: perf size limit reached (10 KB), stopping session ]
-  Couldn't synthesize bpf events.
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Captured and wrote 1.546 MB perf.data (69 samples) ]
+So 'evsel->id' is allocated with one item, and it will be used in
+function perf_evlist__id_add():
 
-  # ls -l perf.data
-  -rw------- 1 root root 1626952 Oct 22 14:36 perf.data
+   evsel->id[0] = id
+   evsel->ids   = 1
 
-Committer notes:
+At the second call for do_test(), it skips to initialize 'evsel->id'
+and reuses the array which is allocated in the first call.  But
+'evsel->ids' contains the stale value.  Thus:
 
-Fixed the build in multiple distros by using PRIu64 to print u64 struct
-members, fixing this:
+   evsel->id[1] = id    -> out of bound access
+   evsel->ids   = 2
 
-  builtin-record.c: In function 'record__write':
-  builtin-record.c:150:5: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'u64' [-Werror=format=]
-       rec->bytes_written >> 10);
-       ^
-    CC       /tmp/build/pe
+To fix this issue, we will use evlist__open() and evlist__close() pair
+functions to prepare and cleanup context for evlist; so 'evsel->id' and
+'evsel->ids' can be initialized properly when invoke do_test() and avoid
+the out of bounds memory access.
 
-Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: ee74701ed8ad ("perf tests: Add test to check backward ring buffer")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Richard Danter <richard.danter@windriver.com>
-Link: http://lore.kernel.org/lkml/20191022080901.3841-1-jiwei.sun@windriver.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: stable@vger.kernel.org # v4.10+
+Link: http://lore.kernel.org/lkml/20191107020244.2427-1-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-record.txt |  4 +++
- tools/perf/builtin-record.c              | 46 +++++++++++++++++++++++-
- 2 files changed, 49 insertions(+), 1 deletion(-)
+ tools/perf/tests/backward-ring-buffer.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 8a4506113d9f..ebcba1f95513 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -574,6 +574,10 @@ Implies --tail-synthesize.
- --kcore::
- Make a copy of /proc/kcore and place it into a directory with the perf data file.
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index a4cd30c0beb3..15cea518f5ad 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -148,6 +148,15 @@ int test__backward_ring_buffer(struct test *test __maybe_unused, int subtest __m
+ 		goto out_delete_evlist;
+ 	}
  
-+--max-size=<size>::
-+Limit the sample data max size, <size> is expected to be a number with
-+appended unit character - B/K/M/G
++	evlist__close(evlist);
 +
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index f6664bb08b26..b95c000c1ed9 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -94,8 +94,11 @@ struct record {
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
- 	cpu_set_t		affinity_mask;
-+	unsigned long		output_max_size;	/* = 0: unlimited */
- };
- 
-+static volatile int done;
-+
- static volatile int auxtrace_record__snapshot_started;
- static DEFINE_TRIGGER(auxtrace_snapshot_trigger);
- static DEFINE_TRIGGER(switch_output_trigger);
-@@ -123,6 +126,12 @@ static bool switch_output_time(struct record *rec)
- 	       trigger_is_ready(&switch_output_trigger);
- }
- 
-+static bool record__output_max_size_exceeded(struct record *rec)
-+{
-+	return rec->output_max_size &&
-+	       (rec->bytes_written >= rec->output_max_size);
-+}
-+
- static int record__write(struct record *rec, struct mmap *map __maybe_unused,
- 			 void *bf, size_t size)
- {
-@@ -135,6 +144,13 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
- 
- 	rec->bytes_written += size;
- 
-+	if (record__output_max_size_exceeded(rec) && !done) {
-+		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
-+				" stopping session ]\n",
-+				rec->bytes_written >> 10);
-+		done = 1;
++	err = evlist__open(evlist);
++	if (err < 0) {
++		pr_debug("perf_evlist__open: %s\n",
++			 str_error_r(errno, sbuf, sizeof(sbuf)));
++		goto out_delete_evlist;
 +	}
 +
- 	if (switch_output_size(rec))
- 		trigger_hit(&switch_output_trigger);
- 
-@@ -499,7 +515,6 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
- 	return record__write(rec, map, bf, size);
- }
- 
--static volatile int done;
- static volatile int signr = -1;
- static volatile int child_finished;
- 
-@@ -1984,6 +1999,33 @@ static int record__parse_affinity(const struct option *opt, const char *str, int
- 	return 0;
- }
- 
-+static int parse_output_max_size(const struct option *opt,
-+				 const char *str, int unset)
-+{
-+	unsigned long *s = (unsigned long *)opt->value;
-+	static struct parse_tag tags_size[] = {
-+		{ .tag  = 'B', .mult = 1       },
-+		{ .tag  = 'K', .mult = 1 << 10 },
-+		{ .tag  = 'M', .mult = 1 << 20 },
-+		{ .tag  = 'G', .mult = 1 << 30 },
-+		{ .tag  = 0 },
-+	};
-+	unsigned long val;
-+
-+	if (unset) {
-+		*s = 0;
-+		return 0;
-+	}
-+
-+	val = parse_tag_value(str, tags_size);
-+	if (val != (unsigned long) -1) {
-+		*s = val;
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
- static int record__parse_mmap_pages(const struct option *opt,
- 				    const char *str,
- 				    int unset __maybe_unused)
-@@ -2311,6 +2353,8 @@ static struct option __record_options[] = {
- 			    "n", "Compressed records using specified level (default: 1 - fastest compression, 22 - greatest compression)",
- 			    record__parse_comp_level),
- #endif
-+	OPT_CALLBACK(0, "max-size", &record.output_max_size,
-+		     "size", "Limit the maximum size of the output file", parse_output_max_size),
- 	OPT_END()
- };
- 
+ 	err = do_test(evlist, 1, &sample_count, &comm_count);
+ 	if (err != TEST_OK)
+ 		goto out_delete_evlist;
 -- 
 2.21.0
 
