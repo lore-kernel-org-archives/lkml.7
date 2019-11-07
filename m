@@ -2,69 +2,95 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AA3C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00132C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F38921882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573135969;
-	bh=oCGRslHe9Ygu7scxwnjJrxwGU0pwKMwcwqz796hhE94=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i7NdM5hSF8NOs83Z42cwUe0rYY42D2LYGiiAZrV8K4lzwz6o+r7kEB2ZCiGuWeQZd
-	 0aeknAYPa6Llh/HCWS0u1/YJKeCV2tFAhTk+5JrN+alwINNXWdj60nC5y/7lG2QQdz
-	 Qxsqn3vXW+ylHzVWDGn2C2EUrDh5OVfubrxx1pGU=
+	by mail.kernel.org (Postfix) with ESMTP id C27562178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqZSnsIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfKGOMs (ORCPT
+        id S2389193AbfKGONx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:12:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfKGOMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:12:47 -0500
-Received: from linux-8ccs (x2f7fd33.dyn.telefonica.de [2.247.253.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00A942178F;
-        Thu,  7 Nov 2019 14:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573135967;
-        bh=oCGRslHe9Ygu7scxwnjJrxwGU0pwKMwcwqz796hhE94=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AYDIsmPuwTTimYGQfgQDHrjugb4vtMt2yFMPh7HOOcJDg2Xc533pQBCESwGRJKdEk
-         bgaOLA3b3hNTcIFy7uoGt2XGkwAKe3sUAXGqKgvwlHijTT0V3UQDCG25E13BCJdZWY
-         zSAlgCG2idesSoqfINqubWdhg8p+n/xsuIUP6DiA=
-Date:   Thu, 7 Nov 2019 15:12:40 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        gladkov.alexey@gmail.com, rusty@rustcorp.com.au
-Subject: Re: [PATCH] moduleparam: fix parameter description mismatch
-Message-ID: <20191107141240.GA6515@linux-8ccs>
-References: <1572858577-8349-1-git-send-email-zhenzhong.duan@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1572858577-8349-1-git-send-email-zhenzhong.duan@oracle.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 7 Nov 2019 09:13:53 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34489 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbfKGONx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:13:53 -0500
+Received: by mail-wm1-f66.google.com with SMTP id v3so4997378wmh.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 06:13:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=727/3hXNrCpMzc8Pu8pq1fTYwENsqPgwGKKHUIkJ+iQ=;
+        b=mqZSnsIbvbCPOezMyABP9kgRU/q8s09FqoL+8rtW1HFh/g10TeHhxA3n0jGhJtQKNF
+         4paJCGdNtrAXBwgxE9NcJMDDBpwA0F9Id33qIiNyP9KjnIrJS5bhuErPyPM7M4ypeB4C
+         uYV6wtRBYDpk62xEyorrnKCmoryyUzWIK45XRMDeqItXcC/Wo+tfYytK3lPJPIFU3PLZ
+         kXxJum2HliNF/fn/07JJyHbJJ/EmRxr2qaqFVcpy6vTBSxWwa3flDwggY9ntSym1pYhZ
+         pjdkwB09T1Cu6v8H225hdP6Vf+wgl8j4uADWp4L48fIu+30FDF/z/lFZg2zU5Y+5xGe4
+         vcbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=727/3hXNrCpMzc8Pu8pq1fTYwENsqPgwGKKHUIkJ+iQ=;
+        b=Dx4+Qgzj6n86uKeT4roIvYgiwn02F8ptUJhqk5UDCl0WoMkiA0DqJ7ZLTN0QuXksh+
+         dovMkBtLK3dNN69lLYeuqK60iekjGGuZ6rrl3LuST8lryR5oBwGTTNJh/9O8ItY9qekq
+         2LIjXDzjKYcdilziHh6NC5XDQdNMPXUTifDkNmsLNfIOFnObjXoNNAB+U/wtbGsJ6zn0
+         yLnDVaFSokZ+I9RXG/WHxtWV69RZZ+BEjX2h/gorSgAw/jr/R0CjK6/MXsXhnE6+CMRM
+         9rcmNwtJA92DR3gPrw4DXTujJoal8oAu7AnH9DdPyufaGMst8rZ82lSLxL4Zg8mZxErn
+         RjKg==
+X-Gm-Message-State: APjAAAURdcLboNHtgkC7BSpPPQFJReBh+0nT9Iyf3P1pzA0GG0MRnlJe
+        KKamTNsuh72meplGWBU44jg=
+X-Google-Smtp-Source: APXvYqxrDB0OVg0ERQNnmg5c6UHBM/XNtCaWKes8hIeX19qwgG4w6OzxLz8Zz96+lz5tx0cuPQPCvw==
+X-Received: by 2002:a1c:a943:: with SMTP id s64mr3086918wme.170.1573136031041;
+        Thu, 07 Nov 2019 06:13:51 -0800 (PST)
+Received: from hwsrv-485799.hostwindsdns.com ([2a0d:7c40:3000:11f::2])
+        by smtp.gmail.com with ESMTPSA id x9sm2194691wru.32.2019.11.07.06.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 06:13:50 -0800 (PST)
+From:   Valery Ivanov <ivalery111@gmail.com>
+To:     devel@drivrdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Valery Ivanov <ivalery111@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        devel@driverdev.osuosl.org
+Subject: [PATCH] staging: octeon: fix missing a blank line after declaration
+Date:   Thu,  7 Nov 2019 14:13:22 +0000
+Message-Id: <20191107141335.17641-1-ivalery111@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Zhenzhong Duan [04/11/19 17:09 +0800]:
->The first parameter of module_param is @name, but @value is used
->in description. Fix it.
->
->Fixes: 546970bc6afc ("param: add kerneldoc to moduleparam.h")
->Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+	This patch fixes "WARNING: Missing a blank line after declarations"
+	Issue found by checkpatch.pl
 
-Applied, thanks.
+Signed-off-by: Valery Ivanov <ivalery111@gmail.com>
+---
+ drivers/staging/octeon/octeon-stubs.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jessica
+diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+index d53bd801f440..ed9d44ff148b 100644
+--- a/drivers/staging/octeon/octeon-stubs.h
++++ b/drivers/staging/octeon/octeon-stubs.h
+@@ -1375,6 +1375,7 @@ static inline union cvmx_gmxx_rxx_rx_inbnd cvmx_spi4000_check_speed(
+ 	int port)
+ {
+ 	union cvmx_gmxx_rxx_rx_inbnd r;
++
+ 	r.u64 = 0;
+ 	return r;
+ }
+-- 
+2.17.1
 
