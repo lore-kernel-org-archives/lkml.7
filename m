@@ -2,225 +2,111 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0833C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D875BC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E6021D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E5221D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573153502;
+	bh=2GjoY1mbQmJ1MIjhHcVL2b66qWSckvRQqjOxvCd7vok=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XgOs64BfCGRcfaB2cIQ0VUj0VgH9IL87xLfC67fb+iGqhjwkkdpQEKi3hqLF6W6IH
+	 y0qogWjGE/2pMt/0FQfh4DFghEDqbGn9h6UJCLScG6apqv97fwFqFuNf4mPw4PXOC+
+	 PBecSEfKppaK3Gr6DFOMU7rZ8tSLBR2Ljm9TCDtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbfKGTE7 (ORCPT
+        id S1730183AbfKGTFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:04:59 -0500
-Received: from ms.lwn.net ([45.79.88.28]:39040 "EHLO ms.lwn.net"
+        Thu, 7 Nov 2019 14:05:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfKGTE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726656AbfKGTE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 14:04:58 -0500
-Received: from lwn.net (localhost [127.0.0.1])
+Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id E11736EC;
-        Thu,  7 Nov 2019 19:04:56 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 12:04:55 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jaskaran Singh <jaskaransingh7654321@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        christian@brauner.io, neilb@suse.com, willy@infradead.org,
-        tobin@kernel.org, stefanha@redhat.com, hofrat@osadl.org,
-        gregkh@linuxfoundation.org, jeffrey.t.kirsher@intel.com,
-        linux-doc@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH][RESEND] docs: filesystems: sysfs: convert sysfs.txt to
- reST
-Message-ID: <20191107120455.29a4c155@lwn.net>
-In-Reply-To: <20191105071846.GA28727@localhost.localdomain>
-References: <20191105071846.GA28727@localhost.localdomain>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id CF31F2085B;
+        Thu,  7 Nov 2019 19:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573153498;
+        bh=2GjoY1mbQmJ1MIjhHcVL2b66qWSckvRQqjOxvCd7vok=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FndtvtpjBAKkY/L/b1e4c8NP3ivmSMVnQMjrzjsYXBknomapcBqbviI9ushzpQysh
+         /T+Va38opJGLwYLlOO/uTr5sp8OO6xQytn8sIgrJ1bmCxz6Tub9BWi1Sm2g7Cpupgz
+         dM0C5UpCxUJpkx1oTXdmAuqQkszu36cDFO8lJmS4=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        James Clark <James.Clark@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, nd <nd@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 32/63] libsubcmd: Move EXTRA_FLAGS to the end to allow overriding existing flags
+Date:   Thu,  7 Nov 2019 15:59:40 -0300
+Message-Id: <20191107190011.23924-33-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
+References: <20191107190011.23924-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 12:48:46 +0530
-Jaskaran Singh <jaskaransingh7654321@gmail.com> wrote:
+From: James Clark <James.Clark@arm.com>
 
-> This patch converts sysfs.txt to sysfs.rst, and adds a corresponding
-> entry in index.rst.
-> 
-> Most of the whitespacing and indentation is kept similar to the
-> original document.
-> 
-> Changes to the original document include:
-> 
->  - Adding an authors statement in the header.
->  - Replacing the underscores in the title with asterisks. This is so
->    that the "The" in the title appears in italics in HTML.
->  - Replacing the tilde (~) headings with equal signs, for reST section
->    headings.
->  - List out the helper macros with backquotes and corresponding description
->    on the next line.
->  - Placing C code and shell code in reST code blocks, with an indentation
->    of an 8 length tab.
->
-> Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
+Move EXTRA_WARNINGS and EXTRA_FLAGS to the end of the compilation line,
+otherwise they cannot be used to override the default values.
 
-Thanks for working to improve the documentation.  There are some problems
-here, none of which are your creation, but I would sure like to resolve
-them while working with this document.
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: nd <nd@arm.com>
+Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
+[ split from a larger patch ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/lib/subcmd/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-The first of these is that Documentation/filesystems is really the wrong
-place for this file - it's covering the internal API for subsystems that
-want to create entries in sysfs.  IMO, it belongs in either the driver-API
-manual or the core-API manual - probably the latter.
-
->  Documentation/filesystems/index.rst           |   1 +
->  .../filesystems/{sysfs.txt => sysfs.rst}      | 323 ++++++++++--------
->  2 files changed, 189 insertions(+), 135 deletions(-)
->  rename Documentation/filesystems/{sysfs.txt => sysfs.rst} (60%)
-> 
-> diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-> index 2c3a9f761205..18b5ea780b9b 100644
-> --- a/Documentation/filesystems/index.rst
-> +++ b/Documentation/filesystems/index.rst
-> @@ -46,4 +46,5 @@ Documentation for filesystem implementations.
->  .. toctree::
->     :maxdepth: 2
->  
-> +   sysfs
->     virtiofs
-> diff --git a/Documentation/filesystems/sysfs.txt b/Documentation/filesystems/sysfs.rst
-> similarity index 60%
-> rename from Documentation/filesystems/sysfs.txt
-> rename to Documentation/filesystems/sysfs.rst
-> index ddf15b1b0d5a..de0de5869323 100644
-> --- a/Documentation/filesystems/sysfs.txt
-> +++ b/Documentation/filesystems/sysfs.rst
-> @@ -1,15 +1,18 @@
-> +======================================================
-> +sysfs - *The* filesystem for exporting kernel objects.
-> +======================================================
->  
-> -sysfs - _The_ filesystem for exporting kernel objects. 
-
-Nits: We can really just drop emphasis like that, it doesn't really help
-anybody.  Also the period can go on section headers.
-
-> +Authors:
->  
-> -Patrick Mochel	<mochel@osdl.org>
-> -Mike Murphy <mamurph@cs.clemson.edu>
-> +- Patrick Mochel	<mochel@osdl.org>
-> +- Mike Murphy   	<mamurph@cs.clemson.edu>
-
-I would be absolutely amazed if either of those email addresses works at
-this point.  I'd take them out.
-
-> -Revised:    16 August 2011
-> -Original:   10 January 2003
-> +| Revised:    16 August 2011
-> +| Original:   10 January 2003
-
-Dates like that are a red flag.  See below.
-
->  What it is:
-> -~~~~~~~~~~~
-> +===========
->  
->  sysfs is a ram-based filesystem initially based on ramfs. It provides
->  a means to export kernel data structures, their attributes, and the 
-> @@ -21,16 +24,18 @@ interface.
->  
->  
->  Using sysfs
-> -~~~~~~~~~~~
-> +===========
->  
->  sysfs is always compiled in if CONFIG_SYSFS is defined. You can access
->  it by doing:
->  
-> -    mount -t sysfs sysfs /sys 
-> +.. code-block:: sh
-> +
-> +	mount -t sysfs sysfs /sys
-
-In the spirit of minimal markup, I'd do the above as:
-
-   it by doing::
-
-	mount -t sysfs sysfs /sys
-
-But then I know that others are much more fond of .. code-block and syntax
-highlighting than I am.
-
->  Directory Creation
-> -~~~~~~~~~~~~~~~~~~
-> +==================
->  
->  For every kobject that is registered with the system, a directory is
->  created for it in sysfs. That directory is created as a subdirectory
-> @@ -48,7 +53,7 @@ only modified directly by the function sysfs_schedule_callback().
->  
->  
->  Attributes
-> -~~~~~~~~~~
-> +==========
->  
->  Attributes can be exported for kobjects in the form of regular files in
->  the filesystem. Sysfs forwards file I/O operations to methods defined
-> @@ -67,15 +72,16 @@ you publicly humiliated and your code rewritten without notice.
->  
->  An attribute definition is simply:
->  
-> -struct attribute {
-> -        char                    * name;
-> -        struct module		*owner;
-> -        umode_t                 mode;
-> -};
-> +.. code-block:: c
->  
-> +	struct attribute {
-> +		char                    * name;
-> +		struct module		*owner;
-> +		umode_t                 mode;
-> +	};
-
-Here is where we go pretty far off the rails.  If you go looking in
-include/linux/sysfs.h, the actual definition of this structure is:
-
-struct attribute {
-	const char		*name;
-	umode_t			mode;
-#ifdef CONFIG_DEBUG_LOCK_ALLOC
-	bool			ignore_lockdep:1;
-	struct lock_class_key	*key;
-	struct lock_class_key	skey;
-#endif
-};
-
-Most notably, the owner field went away quite some time ago.
-
-Documentation like this is not really useful to anybody; once a reader
-realizes it doesn't describe current reality, they will justifiably
-disregard it.  This isn't your fault, of course, but converting something
-like this to RST gives the illusion that it has been updated, when that is
-very much not the case.
-
-At a bare minimum, an effort like this needs to put a big flashing warning
-at the top of the file.  But it would be soooooo much better to actually
-update the content as well.
-
-The best way to do that would be to annotate the source with proper
-kerneldoc comments, then pull them into the documentation rather than
-repeating the information here.  Is there any chance you might be up for
-taking on a task like this?
-
-Thanks,
-
-jon
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 5b2cd5e58df0..352c6062deba 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -19,8 +19,7 @@ MAKEFLAGS += --no-print-directory
+ 
+ LIBFILE = $(OUTPUT)libsubcmd.a
+ 
+-CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+-CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
++CFLAGS := -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
+ 
+ ifeq ($(DEBUG),0)
+   ifeq ($(feature-fortify-source), 1)
+@@ -43,6 +42,8 @@ CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+ 
+ CFLAGS += -I$(srctree)/tools/include/
+ 
++CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
++
+ SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
+ 
+ all:
+-- 
+2.21.0
 
