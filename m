@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A94FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23300FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D2D2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD512187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="eHPgKGH9"
+	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="rBMjZCqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389094AbfKGN2J (ORCPT
+        id S2389053AbfKGN2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:28:09 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35973 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389055AbfKGN2I (ORCPT
+        Thu, 7 Nov 2019 08:28:17 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46003 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389044AbfKGN2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:28:08 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m6so1611922lfl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:28:06 -0800 (PST)
+        Thu, 7 Nov 2019 08:28:06 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n21so2247133ljg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:28:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wRJUigE76AyzxKPdwIXmFrxCAtwRa7ubQV/YC/3pAas=;
-        b=eHPgKGH9xEN9hvukhqJLmmua/oS1+CUUAE74DWq5vPa7giYMlc+U3F+6XIkpMpMJVj
-         yin0QkebMhmVmf+VmXaYUXtv1lH9PwEf7IXHiothg1gQpqQ6/sqRR6yPdH/GXhXfWHqj
-         gd+Wi3sPvg6Rg2+d+nOcd8qxtDwZC76OERewVj7MtTcFXQoKPag2+MX55GLfjLA39hQn
-         TrIW0RqReLaUcqK2gJQlX4pL+XSiUd5UWzqvpYJS/YpixQ2tjA3Nj7AJiVKNNAHmrx2F
-         2UzWWOmR2J3UfXttJ46kdPIIMd26uPHCpD1zyhsLDgwAbOg8PqTlCAUpiiR86l37VagS
-         8ojw==
+        bh=zXDgHEnXmAd5c8hm63wbideMGJDr2j+Jf+RGDuNusS4=;
+        b=rBMjZCqHLRK4uxWE3Jn85OBeFCg3CIPM6/SBq/1nYky4z9Z8LfxMCO78o3o6il5kqj
+         Hl+e7g08u6R8M2JBZt3wvjlwBW5rbrdROXabAdePH/8fgNHmOp34ydg0fsr1rIz437g2
+         72/gOjwiBCmsnSgxYS7h4qhz8grxYzGuiMlEPMv6I6GS4wIsD87XRkqJZcT3aTGdXKCK
+         Umu+mYlwuM6faJ01pr59Iz5lggc+vpcb+idodwaBaOaiocXbqmvNC8+Vw8oGwsL/TpIm
+         2ezfyhwVN3C1vTt4a3DBiwdyhkBiuB0m5sZvCo3zJ71OF9x4uw59HFwMx/LYIYkHpxTl
+         GuIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wRJUigE76AyzxKPdwIXmFrxCAtwRa7ubQV/YC/3pAas=;
-        b=fotqAHJwU3UJ3pPde/JP8RC1wqlaIRni9wpO/Tb3zAELAJDJPPtGIECZW1rUDjxdb2
-         h8MTKu0aSRt2/lSBJb0WBfJKSCJZ4J4mxaWwYU4gWXY3go8lPFuVQ1rvzctzr1x3+bHD
-         RfoRhqjBqIfu8Bh6Z5zpjWvAbZH6bexFfke+TmgnpMoOcuURIICumBudop0rVued7hCi
-         cVYZofBZ3lDOFpGZC00zxnl8Llbj0Ffu9qlfnmCGsgb7EQ9j0TJxixsiB87YOspARSEP
-         +quoADKaLrrPkVQaURLUlQsXOJGBC1up1ZkBF/dZdr8GMXen6NroUEgqLnLmERhJLk6r
-         NxnQ==
-X-Gm-Message-State: APjAAAVjg1oQrPRHquz2AxIAcDP5sS17HZj+Fe1C53ISzlEzUcf5UG8h
-        EE8DhXqCHDi4YlxOUbOSvHtcQg==
-X-Google-Smtp-Source: APXvYqxbU3kzG4ljeyOS1yo2AT52ALE36CZwu3aUQA9YevpCoCrU7SNcyrErntjJvYRlXZD3N4YuPQ==
-X-Received: by 2002:ac2:5deb:: with SMTP id z11mr2563233lfq.35.1573133285907;
-        Thu, 07 Nov 2019 05:28:05 -0800 (PST)
+        bh=zXDgHEnXmAd5c8hm63wbideMGJDr2j+Jf+RGDuNusS4=;
+        b=TUTPqSKBy1HyKW5BUD+oXaygxUxEXKbAc4nkVHnwTomq0DXrVuJ6PysEgVTuDyL+MK
+         lTGreKy4dttW8nJTolcg98qKl17xAmp/Lt7jZZR14+24uWuDU2SRxm/lICsR5iUdlo+2
+         baTeYrcIqif6ZFPvOQyANnvAv6IXhmbFyRiG7pHV1oVTse3IQ9XwDXN7AJZiBGvVtBKx
+         FOUeVZqiyYWB9vJ3G/X5V5HX8s6hgPudojbovvaExs0UeWHCmKhvinKv1j5Ix77qdGwo
+         G4bgrkcFtFaccy2ra5o1AIPcQge3NDeE9DqKiTjcgmsSUKfArF89Y99f0ClsB92mpRev
+         f72w==
+X-Gm-Message-State: APjAAAWQmDDWTFJRzr3zGzBZTc02C0+fR9gERLFTon2s8bPYiCeEaBMx
+        HUBXVh0SOzqY1e9kCNczsBQMQA==
+X-Google-Smtp-Source: APXvYqyBWis+vPxpbD+JmZEOBgKo3ElSBxQQsXXtFqZF7NzkD09vQlT2OduOj2N3/n5Y1L41NCvgvA==
+X-Received: by 2002:a2e:9e45:: with SMTP id g5mr2273176ljk.58.1573133284676;
+        Thu, 07 Nov 2019 05:28:04 -0800 (PST)
 Received: from mimer.lan (h-137-65.A159.priv.bahnhof.se. [81.170.137.65])
-        by smtp.gmail.com with ESMTPSA id y20sm3151507ljd.99.2019.11.07.05.28.04
+        by smtp.gmail.com with ESMTPSA id y20sm3151507ljd.99.2019.11.07.05.28.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 05:28:05 -0800 (PST)
+        Thu, 07 Nov 2019 05:28:04 -0800 (PST)
 From:   Jonas Bonn <jonas@norrbonn.se>
 To:     nicolas.dichtel@6wind.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     davem@davemloft.net, Jonas Bonn <jonas@norrbonn.se>
-Subject: [PATCH v3 6/6] net: ipv6: allow setting address on interface outside current namespace
-Date:   Thu,  7 Nov 2019 14:27:55 +0100
-Message-Id: <20191107132755.8517-7-jonas@norrbonn.se>
+Subject: [PATCH v3 5/6] net: namespace: allow setting NSIDs outside current namespace
+Date:   Thu,  7 Nov 2019 14:27:54 +0100
+Message-Id: <20191107132755.8517-6-jonas@norrbonn.se>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191107132755.8517-1-jonas@norrbonn.se>
 References: <20191107132755.8517-1-jonas@norrbonn.se>
@@ -73,47 +73,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows an interface outside of the current namespace to be
-selected when setting a new IPv6 address for a device.  This uses the
-IFA_TARGET_NETNSID attribute to select the namespace in which to search
-for the interface to act upon.
+Currently it is only possible to move an interface to a new namespace if
+the destination namespace has an ID in the interface's current namespace.
+If the interface already resides outside of the current namespace, then
+we may need to assign the destination namespace an ID in the interface's
+namespace in order to effect the move.
+
+This patch allows namespace ID's to be created outside of the current
+namespace.  With this, the following is possible:
+
+i)    Our namespace is 'A'.
+ii)   The interface resides in namespace 'B'
+iii)  We can assign an ID for NS 'A' in NS 'B'
+iv)   We can then move the interface into our own namespace.
+
+and
+
+i)   Our namespace is 'A'; namespaces 'B' and 'C' also exist
+ii)  We can assign an ID for namespace 'C' in namespace 'B'
+iii) We can then create a VETH interface directly in namespace 'B' with
+the other end in 'C', all without ever leaving namespace 'A'
 
 Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
+Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 ---
- net/ipv6/addrconf.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ net/core/net_namespace.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index 34ccef18b40e..06a49670fe62 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -4721,6 +4721,7 @@ inet6_rtm_newaddr(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		  struct netlink_ext_ack *extack)
- {
- 	struct net *net = sock_net(skb->sk);
-+	struct net *tgt_net;
- 	struct ifaddrmsg *ifm;
- 	struct nlattr *tb[IFA_MAX+1];
- 	struct in6_addr *peer_pfx;
-@@ -4758,6 +4759,18 @@ inet6_rtm_newaddr(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		cfg.preferred_lft = ci->ifa_prefered;
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index 39402840025e..ebb01903d1f7 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -726,6 +726,7 @@ static int rtnl_net_newid(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	struct nlattr *tb[NETNSA_MAX + 1];
+ 	struct nlattr *nla;
+ 	struct net *peer;
++	struct net *target = NULL;
+ 	int nsid, err;
+ 
+ 	err = nlmsg_parse_deprecated(nlh, sizeof(struct rtgenmsg), tb,
+@@ -754,6 +755,21 @@ static int rtnl_net_newid(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		return PTR_ERR(peer);
  	}
  
-+	if (tb[IFA_TARGET_NETNSID]) {
-+		s32 netnsid = nla_get_s32(tb[IFA_TARGET_NETNSID]);
++	if (tb[NETNSA_TARGET_NSID]) {
++		int id = nla_get_s32(tb[NETNSA_TARGET_NSID]);
 +
-+		tgt_net = rtnl_get_net_ns_capable(NETLINK_CB(skb).sk, netnsid);
-+		if (IS_ERR(tgt_net)) {
++		target = rtnl_get_net_ns_capable(NETLINK_CB(skb).sk, id);
++		if (IS_ERR(target)) {
++			NL_SET_BAD_ATTR(extack, tb[NETNSA_TARGET_NSID]);
 +			NL_SET_ERR_MSG(extack,
-+				"ipv6: Invalid target network namespace id");
-+			return PTR_ERR(tgt_net);
++				       "Target netns reference is invalid");
++			err = PTR_ERR(target);
++			goto out;
 +		}
-+		net = tgt_net;
++
++		net = target;
 +	}
 +
- 	dev =  __dev_get_by_index(net, ifm->ifa_index);
- 	if (!dev)
- 		return -ENODEV;
+ 	spin_lock_bh(&net->nsid_lock);
+ 	if (__peernet2id(net, peer) >= 0) {
+ 		spin_unlock_bh(&net->nsid_lock);
+@@ -775,6 +791,9 @@ static int rtnl_net_newid(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		NL_SET_BAD_ATTR(extack, tb[NETNSA_NSID]);
+ 		NL_SET_ERR_MSG(extack, "The specified nsid is already used");
+ 	}
++
++	if (target)
++		put_net(target);
+ out:
+ 	put_net(peer);
+ 	return err;
 -- 
 2.20.1
 
