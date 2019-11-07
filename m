@@ -3,112 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1426BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8397BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC778214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BBFB2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j7FjqYqY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6lX2Zno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733081AbfKGDUf (ORCPT
+        id S1733077AbfKGD0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:20:35 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38472 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbfKGDUf (ORCPT
+        Wed, 6 Nov 2019 22:26:22 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:41267 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733026AbfKGD0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:20:35 -0500
-Received: by mail-pf1-f194.google.com with SMTP id c13so1282962pfp.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 19:20:35 -0800 (PST)
+        Wed, 6 Nov 2019 22:26:22 -0500
+Received: by mail-yw1-f67.google.com with SMTP id j190so137932ywf.8;
+        Wed, 06 Nov 2019 19:26:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2oC3yJJXBDl4Wr0A5jeoRouH5CPSnlYcDExtnV2jGKQ=;
-        b=j7FjqYqYchtyDbwjW7ryF1WpehF5qoKiuEYjAahXifGnYIAPnQfZmD1p6vxvfB6Xlj
-         CrL4M5oduRqpQcWyDaO5DOqU+GIGt9NJQaatkqIuwJL+s0jVd+rZOh8+T7eWpZ/L3ELn
-         VLACicXal+IJHmJUtphKMXgviaJXuETGgbjXkI+RZE8GtZMHKb61wYvecNrdr4CVTx0q
-         FWg7Y2px83ntq+Y1F5gtjh15O5g0/As2XUQPDRBMLGMoY2bCu9iw+YbV2nC0A7RrmzKc
-         8Y2Ms8pzDjl6Fpw/ySvXByeADgsCSIhG9qMrMhYALp0kIXnjXdbidxA6wB8M+NHjiONq
-         7Kuw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=i7lPlVFXCwaRBfgllPbIuG84TNHexMw3eUuR2CC5D+w=;
+        b=U6lX2ZnoRL0dPtyIBg3cnH1/TPonJFZeawdSmmx8HafU1R9vc8NgDfKIfFiRn1DLsT
+         xuzIT/EJZS/g4PBS1rE64BaSe5ZDXrD3YgnbYpWrufF4vn/g2cLk9zO16yVgO9zMuNJu
+         vQ5IfyhA3YWuHgaVKkpvSEY87oe8f20BHwHbJDcj0TO11Q4js0ygOY+3LcyAQcOW2507
+         ifBM+jSUcs64gAI/WoP5N21XWSc4xrNHBdCETj9EsIlg7z3VePG/OYhCFJqaO5sUdxcf
+         NTuhabHP7O0Uid3IhdC1uJ2rahOIjp2VPcct7nCtxq8imj5R569nxmL/6wHlgmsAhgEw
+         Ss2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2oC3yJJXBDl4Wr0A5jeoRouH5CPSnlYcDExtnV2jGKQ=;
-        b=aT629UjaF5eoIHhEsud9TYDslSXjtpsgacKjom8Swf3APrfHstl7IuQxj4zyHaGUwc
-         VhPTdJMiKSXZC1Vd4RGMP6kcZCdj79yrJbz5ZDQ49L7ixq12hYGLoWu1zjY1CR8tUloZ
-         zO5URYVV/AlFnFfOmEIRzrWTrPHSWx3xgEW/pMeZj5bps0QWIhxlzoJH2TROr/r7zUdk
-         pYdSWikGGgNphFlJoFicaA5WTOxfEOkhs0TXqpIm9UY31z+Kyf0faispF1Bij4iql1gk
-         bmr+n6GtP7K0BrxgzPzfr0608S0YK4FBTBIhXgfYt2yAbBDc5NQA2TKu0ZtkBNvh6wPb
-         B3mQ==
-X-Gm-Message-State: APjAAAUMmOq3AkidBM2w6fGdsyg/UORgZ/2nnX5M2llJI0zKw9zyP2FN
-        A1ZEDGSM1rT/uxZHRAnRc2E97sJtt5o=
-X-Google-Smtp-Source: APXvYqz0puT+Kdua5STtrjcl24wC8akQcYeHP6/4jA+rq9BMZhcU+xIEkwN6yi7p0uDufuX966jCOA==
-X-Received: by 2002:a17:90a:a598:: with SMTP id b24mr1989317pjq.46.1573096834829;
-        Wed, 06 Nov 2019 19:20:34 -0800 (PST)
-Received: from localhost ([122.171.110.253])
-        by smtp.gmail.com with ESMTPSA id x20sm441541pfa.186.2019.11.06.19.20.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 19:20:34 -0800 (PST)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] IB/qib: Validate ->show()/store() callbacks before calling them
-Date:   Thu,  7 Nov 2019 08:50:25 +0530
-Message-Id: <d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=i7lPlVFXCwaRBfgllPbIuG84TNHexMw3eUuR2CC5D+w=;
+        b=PS/NYarti70Qs6/jlwl/L9vQhUH2do03hJbJfLqJ1vSt26ggmOf2ag1agP0xBbCbyu
+         OVxh4u3q3JPsQDpLfNYQuIfWCPg4n/tH+0cXZp/rdNzEOUIcg24m1eNSenaui+B5BOyW
+         PuXcviUp3DsbkO+TQZ0pr/LxGtR4jVonmqA/WmgxRePk3z00Pd1PPJEAnroesh/nFLL8
+         UAYZyzpdNJKhnpMRxR6HbeHKYK4qx/pby26H/zq4J/cyKx3rPZtwNaxZDnfA/zqJHpfH
+         qnGqTJqSfPf4YOx/IPXicBlytGHWdL7lp6Dzi611ChgWFmf/bgR+W85dalekLgBpRa8K
+         Fecg==
+X-Gm-Message-State: APjAAAXHciP5CkONK79/HF1w4oassPdQEVqkSMkiccy+d3j1hpFc0Q3g
+        zTxG2qrFUKZmCEzG3Yt5M7DnAbI/Ln0=
+X-Google-Smtp-Source: APXvYqyJOCLE9yWoKCkwp3e2oMQizGGDkRRmRKHTNw5uMIY3Ox14NoxGHm1ZbXsi7B7vTUS69flPjQ==
+X-Received: by 2002:a0d:ddc3:: with SMTP id g186mr721122ywe.201.1573097178953;
+        Wed, 06 Nov 2019 19:26:18 -0800 (PST)
+Received: from localhost.localdomain (cpe-76-177-112-180.natcky.res.rr.com. [76.177.112.180])
+        by smtp.gmail.com with ESMTPSA id i190sm276826ywg.1.2019.11.06.19.26.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 06 Nov 2019 19:26:17 -0800 (PST)
+From:   Bradley Bolen <bradleybolen@gmail.com>
+To:     linux-mmc@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, avri.altman@wdc.com,
+        wsa+renesas@sang-engineering.com, yinbo.zhu@nxp.com,
+        hongjiefang@asrmicro.com, linux-kernel@vger.kernel.org,
+        Bradley Bolen <bradleybolen@gmail.com>
+Subject: [PATCH v2] mmc: core: Fix size overflow for mmc partitions
+Date:   Wed,  6 Nov 2019 22:25:59 -0500
+Message-Id: <1573097159-3914-1-git-send-email-bradleybolen@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The permissions of the read-only or write-only sysfs files can be
-changed (as root) and the user can then try to read a write-only file or
-write to a read-only file which will lead to kernel crash here.
+With large eMMC cards, it is possible to create general purpose
+partitions that are bigger than 4GB.  The size member of the mmc_part
+struct is only an unsigned int which overflows for gp partitions larger
+than 4GB.  Change this to a u64 to handle the overflow.
 
-Protect against that by always validating the show/store callbacks.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Bradley Bolen <bradleybolen@gmail.com>
 ---
- drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/mmc/core/mmc.c   | 6 +++---
+ include/linux/mmc/card.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
-index 3926be78036e..568b21eb6ea1 100644
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->show)
-+		return -EIO;
-+
- 	return pattr->show(ppd, buf);
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index c880489..fc02124 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -297,7 +297,7 @@ static void mmc_manage_enhanced_area(struct mmc_card *card, u8 *ext_csd)
+ 	}
  }
  
-@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
+-static void mmc_part_add(struct mmc_card *card, unsigned int size,
++static void mmc_part_add(struct mmc_card *card, u64 size,
+ 			 unsigned int part_cfg, char *name, int idx, bool ro,
+ 			 int area_type)
+ {
+@@ -313,7 +313,7 @@ static void mmc_manage_gp_partitions(struct mmc_card *card, u8 *ext_csd)
+ {
+ 	int idx;
+ 	u8 hc_erase_grp_sz, hc_wp_grp_sz;
+-	unsigned int part_size;
++	u64 part_size;
  
-+	if (!pattr->store)
-+		return -EIO;
-+
- 	return pattr->store(ppd, buf, len);
- }
+ 	/*
+ 	 * General purpose partition feature support --
+@@ -362,7 +362,7 @@ static void mmc_manage_gp_partitions(struct mmc_card *card, u8 *ext_csd)
+ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+ {
+ 	int err = 0, idx;
+-	unsigned int part_size;
++	u64 part_size;
+ 	struct device_node *np;
+ 	bool broken_hpi = false;
  
+diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+index 9b6336a..b59d35b 100644
+--- a/include/linux/mmc/card.h
++++ b/include/linux/mmc/card.h
+@@ -226,7 +226,7 @@ struct mmc_queue_req;
+  * MMC Physical partitions
+  */
+ struct mmc_part {
+-	unsigned int	size;	/* partition size (in bytes) */
++	u64		size;	/* partition size (in bytes) */
+ 	unsigned int	part_cfg;	/* partition type */
+ 	char	name[MAX_MMC_PART_NAME_LEN];
+ 	bool	force_ro;	/* to make boot parts RO by default */
 -- 
-2.21.0.rc0.269.g1a574e7a288b
+2.7.4
 
