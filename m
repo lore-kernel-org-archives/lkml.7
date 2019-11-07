@@ -2,133 +2,77 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E6AFC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1D3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C62214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC30214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573131692;
+	bh=W/dIFA7RW841+yhHN9HyhT5RYn5co+9jS6B4gz+TUCg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=B/jnVidr1Bi4z/RrUYsivfSjf+fCQ9ifc5i8B8yo988nx61whhS5THTzPUsT7OBjv
+	 FQzRqi8/n6og2MSlhmd+thfAEGGhz1F9ydeco4YbgiB2aSbMclvQmMRpD5RNSXH5Kh
+	 eqDsiBZ94sXN8LLbkPQoOTE0+0jtp69hoApkRQX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388837AbfKGNBP (ORCPT
+        id S2388894AbfKGNBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:01:15 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:54703 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfKGNBO (ORCPT
+        Thu, 7 Nov 2019 08:01:31 -0500
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:38454 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388542AbfKGNBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:01:14 -0500
-Received: from localhost ([46.78.193.225]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MAfQk-1idk0d0Uye-00B74F; Thu, 07 Nov 2019 14:00:31 +0100
-Date:   Thu, 7 Nov 2019 14:00:29 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
-Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
-        tglx@linutronix.de, mchehab+samsung@kernel.org,
-        davem@davemloft.net, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] dt-bindings: add parallax ping sensors
-Message-ID: <20191107130027.k2uo547xrfiuxgb7@arbad>
+        Thu, 7 Nov 2019 08:01:31 -0500
+Received: by mail-ot1-f48.google.com with SMTP id v24so1922580otp.5;
+        Thu, 07 Nov 2019 05:01:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W/dIFA7RW841+yhHN9HyhT5RYn5co+9jS6B4gz+TUCg=;
+        b=fsMCYQIi9FtWrQj80R7tk3J2uWSd5MiVAYM0XTmVnOyYZ8ETU/OxTOd9EA2AOmsV6P
+         OnGnPNxTn4PuT1YQ/XSKHZGC8SVoNj3G5qCi0mDZvGhGbx/M0tQecgKQNhgQQCZTlsix
+         Yzd8PQeyaaX5oFpBdPI+GZc2+FFC6AYtn0FBAGyDuZ7xFa8Xxna7wkSWv4dE0iI8lF8y
+         71sGPkNdFjI8F1bsz6s86UkdP0Wc/Pb10GbYX1j26vTMp2Mi/vk3l1m/mSgBFA/lrKx7
+         jpwTTNO+l8m6nJSLO8XmSWZNKicStmhO24K06X0Xdiku3jVLzbEb4txMcZ30AcH3vKRo
+         p4JA==
+X-Gm-Message-State: APjAAAXTbaAztL3Zdtipletzh1prtCaoFGoUk0ef1rlUJRXIiqabT14F
+        E4akgujGSAVxZHxqX7xWNJFYi21J6eEl4dIR7JJ6lQ==
+X-Google-Smtp-Source: APXvYqwLRYogYe8gkHkJSvcX1qvU6mjS7u4KYWpPWMy9mqIw5ttxjpVCKPmIbInn6HHLuIWVxAwcCPLXpObR/kSwgk0=
+X-Received: by 2002:a9d:7d01:: with SMTP id v1mr2739749otn.167.1573131690285;
+ Thu, 07 Nov 2019 05:01:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:U8Bhu4Vf+4KzVDN7o7hwZXPSjh260AOQqJZxXo1LOYq9R7wx45l
- qnicUAjmKFHfet4tBWVuSROasrooJ/jiN46LNHswEIXeLVnUN7glkp4VpgR/Sn1RYDC7kD9
- TevZhF2xS/c0uONj+wFOiWRBuZWSs9TUpXBGGkeNEXqBDONi2jliQKZWPdxalt3+TgYcb39
- +0EOWafbZeC+SJC4ELJ9Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7uSPIhWC6ns=:eGFlqo4N96XxVf0BxSzsKM
- 9S48F5JPNhf2Zqu1arX8XktQ2tg688u1oGwiLzTZWQPSiUR1s1mre/Zfb0BhbSq5HxTNaiRH2
- iOwE4P713IPTnNujXHS7Tvyy+JATPfl8vGZj2N4PKFe0QUE9sCmla7gDWEhx6pwHJzj7HpxJF
- 4ePuKHdm7oKT5l2uZ+xGBdbbLXRSspZcQ4k1KaXd1hTUcj2it8LgnQAakp3tPIBSFjjM3IIWI
- jmfcpenTyhMpSc/ofkcEsN94qOxPOTGf04+4UMj1Qimch9QPHsZoOhu4oDFXkcjvHSs6JyLxl
- Km3oY0UdoNe5Hk9DWOAp4kPwHU/IWEncMUwU53i4uUsPEAJXfrHBX7JIgOl2p7UEAHnFCFayP
- iaCLi7AMI8YStH/Mr/z+A3f2vT+pDbDAsDIYOrg8SH/SzBFF606CYXkn8SdnG5XiGQxzst5JJ
- CWGg8YAWmYHloaPhRPGv6z9oaK8s5IZkEUkTrI/Bn/dWa9/8rvndZMLWAEd9RGr/71iuRkThy
- D2kNS1PkFBGkoTJ+L21/SVtIx3dcOfGBWKU0rUUGx/CJnDsPxA9Ct4JccU2AGeQ4Wl7nggegh
- ExUzzlyGyqk9DdHi+JK1HsMQHzqfyeMwPenI2T3Y0IdVpQo7T07rF/Zdtx3gTJyBUxos04mxf
- 3P32st9l0vLARle1URYRjJ5btNRR85j48MZPEVrlSeSoeNktplCPMcNpXL3K3/XZ3e92TxNqk
- gEAcEBmh8dstwu84DiejN3hM+O+lht7Jlenmlp1ZGKjg5rENWLlp4cTRlzDsSdxMAkvMtTCDx
- ghKQPadixhSaUSjWzovcPQw3eMTGUsZ4bK6wtapZ2PfLz3fBBt+USdaY0vAi4jF21ZlEE+aBf
- vSSlAcyCaq0IkZX6fI8g==
+References: <49ce5255-a0aa-1c64-90c6-ad80381d333a@linuxfoundation.org>
+In-Reply-To: <49ce5255-a0aa-1c64-90c6-ad80381d333a@linuxfoundation.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 7 Nov 2019 14:01:19 +0100
+Message-ID: <CAJZ5v0ibeSe-CjpQ=+ybH8csg2=itm5H0Jkr-Eqk1BOHYfCG1A@mail.gmail.com>
+Subject: Re: [GIT PULL] cpupower update for Linux 5.5-rc1
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Renninger <trenn@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt-bindings for parallax PING))) and LaserPING iio sensors, which
-are used for measuring distances.
+On Thu, Nov 7, 2019 at 2:00 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> Hi Rafael,
+>
+> Please pull the following update for Linux 5.5-rc1.
+>
+> This cpupower update for Linux 5.5-rc1 consists of bug fixes and
+> improvements to make it more accurate by removing the userspace
+> to kernel transition and read_msr initiated IPI delays.
+>
+> diff is attached.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- .../bindings/iio/proximity/parallax-ping.yaml      | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-new file mode 100644
-index 000000000000..ab8dbdf4f04a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/parallax-ping.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Parallax PING))) and LaserPING range finder
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  Bit-banging driver using one GPIO:
-+  - ping-gpio is raised by the driver to start measurement
-+  - direction of ping-gpio is then switched into input with an interrupt
-+    for receiving distance value as PWM signal
-+
-+  Specifications about the devices can be found at:
-+  http://parallax.com/sites/default/files/downloads/28041-LaserPING-2m-Rangefinder-Guide.pdf
-+  http://parallax.com/sites/default/files/downloads/28015-PING-Documentation-v1.6.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - parallax,ping
-+      - parallax,laserping
-+
-+  ping-gpios:
-+    description:
-+      Definition of the GPIO for the triggering and echo (output and input)
-+      This GPIO is set for about 5 us by the driver to tell the device it
-+      should initiate the measurement cycle. Afterwards the GPIO is switched
-+      to input direction with an interrupt. The device sets it and the
-+      length of the input signal corresponds to the measured distance.
-+      It needs to be an GPIO which is able to deliver an interrupt because
-+      the time between two interrupts is measured in the driver.
-+      See Documentation/devicetree/bindings/gpio/gpio.txt for information
-+      on how to specify a consumer gpio.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - ping-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    proximity {
-+        compatible = "parallax,laserping";
-+        ping-gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-+    };
--- 
-2.11.0
+Pulled, thanks!
