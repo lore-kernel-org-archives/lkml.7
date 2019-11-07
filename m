@@ -2,799 +2,354 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9C9C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58F3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05052178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880C32178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="NDlHUue2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XG9AjzbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388735AbfKGN0p (ORCPT
+        id S2388791AbfKGN0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:26:45 -0500
-Received: from mail-eopbgr790042.outbound.protection.outlook.com ([40.107.79.42]:7372
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388250AbfKGN0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:26:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g4A6bXqRGKAnPbnvq5btXNMtXYAfrrUbSl2H4rbPwJjs0nLzelRszfImDFR2aH1OafkCGZ0zpW0dwNNVCsbWUDCXObgPdZCRc+EiCjV3ddZiAbpMJfN8gpTXb4XPYl8PbbDMASWrCfBefXus6286UEBXvmnDYxmJzuAEF1Oo5xrnch0i1p5lEhGkIvueYqCXDpEI87mV3RBWkUUNwji/D4hP8wNy0iHqzdN6S0vZQvoTEhQXsjNxunjsrbJ8+cOpF3/jywjuRX+OS696Zmtq20tT2vpk5Wku4e86ryzlLrXd+s8tXVXh9bcz4AKcSJ7tCIrPxhhV1YxNUzpsKpOP9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mBcXj0YHm8UFzIa+GW5n8FaVfzs3Za/GYacSJnhRSaA=;
- b=hu4r4VRwPIhCWyfkrxTKnbgBVE6+OXQg0HG9SPdWTiIz0F5UdJbZDYQD5srChg9ZOuyireKRIZcY9OzTFATqXGLiOdiDa7Z2JpOowB2aDIrJTvqVqO35cBVKbv5ifaU00SeRC7p8xVskgZwwYkke+VBj1opHaM1KR1v/EOhlH2XoIGHsJqgjV4SaSgfdX6UR2uMWs22wnU4dLqye1R+c/vhwCr3GbVxMvNzxZNwkulxaXdEglggPYRCAODN8/KQYk7nKbptyzZ38a5L+pqbhStTIewCLcjhcy5m+po1GWbSZNm6kuKiz/9u0gTre0g0/Gza9tw6U1mzix5aoETA2NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mBcXj0YHm8UFzIa+GW5n8FaVfzs3Za/GYacSJnhRSaA=;
- b=NDlHUue2wSbqE/6lva10B7JBo52TZfOYN67PeWgRg/OOV+SwXtJ8UoIEa7HUASzPu/Pculs9ihG8iqbHW7YquQYqAcV8X50Sj6NiouwVRb8r0T9NR8PmxdbUW2b4h/c5Cu/crvuTuBrdHuxgKHjq5yQ4ZzITnTM/YkhJ+v/FGbY=
-Received: from BN6PR12CA0033.namprd12.prod.outlook.com (2603:10b6:405:70::19)
- by CY4PR12MB1445.namprd12.prod.outlook.com (2603:10b6:910:11::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22; Thu, 7 Nov
- 2019 13:26:36 +0000
-Received: from DM3NAM03FT030.eop-NAM03.prod.protection.outlook.com
- (2a01:111:f400:7e49::201) by BN6PR12CA0033.outlook.office365.com
- (2603:10b6:405:70::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2430.20 via Frontend
- Transport; Thu, 7 Nov 2019 13:26:36 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- DM3NAM03FT030.mail.protection.outlook.com (10.152.82.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2430.20 via Frontend Transport; Thu, 7 Nov 2019 13:26:36 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 7 Nov 2019
- 07:26:35 -0600
-Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 7 Nov 2019
- 07:26:35 -0600
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB01.amd.com (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Thu, 7 Nov 2019 07:26:26 -0600
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
-        <Akshu.Agrawal@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        "Alex Deucher" <alexander.deucher@amd.com>,
-        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>
-Subject: [PATCH v3 2/6] ASoC: amd: Refactoring of DAI from DMA driver
-Date:   Thu, 7 Nov 2019 18:54:49 +0530
-Message-ID: <1573133093-28208-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573133093-28208-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <1573133093-28208-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+        Thu, 7 Nov 2019 08:26:48 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35616 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388250AbfKGN0r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:26:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Qbs4Unt62pEeVFmxllR77NlFdcNg9z3uuNGSR69iJ2Q=; b=XG9AjzbXAdjzzis5psEwBRXMT
+        sLX248EjswxOfJyF56y9paAcqPw1z0+63UReVvGxivi4JhCv/5yuAAMdp3QobligJDt2hdUxQ2lQr
+        ErQFGGpxD52Wlz4iAsGp6Mj2NBZr6t4bkHay5HW0yGed5urBQc4TAqRmqdJHUSFk/xlkO86P7A7Gw
+        W1tCRfNCEvCxuJ13TauQYYFms/x3EQKAvKoeqO2tdoTSesJWbJvz4JQATRD8Si1s9oomCnwOhShq8
+        hQEJMHoWoLOId4SNTFE7mHjiS57V1raOGDlGF9S4G/c9ZM2JF5u6Z8lgssRUktj6hxt/FMX7eV0eE
+        5UWQx6mvg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iShnz-0004CJ-Bu; Thu, 07 Nov 2019 13:26:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7B8EB301A79;
+        Thu,  7 Nov 2019 14:25:24 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EB57220241336; Thu,  7 Nov 2019 14:26:28 +0100 (CET)
+Date:   Thu, 7 Nov 2019 14:26:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Quentin Perret <qperret@google.com>, linux-kernel@vger.kernel.org,
+        aaron.lwe@gmail.com, valentin.schneider@arm.com, mingo@kernel.org,
+        pauld@redhat.com, jdesfossez@digitalocean.com,
+        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        kernel-team@android.com, john.stultz@linaro.org
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+Message-ID: <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
+References: <20191028174603.GA246917@google.com>
+ <20191106120525.GX4131@hirez.programming.kicks-ass.net>
+ <33643a5b-1b83-8605-2347-acd1aea04f93@virtuozzo.com>
+ <20191106165437.GX4114@hirez.programming.kicks-ass.net>
+ <20191106172737.GM5671@hirez.programming.kicks-ass.net>
+ <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(1496009)(376002)(346002)(39860400002)(396003)(136003)(428003)(199004)(189003)(426003)(8936002)(11346002)(109986005)(356004)(486006)(2616005)(476003)(126002)(6666004)(1671002)(50466002)(8676002)(446003)(14444005)(36756003)(70586007)(81166006)(86362001)(47776003)(30864003)(48376002)(81156014)(50226002)(5660300002)(70206006)(186003)(2906002)(316002)(53416004)(4326008)(478600001)(336012)(76176011)(305945005)(54906003)(7696005)(26005)(51416003)(16586007)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1445;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a97f469e-9dab-4292-c975-08d763861d59
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1445:|CY4PR12MB1445:
-X-Microsoft-Antispam-PRVS: <CY4PR12MB14453A7F969D832D52E6F277E7780@CY4PR12MB1445.namprd12.prod.outlook.com>
-X-MS-Exchange-Transport-Forked: True
-X-MS-Oob-TLC-OOBClassifiers: OLM:93;
-X-Forefront-PRVS: 0214EB3F68
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VmmgYlSoNWcMZ/G+CrOP/HCBaSXHM92oeRTc+/qDiU26e4B0kaRiwLYO93yg7QVz1Lojasok7y1GVnVs9voCzfviSQDJ5WKs87+mxVLep/nksvjZBX0dayowLhqPg3tsFC7Mzi8qe7TXphlpp5GYrNu7fT7/Vx4nNCdKj1lHYl5Tx5b3/8eGLPh0RnOLv1mPVPx+oDL0Pk+/MQDd5jt4YxCRSAMiKf5i6E6Y/oO9H25Ue/nX8KJ8HMW4GhAdWuEaoRyGBuviiZUUkJoIfi+pMJ4MYjmjTgP/9ifSwzhyfStVqx5nBsW5m8RTg3KX/nwhdUjIVy4WSnzmTk8+nEOFX5Cg9Pc7iuHM22ICrCP6rrkPK//qnj1+O9/Dpw6+MoIjYhT8KPeY6lLj2ifG51KmjsqNwB3PTbc9NeduC+8x93xNpAn0fqfWsafcepEn9nMF
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2019 13:26:36.4534
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a97f469e-9dab-4292-c975-08d763861d59
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1445
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Asoc: PCM DMA driver should only have dma ops.
-So Removed all DAI related functionality.
-Refactoring the PCM DMA diver code.
-Added new file containing only DAI ops.
+On Thu, Nov 07, 2019 at 11:36:50AM +0300, Kirill Tkhai wrote:
+> On 06.11.2019 20:27, Peter Zijlstra wrote:
+> > On Wed, Nov 06, 2019 at 05:54:37PM +0100, Peter Zijlstra wrote:
+> >> On Wed, Nov 06, 2019 at 06:51:40PM +0300, Kirill Tkhai wrote:
+> >>>> +#ifdef CONFIG_SMP
+> >>>> +	if (!rq->nr_running) {
+> >>>> +		/*
+> >>>> +		 * Make sure task_on_rq_curr() fails, such that we don't do
+> >>>> +		 * put_prev_task() + set_next_task() on this task again.
+> >>>> +		 */
+> >>>> +		prev->on_cpu = 2;
+> >>>>  		newidle_balance(rq, rf);
+> >>>
+> >>> Shouldn't we restore prev->on_cpu = 1 after newidle_balance()? Can't prev
+> >>> become pickable again after newidle_balance() releases rq->lock, and we
+> >>> take it again, so this on_cpu == 2 never will be cleared?
+> >>
+> >> Indeed so.
+> > 
+> > Oh wait, the way it was written this is not possible. Because
+> > rq->nr_running == 0 and prev->on_cpu > 0 it means the current task is
+> > going to sleep and cannot be woken back up.
+> 
+> I mostly mean throttling. AFAIR, tasks of throttled rt_rq are not accounted
+> in rq->nr_running. But it seems rt_rq may become unthrottled again after
+> newidle_balance() unlocks rq lock, and prev will become pickable again.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+Urgh... throttling.
+
+Bah.. I had just named the "->on_cpu = 2" thing leave_task(), to match
+prepare_task() and finish_task(), but when we have to flip it back to 1
+that doesn't really work.
+
+Also, I'm still flip-flopping on where to place it. Yesterday I
+suggested placing it before put_prev_task(), but then I went to write a
+comment, and either way around put_prev_task() needs to be very careful.
+
+So I went back to placing it after and putting lots of comments on.
+
+How does the below look?
+
 ---
- sound/soc/amd/raven/Makefile        |   2 +
- sound/soc/amd/raven/acp3x-i2s.c     | 267 ++++++++++++++++++++++++++++++++++++
- sound/soc/amd/raven/acp3x-pcm-dma.c | 232 ++-----------------------------
- sound/soc/amd/raven/acp3x.h         |  42 ++++++
- 4 files changed, 325 insertions(+), 218 deletions(-)
- create mode 100644 sound/soc/amd/raven/acp3x-i2s.c
+Subject: sched: Fix pick_next_task() vs 'change' pattern race
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Mon Nov 4 22:18:14 CET 2019
 
-diff --git a/sound/soc/amd/raven/Makefile b/sound/soc/amd/raven/Makefile
-index 108d1ac..8eef292 100644
---- a/sound/soc/amd/raven/Makefile
-+++ b/sound/soc/amd/raven/Makefile
-@@ -1,6 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Raven Ridge platform Support
- snd-pci-acp3x-objs	:= pci-acp3x.o
-+snd-acp3x-i2s-objs	:= acp3x-i2s.o
- snd-acp3x-pcm-dma-objs	:= acp3x-pcm-dma.o
- obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-pci-acp3x.o
-+obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-acp3x-i2s.o
- obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-acp3x-pcm-dma.o
-diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
-new file mode 100644
-index 0000000..547f497
---- /dev/null
-+++ b/sound/soc/amd/raven/acp3x-i2s.c
-@@ -0,0 +1,267 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// AMD ALSA SoC PCM Driver
-+//
-+//Copyright 2016 Advanced Micro Devices, Inc.
-+
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/pm_runtime.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <sound/soc-dai.h>
-+#include <linux/dma-mapping.h>
-+
-+#include "acp3x.h"
-+
-+#define DRV_NAME "acp3x-i2s"
-+
-+static int acp3x_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
-+{
-+
-+	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
-+
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+
-+	case SND_SOC_DAIFMT_I2S:
-+		adata->tdm_mode = false;
-+		break;
-+	case SND_SOC_DAIFMT_DSP_A:
-+		adata->tdm_mode = true;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
-+		u32 rx_mask, int slots, int slot_width)
-+{
-+	u32 val;
-+	u16 slot_len;
-+
-+	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
-+
-+	/* These values are as per Hardware Spec */
-+
-+	switch (slot_width) {
-+	case SLOT_WIDTH_8:
-+		slot_len = 8;
-+		break;
-+	case SLOT_WIDTH_16:
-+		slot_len = 16;
-+		break;
-+	case SLOT_WIDTH_24:
-+		slot_len = 24;
-+		break;
-+	case SLOT_WIDTH_32:
-+		slot_len = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
-+	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_ITER);
-+	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
-+	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_IRER);
-+
-+	val = (FRM_LEN | (slots << 15) | (slot_len << 18));
-+	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
-+	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
-+
-+	adata->tdm_fmt = val;
-+	return 0;
-+}
-+
-+static int acp3x_i2s_hwparams(struct snd_pcm_substream *substream,
-+		struct snd_pcm_hw_params *params,
-+		struct snd_soc_dai *dai)
-+{
-+	u32 val = 0;
-+	struct i2s_stream_instance *rtd = substream->runtime->private_data;
-+
-+	switch (params_format(params)) {
-+	case SNDRV_PCM_FORMAT_U8:
-+	case SNDRV_PCM_FORMAT_S8:
-+		rtd->xfer_resolution = 0x0;
-+		break;
-+	case SNDRV_PCM_FORMAT_S16_LE:
-+		rtd->xfer_resolution = 0x02;
-+		break;
-+	case SNDRV_PCM_FORMAT_S24_LE:
-+		rtd->xfer_resolution = 0x04;
-+		break;
-+	case SNDRV_PCM_FORMAT_S32_LE:
-+		rtd->xfer_resolution = 0x05;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+		val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-+		val = val | (rtd->xfer_resolution  << 3);
-+		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-+	} else {
-+		val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
-+		val = val | (rtd->xfer_resolution  << 3);
-+		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
-+	}
-+	return 0;
-+}
-+
-+static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
-+		int cmd, struct snd_soc_dai *dai)
-+{
-+	int ret = 0;
-+	struct i2s_stream_instance *rtd = substream->runtime->private_data;
-+	u32 val, period_bytes;
-+
-+	period_bytes = frames_to_bytes(substream->runtime,
-+			substream->runtime->period_size);
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		rtd->bytescount = acp_get_byte_count(rtd,
-+						substream->stream);
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+			rv_writel(period_bytes, rtd->acp3x_base +
-+					mmACP_BT_TX_INTR_WATERMARK_SIZE);
-+			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-+			val = val | BIT(0);
-+			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-+		} else {
-+			rv_writel(period_bytes, rtd->acp3x_base +
-+					mmACP_BT_RX_INTR_WATERMARK_SIZE);
-+			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
-+			val = val | BIT(0);
-+			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
-+		}
-+		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-+			val = val & ~BIT(0);
-+			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-+		} else {
-+			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
-+			val = val & ~BIT(0);
-+			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
-+		}
-+		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static struct snd_soc_dai_ops acp3x_i2s_dai_ops = {
-+	.hw_params = acp3x_i2s_hwparams,
-+	.trigger   = acp3x_i2s_trigger,
-+	.set_fmt = acp3x_i2s_set_fmt,
-+	.set_tdm_slot = acp3x_i2s_set_tdm_slot,
-+};
-+
-+static const struct snd_soc_component_driver acp3x_dai_component = {
-+	.name           = "acp3x-i2s",
-+};
-+
-+static struct snd_soc_dai_driver acp3x_i2s_dai = {
-+	.playback = {
-+		.rates = SNDRV_PCM_RATE_8000_96000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
-+			SNDRV_PCM_FMTBIT_U8 |
-+			SNDRV_PCM_FMTBIT_S24_LE |
-+			SNDRV_PCM_FMTBIT_S32_LE,
-+		.channels_min = 2,
-+		.channels_max = 8,
-+
-+		.rate_min = 8000,
-+		.rate_max = 96000,
-+	},
-+	.capture = {
-+		.rates = SNDRV_PCM_RATE_8000_48000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
-+			SNDRV_PCM_FMTBIT_U8 |
-+			SNDRV_PCM_FMTBIT_S24_LE |
-+			SNDRV_PCM_FMTBIT_S32_LE,
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rate_min = 8000,
-+		.rate_max = 48000,
-+	},
-+	.ops = &acp3x_i2s_dai_ops,
-+};
-+
-+
-+static int acp3x_dai_probe(struct platform_device *pdev)
-+{
-+	int status;
-+	struct resource *res;
-+	struct i2s_dev_data *adata;
-+
-+	if (!pdev->dev.platform_data) {
-+		dev_err(&pdev->dev, "platform_data not retrieved\n");
-+		return -ENODEV;
-+	}
-+
-+	adata = devm_kzalloc(&pdev->dev, sizeof(struct i2s_dev_data),
-+			GFP_KERNEL);
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "IORESOURCE_MEM FAILED\n");
-+		return -ENODEV;
-+	}
-+
-+	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
-+			resource_size(res));
-+	if (IS_ERR(adata->acp3x_base))
-+		return PTR_ERR(adata->acp3x_base);
-+
-+	adata->i2s_irq = res->start;
-+	dev_set_drvdata(&pdev->dev, adata);
-+	status = devm_snd_soc_register_component(&pdev->dev,
-+			&acp3x_dai_component,
-+			&acp3x_i2s_dai, 1);
-+	if (status) {
-+		dev_err(&pdev->dev, "Fail to register acp i2s dai\n");
-+		return -ENODEV;
-+	}
-+
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 10000);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	return 0;
-+}
-+
-+static int acp3x_dai_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+	return 0;
-+}
-+static struct platform_driver acp3x_dai_driver = {
-+	.probe = acp3x_dai_probe,
-+	.remove = acp3x_dai_remove,
-+	.driver = {
-+		.name = "acp3x_i2s_playcap",
-+	},
-+};
-+
-+module_platform_driver(acp3x_dai_driver);
-+
-+MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
-+MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 60709e3..f5e4c7b 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -18,24 +18,6 @@
- 
- #define DRV_NAME "acp3x-i2s-audio"
- 
--struct i2s_dev_data {
--	bool tdm_mode;
--	unsigned int i2s_irq;
--	u32 tdm_fmt;
--	void __iomem *acp3x_base;
--	struct snd_pcm_substream *play_stream;
--	struct snd_pcm_substream *capture_stream;
--};
--
--struct i2s_stream_instance {
--	u16 num_pages;
--	u16 channels;
--	u32 xfer_resolution;
--	u64 bytescount;
--	dma_addr_t dma_addr;
--	void __iomem *acp3x_base;
--};
--
- static const struct snd_pcm_hardware acp3x_pcm_hardware_playback = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED |
- 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
-@@ -279,7 +261,11 @@ static int acp3x_dma_open(struct snd_soc_component *component,
- 			  struct snd_pcm_substream *substream)
- {
- 	int ret = 0;
-+
- 	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *prtd = substream->private_data;
-+
-+	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
- 	struct i2s_dev_data *adata = dev_get_drvdata(component->dev);
- 	struct i2s_stream_instance *i2s_data = kzalloc(sizeof(struct i2s_stream_instance),
- 						       GFP_KERNEL);
-@@ -312,23 +298,6 @@ static int acp3x_dma_open(struct snd_soc_component *component,
- 	return 0;
- }
- 
--static u64 acp_get_byte_count(struct i2s_stream_instance *rtd, int direction)
--{
--	u64 byte_count;
--
--	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
--		byte_count = rv_readl(rtd->acp3x_base +
--				      mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
--		byte_count |= rv_readl(rtd->acp3x_base +
--				       mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
--	} else {
--		byte_count = rv_readl(rtd->acp3x_base +
--				      mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
--		byte_count |= rv_readl(rtd->acp3x_base +
--				       mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
--	}
--	return byte_count;
--}
- 
- static int acp3x_dma_hw_params(struct snd_soc_component *component,
- 			       struct snd_pcm_substream *substream,
-@@ -380,6 +349,7 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
- static int acp3x_dma_new(struct snd_soc_component *component,
- 			 struct snd_soc_pcm_runtime *rtd)
- {
-+	component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
- 	struct device *parent = component->dev->parent;
- 	snd_pcm_lib_preallocate_pages_for_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
- 					      parent, MIN_BUFFER, MAX_BUFFER);
-@@ -402,7 +372,9 @@ static int acp3x_dma_mmap(struct snd_soc_component *component,
- static int acp3x_dma_close(struct snd_soc_component *component,
- 			   struct snd_pcm_substream *substream)
- {
-+	struct snd_soc_pcm_runtime *prtd = substream->private_data;
- 	struct i2s_stream_instance *rtd = substream->runtime->private_data;
-+	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
- 	struct i2s_dev_data *adata = dev_get_drvdata(component->dev);
- 
- 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-@@ -419,182 +391,6 @@ static int acp3x_dma_close(struct snd_soc_component *component,
- 	return 0;
- }
- 
--static int acp3x_dai_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
--{
--
--	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
--
--	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
--	case SND_SOC_DAIFMT_I2S:
--		adata->tdm_mode = false;
--		break;
--	case SND_SOC_DAIFMT_DSP_A:
--		adata->tdm_mode = true;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
--static int acp3x_dai_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
--				  u32 rx_mask, int slots, int slot_width)
--{
--	u32 val = 0;
--	u16 slot_len;
--
--	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
--
--	switch (slot_width) {
--	case SLOT_WIDTH_8:
--		slot_len = 8;
--		break;
--	case SLOT_WIDTH_16:
--		slot_len = 16;
--		break;
--	case SLOT_WIDTH_24:
--		slot_len = 24;
--		break;
--	case SLOT_WIDTH_32:
--		slot_len = 0;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
--	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_ITER);
--	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
--	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_IRER);
--
--	val = (FRM_LEN | (slots << 15) | (slot_len << 18));
--	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
--	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
--
--	adata->tdm_fmt = val;
--	return 0;
--}
--
--static int acp3x_dai_i2s_hwparams(struct snd_pcm_substream *substream,
--				  struct snd_pcm_hw_params *params,
--				  struct snd_soc_dai *dai)
--{
--	u32 val = 0;
--	struct i2s_stream_instance *rtd = substream->runtime->private_data;
--
--	switch (params_format(params)) {
--	case SNDRV_PCM_FORMAT_U8:
--	case SNDRV_PCM_FORMAT_S8:
--		rtd->xfer_resolution = 0x0;
--		break;
--	case SNDRV_PCM_FORMAT_S16_LE:
--		rtd->xfer_resolution = 0x02;
--		break;
--	case SNDRV_PCM_FORMAT_S24_LE:
--		rtd->xfer_resolution = 0x04;
--		break;
--	case SNDRV_PCM_FORMAT_S32_LE:
--		rtd->xfer_resolution = 0x05;
--		break;
--	default:
--		return -EINVAL;
--	}
--	val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
--	val = val | (rtd->xfer_resolution  << 3);
--	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
--		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
--	else
--		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
--
--	return 0;
--}
--
--static int acp3x_dai_i2s_trigger(struct snd_pcm_substream *substream,
--				 int cmd, struct snd_soc_dai *dai)
--{
--	int ret = 0;
--	struct i2s_stream_instance *rtd = substream->runtime->private_data;
--	u32 val, period_bytes;
--
--	period_bytes = frames_to_bytes(substream->runtime,
--				       substream->runtime->period_size);
--	switch (cmd) {
--	case SNDRV_PCM_TRIGGER_START:
--	case SNDRV_PCM_TRIGGER_RESUME:
--	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
--		rtd->bytescount = acp_get_byte_count(rtd, substream->stream);
--		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
--			rv_writel(period_bytes, rtd->acp3x_base +
--				  mmACP_BT_TX_INTR_WATERMARK_SIZE);
--			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
--			val = val | BIT(0);
--			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
--		} else {
--			rv_writel(period_bytes, rtd->acp3x_base +
--				  mmACP_BT_RX_INTR_WATERMARK_SIZE);
--			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
--			val = val | BIT(0);
--			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
--		}
--		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
--		break;
--	case SNDRV_PCM_TRIGGER_STOP:
--	case SNDRV_PCM_TRIGGER_SUSPEND:
--	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
--		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
--			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
--			val = val & ~BIT(0);
--			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
--		} else {
--			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
--			val = val & ~BIT(0);
--			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
--		}
--		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
--		break;
--	default:
--		ret = -EINVAL;
--		break;
--	}
--
--	return ret;
--}
--
--static struct snd_soc_dai_ops acp3x_dai_i2s_ops = {
--	.hw_params = acp3x_dai_i2s_hwparams,
--	.trigger   = acp3x_dai_i2s_trigger,
--	.set_fmt = acp3x_dai_i2s_set_fmt,
--	.set_tdm_slot = acp3x_dai_set_tdm_slot,
--};
--
--static struct snd_soc_dai_driver acp3x_i2s_dai_driver = {
--	.playback = {
--		.rates = SNDRV_PCM_RATE_8000_96000,
--		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
--					SNDRV_PCM_FMTBIT_U8 |
--					SNDRV_PCM_FMTBIT_S24_LE |
--					SNDRV_PCM_FMTBIT_S32_LE,
--		.channels_min = 2,
--		.channels_max = 8,
--
--		.rate_min = 8000,
--		.rate_max = 96000,
--	},
--	.capture = {
--		.rates = SNDRV_PCM_RATE_8000_48000,
--		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
--					SNDRV_PCM_FMTBIT_U8 |
--					SNDRV_PCM_FMTBIT_S24_LE |
--					SNDRV_PCM_FMTBIT_S32_LE,
--		.channels_min = 2,
--		.channels_max = 2,
--		.rate_min = 8000,
--		.rate_max = 48000,
--	},
--	.ops = &acp3x_dai_i2s_ops,
--};
--
- static const struct snd_soc_component_driver acp3x_i2s_component = {
- 	.name		= DRV_NAME,
- 	.open		= acp3x_dma_open,
-@@ -619,6 +415,9 @@ static int acp3x_audio_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 	irqflags = *((unsigned int *)(pdev->dev.platform_data));
-+	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
-+	if (!adata)
-+		return -ENOMEM;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
-@@ -626,10 +425,6 @@ static int acp3x_audio_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
--	if (!adata)
--		return -ENOMEM;
--
- 	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
- 					 resource_size(res));
- 
-@@ -650,9 +445,9 @@ static int acp3x_audio_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	status = devm_snd_soc_register_component(&pdev->dev,
- 						 &acp3x_i2s_component,
--						 &acp3x_i2s_dai_driver, 1);
-+						 NULL, 0);
- 	if (status) {
--		dev_err(&pdev->dev, "Fail to register acp i2s dai\n");
-+		dev_err(&pdev->dev, "Fail to register acp i2s component\n");
- 		goto dev_err;
- 	}
- 	status = devm_request_irq(&pdev->dev, adata->i2s_irq, i2s_irq_handler,
-@@ -774,13 +569,14 @@ static struct platform_driver acp3x_dma_driver = {
- 	.probe = acp3x_audio_probe,
- 	.remove = acp3x_audio_remove,
- 	.driver = {
--		.name = "acp3x_rv_i2s",
-+		.name = "acp3x_rv_i2s_dma",
- 		.pm = &acp3x_pm_ops,
- 	},
- };
- 
- module_platform_driver(acp3x_dma_driver);
- 
-+MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
- MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
- MODULE_AUTHOR("Vijendar.Mukunda@amd.com");
- MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
-diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-index 2f15fe1..72c1a23 100644
---- a/sound/soc/amd/raven/acp3x.h
-+++ b/sound/soc/amd/raven/acp3x.h
-@@ -51,6 +51,29 @@
- #define SLOT_WIDTH_24 0x18
- #define SLOT_WIDTH_32 0x20
- 
-+struct acp3x_platform_info {
-+	u16 play_i2s_instance;
-+	u16 cap_i2s_instance;
-+	u16 capture_channel;
-+};
-+
-+struct i2s_dev_data {
-+	bool tdm_mode;
-+	unsigned int i2s_irq;
-+	u32 tdm_fmt;
-+	void __iomem *acp3x_base;
-+	struct snd_pcm_substream *play_stream;
-+	struct snd_pcm_substream *capture_stream;
-+};
-+
-+struct i2s_stream_instance {
-+	u16 num_pages;
-+	u16 channels;
-+	u32 xfer_resolution;
-+	u64 bytescount;
-+	dma_addr_t dma_addr;
-+	void __iomem *acp3x_base;
-+};
- 
- static inline u32 rv_readl(void __iomem *base_addr)
- {
-@@ -61,3 +84,22 @@ static inline void rv_writel(u32 val, void __iomem *base_addr)
- {
- 	writel(val, base_addr - ACP3x_PHY_BASE_ADDRESS);
- }
-+
-+static inline u64 acp_get_byte_count(struct i2s_stream_instance *rtd,
-+							int direction)
-+{
-+	u64 byte_count;
-+
-+	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
-+		byte_count = rv_readl(rtd->acp3x_base +
-+				mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
-+		byte_count |= rv_readl(rtd->acp3x_base +
-+				mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
-+	} else {
-+		byte_count = rv_readl(rtd->acp3x_base +
-+				mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
-+		byte_count |= rv_readl(rtd->acp3x_base +
-+				mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
-+	}
-+	return byte_count;
-+}
--- 
-2.7.4
+Commit 67692435c411 ("sched: Rework pick_next_task() slow-path")
+inadvertly introduced a race because it changed a previously
+unexplored dependency between dropping the rq->lock and
+sched_class::put_prev_task().
 
+The comments about dropping rq->lock, in for example
+newidle_balance(), only mentions the task being current and ->on_cpu
+being set. But when we look at the 'change' pattern (in for example
+sched_setnuma()):
+
+	queued = task_on_rq_queued(p); /* p->on_rq == TASK_ON_RQ_QUEUED */
+	running = task_current(rq, p); /* rq->curr == p */
+
+	if (queued)
+		dequeue_task(...);
+	if (running)
+		put_prev_task(...);
+
+	/* change task properties */
+
+	if (queued)
+		enqueue_task(...);
+	if (running)
+		set_next_task(...);
+
+It becomes obvious that if we do this after put_prev_task() has
+already been called on @p, things go sideways. This is exactly what
+the commit in question allows to happen when it does:
+
+	prev->sched_class->put_prev_task(rq, prev, rf);
+	if (!rq->nr_running)
+		newidle_balance(rq, rf);
+
+The newidle_balance() call will drop rq->lock after we've called
+put_prev_task() and that allows the above 'change' pattern to
+interleave and mess up the state.
+
+The order in pick_next_task() is mandated by the fact that RT/DL
+put_prev_task() can pull other RT tasks, in which case we should not
+call newidle_balance() since we'll not be going idle. Similarly, we
+cannot put newidle_balance() in put_prev_task_fair() because it should
+be called every time we'll end up selecting the idle task.
+
+Given that we're stuck with this order, the only solution is fixing
+the 'change' pattern. The simplest fix seems to be to 'absuse'
+p->on_cpu to carry more state. Adding more state to p->on_rq is
+possible but is far more invasive and also ends up duplicating much of
+the state we already carry in p->on_cpu.
+
+Introduce task_on_rq_curr() to indicate the if
+sched_class::set_next_task() has been called -- and we thus need to
+call put_prev_task().
+
+Fixes: 67692435c411 ("sched: Rework pick_next_task() slow-path")
+Reported-by: Quentin Perret <qperret@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Quentin Perret <qperret@google.com>
+Tested-by: Qais Yousef <qais.yousef@arm.com>
+Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+---
+ kernel/sched/core.c     |   35 ++++++++++++++++++++++++++++-------
+ kernel/sched/deadline.c |    9 +++++++++
+ kernel/sched/rt.c       |    9 +++++++++
+ kernel/sched/sched.h    |   21 +++++++++++++++++++++
+ 4 files changed, 67 insertions(+), 7 deletions(-)
+
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1595,7 +1595,7 @@ void do_set_cpus_allowed(struct task_str
+ 	lockdep_assert_held(&p->pi_lock);
+ 
+ 	queued = task_on_rq_queued(p);
+-	running = task_current(rq, p);
++	running = task_on_rq_curr(rq, p);
+ 
+ 	if (queued) {
+ 		/*
+@@ -3078,6 +3078,19 @@ static inline void prepare_task(struct t
+ #endif
+ }
+ 
++static inline void leave_task(struct task_struct *prev)
++{
++#ifdef CONFIG_SMP
++	/*
++	 * The task is on its way out, we'll have called put_prev_task() on it.
++	 *
++	 * Make sure task_on_rq_curr() fails, such that we don't do
++	 * put_prev_task() + set_next_task() on this task again.
++	 */
++	prev->on_cpu = 2;
++#endif
++}
++
+ static inline void finish_task(struct task_struct *prev)
+ {
+ #ifdef CONFIG_SMP
+@@ -3934,8 +3947,16 @@ pick_next_task(struct rq *rq, struct tas
+ 	 * can PULL higher prio tasks when we lower the RQ 'priority'.
+ 	 */
+ 	prev->sched_class->put_prev_task(rq, prev, rf);
+-	if (!rq->nr_running)
++	if (!rq->nr_running) {
++		leave_task(prev);
+ 		newidle_balance(rq, rf);
++		/*
++		 * When the below pick loop results in @p == @prev, then we
++		 * will not go through context_switch() but the
++		 * pick_next_task() will have done set_next_task() again.
++		 */
++		prepare_task(prev);
++	}
+ 
+ 	for_each_class(class) {
+ 		p = class->pick_next_task(rq, NULL, NULL);
+@@ -4422,7 +4443,7 @@ void rt_mutex_setprio(struct task_struct
+ 
+ 	prev_class = p->sched_class;
+ 	queued = task_on_rq_queued(p);
+-	running = task_current(rq, p);
++	running = task_on_rq_curr(rq, p);
+ 	if (queued)
+ 		dequeue_task(rq, p, queue_flag);
+ 	if (running)
+@@ -4509,7 +4530,7 @@ void set_user_nice(struct task_struct *p
+ 		goto out_unlock;
+ 	}
+ 	queued = task_on_rq_queued(p);
+-	running = task_current(rq, p);
++	running = task_on_rq_curr(rq, p);
+ 	if (queued)
+ 		dequeue_task(rq, p, DEQUEUE_SAVE | DEQUEUE_NOCLOCK);
+ 	if (running)
+@@ -4957,7 +4978,7 @@ static int __sched_setscheduler(struct t
+ 	}
+ 
+ 	queued = task_on_rq_queued(p);
+-	running = task_current(rq, p);
++	running = task_on_rq_curr(rq, p);
+ 	if (queued)
+ 		dequeue_task(rq, p, queue_flags);
+ 	if (running)
+@@ -6141,7 +6162,7 @@ void sched_setnuma(struct task_struct *p
+ 
+ 	rq = task_rq_lock(p, &rf);
+ 	queued = task_on_rq_queued(p);
+-	running = task_current(rq, p);
++	running = task_on_rq_curr(rq, p);
+ 
+ 	if (queued)
+ 		dequeue_task(rq, p, DEQUEUE_SAVE);
+@@ -7031,7 +7052,7 @@ void sched_move_task(struct task_struct
+ 	rq = task_rq_lock(tsk, &rf);
+ 	update_rq_clock(rq);
+ 
+-	running = task_current(rq, tsk);
++	running = task_on_rq_curr(rq, tsk);
+ 	queued = task_on_rq_queued(tsk);
+ 
+ 	if (queued)
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1778,6 +1778,15 @@ pick_next_task_dl(struct rq *rq, struct
+ 	return p;
+ }
+ 
++/*
++ * As per the note for sched_class::put_prev_task() we must only drop
++ * the rq->lock before any permanent state change.
++ *
++ * In this case, the state change and the pull action are mutually exclusive.
++ * If @prev is still on the runqueue, the priority will not have dropped and we
++ * don't need to pull. If @prev is no longer on the runqueue we don't need
++ * to add it back to the pushable list.
++ */
+ static void put_prev_task_dl(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
+ {
+ 	update_curr_dl(rq);
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1566,6 +1566,15 @@ pick_next_task_rt(struct rq *rq, struct
+ 	return p;
+ }
+ 
++/*
++ * As per the note for sched_class::put_prev_task() we must only drop
++ * the rq->lock before any permanent state change.
++ *
++ * In this case, the state change and the pull action are mutually exclusive.
++ * If @prev is still on the runqueue, the priority will not have dropped and we
++ * don't need to pull. If @prev is no longer on the runqueue we don't need
++ * to add it back to the pushable list.
++ */
+ static void put_prev_task_rt(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
+ {
+ 	update_curr_rt(rq);
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1628,6 +1628,22 @@ static inline int task_running(struct rq
+ #endif
+ }
+ 
++/*
++ * If true, @p has had sched_class::set_next_task() called on it.
++ * See pick_next_task().
++ */
++static inline bool task_on_rq_curr(struct rq *rq, struct task_struct *p)
++{
++#ifdef CONFIG_SMP
++	return rq->curr == p && p->on_cpu == 1;
++#else
++	return rq->curr == p;
++#endif
++}
++
++/*
++ * If true, @p has has sched_class::enqueue_task() called on it.
++ */
+ static inline int task_on_rq_queued(struct task_struct *p)
+ {
+ 	return p->on_rq == TASK_ON_RQ_QUEUED;
+@@ -1727,6 +1743,11 @@ struct sched_class {
+ 	struct task_struct * (*pick_next_task)(struct rq *rq,
+ 					       struct task_struct *prev,
+ 					       struct rq_flags *rf);
++	/*
++	 * When put_prev_task() drops the rq->lock (RT/DL) it must do this
++	 * before any effective state change, such that a nested
++	 * 'put_prev_task() + set_next_task' pair will work correctly.
++	 */
+ 	void (*put_prev_task)(struct rq *rq, struct task_struct *p, struct rq_flags *rf);
+ 	void (*set_next_task)(struct rq *rq, struct task_struct *p);
+ 
