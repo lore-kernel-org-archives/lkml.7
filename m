@@ -6,52 +6,53 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9050AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9838C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EC821D7F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B8221D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389225AbfKGNmK (ORCPT
+        id S2389276AbfKGNmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:42:10 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:35361 "EHLO
+        Thu, 7 Nov 2019 08:42:12 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47294 "EHLO
         mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389127AbfKGNmJ (ORCPT
+        with ESMTP id S2389214AbfKGNmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:42:09 -0500
-Received: by mail-il1-f199.google.com with SMTP id w69so2679254ilk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:42:08 -0800 (PST)
+        Thu, 7 Nov 2019 08:42:10 -0500
+Received: by mail-il1-f199.google.com with SMTP id c19so2630016ilf.14
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:42:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=lYXHu1+8CxUYZrtgD2bXy/E8sjSme0LaouR97ajask0=;
-        b=e5BP4eiqYKa3CGOSMqsboUuV+X2542/7zLl06wKYdr8ezvCRb6pYaNvlyfvH8r0Icm
-         rS9rC0fIy7FGDWAPuYODWX9VNzz83r5RXQsqyZq655toNAqcMJF+kI5cjqdw/dfMAK0a
-         XbPI0c3a2g8Q66ObWFKtMZxOwaoUe5gx+xdRJkb8vPmtyFo+odRI/oMndrBZTK03Gkgs
-         nF2kob3+RMbk1SKRlqUo012els+pdJAJtGAYGp0gVHYchh/dyXvnmQ0f29IOrpdURHft
-         3G1DfdDbrdDkqQSytEWOffHSzK3ppecKusw5/cY5MViG/hXdtYM7RLs/oqLET0AcVNu8
-         WJAA==
-X-Gm-Message-State: APjAAAVYY2sib/MH1pa4twmvuha5WOaecHzI8bT6i73yQQu6OJN9qoxU
-        VdrKCLihZId/zW21VlGXqOhDVAh0wQErhl7XUXywl5Juk0/4
-X-Google-Smtp-Source: APXvYqyCn5PnsReBzzn0eMeMMCw+qkOz5YAQ4Lrcbdu5KR2Dy7fnX7Bn1RK2uLQWMUldMvI5RwDNhljITPEXD6xZrL9jqRFluc7a
+        bh=z+Z8TkdvQr/GRZpXW3peRb5jGPad3W0SZz8cB4LQWhs=;
+        b=enoI7VBwnujRaE1axmjWw6cAFxLoe7JUqXLx5YXx/4liLtJKJ66vWOS20scqCDE6Fz
+         FMDklv8qRCiqUCvof2sVbeANDF1vPZYftxoo8sdImDXU7IEEUA7Dic62GH3X/WByJ1hz
+         sYKifS5H98tc8FuJLa9jhmJ+MMhsvFwPKyhA7+083yvC6rtqE7NMM0/AmgYzV+Pu4r2+
+         vIhNWcomMl0flGbrimA6RCPDk+lV30gw35oOY1G7cz3nwHzR/x4wVyRtO5aZrkeheFsw
+         HyxN+xhP2iEnZyefUbmmi5buDbHjUwAMy+3m48vW186tTqSVBP2Vxc0vOPU3lnfnj7ml
+         bmAg==
+X-Gm-Message-State: APjAAAX2TMIDpcxWBVpGnZAw1Cf2c+I0AFjWf1HjXk2+rb9b3ymF+e+T
+        OC2zf+mo3KpO7dLJrDmckCCQApj4lMfSQcjYGcoWmNbnKAVc
+X-Google-Smtp-Source: APXvYqyf1cKz61gO8QSl1DRVCNuMsdbH0nNI8mKaxm3hxYxs5ax7V00wGOmaWFwtfhNI9XqT77Cka6rT2NVHEVha28kuNTLo32XT
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9756:: with SMTP id c22mr3662214ioo.233.1573134128190;
+X-Received: by 2002:a5d:9613:: with SMTP id w19mr3497924iol.271.1573134128848;
  Thu, 07 Nov 2019 05:42:08 -0800 (PST)
 Date:   Thu, 07 Nov 2019 05:42:08 -0800
-In-Reply-To: <000000000000f68d660570dcddd8@google.com>
+In-Reply-To: <001a113f8bf6a9acd90568e8ea59@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e51d450596c1d472@google.com>
-Subject: Re: kernel BUG at net/ipv4/ip_output.c:LINE!
-From:   syzbot <syzbot+90d5ec0c05e708f3b66d@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, dsahern@gmail.com, johannes.berg@intel.com,
-        kafai@fb.com, kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, posk@google.com, songliubraving@fb.com,
+Message-ID: <000000000000ef265b0596c1d48c@google.com>
+Subject: Re: KASAN: use-after-free Read in uprobe_perf_close
+From:   syzbot <syzbot+cef9473c7fa0fe8ab95e@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bhole_prashant_q7@lab.ntt.co.jp, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, mingo@redhat.com,
+        namhyung@kernel.org, oleg@redhat.com, peterz@infradead.org,
+        rostedt@goodmis.org, stable@kernel.org,
         syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        willemb@google.com, yhs@fb.com, yoshfuji@linux-ipv6.org
+        torvalds@linux-foundation.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,22 +61,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 syzbot suspects this bug was fixed by commit:
 
-commit e7c87bd6cc4ec7b0ac1ed0a88a58f8206c577488
-Author: Willem de Bruijn <willemb@google.com>
-Date:   Wed Jan 16 01:19:22 2019 +0000
+commit 621b6d2ea297d0fb6030452c5bcd221f12165fcf
+Author: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
+Date:   Mon Apr 9 10:03:46 2018 +0000
 
-     bpf: in __bpf_redirect_no_mac pull mac only if present
+     perf/core: Fix use-after-free in uprobe_perf_close()
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14175486600000
-start commit:   112cbae2 Merge branch 'linus' of git://git.kernel.org/pub/..
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1068a38c600000
+start commit:   86bbbeba Merge branch 'ras-core-for-linus' of git://git.ke..
 git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=152cb8ccd35b1f70
-dashboard link: https://syzkaller.appspot.com/bug?extid=90d5ec0c05e708f3b66d
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153ed6e2400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1539038c400000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5e630e8cb6d3da36
+dashboard link: https://syzkaller.appspot.com/bug?extid=cef9473c7fa0fe8ab95e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162240bb800000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a4e0bb800000
 
 If the result looks correct, please mark the bug fixed by replying with:
 
-#syz fix: bpf: in __bpf_redirect_no_mac pull mac only if present
+#syz fix: perf/core: Fix use-after-free in uprobe_perf_close()
 
 For information about bisection process see: https://goo.gl/tpsmEJ#bisection
