@@ -2,251 +2,158 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A975C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ED2FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447DD2075C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E268D2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KMNY2d8a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P9humavg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388886AbfKGNjT (ORCPT
+        id S2388726AbfKGNlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:39:19 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39921 "EHLO
+        Thu, 7 Nov 2019 08:41:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46874 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727858AbfKGNjS (ORCPT
+        with ESMTP id S1728687AbfKGNlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:39:18 -0500
+        Thu, 7 Nov 2019 08:41:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573133956;
+        s=mimecast20190719; t=1573134059;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tq2JeUBVUQ/XsuBt3nC8IiPmPbwKvnLljLM+JcrAMJk=;
-        b=KMNY2d8aZwBcqGuLQVwZMWK5L2y8WMKXk5SSK2uvfi/LLOa4rnDOSoH4nXz8nidHG6x1NW
-        03KKNd0OUA7hRM6bakJDUfBHtdZZONhMJQsoCKsAcAP096pXZLW9btoYn+Khzvp9vPwQNl
-        4lu/4KxhjDCIpCf6Z8VARoBwVOBzhMI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-Xcs4GK4rNDixMXRgLGnU6Q-1; Thu, 07 Nov 2019 08:39:14 -0500
-Received: by mail-wm1-f70.google.com with SMTP id i23so790591wmb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:39:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=R0mNyYZd6bScGehmpEaPxSSN+C3Fm91zz0KVrfqWw10=;
-        b=hUd/UMFrLcLoyi0QEm2kC9gIgoCFp/osEvro8khSJi1GKRSl6KnN7wl3ZWsLfGVgz5
-         NDVS9gDKuQBoXbqsxQLNK2CL3XhXJWNYAprvjxdCuZ5GgBbm2KEUhzUg6NXuSGjBxXa8
-         KAX6KbVMEupBQsUHJPQsJ7YF5CjQeTA/10PS4wHqg36BuDKS7Nxc87mKO2ojCOsoYltP
-         CR/ovq9vgpERTzVyp1rLpf+z93sGeWV4GT1Ln5F+GuOlgrYJJdkEUp1mRlIrJ/ukxnfU
-         FHHVFhDMQTMtiOgiBRrDl0xFOWEw7l29CO988z4xH+zSL5s8UfXD8bJgd+vqkXLO0iH2
-         Cwhg==
-X-Gm-Message-State: APjAAAVNIEaf5oiUvE7LCdX3N01iUIcsWeZAGW7YnoMACruKUbv2rSFQ
-        Tf9Zg2uJeMtYfJO9Yxpaajit3zz2mM0FxBnhiWZM/yQ6sx4sWiPunYwKE1ZFo5Q1YZxYLqHiHF4
-        h+lLkfg4FxEFwqbB5dt/pVyDi
-X-Received: by 2002:a05:6000:101:: with SMTP id o1mr3011985wrx.394.1573133953386;
-        Thu, 07 Nov 2019 05:39:13 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxlJH4U7SHbrC8hxVGAeT6H8Xo6YW+iuKy+hdOOvg2QwqKGRTGrF+FvXRmJs1SP18+ynLahVA==
-X-Received: by 2002:a05:6000:101:: with SMTP id o1mr3011954wrx.394.1573133953071;
-        Thu, 07 Nov 2019 05:39:13 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c15sm1843353wmb.45.2019.11.07.05.39.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 05:39:12 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Olaf Hering <olaf@aepfle.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     Olaf Hering <olaf@aepfle.de>
-Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-In-Reply-To: <20191024144943.26199-1-olaf@aepfle.de>
-References: <20191024144943.26199-1-olaf@aepfle.de>
-Date:   Thu, 07 Nov 2019 14:39:11 +0100
-Message-ID: <874kzfbybk.fsf@vitty.brq.redhat.com>
+        bh=lrRk9jJT/1ACKeP3964rK2rTDoGnupNCrHKoiqqL+xU=;
+        b=P9humavgHP/QJBUn5y8kkFpkj3dHiQ2RQ9BAxYSrWBIidYFISfZoF9dNFXUus+Rw5R3At7
+        cDvELrvwZswJ+/yRvSbq417c593HsHkiCneTEFawvPhx0TPKyKHjeA6zpQV6bBdJR7unht
+        vaCQXqtukeYgOct29Foa0ujmPOPsyN0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-BhQNNXH4MTueutQVI-hMlw-1; Thu, 07 Nov 2019 08:40:55 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D14428017DD;
+        Thu,  7 Nov 2019 13:40:51 +0000 (UTC)
+Received: from [10.72.12.21] (ovpn-12-21.pek2.redhat.com [10.72.12.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C641600D1;
+        Thu,  7 Nov 2019 13:40:10 +0000 (UTC)
+Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191106133531.693-1-jasowang@redhat.com>
+ <20191106133531.693-7-jasowang@redhat.com>
+ <20191107040700-mutt-send-email-mst@kernel.org>
+ <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
+ <20191107061942-mutt-send-email-mst@kernel.org>
+ <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+ <c588c724-04da-2991-9f88-f36c0d04364a@redhat.com>
+ <20191107080721-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <29d92758-18f7-15c7-fd04-0556b1f9033c@redhat.com>
+Date:   Thu, 7 Nov 2019 21:40:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MC-Unique: Xcs4GK4rNDixMXRgLGnU6Q-1
+In-Reply-To: <20191107080721-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: BhQNNXH4MTueutQVI-hMlw-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Olaf Hering <olaf@aepfle.de> writes:
 
-> The hostname is resolved just once since commit 58125210ab3b ("Tools:
-> hv: cache FQDN in kvp_daemon to avoid timeouts") to make sure the VM
-> responds within the timeout limits to requests from the host.
+On 2019/11/7 =E4=B8=8B=E5=8D=889:08, Michael S. Tsirkin wrote:
+> On Thu, Nov 07, 2019 at 08:47:06PM +0800, Jason Wang wrote:
+>> On 2019/11/7 =E4=B8=8B=E5=8D=888:43, Jason Wang wrote:
+>>> On 2019/11/7 =E4=B8=8B=E5=8D=887:21, Michael S. Tsirkin wrote:
+>>>> On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
+>>>>> On 2019/11/7 =E4=B8=8B=E5=8D=885:08, Michael S. Tsirkin wrote:
+>>>>>> On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
+>>>>>>> This sample driver creates mdev device that simulate
+>>>>>>> virtio net device
+>>>>>>> over virtio mdev transport. The device is implemented through vring=
+h
+>>>>>>> and workqueue. A device specific dma ops is to make sure HVA is use=
+d
+>>>>>>> directly as the IOVA. This should be sufficient for kernel virtio
+>>>>>>> driver to work.
+>>>>>>>
+>>>>>>> Only 'virtio' type is supported right now. I plan to add 'vhost' ty=
+pe
+>>>>>>> on top which requires some virtual IOMMU implemented in this sample
+>>>>>>> driver.
+>>>>>>>
+>>>>>>> Acked-by: Cornelia Huck<cohuck@redhat.com>
+>>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>>>> I'd prefer it that we call this something else, e.g.
+>>>>>> mvnet-loopback. Just so people don't expect a fully
+>>>>>> functional device somehow. Can be renamed when applying?
+>>>>> Actually, I plan to extend it as another standard network interface f=
+or
+>>>>> kernel. It could be either a standalone pseudo device or a stack
+>>>>> device.
+>>>>> Does this sounds good to you?
+>>>>>
+>>>>> Thanks
+>>>> That's a big change in an interface so it's a good reason
+>>>> to rename the driver at that point right?
+>>>> Oherwise users of an old kernel would expect a stacked driver
+>>>> and get a loopback instead.
+>>>>
+>>>> Or did I miss something?
+>>>
+>>> My understanding is that it was a sample driver in /doc. It should not
+>>> be used in production environment. Otherwise we need to move it to
+>>> driver/virtio.
+>>>
+>>> But if you insist, I can post a V11.
+>>>
+>>> Thanks
+>>
+>> Or maybe it's better to rename the type of current mdev from 'virtio' to
+>> 'virtio-loopback'. Then we can add more types in the future.
+>>
+>> Thanks
+>>
+> Maybe but is virtio actually a loopback somehow? I thought we
+> can bind a regular virtio device there, no?
+
+
+It has a prefix, so user will see "mvnet-virtio-loopback".
+
+Thanks
+
 >
-> If for some reason getaddrinfo fails, the string returned by the
-> "FullyQualifiedDomainName" request contains some error string, which is
-> then used by tools on the host side.
->
-> Adjust the code to resolve the current hostname in a separate thread.
-> This thread loops until getaddrinfo returns success. During this time
-> all "FullyQualifiedDomainName" requests will be answered with an empty
-> string.
->
-> Signed-off-by: Olaf Hering <olaf@aepfle.de>
-> ---
->  tools/hv/Makefile        |  2 ++
->  tools/hv/hv_kvp_daemon.c | 69 ++++++++++++++++++++++++++++++++----------=
-------
->  2 files changed, 48 insertions(+), 23 deletions(-)
->
-> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-> index b57143d9459c..3b5481015a84 100644
-> --- a/tools/hv/Makefile
-> +++ b/tools/hv/Makefile
-> @@ -22,6 +22,8 @@ ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS=
-))
-> =20
->  ALL_SCRIPTS :=3D hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.=
-sh
-> =20
-> +$(OUTPUT)hv_kvp_daemon: LDFLAGS +=3D -lpthread
-> +
->  all: $(ALL_PROGRAMS)
-> =20
->  export srctree OUTPUT CC LD CFLAGS
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index e9ef4ca6a655..22cf1c4dbf5c 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -41,6 +41,7 @@
->  #include <net/if.h>
->  #include <limits.h>
->  #include <getopt.h>
-> +#include <pthread.h>
-> =20
->  /*
->   * KVP protocol: The user mode component first registers with the
-> @@ -85,7 +86,7 @@ static char *processor_arch;
->  static char *os_build;
->  static char *os_version;
->  static char *lic_version =3D "Unknown version";
-> -static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
-> +static char *full_domain_name;
->  static struct utsname uts_buf;
-> =20
->  /*
-> @@ -1327,27 +1328,53 @@ static int kvp_set_ip_info(char *if_name, struct =
-hv_kvp_ipaddr_value *new_val)
->  =09return error;
->  }
-> =20
-> -
-> -static void
-> -kvp_get_domain_name(char *buffer, int length)
-> +/*
-> + * Async retrival of Fully Qualified Domain Name because getaddrinfo tak=
-es an
-> + * unpredictable amount of time to finish.
-> + */
-> +static void *kvp_getaddrinfo(void *p)
->  {
-> -=09struct addrinfo=09hints, *info ;
-> -=09int error =3D 0;
-> +=09char *tmp, **str_ptr =3D (char **)p;
-> +=09char hostname[HOST_NAME_MAX + 1];
-> +=09struct addrinfo=09*info, hints =3D {
-> +=09=09.ai_family =3D AF_INET, /* Get only ipv4 addrinfo. */
-> +=09=09.ai_socktype =3D SOCK_STREAM,
-> +=09=09.ai_flags =3D AI_CANONNAME,
-> +=09};
-> +=09int ret;
-> +
-> +=09if (gethostname(hostname, sizeof(hostname) - 1) < 0)
-> +=09=09goto out;
-> +
-> +=09do {
-> +=09=09ret =3D getaddrinfo(hostname, NULL, &hints, &info);
-> +=09=09if (ret)
-> +=09=09=09sleep(1);
-
-Is it only EAI_AGAIN or do you see any other return values which justify
-the retry? I'm afraid that in case of a e.g. non-existing hostname we'll
-be infinitely looping with EAI_FAIL.
-
-> +=09} while (ret);
-> +
-> +=09ret =3D asprintf(&tmp, "%s", info->ai_canonname);
-> +=09freeaddrinfo(info);
-> +=09if (ret <=3D 0)
-> +=09=09goto out;
-> +
-> +=09if (ret > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)
-> +=09=09tmp[HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1] =3D '\0';
-> +=09*str_ptr =3D tmp;
-> =20
-> -=09gethostname(buffer, length);
-> -=09memset(&hints, 0, sizeof(hints));
-> -=09hints.ai_family =3D AF_INET; /*Get only ipv4 addrinfo. */
-> -=09hints.ai_socktype =3D SOCK_STREAM;
-> -=09hints.ai_flags =3D AI_CANONNAME;
-> +out:
-> +=09pthread_exit(NULL);
-> +}
-> +
-> +static void kvp_obtain_domain_name(char **str_ptr)
-> +{
-> +=09pthread_t t;
-> =20
-> -=09error =3D getaddrinfo(buffer, NULL, &hints, &info);
-> -=09if (error !=3D 0) {
-> -=09=09snprintf(buffer, length, "getaddrinfo failed: 0x%x %s",
-> -=09=09=09error, gai_strerror(error));
-> +=09if (pthread_create(&t, NULL, kvp_getaddrinfo, str_ptr)) {
-> +=09=09syslog(LOG_ERR, "pthread_create failed; error: %d %s",
-> +=09=09=09errno, strerror(errno));
->  =09=09return;
->  =09}
-> -=09snprintf(buffer, length, "%s", info->ai_canonname);
-> -=09freeaddrinfo(info);
-> +=09pthread_detach(t);
-
-I think this should be complemented with pthread_cancel/pthread_join
-before exiting main().
-
->  }
-> =20
->  void print_usage(char *argv[])
-> @@ -1412,11 +1439,7 @@ int main(int argc, char *argv[])
->  =09 * Retrieve OS release information.
->  =09 */
->  =09kvp_get_os_info();
-> -=09/*
-> -=09 * Cache Fully Qualified Domain Name because getaddrinfo takes an
-> -=09 * unpredictable amount of time to finish.
-> -=09 */
-> -=09kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
-> +=09kvp_obtain_domain_name(&full_domain_name);
-> =20
->  =09if (kvp_file_init()) {
->  =09=09syslog(LOG_ERR, "Failed to initialize the pools");
-> @@ -1571,7 +1594,7 @@ int main(int argc, char *argv[])
-> =20
->  =09=09switch (hv_msg->body.kvp_enum_data.index) {
->  =09=09case FullyQualifiedDomainName:
-> -=09=09=09strcpy(key_value, full_domain_name);
-> +=09=09=09strcpy(key_value, full_domain_name ? : "");
->  =09=09=09strcpy(key_name, "FullyQualifiedDomainName");
->  =09=09=09break;
->  =09=09case IntegrationServicesVersion:
-
---=20
-Vitaly
 
