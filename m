@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C21C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2876C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93439214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEA62084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jz6MCXfc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6eQY235"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfKGXEP (ORCPT
+        id S1727562AbfKGXFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 18:04:15 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43269 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfKGXEP (ORCPT
+        Thu, 7 Nov 2019 18:05:12 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36840 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfKGXFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 18:04:15 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y23so4107281ljh.10;
-        Thu, 07 Nov 2019 15:04:13 -0800 (PST)
+        Thu, 7 Nov 2019 18:05:12 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m6so2927187lfl.3;
+        Thu, 07 Nov 2019 15:05:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mJ905JhgVEMWkxx1d3CbO+F8gnJEKM2/B3X+ka6FihM=;
-        b=Jz6MCXfc18X4aCt4FPfRBM9pzhfePwV7t/Tn2fey66tQnJGFJ3sQlyH4LEIzp69lfA
-         8OlZIh+bwlJO4wR9LTmcQtTSirrCMOyha33MSVpn6tyQHBFxVBdmY0f0/DJ5BAteoTsp
-         hBs5Q+fof4bVTrOJfuyUvsFytTRDwuRgT3kdXu60n4e1Tu/z/L9W4tdHFPmsqrXtypLk
-         Z7kM8dDEgVx1zRr5ZqqACFlyuGKvWUTphAaeD/oHFUiwQYFsisbLfA/rhmllL5SXHP9r
-         JlHbRCAi4Y2RDI6bE28R32G/vj2U+slGCcU/zsWizmxWFl2O3u5RmeP7Kme2paRB2NOG
-         2NrA==
+        bh=Qh1AeCz8eA6zmulN69qbNwKR1BsfwhZTioKSRTvkL3s=;
+        b=H6eQY235ZUufhirzG/FMY+QW+MMkR5AeVIQ9atA8pC4O8NbNFpudtjJyx2M37BmKma
+         tSfz05UC/lmDgOleSzcySKRZpG34WxYGzPOTKf6Rp8FUs2v8lVkyZvLW1+CXDQC/9p1X
+         3C7QdQzGjfraJonx6a9RpCwF1gW+lp1ctVql+GUplVKBGlNQ0QthPg5iTdTBgur3DwqJ
+         zzrgdF5Zqc+pfZS7/QAX6sHVEBcLaIiEQtRIooLbetmTIlcWE6koIdK+v/xPLfn1T3J0
+         0rQZi7/TQDVROGVzGskBOVXzZxUAAYYztglFEHRn2Y4c0DrYhWgMf1APcigRIpjI0fUp
+         RJeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mJ905JhgVEMWkxx1d3CbO+F8gnJEKM2/B3X+ka6FihM=;
-        b=ebhHwwW4NApsK7r+fgkb2L+0Cc5ZwYQUWo9clOdhuSkFKoK/5V/8UeU2gd6nOppGUF
-         kapzDwl4kkBq36A6EjVCTWtngVUClhkaTHuP3FtxCC3PJUHolk6GEgFnJ9b9tRLZZAuJ
-         5Vu33JIcTg3V+9gMJ/gEOH/4qCHkOYrXWwS8LjA6k20atwmUrZQto4/2f/UPme78LTdc
-         mYzrV+Vxtz6543KHlHDVEi253KkUXzAWCQHtAB3+u0sPoC0mQ9+Q6kz+V6n79kGa/Pwx
-         YkbiKZX1itQHZ8hG0s9eK7Rtyzi0tO6o4EbFPdMEkLn6qyVHbkg/rdy1LJGFfukW5MNf
-         abgQ==
-X-Gm-Message-State: APjAAAVXCdBHI/i58M3f1rdZ8QkV7RUZUFXMVBVrI7QrrRDZQUBwOu26
-        XYyTmmMNCdfsZWxUC988XG7LRlcpFhM=
-X-Google-Smtp-Source: APXvYqxa5u3IKz4aukYucY3WwsSeSoKwJzFuIh6+SbpspCEokV5eGn04QxPo1da7+O8gggJK8dYAVg==
-X-Received: by 2002:a2e:63c9:: with SMTP id s70mr4422997lje.73.1573167852432;
-        Thu, 07 Nov 2019 15:04:12 -0800 (PST)
+        bh=Qh1AeCz8eA6zmulN69qbNwKR1BsfwhZTioKSRTvkL3s=;
+        b=ITZrVC/Uwfl/J56hzBDrVmXrHo9XdY2Yt4M+p7e8qRerZbuNUdvJIpyZWeZtISyMLh
+         KgwpA5wjLcIdOXvUB43AnPRXu7t/YTeh1C59W4wpLKLUWLk0HRfERNiK9l+RoK6isqiM
+         VGM0+dWVWWqpTvXrcO9rODHsvGu4mzNSnzknOUYq7vl/7iMmBjG78LMJiWFDbkly+rXO
+         V0yk6l7egfcKdCtPDDxhFxK4BHvVkslY4u38djga6J6EfBtNX/K7XwpKwYtRQK/k/mwX
+         d0NhnvpFQEC3gsjPxC72CS86BasCyF44GVRTdY3xS7SiN54LNQFsO5Ig3/XF7RgufIud
+         HUOA==
+X-Gm-Message-State: APjAAAWt8UNNVwwXVqTD/gSllT1dAhKJRGs39JxYqZ2hwRe4oOJRcgD7
+        AFpnN/nXFnmu8/+RQzsCN+1Ib8yosAw=
+X-Google-Smtp-Source: APXvYqyVGAOaeBedDtYlz53PFyZjB3gajDQWaZrwBhwlLsvYOIeFI9ug2eQ0Z+w+xPMJGWX88ewLnw==
+X-Received: by 2002:ac2:5453:: with SMTP id d19mr4331022lfn.181.1573167909899;
+        Thu, 07 Nov 2019 15:05:09 -0800 (PST)
 Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id 77sm2219131lfj.41.2019.11.07.15.04.11
+        by smtp.googlemail.com with ESMTPSA id y5sm1556113lfg.5.2019.11.07.15.05.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 15:04:11 -0800 (PST)
+        Thu, 07 Nov 2019 15:05:09 -0800 (PST)
 From:   Leonid Maksymchuk <leonmaxx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     platform-driver-x86@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     platform-driver-x86@vger.kernel.org,
         yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
         andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
         Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v3 2/3] asus_wmi: Support fan boost mode on FX505DY/FX705DY
-Date:   Fri,  8 Nov 2019 01:04:01 +0200
-Message-Id: <20191107230401.30836-1-leonmaxx@gmail.com>
+Subject: [PATCH v3 3/3] asus_wmi: Set default fan boost mode to normal
+Date:   Fri,  8 Nov 2019 01:04:58 +0200
+Message-Id: <20191107230458.30922-1-leonmaxx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191107230105.30574-1-leonmaxx@gmail.com>
 References: <20191107230105.30574-1-leonmaxx@gmail.com>
@@ -77,124 +77,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On ASUS FX505DY/FX705DY laptops fan boost mode is same as in other
-TUF laptop models but have different ACPI device ID and different hotkey
-code.
+Set default fan boost mode to normal for multiple reasons:
+
+1) existing code assumes that laptop started in normal mode and that is
+   not always correct.
+2) FX705DY/FX505DY starts in silent mode and under heavy CPU load it
+   overheats and drops CPU frequency to 399MHz [1]. Setting fan mode to
+   normal avoids overheating.
+
+[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
 
 Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c            | 42 +++++++++++++++-------
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 31 insertions(+), 12 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 723aa4d969dc..311658807dfe 100644
+index 311658807dfe..435e1420fb40 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -61,6 +61,7 @@ MODULE_LICENSE("GPL");
- #define NOTIFY_KBD_BRTDWN		0xc5
- #define NOTIFY_KBD_BRTTOGGLE		0xc7
- #define NOTIFY_KBD_FBM			0x99
-+#define NOTIFY_KBD_FBM_2		0xae
- 
- #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
- 
-@@ -195,6 +196,7 @@ struct asus_wmi {
- 	int agfn_pwm;
- 
- 	bool fan_boost_mode_available;
-+	u32 fan_boost_mode_dev_id;
- 	u8 fan_boost_mode_mask;
- 	u8 fan_boost_mode;
- 
-@@ -1611,31 +1613,46 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
- 
- /* Fan mode *******************************************************************/
- 
--static int fan_boost_mode_check_present(struct asus_wmi *asus)
-+static int fan_boost_mode_check_device(struct asus_wmi *asus, u32 dev_id)
- {
- 	u32 result;
- 	int err;
- 
--	asus->fan_boost_mode_available = false;
-+	err = asus_wmi_get_devstate(asus, dev_id, &result);
- 
--	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FAN_BOOST_MODE,
--				    &result);
--	if (err) {
--		if (err == -ENODEV)
--			return 0;
--		else
--			return err;
--	}
-+	if (err)
-+		return err;
- 
- 	if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
- 			(result & ASUS_FAN_BOOST_MODES_MASK)) {
- 		asus->fan_boost_mode_available = true;
-+		asus->fan_boost_mode_dev_id = dev_id;
- 		asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
- 	}
- 
+@@ -1678,6 +1678,15 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
  	return 0;
  }
  
-+static int fan_boost_mode_check_present(struct asus_wmi *asus)
++static int fan_boost_mode_set_default(struct asus_wmi *asus)
 +{
-+	int err;
-+
-+	asus->fan_boost_mode_available = false;
-+	err = fan_boost_mode_check_device(asus, ASUS_WMI_DEVID_FAN_BOOST_MODE);
-+
-+	if (err && err != -ENODEV)
-+		return err;
-+	else if (asus->fan_boost_mode_available)
++	if (!asus->fan_boost_mode_available)
 +		return 0;
 +
-+	err = fan_boost_mode_check_device(asus,
-+					  ASUS_WMI_DEVID_FAN_BOOST_MODE_2);
-+	if (err == -ENODEV)
-+		return 0;
-+
-+	return err;
++	asus->fan_boost_mode = ASUS_FAN_BOOST_MODE_NORMAL;
++	return fan_boost_mode_write(asus);
 +}
 +
- static int fan_boost_mode_write(struct asus_wmi *asus)
+ static int fan_boost_mode_switch_next(struct asus_wmi *asus)
  {
- 	int err;
-@@ -1645,7 +1662,7 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
- 	value = asus->fan_boost_mode;
+ 	u8 mask = asus->fan_boost_mode_mask;
+@@ -2454,6 +2463,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	err = fan_boost_mode_check_present(asus);
+ 	if (err)
+ 		goto fail_fan_boost_mode;
++	fan_boost_mode_set_default(asus);
  
- 	pr_info("Set fan boost mode: %u\n", value);
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_FAN_BOOST_MODE, value,
-+	err = asus_wmi_set_devstate(asus->fan_boost_mode_dev_id, value,
- 				    &retval);
- 	if (err) {
- 		pr_warn("Failed to set fan boost mode: %d\n", err);
-@@ -2000,7 +2017,8 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 	}
- 
--	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
-+	if (asus->fan_boost_mode_available &&
-+			(code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_FBM_2)) {
- 		fan_boost_mode_switch_next(asus);
- 		return;
- 	}
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 60249e22e844..714782b193b3 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -58,6 +58,7 @@
- #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
- #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
- #define ASUS_WMI_DEVID_FAN_BOOST_MODE	0x00110018
-+#define ASUS_WMI_DEVID_FAN_BOOST_MODE_2	0x00120075
- 
- /* Misc */
- #define ASUS_WMI_DEVID_CAMERA		0x00060013
+ 	err = asus_wmi_sysfs_init(asus->platform_device);
+ 	if (err)
 -- 
 2.23.0
 
