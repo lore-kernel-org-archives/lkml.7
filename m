@@ -2,79 +2,135 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83322C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1677C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAA22187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC2E21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573111874;
+	bh=8cQBIwNA3zhWQ9iS8VO6DebmqrZUhptIxgSmHMfDlTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b4TEjIrJdjt2LHzFhL+6Wr3yhIm9arD9WQhVxsE1FIJvqsLDvFi+o+sd+LGtHb/Q3
+	 j8bMKetVS/bYK4DqKEjQWhZX8YCKed9TdvClVrPHutYmAU4Nr8qdPzdMdXjk2vv1uL
+	 y/esEmOc8tLqK2MvQZxPGnEu+OogNppVM9Dmlxas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfKGH3o (ORCPT
+        id S1727329AbfKGHbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:29:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:50950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfKGH3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:29:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 466DD46A;
-        Wed,  6 Nov 2019 23:29:43 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7DE53F71A;
-        Wed,  6 Nov 2019 23:32:37 -0800 (PST)
-Date:   Thu, 7 Nov 2019 07:29:39 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: core: fix compilation error when cgroup not
- selected
-Message-ID: <20191107072939.u5a3p7apphq5oxnm@e107158-lin.cambridge.arm.com>
-References: <20191105112212.596-1-qais.yousef@arm.com>
- <20191107072525.GA19642@darkstar>
+        Thu, 7 Nov 2019 02:31:13 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38488 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfKGHbN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 02:31:13 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z19so1192875wmk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:31:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Yo6Xq8M8DuyhNK9VANJe3xtr6IPG2RacFSM7QGUt7BA=;
+        b=aEVG5AcJWrfVEU1eku32nAzFeEd6FF5MmhE9axBqp7s7fN2QWuoG1TJDOUsarngERP
+         vvBQ2o07Nqodm7pTECbIhbSClBaTXav2lLaz5aJFKddKvINiM68VLO/9OGXX+ki4XS7R
+         h+e5rgkfzQvqYOhAbi/u0QBbUl2dYd/qGmmZTaYmRYcvDO4U/Jice9+vQKjbfmj+qpWQ
+         XEwdCj/wSkI+Zdh50o18DVxvWpnC7hdZU/wwoe5HUjH5Wmj/vmIidjXVzsZmZxoTiUDx
+         JHgfhrRHaCVS/FB2QOAjdsoIEQq50yoIP47FCLFMs6TC3WfqeBN6Pmwuy6NmyTy00sRm
+         Fptw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yo6Xq8M8DuyhNK9VANJe3xtr6IPG2RacFSM7QGUt7BA=;
+        b=WxXLAluw8sNbCQIYOZxQC8ZSPNYmhqq5TqRP1PSZEs3g5ZlI8mmaPmvfhh1q23SDZU
+         bRzVoE4jYkjwVvsTKeeCMrIH7/weL/6UzgyS2vosRuNC0vqGxrJywKOT+GQZh8CPm/es
+         CFLbfbO1kBXezHGvKJ72I0Vg9Yc1uey4HavvMOkNe/gvJUABMlXxdHDr7JArqwc12Srx
+         dIcflxBC9AFKAC3vf9g0SNUy0OjM7hoe2V31721hRu5qzze4YWaDe3xkPiFuU1CPjxO3
+         CBenDSIfOp+3JRi438pbizR0cdfWupXCWvYAPtSkDiQBhn8k1A8SAzQW+xARgofh/Oco
+         t7vQ==
+X-Gm-Message-State: APjAAAWZCmIolHvBR2mMdFIbHhQxa/rBaoqiAK/8u/baVZ4lS0Twu5ZA
+        jLIPINBtkjQa0D/ZsCxtD8w=
+X-Google-Smtp-Source: APXvYqyG+zMnyvvQhxkPIcK2Od4qCWTRqCEcvpbTXoqW3nJ4gzEoAFj8yE4O0v+LQ6Jw7Ek1bBLDgA==
+X-Received: by 2002:a7b:c341:: with SMTP id l1mr1400063wmj.140.1573111871348;
+        Wed, 06 Nov 2019 23:31:11 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id n13sm1029564wmi.25.2019.11.06.23.31.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 23:31:10 -0800 (PST)
+Date:   Thu, 7 Nov 2019 08:31:08 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch 1/9] x86/ptrace: Prevent truncation of bitmap size
+Message-ID: <20191107073108.GC30739@gmail.com>
+References: <20191106193459.581614484@linutronix.de>
+ <20191106202805.856479311@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191107072525.GA19642@darkstar>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20191106202805.856479311@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick
 
-On 11/07/19 07:25, Patrick Bellasi wrote:
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-[...]
-
-> Thanks for posting this again.
+> The active() callback of the IO bitmap regset divides the IO bitmap size by
+> the word size (32/64 bit). As the I/O bitmap size is in bytes the active
+> check fails for bitmap sizes of 1-3 bytes on 32bit and 1-7 bytes on 64bit.
 > 
-> We now have three "versions" of this same fix, including:
->  - the original bug report by Randy and a fix from me here:
->    Message-ID: <8736gv2gbv.fsf@arm.com>
->    https://lore.kernel.org/linux-next/8736gv2gbv.fsf@arm.com/
->  - and a follow up patch from Arnd:
->    Message-ID: <20190918195957.2220297-1-arnd@arndb.de>
->    https://lore.kernel.org/lkml/20190918195957.2220297-1-arnd@arndb.de/
+> Use DIV_ROUND_UP() instead.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/x86/kernel/ptrace.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/arch/x86/kernel/ptrace.c
+> +++ b/arch/x86/kernel/ptrace.c
+> @@ -697,7 +697,7 @@ static int ptrace_set_debugreg(struct ta
+>  static int ioperm_active(struct task_struct *target,
+>  			 const struct user_regset *regset)
+>  {
+> -	return target->thread.io_bitmap_max / regset->size;
+> +	return DIV_ROUND_UP(target->thread.io_bitmap_max, regset->size);
+>  }
+>  
+>  static int ioperm_get(struct task_struct *target,
 
-Oh I should have done my homework better. FWIW I caught this on 5.4-rc6 so
-that's why I didn't think there was a fix posted.
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
 
-I don't mind which version gets picked. But if it can go in before 5.4 is
-released that'd be great.
 
-Thanks
+But the ioperm core dumping logic in ptrace.c looks a bit weird. For 
+example why do we alias REGSET_IOPERM64 to REGSET_XFP:
 
---
-Qais Yousef
+enum x86_regset {
+        REGSET_GENERAL,
+        REGSET_FP,
+        REGSET_XFP,
+        REGSET_IOPERM64 = REGSET_XFP,
+        REGSET_XSTATE,
+        REGSET_TLS,
+        REGSET_IOPERM32,
+};
+
+This has been so since the original regset commit (325af5fb1418).
+
+Unless I'm misreading the code this makes either REGSET_XFP or 
+REGSET_IOPERM64 misbehave? What am I missing?
+
+Thanks,
+
+	Ingo
