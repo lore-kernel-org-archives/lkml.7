@@ -2,49 +2,49 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221BBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3049C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32EB214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C42472178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Rrv3XhZ6"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L0nL7Xxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfKGGg5 (ORCPT
+        id S1727021AbfKGGhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:36:57 -0500
-Received: from mail-eopbgr30073.outbound.protection.outlook.com ([40.107.3.73]:49474
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Thu, 7 Nov 2019 01:37:32 -0500
+Received: from mail-eopbgr60043.outbound.protection.outlook.com ([40.107.6.43]:31558
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725763AbfKGGg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:36:57 -0500
+        id S1726910AbfKGGhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 01:37:31 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LAuI5Bu0tvj3jgkq6Q5oqwk5nKxm3jaVGi6euptC5Xm1JGPvhwPz5vJvTK4Q0AUNkAWrYTQbbd64yqo6OzxeEU8TePj/NiOeU4wLxbT/BBs5Joa7xPeL5az9Y8imBjAykk1e9gHzRTAG5EFlf2QCNHMdd3zc1jWdFS79j2tgIgBJ+zoV1IfFif/ROw+JZ2Bgomy7OCy4VDqKGTYK3rYGEDVbltF3Sd4bUP0C1lOjgbPI4ls68xpaO1GsZjaif1UczlYRX9EOSDXyy4i8V7I74DqKa18WSBOxTWA4zBUYZ1qZcwWAUCPiyexP0TOqwLArIbx7FSkvNt6OPPR08daWnQ==
+ b=dlNFw82usSFNqWQzcgJnWOTkxr8WESw/jFHy5RNjvepoOK6LYTgqT0fVESiQq8Qhy527rhQuAvzBPmArt1Md3mo19XsOJ3DomUAXsEn6MbO5aHHnFXJKXmb9nbXMZsuPaS/+z6zoN7QMWGun6A6lpO3AMqsO/QnGIwfW3DqbbaaFO6u38D3K67mgkbTLK0Nw2anqLCN4dnJfvKelIUvWi5XVWF2sBgeQ0yFNry4gc4fd6kIuUb5vmAFymtBn7ePyystsWVtQcL84hXG6YwewIvHY4GmYFiLYQjRL4ZO4hDxKuOxa0B6KqxgGJ/FjKEXCG1KrEeHwY+qXCi4zDY0/eQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bSnGdMNHEUvKj6lC+s8Aqsw2IbOhrzb8BJg5V2UqlOc=;
- b=eRH0x3X2HwnaMLWb+mz0pVHWnO3nf2il232e2suOzVxOIPpmTGEptgoOtspmXGRhunH36QA9z0WsSZCs9RrU/LXqp7bsjNNzFhzEj1f0YiXke0uvi5G5uOsw894iBF1mnDqIzSBtP5Yxe+hZ8AC1prg0zAhJj9St3cQJYoABCrGGX9BmTQH2DYIF6yeX05YzkLonnoXKtxG1QtnYGe2zxylC18pRG/j/bzyodx23cpwiVa5PoCTUp8cUREPGh/7ESh/5JnQXmzfNfTMf0iDtHgMb1mgkxk5ZYMHm466dQ9RAh73ASXFCR5wmRjsbXaPShrEQQh77ewgALD+JZ5C6zQ==
+ bh=GNXtmNcbX8LR1o+A1iR2EMBYqSMdKw6VuTf18QE9WfU=;
+ b=FOBKXjji3OsUMhkBnvVK9SFLbr/4wG2+6UhLzn5w34At3DepMgB5yKLFPBAYMlOos3w2tfhNv073XYwb5BroBprK74PCwW0kOZM+XkrFA+ktmuDwrV1eyRK46vtfuGjN2M8m0+WKGFxr+TIITyv8wkpamGXDWNZtbGU7WShE8jt35HU/siMRHTDM5s5tK7QkPdKsq1FCD9iiPdPlI/zQpFUDQtoy3G4mso7JEgWOXRoFyF9BWDpAYR++mRuKnZBD1U6xOvQkbxTRQhjQaMaT8j4eCbWPKPVlodgFY7GpwsnOHzuHP+heZMXyWEpYdoQDfAMYRyluKe8aY/wCSUCWmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bSnGdMNHEUvKj6lC+s8Aqsw2IbOhrzb8BJg5V2UqlOc=;
- b=Rrv3XhZ6tzPHvSO3jWOZp2aegRFo7PEk5o9aoOjjBjr+sDoYA+tYfPKo9p2+Hun2QSPaKSCxA+0M1dso67JQT/spTjVf00jq6DK4T2+YdffMviYgONFeAJVFYG/jth4xypFlov+5lfi0eMz1z+OKmkwYVr7+HMtehEtcfd3rGZ0=
+ bh=GNXtmNcbX8LR1o+A1iR2EMBYqSMdKw6VuTf18QE9WfU=;
+ b=L0nL7XxxwAvDfFq+d9ccDMviIf9cdV1/eUn/B6lAmqMZj4go9PbrraB3U9+ZSyoTGIl93kLmsbyqLwdLueFasEGgXxCL/NJIzCdgZJYr0IV6waqW6AK1CH8AvTUcS77mR1qQSe7jJO5bMc6iAKuZhsc56HKt33Hcw0ta3lqY+1A=
 Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4108.eurprd04.prod.outlook.com (52.135.128.12) with Microsoft SMTP
+ DB7PR04MB4908.eurprd04.prod.outlook.com (20.176.234.27) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Thu, 7 Nov 2019 06:36:52 +0000
+ 15.20.2408.24; Thu, 7 Nov 2019 06:37:28 +0000
 Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
  ([fe80::115f:1e4f:9ceb:2a2c]) by DB7PR04MB4490.eurprd04.prod.outlook.com
  ([fe80::115f:1e4f:9ceb:2a2c%7]) with mapi id 15.20.2430.020; Thu, 7 Nov 2019
- 06:36:52 +0000
+ 06:37:28 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "jslaby@suse.com" <jslaby@suse.com>,
@@ -54,16 +54,16 @@ CC:     dl-linux-imx <linux-imx@nxp.com>,
         "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Andy Duan <fugang.duan@nxp.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH V2] tty: serial: fsl_lpuart: use the sg count from
- dma_map_sg
-Thread-Topic: [PATCH V2] tty: serial: fsl_lpuart: use the sg count from
- dma_map_sg
-Thread-Index: AQHVlRYSjb10LGdSBU+AJ5B7rW7xA6d/QS9A
-Date:   Thu, 7 Nov 2019 06:36:52 +0000
-Message-ID: <DB7PR04MB4490FC1A30F476F876D99D2788780@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <1573094911-448-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1573094911-448-1-git-send-email-peng.fan@nxp.com>
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH] tty: serial: imx: use the sg count from dma_map_sg
+Thread-Topic: [PATCH] tty: serial: imx: use the sg count from dma_map_sg
+Thread-Index: AQHVlRfNofENwEaBB0GOB39FR9UWa6d/QU4w
+Date:   Thu, 7 Nov 2019 06:37:28 +0000
+Message-ID: <DB7PR04MB4490A84F6E06BD2D54261A9688780@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <1573095656-749-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1573095656-749-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -73,39 +73,38 @@ authentication-results: spf=none (sender IP is )
 x-originating-ip: [119.31.174.71]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 85afdbe5-0f06-476b-560f-08d7634ce02d
-x-ms-traffictypediagnostic: DB7PR04MB4108:|DB7PR04MB4108:
+x-ms-office365-filtering-correlation-id: 0ccee4f5-b03c-495b-ab4e-08d7634cf570
+x-ms-traffictypediagnostic: DB7PR04MB4908:|DB7PR04MB4908:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB41081E73706CCFADCB05812B88780@DB7PR04MB4108.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-microsoft-antispam-prvs: <DB7PR04MB49080293535D7A357664FE5E88780@DB7PR04MB4908.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0214EB3F68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(136003)(366004)(346002)(189003)(199004)(102836004)(110136005)(2201001)(66066001)(8676002)(64756008)(229853002)(99286004)(6246003)(86362001)(26005)(71200400001)(76176011)(66476007)(7696005)(66446008)(9686003)(256004)(55016002)(6436002)(6506007)(66946007)(76116006)(66556008)(44832011)(8936002)(25786009)(486006)(11346002)(3846002)(446003)(476003)(81156014)(81166006)(4326008)(52536014)(71190400001)(2906002)(54906003)(186003)(7736002)(6116002)(478600001)(14454004)(5660300002)(74316002)(316002)(305945005)(33656002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4108;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(136003)(39860400002)(396003)(346002)(199004)(189003)(76116006)(66556008)(2906002)(66476007)(64756008)(66946007)(476003)(66446008)(316002)(33656002)(3846002)(7736002)(305945005)(74316002)(8676002)(54906003)(76176011)(6116002)(6506007)(102836004)(81156014)(186003)(7696005)(26005)(8936002)(81166006)(110136005)(71190400001)(71200400001)(44832011)(478600001)(14444005)(11346002)(256004)(486006)(99286004)(86362001)(9686003)(2201001)(14454004)(6246003)(25786009)(55016002)(229853002)(52536014)(4326008)(5660300002)(6436002)(66066001)(2501003)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4908;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: b+RJrLOQT0li735avcV5C7/J3RYMVRLkhjR97KdMiegG9nHx7rxvUgThlANDEq7ebAgDGwh0GQVKR3+o0WaiAX5vkXCno1ncrx8s4KlvFiVM4kgTN4z+BW+OKPtPtIU6r761spAhmZqYeYUzkI36F6TwfPBk8KV/33ZAvbxhEGTnysT/aAIJHkISc88jVFs/5iQH1zDHR/nlqwwD2rAqtHGMYcrwtrVoz9d2/ingQ8YP0j78o20rpqC0XqzxAKvahEwcV2Nhio4WV8YWD1FKeG53W9T10nAvxKGNHQ7P0qHkJbhailnZxrvL7cZM/ecsK9za43P+jveDP5UZhIrLXs8pNQ3lbhVd2A3BfavCIrMuOIgCm7ZoGvAYMgTGToxYgxTGszvmgHcIiBzDuJ45HCbH3SYgs4Hm9Sl83hbCkNdZKJ4a3+W7+2xGuIWdEAPf
+x-microsoft-antispam-message-info: dwYQUAaq5BoSHxJXdNQwomCf7e+4yo5118ac30egXxSma95JyITWQaY1d/tFhnYinsuNstZiokAtPSvsNPFYyjxKy286dTlZvLrjEr76NF3BE1wfiUvFPv/GMfiCbGoWFh6gyRKf4aZTDLBJEgQ3i/5DjLN/bHpE14BuRn9deuwJRWkvSwrRTHBfVPkkDKHyJjCPjoAMsYpl1D2IzLFw6Hrnsc5s4cJEmPTRtOLSsDFe+Cj7E50bC/coaBM3F/NyNEJOd6mPletpHGm4AqehVieIahG1UzB0UC5kTvtQJ6oHQQ/3t4BsnhiiQ/hnSiVew9PeBNAFxgakDJxJasRwv1MZPgHVejGiTUMtJCJR9QUzIYrn9FDV/MPklEiy21DN1HXK7h6IAgd2JIS28/1FQnINWTVs9nhdwrweKmJHSzGt2RF247V9WbaI/1ZHxtab
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85afdbe5-0f06-476b-560f-08d7634ce02d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 06:36:52.5586
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ccee4f5-b03c-495b-ab4e-08d7634cf570
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 06:37:28.1971
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7dne+H+3uBUiLaR5lBza/fQUfQtf9xq0WrQ89gpGhyJ4hB4LkrmrJgVIEuP41ytJBhpwOJnlWLriqkFr4REM6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4108
+X-MS-Exchange-CrossTenant-userprincipalname: MnOdgEwCrxf9t8kjFTGjsBfydE6nq8PiLeDrg2pKmCMlxmKuCIiMYJvnL+DAeHnkpu3aVg7oUlKQhh+UjpTL2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4908
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH V2] tty: serial: fsl_lpuart: use the sg count from dma_ma=
-p_sg
+> Subject: [PATCH] tty: serial: imx: use the sg count from dma_map_sg
 
-Ignore this patch. Keep v1.
+Ignore this patch. Wrong fix, will have V2.
 
 Thanks,
 Peng.
@@ -117,39 +116,29 @@ Peng.
 > dma_map_sg, not use sport->dma_tx_nents, because the return value of
 > dma_map_sg is not always same with "nents".
 >=20
-> When enabling iommu for lpuart + edma, iommu framework may concatenate
-> two sgs into one.
+> And update sport->dma_tx_nents with value from dma_map_sg to avoid
+> modifing dma_unmap_sg
 >=20
-> Fixes: 6250cc30c4c4e ("tty: serial: fsl_lpuart: Use scatter/gather DMA fo=
-r Tx")
-> Cc: <stable@vger.kernel.org>
+> Fixes: b4cdc8f61beb("serial: imx: add DMA support for imx6q")
 > Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
+>  drivers/tty/serial/imx.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
-> V2:
->  Assign ret to sport->dma_tx_nents, then we no need to fix dma_unmap_sg
-> Hi Greg,
->   I saw v1 patch merged to tty-next, please help to replace with V2 if th=
-is
->   is ok for you, or you need I have a follow up fix for v1.
->=20
->  drivers/tty/serial/fsl_lpuart.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpu=
-art.c index
-> 3e17bb8a0b16..ec5ea098669e 100644
-> --- a/drivers/tty/serial/fsl_lpuart.c
-> +++ b/drivers/tty/serial/fsl_lpuart.c
-> @@ -436,6 +436,7 @@ static void lpuart_dma_tx(struct lpuart_port *sport)
+> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c index
+> 87c58f9f6390..bda7f59ec60e 100644
+> --- a/drivers/tty/serial/imx.c
+> +++ b/drivers/tty/serial/imx.c
+> @@ -619,6 +619,9 @@ static void imx_uart_dma_tx(struct imx_port *sport)
+>  		dev_err(dev, "DMA mapping error for TX.\n");
 >  		return;
 >  	}
->=20
+> +
 > +	sport->dma_tx_nents =3D ret;
->  	sport->dma_tx_desc =3D dmaengine_prep_slave_sg(sport->dma_tx_chan,
-> sgl,
->  					sport->dma_tx_nents,
+> +
+>  	desc =3D dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
 >  					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
+>  	if (!desc) {
 > --
 > 2.16.4
 
