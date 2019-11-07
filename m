@@ -2,125 +2,97 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18ADBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2F0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E929A2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC20206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SK1wM51o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfKGIBn (ORCPT
+        id S1727529AbfKGIC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:01:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46430 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfKGIBn (ORCPT
+        Thu, 7 Nov 2019 03:02:26 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33894 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfKGIC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:01:43 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iScjQ-0000io-4h; Thu, 07 Nov 2019 09:01:28 +0100
-Date:   Thu, 7 Nov 2019 09:01:26 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jianyong Wu <jianyong.wu@arm.com>
-cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        maz@kernel.org, richardcochran@gmail.com, Mark.Rutland@arm.com,
-        will@kernel.org, suzuki.poulose@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        nd@arm.com
-Subject: Re: [RFC PATCH v6 5/7] psci: Add hvc call service for ptp_kvm.
-In-Reply-To: <20191024110209.21328-6-jianyong.wu@arm.com>
-Message-ID: <alpine.DEB.2.21.1911070856100.1869@nanos.tec.linutronix.de>
-References: <20191024110209.21328-1-jianyong.wu@arm.com> <20191024110209.21328-6-jianyong.wu@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 7 Nov 2019 03:02:26 -0500
+Received: by mail-lf1-f66.google.com with SMTP id f5so867705lfp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:02:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z9mPuhlzRf2U1OBIGxGX7HH1EXmPxl/x73E9K2ggUck=;
+        b=SK1wM51olND95PLqbjvST9iMNaroL73Er+3ZYIfE35j0Ls+YrZ6cWAjD56K7zsToZN
+         GeklTja+lPJOiQUls7RTUEAoveu6+klmDApv9axuWTeAu00VBLouumILMzEWhMMYqZgU
+         nmIwQL7U9Vm+Y8ESDHB7zKbE5dXgF+9n9FG1M7GjXEL6JYUXKaWGcy1XZOXb1LtX79Io
+         p7v7QxR1jKTSWl7YhdqIBu3OIqhSgaoTerqTiNvKU/USQftsBv8Yywza2YrfpNpWpHzT
+         5cmvJIQ7FLOnntktciK+I8+MQIsN5aBzeTiFEmTwZTSzWH/SYsjZ5Mazj3YR4DYLzefI
+         2y9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z9mPuhlzRf2U1OBIGxGX7HH1EXmPxl/x73E9K2ggUck=;
+        b=L4RpLhGYXbpK+9h1AI/gSCJD4RT4cCVvHixaBhGmSRJ7AOc58MCNCfQAf3Lh1s4jFY
+         9vFrsQs3vPeKiVOjA8pPZ3MFcHBwj99Q9VzlNh6PwHfIWErKUb+iPtzNOPBT6sOugTD7
+         LvKl8NjjTmxo4XPWVjnv70jMlu6tGn/xqbWS9ZaVkHY2wQ8StJpWIylRyO8IKCzoFOLe
+         5vmeT+oOXYoz32F4xgGLIodLcwWDHDdFxwJdC9KfINUfof0VlmYiqoF0GhR4/FNaOMaR
+         svxHzBuvmeOvTpP94iNHQnjce45ncaAlmGWhzkL2TXMs7AuI1dOmIuG4dMZ6ZOoCJYEV
+         SeBg==
+X-Gm-Message-State: APjAAAVh/BOCzH/b82WzP9mOmdq8PbM6aZlva2kIH+7qaaEgutPVNjsB
+        8Tb2AXPlYj7VW2VzuiHGF9BqMKgrz5ev44MDhSY/D4LeQKA=
+X-Google-Smtp-Source: APXvYqySKkpB4xIbWr6eEacadJzbolNXqXEmB3q4EFcgrcx8DRZkDbieVhG+JoaTMcRF0WdJY9AQ9FIiPS3W+AKwYWM=
+X-Received: by 2002:a19:651b:: with SMTP id z27mr1347399lfb.117.1573113744394;
+ Thu, 07 Nov 2019 00:02:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20191106173125.14496-1-stephan@gerhold.net>
+In-Reply-To: <20191106173125.14496-1-stephan@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 7 Nov 2019 09:02:11 +0100
+Message-ID: <CACRpkdaH8ahbVKTrBHh7NKVZVg-PZvyKDKNityEyv5rL8=Qdag@mail.gmail.com>
+Subject: Re: [PATCH 1/2] regulator: ab8500: Remove AB8505 USB regulator
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019, Jianyong Wu wrote:
+On Wed, Nov 6, 2019 at 6:33 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-> This patch is the base of ptp_kvm for arm64.
+> The USB regulator was removed for AB8500 in
+> commit 41a06aa738ad ("regulator: ab8500: Remove USB regulator").
+> It was then added for AB8505 in
+> commit 547f384f33db ("regulator: ab8500: add support for ab8505").
+>
+> However, there was never an entry added for it in
+> ab8505_regulator_match. This causes all regulators after it
+> to be initialized with the wrong device tree data, eventually
+> leading to an out-of-bounds array read.
+>
+> Given that it is not used anywhere in the kernel, it seems
+> likely that similar arguments against supporting it exist for
+> AB8505 (it is controlled by hardware).
+>
+> Therefore, simply remove it like for AB8500 instead of adding
+> an entry in ab8505_regulator_match.
+>
+> Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-This patch ...
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> ptp_kvm modules will call hvc to get this service.
-> The service offers real time and counter cycle of host for guest.
-> 
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  drivers/clocksource/arm_arch_timer.c |  2 ++
->  include/clocksource/arm_arch_timer.h |  4 ++++
->  include/linux/arm-smccc.h            | 12 ++++++++++++
->  virt/kvm/arm/psci.c                  | 22 ++++++++++++++++++++++
->  4 files changed, 40 insertions(+)
-> 
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index 07e57a49d1e8..e4ad38042ef6 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -29,6 +29,7 @@
->  #include <asm/virt.h>
->  
->  #include <clocksource/arm_arch_timer.h>
-> +#include <linux/clocksource_ids.h>
-
-Same ordering issue and lack of file.
- 
-> diff --git a/include/clocksource/arm_arch_timer.h b/include/clocksource/arm_arch_timer.h
-> index 1d68d5613dae..426d749e8cf8 100644
-> --- a/include/clocksource/arm_arch_timer.h
-> +++ b/include/clocksource/arm_arch_timer.h
-> @@ -104,6 +104,10 @@ static inline bool arch_timer_evtstrm_available(void)
->  	return false;
->  }
->  
-> +bool is_arm_arch_counter(void *unuse)
-
-A global function in a header file? You might want to make this static
-inline. And while at it please s/unuse/unused/
-
-> +{
-> +	return false;
-> +}
->  #endif
->  #include <linux/linkage.h>
-> diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c
-> index 0debf49bf259..339bcbafac7b 100644
-> --- a/virt/kvm/arm/psci.c
-> +++ b/virt/kvm/arm/psci.c
-> @@ -15,6 +15,7 @@
->  #include <asm/kvm_host.h>
->  
->  #include <kvm/arm_psci.h>
-> +#include <linux/clocksource_ids.h>
-
-Sigh.
-  
->  /*
->   * This is an implementation of the Power State Coordination Interface
-> @@ -392,6 +393,8 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->  	u32 func_id = smccc_get_function(vcpu);
->  	u32 val[4] = {};
->  	u32 option;
-> +	u64 cycles;
-> +	struct system_time_snapshot systime_snapshot;
-
-Also here you might notice that the variables are not randomly ordered.
-
-Thanks,
-
-	tglx
+Yours,
+Linus Walleij
