@@ -2,224 +2,90 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC222C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539CBC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A521821882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEDB214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573150545;
+	bh=mkkJBDyIiAdnm/glQLkfsD0szVtlg4EXK/75ogcIUiU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BlYzToYIrVW26/mFMLg6lQC+OUi/8/bXWvgI8vRceFjiqiMlLHSDwB5vG8Lr61dDy
+	 RLJHrVLtuJ25MdOPsRUmxesq7Q+XBrcvWvc823T6SWqvZlRmcyGO8ZWnSYj0CxnsjA
+	 rcQmVaud5pw1cg4ndd/n25yOIRBDLQggoOkJJVfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfKGSN1 (ORCPT
+        id S1727786AbfKGSPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:13:27 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55019 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfKGSN1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:13:27 -0500
-Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <m.tretter@pengutronix.de>)
-        id 1iSmHR-0001kB-TM; Thu, 07 Nov 2019 19:13:13 +0100
-Date:   Thu, 7 Nov 2019 19:13:11 +0100
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     Rajan Vaja <rajan.vaja@xilinx.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, michal.simek@xilinx.com,
-        jollys@xilinx.com, nava.manne@xilinx.com, tejas.patel@xilinx.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] clk: zynqmp: Fix divider calculation
-Message-ID: <20191107191311.4e0d58b2@litschi.hi.pengutronix.de>
-In-Reply-To: <1573117574-9316-1-git-send-email-rajan.vaja@xilinx.com>
-References: <1573117574-9316-1-git-send-email-rajan.vaja@xilinx.com>
-Organization: Pengutronix
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Thu, 7 Nov 2019 13:15:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfKGSPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 13:15:43 -0500
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FE89222CB
+        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 18:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573150541;
+        bh=mkkJBDyIiAdnm/glQLkfsD0szVtlg4EXK/75ogcIUiU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pQqJMQdtiWhzbkNUqqqm0gMcVuFUFO6KFRLn/L3tv6U+SHbk6Yl5nXLVb2nXQjgFW
+         YjXLXvGC8ZXU3YaPRHpZzlWR5Gjr/8D28yaAwzDWfK26KeGUzf3KvZ7inKo317qC7G
+         1cIx5r9ZIlXNLcSGM/Nd3hpDiNqLz/fqkOviuI2Q=
+Received: by mail-wr1-f51.google.com with SMTP id p4so4128236wrm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:15:41 -0800 (PST)
+X-Gm-Message-State: APjAAAXUKbVrzH3MHu8Pzh81cV/EdCgem6oKGdQtAxZp0fv2OWBRNicb
+        VQFDxRipJSM+8IjrbkIDKvfkCxvh6w9uWis+XoRttQ==
+X-Google-Smtp-Source: APXvYqx20OM7QsTfSBvENmpd1ZzYDPmxA0e8l69FibUDYivV3Y4TzOtfUMdKVs1bwqiNP0U1tpOoZOTXhte3WmwIXm8=
+X-Received: by 2002:adf:e4c5:: with SMTP id v5mr4364675wrm.106.1573150540087;
+ Thu, 07 Nov 2019 10:15:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
-X-SA-Exim-Mail-From: m.tretter@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk>
+ <157313379331.29677.5209561321495531328.stgit@warthog.procyon.org.uk>
+In-Reply-To: <157313379331.29677.5209561321495531328.stgit@warthog.procyon.org.uk>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 7 Nov 2019 10:15:28 -0800
+X-Gmail-Original-Message-ID: <CALCETrWszYm9=-WEgSbhmGc3DYCvY6q3W4Lezm6YtKnGtRs_5g@mail.gmail.com>
+Message-ID: <CALCETrWszYm9=-WEgSbhmGc3DYCvY6q3W4Lezm6YtKnGtRs_5g@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/14] pipe: Allow buffers to be marked
+ read-whole-or-error for notifications [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Nov 2019 01:06:14 -0800, Rajan Vaja wrote:
-> Linux doesn't know maximum value of divisor that it can support.
-> zynqmp_clk_divider_round_rate() returns actual divider value
-> after calculating from parent rate and desired rate, even though
-> that rate is not supported by single divider of hardware. It is
-> also possible that such divisor value can be achieved through 2
-> different dividers. As, Linux tries to set such divisor value(out
-> of range) in single divider set divider is getting failed.
-> 
-> Fix the same by computing best possible combination of two
-> divisors which provides more accurate clock rate.
+On Thu, Nov 7, 2019 at 5:39 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Allow a buffer to be marked such that read() must return the entire buffer
+> in one go or return ENOBUFS.  Multiple buffers can be amalgamated into a
+> single read, but a short read will occur if the next "whole" buffer won't
+> fit.
+>
+> This is useful for watch queue notifications to make sure we don't split a
+> notification across multiple reads, especially given that we need to
+> fabricate an overrun record under some circumstances - and that isn't in
+> the buffers.
 
-This patch could be split into two patches. One for getting the maximum
-value of the divisor and one for calculating the best combination of
-the two clocks.
-
-> 
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-> ---
->  drivers/clk/zynqmp/divider.c         | 62 +++++++++++++++++++++++++++++++++++-
->  include/linux/firmware/xlnx-zynqmp.h |  3 +-
->  2 files changed, 63 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-> index d8f5b70d..d2be24e 100644
-> --- a/drivers/clk/zynqmp/divider.c
-> +++ b/drivers/clk/zynqmp/divider.c
-> @@ -2,7 +2,7 @@
->  /*
->   * Zynq UltraScale+ MPSoC Divider support
->   *
-> - *  Copyright (C) 2016-2018 Xilinx
-> + *  Copyright (C) 2016-2019 Xilinx
->   *
->   * Adjustable divider clock implementation
->   */
-> @@ -41,6 +41,7 @@ struct zynqmp_clk_divider {
->  	bool is_frac;
->  	u32 clk_id;
->  	u32 div_type;
-> +	u32 max_div;
-
-If the maximum value is 0xFFFF, shouldn't this be u16?
-
->  };
->  
->  static inline int zynqmp_divider_get_val(unsigned long parent_rate,
-> @@ -88,6 +89,34 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
->  	return DIV_ROUND_UP_ULL(parent_rate, value);
->  }
->  
-> +static void zynqmp_compute_divider(struct clk_hw *hw,
-> +				   unsigned long rate,
-> +				   unsigned long parent_rate,
-> +				   u32 max_div,
-> +				   int *bestdiv)
-
-Return bestdiv instead of returning void and passing it as a pointer.
-Also maybe you can find a better name for this function.
-
-> +{
-> +	int div1;
-> +	int div2;
-> +	long error = LONG_MAX;
-> +	struct clk_hw *parent_hw = clk_hw_get_parent(hw);
-> +	struct zynqmp_clk_divider *pdivider = to_zynqmp_clk_divider(parent_hw);
-> +
-> +	if (!pdivider)
-> +		return;
-> +
-> +	*bestdiv = 1;
-> +	for (div1 = 1; div1 <= pdivider->max_div; div1++) {
-> +		for (div2 = 1; div2 <= max_div; div2++) {
-
-What happens, if the parent or this divider only supports divisors that
-are a power of 2?
-
-> +			long new_error = ((parent_rate / div1) / div2) - rate;
-> +
-> +			if (abs(new_error) < abs(error)) {
-> +				*bestdiv = div2;
-> +				error = new_error;
-> +			}
-> +		}
-> +	}
-> +}
-> +
->  /**
->   * zynqmp_clk_divider_round_rate() - Round rate of divider clock
->   * @hw:			handle between common and hardware-specific interfaces
-> @@ -125,8 +154,21 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
->  
->  	bestdiv = zynqmp_divider_get_val(*prate, rate);
->  
-> +	/*
-> +	 * In case of two divisors, compute best divider values and return
-> +	 * divider2 value based on compute value. div1 will  be automatically
-> +	 * set to optimum based on required total divider value.
-> +	 */
-> +	if (div_type == TYPE_DIV2 &&
-> +	    (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
-> +		zynqmp_compute_divider(hw, rate, *prate,
-> +				       divider->max_div, &bestdiv);
-> +	}
-> +
->  	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
->  		bestdiv = rate % *prate ? 1 : bestdiv;
-> +
-> +	bestdiv = min_t(u32, bestdiv, divider->max_div);
->  	*prate = rate * bestdiv;
->  
->  	return rate;
-> @@ -195,6 +237,9 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
->  	struct clk_hw *hw;
->  	struct clk_init_data init;
->  	int ret;
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +	struct zynqmp_pm_query_data qdata = {0};
-> +	u32 ret_payload[PAYLOAD_ARG_CNT];
->  
->  	/* allocate the divider */
->  	div = kzalloc(sizeof(*div), GFP_KERNEL);
-> @@ -215,6 +260,21 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
->  	div->clk_id = clk_id;
->  	div->div_type = nodes->type;
->  
-> +	/*
-> +	 * To achieve best possible rate, maximum limit of divider is required
-> +	 * while computation. Get maximum supported divisor from firmware. To
-> +	 * maintain backward compatibility assign maximum possible value(0xFFFF)
-> +	 * if query for max divisor is not successful.
-> +	 */
-> +	qdata.qid = PM_QID_CLOCK_GET_MAX_DIVISOR;
-> +	qdata.arg1 = clk_id;
-> +	qdata.arg2 = nodes->type;
-> +	ret = eemi_ops->query_data(qdata, ret_payload);
-> +	if (ret)
-> +		div->max_div = 0XFFFF;
-
-U16_MAX?
-
-Michael
-
-> +	else
-> +		div->max_div = ret_payload[1];
-> +
->  	hw = &div->hw;
->  	ret = clk_hw_register(NULL, hw);
->  	if (ret) {
-> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-> index 778abbb..1edb6e9 100644
-> --- a/include/linux/firmware/xlnx-zynqmp.h
-> +++ b/include/linux/firmware/xlnx-zynqmp.h
-> @@ -2,7 +2,7 @@
->  /*
->   * Xilinx Zynq MPSoC Firmware layer
->   *
-> - *  Copyright (C) 2014-2018 Xilinx
-> + *  Copyright (C) 2014-2019 Xilinx
->   *
->   *  Michal Simek <michal.simek@xilinx.com>
->   *  Davorin Mista <davorin.mista@aggios.com>
-> @@ -105,6 +105,7 @@ enum pm_query_id {
->  	PM_QID_CLOCK_GET_PARENTS,
->  	PM_QID_CLOCK_GET_ATTRIBUTES,
->  	PM_QID_CLOCK_GET_NUM_CLOCKS = 12,
-> +	PM_QID_CLOCK_GET_MAX_DIVISOR,
->  };
->  
->  enum zynqmp_pm_reset_action {
+Hmm.  I'm not totally in love with introducing a new error code like
+this for read(), especially if it could affect the kind of pipe that
+is bound to a file in a filesystem.  But maybe it's not a problem.
