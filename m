@@ -2,204 +2,224 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898B1FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC222C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62ED421882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IalNoteq"
+	by mail.kernel.org (Postfix) with ESMTP id A521821882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbfKGSMN (ORCPT
+        id S1728408AbfKGSN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:12:13 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60140 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKGSMN (ORCPT
+        Thu, 7 Nov 2019 13:13:27 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55019 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfKGSN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:12:13 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5AA3C99A;
-        Thu,  7 Nov 2019 19:12:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1573150330;
-        bh=qY+9wqw2HKjEleKyepixfIuCgZVEoPDFaahUGDwjj9U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IalNoteqDBi42927UGCCa5rhXplV5XO4SMZO08+97RIpbJNDkQp1a58JXQWsNGqgD
-         +vkONog7X97rmGJ3qI+EKSiMHpRp37v2qUoIL3ZELdg1ps5R7cSfpKdRe4v+W2l1oi
-         GW2j+y11mkyXk7NPXpA2fC+WzoKQrma0CRlv1D3U=
-Date:   Thu, 7 Nov 2019 20:12:00 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v3 2/8] dt-bindings: display: Add idk-2121wr binding
-Message-ID: <20191107181200.GB24231@pendragon.ideasonboard.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1567017402-5895-3-git-send-email-fabrizio.castro@bp.renesas.com>
+        Thu, 7 Nov 2019 13:13:27 -0500
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1iSmHR-0001kB-TM; Thu, 07 Nov 2019 19:13:13 +0100
+Date:   Thu, 7 Nov 2019 19:13:11 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, michal.simek@xilinx.com,
+        jollys@xilinx.com, nava.manne@xilinx.com, tejas.patel@xilinx.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] clk: zynqmp: Fix divider calculation
+Message-ID: <20191107191311.4e0d58b2@litschi.hi.pengutronix.de>
+In-Reply-To: <1573117574-9316-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1573117574-9316-1-git-send-email-rajan.vaja@xilinx.com>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1567017402-5895-3-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
+On Thu, 07 Nov 2019 01:06:14 -0800, Rajan Vaja wrote:
+> Linux doesn't know maximum value of divisor that it can support.
+> zynqmp_clk_divider_round_rate() returns actual divider value
+> after calculating from parent rate and desired rate, even though
+> that rate is not supported by single divider of hardware. It is
+> also possible that such divisor value can be achieved through 2
+> different dividers. As, Linux tries to set such divisor value(out
+> of range) in single divider set divider is getting failed.
+> 
+> Fix the same by computing best possible combination of two
+> divisors which provides more accurate clock rate.
 
-Thank you for the patch.
+This patch could be split into two patches. One for getting the maximum
+value of the divisor and one for calculating the best combination of
+the two clocks.
 
-On Wed, Aug 28, 2019 at 07:36:36PM +0100, Fabrizio Castro wrote:
-> Add binding for the idk-2121wr LVDS panel from Advantech.
 > 
-> Some panel-specific documentation can be found here:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 > ---
-> v2->v3:
-> * new patch
-> ---
->  .../display/panel/advantech,idk-2121wr.yaml        | 90 ++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+>  drivers/clk/zynqmp/divider.c         | 62 +++++++++++++++++++++++++++++++++++-
+>  include/linux/firmware/xlnx-zynqmp.h |  3 +-
+>  2 files changed, 63 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-> new file mode 100644
-> index 0000000..b2ccdc8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
-> +
-> +maintainers:
-> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +
-> +description: |
-> +  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
-> +
-> +  The panels expects odd pixels from the first port, and even pixels from
+> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+> index d8f5b70d..d2be24e 100644
+> --- a/drivers/clk/zynqmp/divider.c
+> +++ b/drivers/clk/zynqmp/divider.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Zynq UltraScale+ MPSoC Divider support
+>   *
+> - *  Copyright (C) 2016-2018 Xilinx
+> + *  Copyright (C) 2016-2019 Xilinx
+>   *
+>   * Adjustable divider clock implementation
+>   */
+> @@ -41,6 +41,7 @@ struct zynqmp_clk_divider {
+>  	bool is_frac;
+>  	u32 clk_id;
+>  	u32 div_type;
+> +	u32 max_div;
 
-s/panels/panel/
-Maybe s/from the/on the/g ?
+If the maximum value is 0xFFFF, shouldn't this be u16?
 
-> +  the second port, therefore the ports must be marked accordingly.
-> +
-> +allOf:
-> +  - $ref: lvds.yaml#
-> +  - $ref: ../bus-timings/lvds.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: advantech,idk-2121wr
-> +      - {} # panel-lvds, but not listed here to avoid false select
-> +
-> +  data-mapping:
-> +    const: vesa-24
-> +
-> +  width-mm:
-> +    const: 476
-> +
-> +  height-mm:
-> +    const: 268
-> +
-> +  panel-timing: true
-> +  ports: true
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
+>  };
+>  
+>  static inline int zynqmp_divider_get_val(unsigned long parent_rate,
+> @@ -88,6 +89,34 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
+>  	return DIV_ROUND_UP_ULL(parent_rate, value);
+>  }
+>  
+> +static void zynqmp_compute_divider(struct clk_hw *hw,
+> +				   unsigned long rate,
+> +				   unsigned long parent_rate,
+> +				   u32 max_div,
+> +				   int *bestdiv)
 
-Shouldn't data-mapping, width-mm, height-mm and ports be required too ?
+Return bestdiv instead of returning void and passing it as a pointer.
+Also maybe you can find a better name for this function.
 
-As you mentioned in the cover letter, validating ports, port and the new
-dual-lvds-*-pixels properties would be nice. I'm not YAML schema
-specialist, so I'm fine with a best effort approach here, but as far as
-I understand Rob proposed a way forward, could you try it ?
+> +{
+> +	int div1;
+> +	int div2;
+> +	long error = LONG_MAX;
+> +	struct clk_hw *parent_hw = clk_hw_get_parent(hw);
+> +	struct zynqmp_clk_divider *pdivider = to_zynqmp_clk_divider(parent_hw);
+> +
+> +	if (!pdivider)
+> +		return;
+> +
+> +	*bestdiv = 1;
+> +	for (div1 = 1; div1 <= pdivider->max_div; div1++) {
+> +		for (div2 = 1; div2 <= max_div; div2++) {
 
-Apart from that, the bindings look sne to me, so
+What happens, if the parent or this divider only supports divisors that
+are a power of 2?
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +			long new_error = ((parent_rate / div1) / div2) - rate;
+> +
+> +			if (abs(new_error) < abs(error)) {
+> +				*bestdiv = div2;
+> +				error = new_error;
+> +			}
+> +		}
+> +	}
+> +}
+> +
+>  /**
+>   * zynqmp_clk_divider_round_rate() - Round rate of divider clock
+>   * @hw:			handle between common and hardware-specific interfaces
+> @@ -125,8 +154,21 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
+>  
+>  	bestdiv = zynqmp_divider_get_val(*prate, rate);
+>  
+> +	/*
+> +	 * In case of two divisors, compute best divider values and return
+> +	 * divider2 value based on compute value. div1 will  be automatically
+> +	 * set to optimum based on required total divider value.
+> +	 */
+> +	if (div_type == TYPE_DIV2 &&
+> +	    (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
+> +		zynqmp_compute_divider(hw, rate, *prate,
+> +				       divider->max_div, &bestdiv);
+> +	}
+> +
+>  	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
+>  		bestdiv = rate % *prate ? 1 : bestdiv;
+> +
+> +	bestdiv = min_t(u32, bestdiv, divider->max_div);
+>  	*prate = rate * bestdiv;
+>  
+>  	return rate;
+> @@ -195,6 +237,9 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
+>  	struct clk_hw *hw;
+>  	struct clk_init_data init;
+>  	int ret;
+> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+> +	struct zynqmp_pm_query_data qdata = {0};
+> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+>  
+>  	/* allocate the divider */
+>  	div = kzalloc(sizeof(*div), GFP_KERNEL);
+> @@ -215,6 +260,21 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
+>  	div->clk_id = clk_id;
+>  	div->div_type = nodes->type;
+>  
+> +	/*
+> +	 * To achieve best possible rate, maximum limit of divider is required
+> +	 * while computation. Get maximum supported divisor from firmware. To
+> +	 * maintain backward compatibility assign maximum possible value(0xFFFF)
+> +	 * if query for max divisor is not successful.
+> +	 */
+> +	qdata.qid = PM_QID_CLOCK_GET_MAX_DIVISOR;
+> +	qdata.arg1 = clk_id;
+> +	qdata.arg2 = nodes->type;
+> +	ret = eemi_ops->query_data(qdata, ret_payload);
+> +	if (ret)
+> +		div->max_div = 0XFFFF;
 
-once the above issues get addressed.
+U16_MAX?
 
-> +
-> +examples:
-> +  - |+
-> +    panel-lvds {
-> +      compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +      width-mm = <476>;
-> +      height-mm = <268>;
-> +
-> +      data-mapping = "vesa-24";
-> +
-> +      panel-timing {
-> +        clock-frequency = <148500000>;
-> +        hactive = <1920>;
-> +        vactive = <1080>;
-> +        hsync-len = <44>;
-> +        hfront-porch = <88>;
-> +        hback-porch = <148>;
-> +        vfront-porch = <4>;
-> +        vback-porch = <36>;
-> +        vsync-len = <5>;
-> +      };
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          reg = <0>;
-> +          dual-lvds-odd-pixels;
-> +          panel_in0: endpoint {
-> +            remote-endpoint = <&lvds0_out>;
-> +          };
-> +        };
-> +
-> +        port@1 {
-> +          reg = <1>;
-> +          dual-lvds-even-pixels;
-> +          panel_in1: endpoint {
-> +            remote-endpoint = <&lvds1_out>;
-> +          };
-> +        };
-> +      };
-> +    };
-> +
-> +...
+Michael
 
--- 
-Regards,
-
-Laurent Pinchart
+> +	else
+> +		div->max_div = ret_payload[1];
+> +
+>  	hw = &div->hw;
+>  	ret = clk_hw_register(NULL, hw);
+>  	if (ret) {
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index 778abbb..1edb6e9 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Xilinx Zynq MPSoC Firmware layer
+>   *
+> - *  Copyright (C) 2014-2018 Xilinx
+> + *  Copyright (C) 2014-2019 Xilinx
+>   *
+>   *  Michal Simek <michal.simek@xilinx.com>
+>   *  Davorin Mista <davorin.mista@aggios.com>
+> @@ -105,6 +105,7 @@ enum pm_query_id {
+>  	PM_QID_CLOCK_GET_PARENTS,
+>  	PM_QID_CLOCK_GET_ATTRIBUTES,
+>  	PM_QID_CLOCK_GET_NUM_CLOCKS = 12,
+> +	PM_QID_CLOCK_GET_MAX_DIVISOR,
+>  };
+>  
+>  enum zynqmp_pm_reset_action {
