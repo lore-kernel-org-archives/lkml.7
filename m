@@ -2,131 +2,260 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB501C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FF221882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMKqtIsq"
+	by mail.kernel.org (Postfix) with ESMTP id 2112421882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573153561;
+	bh=T4vs0catgIuCd1KtdiXulfwegTRPj3irzJCExPcCY7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=daUIyVCTjCqQ08m8dlSn3gHxkHikyx0XwowMoUT8TmTOuN5IltRYcJeqC+S7pKgBD
+	 ArNU5ZgGIZow6aQUAD+E1rRdmwDusQLvtyFRt3s7Shebq1jZ03qwmA9y1A+1FvbUEW
+	 lxpw3ll9PANrnahozykEq8KEnyyGdCTb5Lw92Hts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfKGTFw (ORCPT
+        id S1728784AbfKGTGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:05:52 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:43767 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfKGTFw (ORCPT
+        Thu, 7 Nov 2019 14:06:00 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46084 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfKGTF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:05:52 -0500
-Received: by mail-qv1-f67.google.com with SMTP id cg2so1237643qvb.10;
-        Thu, 07 Nov 2019 11:05:51 -0800 (PST)
+        Thu, 7 Nov 2019 14:05:59 -0500
+Received: by mail-qt1-f195.google.com with SMTP id u22so3512206qtq.13;
+        Thu, 07 Nov 2019 11:05:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W47odrIZjcYj4z0Bgkfmue2TCHoiOu56PCWwIh8207g=;
-        b=mMKqtIsq5pYYAfZq2O+8PKS6LuoNfzmmsez9yRUYkHSSU/sFfqaFYiuykAOrmHjpdO
-         iPdMku3aBjtDrw1zEfGG1dz17wpBhtqcevu7Lo0iIM8jtfWqkOlyyoIWijjCJq5NVxqB
-         X2xB9wMzKESpobnCUIqgKric4uF6oJHLVbvLT3sRVAbCmSA1sE0rc/+NJibDJJBbwL0/
-         EKXPuRTmPx7JAYngCv7bhF/FJitCOCP4Or/Q30CCMj+cNoZRNTlp/SvSetRPgG+2kkqM
-         Ok1kS5o13/rZYYEOiza/EzqA34y9MN3peKdGtC1itTzYpEzLHQMgk7FPC/Tfg6iCARgF
-         DVUA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U8zpmiqBADxX47OznOybd9yWoe3no3mfK8sqGsDDxeQ=;
+        b=MLQWOL50SgLqIriBuddIFpApYq/Eyf/Ty4qohAkuymWPzpiyXayupTE0X9t79pFy8Q
+         ONhexVDx6tWa4j83oubokoFOOotudgz1XkmKutppjfgHwIe6EnJPmtBAPBzqBkxQDaJm
+         HvjBNkaljz0e5qOe7Wv6lQ4LwcpR2qLBSWRKrCa4Fz7nY6Q6oMEZ71tZJracAxfM1x8S
+         cbMMeFS87AKjm5zjXs/qe5kB8YUp7k2/pnfUCi5MLQICF9zKPdIIddhnoNDxqT+7zV/Q
+         QlQGugssp7mFNeJEoNGKU2h4qRj+2NnE0IlYuhpIZGFc4qVLqTB3/7GtCnS/Ngy1gQJx
+         ERaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W47odrIZjcYj4z0Bgkfmue2TCHoiOu56PCWwIh8207g=;
-        b=Pl7lnZ71yU/KJ8qRqKHPodXKS2I9rvbfJVERXO6ckvOq5Ikc7kxYbGXFZr67NaqXs2
-         PcG2yM2O5ojl/TE648qwSSuZ+jVUPgdJKL3HlRw/NymSZkmI80G+8NHGk2txgtQZADCG
-         uaMgOzQ8h2T6ZNUXD25K7RF1PmAO/OUHhBwwI/H1YGP5X0+OmNJsstF0d2o8Rr81/3aI
-         AZUrNN77t4BVfMbUdTXvdE1yA+boCX9wMcRzlT57vEnLq8ehl/8y1r/0yzU9t0tu4KvR
-         IrwMnM2wY7GDNmTentxtnMRuQcvFxSCVlhRbQ6kG83YlNXGGcPVmaj5cKDRWT+mYJ9sX
-         iIKA==
-X-Gm-Message-State: APjAAAVyyVXcNwmiN1ODE5qJ1igVVH44+IFjP0/GUlhSC/Jzm95oJ1Lv
-        VrFaId14nVps9ejIlec2bJ0=
-X-Google-Smtp-Source: APXvYqxhEAzOELijW4I0V72qVYbNj3+14XAXPmhY2Xi5OjfA8i2GcsCy1+UGFSvZBQ+tREInF2pbCg==
-X-Received: by 2002:a0c:a046:: with SMTP id b64mr5088475qva.6.1573153548680;
-        Thu, 07 Nov 2019 11:05:48 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id h21sm153692qkj.116.2019.11.07.11.05.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 11:05:48 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     Frank.li@nxp.com, corbet@lwn.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [RFC PATCH] Documentation: perf: fix kernel-doc warnings in imx-ddr.rst
-Date:   Thu,  7 Nov 2019 15:57:55 -0300
-Message-Id: <20191107185755.29586-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U8zpmiqBADxX47OznOybd9yWoe3no3mfK8sqGsDDxeQ=;
+        b=LY42eC6A/j+gGLuFLAcmLKkNzlJmpd00Q9ZBaWgv/UxnQpdEO8cxUc2FD/4rTBnmkZ
+         76I4/4rqckJXJ7vLam8RhnhAojehtuRW/HwSiDqYbANzA15Y7HlDsFluEpS99d+5kb37
+         T96f6oMq2xsYl+evE1nTQgQLi2Gfn7hgG0FQH8LdyQReQu31MKDlBekD1T7d78nh8sGC
+         2CSO/snekOtinRkMnOIucA37b7hjIiFdCkGMsPThVUHP4/BWwBjL4MuZjemkEJvliLLA
+         N50OkFgXyQ4h5ZXspFu2vd4YzLPZyuiuA/zivP0ePmqFFMfGsip9DcKYFlgaA/YdV8J9
+         wRjg==
+X-Gm-Message-State: APjAAAX5UjUEqqZ3qfoWEGcZHK1XNEhbF3tLYkoBliJFcE7vdzQlxmE3
+        8JPiJnkECYcAW69HaJPk1/I=
+X-Google-Smtp-Source: APXvYqx7OcV8j88k3kUZwU07cB8Fnru+N9/4Syy2Nw52WliHVqFiJLsfvwB75ltMAmUhQk0V7mb+Qw==
+X-Received: by 2002:ac8:2ff3:: with SMTP id m48mr1760184qta.127.1573153557730;
+        Thu, 07 Nov 2019 11:05:57 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:3f13])
+        by smtp.gmail.com with ESMTPSA id w26sm1382599qkf.59.2019.11.07.11.05.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 11:05:57 -0800 (PST)
+Date:   Thu, 7 Nov 2019 11:05:55 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, kernel-team@fb.com,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH v2 1/5] bfq-iosched: stop using blkg->stat_bytes and
+ ->stat_ios
+Message-ID: <20191107190555.GB3622521@devbig004.ftw2.facebook.com>
+References: <20191106215838.3973497-1-tj@kernel.org>
+ <20191106215838.3973497-2-tj@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106215838.3973497-2-tj@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+From 4f711dd784f8666ec41fa5319f16838235557a30 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Thu, 7 Nov 2019 11:01:19 -0800
 
-Unexpected indentation errors were reported due to missing blank lines.
-Now fixed. No change in content otherwise.
+When used on cgroup1, bfq uses the blkg->stat_bytes and ->stat_ios
+from blk-cgroup core to populate six stat knobs.  blk-cgroup core is
+moving away from blkg_rwstat to improve scalability and won't be able
+to support this usage.
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+It isn't like the sharing gains all that much.  Let's break it out to
+dedicated rwstat counters which are updated when on cgroup1.  This
+makes use of bfqg_*rwstat*() helpers outside of
+CONFIG_BFQ_CGROUP_DEBUG.  Move them out.
+
+v2: Compile fix when !CONFIG_BFQ_CGROUP_DEBUG.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Paolo Valente <paolo.valente@linaro.org>
 ---
- Documentation/admin-guide/perf/imx-ddr.rst | 5 +++++
- 1 file changed, 5 insertions(+)
+ block/bfq-cgroup.c  | 39 +++++++++++++++++++++++++++------------
+ block/bfq-iosched.c |  4 ++++
+ block/bfq-iosched.h |  4 ++++
+ 3 files changed, 35 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/admin-guide/perf/imx-ddr.rst b/Documentation/admin-guide/perf/imx-ddr.rst
-index 517a205abad6..75c8b46ba6f9 100644
---- a/Documentation/admin-guide/perf/imx-ddr.rst
-+++ b/Documentation/admin-guide/perf/imx-ddr.rst
-@@ -18,6 +18,7 @@ The "format" directory describes format of the config (event ID) and config1
- devices/imx8_ddr0/format/. The "events" directory describes the events types
- hardware supported that can be used with perf tool, see /sys/bus/event_source/
- devices/imx8_ddr0/events/.
-+
-   e.g.::
-         perf stat -a -e imx8_ddr0/cycles/ cmd
-         perf stat -a -e imx8_ddr0/read/,imx8_ddr0/write/ cmd
-@@ -31,16 +32,19 @@ in the driver.
-   Filter is defined with two configuration parts:
-   --AXI_ID defines AxID matching value.
-   --AXI_MASKING defines which bits of AxID are meaningful for the matching.
-+
-         0：corresponding bit is masked.
-         1: corresponding bit is not masked, i.e. used to do the matching.
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index d4755d4ad009..cea0ae12f937 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -347,6 +347,14 @@ void bfqg_and_blkg_put(struct bfq_group *bfqg)
+ 	bfqg_put(bfqg);
+ }
  
-   AXI_ID and AXI_MASKING are mapped on DPCR1 register in performance counter.
-   When non-masked bits are matching corresponding AXI_ID bits then counter is
-   incremented. Perf counter is incremented if
++void bfqg_stats_update_legacy_io(struct request_queue *q, struct request *rq)
++{
++	struct bfq_group *bfqg = blkg_to_bfqg(rq->bio->bi_blkg);
 +
-           AxID && AXI_MASKING == AXI_ID && AXI_MASKING
++	blkg_rwstat_add(&bfqg->stats.bytes, rq->cmd_flags, blk_rq_bytes(rq));
++	blkg_rwstat_add(&bfqg->stats.ios, rq->cmd_flags, 1);
++}
++
+ /* @stats = 0 */
+ static void bfqg_stats_reset(struct bfqg_stats *stats)
+ {
+@@ -431,6 +439,8 @@ void bfq_init_entity(struct bfq_entity *entity, struct bfq_group *bfqg)
  
-   This filter doesn't support filter different AXI ID for axid-read and axid-write
-   event at the same time as this filter is shared between counters.
+ static void bfqg_stats_exit(struct bfqg_stats *stats)
+ {
++	blkg_rwstat_exit(&stats->bytes);
++	blkg_rwstat_exit(&stats->ios);
+ #ifdef CONFIG_BFQ_CGROUP_DEBUG
+ 	blkg_rwstat_exit(&stats->merged);
+ 	blkg_rwstat_exit(&stats->service_time);
+@@ -448,6 +458,10 @@ static void bfqg_stats_exit(struct bfqg_stats *stats)
+ 
+ static int bfqg_stats_init(struct bfqg_stats *stats, gfp_t gfp)
+ {
++	if (blkg_rwstat_init(&stats->bytes, gfp) ||
++	    blkg_rwstat_init(&stats->ios, gfp))
++		return -ENOMEM;
 +
-   e.g.::
-         perf stat -a -e imx8_ddr0/axid-read,axi_mask=0xMMMM,axi_id=0xDDDD/ cmd
-         perf stat -a -e imx8_ddr0/axid-write,axi_mask=0xMMMM,axi_id=0xDDDD/ cmd
-@@ -48,5 +52,6 @@ in the driver.
-   NOTE: axi_mask is inverted in userspace(i.e. set bits are bits to mask), and
-   it will be reverted in driver automatically. so that the user can just specify
-   axi_id to monitor a specific id, rather than having to specify axi_mask.
-+
-   e.g.::
-         perf stat -a -e imx8_ddr0/axid-read,axi_id=0x12/ cmd, which will monitor ARID=0x12
+ #ifdef CONFIG_BFQ_CGROUP_DEBUG
+ 	if (blkg_rwstat_init(&stats->merged, gfp) ||
+ 	    blkg_rwstat_init(&stats->service_time, gfp) ||
+@@ -1057,7 +1071,6 @@ static ssize_t bfq_io_set_weight(struct kernfs_open_file *of,
+ 	return bfq_io_set_device_weight(of, buf, nbytes, off);
+ }
+ 
+-#ifdef CONFIG_BFQ_CGROUP_DEBUG
+ static int bfqg_print_rwstat(struct seq_file *sf, void *v)
+ {
+ 	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_rwstat,
+@@ -1082,6 +1095,7 @@ static int bfqg_print_rwstat_recursive(struct seq_file *sf, void *v)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_BFQ_CGROUP_DEBUG
+ static int bfqg_print_stat(struct seq_file *sf, void *v)
+ {
+ 	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_stat,
+@@ -1125,7 +1139,8 @@ static int bfqg_print_stat_recursive(struct seq_file *sf, void *v)
+ static u64 bfqg_prfill_sectors(struct seq_file *sf, struct blkg_policy_data *pd,
+ 			       int off)
+ {
+-	u64 sum = blkg_rwstat_total(&pd->blkg->stat_bytes);
++	struct bfq_group *bfqg = blkg_to_bfqg(pd->blkg);
++	u64 sum = blkg_rwstat_total(&bfqg->stats.bytes);
+ 
+ 	return __blkg_prfill_u64(sf, pd, sum >> 9);
+ }
+@@ -1142,8 +1157,8 @@ static u64 bfqg_prfill_sectors_recursive(struct seq_file *sf,
+ {
+ 	struct blkg_rwstat_sample tmp;
+ 
+-	blkg_rwstat_recursive_sum(pd->blkg, NULL,
+-			offsetof(struct blkcg_gq, stat_bytes), &tmp);
++	blkg_rwstat_recursive_sum(pd->blkg, &blkcg_policy_bfq,
++			offsetof(struct bfq_group, stats.bytes), &tmp);
+ 
+ 	return __blkg_prfill_u64(sf, pd,
+ 		(tmp.cnt[BLKG_RWSTAT_READ] + tmp.cnt[BLKG_RWSTAT_WRITE]) >> 9);
+@@ -1226,13 +1241,13 @@ struct cftype bfq_blkcg_legacy_files[] = {
+ 	/* statistics, covers only the tasks in the bfqg */
+ 	{
+ 		.name = "bfq.io_service_bytes",
+-		.private = (unsigned long)&blkcg_policy_bfq,
+-		.seq_show = blkg_print_stat_bytes,
++		.private = offsetof(struct bfq_group, stats.bytes),
++		.seq_show = bfqg_print_rwstat,
+ 	},
+ 	{
+ 		.name = "bfq.io_serviced",
+-		.private = (unsigned long)&blkcg_policy_bfq,
+-		.seq_show = blkg_print_stat_ios,
++		.private = offsetof(struct bfq_group, stats.ios),
++		.seq_show = bfqg_print_rwstat,
+ 	},
+ #ifdef CONFIG_BFQ_CGROUP_DEBUG
+ 	{
+@@ -1269,13 +1284,13 @@ struct cftype bfq_blkcg_legacy_files[] = {
+ 	/* the same statistics which cover the bfqg and its descendants */
+ 	{
+ 		.name = "bfq.io_service_bytes_recursive",
+-		.private = (unsigned long)&blkcg_policy_bfq,
+-		.seq_show = blkg_print_stat_bytes_recursive,
++		.private = offsetof(struct bfq_group, stats.bytes),
++		.seq_show = bfqg_print_rwstat_recursive,
+ 	},
+ 	{
+ 		.name = "bfq.io_serviced_recursive",
+-		.private = (unsigned long)&blkcg_policy_bfq,
+-		.seq_show = blkg_print_stat_ios_recursive,
++		.private = offsetof(struct bfq_group, stats.ios),
++		.seq_show = bfqg_print_rwstat_recursive,
+ 	},
+ #ifdef CONFIG_BFQ_CGROUP_DEBUG
+ 	{
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index b33be928d164..4629f5580d46 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -5450,6 +5450,10 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 	bool idle_timer_disabled = false;
+ 	unsigned int cmd_flags;
+ 
++#ifdef CONFIG_BFQ_GROUP_IOSCHED
++	if (!cgroup_subsys_on_dfl(io_cgrp_subsys) && rq->bio)
++		bfqg_stats_update_legacy_io(q, rq);
++#endif
+ 	spin_lock_irq(&bfqd->lock);
+ 	if (blk_mq_sched_try_insert_merge(q, rq)) {
+ 		spin_unlock_irq(&bfqd->lock);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 5d1a519640f6..2676c06218f1 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -809,6 +809,9 @@ struct bfq_stat {
+ };
+ 
+ struct bfqg_stats {
++	/* basic stats */
++	struct blkg_rwstat		bytes;
++	struct blkg_rwstat		ios;
+ #ifdef CONFIG_BFQ_CGROUP_DEBUG
+ 	/* number of ios merged */
+ 	struct blkg_rwstat		merged;
+@@ -956,6 +959,7 @@ void bfq_put_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg);
+ 
+ /* ---------------- cgroups-support interface ---------------- */
+ 
++void bfqg_stats_update_legacy_io(struct request_queue *q, struct request *rq);
+ void bfqg_stats_update_io_add(struct bfq_group *bfqg, struct bfq_queue *bfqq,
+ 			      unsigned int op);
+ void bfqg_stats_update_io_remove(struct bfq_group *bfqg, unsigned int op);
 -- 
-2.24.0
+2.17.1
 
