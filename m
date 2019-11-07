@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ABFC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C8CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3754E2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5345A2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153716;
-	bh=seO99G0Bqskyv8xyJ+e6rlEe6L0GnWhk6N5GdB+ZGww=;
+	s=default; t=1573153721;
+	bh=uhPN+CgdpLMTBq0yQ3md3W8JpAcdHGVTkJTX+zMpRGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Ddz0FTVtz3UGu/8GyeWOfDO4UoNczaxP5OfnkfsDM/vvwfOs6zzF50CPUwhTA08P
-	 CZxLGUDkEo5FeqiWwB8a9SPioTlpOAL5eY0dxJOmvlKoIKy0A4zQpxy2cd2EZKzSJI
-	 zZEuf6/alU6YsonURZHv9d7qEdF9ApxitTdM2Y1o=
+	b=CRdDGvoQ2CNMjjSX3MXpdCBjJeW0HsH6iOwpkWDVG0/emkXrUe8kp9nLnErn2AKeh
+	 edfr8PPiA9qKair8MndOceCrBnsynbzgZYNtPKX/WRkgWwSYxJh76ExMNphxtuNvDE
+	 fcGIuxcxSszkzoBwuAYZBKiFHVfLXLvPpZiZYres=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbfKGTIf (ORCPT
+        id S1731162AbfKGTIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:08:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46958 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:08:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbfKGTId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:08:33 -0500
+        id S1727936AbfKGTIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:08:38 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC86B21882;
-        Thu,  7 Nov 2019 19:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E82F7222C6;
+        Thu,  7 Nov 2019 19:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153712;
-        bh=seO99G0Bqskyv8xyJ+e6rlEe6L0GnWhk6N5GdB+ZGww=;
+        s=default; t=1573153717;
+        bh=uhPN+CgdpLMTBq0yQ3md3W8JpAcdHGVTkJTX+zMpRGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAnqlHc5QMCoE3Vp6TfNS6AHCG/KaOCOkDAS+OP6h2cNieQX7P5uT+8EEY8O7r3BG
-         H3YT+C9ceo0+gc5qCHmJ9DWVzj7K9ylG2AUE3NaSd0klYLfnEyZK6IFQFrrVl1Oin6
-         +xGMr1TPNFa7q2cwI4aglBkMzJAXSlpmZQ1sgsMQ=
+        b=mC+hTNSM6emCDiL4/5xwFozZvi6vUJCK7zvPgH1Hq+n4twtxMsLoOOon1Cu4rdfzc
+         0i17tm52WPyGNc3JdNUY7V//WMM6NaKNMU7mgtYxqFQEHr1kBUXw2wIWn7DTRK8Nrk
+         IkMKUIkGrBHnnu1hkWCf3+aMwF8wsGnS9509cYYI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 52/63] perf probe: Filter out instances except for inlined subroutine and subprogram
-Date:   Thu,  7 Nov 2019 16:00:00 -0300
-Message-Id: <20191107190011.23924-53-acme@kernel.org>
+Subject: [PATCH 53/63] perf probe: Fix to show calling lines of inlined functions
+Date:   Thu,  7 Nov 2019 16:00:01 -0300
+Message-Id: <20191107190011.23924-54-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -63,114 +63,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Filter out instances except for inlined_subroutine and subprogram DIE in
-die_walk_instances() and die_is_func_instance().
+Fix to show calling lines of inlined functions (where an inline function
+is called).
 
-This fixes an issue that perf probe sets some probes on calling address
-instead of a target function itself.
+die_walk_lines() filtered out the lines inside inlined functions based
+on the address. However this also filtered out the lines which call
+those inlined functions from the target function.
 
-When perf probe walks on instances of an abstruct origin (a kind of
-function prototype of inlined function), die_walk_instances() can also
-pass a GNU_call_site (a GNU extension for call site) to callback. Since
-it is not an inlined instance of target function, we have to filter out
-when searching a probe point.
+To solve this issue, check the call_file and call_line attributes and do
+not filter out if it matches to the line information.
 
-Without this patch, perf probe sets probes on call site address too.This
-can happen on some function which is marked "inlined", but has actual
-symbol. (I'm not sure why GCC mark it "inlined"):
+Without this fix, perf probe -L doesn't show some lines correctly.
+(don't see the lines after 17)
 
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+2500017
-  p:probe/vfs_read_1 _text+2499468
-  p:probe/vfs_read_2 _text+2499563
-  p:probe/vfs_read_3 _text+2498876
-  p:probe/vfs_read_4 _text+2498512
-  p:probe/vfs_read_5 _text+2498627
+  # perf probe -L vfs_read
+  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
+        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+        1  {
+        2         ssize_t ret;
 
-With this patch:
+        4         if (!(file->f_mode & FMODE_READ))
+                          return -EBADF;
+        6         if (!(file->f_mode & FMODE_CAN_READ))
+                          return -EINVAL;
+        8         if (unlikely(!access_ok(buf, count)))
+                          return -EFAULT;
 
-Slightly different results, similar tho:
+       11         ret = rw_verify_area(READ, file, pos, count);
+       12         if (!ret) {
+       13                 if (count > MAX_RW_COUNT)
+                                  count =  MAX_RW_COUNT;
+       15                 ret = __vfs_read(file, buf, count, pos);
+       16                 if (ret > 0) {
+                                  fsnotify_access(file);
+                                  add_rchar(current, ret);
+                          }
 
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+2498512
+With this fix:
 
-Committer testing:
+  # perf probe -L vfs_read
+  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
+        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+        1  {
+        2         ssize_t ret;
 
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+        4         if (!(file->f_mode & FMODE_READ))
+                          return -EBADF;
+        6         if (!(file->f_mode & FMODE_CAN_READ))
+                          return -EINVAL;
+        8         if (unlikely(!access_ok(buf, count)))
+                          return -EFAULT;
 
-Before:
+       11         ret = rw_verify_area(READ, file, pos, count);
+       12         if (!ret) {
+       13                 if (count > MAX_RW_COUNT)
+                                  count =  MAX_RW_COUNT;
+       15                 ret = __vfs_read(file, buf, count, pos);
+       16                 if (ret > 0) {
+       17                         fsnotify_access(file);
+       18                         add_rchar(current, ret);
+                          }
+       20                 inc_syscr(current);
+                  }
 
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+3131557
-  p:probe/vfs_read_1 _text+3130975
-  p:probe/vfs_read_2 _text+3131047
-  p:probe/vfs_read_3 _text+3130380
-  p:probe/vfs_read_4 _text+3130000
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-  #
-
-After:
-
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+3130000
-  #
-
-Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241937063.32002.11024544873990816590.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157241937995.32002.17899884017011512577.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dwarf-aux.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ tools/perf/util/dwarf-aux.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index f31001d13bfb..ac1289043204 100644
+index ac1289043204..5544bfbd0f6c 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -334,18 +334,22 @@ int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
-  * @dw_die: a DIE
-  *
-  * Ensure that this DIE is an instance (which has an entry address).
-- * This returns true if @dw_die is a function instance. If not, you need to
-- * call die_walk_instances() to find actual instances.
-+ * This returns true if @dw_die is a function instance. If not, the @dw_die
-+ * must be a prototype. You can use die_walk_instances() to find actual
-+ * instances.
-  **/
- bool die_is_func_instance(Dwarf_Die *dw_die)
- {
- 	Dwarf_Addr tmp;
- 	Dwarf_Attribute attr_mem;
-+	int tag = dwarf_tag(dw_die);
- 
--	/* Actually gcc optimizes non-inline as like as inlined */
--	return !dwarf_func_inline(dw_die) &&
--	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
--		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
-+	if (tag != DW_TAG_subprogram &&
-+	    tag != DW_TAG_inlined_subroutine)
-+		return false;
+@@ -784,7 +784,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	Dwarf_Lines *lines;
+ 	Dwarf_Line *line;
+ 	Dwarf_Addr addr;
+-	const char *fname, *decf = NULL;
++	const char *fname, *decf = NULL, *inf = NULL;
+ 	int lineno, ret = 0;
+ 	int decl = 0, inl;
+ 	Dwarf_Die die_mem, *cu_die;
+@@ -835,13 +835,21 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 			 */
+ 			if (!dwarf_haspc(rt_die, addr))
+ 				continue;
 +
-+	return dwarf_entrypc(dw_die, &tmp) == 0 ||
-+		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
- }
- 
- /**
-@@ -624,6 +628,9 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
- 	Dwarf_Die *origin;
- 	int tmp;
- 
-+	if (!die_is_func_instance(inst))
-+		return DIE_FIND_CB_CONTINUE;
+ 			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
++				/* Call-site check */
++				inf = die_get_call_file(&die_mem);
++				if ((inf && !strcmp(inf, decf)) &&
++				    die_get_call_lineno(&die_mem) == lineno)
++					goto found;
 +
- 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
- 	if (attr == NULL)
- 		return DIE_FIND_CB_CONTINUE;
+ 				dwarf_decl_line(&die_mem, &inl);
+ 				if (inl != decl ||
+ 				    decf != dwarf_decl_file(&die_mem))
+ 					continue;
+ 			}
+ 		}
++found:
+ 		/* Get source line */
+ 		fname = dwarf_linesrc(line, NULL, NULL);
+ 
 -- 
 2.21.0
 
