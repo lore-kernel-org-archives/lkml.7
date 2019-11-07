@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21749C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7781AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFCA21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5502D218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfKGSzP (ORCPT
+        id S1727538AbfKGSzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:55:15 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:42117 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKGSzM (ORCPT
+        Thu, 7 Nov 2019 13:55:10 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:52579 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfKGSzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:55:12 -0500
-Received: by mail-il1-f197.google.com with SMTP id n16so3605205ilm.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:55:10 -0800 (PST)
+        Thu, 7 Nov 2019 13:55:10 -0500
+Received: by mail-il1-f199.google.com with SMTP id t23so3578009ila.19
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:55:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ncLHvCMcrTLEL3uLU3CyiqGHvpiV5fStvg1s9KU5q9Y=;
-        b=iGMOijl/xH8NxgMLhzD1HHr2z5rH/CekZPki62hHAA48O864LltPMXxv0GJ2pXL2Yr
-         jqK20OVlT4m0oTDly3etH0pblyMhZC9kzjme7nrbux3gleT+DXTZYCEyFVkxbdPajOWr
-         1fUF76sRxylK4wecQfbO/4PAmbS4hrfO5nVteXcrBasUO9i67zaL1AE1fzsagR0OiT3p
-         RIVk7lZCONup0xnjX6/s9J4bO3haDO4MxQeGI83yDqhoFZrArCFL1b6oa3bh/YzqZa7L
-         8VoAbYr0gsqGHgDNI+LZ9GPBjePxJMsT3QKir+T2QjJ1UHUEUFjQ814M6nXj4nFUjbUC
-         0uZQ==
-X-Gm-Message-State: APjAAAXSvblQq/XIF+UjK8HvfvZHa+fhG4vf7gkxGC7auDNlLHftkobF
-        RL9KbiUhHqtjFnOhjnMcepPz+xRNTG7XRfNIZnQ2/OcMcBpd
-X-Google-Smtp-Source: APXvYqwu+NO9F4IWA1pOKF2v1GmJWS4zEFUZ9BuEmpGqON5v+RXmNcCbkzeCr8UHY4pYUB0TzbbUvHQuLcZkO6FyaEkG9nM10/4S
+        bh=ebPwios/a/BkGm6Az/riO5vBmQU4SCQIjm285Fi84Ok=;
+        b=A5Ae7sIoHrtzIV1vExqxZUt3iWXxbbjxf4/Isu5oMqylYztsEGxKRzVkU8HO2f26Zr
+         Ky1WFsXtCTSzlhff1E5/e5Jghtp0U55hWWE4xqjXJQGpN+x1W9JZW6KxPmxu2nutx+oQ
+         R/V3w3EJtutFcoT3FUxEPiPHy4xQcL+brZRjbymXlT0+isxBhcFo5ggodbRNoae7J8YG
+         wsWm0ldpHQ96h9OHDoSjTmuvsUjtrURe+WQsIvAQQWnukQX29yoMr4lN+I1O6EWJS8dx
+         yZ2BRcHesnaQEv0AXNxeDVtzuO68oA0fvU9SZCfq30DFXPLhmeGQJ6kg+sGyvFfhIcZE
+         KV1w==
+X-Gm-Message-State: APjAAAWx2P16jU8ZcUVC0amD8Ork/2imPLqF33HixRo+B3jUtLkHuOjh
+        EP2Sjf4fcdvTayWvCGWQqEzja3Emxp+QFnXcHSl+GbXP8DgY
+X-Google-Smtp-Source: APXvYqzBDOsS8mZ6Itklvqdj/v5vZqjYnnpcPTCDdNcQNyvmaEezCkV7wemNSVu35PiJ/FVLAvrE/7UlYClNkml7HmY5onoPiX9g
 MIME-Version: 1.0
-X-Received: by 2002:a92:ce06:: with SMTP id b6mr6266104ilo.14.1573152909795;
+X-Received: by 2002:a92:3ad4:: with SMTP id i81mr6080862ilf.18.1573152909497;
  Thu, 07 Nov 2019 10:55:09 -0800 (PST)
 Date:   Thu, 07 Nov 2019 10:55:09 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005daaaf0596c634bc@google.com>
-Subject: KCSAN: data-race in netlink_recvmsg / netlink_recvmsg
-From:   syzbot <syzbot+6dedf50d68e5713a1f65@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, dsahern@gmail.com,
-        elver@google.com, herbert@gondor.apana.org.au,
-        jakub.kicinski@netronome.com, linux-kernel@vger.kernel.org,
-        lirongqing@baidu.com, netdev@vger.kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, ptalbert@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Message-ID: <0000000000005927bf0596c634a2@google.com>
+Subject: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
+From:   syzbot <syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, elver@google.com,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,87 +60,54 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    94c00660 x86, kcsan: Enable KCSAN for x86
+HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
 git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=14426768e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=51a7c7d2972c87e5
-dashboard link: https://syzkaller.appspot.com/bug?extid=6dedf50d68e5713a1f65
+console output: https://syzkaller.appspot.com/x/log.txt?x=1046796ce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=e3b35fe7918ff0ee474e
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6dedf50d68e5713a1f65@syzkaller.appspotmail.com
+Reported-by: syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KCSAN: data-race in netlink_recvmsg / netlink_recvmsg
+BUG: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
 
-write to 0xffff8880b588efb2 of 2 bytes by task 19788 on cpu 0:
-  skb_reset_transport_header include/linux/skbuff.h:2463 [inline]
-  netlink_recvmsg+0x196/0x910 net/netlink/af_netlink.c:1974
-  sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
-  ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
-  do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
-  __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
-  __do_sys_recvmmsg net/socket.c:2703 [inline]
-  __se_sys_recvmmsg net/socket.c:2696 [inline]
-  __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
+write to 0xffff8880b67c0020 of 8 bytes by task 18908 on cpu 1:
+  sctp_assoc_migrate+0x1a6/0x290 net/sctp/associola.c:1091
+  sctp_sock_migrate+0x8aa/0x9b0 net/sctp/socket.c:9465
+  sctp_accept+0x3c8/0x470 net/sctp/socket.c:4916
+  inet_accept+0x7f/0x360 net/ipv4/af_inet.c:734
+  __sys_accept4+0x224/0x430 net/socket.c:1754
+  __do_sys_accept net/socket.c:1795 [inline]
+  __se_sys_accept net/socket.c:1792 [inline]
+  __x64_sys_accept+0x4e/0x60 net/socket.c:1792
   do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-write to 0xffff8880b588efb2 of 2 bytes by task 19789 on cpu 1:
-  skb_reset_transport_header include/linux/skbuff.h:2463 [inline]
-  netlink_recvmsg+0x196/0x910 net/netlink/af_netlink.c:1974
-  sock_recvmsg_nosec net/socket.c:871 [inline]
-  sock_recvmsg net/socket.c:889 [inline]
-  sock_recvmsg+0x92/0xb0 net/socket.c:885
-  __sys_recvfrom+0x1ae/0x2d0 net/socket.c:2009
-  __do_sys_recvfrom net/socket.c:2027 [inline]
-  __se_sys_recvfrom net/socket.c:2023 [inline]
-  __x64_sys_recvfrom+0x89/0xb0 net/socket.c:2023
-  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+read to 0xffff8880b67c0020 of 8 bytes by task 12003 on cpu 0:
+  sctp_hash_obj+0x4f/0x2d0 net/sctp/input.c:894
+  rht_key_get_hash include/linux/rhashtable.h:133 [inline]
+  rht_key_hashfn include/linux/rhashtable.h:159 [inline]
+  rht_head_hashfn include/linux/rhashtable.h:174 [inline]
+  head_hashfn lib/rhashtable.c:41 [inline]
+  rhashtable_rehash_one lib/rhashtable.c:245 [inline]
+  rhashtable_rehash_chain lib/rhashtable.c:276 [inline]
+  rhashtable_rehash_table lib/rhashtable.c:316 [inline]
+  rht_deferred_worker+0x468/0xab0 lib/rhashtable.c:420
+  process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+  worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
 
 Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 19789 Comm: syz-executor.0 Not tainted 5.4.0-rc6+ #0
+CPU: 0 PID: 12003 Comm: kworker/0:6 Not tainted 5.4.0-rc3+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+Workqueue: events rht_deferred_worker
 ==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 19789 Comm: syz-executor.0 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xf5/0x159 lib/dump_stack.c:113
-  panic+0x210/0x640 kernel/panic.c:221
-  kcsan_report.cold+0xc/0xe kernel/kcsan/report.c:302
-  kcsan_setup_watchpoint+0x3fe/0x410 kernel/kcsan/core.c:357
-  check_access kernel/kcsan/core.c:409 [inline]
-  __tsan_unaligned_write2+0x143/0x1f0 kernel/kcsan/core.c:528
-  skb_reset_transport_header include/linux/skbuff.h:2463 [inline]
-  netlink_recvmsg+0x196/0x910 net/netlink/af_netlink.c:1974
-  sock_recvmsg_nosec net/socket.c:871 [inline]
-  sock_recvmsg net/socket.c:889 [inline]
-  sock_recvmsg+0x92/0xb0 net/socket.c:885
-  __sys_recvfrom+0x1ae/0x2d0 net/socket.c:2009
-  __do_sys_recvfrom net/socket.c:2027 [inline]
-  __se_sys_recvfrom net/socket.c:2023 [inline]
-  __x64_sys_recvfrom+0x89/0xb0 net/socket.c:2023
-  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45a219
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f580a978c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
-RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 000000000045a219
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f580a9796d4
-R13: 00000000004c7c59 R14: 00000000004ddd80 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
 ---
