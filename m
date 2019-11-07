@@ -2,148 +2,145 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257CCFC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33E8C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DE5214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994F0214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tnfOQCfK"
+	dkim=pass (2048-bit key) header.d=softbankrobotics.com header.i=@softbankrobotics.com header.b="B+ofl552"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388796AbfKGPVZ (ORCPT
+        id S2388847AbfKGPVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:21:25 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40959 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfKGPVZ (ORCPT
+        Thu, 7 Nov 2019 10:21:40 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:39401 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729877AbfKGPVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:21:25 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f3so2853899wmc.5;
-        Thu, 07 Nov 2019 07:21:23 -0800 (PST)
+        Thu, 7 Nov 2019 10:21:40 -0500
+Received: by mail-yb1-f196.google.com with SMTP id q18so1062301ybq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:21:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tUz9lo/9z4UAAly/Z67v9gZOTHnCyevqoBRgRavRjsw=;
-        b=tnfOQCfKS48H+K7xacz5HFV2JFSpKKz9GqPzCKBy4p/x5x2hN8mOivcNoFPSfFBM8B
-         CimxXeTk/32+Cxx0NZ9r1V0ya08lTNBBFMhqXNbG0ILKJIKQA+jUpvNMFPKgIdtZTcnE
-         cWK30MRynSSxLEL/sPdHLsBNy8upE4KmkeAojnzxT+Uk4MMbvzbOjIRhCra9pkWDQR2m
-         mcfgFtIewpyqCt/Uw83QZgnK/8Ds49b+alrIlEtpk2BUDSAjyF1gsFXe17Z6EUhrgVN+
-         SiTWmyEqilyngUf+KeU7WDSm7WhhlYaX2Q1X457k6GXKc5zdpqBv+8TGzPElAJUKClTz
-         iD4w==
+        d=softbankrobotics.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
+        b=B+ofl552YPgYG6agLUogYSqjMLA2umxOSGn21yV1uEwT31g7O/XQa+bfA7zal3lIlY
+         n9FXKNbKV2UT5TdYkLKYcZGqkawb6fbGuxNB33XRqxyHnMdeSGvV1SKbkTwxOM29YHdK
+         CTrk65dnI2YI5M4ulWsWC41tW6TfgkvudMBFZV5zKvTuWt1b90gCuBZhce45pu1S6RSs
+         eJ4hxSJDrze95oS+eMpi8ZNIl7HKN76svCna85rwnt3IK9gDHoK/o5xm7E3YXvvjqKfz
+         zEfyMTwyNPUxJf3CRAuhXBm+RFlTF3JObOTVrzUSSy0OtEK3Fh5b6UnIiz4+n3DZYdru
+         9LLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tUz9lo/9z4UAAly/Z67v9gZOTHnCyevqoBRgRavRjsw=;
-        b=TIGJTSAzd8+BvslOO2wOZ+AnEoWuhCp4fHqWfyxNr3rc8PNOP0seTVREk7zcxPdjHc
-         QpbNCMrR6NuWlQRg3pkljB44uAK2aSk2FDlhtPQ+dGQGEZIxLy+9BtpZf8oHfD7Sz8E4
-         OlmxzVrypD627F1GqVzOAe7FyRexRH+bREClVsKxuQIBIdI1TCjDVgZ0B7cej2D8zTw3
-         MvXwO/JS3GCgMrB6Bs1sEzzxl3NPL7ao+fUkguIkw3uZcBZ0lSum9uvNvEfEFF/luFHm
-         yKsQf9pLU6COGWcATInSaZ2KU0nmKfPBOK6GyC9HnPVNF06YLIkjrZ+yeH1nq3c41BaS
-         Y7UQ==
-X-Gm-Message-State: APjAAAUJZOOBIKOMjsZxVOCVTFL2dMreb885X1uXdzSy+WrfPXKwolZS
-        /jMwbQ/VlNFizwF00NX4tl4=
-X-Google-Smtp-Source: APXvYqzUoO54SjCKN5o/wY+n0JSUgqyAlyIDjV70oqVl5A7OH+1xnZNUrJJ3e8+hC0nkaF/X9fycDg==
-X-Received: by 2002:a1c:1d41:: with SMTP id d62mr3402052wmd.32.1573140082266;
-        Thu, 07 Nov 2019 07:21:22 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id x8sm2459912wrm.7.2019.11.07.07.21.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 07:21:17 -0800 (PST)
-Date:   Thu, 7 Nov 2019 16:21:15 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        jason@lakedaemon.net, jonathanh@nvidia.com,
-        linus.walleij@linaro.org, marc.zyngier@arm.com,
-        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
-Message-ID: <20191107152115.GA2580600@ulmo>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
- <1565984527-5272-8-git-send-email-skomatineni@nvidia.com>
- <20191106231005.F2CD820869@mail.kernel.org>
- <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
+        b=VkSUrg0Ib//v2UTEv2HB4xywTtZCvHuHzS0P2N8lktfSt/fWVlR5V7S6haAOi3oVaZ
+         XXwJDv3K/mTWjUG/OV94PLzFkdGt47WYguX1NXY4V+qCC73FWcq06v/NYzILw6SmWTEu
+         kOw1H70ftehOBp5SE5t9MMEdkSfYBT4IUSfFxPtXtfqR518Qrt3ta60jR7+pHBuEuEkL
+         6MV9AsKDu07/YjYd9nmDjesnxYQv225b4Ro/0qVX1hTmDtjz3rdO6Gc7Ya5ffS5K/JF2
+         zh/HiifihbGG0ugeMmJ4ydPy8V4b+V4xt6A4q+oAsO/zJbjsvS35LAGkFnC/QBTVfd+Y
+         IAeA==
+X-Gm-Message-State: APjAAAV2ssKb7mrTFkw0OneleflTvg2CtCltSG04OLU1ny6KKHYoiw5g
+        HZBP6cTsmGwN+I/w3mUi7hcCMTJWAzSjylziIrZyMQ6a3ik7R4b5mMUtB8ha7+ugfci/lCaJpU6
+        0J5S09W0oSTykc2d5zpt0HtdpAgw5Fxk=
+X-Google-Smtp-Source: APXvYqzRuP0KRS6kNgXL+k/rx599gZ4zi3AP+E1yvYWTX39dSFoKRwBgmZ5zlQmRjqF3lwYHFQD1X1VHI+OdjPHCIg4=
+X-Received: by 2002:a25:3b56:: with SMTP id i83mr3914294yba.496.1573140099285;
+ Thu, 07 Nov 2019 07:21:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Content-Disposition: inline
-In-Reply-To: <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
+From:   Julien Massot <jmassot@softbankrobotics.com>
+Date:   Thu, 7 Nov 2019 16:21:28 +0100
+Message-ID: <CADGp=QcwM8MhkRCjKz0wwHuz5vZGdfHOn0qYp4g_TBjHWzY6CA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] PCI: qcom: Add support for SDM845 PCIe
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bjorn,
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Nov 7, 2019 at 1:16 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> This adds support necessary for the two PCIe controllers found in Qualcom=
+m
+> SDM845.
 
-On Thu, Nov 07, 2019 at 03:54:03AM +0300, Dmitry Osipenko wrote:
-> 07.11.2019 02:10, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
-> >> This patch adds an API clk_hw_get_parent_index to get index of the
-> >> clock parent to use during the clock restore operations on system
-> >> resume.
-> > =20
-> > Is there a reason we can't save the clk hw index at suspend time by
-> > reading the hardware to understand the current parent? The parent index
-> > typically doesn't matter unless we're trying to communicate something
-> > from the framework to the provider driver. Put another way, I would
-> > think the provider driver can figure out the index itself without having
-> > to go through the framework to do so.
->=20
-> Isn't it a bit wasteful to duplicate information about the parent within
-> a provider if framework already has that info? The whole point of this
-> new API is to allow providers to avoid that unnecessary duplication.
->=20
-> Please note that clk_hw_get_parent_index is getting used only at the
-> resume time and not at suspend.
+Thanks a lot the gen 3 PCIE works on my 845 platform.
+Tested-by: Julien Massot <jmassot@softbankrobotics.com>
 
-I agree with this. All of the information that we need is already cached
-in the framework. Doing this in the driver would mean essentially adding
-a "saved parent" field along with code to read the value at suspend time
-to the three types of clocks that currently use this core helper.
+--=20
 
-That's certainly something that we *can* do, but it doesn't sound like a
-better option than simply querying the framework for the value that we
-need.
 
-Thierry
+*This email and any attachment thereto are confidential and intended=20
+solely for the use of the individual or entity to whom they are addressed.
 
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
+If you are not the intended recipient, please be advised that disclosing,=
+=20
+copying, distributing or taking any action in reliance on the contents of=
+=20
+this email is strictly prohibited. In such case, please immediately advise=
+=20
+the sender, and delete all copies and attachment from your system.
+This=20
+email shall not be construed and is not tantamount to an offer, an=20
+acceptance of offer, or an agreement by SoftBank Robotics Europe on any=20
+discussion or contractual document whatsoever. No employee or agent is=20
+authorized to represent or bind SoftBank Robotics Europe to third parties=
+=20
+by email, or act on behalf of SoftBank Robotics Europe by email, without=20
+express written confirmation by SoftBank Robotics Europe=E2=80=99 duly auth=
+orized=20
+representatives.
+*
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3ENmgACgkQ3SOs138+
-s6HBehAAoWy2oqQjgS7Lk2yJnxhX9j8cHmxS30B66WKwZ/Enod8p3/tHOIreOs7Q
-na8sE7nhvDP6ULJjCNNjrBtZ+rm9EfK9n4jUV6Y10wH8PVpFyN8Xnobp5yipT4uD
-V65DF1MPG1xYfG7ksHXFJRpXlWPuVWQzaxTKSVpQuzbqRtpyoXCYTy50u68TUz5X
-Qs8XOQAmrcG2DqflYdDdra1OVqjPlL6gShB9nrzkIoCg41mqnQ/j6iqC9yPa0rXv
-k765USRxiD9gdYPksBVf5WJx7Bf3oECYEkhxP6XalKDp/b/USIEOElTqwe7uFSW6
-oL5MhWWlM/aOGvtR5lt8cawc2Z9oGzg7Ts2Z6Ot1iDV8Un+NPobcGBXFIw5y6zP2
-pEKbHMCxSBx8X86zlMxhIg2g0NGZu3xkKWTa+9KnANa8MRGDCfacHPoRy/XA2qGh
-ufM4+hfz8fFJk1ODxS/f4RbMp6XwXfL3X5UvVVhiKNBm44H3ZpD8398RolwT6yQS
-rFMpF8SC00/t5f34ZPU2gZkBDZheqFfX/d94EVUXUxcJ7xndVVqXgGrWlFjKnYVw
-hovXum6/3HTiMjyVQW3HfgaU8fa+Oazny1okGE0rXkrV5Ii/XFtAQyVv2Q7oGNOK
-TrfKd5/oJr6Eu1zqpToS+HmUhTZGQp0NL1QF9BrUd4+WvLNmsWs=
-=PNuJ
------END PGP SIGNATURE-----
 
---XsQoSWH+UP9D9v3l--
+*Ce message =C3=A9lectronique et =C3=A9ventuelles pi=C3=A8ces=20
+jointes sont confidentiels, et exclusivement destin=C3=A9s =C3=A0 la person=
+ne ou=20
+l'entit=C3=A9 =C3=A0 qui ils sont adress=C3=A9s.
+Si vous n'=C3=AAtes pas le destinataire vis=C3=A9,=20
+vous =C3=AAtes pri=C3=A9 de ne pas divulguer, copier, distribuer ou prendre=
+ toute=20
+d=C3=A9cision sur la foi de ce message =C3=A9lectronique. Merci d'en aviser=
+=20
+imm=C3=A9diatement l'exp=C3=A9diteur et de supprimer toutes les copies et =
+=C3=A9ventuelles=20
+pi=C3=A8ces jointes de votre syst=C3=A8me.
+Ce message =C3=A9lectronique n'=C3=A9quivaut pas =C3=A0=20
+une offre, =C3=A0 une acceptation d=E2=80=99offre, ou =C3=A0 un accord de S=
+oftBank Robotics=20
+Europe sur toute discussion ou document contractuel quel qu=E2=80=99il soit=
+, et ne=20
+peut =C3=AAtre interpr=C3=A9t=C3=A9 comme tel. Aucun employ=C3=A9 ou agent =
+de SoftBank Robotics=20
+Europe n'est autoris=C3=A9 =C3=A0 repr=C3=A9senter ou =C3=A0 engager la soc=
+i=C3=A9t=C3=A9 par email, ou =C3=A0=20
+agir au nom et pour le compte de la soci=C3=A9t=C3=A9 par email, sans qu=E2=
+=80=99une=20
+confirmation =C3=A9crite soit donn=C3=A9e par le repr=C3=A9sentant l=C3=A9g=
+al de SoftBank=20
+Robotics Europe ou par toute autre personne ayant re=C3=A7u d=C3=A9l=C3=A9g=
+ation de=20
+pouvoir appropri=C3=A9e.
+*
+
+**
