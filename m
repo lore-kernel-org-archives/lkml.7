@@ -2,124 +2,126 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2B1C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F86C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3EC21D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573114721;
-	bh=TTmMMdaJZ+q0ILx10f9KcxiSjGKCG0L4SWV93S+2APs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1WAWhUpFsqRDUmLEuLpD5iTDuh9RDB1Tg4BqdZYCtfea/kGcs2oU/dy0a3WD0Q2qn
-	 KcNWQsG1u0HBjU4UtRK8MOcfgAkI+xTwWDLVlTV8IvAAM/UffLGqLOsNRaDWvhsXvd
-	 +VIfvdL1d71PUMnRnHGJ/VAQ221sMZfM6D9Y8p9M=
+	by mail.kernel.org (Postfix) with ESMTP id 7AE4D21D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfKGISk (ORCPT
+        id S1727634AbfKGIT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:18:40 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44595 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfKGISj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:18:39 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v4so864177lfd.11;
-        Thu, 07 Nov 2019 00:18:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jADw1Ub15ip6TZv8Btimu9F+3zScCWJmjUZMm+FL7DA=;
-        b=UQHYj64Y6csMMpoQebO1M2SaZf1u51eXHob46GR7H9RN4blGdOounDNeGtmWQB8Sax
-         +dCcwfVjA+pEmgIP3xmT2rSe7T6+T5NZbuERXGFCDUnIbx5s0F5H+Hy5HOAH37xmBBQr
-         cqFWFqvtA4TLjjfqjfXQtP4OmoP4s9Z7pexTDNE/Bl5bMHlYSZuKf695VocIQpGRs3gH
-         wmcudz2txqJHWPQicHeC86uhp+80XIt2MN8TdMx5+u+YltNezGfEe/0GivVC49jLTib0
-         g0oeUasFadoVi6q1AFUgzCipH7w7LtdHmQJzhHBMWWSwYJCPi7iieZj8IcOnu+4FnQiD
-         f5Yw==
-X-Gm-Message-State: APjAAAX6z7OKDT3m6JB/ZEeXiWkVeTUxFnOzRbzKClO6iDFSnVZ3a1VT
-        rnVyOvnEhABbdE57gAZ7NOg=
-X-Google-Smtp-Source: APXvYqyzAB1JQTvdRbAXpNyoBpPRjsDxJNFmC4MDIRKqKzrkv0XiJ0wimNnFwdnU46zYNtQyhli/Xw==
-X-Received: by 2002:ac2:4ace:: with SMTP id m14mr1456777lfp.130.1573114717581;
-        Thu, 07 Nov 2019 00:18:37 -0800 (PST)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id u2sm1100217ljg.34.2019.11.07.00.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 00:18:36 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iSd01-0002Ck-FV; Thu, 07 Nov 2019 09:18:37 +0100
-Date:   Thu, 7 Nov 2019 09:18:37 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Pan Bian <bianpan2016@163.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Young Xiao <92siuyang@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] nfc: netlink: fix double device reference drop
-Message-ID: <20191107081837.GF11035@localhost>
-References: <1573108190-30836-1-git-send-email-bianpan2016@163.com>
+        Thu, 7 Nov 2019 03:19:27 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:16164 "EHLO SHSQR01.unisoc.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726800AbfKGIT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:19:27 -0500
+X-Greylist: delayed 1909 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Nov 2019 03:19:26 EST
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+        by SHSQR01.unisoc.com with ESMTP id xA77lUVu065852
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 15:47:30 +0800 (CST)
+        (envelope-from lvqiang.huang@unisoc.com)
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id xA77j9w1060787
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 7 Nov 2019 15:45:09 +0800 (CST)
+        (envelope-from lvqiang.huang@unisoc.com)
+Received: from localhost (10.0.74.59) by BJMBX01.spreadtrum.com (10.0.64.7)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Thu, 7 Nov 2019 15:45:14
+ +0800
+From:   Lvqiang <Lvqiang.Huang@unisoc.com>
+To:     <linux@armlinux.org.uk>, <ebiederm@xmission.com>,
+        <dave.hansen@linux.intel.com>, <anshuman.khandual@arm.com>,
+        <akpm@linux-foundation.org>, <Lvqiang.Huang@unisoc.com>,
+        <f.fainelli@gmail.com>, <will@kernel.org>, <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: check __ex_table in do_bad()
+Date:   Thu, 7 Nov 2019 15:45:13 +0800
+Message-ID: <1573112713-10115-1-git-send-email-Lvqiang.Huang@unisoc.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573108190-30836-1-git-send-email-bianpan2016@163.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.0.74.59]
+X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL: SHSQR01.spreadtrum.com xA77j9w1060787
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 02:29:50PM +0800, Pan Bian wrote:
-> The function nfc_put_device(dev) is called twice to drop the reference
-> to dev when there is no associated local llcp. Remove one of them to fix
-> the bug.
-> 
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
-> ---
-> v2: change subject of the patch
-> ---
->  net/nfc/netlink.c | 2 --
->  1 file changed, 2 deletions(-)
 
-Reviewed-by: Johan Hovold <johan@kernel.org>
+We got many crashs in for_each_frame+0x18 arch/arm/lib/backtrace.S
+    1003: ldr r2, [sv_pc, #-4]
 
-In the future, please try to track down the commits introducing the bugs
-you fix. That will help not only reviewers, but also the stable
-maintainers.
+The backtrace is
+    dump_backtrace
+    show_stack
+    sched_show_task
+    show_state_filter
+    sysrq_handle_showstate_blocked
+    __handle_sysrq
+    write_sysrq_trigger
+    proc_reg_write
+    __vfs_write
+    vfs_write
+    sys_write
 
-In this case you could have added:
+Related Kernel config
+    CONFIG_CPU_SW_DOMAIN_PAN=y
+    # CONFIG_ARM_UNWIND is not set
+    CONFIG_FRAME_POINTER=y
 
-Fixes: 52feb444a903 ("NFC: Extend netlink interface for LTO, RW, and MIUX parameters support")
-Fixes: d9b8d8e19b07 ("NFC: llcp: Service Name Lookup netlink interface")
+The task A was dumping the stack of an UN task B. However, the task B
+scheduled to run on another CPU, which cause it stack content changed.
+Then, task A may hit a page domain fault and die().
+    [520.661314] Unhandled fault: page domain fault (0x01b) at 0x32848c02
 
-> diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
-> index 17e6ca62f1be..afde0d763039 100644
-> --- a/net/nfc/netlink.c
-> +++ b/net/nfc/netlink.c
-> @@ -1099,7 +1099,6 @@ static int nfc_genl_llc_set_params(struct sk_buff *skb, struct genl_info *info)
->  
->  	local = nfc_llcp_find_local(dev);
->  	if (!local) {
-> -		nfc_put_device(dev);
->  		rc = -ENODEV;
->  		goto exit;
->  	}
-> @@ -1159,7 +1158,6 @@ static int nfc_genl_llc_sdreq(struct sk_buff *skb, struct genl_info *info)
->  
->  	local = nfc_llcp_find_local(dev);
->  	if (!local) {
-> -		nfc_put_device(dev);
->  		rc = -ENODEV;
->  		goto exit;
->  	}
+The addr 0x32848c02 is a valid user-space address.
+    PAGE DIRECTORY: d1854000
+      PGD: d1854ca0 => bb21e835
+      PMD: d1854ca0 => bb21e835
+      PTE: bb21e120 => afffa79f
 
-Johan
+With CONFIG_CPU_SW_DOMAIN_PAN=y, a page domain fault occurred.
+    { do_bad, SIGSEGV, SEGV_ACCERR, "page domain fault"},
+
+Without check the __ex_table entry, do_bad() just return fault and die().
+    .pushsection __ex_table,"a"
+    .long	1003b, 1006b
+
+This patch try __ex_table in do_bad(), the same as in __do_kernel_fault().
+
+Signed-off-by: Lvqiang <Lvqiang.Huang@unisoc.com>
+---
+ arch/arm/mm/fault.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index bd0f482..22f45df 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -487,11 +487,14 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
+ #endif /* CONFIG_ARM_LPAE */
+ 
+ /*
+- * This abort handler always returns "fault".
++ * Checks __ex_table before returns "fault".
+  */
+ static int
+ do_bad(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ {
++	if (fixup_exception(regs))
++		return 0;
++
+ 	return 1;
+ }
+ 
+-- 
+1.7.9.5
+
+
