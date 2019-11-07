@@ -2,118 +2,119 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921BCFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649BAC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B332178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAEF2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IfDSYKKh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kv5Shbw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733132AbfKGEF4 (ORCPT
+        id S1733150AbfKGEI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:05:56 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55003 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727280AbfKGEF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 23:05:56 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 6 Nov 2019 23:08:59 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34186 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733094AbfKGEI7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:08:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573099737;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YSIEdqcLrogv35u/q3ac44m/gQYEQosg5vjXwg1Frog=;
+        b=Kv5Shbw2uYdpjl7xPUJp0kikDCTV436Av2zR0n2DdCcWiHGK1mx9guuVQYRsSaiuc0yLwY
+        bWa3ixK3Cg8XwDj6dRa/hMwkQAeiLkdAsLgP6NNPVVw5Vm78dxJEUheCTNiOQu6/1UbsHx
+        kPgHiYQeyJ3EIdD04wf9j0IrUrZt+bw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-355-b64OKsVqNKabWfY1H8bGSQ-1; Wed, 06 Nov 2019 23:08:54 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 477qZS0FHWz9sRY;
-        Thu,  7 Nov 2019 15:05:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573099552;
-        bh=2QapZZxv0w8eOLKWxJmjSRY76XAd4sqlYoTQLOXOZ5c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IfDSYKKhh2+ECCeQVSboLI/gjCCp9JnwwSYuM3D9CXDKQaW6/vJWvNRU2F9ypRzNW
-         y8EL4qYZoMgOJoF06a0E94HW9Wz5WzjOC6TQo+rrjxqjyfdPOABNQ2e+xJLzJPQ4vi
-         pW2oekPtX+ZVcGqCGSttDV3rOyO6AGgExUOhMi859vj7XhB/XXm35TQ9JnZf7WJQXI
-         XlBHs+67ExtYC1wEJpD3M+QtbJpWaUhMX6woonG4nK0TcU1b8v3ApsNeDUhtv/vsK8
-         sk5TA0661D21+f+WVHNLTm9Q/JBMim91nV6ODfPQxlCDDZpXgXa45GvCsm7w+tf3cV
-         R+7f/P8YYH1vA==
-Date:   Thu, 7 Nov 2019 15:05:50 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>, Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: linux-next: manual merge of the gpio tree with the driver-core tree
-Message-ID: <20191107150550.15df2f35@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3D7B107ACC3;
+        Thu,  7 Nov 2019 04:08:52 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4851960870;
+        Thu,  7 Nov 2019 04:08:16 +0000 (UTC)
+Subject: Re: [PATCH v5] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <20191105115332.11026-1-tiwei.bie@intel.com>
+ <16f31c27-3a0e-09d7-3925-dc9777f5e229@redhat.com> <20191106122249.GA3235@___>
+ <20191106075607-mutt-send-email-mst@kernel.org>
+ <580dfa2c-f1ff-2f6f-bbc8-1c4b0a829a3d@redhat.com>
+ <20191106144952.GA10926@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <914081d6-40ee-f184-ff43-c3d4cd885fba@redhat.com>
+Date:   Thu, 7 Nov 2019 12:08:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SJ98=elDCbAvM+46dv4d8lv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191106144952.GA10926@___>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: b64OKsVqNKabWfY1H8bGSQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SJ98=elDCbAvM+46dv4d8lv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 2019/11/6 =E4=B8=8B=E5=8D=8810:49, Tiwei Bie wrote:
+>>>>>> +=09default:
+>>>>>> +=09=09/*
+>>>>>> +=09=09 * VHOST_SET_MEM_TABLE, VHOST_SET_LOG_BASE, and
+>>>>>> +=09=09 * VHOST_SET_LOG_FD are not used yet.
+>>>>>> +=09=09 */
+>>>>> If we don't even use them, there's probably no need to call
+>>>>> vhost_dev_ioctl(). This may help to avoid confusion when we want to d=
+evelop
+>>>>> new API for e.g dirty page tracking.
+>>>> Good point. It's better to reject these ioctls for now.
+>>>>
+>>>> PS. One thing I may need to clarify is that, we need the
+>>>> VHOST_SET_OWNER ioctl to get the vq->handle_kick to work.
+>>>> So if we don't call vhost_dev_ioctl(), we will need to
+>>>> call vhost_dev_set_owner() directly.
+>> I may miss something, it looks to me the there's no owner check in
+>> vhost_vring_ioctl() and the vhost_poll_start() can make sure handle_kick
+>> works?
+> Yeah, there is no owner check in vhost_vring_ioctl().
+> IIUC, vhost_poll_start() will start polling the file. And when
+> event arrives, vhost_poll_wakeup() will be called, and it will
+> queue work to work_list and wakeup worker to finish the work.
+> And the worker is created by vhost_dev_set_owner().
+>
 
-Today's linux-next merge of the gpio tree got a conflict in:
+Right, rethink about this. It looks to me we need:
 
-  drivers/gpio/gpio-tegra186.c
+- Keep VHOST_SET_OWNER, this could be used for future control vq where=20
+it needs a kthread to access the userspace memory
 
-between commit:
+- Temporarily filter=C2=A0 SET_LOG_BASE and SET_LOG_FD until we finalize th=
+e=20
+API for dirty page tracking.
 
-  cc4c831811c2 ("gpio: tegra186: use devm_platform_ioremap_resource_byname(=
-)")
+- For kick through kthread, it looks sub-optimal but we can address this=20
+in the future, e.g call handle_vq_kick directly in vhost_poll_queue=20
+(probably a flag for vhost_poll) and deal with the synchronization in=20
+vhost_poll_flush carefully.
 
-from the driver-core tree and commit:
+Thanks
 
-  2a3655056730 ("gpio: tegra186: Implement wake event support")
 
-from the gpio tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpio/gpio-tegra186.c
-index ef40fbe923cf,8a2a69178925..000000000000
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@@ -407,6 -449,8 +449,7 @@@ static int tegra186_gpio_probe(struct p
-  	unsigned int i, j, offset;
-  	struct gpio_irq_chip *irq;
-  	struct tegra_gpio *gpio;
-+ 	struct device_node *np;
- -	struct resource *res;
-  	char **names;
-  	int err;
- =20
-
---Sig_/SJ98=elDCbAvM+46dv4d8lv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3DmB4ACgkQAVBC80lX
-0GypaAf/cmF8EFtMCIWMpVN3p4PS3N1FaIKHp2iH+ehuV7yYdrjcnTgZPKTZeRUs
-N7HitAcXJZZp3P7+HRMBN4QxVorshnQ+KSVTfvrOTEVMlfWm5bQBBaShv9Uk8ZOy
-PpBGg9cE6lL23btDY0Tu9n8r17NhP+fcFLOxr/Nw3LF9jVAQG2aYbq8z6lS0Gdqd
-tT8HBY22+EDxbR1W2+IOizhkHJ/BFl9NSvjOY3J4aHSVQ1M8pbYQUTMkJWnd8LWf
-SMfQiBbgdP+mabqKe0EHzfBZeFI0oNYHXjM1qEN+Ep/H/LDoDESDnsPIiy1H5KPV
-B9VzvT+SlH67jbwRj3YLjhARFLN1ZQ==
-=E2cZ
------END PGP SIGNATURE-----
-
---Sig_/SJ98=elDCbAvM+46dv4d8lv--
