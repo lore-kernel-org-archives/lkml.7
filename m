@@ -2,91 +2,131 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0DDC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128BEC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6162187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Ml77gR1F"
+	by mail.kernel.org (Postfix) with ESMTP id CC4F221882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573125729;
+	bh=+CIQPZ+/8fpJy1L09YhNePzp1OmY7Y7silMp+Oka410=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xivTitEEzKtt+R9V9SfKnmvfcS4VALJyBn2FkyNFUx1hsUtbJrTGVNlFziX7o/fPm
+	 dWGjm6W+hiz99ZzCQ8mFq2JVIM8CnZntxB5O4jchm2UwFkS4iM0dxH60ddfXPYAf9N
+	 yENqGgxkyBiU7xY3UcBGN3d4L+LmRSDlxnabei/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbfKGLV6 (ORCPT
+        id S2388449AbfKGLWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:21:58 -0500
-Received: from ozlabs.org ([203.11.71.1]:53389 "EHLO ozlabs.org"
+        Thu, 7 Nov 2019 06:22:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388353AbfKGLV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:21:57 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2388412AbfKGLWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:22:08 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4781FY6nbkz9sPk;
-        Thu,  7 Nov 2019 22:21:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573125714;
-        bh=SQjOUdmp2dtdcIZfeEWQOp+PIbNXiuzVApc6kLzPTKY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Ml77gR1Fw0n0YfITP4YrFd8lvFF3z05cSaeBXVnkc773KQxpPdng3SHv3ImLfW1dQ
-         TmyY0wG5hy2lBweYfx4hOFVDTyBEUKftNjpsPHmXAgyJyqKWACQYAHarbG7rPK4SEN
-         cG4xCqDtSu4ZiEMfQnQ8CB88m4tSVmpxoWiffIgpSC7FBZQXKcEK22QzeGL9QdRUld
-         LNVlWGOzhUgjSPQHl7u1D3AEaSw6TGNZpOEiHUPKE4+uxn8X90JWEGyX0RkV+85n6F
-         0OVVNrBzl15/VgDri0u4WuV0PCvwT2IRvrVaaZjocWET8WzcFY77w3N/ydjZCYJwRK
-         UmAznZIU67zvw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus\@samba.org" <paulus@samba.org>,
-        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "malat\@debian.org" <malat@debian.org>
-Cc:     "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] powerpc: Support CMDLINE_EXTEND
-In-Reply-To: <46da00814535270a2b525de1f75afc79f3abbf5c.camel@alliedtelesis.co.nz>
-References: <20190801225006.21952-1-chris.packham@alliedtelesis.co.nz> <9262a291-161f-e172-9d13-88a717da9de4@c-s.fr> <46da00814535270a2b525de1f75afc79f3abbf5c.camel@alliedtelesis.co.nz>
-Date:   Thu, 07 Nov 2019 22:21:47 +1100
-Message-ID: <87eeyk53uc.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2353D207FA;
+        Thu,  7 Nov 2019 11:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573125726;
+        bh=+CIQPZ+/8fpJy1L09YhNePzp1OmY7Y7silMp+Oka410=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gAwmlkg+C1uqfpT4oaZ7vzWSd9xyvz0Bxo+zUKBL2Zrns5QwhTlbQvGPtAnKaSTcD
+         45jomg5haOVkPswa/+YSyM9Gom9rA+S7X2+q6BS43sx86egC5HVpnscjGEkBD4SNdw
+         Ftqww3kdxYvyK0M+2MLO/SOLEGqKgMiKvELJlT0g=
+Date:   Thu, 7 Nov 2019 11:22:01 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Manfred Spraul <manfred@colorfullife.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Waiman Long <longman@redhat.com>, 1vier1@web.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 1/5] smp_mb__{before,after}_atomic(): Update Documentation
+Message-ID: <20191107112200.GA11587@willie-the-truck>
+References: <20191020123305.14715-1-manfred@colorfullife.com>
+ <20191020123305.14715-2-manfred@colorfullife.com>
+ <20191101164948.GD3603@willie-the-truck>
+ <65a187c2-80de-2c6f-5f80-48c51f973d08@colorfullife.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65a187c2-80de-2c6f-5f80-48c51f973d08@colorfullife.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
-> Hi All,
->
-> On Fri, 2019-08-02 at 06:40 +0200, Christophe Leroy wrote:
->>=20
->> Le 02/08/2019 =C3=A0 00:50, Chris Packham a =C3=A9crit :
->> > Bring powerpc in line with other architectures that support extending =
-or
->> > overriding the bootloader provided command line.
->> >=20
->> > The current behaviour is most like CMDLINE_FROM_BOOTLOADER where the
->> > bootloader command line is preferred but the kernel config can provide=
- a
->> > fallback so CMDLINE_FROM_BOOTLOADER is the default. CMDLINE_EXTEND can
->> > be used to append the CMDLINE from the kernel config to the one provid=
-ed
->> > by the bootloader.
->> >=20
->> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->>=20
->> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
->
-> Just going over some old patches this doesn't appear to be in next. Is
-> there anything stopping it from being accepted?
+Hi Manfred,
 
-Just me not being overloaded :/, sorry.
+On Wed, Nov 06, 2019 at 08:23:03PM +0100, Manfred Spraul wrote:
+> From 8d2b219794221e3ef1a1ec90e0f4fe344af9a55d Mon Sep 17 00:00:00 2001
+> From: Manfred Spraul <manfred@colorfullife.com>
+> Date: Fri, 11 Oct 2019 10:33:26 +0200
+> Subject: [PATCH 1/5] smp_mb__{before,after}_atomic(): Update Documentation
+> 
+> When adding the _{acquire|release|relaxed}() variants of some atomic
+> operations, it was forgotten to update Documentation/memory_barrier.txt:
+> 
+> smp_mb__before_atomic and smp_mb__after_atomic can be combined with
+> all RMW operations that do not imply memory barriers.
+> 
+> In order to avoid that this happens again:
+> Remove the paragraph from Documentation/memory_barrier.txt, the functions
+> are sufficiently documented in Documentation/atomic_{t,bitops}.txt
+> 
+> Fixes: 654672d4ba1a ("locking/atomics: Add _{acquire|release|relaxed}() variants of some atomic operations")
+> 
+> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+> Acked-by: Waiman Long <longman@redhat.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> ---
+>  Documentation/memory-barriers.txt | 20 +-------------------
+>  1 file changed, 1 insertion(+), 19 deletions(-)
+> 
+> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+> index 1adbb8a371c7..16dfb4cde1e1 100644
+> --- a/Documentation/memory-barriers.txt
+> +++ b/Documentation/memory-barriers.txt
+> @@ -1873,25 +1873,7 @@ There are some more advanced barrier functions:
+>   (*) smp_mb__before_atomic();
+>   (*) smp_mb__after_atomic();
+>  
+> -     These are for use with atomic (such as add, subtract, increment and
+> -     decrement) functions that don't return a value, especially when used for
+> -     reference counting.  These functions do not imply memory barriers.
+> -
+> -     These are also used for atomic bitop functions that do not return a
+> -     value (such as set_bit and clear_bit).
+> -
+> -     As an example, consider a piece of code that marks an object as being dead
+> -     and then decrements the object's reference count:
+> -
+> -	obj->dead = 1;
+> -	smp_mb__before_atomic();
+> -	atomic_dec(&obj->ref_count);
+> -
+> -     This makes sure that the death mark on the object is perceived to be set
+> -     *before* the reference counter is decremented.
+> -
+> -     See Documentation/atomic_{t,bitops}.txt for more information.
+> -
+> +     See Documentation/atomic_{t,bitops}.txt for information.
+>  
+>   (*) dma_wmb();
+>   (*) dma_rmb();
 
-Have put it in my next-test branch, which means it should appear in next
-in the next few days.
+Thanks, I much prefer this approach:
 
-cheers
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
