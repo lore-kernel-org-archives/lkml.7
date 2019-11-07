@@ -2,225 +2,108 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97072FC6197
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2311C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F4921D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D072084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="etLkjGlo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JEB1F12i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfKGSqQ (ORCPT
+        id S1727192AbfKGSrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:46:16 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:10257 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfKGSqO (ORCPT
+        Thu, 7 Nov 2019 13:47:23 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45067 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfKGSrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:46:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573152371;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=M0SkY422W77c8+OLI5WPEaw391MF/u1kXF3/i3p3FEc=;
-        b=etLkjGloJRYoGSDNNhNN2xj9Wyb0tGGfxhhW4a22gCUT+CYQ6yG0iaDL4DT70S1OSG
-        iefnMMCfBUMJTBg7LRax1D2aREJhEaYAp83AyOUIbPVrIhQdQFCm2wjsMeFgi8dRZ+4/
-        AcRGbKOw6c4/wCQslcMuCnnB4VKDbRATVYNf0l+2JYf7rn+ROEwS1eWFZKG1PMPtwcTv
-        ob+F7f46v++tx4XNEkD0KLvHIh6ohkuim4u9miDfxDSb+d+kHl2Z5/qtmoFL3B1wIZWM
-        mAKw+nwOCxMitTA+eATZlHlOcv64fncZqsARJjzb5wdHhK8DNzDa9HCzNOef+RebpgMI
-        sidA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXsMnvtxdYcg=="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vA7IkAoQr
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 19:46:10 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jean-Baptiste Maneyrol <JManeyrol@invensense.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH v2 2/2] iio: imu: mpu6050: Add support for vdd-supply regulator
-Date:   Thu,  7 Nov 2019 19:43:42 +0100
-Message-Id: <20191107184342.20361-2-stephan@gerhold.net>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191107184342.20361-1-stephan@gerhold.net>
-References: <20191107184342.20361-1-stephan@gerhold.net>
+        Thu, 7 Nov 2019 13:47:23 -0500
+Received: by mail-il1-f196.google.com with SMTP id o18so2744339ils.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:47:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LlH/emK43X7VQlux0XjazW6nVpP1+OhxUnqAKnN/vBs=;
+        b=JEB1F12iTYfjJYno9PiUHEyIvfvFi+cWQhuSPBKHPuy1ugZuXn4+uxYA3Ey4McDqlF
+         PvDtJzEOxJSnnwrAitdgUXRRfeq3SlbXPFIE6k67sa3xWjywqkMIXl2xZ9MziBmUPsAl
+         QX+sIqfsd0HwsZoDRs/WK9nqC6eBfcG0Vm9gLGk8eQg56BI/CqY5tritxhJkvt3pb2a5
+         uCR5rJtp8GXjIT4bMlrgdU4gghxt2xZNnrZRtp0lqc0S4lQ5JDbicq98gKRi039be6sD
+         LumACIvxVvtdh2nbwrwLoZJm2SfXnunI5xJzIHARQGFZ8A8Qw0M/nwMrX0Oah7XPbLBt
+         FE8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LlH/emK43X7VQlux0XjazW6nVpP1+OhxUnqAKnN/vBs=;
+        b=mOacFJ5rDo2iB0VYaw/4BWky0i+j1mzmgX9dPxKrETulzAbkGVbE9IyK0b+l4LQoUF
+         CLptwjldOimejnbBOtZAcm2lQL6lDnhsevgB2tLwurXqSKAIf8T4oetZgbzZ7leLtlGE
+         DFkliAra1x53BzfvQPgt847KknpKj/xQxxETY8fDcPCsRoSz9GNuzpAlqmanUX7bvEpe
+         Fc5Y7uv2MavcjhiWcfc4gU7yru1hdw1t6nE54To77lVutUCVlQCD/x23ij7kkxQ8vQle
+         8jAbMoI/jYq2t70Wi989Te63hwGwBAkDzFE0mznP25qQhvInB0shiSBMrVhw2RyQxmWw
+         GP8Q==
+X-Gm-Message-State: APjAAAW7KfxZBk3JYFOtluY4iiw5zCwF2KQjVlHvawNQHIuS9rytx0t/
+        SY89/QAxV/eCBzI/UDYdf+C+RyfXyXRAeZHoz4KusQ==
+X-Google-Smtp-Source: APXvYqzAVWigadbsfFuHoFmMfkvGVyLArpcA4tXnCqWDWZyByyzokkk8+aogfdz1WchCA9laZjOZIHtQihQ5pjFV66o=
+X-Received: by 2002:a92:350a:: with SMTP id c10mr6317836ila.140.1573152441970;
+ Thu, 07 Nov 2019 10:47:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191106115651.113943-1-weiyongjun1@huawei.com>
+In-Reply-To: <20191106115651.113943-1-weiyongjun1@huawei.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 7 Nov 2019 11:47:11 -0700
+Message-ID: <CANLsYkxKAC9FLYkFjuehj_oFHTVyd=8_R8bAKjPxTXQyAGkwYw@mail.gmail.com>
+Subject: Re: [PATCH -next] coresight: replicator: Fix missing spin_lock_init()
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Yabin Cui <yabinc@google.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MPU6050 has two power supply pins: VDD and VLOGIC, but the
-mpu6050 driver only supports enabling one of them at the moment.
-In some cases, they may need to be enabled separately.
+On Wed, 6 Nov 2019 at 04:57, Wei Yongjun <weiyongjun1@huawei.com> wrote:
+>
+> The driver allocates the spinlock but not initialize it.
+> Use spin_lock_init() on it to initialize it correctly.
+>
+> This is detected by Coccinelle semantic patch.
+>
+> Fixes: 0093875ad129 ("coresight: Serialize enabling/disabling a link device.")
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-replicator.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index 43304196a1a6..e7dc1c31d20d 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -248,6 +248,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
+>         }
+>         dev->platform_data = pdata;
+>
+> +       spin_lock_init(&drvdata->spinlock);
 
-Add an additional "vdd-supply" that stays enabled for as long as
-the driver is loaded. We cannot turn off the VDD regulator during
-suspend as this would cause register settings (FSR, sampling rate, ...)
-to be lost.
+I have applied both patches but removed the "Fixes" line since the
+commit is only visible in my local coresight next tree.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
-Changes in v2:
-  - Keep "vdd-supply" enabled during suspend to prevent register
-    settings from getting lost.
-  - Revert convertion to bulk regulator API (does not work well
-    when regulators need to be enabled/disabled separately)
+Thanks,
+Mathieu
 
-v1: https://lore.kernel.org/linux-iio/20191106183536.123070-2-stephan@gerhold.net/
----
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 43 +++++++++++++++++-----
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  4 +-
- 2 files changed, 37 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 354030e9bed5..661a829478f5 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -1140,14 +1140,14 @@ static int inv_check_and_setup_chip(struct inv_mpu6050_state *st)
- 	return result;
- }
- 
--static int inv_mpu_core_enable_regulator(struct inv_mpu6050_state *st)
-+static int inv_mpu_core_enable_regulator_vddio(struct inv_mpu6050_state *st)
- {
- 	int result;
- 
- 	result = regulator_enable(st->vddio_supply);
- 	if (result) {
- 		dev_err(regmap_get_device(st->map),
--			"Failed to enable regulator: %d\n", result);
-+			"Failed to enable vddio regulator: %d\n", result);
- 	} else {
- 		/* Give the device a little bit of time to start up. */
- 		usleep_range(35000, 70000);
-@@ -1156,21 +1156,29 @@ static int inv_mpu_core_enable_regulator(struct inv_mpu6050_state *st)
- 	return result;
- }
- 
--static int inv_mpu_core_disable_regulator(struct inv_mpu6050_state *st)
-+static int inv_mpu_core_disable_regulator_vddio(struct inv_mpu6050_state *st)
- {
- 	int result;
- 
- 	result = regulator_disable(st->vddio_supply);
- 	if (result)
- 		dev_err(regmap_get_device(st->map),
--			"Failed to disable regulator: %d\n", result);
-+			"Failed to disable vddio regulator: %d\n", result);
- 
- 	return result;
- }
- 
- static void inv_mpu_core_disable_regulator_action(void *_data)
- {
--	inv_mpu_core_disable_regulator(_data);
-+	struct inv_mpu6050_state *st = _data;
-+	int result;
-+
-+	result = regulator_disable(st->vdd_supply);
-+	if (result)
-+		dev_err(regmap_get_device(st->map),
-+			"Failed to disable vdd regulator: %d\n", result);
-+
-+	inv_mpu_core_disable_regulator_vddio(st);
- }
- 
- int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
-@@ -1239,6 +1247,15 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 		return -EINVAL;
- 	}
- 
-+	st->vdd_supply = devm_regulator_get(dev, "vdd");
-+	if (IS_ERR(st->vdd_supply)) {
-+		if (PTR_ERR(st->vdd_supply) != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get vdd regulator %d\n",
-+				(int)PTR_ERR(st->vdd_supply));
-+
-+		return PTR_ERR(st->vdd_supply);
-+	}
-+
- 	st->vddio_supply = devm_regulator_get(dev, "vddio");
- 	if (IS_ERR(st->vddio_supply)) {
- 		if (PTR_ERR(st->vddio_supply) != -EPROBE_DEFER)
-@@ -1248,9 +1265,17 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 		return PTR_ERR(st->vddio_supply);
- 	}
- 
--	result = inv_mpu_core_enable_regulator(st);
--	if (result)
-+	result = regulator_enable(st->vdd_supply);
-+	if (result) {
-+		dev_err(dev, "Failed to enable vdd regulator: %d\n", result);
- 		return result;
-+	}
-+
-+	result = inv_mpu_core_enable_regulator_vddio(st);
-+	if (result) {
-+		regulator_disable(st->vdd_supply);
-+		return result;
-+	}
- 
- 	result = devm_add_action_or_reset(dev, inv_mpu_core_disable_regulator_action,
- 				 st);
-@@ -1352,7 +1377,7 @@ static int inv_mpu_resume(struct device *dev)
- 	int result;
- 
- 	mutex_lock(&st->lock);
--	result = inv_mpu_core_enable_regulator(st);
-+	result = inv_mpu_core_enable_regulator_vddio(st);
- 	if (result)
- 		goto out_unlock;
- 
-@@ -1370,7 +1395,7 @@ static int inv_mpu_suspend(struct device *dev)
- 
- 	mutex_lock(&st->lock);
- 	result = inv_mpu6050_set_power_itg(st, false);
--	inv_mpu_core_disable_regulator(st);
-+	inv_mpu_core_disable_regulator_vddio(st);
- 	mutex_unlock(&st->lock);
- 
- 	return result;
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index 52fcf45050a5..4fcf683b9c63 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -130,7 +130,8 @@ struct inv_mpu6050_hw {
-  *  @chip_period:	chip internal period estimation (~1kHz).
-  *  @it_timestamp:	timestamp from previous interrupt.
-  *  @data_timestamp:	timestamp for next data sample.
-- *  @vddio_supply	voltage regulator for the chip.
-+ *  @vdd_supply:	VDD voltage regulator for the chip.
-+ *  @vddio_supply	I/O voltage regulator for the chip.
-  *  @magn_disabled:     magnetometer disabled for backward compatibility reason.
-  *  @magn_raw_to_gauss:	coefficient to convert mag raw value to Gauss.
-  *  @magn_orient:       magnetometer sensor chip orientation if available.
-@@ -154,6 +155,7 @@ struct inv_mpu6050_state {
- 	s64 chip_period;
- 	s64 it_timestamp;
- 	s64 data_timestamp;
-+	struct regulator *vdd_supply;
- 	struct regulator *vddio_supply;
- 	bool magn_disabled;
- 	s32 magn_raw_to_gauss[3];
--- 
-2.23.0
-
+>         desc.type = CORESIGHT_DEV_TYPE_LINK;
+>         desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
+>         desc.ops = &replicator_cs_ops;
+>
+>
+>
