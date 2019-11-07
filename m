@@ -2,296 +2,494 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60B2FC6196
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAB1FC6196
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89977206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6208A2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKtGSHQL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lk+BnRBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732659AbfKGAQz (ORCPT
+        id S1728202AbfKGATd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:16:55 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36699 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728465AbfKGAQu (ORCPT
+        Wed, 6 Nov 2019 19:19:33 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36870 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfKGATd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 19:16:50 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g9so101124plp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 16:16:50 -0800 (PST)
+        Wed, 6 Nov 2019 19:19:33 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z24so407851pgu.4;
+        Wed, 06 Nov 2019 16:19:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ku11UK5M4kBjClOZ9jsUdie4RqmP8PdwQKvUzAijcRU=;
-        b=HKtGSHQLHLryzCDWQ1fAxmEr+YAD4wkG/cyr5Zl8adkZqu/3MSYAAFkC0/NGufbzCC
-         4dmPWLKiOU6bVjYsN4bOzWUvFmkd0SCX8Ho5sM3wwW1qwaBDX4dVWRaXFC2f2vxVLyTa
-         je/gs7AOiKO9EO3NZfb4JUiMfojJaC0KtsJf5ct5g9vRuF+DFauYReSqQl7fZITbEyMc
-         B6EZsjFdD7V0V9q7SGZx4z1OSrA40GlSGy9Y6aOocvpiK8EP3fSpD/Mc8T8uOH57g+GA
-         W+5iYPSy5cSVyqkC1wEKR0b/zZY1usm+cPTv6ZcGau/M1S+p+X7Uxg0JPGKMAH9SylNH
-         LWSw==
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YghwMrvSFtW3tPnmkDG1lMQzsLizbEfLWWFN2/f0L40=;
+        b=Lk+BnRBqLUG6DyNW0ioJ1wVqxScb6Hl7GDO9b0A1n28cG+XEuuT+BSj/HhjFL2ihhP
+         LDB5CSTAg69oOUSVdqeQyLumvtcLkyEmW9P9WoxYjVhiZ2OVjQAWvUrlbe1Uq/PVmgFX
+         RsZsQ7wrQrQKigTKfd23mmqTDbgrJ0kn1opX1RLlh9Sek0aKrIMG0CPn2cj6UmIw39/g
+         tZptNtbmcS7tSzxJrdmoZVJz8miBjOWu6SsV3bxYw8fyb8rUcXkqPJM0WngAki8oNUzN
+         UamI3wZ3PURURm0E3ZQkfHRKnIx+TiL8uTO/uLK+nZ+C5A2m6hCRsWQujZHRsX1jgXXa
+         LLsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ku11UK5M4kBjClOZ9jsUdie4RqmP8PdwQKvUzAijcRU=;
-        b=PlwUnl65ZN6+yJJFSiNYoMHBpviejnVhzbcwxw9qwm8bRf/ySEOUduaJDwfuDK1G8M
-         ksTmH/DhPsqv+z9bLYJdQ0dA1NDnGZZF8BwdFa4DQ/rcyGSr0eezMWglJVCrMSmX6cpR
-         NID6uTWHw64w0nPIWLcUYBmc6undTI+dJZ2g8l+yhUEhzofo57Xxb3Q1bZ2zMF4QZDuy
-         BuRME/8q4arHOQGl8pnRyfeI7vx7Kj3uAJzoaAVzj1sNfStWbPqTRH3q7KhlHd8MUSz1
-         Lm2P1zVPtKAa798qMgyS2cBUAlpeWvsateNk5IiLi2wMzluvX7lkTZAZ58XQvD4VK4AQ
-         zjDw==
-X-Gm-Message-State: APjAAAW0W/F5nbOSoAiZjsyr+LktWCK0JoCdyHrVqQT/fzEa6tIMnI+O
-        XN3s2jOx48Z5O3SUocr6oasltQ==
-X-Google-Smtp-Source: APXvYqyKBySTal5ICDyjqZZChJzUzwSF7LcKZLZMAAisuuTe3GRjRz8u4XnrK/XyZlExPVGGcTprHg==
-X-Received: by 2002:a17:902:14e:: with SMTP id 72mr412670plb.271.1573085809358;
-        Wed, 06 Nov 2019 16:16:49 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 90sm81044pjz.29.2019.11.06.16.16.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:16:48 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v3 2/2] PCI: qcom: Add support for SDM845 PCIe controller
-Date:   Wed,  6 Nov 2019 16:16:42 -0800
-Message-Id: <20191107001642.1127561-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YghwMrvSFtW3tPnmkDG1lMQzsLizbEfLWWFN2/f0L40=;
+        b=C9JF49lmmjwX6I763o1XkUMNM7YeIwmnTiOBlJtd1zd9Fh1wRHNousgCdWpdqfmW0z
+         FOeSJYxNdkeq8Nsr7eRpOkf9/pcGwzqygMIkssnklbunB5aPNWmE3iMpE03Ur5fpAGc6
+         UP+uLX2coaMLiBs289/lGBrAbqipT8EfLefP0fz4EoYg2XIoG+BARE82CRMRtNO9WJnC
+         MKeGNHdLPFda/hR0iZg0zrArECkuqVGiekFONVpkDYDn0oyG63hY/pebxwjWE8HhCRYt
+         sN4TrPddShMug2LMrd+Insf+SbnIzzieNMyKXkxh9rTStnOARhUHsK7k+rKzIA6HxcEv
+         0moQ==
+X-Gm-Message-State: APjAAAWV8Q6b1FZZM9/bHu6vNbkMdCsv3Qj8iEhnP0Xm0+9xY3KTkc/T
+        1CKoKyYMiwuGd1Sx7xYnrjTElF3wrwQklA==
+X-Google-Smtp-Source: APXvYqzK56tfWC7DBNih1acqbdS6sfLv0HKYni7nk8FVzB3+uxvrhPxP6oOCpkDND0FgtG8Io0OQOQ==
+X-Received: by 2002:aa7:8e8d:: with SMTP id a13mr108506pfr.241.1573085971990;
+        Wed, 06 Nov 2019 16:19:31 -0800 (PST)
+Received: from ?IPv6:2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb? ([2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb])
+        by smtp.gmail.com with ESMTPSA id j6sm136452pfa.124.2019.11.06.16.19.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 16:19:31 -0800 (PST)
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>, tranmanphong@gmail.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rcu@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: RCU: rcubarrier:
+ Convert to reST
+To:     Amol Grover <frextrite@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20191106165617.GA12205@workstation-kernel-dev>
+From:   Phong Tran <tranmanphong@gmail.com>
+Message-ID: <15512469-fc7e-24c8-d407-72ba7015a099@gmail.com>
+Date:   Thu, 7 Nov 2019 07:19:27 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191106165617.GA12205@workstation-kernel-dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SDM845 has one Gen2 and one Gen3 controller, add support for these.
+On 11/6/19 11:56 PM, Amol Grover wrote:
+> Convert rcubarrier.txt to rcubarrier.rst and
+> add it to index.rst
+> 
+> Format file according to reST
+> - Add headings and sub-headings
+> - Add code segments
+> - Add cross-references to quizes and answers
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>   Documentation/RCU/index.rst                   |   1 +
+>   .../RCU/{rcubarrier.txt => rcubarrier.rst}    | 220 ++++++++++--------
+>   2 files changed, 125 insertions(+), 96 deletions(-)
+>   rename Documentation/RCU/{rcubarrier.txt => rcubarrier.rst} (73%)
+> 
+> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> index c81d0e4fd999..81a0a1e5f767 100644
+> --- a/Documentation/RCU/index.rst
+> +++ b/Documentation/RCU/index.rst
+> @@ -8,6 +8,7 @@ RCU concepts
+>      :maxdepth: 3
+>   
+>      arrayRCU
+> +   rcubarrier
+>      rcu_dereference
+>      whatisRCU
+>      rcu
+> diff --git a/Documentation/RCU/rcubarrier.txt b/Documentation/RCU/rcubarrier.rst
+> similarity index 73%
+> rename from Documentation/RCU/rcubarrier.txt
+> rename to Documentation/RCU/rcubarrier.rst
+> index a2782df69732..1aa9ed1d1b5b 100644
+> --- a/Documentation/RCU/rcubarrier.txt
+> +++ b/Documentation/RCU/rcubarrier.rst
+> @@ -1,4 +1,7 @@
+> +.. _rcu_barrier:
+> +
+>   RCU and Unloadable Modules
+> +==========================
+>   
+>   [Originally published in LWN Jan. 14, 2007: http://lwn.net/Articles/217484/]
+>   
+> @@ -21,7 +24,7 @@ given that readers might well leave absolutely no trace of their
+>   presence? There is a synchronize_rcu() primitive that blocks until all
+>   pre-existing readers have completed. An updater wishing to delete an
+>   element p from a linked list might do the following, while holding an
+> -appropriate lock, of course:
+> +appropriate lock, of course::
+>   
+>   	list_del_rcu(p);
+>   	synchronize_rcu();
+> @@ -32,13 +35,13 @@ primitive must be used instead. This primitive takes a pointer to an
+>   rcu_head struct placed within the RCU-protected data structure and
+>   another pointer to a function that may be invoked later to free that
+>   structure. Code to delete an element p from the linked list from IRQ
+> -context might then be as follows:
+> +context might then be as follows::
+>   
+>   	list_del_rcu(p);
+>   	call_rcu(&p->rcu, p_callback);
+>   
+>   Since call_rcu() never blocks, this code can safely be used from within
+> -IRQ context. The function p_callback() might be defined as follows:
+> +IRQ context. The function p_callback() might be defined as follows::
+>   
+>   	static void p_callback(struct rcu_head *rp)
+>   	{
+> @@ -49,6 +52,7 @@ IRQ context. The function p_callback() might be defined as follows:
+>   
+>   
+>   Unloading Modules That Use call_rcu()
+> +-------------------------------------
+>   
+>   But what if p_callback is defined in an unloadable module?
+>   
+> @@ -69,10 +73,11 @@ in realtime kernels in order to avoid excessive scheduling latencies.
+>   
+>   
+>   rcu_barrier()
+> +-------------
+>   
+>   We instead need the rcu_barrier() primitive.  Rather than waiting for
+>   a grace period to elapse, rcu_barrier() waits for all outstanding RCU
+> -callbacks to complete.  Please note that rcu_barrier() does -not- imply
+> +callbacks to complete.  Please note that rcu_barrier() does **not** imply
+>   synchronize_rcu(), in particular, if there are no RCU callbacks queued
+>   anywhere, rcu_barrier() is within its rights to return immediately,
+>   without waiting for a grace period to elapse.
+> @@ -89,78 +94,78 @@ module uses multiple flavors of call_rcu(), then it must also use multiple
+>   flavors of rcu_barrier() when unloading that module.  For example, if
+>   it uses call_rcu(), call_srcu() on srcu_struct_1, and call_srcu() on
+>   srcu_struct_2(), then the following three lines of code will be required
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Hello Amol,
 
-Changes since v1:
-- Don't assert the reset in the failure path
+srcu_struct_2() should be srcu_struct_2
 
- drivers/pci/controller/dwc/pcie-qcom.c | 150 +++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
+> -when unloading:
+> +when unloading::
+>   
+>    1 rcu_barrier();
+>    2 srcu_barrier(&srcu_struct_1);
+>    3 srcu_barrier(&srcu_struct_2);
+>   
+>   The rcutorture module makes use of rcu_barrier() in its exit function
+> -as follows:
+> +as follows::
+>   
+> - 1 static void
+> - 2 rcu_torture_cleanup(void)
+> - 3 {
+> - 4   int i;
+> + 1  static void
+> + 2  rcu_torture_cleanup(void)
+> + 3  {
+> + 4    int i;
+>    5
+> - 6   fullstop = 1;
+> - 7   if (shuffler_task != NULL) {
+> + 6    fullstop = 1;
+> + 7    if (shuffler_task != NULL) {
+>    8     VERBOSE_PRINTK_STRING("Stopping rcu_torture_shuffle task");
+>    9     kthread_stop(shuffler_task);
+> -10   }
+> -11   shuffler_task = NULL;
+> -12
+> -13   if (writer_task != NULL) {
+> -14     VERBOSE_PRINTK_STRING("Stopping rcu_torture_writer task");
+> -15     kthread_stop(writer_task);
+> -16   }
+> -17   writer_task = NULL;
+> -18
+> -19   if (reader_tasks != NULL) {
+> -20     for (i = 0; i < nrealreaders; i++) {
+> -21       if (reader_tasks[i] != NULL) {
+> -22         VERBOSE_PRINTK_STRING(
+> -23           "Stopping rcu_torture_reader task");
+> -24         kthread_stop(reader_tasks[i]);
+> -25       }
+> -26       reader_tasks[i] = NULL;
+> -27     }
+> -28     kfree(reader_tasks);
+> -29     reader_tasks = NULL;
+> -30   }
+> -31   rcu_torture_current = NULL;
+> -32
+> -33   if (fakewriter_tasks != NULL) {
+> -34     for (i = 0; i < nfakewriters; i++) {
+> -35       if (fakewriter_tasks[i] != NULL) {
+> -36         VERBOSE_PRINTK_STRING(
+> -37           "Stopping rcu_torture_fakewriter task");
+> -38         kthread_stop(fakewriter_tasks[i]);
+> -39       }
+> -40       fakewriter_tasks[i] = NULL;
+> -41     }
+> -42     kfree(fakewriter_tasks);
+> -43     fakewriter_tasks = NULL;
+> -44   }
+> -45
+> -46   if (stats_task != NULL) {
+> -47     VERBOSE_PRINTK_STRING("Stopping rcu_torture_stats task");
+> -48     kthread_stop(stats_task);
+> -49   }
+> -50   stats_task = NULL;
+> -51
+> -52   /* Wait for all RCU callbacks to fire. */
+> -53   rcu_barrier();
+> -54
+> -55   rcu_torture_stats_print(); /* -After- the stats thread is stopped! */
+> -56
+> -57   if (cur_ops->cleanup != NULL)
+> -58     cur_ops->cleanup();
+> -59   if (atomic_read(&n_rcu_torture_error))
+> -60     rcu_torture_print_module_parms("End of test: FAILURE");
+> -61   else
+> -62     rcu_torture_print_module_parms("End of test: SUCCESS");
+> -63 }
+> + 10   }
+> + 11   shuffler_task = NULL;
+> + 12
+> + 13   if (writer_task != NULL) {
+> + 14     VERBOSE_PRINTK_STRING("Stopping rcu_torture_writer task");
+> + 15     kthread_stop(writer_task);
+> + 16   }
+> + 17   writer_task = NULL;
+> + 18
+> + 19   if (reader_tasks != NULL) {
+> + 20     for (i = 0; i < nrealreaders; i++) {
+> + 21       if (reader_tasks[i] != NULL) {
+> + 22         VERBOSE_PRINTK_STRING(
+> + 23           "Stopping rcu_torture_reader task");
+> + 24         kthread_stop(reader_tasks[i]);
+> + 25       }
+> + 26       reader_tasks[i] = NULL;
+> + 27     }
+> + 28     kfree(reader_tasks);
+> + 29     reader_tasks = NULL;
+> + 30   }
+> + 31   rcu_torture_current = NULL;
+> + 32
+> + 33   if (fakewriter_tasks != NULL) {
+> + 34     for (i = 0; i < nfakewriters; i++) {
+> + 35       if (fakewriter_tasks[i] != NULL) {
+> + 36         VERBOSE_PRINTK_STRING(
+> + 37           "Stopping rcu_torture_fakewriter task");
+> + 38         kthread_stop(fakewriter_tasks[i]);
+> + 39       }
+> + 40       fakewriter_tasks[i] = NULL;
+> + 41     }
+> + 42     kfree(fakewriter_tasks);
+> + 43     fakewriter_tasks = NULL;
+> + 44   }
+> + 45
+> + 46   if (stats_task != NULL) {
+> + 47     VERBOSE_PRINTK_STRING("Stopping rcu_torture_stats task");
+> + 48     kthread_stop(stats_task);
+> + 49   }
+> + 50   stats_task = NULL;
+> + 51
+> + 52   /* Wait for all RCU callbacks to fire. */
+> + 53   rcu_barrier();
+> + 54
+> + 55   rcu_torture_stats_print(); /* -After- the stats thread is stopped! */
+> + 56
+> + 57   if (cur_ops->cleanup != NULL)
+> + 58     cur_ops->cleanup();
+> + 59   if (atomic_read(&n_rcu_torture_error))
+> + 60     rcu_torture_print_module_parms("End of test: FAILURE");
+> + 61   else
+> + 62     rcu_torture_print_module_parms("End of test: SUCCESS");
+> + 63 }
+>   
+>   Line 6 sets a global variable that prevents any RCU callbacks from
+>   re-posting themselves. This will not be necessary in most cases, since
+> @@ -176,9 +181,14 @@ for any pre-existing callbacks to complete.
+>   Then lines 55-62 print status and do operation-specific cleanup, and
+>   then return, permitting the module-unload operation to be completed.
+>   
+> -Quick Quiz #1: Is there any other situation where rcu_barrier() might
+> +.. _rcubarrier_quiz_1:
+> +
+> +Quick Quiz #1:
+> +	Is there any other situation where rcu_barrier() might
+>   	be required?
+>   
+> +:ref:`Answer to Quick Quiz #1 <answer_rcubarrier_quiz_1>`
+> +
+>   Your module might have additional complications. For example, if your
+>   module invokes call_rcu() from timers, you will need to first cancel all
+>   the timers, and only then invoke rcu_barrier() to wait for any remaining
+> @@ -188,11 +198,12 @@ Of course, if you module uses call_rcu(), you will need to invoke
+>   rcu_barrier() before unloading.  Similarly, if your module uses
+>   call_srcu(), you will need to invoke srcu_barrier() before unloading,
+>   and on the same srcu_struct structure.  If your module uses call_rcu()
+> --and- call_srcu(), then you will need to invoke rcu_barrier() -and-
+> +-and- call_srcu(), then you will need to invoke rcu_barrier() **and**
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 7e581748ee9f..5ea527a6bd9f 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -54,6 +54,7 @@
- #define PCIE20_PARF_LTSSM			0x1B0
- #define PCIE20_PARF_SID_OFFSET			0x234
- #define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
-+#define PCIE20_PARF_DEVICE_TYPE			0x1000
- 
- #define PCIE20_ELBI_SYS_CTRL			0x04
- #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
-@@ -80,6 +81,8 @@
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
- 
-+#define DEVICE_TYPE_RC				0x4
-+
- #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
- struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
-@@ -139,12 +142,20 @@ struct qcom_pcie_resources_2_3_3 {
- 	struct reset_control *rst[7];
- };
- 
-+struct qcom_pcie_resources_2_7_0 {
-+	struct clk_bulk_data clks[6];
-+	struct regulator_bulk_data supplies[2];
-+	struct reset_control *pci_reset;
-+	struct clk *pipe_clk;
-+};
-+
- union qcom_pcie_resources {
- 	struct qcom_pcie_resources_1_0_0 v1_0_0;
- 	struct qcom_pcie_resources_2_1_0 v2_1_0;
- 	struct qcom_pcie_resources_2_3_2 v2_3_2;
- 	struct qcom_pcie_resources_2_3_3 v2_3_3;
- 	struct qcom_pcie_resources_2_4_0 v2_4_0;
-+	struct qcom_pcie_resources_2_7_0 v2_7_0;
- };
- 
- struct qcom_pcie;
-@@ -1068,6 +1079,134 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
- 	return ret;
- }
- 
-+static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int ret;
-+
-+	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
-+	if (IS_ERR(res->pci_reset))
-+		return PTR_ERR(res->pci_reset);
-+
-+	res->supplies[0].supply = "vdda";
-+	res->supplies[1].supply = "vddpe-3v3";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(res->supplies),
-+				      res->supplies);
-+	if (ret)
-+		return ret;
-+
-+	res->clks[0].id = "aux";
-+	res->clks[1].id = "cfg";
-+	res->clks[2].id = "bus_master";
-+	res->clks[3].id = "bus_slave";
-+	res->clks[4].id = "slave_q2a";
-+	res->clks[5].id = "tbu";
-+
-+	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-+	if (ret < 0)
-+		return ret;
-+
-+	res->pipe_clk = devm_clk_get(dev, "pipe");
-+	return PTR_ERR_OR_ZERO(res->pipe_clk);
-+}
-+
-+static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	u32 val;
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot enable regulators\n");
-+		return ret;
-+	}
-+
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-+	if (ret < 0)
-+		goto err_disable_regulators;
-+
-+	ret = reset_control_assert(res->pci_reset);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot deassert pci reset\n");
-+		goto err_disable_clocks;
-+	}
-+
-+	usleep_range(1000, 1500);
-+
-+	ret = reset_control_deassert(res->pci_reset);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot deassert pci reset\n");
-+		goto err_disable_clocks;
-+	}
-+
-+	ret = clk_prepare_enable(res->pipe_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable pipe clock\n");
-+		goto err_disable_clocks;
-+	}
-+
-+	/* configure PCIe to RC mode */
-+	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-+
-+	/* enable PCIe clocks and resets */
-+	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	val &= ~BIT(0);
-+	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	/* change DBI base address */
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	/* MAC PHY_POWERDOWN MUX DISABLE  */
-+	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
-+	val &= ~BIT(29);
-+	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
-+
-+	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-+	val |= BIT(4);
-+	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+		val |= BIT(31);
-+		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+	}
-+
-+	return 0;
-+err_disable_clocks:
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-+err_disable_regulators:
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-+
-+	return ret;
-+}
-+
-+static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-+}
-+
-+static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+
-+	return clk_prepare_enable(res->pipe_clk);
-+}
-+
-+static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+
-+	clk_disable_unprepare(res->pipe_clk);
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 val = readw(pci->dbi_base + PCIE20_CAP + PCI_EXP_LNKSTA);
-@@ -1167,6 +1306,16 @@ static const struct qcom_pcie_ops ops_2_3_3 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 2.7.0	Synopsys IP rev.: 4.30a */
-+static const struct qcom_pcie_ops ops_2_7_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_7_0,
-+	.init = qcom_pcie_init_2_7_0,
-+	.deinit = qcom_pcie_deinit_2_7_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+	.post_init = qcom_pcie_post_init_2_7_0,
-+	.post_deinit = qcom_pcie_post_deinit_2_7_0,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- };
-@@ -1282,6 +1431,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
-+	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
- 	{ }
- };
- 
--- 
-2.23.0
+-and- here should be bold.
 
+The rest looks good.
+
+Regards,
+Phong.
+
+>   srcu_barrier().
+>   
+>   
+>   Implementing rcu_barrier()
+> +--------------------------
+>   
+>   Dipankar Sarma's implementation of rcu_barrier() makes use of the fact
+>   that RCU callbacks are never reordered once queued on one of the per-CPU
+> @@ -200,19 +211,19 @@ queues. His implementation queues an RCU callback on each of the per-CPU
+>   callback queues, and then waits until they have all started executing, at
+>   which point, all earlier RCU callbacks are guaranteed to have completed.
+>   
+> -The original code for rcu_barrier() was as follows:
+> +The original code for rcu_barrier() was as follows::
+>   
+> - 1 void rcu_barrier(void)
+> - 2 {
+> - 3   BUG_ON(in_interrupt());
+> - 4   /* Take cpucontrol mutex to protect against CPU hotplug */
+> - 5   mutex_lock(&rcu_barrier_mutex);
+> - 6   init_completion(&rcu_barrier_completion);
+> - 7   atomic_set(&rcu_barrier_cpu_count, 0);
+> - 8   on_each_cpu(rcu_barrier_func, NULL, 0, 1);
+> - 9   wait_for_completion(&rcu_barrier_completion);
+> -10   mutex_unlock(&rcu_barrier_mutex);
+> -11 }
+> + 1  void rcu_barrier(void)
+> + 2  {
+> + 3    BUG_ON(in_interrupt());
+> + 4    /* Take cpucontrol mutex to protect against CPU hotplug */
+> + 5    mutex_lock(&rcu_barrier_mutex);
+> + 6    init_completion(&rcu_barrier_completion);
+> + 7    atomic_set(&rcu_barrier_cpu_count, 0);
+> + 8    on_each_cpu(rcu_barrier_func, NULL, 0, 1);
+> + 9    wait_for_completion(&rcu_barrier_completion);
+> + 10   mutex_unlock(&rcu_barrier_mutex);
+> + 11 }
+>   
+>   Line 3 verifies that the caller is in process context, and lines 5 and 10
+>   use rcu_barrier_mutex to ensure that only one rcu_barrier() is using the
+> @@ -226,18 +237,18 @@ This code was rewritten in 2008 and several times thereafter, but this
+>   still gives the general idea.
+>   
+>   The rcu_barrier_func() runs on each CPU, where it invokes call_rcu()
+> -to post an RCU callback, as follows:
+> +to post an RCU callback, as follows::
+>   
+> - 1 static void rcu_barrier_func(void *notused)
+> - 2 {
+> - 3 int cpu = smp_processor_id();
+> - 4 struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
+> - 5 struct rcu_head *head;
+> + 1  static void rcu_barrier_func(void *notused)
+> + 2  {
+> + 3    int cpu = smp_processor_id();
+> + 4    struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
+> + 5    struct rcu_head *head;
+>    6
+> - 7 head = &rdp->barrier;
+> - 8 atomic_inc(&rcu_barrier_cpu_count);
+> - 9 call_rcu(head, rcu_barrier_callback);
+> -10 }
+> + 7    head = &rdp->barrier;
+> + 8    atomic_inc(&rcu_barrier_cpu_count);
+> + 9    call_rcu(head, rcu_barrier_callback);
+> + 10 }
+>   
+>   Lines 3 and 4 locate RCU's internal per-CPU rcu_data structure,
+>   which contains the struct rcu_head that needed for the later call to
+> @@ -248,20 +259,25 @@ the current CPU's queue.
+>   
+>   The rcu_barrier_callback() function simply atomically decrements the
+>   rcu_barrier_cpu_count variable and finalizes the completion when it
+> -reaches zero, as follows:
+> +reaches zero, as follows::
+>   
+>    1 static void rcu_barrier_callback(struct rcu_head *notused)
+>    2 {
+> - 3 if (atomic_dec_and_test(&rcu_barrier_cpu_count))
+> - 4 complete(&rcu_barrier_completion);
+> + 3   if (atomic_dec_and_test(&rcu_barrier_cpu_count))
+> + 4     complete(&rcu_barrier_completion);
+>    5 }
+>   
+> -Quick Quiz #2: What happens if CPU 0's rcu_barrier_func() executes
+> +.. _rcubarrier_quiz_2:
+> +
+> +Quick Quiz #2:
+> +	What happens if CPU 0's rcu_barrier_func() executes
+>   	immediately (thus incrementing rcu_barrier_cpu_count to the
+>   	value one), but the other CPU's rcu_barrier_func() invocations
+>   	are delayed for a full grace period? Couldn't this result in
+>   	rcu_barrier() returning prematurely?
+>   
+> +:ref:`Answer to Quick Quiz #2 <answer_rcubarrier_quiz_2>`
+> +
+>   The current rcu_barrier() implementation is more complex, due to the need
+>   to avoid disturbing idle CPUs (especially on battery-powered systems)
+>   and the need to minimally disturb non-idle CPUs in real-time systems.
+> @@ -269,6 +285,7 @@ However, the code above illustrates the concepts.
+>   
+>   
+>   rcu_barrier() Summary
+> +---------------------
+>   
+>   The rcu_barrier() primitive has seen relatively little use, since most
+>   code using RCU is in the core kernel rather than in modules. However, if
+> @@ -277,8 +294,12 @@ so that your module may be safely unloaded.
+>   
+>   
+>   Answers to Quick Quizzes
+> +------------------------
+> +
+> +.. _answer_rcubarrier_quiz_1:
+>   
+> -Quick Quiz #1: Is there any other situation where rcu_barrier() might
+> +Quick Quiz #1:
+> +	Is there any other situation where rcu_barrier() might
+>   	be required?
+>   
+>   Answer: Interestingly enough, rcu_barrier() was not originally
+> @@ -292,7 +313,12 @@ Answer: Interestingly enough, rcu_barrier() was not originally
+>   	implementing rcutorture, and found that rcu_barrier() solves
+>   	this problem as well.
+>   
+> -Quick Quiz #2: What happens if CPU 0's rcu_barrier_func() executes
+> +:ref:`Back to Quick Quiz #1 <rcubarrier_quiz_1>`
+> +
+> +.. _answer_rcubarrier_quiz_2:
+> +
+> +Quick Quiz #2:
+> +	What happens if CPU 0's rcu_barrier_func() executes
+>   	immediately (thus incrementing rcu_barrier_cpu_count to the
+>   	value one), but the other CPU's rcu_barrier_func() invocations
+>   	are delayed for a full grace period? Couldn't this result in
+> @@ -323,3 +349,5 @@ Answer: This cannot happen. The reason is that on_each_cpu() has its last
+>   	is to add an rcu_read_lock() before line 8 of rcu_barrier()
+>   	and an rcu_read_unlock() after line 8 of this same function. If
+>   	you can think of a better change, please let me know!
+> +
+> +:ref:`Back to Quick Quiz #2 <rcubarrier_quiz_2>`
+> 
