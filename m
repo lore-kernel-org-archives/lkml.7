@@ -2,78 +2,119 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8610C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052CCC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC74214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E317214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EFn1nWBM"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="qJ6+3nX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfKGX6e (ORCPT
+        id S1727984AbfKGX74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 18:58:34 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:53867 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfKGX6e (ORCPT
+        Thu, 7 Nov 2019 18:59:56 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36168 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfKGX74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 18:58:34 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5114823E23;
-        Fri,  8 Nov 2019 00:58:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573171112;
-        bh=GTbVnP35xn/Y0nwP1JsExVBFBqddoJ9o4ht2MFIvCXc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EFn1nWBMWzQD8wXQluoJRpaHKI3W5QmMXS6MDB7D6kEHxXXRDKzyFU+1lk1ExxHkZ
-         CupqapBjs0Xi3IfNENrk0ZIYIPA7Exe30ZDr3E09M7m3T5mZOp8tGG10cxS6a8CnM/
-         8wbey6e9kT9PEUnnJAe0jdetgJz3VryGr+lmG+/0=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>, Michael Walle <michael@walle.cc>
-Subject: [PATCH] enetc: fix return value for enetc_ioctl()
-Date:   Fri,  8 Nov 2019 00:58:21 +0100
-Message-Id: <20191107235821.12767-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Thu, 7 Nov 2019 18:59:56 -0500
+Received: by mail-io1-f67.google.com with SMTP id s3so4361153ioe.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 15:59:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
+        b=qJ6+3nX2A0cxXp5ywWmFmELron2FyoN3FDc1ffUYMSP1vQyxNNpAwPSnIE5uLNzHPq
+         yyTkSrkV4O5kQntMue3g7+nconlzJcFJaaHJJvfJhYiZk1qUc6eQ7eSGlcWwJjDZxSRI
+         7S/mzRsyDqgZuUtoTd4Nl/Yt1BDw/i2DmXmPOTsRh50NUe/3/3QtgZHdZFheYVUikA7M
+         N+9OqwsvL5vJn14W36FB7KmRrDoQ5hyXXvKRhWwjTE1IpQ+HN47iJQHz64V389iY1Cde
+         pazLb/um+PtgdVcge3dhBcECyUDnNWvzK6hGd+wFsEi3EaLHfwIrCnq7ZBaYeiJrTqA1
+         C3tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
+        b=WsEDs9eW9AW3D3abYqmYq0EgR4uCPj1cu6eY6H0ZVfS/kri7e2NwEscnQkiP/eIDJi
+         7/RmZ42NdhAZyklHZSZFiyycESOGymUVW8oq1C3tYWUHqw9t7bNEnB0badKUIgOzNbbV
+         VY88R5xkw8QLCU4En8joJeJjC5TtXZN4knH5tWnFmJjDUg/S5ysSIi3Cq4tXyKpDisG+
+         FnnafvFvUukHHlWu0X3yc4W7uIhj1kEFRCaL346cB/RI7oc7nPT0hjgS8MxTw5l+QP5c
+         EwPzxRpHJT3OWB6LV7yANBSXAm+V8HVBIUqBP8/8KFLGASDbYLdXC6JzzRnvm1sYXdZS
+         uLmA==
+X-Gm-Message-State: APjAAAUK/J9C4zu2S+btfC4D3vltf4JFZmylMiQFNsl1rlL5HVhRJtxJ
+        uZ+mzZmOHx+xcjdlglfoNtTyBGf7jBZJLm8zC4yOyX+DNMKiDg==
+X-Google-Smtp-Source: APXvYqwdhyG4PRd2KuyuhMDVRxc8TrIjKm0QEGmFDeLDmPvQFWLzeehD5bVsnZtjSW2ZuPfUI6UWw5ZPpD3feEOMNM8=
+X-Received: by 2002:a5e:8202:: with SMTP id l2mr6723828iom.207.1573171195298;
+ Thu, 07 Nov 2019 15:59:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+References: <20191025202004.GA147688@google.com> <1ade6a9f-9532-c400-9bb0-4e68ed5752ce@linux.intel.com>
+ <CAOesGMhdAUKj9f0=sVwH7kffr=P-LqWWqKxKK3N3e0MpcjLExw@mail.gmail.com> <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
+In-Reply-To: <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Thu, 7 Nov 2019 15:59:43 -0800
+Message-ID: <CAOesGMi2hnEhZvvcWg44LzjAr44LhzQ58s=u=THpfn=RRLLA7w@mail.gmail.com>
+Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
+ back old behavior
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return -EOPNOTSUPP instead of -EINVAL if the requested ioctl is not
-implemented.
+On Thu, Nov 7, 2019 at 2:07 PM Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+> On 11/7/19 12:09 PM, Olof Johansson wrote:
+> > On Thu, Nov 7, 2019 at 12:02 PM Kuppuswamy Sathyanarayanan
+> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> >> Hi,
+> >>
+> >> On 10/25/19 1:20 PM, Bjorn Helgaas wrote:
+> >>> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
+> >>>> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+> >>>> the behavior was changed such that native (kernel) handling of DPC
+> >>>> got tied to whether the kernel also handled AER. While this is what
+> >>>> the standard recommends, there are BIOSes out there that lack the DPC
+> >>>> handling since it was never required in the past.
+> >>> Some systems do not grant OS control of AER via _OSC.  I guess the
+> >>> problem is that on those systems, the OS DPC driver used to work, but
+> >>> after eed85ff4c0da7, it does not.  Right?
+> >> I need some clarification on this issue. Do you mean in these systems,
+> >> firmware expects OS to handle DPC and AER, but it does not let OS know
+> >> about it via _OSC ?
+> > The OS and BIOS both assumed behavior as before eed85ff4c0da7 -- AER
+> > handled by firmware but DPC handled by kernel.
+> >
+> > I.e. a classic case of "Sure, the spec says this, but in reality
+> > implementations relied on actual behavior", and someone had a
+> > regression and need a way to restore previous behavior.
+>
+> Got it. I don't know whether its good to add hacks to support products
+> that does not follow spec.
+> But, do you think it would be useful to add some kind of warning message
+> when this option is
+> enabled ? May be it could be useful in debugging.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/net/ethernet/freescale/enetc/enetc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It's not a "hack", it is fixing a regression in behavior because of
+changed assumptions by the kernel.
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-index 25af207f1962..3e8f9819f08c 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-@@ -1601,7 +1601,7 @@ int enetc_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
- #endif
- 
- 	if (!ndev->phydev)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 	return phy_mii_ioctl(ndev->phydev, rq, cmd);
- }
- 
--- 
-2.20.1
+We're pretty clear as a kernel community: We don't regress our users.
+So, in cases like these, we need to make sure we allow people to use
+their hardware the same way they used it with an older kernel.
 
+A printk() to indicate that this mode is enabled could be useful, if
+nothing else to make sure that the pre-eed85ff4c0da7 behavior is
+enabled without having to grep /proc/cmdline.
+
+
+-Olof
