@@ -2,151 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB428C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A792C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58E821D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573110156;
-	bh=tsSO2oKH4AjYEiJRusdVI6QSVnr6kuH4qgplOpJ5GCU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0UsLTN+Y3Q3sg2j0Iy5gNDcBdlZZpdk+uXOMJE2JJT94DsFw7pRvCjG8+al+QgwGj
-	 jZ/C5U8Wrw4R8hTLSefQ5cyF6JWltTZjPls80q9Sb7eDeu0eclyjIOo2bWEhWl50Oq
-	 ANbLq0F/kf00ylS0/zTid67SclpjlmIkPVEj35vg=
+	by mail.kernel.org (Postfix) with ESMTP id 3DD4D21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:04:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="BED9/AYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfKGHCf (ORCPT
+        id S1727302AbfKGHEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:02:35 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39469 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfKGHCe (ORCPT
+        Thu, 7 Nov 2019 02:04:40 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52009 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfKGHEj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:02:34 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a11so1707184wra.6;
-        Wed, 06 Nov 2019 23:02:33 -0800 (PST)
+        Thu, 7 Nov 2019 02:04:39 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q70so1223804wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:04:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zZXglcpbTpC9QlP3VtjwpWHkMXqkfLtACCkjAh1NRHY=;
-        b=t9pBSGRQKigXPt5sxvRAMRQ6ExnjvHMa36xRxQRAsSpYYyhBFnVedw3Ox/IgmX9+Qv
-         xGH4azkjAoZqRambEY92VVUepJ3+EzwVtNd+zbFzATad+wtbIZxghv91Rg0aeX8b/RBz
-         7QVPiYydbiRR3cGrTt4e5bYCkXhDsZxL6VbIr2RnKxMSWgWI6fRPPdKwcryXK3yF09I9
-         WVerep8+6ROk9Zok3h+OviCQq7fJwzMrAdRfbtxY1o/wGn5u2uQr0INe5wEfR3P8wOkj
-         p5Cqv5f2+eKGOULbN/DzyV5SweO0DVZbHl998jivCtROOCUGEoPyreIFmngPOUQqSbth
-         xZKg==
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=1BWOBnBh3RsSrHmTF9OyTNjqu4CElUB2toH/DiA/qIc=;
+        b=BED9/AYxEqSzI3EIPyUatgXBzDzJIxvgb0tT/vCP+uqowsV2RHUg0bX6M8PTiGO66K
+         n7MyBQhs7dvtPaFHFKpel/rUchRTLdALNm7Nou59bT7p1fZ0MQGt+lJi3gBhtLgJe2nI
+         K2ljk6GK9pXXI9DWK67jD+Edy51V3hkVEHkATxqkphL1L5B/RUdDw8UV9MN6cnC+feiQ
+         X1yVn1O0lJ2Qqr7nY1RV8g5jxqtwrGcS1eGKEWk337YlszC44W+AkYRuFLEBO4SJJuv7
+         ORRsE2UglZFYFgEQC2tCWXH7/lTb3I9PXK50YxjTCVoF749iSKlHRdTYyRllwY0Nix7R
+         cVbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=zZXglcpbTpC9QlP3VtjwpWHkMXqkfLtACCkjAh1NRHY=;
-        b=pbHoaMB2UvBj47hmREQftASKQHkV+0l+HVXN+NupVH/OcIZ+/byylMMrF+N8M4wL4T
-         8aUDj44CjWREt6bL6Rw1YND/k6m7Kgw2SRRWhCkoJKsi0fHaBATHSY8QT9VBSysBKQuG
-         JP0X7h4+qmsjRy8R0lyS2e9t5gKe3tpgbHnratHAlgVLW1pM7P/tSb0+FV6Ljer2vz/u
-         1YtHiEKIcDvcyQtkSuELy49kSyoQTd9l5MGAsfOpZXf6mUdK4OF3Hezi9zU9AwNDPfU0
-         hu09gy0ryYTVFj+FrhBtELxwfG38TdL0Fs8GZlK1hr6f/mKJDXP1IL8l59Yr7hfyW1ic
-         yhug==
-X-Gm-Message-State: APjAAAWNbK12y1H/0A2m9nJ1+JV7ipcXabUQ2E9QAcHIoj5ns8jIfNTr
-        ybG+J0zr9TcQSA1ytRCO0I8=
-X-Google-Smtp-Source: APXvYqyixvNMStPVBkupleG+MMdRDltlLiflRAW22PjPlHgaf6vxHn9xI7ckIUqcYUcrMk7roCT06Q==
-X-Received: by 2002:a5d:4946:: with SMTP id r6mr689848wrs.155.1573110152345;
-        Wed, 06 Nov 2019 23:02:32 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id u4sm1169499wrq.22.2019.11.06.23.02.30
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=1BWOBnBh3RsSrHmTF9OyTNjqu4CElUB2toH/DiA/qIc=;
+        b=auJCnQMosLa0jAf9dgVm9QXnFWDIN3TXfgpjo38Zx+MyRmG56G/qQHi2u80hTVKDTz
+         +pnerB5lxJYVsjJ2XMyHZAScDNJUMVYY+yvHo78Vm5eNtioIPect7txiDxE7m/Uhiovx
+         NR2YVm8hJ/GS9l9VOy6PzXdIRg++6j6jl4ImhHV7Vl2+E2sT1rpmAHi0EIkD91iuJgnQ
+         TGtSf/AxuKp5ZrScOAYeOJvT20arLnizsZgW2t+GodJZBwGxKMlR7mnsSzx/xFH5Isjx
+         aZw7b+EJhEWPDJ0HifH3trtFGnyJYJooz+YNtmBtxJtAvV0V+mjG4siG+HvyMi3/ndHl
+         grCQ==
+X-Gm-Message-State: APjAAAWLKoYDTSQKvMiA6RGigjIOO2+Z40vmR69I4selGN55D0Pg2uNP
+        ovaxsas8OznzNKVwi7AnOmO4DA==
+X-Google-Smtp-Source: APXvYqw5oCk6xXi6ixLz7jByPs1zY84R0XhXM9pbgD9ZCxKqdl36Geh9BAUevrqz0GAD8gxGpRTXcA==
+X-Received: by 2002:a05:600c:254f:: with SMTP id e15mr1260124wma.37.1573110275553;
+        Wed, 06 Nov 2019 23:04:35 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id u7sm1508088wre.59.2019.11.06.23.04.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 23:02:31 -0800 (PST)
-Date:   Thu, 7 Nov 2019 08:02:29 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/urgent fixes
-Message-ID: <20191107070229.GA30739@gmail.com>
-References: <20191017160301.20888-1-acme@kernel.org>
- <20191021062354.GA22042@gmail.com>
- <20191106191051.GE3636@kernel.org>
+        Wed, 06 Nov 2019 23:04:34 -0800 (PST)
+Message-ID: <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
+Subject: Re: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Date:   Thu, 07 Nov 2019 08:04:28 +0100
+In-Reply-To: <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
+         <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191106191051.GE3636@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Em Mon, Oct 21, 2019 at 08:23:54AM +0200, Ingo Molnar escreveu:
-> > Secondly, there also appears to be a TUI weirdness when the annotated 
-> > kernel functions are small (or weird): the blue cursor is stuck at the 
-> > top and I cannot move between the annotated instructions with the down/up 
-> > arrow:
-> > 
-> > Samples: 13M of event 'cycles', 4000 Hz, Event count (approx.): 1272420588851
-> > clear_page_rep  /usr/lib/debug/boot/vmlinux-5.4.0-rc3-custom-00557-gb6c81ae120e0 [Percent: local period]
-> >   0.01 │     mov  $0x200,%ecx                                                                                                                                                                      ▒
-> >        │   xorl %eax,%eax                                                                                                                                                                          ▒
-> >   0.01 │     xor  %eax,%eax                                                                                                                                                                        ▒
-> >        │   rep stosq                                                                                                                                                                               ▒
-> >  99.27 │     rep  stos %rax,%es:(%rdi)                                                                                                                                                             ▒
-> >        │   ret                                                                                                                                                                                     ▒
-> >   0.71 │   ← retq                         
-> > 
-> > I can still exit the screen with 'q', and can move around in larger 
-> > annotated kernel functions. Not sure whether it's related to function 
-> > size, or perhaps to the 'hottest' instruction that the cursor is normally 
-> > placed at.
+Il giorno mer, 06/11/2019 alle 22.13 +0000, Damien Le Moal ha scritto:
 > 
-> I couldn't reproduce this one so far, with another small function,
-> clear_page_erms, what happens is that the cursor seems to be hidden at the
-> bottom, if you press the "magic" 'D' hotkey it will tell (at the bottom of the
-> screen) that the idx is at 18, which  for a function with just 8 output lines
-> doesn't make sense:
 > 
-> Samples: 12K of event 'cycles', 4000 Hz, Event count (approx.): 2219443843
-> clear_page_erms  /proc/kcore [Percent: local period]
-> Percent│                                                                 ◆
->        │                                                                 ▒
->        │                                                                 ▒
->        │    Disassembly of section load0:                                ▒
->        │                                                                 ▒
->        │    ffffffffab9d17c0 <load0>:                                    ▒
->        │      mov  $0x1000,%ecx                                          ▒
->        │      xor  %eax,%eax                                             ▒
-> 100.00 │      rep  stos %al,%es:(%rdi)                                   ▒
->        │    ← retq                                                       ▒
->                                                                          ▒
-> 1: nr_ent=20, height=35, idx=18, top_idx=1, nr_asm_entries=8
+> Please simply try your write tests after doing this:
 > 
-> Doesn't make sense, there aren't 20 entries nor the idx is 18, the
-> nr_asm_entries is right, I'll try to follow up on this one...
+> echo mq-deadline > /sys/block/<name of your USB
+> disk>/queue/scheduler
 > 
-> But you can in these cases try to go on pressin the up arrow till the cursor
-> appears, etc.
+> And confirm that mq-deadline is selected with:
+> 
+> cat /sys/block/<name of your USB disk>/queue/scheduler
+> [mq-deadline] kyber bfq none
 
-Yeah, I can reproduce this too - and don't see the original weirdness 
-anymore. :-/
+ok, which kernel should I test with this: the fresh git cloned, or the
+one just patched with Alan's patch, or doesn't matter which one?
 
-Will re-report if it happens again.
+Thanks, and bye,
+Andrea
 
-Thanks,
-
-	Ingo
