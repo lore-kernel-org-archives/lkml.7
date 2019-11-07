@@ -2,100 +2,195 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EB6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CF3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8667A21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FB42178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K6FTWVC1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y5YC+/pS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388583AbfKGPBu (ORCPT
+        id S2388634AbfKGPDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:01:50 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:47018 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727142AbfKGPBu (ORCPT
+        Thu, 7 Nov 2019 10:03:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:54462 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKGPDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:01:50 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so2599235ljp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:01:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jgAkr102LqQKPAr3pGJYhPDK4e/SFK30Vkoy1JW8C9s=;
-        b=K6FTWVC18/HyP+n8tnIdWBbmpg4P7IxBIGjTfd3smZOdNgDhapmaHf1IhT8kb2LSeg
-         Jp07yGotkBOcA6+pRceCmh3VjtNawsLwxSifx2YACvzh9JDUgrSG5pHHU6YW2cq3V8qi
-         wbXClCy8b0xtcYKRt6csHAPi5UH1fVW1AlSaTW87EJcyy26oAX/KQxunAyTCdCbMLQao
-         hmwkxLx/5OQRsiBShbFCZRZq+qwSxwx5ReOVAbsv2fE+fKibsPIEhdksbqEEnkH6QekX
-         NqQzaZNv//tuRz+X9s5Fgxa3pRbvJVbZDYBy4Ju2n+OYbhL2uB9GnNoF66wM6k4KJ3B1
-         J1vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jgAkr102LqQKPAr3pGJYhPDK4e/SFK30Vkoy1JW8C9s=;
-        b=jJj7I21X1cv9kqj6i46peH6+lrWi5bGAMUo3znVSX2eyQvphxXQuiHa3FLKS/ZAfqq
-         9qw57CYOTnhCc35droZQlQ56BNsnnJ1I/DQQ6IxW3kAHVI2hxdtN5PHHGBUZVSQJmfgV
-         3UMwAB6HVr8b7viz8yPBepMo0hJ5QAGQbXZoeWZTk4nT7nuv31YnzGKp7yAZ52U01cyN
-         +mpng6/QLdK0gR9EgHh47R4BCDK44KCHT2XS1rEcewTQ7Asn+Tst35bWwirBCaFCwRCT
-         hl2dXaI8l/AZQ5U/yhK8B/UDrTKzl3dVGH1lL/0v2NqaJfTP7bMgiXFYFhHm4fihTkPV
-         Tb1w==
-X-Gm-Message-State: APjAAAXZ6Iv7EG/3kXJyB7JdCFPfKeyRzoMajxAQCGzVQ4qfZqrHMtur
-        kla9jpm4NaJCVW/6QIbb+0H7MbFK4VsCknbu0SuHZA==
-X-Google-Smtp-Source: APXvYqxEfc/CuHeO/tUPbA/L8KnwpKF2GYeDL5vyFe1U1/wxU4srnu1AJ/8ugakgyWV8GG7sl3Pz4PrhWVkvlJpK/wQ=
-X-Received: by 2002:a2e:90b:: with SMTP id 11mr2740565ljj.233.1573138907121;
- Thu, 07 Nov 2019 07:01:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20191107103540.21088-1-jonathanh@nvidia.com>
-In-Reply-To: <20191107103540.21088-1-jonathanh@nvidia.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 16:01:35 +0100
-Message-ID: <CACRpkdZircUVEcQHV2saCk_Mihf-hUWWKUJ=h9jg1it58VeitA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: xgs-iproc: Fix crash when driver is built as a module
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 Nov 2019 10:03:33 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7EiQQf050951;
+        Thu, 7 Nov 2019 15:02:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=WIrFjT89+Gu5N4D3hmBKexKVwTCS1SDwd3tM6/hO4o4=;
+ b=Y5YC+/pSrp7sYP+/eudVtCqXnEXyWhvFJX5hW5Z5b9kAbLphFmM3cAxSIIcLJIqmUp6s
+ Ee/R5jK2gZCgBz3FILobpIxrkRN4cTUz2en9wOT74i5ZBzCAdmEVJCzf79pf20dOmCLu
+ 7jhRoQ/Psrc/Yf2D4n20RKyrxx2/EFVj3COe+3//SihJwC5f67ZdifrPEaIzMdur5YC0
+ RResaZS9Edmvzy2r6tWCwIvYyipTk8z1/y66uZ2Q+viVO7Ngjtv8iuPFZHxmcUXSXp3H
+ y/sM2sSELo2G5q1F6i8gJiRgWkBv4IUAtbB6R3YrvNfMdF+49eDFdG30FDHuvvpm/iQ/ AA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2w41w16s7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 15:02:38 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7Eia3k131529;
+        Thu, 7 Nov 2019 15:02:38 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2w4k2vee2x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 15:02:36 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA7F2WhJ024079;
+        Thu, 7 Nov 2019 15:02:34 GMT
+Received: from [192.168.14.112] (/79.182.207.213)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 Nov 2019 07:02:32 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is
+ trustworthy
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <943488A8-2DD7-4471-B3C7-9F21A0B0BCF9@dinechin.org>
+Date:   Thu, 7 Nov 2019 17:02:26 +0200
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <713ECF67-6A6C-4956-8AC6-7F4C05961328@oracle.com>
+References: <20191105161737.21395-1-vkuznets@redhat.com>
+ <20191105193749.GA20225@linux.intel.com>
+ <20191105232500.GA25887@linux.intel.com>
+ <943488A8-2DD7-4471-B3C7-9F21A0B0BCF9@dinechin.org>
+To:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911070144
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911070144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 11:35 AM Jon Hunter <jonathanh@nvidia.com> wrote:
 
-> Commit 6a41b6c5fc20 ("gpio: Add xgs-iproc driver") introduced a new
-> GPIO driver for the Broadcom GPIO controller. When this driver is built
-> as a module the following warning is observed because the
-> bcm_iproc_gpio_of_match structure is defined with the __initconst
-> attribute ...
->
->  MODPOST vmlinux.o
->  WARNING: vmlinux.o(.data+0x834d0): Section mismatch in reference from
->  the variable bcm_iproc_gpio_driver to the variable
->  .init.rodata:bcm_iproc_gpio_of_match
->  The variable bcm_iproc_gpio_driver references
->  the variable __initconst bcm_iproc_gpio_of_match
->
-> This then causes a translation fault on boot which and results in a
-> system crash. Fix this by dropping the __initconst attribute from the
-> bcm_iproc_gpio_of_match structure.
->
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 
-Incidentally Mark Brown already sent an identical patch.
+> On 7 Nov 2019, at 16:00, Christophe de Dinechin =
+<christophe.de.dinechin@gmail.com> wrote:
+>=20
+>=20
+>=20
+>> On 6 Nov 2019, at 00:25, Sean Christopherson =
+<sean.j.christopherson@intel.com> wrote:
+>>=20
+>> On Tue, Nov 05, 2019 at 11:37:50AM -0800, Sean Christopherson wrote:
+>>> On Tue, Nov 05, 2019 at 05:17:37PM +0100, Vitaly Kuznetsov wrote:
+>>>> Virtualized guests may pick a different strategy to mitigate =
+hardware
+>>>> vulnerabilities when it comes to hyper-threading: disable SMT =
+completely,
+>>>> use core scheduling, or, for example, opt in for STIBP. Making the
+>>>> decision, however, requires an extra bit of information which is =
+currently
+>>>> missing: does the topology the guest see match hardware or if it is =
+'fake'
+>>>> and two vCPUs which look like different cores from guest's =
+perspective can
+>>>> actually be scheduled on the same physical core. Disabling SMT or =
+doing
+>>>> core scheduling only makes sense when the topology is trustworthy.
+>>>>=20
+>>>> Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the =
+meaning
+>>>> that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the =
+exposed SMT
+>>>> topology is actually trustworthy. It would, of course, be possible =
+to get
+>>>> away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose =
+backwards
+>>>> compatibility but the current approach looks more straightforward.
+>>>=20
+>>> I'd stay away from "trustworthy", especially if this is controlled =
+by
+>>> userspace.  Whether or not the hint is trustworthy is purely up to =
+the
+>>> guest.  Right now it doesn't really matter, but that will change as =
+we
+>>> start moving pieces of the host out of the guest's TCB.
+>>>=20
+>>> It may make sense to split the two (or even three?) cases, e.g.
+>>> KVM_FEATURE_NO_SMT and KVM_FEATURE_ACCURATE_TOPOLOGY.  KVM can =
+easily
+>>> enforce NO_SMT _today_, i.e. allow it to be set if and only if SMT =
+is
+>>> truly disabled.  Verifying that the topology exposed to the guest is =
+legit
+>>> is a completely different beast.
+>>=20
+>> Scratch the ACCURATE_TOPOLOGY idea, I doubt there's a real use case =
+for
+>> setting ACCURATE_TOPOLOGY and not KVM_HINTS_REALTIME.  A feature flag =
+to
+>> state that SMT is disabled seems simple and useful.
 
-Thanks anyway!
+A bit such as NoNonArchitecturalCoreSharing can be set even when host =
+SMT is enabled.
+For example, when host use core-scheduling to group together vCPUs that =
+run as sibling hyperthreads.
+Therefore, I wouldn=E2=80=99t want to tie the feature-flag semantics to =
+host SMT being enabled/disabled.
+It=E2=80=99s just true that this bit can be set when host SMT is =
+disabled.
 
-Yours,
-Linus Walleij
+>=20
+> I share that concern about the naming, although I do see some
+> value in exposing the cpu_smt_possible() result. I think it=E2=80=99s =
+easier
+> to state that something does not work than to state something does
+> work.
+>=20
+> Also, with respect to mitigation, we may want to split the two cases
+> that Paolo outlined, i.e. have KVM_HINTS_REALTIME,
+> KVM_HINTS_CORES_CROSSTALK and
+> KVM_HINTS_CORES_LEAKING,
+> where CORES_CROSSTALKS indicates there may be some
+> cross-talk between what the guest thinks are isolated cores,
+> and CORES_LEAKING indicates that cores may leak data
+> to some other guest.
+>=20
+> The problem with my approach is that it is shouting =E2=80=9Cdon=E2=80=99=
+t trust me=E2=80=9D
+> a bit too loudly.
+
+I don=E2=80=99t see a value in exposing CORES_LEAKING to guest. As guest =
+have nothing to do with it.
+
+-Liran
+
+
+
+
+
+
+
+
+
