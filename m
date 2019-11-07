@@ -2,181 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E5CC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6ABC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838E421D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E280B2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YYdbeUut"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wIFX/g4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388860AbfKGPiP (ORCPT
+        id S2389028AbfKGPiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:38:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42501 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388230AbfKGPiO (ORCPT
+        Thu, 7 Nov 2019 10:38:55 -0500
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:55878 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKGPiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:38:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573141093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZlnYjNYTseMGbHaFbgcXIvub57cEgCnxRgcSJ+6+lDM=;
-        b=YYdbeUutbhPDzbEXPvBWXimFL4ip25HgjYt5gaf0PMmJ8eWUM7z2BGUShJF+u2Rlf+Zsaf
-        j2M+dnPXN3Sr+7eEw7jNoslJJS7RGNtEMHlYMA7CQ2Yc525cgexhlbw75l6UUa9ufYHi6j
-        CV5mnYghhKPFcKvEahRHGPWekRJLw1M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-18FDT1idPRKsX84YKyOzuA-1; Thu, 07 Nov 2019 10:38:04 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A9EC477;
-        Thu,  7 Nov 2019 15:38:03 +0000 (UTC)
-Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3F89608AC;
-        Thu,  7 Nov 2019 15:38:02 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 10:38:01 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
- UFFD_FEATURE_EVENT_FORK
-Message-ID: <20191107153801.GF17896@redhat.com>
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
- <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
- <20191105162424.GH30717@redhat.com>
- <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
- <20191107083902.GB3247@linux.ibm.com>
- <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
+        Thu, 7 Nov 2019 10:38:54 -0500
+Received: by mail-wm1-f47.google.com with SMTP id b11so2952854wmb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:38:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=td8ivn6HMnYDeB2Y4ofVQkcwrmwl8/xF8VLFkmr1OIg=;
+        b=wIFX/g4H++tVslYBfqNzX9niYmHhyN4lzaes3nyaEfZvmusoG1QwL8pMOKwWogqoI6
+         hI+6340m9Wn6BfWDdWBlQwyx+sj/y0fp6LwSkZrsfhvIryrNUM0HCKHzh5uTsqhi07m4
+         gE6wiDVpuyLn8Xm84+5OY7wjAcjr0Pnjr3oV+0mUpMRSoJYiPEvdCyVOKEL1utra2eeT
+         UIY9EfBrHG9j0NpR+gbJl7yOTk8isqj5ctwRZHePh3qQPx3UYu+7xfDmDY+rb8yoPMXu
+         7qnMdkkyOi1tCbtvvfAP0oTzokqgnpPOGLZenu0EyLvblzWsfDI1qPO+2NRNYE6PXPgf
+         TIRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=td8ivn6HMnYDeB2Y4ofVQkcwrmwl8/xF8VLFkmr1OIg=;
+        b=lEcoc5WJPrs9MhLg+l5dbbvFIYglBjWDmuCb9CaohJ1o1tHxyLyLyFAVLI3AO1T7im
+         MizYbYjeytKfXO37Wzj6MBvVZK3MWT4fPr10HQrbTl1LKlLqM96bPAt2KaapWEc5Q4vb
+         RJJJBGdRZxv0B09PhLbKWYTA/enbxlK8xH/Hm/v0m675gIUUYidQp/4+tfqRQtKsnR66
+         Q6fRi6OtOYyzRu0eDr3nUp6Y/hIZVKsjOyhLduAMKO5iqfPK7G9+RhOarSx06CeRueHQ
+         MwcysnqGpstgaFWRb1MPpz+kw+uhlwH39OnzNsceJT/iX9gAHxFXpo4vxSdwxP2mAGHe
+         FoGQ==
+X-Gm-Message-State: APjAAAUkIWLm7uWpAMl1ZZOHRlD26G8JrTyVYClnDnFCX+/LtbsLmdcs
+        0FkMlzpIbyJ6kjYIslbrWE7lLg==
+X-Google-Smtp-Source: APXvYqww9cIAJydXkh6COrb6XBiX8uy26MoHTMWwZjN7I9k136PrmP5xRVrQX1wqR7CSK5x2wc9UdA==
+X-Received: by 2002:a1c:411:: with SMTP id 17mr3293231wme.122.1573141132210;
+        Thu, 07 Nov 2019 07:38:52 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id 65sm4362281wrs.9.2019.11.07.07.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 07:38:51 -0800 (PST)
+Date:   Thu, 7 Nov 2019 15:38:48 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, linux-kernel@vger.kernel.org,
+        aaron.lwe@gmail.com, valentin.schneider@arm.com, mingo@kernel.org,
+        pauld@redhat.com, jdesfossez@digitalocean.com,
+        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        kernel-team@android.com, john.stultz@linaro.org
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+Message-ID: <20191107153848.GA31774@google.com>
+References: <20191028174603.GA246917@google.com>
+ <20191106120525.GX4131@hirez.programming.kicks-ass.net>
+ <33643a5b-1b83-8605-2347-acd1aea04f93@virtuozzo.com>
+ <20191106165437.GX4114@hirez.programming.kicks-ass.net>
+ <20191106172737.GM5671@hirez.programming.kicks-ass.net>
+ <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
+ <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 18FDT1idPRKsX84YKyOzuA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thursday 07 Nov 2019 at 14:26:28 (+0100), Peter Zijlstra wrote:
+> Given that we're stuck with this order, the only solution is fixing
+> the 'change' pattern. The simplest fix seems to be to 'absuse'
+> p->on_cpu to carry more state. Adding more state to p->on_rq is
+> possible but is far more invasive and also ends up duplicating much of
+> the state we already carry in p->on_cpu.
 
-On Thu, Nov 07, 2019 at 12:54:59AM -0800, Daniel Colascione wrote:
-> On Thu, Nov 7, 2019 at 12:39 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > On Tue, Nov 05, 2019 at 08:41:18AM -0800, Daniel Colascione wrote:
-> > > On Tue, Nov 5, 2019 at 8:24 AM Andrea Arcangeli <aarcange@redhat.com>=
- wrote:
-> > > > The long term plan is to introduce UFFD_FEATURE_EVENT_FORK2 feature
-> > > > flag that uses the ioctl to receive the child uffd, it'll consume m=
-ore
-> > > > CPU, but it wouldn't require the PTRACE privilege anymore.
-> > >
-> > > Why not just have callers retrieve FDs using recvmsg? This way, you
-> > > retrieve the message packet and the file descriptor at the same time
-> > > and you don't need any appreciable extra CPU use.
-> >
-> > I don't follow you here. Can you elaborate on how recvmsg would be used=
- in
-> > this case?
->=20
-> Imagine an AF_UNIX SOCK_DGRAM socket. You call recvmsg(). You get a
-> blob of regular data along with some ancillary data. The ancillary
-> data may include some file descriptors or it may not. Isn't the UFFD
-> message model the same thing? You'd call recvmsg() on a UFFD and get
-> back a uffd_msg data structure. If that uffd_msg came with file
-> descriptors, these descriptors would be in ancillary data. If you
-> didn't reserve enough space for the message or enough space for its
-> ancillary data, the recvmsg() call would fail cleanly with MSG_TRUNC
-> or MSG_CTRUNC.
+I think there is another solution, which is to 'de-factorize' the call
+to put_prev_task() (that is, have each class do it). I gave it a go and
+I basically end up with something equivalent to reverting 67692435c411
+("sched: Rework pick_next_task() slow-path"), which isn't the worst
+solution IMO. I'm thinking at least we should consider it.
 
-Having to check for truncation is just a slowdown doesn't sound a
-feature here but just a complication and unnecessary branches. You can
-already read as much as you want in multiples of the uffd size.
-
-> The nice thing about using recvmsg() for this purpose is that there's
-> tons of existing code for dealing with recvmsg()'s calling convention
-> and its ancillary data. You can, for example, use recvmsg out of the
-> box in a Python script. You could make an ioctl that also returned a
-> data blob plus some optional file descriptors, but if recvmsg already
-> does exactly that job and it's well-understood, why not just reuse the
-> recvmsg interface?
-
-uffd can't become an plain AF_UNIX because on the other end there's no
-other process but the kernel. Even if it could the fact it'd
-facilitate a pure python backend isn't relevant because handling page
-faults is a performance critical system activity, and rust can do the
-ioctl like it can do poll/epoll without mio/tokyo by just calling
-glibc. We can't write kernel code in python either for the same
-reason.
-
-> How practical is it to actually support recvmsg without being a
-> socket? How hard would it be to just become a socket? I don't know. My
-
-AF_UINIX has more features than we need (credentials) and dealing with
-skbs and truncation would slow down the protocol. The objective is to
-get the highest performance possible out of the uffd API so that it
-performs as close as possible to running page faults in the kernel.
-
-So even if we could avoid a syscall in CRIU, but we'd be slowing down
-QEMU and all other normal cooperative usages if we made uffd a
-socket. So overall it would be a net loss.
-
-> point is only that *from a userspace API* point of view, recvmsg()
-> seems ideal.
-
-Now thinking about this, the semantics of the ancillary data seems to
-be per socket family. So what does prevent you to create an AF_UNIX
-socket, send it to a SCM_RIGHTS receiving daemon unaware that it is
-getting an AF_UNIX socket. The daemon is calling recvmsg on the fd it
-receives from SCM_RIGHTS in order to receive ancillary data from
-another non-AF_UNIX family instead (it is irrelevant what the
-semantics of the ancillary data are but they're not AF_UNIX). So the
-daemon calls recvmsg and it will not understand that the fd in the
-ancillary data represents an installed "fd" in the fd space and in
-turn still gets the fd involuntary installed with the exact same side
-effects of what we're fixing in the uffd fork event read?
-
-I guess there shall be something somewhere that prevents recvmsg to
-run on anything but an AF_UNIX if msg_control isn't NULL and
-msg_controllen > 0? Otherwise even if we implemented the uffd fork
-event with recvmsg, we would be back to square one.
-
-As a corollary this could also imply we don't need the ptrace check
-after all if the same thing can happen already to SCM_RIGHTS receiving
-daemon expecting to receive ancillary data from AF_SOMETHING but
-getting an AF_UNIX instead through SCM_RIGHTS (just like the uffd
-example was expecting to call read() on a normal fd and instead it got
-an uffd).
-
-I'm sure there's something stopping SCM_RIGHTS to have the same
-pitfalls of uffd event fork and that makes recvmsg safe unlike read()
-but then it's not immediately clear what it is.
+Now, 67692435c411 _is_ a nice clean-up, it's just a shame that the fix
+on top isn't as nice (IMO). It might just be a matter of personal taste,
+so I don't have a strong opinion on this :)
 
 Thanks,
-Andrea
-
+Quentin
