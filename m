@@ -2,138 +2,164 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFA0FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5216AFC6194
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4E121848
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EDD21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDJGXLGg"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G9fdjcSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733044AbfKGCVb (ORCPT
+        id S1733059AbfKGCVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:21:31 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41883 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfKGCVa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:21:30 -0500
-Received: by mail-pl1-f195.google.com with SMTP id d29so364392plj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:21:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F8VYuNOSid43MrjVcuL5CaqvY6S8eW3r2yuK7BO5dwk=;
-        b=SDJGXLGggE+E5m+gMdad8MXvtzmZkX9FQLHSFJY3No1jFMqqPX+P84oKpd1BRIrIhv
-         iHfXEo4bZUfrs6P/8pwMKgedu8kInPSpg5nFo2uz3zf1gdd8OL1Ng0DHLWx5c7Uee8Q9
-         yJyvD+Bykzyl0Hg3JVhqGVV5HWNrOjC214hZ1NoZk6sskkkKY2Al6aqc1NU5TPF28t3M
-         Btek2alNVky8HWFU/w7EbzgdzWyIrgtDDLzh67x7C7u9sOC4exJ799z/f1N8WPY+IoGY
-         FURMba0tsOS5HB1nWufsBEGQUFaKz/ilUfP4nAKu7Ux+y/z4gug6Zwg+mxN8Jj2GEr+Q
-         pQow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F8VYuNOSid43MrjVcuL5CaqvY6S8eW3r2yuK7BO5dwk=;
-        b=eNdwh+oEK32V4owbAxKrt0r5wYSaXNsyfd2ZOUckrivb0cebDCHe1K5ke0VXAmP+Tu
-         tRQ/zWGSG2XBTyCY1eLh4qbfz64mr44zFBGC6dN6lEAZZpGV0IKiLUhvY6Z9F90ZJdhZ
-         PDBIOpPNfscOSNcE5mCdOtuXpG/4K83eDikyvTOtolL8zmhsvFRMRRUAjs9+dp0pWyeq
-         B43W4x6hUzdR+8CPcgIjX6mKbBEfkpjCDx+QBNzerFRJm0GMFb5xoDV/RX6Yi1Fyq46q
-         l9ZO3CZS9inTnIn/BvYkG6VAh+gr04Wvvqeq0sH0ul8SbWvEjFZJWOtZGrrgCJWd8B9O
-         QDfQ==
-X-Gm-Message-State: APjAAAVxFJnDktn45xtAWmY1hIeDZAWe0BgZ6zftQBDabF50T1wN1D3f
-        Xa0MKqyj7BREVMms0hz5YX47Nw==
-X-Google-Smtp-Source: APXvYqwCjUUa2EravddhWJUCM9i3hC9daXOm5Ys3mXL0S5Zxg/iGcWx5LIEoQdFU17focrcutXV10A==
-X-Received: by 2002:a17:902:6946:: with SMTP id k6mr1064471plt.60.1573093289898;
-        Wed, 06 Nov 2019 18:21:29 -0800 (PST)
-Received: from localhost ([122.171.110.253])
-        by smtp.gmail.com with ESMTPSA id s23sm402279pgh.21.2019.11.06.18.21.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 18:21:29 -0800 (PST)
-Date:   Thu, 7 Nov 2019 07:51:25 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Javi Merino <javi.merino@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jun Nie <jun.nie@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 08/11] thermal: samsung: Appease the kernel-doc deity
-Message-ID: <20191107022125.wkdsdoolondcxhju@vireshk-i7>
-References: <cover.1573046440.git.amit.kucheria@linaro.org>
- <ef268335454e96e6ee3d13deb1cb89af0d0a3b61.1573046440.git.amit.kucheria@linaro.org>
+        Wed, 6 Nov 2019 21:21:49 -0500
+Received: from ozlabs.org ([203.11.71.1]:34441 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727328AbfKGCVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:21:48 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 477nGF3CQLz9sNx;
+        Thu,  7 Nov 2019 13:21:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573093304;
+        bh=KGNl6sUiCz4f+yJNbN2XaMijKNR2ypk6vEzvOfrtqMQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=G9fdjcSKx4DWr/EV29HespizrqyOlfqzl53rNWgqqPNU+nEYJUCk/zbHan5HJEmTh
+         iC+O1Qfbi1V0s8t5BrTLS30/O4fktAhQiXyoo10aP36hbnaXom5m//e6smFK70Mypf
+         Is0BNWg1dDpJQlh5HrACRYvBd1CHo+85iya5R2kWwSFWVKNPes79do5ZMyU1BubdVN
+         ap7djsgKBXvsEUE622RcpeVE8snheM0WUxlabJnHpD7Wjjm+flspOJhiutGqq93tEN
+         nt92pahtx+vD1hLAzyOzZWVytvDMtA9lokumE0d9GieKl9tvzYnU9WFjDI8Kst4pLx
+         ZJ0v50fGrCDvg==
+Date:   Thu, 7 Nov 2019 13:21:38 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, Jan Kara <jack@suse.cz>
+Subject: linux-next: manual merge of the tip tree with the ext4 tree
+Message-ID: <20191107132138.67da101f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef268335454e96e6ee3d13deb1cb89af0d0a3b61.1573046440.git.amit.kucheria@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: multipart/signed; boundary="Sig_/7FB1rBv5YwvXYeS4XeHDzfi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-11-19, 18:58, Amit Kucheria wrote:
-> Fix up the following warning when compiled with make W=1:
-> 
-> linux.git/drivers/thermal/mtk_thermal.c:374: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt8173_thermal_data = '
-> linux.git/drivers/thermal/mtk_thermal.c:413: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt2701_thermal_data = '
-> linux.git/drivers/thermal/mtk_thermal.c:443: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt2712_thermal_data = '
-> linux.git/drivers/thermal/mtk_thermal.c:499: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt8183_thermal_data = '
-> linux.git/drivers/thermal/mtk_thermal.c:529: warning: Function parameter or member 'sensno' not described in 'raw_to_mcelsius'
+--Sig_/7FB1rBv5YwvXYeS4XeHDzfi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Incorrect log here.
+Hi all,
 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/thermal/samsung/exynos_tmu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index fb2c55123a99e..8193b66a3f831 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -138,7 +138,7 @@ enum soc_type {
->  
->  /**
->   * struct exynos_tmu_data : A structure to hold the private data of the TMU
-> -	driver
-> + *			    driver
->   * @id: identifier of the one instance of the TMU controller.
->   * @base: base address of the single instance of the TMU controller.
->   * @base_second: base address of the common registers of the TMU controller.
-> @@ -162,8 +162,11 @@ enum soc_type {
->   *	0 < reference_voltage <= 31
->   * @regulator: pointer to the TMU regulator structure.
->   * @reg_conf: pointer to structure to register with core thermal.
-> + * @tzd: pointer to thermal_zone_device structure
->   * @ntrip: number of supported trip points.
->   * @enabled: current status of TMU device
-> + * @tmu_set_trip_temp: SoC specific method to set trip (rising threshold)
-> + * @tmu_set_trip_hyst: SoC specific to set hysteresis (falling threshold)
->   * @tmu_initialize: SoC specific TMU initialization method
->   * @tmu_control: SoC specific TMU control method
->   * @tmu_read: SoC specific TMU temperature read method
-> -- 
-> 2.17.1
+Today's linux-next merge of the tip tree got a conflict in:
 
--- 
-viresh
+  fs/jbd2/transaction.c
+
+between commit:
+
+  ec8b6f600e49 ("jbd2: Factor out common parts of stopping and restarting a=
+ handle")
+
+from the ext4 tree and commit:
+
+  5facae4f3549 ("locking/lockdep: Remove unused @nested argument from lock_=
+release()")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/jbd2/transaction.c
+index c068912408dd,b25ebdcabfa3..000000000000
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@@ -690,49 -655,6 +690,49 @@@ error_out
+  	return result;
+  }
+ =20
+ +static void stop_this_handle(handle_t *handle)
+ +{
+ +	transaction_t *transaction =3D handle->h_transaction;
+ +	journal_t *journal =3D transaction->t_journal;
+ +	int revokes;
+ +
+ +	J_ASSERT(journal_current_handle() =3D=3D handle);
+ +	J_ASSERT(atomic_read(&transaction->t_updates) > 0);
+ +	current->journal_info =3D NULL;
+ +	/*
+ +	 * Subtract necessary revoke descriptor blocks from handle credits. We
+ +	 * take care to account only for revoke descriptor blocks the
+ +	 * transaction will really need as large sequences of transactions with
+ +	 * small numbers of revokes are relatively common.
+ +	 */
+ +	revokes =3D handle->h_revoke_credits_requested - handle->h_revoke_credit=
+s;
+ +	if (revokes) {
+ +		int t_revokes, revoke_descriptors;
+ +		int rr_per_blk =3D journal->j_revoke_records_per_block;
+ +
+ +		WARN_ON_ONCE(DIV_ROUND_UP(revokes, rr_per_blk)
+ +				> handle->h_total_credits);
+ +		t_revokes =3D atomic_add_return(revokes,
+ +				&transaction->t_outstanding_revokes);
+ +		revoke_descriptors =3D
+ +			DIV_ROUND_UP(t_revokes, rr_per_blk) -
+ +			DIV_ROUND_UP(t_revokes - revokes, rr_per_blk);
+ +		handle->h_total_credits -=3D revoke_descriptors;
+ +	}
+ +	atomic_sub(handle->h_total_credits,
+ +		   &transaction->t_outstanding_credits);
+ +	if (handle->h_rsv_handle)
+ +		__jbd2_journal_unreserve_handle(handle->h_rsv_handle);
+ +	if (atomic_dec_and_test(&transaction->t_updates))
+ +		wake_up(&journal->j_wait_updates);
+ +
+- 	rwsem_release(&journal->j_trans_commit_map, 1, _THIS_IP_);
+++	rwsem_release(&journal->j_trans_commit_map, _THIS_IP_);
+ +	/*
+ +	 * Scope of the GFP_NOFS context is over here and so we can restore the
+ +	 * original alloc context.
+ +	 */
+ +	memalloc_nofs_restore(handle->saved_alloc_context);
+ +}
+ =20
+  /**
+   * int jbd2_journal_restart() - restart a handle .
+
+--Sig_/7FB1rBv5YwvXYeS4XeHDzfi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3Df7IACgkQAVBC80lX
+0Gwjugf+Nfahq/rIgvCSmZpcym69cSviqg7+/+6/caumm/ZdG9DpkF75X/L/LzDX
+cL8bEk0TGHBcePA+xEFSbWfYInurVNnc6lTM4SxPGg06TdiQO71lYumpBfAQCVCB
+bX9eVMSfRHmCMjSa/7SnuERtBxUTZhEU4wxKrfi1cQbtmhUq/kvxyGvZb/tY2pCd
+rz6Pv13ZU6GYXkFC1kV4VZ76AHXwfqKGaRPYJOK47kM68dw4PCpD6jflZBoHwbT0
+/YTYBA+WA2Vj6Spayw6mFTbJ4Ek0DO6Y9kK4waTqzTl2Gv5JXZ4XNNKzMQ/KBv7i
+5g5UcpT8olp7fqB8pyXSXeG1FS3fxg==
+=uQtu
+-----END PGP SIGNATURE-----
+
+--Sig_/7FB1rBv5YwvXYeS4XeHDzfi--
