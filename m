@@ -2,104 +2,141 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12B0FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA68FC6196
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A9221848
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573087445;
-	bh=OxsEy+Dfig77EH9KkLTDBIrpEo60kZmcoko9epPNKEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ehhoxhwK/J/z4akzOvlezDuHfLO+ox1xCHzSh1JRDA+Iik8/XI/9xd3wozFU4ZGlv
-	 VfzuhCARapE/wCbKgdl6KeKQF2hoPfFz1mf7P7aAt4gMFgvWVGQBp6uEvnSoUrOfpt
-	 NE1sOID+oRtgkVyrX10FU4FJJlhMVsHhkLNSWQ0k=
+	by mail.kernel.org (Postfix) with ESMTP id 6BC8A21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vN47OxNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732728AbfKGAoE (ORCPT
+        id S1732767AbfKGAoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:44:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33741 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGAoE (ORCPT
+        Wed, 6 Nov 2019 19:44:20 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46885 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKGAoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 19:44:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id u13so517742ote.0;
-        Wed, 06 Nov 2019 16:44:03 -0800 (PST)
+        Wed, 6 Nov 2019 19:44:19 -0500
+Received: by mail-pl1-f193.google.com with SMTP id l4so120549plt.13;
+        Wed, 06 Nov 2019 16:44:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ve6txvm4TEbZ68vl1TZrP7X3Fq6hJlmUnRCShKqx4Nc=;
+        b=vN47OxNW9OpxtDVgv9BdNwxRsewNx8fSaPUZKaVQUNrcOQ2voRnPDZO4+7ZF+Df2qQ
+         db/BjqbBzRuIHIuu8P3Dgo8tza2VWOkVhntkHXhLOTZ87cQ7YDgUV68nEPJ7pu4Yx0Al
+         645dvDwdGtOzij+4nU1ffGiqD8XHqt9kmWGw5geDoU837WQCM71fbMpt698pFyWW3f8t
+         a6pds0DTuwrGg5zVS3YF8Z+00AbZr221wvFURl2kJvJsFNjee6zXOmPcKnsNXCN00a4p
+         YbpwLqYI68/2st7ssoQxkui/3D5im11vpVa58wRbNNiLrRG13OvUMPrFWe278MqeCfaU
+         291w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=0Caqne9b0+WL4rLkBbGp1GBAkgiKkmuIY6NX34hcg68=;
-        b=qXDyxn528zdhlTpZaNLtmze7P8oXx/DOo+jajTth4odCB5PRwCmNEqO1ElOfnpxKqc
-         v6MLBD2CWF6n9msC/768CcVVf7sK8P69kRCHe5nEfTb4MgAruGpqV0V8/BvjnqlqpIoh
-         ozE/os+AVu16bny43vpXhOYCV0Gr8WjmpIu2jBFxuXaA/HVgczJ70RpAJwCNy5+qYle4
-         24Ptqp0CdHaOiTvNLvu71VBu1r+gQjjmSYR0tEPFKVzLpAgpu3WDejy0iUowx07f0U6X
-         tKuHYSlPKc4lzMA0Znc3TERJWZBBRYaIug8j0X+1OV7gC1JXvza+CI8G8MgK5fXe9yu+
-         AnQA==
-X-Gm-Message-State: APjAAAVc2CJKJ3AZp0iAIdk7NcljGIbu2Bat4x0BZ5hd+VonRyTfQiS7
-        KGqygckelAzRacl+kZLidg==
-X-Google-Smtp-Source: APXvYqx92yPoPX4sYPoYWxsUDxAEC9WbCWpCzZTCzN77i7Mtz6MGpHeFiBva2FYZd5mcftwDWyN+yA==
-X-Received: by 2002:a9d:6452:: with SMTP id m18mr465800otl.325.1573087443454;
-        Wed, 06 Nov 2019 16:44:03 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m12sm131094oih.46.2019.11.06.16.44.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ve6txvm4TEbZ68vl1TZrP7X3Fq6hJlmUnRCShKqx4Nc=;
+        b=Jq+kxi8xZkCooeiwqmrCTf+IJEP54uGADLNbkUOiNK9x5bzPaRV0aAvP3Wf8Fsshf0
+         bJK1H+5117kzaXFefVOWsUom5TUlG/SiTfkJmmvCU1QPfg+1KP+5ivRYzFDDBNuz5c7U
+         gQN/tB7mARkhTEphEEl3s8CPPHdkS9vkWvA+/2XX+nO5F4nShzukWJKYEE0NJfLTqhQ6
+         91dzmlZs/yVgS4Jcpyu/NJnks6fDKAJaU01qyP+qFK7TOPF9SJHGeGjxdYiNWSJZtMyq
+         y+CJCfuLITZJQx1w2peNyL7GXqjcLsdsODyQNO3l+pB74qbSUp42dm8bqbilNT+oAN8t
+         0u4g==
+X-Gm-Message-State: APjAAAWoTH6M1+vjQY9h7sIsnJw58j5sS8Wq5RP2/8ZZ1pSytHYov0fY
+        8BKaeXpHVeqKNm7Vi/+dbeo=
+X-Google-Smtp-Source: APXvYqxpy3t28znraTs3FdUzKv0i5TNBoXLmMbIn4EQZShJvFNGc0pT9gU4Ma4CNDnuo+NLeWHI5Zg==
+X-Received: by 2002:a17:902:9005:: with SMTP id a5mr583641plp.204.1573087458695;
+        Wed, 06 Nov 2019 16:44:18 -0800 (PST)
+Received: from debian.net.fpt ([2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb])
+        by smtp.gmail.com with ESMTPSA id 71sm180385pfx.107.2019.11.06.16.44.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:44:02 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:44:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] dt-bindings: mmc: fsl-imx-esdhc: add imx8m compatible
- string
-Message-ID: <20191107004402.GA13364@bogus>
-References: <1572949321-8193-1-git-send-email-peng.fan@nxp.com>
+        Wed, 06 Nov 2019 16:44:18 -0800 (PST)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     syzbot+7dc7c28d4577bbe55b10@syzkaller.appspotmail.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org
+Cc:     glider@google.com, hslester96@gmail.com,
+        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH] usb: asix: Fix uninit-value in asix_mdio_write
+Date:   Thu,  7 Nov 2019 07:44:04 +0700
+Message-Id: <20191107004404.23707-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <0000000000009763320594f993ee@google.com>
+References: <0000000000009763320594f993ee@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572949321-8193-1-git-send-email-peng.fan@nxp.com>
-Content-Language: en-US
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 10:23:36 +0000, Peng Fan wrote:
-> 
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Add imx8mq/m/n compatible string
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> V1:
->  imx8mq/m/n.dtsi already use this compatible string,
->  but not listed in binding doc, so add it.
-> 
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+The local variables use without initilization value.
+This fixes the syzbot report.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reported-by: syzbot+7dc7c28d4577bbe55b10@syzkaller.appspotmail.com
+
+Test result:
+
+https://groups.google.com/d/msg/syzkaller-bugs/3H_n05x_sPU/sUoHhxgAAgAJ
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+ drivers/net/usb/asix_common.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+index e39f41efda3e..3c7ccd8a9da8 100644
+--- a/drivers/net/usb/asix_common.c
++++ b/drivers/net/usb/asix_common.c
+@@ -444,8 +444,8 @@ void asix_set_multicast(struct net_device *net)
+ int asix_mdio_read(struct net_device *netdev, int phy_id, int loc)
+ {
+ 	struct usbnet *dev = netdev_priv(netdev);
+-	__le16 res;
+-	u8 smsr;
++	__le16 res = 0;
++	u8 smsr = 0;
+ 	int i = 0;
+ 	int ret;
+ 
+@@ -478,7 +478,7 @@ void asix_mdio_write(struct net_device *netdev, int phy_id, int loc, int val)
+ {
+ 	struct usbnet *dev = netdev_priv(netdev);
+ 	__le16 res = cpu_to_le16(val);
+-	u8 smsr;
++	u8 smsr = 0;
+ 	int i = 0;
+ 	int ret;
+ 
+@@ -508,8 +508,8 @@ void asix_mdio_write(struct net_device *netdev, int phy_id, int loc, int val)
+ int asix_mdio_read_nopm(struct net_device *netdev, int phy_id, int loc)
+ {
+ 	struct usbnet *dev = netdev_priv(netdev);
+-	__le16 res;
+-	u8 smsr;
++	__le16 res = 0;
++	u8 smsr = 0;
+ 	int i = 0;
+ 	int ret;
+ 
+@@ -543,7 +543,7 @@ asix_mdio_write_nopm(struct net_device *netdev, int phy_id, int loc, int val)
+ {
+ 	struct usbnet *dev = netdev_priv(netdev);
+ 	__le16 res = cpu_to_le16(val);
+-	u8 smsr;
++	u8 smsr = 0;
+ 	int i = 0;
+ 	int ret;
+ 
+-- 
+2.20.1
+
