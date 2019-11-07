@@ -2,220 +2,341 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D08DC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703FE2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882042084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:05:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rldw4LXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389120AbfKGOFE (ORCPT
+        id S2389176AbfKGOFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:05:04 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:52169 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbfKGOFD (ORCPT
+        Thu, 7 Nov 2019 09:05:17 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40684 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731026AbfKGOFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:05:03 -0500
-Received: from localhost.localdomain ([78.238.229.36]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1Mm9NA-1i2Q7I1kGG-00iFxf; Thu, 07 Nov 2019 15:03:08 +0100
-From:   Laurent Vivier <laurent@vivier.eu>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <dima@arista.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        linux-fsdevel@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-api@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Greg Kurz <groug@kaod.org>, Jann Horn <jannh@google.com>,
-        containers@lists.linux-foundation.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Laurent Vivier <laurent@vivier.eu>
-Subject: [PATCH v7 0/1] ns: introduce binfmt_misc namespace
-Date:   Thu,  7 Nov 2019 15:03:03 +0100
-Message-Id: <20191107140304.8426-1-laurent@vivier.eu>
-X-Mailer: git-send-email 2.21.0
+        Thu, 7 Nov 2019 09:05:17 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA7E5Enf041605;
+        Thu, 7 Nov 2019 08:05:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573135514;
+        bh=o/EqpNPNaEyYUZE15OnOVt0MoNYPXk67tjcgorCQZAo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Rldw4LXqERkzBI5qJo19NuGyVyV0KxRAfbGkW1Ju+9mNR8ONei2stAwqVyKqqtSgd
+         fMlja1wsqgIjTCoIfv769pBPS8ZfVZtpjXXKUv0PKNlMD7ipmw8TJxStXIefiYhp1e
+         7GrEjDuu86XMhxDr6h6q0oxhAHuhoB9IIIkyKZK4=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA7E5Efd118673
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 Nov 2019 08:05:14 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 7 Nov
+ 2019 08:05:11 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 7 Nov 2019 08:04:55 -0600
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA7E58To064114;
+        Thu, 7 Nov 2019 08:05:09 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>, <devicetree@vger.kernel.org>
+Subject: [PATCHv2 01/17] dt-bindings: remoteproc: Add OMAP remoteproc bindings
+Date:   Thu, 7 Nov 2019 16:05:08 +0200
+Message-ID: <20191107140508.32298-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191028124238.19224-2-t-kristo@ti.com>
+References: <20191028124238.19224-2-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:0IwXS9kWgl1NDLJnpYU5E4zYGksXQUFaoNqObTDgVP9i2eJp0zU
- WqOBiib9Sq5I1nUr+awL7KR6l2r6voh+hZFKeGTcjC5xyG81OA1swTYDDK7ROPw5DsZpCXM
- LqAB5hq27/lM9QACO0m2TVKjLhfBaAg5KbZlflHpu7MRgruiqYt73IIDwvKTM3r1LQ6eoIh
- oTeNAvQIanFLWVbsuRdDA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TPwyDjY6Xrg=:UMk3rylYd9788c9inykdop
- oHAasjgwholgOJgMPeRCsQPYWfiEhq++ZKAXuvYbasncJVPlY6h2Ibi/l3RiZb32Vnj+93dMd
- p/LyuAmnwnvIKGkLpWoJNA2ryVAMFucJcANHi/ewaGIlEaqxsa8I4AaVanoCQkhUlmUBElRhJ
- dYhRC0Nq9p1z0gk/Ypa6zVhLlILdsTJdG5RVQmM/AbZct3gsGnzHVSwWKIPTUqq6tG1k5tw7j
- OLZD35eJpEu6Rsdon2zOEP82fZvF/YoSG+D7EVn+OnwLtRGnN7AzyRPw2M5zUIDM/R9xgYWJE
- clJmQ0BI/BA56QX8kkaVcHzwK9rlybvA6EC1AkyhL4Ph1H7tw6F/kyHBuSaJbjTdSJqv2N0ax
- dZnEn2y4OCyQ3/eOK36RVXpqIr+DpIVzfRwRy5boifWn2Hs4h51yZA7bCB4Uqg1IIHAdfMbGp
- 3W0L7OAlJngtEM+CbKRla30s8wNHiLL6kF4D8GweWJQmJQrzfdY7fFZLwD9tOlhlpdiP516bZ
- C+pELMnREzMcMscVVHG79SW5yM/kikqDt/tiyihMjq3qSbaWxyXqHthpPKMGd8bdV05iXoeIx
- +CYYY4uPREk0BnVle1QCk59N0Ud37CTfV3oir0iGOcRh+CVYCxu6Jf+Z1GCYNtDyEtmvJbIx7
- 38c774PF3C0OzA5vbWJAWkdU4Tc5ITtbu5jz+7c7ZJPUTJHcy+ZMlpM7Lkeoq1XYU0oX6K3HD
- 1SkS0y/ktv4/vCUu8EvDGuVSCFxTXioQe+6ziGw3P/+/w3iMBx2eAa9lK7MIG39jEuwTWGsT2
- wnmLrZIm++SQ/yCUrOa3yN8o3hpnoOYeZj/cwhAzvhlqiG/9ff6YGWfaz6umHyhpsDmDlFFgb
- pU7Wi85Viy/JHMnqIlumyzRSMA2TDvUuh1nwu7vPQOSLuDXFnK/IXy6voMF6Gxo7zV2C8s0x7
- o7M6s9AOzqfAwD5XNS7Lel6JyMszhKvdUpGp0Lmjv4TV7N8ftuUDqLi+1iR7e7V4TvvoMK47y
- oEjSpoV++NdDMg8peJAB6t+/z/qk7APOCMwgcIWOVVbwPZQ7qKP+P6/W1jIbROeq4umMNC1lF
- J7d2owV8aDQ9lI=
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v7: Use the new mount API
+From: Suman Anna <s-anna@ti.com>
 
-    Replace
+Add the device tree bindings document for the IPU and DSP
+remote processor devices on OMAP4+ SoCs.
 
-      static struct dentry *bm_mount(struct file_system_type *fs_type,
-                            int flags, const char *dev_name, void *data)
-      {
-               struct user_namespace *ns = current_user_ns();
+Signed-off-by: Suman Anna <s-anna@ti.com>
+[t-kristo@ti.com: converted to schema]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ .../remoteproc/ti,omap-remoteproc.yaml        | 250 ++++++++++++++++++
+ 1 file changed, 250 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
 
-               return mount_ns(fs_type, flags, data, ns, ns,
-                               bm_fill_super);
-      }
-
-    by
-
-      static void bm_free(struct fs_context *fc)
-      {
-             if (fc->s_fs_info)
-                     put_user_ns(fc->s_fs_info);
-      }
-
-      static int bm_get_tree(struct fs_context *fc)
-      {
-              return get_tree_keyed(fc, bm_fill_super, get_user_ns(fc->user_ns));
-      }
-
-      static const struct fs_context_operations bm_context_ops = {
-              .free           = bm_free,
-              .get_tree       = bm_get_tree,
-      };
-
-      static int bm_init_fs_context(struct fs_context *fc)
-      {
-              fc->ops = &bm_context_ops;
-              return 0;
-      }
-
-v6: Return &init_binfmt_ns instead of NULL in binfmt_ns()
-    This should never happen, but to stay safe return a
-    value we can use.
-    change subject from "RFC" to "PATCH"
-
-v5: Use READ_ONCE()/WRITE_ONCE()
-    move mount pointer struct init to bm_fill_super() and add smp_wmb()
-    remove useless NULL value init
-    add WARN_ON_ONCE()
-
-v4: first user namespace is initialized with &init_binfmt_ns,
-    all new user namespaces are initialized with a NULL and use
-    the one of the first parent that is not NULL. The pointer
-    is initialized to a valid value the first time the binfmt_misc
-    fs is mounted in the current user namespace.
-    This allows to not change the way it was working before:
-    new ns inherits values from its parent, and if parent value is modified
-    (or parent creates its own binfmt entry by mounting the fs) child
-    inherits it (unless it has itself mounted the fs).
-
-v3: create a structure to store binfmt_misc data,
-    add a pointer to this structure in the user_namespace structure,
-    in init_user_ns structure this pointer points to an init_binfmt_ns
-    structure. And all new user namespaces point to this init structure.
-    A new binfmt namespace structure is allocated if the binfmt_misc
-    filesystem is mounted in a user namespace that is not the initial
-    one but its binfmt namespace pointer points to the initial one.
-    add override_creds()/revert_creds() around open_exec() in
-    bm_register_write()
-
-v2: no new namespace, binfmt_misc data are now part of
-    the mount namespace
-    I put this in mount namespace instead of user namespace
-    because the mount namespace is already needed and
-    I don't want to force to have the user namespace for that.
-    As this is a filesystem, it seems logic to have it here.
-
-This allows to define a new interpreter for each new container.
-
-But the main goal is to be able to chroot to a directory
-using a binfmt_misc interpreter without being root.
-
-I have a modified version of unshare at:
-
-  https://github.com/vivier/util-linux.git branch unshare-chroot
-
-with some new options to unshare binfmt_misc namespace and to chroot
-to a directory.
-
-If you have a directory /chroot/powerpc/jessie containing debian for powerpc
-binaries and a qemu-ppc interpreter, you can do for instance:
-
- $ uname -a
- Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 x86_64 x86_64 x86_64 GNU/Linux
- $ ./unshare --map-root-user --fork --pid \
-   --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/qemu-ppc:OC" \
-   --root=/chroot/powerpc/jessie /bin/bash -l
- # uname -a
- Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 ppc GNU/Linux
- # id
-uid=0(root) gid=0(root) groups=0(root),65534(nogroup)
- # ls -l
-total 5940
-drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 bin
-drwxr-xr-x.   2 nobody nogroup    4096 Jun 17 20:26 boot
-drwxr-xr-x.   4 nobody nogroup    4096 Aug 12 00:08 dev
-drwxr-xr-x.  42 nobody nogroup    4096 Sep 28 07:25 etc
-drwxr-xr-x.   3 nobody nogroup    4096 Sep 28 07:25 home
-drwxr-xr-x.   9 nobody nogroup    4096 Aug 12 00:58 lib
-drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 media
-drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 mnt
-drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 13:09 opt
-dr-xr-xr-x. 143 nobody nogroup       0 Sep 30 23:02 proc
--rwxr-xr-x.   1 nobody nogroup 6009712 Sep 28 07:22 qemu-ppc
-drwx------.   3 nobody nogroup    4096 Aug 12 12:54 root
-drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 00:08 run
-drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 sbin
-drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 srv
-drwxr-xr-x.   2 nobody nogroup    4096 Apr  6  2015 sys
-drwxrwxrwt.   2 nobody nogroup    4096 Sep 28 10:31 tmp
-drwxr-xr-x.  10 nobody nogroup    4096 Aug 12 00:08 usr
-drwxr-xr-x.  11 nobody nogroup    4096 Aug 12 00:08 var
-
-If you want to use the qemu binary provided by your distro, you can use
-
-    --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/bin/qemu-ppc-static:OCF"
-
-With the 'F' flag, qemu-ppc-static will be then loaded from the main root
-filesystem before switching to the chroot.
-
-Another example is to use the 'P' flag in one chroot and not in another one (useful in a test
-environment to test different configurations of the same interpreter):
-
-./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-noargv0:OCF" --root=/chroot/powerpc/jessie /bin/bash -l
-root@localhost:/# sh -c 'echo $0'
-/bin/sh
-
-./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-argv0:OCFP" --root=/chroot/powerpc/jessie /bin/bash -l
-root@localhost:/# sh -c 'echo $0'
-sh
-
-Laurent Vivier (1):
-  ns: add binfmt_misc to the user namespace
-
- fs/binfmt_misc.c               | 115 +++++++++++++++++++++++++--------
- include/linux/user_namespace.h |  15 +++++
- kernel/user.c                  |  14 ++++
- kernel/user_namespace.c        |   3 +
- 4 files changed, 119 insertions(+), 28 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+new file mode 100644
+index 000000000000..901ccf1024c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+@@ -0,0 +1,249 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: OMAP4+ Remoteproc Devices
++
++maintainers:
++  - Suman Anna <s-anna@ti.com>
++
++description:
++  The OMAP family of SoCs usually have one or more slave processor sub-systems
++  that are used to offload some of the processor-intensive tasks, or to manage
++  other hardware accelerators, for achieving various system level goals.
++
++  The processor cores in the sub-system are usually behind an IOMMU, and may
++  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
++  caches, an Interrupt Controller, a Cache Controller etc.
++
++  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
++  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
++  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
++  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
++  Cortex-M4 processors.
++
++  Each remote processor sub-system is represented as a single DT node. Each node
++  has a number of required or optional properties that enable the OS running on
++  the host processor (MPU) to perform the device management of the remote
++  processor and to communicate with the remote processor. The various properties
++  can be classified as constant or variable. The constant properties are
++  dictated by the SoC and does not change from one board to another having the
++  same SoC. Examples of constant properties include 'iommus', 'reg'. The
++  variable properties are dictated by the system integration aspects such as
++  memory on the board, or configuration used within the corresponding firmware
++  image. Examples of variable properties include 'mboxes', 'memory-region',
++  'timers', 'watchdog-timers' etc.
++
++properties:
++  compatible:
++    enum:
++      - ti,omap4-dsp
++      - ti,omap5-dsp
++      - ti,dra7-dsp
++      - ti,omap4-ipu
++      - ti,omap5-ipu
++      - ti,dra7-ipu
++
++  iommus:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      phandles to OMAP IOMMU nodes, that need to be programmed
++      for this remote processor to access any external RAM memory or
++      other peripheral device address spaces. This property usually
++      has only a single phandle. Multiple phandles are used only in
++      cases where the sub-system has different ports for different
++      sub-modules within the processor sub-system (eg: DRA7 DSPs),
++      and need the same programming in both the MMUs.
++
++  mboxes:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
++      communication with the remote processor. The specifier format is
++      as per the bindings,
++      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++      This property should match with the sub-mailbox node used in
++      the firmware image.
++
++# Optional properties:
++# --------------------
++# Some of these properties are mandatory on some SoCs, and some are optional
++# depending on the configuration of the firmware image to be executed on the
++# remote processor. The conditions are mentioned for each property.
++#
++# The following are the optional properties:
++
++  reg:
++    minItems: 1
++    maxItems: 3
++    description: |
++      Address space for any remoteproc memories present on
++      the SoC. Should contain an entry for each value in
++      'reg-names'. These are mandatory for all DSP and IPU
++      processors that have them (OMAP4/OMAP5 DSPs do not have
++      any RAMs)
++
++  reg-names:
++    description: |
++      Required names for each of the address spaces defined in
++      the 'reg' property. Should contain a string from among
++      the following names, each representing the corresponding
++      internal RAM memory region.
++    minItems: 1
++    maxItems: 3
++    items:
++      - const: l2ram
++      - const: l1pram
++      - const: l1dram
++
++  ti,bootreg:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      Should be a pair of the phandle to the System Control
++      Configuration region that contains the boot address
++      register, and the register offset of the boot address
++      register within the System Control module. This property
++      is required for all the DSP instances on OMAP4, OMAP5
++      and DRA7xx SoCs.
++
++  memory-region:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      phandle to the reserved memory node to be associated
++      with the remoteproc device. The reserved memory node
++      can be a CMA memory node, and should be defined as
++      per the bindings,
++      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
++  ti,timers:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      One or more phandles to OMAP DMTimer nodes, that serve
++      as System/Tick timers for the OS running on the remote
++      processors. This will usually be a single timer if the
++      processor sub-system is running in SMP mode, or one per
++      core in the processor sub-system. This can also be used
++      to reserve specific timers to be dedicated to the
++      remote processors.
++
++      This property is mandatory on remote processors requiring
++      external tick wakeup, and to support Power Management
++      features. The timers to be used should match with the
++      timers used in the firmware image.
++
++  ti,watchdog-timers:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      One or more phandles to OMAP DMTimer nodes, used to
++      serve as Watchdog timers for the processor cores. This
++      will usually be one per executing processor core, even
++      if the processor sub-system is running a SMP OS.
++
++      The timers to be used should match with the watchdog
++      timers used in the firmware image.
++
++required:
++  - compatible
++  - iommus
++  - mboxes
++
++examples:
++  - |
++
++    //Example 1: OMAP4 DSP
++
++    /* DSP Reserved Memory node */
++    reserved-memory {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        dsp_memory_region: dsp-memory@98000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x98000000 0x800000>;
++            reusable;
++        };
++    };
++
++    /* DSP node */
++    ocp {
++        dsp: dsp {
++            compatible = "ti,omap4-dsp";
++            ti,bootreg = <&scm_conf 0x304>;
++            iommus = <&mmu_dsp>;
++            mboxes = <&mailbox &mbox_dsp>;
++            memory-region = <&dsp_memory_region>;
++            ti,timers = <&timer5>;
++            ti,watchdog-timers = <&timer6>;
++        };
++    };
++
++  - |+
++
++    //Example 2: OMAP5 IPU
++
++    /* IPU Reserved Memory node */
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        ipu_memory_region: ipu-memory@95800000 {
++            compatible = "shared-dma-pool";
++            reg = <0 0x95800000 0 0x3800000>;
++            reusable;
++        };
++    };
++
++    /* IPU node */
++    ocp {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        ipu: ipu@55020000 {
++            compatible = "ti,omap5-ipu";
++            reg = <0x55020000 0x10000>;
++            reg-names = "l2ram";
++            iommus = <&mmu_ipu>;
++            mboxes = <&mailbox &mbox_ipu>;
++            memory-region = <&ipu_memory_region>;
++            ti,timers = <&timer3>, <&timer4>;
++            ti,watchdog-timers = <&timer9>, <&timer11>;
++        };
++    };
++
++  - |+
++
++    //Example 3: DRA7xx/AM57xx DSP
++
++    /* DSP1 Reserved Memory node */
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        dsp1_memory_region: dsp1-memory@99000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x0 0x99000000 0x0 0x4000000>;
++            reusable;
++        };
++    };
++
++    /* DSP1 node */
++    ocp {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        dsp1: dsp@40800000 {
++            compatible = "ti,dra7-dsp";
++            reg = <0x40800000 0x48000>,
++                  <0x40e00000 0x8000>,
++                  <0x40f00000 0x8000>;
++            reg-names = "l2ram", "l1pram", "l1dram";
++            ti,bootreg = <&scm_conf 0x55c>;
++            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
++            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
++            memory-region = <&dsp1_memory_region>;
++            ti,timers = <&timer5>;
++            ti,watchdog-timers = <&timer10>;
++        };
++    };
 -- 
-2.21.0
+2.17.1
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
