@@ -2,72 +2,120 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B428CFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BC9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87ED421882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA17E214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IxmL8NC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387940AbfKGLdz (ORCPT
+        id S2388093AbfKGLd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:33:55 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35761 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfKGLdz (ORCPT
+        Thu, 7 Nov 2019 06:33:58 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53722 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfKGLd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:33:55 -0500
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 2A6F51BF242;
-        Thu,  7 Nov 2019 11:28:50 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 12:28:50 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com, Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] rtc: bd70528: Fix hour register mask
-Message-ID: <20191107112850.GP8309@piout.net>
-References: <20191023114751.GA14100@localhost.localdomain>
- <20191105165317.GC8309@piout.net>
- <20191107105949.GA19195@dell>
+        Thu, 7 Nov 2019 06:33:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7BOd77056436;
+        Thu, 7 Nov 2019 11:31:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Czv8pVqfVxDd0LKsdSWLqwv2PVZZcgc54wLOCYMQZpI=;
+ b=IxmL8NC5gDs35jgU5KDXQWFaY6gRj6hkmvOc7nat9QD+kZvucJ3ra2JTVeHCHQJvyMTu
+ Ri92gGhFoDOdV+086QQZpBQR+85j3rFpn75uiBe+JJIt6eVElHh5g/GGdaAbeDTGSCB2
+ W/1C1jUXTTWhICSoHbN3IOswf8WRZ51u4Jilg8yCj8VDVzzpoAoqmGf5o2Ow6+85Bz0s
+ i+sUs3DyIF3avPnqOccY/C2KJ+c1RSp8WRROhlfDPFbH4mcCUkYMVlYAW/YkryitMg6j
+ o8zOc1fRM/wOYARIMsUDZcUdDhhNQR51q45jlMviezMw46e+DX30lFJ+Emx5SUQql0T/ Nw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2w41w0wev6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 11:31:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7BSjdh171874;
+        Thu, 7 Nov 2019 11:31:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2w41wepmft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 11:31:50 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA7BVfka020250;
+        Thu, 7 Nov 2019 11:31:46 GMT
+Received: from tomti.i.net-space.pl (/10.175.179.76)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 Nov 2019 03:31:40 -0800
+Date:   Thu, 7 Nov 2019 12:31:34 +0100
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     hpa@zytor.com
+Cc:     Borislav Petkov <bp@alien8.de>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, ard.biesheuvel@linaro.org,
+        boris.ostrovsky@oracle.com, corbet@lwn.net,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        eric.snowberg@oracle.com, jgross@suse.com,
+        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
+        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH v5 0/3] x86/boot: Introduce the kernel_info et consortes
+Message-ID: <20191107113134.yl7e4rwxowr52tzf@tomti.i.net-space.pl>
+References: <20191104151354.28145-1-daniel.kiper@oracle.com>
+ <20191106170333.GD28380@zn.tnic>
+ <3EABBAB2-5BEF-4FEE-8BB4-9EB4B0180B10@zytor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191107105949.GA19195@dell>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <3EABBAB2-5BEF-4FEE-8BB4-9EB4B0180B10@zytor.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=632
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911070117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=717 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911070117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/11/2019 10:59:49+0000, Lee Jones wrote:
-> On Tue, 05 Nov 2019, Alexandre Belloni wrote:
-> 
-> > On 23/10/2019 14:47:51+0300, Matti Vaittinen wrote:
-> > > When RTC is used in 24H mode (and it is by this driver) the maximum
-> > > hour value is 24 in BCD. This occupies bits [5:0] - which means
-> > > correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
-> > > 
-> > > Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > ---
-> > >  include/linux/mfd/rohm-bd70528.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > Applied, thanks.
-> 
-> You have been duped. This is clearly not an RTC patch.
-> 
+On Wed, Nov 06, 2019 at 09:56:48AM -0800, hpa@zytor.com wrote:
+> On November 6, 2019 9:03:33 AM PST, Borislav Petkov <bp@alien8.de> wrote:
+> >On Mon, Nov 04, 2019 at 04:13:51PM +0100, Daniel Kiper wrote:
+> >> Hi,
+> >>
+> >> Due to very limited space in the setup_header this patch series introduces new
+> >> kernel_info struct which will be used to convey information from the kernel to
+> >> the bootloader. This way the boot protocol can be extended regardless of the
+> >> setup_header limitations. Additionally, the patch series introduces some
+> >> convenience features like the setup_indirect struct and the
+> >> kernel_info.setup_type_max field.
+> >
+> >That's all fine and dandy but I'm missing an example about what that'll
+> >be used for, in practice.
+> >
+> >Thx.
+>
+> For one thing, we already have people asking for more than 4 GiB worth
+> of initramfs, and especially with initramfs that huge it would make a
+> *lot* of sense to allow loading it in chunks without having to
+> concatenate them. I have been asking for a long time for initramfs
+> creators to split the kernel-dependent and kernel independent parts
+> into separate initramfs modules.
 
-Well, it only affects the RTC driver. Do you want to take it?
+Another user of this patchset is the TrenchBoot project on which we are
+working on. We have to introduce separate entry point for Intel TXT MLE
+startup code. That is why we need the kernel_info struct.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Daniel
