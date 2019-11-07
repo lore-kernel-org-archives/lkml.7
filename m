@@ -2,161 +2,198 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D36C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8D5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7982077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A7B2077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KlKZj3AJ"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="puTI2Jbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbfKGNpe (ORCPT
+        id S2388920AbfKGNqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:45:34 -0500
-Received: from mout.gmx.net ([212.227.15.15]:34823 "EHLO mout.gmx.net"
+        Thu, 7 Nov 2019 08:46:16 -0500
+Received: from mout.web.de ([212.227.17.12]:37367 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfKGNpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:45:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1573134326;
-        bh=s00K1OOu0aaQsQbtK0UBknbyKhQQRQtn+2TeWxy/ryE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=KlKZj3AJSJ7e83rhZmtGlKwV7413nvG7hcWkQ5txgMhHU1RppqzDijtXJk+ZpFqJM
-         6h98Q/fA9PhAjIt6L9W+pY57taPuRw2eNuAYEcVmeHNi3QHF7Hwv7zIX3z8qNBrVJB
-         XPeRE1NEfQjXX4xgqHKJnrV2B21Gsa4bSmcTT4r4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([89.0.54.163]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M4s4r-1iSQaI3QmN-0020GY; Thu, 07
- Nov 2019 14:45:25 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/kernel-doc: Add support for named variable macro arguments
-Date:   Thu,  7 Nov 2019 14:41:33 +0100
-Message-Id: <20191107134133.14690-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        id S1731058AbfKGNqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:46:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1573134362;
+        bh=RHwsmZfu4iRzxYZNEyr0qQy3SUcUgNwBxdLZdcmUjgc=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=puTI2JbdiOsRmIMIiinGR5mqOPHqBtjvUYQGcGIUTz8eQujnVksMCSOc6iavYpfcW
+         c+RymsEqOr1K+HKCCoJkWyjBBk1lY/eH2j1uH7FKLoOu++pLEAoQuA197XT+S5s8YS
+         jNJhxVxG3qtwxwl0Rv24hcCZT+Ma3YUyKXXSWWug=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.68.124]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M5wrF-1hj1RD2UA5-00xvBX; Thu, 07
+ Nov 2019 14:46:02 +0100
+Subject: Re: [PATCH v2] s390/pkey: Use memdup_user() rather than duplicating
+ its implementation
+To:     =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Franzki <ifranzki@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
+References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
+ <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
+ <deb7893f-3cfe-18fc-3feb-b26b290bf3c6@web.de>
+ <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
+Date:   Thu, 7 Nov 2019 14:45:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RPtxoPYDoRNPEEEsoABZlK6tUN+SI8PtlbkTIJcv9PqIRBBQIBT
- ADbGulVNTBMQC45gRADoHR3KewaKXWZwELTfzYOLjiSQNcsZof3WaNgRi1MbmZffjNtqxx9
- jsw4jA1JHUAkBiW0+rzlU2yC5+cOS1owwUcc+DDdyHwTt0x0NHk9AZkjc7esKr9NjZbClC4
- pdlkrFvTHjYDTTYrtSoAw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HBIKmeHj6tI=:CJ/0RubdzvprzW/+50mXDe
- pD4U91q8fDY0k+kfYlsyjts5ufP4BQqig4Anp2lLKs05bEazrn4jQfJtVW4RXQ+kQLrRPF/8r
- R+RBLSZCqjC/1mVq1foETEWFXOAmS42LYk9EshI+0GxVqFyLfIOKOdnZWO1q7upI1nfzXNgry
- 6irGF7YfotV5qz1U6cTKNEjjVZxEbHghaT1R2/izt0B1+50BPTW5IReP8zrlMjJDuZthnEGoL
- k3PrrgvTshWP70mz9I/yUZbxNFg6niCA+FSDKWtoWf+stDhWy9ZVXYS6i8cDnPRZl4o1NqmPI
- qNDgxBAZQOeYVTBr1nrQ4btDMM5rNcGASJZ1RPzSg7a+o6w4nXUJN8+XUvx0nwAAHqYei3woi
- MMyw/FjvkCyTJtS6ht79PrmEmJLSTMz0lzGyo/rPVtFGD8ovKWkrW8dtEFZfaui2bStJVr2Eu
- qKeq5xkWd+MUHJXVfxkwKk7UwRQ9Q4cv1LXhk+0yILooct7j6NySANOGpU3Cslb+yblxxB3gm
- rq2US/NVNqafqMjJrHMWASZfjzIDP2XZMc9thJdaLPk693br+0/LkfreJMkdXv6i0Q6lOQzGM
- Rw4tgNj0NGBKtLz3V5g9BJVq3JTIiMQq5BNqHHyZVPNnKJ5HnxjX6Krc53BsZn5TG4n1ipA0y
- P//lTluqC7dySA2nP0sIADV4wpmbXJxXWdm2h+g3dpTtnGRq8as91DS2s2qX9D9OR5sUGaZCx
- ZIdEFR2FwQj/sOcrZPjatHJReHFxNWAjAgJcL9zM4qzTSS1xYHZAzARIoTndDdZAW65OC6ixy
- iffXZKnw1IGSD0WtnG1pQ06m3fWWThAK9O0yLZFs3QkT4SGdp6KR6/v7Ie0UyTYIEi0VcqFDz
- wjxmw8SrOo2IGmn13TqxZ1qA43jHYVxfMK6ZSFQA0QbCikYPNbrK47FIwh19ME0m835+7romH
- 0/PlzIVqV9tL7RnZ9tdNCLwcdGTr+Q5dGMrwvn3laTun1X49oQwz66QUIdr2rTrSzNGayrJgX
- On+rzlr/DPZqufhKMTkLsMVMwqGasLyOQJzspOE03df5VTcs/Bwq5YrehVblU109rntA4bDgM
- mLGPZp6+X7i16QeSA6jmAxjGSL6DYf7j+g3fflFNiZwi9bgNSF1+Z4b/E2zdVhhmCCRYh004u
- J3AIYyak1HNTBCIjuhefiQ/hit5nua5DMozXmeDN9YreW/4w0dAv5OjrWRkXSXvz5ZPqpeYTo
- /k9LVfZ3hviQWIxGuia5q+S84aGdEMib2Py+jMZE+pbm1IHsShte7EKkrWdA=
+X-Provags-ID: V03:K1:ih/E6MytGxAanl6pgyvwl9rZHT10wv4oanaEBNdSe8jsW/2Sbv/
+ ilid4DM8rLEjURQV/AZIIVgsxXxGrStpGW/Q47GHMmtK5OJPbXESpWSoA6SMBrzycPx1VSS
+ Y7zsc3u4pfudlSU2p2ODfvxR2tkjM8AJkiNGkYd1brGlm/70D6RagbaxHhtyYgeJro0aLES
+ /FzfE8ca3bk7oa4t5TeDw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uLwzaTJ+JGI=:ydqvPCFhWfiRClaXqe47uq
+ d/+dMes6X8dGWCysBu+/fkviNvTX9UQcxVVhF942Jnjd1nX5IFKiuoIlFiFaOIOhubRexTlhl
+ s5IphzPym8ivRBtlQ4X0yXmk5l2woFXMzq1py0vQ3kvK8LS3X8VDaRe5J+xejI+g+AhoFHyOR
+ jWGf7kW5ZlcaWqjsuI8ux2fccVePmFKec4OTkRay4YQb3MUnWoa0+kHhzDW+h6gbvbPJPVlFo
+ TVbCzpTtzadu1jlfjJ7I7/gmtcR5qFdgYDX7BVhq7c8yOdBQ05/lz/J7LGuTYa/SKC46SHAkD
+ QPsQzsF8qRvPDAQ0OOedzDZulScAkKOJdf5K97AX9j5fLjinMN9ASxGvY1M7lcHHB95V3bKtn
+ qIrDNFnK9pJnm5GHBx1IcWHxq06E6p9Vu3cBsBMPhq2sChZJUmKJh7uSQ0GC225FvYBh36TAU
+ F7fPkeifaQ/IjGNf7dostRAyD49rYuL+uibUYvdpIgi6dwpaZS4VZqhX8uRdKYQTMR7oTiTEK
+ LcOSJDvOHldNwrq2Fb+GDdJHNjQUFf/yDzyfXqOcJO25B4pPXL28xC+Ez5mcYWhTnMi2so0Ab
+ OxwOkHXa9vMxYoe/+Gddmlv5Hcygoy3C608VMnCa31xUbwn4tC12t4uO01CVlARsZ1EkxofJ6
+ qTY9XODFpvZDR6JxBOUcmGHOtwlfMpSHSF884IF2b11+i0h51cARsSz0ANSkn9DTnLqEuFlJA
+ A/GPiEne20allxi8ocG3yS3LECCQo/GeQk0YgtIPtycDILUY6uH7WC7YD2CtSW0Nk3yHjAkWz
+ UuesqQoje4MZwQsTxsLX63hYRKZD4b/rqIW7TGZGqAnZDyonmzgWJJjIel67hEBDIbsSz7y2v
+ gtL6WMePmn38MB3hkzZDLquHhdHfkV8gJ2RjbMcTOiBxfuTlX0RBF52iwaJda/52g1WqcU+nG
+ 5CUjl3n9Zxrlt/QNG98mOC93IkttgJ8+A7rH7Xg1E/DgqJq4r2NBcCy11a7/d0f1ZVhA3Fo3c
+ mxAtLFw5qDiThuCca8pDPPhGy/h3cv7rI4uXBLab0KQcCu9vB10s4pT6kk8FksZIQJCLwltfj
+ k2RvosviwDODttz7okBfVxDsH/QVAI8ROaEZJUWPHkiymleuuXy+3vaDw1tnUZnIDUJJqdQj1
+ 8AJDBO2PT3nZZ7Ox8XHaGhuRA+DGy7fiDVOa90hstOIqn3tTwuyp2nu9C1U1eUfMprvPQnPKX
+ ZBw3Ldby0SxXeU6kNIiZpO0wHdDG5QglnfsMH/BxgPesRlJOXvsRYFZtM7D8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when kernel-doc encounters a macro with a named variable
-argument[1], such as this:
+>> Reuse existing functionality from memdup_user() instead of keeping
+>> duplicate source code.
+>>
+>> Generated by: scripts/coccinelle/api/memdup_user.cocci
+>>
+>> Delete local variables which became unnecessary with this refactoring
+>> in two function implementations.
+>>
+>> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AE=
+S cipher key support")
+>
+> With that patch description, the Fixes tag is wrong...but (see below)
 
-   #define hlist_for_each_entry_rcu(pos, head, member, cond...)
-
-... it expects the variable argument to be documented as `cond...`,
-rather than `cond`. This is semantically wrong, because the name (as
-used in the macro body) is actually `cond`.
-
-With this patch, kernel-doc will accept the name without dots (`cond`
-in the example above) in doc comments, and warn if the name with dots
-(`cond...`) is used and verbose mode[2] is enabled.
-
-The support for the `cond...` syntax can be removed later, when the
-documentation of all such macros has been switched to the new syntax.
-
-Testing this patch on top of v5.4-rc6, `make htmldocs` shows a few
-changes in log output and HTML output:
-
- 1) The following warnings[3] are eliminated:
-
-   ./include/linux/rculist.h:374: warning:
-        Excess function parameter 'cond' description in 'list_for_each_ent=
-ry_rcu'
-   ./include/linux/rculist.h:651: warning:
-        Excess function parameter 'cond' description in 'hlist_for_each_en=
-try_rcu'
-
- 2) For list_for_each_entry_rcu and hlist_for_each_entry_rcu, the
-    correct description is shown
-
- 3) Named variable arguments are shown without dots
+I wonder about such a conclusion together with your subsequent feedback.
 
 
-[1]: https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html
-[2]: scripts/kernel-doc -v
-[3]: See also https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linu=
-x-rcu.git/commit/?h=3Ddev&id=3D5bc4bc0d6153617eabde275285b7b5a8137fdf3c
+>>  static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqn=
+s)
+>>  {
+>
+> This part below is not an equivalent replacement.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-=2D--
- scripts/kernel-doc | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+The shown refactoring provides also different run time characteristics,
+doesn't it?
 
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index 81dc91760b23..48696391eccb 100755
-=2D-- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -1449,6 +1449,10 @@ sub push_parameter($$$$) {
- 	      # handles unnamed variable parameters
- 	      $param =3D "...";
- 	    }
-+	    elsif ($param =3D~ /\w\.\.\.$/) {
-+	      # for named variable parameters of the form `x...`, remove the dot=
-s
-+	      $param =3D~ s/\.\.\.$//;
-+	    }
- 	    if (!defined $parameterdescs{$param} || $parameterdescs{$param} eq "=
-") {
- 		$parameterdescs{$param} =3D "variable arguments";
- 	    }
-@@ -1936,6 +1940,18 @@ sub process_name($$) {
- sub process_body($$) {
-     my $file =3D shift;
 
-+    # Until all named variable macro parameters are
-+    # documented using the bare name (`x`) rather than with
-+    # dots (`x...`), strip the dots:
-+    if ($section =3D~ /\w\.\.\.$/) {
-+	$section =3D~ s/\.\.\.$//;
-+
-+	if ($verbose) {
-+	    print STDERR "${file}:$.: warning: Variable macro arguments should b=
-e documented without dots\n";
-+	    ++$warnings;
-+	}
-+    }
-+
-     if (/$doc_sect/i) { # case insensitive for supported section names
- 	$newsection =3D $1;
- 	$newcontents =3D $2;
-=2D-
-2.20.1
+> In fact you are fixing a bug here...
 
+Thanks for your acknowledgement.
+
+
+>> -	void *kapqns =3D NULL;
+>> -	size_t nbytes;
+>> -
+>> -	if (uapqns && nr_apqns > 0) {
+>> -		nbytes =3D nr_apqns * sizeof(struct pkey_apqn);
+>> -		kapqns =3D kmalloc(nbytes, GFP_KERNEL);
+>> -		if (!kapqns)
+>> -			return ERR_PTR(-ENOMEM);
+>> -		if (copy_from_user(kapqns, uapqns, nbytes))
+>
+> 	.... here we would need to kfree kapqns, but we do not. So this is
+> a memory leak. Isnt it?
+
+This is another undesirable software weakness because of incomplete
+exception handling in the previous copy approach.
+
+
+> So indeed this is fixing something. But please rework your the patch
+> description accordingly.
+
+Can the final committer pick the opportunity up to extend the change
+description another bit?
+
+
+>> +	if (!uapqns || nr_apqns <=3D 0)
+>> +		return NULL;
+>>
+>> -	return kapqns;
+>> +	return memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn));
+>>  }
+
+
+Would you like to add any tags for the presented software improvement?
+
+Regards,
+Markus
