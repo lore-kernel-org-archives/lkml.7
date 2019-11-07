@@ -2,154 +2,128 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC8AC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D33C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E50F218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBBB2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G+b5F0zs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388725AbfKGMqV (ORCPT
+        id S2388747AbfKGMqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:46:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:55526 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388407AbfKGMqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:46:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25BE831B;
-        Thu,  7 Nov 2019 04:46:20 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E0343F6C4;
-        Thu,  7 Nov 2019 04:46:19 -0800 (PST)
-Date:   Thu, 7 Nov 2019 12:46:17 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is
- deasserted
-Message-ID: <20191107124617.GA43905@e119886-lin.cambridge.arm.com>
-References: <1573102695-7018-2-git-send-email-hayashi.kunihiko@socionext.com>
- <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
- <20191107205239.65C1.4A936039@socionext.com>
+        Thu, 7 Nov 2019 07:46:25 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:60264 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388407AbfKGMqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 07:46:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Xa3xcbvcNii0ckLDCeWLHK/ql7ey1ORYLLY0djGGeQI=; b=G+b5F0zsTBN+89jWdmm+g3GUT
+        dAp0DdRzLdcdJt3d/VA9pu3ahL7Uspd+ccWn2SDhwCutIaN0FES4q/uTVaUihfitkSe/4BPdomRBn
+        jo2BbmEllza+WOBsq0BCfHtnJhco/BmOP5Z7J8n4+8EHBdPb2kF9i13edAE+GgFtAq1DbufjCSUnZ
+        mUg8UYhtZLV80L2GVxYA3KoIyDK8pD7pnfhay26rVUDZ5ftZelLPpWLsueZNXIdBqZKa79+myWtc/
+        unCYTqzClb1hBngRB896GlSl7hagF6dkPl2XUpi1wapvGxfmKvQmtYKWYb7jwJ97kDrKR3Wn0YF69
+        eOHvcNAYA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iShB4-0005kt-9O; Thu, 07 Nov 2019 12:46:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1144A301747;
+        Thu,  7 Nov 2019 13:45:11 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 91DF52025EDA7; Thu,  7 Nov 2019 13:46:15 +0100 (CET)
+Date:   Thu, 7 Nov 2019 13:46:15 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jan Stancek <jstancek@redhat.com>, linux-kernel@vger.kernel.org,
+        ltp@lists.linux.it, viro@zeniv.linux.org.uk,
+        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        rfontana@redhat.com
+Subject: Re: [PATCH] kernel: use ktime_get_real_ts64() to calculate
+ acct.ac_btime
+Message-ID: <20191107124615.GG4131@hirez.programming.kicks-ass.net>
+References: <a87876829697e1b3c63601b1401a07af79eddae6.1572651216.git.jstancek@redhat.com>
+ <20191107123224.GA6315@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1911071335320.4256@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191107205239.65C1.4A936039@socionext.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <alpine.DEB.2.21.1911071335320.4256@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 08:52:39PM +0900, Kunihiko Hayashi wrote:
-> Hi Andrew,
-> Thank you for your comments.
-> 
-> On Thu, 7 Nov 2019 10:02:08 +0000 <andrew.murray@arm.com> wrote:
-> 
-> > On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
-> > > When PERST# is asserted once, EP configuration will be initialized.
-> > 
-> > I don't quite understand this - does the EP/RC mode depend on how often
-> > PERST# is toggled?
-> 
-> I think of connecting this RC controller and EP based on `Linux PCI
-> endpoint framework' in another machine.
-> 
-> While this RC driver is probing, the EP driver might be also probing and
-> configurating itself using configfs. If PERST# is toggled after the EP
-> has done its configuration, this configuration will be lost.
-> 
-> I expect that the EP configurates after RC has toggled PERST#, however,
-> there is no way to synchronize both of them.
-> 
+On Thu, Nov 07, 2019 at 01:40:47PM +0100, Thomas Gleixner wrote:
+> Typing real_start_time makes me really cringe.
 
-OK I understand where you are coming from now. Please ensure the commit
-message gives this rationale.
+I have a patch fixing that...
 
-However, If I understand correctly, doesn't your solution only work some
-of the time? What happens if you boot both machines at the same time,
-and PERST# isn't asserted prior to the kernel booting?
+---
+Subject: kernel: Rename tsk->real_start_time
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Thu Nov  7 11:07:58 CET 2019
 
-The only way you can ensure the EP is started after the RC is initialised
-is to start the EP after the RC is initialised.
+Since it stores CLOCK_BOOTTIME, not, as the name suggests,
+CLOCK_REALTIME, let's rename real_start_time.
 
-I'm not sure what the solution is here, but it feels like this approach
-only partially solves it.
-
-> 
-> > 
-> > > If PERST# has been already deasserted, it isn't necessary to assert
-> > > here.
-> > 
-> > What is the motativation for this patch? Is it to avoid a delay during
-> > boot, or to fix some bug? Isn't it nice to always reset the IP before
-> > use anyway?
-> 
-> Since EP device usually works without its configuration after PERST#,
-> deassering PERST# here is no problem. Since bus reset breaks configuration
-> of EP as shown above, bus reset should be done before EP has probed.
-> Maybe boot sequence in host machine will do.
-> 
-> 
-> >
-> > > 
-> > > This checks whether PERST# is deasserted using PCL_PINMON register,
-> > > and adds omit controlling PERST#.
-> > 
-> > Should this read 'and omits controlling PERST#'?
-> 
-> Yes, I'll fix it.
-> 
-> 
-> > 
-> > > 
-> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > > index 8fd7bad..1ea4220 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > > @@ -22,6 +22,9 @@
-> > >  
-> > >  #include "pcie-designware.h"
-> > >  
-> > > +#define PCL_PINMON			0x0028
-> > > +#define PCL_PINMON_PERST_OUT		BIT(16)
-> > > +
-> > >  #define PCL_PINCTRL0			0x002c
-> > >  #define PCL_PERST_PLDN_REGEN		BIT(12)
-> > >  #define PCL_PERST_NOE_REGEN		BIT(11)
-> > > @@ -100,6 +103,11 @@ static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
-> > >  	val |= PCL_SYS_AUX_PWR_DET;
-> > >  	writel(val, priv->base + PCL_APP_PM0);
-> > >  
-> > > +	/* return if PERST# is already deasserted */
-> > 
-> > This comment just describes what the following line does which may be
-> > self-explanatory, perhaps a better comment would describe why we avoid
-> > a reset.
-> 
-> Indeed. I'll write the reason here.
-> 
-Thanks,
-
-Andrew Murray
-
-> Thank you,
-> 
-> ---
-> Best Regards,
-> Kunihiko Hayashi
-> 
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1132,7 +1132,7 @@ static int de_thread(struct task_struct
+ 		 * also take its birthdate (always earlier than our own).
+ 		 */
+ 		tsk->start_time = leader->start_time;
+-		tsk->real_start_time = leader->real_start_time;
++		tsk->start_boottime = leader->start_boottime;
+ 
+ 		BUG_ON(!same_thread_group(leader, tsk));
+ 		BUG_ON(has_group_leader_pid(tsk));
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -533,7 +533,7 @@ static int do_task_stat(struct seq_file
+ 	nice = task_nice(task);
+ 
+ 	/* convert nsec -> ticks */
+-	start_time = nsec_to_clock_t(task->real_start_time);
++	start_time = nsec_to_clock_t(task->start_boottime);
+ 
+ 	seq_put_decimal_ull(m, "", pid_nr_ns(pid, ns));
+ 	seq_puts(m, " (");
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -879,7 +879,7 @@ struct task_struct {
+ 	u64				start_time;
+ 
+ 	/* Boot based time in nsecs: */
+-	u64				real_start_time;
++	u64				start_boottime;
+ 
+ 	/* MM fault and swap info: this can arguably be seen as either mm-specific or thread-specific: */
+ 	unsigned long			min_flt;
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2130,7 +2130,7 @@ static __latent_entropy struct task_stru
+ 	 */
+ 
+ 	p->start_time = ktime_get_ns();
+-	p->real_start_time = ktime_get_boottime_ns();
++	p->start_boottime = ktime_get_boottime_ns();
+ 
+ 	/*
+ 	 * Make it visible to the rest of the system, but dont wake it up yet.
