@@ -2,163 +2,152 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2359FC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D6EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDEE021882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0106221882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPM3WJ2i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lc05jcYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfKGWXU (ORCPT
+        id S1727803AbfKGWXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:23:20 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:43649 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfKGWXU (ORCPT
+        Thu, 7 Nov 2019 17:23:33 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36478 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfKGWXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:23:20 -0500
-Received: by mail-qv1-f68.google.com with SMTP id cg2so1473526qvb.10;
-        Thu, 07 Nov 2019 14:23:19 -0800 (PST)
+        Thu, 7 Nov 2019 17:23:32 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j7so3509272oib.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 14:23:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yew1kGqLdARlc4F/0Ldfg3TeatXOLJ2yXMHgCqKdarE=;
-        b=HPM3WJ2iwHbv9LU9DBt53zzDpi3HBGDabp2msMh+/2nLzKLWwxKbMDTheMv3fLXRL6
-         cQ/6+eBCatMW6dK/Ymb075NSdCNJ2X4XRAHseD4Npckm4eoNKwAY3lZzuN6K2NfYGVvO
-         VWLf5dmFE0tMU5LqZe/dxsRDncRT7GJ4ogvTPAzFhjTlFhOF9LM7KwofD8pUqahiWjJf
-         BQ6XKnOf1aIA5bOLFZEYjojWmnKgyd57GuuidefYOrcU3qSkFCNNpB+IIlhxihhEPr48
-         PrUT+ibJ8pywCL9l5os6C4dTr0o3KrDuSKVtbOhOGYbtOXN7K/E9sJt9Sl+2v4MPtwZ+
-         4gQg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nZOXu8T4pF3RPpBQKh0YAfX9FS2U6WtIcpqxi844o2o=;
+        b=lc05jcYGrXd77mjvFh2st+MfjgbDAvcXo0am0zOpmLekG0wMNHS6UQKK5Fv7ICh9QW
+         lS8XQhqwhCipkOkSk6zhfV7iW657Ug2ftK3XaPoQ4y07t7r41kwJt2CjB2coTxyUhXNY
+         3T3MDaMPazQIU1CnQXWf2dCvm2vgdzcqfNojMrXHKPV6mnx8ABDe5H/ABYSDepRtGCkw
+         ePk2jg9N6xr+45Jm1fJDgZvg8XrE0tgusPHB8gJ/V8zqb/Ye05WNE0Cibz8rDDKQ6Ojt
+         2dERKMfhMPDH2/QPqET3sVJJ3WGHAVVwlR6HHrmWR6SWM9bmAQVY41eMP9sH8j0dO3kp
+         MZtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yew1kGqLdARlc4F/0Ldfg3TeatXOLJ2yXMHgCqKdarE=;
-        b=UG5mhp89cCy3jXlsZr8VCICQeD0lYxAULUh1X7wC0t/DLoBBdpO7PNS1Pm0QslsLAA
-         euV4m/BHYvEfHfJAZxJD+gwd0eN3CrWoaIa7Tx5ZobVJfcWDSiHYeMeeYNnN55fTqWtJ
-         IZtbWd+HUNG/2ekadPh5qcDhaDTeKHRegX7VNHUFOm6NsqU7pRqmdaemskLWDuQZx3hW
-         U9ftOA19sMOlOrB2jnpB+bi/vE165R2d/ceiNEVtaRE+7TVnVcJG/Q6K7VP2dH3kmvVC
-         34qq/dRwLuPV3mV8ocovn+DVW2pjZPaFmi7knNuoqqcYLm4pOr+rp6kY/SW+9oa9XeVc
-         3lRg==
-X-Gm-Message-State: APjAAAWTrqMa096veTAPEBgox0Yej3e5PWXWbNKHJdD8K4weAivhZy7V
-        Z1lKaCf3gzjXCmaEtaMS6lENHc6nICo=
-X-Google-Smtp-Source: APXvYqxW6sDS7SegH22noRhdOMu5DnRa05qbrbcI4epicbbsCZ9mcj9LA66uUMtEunO6hmcA/Ry06A==
-X-Received: by 2002:a0c:c78b:: with SMTP id k11mr6109208qvj.47.1573165398694;
-        Thu, 07 Nov 2019 14:23:18 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id x194sm1522035qkb.66.2019.11.07.14.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 14:23:17 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B1800411B3; Thu,  7 Nov 2019 19:23:15 -0300 (-03)
-Date:   Thu, 7 Nov 2019 19:23:15 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v6 00/10] Improvements to memory usage by parse events
-Message-ID: <20191107222315.GA7261@kernel.org>
-References: <20191030223448.12930-1-irogers@google.com>
- <20191107221428.168286-1-irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nZOXu8T4pF3RPpBQKh0YAfX9FS2U6WtIcpqxi844o2o=;
+        b=mZ0pWfx0s3DUwdkq3B/HZijRA05rfSbnddcJ3h1T5MJuOqKxXP215FmW6MREe15Dpi
+         r0d5MY3x+LQ5cQYKQoX+HEpqXZTsaKYo9EXs/fdbo5/H6scJaO9oQ4Yj6HclC+0lodwq
+         IMxme7pUy3D9sH+PGqi/E5tHBrH+zwli9kE++JoAmxtP4Je3PvgVOTwDt3JeUjykdF9a
+         CyPJlAF/kOiqoZ9wSc12OZpgSkZdG8u41Hjk9TS6z2S4kliq7syeoUl5hEW4mWXob1/4
+         Ixf2x26AN0BtRoRLr9ETbdHJ8SymI/AF3D1xQqHMTKMqQX0fm4HFIVvBMGXl5TV3XOha
+         0ihw==
+X-Gm-Message-State: APjAAAXd786HAkFZpz00BNPMSuQXJ9TIN7k5EQznR4xv2oTatcAnnNbQ
+        hr89AScZsbzLbVnxlZm8DW0JPUako6EEcX31sNLovQ==
+X-Google-Smtp-Source: APXvYqyY6gqmhyUhh3I+7EzLkfqF4UECKiJdfaiTy6lvDg2Gv4yTuY9xtDeOsBizV8dGg8RKtFASWwMYJe6DdFIxXQQ=
+X-Received: by 2002:a05:6808:9bc:: with SMTP id e28mr425347oig.169.1573165411701;
+ Thu, 07 Nov 2019 14:23:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107221428.168286-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-10-john.stultz@linaro.org> <878sp3j42w.fsf@gmail.com>
+In-Reply-To: <878sp3j42w.fsf@gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 7 Nov 2019 14:23:20 -0800
+Message-ID: <CALAqxLWZTevNPxBKBOGm2yMtevDkGXXninDGdZYj2qitFohvPw@mail.gmail.com>
+Subject: Re: [PATCH v4 9/9] usb: dwc3: Add host-mode as default support
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Nov 07, 2019 at 02:14:18PM -0800, Ian Rogers escreveu:
-> The parse events parser leaks memory for certain expressions as well
-> as allowing a char* to reference stack, heap or .rodata. This series
-> of patches improves the hygeine and adds free-ing operations to
-> reclaim memory in the parser in error and non-error situations.
-> 
-> The series of patches was generated with LLVM's address sanitizer and
-> libFuzzer:
-> https://llvm.org/docs/LibFuzzer.html
-> called on the parse_events function with randomly generated input. With
-> the patches no leaks or memory corruption issues were present.
-> 
-> The v6 patches address a C90 compilation issue.
+On Tue, Oct 29, 2019 at 2:25 AM Felipe Balbi <balbi@kernel.org> wrote:
+> John Stultz <john.stultz@linaro.org> writes:
+> > diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> > index 61d4fd8aead4..0e3466fe5ac4 100644
+> > --- a/drivers/usb/dwc3/drd.c
+> > +++ b/drivers/usb/dwc3/drd.c
+> > @@ -489,7 +489,10 @@ static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
+> >               mode = DWC3_GCTL_PRTCAP_DEVICE;
+> >               break;
+> >       default:
+> > -             mode = DWC3_GCTL_PRTCAP_DEVICE;
+> > +             if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
+> > +                     mode = DWC3_GCTL_PRTCAP_HOST;
+> > +             else
+> > +                     mode = DWC3_GCTL_PRTCAP_DEVICE;
+> >               break;
+> >       }
+> >
+> > @@ -515,7 +518,10 @@ static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
+> >               role = dwc->current_otg_role;
+> >               break;
+> >       default:
+> > -             role = USB_ROLE_DEVICE;
+> > +             if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
+> > +                     role = USB_ROLE_HOST;
+>
+> look at this, we now have 3 different encodings for role which DWC3
+> needs to understand. One is its own PRTCAP_DIR, then there USB_DR_MODE_*
+> and now USB_ROLE_*, can we make it so that we only have one private
+> encoding and one generic encoding?
 
-Please take a look at what is in my perf/core branch, to see what is
-left, if something needs fixing, please send a patch on top of that,
+And you left out the DWC3_OTG_ROLE_* set too!
 
-Thanks,
+So I agree it can be easy to muddle up.  The enums are *almost* equivalent:
 
-- Arnaldo
- 
-> The v5 patches add initial error print to the set, as requested by
-> Jiri Olsa. They also fix additional 2 missed frees in the patch
-> 'before yyabort-ing free components' and remove a redundant new_str
-> variable from the patch 'add parse events handle error' as spotted by
-> Stephane Eranian.
-> 
-> The v4 patches address review comments from Jiri Olsa, turning a long
-> error message into a single warning, fixing the data type in a list
-> iterator and reordering patches.
-> 
-> The v3 patches address review comments from Jiri Olsa improving commit
-> messages, handling ENOMEM errors from strdup better, and removing a
-> printed warning if an invalid event is passed.
-> 
-> The v2 patches are preferable to an earlier proposed patch:
->    perf tools: avoid reading out of scope array
-> 
-> Ian Rogers (10):
->   perf tools: add parse events handle error
->   perf tools: move ALLOC_LIST into a function
->   perf tools: avoid a malloc for array events
->   perf tools: splice events onto evlist even on error
->   perf tools: ensure config and str in terms are unique
->   perf tools: add destructors for parse event terms
->   perf tools: before yyabort-ing free components
->   perf tools: if pmu configuration fails free terms
->   perf tools: add a deep delete for parse event terms
->   perf tools: report initial event parsing error
-> 
->  tools/perf/arch/powerpc/util/kvm-stat.c |   9 +-
->  tools/perf/builtin-stat.c               |   2 +
->  tools/perf/builtin-trace.c              |  16 +-
->  tools/perf/tests/parse-events.c         |   3 +-
->  tools/perf/util/metricgroup.c           |   2 +-
->  tools/perf/util/parse-events.c          | 239 +++++++++++----
->  tools/perf/util/parse-events.h          |   7 +
->  tools/perf/util/parse-events.y          | 390 +++++++++++++++++-------
->  tools/perf/util/pmu.c                   |  32 +-
->  9 files changed, 511 insertions(+), 189 deletions(-)
-> 
-> -- 
-> 2.24.0.432.g9d3f5f5b63-goog
+include/linux/usb/role.h:
+enum usb_role {
+        USB_ROLE_NONE,
+        USB_ROLE_HOST,
+        USB_ROLE_DEVICE,
+};
 
--- 
+include/linux/usb/otg.h:
+enum usb_dr_mode {
+        USB_DR_MODE_UNKNOWN,
+        USB_DR_MODE_HOST,
+        USB_DR_MODE_PERIPHERAL,
+        USB_DR_MODE_OTG,
+};
 
-- Arnaldo
+But both are widely used:
+$ git grep USB_ROLE_ | wc -l
+123
+$ git grep USB_DR_MODE_ | wc -l
+190
+
+So I'm not sure how easy it will be to condense down, since the usage
+is coming from different usb subsystems (otg and role switching)  and
+I worry assuming them equivalent in just one driver may run into
+trouble eventually if the values diverge (ie someone adds
+USB_ROLE_BRICK or something).
+
+Heikki/Greg: Any thoughts on this? Does it make sense to try to drop
+the usb_role enum and users and replace it with usb_dr_mode?
+
+thanks
+-john
