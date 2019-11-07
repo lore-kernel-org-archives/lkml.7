@@ -2,118 +2,130 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3E9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23867C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB3E21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573154375;
-	bh=KfubhkiePCi8VGkvdxTatX01GSD+R9bZnDBflQTG4CI=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=vMEb1SRr6YLg55Xn1rqAlYGLg9TBL769Tjpg4rpN/tX8oMTXLj+ekGtH4j7YVj6vo
-	 74Z1gKfQCs+m3D+qgXZVGUnjWv0IxrVM323AUiEGSS8dBejceqxdmBEbY+a+XfNC1+
-	 Fb/Wdw3Hs7SInBvoHWw/V2kYg/o4oE1xKMghDRIc=
+	by mail.kernel.org (Postfix) with ESMTP id E643921882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="sDvOaCqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfKGTTe (ORCPT
+        id S1726383AbfKGTUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:19:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfKGTTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:19:34 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B18021D6C;
-        Thu,  7 Nov 2019 19:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573154373;
-        bh=KfubhkiePCi8VGkvdxTatX01GSD+R9bZnDBflQTG4CI=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=RJKgKFVCaeBna9mLw4V8SIefSFJ9vq3dizcCsSfD+RQg0zZnVwYAMsfFiPalN3xTI
-         c3909sJB3vzB95Ew2++B34G5jx/fw9Jiwwehy2+u/MSzo2Zdm9XArrwlFaWu0qnXnN
-         FOQvxYrC2Dl7kO5nQIEbXNtepqcwvm4DJKjYHCRA=
+        Thu, 7 Nov 2019 14:20:32 -0500
+Received: from mail-eopbgr790084.outbound.protection.outlook.com ([40.107.79.84]:55946
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725497AbfKGTUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:20:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nXh+QtlB9AuFO+lHNe+DuQW/RqnjvjFwFvlld/WE1h2M/EazDUUTPaEM3y9w6O4GVKYezG6+4n/M1iRrcqzMVhTXuxY+DuY7I5ROnEPBZ8vRmY8OmpQKlxPcDBZkRezXutqLZlgv6FN9YMQ8X3kQl+OaFyj3/U+CHS/p6/zzm+ofWZ/TP4kJ6ui4VuM80h2zGQEznOZpB7R6T37syK4lvrZNJCinj/dXvochU0H78KYSswoycoMJyVSn3kZwB3WIYUrmXyGeMWYzFRoB0Iu/mIN/vH3/VFLCuQzb26DcU/u8K6rX61Rm/VOF0Ss1/Lft0dj63HqDeEDauFLtVzThxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=81A8AshbYdjP6EpHB5rqezkUALqjsTZIjD8Oq0l1aiU=;
+ b=dpJRlp7oiKKX1Yf0g2dM7xy356kdZlAtD+zfdCM5vW/7BleCQrKwJKTpmsFYbQC57I4VHy24ZSVc//4qDaH7BvRoCEyjBpT5JKifNv6VztrSzC+9gASeObCDhHhn7frkt3w+OulmHwjJhYXpHVVt2yzoCWaGRwtJ50AI4NpG17Ljp7hmuRebq0KQ5h4+5K0NbFkrWstBNsG+oqiqgkHxvtAq5rv6X+qSo+R3aENns1Hp+yGpAb6vgbOZcuQgWlCaU7Worywpa/XiL/r+u4RQR7a3LKGDmJUVYpHG9+hvTG2rDAfAtbe4puve6LrwbFXqoS86QYwg5jCb55scyN30CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=81A8AshbYdjP6EpHB5rqezkUALqjsTZIjD8Oq0l1aiU=;
+ b=sDvOaCqBxmfv6JmKCsXKUdkwLC1dqp5sVr09BIvG3FUmyvtG099YmfJVP2SKWMFitP8bxWRSLJOkXt/auxvM44AUZat8Ua0nwCRz3vdRUf4LhwUWp+ZJj/ovrjZRAIFfT4gSNUmeLj+WMtU0FsWX+JNORWAuuML0ZrpPYEiQ3eQ=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2720.namprd12.prod.outlook.com (52.135.103.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Thu, 7 Nov 2019 19:20:25 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba%3]) with mapi id 15.20.2408.028; Thu, 7 Nov 2019
+ 19:20:25 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Topic: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Index: AQHVlEEBkkiHg8UvLEKx+Q/uzElWBqd+T6+AgAAi68CAABzVgIAA9yyAgAAyaVCAACG7AIAAO3tw
+Date:   Thu, 7 Nov 2019 19:20:25 +0000
+Message-ID: <SN6PR12MB263925E6F18C3EDC8D398932F8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
+ <20191106160607.GC28380@zn.tnic>
+ <SN6PR12MB26398D9E617DF8C0ABE0252CF8790@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191106195417.GF28380@zn.tnic> <20191107103857.GC19501@zn.tnic>
+ <SN6PR12MB263984026F57EC7F3B33B2BFF8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191107154006.GF19501@zn.tnic>
+In-Reply-To: <20191107154006.GF19501@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [2603:9001:1a05:3100:9de1:18ac:4797:8053]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 626645be-3dcb-4ba1-1443-08d763b78ad8
+x-ms-traffictypediagnostic: SN6PR12MB2720:
+x-microsoft-antispam-prvs: <SN6PR12MB2720D4674005582FFFCE6465F8780@SN6PR12MB2720.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(376002)(136003)(39860400002)(13464003)(199004)(189003)(476003)(486006)(102836004)(256004)(14444005)(53546011)(9686003)(55016002)(186003)(86362001)(6116002)(14454004)(66556008)(6506007)(2906002)(66446008)(66476007)(76176011)(64756008)(5660300002)(6246003)(76116006)(11346002)(52536014)(66946007)(74316002)(4326008)(71190400001)(46003)(25786009)(7696005)(33656002)(316002)(99286004)(7736002)(54906003)(446003)(6436002)(71200400001)(6916009)(478600001)(8676002)(81156014)(81166006)(305945005)(8936002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2720;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yk82iDGkkgRyZ23UKij81c/cbBhjWzQSC5VYC29VQiM5lJdqCRMOSP4Z/UrnkJyyGLblbm/wD8K33uzwv9V2C9sNvwXiNIjiOXRqNhBWc3kIPO1NEPQhFPVySIsuF5T/rGmeRLQ9mDf5TKmTxbHAWqJf+ZsDaW3CY2Y1YtkCZGDZcToRzpShYiJgYewtiSqli3JnkU1uRo/ceS3fRTk8TjZCy6bsW9I4UQ9TJ6mPsVXJSQWX5f8MpVa8Njs/6GwuGUwEQSyKwiifsuLBfyqSaW4rIZRvNd1YI+dGxKPcVZJ4ZplJwnowagJzdj0LLrLH76OBe6DJY7IIHdoCeZw4C+FOBiYSF7EoamiwmsCqcWn+x5nzOEX1ivB5pBGYmTX4h120DTdbchrMPnD9hyvZJ0qG6BsUirHFxziA6JbUz85+0mXnuY40/3SCTuOyhX1f
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191107152115.GA2580600@ulmo>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
-        jonathanh@nvidia.com, linus.walleij@linaro.org,
-        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
-        tglx@linutronix.de, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 11:19:32 -0800
-Message-Id: <20191107191933.0B18021D6C@mail.kernel.org>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 626645be-3dcb-4ba1-1443-08d763b78ad8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 19:20:25.4886
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: N7+6zUDz1bKJNCVvi5ZYLJV9Es6DAMlJ6K5TkqS69tQ70AvhN6JOrMu7HI4/ZBTQ7Wv5BrjJ2LGfsykqwboUpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2720
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Thierry Reding (2019-11-07 07:21:15)
-> On Thu, Nov 07, 2019 at 03:54:03AM +0300, Dmitry Osipenko wrote:
-> > 07.11.2019 02:10, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > > Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
-> > >> This patch adds an API clk_hw_get_parent_index to get index of the
-> > >> clock parent to use during the clock restore operations on system
-> > >> resume.
-> > > =20
-> > > Is there a reason we can't save the clk hw index at suspend time by
-> > > reading the hardware to understand the current parent? The parent ind=
-ex
-> > > typically doesn't matter unless we're trying to communicate something
-> > > from the framework to the provider driver. Put another way, I would
-> > > think the provider driver can figure out the index itself without hav=
-ing
-> > > to go through the framework to do so.
-> >=20
-> > Isn't it a bit wasteful to duplicate information about the parent within
-> > a provider if framework already has that info? The whole point of this
-> > new API is to allow providers to avoid that unnecessary duplication.
-> >=20
-> > Please note that clk_hw_get_parent_index is getting used only at the
-> > resume time and not at suspend.
->=20
-> I agree with this. All of the information that we need is already cached
-> in the framework. Doing this in the driver would mean essentially adding
-> a "saved parent" field along with code to read the value at suspend time
-> to the three types of clocks that currently use this core helper.
-
-Don't we already have a "saved parent" field by storing the pointer to
-the clk_hw?
-
->=20
-> That's certainly something that we *can* do, but it doesn't sound like a
-> better option than simply querying the framework for the value that we
-> need.
->=20
-
-Let me say this another way. Why does this driver want to know the index
-that the framework uses for some clk_hw pointer? Perhaps it happens to
-align with the same value that hardware uses, but I still don't
-understand why the driver wants to know what the framework has decided
-is the index for some clk_hw pointer.
-
-Or is this something like "give me the index for the parent that the
-framework thinks I currently have but in reality don't have anymore
-because the register contents were wiped and we need to reparent it"? A
-generic API to get any index for this question is overkill and we should
-consider adding some sort of API like clk_hw_get_current_parent_index(),
-or a framework flag that tells the framework this parent is incorrect
-and we need to call the .set_parent() op again to reconfigure it.
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1rZXJuZWwtb3duZXJA
+dmdlci5rZXJuZWwub3JnIDxsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBC
+ZWhhbGYgT2YgQm9yaXNsYXYgUGV0a292DQo+IFNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciA3LCAy
+MDE5IDEwOjQwIEFNDQo+IFRvOiBHaGFubmFtLCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29t
+Pg0KPiBDYzogbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwLzVdIEFNRDY0IEVEQUM6IENoZWNr
+IGZvciBub2RlcyB3aXRob3V0IG1lbW9yeSwgZXRjLg0KPiANCj4gT24gVGh1LCBOb3YgMDcsIDIw
+MTkgYXQgMDE6NDc6NTNQTSArMDAwMCwgR2hhbm5hbSwgWWF6ZW4gd3JvdGU6DQo+ID4gQlRXLCB3
+aGF0IGRvIHlvdSB0aGluayBhYm91dCBsb2FkaW5nIGJhc2VkIG9uIFBDSSBkZXZpY2VzPyBUaGUg
+bW9kdWxlDQo+ID4gdXNlZCB0byBkbyB0aGlzLiBJIGFzayBiZWNhdXNlIEknbSBzdGFydGluZyB0
+byBzZWUgdGhhdCBmdXR1cmUgc3lzdGVtcyBtYXkNCj4gPiByZS11c2UgUENJIElEcywgYW5kIHRo
+aXMgaW5kaWNhdGVzIHRoZSBzYW1lIGxldmVsIG9mIGhhcmR3YXJlIHN1cHBvcnQuDQo+IA0KPiBU
+aGUgcmVhc29uIHdlIHN3aXRjaGVkIHRvIGZhbWlseS1iYXNlZCBhdXRvbG9hZGluZyB3YXMgdGhh
+dCBhbG1vc3QNCj4gZXZlcnkgbmV3IHBsYXRmb3JtIHdvdWxkIGFkZCBhIG5ldyBQQ0kgZGV2aWNl
+IElELCB3aGljaCB3b3VsZCByZXF1aXJlDQo+IGVuYWJsZW1lbnQgd29yay4uLg0KPiANCg0KWWVz
+LCB0aGF0J3MgcmlnaHQuIEJ1dCBpdCBsb29rcyBsaWtlIGZ1dHVyZSBzeXN0ZW1zIHdpbGwgcmUt
+dXNlIFBDSSBJRHMgZXZlbg0KYWNyb3NzIGZhbWlsaWVzIGFuZCBtb2RlbHMuIEFuZCB0aGUgUENJ
+IElEcyB3aWxsIGJlIG1vcmUgY2xvc2VseSByZWxhdGVkIHRvDQpoYXJkd2FyZSBjYXBhYmlsaXRp
+ZXMgdGhhbiBmYW1pbHkgYW5kIG1vZGVsLg0KDQpJbiBhbnkgY2FzZSwgd2UgY2FuIGFkZHJlc3Mg
+dGhhdCB3aGVuIHdlIGdldCB0aGVyZS4NCg0KPiA+IEp1c3QgYSBuaXQsIGJ1dCB0aGlzIGVsc2Ug
+c2VlbXMgdW5uZWNlc3NhcnkgcmlnaHQ/DQo+IA0KPiBNYXliZSBpdCBpcyBlYXNpZXIgaWYgeW91
+IGxvb2sgYXQgdGhlIGZ1bmN0aW9uIGVuZCBpbiB0aGUgLmMgZmlsZSBkaXJlY3RseSBhcw0KPiBk
+aWZmcyBjYW4gYmUgY29uZnVzaW5nOg0KPiANCj4gc3RhdGljIGJvb2wgZWNjX2VuYWJsZWQoc3Ry
+dWN0IGFtZDY0X3B2dCAqcHZ0KQ0KPiB7DQo+IA0KPiAJLi4uDQo+IA0KPiAgICAgICAgIGFtZDY0
+X2luZm8oIk5vZGUgJWQ6IERSQU0gRUNDICVzLlxuIiwNCj4gICAgICAgICAgICAgICAgICAgIG5p
+ZCwgKGVjY19lbiA/ICJlbmFibGVkIiA6ICJkaXNhYmxlZCIpKTsNCj4gDQo+ICAgICAgICAgaWYg
+KCFlY2NfZW4gfHwgIW5iX21jZV9lbikNCj4gICAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsN
+Cj4gICAgICAgICBlbHNlDQoNClJpZ2h0LCBJIG1lYW50IHlvdSBjYW4gZHJvcCB0aGlzIGVsc2Ug
+YW5kIGp1c3QgcmV0dXJuIHRydWUuDQoNCj4gICAgICAgICAgICAgICAgIHJldHVybiB0cnVlOw0K
+PiB9DQo+IA0KDQpUaGFua3MsDQpZYXplbg0K
