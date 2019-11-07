@@ -2,187 +2,129 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E586C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29C8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBAF2075C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91938206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:15:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJC2AhdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfKGRLw (ORCPT
+        id S1729997AbfKGRPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:11:52 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5744 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726231AbfKGRLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:11:52 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6B610380FE4F07C059D1;
-        Fri,  8 Nov 2019 01:11:47 +0800 (CST)
-Received: from A190218597.china.huawei.com (10.202.226.45) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 8 Nov 2019 01:11:39 +0800
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     <davem@davemloft.net>, <maz@kernel.org>
-CC:     <edumazet@google.com>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <lipeng321@huawei.com>,
-        <mehta.salil@opnsrc.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH V2 net] net: hns: Fix the stray netpoll locks causing deadlock in NAPI path
-Date:   Thu, 7 Nov 2019 17:09:53 +0000
-Message-ID: <20191107170953.7672-1-salil.mehta@huawei.com>
-X-Mailer: git-send-email 2.8.3
+        Thu, 7 Nov 2019 12:15:41 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44215 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfKGRPl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 12:15:41 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q26so2973873pfn.11;
+        Thu, 07 Nov 2019 09:15:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZrnrvjovC3aqTNqak27aggWsYvWoIu3bYN3JGt2+Qt4=;
+        b=ZJC2AhdOvajdEQiS/g9J8KcfeyC1oD39dC+iDACNSo9jPZxqnzoRVVRnS9jjzIjaXY
+         Ct5ZtGZscwAisnIvyUzl12jmx8Cg9sCmH2cXvGciB1mhXrUOOTA4chkRHz1Xdns+4ZvD
+         AkS7itR+lLy9JNw3eRkQbO8oS0CVrndlKu9nKnT6wBQjBMQWg4gv2NVhYPhOxkLrlfxM
+         AOaU+eNIcdBGjHTXYwuA40c4mR2GxW4sdYOAjU/wqoS4OH2ozq8pvHw/mopbMX9fXVDV
+         xHh97lKBbBTd7/zdKW69sLkSIJTSUMqkRhycN8AL6VkMDQUlDfvV2y6YEIDQKC7gPbdz
+         KSow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZrnrvjovC3aqTNqak27aggWsYvWoIu3bYN3JGt2+Qt4=;
+        b=Bshz0HDbfGjx5/wFT1Mb5hSCUOrV9V0ubNO549Src24WkbKgpkWrgJyktMBsI6846r
+         F6AM2CZw940NCjvaR7qQkudbqT6wm92ImlULp0PnPRTDyJRmfy0DeD4ghNzWLo3ziDRb
+         UiA1tXzR+4n3PoEhklvPDIOl+WYeYFyaMjcG7snUaX7rDXHGomdO0z7u8GOBcWW59NYL
+         +tMwrTFluFk/uJI10SfkCSrm38Qs4gNh0+A/pupb1qUw6AGV82p6tDlEAHkGlNBNmAyh
+         MCFHLsujo+kwUIGjoj3RmYta6met7TCLID0PsNLL/MQRJhkDNa9S0nc3itH2WdMrHlIf
+         O1gw==
+X-Gm-Message-State: APjAAAVqAUK1X+HYOketY4pP7DCCkAzM5ojlAk92TWQJ3W5WUzcrUxkC
+        FW5OpkfsleoF/YydzCuLwKf/E3DOzFFVOvYTxA8=
+X-Google-Smtp-Source: APXvYqx2MfX6bvc66zcIX6xz7d5ceVYWDNE71sT4bWbHByywkg7iCaDjU4nirf9pMBFHXquBEV26c0HPS5K7yN5YyEk=
+X-Received: by 2002:a63:3c6:: with SMTP id 189mr5749899pgd.4.1573146938852;
+ Thu, 07 Nov 2019 09:15:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.202.226.45]
-X-CFilter-Loop: Reflected
+References: <20191104213417.18036-1-leonmaxx@gmail.com> <20191104213828.18278-1-leonmaxx@gmail.com>
+In-Reply-To: <20191104213828.18278-1-leonmaxx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 7 Nov 2019 19:15:28 +0200
+Message-ID: <CAHp75VfNu_G7zzaCV9JF+Ua9otSTftJgtgr9N4qhQNR0o+QHtA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] platform/x86: asus_wmi: Support fan boost mode on FX505DY/FX705DY
+To:     Leonid Maksymchuk <leonmaxx@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Chris Chiu <chiu@endlessm.com>,
+        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Kristian Klausen <kristian@klausen.dk>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Corentin Chary <corentin.chary@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the problem of the spin locks, originally
-meant for the netpoll path of hns driver, causing deadlock in
-the normal NAPI poll path. The issue happened due to the presence
-of the stray leftover spin lock code related to the netpoll,
-whose support was earlier removed from the HNS[1], got activated
-due to enabling of NET_POLL_CONTROLLER switch.
+On Mon, Nov 4, 2019 at 11:38 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
+> On ASUS FX505DY/FX705DY laptops fan boost mode is same as in other
+> TUF laptop models but have different ACPI device ID and different key
+> code.
 
-Earlier background:
-The netpoll handling code originally had this bug(as identified
-by Marc Zyngier[2]) of wrong spin lock API being used which did
-not disable the interrupts and hence could cause locking issues.
-i.e. if the lock were first acquired in context to thread like
-'ip' util and this lock if ever got later acquired again in
-context to the interrupt context like TX/RX (Interrupts could
-always pre-empt the lock holding task and acquire the lock again)
-and hence could cause deadlock.
+> +       if (err == 0 &&
+> +                       (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> +                       (result & ASUS_FAN_BOOST_MODES_MASK)) {
+> +               asus->fan_boost_mode_available = 1;
+> +               asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
+> +               return 0;
+>         }
+>
+> -       if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> +       err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FAN_BOOST_MODE_2,
+> +                                   &result);
+> +
+> +       if (err == 0 &&
+> +                       (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+>                         (result & ASUS_FAN_BOOST_MODES_MASK)) {
+> -               asus->fan_boost_mode_available = true;
+> +               asus->fan_boost_mode_available = 2;
+>                 asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
+>         }
 
-Proposed Solution:
-1. If the netpoll was enabled in the HNS driver, which is not
-   right now, we could have simply used spin_[un]lock_irqsave()
-2. But as netpoll is disabled, therefore, it is best to get rid
-   of the existing locks and stray code for now. This should
-   solve the problem reported by Marc.
+The above differs only in one value to give and one value to set, I
+suppose you may introduce an additional helper to it
 
-[1] https://git.kernel.org/torvalds/c/4bd2c03be7
-[2] https://patchwork.ozlabs.org/patch/1189139/
+> +       if (err == -ENODEV)
+> +               return 0;
 
-Fixes: 4bd2c03be707 ("net: hns: remove ndo_poll_controller")
-Cc: lipeng <lipeng321@huawei.com>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: David S. Miller <davem@davemloft.net>
-Reported-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns/hnae.c     |  1 -
- drivers/net/ethernet/hisilicon/hns/hnae.h     |  3 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 22 +------------------
- 3 files changed, 1 insertion(+), 25 deletions(-)
+This should be explained or even separated to another patch. It
+changes behaviour of the original code, why?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
-index 6d0457eb4faa..08339278c722 100644
---- a/drivers/net/ethernet/hisilicon/hns/hnae.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
-@@ -199,7 +199,6 @@ hnae_init_ring(struct hnae_queue *q, struct hnae_ring *ring, int flags)
- 
- 	ring->q = q;
- 	ring->flags = flags;
--	spin_lock_init(&ring->lock);
- 	ring->coal_param = q->handle->coal_param;
- 	assert(!ring->desc && !ring->desc_cb && !ring->desc_dma_addr);
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.h b/drivers/net/ethernet/hisilicon/hns/hnae.h
-index e9c67c06bfd2..6ab9458302e1 100644
---- a/drivers/net/ethernet/hisilicon/hns/hnae.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
-@@ -274,9 +274,6 @@ struct hnae_ring {
- 	/* statistic */
- 	struct ring_stats stats;
- 
--	/* ring lock for poll one */
--	spinlock_t lock;
--
- 	dma_addr_t desc_dma_addr;
- 	u32 buf_size;       /* size for hnae_desc->addr, preset by AE */
- 	u16 desc_num;       /* total number of desc */
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index a48396dd4ebb..14ab20491fd0 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -943,15 +943,6 @@ static int is_valid_clean_head(struct hnae_ring *ring, int h)
- 	return u > c ? (h > c && h <= u) : (h > c || h <= u);
- }
- 
--/* netif_tx_lock will turn down the performance, set only when necessary */
--#ifdef CONFIG_NET_POLL_CONTROLLER
--#define NETIF_TX_LOCK(ring) spin_lock(&(ring)->lock)
--#define NETIF_TX_UNLOCK(ring) spin_unlock(&(ring)->lock)
--#else
--#define NETIF_TX_LOCK(ring)
--#define NETIF_TX_UNLOCK(ring)
--#endif
--
- /* reclaim all desc in one budget
-  * return error or number of desc left
-  */
-@@ -965,21 +956,16 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = readl_relaxed(ring->io_base + RCB_REG_HEAD);
- 	rmb(); /* make sure head is ready before touch any data */
- 
--	if (is_ring_empty(ring) || head == ring->next_to_clean) {
--		NETIF_TX_UNLOCK(ring);
-+	if (is_ring_empty(ring) || head == ring->next_to_clean)
- 		return 0; /* no data to poll */
--	}
- 
- 	if (!is_valid_clean_head(ring, head)) {
- 		netdev_err(ndev, "wrong head (%d, %d-%d)\n", head,
- 			   ring->next_to_use, ring->next_to_clean);
- 		ring->stats.io_err_cnt++;
--		NETIF_TX_UNLOCK(ring);
- 		return -EIO;
- 	}
- 
-@@ -994,8 +980,6 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
- 	ring->stats.tx_pkts += pkts;
- 	ring->stats.tx_bytes += bytes;
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
- 
-@@ -1055,16 +1039,12 @@ static void hns_nic_tx_clr_all_bufs(struct hns_nic_ring_data *ring_data)
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = ring->next_to_use; /* ntu :soft setted ring position*/
- 	bytes = 0;
- 	pkts = 0;
- 	while (head != ring->next_to_clean)
- 		hns_nic_reclaim_one_desc(ring, &bytes, &pkts);
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_reset_queue(dev_queue);
- }
+> +       u32 dev_id = asus->fan_boost_mode_available == 1 ?
+> +                       ASUS_WMI_DEVID_FAN_BOOST_MODE :
+> +                       ASUS_WMI_DEVID_FAN_BOOST_MODE_2;
+
+I would prefer to see
+ if (...)
+  call with mode
+else
+  call with mode_2
+
+below.
+
+> -       err = asus_wmi_set_devstate(ASUS_WMI_DEVID_FAN_BOOST_MODE, value,
+> -                                   &retval);
+> +       err = asus_wmi_set_devstate(dev_id, value, &retval);
+
 -- 
-2.17.1
-
-
+With Best Regards,
+Andy Shevchenko
