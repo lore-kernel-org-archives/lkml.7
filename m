@@ -2,95 +2,114 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464E2C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD21CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC00214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B1B2077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="bLyicoN/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNUuOmM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfKGQ62 (ORCPT
+        id S1730601AbfKGQ7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:58:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45504 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKGQ61 (ORCPT
+        Thu, 7 Nov 2019 11:59:22 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38361 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728847AbfKGQ7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:58:27 -0500
-Received: by mail-wr1-f65.google.com with SMTP id h3so3802278wrx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:58:24 -0800 (PST)
+        Thu, 7 Nov 2019 11:59:21 -0500
+Received: by mail-yw1-f65.google.com with SMTP id s6so826617ywe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:59:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google;
-        h=reply-to:subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=duuZ/GEcOj1lMi9UGA5Gk5HIPaCv9sbL2SkkSg2xRiM=;
-        b=bLyicoN/oBrGbatrICWZKI+duF29G+47XWdRzsIZkvTBjpJbLNXhVsVkC79qxqeCyE
-         GrXOueZY5k14qC8nADucD9PnD6j9rjkpap4ENKK5mkxMOGCkU5fJcS9K5xoYHoSYo6oh
-         siCDUh2VqshjlFkmMLKJd8qU5s65a2frvoj8no02l3MMbCxuh31z5bELZHAcPAAYQRmT
-         Q5GnmBH+pcf+PJs+JnOUAQWiS1jbIx8+5/DFFReyQcKPOVv+S49HXnaVOaxO+d5Ggo7x
-         WmN9owozs43xvh1kLmabjEnn4iQ/RbjrscAdxdrtbXvwIwo6USfrvrp2nvZ8RWp0EIDY
-         kwfQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OY3mL3SJty7WONSqI9Sp3mmm9hhK0YCgUyTwKH16DyM=;
+        b=NNUuOmM7CKWjGHRTbNqGdtPWTCVZ0EOBnHBVZa3Du0rkbJ7FuAdoM+5baW/0stuk3E
+         gCiivLgsL72BauezxIjWfOW69541tetppjNLpG2D95N8+F/Wn/SGBAKFTqnLiB7KU6Lx
+         CX3qq1gGt+ByA9Y561UNZy9VW7qUxNA/RFLeIB6YzUt5jxNcSAniQlhV5waLfLIYwRmI
+         CNEAmi7iXeMVT9AdY2V3t1FWvhKfmU8ccDR4oOIJ+vrikdE91d1U2H6AutP4iBv4Leoj
+         +HqRPkKjWHec2HWsuDwlAK0V8pdoaeVsGF3xzqc4YUKmwU5Ea5BiwNPzJA4399Kyj9sf
+         hYVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=duuZ/GEcOj1lMi9UGA5Gk5HIPaCv9sbL2SkkSg2xRiM=;
-        b=pet09LmJLH5PBzh52NY/Eh6dMzUVWb+ri7V0oihxr4KtrqQscx65awU4Va6kZs4Mga
-         nTru0IDMPRWjgpQXLQ/XRUDGPKLlw/05fmNlYpahRrP7pPXpdHQ/dRtEgct6rrdStGQb
-         kaL0F6JwgNKO+PMyNtXCLlqQbrDU2/opLQl5nUU8Bp3lVv9gPuewvH6UScXUSLkRwnxZ
-         Z4RliOwZjANvH1Dlf0P1gmHupG5q3NBA3JOa3CYCt4Y4AIA5+2q0239P5T0/fQ8ITxVV
-         kyyX4phIxiicqSSkLdrER/CEDYXak5G/6/kfGCNlcW+47Hz3rMpRiqxZObuMhmksgbWH
-         M9qg==
-X-Gm-Message-State: APjAAAVJb9vQblkBf/VnYczCCRRM6EODp3OCxQQ36y7jrDjwcv0VYNzI
-        0g9rvxY7Nt152nwd4p+xsgRGbw==
-X-Google-Smtp-Source: APXvYqxUPQt/UQq91K5FWXcV7jPBqeDBMXe8DhnwkRTqSBFfcNvvxM6M3M3acec0a/Aj7sCn1c0WrA==
-X-Received: by 2002:adf:e602:: with SMTP id p2mr4043485wrm.348.1573145903787;
-        Thu, 07 Nov 2019 08:58:23 -0800 (PST)
-Received: from ?IPv6:2a01:e35:8b63:dc30:95e0:8058:2b4b:3437? ([2a01:e35:8b63:dc30:95e0:8058:2b4b:3437])
-        by smtp.gmail.com with ESMTPSA id q5sm2251463wmc.27.2019.11.07.08.58.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Nov 2019 08:58:23 -0800 (PST)
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH v3 1/1] net: ipv6: allow setting address on interface
- outside current namespace
-To:     Jonas Bonn <jonas@norrbonn.se>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net
-References: <20191107132755.8517-7-jonas@norrbonn.se>
- <20191107135652.19629-1-jonas@norrbonn.se>
-From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Organization: 6WIND
-Message-ID: <fb330ba7-1b9a-3fbb-4351-813b0928dc1b@6wind.com>
-Date:   Thu, 7 Nov 2019 17:58:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OY3mL3SJty7WONSqI9Sp3mmm9hhK0YCgUyTwKH16DyM=;
+        b=QVfVmAbuQ/YJmQxLxgoxOr/NDOT6oEw2RwoCmkap9MBMjat26rG6ClDMnHm6dI1vRG
+         3xrgmb7vMnB+lvkCLxl6WpFymN6RZT/QnPfQlPon6hmJD9F0ZlZcMGnrRiyW5ZNK5iIE
+         KfiETcXP0KYxg5nJQ4BtZwrRSyfkymzzGT6NOrQEU1WsQwSRFlPnjA/5HUJUJNrM029K
+         VI8kA51B0aWX4Qu8gq2Riyujm+FsLv2poOaqp55BJwgUiWtVZ7Q3MlaUAIRRlenVT+LN
+         ljZo5B/E1WrfJ5t/BUPW2M60D3jyJQ5UA8dN8lqKEA/049Hd/he/6ZYWY0/6v7EoHXBy
+         dONw==
+X-Gm-Message-State: APjAAAVa7VLOAp+RueGqFYbHAAh4Iy8ztcG3okx0BX5z7FWCBktqBtvO
+        ALnMqfUmwnW2xgjYtWKBiZ/AjpNB
+X-Google-Smtp-Source: APXvYqwywasLn6m/7m+9ngq7VemwIJGQsnD+MP7zkTDSAGK5hEfJpgVTJTKBUslwtz2IbJ0bLXpe5g==
+X-Received: by 2002:a81:a303:: with SMTP id a3mr3070741ywh.244.1573145959312;
+        Thu, 07 Nov 2019 08:59:19 -0800 (PST)
+Received: from mail-yw1-f41.google.com (mail-yw1-f41.google.com. [209.85.161.41])
+        by smtp.gmail.com with ESMTPSA id j136sm750614ywj.17.2019.11.07.08.59.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Nov 2019 08:59:18 -0800 (PST)
+Received: by mail-yw1-f41.google.com with SMTP id y64so830031ywe.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:59:17 -0800 (PST)
+X-Received: by 2002:a0d:fe06:: with SMTP id o6mr1541900ywf.424.1573145957443;
+ Thu, 07 Nov 2019 08:59:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191107135652.19629-1-jonas@norrbonn.se>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <000000000000f68d660570dcddd8@google.com> <000000000000e51d450596c1d472@google.com>
+In-Reply-To: <000000000000e51d450596c1d472@google.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 7 Nov 2019 11:58:41 -0500
+X-Gmail-Original-Message-ID: <CA+FuTSdz-+Hj2itAiC5uiP0X7aHP4YPG1+1k_bbE+OCBK+P0Rg@mail.gmail.com>
+Message-ID: <CA+FuTSdz-+Hj2itAiC5uiP0X7aHP4YPG1+1k_bbE+OCBK+P0Rg@mail.gmail.com>
+Subject: Re: kernel BUG at net/ipv4/ip_output.c:LINE!
+To:     syzbot <syzbot+90d5ec0c05e708f3b66d@syzkaller.appspotmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>, johannes.berg@intel.com,
+        Martin Lau <kafai@fb.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Peter Oskolkov <posk@google.com>, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        Yonghong Song <yhs@fb.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 07/11/2019 à 14:56, Jonas Bonn a écrit :
-> This patch allows an interface outside of the current namespace to be
-> selected when setting a new IPv6 address for a device.  This uses the
-> IFA_TARGET_NETNSID attribute to select the namespace in which to search
-> for the interface to act upon.
-> 
-> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-> ---
-> 
-> I messed up this patch and the cleanup code path wasn't included.  It
-> should look like this.  Sorry for the noise.
-You cannot resend just one patch, you have to resend the whole series.
+On Thu, Nov 7, 2019 at 8:42 AM syzbot
+<syzbot+90d5ec0c05e708f3b66d@syzkaller.appspotmail.com> wrote:
+>
+> syzbot suspects this bug was fixed by commit:
+>
+> commit e7c87bd6cc4ec7b0ac1ed0a88a58f8206c577488
+> Author: Willem de Bruijn <willemb@google.com>
+> Date:   Wed Jan 16 01:19:22 2019 +0000
+>
+>      bpf: in __bpf_redirect_no_mac pull mac only if present
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14175486600000
+> start commit:   112cbae2 Merge branch 'linus' of git://git.kernel.org/pub/..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=152cb8ccd35b1f70
+> dashboard link: https://syzkaller.appspot.com/bug?extid=90d5ec0c05e708f3b66d
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153ed6e2400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1539038c400000
+>
+> If the result looks correct, please mark the bug fixed by replying with:
+>
+> #syz fix: bpf: in __bpf_redirect_no_mac pull mac only if present
+
+#syz fix: bpf: in __bpf_redirect_no_mac pull mac only if present
