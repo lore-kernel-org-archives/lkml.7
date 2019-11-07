@@ -2,112 +2,182 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0EAC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D3CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE5A214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="zrnACrcq"
+	by mail.kernel.org (Postfix) with ESMTP id 1A53C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfKGUFm (ORCPT
+        id S1726130AbfKGUIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 15:05:42 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39467 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfKGUFl (ORCPT
+        Thu, 7 Nov 2019 15:08:49 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39136 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfKGUIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 15:05:41 -0500
-Received: by mail-pl1-f193.google.com with SMTP id o9so2308029plk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=Sn3H3USYo7BZToUu8oTrq01WdHO2mboQb5HVlpeRiKU=;
-        b=zrnACrcqsS2nzZa62EllyvKRCMH6Xpw6xK4qtFHcCoI6JgHhSQTKLdaelc5GJvsini
-         Oa3vn1I56tihebF1k6Eri2QUUD77LabYMtvF/m/EVozcVpT6Kf2JVDh7iqs5w3ExN4Z3
-         5zTpG7h+lKNQAoih+3IwDuoTlgPb8eeu9E3XKmtDCwciFe2BatUH2akmOR80S8+WxK5O
-         7nHwOOm0eq2IK3azfr3Hkr1I7mlLWqxEPPDzW7TA7PreJZDFe5666TD/NeujpVm4SmYO
-         LD5pytA58EY7pZ3yx3JBUFUAAPVX5H8Txi0hG6SHfUSBTOCJCVVbJCR6z9vvAnr6yYub
-         lIiQ==
+        Thu, 7 Nov 2019 15:08:48 -0500
+Received: by mail-ot1-f67.google.com with SMTP id e17so3145756otk.6;
+        Thu, 07 Nov 2019 12:08:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Sn3H3USYo7BZToUu8oTrq01WdHO2mboQb5HVlpeRiKU=;
-        b=flMJPS2rwIqzuukzMbcmBW+DsVsYvEDGD+R/WtqxDPgvR4YqlAXAy0VR07H8ydF7Wx
-         WIgUbtMFLEKManCp8yApHwtxPnaHDNp/h1u7xoITYnJULjahtMTINexEppOpGTaaJq+E
-         rqZk5ReSlI/g2AFM2riLMfDiDbsXGH0teCXwviKbM7oSNDKZwqpcfVHsFuETLtLmrx5x
-         lAyhA/TzsWh0Jrr58C5CpU8J9M7o7qVcF4x6rf+4gxmFyvqDQzuXTJ7pW+lkOimzSQ2K
-         gWF/OdUgnnMMBPHEFFsAgByIxS053VhqH+s1f8GMqlzV1baKRaZZV13j6U3vGafp1wOQ
-         uYzw==
-X-Gm-Message-State: APjAAAXpvwVsKPjXLhLHNxEGsNVH1KJm8BTEZ088HAiMd0RrjE79j3gM
-        PNMTjsL8Dc44AAPpMIEczpBVew==
-X-Google-Smtp-Source: APXvYqxWJNQvlbKIguc4Z/QM2uQTi9gQTGUknCkgIqxTfIQYWu4kMMdmOd+rr2Z9plzKxIsinf1bng==
-X-Received: by 2002:a17:902:161:: with SMTP id 88mr5368963plb.253.1573157139042;
-        Thu, 07 Nov 2019 12:05:39 -0800 (PST)
-Received: from cakuba.netronome.com ([65.196.126.174])
-        by smtp.gmail.com with ESMTPSA id s18sm4398210pfm.27.2019.11.07.12.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 12:05:38 -0800 (PST)
-Date:   Thu, 7 Nov 2019 15:05:18 -0500
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+e736399a2c4054612307@syzkaller.appspotmail.com>
-Cc:     Jason@zx2c4.com, ard.biesheuvel@linaro.org, aviadye@mellanox.com,
-        borisp@mellanox.com, daniel@iogearbox.net, davejwatson@fb.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        dirk.vandermerwe@netronome.com, ebiggers3@gmail.com,
-        herbert@gondor.apana.org.au, john.fastabend@gmail.com,
-        k.marinushkin@gmail.com, keescook@chromium.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org,
-        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in crypto_gcm_init_common
-Message-ID: <20191107150518.36b4a872@cakuba.netronome.com>
-In-Reply-To: <000000000000dd9f160596c1d465@google.com>
-References: <00000000000060e0ae057a092be8@google.com>
-        <000000000000dd9f160596c1d465@google.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/M+7NEa9F4hcyStwS+O2CXj/DuZPkBH6ed1KATiGvQk=;
+        b=omHjvu5KFGKoYehYkC8YwWbXVcn8rQVcbHCMfAOVwwvc/Nj76Xrfb0/3ebuFWxlTeg
+         7TPhEzajt4CqzSa/NRdE+GjpCNhCn2jQirxMKmo6Mu4uIAR8kjJYlXe6JZnxAXZaWHWX
+         k5CjQNz8wMjIjE5GvuXMvFlplx3dojJKFX2QgLl2WLyAca2pmtojXlqS2d/pQBEKpazz
+         ywBl3PJkCX03gJByBPA+2QX9tJ1TAbme655RrsgATtWAgX/IYYI2LpM4lxoruopGRCI+
+         Q+7ASZR5ayBvm7l15D4gj4+SRenZcBfD8QsMJeDcon39iyRNOEeOV2wkfPxKd5ogoV/x
+         hb1Q==
+X-Gm-Message-State: APjAAAW74l/99Zoun8ZextOX5Uu3//9UcKIqKc9LFdBF5+v2zrVZJzrD
+        Nfco9z3U5T2m5YAfLwO4rph0sSz5p66fgrOv3ao=
+X-Google-Smtp-Source: APXvYqxSdxE5q8o7kot3Q3VPWpmjiPKminjmiI4HTAqtu6579k67BzPvoy6LhYBLhEbydlStEWo7/83897A46FJL54w=
+X-Received: by 2002:a9d:73cd:: with SMTP id m13mr4644863otk.145.1573157326980;
+ Thu, 07 Nov 2019 12:08:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com> <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+In-Reply-To: <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 7 Nov 2019 21:08:35 +0100
+Message-ID: <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Nov 2019 05:42:07 -0800, syzbot wrote:
-> syzbot suspects this bug was fixed by commit:
-> 
-> commit 9354544cbccf68da1b047f8fb7b47630e3c8a59d
-> Author: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-> Date:   Mon Jun 24 04:26:58 2019 +0000
-> 
->      net/tls: fix page double free on TX cleanup
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=168ad3c2600000
-> start commit:   4710e789 Merge tag 'nfs-for-4.20-2' of git://git.linux-nfs..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9384ecb1c973baed
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e736399a2c4054612307
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17902f5b400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111377e5400000
-> 
-> If the result looks correct, please mark the bug fixed by replying with:
-> 
-> #syz fix: net/tls: fix page double free on TX cleanup
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Hi Prabhakar,
 
-The bug report looks fairly strange and could indicate a double free,
-but I don't see an entirely clear connection. We are double freeing a
-record and its pages while the splat is from a slab-32.. Given the
-bisection I think it's probably okay:
+On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> > >
+> > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> > > @@ -0,0 +1,43 @@
+> > > +* Renesas R-Car PCIe Endpoint Controller DT description
+> > > +
+> > > +Required properties:
+> > > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> > > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> > > +                                    RZ/G2 compatible device.
+> >
+> > Unless I'm missing something, this is for the exact same hardware block as
+> > Documentation/devicetree/bindings/pci/rcar-pci.txt?
+> > So shouldn't you amend those bindings, instead of adding new compatible
+> > values?
+> > Please remember that DT describes hardware, not software policy.
+> > So IMHO choosing between host and endpoint is purely a configuration
+> > issue, and could be indicated by the presence or lack of some DT properties.
+> > E.g. host mode requires both "bus-range" and "device_type" properties,
+> > so their absence could indicate endpoint mode.
+> >
+> yes its the same hardware block as described in the rcar-pci.txt, I
+> did think about amending it
+> but  it might turn out to be bit messy,
+>
+> required properties host ======required properties Endpoint
+> ====================||==================
+> 1: reg                                || reg
+> 2:bus-range                      || reg names
+> 3: device_type                  || resets
+> 4: ranges                          || clocks
+> 5: dma-ranges                  || clock-names
+> 6: interrupts                      ||
+> 7: interrupt-cells               ||
+> 8: interrupt-map-mask     ||
+> 9: clocks                          ||
+> 10: clock-names             ||
 
-#syz fix: net/tls: fix page double free on TX cleanup
+We have a similar situation with SPI, where a controller can operate in
+master or slave mode, based on the absence or presence of the
+"spi-slave" DT property.
+
+> and if I go ahead with the same compatible string that would mean to
+> add support for endpoint
+> mode in the host driver itself. I did follow the examples of
+
+You can still have two separate drivers, binding against the same
+compatible value.  Just let the .probe() function return -ENODEV if it
+discovers (by looking at DT properties) if the node is configured for
+the other mode.
+Which brings us to my next questions: is there any code that could be
+shared between the drivers for the two modes?
+
+> rockchip/cadence/designware where
+> its the same hardware block but has two different binding files one
+> for host mode and other for
+> endpoint mode.
+
+Having two separate DT binding documents sounds fine to me, if unifying
+them makes things too complex.
+However, I think they should use the same compatible value, because the
+hardware block is the same, but just used in a different mode.
+
+Rob/Mark: Any input from the DT maintainers?
+
+> > > +- reg: Five register ranges as listed in the reg-names property
+> > > +- reg-names: Must include the following names
+> > > +       - "apb-base"
+> > > +       - "memory0"
+> > > +       - "memory1"
+> > > +       - "memory2"
+> > > +       - "memory3"
+> >
+> > What is the purpose of the last 4 regions?
+> > Can they be chosen by the driver, at runtime?
+> >
+> no the driver cannot choose them at runtime, as these are the only
+> PCIE memory(0/1/2/3) ranges
+> in the AXI address space where host memory can be mapped.
+
+Are they fixed by the PCIe hardware, i.e. could they be looked up by the
+driver based on the compatible value?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
