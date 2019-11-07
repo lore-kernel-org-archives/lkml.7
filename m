@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE445C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE77C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F4821D7B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BEBE21D7B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573144094;
-	bh=FqcDv1sjY05veUgpDJnfxuCQBeNLAI8X0PRJC2Y59xc=;
+	s=default; t=1573144103;
+	bh=aa+lHiitl6Vs5l8bpw2fpH46b6u0fQ7ZvdPGLvO8nsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TbN8fnbeEhdr/XIWWXJc1bNOURsqdI4IsVttAZ4wHtHATQ8fklcjIPbDUTuupaiRH
-	 x5Q2KZsXQhdouPDcFkOsUajs/QdaH+ICtJgw3BUBKL4rh2L4jK7FXQn7P96tlQ7vOn
-	 PzkEhtP2lSbQw57m3g+rY/pj3ZmxF6QJW7x3X4Bo=
+	b=EsIoWaGI7L1HxdX1iPdnUtiq2N6ow2/pp7H8U1cuTIr0PNix/1Gwmaicn9n2mdfzX
+	 McgQDPdwHV598kwPjoDh/5fp2854ebiyyHmCTg0Exq4QKk5dgOP8vWYnErGLYlfCgt
+	 5aFK7HeCfeK58JqtWL8Tv4da37bnnp7NPUU/aVPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfKGQ2N (ORCPT
+        id S2388753AbfKGQ2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:28:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40848 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 11:28:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfKGQ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:28:13 -0500
+        id S1726877AbfKGQ2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 11:28:22 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4650721D79;
-        Thu,  7 Nov 2019 16:28:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C003F21D7F;
+        Thu,  7 Nov 2019 16:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573144092;
-        bh=FqcDv1sjY05veUgpDJnfxuCQBeNLAI8X0PRJC2Y59xc=;
+        s=default; t=1573144101;
+        bh=aa+lHiitl6Vs5l8bpw2fpH46b6u0fQ7ZvdPGLvO8nsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQAhlTKY3O/OwlQWMiazquwZOHnIBYAJPYpCnVRKca7lyRnJ6iaRufo2LPirvaW1t
-         creEbKe4EOP2xZ/YyQhSD6xYfAE2Cf9rUltGiCViWAD6hUl0gcBAh5dwqPAbhzmxDN
-         kVNO2L2GJQD3s381lk9p7QI8Y3Vu/JbIG45g4ZFE=
+        b=hCaBcjZU1fv/hLC6D6jDaCTu/fz52/gsbnpAroxNwg7ddaI1w4tId9tv3IkMVVHWQ
+         7x7mDWvRZp6Bg8oDceOct3SZxlvDGMRa06S5hTktNW1J7zOPY+9piqxKAO4t5KOzZu
+         SsVhy4Vdpw/Ji9HQfDG07MlT2DaIQLj4LISIoNiA=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v2 2/4] perf probe: Support multiprobe event
-Date:   Fri,  8 Nov 2019 01:28:08 +0900
-Message-Id: <157314408813.4063.14742503412836551501.stgit@devnote2>
+Subject: [PATCH v2 3/4] perf probe: Support DW_AT_const_value constant value
+Date:   Fri,  8 Nov 2019 01:28:17 +0900
+Message-Id: <157314409774.4063.1275383799725648249.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <157314406866.4063.16995747442215702109.stgit@devnote2>
 References: <157314406866.4063.16995747442215702109.stgit@devnote2>
@@ -63,102 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support multiprobe event if the event is based on function
-and lines and kernel supports it. In this case, perf probe
-creates the first probe with an event, and tries to append
-following probes on that event, since those probes must be
-on the same source code line.
-
-Before this patch;
-  # perf probe -a vfs_read:18
-  Added new events:
-    probe:vfs_read_L18   (on vfs_read:18)
-    probe:vfs_read_L18_1 (on vfs_read:18)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:vfs_read_L18_1 -aR sleep 1
-
-  #
-
-After this patch (on multiprobe supported kernel)
-  # perf probe -a vfs_read:18
-  Added new events:
-    probe:vfs_read_L18   (on vfs_read:18)
-    probe:vfs_read_L18   (on vfs_read:18)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:vfs_read_L18 -aR sleep 1
-
-  #
+Support DW_AT_const_value for variable assignment instead of location.
+Note that this requires ftrace supporting immediate value.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- tools/perf/util/probe-event.c |    9 +++++++--
- tools/perf/util/probe-file.c  |    7 +++++++
- tools/perf/util/probe-file.h  |    1 +
- 3 files changed, 15 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-file.c   |    7 +++++++
+ tools/perf/util/probe-file.h   |    1 +
+ tools/perf/util/probe-finder.c |   11 +++++++++++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 5c86d2cf6338..8f963a193a5d 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2738,8 +2738,13 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
- 	if (tev->event == NULL || tev->group == NULL)
- 		return -ENOMEM;
- 
--	/* Add added event name to namelist */
--	strlist__add(namelist, event);
-+	/*
-+	 * Add new event name to namelist if multiprobe event is NOT
-+	 * supported, since we have to use new event name for following
-+	 * probes in that case.
-+	 */
-+	if (!multiprobe_event_is_supported())
-+		strlist__add(namelist, event);
- 	return 0;
- }
- 
 diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index b659466ea498..a63f1a19b0e8 100644
+index a63f1a19b0e8..5003ba403345 100644
 --- a/tools/perf/util/probe-file.c
 +++ b/tools/perf/util/probe-file.c
-@@ -1007,6 +1007,7 @@ enum ftrace_readme {
- 	FTRACE_README_KRETPROBE_OFFSET,
+@@ -1008,6 +1008,7 @@ enum ftrace_readme {
  	FTRACE_README_UPROBE_REF_CTR,
  	FTRACE_README_USER_ACCESS,
-+	FTRACE_README_MULTIPROBE_EVENT,
+ 	FTRACE_README_MULTIPROBE_EVENT,
++	FTRACE_README_IMMEDIATE_VALUE,
  	FTRACE_README_END,
  };
  
-@@ -1020,6 +1021,7 @@ static struct {
- 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
+@@ -1022,6 +1023,7 @@ static struct {
  	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
  	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
-+	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
+ 	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
++	DEFINE_TYPE(FTRACE_README_IMMEDIATE_VALUE, "*\\imm-value,*"),
  };
  
  static bool scan_ftrace_readme(enum ftrace_readme type)
-@@ -1085,3 +1087,8 @@ bool user_access_is_supported(void)
+@@ -1092,3 +1094,8 @@ bool multiprobe_event_is_supported(void)
  {
- 	return scan_ftrace_readme(FTRACE_README_USER_ACCESS);
+ 	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
  }
 +
-+bool multiprobe_event_is_supported(void)
++bool immediate_value_is_supported(void)
 +{
-+	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
++	return scan_ftrace_readme(FTRACE_README_IMMEDIATE_VALUE);
 +}
 diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
-index 986c1c94f64f..850d1b52d60a 100644
+index 850d1b52d60a..0dba88c0f5f0 100644
 --- a/tools/perf/util/probe-file.h
 +++ b/tools/perf/util/probe-file.h
-@@ -71,6 +71,7 @@ bool probe_type_is_available(enum probe_type type);
- bool kretprobe_offset_is_supported(void);
+@@ -72,6 +72,7 @@ bool kretprobe_offset_is_supported(void);
  bool uprobe_ref_ctr_is_supported(void);
  bool user_access_is_supported(void);
-+bool multiprobe_event_is_supported(void);
+ bool multiprobe_event_is_supported(void);
++bool immediate_value_is_supported(void);
  #else	/* ! HAVE_LIBELF_SUPPORT */
  static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
  {
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 9ecea45da4ca..2e3a468c8350 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -177,6 +177,17 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
+ 	if (dwarf_attr(vr_die, DW_AT_external, &attr) != NULL)
+ 		goto static_var;
+ 
++	/* Constant value */
++	if (dwarf_attr(vr_die, DW_AT_const_value, &attr) &&
++	    immediate_value_is_supported()) {
++		Dwarf_Sword snum;
++
++		dwarf_formsdata(&attr, &snum);
++		ret = asprintf(&tvar->value, "\\%ld", (long)snum);
++
++		return ret < 0 ? -ENOMEM : 0;
++	}
++
+ 	/* TODO: handle more than 1 exprs */
+ 	if (dwarf_attr(vr_die, DW_AT_location, &attr) == NULL)
+ 		return -EINVAL;	/* Broken DIE ? */
 
