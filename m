@@ -2,159 +2,191 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6259FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B297EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431BC2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85ED02178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbfKGNvi (ORCPT
+        id S2389187AbfKGNvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:51:38 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:35810 "EHLO mx1.redhat.com"
+        Thu, 7 Nov 2019 08:51:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:56556 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388008AbfKGNvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:51:36 -0500
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4A3CDC05683F
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 13:51:35 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id i9so2646623qtq.11
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:51:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Vuj0sOrz0obsaQW6VB4nuyg1B3f92+UjONHlMugAHRU=;
-        b=dB/OZPDfxPRXQ4Wu6n/Zeujx7DouIbE7BJ/TYURUTNmePwpZECxI6GiNCw4mPeI4gT
-         Fcp/3r1SDkSgPvc2cB4/CqoCXC7A1f4FW/xZE3euk2HJ58HjQklXbIG3amRaXfTaNT9R
-         I6pBmfiHbiEseJt5WrmzkdqlKh0txm0/O25G4HONM8wjj7n6jmBnM0yPRLvqcoCv3zy8
-         arFgMZTnZNbelEauoiNozgiJ18HR3PLBve3Hvd5P1p3cf7PAF9HbXYDuxxIBbo/KA5yU
-         aHIRH0FdA9yZhtpllpsBs38h/VXB7qVWZHr1j8m9EN2lXHAG/7eALvb6mMrrD2MksJqZ
-         VSKQ==
-X-Gm-Message-State: APjAAAUNeVH8/a091vmLlrmsGXI7JyEEexO6qKY532gzdKzNh7koXgKo
-        7uG1dWhPG0jNFyuWb3MS56l33yGalghd9F0tZCG3LVFKNaBJuKFsRTzMDdJ3Lx3p973rWjml3yq
-        UEfSxjELBI7tI1MbYhuQkAKA5
-X-Received: by 2002:a05:620a:9c4:: with SMTP id y4mr1685932qky.113.1573134694388;
-        Thu, 07 Nov 2019 05:51:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyX+KBUhWqpKhTfmZTPkTDc7Eh32z5L3hFi76AldzGn/MNvSqKAS8VxujSm8oFj0PnbSG1J/A==
-X-Received: by 2002:a05:620a:9c4:: with SMTP id y4mr1685880qky.113.1573134694094;
-        Thu, 07 Nov 2019 05:51:34 -0800 (PST)
-Received: from redhat.com (bzq-79-178-12-128.red.bezeqint.net. [79.178.12.128])
-        by smtp.gmail.com with ESMTPSA id o201sm1088010qka.17.2019.11.07.05.51.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 05:51:33 -0800 (PST)
-Date:   Thu, 7 Nov 2019 08:51:21 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
- implement virtio-mdev framework
-Message-ID: <20191107085108-mutt-send-email-mst@kernel.org>
-References: <20191106133531.693-1-jasowang@redhat.com>
- <20191106133531.693-7-jasowang@redhat.com>
- <20191107040700-mutt-send-email-mst@kernel.org>
- <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
- <20191107061942-mutt-send-email-mst@kernel.org>
- <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
- <c588c724-04da-2991-9f88-f36c0d04364a@redhat.com>
- <20191107080721-mutt-send-email-mst@kernel.org>
- <29d92758-18f7-15c7-fd04-0556b1f9033c@redhat.com>
+        id S2387662AbfKGNvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:51:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19CEC31B;
+        Thu,  7 Nov 2019 05:51:50 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE9603F71A;
+        Thu,  7 Nov 2019 05:51:48 -0800 (PST)
+Subject: Re: [sched] 10e7071b2f: BUG:kernel_NULL_pointer_dereference,address
+To:     kernel test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Aaron Lu <aaron.lwe@gmail.com>, Phil Auld <pauld@redhat.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, lkp@01.org
+References: <20191107090808.GW29418@shao2-debian>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <d94e549d-04de-5b23-c4e0-6c161ec8213e@arm.com>
+Date:   Thu, 7 Nov 2019 13:51:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <29d92758-18f7-15c7-fd04-0556b1f9033c@redhat.com>
+In-Reply-To: <20191107090808.GW29418@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 09:40:09PM +0800, Jason Wang wrote:
-> 
-> On 2019/11/7 下午9:08, Michael S. Tsirkin wrote:
-> > On Thu, Nov 07, 2019 at 08:47:06PM +0800, Jason Wang wrote:
-> > > On 2019/11/7 下午8:43, Jason Wang wrote:
-> > > > On 2019/11/7 下午7:21, Michael S. Tsirkin wrote:
-> > > > > On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
-> > > > > > On 2019/11/7 下午5:08, Michael S. Tsirkin wrote:
-> > > > > > > On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
-> > > > > > > > This sample driver creates mdev device that simulate
-> > > > > > > > virtio net device
-> > > > > > > > over virtio mdev transport. The device is implemented through vringh
-> > > > > > > > and workqueue. A device specific dma ops is to make sure HVA is used
-> > > > > > > > directly as the IOVA. This should be sufficient for kernel virtio
-> > > > > > > > driver to work.
-> > > > > > > > 
-> > > > > > > > Only 'virtio' type is supported right now. I plan to add 'vhost' type
-> > > > > > > > on top which requires some virtual IOMMU implemented in this sample
-> > > > > > > > driver.
-> > > > > > > > 
-> > > > > > > > Acked-by: Cornelia Huck<cohuck@redhat.com>
-> > > > > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
-> > > > > > > I'd prefer it that we call this something else, e.g.
-> > > > > > > mvnet-loopback. Just so people don't expect a fully
-> > > > > > > functional device somehow. Can be renamed when applying?
-> > > > > > Actually, I plan to extend it as another standard network interface for
-> > > > > > kernel. It could be either a standalone pseudo device or a stack
-> > > > > > device.
-> > > > > > Does this sounds good to you?
-> > > > > > 
-> > > > > > Thanks
-> > > > > That's a big change in an interface so it's a good reason
-> > > > > to rename the driver at that point right?
-> > > > > Oherwise users of an old kernel would expect a stacked driver
-> > > > > and get a loopback instead.
-> > > > > 
-> > > > > Or did I miss something?
-> > > > 
-> > > > My understanding is that it was a sample driver in /doc. It should not
-> > > > be used in production environment. Otherwise we need to move it to
-> > > > driver/virtio.
-> > > > 
-> > > > But if you insist, I can post a V11.
-> > > > 
-> > > > Thanks
-> > > 
-> > > Or maybe it's better to rename the type of current mdev from 'virtio' to
-> > > 'virtio-loopback'. Then we can add more types in the future.
-> > > 
-> > > Thanks
-> > > 
-> > Maybe but is virtio actually a loopback somehow? I thought we
-> > can bind a regular virtio device there, no?
-> 
-> 
-> It has a prefix, so user will see "mvnet-virtio-loopback".
-> 
-> Thanks
-> 
 
 
-yes but it's mvnet that is doing the loopback, not virtio
+On 07/11/2019 09:08, kernel test robot wrote:
+> FYI, we noticed the following commit (built with gcc-7):
+> 
+> commit: 10e7071b2f491b0fb981717ea0a585c441906ede ("sched: Rework CPU hotplug task selection")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> in testcase: kernel_selftests
+> with following parameters:
+> 
+> 	group: kselftests-01
+> 
+> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> 
+> 
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> 
+> 
+> +-------------------------------------------------+------------+------------+
+> |                                                 | f95d4eaee6 | 10e7071b2f |
+> +-------------------------------------------------+------------+------------+
+> | boot_successes                                  | 54         | 12         |
+> | boot_failures                                   | 0          | 82         |
+> | BUG:kernel_NULL_pointer_dereference,address     | 0          | 79         |
+> | Oops:#[##]                                      | 0          | 79         |
+> | RIP:pick_next_task_dl                           | 0          | 79         |
+> | Kernel_panic-not_syncing:Fatal_exception        | 0          | 79         |
+> | BUG:kernel_reboot-without-warning_in_test_stage | 0          | 3          |
+> +-------------------------------------------------+------------+------------+
+> 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> 
 
+FWIW the decoded stacktrace from my end is (my x86 GCC is a tad ancient,
+but the lines seem to match):
+
+[   84.432464] BUG: kernel NULL pointer dereference, address: 0000000000000064
+[   84.433700] #PF: supervisor read access in kernel mode
+[   84.434589] #PF: error_code(0x0000) - not-present page
+[   84.435499] PGD 0 P4D 0
+[   84.435933] Oops: 0000 [#1] SMP PTI
+[   84.436581] CPU: 1 PID: 15 Comm: migration/1 Not tainted 5.3.0-rc1-00086-g10e7071b2f491 #1
+[   84.438004] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+[   84.439461] RIP: 0010:pick_next_task_dl (./include/linux/sched/deadline.h:13 ./include/linux/sched/deadline.h:20 kernel/sched/deadline.c:505 kernel/sched/deadline.c:1766)
+[ 84.440266] Code: ed bd 70 01 01 e8 42 2d fb ff 0f 0b e9 6b ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66 90 55 53 48 89 fb 48 83 ec 10 <8b> 46 64 85 c0 78 73 48 81 7e 78 a0 3f e2 a7 74 57 48 83 bb 10 09
+All code
+========
+   0:	ed			in     (%dx),%eax
+   1:	bd 70 01 01 e8		mov    $0xe8010170,%ebp
+   6:	42 2d fb ff 0f 0b	rex.X sub $0xb0ffffb,%eax
+   c:	e9 6b ff ff ff		jmpq   0xffffffffffffff7c
+  11:	66 66 2e 0f 1f 84 00	data16 nopw %cs:0x0(%rax,%rax,1)
+  18:	00 00 00 00
+  1c:	66 66 66 66 90		data16 data16 data16 xchg %ax,%ax
+  21:	55			push   %rbp
+  22:	53			push   %rbx
+  23:	48 89 fb		mov    %rdi,%rbx
+  26:	48 83 ec 10		sub    $0x10,%rsp
+  2a:*	8b 46 64		mov    0x64(%rsi),%eax		<-- trapping instruction
+  2d:	85 c0			test   %eax,%eax
+  2f:	78 73			js     0xa4
+  31:	48 81 7e 78 a0 3f e2	cmpq   $0xffffffffa7e23fa0,0x78(%rsi)
+  38:	a7
+  39:	74 57			je     0x92
+  3b:	48			rex.W
+  3c:	83			.byte 0x83
+  3d:	bb			.byte 0xbb
+  3e:	10 09			adc    %cl,(%rcx)
+
+Code starting with the faulting instruction
+===========================================
+   0:	8b 46 64		mov    0x64(%rsi),%eax
+   3:	85 c0			test   %eax,%eax
+   5:	78 73			js     0x7a
+   7:	48 81 7e 78 a0 3f e2	cmpq   $0xffffffffa7e23fa0,0x78(%rsi)
+   e:	a7
+   f:	74 57			je     0x68
+  11:	48			rex.W
+  12:	83			.byte 0x83
+  13:	bb			.byte 0xbb
+  14:	10 09			adc    %cl,(%rcx)
+[   84.443485] RSP: 0000:ffffa5518008bd40 EFLAGS: 00010082
+[   84.444423] RAX: ffffffffa6eeeae0 RBX: ffff98ebbfd2b0c0 RCX: ffff98ebbfd2d040
+[   84.445641] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff98ebbfd2b0c0
+[   84.446877] RBP: ffffa5518008bdc0 R08: 0000001ac1016512 R09: 0000000000000001
+[   84.448128] R10: ffffffffa863e640 R11: 0000000000000003 R12: ffff98ebbfd2b0c0
+[   84.449349] R13: ffffffffa7e23fa0 R14: ffffffffa7e24060 R15: 0000000000000000
+[   84.450603] FS:  0000000000000000(0000) GS:ffff98ebbfd00000(0000) knlGS:0000000000000000
+[   84.452007] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   84.453022] CR2: 0000000000000064 CR3: 00000001aab84000 CR4: 00000000000406e0
+[   84.454244] Call Trace:
+[   84.455263] ? update_rq_clock (kernel/sched/pelt.h:85 kernel/sched/core.c:196 kernel/sched/core.c:218)
+[   84.456081] sched_cpu_dying (kernel/sched/core.c:6093 kernel/sched/core.c:6143 kernel/sched/core.c:6366)
+[   84.456777] ? sched_cpu_starting (kernel/sched/core.c:6353)
+[   84.457510] cpuhp_invoke_callback (kernel/cpu.c:166 (discriminator 4))
+[   84.458279] ? cpu_disable_common (./arch/x86/include/asm/bitops.h:80 ./include/asm-generic/bitops-instrumented.h:57 ./include/linux/cpumask.h:327 arch/x86/kernel/smpboot.c:1570 arch/x86/kernel/smpboot.c:1585)
+[   84.459047] take_cpu_down (kernel/cpu.c:855)
+[   84.459649] multi_cpu_stop (./arch/x86/include/asm/atomic.h:125 ./include/asm-generic/atomic-instrumented.h:748 kernel/stop_machine.c:176 kernel/stop_machine.c:227)
+[   84.460339] ? stop_machine_yield (??:?)
+[   84.461078] cpu_stopper_thread (kernel/stop_machine.c:519)
+[   84.461809] ? smpboot_thread_fn (kernel/smpboot.c:113)
+[   84.462539] ? smpboot_thread_fn (kernel/smpboot.c:128 (discriminator 3))
+[   84.463280] ? smpboot_thread_fn (kernel/smpboot.c:129)
+[   84.464024] smpboot_thread_fn (kernel/smpboot.c:129)
+[   84.464768] ? sort_range (kernel/smpboot.c:108)
+[   84.465389] kthread (kernel/kthread.c:237)
+[   84.465961] ? kthread_park (kernel/kthread.c:609)
+[   84.466605] ret_from_fork (arch/x86/entry/entry_64.S:358)
+[   84.467236] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver binfmt_misc intel_rapl_msr intel_rapl_common sr_mod crct10dif_pclmul cdrom crc32_pclmul sg crc32c_intel ghash_clmulni_intel ata_generic pata_acpi ppdev bochs_drm drm_vram_helper ttm drm_kms_helper syscopyarea sysfillrect snd_pcm sysimgblt fb_sys_fops drm aesni_intel snd_timer ata_piix crypto_simd snd cryptd glue_helper libata soundcore pcspkr joydev serio_raw parport_pc i2c_piix4 parport floppy ip_tables
+[   84.474471] CR2: 0000000000000064
+[   84.475066] ---[ end trace af8f1919a81ca744 ]---
+
+
+Using that, the fail is on:
+
+	if (need_pull_dl_task(rq, prev)) {
+
+Which is most likely explained by the above call ending up doing a 
+
+  dl_prio(prev->prio);
+
+which doesn't play well with 
+
+  class->pick_next_task(rq, NULL, NULL);
+
+
+Now, this is no longer an issue (I think) with the rest of Peter's series,
+since the above deref is gone with
+
+67692435c411 ("sched: Rework pick_next_task() slow-path")
+
+It would be interesting to know whether LKP found this on a mainline kernel
+and bisected it down, or if it stumbled on this while bisecting something
+else.
