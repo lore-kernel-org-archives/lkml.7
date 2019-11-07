@@ -2,147 +2,84 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E18EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF95C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF232187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573136874;
-	bh=x0tD8QPg5+9rNj9eiZasj+95TTki8u7csrKsOWaOvR8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=AQtCPxu5IR5up5ri1ZKhNPsiCt0+yttFlNJRfQfKyD2jBhGkYEtuMREXHevFpEYyt
-	 y4UoVorEmWHADIzjGp12Y6G/qyWCUYBtCK1ArPbFznwjgRGXJZtCX/6vIZUDewk8mB
-	 xWWrTGQAGGCMAMr0IiEmBTbNBDJbpVHtk38gBLCw=
+	by mail.kernel.org (Postfix) with ESMTP id 280272187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:28:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Oqo9ezXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389151AbfKGO1x (ORCPT
+        id S2389230AbfKGO2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:27:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfKGO1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:27:53 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [109.144.209.93])
+        Thu, 7 Nov 2019 09:28:22 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:54561 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfKGO2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:28:21 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78EB1207FA;
-        Thu,  7 Nov 2019 14:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573136871;
-        bh=x0tD8QPg5+9rNj9eiZasj+95TTki8u7csrKsOWaOvR8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ePEqbXEg0stzokyxq8cdFAe7G5ANj+pk90tvrO3MiRQ6pi6YJoabhrAApy3bfwRdy
-         LCClauPRA9NqrjDuJcR4+sdaJkQNkVa4ifgntq9EHm8bl6u4+W/xkc1Nfz7XotP2w1
-         frfy4yE0ZB07wgiiUlVIrKUgX2m4eLGkKJqpfy/4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DE07D35227FC; Thu,  7 Nov 2019 06:27:48 -0800 (PST)
-Date:   Thu, 7 Nov 2019 06:27:48 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/kernel-doc: Add support for named variable macro
- arguments
-Message-ID: <20191107142748.GN20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191107134133.14690-1-j.neuschaefer@gmx.net>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B295223E3F;
+        Thu,  7 Nov 2019 15:28:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1573136900;
+        bh=23Xq+LOAvfScLvlQZfupvgtVKHAM1yIBxWL8E5aw5iw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Oqo9ezXig/6bIxb/gHxs5396ziZeEqKTPv7wi2dBmm9sfXfeqwDSinSYlArfvBoO4
+         T+M0QLqKNCKFfY3vCkzSsws7jkSp2jxmB08eFiAR22MV4ePFPEonQJooYEJ8MBEQxz
+         KECUMS7+EAln/nESS67fXlqsZt7DfS5Obf5k2skc=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191107134133.14690-1-j.neuschaefer@gmx.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 07 Nov 2019 15:28:19 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v2 4/6] net: phy: at803x: mention AR8033 as same as AR8031
+In-Reply-To: <20191107125547.GB22978@lunn.ch>
+References: <20191106223617.1655-1-michael@walle.cc>
+ <20191106223617.1655-5-michael@walle.cc> <20191107020436.GD8978@lunn.ch>
+ <1DE4295A-1D25-4FAD-8DAB-45BD97E511C9@walle.cc>
+ <20191107125547.GB22978@lunn.ch>
+Message-ID: <89dcabd5a1b38e8106d70173922c391b@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.2.3
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 02:41:33PM +0100, Jonathan Neuschäfer wrote:
-> Currently, when kernel-doc encounters a macro with a named variable
-> argument[1], such as this:
-> 
->    #define hlist_for_each_entry_rcu(pos, head, member, cond...)
-> 
-> ... it expects the variable argument to be documented as `cond...`,
-> rather than `cond`. This is semantically wrong, because the name (as
-> used in the macro body) is actually `cond`.
-> 
-> With this patch, kernel-doc will accept the name without dots (`cond`
-> in the example above) in doc comments, and warn if the name with dots
-> (`cond...`) is used and verbose mode[2] is enabled.
-> 
-> The support for the `cond...` syntax can be removed later, when the
-> documentation of all such macros has been switched to the new syntax.
-> 
-> Testing this patch on top of v5.4-rc6, `make htmldocs` shows a few
-> changes in log output and HTML output:
-> 
->  1) The following warnings[3] are eliminated:
-> 
->    ./include/linux/rculist.h:374: warning:
->         Excess function parameter 'cond' description in 'list_for_each_entry_rcu'
->    ./include/linux/rculist.h:651: warning:
->         Excess function parameter 'cond' description in 'hlist_for_each_entry_rcu'
-> 
->  2) For list_for_each_entry_rcu and hlist_for_each_entry_rcu, the
->     correct description is shown
-> 
->  3) Named variable arguments are shown without dots
-> 
-> 
-> [1]: https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html
-> [2]: scripts/kernel-doc -v
-> [3]: See also https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=5bc4bc0d6153617eabde275285b7b5a8137fdf3c
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
+Hi Andrew,
 
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-> ---
->  scripts/kernel-doc | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+Am 2019-11-07 13:55, schrieb Andrew Lunn:
+>> I tried that actually.. There is a PTP enable bit. It's default is 1
+>> (according to the AR8031 datasheet). Now guess what it's value is on
+>> the AR8033.. its also 1. Not enough.. I also tried to enable the
+>> realtime counter. well that worked too.
 > 
-> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-> index 81dc91760b23..48696391eccb 100755
-> --- a/scripts/kernel-doc
-> +++ b/scripts/kernel-doc
-> @@ -1449,6 +1449,10 @@ sub push_parameter($$$$) {
->  	      # handles unnamed variable parameters
->  	      $param = "...";
->  	    }
-> +	    elsif ($param =~ /\w\.\.\.$/) {
-> +	      # for named variable parameters of the form `x...`, remove the dots
-> +	      $param =~ s/\.\.\.$//;
-> +	    }
->  	    if (!defined $parameterdescs{$param} || $parameterdescs{$param} eq "") {
->  		$parameterdescs{$param} = "variable arguments";
->  	    }
-> @@ -1936,6 +1940,18 @@ sub process_name($$) {
->  sub process_body($$) {
->      my $file = shift;
+>> And yes. I've double checked the package marking. It definitely was
+>> an AR8033. So either I was just lucky, or maybe.. the AR8033 is just
+>> a relabled AR8031 ;)
 > 
-> +    # Until all named variable macro parameters are
-> +    # documented using the bare name (`x`) rather than with
-> +    # dots (`x...`), strip the dots:
-> +    if ($section =~ /\w\.\.\.$/) {
-> +	$section =~ s/\.\.\.$//;
-> +
-> +	if ($verbose) {
-> +	    print STDERR "${file}:$.: warning: Variable macro arguments should be documented without dots\n";
-> +	    ++$warnings;
-> +	}
-> +    }
-> +
->      if (/$doc_sect/i) { # case insensitive for supported section names
->  	$newsection = $1;
->  	$newcontents = $2;
-> --
-> 2.20.1
-> 
+> O.K, thanks for trying. We really only need to solve this mystery if
+> anybody actually tries to make use of PTP.
+
+That might be the next thing on my list; but depends if there is an 
+usable interrupt for the PHY on my board..
+
+-michael
