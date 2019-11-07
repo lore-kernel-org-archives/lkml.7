@@ -2,106 +2,108 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF356FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884D5C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB4E206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD6A206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:04:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F/SLkeZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfKGIDT (ORCPT
+        id S1727621AbfKGIEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:03:19 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5740 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726734AbfKGIDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:03:18 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6EEA48D711EBFC8BF3D0;
-        Thu,  7 Nov 2019 16:03:16 +0800 (CST)
-Received: from [127.0.0.1] (10.57.64.164) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 7 Nov 2019
- 16:03:07 +0800
-Subject: Re: [PATCH] EFI/stub: tpm: enable tpm eventlog function for ARM64
- platform
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-CC:     Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Capper <steve.capper@arm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>, <zoucao@linux.alibaba.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>
-References: <20191105082924.289-1-kong.kongxinwei@hisilicon.com>
- <CAKv+Gu-V0S9EZeCjna5+P6v53evV-6uuG0rAShUA+uWb=NgH4g@mail.gmail.com>
- <CAKv+Gu9X4vCiS+BABs34t05MdF6GaFJr4jBTeaamngx3s=sPBg@mail.gmail.com>
-From:   kongxinwei <kong.kongxinwei@hisilicon.com>
-Message-ID: <9ffbc8d5-cd95-1978-c5df-eedd4fe2b850@hisilicon.com>
-Date:   Thu, 7 Nov 2019 16:03:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 7 Nov 2019 03:04:22 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43537 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGIEW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:04:22 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y23so1152765ljh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:04:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Icvs9OZ2xWXC5UPn4WjTDzsRSqv4ABuStVj0mfFJ9ZA=;
+        b=F/SLkeZfh9tn1C1SOcqQGA7uI8T6cB6x6lBr5R+HR4WuNbOlV4NPR9FoJasE9xAtv6
+         myuCAP/bRD1Vvyzg8Ht5V9SEOvVDBbEU7ewy7WXFpiZ1HLhB8P2oZeUPl3Cmzz8jHTBx
+         +JfsjtF9sx1XLM12jsSW1Us+ebt3dG7MeFhJRiWZ9vvFjb/pYX1Z67xgojDhwliUFwWq
+         wc+FCq3m2Kv4+LogclzGNz9+4IIpJKrUjtvRQecQJusMeZQtaRp1A4lh4MEQGcSjyORu
+         POQGNcpHNLzdj9lNrwEoO14rI7QHovnPphY92fDo2F1f8ufzcgSnOLHhOCHrewzyFfUV
+         TcfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Icvs9OZ2xWXC5UPn4WjTDzsRSqv4ABuStVj0mfFJ9ZA=;
+        b=txy/AHIYPJASaeFYzZz82UjZAmsknzg+Ar2xapqhsiprx6+ZNVubPqDckYI63Fl3wI
+         z7PZu7p2r5iI7vYbH5qO6sAluyZigzr2NZ4V5clNO6lc+ErvWCtD5B7vm7cx868tYayU
+         mhxNZPAOKXB4TboDReZhgBCkxdJu5ldGsF9AErHnyVgdEGBoR6sS30a0EGpKDcxIPsG4
+         HG7jGqplCJcTaV55J9Z/wceqTyatWmdt1YyiqFoT0Q/wYgu3VfhPJzrh32M7VRpAveaN
+         OTJ3ykUcVaHUBKpi+/+rz+NPfb2xocmxB9SNYv/eVQAC6FCHHqTAEo4QhjMLRRJJLA5v
+         igDA==
+X-Gm-Message-State: APjAAAUVTnTTuauGymxhCD3rTnBHIQa13/Q4XbZT3u+WA6wdHMuO1+iz
+        /gnBUYLW9xOBtw1XqQrt8j7Okbq9/48/hiF8JGukIQ==
+X-Google-Smtp-Source: APXvYqwyLBON2IrM1MH7zrGDSUoOt7eH91Ktx6j7qYfJSSZHJ7k8s5gOCs6qkRwBV0ORbE/D4fJNFUcmt5X6vjZzWp0=
+X-Received: by 2002:a2e:161b:: with SMTP id w27mr1297296ljd.183.1573113860059;
+ Thu, 07 Nov 2019 00:04:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu9X4vCiS+BABs34t05MdF6GaFJr4jBTeaamngx3s=sPBg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.57.64.164]
-X-CFilter-Loop: Reflected
+References: <5dc3460a.1c69fb81.bfae4.adf1@mx.google.com> <e2ba3c23-4b85-f83b-0ba4-dc0db1b8dd0f@collabora.com>
+In-Reply-To: <e2ba3c23-4b85-f83b-0ba4-dc0db1b8dd0f@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 7 Nov 2019 09:04:08 +0100
+Message-ID: <CACRpkdYA9TgBWb2TQzSVtV1CWy6ZOXA1=8NjSg5bksrNM1C=NA@mail.gmail.com>
+Subject: Re: next/master boot bisection: next-20191106 on r8a7795-salvator-x
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>, mgalka@collabora.com,
+        Mark Brown <broonie@kernel.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Scott Branden <sbranden@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/11/6 22:59, Ard Biesheuvel wrote:
-> On Wed, 6 Nov 2019 at 15:56, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->>
->> On Tue, 5 Nov 2019 at 09:29, Xinwei Kong <kong.kongxinwei@hisilicon.com> wrote:
->>>
->>> this patch gets tpm eventlog information such as device boot status,event guid
->>> and so on, which will be from bios stage. it use "efi_retrieve_tpm2_eventlog"
->>> functions to get it for ARM64 platorm.
->>>
->>> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
->>> Signed-off-by: Zou Cao <zoucao@linux.alibaba.com>
->>> ---
->>>  drivers/firmware/efi/libstub/arm-stub.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
->>> index c382a48..37c8f81 100644
->>> --- a/drivers/firmware/efi/libstub/arm-stub.c
->>> +++ b/drivers/firmware/efi/libstub/arm-stub.c
->>> @@ -139,6 +139,8 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table,
->>>         if (status != EFI_SUCCESS)
->>>                 goto fail;
->>>
->>> +       efi_retrieve_tpm2_eventlog(sys_table);
->>> +
->>
->> This function allocates memory, so calling it should be deferred until
->> after we relocate the kernel, to prevent these allocations from using
->> up space that we'd rather use for the kernel.
->>
->> Does it work for you if we move this call further down, right before
->> the call to efi_enable_reset_attack_mitigation()? Please confirm.
->>
+On Wed, Nov 6, 2019 at 11:27 PM Guillaume Tucker
+<guillaume.tucker@collabora.com> wrote:
+> On 06/11/2019 22:15, kernelci.org bot wrote:
+> > +static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst = {
+> > +     { .compatible = "brcm,iproc-gpio-cca" },
+> > +     {}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
+> > +
+> > +static struct platform_driver bcm_iproc_gpio_driver = {
+> > +     .driver = {
+> > +             .name = "iproc-xgs-gpio",
+> > +             .owner = THIS_MODULE,
+> > +             .of_match_table = bcm_iproc_gpio_of_match,
+> > +     },
+> > +     .probe = iproc_gpio_probe,
+> > +     .remove = iproc_gpio_remove,
+> > +};
+>
+> There's a fix for this which Mark sent yesterday[1] and should
+> have now been applied, by removing __initconst for the
+> of_device_id table.  So this regression should not be present in
+> the next linux-next tag.
 
-ok，I will confirm it and send V2 version patch :
+Confirmed, I pushed a new for-next branch with this fix in it.
 
-> 
-> Also, your S-o-b chain is incorrect. If Zou Cao provided you with the
-> patch, please credit her/him as the author (using git --reset-author)
-> and move your S-o-b last. If Zou Cao was a co-author [which seems
-> unlikely for a single line patch], use Co-developed-by+Signed-off-by.
-> In any case, the S-o-b of the person sending out the patch via email
-> should come last.
-> 
-I will deal it.
-> .
-> 
-
+Yours,
+Linus Walleij
