@@ -2,96 +2,203 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE33C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45795C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C56A222C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573148456;
-	bh=OYgQrmdZmNroAHb74sVUuSnpCtxolSUHgVGyEjv4V5Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o7ZpSmct4ONkZHTObdTenk19wYCvUMNavG1GIvvUwk3Hl1WQ8M5991MW4h1kJV4p1
-	 NbCg94Zs9y64mKX+4Hvw49/9YPXUfVullnaMtTOGwjbyHhzlK0AH024C/iMvFcjrIf
-	 ErmpTUyehzKXXTLDaFqn2NlWnfqlHtiYLryWYWw4=
+	by mail.kernel.org (Postfix) with ESMTP id 11ADA21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:40:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p5VJ+Kzb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbfKGRkz (ORCPT
+        id S2387502AbfKGRk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 7 Nov 2019 12:40:57 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49990 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfKGRkz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 12:40:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbfKGRkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:40:55 -0500
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0F702084D;
-        Thu,  7 Nov 2019 17:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573148454;
-        bh=OYgQrmdZmNroAHb74sVUuSnpCtxolSUHgVGyEjv4V5Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rDltopZkGIFVN3tdTyMtIBC0/DHvpYC//97XoCxkCgL1Wprtj27pPVltzMEqfAnS9
-         H4eUUc89erhUBoVs8OiiQr9GmEe8B6Hw/1e6dQBfKiDSw4lxtaIWMORzftVi5lU2bE
-         OiHu70ENCi0eJ9yVREDlYILAWx4y/Po/OkXaHVvE=
-Received: by mail-qt1-f170.google.com with SMTP id u22so3219324qtq.13;
-        Thu, 07 Nov 2019 09:40:53 -0800 (PST)
-X-Gm-Message-State: APjAAAWfQ2jvVcRlr9x0D9Rcemoo8XH0id4cDAfbo6KRn/LiBqMbg1V6
-        XQAf0WxAYTqrUdYMhiOUmVgi8E11W7hnDgIBMg==
-X-Google-Smtp-Source: APXvYqymGGkqABjYdF0xhvWYzF9gyZ7Mx6LFLCCgTmCamvcfGddIsg5zyOUpdwQsy7X4I+/2Uw4D8lnhSwngyNf7W74=
-X-Received: by 2002:ac8:7612:: with SMTP id t18mr5129163qtq.143.1573148453179;
- Thu, 07 Nov 2019 09:40:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=V6oKP4lc+Qnv6sTHAaXs5ytofADvXNkCvxLyMCGZAGM=; b=p5VJ+KzbAtdMWZHpt1z3zRLm9J
+        BuGBPRjHA8A17ctz38M7+c95xVBVezojpm5oFhjIdFVn7Y60AjqOaaJn+Fy33f6p4nWducN+uyhfG
+        aiAwjRn0MYfTFU1boeDjAdni7qM4goYe0VI55Rt8yn/jPqsDAbhbYK2qPZmjkKH+mXGymzsq4Y00g
+        1NvMd7wTMvwQ8Or0qVj0Oc0YyKi4bBH3UdEq5jr2YhuT5MFy74fP+XwvWFfRFyL85RPXhNHtNt1YT
+        j6rYqNfnmvCtdqcjjTvzIW2GYIm/6cuj68FvBKNA8hzm0BAOJPXkJpAcVXfPKida7k7xBN417alSF
+        ymNp+ikw==;
+Received: from [2001:4bb8:184:e48:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSllw-0002O1-MK; Thu, 07 Nov 2019 17:40:41 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dma-mapping: support setting memory uncached in place
+Date:   Thu,  7 Nov 2019 18:40:34 +0100
+Message-Id: <20191107174035.13783-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191107174035.13783-1-hch@lst.de>
+References: <20191107174035.13783-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-2-srinivas.kandagatla@linaro.org> <20191105193100.GB4709@bogus>
- <315fd1f8-b6b5-5df7-604d-4ca92b31772c@linaro.org>
-In-Reply-To: <315fd1f8-b6b5-5df7-604d-4ca92b31772c@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Nov 2019 11:40:41 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ+EUe8TiNfUN30D9x4XNcUnevUSK2cM9zVQR=jDR1wQQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ+EUe8TiNfUN30D9x4XNcUnevUSK2cM9zVQR=jDR1wQQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 4:08 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 05/11/2019 19:31, Rob Herring wrote:
-> >> +  vdd-micbias-supply:
-> >> +    description: A reference to the micbias supply
-> >> +
-> >> +  qcom,micbias1-microvolts:
-> > The standard unit is 'microvolt', not 'microvolts'.
-> >
-> I started with microvolt but dt_bindings_check reported errors.
->
-> looking at
-> https://github.com/devicetree-org/dt-schema/blob/master/meta-schemas/vendor-props.yaml#L19
->   suggested microvolts should be used on vendor properties.
->
-> Is this a typo in dt-schema ?
+We currently only support remapping memory as uncached through vmap
+or a magic uncached segment provided by some architectures.  But there
+is a simpler and much better way available on some architectures where
+we can just remap the memory in place.  The advantages are:
 
-Yes, even the DT maintainer gets confused. :) It's fixed now.
+ 1) no aliasing is possible, which prevents speculating into the
+    cached alias
+ 2) there is no need to allocate new ptes and thus no need for a special
+    pre-allocated pool of memory that can be used with GFP_ATOMIC DMA
+    allocations
 
-Rob
+The downside is that architectures must provide a way to set arbitrary
+pages uncached in the kernel mapping, which might not be possible on
+architecture that have a special implicit kernel mapping, and requires
+splitting of huge page kernel mappings where they exist.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/dma-noncoherent.h |  3 +++
+ kernel/dma/Kconfig              |  8 ++++++++
+ kernel/dma/direct.c             | 28 ++++++++++++++++++----------
+ 3 files changed, 29 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
+index e30fca1f1b12..c4be9697279a 100644
+--- a/include/linux/dma-noncoherent.h
++++ b/include/linux/dma-noncoherent.h
+@@ -111,4 +111,7 @@ static inline void arch_dma_prep_coherent(struct page *page, size_t size)
+ void *uncached_kernel_address(void *addr);
+ void *cached_kernel_address(void *addr);
+ 
++int arch_dma_set_uncached(void *cpu_addr, size_t size);
++void arch_dma_clear_uncached(void *cpu_addr, size_t size);
++
+ #endif /* _LINUX_DMA_NONCOHERENT_H */
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index 4c103a24e380..7bc0b77f1243 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -83,6 +83,14 @@ config DMA_DIRECT_REMAP
+ 	bool
+ 	select DMA_REMAP
+ 
++#
++# Should be selected if the architecture can remap memory from the page
++# allocator and CMA as uncached and provides the arch_dma_set_uncached and
++# arch_dma_clear_uncached helpers
++#
++config ARCH_HAS_DMA_SET_UNCACHED
++	bool
++
+ config DMA_CMA
+ 	bool "DMA Contiguous Memory Allocator"
+ 	depends on HAVE_DMA_CONTIGUOUS && CMA
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index e37e7ab6e2ee..e2b46001c1b3 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -171,11 +171,8 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 		ret = dma_common_contiguous_remap(page, PAGE_ALIGN(size),
+ 				dma_pgprot(dev, PAGE_KERNEL, attrs),
+ 				__builtin_return_address(0));
+-		if (!ret) {
+-			dma_free_contiguous(dev, page, size);
+-			return ret;
+-		}
+-
++		if (!ret)
++			goto out_free_pages;
+ 		memset(ret, 0, size);
+ 		goto done;
+ 	}
+@@ -188,8 +185,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 		 * so log an error and fail.
+ 		 */
+ 		dev_info(dev, "Rejecting highmem page from CMA.\n");
+-		dma_free_contiguous(dev, page, size);
+-		return NULL;
++		goto out_free_pages;
+ 	}
+ 
+ 	ret = page_address(page);
+@@ -198,10 +194,15 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 
+ 	memset(ret, 0, size);
+ 
+-	if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
+-	    dma_alloc_need_uncached(dev, attrs)) {
++	if (dma_alloc_need_uncached(dev, attrs)) {
+ 		arch_dma_prep_coherent(page, size);
+-		ret = uncached_kernel_address(ret);
++
++		if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED)) {
++			if (!arch_dma_set_uncached(ret, size))
++				goto out_free_pages;
++		} else if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT)) {
++			ret = uncached_kernel_address(ret);
++		}
+ 	}
+ done:
+ 	if (force_dma_unencrypted(dev))
+@@ -209,6 +210,9 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 	else
+ 		*dma_handle = phys_to_dma(dev, page_to_phys(page));
+ 	return ret;
++out_free_pages:
++	dma_free_contiguous(dev, page, size);
++	return NULL;
+ }
+ 
+ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+@@ -232,6 +236,8 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+ 
+ 	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
+ 		vunmap(cpu_addr);
++	else if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED))
++		arch_dma_clear_uncached(cpu_addr, size);
+ 
+ 	dma_free_contiguous(dev, dma_direct_to_page(dev, dma_addr), size);
+ }
+@@ -240,6 +246,7 @@ void *dma_direct_alloc(struct device *dev, size_t size,
+ 		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+ {
+ 	if (!IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
++	    !IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
+ 	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+ 	    dma_alloc_need_uncached(dev, attrs))
+ 		return arch_dma_alloc(dev, size, dma_handle, gfp, attrs);
+@@ -250,6 +257,7 @@ void dma_direct_free(struct device *dev, size_t size,
+ 		void *cpu_addr, dma_addr_t dma_addr, unsigned long attrs)
+ {
+ 	if (!IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
++	    !IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
+ 	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+ 	    dma_alloc_need_uncached(dev, attrs))
+ 		arch_dma_free(dev, size, cpu_addr, dma_addr, attrs);
+-- 
+2.20.1
+
