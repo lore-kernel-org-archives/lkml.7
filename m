@@ -2,92 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F032C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4D5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA96C2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218AE214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573145676;
-	bh=NrSOsZi6jOLY0S57+WA9Ehj9OOtiUIdgVBK+A6ZRj3o=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=naed2CDQJmWikRs5RI8hFFov3eqk4yH5EjvDXbTQ3BRP2UV6SyQItSeYcg6oP/5Vg
-	 nm/pUaTiJwsh3Q74uzKCjSZcEdmk/oTsMBIqmxa0rBkoYsrSe6KhSOSGTCLCCjwKKF
-	 kEhT9c6MxxIeAJUq7gq5wJXxyqTq7e+uXgMbtfV0=
+	s=default; t=1573145724;
+	bh=9Qx3vmFd4+b4Sv1z9J23Cc5K7UoVjXFQY2SKmavGJh8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fKSCy8AKEBR5JTfi5ozXo+rHJFdPVtaTf9PdJcnyj32PuDnZxIkTxJbumfP5rpzcK
+	 62UjfjaBYeKi7CkSaqWwWBMkcp45WY28DrY8Eqt9HEnqfgWQPGBwkbeph7tVMcJ/Gh
+	 FbefwTq1uqTB73T0YDz2Fxrrj2vnqbuPd59alOFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389336AbfKGQyc (ORCPT
+        id S2389651AbfKGQzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:54:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729656AbfKGQyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:54:31 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F0152077C;
-        Thu,  7 Nov 2019 16:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573145670;
-        bh=NrSOsZi6jOLY0S57+WA9Ehj9OOtiUIdgVBK+A6ZRj3o=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=hEaP66T1mEMsezjd0r96IK5fJi75C6B9dAaG3QoHBGcUpcikelUP+gNZ0a/ebtezC
-         pXWhKJGx0w7dCtlJKbGf7h0iS47Ta8tZwZKvXWr/9GpltnxQdT4Ch7TZyy1WXiXot/
-         8YS2SFlvkOOF4o8RfFAVuf07+NXVNIxo1pEfwt8A=
-Subject: Re: KASAN: use-after-free Read in vhci_hub_control
-To:     syzbot <syzbot+600b03e0cf1b73bb23c4@syzkaller.appspotmail.com>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stable@vger.kernel.org,
-        sudipm.mukherjee@gmail.com, syzkaller-bugs@googlegroups.com,
-        valentina.manea.m@gmail.com, shuah <shuah@kernel.org>
-References: <000000000000c460630596c1d40d@google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e312222f-d24e-ad18-1801-e266d6497a6a@kernel.org>
-Date:   Thu, 7 Nov 2019 09:54:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 11:55:23 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35043 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfKGQzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 11:55:22 -0500
+Received: by mail-qk1-f195.google.com with SMTP id i19so2614975qki.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:55:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=40D2HnLK9UafcSefJMy/uC7cBWC9QZTIxI56cVPOeuc=;
+        b=WKAX2juoFaRBQOgbIfuHmV4wQjMyq3ooDWDpbItmlf1q5bA08z2G1sN8bNIszXmNje
+         tA6mmuEMl08JI5BQHkoSfU5e3ZJb/QGxX/0xZO1r7BAelQPkjxeXS9zgRM9alLOwIqIv
+         CpEqxPFMLMzrAPonuNKbQKXJ4g6k7sFSSX1GElxoBZcBYKa7o7ae1eX7xMquzrL2QYwc
+         V5lRX7H4fEWqF8ymNgaRYiXE1AeMScWVnSBAsSAhXNx0pM/8cqwbo+BoqO3j3+toBp14
+         XdSZ+1Qp0fG6lQa5sh11+gTNRR3xVbPZKoD0dXF9Ak8tdtz3mfSk2aJ7uEcBkqCRKgwf
+         jrLQ==
+X-Gm-Message-State: APjAAAURbiz0h3xQynqLi1WmuHqJCh6/YNPN6wJYjwUNyk7Abe6sBuBI
+        RaJZE0a0BzIaU/ObppzFH2w=
+X-Google-Smtp-Source: APXvYqxKgFkNVtel6CxBLRl5CUG7wk4STDC80hHFEp5Q1GrGM9htmtlbCC1VSi/niLEcNWLMFQzLkQ==
+X-Received: by 2002:a37:96c1:: with SMTP id y184mr22815qkd.44.1573145721641;
+        Thu, 07 Nov 2019 08:55:21 -0800 (PST)
+Received: from dennisz-mbp ([2620:10d:c091:500::3:db5f])
+        by smtp.gmail.com with ESMTPSA id y29sm2141100qtc.8.2019.11.07.08.55.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 08:55:20 -0800 (PST)
+Date:   Thu, 7 Nov 2019 11:55:19 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] percpu-refcount: Use normal instead of RCU-sched"
+Message-ID: <20191107165519.GA99408@dennisz-mbp>
+References: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
+ <20191107091319.6zf5tmdi54amtann@linutronix.de>
+ <20191107161749.GA93945@dennisz-mbp>
+ <20191107162842.2qgd3db2cjmmsxeh@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <000000000000c460630596c1d40d@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107162842.2qgd3db2cjmmsxeh@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/7/19 6:42 AM, syzbot wrote:
-> syzbot suspects this bug was fixed by commit:
+On Thu, Nov 07, 2019 at 05:28:42PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-11-07 11:17:49 [-0500], Dennis Zhou wrote:
+> > Hello,
 > 
-> commit 81f7567c51ad97668d1c3a48e8ecc482e64d4161
-> Author: Shuah Khan (Samsung OSG) <shuah@kernel.org>
-> Date:   Fri Oct 5 22:17:44 2018 +0000
+> Hi,
 > 
->      usb: usbip: Fix BUG: KASAN: slab-out-of-bounds in vhci_hub_control()
+> > I just want to clarify a little bit. Is this patch aimed at fixing an
+> > issue with RT kernels specifically? 
 > 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14046c2c600000
-> start commit:   420f51f4 Merge tag 'arm64-fixes' of 
-> git://git.kernel.org/p..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=531a917630d2a492
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=600b03e0cf1b73bb23c4
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1116710a400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119be4ea400000
-> 
-> If the result looks correct, please mark the bug fixed by replying with:
-> 
-> #syz fix: usb: usbip: Fix BUG: KASAN: slab-out-of-bounds in 
-> vhci_hub_control()
-> 
-> For information about bisection process see: 
-> https://goo.gl/tpsmEJ#bisection
+> Due to the implications of preempt_disable() on RT kernels it fixes
+> problems with RT kernels.
 > 
 
-#syz fix: usb: usbip: Fix BUG: KASAN: slab-out-of-bounds in 
-vhci_hub_control()
+Great, do you mind adding this explanation with what the implications
+are in the commit message?
+
+
+> > It'd also be nice to have the
+> > numbers as well as if the kernel was RT or non-RT.
+> 
+> The benchmark was done on a CONFIG_PREEMPT kernel. As said in the commit
+> log, the numbers were mostly the same, I can re-run the test and post
+> numbers if you want them.
+> This patch makes no difference on PREEMPT_NONE or PREEMPT_VOLUNTARY
+> kernels.
+> 
+
+I think a more explicit explanation in the commit message would suffice.
+
+Thanks,
+Dennis
