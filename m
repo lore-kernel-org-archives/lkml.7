@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A89C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C90F2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174C6222C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153706;
-	bh=/C3nLUJIdUuaUnnMf2d3nrdNhD0ts8jtkEY8senWH/w=;
+	s=default; t=1573153709;
+	bh=ktNzO+S3HJOSvFkixFTw2IvreLtpRPHA/eNUz53iQEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OoLFMjNFFYHTgNYj44VJY653LF/keSBIGuUd7vE//kSILKCrm5ibZMbSembXnVao0
-	 8Hwo3qH6OeS4dTbv5ZkIwMYg075W0ietZYcAL43u8MDng9D/o11qrG9zsDejCxYuLU
-	 VQfUNLjxUoUbaeCngW21FAC7YIluruAWR5W6Oxnk=
+	b=E3iIpbDQUYHH7F9wMIzqEJGDbblAp/1Lo91Ru2yweINLhi6HL9OnVzMai/g5IPjnV
+	 noxNZtX6YLU5wZAQjmPY1nlsmCKR0Oec0BnD7+1OjypZry2DlG8S6DyRl3DRzqdheV
+	 OnfTuQfWOvJrXC/bhWRfMmcnYq1A1I0V7Kb9kpuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731093AbfKGTIZ (ORCPT
+        id S1729059AbfKGTIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:08:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:08:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727963AbfKGTIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:08:24 -0500
+        id S1725906AbfKGTIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:08:18 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3502F2084D;
-        Thu,  7 Nov 2019 19:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2EAD2166E;
+        Thu,  7 Nov 2019 19:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153703;
-        bh=/C3nLUJIdUuaUnnMf2d3nrdNhD0ts8jtkEY8senWH/w=;
+        s=default; t=1573153698;
+        bh=ktNzO+S3HJOSvFkixFTw2IvreLtpRPHA/eNUz53iQEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOUY63MK5VtmMJVtMDras9pnHJmM0xaGpnPd6h86SlfOh61bZ5lDWWLNUTZcu4ukP
-         I5nP+3HbvztfrcAWFDJYES4Ydx83GyQ5VUYtLl3mTs8+awna2/OTwck1j97yY5PQ+w
-         7Fcf3PEFdWzNNq79r8MbbPioWahqxuMULPXNN6mw=
+        b=kYxh1Q493NootHMv8zLKNiIVTC4g8yJAzggBtIuQpxUrErluygEuXJxqNWCELSszx
+         TuY0wKlQ8gsbZTJcZPh8kB5Tor1i15d8mnc9ZbtB5tcWpHn+dV+BnXaY0Byg1GFGe6
+         iZmvzv7/GPhoYxrrRPlxwcHvB8LnGXvkhGjWFfgc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Subject: [PATCH 50/63] perf probe: Return a better scope DIE if there is no best scope
-Date:   Thu,  7 Nov 2019 15:59:58 -0300
-Message-Id: <20191107190011.23924-51-acme@kernel.org>
+        Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 49/63] perf annotate: Fix heap overflow
+Date:   Thu,  7 Nov 2019 15:59:57 -0300
+Message-Id: <20191107190011.23924-50-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -63,79 +66,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ian Rogers <irogers@google.com>
 
-Make find_best_scope() returns innermost DIE at given address if there
-is no best matched scope DIE. Since Gcc sometimes generates intuitively
-strange line info which is out of inlined function address range, we
-need this fixup.
+Fix expand_tabs that copies the source lines '\0' and then appends
+another '\0' at a potentially out of bounds address.
 
-Without this, sometimes perf probe failed to probe on a line inside an
-inlined function:
-
-  # perf probe -D ksys_open:3
-  Failed to find scope of probe point.
-    Error: Failed to add events.
-
-With this fix, 'perf probe' can probe it:
-
-  # perf probe -D ksys_open:3
-  p:probe/ksys_open _text+25707308
-  p:probe/ksys_open_1 _text+25710596
-  p:probe/ksys_open_2 _text+25711114
-  p:probe/ksys_open_3 _text+25711343
-  p:probe/ksys_open_4 _text+25714058
-  p:probe/ksys_open_5 _text+2819653
-  p:probe/ksys_open_6 _text+2819701
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157291300887.19771.14936015360963292236.stgit@devnote2
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20191026035644.217548-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 88e17a4f5ac3..582f8c34d93a 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -744,6 +744,16 @@ static int find_best_scope_cb(Dwarf_Die *fn_die, void *data)
- 	return 0;
- }
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ef1866a902c4..bee0fee122f8 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1892,7 +1892,7 @@ static char *expand_tabs(char *line, char **storage, size_t *storage_len)
+ 	}
  
-+/* Return innermost DIE */
-+static int find_inner_scope_cb(Dwarf_Die *fn_die, void *data)
-+{
-+	struct find_scope_param *fsp = data;
-+
-+	memcpy(fsp->die_mem, fn_die, sizeof(Dwarf_Die));
-+	fsp->found = true;
-+	return 1;
-+}
-+
- /* Find an appropriate scope fits to given conditions */
- static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
- {
-@@ -755,8 +765,13 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
- 		.die_mem = die_mem,
- 		.found = false,
- 	};
-+	int ret;
- 
--	cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb, &fsp);
-+	ret = cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb,
-+				   &fsp);
-+	if (!ret && !fsp.found)
-+		cu_walk_functions_at(&pf->cu_die, pf->addr,
-+				     find_inner_scope_cb, &fsp);
- 
- 	return fsp.found ? die_mem : NULL;
- }
+ 	/* Expand the last region. */
+-	len = line_len + 1 - src;
++	len = line_len - src;
+ 	memcpy(&new_line[dst], &line[src], len);
+ 	dst += len;
+ 	new_line[dst] = '\0';
 -- 
 2.21.0
 
