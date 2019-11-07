@@ -2,144 +2,131 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9566EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB501C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C219218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153525;
-	bh=9Uj1Td2gQRLWqpoRXt/3lPpJOKmuBur3ZIO0ExPDuvg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpJHzy29slaFUOCK0j/P3SOOLj58pT3JjnkHwlLd3L3QkPU1wdCdkQXpqtVSma4bt
-	 IPtDMW+wWyV9aF5uQdbL9MQKTRaK0oi0i1DFATJ08wZnPvPizJhBeCJmfGEl2IRUoT
-	 +Ck8Rq9pqQX4kAhc8g27ueVdJTbYsF4K/qLRxYSo=
+	by mail.kernel.org (Postfix) with ESMTP id C1FF221882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:05:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMKqtIsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbfKGTFY (ORCPT
+        id S1728057AbfKGTFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:05:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfKGTFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:05:23 -0500
-Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 494F421882;
-        Thu,  7 Nov 2019 19:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153522;
-        bh=9Uj1Td2gQRLWqpoRXt/3lPpJOKmuBur3ZIO0ExPDuvg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKt6/puHcEd7GsGCxS97HfpQ0nm9tBJEItR30eyZKPxn7EjDh44geei0zrI/NbXgR
-         kPCJpTwgeDa6AZ3TZChFX+N3NXc7fBjnMITEy0eDYtQXg1KzTgJPjGolEPElrYwm8M
-         HOYVWa1N/8ZMNo/wm10ObDyiyey9YCC1UDzBYOhE=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 34/63] perf tools: Splice events onto evlist even on error
-Date:   Thu,  7 Nov 2019 15:59:42 -0300
-Message-Id: <20191107190011.23924-35-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
-References: <20191107190011.23924-1-acme@kernel.org>
+        Thu, 7 Nov 2019 14:05:52 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:43767 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfKGTFw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:05:52 -0500
+Received: by mail-qv1-f67.google.com with SMTP id cg2so1237643qvb.10;
+        Thu, 07 Nov 2019 11:05:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W47odrIZjcYj4z0Bgkfmue2TCHoiOu56PCWwIh8207g=;
+        b=mMKqtIsq5pYYAfZq2O+8PKS6LuoNfzmmsez9yRUYkHSSU/sFfqaFYiuykAOrmHjpdO
+         iPdMku3aBjtDrw1zEfGG1dz17wpBhtqcevu7Lo0iIM8jtfWqkOlyyoIWijjCJq5NVxqB
+         X2xB9wMzKESpobnCUIqgKric4uF6oJHLVbvLT3sRVAbCmSA1sE0rc/+NJibDJJBbwL0/
+         EKXPuRTmPx7JAYngCv7bhF/FJitCOCP4Or/Q30CCMj+cNoZRNTlp/SvSetRPgG+2kkqM
+         Ok1kS5o13/rZYYEOiza/EzqA34y9MN3peKdGtC1itTzYpEzLHQMgk7FPC/Tfg6iCARgF
+         DVUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W47odrIZjcYj4z0Bgkfmue2TCHoiOu56PCWwIh8207g=;
+        b=Pl7lnZ71yU/KJ8qRqKHPodXKS2I9rvbfJVERXO6ckvOq5Ikc7kxYbGXFZr67NaqXs2
+         PcG2yM2O5ojl/TE648qwSSuZ+jVUPgdJKL3HlRw/NymSZkmI80G+8NHGk2txgtQZADCG
+         uaMgOzQ8h2T6ZNUXD25K7RF1PmAO/OUHhBwwI/H1YGP5X0+OmNJsstF0d2o8Rr81/3aI
+         AZUrNN77t4BVfMbUdTXvdE1yA+boCX9wMcRzlT57vEnLq8ehl/8y1r/0yzU9t0tu4KvR
+         IrwMnM2wY7GDNmTentxtnMRuQcvFxSCVlhRbQ6kG83YlNXGGcPVmaj5cKDRWT+mYJ9sX
+         iIKA==
+X-Gm-Message-State: APjAAAVyyVXcNwmiN1ODE5qJ1igVVH44+IFjP0/GUlhSC/Jzm95oJ1Lv
+        VrFaId14nVps9ejIlec2bJ0=
+X-Google-Smtp-Source: APXvYqxhEAzOELijW4I0V72qVYbNj3+14XAXPmhY2Xi5OjfA8i2GcsCy1+UGFSvZBQ+tREInF2pbCg==
+X-Received: by 2002:a0c:a046:: with SMTP id b64mr5088475qva.6.1573153548680;
+        Thu, 07 Nov 2019 11:05:48 -0800 (PST)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id h21sm153692qkj.116.2019.11.07.11.05.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 11:05:48 -0800 (PST)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     Frank.li@nxp.com, corbet@lwn.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [RFC PATCH] Documentation: perf: fix kernel-doc warnings in imx-ddr.rst
+Date:   Thu,  7 Nov 2019 15:57:55 -0300
+Message-Id: <20191107185755.29586-1-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-If event parsing fails the event list is leaked, instead splice the list
-onto the out result and let the caller cleanup.
+Unexpected indentation errors were reported due to missing blank lines.
+Now fixed. No change in content otherwise.
 
-An example input for parse_events found by libFuzzer that reproduces
-this memory leak is 'm{'.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191025180827.191916-5-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- tools/perf/util/parse-events.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ Documentation/admin-guide/perf/imx-ddr.rst | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index db882f630f7e..d36b8129b27a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1927,15 +1927,20 @@ int parse_events(struct evlist *evlist, const char *str,
+diff --git a/Documentation/admin-guide/perf/imx-ddr.rst b/Documentation/admin-guide/perf/imx-ddr.rst
+index 517a205abad6..75c8b46ba6f9 100644
+--- a/Documentation/admin-guide/perf/imx-ddr.rst
++++ b/Documentation/admin-guide/perf/imx-ddr.rst
+@@ -18,6 +18,7 @@ The "format" directory describes format of the config (event ID) and config1
+ devices/imx8_ddr0/format/. The "events" directory describes the events types
+ hardware supported that can be used with perf tool, see /sys/bus/event_source/
+ devices/imx8_ddr0/events/.
++
+   e.g.::
+         perf stat -a -e imx8_ddr0/cycles/ cmd
+         perf stat -a -e imx8_ddr0/read/,imx8_ddr0/write/ cmd
+@@ -31,16 +32,19 @@ in the driver.
+   Filter is defined with two configuration parts:
+   --AXI_ID defines AxID matching value.
+   --AXI_MASKING defines which bits of AxID are meaningful for the matching.
++
+         0：corresponding bit is masked.
+         1: corresponding bit is not masked, i.e. used to do the matching.
  
- 	ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
- 	perf_pmu__parse_cleanup();
+   AXI_ID and AXI_MASKING are mapped on DPCR1 register in performance counter.
+   When non-masked bits are matching corresponding AXI_ID bits then counter is
+   incremented. Perf counter is incremented if
 +
-+	if (!ret && list_empty(&parse_state.list)) {
-+		WARN_ONCE(true, "WARNING: event parser found nothing\n");
-+		return -1;
-+	}
-+
-+	/*
-+	 * Add list to the evlist even with errors to allow callers to clean up.
-+	 */
-+	perf_evlist__splice_list_tail(evlist, &parse_state.list);
-+
- 	if (!ret) {
- 		struct evsel *last;
+           AxID && AXI_MASKING == AXI_ID && AXI_MASKING
  
--		if (list_empty(&parse_state.list)) {
--			WARN_ONCE(true, "WARNING: event parser found nothing\n");
--			return -1;
--		}
--
--		perf_evlist__splice_list_tail(evlist, &parse_state.list);
- 		evlist->nr_groups += parse_state.nr_groups;
- 		last = evlist__last(evlist);
- 		last->cmdline_group_boundary = true;
+   This filter doesn't support filter different AXI ID for axid-read and axid-write
+   event at the same time as this filter is shared between counters.
++
+   e.g.::
+         perf stat -a -e imx8_ddr0/axid-read,axi_mask=0xMMMM,axi_id=0xDDDD/ cmd
+         perf stat -a -e imx8_ddr0/axid-write,axi_mask=0xMMMM,axi_id=0xDDDD/ cmd
+@@ -48,5 +52,6 @@ in the driver.
+   NOTE: axi_mask is inverted in userspace(i.e. set bits are bits to mask), and
+   it will be reverted in driver automatically. so that the user can just specify
+   axi_id to monitor a specific id, rather than having to specify axi_mask.
++
+   e.g.::
+         perf stat -a -e imx8_ddr0/axid-read,axi_id=0x12/ cmd, which will monitor ARID=0x12
 -- 
-2.21.0
+2.24.0
 
