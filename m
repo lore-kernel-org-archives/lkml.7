@@ -2,204 +2,148 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B7DC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376D9C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB7E21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0054D218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="nnELPvHb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W0EvcZZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfKGGBd (ORCPT
+        id S1726927AbfKGGCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:01:33 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35415 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfKGGBc (ORCPT
+        Thu, 7 Nov 2019 01:02:51 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38172 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfKGGCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:01:32 -0500
-Received: by mail-pf1-f195.google.com with SMTP id d13so1685137pfq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 22:01:29 -0800 (PST)
+        Thu, 7 Nov 2019 01:02:51 -0500
+Received: by mail-ot1-f68.google.com with SMTP id v24so1025152otp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 22:02:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e00d5YBmHccKDNwDC/ZSC9s25lwYabyM9BiQUjCXOhw=;
-        b=nnELPvHbtwYJRa+fArupGTgIpR4z/Ph7VSpfIJTTVmMFC9dCABmvCeqnb+b3W5NZ0g
-         9muoOzc1QrjLMMKpKKO3G1b9Zwu3fuADrSCJWyEgVYg8bHM23EuTxgVV12r6txnnzvpz
-         BLjWGzpSg+sleEGE6biXa+Ksob1nmVBtCywNrJUD9l7SeKzoiTSskAVZz8svTv/I4Kjk
-         g/SrP6UfPStX/ZlssnQoyynevXIxZxPc9vGQ1YcM9jdploHIgvFnCKr/Krn1s5EwtI/z
-         lwdpXGf1qL48xKemsxypWhwrlK9PthaCw2ep5q1QTENZbZ2lFrFHC0ebb069rCUSD4W/
-         TZqw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U0ErkhVGaL41tlGkE5V/KZZ/5b46WzaSkkkhcubMXUk=;
+        b=W0EvcZZS99VpCl5NOjb/XyG30Zb5QpgxWFKv42rpG9bcAduwrEGYKLO5+r5GY2/dOZ
+         G97YE5sR0CULxvxBnFamCTSaCYU7JHQUhbmFhbbtNx4YJUm87ND2CPPrY2AoJ6SiNZYs
+         MHJ0nxy5NJxRp5yJfbeRtCzm/CUSi2nh3Z04J0kFvSeBdzKhYxxe4DITy6OlgYLtpUOe
+         rz7C1NAY0aTHsm1HfbRJ8XwwCvvXXL7kueBgctPXfltlBWTX1ZtKZg2W3MTIfkRm52En
+         PxQG7Nrp0IVgFl+0C+T6mzLSridXjcgGOK7G7EWbHfkXXNJf1XjTeu57qK+K5PNm0Weq
+         l4Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=e00d5YBmHccKDNwDC/ZSC9s25lwYabyM9BiQUjCXOhw=;
-        b=IQ2YWygu+R7pekd6X2bMWCmYYAutAFLeG0EUY8B6mrbmMTuHH8S8ot6k2n5ZyL1R/q
-         BY3Ft0V7JTHOxO1F+wjJa1IPLUSKbxoI/ZvyEh9wXNFJKhL/6SMQCY0kEhxSbAC+CR5N
-         lCy6pp9sPPxFeSMyigNJt8aS2pC33FBe2r8x5SjmFXw1FRUZQjHUvLkxpJQAuInDvqYC
-         +YkG3x2xoo5bRxXBnEsCQXvEvsKsKU0SwF107BSRaKp/Pc3DeofX80aLD0JfXZWv0efd
-         P2gX4ohcEz/5+KMHfxs11Ym0PoTrbQJ9W1QWrOe1lssdBZhRKinHy+EaNkPtuLoTpIGK
-         Fk6g==
-X-Gm-Message-State: APjAAAUljNoK+arw054ZZP2uGNAhzPpycb+e9+rKCj232eQvFCM6GLRf
-        Pa/QCPu8senKIVnMQprlhMj19OrP+fo=
-X-Google-Smtp-Source: APXvYqw26KF+stBaP6nGUej8n8EA4QNx+LxQtza98i9RABAtt4qKouJ705ljyKqBLFm4SY9/pnwgww==
-X-Received: by 2002:a63:ce51:: with SMTP id r17mr2301059pgi.16.1573106489073;
-        Wed, 06 Nov 2019 22:01:29 -0800 (PST)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id j7sm925149pgl.38.2019.11.06.22.01.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 22:01:28 -0800 (PST)
-Subject: Re: [RFC v1 0/2] Enable IOMMU support for pseries Secure VMs
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
-        hch@lst.de, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com,
-        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
- <265679db-9cb3-1660-0cf6-97f740b1b48b@ozlabs.ru>
- <20191106130558-mutt-send-email-mst@kernel.org>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <cd60f9ad-7050-188a-8863-10436e6928ca@ozlabs.ru>
-Date:   Thu, 7 Nov 2019 17:01:22 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U0ErkhVGaL41tlGkE5V/KZZ/5b46WzaSkkkhcubMXUk=;
+        b=WZD0VeKkjf+GAIvduMk/VAq/LT5vy58taie1GdUZVo/pzRFvRLZ16d/a59KYyv1IGC
+         p0t6LM1mhZlNApVTbZPMH07lJEk8+XEaXN6Ef7bdCYxx5DMPCyapZoYNJusGLKIBzBxw
+         t3KtJq4VHcbKBhT9Jp66/PHQRt2YpC075ru8RiE8kAc2Ay5mwcVbolPYAuQRP7xABQtk
+         aw9iK2cmwiGPouJcy1aVWB0O5kN4rq41e6fKxSYyUueI6BBYj5lbikvuGQb8SRD+fhaX
+         bTKhZBMuNGk/N8Pt6nViM0gmQElQKXaU5B08MLPWo2G2nCPvAOdixza94eMo1i8fMiz6
+         MoFQ==
+X-Gm-Message-State: APjAAAW7gXnafP9tlEapQ2YSMnqlCrrPhOHxtaVX9yMEw7uZH96L6Z4J
+        6wYu3m1GNKtneCpe/litYeFoOcM+CdYsMrA3oZZG+g==
+X-Google-Smtp-Source: APXvYqyYGqVBSufZwYtm7fzA1QXMCLwa5Z15TPe6y5IAP/FlDrRbiXtUN0V/Vm+bKDLaLeTdGr2lHBDrnvVyxg49Vuk=
+X-Received: by 2002:a9d:6f15:: with SMTP id n21mr1482035otq.231.1573106570092;
+ Wed, 06 Nov 2019 22:02:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191106130558-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191030145112.19738-1-will@kernel.org> <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
+ <20191030155444.GC19096@willie-the-truck> <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
+ <20191031193758.GA2607492@lophozonia> <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
+ <6994ae35-2b89-2feb-2bcb-cffc5a01963c@huawei.com> <CAGETcx-9M8vvHA2Lykcv0hHWoC2OAw5kfBrjcNJN2CYCwR4eWQ@mail.gmail.com>
+ <47418554-e7a7-f9f3-8852-60cecef3d5c7@huawei.com>
+In-Reply-To: <47418554-e7a7-f9f3-8852-60cecef3d5c7@huawei.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 6 Nov 2019 22:02:14 -0800
+Message-ID: <CAGETcx_J=PLVvJm+JCYpS2C+ANa5zojPwu2P5vj4j+O5fEaOAg@mail.gmail.com>
+Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 4, 2019 at 4:16 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 01/11/2019 21:13, Saravana Kannan wrote:
+> > On Fri, Nov 1, 2019 at 3:28 AM John Garry <john.garry@huawei.com> wrote:
+> >>
+> >> On 31/10/2019 23:34, Saravana Kannan via iommu wrote:
+> >>> I looked into the iommu-map property and it shouldn't be too hard to
+> >>> add support for it. Looks like we can simply hold off on probing the
+> >>> root bridge device till all the iommus in its iommu-map are probed and
+> >>> we should be fine.
+> >>>
+> >>>> I'm also unsure about distro vendors agreeing to a mandatory kernel
+> >>>> parameter (of_devlink). Do you plan to eventually enable it by default?
+> >>>>
+> >>>>> static const struct supplier_bindings of_supplier_bindings[] = {
+> >>>>>           { .parse_prop = parse_clocks, },
+> >>>>>           { .parse_prop = parse_interconnects, },
+> >>>>>           { .parse_prop = parse_regulators, },
+> >>>>> +        { .parse_prop = parse_iommus, },
+> >>>>>           {},
+> >>>>> };
+> >>>>>
+> >>>>> I plan to upstream this pretty soon, but I have other patches in
+> >>>>> flight that touch the same file and I'm waiting for those to get
+> >>>>> accepted. I also want to clean up the code a bit to reduce some
+> >>>>> repetition before I add support for more bindings.
+> >>>> I'm also wondering about ACPI support.
+> >>> I'd love to add ACPI support too, but I have zero knowledge of ACPI.
+> >>> I'd be happy to help anyone who wants to add ACPI support that allows
+> >>> ACPI to add device links.
+> >>
+> >> If possible to add, that may be useful for remedying this:
+> >>
+> >> https://lore.kernel.org/linux-iommu/9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com/
+> >
+> > I'm happy that this change might fix that problem, but isn't the
+> > problem reported in that thread more to do with child devices getting
+> > added before the parent probes successfully? That doesn't make sense
+> > to me.
+>
+> So the pcieport device and then the child device are added in the PCI
+> scan, but only some time later do the device drivers probe for these
+> devices; so it's not that the that pcieport driver creates the child device.
 
+My lack of PCI knowledge might be showing, but without the pcieport
+device itself being functional (I'm assuming this is the PCIe
+controller) how does a PCI scan work? In anyway, I understand that all
+devices are added at the same time as of today.
 
-On 07/11/2019 05:06, Michael S. Tsirkin wrote:
-> On Wed, Nov 06, 2019 at 12:59:50PM +1100, Alexey Kardashevskiy wrote:
->>
->>
->> On 05/11/2019 08:28, Ram Pai wrote:
->>> This patch series enables IOMMU support for pseries Secure VMs.
->>>
->>>
->>> Tested using QEMU command line option:
->>>
->>>  "-device virtio-scsi-pci,id=scsi0,bus=pci.0,addr=0x4,
->>>  	iommu_platform=on,disable-modern=off,disable-legacy=on"
->>>  and 
->>>
->>>  "-device virtio-blk-pci,scsi=off,bus=pci.0,
->>>  	addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,
->>>  	iommu_platform=on,disable-modern=off,disable-legacy=on"
->>
->>
->> Worth mentioning that SLOF won't boot with such devices as SLOF does not know about iommu_platform=on.
-> 
-> Shouldn't be hard to support: set up the iommu to allow everything
-> and ack the feature. Right?
+> The problem then occurs in that the ordering the of device driver probe
+> is such that we have this: pcieport probe + defer (as no IOMMU group
+> registered), SMMU probe (registers the IOMMU group), child device probe,
+> pcieport really probe.
+>
+> Can't the piceport driver not add its child devices before it
+> > probes successfully? Or more specifically, who adds the child devices
+> > of the pcieport before the pcieport itself probes?
+>
+> The devices are actually added in order pcieport, child device, but not
+> really probed in that same order, as above.
 
-With the defaults we have (32bit window limited by 1GB and SLOF residing close to the end of the second GB), it is not
-straight forward; also SLOF's XHCI and E1000 already use IOMMU so we should just do this for virtio as well, I am
-hacking it now. Thanks,
+Thanks. Got it.
 
+I guess one nice thing that came out of devicetree world is that the
+child devices are never probed without the parent probing first (I'm
+ignoring the simple-bus devices). It also kinda makes sense to me --
+without a USB port device being added and probed, it doesn't make
+sense to add the (keyboard, mouse, USB-HDD, etc) devices connected to
+the USB port. But this is an orthogonal debate.
 
-
-> 
->>>
->>> Ram Pai (2):
->>>   powerpc/pseries/iommu: Share the per-cpu TCE page with the hypervisor.
->>>   powerpc/pseries/iommu: Use dma_iommu_ops for Secure VMs aswell.
->>>
->>>  arch/powerpc/platforms/pseries/iommu.c | 30 ++++++++++++++++++------------
->>>  1 file changed, 18 insertions(+), 12 deletions(-)
->>>
->>
->> -- 
->> Alexey
-> 
-
--- 
-Alexey
+-Saravana
