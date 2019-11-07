@@ -2,100 +2,195 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B74FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC7FFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E7320869
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eF/HmLvl"
+	by mail.kernel.org (Postfix) with ESMTP id 6D7882178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfKGB45 (ORCPT
+        id S1732606AbfKGB5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:56:57 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:43094 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfKGB45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:56:57 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71s5YH187038;
-        Thu, 7 Nov 2019 01:56:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=hHR5/nxvketnU54a1k1e33bJv4PJgcmLZua+X2UwC5I=;
- b=eF/HmLvludviEdI7FYGvN0fyZo+Y58fqWFjoOYN4lACrGMPNnLKKcvTlYmCgbmlS2+MU
- fHFGW7QlbGrnA/m/v7g6mmk/V31asBxRb61FHsTZUzMNlPTvPVUrRQlH5jKZsvKJMG3z
- wJDdBmR3FJTkVGkszvM72/aiRUaNFOZRtuw9L3fiCEVgLZv0m4ZF1BA0OI+mlxz+MwzN
- MxWPrXo6QfyWFG+EqVlDB1OF/P54jZ7cKV7//fhikgUbzhSNeEKJVI2cHWm47GRh37c+
- hKpI8TmivpqiIrytuWVayss+yZdUdkkgDOtr5gu2ADeT8WMxmAN7r8fSwlNGQrhu8/f5 uQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2w41w0tsjq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 01:56:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71s3wG026240;
-        Thu, 7 Nov 2019 01:56:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w41w8g75p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 01:56:40 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA71ub1N025231;
-        Thu, 7 Nov 2019 01:56:37 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 17:56:37 -0800
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: linux-next: manual merge of the scsi-fixes tree with Linus' tree
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191106082239.5c4d139c@canb.auug.org.au>
-Date:   Wed, 06 Nov 2019 20:56:34 -0500
-In-Reply-To: <20191106082239.5c4d139c@canb.auug.org.au> (Stephen Rothwell's
-        message of "Wed, 6 Nov 2019 08:22:39 +1100")
-Message-ID: <yq1mud8zbxp.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 6 Nov 2019 20:57:08 -0500
+Received: from mga01.intel.com ([192.55.52.88]:46632 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727328AbfKGB5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:57:07 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 17:57:07 -0800
+X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
+   d="scan'208";a="196402574"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 17:57:07 -0800
+Subject: [PATCH v8 00/12] EFI Specific Purpose Memory Support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     mingo@redhat.com
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Keith Busch <kbusch@kernel.org>, Len Brown <lenb@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-efi@vger.kernel.org
+Date:   Wed, 06 Nov 2019 17:42:50 -0800
+Message-ID: <157309097008.1579826.12818463304589384434.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=989
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070018
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070018
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes since v7:
+- This is mostly a resend to get it refreshed in Ingo's inbox for v5.5
+  consideration. It picks up a Reviewed-by on patch4 from Ard, has a
+  minor cosmetic rebase on v5.4-rc6 with no other changes, it merges
+  cleanly with tip/master, and is still passing the test case described in
+  the final patch, but development is otherwise idle over the past 3
+  weeks.
 
-Stephen,
+[1]: https://lkml.kernel.org/r/157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com/
 
-[Looks like this mail didn't go out last night]
+---
+Merge notes:
 
-> 8437bb81853e claims to fix d81e9d494354, however the latter is not an
-> ancestor of the former ...
+Hi Ingo,
 
-Should be fixed now. d81e9d494354 was part of a series that went through
-Jens' tree post -rc1.
+This is ready to go as far as I'm concerned. Please consider merging, or
+acking for Rafael to take, or of course naking if something looks off.
+Rafael had threatened to start taking the standalone ACPI bits through
+his tree, but I have yet to any movement on that in his 'linux-next' or
+'bleeding-edge' tree.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+---
+
+The EFI 2.8 Specification [2] introduces the EFI_MEMORY_SP ("specific
+purpose") memory attribute. This attribute bit replaces the deprecated
+ACPI HMAT "reservation hint" that was introduced in ACPI 6.2 and removed
+in ACPI 6.3.
+
+Given the increasing diversity of memory types that might be advertised
+to the operating system, there is a need for platform firmware to hint
+which memory ranges are free for the OS to use as general purpose memory
+and which ranges are intended for application specific usage. For
+example, an application with prior knowledge of the platform may expect
+to be able to exclusively allocate a precious / limited pool of high
+bandwidth memory. Alternatively, for the general purpose case, the
+operating system may want to make the memory available on a best effort
+basis as a unique numa-node with performance properties by the new
+CONFIG_HMEM_REPORTING [3] facility.
+
+In support of optionally allowing either application-exclusive and
+core-kernel-mm managed access to differentiated memory, claim
+EFI_MEMORY_SP ranges for exposure as "soft reserved" and assigned to a
+device-dax instance by default. Such instances can be directly owned /
+mapped by a platform-topology-aware application. Alternatively, with the
+new kmem facility [4], the administrator has the option to instead
+designate that those memory ranges be hot-added to the core-kernel-mm as
+a unique memory numa-node. In short, allow for the decision about what
+software agent manages soft-reserved memory to be made at runtime.
+
+The patches build on the new HMAT+HMEM_REPORTING facilities merged
+for v5.2-rc1. The implementation is tested with qemu emulation of HMAT
+[5] plus the efi_fake_mem facility for applying the EFI_MEMORY_SP
+attribute. Specific details on reproducing the test configuration are in
+patch 12.
+
+[2]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1cf33aafb84
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
+[5]: http://patchwork.ozlabs.org/cover/1096737/
+
+---
+
+Dan Williams (12):
+      acpi/numa: Establish a new drivers/acpi/numa/ directory
+      efi: Enumerate EFI_MEMORY_SP
+      x86/efi: Push EFI_MEMMAP check into leaf routines
+      efi: Common enable/disable infrastructure for EFI soft reservation
+      x86/efi: EFI soft reservation to E820 enumeration
+      arm/efi: EFI soft reservation to memblock
+      x86/efi: Add efi_fake_mem support for EFI_MEMORY_SP
+      lib: Uplevel the pmem "region" ida to a global allocator
+      dax: Fix alloc_dax_region() compile warning
+      device-dax: Add a driver for "hmem" devices
+      acpi/numa/hmat: Register HMAT at device_initcall level
+      acpi/numa/hmat: Register "soft reserved" memory as an "hmem" device
+
+
+ Documentation/admin-guide/kernel-parameters.txt |   19 +++
+ arch/arm64/mm/mmu.c                             |    2 
+ arch/x86/boot/compressed/eboot.c                |    6 +
+ arch/x86/boot/compressed/kaslr.c                |   46 +++++++-
+ arch/x86/include/asm/e820/types.h               |    8 +
+ arch/x86/include/asm/efi.h                      |   17 +++
+ arch/x86/kernel/e820.c                          |   12 ++
+ arch/x86/kernel/setup.c                         |   18 +--
+ arch/x86/platform/efi/efi.c                     |   54 ++++++++-
+ arch/x86/platform/efi/quirks.c                  |    3 +
+ drivers/acpi/Kconfig                            |    9 --
+ drivers/acpi/Makefile                           |    3 -
+ drivers/acpi/hmat/Makefile                      |    2 
+ drivers/acpi/numa/Kconfig                       |    7 +
+ drivers/acpi/numa/Makefile                      |    3 +
+ drivers/acpi/numa/hmat.c                        |  138 +++++++++++++++++++++--
+ drivers/acpi/numa/srat.c                        |    0 
+ drivers/dax/Kconfig                             |   27 ++++-
+ drivers/dax/Makefile                            |    2 
+ drivers/dax/bus.c                               |    2 
+ drivers/dax/bus.h                               |    2 
+ drivers/dax/dax-private.h                       |    2 
+ drivers/dax/hmem.c                              |   56 +++++++++
+ drivers/firmware/efi/Kconfig                    |   21 ++++
+ drivers/firmware/efi/Makefile                   |    5 +
+ drivers/firmware/efi/arm-init.c                 |    9 ++
+ drivers/firmware/efi/arm-runtime.c              |   24 ++++
+ drivers/firmware/efi/efi.c                      |   13 ++
+ drivers/firmware/efi/esrt.c                     |    3 +
+ drivers/firmware/efi/fake_mem.c                 |   26 ++--
+ drivers/firmware/efi/fake_mem.h                 |   10 ++
+ drivers/firmware/efi/libstub/arm32-stub.c       |    5 +
+ drivers/firmware/efi/libstub/efi-stub-helper.c  |   19 +++
+ drivers/firmware/efi/libstub/random.c           |    4 +
+ drivers/firmware/efi/x86_fake_mem.c             |   69 ++++++++++++
+ drivers/nvdimm/Kconfig                          |    1 
+ drivers/nvdimm/core.c                           |    1 
+ drivers/nvdimm/nd-core.h                        |    1 
+ drivers/nvdimm/region_devs.c                    |   13 +-
+ include/linux/efi.h                             |   16 +++
+ include/linux/ioport.h                          |    1 
+ include/linux/memregion.h                       |   23 ++++
+ lib/Kconfig                                     |    3 +
+ lib/Makefile                                    |    1 
+ lib/memregion.c                                 |   18 +++
+ 45 files changed, 634 insertions(+), 90 deletions(-)
+ delete mode 100644 drivers/acpi/hmat/Makefile
+ rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (75%)
+ create mode 100644 drivers/acpi/numa/Makefile
+ rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (85%)
+ rename drivers/acpi/{numa.c => numa/srat.c} (100%)
+ create mode 100644 drivers/dax/hmem.c
+ create mode 100644 drivers/firmware/efi/fake_mem.h
+ create mode 100644 drivers/firmware/efi/x86_fake_mem.c
+ create mode 100644 include/linux/memregion.h
+ create mode 100644 lib/memregion.c
