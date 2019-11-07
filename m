@@ -2,215 +2,123 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E41C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CA0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E391206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:17:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYZ8JFSE"
+	by mail.kernel.org (Postfix) with ESMTP id CFDCC206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573143474;
+	bh=I3TRsK9lr4vZTQyGRyrYm8+JO0CSGywNXM/jY10z+Jc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JTggfEgXZ6MGI+bdEpDto9AcmMS5odIhUMeLuzC8DWx9qCOZt0pVyJeJ0bufBZ/wV
+	 PK3p5El4ojkpCAzdlEctALSHE+pU1ahduhxUccc+gHbKFcC/lTyc8Hu6X34/NGyXa3
+	 xgUvmIGg/689D5KhxC5ouhsvrqImR7yw1+Fsq5Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389278AbfKGQRG (ORCPT
+        id S2389375AbfKGQRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:17:06 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46535 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388974AbfKGQRG (ORCPT
+        Thu, 7 Nov 2019 11:17:53 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40682 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730057AbfKGQRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:17:06 -0500
-Received: by mail-ed1-f68.google.com with SMTP id x11so2327478eds.13;
-        Thu, 07 Nov 2019 08:17:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Rj+OQ9fW5fICO1poKarjRIu6j7aCw1dDBMbwrlim3o=;
-        b=tYZ8JFSErapfYTa5jHfMMKbVwJpGQ9dOQYiNojnFYVUeM4zvRs5qWEdDtZhBB9kB+3
-         hBZp3J2gQeTpkRFAIGqlOOOgbCAz8hAs8LBT5OrDEdVyD5kqnDfMQMk5YQzTeC/uYbKT
-         vv1N+xXP3eeRAJnDmc4IrF/sDR7M/0EmyuKf13Cys0YJepDnqd/hO2QWvgSK5LLjMePT
-         RsYWfl4Zc8XrhuANlDEt02Iqg5XcaunldRe1l9ZEvKySOwMJFM0mHlNulmfwsJQ8LvkO
-         QlvarDKuu5Kpet1gQ7zMAHfNzwExk6qXi7KwXlV5q2MUUUuBBx9jdx7MIkoLQ5rOOByl
-         69zg==
+        Thu, 7 Nov 2019 11:17:53 -0500
+Received: by mail-qk1-f196.google.com with SMTP id z16so2475270qkg.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:17:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Rj+OQ9fW5fICO1poKarjRIu6j7aCw1dDBMbwrlim3o=;
-        b=I/z+NAiNz+FFi5Ll/OnNdSD9+NXwGIh/GG5wbqqpY1woEVSR6gZytsnHw53v5cQVpm
-         MPvRAuv6h4+5RhfOdSUUjF9j+xZw3SAcoDFXuaXJQkPFUVI7GmFlSKCSLNxrF+hvwbwi
-         c8ebcJ+3rgH/WQ+14b31ApWvr9u3ILNMWkzbKMpyMb8K/SzOZqNSGhlHUiSsPjrWyyc4
-         XJAlkWIl1lRhQBbbLmUIJ4iGqPoC1HSJw7xo05y2cf6LY9/g1aV7bWyWw+D96HeKwD8U
-         KXrXlvFUgCNjFitIQk+Yd3+WvwUDDyy6NN3n7NDm/u2lB5ye3KDColokiQz69LVwfKz/
-         ehvw==
-X-Gm-Message-State: APjAAAUunilLpCN7LRLWMLnTpnDo0VD5runMKaRrMrYl1w5AYvIYm0K5
-        7AeMT/NzgyuJ1+amJ5Xacl629LSlyFzi86cores=
-X-Google-Smtp-Source: APXvYqx4Ba4RatZKWYV5NZJ6LR9XHfYgGAtCJlASQobC+3T0EUekpM2/K8yeJtzZuRVGSFbT5OrDP05ZVxOiktvM51U=
-X-Received: by 2002:aa7:cf8b:: with SMTP id z11mr4480262edx.294.1573143421835;
- Thu, 07 Nov 2019 08:17:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=dYr8Ef7OO1iYcDeJZqmz3VmJ1srDKDk+GdYU413QJIM=;
+        b=LAZfAqjyttXKDwvNjlLDkyz5fKssu6YWtD4+TSlMKp5YrXocv8Ji5kwH8zsD/oWmaX
+         473AujMn+heQeEseTj9E/ZqSheKbh4HXjudOaXP40dxUvxsj9OJH/MKaGts8KbZ8MNoj
+         u0Ez15D5dFA4kcJN/7Jnhv3TLfER/qBDsVFHgJ8l5ORvgp657Dn8z0DpS6tYTX4Y1T4M
+         Pbt/F39lC5OoW+CvVpT+9eEEwjm3vyvLbyIH5NShrSKj/AnqYVBC696IdHLrz1DyWz8x
+         KAjxKpqIclHjsww2JZQFyzv5FQDVYQRn8urIbc8mHs9lIBuLmYE801Moc5FpiA7bRtfo
+         kn0A==
+X-Gm-Message-State: APjAAAW1n2p4yqYIsxEiBb4sYXvgs2FZrz2/K6GnXZwWAivIj0w3dGfM
+        4oHs/l8COBxraiXtPMuXsps=
+X-Google-Smtp-Source: APXvYqx1F/o7sNloPWfDkD0XSyduNgGg7EOKBPlZhFqT8m3ZXetXdTmgbx0U6dTrcVt62WgKSoM7Og==
+X-Received: by 2002:a37:9bc2:: with SMTP id d185mr3432827qke.299.1573143472238;
+        Thu, 07 Nov 2019 08:17:52 -0800 (PST)
+Received: from dennisz-mbp ([2620:10d:c091:500::3:db5f])
+        by smtp.gmail.com with ESMTPSA id j71sm1576484qke.90.2019.11.07.08.17.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 08:17:51 -0800 (PST)
+Date:   Thu, 7 Nov 2019 11:17:49 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] percpu-refcount: Use normal instead of RCU-sched"
+Message-ID: <20191107161749.GA93945@dennisz-mbp>
+References: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
+ <20191107091319.6zf5tmdi54amtann@linutronix.de>
 MIME-Version: 1.0
-References: <20191105000129.GA6536@onstation.org> <CAF6AEGv3gs+LFOP3AGthXd4niFb_XYOuwLfEa2G9eb27b1wMMA@mail.gmail.com>
- <20191105100804.GA9492@onstation.org> <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
- <20191106091335.GA16729@onstation.org> <CAF6AEGuEO1jg6KhOFWEMUjq4ZQy5w61dWJk6uLWRzHnMZYZv=g@mail.gmail.com>
- <CAOCk7NomH2MsZ+FvPFAMWeabOFpyOwODCb_Ro07v+2k2v_C4NA@mail.gmail.com>
- <CAF6AEGsZkJJTNZ8SzHsSioEnkpekr1Texu5_EeBW1hP-bsOyjQ@mail.gmail.com> <20191107111019.GA24028@onstation.org>
-In-Reply-To: <20191107111019.GA24028@onstation.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 7 Nov 2019 08:16:50 -0800
-Message-ID: <CAF6AEGtbP=X2+DELajQq9zMZYGgmhyUhe62ncvHvyFnyZexTXg@mail.gmail.com>
-Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async commit changes
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191107091319.6zf5tmdi54amtann@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 3:10 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Wed, Nov 06, 2019 at 08:58:59AM -0800, Rob Clark wrote:
-> > On Wed, Nov 6, 2019 at 8:47 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> > >
-> > > On Wed, Nov 6, 2019 at 9:30 AM Rob Clark <robdclark@gmail.com> wrote:
-> > > >
-> > > > On Wed, Nov 6, 2019 at 1:13 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > >
-> > > > > On Tue, Nov 05, 2019 at 08:23:27AM -0800, Rob Clark wrote:
-> > > > > > On Tue, Nov 5, 2019 at 2:08 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > > > > The 'pp done time out' errors go away if I revert the following three
-> > > > > > > commits:
-> > > > > > >
-> > > > > > > cd6d923167b1 ("drm/msm/dpu: async commit support")
-> > > > > > > d934a712c5e6 ("drm/msm: add atomic traces")
-> > > > > > > 2d99ced787e3 ("drm/msm: async commit support")
-> > > > > > >
-> > > > > > > I reverted the first one to fix a compiler error, and the second one so
-> > > > > > > that the last patch can be reverted without any merge conflicts.
-> > > > > > >
-> > > > > > > I see that crtc_flush() calls mdp5_ctl_commit(). I tried to use
-> > > > > > > crtc_flush_all() in mdp5_flush_commit() and the contents of the frame
-> > > > > > > buffer dance around the screen like its out of sync. I renamed
-> > > > > > > crtc_flush_all() to mdp5_crtc_flush_all() and removed the static
-> > > > > > > declaration. Here's the relevant part of what I tried:
-> > > > > > >
-> > > > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > > > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > > > > > > @@ -171,7 +171,15 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
-> > > > > > >
-> > > > > > >  static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
-> > > > > > >  {
-> > > > > > > -       /* TODO */
-> > > > > > > +       struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
-> > > > > > > +       struct drm_crtc *crtc;
-> > > > > > > +
-> > > > > > > +       for_each_crtc_mask(mdp5_kms->dev, crtc, crtc_mask) {
-> > > > > > > +               if (!crtc->state->active)
-> > > > > > > +                       continue;
-> > > > > > > +
-> > > > > > > +               mdp5_crtc_flush_all(crtc);
-> > > > > > > +       }
-> > > > > > >  }
-> > > > > > >
-> > > > > > > Any tips would be appreciated.
-> > > > > >
-> > > > > >
-> > > > > > I think this is along the lines of what we need to enable async commit
-> > > > > > for mdp5 (but also removing the flush from the atomic-commit path)..
-> > > > > > the principle behind the async commit is to do all the atomic state
-> > > > > > commit normally, but defer writing the flush bits.  This way, if you
-> > > > > > get another async update before the next vblank, you just apply it
-> > > > > > immediately instead of waiting for vblank.
-> > > > > >
-> > > > > > But I guess you are on a command mode panel, if I remember?  Which is
-> > > > > > a case I didn't have a way to test.  And I'm not entirely about how
-> > > > > > kms_funcs->vsync_time() should be implemented for cmd mode panels.
-> > > > >
-> > > > > Yes, this is a command-mode panel and there's no hardware frame counter
-> > > > > available. The key to getting the display working on this phone was this
-> > > > > patch:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2bab52af6fe68c43b327a57e5ce5fc10eefdfadf
-> > > > >
-> > > > > > That all said, I think we should first fix what is broken, before
-> > > > > > worrying about extending async commit support to mdp5.. which
-> > > > > > shouldn't hit the async==true path, due to not implementing
-> > > > > > kms_funcs->vsync_time().
-> > > > > >
-> > > > > > What I think is going on is that, in the cmd mode case,
-> > > > > > mdp5_wait_flush() (indirectly) calls mdp5_crtc_wait_for_pp_done(),
-> > > > > > which waits for a pp-done irq regardless of whether there is a flush
-> > > > > > in progress.  Since there is no flush pending, the irq never comes.
-> > > > > > But the expectation is that kms_funcs->wait_flush() returns
-> > > > > > immediately if there is nothing to wait for.
-> > > > >
-> > > > > I don't think that's happening in this case. I added some pr_info()
-> > > > > statements to request_pp_done_pending() and mdp5_crtc_pp_done_irq().
-> > > > > Here's the first two sets of messages that appear in dmesg:
-> > > > >
-> > > > > [   14.018907] msm fd900000.mdss: pp done time out, lm=0
-> > > > > [   14.018993] request_pp_done_pending: HERE
-> > > > > [   14.074208] mdp5_crtc_pp_done_irq: HERE
-> > > > > [   14.074368] Console: switching to colour frame buffer device 135x120
-> > > > > [   14.138938] msm fd900000.mdss: pp done time out, lm=0
-> > > > > [   14.139021] request_pp_done_pending: HERE
-> > > > > [   14.158097] mdp5_crtc_pp_done_irq: HERE
-> > > > >
-> > > > > The messages go on like this with the same pattern.
-> > > > >
-> > > > > I tried two different changes:
-> > > > >
-> > > > > 1) I moved the request_pp_done_pending() and corresponding if statement
-> > > > >    from mdp5_crtc_atomic_flush() and into mdp5_crtc_atomic_begin().
-> > > > >
-> > > > > 2) I increased the timeout in wait_for_completion_timeout() by several
-> > > > >    increments; all the way to 5 seconds.
-> > > >
-> > > > increasing the timeout won't help, because the pp-done irq has already
-> > > > come at the point where we wait for it..
-> > > >
-> > > > maybe the easy thing is just add mdp5_crtc->needs_pp, set to true
-> > > > before requesting, and false when we get the irq.. and then
-> > > > mdp5_crtc_wait_for_pp_done() just returns if needs_pp==false..
-> > >
-> > > On the otherhand, what about trying to make command mode panels
-> > > resemble video mode panels slightly?  Video mode panels have a vsync
-> > > counter in hardware, which is missing from command mode - however it
-> > > seems like the driver/drm framework would prefer such a counter.
-> > > Would it be a reasonable idea to make a software counter, and just
-> > > increment it every time the pp_done irq is triggered?
-> > >
-> > > I'm just thinking that we'll avoid issues long term by trying to make
-> > > the code common, rather than diverging it for the two modes.
-> > >
-> >
-> > *possibly*, but I think we want to account somehow periods where
-> > display is not updated.
-> >
-> > fwiw, it isn't that uncommon for userspace to use vblanks to "keep
-> > time" (drive animations for desktop switch, window
-> > maximize/unmaximize, etc).. it could be a surprise when "vblank" is
-> > not periodic.
->
-> What do you think about using some variation of the current value of
-> jiffies in the kernel + the number of pp_done IRQs as the software
-> counter for command-mode panels?
->
+On Thu, Nov 07, 2019 at 10:13:19AM +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-10-02 13:22:53 [+0200], To linux-kernel@vger.kernel.org wrote:
+> > This is a revert of commit
+> >    a4244454df129 ("percpu-refcount: use RCU-sched insted of normal RCU")
+> > 
+> > which claims the only reason for using RCU-sched is
+> >    "rcu_read_[un]lock() … are slightly more expensive than preempt_disable/enable()"
+> > 
+> > and
+> >     "As the RCU critical sections are extremely short, using sched-RCU
+> >     shouldn't have any latency implications."
+> > 
+> > The problem with using RCU-sched here is that it disables preemption and
+> > the callback must not acquire any sleeping locks like spinlock_t on
+> > PREEMPT_RT which is the case with some of the users.
+> > 
+> > Using rcu_read_lock() on PREEMPTION=n kernels is not any different
+> > compared to rcu_read_lock_sched(). On PREEMPTION=y kernels there are
+> > already performance issues due to additional preemption points.
+> > Looking at the code, the rcu_read_lock() is just an increment and unlock
+> > is almost just a decrement unless there is something special to do. Both
+> > are functions while disabling preemption is inlined.
+> > Doing a small benchmark, the minimal amount of time required was mostly
+> > the same. The average time required was higher due to the higher MAX
+> > value (which could be preemption). With DEBUG_PREEMPT=y it is
+> > rcu_read_lock_sched() that takes a little longer due to the additional
+> > debug code.
+> > 
+> > Convert back to normal RCU.
+> 
+> a gentle ping.
+> 
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > ---
+> > 
+> > Benchmark https://breakpoint.cc/percpu_test.patch
+> 
+> 
+> Sebastian
 
-jiffies is probably too coarse.. but we could use monotonic clock, I guess.
+Hello,
 
-But I suppose even a cmd mode panel has a "vblank", it is just
-internal the panel.  Do we get the TE interrupt at regular intervals?
-AFAIU this would be tied to the panel's internal vblank.
+I just want to clarify a little bit. Is this patch aimed at fixing an
+issue with RT kernels specifically? It'd also be nice to have the
+numbers as well as if the kernel was RT or non-RT.
 
-BR,
--R
+Thanks,
+Dennis
