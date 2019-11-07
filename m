@@ -6,63 +6,64 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8614DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECA5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD8121882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D705C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=softbankrobotics.com header.i=@softbankrobotics.com header.b="DewvGuNh"
+	dkim=pass (2048-bit key) header.d=softbankrobotics.com header.i=@softbankrobotics.com header.b="W0xKGXpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388664AbfKGPU1 (ORCPT
+        id S2388724AbfKGPVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:20:27 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:44986 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbfKGPU1 (ORCPT
+        Thu, 7 Nov 2019 10:21:11 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:38144 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729954AbfKGPVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:20:27 -0500
-Received: by mail-yw1-f66.google.com with SMTP id p128so691308ywc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:20:25 -0800 (PST)
+        Thu, 7 Nov 2019 10:21:11 -0500
+Received: by mail-yb1-f196.google.com with SMTP id b11so411105ybj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:21:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=softbankrobotics.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=18TLb91SzT2x0R/+396U6JSLyNNqAB8XVEkq7aB6mlk=;
-        b=DewvGuNhgkHP8qP2WCxwxrCvqhGi0nEa5jNfkHYGmIxj4+NdxIYnac6jrWWkzqSmzd
-         JISNZ45acf413XEzpEzO4WDO52DEGQgBK5nGP//TJnli5V4eY6vM9ac/M2CZ1/30H1JV
-         uSyYbgqakRYBG2A+rPyZDkMRfeUsYNm1n9ZAIctCyo5K3xPxVOHZF23RjYRXWU4UB0vh
-         SX9OGtjLpucTu8hBzpX0RUL/3vQMJVkcv+pV1GtgcpGSALHddoJo0wGRas6kQXoeQUt+
-         qddqcCdX2rNsEsxk8UvpJRX8r8poOLIf3ANuWcy4nR5rf5wINPHm2Pa1WyWaN4+OneHu
-         c1RA==
+        bh=1acTtONRgb0usuJaFUKddbXdLV9J2Ws9ySjq9JH1O8w=;
+        b=W0xKGXpz7bBo4GhKfvhNjyJ3DWXTjk/DcrakRNDQI8I8isyDwNkdDtEzwiQQTHeGHZ
+         FTFUB/PvzAahBWKK+KJMCJ1gV/4Sv7RaNcTleYVw5JPQiXQwq5t73YBeE4iKQhNtFDza
+         cOuj0mmsyWz+iuq+OPJloZFi+v//kRxwml1SMeCUFFRKJ5IPZ0FaOS+LvcJyv39A3paX
+         2mKn1kYfBeW41EQHEw3PeYAaM6RxeNeRE/30I2tWU9zF5rZabVKOH538QfMoEM8ShmMl
+         ZfDbyuf6iqq9/ABZAjD3FIAXCfGW5+2ivDxPrJZGpV/PIfP8RhhPWr+p+mFGQAwIB2JE
+         OQHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=18TLb91SzT2x0R/+396U6JSLyNNqAB8XVEkq7aB6mlk=;
-        b=nojGxIAlmEmt8sm9Yst+ShFtzHUiTLexYT9m1A8ZTHvG0acybZlrKkvOaKf59SH4lg
-         p7liXecJ7HKgo82iDmc+/nPG5fjVzT4lmoeWk1ef1G10XtVvEdDTKCTT8oOdpXpKjS7A
-         lb4JxNs461M8ILAeOxebru3WoubiMeyxxOsC/T3TABkqFy2Uyyi9lHX4YBAlvn7hu/g8
-         wJMBUOZymCRgctIKdvytHvUXxtOldVLfGZ4Zz/BVCuot17Zim/vLY7cnv+/CL8YBbK0g
-         zBePO1mfVAZWoKOF9IwvYxgRgtSvSFT8m6sbb2UO9KwVeiyHQ6Co0mo82pVoLqZyczgQ
-         /iXA==
-X-Gm-Message-State: APjAAAXtWnBum18YvW1XtuzQCfDCrFaRkZ79aruOHHrGnLY71a0Dufhe
-        /4nvLwJxBg+haRHWZzDQNuBSq2x9gU31s5bcl1wSlchiI65G+KsX90uKFU3gWNsd9iL8cytklow
-        iHddQzSvVzzSEnMe0MfuyEBhRAs26w4M=
-X-Google-Smtp-Source: APXvYqxswHnO3u8l/PozS38LwoBMyGav1VM8lSB94X/NFkBvej0uzf7oh1fGSwxh/+CmB/LtdCrgXlQH6bLLfGp+p2Y=
-X-Received: by 2002:a0d:f9c6:: with SMTP id j189mr2802766ywf.34.1573140024613;
- Thu, 07 Nov 2019 07:20:24 -0800 (PST)
+        bh=1acTtONRgb0usuJaFUKddbXdLV9J2Ws9ySjq9JH1O8w=;
+        b=MFak08t2SJBXmulo/3utkGKDonZBwYn67L7k4v0d17mkmaw+XPxgZD5agjVJQTAJJB
+         XfDGWZfAdHOfcYGqeHe5hAmFB6WyU/9mmJlQDjXvZVVCDMpX+vmDEStseui2qOm7dYRc
+         pIcQkKWFUdTryFqNSdMz5XJSRlJVKbyXKiilaiCqjbf4CeWEiIDGXgwrR6tC04Fweyxr
+         YV8jSlZrVL3NYB4kVQjlZxsrkn+K96qV/y7pzlC7gM9z+xMuSQVPKKPrec4C5QO2a1Vx
+         rIMQaeRC5UwS3VkwcHg+GIeapXZ6ZJzzSZdMLUgHnZxuErNtSQCx6KRsFt4ni5WxWhFd
+         fcqQ==
+X-Gm-Message-State: APjAAAUbxBMslTK9Szj54wpMwN8Gy6cRsz8QSkpU91S2ZmDbkBySmBRh
+        bQd2/Kl0NuMV7VuyIkdwj1eUcIF8GWLVJ/YoYkX4ivuYf/U9hRtwiZHNDUAtywO+J5HTPxPwCGj
+        HQW8wfek2Ttc1BWdtYjTP3oVBGrkoTGw=
+X-Google-Smtp-Source: APXvYqx7EmjM+t4xin/Z0yi/k2ooVrTiv80qyGjcFmMoKt/Qrm/FEhkrqssKnn5ji0lB0fdEHsnIU6gRF+6cP0q7TxE=
+X-Received: by 2002:a25:c791:: with SMTP id w139mr3505225ybe.300.1573140068994;
+ Thu, 07 Nov 2019 07:21:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20191107000917.1092409-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191107000917.1092409-1-bjorn.andersson@linaro.org>
+References: <20191107002247.1127689-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20191107002247.1127689-1-bjorn.andersson@linaro.org>
 From:   Julien Massot <jmassot@softbankrobotics.com>
-Date:   Thu, 7 Nov 2019 16:20:13 +0100
-Message-ID: <CADGp=Qd-5oSkWMNzyjpDJhXuS9cmT0g2Ofg=yq+cdVnunf9-hA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] phy: qcom-qmp: Add SDM845 QMP and QHP PHYs
+Date:   Thu, 7 Nov 2019 16:20:58 +0100
+Message-ID: <CADGp=QdLjo_S6_t1t95d5CiHpkHU5qrTmo-eRtFaFga1TLeWhg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] arm64: dts: qcom: sdm845: Add PCIe nodes
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,11 +73,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Bjorn,
 
-On Thu, Nov 7, 2019 at 1:09 AM Bjorn Andersson
+On Thu, Nov 7, 2019 at 1:22 AM Bjorn Andersson
 <bjorn.andersson@linaro.org> wrote:
 >
-> Add support for the two PCIe PHYs found in Qualcomm SDM845.
->
+> Add PCIe controller and PHY nodes for SDM845 and enable them for the
+> Dragonboard 845c.
 
 Thanks a lot the gen 3 PCIE works on my 845 platform.
 Tested-by: Julien Massot <jmassot@softbankrobotics.com>
