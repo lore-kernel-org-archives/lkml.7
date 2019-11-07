@@ -2,326 +2,246 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE95FC6197
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996D6C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4DE2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573137344;
-	bh=wwLmrh0U00tbD/J8CgxKi0nU5QepQNXQI2i3g4NanWQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tSdFD5OWappHeaFof9gCblh/KNBssn7ALnRO0xTMSsDJTttR+qXRaPxB16mEf6dvN
-	 hHjAHIBDgX8OSclZXpd2cgONtYBb0CmvCYMSjpO6QBJvxPz+5PZsxRHre9r82YQ3j5
-	 dINx3K/oKEXyGNG3qE/LKbOiCHB+poNdlbMd208I=
+	by mail.kernel.org (Postfix) with ESMTP id 6434A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:35:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p609bKDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388496AbfKGOfn (ORCPT
+        id S2389167AbfKGOf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:35:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfKGOfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:35:42 -0500
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF5092187F;
-        Thu,  7 Nov 2019 14:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573137341;
-        bh=wwLmrh0U00tbD/J8CgxKi0nU5QepQNXQI2i3g4NanWQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AWCcCALH0IdprOT6EOBeEU2bRU74AF3nAR3TU+qhcwWqhk5AdhJUBTXXA3YrKyKDL
-         3d8mVl8+mx1evV26o9p+eJHp76Hqw26y5G8ca2dff3vbkeRbM7nz9j7ZcjgrvMvK64
-         gdyKMNy8gvUNajnjyzulJ9IqjLwI1awh3pXg2gqs=
-Received: by mail-qt1-f170.google.com with SMTP id y10so2617375qto.3;
-        Thu, 07 Nov 2019 06:35:40 -0800 (PST)
-X-Gm-Message-State: APjAAAVDWscfS84bfQssb8/vegV52JRll6a52RoDRFM4TN+bUC2zSekc
-        nrfn8mxflRLJZJRzb6I49xIgroTi0bvy33Cd8w==
-X-Google-Smtp-Source: APXvYqywGsSvcRTD5YG/9hLGCfgaArfaDxMX3Lkcr8Tk735sKkk8K0pZPwxkHFh8E/5JXs2wexLG2hxPzDM6/P4dwkc=
-X-Received: by 2002:ac8:73ce:: with SMTP id v14mr4149162qtp.136.1573137339809;
- Thu, 07 Nov 2019 06:35:39 -0800 (PST)
+        Thu, 7 Nov 2019 09:35:57 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:46510 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfKGOf4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:35:56 -0500
+Received: by mail-yb1-f193.google.com with SMTP id g17so979540ybd.13;
+        Thu, 07 Nov 2019 06:35:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cCJqsx/ftlwibAsAJ5Vcy0JA49jWm4p8qE8hfVDsfVk=;
+        b=p609bKDpHCoHQfbM/eGZgG96SmANx4wFD92aOiUSmPx5mI7JQb5iusZm7PMGjBE0Ur
+         WeK+YljlXYEK2ZWCFagZr7d2o3eoov4TZUw9MXsXfrdJ6v98qDqmFyj1P3tTD931PPBa
+         tCwaFuEHWd65r52ozGGDMdSNYgwZQBnCN9YimJFvUAYgJGkw8uWYTRICATCF1hko1yn0
+         FmUGCcxP8CYFZeoJ1UvtOIfL0LkrGbRWZt2l9ck4MF/ahw7CWemncTIvCwwQXTi1EgII
+         n11omcKJxXVfsYb6mLc4Hu78PO1RIZdLiQDcYi9wQot8m9nr+1rOmh9TW3UppuFlhjbQ
+         JZDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cCJqsx/ftlwibAsAJ5Vcy0JA49jWm4p8qE8hfVDsfVk=;
+        b=SpePYLVDVe3yK4trJNNJBgS/dZSbiztoU433ywbp4EurRxY/wGiloiCE4XmO10nmgu
+         0mSrJ4jXAA5akzh9qymJN13YAqbqIFBNgOHf/sa2mjwMrc/OA5G7JOHLnIsgmVrRQfVK
+         XLSKxHW7KBKwvJrUsRlyGe9aU837bnnNQPKIcnjx8UjFOpH91LmJfb1veWOdh1OTgOCq
+         d8CHQPH7WLQ12qIcze0L1n4EeAxfxKwVXPF7nt2go1pWkqD1QvDiZN0eiGFZ1zZSev5P
+         D6hvaByIdtj+jhKzEfMU68TwEnWC0+MXrngBbgOM6UrCgXLeye+4UXsWwyG3IWKEF2R7
+         A+AQ==
+X-Gm-Message-State: APjAAAV0X1zmcreIgDzyR9yrbxJWpaUsaj62f1hbx3BxgPeny+/5dClP
+        8NjcngrASgS09BE54vnAqFnZEdZg9tHhrQWCzp4=
+X-Google-Smtp-Source: APXvYqyMWpVj32FzQRayhpTWpWdlFXd3D4KTz3BmEyqk9mEJsRvKERSKWHPspwqvIWQCC2SxnvCjPuu22GSaPnAZcbM=
+X-Received: by 2002:a25:c781:: with SMTP id w123mr3644320ybe.509.1573137355279;
+ Thu, 07 Nov 2019 06:35:55 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1573124770.git.hns@goldelico.com> <4292cec1fd82cbd7d42742d749557adb01705574.1573124770.git.hns@goldelico.com>
-In-Reply-To: <4292cec1fd82cbd7d42742d749557adb01705574.1573124770.git.hns@goldelico.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 7 Nov 2019 08:35:27 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+ri3AXb=qhedBzQ6WufLm4aPrSqNxXiHd3_=mH3vJ8xw@mail.gmail.com>
-Message-ID: <CAL_Jsq+ri3AXb=qhedBzQ6WufLm4aPrSqNxXiHd3_=mH3vJ8xw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] RFC: dt-bindings: add img,pvrsgx.yaml for
- Imagination GPUs
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
+References: <1573002091-9744-1-git-send-email-gkulkarni@marvell.com>
+ <1573002091-9744-2-git-send-email-gkulkarni@marvell.com> <20191106112810.GA50610@lakrids.cambridge.arm.com>
+ <CAKTKpr6U8gUp4C9muN2cL4wn33o2LAa5QnTO2MSmfnBz8oUc=Q@mail.gmail.com>
+In-Reply-To: <CAKTKpr6U8gUp4C9muN2cL4wn33o2LAa5QnTO2MSmfnBz8oUc=Q@mail.gmail.com>
+From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
+Date:   Thu, 7 Nov 2019 06:35:44 -0800
+Message-ID: <CAKTKpr7za2-s0Ayf2AAW5CJ9WQk9smtTAbsjpiFgEg4+wevK7A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf/core: Adding capability to disable PMUs event multiplexing
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        openpvrsgx-devgroup@letux.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 5:06 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+Hi Mark,
+
+On Wed, Nov 6, 2019 at 3:28 PM Ganapatrao Kulkarni <gklkml16@gmail.com> wrote:
 >
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
-> and others.
+> Hi Peter, Mark,
 >
-> With this binding, we describe how the SGX processor is
-> interfaced to the SoC (registers, interrupt etc.).
+> On Wed, Nov 6, 2019 at 3:28 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Wed, Nov 06, 2019 at 01:01:40AM +0000, Ganapatrao Prabhakerrao Kulkarni wrote:
+> > > When PMUs are registered, perf core enables event multiplexing
+> > > support by default. There is no provision for PMUs to disable
+> > > event multiplexing, if PMUs want to disable due to unavoidable
+> > > circumstances like hardware errata etc.
+> > >
+> > > Adding PMU capability flag PERF_PMU_CAP_NO_MUX_EVENTS and support
+> > > to allow PMUs to explicitly disable event multiplexing.
+> >
+> > Even without multiplexing, this PMU activity can happen when switching
+> > tasks, or when creating/destroying events, so as-is I don't think this
+> > makes much sense.
+> >
+> > If there's an erratum whereby heavy access to the PMU can lockup the
+> > core, and it's possible to workaround that by minimzing accesses, that
+> > should be done in the back-end PMU driver.
 >
-> Clock, Reset and power management should be handled
-> by a parent node or elsewhere.
-
-That's probably TI specific...
-
-> ---
+> As said in errata,  If there are heavy access to memory like stream
+> application running and along with that if PMU control registers are
+> also accessed frequently, then CPU lockup is seen.
 >
-> I have used the doc2yaml script to get a first veryion
-> but I am still stuggling with the yaml thing. My impression
-> is that while it is human readable, it is not very human
-> writable... Unfortunately I haven't found a good tutorial
-> for Dummies (like me) for bindings in YAML.
-
-Did you read .../bindings/example-schema.yaml? It explains the common
-cases and what schema are doing. I recently added to it, so look at
-the version in linux-next.
-
-> The big problem is not the YAML syntax but what the schema
-> should contain and how to correctly formulate ideas in this
-> new language.
+> I ran perf stat with 4 events of thuderx2 PMU as well as with 6 events
+> for stream application.
+> For 4 events run, there is no event multiplexing, where as for 6
+> events run the events are multiplexed.
 >
-> Specific questions for this RFC:
+> For 4 event run:
+> No of times pmu->add is called: 10
+> No of times pmu->del is called: 10
+> No of times pmu->read is called: 310
 >
-> * formatting: is space/tab indentation correct?
-
-YAML requires spaces.
-
-> * are strings with "" correct or without?
-
-Generally only keys or values starting with '#' need quotes. There's
-other cases, but we simply don't hit them with DT. We tend to quote
-$ref values, but that's not strictly needed.
-
-> * how do I specify that there is a list of compatible strings required in a specific order?
-
-An 'items' list defines the order.
-
-> * but there are multiple such lists, and only one of them is to be chosen?
-
-                                                ^^^^^^
-'oneOf' is the schema keyword you are looking for.
-
-> * how can be described in the binding that there should be certain values in
->   the parent node (ranges) to make it work?
-
-You can't. Schemas match on a node and work down from there. So you
-can do it, but it's more complicated. You'd need a custom 'select'
-select that matches on the parent node having the child node you are
-looking for (assuming the parent is something generic like
-'simple-bus' which you can't match on). However, based on the example,
-I'd say checking 'ranges' is outside the scope of schema checks.
-'ranges' doesn't have to be a certain value any more than every case
-of 'reg' (except maybe i2c devices with fixed addresses). It's up to
-the .dts author how exactly to do address translation.
-
-I would like to have more ranges/reg checks such as bounds checks and
-overlapping addresses, but I think we'd do those with code, not
-schema.
-
-> I was not able to run
+> For 6 events run:
+> No of times pmu->add is called: 5216
+> No of times pmu->del is called: 5216
+> No of times pmu->read is called: 5216
 >
->         make dt_binding_check dtbs_check
+> Issue happens when the add and del are called too many times as seen
+> with 6 event case.
+> The PMU hardware control registers are programmed when add and del
+> functions are called.
+> For pmu->read no issues since no h/w issue with the data path.
 >
-> due to some missing dependencies (which I did not want to
-> invest time to research them) on my build host, so I could
-> not get automated help from those.
-
-Dependencies are documented in Documentation/devicetree/writing-schema.rst.
-
-> ---
->  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 128 ++++++++++++++++++
->  1 file changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> This is UNCORE driver, not sure context switch has any influence on this?
+> Please suggest me, how can we fix this in back-end PMU driver without
+> any perf core help?
 >
-> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> new file mode 100644
-> index 000000000000..b1b021601c47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> @@ -0,0 +1,128 @@
-> +# SPDX-License-Identifier: None
-
-Obviously not valid.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/gpu/img,pvrsgx.yaml#
-
-This should have been correct with the script, but you need to drop 'bindings'.
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Imagination PVR/SGX GPU
-> +
-> +maintainers:
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +description: |+
-> +  This binding describes the Imagination SGX5 series of 3D accelerators which
-> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
-> +  Allwinner A83, and Intel Poulsbo and CedarView.
-> +
-> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by
-> +  this binding.
-> +
-> +  The SGX node is usually a child node of some DT node belonging to the SoC
-> +  which handles clocks, reset and general address space mapping of the SGX
-> +  register area.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - item:
-
-'item/items'
-
-> +        # BeagleBoard ABC, OpenPandora 600MHz
-> +        - const: "ti,omap3-sgx530-121", "img,sgx530-121", "img,sgx530", "img,sgx5"
-
-Not valid YAML nor json-schema. Each value needs to be list item with 'const:'
-
-Plenty of examples in bindings/arm/ with board/soc bindings.
-
-> +        # BeagleBoard XM, GTA04, OpenPandora 1GHz
-> +        - const: "ti,omap3-sgx530-125", "img,sgx530-125", "img,sgx530", "img,sgx5"
-
-This needs to be a new 'items' list under 'oneOf'.
-
-> +        # BeagleBone Black
-> +        - const: "ti,am335x-sgx530-125", "img,sgx530-125", "img,sgx530", "img,sgx5"
-> +        # Pandaboard (ES)
-> +        - const: "ti,omap4-sgx540-120", "img,sgx540-120", "img,sgx540", "img,sgx5"
-> +        - const "ti,omap4-sgx544-112", "img,sgx544-112", "img,sgx544", "img,sgx5"
-> +        # OMAP5 UEVM, Pyra Handheld
-> +        "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5"
-> +        "ti,dra7-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5"
-
-Just gave up on trying to write a schema here?
-
-> +        # CI20
-> +        "ingenic,jz4780-sgx540-120", "img,sgx540-120", "img,sgx540", "img,sgx5";
-> +
-> +  reg:
-> +    items:
-> +      - description: physical base address and length of the register area
-
-For single entries, just 'maxItems: 1' is enough. Unless you have
-something special about this device, you don't need a description
-here.
-
-> +
-> +  interrupts:
-> +     items:
-> +      - description: interrupt from SGX subsystem to core processor
-> +
-> +  clocks:
-> +     items:
-> +      - description: optional clocks
-> +
-> +  required:
-> +    - compatible
-> +    - reg
-> +    - interrupts
-> +
-> +examples: |
-> +  gpu@fe00 {
-> +       compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
-> +       reg = <0xfe00 0x200>;
-> +       interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +  };
-> +
-> +
-> +historical: |
-
-This should be dropped. It's just for reference as you write the schema.
-
-> +  Imagination PVR/SGX GPU
-> +
-> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by this binding.
-> +
-> +  Required properties:
-> +  - compatible:        Should be one of
-> +               "ti,omap3-sgx530-121", "img,sgx530-121", "img,sgx530", "img,sgx5"; - BeagleBoard ABC, OpenPandora 600MHz
-> +               "ti,omap3-sgx530-125", "img,sgx530-125", "img,sgx530", "img,sgx5"; - BeagleBoard XM, GTA04, OpenPandora 1GHz
-> +               "ti,am3517-sgx530-125", "img,sgx530-125", "img,sgx530", "img,sgx5";
-> +               "ti,am335x-sgx530-125", "img,sgx530-125", "img,sgx530", "img,sgx5"; - BeagleBone Black
-> +               "ti,omap4-sgx540-120", "img,sgx540-120", "img,sgx540", "img,sgx5"; - Pandaboard (ES)
-> +               "ti,omap4-sgx544-112", "img,sgx544-112", "img,sgx544", "img,sgx5";
-> +               "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5"; - OMAP5 UEVM, Pyra Handheld
-> +               "ti,dra7-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
-> +               "ti,am3517-sgx530-?", "img,sgx530-?", "img,sgx530", "img,sgx5";
-> +               "ti,am43xx-sgx530-?", "img,sgx530-?", "img,sgx530", "img,sgx5";
-> +               "ti,ti81xx-sgx530-?", "img,sgx530-?", "img,sgx530", "img,sgx5";
-> +               "img,jz4780-sgx540-?", "img,sgx540-?", "img,sgx540", "img,sgx5"; - CI20
-> +               "allwinner,sun8i-a83t-sgx544-?", "img,sgx544-116", "img,sgx544", "img,sgx5"; - Banana-Pi-M3 (Allwinner A83T)
-> +               "intel,poulsbo-gma500-sgx535", "img,sgx535-116", "img,sgx535", "img,sgx5"; - Atom Z5xx
-> +               "intel,medfield-gma-sgx540", "img,sgx540-116", "img,sgx540", "img,sgx5"; - Atom Z24xx
-> +               "intel,cedarview-gma3600-sgx545", "img,sgx545-116", "img,sgx545", "img,sgx5"; - Atom N2600, D2500
-> +
-> +               The "ti,omap..." entries are needed temporarily to handle SoC
-> +               specific builds of the kernel module.
-> +
-> +               In the long run, only the "img,sgx..." entry should suffice
-> +               to match a generic driver for all architectures and driver
-> +               code can dynamically find out on which SoC it is running.
-> +
-> +
-> +  - reg:               Physical base address and length of the register area.
-> +  - interrupts:        The interrupt numbers.
-> +
-> +  / {
-> +       ocp {
-> +               sgx_module: target-module@56000000 {
-> +                       compatible = "ti,sysc-omap4", "ti,sysc";
-> +                       reg = <0x5600fe00 0x4>,
-> +                             <0x5600fe10 0x4>;
-> +                       reg-names = "rev", "sysc";
-> +                       ti,sysc-midle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>,
-> +                                       <SYSC_IDLE_SMART>;
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>,
-> +                                       <SYSC_IDLE_SMART>;
-> +                       clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
-> +                       clock-names = "fck";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0 0x56000000 0x2000000>;
-> +
-> +                       gpu@fe00 {
-> +                               compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
-> +                               reg = <0xfe00 0x200>;
-> +                               interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +                       };
-> +               };
-> +       };
-> +  };
-> --
-> 2.23.0
+> >
+> > Either way, this minimzes the utility of the PMU.
+> >
+> > Thanks,
+> > Mark.
+> >
+> > >
+> > > Signed-off-by: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
+> > > ---
+> > >  include/linux/perf_event.h | 1 +
+> > >  kernel/events/core.c       | 8 ++++++++
+> > >  2 files changed, 9 insertions(+)
+> > >
+> > > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > > index 61448c19a132..9e18d841daf7 100644
+> > > --- a/include/linux/perf_event.h
+> > > +++ b/include/linux/perf_event.h
+> > > @@ -247,6 +247,7 @@ struct perf_event;
+> > >  #define PERF_PMU_CAP_HETEROGENEOUS_CPUS              0x40
+> > >  #define PERF_PMU_CAP_NO_EXCLUDE                      0x80
+> > >  #define PERF_PMU_CAP_AUX_OUTPUT                      0x100
+> > > +#define PERF_PMU_CAP_NO_MUX_EVENTS           0x200
+> > >
+> > >  /**
+> > >   * struct pmu - generic performance monitoring unit
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index 4655adbbae10..65452784f81c 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -1092,6 +1092,10 @@ static void __perf_mux_hrtimer_init(struct perf_cpu_context *cpuctx, int cpu)
+> > >       if (pmu->task_ctx_nr == perf_sw_context)
+> > >               return;
+> > >
+> > > +     /* No PMU support */
+> > > +     if (pmu->capabilities & PERF_PMU_CAP_NO_MUX_EVENTS)
+> > > +             return 0;
+> > > +
+> > >       /*
+> > >        * check default is sane, if not set then force to
+> > >        * default interval (1/tick)
+> > > @@ -1117,6 +1121,10 @@ static int perf_mux_hrtimer_restart(struct perf_cpu_context *cpuctx)
+> > >       if (pmu->task_ctx_nr == perf_sw_context)
+> > >               return 0;
+> > >
+> > > +     /* No PMU support */
+> > > +     if (pmu->capabilities & PERF_PMU_CAP_NO_MUX_EVENTS)
+> > > +             return 0;
+> > > +
+> > >       raw_spin_lock_irqsave(&cpuctx->hrtimer_lock, flags);
+> > >       if (!cpuctx->hrtimer_active) {
+> > >               cpuctx->hrtimer_active = 1;
+> > > --
+> > > 2.17.1
+> > >
 >
+> Thanks,
+> Ganapat
+
+Below diff does workaround without support of perf core.
+Please review and let me know your thoughts?
+
+root@SBR-26>perf>> git diff
+diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+index 43d76c85da56..d5c90a93e96b 100644
+--- a/drivers/perf/thunderx2_pmu.c
++++ b/drivers/perf/thunderx2_pmu.c
+@@ -69,6 +69,7 @@ struct tx2_uncore_pmu {
+        int node;
+        int cpu;
+        u32 max_counters;
++       bool events_mux_disable;
+        u32 prorate_factor;
+        u32 max_events;
+        u64 hrtimer_interval;
+@@ -442,6 +443,8 @@ static int tx2_uncore_event_init(struct perf_event *event)
+        if (!tx2_uncore_validate_event_group(event))
+                return -EINVAL;
+
++       /* reset flag */
++       tx2_pmu->events_mux_disable = false;
+        return 0;
+ }
+
+@@ -490,10 +493,19 @@ static int tx2_uncore_event_add(struct
+perf_event *event, int flags)
+
+        tx2_pmu = pmu_to_tx2_pmu(event->pmu);
+
++       /* Erratum ThunderX2 erratum 221.
++        * Disable support for events multiplexing.
++        * Limiting the number of events to available hardware counters.
++        */
++       if (tx2_pmu->events_mux_disable)
++               return -EOPNOTSUPP;
++
+        /* Allocate a free counter */
+        hwc->idx  = alloc_counter(tx2_pmu);
+-       if (hwc->idx < 0)
++       if (hwc->idx < 0) {
++               tx2_pmu->events_mux_disable = true;
+                return -EAGAIN;
++       }
+
+        tx2_pmu->events[hwc->idx] = event;
+        /* set counter control and data registers base address */
+@@ -648,6 +660,7 @@ static struct tx2_uncore_pmu
+*tx2_uncore_pmu_init_dev(struct device *dev,
+        tx2_pmu->dev = dev;
+        tx2_pmu->type = type;
+        tx2_pmu->base = base;
++       tx2_pmu->events_mux_disable = false;
+        tx2_pmu->node = dev_to_node(dev);
+        INIT_LIST_HEAD(&tx2_pmu->entry);
