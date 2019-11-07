@@ -2,78 +2,112 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B51C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA589C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298A5214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDF32067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:29:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CccOhV4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfKGWZK (ORCPT
+        id S1726765AbfKGW3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:25:10 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:40227 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfKGWZJ (ORCPT
+        Thu, 7 Nov 2019 17:29:23 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25135 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725870AbfKGW3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:25:09 -0500
-Received: from localhost (unknown [92.184.100.203])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7E6B1240007;
-        Thu,  7 Nov 2019 22:24:58 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 23:24:45 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: at91: defconfig for 5.5
-Message-ID: <20191107222445.GA202433@piout.net>
+        Thu, 7 Nov 2019 17:29:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573165762;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HewLpiTYZdR6SKaDXv+O9j7By44Vn+GAbDlAzONyEI4=;
+        b=CccOhV4Ins9TXupwOiNW2LJpbjUllO7D2Zotp/+KlwKgm3hGkPFLAH2yngWh4G3T41jOyQ
+        SHQTlEmbh/jtzV2bxa5XNQWMtUYDHPO0tr52ldl+rzl8Vz4JPg0ESq/yB5tdyYqpXaBYub
+        Mfuptp56rzW9CrbkqvodUIdD1h6eqLU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-431-9yfZB0iiN4iLeXpa1sZAIA-1; Thu, 07 Nov 2019 17:29:19 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EF7C1005500;
+        Thu,  7 Nov 2019 22:29:17 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-79.ams2.redhat.com [10.36.116.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0763260BE2;
+        Thu,  7 Nov 2019 22:29:09 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <darren@dvhart.com>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Yang Tao <yang.tao172@zte.com.cn>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [patch 00/12] futex: Cure robust/PI futex exit races
+References: <20191106215534.241796846@linutronix.de>
+Date:   Thu, 07 Nov 2019 23:29:08 +0100
+In-Reply-To: <20191106215534.241796846@linutronix.de> (Thomas Gleixner's
+        message of "Wed, 06 Nov 2019 22:55:34 +0100")
+Message-ID: <87zhh78gnf.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 9yfZB0iiN4iLeXpa1sZAIA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd, Olof,
+* Thomas Gleixner:
 
-A single patch unselecting the PIT driver to improve the boot time on
-at91 platforms.
+> The series is also available from git:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.locking/f=
+utex
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+I ran the glibc upstream test suite (which has some robust futex tests)
+against b21be7e942b49168ee15a75cbc49fbfdeb1e6a97 on x86-64, both native
+and 32-bit/i386 compat mode.
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+compat mode seems broken, nptl/tst-thread-affinity-pthread fails.  This
+is probably *not* due to
+<https://bugzilla.kernel.org/show_bug.cgi?id=3D154011> because the failure
+is non-sporadic, but reliable fails for thread 253:
 
-are available in the Git repository at:
+info: Detected CPU set size (in bits): 225
+info: Maximum test CPU: 255
+error: pthread_create for thread 253 failed: Resource temporarily unavailab=
+le
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.5-defconfig
+I'm running this on a large box as root, so ulimits etc. do not apply.
 
-for you to fetch changes up to 0fc21fdf4e1023d0e5f8d42a42cdd372177699e2:
+I did not see this failure with the x86-64 test.
 
-  ARM: configs: at91: unselect PIT (2019-10-14 17:05:25 +0200)
+You should be able to reproduce with (assuming you've got a multilib gcc):
 
-----------------------------------------------------------------
-AT91 defconfig for 5.5
+git clone git://sourceware.org/git/glibc.git git
+mkdir build
+cd build
+../git/configure --prefix=3D/usr CC=3D"gcc -m32" CXX=3D"g++ -m32" --build=
+=3Di686-linux
+make -j`nproc`
+make test t=3Dnptl/tst-thread-affinity-pthread
 
- - Unselect PIT now that the TCBs can be used at boot time
+Thanks,
+Florian
 
-----------------------------------------------------------------
-Alexandre Belloni (1):
-      ARM: configs: at91: unselect PIT
-
- arch/arm/configs/at91_dt_defconfig | 1 +
- arch/arm/configs/sama5_defconfig   | 1 +
- 2 files changed, 2 insertions(+)
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
