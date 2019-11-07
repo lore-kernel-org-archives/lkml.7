@@ -2,109 +2,137 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03528C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79DFC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B172187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992582187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573111712;
+	bh=cgw1pHZhRZUq5Cx0CP+hnn9eJH/ypUdYQrZnrqza1zk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1knXwPv3m9hyHnD0l5JPgkRPKWtiKkdgNV84rcUesZ4fBcUIY3GKaVCZOGSV3aizn
+	 xQzuSGhDB+22DHQlTPnlJLjjIvrB3oqS/FJox1t7ik6KUqlJ0IqRF8ca74EBVgq33d
+	 9HHy/ziGI2vV5gfodatzpIl6Y6wSnfucYzyrMQq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfKGH1l (ORCPT
+        id S1727199AbfKGH2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:27:41 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36817 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfKGH1l (ORCPT
+        Thu, 7 Nov 2019 02:28:31 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42154 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfKGH2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:27:41 -0500
-Received: by mail-ot1-f66.google.com with SMTP id f10so1191173oto.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:27:40 -0800 (PST)
+        Thu, 7 Nov 2019 02:28:31 -0500
+Received: by mail-wr1-f65.google.com with SMTP id a15so1746500wrf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:28:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=72ZGaeKO8p6F8DLc8DiLa90CqFm7osDdCPrGV3hluik=;
+        b=EiAfRXneI1ykYdJL17W+mlgYI6uCt6dUSvkWjITXeN0sn3FBP6hOAj+bkaue3UbXDb
+         v7huqqLxlwTUgZgVQB3mjGGk2Pz88Mb/1YUwKSI12PJ3HvC0+wsIqX+kb3hlbubalfyl
+         1YwM4s0sT6SiAST5/MOUiggC0eYf/hWDheb47w4UD8U0hI5yZ06l04H+uVZxixQkoG1S
+         jHTQwiohV1vmnL/OAuKUtvwFTZWp2NFXqFVI7SZIf08nvxZ/WQcXOvy6HFmRKa3c0myN
+         MHaFx5cTuqKCOBwuS7v5Y+2r9jD0DLvMH3KNmpR/4+UEyNXdCQ5ll4/rK6wP3QxG1L+H
+         kBmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OyZRQhNQF0un9Il/ZL90jb+EZuA06+9poSITN0etujY=;
-        b=K5r9/ZLYLtro3cwZ7lmelYQDBVk6Bt2IsLaHgGUcQ7D4HtebYZ4Q0PO0tR4MDsduEe
-         OuRdwJzRxpDeCwUChx+N+WRFxXVKe9XtTDQkkj92mRBXDYq1jX4zh2tuXQylJeykc2Vz
-         GcLbLwSUbZ8kqBv34SkpLY2eW0BRz3an5MyWWYhK3P6guBSLC7FKMKvQZvT24lTiEkQ9
-         u0dnVPvdkFdk5BBwAPKKv3tVUaT+HhNUznBlDcpncsoymTHPz70Ojg4xecSgguhX2mXG
-         HA/XYxMafrQ8DEBI/c06y8R23Smy8dzqG3uxgATxyWzjY9XkwYrYf4BjVneVFn22FS4g
-         /a4g==
-X-Gm-Message-State: APjAAAW1xXXMk/ffyn5y//83h2MlqQpWlbIcXa6Zo8w47WOrPdIAzvfo
-        i5jXDlvyIiBu7ESiteB4eNDGUON9aFqtaPs6g0M=
-X-Google-Smtp-Source: APXvYqykgZBVOySzL/pYLBsJxZ5aXHvbyLGB90p/46uVfriKEO80e1NDA1RsceYYsaUe474Gg2sgcKKSWM5Uy20CMpw=
-X-Received: by 2002:a9d:422:: with SMTP id 31mr1630520otc.107.1573111660358;
- Wed, 06 Nov 2019 23:27:40 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=72ZGaeKO8p6F8DLc8DiLa90CqFm7osDdCPrGV3hluik=;
+        b=kV52zkWR1MY0Tl9C8n4dnqnplUswmyn5SZLrdD6LvGZRe0nXNHJO5oGztaaC8x9kQS
+         30BKapI606WdFmpZd8rs7Dqpnyfg4QhlstOFuBInCHs+d2wdUyZkaGAZ/22EOowqx1nK
+         ygPFB2CgKxeDsDsgCC0fiKPQLMGFRjPmog1NYYzh97+b8Uc62LVU6HJq4utZsAufHrlf
+         smknRu2ux4KAIw8J2gTfJCRAzLvhprz2A5Iz83/JePbWOM1ZYF/rtrdAzEmGlt2f3X5n
+         Nh3kIiyg+aejniAoc/KtB9Piv3S68w19TxRmPrn09iTqcfwjTAlaEhSLQQ0DoeGzxZd0
+         xsRg==
+X-Gm-Message-State: APjAAAUAkHUthy4ZwNoMDDz2jKwRz2iAQmr/q4N+2Re6AHzQtsdlawo7
+        4daDIjYbPw3RecOVvY5+9Ek=
+X-Google-Smtp-Source: APXvYqx8tpmdYJyKSTskDKhc4k8w7+JKQ9uIeKQ0GnbZrBcOc6TFNZ7QQKReT6ymHNQt8H7jNzl0OA==
+X-Received: by 2002:a5d:6947:: with SMTP id r7mr1449910wrw.129.1573111708664;
+        Wed, 06 Nov 2019 23:28:28 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id w19sm1056735wmk.36.2019.11.06.23.28.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 23:28:28 -0800 (PST)
+Date:   Thu, 7 Nov 2019 08:28:26 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [patch] x86/iopl: Remove unused local variable, update comments in
+ ksys_ioperm()
+Message-ID: <20191107072826.GB30739@gmail.com>
+References: <20191106193459.581614484@linutronix.de>
 MIME-Version: 1.0
-References: <20191106030542.868541-1-dima@arista.com> <20191106092039.GT4131@hirez.programming.kicks-ass.net>
- <10db6fa1-5b17-ebe6-09e0-6335e09e4db8@arista.com> <20191106203440.GH3079@worktop.programming.kicks-ass.net>
- <20191106232512.GU25745@shell.armlinux.org.uk>
-In-Reply-To: <20191106232512.GU25745@shell.armlinux.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 7 Nov 2019 08:27:29 +0100
-Message-ID: <CAMuHMdVV67se-DzG=aDL4Y7NsctNRbi0P2p-SSgG7kh0Ce4TOQ@mail.gmail.com>
-Subject: Re: [PATCH 00/50] Add log level to show_stack()
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191106193459.581614484@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
 
-(reduced CC list)
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-On Thu, Nov 7, 2019 at 12:28 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
-> On Wed, Nov 06, 2019 at 09:34:40PM +0100, Peter Zijlstra wrote:
-> > I suppose I'm surprised there are backtraces that are not important.
-> > Either badness happened and it needs printing, or the user asked for it
-> > and it needs printing.
->
-> Or utterly meaningless.
->
-> > Perhaps we should be removing backtraces if they're not important
-> > instead of allowing to print them as lower loglevels?
->
-> Definitely!  WARN_ON() is well overused - and as is typical, used
-> without much thought.  Bound to happen after Linus got shirty about
-> BUG_ON() being over used.  Everyone just grabbed the next nearest thing
-> to assert().
+> The series is also available from git:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/iopl
 
-Which is what checkpatch.pl suggests...
+Very nice series - I fully agree with this simplification of ioperm 
+legacies.
 
-> As a kind of example, I've recently come across one WARN_ON() in a
-> driver subsystem (that shall remain nameless at the moment) which very
-> likely has multiple different devices on a platform.  The WARN_ON()
-> triggers as a result of a problem with the hardware, but because it's a
-> WARN_ON(), you've no idea which device has a problem.  The backtrace is
-> mostly meaningless.  So you know that a problem has occurred, but the
-> kernel prints *useless* backtrace to let you know, and totally omits
-> the *useful* information.
 
-So that callsite should be converted to use dev_WARN(), with a suitable
-message.
+On x86-64 defconfig new warning in ioport.c:
 
-Perhaps checkpatch should be updated, to suggest {,dev_}WARN()
-instead of WARN_ON(), and add a check for the latter, too?
+    arch/x86/kernel/ioport.c:184:18: warning: unused variable ‘regs’ [-Wunused-variable]
 
-Gr{oetje,eeting}s,
+This local variable can simply be removed, now that we don't rely on 
+regs->flags anymore. See the patch below.
 
-                        Geert
+I also removed the now stale comment about the Xen PV 
+quirk/incompatibility.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Ingo
+
+---
+ arch/x86/kernel/ioport.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
+index aad296a23170..78127087b1ed 100644
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -181,15 +181,10 @@ SYSCALL_DEFINE3(ioperm, unsigned long, from, unsigned long, num, int, turn_on)
+ SYSCALL_DEFINE1(iopl, unsigned int, level)
+ {
+ 	struct thread_struct *t = &current->thread;
+-	struct pt_regs *regs = current_pt_regs();
+ 	struct tss_struct *tss;
+ 	unsigned int tss_base;
+ 	unsigned int old;
+ 
+-	/*
+-	 * Careful: the IOPL bits in regs->flags are undefined under Xen PV
+-	 * and changing them has no effect.
+-	 */
+ 	if (IS_ENABLED(CONFIG_X86_IOPL_NONE))
+ 		return -ENOSYS;
+ 
