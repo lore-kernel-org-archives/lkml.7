@@ -2,62 +2,87 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED17C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36196C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47D22166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F404721882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388255AbfKGLst (ORCPT
+        id S2388267AbfKGLun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:48:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54304 "EHLO mx1.suse.de"
+        Thu, 7 Nov 2019 06:50:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54862 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727178AbfKGLst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:48:49 -0500
+        id S1727178AbfKGLun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:50:43 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A4989AD0B;
-        Thu,  7 Nov 2019 11:48:47 +0000 (UTC)
-Message-ID: <1573126365.3024.4.camel@suse.com>
-Subject: Re: [PATCH 4.19 114/149] UAS: Revert commit 3ae62a42090f ("UAS: fix
- alignment of scatter/gather segments")
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Date:   Thu, 07 Nov 2019 12:32:45 +0100
-In-Reply-To: <20191105163805.GB2760793@kroah.com>
-References: <Pine.LNX.4.44L0.1911051007140.1678-100000@iolanthe.rowland.org>
-         <1572968467.2921.27.camel@suse.com> <20191105163805.GB2760793@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx1.suse.de (Postfix) with ESMTP id B5CC9B0A5;
+        Thu,  7 Nov 2019 11:50:41 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 41CE61E4415; Thu,  7 Nov 2019 12:50:41 +0100 (CET)
+Date:   Thu, 7 Nov 2019 12:50:41 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jan Kara <jack@suse.com>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Subject: Re: [PATCH] fs/quota: use unsigned int helper for sysctl fs.quota.*
+Message-ID: <20191107115041.GC11400@quack2.suse.cz>
+References: <157312129151.3890.6076128127053624123.stgit@buzz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157312129151.3890.6076128127053624123.stgit@buzz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 05.11.2019, 17:38 +0100 schrieb Greg Kroah-Hartman:
-> > > Given this information, perhaps you will decide that the revert is 
-> > > worthwhile.
-> > 
-> > Damned if I do, damned if I do not.
-> > Check for usbip and special case it?
+On Thu 07-11-19 13:08:11, Konstantin Khlebnikov wrote:
+> Report counters as unsigned, otherwise they turn negative at overflow:
 > 
-> We should be able to do that in the host controller driver for usbip,
-> right?  What is the symptom if you use a UAS device with usbip and this
-> commit?
+> # sysctl fs.quota
+> fs.quota.allocated_dquots = 22327
+> fs.quota.cache_hits = -489852115
+> fs.quota.drops = -487288718
+> fs.quota.free_dquots = 22083
+> fs.quota.lookups = -486883485
+> fs.quota.reads = 22327
+> fs.quota.syncs = 335064
+> fs.quota.writes = 3088689
+> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Yes, that patch should then also be applied. Then it will work.
-Without it, commands will fail, as transfers will end prematurely.
+Fair enough but then 'stats' array in dqstats should be unsigned as well
+for consistency and why not actually make everything long when we are at
+it? percpu_counter we use is s64 anyway...
 
-	Regards
-		Oliver
+								Honza
 
+> ---
+>  fs/quota/dquot.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+> index 6e826b454082..606e1e39674b 100644
+> --- a/fs/quota/dquot.c
+> +++ b/fs/quota/dquot.c
+> @@ -2865,7 +2865,7 @@ static int do_proc_dqstats(struct ctl_table *table, int write,
+>  	/* Update global table */
+>  	dqstats.stat[type] =
+>  			percpu_counter_sum_positive(&dqstats.counter[type]);
+> -	return proc_dointvec(table, write, buffer, lenp, ppos);
+> +	return proc_douintvec(table, write, buffer, lenp, ppos);
+>  }
+>  
+>  static struct ctl_table fs_dqstats_table[] = {
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
