@@ -2,108 +2,236 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884D5C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA5CC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD6A206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F/SLkeZf"
+	by mail.kernel.org (Postfix) with ESMTP id 8BA4C206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfKGIEW (ORCPT
+        id S1727527AbfKGIFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:04:22 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43537 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGIEW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:04:22 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y23so1152765ljh.10
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:04:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Icvs9OZ2xWXC5UPn4WjTDzsRSqv4ABuStVj0mfFJ9ZA=;
-        b=F/SLkeZfh9tn1C1SOcqQGA7uI8T6cB6x6lBr5R+HR4WuNbOlV4NPR9FoJasE9xAtv6
-         myuCAP/bRD1Vvyzg8Ht5V9SEOvVDBbEU7ewy7WXFpiZ1HLhB8P2oZeUPl3Cmzz8jHTBx
-         +JfsjtF9sx1XLM12jsSW1Us+ebt3dG7MeFhJRiWZ9vvFjb/pYX1Z67xgojDhwliUFwWq
-         wc+FCq3m2Kv4+LogclzGNz9+4IIpJKrUjtvRQecQJusMeZQtaRp1A4lh4MEQGcSjyORu
-         POQGNcpHNLzdj9lNrwEoO14rI7QHovnPphY92fDo2F1f8ufzcgSnOLHhOCHrewzyFfUV
-         TcfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Icvs9OZ2xWXC5UPn4WjTDzsRSqv4ABuStVj0mfFJ9ZA=;
-        b=txy/AHIYPJASaeFYzZz82UjZAmsknzg+Ar2xapqhsiprx6+ZNVubPqDckYI63Fl3wI
-         z7PZu7p2r5iI7vYbH5qO6sAluyZigzr2NZ4V5clNO6lc+ErvWCtD5B7vm7cx868tYayU
-         mhxNZPAOKXB4TboDReZhgBCkxdJu5ldGsF9AErHnyVgdEGBoR6sS30a0EGpKDcxIPsG4
-         HG7jGqplCJcTaV55J9Z/wceqTyatWmdt1YyiqFoT0Q/wYgu3VfhPJzrh32M7VRpAveaN
-         OTJ3ykUcVaHUBKpi+/+rz+NPfb2xocmxB9SNYv/eVQAC6FCHHqTAEo4QhjMLRRJJLA5v
-         igDA==
-X-Gm-Message-State: APjAAAUVTnTTuauGymxhCD3rTnBHIQa13/Q4XbZT3u+WA6wdHMuO1+iz
-        /gnBUYLW9xOBtw1XqQrt8j7Okbq9/48/hiF8JGukIQ==
-X-Google-Smtp-Source: APXvYqwyLBON2IrM1MH7zrGDSUoOt7eH91Ktx6j7qYfJSSZHJ7k8s5gOCs6qkRwBV0ORbE/D4fJNFUcmt5X6vjZzWp0=
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr1297296ljd.183.1573113860059;
- Thu, 07 Nov 2019 00:04:20 -0800 (PST)
-MIME-Version: 1.0
-References: <5dc3460a.1c69fb81.bfae4.adf1@mx.google.com> <e2ba3c23-4b85-f83b-0ba4-dc0db1b8dd0f@collabora.com>
-In-Reply-To: <e2ba3c23-4b85-f83b-0ba4-dc0db1b8dd0f@collabora.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 09:04:08 +0100
-Message-ID: <CACRpkdYA9TgBWb2TQzSVtV1CWy6ZOXA1=8NjSg5bksrNM1C=NA@mail.gmail.com>
-Subject: Re: next/master boot bisection: next-20191106 on r8a7795-salvator-x
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>, mgalka@collabora.com,
-        Mark Brown <broonie@kernel.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Scott Branden <sbranden@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 Nov 2019 03:05:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33404 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726791AbfKGIFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:05:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3D572AD07;
+        Thu,  7 Nov 2019 08:05:15 +0000 (UTC)
+Date:   Thu, 07 Nov 2019 09:05:14 +0100
+Message-ID: <s5hlfss862t.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        "Jaroslav Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: Re: [PATCH v2 7/8] ALSA: aloop: Support selection of snd_timer instead of jiffies
+In-Reply-To: <20191105143218.5948-8-andrew_gabbasov@mentor.com>
+References: <20191105143218.5948-1-andrew_gabbasov@mentor.com>
+        <20191105143218.5948-2-andrew_gabbasov@mentor.com>
+        <20191105143218.5948-3-andrew_gabbasov@mentor.com>
+        <20191105143218.5948-4-andrew_gabbasov@mentor.com>
+        <20191105143218.5948-5-andrew_gabbasov@mentor.com>
+        <20191105143218.5948-6-andrew_gabbasov@mentor.com>
+        <20191105143218.5948-7-andrew_gabbasov@mentor.com>
+        <20191105143218.5948-8-andrew_gabbasov@mentor.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 11:27 PM Guillaume Tucker
-<guillaume.tucker@collabora.com> wrote:
-> On 06/11/2019 22:15, kernelci.org bot wrote:
-> > +static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst = {
-> > +     { .compatible = "brcm,iproc-gpio-cca" },
-> > +     {}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
-> > +
-> > +static struct platform_driver bcm_iproc_gpio_driver = {
-> > +     .driver = {
-> > +             .name = "iproc-xgs-gpio",
-> > +             .owner = THIS_MODULE,
-> > +             .of_match_table = bcm_iproc_gpio_of_match,
-> > +     },
-> > +     .probe = iproc_gpio_probe,
-> > +     .remove = iproc_gpio_remove,
-> > +};
->
-> There's a fix for this which Mark sent yesterday[1] and should
-> have now been applied, by removing __initconst for the
-> of_device_id table.  So this regression should not be present in
-> the next linux-next tag.
+On Tue, 05 Nov 2019 15:32:17 +0100,
+Andrew Gabbasov wrote:
+> @@ -102,6 +106,13 @@ struct loopback_cable {
+>  	unsigned int pause;
+>  	/* timer specific */
+>  	struct loopback_ops *ops;
+> +	/* If sound timer is used */
+> +	struct {
+> +		int owner;
 
-Confirmed, I pushed a new for-next branch with this fix in it.
+The term "owner" is a bit confusing here.  It seems holding the PCM
+direction, but most people expect it being a process-id or something
+like that from the word.
 
-Yours,
-Linus Walleij
+> +		struct snd_timer_id id;
+> +		struct tasklet_struct event_tasklet;
+
+You don't need to make own tasklet.  The timer core calls it via
+tasklet in anyway unless you pass SNDRV_TIMER_IFLG_FAST -- see below.
+
+And the tasklet is no longer recommended infrastructure in the recent
+kernel, we should avoid it as much as possible.
+
+>  struct loopback_setup {
+> @@ -122,6 +133,7 @@ struct loopback {
+>  	struct loopback_cable *cables[MAX_PCM_SUBSTREAMS][2];
+>  	struct snd_pcm *pcm[2];
+>  	struct loopback_setup setup[MAX_PCM_SUBSTREAMS][2];
+> +	char *timer_source;
+
+This can be const char *, I suppose.
+
+> +static void loopback_snd_timer_period_elapsed(
+> +		struct loopback_cable * const cable,
+> +		const int event, const unsigned long resolution)
+> +{
+> +	struct loopback_pcm *dpcm_play =
+> +			cable->streams[SNDRV_PCM_STREAM_PLAYBACK];
+> +	struct loopback_pcm *dpcm_capt =
+> +			cable->streams[SNDRV_PCM_STREAM_CAPTURE];
+
+You shouldn't assign them outside the cable->lock.
+
+> +	struct snd_pcm_runtime *valid_runtime;
+> +	unsigned int running, elapsed_bytes;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&cable->lock, flags);
+> +	running = cable->running ^ cable->pause;
+> +	/* no need to do anything if no stream is running */
+> +	if (!running) {
+> +		spin_unlock_irqrestore(&cable->lock, flags);
+> +		return;
+> +	}
+> +
+> +	if (event == SNDRV_TIMER_EVENT_MSTOP) {
+> +		if (!dpcm_play || !dpcm_play->substream ||
+> +		    !dpcm_play->substream->runtime ||
+> +		    !dpcm_play->substream->runtime->status ||
+
+Would these conditions really happen?
+
+> +		    dpcm_play->substream->runtime->status->state !=
+> +		    SNDRV_PCM_STATE_DRAINING) {
+
+What's special with DRAINING state?  The code doesn't show or explain
+it.  And for other conditions, we keep going even if the event is
+MSTOP?
+
+> +			spin_unlock_irqrestore(&cable->lock, flags);
+> +			return;
+> +		}
+> +	}
+> +
+> +	valid_runtime = (running & (1 << SNDRV_PCM_STREAM_PLAYBACK)) ?
+> +				dpcm_play->substream->runtime :
+> +				dpcm_capt->substream->runtime;
+> +
+> +	/* resolution is only valid for SNDRV_TIMER_EVENT_TICK events */
+> +	if (event == SNDRV_TIMER_EVENT_TICK) {
+> +		/* The hardware rules guarantee that playback and capture period
+> +		 * are the same. Therefore only one device has to be checked
+> +		 * here.
+> +		 */
+> +		if (loopback_snd_timer_check_resolution(valid_runtime,
+> +							resolution) < 0) {
+> +			spin_unlock_irqrestore(&cable->lock, flags);
+> +			if (cable->running & (1 << SNDRV_PCM_STREAM_PLAYBACK))
+> +				snd_pcm_stop_xrun(dpcm_play->substream);
+> +			if (cable->running & (1 << SNDRV_PCM_STREAM_CAPTURE))
+> +				snd_pcm_stop_xrun(dpcm_capt->substream);
+
+Referencing outside the lock isn't really safe.  In the case of
+jiffies timer code, it's a kind of OK because it's done in the timer
+callback function that is assigned for each stream open -- that is,
+the stream runtime is guaranteed to be present in the timer callback.
+But I'm not sure about your case...
+
+
+> @@ -749,6 +1037,152 @@ static struct loopback_ops loopback_jiffies_timer_ops = {
+>  	.dpcm_info = loopback_jiffies_timer_dpcm_info,
+>  };
+>  
+> +static int loopback_parse_timer_id(const char * const str,
+> +				   struct snd_timer_id *tid)
+> +{
+> +	/* [<pref>:](<card name>|<card idx>)[{.,}<dev idx>[{.,}<subdev idx>]] */
+> +	const char * const sep_dev = ".,";
+> +	const char * const sep_pref = ":";
+> +	const char *name = str;
+> +	char save, *sep;
+> +	int card = 0, device = 0, subdevice = 0;
+> +	int err;
+> +
+> +	sep = strpbrk(str, sep_pref);
+> +	if (sep)
+> +		name = sep + 1;
+> +	sep = strpbrk(name, sep_dev);
+> +	if (sep) {
+> +		save = *sep;
+> +		*sep = '\0';
+> +	}
+> +	err = kstrtoint(name, 0, &card);
+> +	if (err == -EINVAL) {
+> +		/* Must be the name, not number */
+> +		for (card = 0; card < snd_ecards_limit; card++) {
+> +			if (snd_cards[card] &&
+> +			    !strcmp(snd_cards[card]->id, name)) {
+> +				err = 0;
+> +				break;
+> +			}
+> +		}
+> +	}
+
+As kbuildbot reported, this is obviously broken with the recent
+kernel.  snd_cards[] is no longer exported!  And I don't want to
+export again.
+
+IOW, if we need this kind of thing, it's better to modify the existing
+code in sound/core/init.c and export that function.
+
+> +/* call in loopback->cable_lock */
+> +static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+> +{
+> +	int err = 0;
+> +	unsigned long flags;
+> +	struct snd_timer_id tid = {
+> +		.dev_class = SNDRV_TIMER_CLASS_PCM,
+> +		.dev_sclass = SNDRV_TIMER_SCLASS_APPLICATION,
+> +	};
+> +	struct snd_timer_instance *timer = NULL;
+
+Why initialing to NULL here?
+
+> +	spin_lock_irqsave(&dpcm->cable->lock, flags);
+
+You need no irqsave version but spin_lock_irq() for the context like
+open/close that is guaranteed to be sleepable.
+
+> +	spin_lock_irqsave(&dpcm->cable->lock, flags);
+> +
+> +	/* The callback has to be called from another tasklet. If
+> +	 * SNDRV_TIMER_IFLG_FAST is specified it will be called from the
+> +	 * snd_pcm_period_elapsed() call of the selected sound card.
+
+Well, you're the one who specifies SNDRV_TIMER_IFLG_XXX, so you know
+that the flag isn't set.  So tasklet makes little sense.
+
+> +	 * snd_pcm_period_elapsed() helds snd_pcm_stream_lock_irqsave().
+> +	 * Due to our callback loopback_snd_timer_function() also calls
+> +	 * snd_pcm_period_elapsed() which calls snd_pcm_stream_lock_irqsave().
+> +	 * This would end up in a dead lock.
+> +	 */
+> +	timer->flags |= SNDRV_TIMER_IFLG_AUTO;
+> +	timer->callback = loopback_snd_timer_function;
+> +	timer->callback_data = (void *)dpcm->cable;
+> +	timer->ccallback = loopback_snd_timer_event;
+
+This reminds me that we need a safer way to assign these stuff in
+general...  But it's above this patch set, in anyway.
+
+
+thanks,
+
+Takashi
