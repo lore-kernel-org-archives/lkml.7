@@ -2,105 +2,96 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D966C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5679C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BBE2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CC32084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="gb5wc+hW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbfKGKYo (ORCPT
+        id S2387918AbfKGK0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:24:44 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:39195 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfKGKYo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:24:44 -0500
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A94921C0005;
-        Thu,  7 Nov 2019 10:24:39 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 11:24:37 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        John Collis <john.collis@alliedtelesis.co.nz>
-Subject: Re: [PATCH] rtc: ds1307: check for oscillator fault on ds1388
-Message-ID: <20191107102437.GO8309@piout.net>
-References: <20191107011245.26796-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 7 Nov 2019 05:26:34 -0500
+Received: from ozlabs.org ([203.11.71.1]:38627 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726866AbfKGK0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:26:34 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47801f5SWCz9sPT;
+        Thu,  7 Nov 2019 21:26:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573122391;
+        bh=ubT6PqHfq+AeskgzniFZvOikXlHxhlqZ5cQjsrS0lnQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=gb5wc+hWL6b3Ya0OtGZix/sJtUue+204GeoQas8US15HICstxZ6MRb2umgOieCFtU
+         tWQs99Bxp0Yj0OgxFyw4ItXJq4B85MoXu32FHmXJJtfQiAdj9aPEQuBwaVDllUDxP9
+         MlFZLvd+TSUoWnRv7YTnrRClNDLH+hhP9lW0oGcog0c7uzG6s7VUjNqKW16QFJzZz4
+         Un9NpYnNSvlucUMGeg00xE+Az8F/e3URCB2Vmrgw9mC+/DpXJ4g6RLVQUSmjbstMi8
+         Q1ima+wUoaMn0mwroazcEZk4jB2LBbwIrH7yCZRdQn4SD1BvK3hc26dAmxSnzbKCP8
+         xJKrpXUcxgaIg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
+        linuxram@us.ibm.com, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
+        aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v1 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for Secure VMs aswell.
+In-Reply-To: <1572902923-8096-3-git-send-email-linuxram@us.ibm.com>
+References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com> <1572902923-8096-2-git-send-email-linuxram@us.ibm.com> <1572902923-8096-3-git-send-email-linuxram@us.ibm.com>
+Date:   Thu, 07 Nov 2019 21:26:28 +1100
+Message-ID: <87k18c56ej.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107011245.26796-1-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Ram Pai <linuxram@us.ibm.com> writes:
+> This enables IOMMU support for pseries Secure VMs.
 
-On 07/11/2019 14:12:45+1300, Chris Packham wrote:
-> Ensure that the oscillator is running and check the OSF bit for the
-> ds1388 variant. The FLAG and CONTROL registers are at a different
-> location to the other supported RTCs so this requires an extra case in
-> the existing switch statement.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  drivers/rtc/rtc-ds1307.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-> index 1f7e8aefc1eb..865c06347d0a 100644
-> --- a/drivers/rtc/rtc-ds1307.c
-> +++ b/drivers/rtc/rtc-ds1307.c
-> @@ -101,6 +101,10 @@ enum ds_type {
->  #	define DS1337_BIT_A2I		0x02
->  #	define DS1337_BIT_A1I		0x01
->  #define DS1339_REG_ALARM1_SECS	0x07
-> +#define DS1388_REG_FLAG		0x0b
-> +#	define DS1388_BIT_OSF		0x80
-> +#define DS1388_REG_CONTROL	0x0c
-> +#	define DS1388_BIT_nEOSC		0x80
+Can you give us some more explanation please?
+
+This is basically a revert of commit:
+  edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests")
+
+But neglects to remove the now unnecessary include of svm.h.
+
+> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> index 07f0847..189717b 100644
+> --- a/arch/powerpc/platforms/pseries/iommu.c
+> +++ b/arch/powerpc/platforms/pseries/iommu.c
+> @@ -1333,15 +1333,7 @@ void iommu_init_early_pSeries(void)
+>  	of_reconfig_notifier_register(&iommu_reconfig_nb);
+>  	register_memory_notifier(&iommu_mem_nb);
 >  
->  #define DS13XX_TRICKLE_CHARGER_MAGIC	0xa0
+> -	/*
+> -	 * Secure guest memory is inacessible to devices so regular DMA isn't
+> -	 * possible.
+> -	 *
+> -	 * In that case keep devices' dma_map_ops as NULL so that the generic
+> -	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
+
+Please explain what has changed to make this no longer necessary.
+
+cheers
+
+> -	 */
+> -	if (!is_secure_guest())
+> -		set_pci_dma_ops(&dma_iommu_ops);
+> +	set_pci_dma_ops(&dma_iommu_ops);
+>  }
 >  
-> @@ -1688,6 +1692,26 @@ static int ds1307_probe(struct i2c_client *client,
->  		}
->  		break;
->  
-> +	case ds_1388:
-> +		err = regmap_bulk_read(ds1307->regmap, DS1388_REG_FLAG,
-> +				       regs, 2);
-> +		if (err) {
-> +			dev_dbg(ds1307->dev, "read error %d\n", err);
-> +			goto exit;
-> +		}
-> +
-> +		if (regs[1] & DS1388_BIT_nEOSC) {
-> +			regmap_write(ds1307->regmap, DS1388_REG_CONTROL,
-> +				     regs[1] & ~DS1388_BIT_nEOSC);
-> +		}
-> +
-> +		if (regs[0] & DS1388_BIT_OSF) {
-> +			regmap_write(ds1307->regmap, DS1388_REG_FLAG,
-> +				     regs[0]  & ~DS1388_BIT_OSF);
-> +			dev_warn(ds1307->dev, "SET TIME!\n");
-
-This is not the correct way to handle that. This information is valuable
-in .read_time where you should return -EINVAL when the time is know to
-be invalid. Then the bit can be reset in .set_time.
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>  static int __init disable_multitce(char *str)
+> -- 
+> 1.8.3.1
