@@ -2,78 +2,95 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5317DC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A1AC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EE921D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC28121D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gKRILxo8"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZyzDE7CM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKGG2Z (ORCPT
+        id S1726951AbfKGGah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:28:25 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:58537 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfKGG2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:28:24 -0500
-Received: from [IPv6:2607:fb90:a622:3c7c:14a5:e36d:bdcc:1961] ([IPv6:2607:fb90:a622:3c7c:14a5:e36d:bdcc:1961])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id xA76QP731130898
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Wed, 6 Nov 2019 22:26:26 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com xA76QP731130898
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019091901; t=1573107987;
-        bh=Y7XGaivwEwz+37HWcF9QARF8o6HEF5nlbog2tF1Q5+g=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=gKRILxo8qQvH9FaEOj92MUe7KAkCSHA4w6v1acrkkclaUATXnjPl5qzvq1xtoEaar
-         sNsrEvXvsKj9P4uKHLvGM0lcpZGQ63RxKiNG4/0K/9IwXwHvbmyfPhAoh297WKVpy/
-         jI5C3mWr7BuUJhGywdzc/gnyWuSgGUli/1PdLawWf/RVN/Oy/sjO+cEZMbw6VFdX7v
-         y+bLh3NJN9bFDheD2Lwc7pqXHfoIlJWAn5a940s5sQEhLsyqal1p6YghF1TSEJmWnR
-         YSlIu7cKweIUX0TmetUX+qxLE3LsNwqh2xx0CP/nN/v4iARBu8G9oWTdjB6Sx2tzTT
-         AenFJI1IkFFTQ==
-Date:   Wed, 06 Nov 2019 22:26:19 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c6269309-0035-002c-8fee-72b37d42bb33@suse.com>
-References: <20191106193459.581614484@linutronix.de> <20191106202806.518518372@linutronix.de> <c6269309-0035-002c-8fee-72b37d42bb33@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [patch 8/9] x86/iopl: Remove legacy IOPL option
-To:     =?ISO-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     x86@kernel.org, Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-From:   hpa@zytor.com
-Message-ID: <56F67727-E96F-461F-94CC-AE779F50167C@zytor.com>
+        Thu, 7 Nov 2019 01:30:37 -0500
+Received: from mail-m974.mail.163.com ([123.126.97.4]:55064 "EHLO
+        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfKGGah (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 01:30:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=v/B2ToBpKvai59daRL
+        vVEWSvI0l4Py53TzTQJCqwvY4=; b=ZyzDE7CMx/26AcilhkRkb8FnIdJj+f91rb
+        3M7lm5tp2CIoMVz/mzhBkKdupchxo6bfGb7RxmjMNZasOQ/7WnxK9USR6h41npcj
+        WsiqUbipL/DAZvskwmA4MCAbQDHiHnDUVY8sksgthZlFoqsdNcB952vNOLTaIWHo
+        IiJO7+SW0=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp4 (Coremail) with SMTP id HNxpCgD3dtviucNdteMLBg--.305S3;
+        Thu, 07 Nov 2019 14:30:03 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Young Xiao <92siuyang@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pan Bian <bianpan2016@163.com>
+Subject: [PATCH v2] nfc: netlink: fix double device reference drop
+Date:   Thu,  7 Nov 2019 14:29:50 +0800
+Message-Id: <1573108190-30836-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: HNxpCgD3dtviucNdteMLBg--.305S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw17Zr1xuF47JF4UtF18Zrb_yoWfXFcEy3
+        4rtr4UWrn8X3s3Ja12kw4UAF9FywnFqr4xCF4SkrWxZa45Zan8uw4kZ39xAry7uw43AFWj
+        q3WkJrW8t347XjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbEoGJUUUUU==
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBZAtmclQHHg832AAAsW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On November 6, 2019 10:11:49 PM PST, "J=C3=BCrgen Gro=C3=9F" <jgross@suse=
-=2Ecom> wrote:
->On 06=2E11=2E19 20:35, Thomas Gleixner wrote:
->> The IOPL emulation via the I/O bitmap is sufficient=2E Remove the
->legacy
->> cruft dealing with the (e)flags based IOPL mechanism=2E
->>=20
->> Signed-off-by: Thomas Gleixner <tglx@linutronix=2Ede>
->
->Reviewed-by: Juergen Gross <jgross@suse=2Ecom> (Paravirt and Xen parts)
->
->
->Juergen
+The function nfc_put_device(dev) is called twice to drop the reference
+to dev when there is no associated local llcp. Remove one of them to fix
+the bug.
 
-Good grief, good riddance=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+---
+v2: change subject of the patch
+---
+ net/nfc/netlink.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
+index 17e6ca62f1be..afde0d763039 100644
+--- a/net/nfc/netlink.c
++++ b/net/nfc/netlink.c
+@@ -1099,7 +1099,6 @@ static int nfc_genl_llc_set_params(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	local = nfc_llcp_find_local(dev);
+ 	if (!local) {
+-		nfc_put_device(dev);
+ 		rc = -ENODEV;
+ 		goto exit;
+ 	}
+@@ -1159,7 +1158,6 @@ static int nfc_genl_llc_sdreq(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	local = nfc_llcp_find_local(dev);
+ 	if (!local) {
+-		nfc_put_device(dev);
+ 		rc = -ENODEV;
+ 		goto exit;
+ 	}
+-- 
+2.7.4
+
