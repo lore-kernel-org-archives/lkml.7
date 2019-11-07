@@ -2,72 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE59CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2160CC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BABA218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8E52166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:20:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xo1imTSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387424AbfKGJTr (ORCPT
+        id S2387694AbfKGJUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:19:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46757 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfKGJTq (ORCPT
+        Thu, 7 Nov 2019 04:20:33 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55647 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbfKGJUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:19:46 -0500
-Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iSdx7-0001zw-Do; Thu, 07 Nov 2019 10:19:41 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH] hrtimer: Remove the comment about not used HRTIMER_SOFTIRQ
-Date:   Thu,  7 Nov 2019 10:19:24 +0100
-Message-Id: <20191107091924.13410-1-bigeasy@linutronix.de>
-X-Mailer: git-send-email 2.24.0
+        Thu, 7 Nov 2019 04:20:32 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b11so1605716wmb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 01:20:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fi6xzuBwDslqMBEvOoSJLgLZ2eKUNykAx5rVCyKwYkY=;
+        b=Xo1imTSWH2DPOskwLGJmaXoLtzlHHl5JVfqYQkKmOOa9uDLE5OHcZN7g4m5+oHdq5G
+         NwftkH7SGrFIUsp1I+fjikmM/gAy+uLeGZjOgK3VYvPI0EVCMPbwzom8M2Hnw2CdqbKM
+         AznMYDsGn3SuvaIA31VakGgLjitGJQgkhqHiEoey7wYyPlcsXyhjF4n1EbyMqem1jfBL
+         XqrejqJGde4OQ0Ydw+Omsh0Lq2+QRdMMLypJBfEft2IuI3m7eOWLzUUxP6O5efsqmLaj
+         6TvWo+C9Jm+XLS37rdrLO4sGFICqK3Sq2s+s/WWKfAwSiLgGf3PC3PHBanCDeM0ekp9R
+         21BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fi6xzuBwDslqMBEvOoSJLgLZ2eKUNykAx5rVCyKwYkY=;
+        b=OBmOtuIzs7Wzzrr+N4bIkhiTuEOr8Nf8kji+h1r5GanwKYC2cYsPtodhl1bscS99yQ
+         iXJp++hv4wYjh9xvAbU4kvJURkLBaOKIm0UoTWEh9dXkeqMLB3gfAV6f0xnH4a48QKhl
+         tB83uas7hQHPG/WVWjNSl/69eiLaFlAjhXnW7xZHAT9huv8UA+jhnS8plg1yQHRgdB6I
+         AUu1ajb814lgg9woEaqaR9hgnnN4tnyQk9uuXwqfc7xJgNoeqnmyf+ErMuxI+ZA09Xqx
+         KCcKoy1L3kGcEMCG6RjNF1bsxWMxPMKWvcdhSucLWKUUZ5oFHJyfwHj+9ggeZ2XqOkfn
+         x8zQ==
+X-Gm-Message-State: APjAAAVUa+u6r/VRqV5kOK/yd2QeAUgLjCDvnYsIyXgOxmRSgJBkhzBN
+        6MSBvw4u+7d4q48rkQLzTFqB4xcS4GueQr2r0hHE0g==
+X-Google-Smtp-Source: APXvYqzviDjzjYdWIBVaJpSRjyKleEqm2u85x/m07Z2DV2q8u5GPTnMR/uRE5Kmk5P/uhgd17AisLoKNThhGARfz6qk=
+X-Received: by 2002:a1c:3d08:: with SMTP id k8mr1722499wma.119.1573118430458;
+ Thu, 07 Nov 2019 01:20:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <1573115061-34791-1-git-send-email-kong.kongxinwei@hisilicon.com>
+In-Reply-To: <1573115061-34791-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 7 Nov 2019 10:20:19 +0100
+Message-ID: <CAKv+Gu9vwDGeCrNYFEbQC0f6kLN1oEiKx9AjA9UpvHm1Q-0nSg@mail.gmail.com>
+Subject: Re: [PATCH V2] EFI/stub: tpm: enable tpm eventlog function for ARM64 platform
+To:     Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steve Capper <steve.capper@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>, zoucao@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The softirq `HRTIMER_SOFTIRQ' was not used since commit
-  c6eb3f70d448 ("hrtimer: Get rid of hrtimer softirq")
+On Thu, 7 Nov 2019 at 09:23, Xinwei Kong <kong.kongxinwei@hisilicon.com> wrote:
+>
+> this patch gets tpm eventlog information such as device boot status,event guid
+> and so on, which will be from bios stage. it use "efi_retrieve_tpm2_eventlog"
+> functions to get it for ARM64 platorm.
+>
+> Tested-by: Zou Cao <zoucao@linux.alibaba.com>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
 
-but then we started using it again, beginning with commit
-  5da70160462e ("hrtimer: Implement support for softirq based hrtimers")
+Thanks. I'll queue this up.
 
-so the comment is not longer accurate.
-
-Remove the comment saying that HRTIMER_SOFTIRQ not used.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/interrupt.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 89fc59dab57d2..963c3c695784f 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -520,8 +520,7 @@ enum
- 	IRQ_POLL_SOFTIRQ,
- 	TASKLET_SOFTIRQ,
- 	SCHED_SOFTIRQ,
--	HRTIMER_SOFTIRQ, /* Unused, but kept as tools rely on the
--			    numbering. Sigh! */
-+	HRTIMER_SOFTIRQ,
- 	RCU_SOFTIRQ,    /* Preferable RCU should always be the last softirq */
-=20
- 	NR_SOFTIRQS
---=20
-2.24.0
-
+> ---
+>  drivers/firmware/efi/libstub/arm-stub.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+> index c382a48..817237c 100644
+> --- a/drivers/firmware/efi/libstub/arm-stub.c
+> +++ b/drivers/firmware/efi/libstub/arm-stub.c
+> @@ -189,6 +189,8 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table,
+>                 goto fail_free_cmdline;
+>         }
+>
+> +       efi_retrieve_tpm2_eventlog(sys_table);
+> +
+>         /* Ask the firmware to clear memory on unclean shutdown */
+>         efi_enable_reset_attack_mitigation(sys_table);
+>
+> --
+> 2.7.4
+>
