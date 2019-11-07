@@ -2,140 +2,138 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801C7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7372AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5407D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DC62166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="GK2zmzQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388337AbfKGLwm (ORCPT
+        id S2388294AbfKGLye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:52:42 -0500
-Received: from mx.socionext.com ([202.248.49.38]:58147 "EHLO mx.socionext.com"
+        Thu, 7 Nov 2019 06:54:34 -0500
+Received: from ozlabs.org ([203.11.71.1]:36053 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbfKGLwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:52:42 -0500
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 07 Nov 2019 20:52:40 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 11A78605F8;
-        Thu,  7 Nov 2019 20:52:40 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 7 Nov 2019 20:52:50 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id D23A61A04FC;
-        Thu,  7 Nov 2019 20:52:39 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id A4AD7120C15;
-        Thu,  7 Nov 2019 20:52:39 +0900 (JST)
-Date:   Thu, 07 Nov 2019 20:52:39 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
-References: <1573102695-7018-2-git-send-email-hayashi.kunihiko@socionext.com> <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
-Message-Id: <20191107205239.65C1.4A936039@socionext.com>
+        id S1727178AbfKGLye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:54:34 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4781z871F7z9sP3;
+        Thu,  7 Nov 2019 22:54:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573127670;
+        bh=+OqaUvb1czjnKLj7FFJP1J5EwOqrmOwhqu8kZf47j3M=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=GK2zmzQSxVGyhgvYs0tzkcMIwkEmyTnz/zSWM6offu95DbfG3Llkgxx4r+tBceft4
+         4Ta5D1+GkMRx/Ql1gnkLxmr8Chi6MvlBz8CFAzDLc8jzQAaj2xu9rVmuKsBxh6BSyJ
+         EsRwQU96nHFL9dNtSAfdVYrFH/9FQVdh+dmxGIV09oL6eJSlafEFcPTw/EaUIjuJ2j
+         EZVyEyPKixHo/SM+ksr0D2QqBA9eXFbt7OIILwgm6es/jD6lmuGpDd2JWSWdR8HFGv
+         eYzUG6AG3LJ3Tx9WaorS4+YN5t5XUFRd0dcK1+HATaCSmEnHI2HNIJm2TqLqNrTpBc
+         EIv6mdMICtKyg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] powerpc: Chunk calls to flush_dcache_range in arch_*_memory
+In-Reply-To: <20191104023305.9581-6-alastair@au1.ibm.com>
+References: <20191104023305.9581-1-alastair@au1.ibm.com> <20191104023305.9581-6-alastair@au1.ibm.com>
+Date:   Thu, 07 Nov 2019 22:54:26 +1100
+Message-ID: <87y2wr52bx.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-Thank you for your comments.
-
-On Thu, 7 Nov 2019 10:02:08 +0000 <andrew.murray@arm.com> wrote:
-
-> On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
-> > When PERST# is asserted once, EP configuration will be initialized.
-> 
-> I don't quite understand this - does the EP/RC mode depend on how often
-> PERST# is toggled?
-
-I think of connecting this RC controller and EP based on `Linux PCI
-endpoint framework' in another machine.
-
-While this RC driver is probing, the EP driver might be also probing and
-configurating itself using configfs. If PERST# is toggled after the EP
-has done its configuration, this configuration will be lost.
-
-I expect that the EP configurates after RC has toggled PERST#, however,
-there is no way to synchronize both of them.
-
-
-> 
-> > If PERST# has been already deasserted, it isn't necessary to assert
-> > here.
-> 
-> What is the motativation for this patch? Is it to avoid a delay during
-> boot, or to fix some bug? Isn't it nice to always reset the IP before
-> use anyway?
-
-Since EP device usually works without its configuration after PERST#,
-deassering PERST# here is no problem. Since bus reset breaks configuration
-of EP as shown above, bus reset should be done before EP has probed.
-Maybe boot sequence in host machine will do.
-
-
+"Alastair D'Silva" <alastair@au1.ibm.com> writes:
+> From: Alastair D'Silva <alastair@d-silva.org>
 >
-> > 
-> > This checks whether PERST# is deasserted using PCL_PINMON register,
-> > and adds omit controlling PERST#.
-> 
-> Should this read 'and omits controlling PERST#'?
+> When presented with large amounts of memory being hotplugged
+> (in my test case, ~890GB), the call to flush_dcache_range takes
+> a while (~50 seconds), triggering RCU stalls.
+>
+> This patch breaks up the call into 1GB chunks, calling
+> cond_resched() inbetween to allow the scheduler to run.
+>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-Yes, I'll fix it.
+I'm going to mark this as:
+  Fixes: fb5924fddf9e ("powerpc/mm: Flush cache on memory hot(un)plug")
 
+Because anyone doing large memory hotplugs on older kernels is going to
+want to backport this to at least that point, otherwise they will see
+the softlockups/RCU stalls.
 
-> 
-> > 
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > index 8fd7bad..1ea4220 100644
-> > --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> > +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > @@ -22,6 +22,9 @@
-> >  
-> >  #include "pcie-designware.h"
-> >  
-> > +#define PCL_PINMON			0x0028
-> > +#define PCL_PINMON_PERST_OUT		BIT(16)
-> > +
-> >  #define PCL_PINCTRL0			0x002c
-> >  #define PCL_PERST_PLDN_REGEN		BIT(12)
-> >  #define PCL_PERST_NOE_REGEN		BIT(11)
-> > @@ -100,6 +103,11 @@ static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
-> >  	val |= PCL_SYS_AUX_PWR_DET;
-> >  	writel(val, priv->base + PCL_APP_PM0);
-> >  
-> > +	/* return if PERST# is already deasserted */
-> 
-> This comment just describes what the following line does which may be
-> self-explanatory, perhaps a better comment would describe why we avoid
-> a reset.
+cheers
 
-Indeed. I'll write the reason here.
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
-
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 54d61ba15e93..a7b662fc02c8 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -104,6 +104,27 @@ int __weak remove_section_mapping(unsigned long start, unsigned long end)
+>  	return -ENODEV;
+>  }
+>  
+> +#define FLUSH_CHUNK_SIZE SZ_1G
+> +/**
+> + * flush_dcache_range_chunked(): Write any modified data cache blocks out to
+> + * memory and invalidate them, in chunks of up to FLUSH_CHUNK_SIZE
+> + * Does not invalidate the corresponding instruction cache blocks.
+> + *
+> + * @start: the start address
+> + * @stop: the stop address (exclusive)
+> + * @chunk: the max size of the chunks
+> + */
+> +static void flush_dcache_range_chunked(unsigned long start, unsigned long stop,
+> +				       unsigned long chunk)
+> +{
+> +	unsigned long i;
+> +
+> +	for (i = start; i < stop; i += chunk) {
+> +		flush_dcache_range(i, min(stop, start + chunk));
+> +		cond_resched();
+> +	}
+> +}
+> +
+>  int __ref arch_add_memory(int nid, u64 start, u64 size,
+>  			struct mhp_restrictions *restrictions)
+>  {
+> @@ -120,7 +141,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+>  			start, start + size, rc);
+>  		return -EFAULT;
+>  	}
+> -	flush_dcache_range(start, start + size);
+> +
+> +	flush_dcache_range_chunked(start, start + size, FLUSH_CHUNK_SIZE);
+>  
+>  	return __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  }
+> @@ -137,7 +159,8 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
+>  
+>  	/* Remove htab bolted mappings for this section of memory */
+>  	start = (unsigned long)__va(start);
+> -	flush_dcache_range(start, start + size);
+> +	flush_dcache_range_chunked(start, start + size, FLUSH_CHUNK_SIZE);
+> +
+>  	ret = remove_section_mapping(start, start + size);
+>  	WARN_ON_ONCE(ret);
+>  
+> -- 
+> 2.21.0
