@@ -2,104 +2,61 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F94FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BB1FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A1D2075C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428D12075C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733000AbfKGCeE (ORCPT
+        id S1732941AbfKGCgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:34:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:48960 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728315AbfKGCeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:34:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ADE246A;
-        Wed,  6 Nov 2019 18:34:03 -0800 (PST)
-Received: from [192.168.0.10] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A53C23F6C4;
-        Wed,  6 Nov 2019 18:34:01 -0800 (PST)
-Subject: Re: [PATCH] efi: Return EFI_RESERVED_TYPE in efi_mem_type() for
- absent addresses
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-References: <1572931429-487-1-git-send-email-anshuman.khandual@arm.com>
- <CAKv+Gu-q16Z=tyeb3b5NnjBkw9cRoeEM6OQaT6dGe1i+9iJa9w@mail.gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ea8db10a-503d-b1b6-2674-8533bb804715@arm.com>
-Date:   Thu, 7 Nov 2019 08:04:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu-q16Z=tyeb3b5NnjBkw9cRoeEM6OQaT6dGe1i+9iJa9w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Nov 2019 21:36:14 -0500
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:51571 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbfKGCgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:36:14 -0500
+X-Greylist: delayed 549 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 21:36:12 EST
+Received: from P80254710 (unknown [121.12.147.249])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 90E004E17EE;
+        Thu,  7 Nov 2019 10:27:01 +0800 (CST)
+Date:   Thu, 7 Nov 2019 10:27:06 +0800
+From:   "Peng Hao" <richard.peng@oppo.com>
+To:     pbonzini <pbonzini@redhat.com>, rkrcmar <rkrcmar@redhat.com>
+Cc:     kvm <kvm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [PATCH] kvm/x86 : Replace BUG_ON(1) with BUG()
+X-Priority: 3
+X-GUID: 608D3069-12C2-46ED-919C-21192C18CDB7
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.10.151[en]
+Mime-Version: 1.0
+Message-ID: <201911071027048908705@oppo.com>
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZVk9VTE5OS0tKTk9PQk5JSEJZV1koWU
+        FJSUtLSjdXWS1ZQUlXWQkOFx4IWUFZNTQpNjo3JCkuNz5ZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mwg6ITo6CDg6DBgMSlYYLy9M
+        SjZPCTJVSlVKTkxIS0JITUlJSU5KVTMWGhIXVQkSGBMaCR9VCx4VHDsUCwsUVRgUFkVZV1kSC1lB
+        WUpJSlVKSVVKT0xVSU9CWVdZCAFZQUpOQ0M3Bg++
+X-HM-Tid: 0a6e43afc0f59376kuws90e004e17ee
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+U2lnbmVkLW9mZi1ieTogUGVuZyBIYW8gPHJpY2hhcmQucGVuZ0BvcHBvLmNvbT4KLS0tCsKgYXJj
+aC94ODYva3ZtL3ZteC9uZXN0ZWQuYyB8IDMgKy0tCsKgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
+aW9uKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS92bXgvbmVz
+dGVkLmMgYi9hcmNoL3g4Ni9rdm0vdm14L25lc3RlZC5jCmluZGV4IGU3NmViNGYuLmQwZTZjNDAg
+MTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2t2bS92bXgvbmVzdGVkLmMKKysrIGIvYXJjaC94ODYva3Zt
+L3ZteC9uZXN0ZWQuYwpAQCAtNDk0NSw4ICs0OTQ1LDcgQEAgc3RhdGljIGludCBoYW5kbGVfaW52
+ZXB0KHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkKwqAJICovCsKgCQlicmVhazsKwqAJZGVmYXVsdDoK
+LQkJQlVHX09OKDEpOwotCQlicmVhazsKKwkJQlVHKCk7CsKgCX0KwqAKwqAJcmV0dXJuIG5lc3Rl
+ZF92bXhfc3VjY2VlZCh2Y3B1KTsKLS3CoAoyLjcuNA==
 
-
-On 11/06/2019 10:31 PM, Ard Biesheuvel wrote:
-> On Tue, 5 Nov 2019 at 21:39, Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
->>
->> The function efi_mem_type() is expected (per documentation above) to return
->> EFI_RESERVED_TYPE when a given physical address is not present in the EFI
->> memory map. Even though EFI_RESERVED_TYPE is not getting checked explicitly
->> anywhere in the callers, it is always better to return expected values.
->>
->> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->> Cc: linux-efi@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> This reverts commit f99afd08a45fbbd9ce35a7624ffd1d850a1906c0.
-> 
-> Could you explain why it is better to fix the code than fix the comment?
-
-From the above commit message, its not clear how returning EFI_RESERVED_TYPE
-would have meant that a memory descriptor really exists.
-
-Just wondering if firmware itself can send across memory descriptors with
-EFI_RESERVED_TYPE attribute or it is only a software specific attribute ?
-Currently it is being used while merging two adjacent regions with similar
-type and attributes. Searching for physical addresses within those merged
-memory descriptors will return EFI_RESERVED_TYPE but that is different than
-the entry not being present at all. So I think the previous commit which
-introduced -EINVAL/-ENOTSUPP in place for EFI_RESERVED_TYPE did the right
-thing.
-
-We should fix the comment instead, will send a patch.
-
-> 
->> ---
->>  drivers/firmware/efi/efi.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
->> index 69f00f7453a3..bdda90a4601e 100644
->> --- a/drivers/firmware/efi/efi.c
->> +++ b/drivers/firmware/efi/efi.c
->> @@ -914,7 +914,7 @@ int efi_mem_type(unsigned long phys_addr)
->>                                   (md->num_pages << EFI_PAGE_SHIFT))))
->>                         return md->type;
->>         }
->> -       return -EINVAL;
->> +       return EFI_RESERVED_TYPE;
->>  }
->>  #endif
->>
->> --
->> 2.20.1
->>
