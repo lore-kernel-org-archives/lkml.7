@@ -2,260 +2,168 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E2C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023D4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2112421882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC60D21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153561;
-	bh=T4vs0catgIuCd1KtdiXulfwegTRPj3irzJCExPcCY7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=daUIyVCTjCqQ08m8dlSn3gHxkHikyx0XwowMoUT8TmTOuN5IltRYcJeqC+S7pKgBD
-	 ArNU5ZgGIZow6aQUAD+E1rRdmwDusQLvtyFRt3s7Shebq1jZ03qwmA9y1A+1FvbUEW
-	 lxpw3ll9PANrnahozykEq8KEnyyGdCTb5Lw92Hts=
+	s=default; t=1573153574;
+	bh=GW9DDPUhIS2WomVrJzb6KTKqKcdBgfn6Vbhsyfh2J7U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FIpQtyTc0ho4xSDYYD1s0y8FHyRwT2Z9ZxPB6C6rPiT73vjnz9A5gCI9dSIySyINp
+	 RDpz0lNNp1ocHvStsI5a+fDdwBc6PWoPe8/bSHExVDCQT9hYCm9DdK/RSZ/WHoEDMo
+	 DE1egGKVfL5INUHVBbO9Y20YgpOe9Bm0oakES544=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfKGTGA (ORCPT
+        id S1728846AbfKGTGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:06:00 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46084 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfKGTF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:05:59 -0500
-Received: by mail-qt1-f195.google.com with SMTP id u22so3512206qtq.13;
-        Thu, 07 Nov 2019 11:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U8zpmiqBADxX47OznOybd9yWoe3no3mfK8sqGsDDxeQ=;
-        b=MLQWOL50SgLqIriBuddIFpApYq/Eyf/Ty4qohAkuymWPzpiyXayupTE0X9t79pFy8Q
-         ONhexVDx6tWa4j83oubokoFOOotudgz1XkmKutppjfgHwIe6EnJPmtBAPBzqBkxQDaJm
-         HvjBNkaljz0e5qOe7Wv6lQ4LwcpR2qLBSWRKrCa4Fz7nY6Q6oMEZ71tZJracAxfM1x8S
-         cbMMeFS87AKjm5zjXs/qe5kB8YUp7k2/pnfUCi5MLQICF9zKPdIIddhnoNDxqT+7zV/Q
-         QlQGugssp7mFNeJEoNGKU2h4qRj+2NnE0IlYuhpIZGFc4qVLqTB3/7GtCnS/Ngy1gQJx
-         ERaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U8zpmiqBADxX47OznOybd9yWoe3no3mfK8sqGsDDxeQ=;
-        b=LY42eC6A/j+gGLuFLAcmLKkNzlJmpd00Q9ZBaWgv/UxnQpdEO8cxUc2FD/4rTBnmkZ
-         76I4/4rqckJXJ7vLam8RhnhAojehtuRW/HwSiDqYbANzA15Y7HlDsFluEpS99d+5kb37
-         T96f6oMq2xsYl+evE1nTQgQLi2Gfn7hgG0FQH8LdyQReQu31MKDlBekD1T7d78nh8sGC
-         2CSO/snekOtinRkMnOIucA37b7hjIiFdCkGMsPThVUHP4/BWwBjL4MuZjemkEJvliLLA
-         N50OkFgXyQ4h5ZXspFu2vd4YzLPZyuiuA/zivP0ePmqFFMfGsip9DcKYFlgaA/YdV8J9
-         wRjg==
-X-Gm-Message-State: APjAAAX5UjUEqqZ3qfoWEGcZHK1XNEhbF3tLYkoBliJFcE7vdzQlxmE3
-        8JPiJnkECYcAW69HaJPk1/I=
-X-Google-Smtp-Source: APXvYqx7OcV8j88k3kUZwU07cB8Fnru+N9/4Syy2Nw52WliHVqFiJLsfvwB75ltMAmUhQk0V7mb+Qw==
-X-Received: by 2002:ac8:2ff3:: with SMTP id m48mr1760184qta.127.1573153557730;
-        Thu, 07 Nov 2019 11:05:57 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:3f13])
-        by smtp.gmail.com with ESMTPSA id w26sm1382599qkf.59.2019.11.07.11.05.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Nov 2019 11:05:57 -0800 (PST)
-Date:   Thu, 7 Nov 2019 11:05:55 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, kernel-team@fb.com,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH v2 1/5] bfq-iosched: stop using blkg->stat_bytes and
- ->stat_ios
-Message-ID: <20191107190555.GB3622521@devbig004.ftw2.facebook.com>
-References: <20191106215838.3973497-1-tj@kernel.org>
- <20191106215838.3973497-2-tj@kernel.org>
+        Thu, 7 Nov 2019 14:06:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727078AbfKGTGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:06:13 -0500
+Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A402121D7B;
+        Thu,  7 Nov 2019 19:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573153572;
+        bh=GW9DDPUhIS2WomVrJzb6KTKqKcdBgfn6Vbhsyfh2J7U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uwtta9L4+pGqjZtcDPjHW9e9t/CniTJCSsBh49cfKF2FTLjgZI3MMD8mWteRxokmf
+         NExFQ6pSXtXmdQ3+2ZvIHapHgYdMLZi3XUrarrJwDhrCXYqxst3IstFC5Dyc/MJ9bs
+         NHuQ9Xnu82iIIjhIlwitaq5twk37C3VLd0WIjsEs=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Joe Mario <jmario@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 37/63] perf env: Add perf_env__numa_node()
+Date:   Thu,  7 Nov 2019 15:59:45 -0300
+Message-Id: <20191107190011.23924-38-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
+References: <20191107190011.23924-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106215838.3973497-2-tj@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 4f711dd784f8666ec41fa5319f16838235557a30 Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Thu, 7 Nov 2019 11:01:19 -0800
+From: Jiri Olsa <jolsa@kernel.org>
 
-When used on cgroup1, bfq uses the blkg->stat_bytes and ->stat_ios
-from blk-cgroup core to populate six stat knobs.  blk-cgroup core is
-moving away from blkg_rwstat to improve scalability and won't be able
-to support this usage.
+To speed up cpu to node lookup, add perf_env__numa_node(), that creates
+cpu array on the first lookup, that holds numa nodes for each stored
+cpu.
 
-It isn't like the sharing gains all that much.  Let's break it out to
-dedicated rwstat counters which are updated when on cgroup1.  This
-makes use of bfqg_*rwstat*() helpers outside of
-CONFIG_BFQ_CGROUP_DEBUG.  Move them out.
-
-v2: Compile fix when !CONFIG_BFQ_CGROUP_DEBUG.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Joe Mario <jmario@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Link: http://lkml.kernel.org/r/20190904073415.723-3-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- block/bfq-cgroup.c  | 39 +++++++++++++++++++++++++++------------
- block/bfq-iosched.c |  4 ++++
- block/bfq-iosched.h |  4 ++++
- 3 files changed, 35 insertions(+), 12 deletions(-)
+ tools/perf/util/env.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/env.h |  6 ++++++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index d4755d4ad009..cea0ae12f937 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -347,6 +347,14 @@ void bfqg_and_blkg_put(struct bfq_group *bfqg)
- 	bfqg_put(bfqg);
- }
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 2a91a10ccfcc..6242a9215df7 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -180,6 +180,7 @@ void perf_env__exit(struct perf_env *env)
+ 	zfree(&env->sibling_threads);
+ 	zfree(&env->pmu_mappings);
+ 	zfree(&env->cpu);
++	zfree(&env->numa_map);
  
-+void bfqg_stats_update_legacy_io(struct request_queue *q, struct request *rq)
+ 	for (i = 0; i < env->nr_numa_nodes; i++)
+ 		perf_cpu_map__put(env->numa_nodes[i].map);
+@@ -354,3 +355,42 @@ const char *perf_env__arch(struct perf_env *env)
+ 
+ 	return normalize_arch(arch_name);
+ }
++
++
++int perf_env__numa_node(struct perf_env *env, int cpu)
 +{
-+	struct bfq_group *bfqg = blkg_to_bfqg(rq->bio->bi_blkg);
++	if (!env->nr_numa_map) {
++		struct numa_node *nn;
++		int i, nr = 0;
 +
-+	blkg_rwstat_add(&bfqg->stats.bytes, rq->cmd_flags, blk_rq_bytes(rq));
-+	blkg_rwstat_add(&bfqg->stats.ios, rq->cmd_flags, 1);
++		for (i = 0; i < env->nr_numa_nodes; i++) {
++			nn = &env->numa_nodes[i];
++			nr = max(nr, perf_cpu_map__max(nn->map));
++		}
++
++		nr++;
++
++		/*
++		 * We initialize the numa_map array to prepare
++		 * it for missing cpus, which return node -1
++		 */
++		env->numa_map = malloc(nr * sizeof(int));
++		if (!env->numa_map)
++			return -1;
++
++		for (i = 0; i < nr; i++)
++			env->numa_map[i] = -1;
++
++		env->nr_numa_map = nr;
++
++		for (i = 0; i < env->nr_numa_nodes; i++) {
++			int tmp, j;
++
++			nn = &env->numa_nodes[i];
++			perf_cpu_map__for_each_cpu(j, tmp, nn->map)
++				env->numa_map[j] = i;
++		}
++	}
++
++	return cpu >= 0 && cpu < env->nr_numa_map ? env->numa_map[cpu] : -1;
 +}
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index a3059dc1abe5..11d05ae3606a 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -87,6 +87,10 @@ struct perf_env {
+ 		struct rb_root		btfs;
+ 		u32			btfs_cnt;
+ 	} bpf_progs;
 +
- /* @stats = 0 */
- static void bfqg_stats_reset(struct bfqg_stats *stats)
- {
-@@ -431,6 +439,8 @@ void bfq_init_entity(struct bfq_entity *entity, struct bfq_group *bfqg)
- 
- static void bfqg_stats_exit(struct bfqg_stats *stats)
- {
-+	blkg_rwstat_exit(&stats->bytes);
-+	blkg_rwstat_exit(&stats->ios);
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	blkg_rwstat_exit(&stats->merged);
- 	blkg_rwstat_exit(&stats->service_time);
-@@ -448,6 +458,10 @@ static void bfqg_stats_exit(struct bfqg_stats *stats)
- 
- static int bfqg_stats_init(struct bfqg_stats *stats, gfp_t gfp)
- {
-+	if (blkg_rwstat_init(&stats->bytes, gfp) ||
-+	    blkg_rwstat_init(&stats->ios, gfp))
-+		return -ENOMEM;
-+
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	if (blkg_rwstat_init(&stats->merged, gfp) ||
- 	    blkg_rwstat_init(&stats->service_time, gfp) ||
-@@ -1057,7 +1071,6 @@ static ssize_t bfq_io_set_weight(struct kernfs_open_file *of,
- 	return bfq_io_set_device_weight(of, buf, nbytes, off);
- }
- 
--#ifdef CONFIG_BFQ_CGROUP_DEBUG
- static int bfqg_print_rwstat(struct seq_file *sf, void *v)
- {
- 	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_rwstat,
-@@ -1082,6 +1095,7 @@ static int bfqg_print_rwstat_recursive(struct seq_file *sf, void *v)
- 	return 0;
- }
- 
-+#ifdef CONFIG_BFQ_CGROUP_DEBUG
- static int bfqg_print_stat(struct seq_file *sf, void *v)
- {
- 	blkcg_print_blkgs(sf, css_to_blkcg(seq_css(sf)), blkg_prfill_stat,
-@@ -1125,7 +1139,8 @@ static int bfqg_print_stat_recursive(struct seq_file *sf, void *v)
- static u64 bfqg_prfill_sectors(struct seq_file *sf, struct blkg_policy_data *pd,
- 			       int off)
- {
--	u64 sum = blkg_rwstat_total(&pd->blkg->stat_bytes);
-+	struct bfq_group *bfqg = blkg_to_bfqg(pd->blkg);
-+	u64 sum = blkg_rwstat_total(&bfqg->stats.bytes);
- 
- 	return __blkg_prfill_u64(sf, pd, sum >> 9);
- }
-@@ -1142,8 +1157,8 @@ static u64 bfqg_prfill_sectors_recursive(struct seq_file *sf,
- {
- 	struct blkg_rwstat_sample tmp;
- 
--	blkg_rwstat_recursive_sum(pd->blkg, NULL,
--			offsetof(struct blkcg_gq, stat_bytes), &tmp);
-+	blkg_rwstat_recursive_sum(pd->blkg, &blkcg_policy_bfq,
-+			offsetof(struct bfq_group, stats.bytes), &tmp);
- 
- 	return __blkg_prfill_u64(sf, pd,
- 		(tmp.cnt[BLKG_RWSTAT_READ] + tmp.cnt[BLKG_RWSTAT_WRITE]) >> 9);
-@@ -1226,13 +1241,13 @@ struct cftype bfq_blkcg_legacy_files[] = {
- 	/* statistics, covers only the tasks in the bfqg */
- 	{
- 		.name = "bfq.io_service_bytes",
--		.private = (unsigned long)&blkcg_policy_bfq,
--		.seq_show = blkg_print_stat_bytes,
-+		.private = offsetof(struct bfq_group, stats.bytes),
-+		.seq_show = bfqg_print_rwstat,
- 	},
- 	{
- 		.name = "bfq.io_serviced",
--		.private = (unsigned long)&blkcg_policy_bfq,
--		.seq_show = blkg_print_stat_ios,
-+		.private = offsetof(struct bfq_group, stats.ios),
-+		.seq_show = bfqg_print_rwstat,
- 	},
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	{
-@@ -1269,13 +1284,13 @@ struct cftype bfq_blkcg_legacy_files[] = {
- 	/* the same statistics which cover the bfqg and its descendants */
- 	{
- 		.name = "bfq.io_service_bytes_recursive",
--		.private = (unsigned long)&blkcg_policy_bfq,
--		.seq_show = blkg_print_stat_bytes_recursive,
-+		.private = offsetof(struct bfq_group, stats.bytes),
-+		.seq_show = bfqg_print_rwstat_recursive,
- 	},
- 	{
- 		.name = "bfq.io_serviced_recursive",
--		.private = (unsigned long)&blkcg_policy_bfq,
--		.seq_show = blkg_print_stat_ios_recursive,
-+		.private = offsetof(struct bfq_group, stats.ios),
-+		.seq_show = bfqg_print_rwstat_recursive,
- 	},
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	{
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index b33be928d164..4629f5580d46 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5450,6 +5450,10 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	bool idle_timer_disabled = false;
- 	unsigned int cmd_flags;
- 
-+#ifdef CONFIG_BFQ_GROUP_IOSCHED
-+	if (!cgroup_subsys_on_dfl(io_cgrp_subsys) && rq->bio)
-+		bfqg_stats_update_legacy_io(q, rq);
-+#endif
- 	spin_lock_irq(&bfqd->lock);
- 	if (blk_mq_sched_try_insert_merge(q, rq)) {
- 		spin_unlock_irq(&bfqd->lock);
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 5d1a519640f6..2676c06218f1 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -809,6 +809,9 @@ struct bfq_stat {
++	/* For fast cpu to numa node lookup via perf_env__numa_node */
++	int			*numa_map;
++	int			 nr_numa_map;
  };
  
- struct bfqg_stats {
-+	/* basic stats */
-+	struct blkg_rwstat		bytes;
-+	struct blkg_rwstat		ios;
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	/* number of ios merged */
- 	struct blkg_rwstat		merged;
-@@ -956,6 +959,7 @@ void bfq_put_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg);
- 
- /* ---------------- cgroups-support interface ---------------- */
- 
-+void bfqg_stats_update_legacy_io(struct request_queue *q, struct request *rq);
- void bfqg_stats_update_io_add(struct bfq_group *bfqg, struct bfq_queue *bfqq,
- 			      unsigned int op);
- void bfqg_stats_update_io_remove(struct bfq_group *bfqg, unsigned int op);
+ enum perf_compress_type {
+@@ -120,4 +124,6 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ 							__u32 prog_id);
+ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
++
++int perf_env__numa_node(struct perf_env *env, int cpu);
+ #endif /* __PERF_ENV_H */
 -- 
-2.17.1
+2.21.0
 
