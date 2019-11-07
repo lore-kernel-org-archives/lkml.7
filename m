@@ -2,124 +2,133 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF309C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906E3C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C297921882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6936521882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HtcOTn3Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YqhmYVEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfKGT2B (ORCPT
+        id S1726733AbfKGT2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:28:01 -0500
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:38516 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfKGT2A (ORCPT
+        Thu, 7 Nov 2019 14:28:04 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58679 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726485AbfKGT2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:28:00 -0500
-Received: by mail-wm1-f46.google.com with SMTP id z19so3757932wmk.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:27:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Gv7piqE0NJN9u+0/VWapMYLQDSNoGwEvnT95iHm9RBo=;
-        b=HtcOTn3ZWuljOuXCKi45eCAIudeUIys2Dkd9s1VzbtZBEhaaoS8zOnRZwxOfvhBLUL
-         20VFcYDA4SLxa8GFKo1Lj+z4zT43fdIOMwT/N+cJe98m9j8UdntCOsyL0JEGk4otgB5l
-         RIFqOT130uNTHlN/Dt2C1kIeTZpmdasLP/YMFnmD6M1fxfQd9wtHu1U2WjswYfNyvrea
-         r6usN/YEMsHo/YZeJAJNdfU8syPHGIo9fa8me7orjakE58e3i+Dm9qXVSDoNbAmv+kJb
-         nm2WOuXdWaqLkoDqMGTfP8U5ac40hmssQCOifSwsQnl4H/N3SGk0jWeHexVorbAqXxVb
-         99Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gv7piqE0NJN9u+0/VWapMYLQDSNoGwEvnT95iHm9RBo=;
-        b=cevlnzBe85Shw9mDO/fyDhAYBlKfDgmveiKHPmlxEclJNLIllMyA4vzoXZiV5+2yRa
-         d+3PB9Roxb2FMpahOChqmFkC/Ke7Iqmh25bjkdansMshvbdavLgr6Ar3QIzLWdh30if5
-         Va94pskT+Tt4PnzMAUg7bgGGvT/qCeKsDH8t66Di5Yco/MruH415m3gmlFarYA7ZiWiV
-         JtdlnK9O1n2j2qsKq3d0FxCZc8sQiN8k2KdEbnG77sdEqygkEM6T8PqZpWQsFrgVXB2M
-         oxsdZwYNrzIoDcuXAUS8vUs2WNHOZ7HZJbDLdiiPtMW+d5KudPEVEc8i4LEvtJ0r1vnI
-         Z53g==
-X-Gm-Message-State: APjAAAVBD8MwfbuquQ+4i9Sl9zi4ljykRIf8Sqh2GSOMnnXrPvmvBzDC
-        bgQjre2D1Moz2rHLHoYPd98+cg==
-X-Google-Smtp-Source: APXvYqxREIEDk8O6HqF7vSZ9tSUM1PBDhhLxYdS4Yag/N3kjj8SeQRoalxsyu/NnPxvHHEwkS9Yp1g==
-X-Received: by 2002:a1c:6405:: with SMTP id y5mr4840693wmb.175.1573154877932;
-        Thu, 07 Nov 2019 11:27:57 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id j67sm3096216wmb.43.2019.11.07.11.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 11:27:57 -0800 (PST)
-Date:   Thu, 7 Nov 2019 19:27:53 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, linux-kernel@vger.kernel.org,
-        aaron.lwe@gmail.com, valentin.schneider@arm.com, mingo@kernel.org,
-        pauld@redhat.com, jdesfossez@digitalocean.com,
-        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        kernel-team@android.com, john.stultz@linaro.org
-Subject: Re: NULL pointer dereference in pick_next_task_fair
-Message-ID: <20191107192753.GA55494@google.com>
-References: <20191028174603.GA246917@google.com>
- <20191106120525.GX4131@hirez.programming.kicks-ass.net>
- <33643a5b-1b83-8605-2347-acd1aea04f93@virtuozzo.com>
- <20191106165437.GX4114@hirez.programming.kicks-ass.net>
- <20191106172737.GM5671@hirez.programming.kicks-ass.net>
- <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
- <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
- <20191107153848.GA31774@google.com>
- <20191107184356.GF4114@hirez.programming.kicks-ass.net>
+        Thu, 7 Nov 2019 14:28:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573154882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5GOtSEPvdxYm2pxjUsA4qBhfGS9ZCElHaPyIXVtMmQI=;
+        b=YqhmYVEW2e/W1KswTW11LGB6KjIrOS3H2tg14Dx7dbIMFxfNWfcblKfNVKfqNWDo6bZoUc
+        o8nTPPNLooGFv5cnVDltRR9tQS68QaJpWpEwO9k/yFZKMDRfOnndDjGMgYrZjJbfKURgbU
+        MDhU17zI6EkaRL75+bQB3iJtZ2ijx9o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-294-F77lJWRLMVywhZ5pj1TsMQ-1; Thu, 07 Nov 2019 14:27:58 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44B3F1005500;
+        Thu,  7 Nov 2019 19:27:56 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DF045E240;
+        Thu,  7 Nov 2019 19:27:56 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 14:27:55 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
+ UFFD_FEATURE_EVENT_FORK
+Message-ID: <20191107192755.GM17896@redhat.com>
+References: <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <20191105162424.GH30717@redhat.com>
+ <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
+ <20191107083902.GB3247@linux.ibm.com>
+ <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
+ <20191107153801.GF17896@redhat.com>
+ <CAKOZueuKttjyRBgMkaBknzn+fzufZA+gJcd5wnKgiwmO37yN1g@mail.gmail.com>
+ <20191107182259.GK17896@redhat.com>
+ <CAKOZueubtyuTZC5zPTL3qDpVS5RFYFMqx727Bj4fjMHDSY5rMg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <CAKOZueubtyuTZC5zPTL3qDpVS5RFYFMqx727Bj4fjMHDSY5rMg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: F77lJWRLMVywhZ5pj1TsMQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191107184356.GF4114@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 07 Nov 2019 at 19:43:56 (+0100), Peter Zijlstra wrote:
-> But you mean something like:
-> 
-> 	for (class = prev->sched_class; class; class = class->next) {
-> 		if (class->balance(rq, rf))
-> 			break;
-> 	}
-> 
-> 	put_prev_task(rq, prev);
-> 
-> 	for_each_class(class) {
-> 		p = class->pick_next_task(rq);
-> 		if (p)
-> 			return p;
-> 	}
-> 
-> 	BUG();
-> 
-> like?
+On Thu, Nov 07, 2019 at 10:50:26AM -0800, Daniel Colascione wrote:
+> On Thu, Nov 7, 2019 at 10:23 AM Andrea Arcangeli <aarcange@redhat.com> wr=
+ote:
+> > Not all software will do this after calling recvmsg:
+> >
+> >     if (cmsg->cmsg_type =3D=3D SCM_RIGHTS) {
+> >       /* oops we got attacked and an fd was involountarily installed
+> >          because we received another AF_UNIX from a malicious attacker
+> >          in control of the other end of the SCM_RIGHTS-receiving
+> >          AF_UNIX connection instead of our expected socket family
+> >          which doesn't even support SCM_RIGHTS so we would never have
+> >          noticed an fd was installed after recvmsg */
+> >     }
+>=20
+> If a program omits this code after calling recvmsg on a file
+> descriptor of unknown provenance and the program breaks, it's the
+> program's fault. [..]
 
-Right, something like that, though what I had was basically doing the
-pull from within the pick_next_task_*() functions directly, like we were
-doing before. I'm now seeing how easy it is to get this wrong, and that
-even good-looking code in this area can be broken in very subtle ways,
-so I didn't feel comfortable refactoring again so close to rc7. If you
-feel more confident, I'm more than happy to test a patch implemeting the
-above :)
+Hmm, ok, would it be possible to do a research effort and check how
+much software that receives an fd through SCM_RIGHTS and then calls
+recvmsg on it, always remembers to follow the recvsmg with a if
+(cmsg->cmsg_type =3D=3D SCM_RIGHTS) path that closes the involuntarily
+opened fd?
 
-> I had convinced myself we didn't need that, but that DL to RT case is
-> pesky and might require it after all.
+Frankly until today, I didn't realize that not adding a specialized
+"cmsg->cmsg_type =3D=3D SCM_RIGHTS" check after every recvmsg executed on
+any fd received with SCM_RIGHTS, was a program's fault and it made the
+program vulnerable (non robust) from an attack from the other end of
+the AF_UNIX pipe just like if the program issued a read() with uffd
+event fork being sent through SCM_RIGHTS (except in that case it
+wasn't program's fault because read had not to install the fd while
+recvmsg can always install fd if cmsg_type =3D=3D SCM_RIGHTS is returned).
 
-Yep, I don't see a way to avoid iterating all classes to do the balance,
-one way or another ...
+The main argument in favor of recvmsg would be that even if we use it
+for uffd too, it won't make recvmsg on an fd received from SCM_RIGHTS
+any less secure than it already is, but it's not exactly an example of
+robustness in terms of API if it's a program's fault if it doesn't
+follow every recvmsg with the above quoted check.
+
+The ioctl is much more robust because there's no chance that somebody
+can be attacked by forgetting a specialized non intuitive check after
+calling the specialized ioctl that installs the fd.
 
 Thanks,
-Quentin
+Andrea
+
