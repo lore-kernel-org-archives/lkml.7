@@ -2,105 +2,159 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D32C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62CFC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABC92187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tp+LL/fB"
+	by mail.kernel.org (Postfix) with ESMTP id AABBA2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfKGHTS (ORCPT
+        id S1726962AbfKGHZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:19:18 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:43058 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfKGHTR (ORCPT
+        Thu, 7 Nov 2019 02:25:30 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36675 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfKGHZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:19:17 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA77JDA7050480;
-        Thu, 7 Nov 2019 07:19:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=GqFqeBt9Nv2tXaeUwh1OqUx18xyTylz1nlXDFPRLHzI=;
- b=Tp+LL/fBSbL7lpitzgt7noUZlojt53KQUBl44AeA1QvnqSE/9bHyXNE8875aGoUk+wds
- 2kgH9znUOZNv+VAPXzH4WBw8zc/hlCwqqtIQ3L4CGNnFBheiCobmc4cAUc41g7JY8/Bp
- s1FCGnoU6greVk/mgrwEf2LQ5Kt+aHr08fW1QfRVuGwe/mVDrEHejdRHXYu+HFWUfdQQ
- itwxFhLQEqLezoFY+Rs1Kc/fC93dkEo9wJxKoBZDmSI2xkH/chjaR3iThjs76yc8AVCv
- lEeE+i6vjp8ugAhkH3Av4MmO1MIuYB88nt2syxnrSvprAJ/GQU5egsB/VzAjNWO39YQv ig== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w41w141fe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 07:19:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA77IutG131073;
-        Thu, 7 Nov 2019 07:19:12 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w41w92208-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 07:19:12 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA77IohQ022769;
-        Thu, 7 Nov 2019 07:18:51 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 23:18:50 -0800
-Date:   Thu, 7 Nov 2019 10:18:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ovl: create UUIDs for file systems that do not set the
- superblock UUID
-Message-ID: <20191107071843.GN10409@kadam>
-References: <20191106234301.283006-1-colin.king@canonical.com>
- <CAOQ4uxhT4pFzHjjKyoMOc3xVXXqyqc37zd=-pCx2+keA4e6NAg@mail.gmail.com>
+        Thu, 7 Nov 2019 02:25:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c22so1192665wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:25:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=sr15vGZZX2ej4ww+noyT+e+hFOhTxt/7+3VG1604M8Q=;
+        b=kzTe/sHgTiZkKhMsvPzizMSVo4EKq5w/lvi8m5wyTbQ0SkuCE2yLThADS4JG5LV1PJ
+         aafGjd55ze1KpF75vgwhGys8mOgofBXkuDTgv+oL8RNiooBRJDfLxoSjCyAm3YVOPdU/
+         752Yc/zKmbJDaFyDdegxZlqyvqS8h1gk5qC6oFl2RchluSy5IRI8wEPeBoELmoXEvnqt
+         NZOf+oFAvenpA+c/BV4DXYR7zSoSTd5S0HBD6hzT4J4Abx6ihCoEMSktm6Hlev/956fr
+         /9tXoHUDGvmTkUhR6drg8qwUiDHXt+0KnhRepP81cS7LYoBSce7W9qfnd81zF2Q3pmIy
+         ensQ==
+X-Gm-Message-State: APjAAAWyNGU3FYDZPYvN2Wv1XtU8Ga5BYPgOybqM2oujOZBUWP0DCjoc
+        a9iyyvkHqeO/xDCawXd/7RE=
+X-Google-Smtp-Source: APXvYqxZG71wG02513xnV4cEsXC/w4JvAfrwYrjkjG0dOhTsLJxkk8gq+Ke4U85wNBnoXeLq7IZJPQ==
+X-Received: by 2002:a1c:7708:: with SMTP id t8mr1416461wmi.29.1573111527953;
+        Wed, 06 Nov 2019 23:25:27 -0800 (PST)
+Received: from darkstar ([109.70.119.5])
+        by smtp.gmail.com with ESMTPSA id 36sm1841166wrj.42.2019.11.06.23.25.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 23:25:27 -0800 (PST)
+Date:   Thu, 7 Nov 2019 07:25:25 +0000
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: core: fix compilation error when cgroup not
+ selected
+Message-ID: <20191107072525.GA19642@darkstar>
+References: <20191105112212.596-1-qais.yousef@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhT4pFzHjjKyoMOc3xVXXqyqc37zd=-pCx2+keA4e6NAg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105112212.596-1-qais.yousef@arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 09:08:44AM +0200, Amir Goldstein wrote:
-> diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-> index a8279280e88d..a0227c31fe17 100644
-> --- a/fs/overlayfs/ovl_entry.h
-> +++ b/fs/overlayfs/ovl_entry.h
-> @@ -22,6 +22,8 @@ struct ovl_config {
->  struct ovl_sb {
->  	struct super_block *sb;
->  	dev_t pseudo_dev;
-> +	/* Unusable (conflicting) uuid */
-> +	bool nouuid;
+[ +Randy ]
 
-Could we name this ignore_uuid, skip_uuid or bad_uuid or something?
-Otherwise we end up with double negatives.
+Hi Qais,
 
-regards,
-dan carpenter
+On 05-Nov 11:22, Qais Yousef wrote:
+> When cgroup is disabled the following compilation error was hit
+> 
+> 	kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
+> 	kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
+> 	  struct css_task_iter it;
+> 			       ^~
+> 	kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
+> 	  css_task_iter_start(css, 0, &it);
+> 	  ^~~~~~~~~~~~~~~~~~~
+> 	  __sg_page_iter_start
+> 	kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
+> 	  while ((p = css_task_iter_next(&it))) {
+> 		      ^~~~~~~~~~~~~~~~~~
+> 		      __sg_page_iter_next
+> 	kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
+> 	  css_task_iter_end(&it);
+> 	  ^~~~~~~~~~~~~~~~~
+> 	  get_task_cred
+> 	kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
+> 	  struct css_task_iter it;
+> 			       ^~
+> 	cc1: some warnings being treated as errors
+> 	make[2]: *** [kernel/sched/core.o] Error 1
+> 
+> Fix by protetion uclamp_update_active_tasks() with
+> CONFIG_UCLAMP_TASK_GROUP
+> 
+> Fixes: babbe170e053 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
 
+Thanks for posting this again.
+
+We now have three "versions" of this same fix, including:
+ - the original bug report by Randy and a fix from me here:
+   Message-ID: <8736gv2gbv.fsf@arm.com>
+   https://lore.kernel.org/linux-next/8736gv2gbv.fsf@arm.com/
+ - and a follow up patch from Arnd:
+   Message-ID: <20190918195957.2220297-1-arnd@arndb.de>
+   https://lore.kernel.org/lkml/20190918195957.2220297-1-arnd@arndb.de/
+
+So, I guess now we just have to pick the one with the changelog we
+prefer. :)
+
+In all cases we should probably add:
+
+  Reported-by: Randy Dunlap <rdunlap@infradead.org>
+  Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Best,
+Patrick
+
+> ---
+>  kernel/sched/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index dd05a378631a..afd4d8028771 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1073,6 +1073,7 @@ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
+>  	task_rq_unlock(rq, p, &rf);
+>  }
+>  
+> +#ifdef CONFIG_UCLAMP_TASK_GROUP
+>  static inline void
+>  uclamp_update_active_tasks(struct cgroup_subsys_state *css,
+>  			   unsigned int clamps)
+> @@ -1091,7 +1092,6 @@ uclamp_update_active_tasks(struct cgroup_subsys_state *css,
+>  	css_task_iter_end(&it);
+>  }
+>  
+> -#ifdef CONFIG_UCLAMP_TASK_GROUP
+>  static void cpu_util_update_eff(struct cgroup_subsys_state *css);
+>  static void uclamp_update_root_tg(void)
+>  {
+> -- 
+> 2.17.1
+> 
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
