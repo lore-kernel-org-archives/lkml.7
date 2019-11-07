@@ -2,58 +2,60 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B01C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81159C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45B72178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544412178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHfr/Fy0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS289DGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389228AbfKGOO0 (ORCPT
+        id S2389246AbfKGOOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:14:26 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41213 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389032AbfKGOO0 (ORCPT
+        Thu, 7 Nov 2019 09:14:33 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40247 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbfKGOOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:14:26 -0500
-Received: by mail-wr1-f65.google.com with SMTP id p4so3186670wrm.8;
-        Thu, 07 Nov 2019 06:14:24 -0800 (PST)
+        Thu, 7 Nov 2019 09:14:32 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f3so2591084wmc.5;
+        Thu, 07 Nov 2019 06:14:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=SySlf9LlN4iQ5DOxcm689bd9gGZWJLbEiQiXadmQ1Pk=;
-        b=UHfr/Fy0eKNYcLbTRmDFkD8ByLbeJuZ98PewgJnQ9K47BY1w6YNNND/1frcRFyjHYs
-         ykqLJocw8egu1fRyxlZkcz9UWGaPlleM7yTcft6cZIXFqB6A2yo6aIBWX8+R1hM2XhWo
-         5exEx26Z6Qvoo62u6gmzfkHWLvNa5ncHQKYxImXIWbhffMRQHk/bhDwe2ysIVZWakJW0
-         h+f/th2fALLj8N3unjhmpXSGtR/s7yp5oMwkriW9fTWoGEZYrexFikYEyjesQM9Zm65Q
-         YWO4i+iMmmOAAOTOBhzi8THEfdgTj6R9BqZiik9wy7sHGRchD4hMvevOHnGJua2e6gap
-         2W9A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=z4v4wVl3s1hArrGKDQlCf3SAy+2jZtyPSY8RHpRjW/c=;
+        b=gS289DGLAlmjTsIrrI+HnfOBs+MFe6Z+dMKRM77pwCmaqmab3zS/UDr4LGAIccnnoj
+         PYrHQNF5s4/Ih6zl2gbemqnAbWBI5KZ1/la/tOIjs7Z1mEm6RUTlmwSd10j4EvE1y6dW
+         RsyplNNZnac1XgHliHIM29YvJlXckXAD80h4vAYw1R7utQbpsjeMZK5CO5C5q42vjLcZ
+         ElJ16ZMLWl3a4pFdrMUJk8C0/A/Og+Td8uC0OmSWoVCviiPxMrNZhrK2IkPaxbaf/raj
+         MgVpm6kSFTyXyj34AndF/Vv5M8JU1kxfeuPS6cD5OLrLD9yTmp2GcVmknxjmj+xqTnIP
+         Msog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SySlf9LlN4iQ5DOxcm689bd9gGZWJLbEiQiXadmQ1Pk=;
-        b=dmHE7U+Jd2cJjfb5Aw2idLePZc1clqB3Cd0M8Xfwpehjfx6bLWiWxgUBUBqOOup/lL
-         EzOIrxqQFrbaEMmUcX3KRFTyVBnxmlu0DNmkNRrRwqgrvQkuhzq92uTmrx5ui3FWccHO
-         IfK2kv/N+q4UOR66crewvgfYX3/JZdA2kgN9msu5PDl7KPko8Do2C5gyxD+FqCtH32o7
-         jhFBfF/pIINlUcAKwnbm0App/ECe5MnlxAK6nd42Z1IyXB0pzUH6WviM/oULy85M3Fl+
-         NIgsOx6VcU8mD/Ev1x+nZrWBgchG4FzwNnpjMU9q0xmHoRfOQPQJ2zE9L+pcQQEuWg4o
-         08AQ==
-X-Gm-Message-State: APjAAAXLMG0SAgX4NjHZwrclSPlrZ7YHfRtWslHNIJhHWT4nrApmME74
-        5nddyPFe3GEMEN6ogEbSESIxaUOvO+8=
-X-Google-Smtp-Source: APXvYqz3a62TlecYMknedHe56Nzvz4QPMUm0c4y7nxYBP+UKHA+WI3HCrJm0EKZ9PUZYV+Hho7vQ5w==
-X-Received: by 2002:a05:6000:11c4:: with SMTP id i4mr3054296wrx.277.1573136063599;
-        Thu, 07 Nov 2019 06:14:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=z4v4wVl3s1hArrGKDQlCf3SAy+2jZtyPSY8RHpRjW/c=;
+        b=Z9ERVUttt9SoDXNE4/W42qBoOggMf+PiT/zY19JoMOODyCaTZ0VMeHXD2B1auPB4Ac
+         TpF51AEaiOcpFub7Sy/cmZDRXxSG9572n46MNiEg8NTWdat2cnIsoi1YLCYa9S+6FCWN
+         gMmJFdqn21Ek1YIgDRoYTcRbFkCOaqz0iN2EfQxhZpa+2Uugo165nUKkCn7SLkj9042C
+         kDrSndoSC8GZwiYcM8uC+zaiFK2yjm/3AFgrYFgPlyHoOvPvIsdpS9JWS6VDM1SDWXFt
+         9IEbJY1rR7z+3ZbIeIbAgjPOfH34nbJSObAOk7dbpM7FwljsMPLp9r8qVIUFyj+RzOlr
+         98qg==
+X-Gm-Message-State: APjAAAW+1z2nxJ6jYoVqIMMnhTU7aUeBkXDtNGrZPHiLBdH0tBO57yXd
+        M+c2gs3mj2bv0kpCgAIVJ1oRfvlhgJI=
+X-Google-Smtp-Source: APXvYqwYVZfRRrimnVJdMUO6UWxwQXvnQ3zdZ6Jzu5hsncWSH8RirMg9CVbBRICD2N/Qud6kBs4XGw==
+X-Received: by 2002:a05:600c:20c9:: with SMTP id y9mr3019835wmm.72.1573136069870;
+        Thu, 07 Nov 2019 06:14:29 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id b1sm2453888wrw.77.2019.11.07.06.14.21
+        by smtp.gmail.com with ESMTPSA id b1sm2453888wrw.77.2019.11.07.06.14.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 06:14:22 -0800 (PST)
+        Thu, 07 Nov 2019 06:14:28 -0800 (PST)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -64,45 +66,72 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH 00/13] phy: usb: Updates to Broadcom STB USB PHY driver
-Date:   Thu,  7 Nov 2019 09:13:26 -0500
-Message-Id: <20191107141339.6079-1-alcooperx@gmail.com>
+Subject: [PATCH 01/13] phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
+Date:   Thu,  7 Nov 2019 09:13:27 -0500
+Message-Id: <20191107141339.6079-2-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191107141339.6079-1-alcooperx@gmail.com>
+References: <20191107141339.6079-1-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add support for 7216 and 7211 Broadcom SoCs which use the new
-  Synopsis USB Controller.
-- Add support for USB Wake
-- Add various bug fixes.
+When the EHCI controller received a 512 byte USB packet that
+had to be broken into 2 256 byte bursts across the SCB bus AND
+there was a following 512 byte USB packet, the second burst of
+data from the first packet was sometimes being lost. If the
+burst size was changed to 128 bytes via the EBR_SCB_SIZE field
+in the USB_CTRL_EBRIDGE register we'd see the 4th 128 byte burst
+of the first packet being lost. This problem became much worse
+if other threads were running that accessed memory, like a memcpy
+test. Setting the EBR_SCB_SIZE to 512, which prevents breaking
+the EHCI USB packet (max size of 512 bytes) into bursts, fixed
+the problem.
 
-Al Cooper (13):
-  phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
-  phy: usb: Get all drivers that use USB clks using correct
-    enable/disable
-  phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
-  phy: usb: Add "wake on" functionality
-  phy: usb: Restructure in preparation for adding 7216 USB support
-  dt-bindings: Add Broadcom STB USB PHY binding document
-  phy: usb: Add support for new Synopsis USB controller on the 7216
-  phy: usb: Add support for new Synopsis USB controller on the 7211b0
-  phy: usb: fix driver to defer on clk_get defer
-  phy: usb: PHY's MDIO registers not accessible without device installed
-  phy: usb: bdc: Fix occasional failure with BDC on 7211
-  phy: usb: USB driver is crashing during S3 resume on 7216
-  phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+---
+ drivers/phy/broadcom/phy-brcm-usb-init.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
- .../bindings/phy/brcm,brcmstb-usb-phy.txt     |  69 ++-
- drivers/phy/broadcom/Makefile                 |   2 +-
- .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 414 ++++++++++++++++++
- drivers/phy/broadcom/phy-brcm-usb-init.c      | 226 +++++-----
- drivers/phy/broadcom/phy-brcm-usb-init.h      | 148 ++++++-
- drivers/phy/broadcom/phy-brcm-usb.c           | 264 +++++++++--
- 6 files changed, 938 insertions(+), 185 deletions(-)
- create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-
+diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.c b/drivers/phy/broadcom/phy-brcm-usb-init.c
+index 3c53625f8bc2..56d9b314a8d0 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb-init.c
++++ b/drivers/phy/broadcom/phy-brcm-usb-init.c
+@@ -42,6 +42,7 @@
+ #define   USB_CTRL_PLL_CTL_PLL_IDDQ_PWRDN_MASK		0x80000000 /* option */
+ #define USB_CTRL_EBRIDGE		0x0c
+ #define   USB_CTRL_EBRIDGE_ESTOP_SCB_REQ_MASK		0x00020000 /* option */
++#define   USB_CTRL_EBRIDGE_EBR_SCB_SIZE_MASK		0x00000f80 /* option */
+ #define USB_CTRL_OBRIDGE		0x10
+ #define   USB_CTRL_OBRIDGE_LS_KEEP_ALIVE_MASK		0x08000000
+ #define USB_CTRL_MDIO			0x14
+@@ -176,6 +177,7 @@ static const struct id_to_type id_to_type_table[] = {
+ 	{ 0x33900000, BRCM_FAMILY_3390A0 },
+ 	{ 0x72500010, BRCM_FAMILY_7250B0 },
+ 	{ 0x72600000, BRCM_FAMILY_7260A0 },
++	{ 0x72550000, BRCM_FAMILY_7260A0 },
+ 	{ 0x72680000, BRCM_FAMILY_7271A0 },
+ 	{ 0x72710000, BRCM_FAMILY_7271A0 },
+ 	{ 0x73640000, BRCM_FAMILY_7364A0 },
+@@ -948,6 +950,17 @@ void brcm_usb_init_eohci(struct brcm_usb_init_params *params)
+ 	if (params->selected_family == BRCM_FAMILY_7271A0)
+ 		/* Enable LS keep alive fix for certain keyboards */
+ 		USB_CTRL_SET(ctrl, OBRIDGE, LS_KEEP_ALIVE);
++
++	if (params->family_id == 0x72550000) {
++		/*
++		 * Make the burst size 512 bytes to fix a hardware bug
++		 * on the 7255a0. See HW7255-24.
++		 */
++		reg = brcmusb_readl(USB_CTRL_REG(ctrl, EBRIDGE));
++		reg &= ~USB_CTRL_MASK(EBRIDGE, EBR_SCB_SIZE);
++		reg |= 0x800;
++		brcmusb_writel(reg, USB_CTRL_REG(ctrl, EBRIDGE));
++	}
+ }
+ 
+ void brcm_usb_init_xhci(struct brcm_usb_init_params *params)
 -- 
 2.17.1
 
