@@ -2,82 +2,143 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E651FC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250A1FC6196
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DF821848
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CF12187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TWDxZ2vs"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rXc2aBAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbfKGBeO (ORCPT
+        id S1732784AbfKGBnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:34:14 -0500
-Received: from mail-m972.mail.163.com ([123.126.97.2]:48498 "EHLO
-        mail-m972.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbfKGBeO (ORCPT
+        Wed, 6 Nov 2019 20:43:10 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45966 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728306AbfKGBnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:34:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=igu7ryEbU708awC1Bd
-        3bWmgFCHnT2YPwmA8o7T7/XHc=; b=TWDxZ2vsOevUE01PkN9V313//G6+++5dcw
-        vLsKDQNMZGpYsxwdZRVNq5GFy1flyyude4eMquHtB0cgsSbAs6rGyQoW6C90umbR
-        U4zrGAXj303972qoav6QHdQTY66jemwoMCg52LtKQdTflGfhicVQiBP5OmTWVtnk
-        Tl3vxTkg8=
-Received: from localhost.localdomain (unknown [202.112.113.212])
-        by smtp2 (Coremail) with SMTP id GtxpCgC3hBJldMNdYlzDBA--.183S3;
-        Thu, 07 Nov 2019 09:33:52 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: [PATCH] NFC: st21nfca: fix double free
-Date:   Thu,  7 Nov 2019 09:33:20 +0800
-Message-Id: <1573090400-23570-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: GtxpCgC3hBJldMNdYlzDBA--.183S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKr1DZw1fuF15Jw4DtFy5Jwb_yoWfXFc_K3
-        W8Xw1xXrs0g34UKa13uFsxZ3yIgFy5Z3WFgrs2qa4SyryxZwnxZFs0vrs7Wr17WrsFvF9r
-        uan5Zr1Fvr4qqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUU9jjJUUUUU==
-X-Originating-IP: [202.112.113.212]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBZwBmcletw91YHQAAsS
+        Wed, 6 Nov 2019 20:43:10 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z4so971617pfn.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:43:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9VO4sGrknxbUDh30qhuG3KUeNeC1A4Tt2xPDsLEp5fM=;
+        b=rXc2aBAZzYFknfwCG04vRP6mmQavmHkErS2hQWqXtresgzruUmJgRYIhy6QRzdzu0j
+         QSqFg22DcPwXm3nS5X1Gbk0909scC7T/V5BMU4hictwJB/67vP3qk5XsOrlE+0Hlo1cy
+         jjymQS7NDLdu3FJObNkukz/ZH4eSVMaZZDYsaIwqPf3teBONwlO5/a4rlJI0TatOQQ8B
+         HlXT7D47UujAzQ55gjBWfO57fKa53rtqKHjRaq0x/A3uEnfzeqVxsxciArSUp862pHFM
+         XNh/DBn71FT4u/BADAFKkClTmUpxDd2bvIdlztxBewEA5bt/tDY+hMtLfh6MIE4Jt0zs
+         d5bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9VO4sGrknxbUDh30qhuG3KUeNeC1A4Tt2xPDsLEp5fM=;
+        b=UT6JK19dMKMagMun3U0sMlKrvqmEa0yaVYu4SwtbdTjjhIMlD6zo4AAM+/o+QFa53y
+         4u925V5RU6I490Dr0NRqQipXLalkMztYotOHacnIo5JxN3CJ7J9hQU6vdICnJBYQsrP5
+         Pryh8IJ4B5/nvoObptb/ilLWEDqPF29Pk5j1lzxJGIYlxpcDJOyW0KeV/P0iQJP5pDUo
+         PBRsiaq6j7N91LKFJoP8sE9Gh4t2GL0yv0C5uSBYneyJpiMSXmHXQruOVAgaxp10hQ+B
+         gY74NZCFTq9z4Cb2rl9mA3ik7s8+/WnRqjr2rOTUZp4MTsFzpsTY3FBBwrsJKDQL28QN
+         HEUA==
+X-Gm-Message-State: APjAAAVC0ma4CN9O68CBT7Nt2L0r961+0qTSRg58kDCJW+kDtYvfOxXJ
+        qMeT5njTzBNjl/BMEDLlFgYwBw==
+X-Google-Smtp-Source: APXvYqyCUj+4VEd7NMm6AGfG0FVKEdooHVpzlCAYsRZh4cpIqYfwEevcYEmaRsySPTUu75BpVUGTcw==
+X-Received: by 2002:a62:1ad6:: with SMTP id a205mr594141pfa.64.1573090987977;
+        Wed, 06 Nov 2019 17:43:07 -0800 (PST)
+Received: from localhost ([2620:10d:c090:200::2:deb0])
+        by smtp.gmail.com with ESMTPSA id c19sm274837pfn.44.2019.11.06.17.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 17:43:06 -0800 (PST)
+Date:   Wed, 6 Nov 2019 17:43:05 -0800
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>, stable@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
+ get_mem_cgroup_from_mm()
+Message-ID: <20191107014305.GC96548@cmpxchg.org>
+References: <20191106225131.3543616-1-guro@fb.com>
+ <20191107002204.GA96548@cmpxchg.org>
+ <CALvZod5=g230Lwnjh7qXyLkoknZJpOiv-nLJ4XYC9rSSzL=e6w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod5=g230Lwnjh7qXyLkoknZJpOiv-nLJ4XYC9rSSzL=e6w@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable nfcid_skb is not changed in the callee nfc_hci_get_param()
-if error occurs. Consequently, the freed variable nfcid_skb will be
-freed again, resulting in a double free bug. Set nfcid_skb to NULL after
-releasing it to fix the bug.
+On Wed, Nov 06, 2019 at 05:25:26PM -0800, Shakeel Butt wrote:
+> On Wed, Nov 6, 2019 at 4:22 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin wrote:
+> > > We've encountered a rcu stall in get_mem_cgroup_from_mm():
+> > >
+> > >  rcu: INFO: rcu_sched self-detected stall on CPU
+> > >  rcu: 33-....: (21000 ticks this GP) idle=6c6/1/0x4000000000000002 softirq=35441/35441 fqs=5017
+> > >  (t=21031 jiffies g=324821 q=95837) NMI backtrace for cpu 33
+> > >  <...>
+> > >  RIP: 0010:get_mem_cgroup_from_mm+0x2f/0x90
+> > >  <...>
+> > >  __memcg_kmem_charge+0x55/0x140
+> > >  __alloc_pages_nodemask+0x267/0x320
+> > >  pipe_write+0x1ad/0x400
+> > >  new_sync_write+0x127/0x1c0
+> > >  __kernel_write+0x4f/0xf0
+> > >  dump_emit+0x91/0xc0
+> > >  writenote+0xa0/0xc0
+> > >  elf_core_dump+0x11af/0x1430
+> > >  do_coredump+0xc65/0xee0
+> > >  ? unix_stream_sendmsg+0x37d/0x3b0
+> > >  get_signal+0x132/0x7c0
+> > >  do_signal+0x36/0x640
+> > >  ? recalc_sigpending+0x17/0x50
+> > >  exit_to_usermode_loop+0x61/0xd0
+> > >  do_syscall_64+0xd4/0x100
+> > >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > >
+> > > The problem is caused by an exiting task which is associated with
+> > > an offline memcg. We're iterating over and over in the
+> > > do {} while (!css_tryget_online()) loop, but obviously the memcg won't
+> > > become online and the exiting task won't be migrated to a live memcg.
+> > >
+> > > Let's fix it by switching from css_tryget_online() to css_tryget().
+> > >
+> > > As css_tryget_online() cannot guarantee that the memcg won't go
+> > > offline, the check is usually useless, except some rare cases
+> > > when for example it determines if something should be presented
+> > > to a user.
+> > >
+> > > A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
+> > > css_tryget() instead of css_tryget_online() in task_get_css()").
+> > >
+> > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > Cc: stable@vger.kernel.org
+> > > Cc: Tejun Heo <tj@kernel.org>
+> >
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> >
+> > The bug aside, it doesn't matter whether the cgroup is online for the
+> > callers. It used to matter when offlining needed to evacuate all
+> > charges from the memcg, and so needed to prevent new ones from showing
+> > up, but we don't care now.
+> 
+> Should get_mem_cgroup_from_current() and get_mem_cgroup_from_page() be
+> switched to css_tryget() as well then?
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- drivers/nfc/st21nfca/core.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/nfc/st21nfca/core.c b/drivers/nfc/st21nfca/core.c
-index f9ac176cf257..2ce17932a073 100644
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -708,6 +708,7 @@ static int st21nfca_hci_complete_target_discovered(struct nfc_hci_dev *hdev,
- 							NFC_PROTO_FELICA_MASK;
- 		} else {
- 			kfree_skb(nfcid_skb);
-+			nfcid_skb = NULL;
- 			/* P2P in type A */
- 			r = nfc_hci_get_param(hdev, ST21NFCA_RF_READER_F_GATE,
- 					ST21NFCA_RF_READER_F_NFCID1,
--- 
-2.7.4
-
+Yes. Looking at the remaining css_tryget_online() in memcontrol.c, I
+don't think the online/offline distinction is meaningful for any of
+them anymore.
