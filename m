@@ -2,312 +2,193 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E93C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C273C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2420B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B949320869
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wyLdDgCn"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="X1fgYTs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfKGUXF (ORCPT
+        id S1726773AbfKGUZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 15:23:05 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38212 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfKGUXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 15:23:05 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j15so4571326wrw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:23:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kxlSJYT66is6xv5jhYsDrbERnoq2gpbHsaiqBPYJVo0=;
-        b=wyLdDgCnFvFoZescPRLYTxxzdJspJ/dAN0On88/1rww/q8MieqaWgQEUFGYA4v+KJZ
-         +rYTid4k0jycKpHgtW6y18T+KlkEdEZuyg57dY6inz+jnmVvU13uNl01RewmPxXbZprQ
-         JqfAi5j2Oez+r8NQHjL4M/NSEpVlADjqADfDDHixUp8ZBW92LtiQ77PI2OIUIbFIcQ/X
-         DsgJEr1iDmc5CdItzJP7dM6oeTmL6/9wj1HzgFh1uESmCMZT1MpHc/M9nYiruTqjYYDw
-         k9lAO16esOKoX9Xf+NDecBUjC97cjbM5QgSNeGaZtKEIvqwVbWa0ksoEwnz4Ubk4Qrw2
-         TEYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kxlSJYT66is6xv5jhYsDrbERnoq2gpbHsaiqBPYJVo0=;
-        b=pAC/1jX5Qm7G+xrjwSpb44DnNfBi8qUTaiXzlXuSGvtgdCZf7vZdqCq+fXOTL0Gojk
-         W0deZwhFDBMqmiu3GHH/omYVKN048FgVXegjzbB6VZis6pcKmeGoCX+6HwrEJiDhdVRL
-         03w7Cue8N3D3cVQ8gBx4nXCVcFuy7unxcUloFFYznbHEopK6t3QvFdsvJgKEal5q+vGG
-         3jOaBq27ooVOdPeR1ftHY3BxjR7V0i8E/qk30ow7/+m2O1E8gXtamzalHPyuD0Ia1nCp
-         lLU63v5qe4lW6UuNV8h+w5YjxAU9Zg1YGIp/VpQAQ0neDjknTLh045nmrPxR8hdV/qb0
-         B4eg==
-X-Gm-Message-State: APjAAAXBeAKuXhXX7/0n6r+RAaIY6WJKNUDgVWj3lyyfpVVw+vr0bQgJ
-        3l7WIL/Ln+JF2GVPu8lZsjTKoQ==
-X-Google-Smtp-Source: APXvYqzVjfs5crQMOZfnIdLk8uRzG2rH+cLnh1BY/udOvImDPn53h0fGsB40hfELHwlrDNGjfCnMtw==
-X-Received: by 2002:adf:f547:: with SMTP id j7mr4947013wrp.69.1573158180935;
-        Thu, 07 Nov 2019 12:23:00 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:85c9:ca0d:aae1:f680? ([2a01:e34:ed2f:f020:85c9:ca0d:aae1:f680])
-        by smtp.googlemail.com with ESMTPSA id r15sm2039234wrc.5.2019.11.07.12.22.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Nov 2019 12:23:00 -0800 (PST)
-Subject: Re: [PATCH] clocksource: Add driver for the Ingenic JZ47xx OST
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, od@zcrc.me,
-        linux-kernel@vger.kernel.org,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-References: <20190809123824.26025-1-paul@crapouillou.net>
- <e8f1bd28-e8fe-926b-6741-3ab328f7815b@linaro.org>
- <54210a015f148218e11e7f3c1d107192@crapouillou.net>
- <a7aa0b0d-e52f-564f-11ef-a8b74f9f1ac8@linaro.org>
- <1573156678.3.0@crapouillou.net>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <78a8e3f2-c608-a2a1-4fd4-f379866726b5@linaro.org>
-Date:   Thu, 7 Nov 2019 21:22:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 7 Nov 2019 15:25:12 -0500
+Received: from mout.web.de ([212.227.17.12]:37187 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbfKGUZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 15:25:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1573158299;
+        bh=h+hnYciR3R0RDvRpTXpOQh13Y7dm7cDXRVPS7TqNK8o=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=X1fgYTs5ddR4GTHiyWHUtGJa7aXqj6uvDFo9Cb/3zTuceJpxfOO1PhnD5I74fp1hO
+         utVnG8zIQPKeSG3PbaatZAIknfon3s6fRVz5EhyJmAV0vUL0U54xuVxds0bTFqdm0c
+         rQzDkQydLzzDL9LMLLlOgTHAu8yAhv8fT8dLoR/s=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.68.124]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MaJvw-1iDKol025A-00Jnv5; Thu, 07
+ Nov 2019 21:24:59 +0100
+To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Igor Russkikh <igor.russkikh@aquantia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] net: aquantia: Use common error handling code in
+ aq_pci_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <f155464c-5cbd-5cf7-c889-dabbe0f1135e@web.de>
+Date:   Thu, 7 Nov 2019 21:24:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <1573156678.3.0@crapouillou.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:y08fUaNZEZA5x1U0mAUElCdxyEBFsUh9JJ712jIfjLdekwMw78c
+ yWGNFyyNhjvZhy0XsCP6ZJy1Klgxn/20Xsp1mFeLRAFyj1rfoEUxbwX8dfiBYezJZaFE+5c
+ qxt8vjTD0IA1Xq7/nW78K5LaVdOMYA4wIaBmBSSoT16qBIYLEccDUz1V1gTjZ0w/zpXabFy
+ rqGZqTqGqaaeUeykEKstg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8leFqPLzEOs=:ol2WMseU3WCK6uJ1vmd8wC
+ Sa9QjGn/V26Ib/N4RQskKlj+kdiXAxqWAKl59QN8YUGdXf5X+ZuEdiGr1aVH4sqwlRE/0MDOw
+ tQHuyoE75D+hn91gYruQyDH6SuzhAGgI/tIKYqta03shHkQH6bDtUFiQB2h6S98wOsKzP/Rkh
+ G9YTvN5Liz4JdPj4iva1GWcliK+GWLoYZy3Pzouavmpb+6E/HhDAxbwSLcfUOz6qv7i9q+S3C
+ Hc15Oxrg/bnQnChF1L7wa3s2Unzagxdm15AeemCQZovN0p2Dj63i25CjjvnxY/00kk0QNviHi
+ Iuvnv3A4+YSzb7y6E+GBaMav9NbDb2XIXc4f0QcRlHcFJGr9WpbuZX6a1XmIsDXuFxz8yMuJJ
+ Ui2sU7+0qpX8uf2AhqJFjGdRasdBEaw2TgXzUXGAT6XY/doXxTstXqX07KFvvqQV6efu7hpkW
+ skVY28ePB9zyB6iScilrtLYXrF5OvdpBZGNEF/9Xb8HUuhbK5g2tPmMJWGZMSwHBEg+1DR2kT
+ qc/6m3ytXSLWM56nzPWdkNZtk0S5Up1DGA6B5uP1KoS5n/tA/o49Rd7QqO/i57DQ0Z9N+J4XY
+ +BKyDpyEoETFrdEn8pKgeDeHBSxyYR2t9HBznanegiYN1IKe7C3X0apLxLLSD4sDpIGyhauwK
+ jiinH/34Cd1BMJJ1QdWGM7vrWGzB2p+Dtot5bRv6YxmbIghhk+pqVKG3wNFtoyjh6l6iBxbPo
+ 9mAm/2tRZ3Ad+CPwDp7NqRTNuD8XzHLKBrnJRVgoK8SxJ4YoSWmGv+cZGgTvao9HyeIpf9T5h
+ 8h7s9uZUdONWbcLe2t2i+dWWomUJtbEn+ZTdCf/cckP+kpZxw5pdvyD0M5BfsUu7jxLQ7Fj28
+ dn3UreETdp79IsKyrsBgwfKXzbsrQcy4930kvgROOBqMA5r7dBIQw2eWUQr+ugQMKvUFon9a2
+ RLWozxZN10pq/M8Xd6vVmUaf2nVVDVZww92uoXuVCBRrGTZVmuZ1aEjBgD9U5fFmncgmK2LRd
+ wcs8j4j1VEJXqaECv3s5nznos+hciFvEtn9lUpgPbSKn+e4x86h9dnanUedVR3tc1BxnxmF7H
+ pc9qct79lTPylPm8/lQPDv6jnDvORQfuL+Zc8X8C53SzXRI9YDKNu6s1WImRBR8QkXsMiGjzh
+ wUz3k++SoV2IXGia+oc1uTJx5q+DzWK3VCSUS/xmIy4uelMLktZwWkkwq4jGxxXxnonQ5BZTO
+ 1IUcFRH1P/cHpOdWwDUYiF5zqgomV/YJIqyawaAsGJei7SC5hH3/utiYDq74=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/11/2019 20:57, Paul Cercueil wrote:
-> 
-> 
-> Le jeu., nov. 7, 2019 at 20:39, Daniel Lezcano
-> <daniel.lezcano@linaro.org> a écrit :
->> On 07/11/2019 16:56, Paul Cercueil wrote:
->>>  Hi Daniel,
->>>
->>>  On 2019-08-16 16:54, Daniel Lezcano wrote:
->>>>  On 09/08/2019 14:38, Paul Cercueil wrote:
->>>>>  From: Maarten ter Huurne <maarten@treewalker.org>
->>>>>
->>>>>  OST is the OS Timer, a 64-bit timer/counter with buffered reading.
->>>>>
->>>>>  SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
->>>>>  JZ4780 have a 64-bit OST.
->>>>>
->>>>>  This driver will register both a clocksource and a sched_clock to the
->>>>>  system.
->>>>>
->>>>>  Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
->>>>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>>>  Tested-by: Mathieu Malaterre <malat@debian.org>
->>>>>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>>>>  ---
->>>>>
->>>>
->>>>  [ ... ]
->>>>
->>>>>  +    err = clocksource_register_hz(cs, rate);
->>>>>  +    if (err) {
->>>>>  +        dev_err(dev, "clocksource registration failed: %d\n", err);
->>>>>  +        clk_disable_unprepare(ost->clk);
->>>>>  +        return err;
->>>>>  +    }
->>>>>  +
->>>>>  +    /* Cannot register a sched_clock with interrupts on */
->>>>
->>>>  Aren't they already disabled?
->>>
->>>  Sorry for the late reply.
->>>
->>>  No, they are not already disabled; this is what I get if I comment out
->>>  the local_irq_save()/local_irq_restore():
->>>
->>>  [    0.361014] clocksource: ingenic-ost: mask: 0xffffffff max_cycles:
->>>  0xffffffff, max_idle_ns: 159271703898 ns
->>>  [    0.361515] clocksource: Switched to clocksource ingenic-ost
->>>  [    0.361686] ------------[ cut here ]------------
->>>  [    0.361893] WARNING: CPU: 0 PID: 1 at kernel/time/sched_clock.c:179
->>>  sched_clock_register+0x7c/0x2e4
->>>  [    0.362174] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc5+ #461
->>>  [    0.362330] Stack : 80744558 80069b44 80770000 00000000 00000000
->>>  00dfd7a7 806e6db4 8106bb74
->>>  [    0.362619]         806f0000 81067ca4 806f31c7 80769478 00000020
->>>  10000400 8106bb20 00dfd7a7
->>>  [    0.362906]         00000000 00000000 80780000 00000000 00000007
->>>  00000001 00000049 3563722d
->>>  [    0.363191]         8106ba61 00000000 ffffffff 00000010 806f0000
->>>  00000000 00000000 806f0000
->>>  [    0.363477]         00000020 00000000 80714534 80770000 00000002
->>>  80319154 00000000 80770000
->>>  [    0.363762]         ...
->>>  [    0.363906] Call Trace:
->>>  [    0.364087] [<8001af14>] show_stack+0x40/0x128
->>>  [    0.364289] [<8002fd88>] __warn+0xb8/0xe0
->>>  [    0.364478] [<8002fe14>] warn_slowpath_fmt+0x64/0xc0
->>>  [    0.364678] [<8072b1c8>] sched_clock_register+0x7c/0x2e4
->>>  [    0.364895] [<8073c874>] ingenic_ost_probe+0x224/0x248
->>>  [    0.365090] [<803d5394>] platform_drv_probe+0x40/0x94
->>>  [    0.365526] [<803d362c>] really_probe+0x104/0x374
->>>  [    0.365743] [<803d3ff0>] device_driver_attach+0x78/0x80
->>>  [    0.365938] [<803d4070>] __driver_attach+0x78/0x118
->>>  [    0.366129] [<803d1700>] bus_for_each_dev+0x7c/0xc8
->>>  [    0.366318] [<803d226c>] bus_add_driver+0x1bc/0x204
->>>  [    0.366513] [<803d4878>] driver_register+0x84/0x14c
->>>  [    0.366717] [<8073a144>] __platform_driver_probe+0x98/0x140
->>>  [    0.366931] [<80724e38>] do_one_initcall+0x84/0x1b4
->>>  [    0.367126] [<807250cc>] kernel_init_freeable+0x164/0x240
->>>  [    0.367318] [<805df75c>] kernel_init+0x10/0xf8
->>>  [    0.367510] [<8001542c>] ret_from_kernel_thread+0x14/0x1c
->>>  [    0.367722] ---[ end trace 7fedf00408fa3bed ]---
->>>  [    0.367985] sched_clock: 32 bits at 12MHz, resolution 83ns, wraps
->>>  every 178956970966ns
->>>
->>>  At kernel/time/sched_clock.c:179 there is:
->>>  WARN_ON(!irqs_disabled());
->>
->> That is strange, no drivers is doing that and no warning is appearing.
->>
->> Isn't missing a local_irq_disable in the code path in the stack above?
-> 
-> I think it comes to the fact that the other drivers are probed much
-> earlier in the boot process, while this one is probed as a regular
-> platform device driver.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 7 Nov 2019 21:17:40 +0100
 
+Move the same error code assignments so that such exception handling
+can be better reused at the end of this function.
 
-There are other drivers doing and nobody is disabling the interrupt:
+This issue was detected by using the Coccinelle software.
 
-em_sti.c:static struct platform_driver em_sti_device_driver = {
-ingenic-timer.c:static struct platform_driver ingenic_tcu_driver = {
-sh_cmt.c:static struct platform_driver sh_cmt_device_driver = {
-sh_mtu2.c:static struct platform_driver sh_mtu2_device_driver = {
-sh_tmu.c:static struct platform_driver sh_tmu_device_driver = {
-timer-ti-dm.c:static struct platform_driver omap_dm_timer_driver = {
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ .../ethernet/aquantia/atlantic/aq_pci_func.c  | 29 +++++++++----------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/driver=
+s/net/ethernet/aquantia/atlantic/aq_pci_func.c
+index e82c96b50373..be0c018d0074 100644
+=2D-- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+@@ -241,30 +241,23 @@ static int aq_pci_probe(struct pci_dev *pdev,
+ 			resource_size_t reg_sz;
 
->>>>>  +    local_irq_save(flags);
->>>>>  +    if (soc_info->is64bit)
->>>>>  +        sched_clock_register(ingenic_ost_read_cntl, 32, rate);
->>>>>  +    else
->>>>>  +        sched_clock_register(ingenic_ost_read_cnth, 32, rate);
->>>>>  +    local_irq_restore(flags);
->>>>>  +
->>>>>  +    return 0;
->>>>>  +}
->>>>>  +
->>
->>
->> -- 
->>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
->>
->> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
->> <http://twitter.com/#!/linaroorg> Twitter |
->> <http://www.linaro.org/linaro-blog/> Blog
->>
-> 
-> 
+ 			mmio_pa =3D pci_resource_start(pdev, bar);
+-			if (mmio_pa =3D=3D 0U) {
+-				err =3D -EIO;
+-				goto err_free_aq_hw;
+-			}
++			if (mmio_pa =3D=3D 0U)
++				goto e_io;
 
+ 			reg_sz =3D pci_resource_len(pdev, bar);
+-			if ((reg_sz <=3D 24 /*ATL_REGS_SIZE*/)) {
+-				err =3D -EIO;
+-				goto err_free_aq_hw;
+-			}
++			if (reg_sz <=3D 24 /* ATL_REGS_SIZE */)
++				goto e_io;
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+ 			self->aq_hw->mmio =3D ioremap_nocache(mmio_pa, reg_sz);
+-			if (!self->aq_hw->mmio) {
+-				err =3D -EIO;
+-				goto err_free_aq_hw;
+-			}
++			if (!self->aq_hw->mmio)
++				goto e_io;
++
+ 			break;
+ 		}
+ 	}
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+-	if (bar =3D=3D 4) {
+-		err =3D -EIO;
+-		goto err_free_aq_hw;
+-	}
++	if (bar =3D=3D 4)
++		goto e_io;
+
+ 	numvecs =3D min((u8)AQ_CFG_VECS_DEF,
+ 		      aq_nic_get_cfg(self)->aq_hw_caps->msix_irqs);
+@@ -312,6 +305,10 @@ static int aq_pci_probe(struct pci_dev *pdev,
+ err_pci_func:
+ 	pci_disable_device(pdev);
+ 	return err;
++
++e_io:
++	err =3D -EIO;
++	goto err_free_aq_hw;
+ }
+
+ static void aq_pci_remove(struct pci_dev *pdev)
+=2D-
+2.24.0
 
