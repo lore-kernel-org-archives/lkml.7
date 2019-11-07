@@ -2,197 +2,310 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0467C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD757C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD7220656
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573120121;
-	bh=En5yYArrVQ/eJQz8LxueVMSEk0Wh7aZQ0ttcAzZP0p0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jZHIWdAIP3oE1IbZpwGcVQmW+deieZmQVF+ZdtPKAGOCvxZddlI5tMZhUw7im4rZ+
-	 WhLm9U3UwMZvyWN1W048l/FnmkJtwq6gluA5I+ZM+xn4X9wppXtEexU0yhOTPUGyPs
-	 yOZlMKkBbuXLhO7CxZXb9OflREYFEHXdaij0FqTc=
+	by mail.kernel.org (Postfix) with ESMTP id 855C0214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9cj1Z3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbfKGJsk (ORCPT
+        id S2387952AbfKGJsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:48:40 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44276 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387629AbfKGJsh (ORCPT
+        Thu, 7 Nov 2019 04:48:41 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45927 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfKGJsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:48:37 -0500
-Received: by mail-ed1-f67.google.com with SMTP id a67so1337771edf.11;
-        Thu, 07 Nov 2019 01:48:36 -0800 (PST)
+        Thu, 7 Nov 2019 04:48:40 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v8so1061926lfa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 01:48:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hDIoVDiKLEU4CGAIdm+g9DYS9ZaaLwciACVGR8Rle3w=;
+        b=O9cj1Z3aYXE1x7fYKQuOdaIDuscL+iQaBgIYkbBQ4UmmoTw3hBt3gJBQ95oqRl0LsB
+         zC7Dq/atW+SVpZxZBzR1KuzGkLrE4Xb9ZVa2vx9ntDBhZLFHZKNftu4HZzZrX1AFJ5PS
+         NBd6/VNPiZzJ3Ltjzy9BIUU92vCmMFJ0CbC4oKRD6VGsFJ0oChAFZEgF9zxwtUbi4xXE
+         Pgvl0kH8HzXKEjm1BUfW8oIRezYn9pStvbnKsVNFAGVWvqW+5lPFrxkMSprjRER9GgZu
+         W851oUhg9ImMH1Uz6sFASzV3Xiebh17jLvyoq0fplddemLigboqidTdkyt7DBtN/Heml
+         p7Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ryVCGfYMOEex1ENMBo3WtYsy72Zmz0c5VfDM/zRq6jQ=;
-        b=iRrmkvhuuwcK/3ifMAhuUt7/1itMUSd/1uW0JxDY6JGLtO1WWlWtQ0AZpxQqJVfvEN
-         zYqRDByMsnUAcIKNhfzkSBx+IYFvVEPZFjM+shutSaYF50k29lx3JiFP5V9IU6WsNJF5
-         4RW8V8Pr3tVY27FkqBHO4MzDA19uNE4G74NYcGPF2NGuBcg+1BC/ZiVaSFGiynX0SYni
-         N4+OHmd7/4rSUSnbyF7L9tf40pKLe2HwES49jO7cH7CWbLdWsJP9bf9057bGdI9hjsjm
-         JKiF5NoKVilMGL93C8PHt4PowhTX9nGMFSHId49EUg9xHM3Pf5PYPLhgFFnnVjHYaN/6
-         F2vg==
-X-Gm-Message-State: APjAAAVqg7w6Tcj9ohxhvshUWtmJMwoICFJii1gryY99FUjzpuedFv2W
-        z0aN0lheEcv50JlBLKG5K6k=
-X-Google-Smtp-Source: APXvYqxtciFqyfuAvEMMp+eSFo/4y6pUhhge7L1IjrIdDo63s82J7dG7Ds8DoAxmytx2VsSq7WgHBQ==
-X-Received: by 2002:a17:906:49d1:: with SMTP id w17mr2089977ejv.101.1573120115626;
-        Thu, 07 Nov 2019 01:48:35 -0800 (PST)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id p12sm41369edr.4.2019.11.07.01.48.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 01:48:34 -0800 (PST)
-Date:   Thu, 7 Nov 2019 10:48:32 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marian Mihailescu <mihailescu2m@gmail.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kgene@kernel.org
-Subject: Re: [PATCH v4 2/2] ARM: dts: exynos5420: add mali dt node and enable
- mali on Odroid XU3/4
-Message-ID: <20191107094832.GA2142@pi3>
-References: <20191106225527.9121-1-mihailescu2m@gmail.com>
- <20191106225527.9121-2-mihailescu2m@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hDIoVDiKLEU4CGAIdm+g9DYS9ZaaLwciACVGR8Rle3w=;
+        b=XHmG7hs6uKjW3g16JrLcWZekB4mhzTM27rrB85VZ0kkCgiqq0UvIcVrkv20Hm8m2r5
+         F5GYUNZidKKoMtd5zlEm2vNhYbtBehl7ovYYjfRN+F8Xy5zJKsIt+h6s9LkkrJ2YuaGh
+         OLNQNO8HnZ5MHBmvMqrJ6AWKEFSs0o1+XTZGmWFV/iec+o26KDcACCVqPpEr4IBKWc+7
+         J1FWEXcjSgYotyCPRA3OFTYQ16D6p1686jaO/DwnG0/iYr2jxzpvVAQN+QW/JH97b8fs
+         agTkw3xQmfPIcPGaTY2I8F8W/hQX58845okaoderwE0XeoAvVEWB/LW2akEnWeaHRK4D
+         xI5A==
+X-Gm-Message-State: APjAAAV7K2jMnpsp5JLHfaETD20TJCg0TgontBWXn7j01yvZ4XKzc4Fu
+        2urSAT47T54fKMSwnM/FPIrn9J538xF+Buk2J6o=
+X-Google-Smtp-Source: APXvYqyTGDsPHLmiAUPkvEpOv7piaHKKeWjh+8V7gEhp2pZjEjKWPrBmkmLoGU+5EWsuy7opflh4g7OU1wAFYt6chhM=
+X-Received: by 2002:ac2:5109:: with SMTP id q9mr1685403lfb.145.1573120118588;
+ Thu, 07 Nov 2019 01:48:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191106225527.9121-2-mihailescu2m@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191106094400.445834-1-paul.kocialkowski@bootlin.com>
+ <20191106094400.445834-3-paul.kocialkowski@bootlin.com> <CAMeQTsa=SWXHt8ZvToa9x5qc6W29B6B4Ssvixs3nd-w=+dYGzA@mail.gmail.com>
+ <20191107083140.GJ23790@phenom.ffwll.local> <CAMeQTsZ59B-h8TEyKnc03rz4-aXrAcx3wyWZqDG218Z1RxC5-w@mail.gmail.com>
+ <CAKMK7uEo92PA68fr7f3==Pyht7CMRrsukm_orQw1L3f9pztiUQ@mail.gmail.com>
+In-Reply-To: <CAKMK7uEo92PA68fr7f3==Pyht7CMRrsukm_orQw1L3f9pztiUQ@mail.gmail.com>
+From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date:   Thu, 7 Nov 2019 10:48:27 +0100
+Message-ID: <CAMeQTsb0RyHiP5UDzxRgQht7tE=B+6RkBnwSK_q2ct1turJjoQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/gma500: Add page flip support on psb/cdv
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 09:25:27AM +1030, Marian Mihailescu wrote:
-> Add device tree node for Mali GPU for Exynos 542x SoC.
-> GPU is disabled by default, and is enabled for each board after the
-> regulator is defined. Tested on Odroid-XU4.
-> 
-> Changes since v3:
-> - fixed compatible to match bindings
+On Thu, Nov 7, 2019 at 10:21 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Thu, Nov 7, 2019 at 10:08 AM Patrik Jakobsson
+> <patrik.r.jakobsson@gmail.com> wrote:
+> >
+> > On Thu, Nov 7, 2019 at 9:31 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > >
+> > > On Wed, Nov 06, 2019 at 04:24:59PM +0100, Patrik Jakobsson wrote:
+> > > > On Wed, Nov 6, 2019 at 10:44 AM Paul Kocialkowski
+> > > > <paul.kocialkowski@bootlin.com> wrote:
+> > > > >
+> > > > > Legacy (non-atomic) page flip support is added to the driver by using the
+> > > > > mode_set_base CRTC function, that allows configuring a new framebuffer for
+> > > > > display. Since the function requires the primary plane's fb to be set
+> > > > > already, this is done prior to calling the function in the page flip helper
+> > > > > and reverted if the flip fails.
+> > > > >
+> > > > > The vblank interrupt handler is also refactored to support passing an event.
+> > > > > The PIPE_TE_STATUS bit is also considered to indicate vblank on medfield
+> > > > > only, as explained in psb_enable_vblank.
+> > > > >
+> > > > > It was tested by running weston on both poulsbo and cedartrail.
+> > > > >
+> > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/gma500/cdv_intel_display.c |  1 +
+> > > > >  drivers/gpu/drm/gma500/gma_display.c       | 46 ++++++++++++++++++++++
+> > > > >  drivers/gpu/drm/gma500/gma_display.h       |  6 +++
+> > > > >  drivers/gpu/drm/gma500/psb_intel_display.c |  1 +
+> > > > >  drivers/gpu/drm/gma500/psb_intel_drv.h     |  3 ++
+> > > > >  drivers/gpu/drm/gma500/psb_irq.c           | 18 +++++++--
+> > > > >  6 files changed, 72 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/gma500/cdv_intel_display.c b/drivers/gpu/drm/gma500/cdv_intel_display.c
+> > > > > index 8b784947ed3b..7109d3d19be0 100644
+> > > > > --- a/drivers/gpu/drm/gma500/cdv_intel_display.c
+> > > > > +++ b/drivers/gpu/drm/gma500/cdv_intel_display.c
+> > > > > @@ -979,6 +979,7 @@ const struct drm_crtc_funcs cdv_intel_crtc_funcs = {
+> > > > >         .gamma_set = gma_crtc_gamma_set,
+> > > > >         .set_config = gma_crtc_set_config,
+> > > > >         .destroy = gma_crtc_destroy,
+> > > > > +       .page_flip = gma_crtc_page_flip,
+> > > > >  };
+> > > > >
+> > > > >  const struct gma_clock_funcs cdv_clock_funcs = {
+> > > > > diff --git a/drivers/gpu/drm/gma500/gma_display.c b/drivers/gpu/drm/gma500/gma_display.c
+> > > > > index bc07ae2a9a1d..17f136985d21 100644
+> > > > > --- a/drivers/gpu/drm/gma500/gma_display.c
+> > > > > +++ b/drivers/gpu/drm/gma500/gma_display.c
+> > > > > @@ -503,6 +503,52 @@ void gma_crtc_destroy(struct drm_crtc *crtc)
+> > > > >         kfree(gma_crtc);
+> > > > >  }
+> > > > >
+> > > > > +int gma_crtc_page_flip(struct drm_crtc *crtc,
+> > > > > +                      struct drm_framebuffer *fb,
+> > > > > +                      struct drm_pending_vblank_event *event,
+> > > > > +                      uint32_t page_flip_flags,
+> > > > > +                      struct drm_modeset_acquire_ctx *ctx)
+> > > > > +{
+> > > > > +       struct gma_crtc *gma_crtc = to_gma_crtc(crtc);
+> > > > > +       struct drm_framebuffer *current_fb = crtc->primary->fb;
+> > > > > +       struct drm_framebuffer *old_fb = crtc->primary->old_fb;
+> > > > > +       const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
+> > > > > +       struct drm_device *dev = crtc->dev;
+> > > > > +       unsigned long flags;
+> > > > > +       int ret;
+> > > > > +
+> > > > > +       if (!crtc_funcs->mode_set_base)
+> > > > > +               return -EINVAL;
+> > > > > +
+> > > > > +       /* Using mode_set_base requires the new fb to be set already. */
+> > > > > +       crtc->primary->fb = fb;
+> > > > > +
+> > > > > +       if (event) {
+> > > > > +               spin_lock_irqsave(&dev->event_lock, flags);
+> > > > > +
+> > > > > +               WARN_ON(drm_crtc_vblank_get(crtc) != 0);
+> > > > > +
+> > > > > +               gma_crtc->page_flip_event = event;
+> > > > > +
+> > > > > +               /* Call this locked if we want an event at vblank interrupt. */
+> > > > > +               ret = crtc_funcs->mode_set_base(crtc, crtc->x, crtc->y, old_fb);
+> > > > > +               if (ret) {
+> > > > > +                       gma_crtc->page_flip_event = NULL;
+> > > > > +                       drm_crtc_vblank_put(crtc);
+> > > > > +               }
+> > > > > +
+> > > > > +               spin_unlock_irqrestore(&dev->event_lock, flags);
+> > > > > +       } else {
+> > > > > +               ret = crtc_funcs->mode_set_base(crtc, crtc->x, crtc->y, old_fb);
+> > > > > +       }
+> > > > > +
+> > > > > +       /* Restore previous fb in case of failure. */
+> > > > > +       if (ret)
+> > > > > +               crtc->primary->fb = current_fb;
+> > > > > +
+> > > > > +       return ret;
+> > > > > +}
+> > > > > +
+> > > > >  int gma_crtc_set_config(struct drm_mode_set *set,
+> > > > >                         struct drm_modeset_acquire_ctx *ctx)
+> > > > >  {
+> > > > > diff --git a/drivers/gpu/drm/gma500/gma_display.h b/drivers/gpu/drm/gma500/gma_display.h
+> > > > > index fdbd7ecaa59c..7bd6c1ee8b21 100644
+> > > > > --- a/drivers/gpu/drm/gma500/gma_display.h
+> > > > > +++ b/drivers/gpu/drm/gma500/gma_display.h
+> > > > > @@ -11,6 +11,7 @@
+> > > > >  #define _GMA_DISPLAY_H_
+> > > > >
+> > > > >  #include <linux/pm_runtime.h>
+> > > > > +#include <drm/drm_vblank.h>
+> > > > >
+> > > > >  struct drm_encoder;
+> > > > >  struct drm_mode_set;
+> > > > > @@ -71,6 +72,11 @@ extern void gma_crtc_prepare(struct drm_crtc *crtc);
+> > > > >  extern void gma_crtc_commit(struct drm_crtc *crtc);
+> > > > >  extern void gma_crtc_disable(struct drm_crtc *crtc);
+> > > > >  extern void gma_crtc_destroy(struct drm_crtc *crtc);
+> > > > > +extern int gma_crtc_page_flip(struct drm_crtc *crtc,
+> > > > > +                             struct drm_framebuffer *fb,
+> > > > > +                             struct drm_pending_vblank_event *event,
+> > > > > +                             uint32_t page_flip_flags,
+> > > > > +                             struct drm_modeset_acquire_ctx *ctx);
+> > > > >  extern int gma_crtc_set_config(struct drm_mode_set *set,
+> > > > >                                struct drm_modeset_acquire_ctx *ctx);
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/gma500/psb_intel_display.c b/drivers/gpu/drm/gma500/psb_intel_display.c
+> > > > > index 4256410535f0..fed3b563e62e 100644
+> > > > > --- a/drivers/gpu/drm/gma500/psb_intel_display.c
+> > > > > +++ b/drivers/gpu/drm/gma500/psb_intel_display.c
+> > > > > @@ -432,6 +432,7 @@ const struct drm_crtc_funcs psb_intel_crtc_funcs = {
+> > > > >         .gamma_set = gma_crtc_gamma_set,
+> > > > >         .set_config = gma_crtc_set_config,
+> > > > >         .destroy = gma_crtc_destroy,
+> > > > > +       .page_flip = gma_crtc_page_flip,
+> > > > >  };
+> > > > >
+> > > > >  const struct gma_clock_funcs psb_clock_funcs = {
+> > > > > diff --git a/drivers/gpu/drm/gma500/psb_intel_drv.h b/drivers/gpu/drm/gma500/psb_intel_drv.h
+> > > > > index cdf10333d1c2..16c6136f778b 100644
+> > > > > --- a/drivers/gpu/drm/gma500/psb_intel_drv.h
+> > > > > +++ b/drivers/gpu/drm/gma500/psb_intel_drv.h
+> > > > > @@ -12,6 +12,7 @@
+> > > > >  #include <drm/drm_crtc_helper.h>
+> > > > >  #include <drm/drm_encoder.h>
+> > > > >  #include <drm/drm_probe_helper.h>
+> > > > > +#include <drm/drm_vblank.h>
+> > > > >  #include <linux/gpio.h>
+> > > > >  #include "gma_display.h"
+> > > > >
+> > > > > @@ -182,6 +183,8 @@ struct gma_crtc {
+> > > > >         struct psb_intel_crtc_state *crtc_state;
+> > > > >
+> > > > >         const struct gma_clock_funcs *clock_funcs;
+> > > > > +
+> > > > > +       struct drm_pending_vblank_event *page_flip_event;
+> > > > >  };
+> > > > >
+> > > > >  #define to_gma_crtc(x) \
+> > > > > diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
+> > > > > index e6265fb85626..f787a51f6335 100644
+> > > > > --- a/drivers/gpu/drm/gma500/psb_irq.c
+> > > > > +++ b/drivers/gpu/drm/gma500/psb_irq.c
+> > > > > @@ -165,11 +165,23 @@ static void mid_pipe_event_handler(struct drm_device *dev, int pipe)
+> > > > >                 "%s, can't clear status bits for pipe %d, its value = 0x%x.\n",
+> > > > >                 __func__, pipe, PSB_RVDC32(pipe_stat_reg));
+> > > > >
+> > > > > -       if (pipe_stat_val & PIPE_VBLANK_STATUS)
+> > > > > -               drm_handle_vblank(dev, pipe);
+> > > > > +       if (pipe_stat_val & PIPE_VBLANK_STATUS ||
+> > > > > +           (IS_MFLD(dev) && pipe_stat_val & PIPE_TE_STATUS)) {
+> > > > > +               struct drm_crtc *crtc = drm_crtc_from_index(dev, pipe);
+> > > > > +               struct gma_crtc *gma_crtc = to_gma_crtc(crtc);
+> > > > > +               unsigned long flags;
+> > > > >
+> > > > > -       if (pipe_stat_val & PIPE_TE_STATUS)
+> > > > >                 drm_handle_vblank(dev, pipe);
+> > > > > +
+> > > > > +               spin_lock_irqsave(&dev->event_lock, flags);
+> > > > > +               if (gma_crtc->page_flip_event) {
+> > > > > +                       drm_crtc_send_vblank_event(crtc,
+> > > > > +                                                  gma_crtc->page_flip_event);
+> > > > > +                       gma_crtc->page_flip_event = NULL;
+> > > > > +                       drm_crtc_vblank_put(crtc);
+> > > > > +               }
+> > > > > +               spin_unlock_irqrestore(&dev->event_lock, flags);
+> > > > > +       }
+> > > > >  }
+> > > > >
+> > > > >  /*
+> > > > > --
+> > > > > 2.23.0
+> > > > >
+> > > >
+> > > > Looks good!
+> > > >
+> > > > Reviewed-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+> > >
+> > > I'm assuming you'll also push these?
+> > >
+> > > Always confusing when maintainer/committers r-b but don't say anything
+> > > about pushing the patch. Good chances it'll fall through cracks if that
+> > > happens.
+> > > -Daniel
+> >
+> > Ah sorry, I also find it confusing. I'll push these.
+>
+> Thanks.
+>
+> Also for a quick check whether someone is committer or not:
+> https://people.freedesktop.org/~seanpaul/whomisc.html
 
-Changelog does not go to commit message. Put it after msg separator
-(---).
+Great, I've been looking for a list like that.
 
-Except this looks good so I will fix it up while applying.
-
-Best regards,
-Krzysztof
-
-
-> 
-> Changes since v2:
-> - separate patch for bindings
-> - fixed bindings typo
-> 
-> Changes since v1:
-> - used generic node and label for GPU
-> - added bindings for compatible
-> - fixed irq indentation
-> - fixed interrupt-names to match bindings
-> - added cooling cells for future TMU connection
-> - used generic node and label for GPU opp table
-> - removed always-on from SoC GPU regulator
-> 
-> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 50 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  6 +++-
->  2 files changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 7d51e0f4ab79..31b5f7ba0e3b 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -670,6 +670,56 @@
->  			iommus = <&sysmmu_gscl1>;
->  		};
->  
-> +		gpu: gpu@11800000 {
-> +			compatible = "samsung,exynos5420-mali", "arm,mali-t628";
-> +			reg = <0x11800000 0x5000>;
-> +			interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "job", "mmu", "gpu";
-> +
-> +			clocks = <&clock CLK_G3D>;
-> +			clock-names = "core";
-> +			power-domains = <&g3d_pd>;
-> +			operating-points-v2 = <&gpu_opp_table>;
-> +
-> +			status = "disabled";
-> +			#cooling-cells = <2>;
-> +
-> +			gpu_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp@177000000 {
-> +					opp-hz = /bits/ 64 <177000000>;
-> +					opp-microvolt = <812500>;
-> +				};
-> +				opp@266000000 {
-> +					opp-hz = /bits/ 64 <266000000>;
-> +					opp-microvolt = <862500>;
-> +				};
-> +				opp@350000000 {
-> +					opp-hz = /bits/ 64 <350000000>;
-> +					opp-microvolt = <912500>;
-> +				};
-> +				opp-420000000 {
-> +					opp-hz = /bits/ 64 <420000000>;
-> +					opp-microvolt = <962500>;
-> +				};
-> +				opp-480000000 {
-> +					opp-hz = /bits/ 64 <480000000>;
-> +					opp-microvolt = <1000000>;
-> +				};
-> +				opp-543000000 {
-> +					opp-hz = /bits/ 64 <543000000>;
-> +					opp-microvolt = <1037500>;
-> +				};
-> +				opp-600000000 {
-> +					opp-hz = /bits/ 64 <600000000>;
-> +					opp-microvolt = <1150000>;
-> +				};
-> +			};
-> +		};
-> +
->  		scaler_0: scaler@12800000 {
->  			compatible = "samsung,exynos5420-scaler";
->  			reg = <0x12800000 0x1294>;
-> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> index 422692b20c46..ce774f7b2ce0 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> @@ -522,7 +522,6 @@
->  				regulator-name = "vdd_g3d";
->  				regulator-min-microvolt = <800000>;
->  				regulator-max-microvolt = <1400000>;
-> -				regulator-always-on;
->  				regulator-boot-on;
->  
->  				regulator-state-mem {
-> @@ -659,6 +658,11 @@
->  	status = "okay";
->  };
->  
-> +&gpu {
-> +	mali-supply = <&buck4_reg>;
-> +	status = "okay";
-> +};
-> +
->  &rtc {
->  	status = "okay";
->  	clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
-> -- 
-> 2.14.1
-> 
+>
+> Once we're on gitlab it should be a lot easier since the list of
+> committers is all there in the web ui.
+> -Daniel
+>
+> >
+> > -Patrik
+> >
+> > > --
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+>
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
