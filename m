@@ -2,128 +2,145 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D33C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F887C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBBB2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6616D2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G+b5F0zs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TVzP13bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388747AbfKGMqZ (ORCPT
+        id S2388762AbfKGMq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:46:25 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:60264 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388407AbfKGMqY (ORCPT
+        Thu, 7 Nov 2019 07:46:58 -0500
+Received: from mail-ed1-f46.google.com ([209.85.208.46]:45315 "EHLO
+        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbfKGMq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:46:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Xa3xcbvcNii0ckLDCeWLHK/ql7ey1ORYLLY0djGGeQI=; b=G+b5F0zsTBN+89jWdmm+g3GUT
-        dAp0DdRzLdcdJt3d/VA9pu3ahL7Uspd+ccWn2SDhwCutIaN0FES4q/uTVaUihfitkSe/4BPdomRBn
-        jo2BbmEllza+WOBsq0BCfHtnJhco/BmOP5Z7J8n4+8EHBdPb2kF9i13edAE+GgFtAq1DbufjCSUnZ
-        mUg8UYhtZLV80L2GVxYA3KoIyDK8pD7pnfhay26rVUDZ5ftZelLPpWLsueZNXIdBqZKa79+myWtc/
-        unCYTqzClb1hBngRB896GlSl7hagF6dkPl2XUpi1wapvGxfmKvQmtYKWYb7jwJ97kDrKR3Wn0YF69
-        eOHvcNAYA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iShB4-0005kt-9O; Thu, 07 Nov 2019 12:46:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1144A301747;
-        Thu,  7 Nov 2019 13:45:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 91DF52025EDA7; Thu,  7 Nov 2019 13:46:15 +0100 (CET)
-Date:   Thu, 7 Nov 2019 13:46:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jan Stancek <jstancek@redhat.com>, linux-kernel@vger.kernel.org,
-        ltp@lists.linux.it, viro@zeniv.linux.org.uk,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        rfontana@redhat.com
-Subject: Re: [PATCH] kernel: use ktime_get_real_ts64() to calculate
- acct.ac_btime
-Message-ID: <20191107124615.GG4131@hirez.programming.kicks-ass.net>
-References: <a87876829697e1b3c63601b1401a07af79eddae6.1572651216.git.jstancek@redhat.com>
- <20191107123224.GA6315@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1911071335320.4256@nanos.tec.linutronix.de>
+        Thu, 7 Nov 2019 07:46:58 -0500
+Received: by mail-ed1-f46.google.com with SMTP id b5so1750140eds.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 04:46:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=to:cc:from:subject:openpgp:message-id:date:mime-version
+         :content-language:content-transfer-encoding;
+        bh=3UZ64Sq3eqaV71BBDiKRJ7pJQ02szPhuWPuPnRF5ua8=;
+        b=TVzP13bc6+rklA1VY1K0u5Gh1wAobf7v8J7dEsA5ZOW6re+W/umx/K5W7RMFRsqhuW
+         AJFNr1VAjjqJcJV47/UDkG+zLwWlN3nUCvdf1OKeo9nWmNeVlu/j8FVzzajcFtzKmL+O
+         9hj0alf2F7lGSrCD2V9719kzcaMteyD4k5I6vB5/hTEDYXH7KHfYS3sbkErb1SBMxaS6
+         I1FQGGHC+apaNDUgiquREFNTWyLjiTs3Gcl7so1G8H6aIOtNkW3BHEGhMM99do8pmBG/
+         DDjaP+eG8VKPwzsD7kVYAvcagz6NdRAGHwScgILQFGnEwcBFPFHU53QMAlhsxGW6Xppl
+         7fTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:openpgp:message-id:date
+         :mime-version:content-language:content-transfer-encoding;
+        bh=3UZ64Sq3eqaV71BBDiKRJ7pJQ02szPhuWPuPnRF5ua8=;
+        b=reNGUSPgLG33GLCdm8MJgtWGGwuLNjgisDsz7XxZy7RTJdiBJJpoutP87ynjBEDVin
+         zRCIxqsc3jlilCT34oEuK5muLNQMfKVz8lEn7i3xbAXKFfbP7Bp7rmht5JGsYBI1cdkN
+         74SAbxJduCwC32AQ6441ABlG1/ELyWs6A7l4gXOTaByMhZO34tPxMmbaEOFGM8Oq/TFX
+         DxgmoiVwbe5gh3I/0LI6XeC5997y9T0CzJJ0pp3N697iVp1gFKzeqdmGhg+qboUR2ECa
+         +/Ui3t9u8bMIO/UAJ1eMhSl/DwGVhqsI6d/RlTck//uFijan/gZjHviSMWLJr8sGcLeH
+         jq3w==
+X-Gm-Message-State: APjAAAUfZJRWxpKOw2yG3XYY7F6ZkBZZTlTfMb7ZDtQTcE5tp6+3WYER
+        6lgcVJ/eFzPQXNMa2cxUpx5SSTztx4o=
+X-Google-Smtp-Source: APXvYqwxLGFsmOUY7smS/25Wr44YSCz3ZetiDfk313lHolSsceE66SBuZ93QVpbGr8TNkpzqenfNrw==
+X-Received: by 2002:a17:906:a411:: with SMTP id l17mr2829816ejz.274.1573130816031;
+        Thu, 07 Nov 2019 04:46:56 -0800 (PST)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id k4sm30818edc.49.2019.11.07.04.46.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 04:46:55 -0800 (PST)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [GIT PULL] interconnect changes for 5.5
+Openpgp: preference=signencrypt
+Message-ID: <5123bf54-5d62-fc5c-8838-17bc34487d83@linaro.org>
+Date:   Thu, 7 Nov 2019 14:46:53 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911071335320.4256@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 01:40:47PM +0100, Thomas Gleixner wrote:
-> Typing real_start_time makes me really cringe.
+Hi Greg,
 
-I have a patch fixing that...
+This is a pull request with interconnect patches for the 5.5 merge window.
+All patches have been for a while in linux-next without reported issues. The
+details are in the signed tag. Please consider pulling into char-misc-next.
 
----
-Subject: kernel: Rename tsk->real_start_time
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu Nov  7 11:07:58 CET 2019
+Thanks,
+Georgi
 
-Since it stores CLOCK_BOOTTIME, not, as the name suggests,
-CLOCK_REALTIME, let's rename real_start_time.
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1132,7 +1132,7 @@ static int de_thread(struct task_struct
- 		 * also take its birthdate (always earlier than our own).
- 		 */
- 		tsk->start_time = leader->start_time;
--		tsk->real_start_time = leader->real_start_time;
-+		tsk->start_boottime = leader->start_boottime;
- 
- 		BUG_ON(!same_thread_group(leader, tsk));
- 		BUG_ON(has_group_leader_pid(tsk));
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -533,7 +533,7 @@ static int do_task_stat(struct seq_file
- 	nice = task_nice(task);
- 
- 	/* convert nsec -> ticks */
--	start_time = nsec_to_clock_t(task->real_start_time);
-+	start_time = nsec_to_clock_t(task->start_boottime);
- 
- 	seq_put_decimal_ull(m, "", pid_nr_ns(pid, ns));
- 	seq_puts(m, " (");
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -879,7 +879,7 @@ struct task_struct {
- 	u64				start_time;
- 
- 	/* Boot based time in nsecs: */
--	u64				real_start_time;
-+	u64				start_boottime;
- 
- 	/* MM fault and swap info: this can arguably be seen as either mm-specific or thread-specific: */
- 	unsigned long			min_flt;
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2130,7 +2130,7 @@ static __latent_entropy struct task_stru
- 	 */
- 
- 	p->start_time = ktime_get_ns();
--	p->real_start_time = ktime_get_boottime_ns();
-+	p->start_boottime = ktime_get_boottime_ns();
- 
- 	/*
- 	 * Make it visible to the rest of the system, but dont wake it up yet.
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+
+are available in the Git repository at:
+
+  https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.5-rc1
+
+for you to fetch changes up to 0bf9146d94a00c7759a30241eeabd3e2b28c5f15:
+
+  docs: driver-api: make interconnect title quieter (2019-11-02 04:04:35 +0200)
+
+----------------------------------------------------------------
+interconnect patches for 5.5
+
+Here are the interconnect updates for the 5.5-rc1 merge window.
+
+- Disallow the interconnect core to be built as a module, as this will
+bring more complexity when this API is called from other frameworks that
+are built-in only.
+- New interconnect driver for msm8974 platforms.
+- Change the initcall level of a driver, so it is available earlier to
+other dependent drivers.
+- Minor clean-up and a tiny documentation fix.
+
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+
+----------------------------------------------------------------
+Brian Masney (2):
+      dt-bindings: interconnect: qcom: add msm8974 bindings
+      interconnect: qcom: add msm8974 driver
+
+Georgi Djakov (1):
+      interconnect: Add locking in icc_set_tag()
+
+Jordan Crouse (2):
+      interconnect: Move interconnect drivers to core_initcall
+      interconnect: Remove unused module exit code from core
+
+Leonard Crestez (1):
+      interconnect: qcom: Fix icc_onecell_data allocation
+
+Louis Taylor (1):
+      docs: driver-api: make interconnect title quieter
+
+Viresh Kumar (1):
+      interconnect: Disallow interconnect core to be built as a module
+
+ Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml |  62 +
+ Documentation/driver-api/interconnect.rst                        |   2 +-
+ drivers/interconnect/Kconfig                                     |   2 +-
+ drivers/interconnect/core.c                                      |  11 +-
+ drivers/interconnect/qcom/Kconfig                                |   9 +
+ drivers/interconnect/qcom/Makefile                               |   2 +
+ drivers/interconnect/qcom/msm8974.c                              | 796 ++++++++
+ drivers/interconnect/qcom/qcs404.c                               |  17 +-
+ drivers/interconnect/qcom/sdm845.c                               |  16 +-
+ include/dt-bindings/interconnect/qcom,msm8974.h                  | 146 ++
+ 10 files changed, 1051 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+ create mode 100644 drivers/interconnect/qcom/msm8974.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
