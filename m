@@ -2,139 +2,118 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BF2C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921BCFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBB72178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B332178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="U91k772f"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IfDSYKKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733129AbfKGEC6 (ORCPT
+        id S1733132AbfKGEF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:02:58 -0500
-Received: from gateway36.websitewelcome.com ([192.185.198.13]:31258 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733028AbfKGEC5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 23:02:57 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 2761B40DBF88A
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 20:25:57 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id SYIVi85tQiJ43SYIVihaC5; Wed, 06 Nov 2019 21:17:23 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=H+g7AYW8DqVIzvI+3N37//r3zkgiBk8GNs4olp1Yr9M=; b=U91k772fD8fY5roAOyl7gkffgL
-        x8A2ije+wEM1tu4ATFKlH0qHZbnChSsjYPrL7vMsFUIBY82XoKdRlOJkxurc6nFMs+NUWvVSRTP9K
-        C5x5j6++848Zc2f/m5w4dt5dQPc71ppSqARGSS1o3TbIF+hfjQrHvZ0v4LkpUZVEtM5kFo0s2eg0i
-        i76o/pNsumT2sdPXsdDeIcpm12S71VQbdzxudC/VgASYt+uvv+2uXd2sE9kWdDiM/LRVhgjTQpOj6
-        LIe3iK5CIWNARfoKn+VpHOifp3BoKrkXvlqs9c3U73NEccnVjoxVNHDkXcqro/A0AJNCltaqJJwFf
-        zmJ1A08A==;
-Received: from [191.31.194.59] (port=34854 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iSYIU-000Mrk-9w; Thu, 07 Nov 2019 00:17:22 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v6 2/5] dt-bindings: power: supply: Max17040: Add DT bindings for max17040 fuel gauge
-Date:   Thu,  7 Nov 2019 00:17:07 -0300
-Message-Id: <20191107031710.5672-3-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191107031710.5672-1-matheus@castello.eng.br>
-References: <20191105095905.GA31721@pi3>
- <20191107031710.5672-1-matheus@castello.eng.br>
+        Wed, 6 Nov 2019 23:05:56 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55003 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727280AbfKGEF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:05:56 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 477qZS0FHWz9sRY;
+        Thu,  7 Nov 2019 15:05:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573099552;
+        bh=2QapZZxv0w8eOLKWxJmjSRY76XAd4sqlYoTQLOXOZ5c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IfDSYKKhh2+ECCeQVSboLI/gjCCp9JnwwSYuM3D9CXDKQaW6/vJWvNRU2F9ypRzNW
+         y8EL4qYZoMgOJoF06a0E94HW9Wz5WzjOC6TQo+rrjxqjyfdPOABNQ2e+xJLzJPQ4vi
+         pW2oekPtX+ZVcGqCGSttDV3rOyO6AGgExUOhMi859vj7XhB/XXm35TQ9JnZf7WJQXI
+         XlBHs+67ExtYC1wEJpD3M+QtbJpWaUhMX6woonG4nK0TcU1b8v3ApsNeDUhtv/vsK8
+         sk5TA0661D21+f+WVHNLTm9Q/JBMim91nV6ODfPQxlCDDZpXgXa45GvCsm7w+tf3cV
+         R+7f/P8YYH1vA==
+Date:   Thu, 7 Nov 2019 15:05:50 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>, Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: linux-next: manual merge of the gpio tree with the driver-core tree
+Message-ID: <20191107150550.15df2f35@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.194.59
-X-Source-L: No
-X-Exim-ID: 1iSYIU-000Mrk-9w
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.194.59]:34854
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 38
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: multipart/signed; boundary="Sig_/SJ98=elDCbAvM+46dv4d8lv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation of max17040 based fuel gauge characteristics.
-For configure low level state of charge threshold alert signaled from
-max17043/max17044 we add "maxim,alert-low-soc-level" property.
+--Sig_/SJ98=elDCbAvM+46dv4d8lv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-new file mode 100644
-index 000000000000..f2d0b22b5f79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-@@ -0,0 +1,33 @@
-+max17040_battery
-+~~~~~~~~~~~~~~~~
-+
-+Required properties :
-+ - compatible : "maxim,max17040" or "maxim,max77836-battery"
-+ - reg: i2c slave address
-+
-+Optional properties :
-+- maxim,alert-low-soc-level :	The alert threshold that sets the state of
-+ 				charge level (%) where an interrupt is
-+				generated. Can be configured from 1 up to 32
-+				(%). If skipped the power up default value of
-+				4 (%) will be used.
-+- interrupts : 			Interrupt line see Documentation/devicetree/
-+				bindings/interrupt-controller/interrupts.txt
-+- wakeup-source :		This device has wakeup capabilities. Use this
-+				property to use alert low SOC level interrupt
-+				as wake up source.
-+
-+Optional properties support interrupt functionality for alert low state of
-+charge level, present in some ICs in the same family, and should be used with
-+compatible "maxim,max77836-battery".
-+
-+Example:
-+
-+	battery-fuel-gauge@36 {
-+		compatible = "maxim,max77836-battery";
-+		reg = <0x36>;
-+		maxim,alert-low-soc-level = <10>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-source;
-+	};
---
-2.24.0.rc2
+Today's linux-next merge of the gpio tree got a conflict in:
 
+  drivers/gpio/gpio-tegra186.c
+
+between commit:
+
+  cc4c831811c2 ("gpio: tegra186: use devm_platform_ioremap_resource_byname(=
+)")
+
+from the driver-core tree and commit:
+
+  2a3655056730 ("gpio: tegra186: Implement wake event support")
+
+from the gpio tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpio/gpio-tegra186.c
+index ef40fbe923cf,8a2a69178925..000000000000
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@@ -407,6 -449,8 +449,7 @@@ static int tegra186_gpio_probe(struct p
+  	unsigned int i, j, offset;
+  	struct gpio_irq_chip *irq;
+  	struct tegra_gpio *gpio;
++ 	struct device_node *np;
+ -	struct resource *res;
+  	char **names;
+  	int err;
+ =20
+
+--Sig_/SJ98=elDCbAvM+46dv4d8lv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3DmB4ACgkQAVBC80lX
+0GypaAf/cmF8EFtMCIWMpVN3p4PS3N1FaIKHp2iH+ehuV7yYdrjcnTgZPKTZeRUs
+N7HitAcXJZZp3P7+HRMBN4QxVorshnQ+KSVTfvrOTEVMlfWm5bQBBaShv9Uk8ZOy
+PpBGg9cE6lL23btDY0Tu9n8r17NhP+fcFLOxr/Nw3LF9jVAQG2aYbq8z6lS0Gdqd
+tT8HBY22+EDxbR1W2+IOizhkHJ/BFl9NSvjOY3J4aHSVQ1M8pbYQUTMkJWnd8LWf
+SMfQiBbgdP+mabqKe0EHzfBZeFI0oNYHXjM1qEN+Ep/H/LDoDESDnsPIiy1H5KPV
+B9VzvT+SlH67jbwRj3YLjhARFLN1ZQ==
+=E2cZ
+-----END PGP SIGNATURE-----
+
+--Sig_/SJ98=elDCbAvM+46dv4d8lv--
