@@ -2,120 +2,153 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE4CFC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3BCFC6197
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E642067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB0A2077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:28:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uSDVaazM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733049AbfKGC0v (ORCPT
+        id S1732992AbfKGC21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:26:51 -0500
-Received: from mga18.intel.com ([134.134.136.126]:62496 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbfKGC0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:26:50 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 18:26:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
-   d="scan'208";a="227685256"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Nov 2019 18:26:48 -0800
-Date:   Wed, 6 Nov 2019 18:26:48 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/18] infiniband: set FOLL_PIN, FOLL_LONGTERM via
- pin_longterm_pages*()
-Message-ID: <20191107022647.GC32084@iweiny-DESK2.sc.intel.com>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-8-jhubbard@nvidia.com>
- <20191104203346.GF30938@ziepe.ca>
- <578c1760-7221-4961-9f7d-c07c22e5c259@nvidia.com>
- <20191104205738.GH30938@ziepe.ca>
+        Wed, 6 Nov 2019 21:28:27 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41954 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfKGC21 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:28:27 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 94so663246oty.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:28:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wS6OdC+S2z/PBQgR4YDbDDYhyL0XvvxGi7c5qPyDE0Y=;
+        b=uSDVaazM9cyqGwRXCwrtjFi/nHUtZ2J26+AP1pK5t+J0d+/Tj7/Z1yUPw5jdywtHtw
+         9HQP5ZcwqS0nMABJOIGE5EnPGMvomAgZELvKeJYd8O3dlqz9ZYsSGyWRiBuBUoSeBl6U
+         vCRHFFi3U5GslJ40zsWHEcZlIrh6664iU/1LGaiAmEtJtacFVvswhNjlN0e3klHMBTdv
+         YXlYs16vjS6IC9YLlku6Q2dYcySVxTO6pVtV7DLXuTbP5LimO/KlLarf7UmNGnKq8Hln
+         uz0tuIjijpI1f8Z2Ul6YaCIva9zraCKef9iJ0Egiw+E6ilQSWVpHbCqAfn2vS/AAeTAj
+         MeCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wS6OdC+S2z/PBQgR4YDbDDYhyL0XvvxGi7c5qPyDE0Y=;
+        b=b1bIIWzbh14qaC/dkNgCiml43OYL9ogch5xm4arYgvIAFLsC07E3xPUBVn/eap241t
+         piOINn7gNXUh8TK7ocZun7RZFFuEduCsKdC23o58Ey6D0ZXSiEFfsoeuo66coHThEs8A
+         +044q73YXXGuaJvTmDTSv4No/5usK8FSt5g4Xa7tTLy663QlJc6eZCky3t6tR+U4U0ig
+         ISaHs/0hWqZD5q4BM73Sns97gh+2nnxq0rRyz42dyxzeXkHSOIO4+rru74QEtE8KYguU
+         GvRy6kmgfx4WKBwdRx2iG6eT0ORYP1GTM68creVOUZYGcz5ACNo0Kc11MEO4AVBp/WKc
+         hPBQ==
+X-Gm-Message-State: APjAAAVGTR/0xeE5rjkNWyl/RVP+votl8Fdmfsnv/xOSCFsrr9K542ar
+        HfjsbdW0M8hQsgA57euSWS2JyJjJVUuJOK685ODtJg==
+X-Google-Smtp-Source: APXvYqxM3DVIoAFqmXRE/YkhMyMJgK2jWrlkdOL0UapC3KZIYGFGZxk0cHboKIbfF893h/cqlowss7WaPRbfFTJZrKk=
+X-Received: by 2002:a9d:5e10:: with SMTP id d16mr812912oti.191.1573093704582;
+ Wed, 06 Nov 2019 18:28:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104205738.GH30938@ziepe.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20191106225131.3543616-1-guro@fb.com> <20191107002204.GA96548@cmpxchg.org>
+ <CALvZod5=g230Lwnjh7qXyLkoknZJpOiv-nLJ4XYC9rSSzL=e6w@mail.gmail.com>
+ <20191107014307.GA1158@castle.dhcp.thefacebook.com> <CALvZod43v4Xx6YzhN8ku3=YrPVGJoK-8mUejg1f29a1jxL1-ug@mail.gmail.com>
+In-Reply-To: <CALvZod43v4Xx6YzhN8ku3=YrPVGJoK-8mUejg1f29a1jxL1-ug@mail.gmail.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 6 Nov 2019 18:28:13 -0800
+Message-ID: <CALvZod7ucfCd+TodJVt2oJEKaWg827h9VCEDBJw4+iwnC1BnAw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in get_mem_cgroup_from_mm()
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 04:57:38PM -0400, Jason Gunthorpe wrote:
-> On Mon, Nov 04, 2019 at 12:48:13PM -0800, John Hubbard wrote:
-> > On 11/4/19 12:33 PM, Jason Gunthorpe wrote:
-> > ...
-> > >> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
-> > >> index 24244a2f68cc..c5a78d3e674b 100644
-> > >> +++ b/drivers/infiniband/core/umem.c
-> > >> @@ -272,11 +272,10 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
-> > >>  
-> > >>  	while (npages) {
-> > >>  		down_read(&mm->mmap_sem);
-> > >> -		ret = get_user_pages(cur_base,
-> > >> +		ret = pin_longterm_pages(cur_base,
-> > >>  				     min_t(unsigned long, npages,
-> > >>  					   PAGE_SIZE / sizeof (struct page *)),
-> > >> -				     gup_flags | FOLL_LONGTERM,
-> > >> -				     page_list, NULL);
-> > >> +				     gup_flags, page_list, NULL);
-> > > 
-> > > FWIW, this one should be converted to fast as well, I think we finally
-> > > got rid of all the blockers for that?
-> > > 
-> > 
-> > I'm not aware of any blockers on the gup.c end, anyway. The only broken thing we
-> > have there is "gup remote + FOLL_LONGTERM". But we can do "gup fast + LONGTERM". 
-> 
-> I mean the use of the mmap_sem here is finally in a way where we can
-> just delete the mmap_sem and use _fast
+On Wed, Nov 6, 2019 at 6:21 PM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> On Wed, Nov 6, 2019 at 5:43 PM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > On Wed, Nov 06, 2019 at 05:25:26PM -0800, Shakeel Butt wrote:
+> > > On Wed, Nov 6, 2019 at 4:22 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > > >
+> > > > On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin wrote:
+> > > > > We've encountered a rcu stall in get_mem_cgroup_from_mm():
+> > > > >
+> > > > >  rcu: INFO: rcu_sched self-detected stall on CPU
+> > > > >  rcu: 33-....: (21000 ticks this GP) idle=6c6/1/0x4000000000000002 softirq=35441/35441 fqs=5017
+> > > > >  (t=21031 jiffies g=324821 q=95837) NMI backtrace for cpu 33
+> > > > >  <...>
+> > > > >  RIP: 0010:get_mem_cgroup_from_mm+0x2f/0x90
+> > > > >  <...>
+> > > > >  __memcg_kmem_charge+0x55/0x140
+> > > > >  __alloc_pages_nodemask+0x267/0x320
+> > > > >  pipe_write+0x1ad/0x400
+> > > > >  new_sync_write+0x127/0x1c0
+> > > > >  __kernel_write+0x4f/0xf0
+> > > > >  dump_emit+0x91/0xc0
+> > > > >  writenote+0xa0/0xc0
+> > > > >  elf_core_dump+0x11af/0x1430
+> > > > >  do_coredump+0xc65/0xee0
+> > > > >  ? unix_stream_sendmsg+0x37d/0x3b0
+> > > > >  get_signal+0x132/0x7c0
+> > > > >  do_signal+0x36/0x640
+> > > > >  ? recalc_sigpending+0x17/0x50
+> > > > >  exit_to_usermode_loop+0x61/0xd0
+> > > > >  do_syscall_64+0xd4/0x100
+> > > > >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > > >
+> > > > > The problem is caused by an exiting task which is associated with
+> > > > > an offline memcg. We're iterating over and over in the
+> > > > > do {} while (!css_tryget_online()) loop, but obviously the memcg won't
+> > > > > become online and the exiting task won't be migrated to a live memcg.
+> > > > >
+> > > > > Let's fix it by switching from css_tryget_online() to css_tryget().
+> > > > >
+> > > > > As css_tryget_online() cannot guarantee that the memcg won't go
+> > > > > offline, the check is usually useless, except some rare cases
+> > > > > when for example it determines if something should be presented
+> > > > > to a user.
+> > > > >
+> > > > > A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
+> > > > > css_tryget() instead of css_tryget_online() in task_get_css()").
+> > > > >
+> > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Yay!  I agree if we can do this we should.
+Forgot to add:
 
-Thanks,
-Ira
+Reviewed-by: Shakeel Butt <shakeeb@google.com>
 
->  
-> ie, AFAIK there is no need for the mmap_sem to be held during
-> ib_umem_add_sg_table()
-> 
-> This should probably be a standalone patch however
-> 
-> Jason
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Cc: Tejun Heo <tj@kernel.org>
+> > > >
+> > > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > >
+> > > > The bug aside, it doesn't matter whether the cgroup is online for the
+> > > > callers. It used to matter when offlining needed to evacuate all
+> > > > charges from the memcg, and so needed to prevent new ones from showing
+> > > > up, but we don't care now.
+> > >
+> > > Should get_mem_cgroup_from_current() and get_mem_cgroup_from_page() be
+> > > switched to css_tryget() as well then?
+> >
+> > In those case it can't cause a rcu stall, so it's not a so urgent.
+> > But you are right, we should probably do the same here. I'll look
+> > at all remaining callers and prepare the patchset.
+> >
+> > I'll also probably rename it to css_tryget_if_online() to make obvious
+> > that it doesn't hold the cgroup from being onlined.
+> >
+>
+> SGTM
