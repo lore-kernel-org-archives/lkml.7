@@ -2,92 +2,127 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2E1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F27C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D26D321882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9370221882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573154600;
+	bh=ftSd/7ehpdn2j3hx+l5leGMaV+fCv0vWroHDpGfHRto=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=QuWLFdU8Myp42kGyxvzdGdUdVMXNAKEEz/YhgelQ1Z0+BjYvXf6OO4ULwIFXiGkM8
+	 St4P9ikmwabBwfVWw2yQs0gZOeE1NtjO1DgAF+UTBpEfV4vmvwulb0FKsNABPlyiXY
+	 LFIjnXyvNc7N2jNTODZQI7YQ/Azzi+7Lm13co5g8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfKGTWk (ORCPT
+        id S1726758AbfKGTXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:22:40 -0500
-Received: from sauhun.de ([88.99.104.3]:45468 "EHLO pokefinder.org"
+        Thu, 7 Nov 2019 14:23:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfKGTWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:22:40 -0500
-Received: from localhost (x4e37fafe.dyn.telefonica.de [78.55.250.254])
-        by pokefinder.org (Postfix) with ESMTPSA id 893F22C053A;
-        Thu,  7 Nov 2019 20:22:37 +0100 (CET)
-Date:   Thu, 7 Nov 2019 20:22:36 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 01/12] i2c: replace i2c_new_probed_device with an
- ERR_PTR variant
-Message-ID: <20191107192236.GA961@kunai>
-References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
- <20191106095033.25182-2-wsa+renesas@sang-engineering.com>
- <cd25c799-bb10-aa59-8705-b079eff2165e@lucaceresoli.net>
+        id S1725497AbfKGTXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:23:19 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E31B2084C;
+        Thu,  7 Nov 2019 19:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573154598;
+        bh=ftSd/7ehpdn2j3hx+l5leGMaV+fCv0vWroHDpGfHRto=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=0hfQhQvlAHgZvgSiYj3SqZoxBDYPhBwxS6V8lIJkE4gCKLNVwr8xFW/VnOTg57eas
+         U5E6mrzmitJwEZL+uDSfwiAvFlvQcY6Fb59c8wJ2ZggGWcAqQMi/X77ePluNmW6djh
+         BeIajKROeKq22+QdH6HG0wwx9TC+ayGA5ru8WZoU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
-Content-Disposition: inline
-In-Reply-To: <cd25c799-bb10-aa59-8705-b079eff2165e@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573120694-6015-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1573120694-6015-1-git-send-email-rajan.vaja@xilinx.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>, jolly.shah@xilinx.com,
+        michal.simek@xilinx.com, mturquette@baylibre.com,
+        nava.manne@xilinx.com, shubhrajyoti.datta@xilinx.com,
+        tejas.patel@xilinx.com
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
+Subject: Re: [PATCH] clk: zynqmp: Warn user if clock user are more than allowed
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 11:23:17 -0800
+Message-Id: <20191107192318.3E31B2084C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Rajan Vaja (2019-11-07 01:58:14)
+> Warn user if clock is used by more than allowed devices.
+> This check is done by firmware and returns respective
+> error code. Upon receiving error code for excessive user,
+> warn user for the same.
+>=20
+> This change is done to restrict VPLL use count. It is
+> assumed that VPLL is used by one user only.
+>=20
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This sign off chain is incorrect.
 
-Hi Luca,
+> ---
+>  drivers/clk/zynqmp/pll.c             | 9 ++++++---
+>  drivers/firmware/xilinx/zynqmp.c     | 2 ++
+>  include/linux/firmware/xlnx-zynqmp.h | 1 +
+>  3 files changed, 9 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/clk/zynqmp/pll.c b/drivers/clk/zynqmp/pll.c
+> index a541397..2f4ccaa 100644
+> --- a/drivers/clk/zynqmp/pll.c
+> +++ b/drivers/clk/zynqmp/pll.c
+> @@ -188,9 +188,12 @@ static int zynqmp_pll_set_rate(struct clk_hw *hw, un=
+signed long rate,
+>                 frac =3D (parent_rate * f) / FRAC_DIV;
+> =20
+>                 ret =3D eemi_ops->clock_setdivider(clk_id, m);
+> -               if (ret)
+> -                       pr_warn_once("%s() set divider failed for %s, ret=
+ =3D %d\n",
+> -                                    __func__, clk_name, ret);
+> +               if (ret) {
+> +                       if (ret =3D=3D -EUSERS)
+> +                               WARN(1, "More than allowed devices are us=
+ing the %s, which is forbidden\n", clk_name);
+> +                       pr_err("%s() set divider failed for %s, ret =3D %=
+d\n",
+> +                              __func__, clk_name, ret);
+> +               }
 
-> I beg your pardon for the newbie question, perhaps a stupid one, kind of
-> nitpicking, and not even strictly related to this patch, but what's the
-> reason for these functions being declared extern?
+Shouldn't we catch this much earlier when clk_get() is called or
+something like that?
 
-I did this for consistency reasons. I agree that the 'extern' keyword
-could need some second thought, yet I think that should be a seperate
-patchset. And that does not have priority for me, so if someone is
-interested... :)
+> =20
+>                 eemi_ops->ioctl(0, IOCTL_SET_PLL_FRAC_DATA, clk_id, f, NU=
+LL);
+> =20
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/z=
+ynqmp.c
+> index 75bdfaa..74d9f13 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -48,6 +48,8 @@ static int zynqmp_pm_ret_code(u32 ret_status)
+>                 return -EACCES;
+>         case XST_PM_ABORT_SUSPEND:
+>                 return -ECANCELED;
+> +       case XST_PM_MULT_USER:
+> +               return -EUSERS;
 
-> For the rest LGTM, I did some grep checks before/after the patchset, ran
-> some build tests, and everything looks fine.
+This is for filesystem quotas? It's a weird error return value.
 
-Cool, thanks for your review!
-
-All the best,
-
-   Wolfram
-
-
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3EbvgACgkQFA3kzBSg
-KbZnUBAAqSXjKtHx8DfxjUUBGdokkq2sI804mQs+pZMf9AnfcaYXg0K4s8MXKkU4
-FkTLxSx0YvFCek2Uj79mqz+6enZQ7BbtHjD27Cv9OTYdG2rRTiDj7klqL1L7wZII
-ShG0ABY9s35DWS/XpBnT+PivvXHEv2qv78CQvreMGowwdaMlDLvfJvZgrNBr0ndg
-vaLDR+2IGt1MMY7QqbQQOeH4kKsAVIYruAvcy1eZm4hDRBxUo2mq5wiG7ERWTXuW
-/FXXXUa5/+6ty5sWyPnsvVE8c3yvC7O6/ejEuMlRHCVjL++20Yshka6X84UPOSlv
-xCiDz+4r2L1UhNYM0sqBiP8zli1MfNsdVHlWVQtmm4pjIrWXzLlEuRlQm94DLZob
-mUXugpUVXiy+CIPy2SVdvDnXGETFLuYx9kY/YMy0U7DPFnEcK7XCUA3Vj+Bfj73Y
-yllFHHg7aeZvg7lfQvx4BIek9VzggAVs4qdreH9i5T2mPPPp+f7EM8diLzYjuJDG
-3oWwtGYqdB5y0U2pZB6+AHGMfB7kgALP3dYxGshBKHiOnJmpz9UL77zP3gbn7I+E
-CclNZNqtdDdGBJiOLETAYKBbpC7zXwt3dnbdZ72ZH1fcFPBjcDMFBjz1h49kHNpp
-6Ig1J/nRkSpLi/RluOy1VrkOhCJaWDK7hMctS5BCm89T+xLYGFA=
-=iIbZ
------END PGP SIGNATURE-----
-
---BOKacYhQ+x31HxR3--
+>         case XST_PM_INTERNAL:
+>         case XST_PM_CONFLICT:
+>         case XST_PM_INVALID_NODE:
