@@ -2,70 +2,115 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E53C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80529C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07AC2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542B82178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573136376;
+	bh=gXl/E/vHmkF3mTsXv+SDK+6uBtKPx8iEnlssedP46YY=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=QtHQV0mHmUwdowOdctcX0KYCguXGn+Y7GRRNbvYkosGQ7MJMRJMPXWwzaZ4R1cNe9
+	 UPKCqbrj5p6cU+b6Gm5hEOYHg4nj2xdMXs8Q6YqBYUQUdq56BzY3oMVhTXNCo7iS8K
+	 ZeghvozvaCGOKKsYocOPqSyqzQBPT7UmKwhaj16A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389142AbfKGOT0 (ORCPT
+        id S2389196AbfKGOTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:19:26 -0500
-Received: from mga11.intel.com ([192.55.52.93]:5909 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbfKGOT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:19:26 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 06:19:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
-   d="scan'208";a="213031550"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 07 Nov 2019 06:19:23 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 07 Nov 2019 16:19:22 +0200
-Date:   Thu, 7 Nov 2019 16:19:22 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v9 1/4] PCI: Consider alignment of hot-added bridges when
- distributing available resources
-Message-ID: <20191107141922.GQ2552@lahna.fi.intel.com>
-References: <SL2P216MB01875C65EE9820B6A69D208580610@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        Thu, 7 Nov 2019 09:19:35 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:33890 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726033AbfKGOTe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:19:34 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iSidE-0006pE-M7; Thu, 07 Nov 2019 15:19:28 +0100
+To:     Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v5 3/8] arm64: hyperv: Add memory alloc/free functions  for Hyper-V size pages
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SL2P216MB01875C65EE9820B6A69D208580610@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 07 Nov 2019 15:28:49 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <will@kernel.org>, <catalin.marinas@arm.com>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>, <devel@linuxdriverproject.org>,
+        <olaf@aepfle.de>, <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, <jasowang@redhat.com>,
+        <marcelo.cerri@canonical.com>, KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "boqun.feng" <boqun.feng@gmail.com>
+In-Reply-To: <1570129355-16005-4-git-send-email-mikelley@microsoft.com>
+References: <1570129355-16005-1-git-send-email-mikelley@microsoft.com>
+ <1570129355-16005-4-git-send-email-mikelley@microsoft.com>
+Message-ID: <43d53ebd2637bd9106137103028a4f0e@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: mikelley@microsoft.com, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, devel@linuxdriverproject.org, olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com, jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:28:21PM +0000, Nicholas Johnson wrote:
-> Rewrite pci_bus_distribute_available_resources to better handle bridges
-> with different resource alignment requirements. Pass more details
-> arguments recursively to track the resource start and end addresses
-> relative to the initial hotplug bridge. This is especially useful for
-> Thunderbolt with native PCI enumeration, enabling external graphics
-> cards and other devices with bridge alignment higher than 1MB.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=199581
-> 
-> Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+On 2019-10-03 20:12, Michael Kelley wrote:
+> Add ARM64-specific code to allocate memory with HV_HYP_PAGE_SIZE
+> size and alignment. These are for use when pages need to be shared
+> with Hyper-V. Separate functions are needed as the page size used
+> by Hyper-V may not be the same as the guest page size.  Free
+> operations are rarely done, so no attempt is made to combine
+> freed pages into larger chunks.
+>
+> This code is built only when CONFIG_HYPERV is enabled.
+>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/arm64/hyperv/hv_init.c    | 68
+> ++++++++++++++++++++++++++++++++++++++++++
+>  include/asm-generic/mshyperv.h |  5 ++++
+>  2 files changed, 73 insertions(+)
+>
+> diff --git a/arch/arm64/hyperv/hv_init.c 
+> b/arch/arm64/hyperv/hv_init.c
+> index 6808bc8..9c294f6 100644
+> --- a/arch/arm64/hyperv/hv_init.c
+> +++ b/arch/arm64/hyperv/hv_init.c
+> @@ -15,10 +15,78 @@
+>  #include <linux/export.h>
+>  #include <linux/mm.h>
+>  #include <linux/hyperv.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/list.h>
+> +#include <linux/string.h>
+>  #include <asm-generic/bug.h>
+>  #include <asm/hyperv-tlfs.h>
+>  #include <asm/mshyperv.h>
+>
+> +
+> +/*
+> + * Functions for allocating and freeing memory with size and
+> + * alignment HV_HYP_PAGE_SIZE. These functions are needed because
+> + * the guest page size may not be the same as the Hyper-V page
+> + * size. And while kalloc() could allocate the memory, it does not
+> + * guarantee the required alignment. So a separate small memory
+> + * allocator is needed.  The free function is rarely used, so it
+> + * does not try to combine freed pages into larger chunks.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Is this still needed now that kmalloc has alignment guarantees
+(see 59bb47985c1d)?
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
