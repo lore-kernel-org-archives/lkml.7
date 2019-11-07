@@ -2,104 +2,68 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E04C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44C5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE26C2077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pr0aFrde"
+	by mail.kernel.org (Postfix) with ESMTP id 8600B2077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfKGWf4 (ORCPT
+        id S1727867AbfKGWgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:35:56 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36766 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfKGWfx (ORCPT
+        Thu, 7 Nov 2019 17:36:51 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:45912 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfKGWgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:35:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c22so4297233wmd.1;
-        Thu, 07 Nov 2019 14:35:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TMwoSxT/4GGDyCQoDNcUPurUcdE1c7+EMwGJUkqnzXs=;
-        b=Pr0aFrdeeIUogR9T9xynvSArsLkK5HBwUlfII2BYxq1GMUW97cXSwG2h9ZmtdUGCKF
-         A8vNOlVE23TGL044HBEUfE25Ngu0JjZh3ll3B/ktVfl36UYXVsndFsQN8XruCuYRLQrm
-         RqQBkM7EX3oE0f2HsOTWq5UPpIQA9HiLbaneiuj481XMoq9D/y5wGaGxMu7b9iRak6G1
-         VthNWZ32vdljxz+lvDPJ1JywpVoZEYRt0mj5X/9OWNkTc7GIVtBB0+N/SsTf7ldE9434
-         7RH4NrA4Nv88zPk9dL35ffxvWcjirR8lZXmBIYIUXVQBcdLCvvzPwMT/XupS3ovnPi/m
-         gMkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=TMwoSxT/4GGDyCQoDNcUPurUcdE1c7+EMwGJUkqnzXs=;
-        b=Rz8dynkfAaZ2NhXfGlFOH2GfWRSA4OFOGpAWQPqkGPL5SisUH30iX8XpRpEArX9zTL
-         AiS2zPs7Y76mPzIqWZQf46mqd9pLrwQSJegMqtrmYZ7clNirQhy/oLnO4y2pVMNIThp8
-         KJYptZiI09TZm9hH+24GBmma2QJ/sU3ZT7JMttwsTxQbrG0XiNI8C+ga5Po8v6WQhWuB
-         h6dGTuWgakiu9RjO3JIGJq3XWaMA0P6qaatKYD95j5hvAx6qsY8RdXNSVoeQSZltLxS2
-         +1zQjCsvH3dIV7zws23d5Obt095NNIKjHAo/A9kJsfhINjSLzdJwOKDa/Fr2xedKey2O
-         hr3Q==
-X-Gm-Message-State: APjAAAWVA+de2WQyAbZpjZ2e87TD+pDBMf6cQfaNsAzssZwDfdwxLF96
-        gIpPskps+KH/HFscSdCecD5U1/GX
-X-Google-Smtp-Source: APXvYqx8xScYBJoXlzF05l83tJs3HriXDX4aeugdE/sGwVN+qr0AD4JgYK3ka5ZxR0To9ENvfMuatQ==
-X-Received: by 2002:a7b:cc0c:: with SMTP id f12mr5132600wmh.40.1573166150882;
-        Thu, 07 Nov 2019 14:35:50 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id y6sm3667194wrw.6.2019.11.07.14.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 14:35:50 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Timur Tabi <timur@kernel.org>,
-        intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 2/2] net: qcom/emac: Demote MTU change print to debug
-Date:   Thu,  7 Nov 2019 14:35:37 -0800
-Message-Id: <20191107223537.23440-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191107223537.23440-1-f.fainelli@gmail.com>
-References: <20191107223537.23440-1-f.fainelli@gmail.com>
+        Thu, 7 Nov 2019 17:36:51 -0500
+Received: from [82.43.126.140] (helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iSqOV-0005un-8Q; Thu, 07 Nov 2019 22:36:47 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
+        Alex Elder <elder@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        ceph-devel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rdb: fix spelling mistake "requeueing" -> "requeuing"
+Date:   Thu,  7 Nov 2019 22:36:46 +0000
+Message-Id: <20191107223646.416986-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changing the MTU can be a frequent operation and it is already clear
-when (or not) a MTU change is successful, demote prints to debug prints.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+There is a spelling mistake in a debug message. Fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/net/ethernet/qualcomm/emac/emac.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/block/rbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
-index c84ab052ef26..98f92268cbaa 100644
---- a/drivers/net/ethernet/qualcomm/emac/emac.c
-+++ b/drivers/net/ethernet/qualcomm/emac/emac.c
-@@ -213,9 +213,9 @@ static int emac_change_mtu(struct net_device *netdev, int new_mtu)
- {
- 	struct emac_adapter *adpt = netdev_priv(netdev);
- 
--	netif_info(adpt, hw, adpt->netdev,
--		   "changing MTU from %d to %d\n", netdev->mtu,
--		   new_mtu);
-+	netif_dbg(adpt, hw, adpt->netdev,
-+		  "changing MTU from %d to %d\n", netdev->mtu,
-+		  new_mtu);
- 	netdev->mtu = new_mtu;
- 
- 	if (netif_running(netdev))
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 39136675dae5..8e1595d09138 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -4230,7 +4230,7 @@ static void rbd_acquire_lock(struct work_struct *work)
+ 		 * lock owner acked, but resend if we don't see them
+ 		 * release the lock
+ 		 */
+-		dout("%s rbd_dev %p requeueing lock_dwork\n", __func__,
++		dout("%s rbd_dev %p requeuing lock_dwork\n", __func__,
+ 		     rbd_dev);
+ 		mod_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork,
+ 		    msecs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT * MSEC_PER_SEC));
 -- 
-2.17.1
+2.20.1
 
