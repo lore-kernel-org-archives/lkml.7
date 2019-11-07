@@ -2,92 +2,90 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EC0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E9FC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7394214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA2C2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:38:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AzwcHjDO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mcFwvJBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbfKGQfn (ORCPT
+        id S1730382AbfKGQiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:35:43 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36815 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKGQfm (ORCPT
+        Thu, 7 Nov 2019 11:38:12 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:23645 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfKGQiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:35:42 -0500
-Received: by mail-io1-f66.google.com with SMTP id s3so3000297ioe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:35:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+AFTD4gdG3RNMTGK/9nXRonGG4bAdvDwZYfzVR9Jo48=;
-        b=AzwcHjDO9ne06auKd8BAeOXMMNo3yGj1X8Sp0qFud95nMtFfFK+WflXwPq/TijSNGI
-         jJgYEyq/kNYkHeDfMsw6N+/OukY2VcVj9U9G4OvrzjGsxzMB3CCvaNY5BrmmEjYENCCG
-         nGrhLAnFEc+N+sf2T9GsQuocS5my8/VmBQdJOrEI2oA0L43dgmXz8tnqfIRczB5QNC0V
-         coxRzqMcel0OCCgGGsCNySkrFNZy7Xd6+PnsJuO5yr/mbPBxi4EWe0CJDPw5WabUtHjR
-         eVu3z9yZQEHl4oubNjBTGeA7OLN6j+Uz1/HFE/OUCF6Xj0TVBikP/SIfPO+IBKtqytfP
-         ZBNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+AFTD4gdG3RNMTGK/9nXRonGG4bAdvDwZYfzVR9Jo48=;
-        b=JigcD72IcJSkOi4PD5pE033jUG6YcuPCEZYaA2e16cQ7hJSZJSjMp58tKNyYYt5vK6
-         G6SDATlE9MnWcxiSjWoj9Vl0NHQAgn8rHxzMXJuFWc1lQwvAenOcGQTXTBgVUi/CrunO
-         ZrJWXZAh1F78Wz2CrRuowW70T5/lur5tFitxWF/WLApvaXgp/b3fuDAEOZzNVNXStWa6
-         zUOQOGVHi5ej6Eh2WUR0BT7g+7PgGDEInz9IPomMQwDbdF7GNycgNt1rSfuZnAy5Qb+h
-         ZrmaY7P1BtHBDplMpUmLTBxfhyqULk5MrXIXyYNOSfIHXtslnUwldqimsu+ZGEWM1wg4
-         R/LQ==
-X-Gm-Message-State: APjAAAUuoyoo4c8YnEm39pNeM8g5Bxrma+avIMLTCTs+OCfjLSwe6o59
-        b0m9GUrhUT5EB+jUPwuopubPX4Ue5nuK+fqEOPBhhuFyygU=
-X-Google-Smtp-Source: APXvYqzhsX0TLQEAxILApJRiP0wSy/GIZcyXlvCbDnsJ/W/YMhH5i9RTQiKdYXG153AUfbndzWkGg6JtTMWmdtVLYX4=
-X-Received: by 2002:a5d:9059:: with SMTP id v25mr1209422ioq.58.1573144541410;
- Thu, 07 Nov 2019 08:35:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20191106174804.74723-1-edumazet@google.com> <157307905904.29376.8711513726869840596.tip-bot2@tip-bot2>
- <CANn89iKXi3rWWruKoBwQ8rncwLvkbzjZJWuJL3K05fjAhcySwg@mail.gmail.com>
- <CANn89iL=xPxejRPC=wHY7q27fLOvFBK-7HtqU_HJo+go3S9UXA@mail.gmail.com>
- <20191107085255.GK20975@paulmck-ThinkPad-P72> <CANn89i+8Hq5j234zFRY05QxZU1n=Vr6S-kZCcvn3Z80xYaindg@mail.gmail.com>
- <20191107161149.GQ20975@paulmck-ThinkPad-P72>
-In-Reply-To: <20191107161149.GQ20975@paulmck-ThinkPad-P72>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 7 Nov 2019 08:35:30 -0800
-Message-ID: <CANn89iLMD0=tiQ181qQ=qKo=Nom-XX4MqonZw6pKiYUzTDVjQg@mail.gmail.com>
-Subject: Re: [tip: timers/core] hrtimer: Annotate lockless access to timer->state
-To:     paulmck@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        syzbot <syzkaller@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 Nov 2019 11:38:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573144689;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=RUuZUnY8v0t17sljokJZv0i1/4lvzd4ncub/rgk8kuU=;
+        b=mcFwvJBjMcQ5QGtLelDfQ5HKRqAfcBS4kI2zpcgIUzR6hSZgO6x+bRFw9JRWxiCqom
+        k9DT7xaOe5wVxSSQoss+gVaUdyx3UxGC3IkmQ6xSJzFzVzlVVHtvcnciOkdmbrvAq1Xb
+        88pz5zotT+8LgC+k+SUYSvoSviGi1rb/M5xLNo2ve4ukhxiPIDIkNRPH+9LGuyPFgtWU
+        DMRuqELK5gTAU1497CMAj5j3Y54j33T4b0vKNjw1doohtiBtIIqwDonl8EB+feHy9mRE
+        QKIB8AwqFDtfgFsf9yJT+LNJTRMDoxlqQcvUh+90tr7ZgSRvdD/cDdLemtWYzDtKyeVx
+        Oxzw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PrwDCq1eY="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3vA7GbsfsV
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 7 Nov 2019 17:37:54 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v2 1/8] RFC: dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191107155401.GC5610@atomide.com>
+Date:   Thu, 7 Nov 2019 17:37:54 +0100
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <65C6747A-982A-4179-95AF-4061733978A1@goldelico.com>
+References: <cover.1573124770.git.hns@goldelico.com> <4292cec1fd82cbd7d42742d749557adb01705574.1573124770.git.hns@goldelico.com> <20191107155401.GC5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 8:11 AM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> OK, so this is due to timer_pending() lockless access to ->entry.pprev
-> to determine whether or not the timer is on the list.  New one on me!
->
-> Given that use case, I don't have an objection to your patch to list.h.
->
-> Except...
->
-> Would it make sense to add a READ_ONCE() to hlist_unhashed()
-> and to then make timer_pending() invoke hlist_unhashed()?  That
-> would better confine the needed uses of READ_ONCE().
 
-Sounds good to me, I had the same idea but was too lazy to look at the
-history of timer_pending()
-to check if the pprev pointer check was really the same underlying idea.
+> Am 07.11.2019 um 16:54 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191107 11:07]:
+>> +        - const: "ti,am335x-sgx530-125", "img,sgx530-125", =
+"img,sgx530", "img,sgx5"
+>=20
+> This should be without the x, maybe use the earliest one here
+> for "ti,am3352-sgx530-125" like we have for "ti,am3352-uart".
+
+Ok, fine. Will update accordingly.
+
+> We could use "ti,am3-sgx530-125" but that can get confused
+> then with am3517 then.
+
+Indeed.
+
+BR and thanks,
+Nikolaus
+
