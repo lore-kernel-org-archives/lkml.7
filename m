@@ -2,107 +2,133 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DD7FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FDAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7CA2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980612178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573135937;
-	bh=eFSEHwy8H/yP84/R4iQg7rUkqjIElsqqX+7Lc2LxeiU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O77/AwRVgHycfnxZZHRJb0bIsfY+XJwpduNNYGg/akoW/duQtYG7n/CXq1qLzG6AW
-	 vzDE7KmddYamrByrGawD8DTBS+XweIGlqNCGOJ+Q+RZ9PyTiTRXOX0A1kDkY6JbBtD
-	 RRiisFGAMsYZMyB/Lf/uSzCPbp5UvYMNTzKLq3mc=
+	s=default; t=1573135944;
+	bh=iGJ5B0qOz2lHUMNcg/EIgSWI4BQHNlzJUaoQBEBpOJM=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=1WPGwULIJO9pD/ZkJ0UyBYGPrJgFRJQu1QxLdWf2Xx0MXWWmixOdAgKfGwTxTx2s2
+	 rA5iBkIKysq75xZ6qMs+Uj2CRkbblob4SV9NsPgG94ha9su3+bxnBTFzSKdb+q9sl/
+	 mdTr/Qa3N96Nss0CloTiKUVFzLbUr7q1IVs9S5Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389089AbfKGOMQ (ORCPT
+        id S2389170AbfKGOMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:12:16 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42519 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKGOMQ (ORCPT
+        Thu, 7 Nov 2019 09:12:23 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:46356 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729162AbfKGOMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:12:16 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b16so2102088otk.9;
-        Thu, 07 Nov 2019 06:12:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cWWfquVvfscWRLHvr28HN8i4Fy/KkuUnhhq0FcZYb0E=;
-        b=r3Oz8uAbxlJ0BixvucNmdzmyK9qOk+Ohp2UB92DtcSynMnaPLKp+yZkWSCBOZdBaTE
-         pN66G7czoEWR+S9DTpaqWHHY5YB9Ka4U5ZSXmUv7+j3n8LzupysOUpBoUwGjph6uJA5k
-         1Bbi/MdC+2CZ5C2LmusPnA94/QLQfW0nZIDTdpnwcC2MFiEsyQr8neidS/E0YUa2gMZf
-         CXMTLPxiMJEQ89UTxmda2XGkw6tHmnhhVwwrlVhyeWiDDOfIViKcyW8gUcnO6myYyH3C
-         kP211JTHEQXZ7WspEOTtgEQwX6FfAWMcfXB2dch8a9wDHaymB87EmoRyJC17oWQXrGNP
-         9CKQ==
-X-Gm-Message-State: APjAAAVbPJgzfUdbC1wKD+xwA2VLavT5GO9/WKDVg8rRBRUmxxvXn2O3
-        UbLKoNJac6SzPk1qRSAe5s6jY8Ee/RJP5vRTPuI=
-X-Google-Smtp-Source: APXvYqxu6udHOvBSW/xwAJQXHKIOXHGoAa2IhEo7XpAgPdk3s2N7Ce8so1jz9m3xm7wa8ZRiIeEm/HJSABKwmeMR68s=
-X-Received: by 2002:a9d:7d01:: with SMTP id v1mr3026793otn.167.1573135933257;
- Thu, 07 Nov 2019 06:12:13 -0800 (PST)
+        Thu, 7 Nov 2019 09:12:23 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iSiWG-0006fb-WE; Thu, 07 Nov 2019 15:12:17 +0100
+To:     Salil Mehta <salil.mehta@huawei.com>
+Subject: Re: [PATCH net] net: hns: Fix the stray netpoll locks causing  deadlock in NAPI path
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <157309097008.1579826.12818463304589384434.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0hDaxcPBwwx2FaxKKJGNOvY_+JuvF7CJ0tbX1TjEisvUQ@mail.gmail.com> <alpine.DEB.2.21.1911071447090.4256@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911071447090.4256@nanos.tec.linutronix.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 7 Nov 2019 15:12:02 +0100
-Message-ID: <CAJZ5v0g2PySxpYg_94aFiz+FBdZOvAw8DwR-B47Lx-H50hR2hw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/12] EFI Specific Purpose Memory Support
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Keith Busch <kbusch@kernel.org>, Len Brown <lenb@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        kbuild test robot <lkp@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 07 Nov 2019 15:21:37 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <davem@davemloft.net>, <edumazet@google.com>,
+        <yisen.zhuang@huawei.com>, <lipeng321@huawei.com>,
+        <mehta.salil@opnsrc.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+In-Reply-To: <20191106185405.23112-1-salil.mehta@huawei.com>
+References: <20191106185405.23112-1-salil.mehta@huawei.com>
+Message-ID: <a6f06cfc7ef91685746dfe5ab6c56401@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: salil.mehta@huawei.com, davem@davemloft.net, edumazet@google.com, yisen.zhuang@huawei.com, lipeng321@huawei.com, mehta.salil@opnsrc.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 2:49 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Thu, 7 Nov 2019, Rafael J. Wysocki wrote:
-> > On Thu, Nov 7, 2019 at 2:57 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Indeed.
-> >
-> > I have waited for comments on x86 bits from Thomas, but since they are
-> > not coming, I have just decided to take patch [1/12] from this series,
-> > which should be totally non-controversial,  as keeping it out of the
-> > tree has become increasingly painful (material depending on it has
-> > been piling up already for some time).
->
-> Sorry for letting this slip through the cracks.
->
-> From x86 side I don't see any issues. It's mostly EFI stuff which Ard has
-> looked at already. So feel free to pick up the lot
->
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Hi Salil,
 
-I will, thank you!
+On 2019-11-06 20:03, Salil Mehta wrote:
+> This patch fixes the problem of the spin locks, originally
+> meant for the netpoll path of hns driver, causing deadlock in
+> the normal NAPI poll path. The issue happened due presence of
+> the stray leftover spin lock code related to the netpoll,
+> whose support was earlier removed from the HNS[1], got activated
+> due to enabling of NET_POLL_CONTROLLER switch.
+>
+> Earlier background:
+> The netpoll handling code originally had this bug(as identified
+> by Marc Zyngier[2]) of wrong spin lock API being used which did
+> not disable the interrupts and hence could cause locking issues.
+> i.e. if the lock were first acquired in context to thread like
+> 'ip' util and this lock if ever got later acquired again in
+> context to the interrupt context like TX/RX (Interrupts could
+> always pre-empt the lock holding task and acquire the lock again)
+> and hence could cause deadlock.
+>
+> Proposed Solution:
+> 1. If the netpoll was enabled in the HNS driver, which is not
+>    right now, we could have simply used spin_[un]lock_irqsave()
+> 2. But as netpoll is disabled, therefore, it is best to get rid
+>    of the existing locks and stray code for now. This should
+>    solve the problem reported by Marc.
+>
+> @Marc,
+> Could you please test this patch and confirm if the problem is
+> fixed at your end?
+
+Yes, this fixes it, although you may want to fully get rid of
+the now useless lock:
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c 
+b/drivers/net/ethernet/hisilicon/hns/hnae.c
+index 6d0457eb4faa..08339278c722 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hnae.c
++++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
+@@ -199,7 +199,6 @@ hnae_init_ring(struct hnae_queue *q, struct 
+hnae_ring *ring, int flags)
+
+  	ring->q = q;
+  	ring->flags = flags;
+-	spin_lock_init(&ring->lock);
+  	ring->coal_param = q->handle->coal_param;
+  	assert(!ring->desc && !ring->desc_cb && !ring->desc_dma_addr);
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.h 
+b/drivers/net/ethernet/hisilicon/hns/hnae.h
+index e9c67c06bfd2..6ab9458302e1 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hnae.h
++++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
+@@ -274,9 +274,6 @@ struct hnae_ring {
+  	/* statistic */
+  	struct ring_stats stats;
+
+-	/* ring lock for poll one */
+-	spinlock_t lock;
+-
+  	dma_addr_t desc_dma_addr;
+  	u32 buf_size;       /* size for hnae_desc->addr, preset by AE */
+  	u16 desc_num;       /* total number of desc */
+
+With that:
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Marc Zyngier <maz@kernel.org>
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
