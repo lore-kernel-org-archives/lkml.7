@@ -2,120 +2,223 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A694C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06144C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B67B2077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67902077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:56:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k2Zi5ilU"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Grjn+xzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733275AbfKGIzi (ORCPT
+        id S2387529AbfKGI4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:55:38 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41385 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727300AbfKGIzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:55:37 -0500
-Received: by mail-lf1-f68.google.com with SMTP id j14so956100lfb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:55:36 -0800 (PST)
+        Thu, 7 Nov 2019 03:56:09 -0500
+Received: from mail-eopbgr700066.outbound.protection.outlook.com ([40.107.70.66]:25601
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733249AbfKGI4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:56:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vh3ECb+zn/3v6TXzB/mbSOBECQ4mQtcian6QzeJWd4AHmXyAcmY0AESmtap3JpNZAsxOWh1km322lUUVe/VFG7b7t4bT9MBXwjcfx3i+OYqlT/LxlRHHo6svjkadehLq4Ck+4kXR0dtF1auw5HTA10l6/yOv95UXwBs4WKM/9BS22Rjp8KqgOOLajo3/Zf8UXEgyhaG4hQFIkgyWW4Tg749DJVbuUzV897PPmsaJbmQPAPqFMqOMykSTvT01ul6RoKrvc9TVM4kpguP1dqICCjJij9oVv7rCpxLZLxs0cKqHN4f/d9dOZ9c9zsdANj2PNnUe+rgCTx+Vw9RxnJIrUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qS+mlutQ68MpJbm655/vD8RfT7Izm6hl50kw6W5rfmw=;
+ b=CIvzTVjVmkfrxZB3n5FncgsJP0mJZa/HqaSIau4+zXws+Pihx6k68cnfcVIbb3nKla26z9PavIRXPwT26YFkz7DaBSU3x5L7DoMyF5ESUPsgAiTB+srqcy6PzvnbsjFhP1JRxqO0mwq5LYPMKtuBfh0o8DdHriwNt2JqyG0claQMQ5BhnNyM8l9JRInWdfJN+qDYe5MhbHnTiiW90LJ4gljD2eqFkR+5FTpJyckx4d2oIDrUOaimEAI7aGq7f7I553EF6RXPM7mdlqUQawdLLPDRxKp8CKIQveZq33FFD8c6knUDV2IUAbRcbBz/t8L1H18nB8UzyPnEv6I7omD4Jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zWZb6GLCF2st+ZVn+OJmwleeG1odyNOnzVdWxMN71m4=;
-        b=k2Zi5ilUpvfwvkE4Ppxa+x0nf4km4BOuvWm1ykPz7BHyrgqo9vEkTpio3e+6YeSAiA
-         ksg0hvGFAxJJ5+A1qVHYbExIOTneSQo46Sclk8UiCKSz3NT2s4jWy4p2tAEvwQrmNNiU
-         R1dMTOqkY/lBDgJo9yps5cz+dnI+fVkq6IK2r1jtC5lneKbhlws47UcUOwdRPKltMqm6
-         zij//x+VBfeyEyoCWdveF8tUyAQEZ/iEK//xFdiRYEFxUGp0LG7WkmOsphoK1smcLmLN
-         NJv5g+5Rf59q8D3VZyo4H3tIiMq2sFCIea6ZVnCBi3GTqfgWNkPBXG3iEIDBsP1axhe2
-         e4hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zWZb6GLCF2st+ZVn+OJmwleeG1odyNOnzVdWxMN71m4=;
-        b=kf9ejgmSM2vzcO1r6vIThB/yWtRTC9jQl1K2XcEeHm9WMUjj8uXoCnKx8/xYVMe1mb
-         cf+uT6fWBMrbx2ZIOWCkwXmkhnfM8oYP/cUQOU0TDf2ysDmCJw5oFAoEBkpWo8/5JCix
-         sTR6FNATBzY5DZZmW2pVF+HINyniTr3xCOrdIsCAHeIFlZVBTIe8CWmbna1BdbDSgVnv
-         gpUV/Vd5ERTCn1vmlr93UGPZHHPck5yQ1xRvtUyNkVxZmSkV4f1MbOTBYEIQ92T/t2Hc
-         mDLB34ILuKSlqk3Jyg78Js1W8OCo2eW9RlFt3S8Aj4Hhv8KVdnsGld3NlhGCybBGgfAX
-         QV5Q==
-X-Gm-Message-State: APjAAAWfx7O0swUCjs3iV7KgNR7nlU1n/30AxHn2fJ+P4jX1VcDzKcpT
-        /JkJ9WfXILetmNNsll5QX1YJlnq1Fi957IJ7qNy5Yw==
-X-Google-Smtp-Source: APXvYqwjmdL6xPlKTj58mFSrRkwb7zeLwRzSWb8Xgzdfaw5gPK5uHdRZEynEOzKUFWJ8jFmyiGAvxtKcJWxmRt9gblQ=
-X-Received: by 2002:a19:8582:: with SMTP id h124mr1571095lfd.64.1573116935696;
- Thu, 07 Nov 2019 00:55:35 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qS+mlutQ68MpJbm655/vD8RfT7Izm6hl50kw6W5rfmw=;
+ b=Grjn+xzG8DAU28R60zfPtZsxJRuOKEFv+8i8PKIMiXezVpyEwobw3hfpoedLOnKLb+/gcczfV1VJcJgUboKygHILnt22cZwHk2F4RwCKzhgkvRLnu+mK8w1A3qSAhJUzLHVVh5HjbOVEinZXstAkOKMlsI7onC7QMIbsCFwtHxc=
+Received: from CY4PR02CA0038.namprd02.prod.outlook.com (2603:10b6:903:117::24)
+ by DM6PR02MB5722.namprd02.prod.outlook.com (2603:10b6:5:178::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2408.24; Thu, 7 Nov
+ 2019 08:56:05 +0000
+Received: from CY1NAM02FT020.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::203) by CY4PR02CA0038.outlook.office365.com
+ (2603:10b6:903:117::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22 via Frontend
+ Transport; Thu, 7 Nov 2019 08:56:05 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT020.mail.protection.outlook.com (10.152.75.191) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2430.20
+ via Frontend Transport; Thu, 7 Nov 2019 08:56:05 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1iSdaH-00011r-3u; Thu, 07 Nov 2019 00:56:05 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1iSdaC-0006ci-0E; Thu, 07 Nov 2019 00:56:00 -0800
+Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xA78tpS3024413;
+        Thu, 7 Nov 2019 00:55:51 -0800
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1iSda3-0006c2-6H; Thu, 07 Nov 2019 00:55:51 -0800
+From:   Rajan Vaja <rajan.vaja@xilinx.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, michal.simek@xilinx.com,
+        m.tretter@pengutronix.de, jollys@xilinx.com
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>
+Subject: [PATCH] clk: zynqmp: Add support for clock with CLK_DIVIDER_POWER_OF_TWO flag
+Date:   Thu,  7 Nov 2019 00:55:02 -0800
+Message-Id: <1573116902-7240-1-git-send-email-rajan.vaja@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(376002)(136003)(346002)(199004)(189003)(6636002)(16586007)(47776003)(50226002)(54906003)(7696005)(9786002)(51416003)(316002)(2906002)(8936002)(36386004)(106002)(36756003)(5660300002)(4326008)(81166006)(107886003)(6666004)(356004)(478600001)(2616005)(486006)(44832011)(476003)(426003)(26005)(8676002)(305945005)(70586007)(70206006)(81156014)(126002)(186003)(336012)(48376002)(50466002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5722;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
- <20191105162424.GH30717@redhat.com> <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
- <20191107083902.GB3247@linux.ibm.com>
-In-Reply-To: <20191107083902.GB3247@linux.ibm.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Thu, 7 Nov 2019 00:54:59 -0800
-Message-ID: <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a029c844-8802-4b1b-2f27-08d763605314
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5722:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB57224F32DF4C7BBCD1DD72B6B7780@DM6PR02MB5722.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
+X-Forefront-PRVS: 0214EB3F68
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AEAtbLOn3s12w4OXKkdVpXKz5lMwAZ8Iumr4jDoHgI4P+A7VpWyXD52jXqkPasz2Xvbl5mEy2nIAe67IGkGGFXQKsZEN36Vwho06aAxkO10J8YChSz/goI7rThpNQITUIKlVJv1/ckJmn56Yx7lyNM5WwVVL2RCMsk/1OVZ8LJjDEdfeXcWPd7eUQKFxE3BjCIvlRhwl70yIKCQYkvA91UsWlDKaOkeWI1JKUj5geCqTI8ZHGUPC1fSfC6lMQ/1pNitrhaPYzcCwFbxJlv86HML1ykekWFa6cjWX5W5K1Yui4YGLYsEuMxl9JRXhieb8yjbrf0XXCJCLhhwvs9KhIRklhL0ayXVlVGBU1XjwPOg3eLwbGOy+tTep4Nde1lWAE5gIzsTrqFz9VJ1rwgpu0bdwqKzJS51GIL4yW1YZTNmnfo9CkY0Acebfe3M5gw+i
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2019 08:56:05.6174
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a029c844-8802-4b1b-2f27-08d763605314
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5722
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 12:39 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> On Tue, Nov 05, 2019 at 08:41:18AM -0800, Daniel Colascione wrote:
-> > On Tue, Nov 5, 2019 at 8:24 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
-> > > The long term plan is to introduce UFFD_FEATURE_EVENT_FORK2 feature
-> > > flag that uses the ioctl to receive the child uffd, it'll consume more
-> > > CPU, but it wouldn't require the PTRACE privilege anymore.
-> >
-> > Why not just have callers retrieve FDs using recvmsg? This way, you
-> > retrieve the message packet and the file descriptor at the same time
-> > and you don't need any appreciable extra CPU use.
->
-> I don't follow you here. Can you elaborate on how recvmsg would be used in
-> this case?
+From: Tejas Patel <tejas.patel@xilinx.com>
 
-Imagine an AF_UNIX SOCK_DGRAM socket. You call recvmsg(). You get a
-blob of regular data along with some ancillary data. The ancillary
-data may include some file descriptors or it may not. Isn't the UFFD
-message model the same thing? You'd call recvmsg() on a UFFD and get
-back a uffd_msg data structure. If that uffd_msg came with file
-descriptors, these descriptors would be in ancillary data. If you
-didn't reserve enough space for the message or enough space for its
-ancillary data, the recvmsg() call would fail cleanly with MSG_TRUNC
-or MSG_CTRUNC.
+Existing clock divider functions is not checking for
+base of divider. So, if any clock divider is power of 2
+then clock rate calculation will be wrong.
 
-The nice thing about using recvmsg() for this purpose is that there's
-tons of existing code for dealing with recvmsg()'s calling convention
-and its ancillary data. You can, for example, use recvmsg out of the
-box in a Python script. You could make an ioctl that also returned a
-data blob plus some optional file descriptors, but if recvmsg already
-does exactly that job and it's well-understood, why not just reuse the
-recvmsg interface?
+Add support to calculate divider value for the clocks
+with CLK_DIVIDER_POWER_OF_TWO flag.
 
-How practical is it to actually support recvmsg without being a
-socket? How hard would it be to just become a socket? I don't know. My
-point is only that *from a userspace API* point of view, recvmsg()
-seems ideal.
+Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+---
+ drivers/clk/zynqmp/divider.c | 36 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+index d8f5b70d..ce63cf5 100644
+--- a/drivers/clk/zynqmp/divider.c
++++ b/drivers/clk/zynqmp/divider.c
+@@ -2,7 +2,7 @@
+ /*
+  * Zynq UltraScale+ MPSoC Divider support
+  *
+- *  Copyright (C) 2016-2018 Xilinx
++ *  Copyright (C) 2016-2019 Xilinx
+  *
+  * Adjustable divider clock implementation
+  */
+@@ -44,9 +44,26 @@ struct zynqmp_clk_divider {
+ };
+ 
+ static inline int zynqmp_divider_get_val(unsigned long parent_rate,
+-					 unsigned long rate)
++					 unsigned long rate, u16 flags)
+ {
+-	return DIV_ROUND_CLOSEST(parent_rate, rate);
++	int up, down;
++	unsigned long up_rate, down_rate;
++
++	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
++		up = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
++		down = parent_rate / rate;
++
++		up = __roundup_pow_of_two(up);
++		down = __rounddown_pow_of_two(down);
++
++		up_rate = DIV_ROUND_UP_ULL((u64)parent_rate, up);
++		down_rate = DIV_ROUND_UP_ULL((u64)parent_rate, down);
++
++		return (rate - up_rate) <= (down_rate - rate) ? up : down;
++
++	} else {
++		return DIV_ROUND_CLOSEST(parent_rate, rate);
++	}
+ }
+ 
+ /**
+@@ -78,6 +95,9 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
+ 	else
+ 		value = div >> 16;
+ 
++	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
++		value = 1 << value;
++
+ 	if (!value) {
+ 		WARN(!(divider->flags & CLK_DIVIDER_ALLOW_ZERO),
+ 		     "%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set\n",
+@@ -120,10 +140,13 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
+ 		else
+ 			bestdiv  = bestdiv >> 16;
+ 
++		if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
++			bestdiv = 1 << bestdiv;
++
+ 		return DIV_ROUND_UP_ULL((u64)*prate, bestdiv);
+ 	}
+ 
+-	bestdiv = zynqmp_divider_get_val(*prate, rate);
++	bestdiv = zynqmp_divider_get_val(*prate, rate, divider->flags);
+ 
+ 	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
+ 		bestdiv = rate % *prate ? 1 : bestdiv;
+@@ -151,7 +174,7 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	int ret;
+ 	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+ 
+-	value = zynqmp_divider_get_val(parent_rate, rate);
++	value = zynqmp_divider_get_val(parent_rate, rate, divider->flags);
+ 	if (div_type == TYPE_DIV1) {
+ 		div = value & 0xFFFF;
+ 		div |= 0xffff << 16;
+@@ -160,6 +183,9 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
+ 		div |= value << 16;
+ 	}
+ 
++	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
++		div = __ffs(div);
++
+ 	ret = eemi_ops->clock_setdivider(clk_id, div);
+ 
+ 	if (ret)
+-- 
+2.7.4
+
