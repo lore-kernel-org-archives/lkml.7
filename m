@@ -2,65 +2,95 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782C1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36153FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559872178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05ECC21D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="pepMGwXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfKGSpL (ORCPT
+        id S1727548AbfKGSqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:45:11 -0500
-Received: from ms.lwn.net ([45.79.88.28]:38948 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbfKGSpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:45:10 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 1B1156EC;
-        Thu,  7 Nov 2019 18:45:10 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 11:45:09 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/kernel-doc: Add support for named variable
- macro arguments
-Message-ID: <20191107114509.16ad9f5c@lwn.net>
-In-Reply-To: <20191107134133.14690-1-j.neuschaefer@gmx.net>
-References: <20191107134133.14690-1-j.neuschaefer@gmx.net>
-Organization: LWN.net
+        Thu, 7 Nov 2019 13:46:13 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:26241 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbfKGSqN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 13:46:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573152371;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=SDECKhmd73C0X3Kn9A0XZ2VAWfazh3EPYkxFWbR6MLI=;
+        b=pepMGwXWHGIhElN345CTFsKH+sWtchlylPn24bEjSVXrcHyflt3CqbuctaZRGbHvRR
+        zKGKJf7MW4FSW7dZ+jaIqm3eYyfBweDEdtbNmJkpDQQUYoK8xPREEbGgP1gRucQdONPt
+        IhYYlIamYkW68UaR5QNQWGKYOJ7kew9tn/Cqq/fBw8xYNi69+wu5nLWPS5eSownx7tud
+        mi/HXVheicihh3XqtBOVdBmskXcwf00EVAbtWnGRykL1ijdokRqfNAZxg5b1gbOIWESO
+        stAEwQ72MSYW5S691mS54m+mFS9mj/8dtYv5RKPJkrhtQGmqYtnKf4+HEM54x+Za6ioT
+        vQeg==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXsMnvtxdYcg=="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vA7Ik9oQq
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 7 Nov 2019 19:46:09 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Jean-Baptiste Maneyrol <JManeyrol@invensense.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH v2 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
+Date:   Thu,  7 Nov 2019 19:43:41 +0100
+Message-Id: <20191107184342.20361-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 Nov 2019 14:41:33 +0100
-Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
+inv_mpu6050 now supports an additional vdd-supply; document it.
 
-> Currently, when kernel-doc encounters a macro with a named variable
-> argument[1], such as this:
-> 
->    #define hlist_for_each_entry_rcu(pos, head, member, cond...)
-> 
-> ... it expects the variable argument to be documented as `cond...`,
-> rather than `cond`. This is semantically wrong, because the name (as
-> used in the macro body) is actually `cond`.
-> 
-> With this patch, kernel-doc will accept the name without dots (`cond`
-> in the example above) in doc comments, and warn if the name with dots
-> (`cond...`) is used and verbose mode[2] is enabled.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+Changes in v2:
+  - Add Reviewed-by from Linus Walleij
 
-This is a definite improvement, thanks.  Applied.
+v1: https://lore.kernel.org/linux-iio/20191106183536.123070-1-stephan@gerhold.net/
+---
+ Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-jon
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+index 268bf7568e19..c5ee8a20af9f 100644
+--- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+@@ -21,6 +21,7 @@ Required properties:
+   bindings.
+ 
+ Optional properties:
++ - vdd-supply: regulator phandle for VDD supply
+  - vddio-supply: regulator phandle for VDDIO supply
+  - mount-matrix: an optional 3x3 mounting rotation matrix
+  - i2c-gate node.  These devices also support an auxiliary i2c bus.  This is
+-- 
+2.23.0
+
