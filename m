@@ -2,110 +2,92 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6757FFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6B0FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317D82187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8022187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733008AbfKGCGd (ORCPT
+        id S1732501AbfKGCIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:06:33 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38804 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728021AbfKGCGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:06:32 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CC94F4185908B1A79E1D;
-        Thu,  7 Nov 2019 10:06:29 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 7 Nov 2019
- 10:06:17 +0800
-Subject: Re: [PATCH] mm/madvise: replace with page_size() in
- madvise_inject_error()
-To:     David Rientjes <rientjes@google.com>
-CC:     <akpm@linux-foundation.org>, <jgg@ziepe.ca>, <mhocko@suse.com>,
-        <jglisse@redhat.com>, <minchan@kernel.org>, <peterz@infradead.org>,
-        <jack@suse.cz>, <rppt@linux.ibm.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-References: <29dce60c-38d6-0220-f292-e298f0c78c4d@huawei.com>
- <alpine.DEB.2.21.1911061327550.155572@chino.kir.corp.google.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <7296c9ca-f8a7-f31b-d090-cc6bf5ee1df4@huawei.com>
-Date:   Thu, 7 Nov 2019 10:05:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1911061327550.155572@chino.kir.corp.google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+        Wed, 6 Nov 2019 21:08:12 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:50706 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727328AbfKGCIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:08:11 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 01AA51A068C;
+        Thu,  7 Nov 2019 03:08:10 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E5DF01A00CE;
+        Thu,  7 Nov 2019 03:08:03 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8FCDF402B4;
+        Thu,  7 Nov 2019 10:07:56 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/4] ARM: dts: imx6sll: Update usdhc fallback compatible to support HS400 mode
+Date:   Thu,  7 Nov 2019 10:06:30 +0800
+Message-Id: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The latest i.MX6SLL EVK board supports HS400 mode, update usdhc's
+fallback compatible to support HS400 mode by default.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No changes.
+---
+ arch/arm/boot/dts/imx6sll.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 2019/11/7 5:28, David Rientjes wrote:
-> On Wed, 6 Nov 2019, Yunfeng Ye wrote:
-> 
->> The function page_size() is supported after the commit a50b854e073c
->> ("mm: introduce page_size()").
->>
->> Replace with page_size() in madvise_inject_error() for readability.
->>
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> ---
->>  mm/madvise.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/madvise.c b/mm/madvise.c
->> index 2be9f3fdb05e..38c4e7fcf850 100644
->> --- a/mm/madvise.c
->> +++ b/mm/madvise.c
->> @@ -856,13 +856,13 @@ static int madvise_inject_error(int behavior,
->>  {
->>  	struct page *page;
->>  	struct zone *zone;
->> -	unsigned int order;
->> +	unsigned int size;
-> 
-> Should be unsinged long.
-> 
-ok, thanks. Andrew has already help me modify the patch and add to -mm tree.
-
->>
->>  	if (!capable(CAP_SYS_ADMIN))
->>  		return -EPERM;
->>
->>
->> -	for (; start < end; start += PAGE_SIZE << order) {
->> +	for (; start < end; start += size) {
->>  		unsigned long pfn;
->>  		int ret;
->>
->> @@ -874,9 +874,9 @@ static int madvise_inject_error(int behavior,
->>  		/*
->>  		 * When soft offlining hugepages, after migrating the page
->>  		 * we dissolve it, therefore in the second loop "page" will
->> -		 * no longer be a compound page, and order will be 0.
->> +		 * no longer be a compound page.
->>  		 */
->> -		order = compound_order(compound_head(page));
->> +		size = page_size(compound_head(page));
->>
->>  		if (PageHWPoison(page)) {
->>  			put_page(page);
-> 
-> .
-> 
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 85aa8bb..1c8101f 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -698,7 +698,7 @@
+ 			};
+ 
+ 			usdhc1: mmc@2190000 {
+-				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
++				compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x02190000 0x4000>;
+ 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SLL_CLK_USDHC1>,
+@@ -712,7 +712,7 @@
+ 			};
+ 
+ 			usdhc2: mmc@2194000 {
+-				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
++				compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x02194000 0x4000>;
+ 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SLL_CLK_USDHC2>,
+@@ -726,7 +726,7 @@
+ 			};
+ 
+ 			usdhc3: mmc@2198000 {
+-				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
++				compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x02198000 0x4000>;
+ 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SLL_CLK_USDHC3>,
+-- 
+2.7.4
 
