@@ -2,117 +2,71 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A19C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410E8C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE8F2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:41:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2ToS8fa"
+	by mail.kernel.org (Postfix) with ESMTP id 18FA62085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573144964;
+	bh=kRomG4skJEKqHmLcDpIBxuJHDtmysngNtIuLfrCdVyw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xGBGkMJuG6BN+W1/FUr/TC3SjDqpmRZEMVzV1FHS8HcifqiBoH/1mI/uWiPdXC/41
+	 lnNRh58SgzGnxcPqtqAfnVK1UMFlnhhn12o+VZSTqfvGtN4FV2+Xn4NUH6EMa+K9+M
+	 Dblyq5s4GXAtXs0iTF/xlPkLajLVam7Z61qu/OX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389212AbfKGQlJ (ORCPT
+        id S1730348AbfKGQmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:41:09 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34609 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729775AbfKGQlI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:41:08 -0500
-Received: by mail-pl1-f196.google.com with SMTP id k7so1869140pll.1;
-        Thu, 07 Nov 2019 08:41:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bg6kqSIBxYXX6N9owOwBDRy3DhfK9Nfe+pI6Kd3oi9c=;
-        b=c2ToS8faBSqCzfedGrU0wMS2D4Qu7ZHy/dBBCR57h46vqBxMe9HoET5KzgLXGEGvMS
-         3KI5OJaNqwyvAW3Veq0cBIHKIXq4goSYuryyLiMpRymaPzukb55Rwq8AqD6gODbfedbI
-         IVmtcs6oOGuPXG1prJr/e4FDdUfun83VkQOYKqYzhkM2jl6WTt7FBDCtYGyfr7dW3Tq3
-         4ZUvcPoKX0VYTM39k1kW1aoPOufqKUTL3K6Js+zqoJcQm2B7CSRhHwUlEYEK0Jp/rw5U
-         sxigbGFKlzV/Caeu6Z8nMdt0XDvzXHLkFtysrEJKYTbEE05xo6WMBSj78rZWFG08IsBa
-         X5NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bg6kqSIBxYXX6N9owOwBDRy3DhfK9Nfe+pI6Kd3oi9c=;
-        b=P4bfgxAAMUU7U1YJPtjIzGnnwh6qD4O7Rbx5XycRkOJXaq74gacPwiXqbcwBY4CFUb
-         VBy6ULTLo6MvmeyAe0ozWJKtmCAS5bCn8QydU0PfUhJm88BSFnmX4YJKfhNMXb/slFRZ
-         +W9pQJ5lB5VO9NyPOqJqlInfhSQjglcFynGU/cv1zDubFopYigHKQ/3w2jD7TsVnuvxN
-         KPSsRXSxjszPlO27DKAXtPIEPlEw5nqW/0alF7lEzsNxX0Ry9Vm6Auk9/HMbuloS18r8
-         yMByh8kwFMNFv6Sb7jhAEhZw7cxBW+TjMiAbIqt+F0l+TlYUd0+kWmFhW+4iMSy7jNrU
-         XBFg==
-X-Gm-Message-State: APjAAAXS5e2IMTcOl5Bfq+SEFkAdYJHHdA02XCrwVDK7rF9t+5CJyxPh
-        DwXokXPH8TSJX1iAItwR80c=
-X-Google-Smtp-Source: APXvYqz+yUC70FeNjMNghD4MEe6mV1Uw81F8V0J/pDKFKNS4LOFazlyFVX8zGdYiz34uEGYKXlHeVQ==
-X-Received: by 2002:a17:902:5a41:: with SMTP id f1mr4789890plm.168.1573144867702;
-        Thu, 07 Nov 2019 08:41:07 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a6sm4438511pja.30.2019.11.07.08.41.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Nov 2019 08:41:06 -0800 (PST)
-Date:   Thu, 7 Nov 2019 08:41:04 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eugen.Hristev@microchip.com
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] watchdog: sama5d4_wdt: addition of sam9x60
- compatible watchdog
-Message-ID: <20191107164104.GA7693@roeck-us.net>
-References: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
- <1571648890-15140-2-git-send-email-eugen.hristev@microchip.com>
- <20191029132831.GA5643@roeck-us.net>
- <28c6b394-ae88-f913-312e-6b38be1dc5a8@microchip.com>
+        Thu, 7 Nov 2019 11:42:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfKGQmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 11:42:42 -0500
+Received: from localhost (unknown [106.51.111.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BEE2085B;
+        Thu,  7 Nov 2019 16:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573144962;
+        bh=kRomG4skJEKqHmLcDpIBxuJHDtmysngNtIuLfrCdVyw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L1saZOU+jkyznC+PlSeDw+s5jT1DUM0kWCdP5nlGJ8jEr1Fjusadj3mjftLO1zvqd
+         dAASBy6WQvmhCu5PIdjeCuzKvGbpbsUJua4VywqEMy59LDpjXJnqQ/ujNLTB4dwl9x
+         nKWwzgzgKRUoLWdLbNNzOchLJExNPSUXECUwbQQk=
+Date:   Thu, 7 Nov 2019 22:12:37 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Elliot Berman <eberman@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org,
+        agross@kernel.org, tsoni@codeaurora.org, sidgup@codeaurora.org,
+        psodagud@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/17] firmware: qcom_scm: Apply consistent naming scheme
+ to command IDs
+Message-ID: <20191107164237.GO952516@vkoul-mobl>
+References: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
+ <1572917256-24205-3-git-send-email-eberman@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <28c6b394-ae88-f913-312e-6b38be1dc5a8@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1572917256-24205-3-git-send-email-eberman@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 12:51:15PM +0000, Eugen.Hristev@microchip.com wrote:
-> 
-> >>   
-> >> -	if ((wdt->mr & AT91_WDT_WDFIEN) && irq) {
-> >> +	irq = irq_of_parse_and_map(dev->of_node, 0);
-> >> +	if (!irq) {
-> >> +		dev_warn(dev, "failed to get IRQ from DT\n");
-> >> +		wdt->need_irq = 0;
-> > 
-> > Does it make sense to ignore that ?
-> 
-> Hi Guenter,
-> 
-> Can you detail what exactly is ignored ?
-> 
-The missing interrupt.
+On 04-11-19, 17:27, Elliot Berman wrote:
+> Create a consistent naming scheme for command IDs. The scheme is
+> QCOM_SCM_##svc_##cmd. Remove unused macros QCOM_SCM_FLAG_HLOS,
+> QCOM_SCM_FLAG_COLDBOOT_MC, QCOM_SCM_FLAG_WARMBOOT_MC,
+> QCOM_SCM_CMD_CORE_HOTPLUGGED, and QCOM_SCM_BOOT_ADDR_MC.
 
-> >> +static struct sama5d4_wdt_data sama5d4_config;
-> >> +
-> >> +static struct sama5d4_wdt_data sam9x60_config = {
-> >> +	.sam9x60_support = 1,
-> >> +};
-> > 
-> > Unless there is reason to believe that there will be other
-> > configuration data, please just assign the flag value directly
-> > to .data and add a variable to struct sama5d4_wdt to access it.
-> > Please make that variable a bool.
-> 
-> There will be more configuration data for future products, but not at 
-> this moment. Do the change or keep it this way ?
-> 
-If not as part of this series, it is better to just assign
-the flag directly. If there are changes coming at a later time
-which indeed need a structure (with more than one object in it),
-that structure can be added at that time.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Guenter
+-- 
+~Vinod
