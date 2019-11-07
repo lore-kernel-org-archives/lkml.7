@@ -2,63 +2,55 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9748FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C87EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2F52077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23EB12077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389207AbfKGNmr (ORCPT
+        id S2389447AbfKGNmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:42:47 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:49164 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389147AbfKGNmJ (ORCPT
+        Thu, 7 Nov 2019 08:42:54 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:43661 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389145AbfKGNmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 08:42:09 -0500
-Received: by mail-il1-f197.google.com with SMTP id c2so2631544ilj.16
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:42:07 -0800 (PST)
+Received: by mail-il1-f198.google.com with SMTP id d11so2648246ild.10
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:42:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=Nw05O48tfZnOsvKSy1GxiAM521gtqxH1bmLh1PZrh9M=;
-        b=gjcZKDLbEaMiaD3tvgyMN8N8Sv0aS36Tc7OeZn/1ENvGNR3lWHuQThx+xr8Wd9oDxG
-         VoYcnCmU2qT59KdIrqi7UfL9QEyncAQ3+z74npN2nXIKBFUfbqDRjE82PJsWuQjXRmrL
-         7tdm1/eQxXIrCKt5mAxPWndvpNd3RWTbqQY6LehUIw8zqXXarE+hqIrzQ5RI6yUfhRjv
-         1GH49n1vJ3ipPXkvxt5dxjOS8vIeM7lyIXSHq/8gXvVlN9L65dtVcGuJUl7MpZ18j6bt
-         UX0LHHTqswz6Lq/V8JHDl34ZfEPjJ5r6bSq7zYhAM7cl7DDqda/7WduP089d/3dl1mPI
-         S/Qw==
-X-Gm-Message-State: APjAAAVPERcH+XDHnUeNkQWww/9BoVbfXAiEKF7fx55C7egtxGLQukeo
-        VcwU0sZF/8i0DaDj6ZQ6H4hoO8W3zWT+HmvohSc5Tf3/roNO
-X-Google-Smtp-Source: APXvYqyNENH6B9y0Wez5W5uFuh4AQx6Njq+f4QH6gQ9D1z+gBpWcYcVbu/AE80nseMiHpzphhK8i6DvSZXMZjz4S+ATHb/GjXcIG
+        bh=lTBwmsnLCzbX/olH5Mwl+G5iNSg0YQFvLfdGOpbbv6E=;
+        b=AXDHogu6mZ3iKGWVKrvDZSXx7spjQkjTZDMH+GVprcCwciqQoVOeJJRzZUs4oeWfoj
+         ArJ4qsWoij8sRPtiZGSnQm3NamNxmho0XpflogEGrRQIdlOkfEnilp6w3wiPukHjvt5F
+         o+VAPfHBhduW4rVGd/VXuFuGM8qlYcVfYM/tuux1jngxv+XJSjWGuKXwp8C7T9OhGmVw
+         kG+3UiCDyysQhF4bS3Cc7fGn847KGPVx4DiST18supURtaCLb8lI7ARkmzqtnU5Zdbwj
+         ScSPkqunBCtRt0AWD+8tDEWYBAaELV4MFrUhO++X9Mtu+XuJYUJQo1Wv1LkmQZQAuUDh
+         I0AA==
+X-Gm-Message-State: APjAAAX2ipycJzdoTwkMpp1QJYaXoGCJDPkjiLT1zqFAuOKaAbW73LAU
+        44gaCeUJM/QoiKSgLx4wq/n+QNE4byweyZJ+LWFilXwOxIRF
+X-Google-Smtp-Source: APXvYqz6ZViFFcstbOLQh1BYSSIMXfKvEDzmUndoSodku49jzXKlimDRlia/G2rBwC2BghwEl5PykfBqcmfIdbePjHfamdgABMJ4
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8450:: with SMTP id w16mr3313990ior.11.1573134127375;
- Thu, 07 Nov 2019 05:42:07 -0800 (PST)
-Date:   Thu, 07 Nov 2019 05:42:07 -0800
-In-Reply-To: <000000000000bfd4270578abe88b@google.com>
+X-Received: by 2002:a02:1c41:: with SMTP id c62mr1425jac.132.1573134128561;
+ Thu, 07 Nov 2019 05:42:08 -0800 (PST)
+Date:   Thu, 07 Nov 2019 05:42:08 -0800
+In-Reply-To: <0000000000002996510581a1487e@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d8b0630596c1d4a0@google.com>
-Subject: Re: possible deadlock in flush_workqueue (2)
-From:   syzbot <syzbot+a50c7541a4a55cd49b02@syzkaller.appspotmail.com>
-To:     aarcange@redhat.com, adilger.kernel@dilger.ca,
-        akpm@linux-foundation.org, aneesh.kumar@linux.vnet.ibm.com,
-        dave@stgolabs.net, davem@davemloft.net, hughd@google.com,
-        jiangshanlai@gmail.com, kirill.shutemov@linux.intel.com,
-        kuznet@ms2.inr.ac.ru, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@kernel.org, mike.kravetz@oracle.com,
-        n-horiguchi@ah.jp.nec.com, netdev@vger.kernel.org,
-        prakash.sangappa@oracle.com, sbrivio@redhat.com,
-        sd@queasysnail.net, syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        torvalds@linux-foundation.org, tytso@mit.edu,
-        viro@zeniv.linux.org.uk, yoshfuji@linux-ipv6.org
+Message-ID: <000000000000eac5200596c1d46b@google.com>
+Subject: Re: general protection fault in qca_setup
+From:   syzbot <syzbot+8c0dbf8843bb75efaa05@syzkaller.appspotmail.com>
+To:     gustavo@padovan.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org, vdronov@redhat.com,
+        ytkim@qca.qualcomm.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -67,23 +59,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 syzbot suspects this bug was fixed by commit:
 
-commit e7c58097793ef15d58fadf190ee58738fbf447cd
-Author: Mike Kravetz <mike.kravetz@oracle.com>
-Date:   Tue Jan 8 23:23:32 2019 +0000
+commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73
+Author: Vladis Dronov <vdronov@redhat.com>
+Date:   Tue Jul 30 09:33:45 2019 +0000
 
-     hugetlbfs: revert "Use i_mmap_rwsem to fix page fault/truncate race"
+     Bluetooth: hci_uart: check for missing tty operations
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ec0d2c600000
-start commit:   ca9eb48f Merge tag 'regulator-v5.0' of git://git.kernel.or..
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1436b32c600000
+start commit:   d1393711 Linux 5.0-rc6
 git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=963b24abf3f7c2d8
-dashboard link: https://syzkaller.appspot.com/bug?extid=a50c7541a4a55cd49b02
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12097f03400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b55ac5400000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ee434566c893c7b1
+dashboard link: https://syzkaller.appspot.com/bug?extid=8c0dbf8843bb75efaa05
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130894af400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10799004c00000
 
 If the result looks correct, please mark the bug fixed by replying with:
 
-#syz fix: hugetlbfs: revert "Use i_mmap_rwsem to fix page fault/truncate  
-race"
+#syz fix: Bluetooth: hci_uart: check for missing tty operations
 
 For information about bisection process see: https://goo.gl/tpsmEJ#bisection
