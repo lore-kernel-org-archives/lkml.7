@@ -2,105 +2,182 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A792C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD4D21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3C321D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="BED9/AYx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VovhYwxp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfKGHEk (ORCPT
+        id S1727348AbfKGHI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:04:40 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52009 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfKGHEj (ORCPT
+        Thu, 7 Nov 2019 02:08:58 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:33267 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfKGHI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:04:39 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q70so1223804wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:04:36 -0800 (PST)
+        Thu, 7 Nov 2019 02:08:58 -0500
+Received: by mail-yw1-f65.google.com with SMTP id q140so292817ywg.0;
+        Wed, 06 Nov 2019 23:08:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=1BWOBnBh3RsSrHmTF9OyTNjqu4CElUB2toH/DiA/qIc=;
-        b=BED9/AYxEqSzI3EIPyUatgXBzDzJIxvgb0tT/vCP+uqowsV2RHUg0bX6M8PTiGO66K
-         n7MyBQhs7dvtPaFHFKpel/rUchRTLdALNm7Nou59bT7p1fZ0MQGt+lJi3gBhtLgJe2nI
-         K2ljk6GK9pXXI9DWK67jD+Edy51V3hkVEHkATxqkphL1L5B/RUdDw8UV9MN6cnC+feiQ
-         X1yVn1O0lJ2Qqr7nY1RV8g5jxqtwrGcS1eGKEWk337YlszC44W+AkYRuFLEBO4SJJuv7
-         ORRsE2UglZFYFgEQC2tCWXH7/lTb3I9PXK50YxjTCVoF749iSKlHRdTYyRllwY0Nix7R
-         cVbA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gIDlG3JSKlde/wLrZszzeALKX0hpoO0JK8Xro3c1wfU=;
+        b=VovhYwxpMBILBLnHwzeoiUZc7cdgG/Wgt9h0MN9g5cudxk3wLwC4oRw2LB1G5kyUkP
+         rZkgTsfVtbdeTAYKWaRup2g1TnER4WfFoMGuxt3DFC/cZ9VysyTa71lM4w5r/ep1ll2t
+         7+HDK+TboTInh0gU73G99QVeCei4j2mNiXYXbr518Sq8OrYd/Odf/jpgz2/KgZuS3O/M
+         9+HcyKpTNSQSXbZV/6BhDWsLnr/2dJ9N5C6hROV+soEVCo7xy0+1NJjw/RTQ63927gqM
+         mmGU+1jFuh4xELds0wbCUWa8ApQ5QvQxrpUkV3/n0VeIXx6Bv73fIvaOi923M4njO0nh
+         X5nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=1BWOBnBh3RsSrHmTF9OyTNjqu4CElUB2toH/DiA/qIc=;
-        b=auJCnQMosLa0jAf9dgVm9QXnFWDIN3TXfgpjo38Zx+MyRmG56G/qQHi2u80hTVKDTz
-         +pnerB5lxJYVsjJ2XMyHZAScDNJUMVYY+yvHo78Vm5eNtioIPect7txiDxE7m/Uhiovx
-         NR2YVm8hJ/GS9l9VOy6PzXdIRg++6j6jl4ImhHV7Vl2+E2sT1rpmAHi0EIkD91iuJgnQ
-         TGtSf/AxuKp5ZrScOAYeOJvT20arLnizsZgW2t+GodJZBwGxKMlR7mnsSzx/xFH5Isjx
-         aZw7b+EJhEWPDJ0HifH3trtFGnyJYJooz+YNtmBtxJtAvV0V+mjG4siG+HvyMi3/ndHl
-         grCQ==
-X-Gm-Message-State: APjAAAWLKoYDTSQKvMiA6RGigjIOO2+Z40vmR69I4selGN55D0Pg2uNP
-        ovaxsas8OznzNKVwi7AnOmO4DA==
-X-Google-Smtp-Source: APXvYqw5oCk6xXi6ixLz7jByPs1zY84R0XhXM9pbgD9ZCxKqdl36Geh9BAUevrqz0GAD8gxGpRTXcA==
-X-Received: by 2002:a05:600c:254f:: with SMTP id e15mr1260124wma.37.1573110275553;
-        Wed, 06 Nov 2019 23:04:35 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id u7sm1508088wre.59.2019.11.06.23.04.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 23:04:34 -0800 (PST)
-Message-ID: <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
-Subject: Re: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Date:   Thu, 07 Nov 2019 08:04:28 +0100
-In-Reply-To: <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
-References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
-         <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gIDlG3JSKlde/wLrZszzeALKX0hpoO0JK8Xro3c1wfU=;
+        b=eMW5+1RlIGNt3JcO872kfNhOAOgNQO4oV5mHyfon6aIlrvr8UyF2/PD5PP9VmyWUJz
+         rP4v4hHponYpBWbrVndWBzl+pvGaVKvsNMJxsvXrOD3zhSFMwdF4x2f/qpFcLO/ekMkp
+         7zFrkCdW2dZKyxZN75g5vJN+HZjEaJzjKjUHhs5q85oUDFSM3ajbn3K8HGmwqtRVX1sH
+         0jcEwApmoUerbP6RgSxt1XW+ad6bPvirfcEyxEYwjXu0vCxdiGjAs3Es/ksXRpuxlrzP
+         KZan2/nfVgXOP1TjdvN0K/xwTcT9zhqhEenoNZFGbVmA6xDFYtKCCxt2AkfBFDq871zR
+         kRtg==
+X-Gm-Message-State: APjAAAXBYlKKej51n++pNTNCRJRD+3kTe8AzIExbxt+DHPUFxz2UcSWr
+        0AuDnvIxzVHpuuq2k6L6QyZ1JccFvXRQPvyGpE0=
+X-Google-Smtp-Source: APXvYqx6erHBE2mkDGi8dnZ+Q0bJeH3gVF4ucy8cDVVb43/1+/4zf08edIJHQxEyyhTDeQtXXy/vhBIQcpWoh4sFDYI=
+X-Received: by 2002:a0d:f305:: with SMTP id c5mr1192964ywf.31.1573110535285;
+ Wed, 06 Nov 2019 23:08:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191106234301.283006-1-colin.king@canonical.com>
+In-Reply-To: <20191106234301.283006-1-colin.king@canonical.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 7 Nov 2019 09:08:44 +0200
+Message-ID: <CAOQ4uxhT4pFzHjjKyoMOc3xVXXqyqc37zd=-pCx2+keA4e6NAg@mail.gmail.com>
+Subject: Re: [PATCH] ovl: create UUIDs for file systems that do not set the
+ superblock UUID
+To:     Colin King <colin.king@canonical.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000a607060596bc5612"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno mer, 06/11/2019 alle 22.13 +0000, Damien Le Moal ha scritto:
-> 
-> 
-> Please simply try your write tests after doing this:
-> 
-> echo mq-deadline > /sys/block/<name of your USB
-> disk>/queue/scheduler
-> 
-> And confirm that mq-deadline is selected with:
-> 
-> cat /sys/block/<name of your USB disk>/queue/scheduler
-> [mq-deadline] kyber bfq none
+--000000000000a607060596bc5612
+Content-Type: text/plain; charset="UTF-8"
 
-ok, which kernel should I test with this: the fresh git cloned, or the
-one just patched with Alan's patch, or doesn't matter which one?
+On Thu, Nov 7, 2019 at 1:43 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Some file systems such as squashfs do not set the UUID in the
+> superblock resulting in a zero'd UUID.  In cases were two or more
+> of these file systems are overlayed on the lower layer we can hit
+> overlay corruption issues because identical zero'd overlayfs UUIDs
+> are impossible to differentiate between.  This can be fixed by
+> creating an overlayfs UUID based on the file system from the
+> superblock s_magic and s_dev fields.  (This currently seems like
+> enough information to be able create a UUID, but the could be
+> scope to use other super block fields such as the pointer s_fs_info
+> but may need some obfuscation).
+>
 
-Thanks, and bye,
-Andrea
+The fix is incorrent. uuid stored in xattr needs to have persistent properties.
+In the use case that you describe, the origin file handle should simply be
+ignored.
 
+Please test attached patch.
+
+Thanks,
+Amir.
+
+--000000000000a607060596bc5612
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-ovl-fix-lookup-failure-on-multi-lower-squashfs.patch"
+Content-Disposition: attachment; 
+	filename="0001-ovl-fix-lookup-failure-on-multi-lower-squashfs.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k2oddo2z0>
+X-Attachment-Id: f_k2oddo2z0
+
+RnJvbSBlMDQ3YjA3ODE1NzY5MWJhOGFiZDU5ODg2NWQ3YzZmMDhhYWI1MzEwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
+YXRlOiBUaHUsIDcgTm92IDIwMTkgMDc6MTk6NTUgKzAyMDAKU3ViamVjdDogW1BBVENIXSBvdmw6
+IGZpeCBsb29rdXAgZmFpbHVyZSBvbiBtdWx0aSBsb3dlciBzcXVhc2hmcwoKSW4gdGhlIHBhc3Qs
+IG92ZXJsYXlmcyByZXF1aXJlZCB0aGF0IGxvd2VyIGZzIGhhdmUgbm9uIG51bGwgdXVpZCBpbgpv
+cmRlciB0byBzdXBwb3J0IG5mcyBleHBvcnQgYW5kIGRlY29kZSBjb3B5IHVwIG9yaWdpbiBmaWxl
+IGhhbmRsZXMuCgpDb21taXQgOWRmMDg1ZjNjOWEyICgib3ZsOiByZWxheCByZXF1aXJlbWVudCBm
+b3Igbm9uIG51bGwgdXVpZCBvZgpsb3dlciBmcyIpIHJlbGF4ZWQgdGhpcyByZXF1aXJlbWVudCBm
+b3IgbmZzIGV4cG9ydCBzdXBwb3J0LCBhcyBsb25nCmFzIHV1aWQgKGV2ZW4gaWYgbnVsbCkgaXMg
+dW5pcXVlIGFtb25nIGFsbCBsb3dlciBmcy4KCkhvd2V2ZXIsIHNhaWQgY29tbWl0IHVuaW50ZW50
+aW9uYWxseSBhbHNvIHJlbGF4ZWQgdGhlIG5vbiBudWxsIHV1aWQKcmVxdWlyZW1lbnQgZm9yIGRl
+Y29kaW5nIGNvcHkgdXAgb3JpZ2luIGZpbGUgaGFuZGxlcywgcmVnYXJkbGVzcyBvZgp0aGUgdW5p
+cXVlIHV1aWQgcmVxdWlyZW1lbnQuCgpBbWVuZCB0aGlzIG1pc3Rha2UgYnkgZGlzYWJsaW5nIGRl
+Y29kaW5nIG9mIGNvcHkgdXAgb3JpZ2luIGZpbGUgaGFuZGxlCmZyb20gbG93ZXIgZnMgd2l0aCBh
+IGNvbmZsaWN0aW5nIHV1aWQuCgpXZSBzdGlsbCBlbmNvZGUgY29weSB1cCBvcmlnaW4gZmlsZSBo
+YW5kbGVzIGZyb20gdGhvc2UgZnMsIGJlY2F1c2UKZmlsZSBoYW5kbGVzIGxpa2UgdGhvc2UgYWxy
+ZWFkeSBleGlzdCBpbiB0aGUgd2lsZCBhbmQgYmVjYXVzZSB0aGV5Cm1pZ2h0IHByb3ZpZGUgdXNl
+ZnVsIGluZm9ybWF0aW9uIGluIHRoZSBmdXR1cmUuCgpSZXBvcnRlZC1ieTogQ29saW4gSWFuIEtp
+bmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4KTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvbGttbC8yMDE5MTEwNjIzNDMwMS4yODMwMDYtMS1jb2xpbi5raW5nQGNhbm9uaWNhbC5jb20v
+CkZpeGVzOiA5ZGYwODVmM2M5YTIgKCJvdmw6IHJlbGF4IHJlcXVpcmVtZW50IGZvciBub24gbnVs
+bCB1dWlkIC4uLiIpCkNjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnICMgdjQuMjArClNpZ25lZC1v
+ZmYtYnk6IEFtaXIgR29sZHN0ZWluIDxhbWlyNzNpbEBnbWFpbC5jb20+Ci0tLQogZnMvb3Zlcmxh
+eWZzL25hbWVpLmMgICAgIHwgOCArKysrKysrKwogZnMvb3ZlcmxheWZzL292bF9lbnRyeS5oIHwg
+MiArKwogZnMvb3ZlcmxheWZzL3N1cGVyLmMgICAgIHwgOSArKysrKysrKy0KIDMgZmlsZXMgY2hh
+bmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2ZzL292
+ZXJsYXlmcy9uYW1laS5jIGIvZnMvb3ZlcmxheWZzL25hbWVpLmMKaW5kZXggZTk3MTdjMmY3ZDQ1
+Li5kZGM1NTE0ZDhjM2IgMTAwNjQ0Ci0tLSBhL2ZzL292ZXJsYXlmcy9uYW1laS5jCisrKyBiL2Zz
+L292ZXJsYXlmcy9uYW1laS5jCkBAIC0zMjUsNiArMzI1LDE0IEBAIGludCBvdmxfY2hlY2tfb3Jp
+Z2luX2ZoKHN0cnVjdCBvdmxfZnMgKm9mcywgc3RydWN0IG92bF9maCAqZmgsIGJvb2wgY29ubmVj
+dGVkLAogCWludCBpOwogCiAJZm9yIChpID0gMDsgaSA8IG9mcy0+bnVtbG93ZXI7IGkrKykgewor
+CQkvKgorCQkgKiBJZiBsb3dlciBmcyB1dWlkIGlzIG5vdCB1bmlxdWUgYW1vbmcgbG93ZXIgZnMg
+d2UgY2Fubm90IG1hdGNoCisJCSAqIGZoLT51dWlkIHRvIGxheWVyLgorCQkgKi8KKwkJaWYgKG9m
+cy0+bG93ZXJfbGF5ZXJzW2ldLmZzaWQgJiYKKwkJICAgIG9mcy0+bG93ZXJfbGF5ZXJzW2ldLmZz
+LT5ub3V1aWQpCisJCQljb250aW51ZTsKKwogCQlvcmlnaW4gPSBvdmxfZGVjb2RlX3JlYWxfZmgo
+ZmgsIG9mcy0+bG93ZXJfbGF5ZXJzW2ldLm1udCwKIAkJCQkJICAgIGNvbm5lY3RlZCk7CiAJCWlm
+IChvcmlnaW4pCmRpZmYgLS1naXQgYS9mcy9vdmVybGF5ZnMvb3ZsX2VudHJ5LmggYi9mcy9vdmVy
+bGF5ZnMvb3ZsX2VudHJ5LmgKaW5kZXggYTgyNzkyODBlODhkLi5hMDIyN2MzMWZlMTcgMTAwNjQ0
+Ci0tLSBhL2ZzL292ZXJsYXlmcy9vdmxfZW50cnkuaAorKysgYi9mcy9vdmVybGF5ZnMvb3ZsX2Vu
+dHJ5LmgKQEAgLTIyLDYgKzIyLDggQEAgc3RydWN0IG92bF9jb25maWcgewogc3RydWN0IG92bF9z
+YiB7CiAJc3RydWN0IHN1cGVyX2Jsb2NrICpzYjsKIAlkZXZfdCBwc2V1ZG9fZGV2OworCS8qIFVu
+dXNhYmxlIChjb25mbGljdGluZykgdXVpZCAqLworCWJvb2wgbm91dWlkOwogfTsKIAogc3RydWN0
+IG92bF9sYXllciB7CmRpZmYgLS1naXQgYS9mcy9vdmVybGF5ZnMvc3VwZXIuYyBiL2ZzL292ZXJs
+YXlmcy9zdXBlci5jCmluZGV4IGFmYmNiMTE2YTdmMS4uNTQ3ZjhjZGJjOThmIDEwMDY0NAotLS0g
+YS9mcy9vdmVybGF5ZnMvc3VwZXIuYworKysgYi9mcy9vdmVybGF5ZnMvc3VwZXIuYwpAQCAtMTI2
+Myw5ICsxMjYzLDEzIEBAIHN0YXRpYyBib29sIG92bF9sb3dlcl91dWlkX29rKHN0cnVjdCBvdmxf
+ZnMgKm9mcywgY29uc3QgdXVpZF90ICp1dWlkKQogCQkgKiBXZSB1c2UgdXVpZCB0byBhc3NvY2lh
+dGUgYW4gb3ZlcmxheSBsb3dlciBmaWxlIGhhbmRsZSB3aXRoIGEKIAkJICogbG93ZXIgbGF5ZXIs
+IHNvIHdlIGNhbiBhY2NlcHQgbG93ZXIgZnMgd2l0aCBudWxsIHV1aWQgYXMgbG9uZwogCQkgKiBh
+cyBhbGwgbG93ZXIgbGF5ZXJzIHdpdGggbnVsbCB1dWlkIGFyZSBvbiB0aGUgc2FtZSBmcy4KKwkJ
+ICogaWYgd2UgZGV0ZWN0IG11bHRpcGxlIGxvd2VyIGZzIHdpdGggdGhlIHNhbWUgdXVpZCwgd2UK
+KwkJICogZGlzYWJsZSBsb3dlciBmaWxlIGhhbmRsZSBkZWNvZGluZyBvbiBhbGwgb2YgdGhlbS4K
+IAkJICovCi0JCWlmICh1dWlkX2VxdWFsKCZvZnMtPmxvd2VyX2ZzW2ldLnNiLT5zX3V1aWQsIHV1
+aWQpKQorCQlpZiAodXVpZF9lcXVhbCgmb2ZzLT5sb3dlcl9mc1tpXS5zYi0+c191dWlkLCB1dWlk
+KSkgeworCQkJb2ZzLT5sb3dlcl9mc1tpXS5ub3V1aWQgPSB0cnVlOwogCQkJcmV0dXJuIGZhbHNl
+OworCQl9CiAJfQogCXJldHVybiB0cnVlOwogfQpAQCAtMTI3Nyw2ICsxMjgxLDcgQEAgc3RhdGlj
+IGludCBvdmxfZ2V0X2ZzaWQoc3RydWN0IG92bF9mcyAqb2ZzLCBjb25zdCBzdHJ1Y3QgcGF0aCAq
+cGF0aCkKIAl1bnNpZ25lZCBpbnQgaTsKIAlkZXZfdCBkZXY7CiAJaW50IGVycjsKKwlib29sIG5v
+dXVpZCA9IGZhbHNlOwogCiAJLyogZnNpZCAwIGlzIHJlc2VydmVkIGZvciB1cHBlciBmcyBldmVu
+IHdpdGggbm9uIHVwcGVyIG92ZXJsYXkgKi8KIAlpZiAob2ZzLT51cHBlcl9tbnQgJiYgb2ZzLT51
+cHBlcl9tbnQtPm1udF9zYiA9PSBzYikKQEAgLTEyODgsNiArMTI5Myw3IEBAIHN0YXRpYyBpbnQg
+b3ZsX2dldF9mc2lkKHN0cnVjdCBvdmxfZnMgKm9mcywgY29uc3Qgc3RydWN0IHBhdGggKnBhdGgp
+CiAJfQogCiAJaWYgKCFvdmxfbG93ZXJfdXVpZF9vayhvZnMsICZzYi0+c191dWlkKSkgeworCQlu
+b3V1aWQgPSB0cnVlOwogCQlvZnMtPmNvbmZpZy5pbmRleCA9IGZhbHNlOwogCQlvZnMtPmNvbmZp
+Zy5uZnNfZXhwb3J0ID0gZmFsc2U7CiAJCXByX3dhcm4oIm92ZXJsYXlmczogJXMgdXVpZCBkZXRl
+Y3RlZCBpbiBsb3dlciBmcyAnJXBkMicsIGZhbGxpbmcgYmFjayB0byBpbmRleD1vZmYsbmZzX2V4
+cG9ydD1vZmYuXG4iLApAQCAtMTMwMyw2ICsxMzA5LDcgQEAgc3RhdGljIGludCBvdmxfZ2V0X2Zz
+aWQoc3RydWN0IG92bF9mcyAqb2ZzLCBjb25zdCBzdHJ1Y3QgcGF0aCAqcGF0aCkKIAogCW9mcy0+
+bG93ZXJfZnNbb2ZzLT5udW1sb3dlcmZzXS5zYiA9IHNiOwogCW9mcy0+bG93ZXJfZnNbb2ZzLT5u
+dW1sb3dlcmZzXS5wc2V1ZG9fZGV2ID0gZGV2OworCW9mcy0+bG93ZXJfZnNbb2ZzLT5udW1sb3dl
+cmZzXS5ub3V1aWQgPSBub3V1aWQ7CiAJb2ZzLT5udW1sb3dlcmZzKys7CiAKIAlyZXR1cm4gb2Zz
+LT5udW1sb3dlcmZzOwotLSAKMi4xNy4xCgo=
+--000000000000a607060596bc5612--
