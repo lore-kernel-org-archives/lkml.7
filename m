@@ -2,133 +2,124 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906E3C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C513BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6936521882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9804A21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YqhmYVEW"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pVKXsw6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfKGT2E (ORCPT
+        id S1726882AbfKGT2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:28:04 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58679 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726485AbfKGT2D (ORCPT
+        Thu, 7 Nov 2019 14:28:50 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44624 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfKGT2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:28:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573154882;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5GOtSEPvdxYm2pxjUsA4qBhfGS9ZCElHaPyIXVtMmQI=;
-        b=YqhmYVEW2e/W1KswTW11LGB6KjIrOS3H2tg14Dx7dbIMFxfNWfcblKfNVKfqNWDo6bZoUc
-        o8nTPPNLooGFv5cnVDltRR9tQS68QaJpWpEwO9k/yFZKMDRfOnndDjGMgYrZjJbfKURgbU
-        MDhU17zI6EkaRL75+bQB3iJtZ2ijx9o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-F77lJWRLMVywhZ5pj1TsMQ-1; Thu, 07 Nov 2019 14:27:58 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44B3F1005500;
-        Thu,  7 Nov 2019 19:27:56 +0000 (UTC)
-Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DF045E240;
-        Thu,  7 Nov 2019 19:27:56 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 14:27:55 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
- UFFD_FEATURE_EVENT_FORK
-Message-ID: <20191107192755.GM17896@redhat.com>
-References: <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
- <20191105162424.GH30717@redhat.com>
- <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
- <20191107083902.GB3247@linux.ibm.com>
- <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
- <20191107153801.GF17896@redhat.com>
- <CAKOZueuKttjyRBgMkaBknzn+fzufZA+gJcd5wnKgiwmO37yN1g@mail.gmail.com>
- <20191107182259.GK17896@redhat.com>
- <CAKOZueubtyuTZC5zPTL3qDpVS5RFYFMqx727Bj4fjMHDSY5rMg@mail.gmail.com>
+        Thu, 7 Nov 2019 14:28:50 -0500
+Received: by mail-io1-f65.google.com with SMTP id j20so3321800ioo.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:28:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LsQBOGT7wlBeTtd5DGVJ1cAFGBGmgxUQGz4CBk4TLCk=;
+        b=pVKXsw6iTlJ2Rzs/YUhd1cSagr7G85BPX4jvG88avd78mLhxpwKSuSup+KefjXgIzd
+         D99eKJyFKqrIcZz8kgmmwl8B7bGRqu8tHo6szfdV1XbTdJ6NW7Daw49AkY/gMmuKncRn
+         t5QMRH81Y3OOOXlCBRJRI8iZUCYzpSb4T3mleVCNGWEdUdF1GzrTwDjUe9aEUSneQL4B
+         uGtLuJbyPxquXYAPyeyX8vY0Bgl/FCPAwmmQGAHRZObaR2TK/+SlD7+smuzdVvztSDN1
+         xpINYOf1vFWkuiS8IiRdmGwfG3W5cTmNRSeHvQH6W7ubVPkL/J0BJfpWgkDHYxjfInUl
+         uxNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LsQBOGT7wlBeTtd5DGVJ1cAFGBGmgxUQGz4CBk4TLCk=;
+        b=bzDFrbeDuqBNVr1iXNd3R8vgCdCB4ggttXwDDtcmXrRVwV0aMJm4LBlmzuGAby/RGd
+         V9tyL6MNVc0IbKljrvMq7bJcFqtxo402bGcaDefL6taBrjtRn7+wM5wx13DLx/Iam/I5
+         hn6VuBLsTU8fAlQvDa22vaEJjoPUfRt2JU+W6Y4NQgst1csNCQJbsSgt9ZJuFK0e+sNb
+         1W4zNU5reORXxhJeVWlcqfUqIGAKsquq68KV6WP+8LG3LiBo934TjMLgR2XYTC5lUm59
+         3Mwk5IMyxGiciqhECI/N/d1jrsy+9tkHDWhviWnLUR/+V41rANQE4TbRsEBH43yFQWZj
+         PIGQ==
+X-Gm-Message-State: APjAAAUzfjZtAHAasMcPXnlp7WdiWbU4tjO/Y7pnsD4JyNbG9QV5nwiI
+        DIOOPJegjYGrMcZWLDmE655f9A==
+X-Google-Smtp-Source: APXvYqytRM2OaAe3ZSxiJMqKi+CwRvtOJTQx6oa467TEQdWnroU8YHYetutKqI3f0YDuqGs+xrjF2A==
+X-Received: by 2002:a02:c9d2:: with SMTP id c18mr5844902jap.108.1573154929192;
+        Thu, 07 Nov 2019 11:28:49 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r25sm437420ilb.16.2019.11.07.11.28.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 11:28:48 -0800 (PST)
+Subject: Re: [PATCHSET v2 block/for-next] blk-cgroup: use cgroup rstat for IO
+ stats
+To:     Tejun Heo <tj@kernel.org>
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, kernel-team@fb.com
+References: <20191107191804.3735303-1-tj@kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2a6dd76b-6063-92b9-7b20-97f69bb4b344@kernel.dk>
+Date:   Thu, 7 Nov 2019 12:28:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAKOZueubtyuTZC5zPTL3qDpVS5RFYFMqx727Bj4fjMHDSY5rMg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: F77lJWRLMVywhZ5pj1TsMQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191107191804.3735303-1-tj@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 10:50:26AM -0800, Daniel Colascione wrote:
-> On Thu, Nov 7, 2019 at 10:23 AM Andrea Arcangeli <aarcange@redhat.com> wr=
-ote:
-> > Not all software will do this after calling recvmsg:
-> >
-> >     if (cmsg->cmsg_type =3D=3D SCM_RIGHTS) {
-> >       /* oops we got attacked and an fd was involountarily installed
-> >          because we received another AF_UNIX from a malicious attacker
-> >          in control of the other end of the SCM_RIGHTS-receiving
-> >          AF_UNIX connection instead of our expected socket family
-> >          which doesn't even support SCM_RIGHTS so we would never have
-> >          noticed an fd was installed after recvmsg */
-> >     }
->=20
-> If a program omits this code after calling recvmsg on a file
-> descriptor of unknown provenance and the program breaks, it's the
-> program's fault. [..]
+On 11/7/19 12:17 PM, Tejun Heo wrote:
+> Hello,
+> 
+> v2: Build fix when !DEBUG.
+> 
+> blk-cgroup IO stats currently use blkg_rwstat which unforutnately
+> requires walking all descendants recursively on read.  On systems with
+> a large number of cgroups (dead or alive), this can make each stat
+> read a substantially expensive operation.
+> 
+> This patch updates blk-cgroup to use cgroup rstat which makes stat
+> reading O(# descendants which have been active since last reading)
+> instead of O(# descendants).
+> 
+>   0001-bfq-iosched-relocate-bfqg_-rwstat-helpers.patch
+>   0002-bfq-iosched-stop-using-blkg-stat_bytes-and-stat_ios.patch
+>   0003-blk-throtl-stop-using-blkg-stat_bytes-and-stat_ios.patch
+>   0004-blk-cgroup-remove-now-unused-blkg_print_stat_-bytes-.patch
+>   0005-blk-cgroup-reimplement-basic-IO-stats-using-cgroup-r.patch
+>   0006-blk-cgroup-separate-out-blkg_rwstat-under-CONFIG_BLK.patch
+> 
+> 0001-0003 make bfq-iosched and blk-throtl use their own blkg_rwstat to
+> track basic IO stats on cgroup1 instead of sharing blk-cgroup core's.
+> 0004 is a follow-up cleanup.
+> 
+> 0005 switches blk-cgroup to cgroup rstat.
+> 
+> 0006 moves blkg_rwstat to its own files and gate it under a config
+> option as it's now only used by blk-throtl and bfq-iosched.
+> 
+> The patchset is on top of
+> 
+>    block/for-next  40afbe18b03a ("Merge branch 'for-5.5/drivers-post' into for-next")
+> + block/for-linus b0814361a25c ("blkcg: make blkcg_print_stat() print stats only for online blkgs")
+> 
+> and also available in the following git branch.
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-blkcg-rstat
 
-Hmm, ok, would it be possible to do a research effort and check how
-much software that receives an fd through SCM_RIGHTS and then calls
-recvmsg on it, always remembers to follow the recvsmg with a if
-(cmsg->cmsg_type =3D=3D SCM_RIGHTS) path that closes the involuntarily
-opened fd?
+Thanks, applied!
 
-Frankly until today, I didn't realize that not adding a specialized
-"cmsg->cmsg_type =3D=3D SCM_RIGHTS" check after every recvmsg executed on
-any fd received with SCM_RIGHTS, was a program's fault and it made the
-program vulnerable (non robust) from an attack from the other end of
-the AF_UNIX pipe just like if the program issued a read() with uffd
-event fork being sent through SCM_RIGHTS (except in that case it
-wasn't program's fault because read had not to install the fd while
-recvmsg can always install fd if cmsg_type =3D=3D SCM_RIGHTS is returned).
-
-The main argument in favor of recvmsg would be that even if we use it
-for uffd too, it won't make recvmsg on an fd received from SCM_RIGHTS
-any less secure than it already is, but it's not exactly an example of
-robustness in terms of API if it's a program's fault if it doesn't
-follow every recvmsg with the above quoted check.
-
-The ioctl is much more robust because there's no chance that somebody
-can be attacked by forgetting a specialized non intuitive check after
-calling the specialized ioctl that installs the fd.
-
-Thanks,
-Andrea
+-- 
+Jens Axboe
 
