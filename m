@@ -2,90 +2,140 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B152C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A89C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712DC2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LgVB184n"
+	by mail.kernel.org (Postfix) with ESMTP id 8C90F2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573153706;
+	bh=/C3nLUJIdUuaUnnMf2d3nrdNhD0ts8jtkEY8senWH/w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OoLFMjNFFYHTgNYj44VJY653LF/keSBIGuUd7vE//kSILKCrm5ibZMbSembXnVao0
+	 8Hwo3qH6OeS4dTbv5ZkIwMYg075W0ietZYcAL43u8MDng9D/o11qrG9zsDejCxYuLU
+	 VQfUNLjxUoUbaeCngW21FAC7YIluruAWR5W6Oxnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731027AbfKGTIV (ORCPT
+        id S1731093AbfKGTIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:08:21 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37217 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbfKGTIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:08:20 -0500
-Received: by mail-io1-f67.google.com with SMTP id 1so3532507iou.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:08:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6tc+3dFnObbCsZTOmcaVyw6tfhQMQsGco5do8dKeQEQ=;
-        b=LgVB184nuWNpFfGTtXqtzbPQCgBsxaiS3I2ido28o3uv6Be63L007ZEgJmeI4p0/bU
-         gZ6XCsGvaUXpCS9kQrcCCvJGsC6gBbU5UgGuwiQXUL2Yq7wIEFglIILOgZw8P9sQ59j7
-         DVtDRA39e/w+eVu+5Fh80AmOIS+cIts7L5UOC6aEPlA7E1tDZ3rxeD/TiAUidkN3wOUr
-         1nHZaIYFTXT5S+tb7PTGosHYi4WLU/P4nMLLf2YXPVRMFdaZd4mZ8LM0dz/v2xb6ZclM
-         3VZLjZEqUWsplJQaLrY2K2NJQ4QLwMKeezr3/t5BIKT6nsMzzJ4vjASSNPhTr64cZv0u
-         0dSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6tc+3dFnObbCsZTOmcaVyw6tfhQMQsGco5do8dKeQEQ=;
-        b=ctKAEVqy6FVcMnIhg0famrhr9PVB9MJM/tahC+A0PzeQx7c+P8eqwSkR5aUKGEB671
-         7X2/csNKwXCc/3irWUs+LH1pCriNFcmCIXAn55HolmkGdn7JPdOPw8q2HSk4rFGMo3Tx
-         FKRMwz+faISn/GPWiLDld8CBKgCQdx9Nr1mtHl4dM6Lj0qV3gv3G5O5t1sybiWF2Ies3
-         fK2j+ov8sXCcb3N4vfEjuy0qBKoOc/X96keogM8qzkY70mpdeap6LwEPs3LM04qiP1rZ
-         9rQn2KevRJwVfMUgvu/QqZg8SSHDR7LfWtTXAvQhOKPltYzcaH2NH7NM6umNIT9dkP70
-         jV7g==
-X-Gm-Message-State: APjAAAVSD2FzCdd61CwKYWa0+yYooJlb0BHOR38/gPC2cmy8v8qFZ5d1
-        RLGcgFIk8YVR+2MwGfp9q+PzVw==
-X-Google-Smtp-Source: APXvYqx5C+YXiG1tSukATm3surkdJTv8OYGBUPh1k6tE3QzNgmrmLWbq9IaV79OTLCPZKjDdSzPfLA==
-X-Received: by 2002:a02:b710:: with SMTP id g16mr3463376jam.111.1573153698830;
-        Thu, 07 Nov 2019 11:08:18 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r1sm237453iod.69.2019.11.07.11.08.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Nov 2019 11:08:17 -0800 (PST)
-Subject: Re: [PATCH 0.5/5] bfq-iosched: relocate bfqg_*rwstat*() helpers
-To:     Tejun Heo <tj@kernel.org>
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, kernel-team@fb.com
-References: <20191106215838.3973497-1-tj@kernel.org>
- <20191107190459.GA3622521@devbig004.ftw2.facebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4d34b6a3-b141-f0fe-c7e1-e68e0fa52cfb@kernel.dk>
-Date:   Thu, 7 Nov 2019 12:08:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 14:08:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727963AbfKGTIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:08:24 -0500
+Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3502F2084D;
+        Thu,  7 Nov 2019 19:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573153703;
+        bh=/C3nLUJIdUuaUnnMf2d3nrdNhD0ts8jtkEY8senWH/w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GOUY63MK5VtmMJVtMDras9pnHJmM0xaGpnPd6h86SlfOh61bZ5lDWWLNUTZcu4ukP
+         I5nP+3HbvztfrcAWFDJYES4Ydx83GyQ5VUYtLl3mTs8+awna2/OTwck1j97yY5PQ+w
+         7Fcf3PEFdWzNNq79r8MbbPioWahqxuMULPXNN6mw=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: [PATCH 50/63] perf probe: Return a better scope DIE if there is no best scope
+Date:   Thu,  7 Nov 2019 15:59:58 -0300
+Message-Id: <20191107190011.23924-51-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
+References: <20191107190011.23924-1-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191107190459.GA3622521@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/7/19 12:04 PM, Tejun Heo wrote:
-> Jens, this is an extra patch to help fixing the build bug when
-> !CONFIG_BFQ_CGROUP_DEBUG.  The git tree has been updated accordingly.
-> Please let me know if you want the whole series reposted.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-I seem to run into issues applying the series with the 0.5 added first
-and with the updated patch 1. So maybe a resend isn't a bad idea :-)
+Make find_best_scope() returns innermost DIE at given address if there
+is no best matched scope DIE. Since Gcc sometimes generates intuitively
+strange line info which is out of inlined function address range, we
+need this fixup.
 
+Without this, sometimes perf probe failed to probe on a line inside an
+inlined function:
+
+  # perf probe -D ksys_open:3
+  Failed to find scope of probe point.
+    Error: Failed to add events.
+
+With this fix, 'perf probe' can probe it:
+
+  # perf probe -D ksys_open:3
+  p:probe/ksys_open _text+25707308
+  p:probe/ksys_open_1 _text+25710596
+  p:probe/ksys_open_2 _text+25711114
+  p:probe/ksys_open_3 _text+25711343
+  p:probe/ksys_open_4 _text+25714058
+  p:probe/ksys_open_5 _text+2819653
+  p:probe/ksys_open_6 _text+2819701
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lore.kernel.org/lkml/157291300887.19771.14936015360963292236.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/probe-finder.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 88e17a4f5ac3..582f8c34d93a 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -744,6 +744,16 @@ static int find_best_scope_cb(Dwarf_Die *fn_die, void *data)
+ 	return 0;
+ }
+ 
++/* Return innermost DIE */
++static int find_inner_scope_cb(Dwarf_Die *fn_die, void *data)
++{
++	struct find_scope_param *fsp = data;
++
++	memcpy(fsp->die_mem, fn_die, sizeof(Dwarf_Die));
++	fsp->found = true;
++	return 1;
++}
++
+ /* Find an appropriate scope fits to given conditions */
+ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+ {
+@@ -755,8 +765,13 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+ 		.die_mem = die_mem,
+ 		.found = false,
+ 	};
++	int ret;
+ 
+-	cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb, &fsp);
++	ret = cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb,
++				   &fsp);
++	if (!ret && !fsp.found)
++		cu_walk_functions_at(&pf->cu_die, pf->addr,
++				     find_inner_scope_cb, &fsp);
+ 
+ 	return fsp.found ? die_mem : NULL;
+ }
 -- 
-Jens Axboe
+2.21.0
 
