@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD362FC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6163FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F3321D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9625E218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bG2hARxl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWUaaCR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733100AbfKGCwE (ORCPT
+        id S1733113AbfKGCwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:52:04 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37254 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732382AbfKGCwE (ORCPT
+        Wed, 6 Nov 2019 21:52:11 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44226 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732382AbfKGCwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:52:04 -0500
-Received: by mail-oi1-f196.google.com with SMTP id y194so665630oie.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:52:03 -0800 (PST)
+        Wed, 6 Nov 2019 21:52:11 -0500
+Received: by mail-ot1-f68.google.com with SMTP id c19so682131otr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:52:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kDdLz2dgz8WJIiGMPPdO9wrz/4A63qBVRe550gS0EUs=;
-        b=bG2hARxlz9n/7uJUPESjTyuodO57X2/iCCk60Vl5V8zXwbQnnPstUSNKmrtIQ5HD3k
-         epZTCMPvKmhpCHIOmLmmlN/MNEojn488H/JwDjSelciE6M0ds2/v36CNQWAstLIldGen
-         L0DzEVJup+j3Tk55B4PcGE0F0HlfLIi4E0wiXL41BtXNYZrPkrjuvibgOL0Y6/dRh3WF
-         +0rP/IgC9qirNn+Ftu0BchZ64hVBMeLUbHzslk/uENviWfrpjvxFzhdKdp4FOcVLDEXy
-         429yPE0Hjjq6iNirVRV20WqQ6yzYriGgRi3YjwVIcs5bOxjI5WlCIPsk6RuvQfTmRL3t
-         pfBQ==
+        bh=QrlsmiSp9MaTLUUYnVA3xTtIb+I1YUcCTslV0/OmSFI=;
+        b=YWUaaCR128DURGqWr9aDknrAFS+YYlD99jyCFzrnkBJytTen48x97ZotJo5kZT3QYa
+         ZjUE1oID3Dz3eEh0vpwgEwGeKs1IlCU141yRD3Ii3VpOrdmuUt1pXff6VBBrmPDXf5BR
+         qXBM00zj3eBtlE8qYCpEysmNqZNhlKyUyCZKV/BxMWYzxoRprgj3lbp8NIAqz2rLFUpO
+         z7KJKXpi8gtqrRNZgvaqQz1TR+YS3y5+HWIU9XjnZ22K3cvZzhrU+m8RD2I10tL57kPA
+         EJd3iqWEZrVXgSl0eXR0vr+OCwqGyOaSN396/nYQDmw7ApNC7AemBk6nrILEpvaB45N8
+         B34w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kDdLz2dgz8WJIiGMPPdO9wrz/4A63qBVRe550gS0EUs=;
-        b=Jbk0N5Vw47+MqgG9nJ7nZvuUsktAPXFdAR+/3+IyI/oh3PHBFVB4GSagol+9tv/pe/
-         Hh/UMfqBR5Z9vZzjb3k22hVEDL/bITvtUJ8yj5CX+qRUwWkX3dnOPasMf3t07N/XYXGC
-         eNJvXt0qaIAEOBdrC2wCu6ofnQEFXV9oIuGnsC7fC5QS+jCQ8jVDwVqa+hIE1dDq8QNQ
-         bBZejuqwpVSRafmdMt8wJVUPcv8+dGkgCtoUhfJZbQGOZhQMK9vFE55iWezX0UcVwZpt
-         cobirHOL2IkJzDk5WWOF7Y3CZWkS7lju89/ipXjQ/bFsTPOYPF4t/XiJqUsLJoufUolU
-         qMhA==
-X-Gm-Message-State: APjAAAW/Ii/dmDpldUNbpQVHwV3i7AnIyL1JawsKtYN0O+2boZ11VnrH
-        lOANbRHJ4th8BC/Ayx1+w8EXwqz7+A0BFmdvpnnfow==
-X-Google-Smtp-Source: APXvYqygM9oGTHer3UTgB/MHwMQWhr4sQtlL4s9IR1zML8zAxx56zAmbgHIIWQqZ8bBe3Q1WUQjtGdo8/8cO0vJ3pRU=
-X-Received: by 2002:aca:7516:: with SMTP id q22mr1098320oic.144.1573095122710;
- Wed, 06 Nov 2019 18:52:02 -0800 (PST)
+        bh=QrlsmiSp9MaTLUUYnVA3xTtIb+I1YUcCTslV0/OmSFI=;
+        b=pv9iIM+EDvyskq7iePwt62BjfrQrXZ3jBAy/Cwllf564mXf0pLbX9IcjHaD5yNisYs
+         UQPAwapdXlsbC9uEebhGBvFdjx64JMPBYB8y9+k3N7RoqNdYBwOFZ/HZ2ggqC/DplU1f
+         pNstOs4SiLsV8aS0JsZKam710MT9HwVCSTx915k93+hrQCTIx5fMVZ4SY0SVG/s183TI
+         RXktvqcL8dvuF1iWTF+vFnYPTt1EsfMfx2hu5hQEKGhBSZ94nFy5xSxYV/3fgB8rQBC/
+         P8VYCgJdh0sP657Ey3yAOhMNMIdZE/HCvETlMoyOoCdglmR6GS59z5QCd2hA3+FW9Qb/
+         Pz5g==
+X-Gm-Message-State: APjAAAVpnBv9vAfy7tYssRmueh+Z7dVqr0nCr3Nwq5HzV8yxk7NJM8D0
+        eIu0PChacOB2BfdaVw/IRM9l45ANzu9ur3nfSMQiWg==
+X-Google-Smtp-Source: APXvYqxOEA6/MtSOLc+2Sk75LPiZD356yYgPUUdsBFVv+mxA1p5VnjYskNRQd2hJyi8yasnt75D22lhdfdnhROetgTM=
+X-Received: by 2002:a9d:5e10:: with SMTP id d16mr886624oti.191.1573095130142;
+ Wed, 06 Nov 2019 18:52:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20190603210746.15800-1-hannes@cmpxchg.org> <20190603210746.15800-7-hannes@cmpxchg.org>
-In-Reply-To: <20190603210746.15800-7-hannes@cmpxchg.org>
+References: <20190603210746.15800-1-hannes@cmpxchg.org> <20190603210746.15800-8-hannes@cmpxchg.org>
+In-Reply-To: <20190603210746.15800-8-hannes@cmpxchg.org>
 From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 6 Nov 2019 18:51:51 -0800
-Message-ID: <CALvZod4fCXrNd+uruEu6J3mjzRgHuK4Mu++fp-dH63Pfb11VHw@mail.gmail.com>
-Subject: Re: [PATCH 06/11] mm: vmscan: turn shrink_node_memcg() into shrink_lruvec()
+Date:   Wed, 6 Nov 2019 18:51:59 -0800
+Message-ID: <CALvZod7EFBD0SCoUFHacEtZqi7hcZ3S6FEZRmfJJORre3dxRtQ@mail.gmail.com>
+Subject: Re: [PATCH 07/11] mm: vmscan: split shrink_node() into node part and
+ memcgs part
 To:     Johannes Weiner <hannes@cmpxchg.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
@@ -73,17 +74,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 3:07 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+On Mon, Jun 3, 2019 at 3:00 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
 >
-> A lruvec holds LRU pages owned by a certain NUMA node and cgroup.
-> Instead of awkwardly passing around a combination of a pgdat and a
-> memcg pointer, pass down the lruvec as soon as we can look it up.
+> This function is getting long and unwieldy. The new shrink_node()
+> handles the generic (node) reclaim aspects:
+>   - global vmpressure notifications
+>   - writeback and congestion throttling
+>   - reclaim/compaction management
+>   - kswapd giving up on unreclaimable nodes
 >
-> Nested callers that need to access node or cgroup properties can look
-> them them up if necessary, but there are only a few cases.
-
-*them
-
+> It then calls shrink_node_memcgs() which handles cgroup specifics:
+>   - the cgroup tree traversal
+>   - memory.low considerations
+>   - per-cgroup slab shrinking callbacks
+>   - per-cgroup vmpressure notifications
 >
 > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
@@ -91,85 +95,71 @@ Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
 
 > ---
->  mm/vmscan.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
+>  mm/vmscan.c | 29 ++++++++++++++++++-----------
+>  1 file changed, 18 insertions(+), 11 deletions(-)
 >
 > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 304974481146..b85111474ee2 100644
+> index b85111474ee2..ee79b39d0538 100644
 > --- a/mm/vmscan.c
 > +++ b/mm/vmscan.c
-> @@ -2210,9 +2210,10 @@ enum scan_balance {
->   * nr[0] = anon inactive pages to scan; nr[1] = anon active pages to scan
->   * nr[2] = file inactive pages to scan; nr[3] = file active pages to scan
->   */
-> -static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
-> -                          struct scan_control *sc, unsigned long *nr)
-> +static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
-> +                          unsigned long *nr)
->  {
-> +       struct mem_cgroup *memcg = lruvec_memcg(lruvec);
->         int swappiness = mem_cgroup_swappiness(memcg);
->         struct zone_reclaim_stat *reclaim_stat = &lruvec->reclaim_stat;
->         u64 fraction[2];
-> @@ -2460,13 +2461,8 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
->         }
+> @@ -2665,24 +2665,15 @@ static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
+>                 (memcg && memcg_congested(pgdat, memcg));
 >  }
 >
-> -/*
-> - * This is a basic per-node page freer.  Used by both kswapd and direct reclaim.
-> - */
-> -static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memcg,
-> -                             struct scan_control *sc)
-> +static void shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
+> -static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> +static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
 >  {
-> -       struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
->         unsigned long nr[NR_LRU_LISTS];
->         unsigned long targets[NR_LRU_LISTS];
->         unsigned long nr_to_scan;
-> @@ -2476,7 +2472,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
->         struct blk_plug plug;
->         bool scan_adjusted;
+> -       struct reclaim_state *reclaim_state = current->reclaim_state;
+>         struct mem_cgroup *root = sc->target_mem_cgroup;
+>         struct mem_cgroup_reclaim_cookie reclaim = {
+>                 .pgdat = pgdat,
+>                 .priority = sc->priority,
+>         };
+> -       unsigned long nr_reclaimed, nr_scanned;
+> -       bool reclaimable = false;
+>         struct mem_cgroup *memcg;
 >
-> -       get_scan_count(lruvec, memcg, sc, nr);
-> +       get_scan_count(lruvec, sc, nr);
->
->         /* Record the original scan target for proportional adjustments later */
->         memcpy(targets, nr, sizeof(nr));
-> @@ -2689,6 +2685,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->
+> -again:
+> -       memset(&sc->nr, 0, sizeof(sc->nr));
+> -
+> -       nr_reclaimed = sc->nr_reclaimed;
+> -       nr_scanned = sc->nr_scanned;
+> -
 >         memcg = mem_cgroup_iter(root, NULL, &reclaim);
 >         do {
-> +               struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
->                 unsigned long reclaimed;
->                 unsigned long scanned;
->
-> @@ -2725,7 +2722,8 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->
->                 reclaimed = sc->nr_reclaimed;
->                 scanned = sc->nr_scanned;
-> -               shrink_node_memcg(pgdat, memcg, sc);
+>                 struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
+> @@ -2750,6 +2741,22 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>                         break;
+>                 }
+>         } while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
+> +}
 > +
-> +               shrink_lruvec(lruvec, sc);
+> +static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> +{
+> +       struct reclaim_state *reclaim_state = current->reclaim_state;
+> +       struct mem_cgroup *root = sc->target_mem_cgroup;
+> +       unsigned long nr_reclaimed, nr_scanned;
+> +       bool reclaimable = false;
+> +
+> +again:
+> +       memset(&sc->nr, 0, sizeof(sc->nr));
+> +
+> +       nr_reclaimed = sc->nr_reclaimed;
+> +       nr_scanned = sc->nr_scanned;
+> +
+> +       shrink_node_memcgs(pgdat, sc);
 >
->                 if (sc->may_shrinkslab) {
->                         shrink_slab(sc->gfp_mask, pgdat->node_id,
-> @@ -3243,6 +3241,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->                                                 pg_data_t *pgdat,
->                                                 unsigned long *nr_scanned)
->  {
-> +       struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
->         struct scan_control sc = {
->                 .nr_to_reclaim = SWAP_CLUSTER_MAX,
->                 .target_mem_cgroup = memcg,
-> @@ -3268,7 +3267,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->          * will pick up pages from other mem cgroup's as well. We hack
->          * the priority and make it zero.
->          */
-> -       shrink_node_memcg(pgdat, memcg, &sc);
-> +       shrink_lruvec(lruvec, &sc);
+>         if (reclaim_state) {
+>                 sc->nr_reclaimed += reclaim_state->reclaimed_slab;
+> @@ -2757,7 +2764,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>         }
 >
->         trace_mm_vmscan_memcg_softlimit_reclaim_end(
->                                         cgroup_ino(memcg->css.cgroup),
+>         /* Record the subtree's reclaim efficiency */
+> -       vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
+> +       vmpressure(sc->gfp_mask, root, true,
+>                    sc->nr_scanned - nr_scanned,
+>                    sc->nr_reclaimed - nr_reclaimed);
+>
 > --
 > 2.21.0
 >
