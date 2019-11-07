@@ -2,108 +2,103 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAC6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F71C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A80214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:26:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jZ5+6wBU"
+	by mail.kernel.org (Postfix) with ESMTP id 2F79D2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573144075;
+	bh=6V33I/CbC9scqkL+yAKQkI5e5SvV8zhCoIW63U6j6pU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GXUnfpeMy7waViDs6KAE+vzBqggmFqZ71/xSbrP23aeL9c1G1icSN4NeHOkPPN1TB
+	 ymC0xPThFV421/CubH52Xgiuzekf4gv5OZ23IK378PALUfisXtwLRx2ViBRH9DPZ40
+	 g7pjmiqw+jC5Zc4AfEMldE52VSRgt+ArNwlYGnok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfKGQ0n (ORCPT
+        id S1730266AbfKGQ1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:26:43 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:32900 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKGQ0n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:26:43 -0500
-Received: by mail-ua1-f66.google.com with SMTP id c16so779429uan.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:26:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AHVtna/ZK+ShoKE32vj/oIbQxq9UojFvas7d10KE8fg=;
-        b=jZ5+6wBUk83wQPpJmxaIJELl84GXA/0+SmIJmGXKvPs+KkSBCCgqHgiiibcWA8tRTA
-         HujJfE7DBIWcM4BdMqqm6Hcz+9CU85jfwEisPSpmYX8SNxvApOvMGdldNngt4QFlmguy
-         L9WnpbCJuTK9/aD4SnBylkT5OXPccTKbvcPGHh1zNsTtz8OVlthkWe7v5As5buBEZozX
-         Jz55FqoRAWXkZ9JM6qJpTKAC26iMxf6eygQfKLebtlCRS+d76RCGYyoBCD/ETzxuMdUU
-         WKTMq/WWxlASzp8vUChued4POTmR6TtUPEetUvMBxAXDXrkob1IGUEAmcarqNNHiev2a
-         mTgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AHVtna/ZK+ShoKE32vj/oIbQxq9UojFvas7d10KE8fg=;
-        b=lTnRP9DavlWOYC0aqLdSRB6Yj5I1gxFZE5mWO1DTxoRxpd7EUHfMOWnmVSm1LIz2St
-         VBxvF306MZpwctHjzhj2bZuHVHJlmO/7niaDPoB4FRjqYDvEGVk1sbaSJRUInGkPfPJk
-         QLqfwcrKQk7cUrDtbcjwCuJVD0RUQ2tSDMl0npbY4/gldSE+YrqazPjrNLJRt8MWO5es
-         cqNZmpNMU4GU/75FuzSP+Jp3Zj22O9acAMPmCHydsjyKPShHHl5obN1JpUglGn6av4ZZ
-         kZtGaOvQiS86gYUhYOGrWaUukGAmyMJ4UkUn0trWJK2IKAzMOicuAWoN+eCLlqajvxVv
-         9AJQ==
-X-Gm-Message-State: APjAAAVHYor5pQUBe9UrozDllhV0jrAaN7mgs7ArCP/DTo1ebEtrwNmE
-        klD0XutJ1dItTfemmoTSPPDVvpshEROPkPHOEZK1Zg==
-X-Google-Smtp-Source: APXvYqyLUUrZngxfbpK2EJw4lHfelTLISIcLLsL1NXa8kNArn8q1ZLsKkeVxBc7Gqn8x30++WT7p1IgHdkDpA3Dvs2U=
-X-Received: by 2002:ab0:2381:: with SMTP id b1mr2931374uan.106.1573144001488;
- Thu, 07 Nov 2019 08:26:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191105235608.107702-1-samitolvanen@google.com> <20191105235608.107702-12-samitolvanen@google.com>
- <CANiq72mZC-G_R_RJjapZS+NvkQcrjdiri0NyHUgesFzUpe-MDg@mail.gmail.com> <CAKv+Gu9DD12BPV_jNv9Hjw4oSiZvtdiVVjB-B8WLXCoPL4CA9Q@mail.gmail.com>
-In-Reply-To: <CAKv+Gu9DD12BPV_jNv9Hjw4oSiZvtdiVVjB-B8WLXCoPL4CA9Q@mail.gmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 7 Nov 2019 08:26:30 -0800
-Message-ID: <CABCJKuc9sxRRkfieExiFcYu0Cx=ZC=jyw2xXqsoQhF5-46HVDw@mail.gmail.com>
-Subject: Re: [PATCH v5 11/14] arm64: efi: restore x18 if it was corrupted
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Thu, 7 Nov 2019 11:27:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727606AbfKGQ1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 11:27:53 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33725214D8;
+        Thu,  7 Nov 2019 16:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573144073;
+        bh=6V33I/CbC9scqkL+yAKQkI5e5SvV8zhCoIW63U6j6pU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W99uIl/+aFt07anrqVOKd4U8Cv6kF2DNOiasnEfo+0MjHMgfriPvAPVQmkjHfYUI3
+         s0XqWE+OLR+w8fRn+Z/4UAhDTOQtmpDd6rkJjVy06bhZKThGckyJ3SJ5W31gvfHIy8
+         2wWA29qDB3ZVmmxIV+uZJX+hpMlz7lNPWFyrNUxU=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v2 0/4] perf/probe: Support multiprobe and immediates
+Date:   Fri,  8 Nov 2019 01:27:48 +0900
+Message-Id: <157314406866.4063.16995747442215702109.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 2:51 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> On Wed, 6 Nov 2019 at 05:46, Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > On Wed, Nov 6, 2019 at 12:56 AM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > >
-> > > If we detect a corrupted x18 and SCS is enabled, restore the register
-> > > before jumping back to instrumented code. This is safe, because the
-> > > wrapper is called with preemption disabled and a separate shadow stack
-> > > is used for interrupt handling.
-> >
-> > In case you do v6: I think putting the explanation about why this is
-> > safe in the existing comment would be best given it is justifying a
-> > subtlety of the code rather than the change itself. Ard?
-> >
->
-> Agreed, but only if you have to respin for other reasons.
+Hi,
 
-Sure, sounds good to me. I'll update the comment if other changes are needed.
+This is the 2nd version of the multiprobe support on perf probe.
 
-Sami
+This can be applied on top of perf/core.
+
+Inlined functions or the lines which have multiple statements can
+be compiled in multiple addresses. Current perf probe generates
+different events for each address, but this is not useful for
+users.
+
+Since ftrace multiprobe per event support is on upstream kernel,
+it is a time to push this series. In this version, I have updated
+the [1/4] not to add suffix _L* if user doesn't specify the line
+number for the function or the line number is 0. And also,
+[4/4] is updated according to [1/4] change.
+
+The previous version is here.
+
+https://lkml.kernel.org/r/157291299825.19771.5190465639558208592.stgit@devnote2
+
+Thank you,
+
+---
+
+Masami Hiramatsu (4):
+      perf probe: Generate event name with line number
+      perf probe: Support multiprobe event
+      perf probe: Support DW_AT_const_value constant value
+      perf probe: Trace a magic number if variable is not found
+
+
+ tools/perf/util/probe-event.c  |   19 +++++++++-
+ tools/perf/util/probe-event.h  |    3 ++
+ tools/perf/util/probe-file.c   |   14 ++++++++
+ tools/perf/util/probe-file.h   |    2 +
+ tools/perf/util/probe-finder.c |   73 ++++++++++++++++++++++++++++++++++++++--
+ tools/perf/util/probe-finder.h |    1 +
+ 6 files changed, 105 insertions(+), 7 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
