@@ -2,145 +2,87 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5C9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AC0FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3220F2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437FD2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IzWCw6Jo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BnKFCdVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfKGSsv (ORCPT
+        id S1727345AbfKGSuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:48:51 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37291 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726965AbfKGSsv (ORCPT
+        Thu, 7 Nov 2019 13:50:44 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45271 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfKGSuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:48:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573152530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UHB0JrKl2/lgoy546a6o5x0iXWhc257PTYUJn/4Bje0=;
-        b=IzWCw6Joj6xY0pxmrt8uf+HitdTf1u5HxPuCNhyPwd+atj0HVEEvvcfqnXDHJq5Q3iMUs1
-        mYP8gP15+qfCHcfUawOYCNJ0A6HvzQWv3FpQSZZ40HpBK69B913VawjCUjhMl+9oEoazo5
-        wcoHY8T3eYEVFyOIQYvdO6F58R4aLKc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-B9RjU769P3eP409e546QHA-1; Thu, 07 Nov 2019 13:48:44 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70429800C61;
-        Thu,  7 Nov 2019 18:48:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 54380600D3;
-        Thu,  7 Nov 2019 18:48:38 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com>
-References: <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com> <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk> <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 04/14] pipe: Add O_NOTIFICATION_PIPE [ver #2]
+        Thu, 7 Nov 2019 13:50:44 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z4so3095395pfn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:50:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:to:cc:user-agent:date;
+        bh=C1WVX915fPdh/srtNce/iA7rehF3H9bggdi/Th19950=;
+        b=BnKFCdVTc1hnaaYgE2CPbWERaaKAAIdT05HgPAM4h2vuO+YFleEa2fKwcq/6/Gd5sR
+         CPiZMg/65hkMuMW5O6lLxjQka6L9JG43UhjpMNZXykK5vHW8d3kpRGonUfO7gQYPywJo
+         EgmCTZ8E9vES6oyhW1mkqUXGCEQbsSPgUdUp0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
+         :user-agent:date;
+        bh=C1WVX915fPdh/srtNce/iA7rehF3H9bggdi/Th19950=;
+        b=fk7ASt0MzhZzILL1iaGQ4gx8pxEyAA+yAob5wlxLE09KvjV4M1U3Bbz2iqreGiSe8J
+         RL9BDvtAFyqXaDzSHL52Q4050Vqd4C7sAZb3VPOlGCnxRMXM6c/1nKV2TpmWLSfCHM/5
+         K0NFh9WpLhwgOoZ8xpvXeoRUNd6xluzch5CI5iVBAJkYUsQkzWVL6HuTfceI71plZP5C
+         +YgSzMxjmOO4fkONuQWiChhcauoWQTOfS7C7kcVFkCj2jpoTyaQ0rNSlw8Azlorc3ns5
+         vVNXaKkBX0tlu3siSntA9PAXitBpGEkM0+62kb44kRy1pqVXtrNZn36T0JnTKIH56IX3
+         aHBQ==
+X-Gm-Message-State: APjAAAUkJSoDbnmMx4cvAQ0ZulRIkvf2a9Be3Akn3lhTnVLBq/LRm6YC
+        WqWgvlsKt+lDGCiZil1veJ5wMg==
+X-Google-Smtp-Source: APXvYqwXYon+nNFVYIt+LRRJ84g0KnEUdAh1JFByFpVa60fm9mh39498T+YM8DFuEp34dlBkoGGBww==
+X-Received: by 2002:a63:e84f:: with SMTP id a15mr6304654pgk.309.1573152643162;
+        Thu, 07 Nov 2019 10:50:43 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f33sm3276919pgl.33.2019.11.07.10.50.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 10:50:42 -0800 (PST)
+Message-ID: <5dc46782.1c69fb81.3133c.8993@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-ID: <6963.1573152517.1@warthog.procyon.org.uk>
-Date:   Thu, 07 Nov 2019 18:48:37 +0000
-Message-ID: <6964.1573152517@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: B9RjU769P3eP409e546QHA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191106065017.22144-14-rnayak@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-14-rnayak@codeaurora.org>
+Subject: Re: [PATCH v4 13/14] arm64: dts: qcom: SC7180: Add node for rpmhcc clock driver
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Taniya Das <tdas@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 10:50:41 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> wrote:
+Quoting Rajendra Nayak (2019-11-05 22:50:16)
+> From: Taniya Das <tdas@codeaurora.org>
+>=20
+> Add node for rpmhcc clock driver.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
 
-> > Add an O_NOTIFICATION_PIPE flag that can be passed to pipe2() to indica=
-te
-> > that the pipe being created is going to be used for notifications.  Thi=
-s
-> > suppresses the use of splice(), vmsplice(), tee() and sendfile() on the
-> > pipe as calling iov_iter_revert() on a pipe when a kernel notification
-> > message has been inserted into the middle of a multi-buffer splice will=
- be
-> > messy.
->
-> How messy?
-
-Well, iov_iter_revert() on a pipe iterator simply walks backwards along the
-ring discarding the last N contiguous slots (where N is normally the number=
- of
-slots that were filled by whatever operation is being reverted).
-
-However, unless the code that transfers stuff into the pipe takes the spinl=
-ock
-spinlock and disables softirqs for the duration of its ring filling, what w=
-ere
-N contiguous slots may now have kernel notifications interspersed - even if=
- it
-has been holding the pipe mutex.
-
-So, now what do you do?  You have to free up just the buffers relevant to t=
-he
-iterator and then you can either compact down the ring to free up the space=
- or
-you can leave null slots and let the read side clean them up, thereby
-reducing the capacity of the pipe temporarily.
-
-Either way, iov_iter_revert() gets more complex and has to hold the spinloc=
-k.
-
-And if you don't take the spinlock whilst you're reverting, more notificati=
-ons
-can come in to make your life more interesting.
-
-There's also a problem with splicing out from a notification pipe that the
-messages are scribed onto preallocated buffers, but now the buffers need
-refcounts and, in any case, are of limited quantity.
-
-> And is there some way to make it impossible for this to happen?
-
-Yes.  That's what I'm doing by declaring the pipe to be unspliceable up fro=
-nt.
-
-> Adding a new flag to pipe2() to avoid messy kernel code seems
-> like a poor tradeoff.
-
-By far the easiest place to check whether a pipe can be spliced to is in
-get_pipe_info().  That's checking the file anyway.  After that, you can't m=
-ake
-the check until the pipe is locked.
-
-Furthermore, if it's not done upfront, the change to the pipe might happen
-during a splicing operation that's residing in pipe_wait()... which drops t=
-he
-pipe mutex.
-
-David
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
