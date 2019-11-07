@@ -2,145 +2,84 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33E8C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397D2C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994F0214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=softbankrobotics.com header.i=@softbankrobotics.com header.b="B+ofl552"
+	by mail.kernel.org (Postfix) with ESMTP id 0C5C02087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388847AbfKGPVk (ORCPT
+        id S2388746AbfKGPWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:21:40 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:39401 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729877AbfKGPVk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:21:40 -0500
-Received: by mail-yb1-f196.google.com with SMTP id q18so1062301ybq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:21:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=softbankrobotics.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
-        b=B+ofl552YPgYG6agLUogYSqjMLA2umxOSGn21yV1uEwT31g7O/XQa+bfA7zal3lIlY
-         n9FXKNbKV2UT5TdYkLKYcZGqkawb6fbGuxNB33XRqxyHnMdeSGvV1SKbkTwxOM29YHdK
-         CTrk65dnI2YI5M4ulWsWC41tW6TfgkvudMBFZV5zKvTuWt1b90gCuBZhce45pu1S6RSs
-         eJ4hxSJDrze95oS+eMpi8ZNIl7HKN76svCna85rwnt3IK9gDHoK/o5xm7E3YXvvjqKfz
-         zEfyMTwyNPUxJf3CRAuhXBm+RFlTF3JObOTVrzUSSy0OtEK3Fh5b6UnIiz4+n3DZYdru
-         9LLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
-        b=VkSUrg0Ib//v2UTEv2HB4xywTtZCvHuHzS0P2N8lktfSt/fWVlR5V7S6haAOi3oVaZ
-         XXwJDv3K/mTWjUG/OV94PLzFkdGt47WYguX1NXY4V+qCC73FWcq06v/NYzILw6SmWTEu
-         kOw1H70ftehOBp5SE5t9MMEdkSfYBT4IUSfFxPtXtfqR518Qrt3ta60jR7+pHBuEuEkL
-         6MV9AsKDu07/YjYd9nmDjesnxYQv225b4Ro/0qVX1hTmDtjz3rdO6Gc7Ya5ffS5K/JF2
-         zh/HiifihbGG0ugeMmJ4ydPy8V4b+V4xt6A4q+oAsO/zJbjsvS35LAGkFnC/QBTVfd+Y
-         IAeA==
-X-Gm-Message-State: APjAAAV2ssKb7mrTFkw0OneleflTvg2CtCltSG04OLU1ny6KKHYoiw5g
-        HZBP6cTsmGwN+I/w3mUi7hcCMTJWAzSjylziIrZyMQ6a3ik7R4b5mMUtB8ha7+ugfci/lCaJpU6
-        0J5S09W0oSTykc2d5zpt0HtdpAgw5Fxk=
-X-Google-Smtp-Source: APXvYqzRuP0KRS6kNgXL+k/rx599gZ4zi3AP+E1yvYWTX39dSFoKRwBgmZ5zlQmRjqF3lwYHFQD1X1VHI+OdjPHCIg4=
-X-Received: by 2002:a25:3b56:: with SMTP id i83mr3914294yba.496.1573140099285;
- Thu, 07 Nov 2019 07:21:39 -0800 (PST)
+        Thu, 7 Nov 2019 10:22:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34446 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726877AbfKGPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 10:22:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 60973B280;
+        Thu,  7 Nov 2019 15:22:50 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 16:22:48 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Joe Perches <joe@perches.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH] MAINTAINERS: Add VSPRINTF
+Message-ID: <20191107152247.kg3k72n63svph4j2@pathway.suse.cz>
+References: <20191031133337.9306-1-pmladek@suse.com>
+ <975eccc7-897c-fd14-ef4f-2486729eb67c@rasmusvillemoes.dk>
+ <20191031145112.thphlpnjvnykbzyy@pathway.suse.cz>
+ <20191031150952.3ag6qa5y4wvikd76@pathway.suse.cz>
+ <CAHp75VcBL8XFBSUs=UrdbfUQw535gHbTKQkHLE4Oj3H2_UKiWg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-From:   Julien Massot <jmassot@softbankrobotics.com>
-Date:   Thu, 7 Nov 2019 16:21:28 +0100
-Message-ID: <CADGp=QcwM8MhkRCjKz0wwHuz5vZGdfHOn0qYp4g_TBjHWzY6CA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] PCI: qcom: Add support for SDM845 PCIe
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcBL8XFBSUs=UrdbfUQw535gHbTKQkHLE4Oj3H2_UKiWg@mail.gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Sat 2019-11-02 12:18:18, Andy Shevchenko wrote:
+> On Thu, Oct 31, 2019 at 5:13 PM Petr Mladek <pmladek@suse.com> wrote:
+> > On Thu 2019-10-31 15:51:12, Petr Mladek wrote:
+> > > On Thu 2019-10-31 14:51:24, Rasmus Villemoes wrote:
+> > > > On 31/10/2019 14.33, Petr Mladek wrote:
+> > > > > printk maintainers have been reviewing patches against vsprintf code last
+> > > > > few years. Most changes have been committed via printk.git last two years.
+> > > > >
+> > > > > New group is used because printk() is not the only vsprintf() user.
+> > > > > Also the group of interested people is not the same.
+> > > >
+> > > > Can you add
+> > > >
+> > > > R: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > >
+> > > Sure. The more reviewers the better :-)
+> >
+> > I acutally wanted to add also
+> >
+> > R: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Ack
 
-On Thu, Nov 7, 2019 at 1:16 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> This adds support necessary for the two PCIe controllers found in Qualcom=
-m
-> SDM845.
+The updated patch is commited in printk.git, branch for-5.5.
 
-Thanks a lot the gen 3 PCIE works on my 845 platform.
-Tested-by: Julien Massot <jmassot@softbankrobotics.com>
+You can check it at
+https://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk.git/commit/?h=for-5.5&id=9d95f0ce36df70e6d7b1f658277c772f589acd84
 
---=20
-
-
-*This email and any attachment thereto are confidential and intended=20
-solely for the use of the individual or entity to whom they are addressed.
-
-If you are not the intended recipient, please be advised that disclosing,=
-=20
-copying, distributing or taking any action in reliance on the contents of=
-=20
-this email is strictly prohibited. In such case, please immediately advise=
-=20
-the sender, and delete all copies and attachment from your system.
-This=20
-email shall not be construed and is not tantamount to an offer, an=20
-acceptance of offer, or an agreement by SoftBank Robotics Europe on any=20
-discussion or contractual document whatsoever. No employee or agent is=20
-authorized to represent or bind SoftBank Robotics Europe to third parties=
-=20
-by email, or act on behalf of SoftBank Robotics Europe by email, without=20
-express written confirmation by SoftBank Robotics Europe=E2=80=99 duly auth=
-orized=20
-representatives.
-*
-
-
-
-*Ce message =C3=A9lectronique et =C3=A9ventuelles pi=C3=A8ces=20
-jointes sont confidentiels, et exclusivement destin=C3=A9s =C3=A0 la person=
-ne ou=20
-l'entit=C3=A9 =C3=A0 qui ils sont adress=C3=A9s.
-Si vous n'=C3=AAtes pas le destinataire vis=C3=A9,=20
-vous =C3=AAtes pri=C3=A9 de ne pas divulguer, copier, distribuer ou prendre=
- toute=20
-d=C3=A9cision sur la foi de ce message =C3=A9lectronique. Merci d'en aviser=
-=20
-imm=C3=A9diatement l'exp=C3=A9diteur et de supprimer toutes les copies et =
-=C3=A9ventuelles=20
-pi=C3=A8ces jointes de votre syst=C3=A8me.
-Ce message =C3=A9lectronique n'=C3=A9quivaut pas =C3=A0=20
-une offre, =C3=A0 une acceptation d=E2=80=99offre, ou =C3=A0 un accord de S=
-oftBank Robotics=20
-Europe sur toute discussion ou document contractuel quel qu=E2=80=99il soit=
-, et ne=20
-peut =C3=AAtre interpr=C3=A9t=C3=A9 comme tel. Aucun employ=C3=A9 ou agent =
-de SoftBank Robotics=20
-Europe n'est autoris=C3=A9 =C3=A0 repr=C3=A9senter ou =C3=A0 engager la soc=
-i=C3=A9t=C3=A9 par email, ou =C3=A0=20
-agir au nom et pour le compte de la soci=C3=A9t=C3=A9 par email, sans qu=E2=
-=80=99une=20
-confirmation =C3=A9crite soit donn=C3=A9e par le repr=C3=A9sentant l=C3=A9g=
-al de SoftBank=20
-Robotics Europe ou par toute autre personne ayant re=C3=A7u d=C3=A9l=C3=A9g=
-ation de=20
-pouvoir appropri=C3=A9e.
-*
-
-**
+Best Regards,
+Petr
