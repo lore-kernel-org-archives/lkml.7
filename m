@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D357C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B672C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAC6217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2538A2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733279AbfKGELl (ORCPT
+        id S1733287AbfKGELr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:11:41 -0500
-Received: from mga14.intel.com ([192.55.52.115]:42670 "EHLO mga14.intel.com"
+        Wed, 6 Nov 2019 23:11:47 -0500
+Received: from mga06.intel.com ([134.134.136.31]:40139 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733082AbfKGELl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 23:11:41 -0500
+        id S1727279AbfKGELr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:11:47 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:11:41 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:11:47 -0800
 X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
-   d="scan'208";a="403972229"
+   d="scan'208";a="402608938"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:11:40 -0800
-Subject: [PATCH 09/16] dax: Create a dax device_type
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:11:46 -0800
+Subject: [PATCH 10/16] dax: Simplify root read-only definition for the
+ 'resource' attribute
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-nvdimm@lists.01.org
 Cc:     Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>, peterz@infradead.org,
         dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org
-Date:   Wed, 06 Nov 2019 19:57:23 -0800
-Message-ID: <157309904365.1582359.5451327195246651379.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 06 Nov 2019 19:57:29 -0800
+Message-ID: <157309904959.1582359.7281180042781955506.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
@@ -47,40 +48,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the open coded release method and attribute groups to a 'struct
-device_type' instance.
+Rather than update the permission in ->is_visible() set the permission
+directly at declaration time.
 
 Cc: Ira Weiny <ira.weiny@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dax/bus.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/dax/bus.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 8fafbeab510a..f3e6e00ece40 100644
+index f3e6e00ece40..ce6d648d7670 100644
 --- a/drivers/dax/bus.c
 +++ b/drivers/dax/bus.c
-@@ -373,6 +373,11 @@ static void dev_dax_release(struct device *dev)
- 	kfree(dev_dax);
+@@ -309,7 +309,7 @@ static ssize_t resource_show(struct device *dev,
+ 
+ 	return sprintf(buf, "%#llx\n", dev_dax_resource(dev_dax));
+ }
+-static DEVICE_ATTR_RO(resource);
++static DEVICE_ATTR(resource, 0400, resource_show, NULL);
+ 
+ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 		char *buf)
+@@ -329,8 +329,6 @@ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
+ 
+ 	if (a == &dev_attr_target_node.attr && dev_dax_target_node(dev_dax) < 0)
+ 		return 0;
+-	if (a == &dev_attr_resource.attr)
+-		return 0400;
+ 	return a->mode;
  }
  
-+static const struct device_type dev_dax_type = {
-+	.release = dev_dax_release,
-+	.groups = dax_attribute_groups,
-+};
-+
- static void unregister_dev_dax(void *dev)
- {
- 	struct dev_dax *dev_dax = to_dev_dax(dev);
-@@ -430,8 +435,7 @@ struct dev_dax *__devm_create_dev_dax(struct dax_region *dax_region, int id,
- 	else
- 		dev->class = dax_class;
- 	dev->parent = parent;
--	dev->groups = dax_attribute_groups;
--	dev->release = dev_dax_release;
-+	dev->type = &dev_dax_type;
- 	dev_set_name(dev, "dax%d.%d", dax_region->id, id);
- 
- 	rc = device_add(dev);
 
