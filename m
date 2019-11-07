@@ -2,510 +2,96 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38804C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885CEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026162067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4620A206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573132012;
+	bh=31tH8imhyAu65xFR993XAkvnUKdU7S1CP1JaRPRgook=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MtbSxcZRMqIOAh5BUT25MUZjptDIwAhA2ZSlScbX6YjBPtOG85i3AwPhH4UTvu+l9
+	 Z/BUI8BJmzmqtelpyv2GGy00nONoMSCvwZYa1whItRRzjcJtcC/qHB96ZFv3yglpsy
+	 PTky7AnaB4p14Q462R+RUmK2GINJOjG9h2yXm8II=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388807AbfKGNF0 (ORCPT
+        id S2388757AbfKGNGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:05:26 -0500
-Received: from mga03.intel.com ([134.134.136.65]:9189 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733250AbfKGNFZ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:05:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 05:05:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
-   d="scan'208";a="214592559"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.212.56]) ([10.254.212.56])
-  by orsmga002.jf.intel.com with ESMTP; 07 Nov 2019 05:05:21 -0800
-Subject: Re: [PATCH v7 4/7] perf util: Support block formats with
- compare/sort/display
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-References: <20191107074719.26139-1-yao.jin@linux.intel.com>
- <20191107074719.26139-5-yao.jin@linux.intel.com>
- <20191107124538.GC11372@kernel.org>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <37278655-c021-113b-4dcb-80af4ab638d7@linux.intel.com>
-Date:   Thu, 7 Nov 2019 21:05:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 08:06:51 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55974 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfKGNGv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:06:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=31tH8imhyAu65xFR993XAkvnUKdU7S1CP1JaRPRgook=; b=eHLSutooyCgBVdcqx8X/iUgci
+        3vaFocBU/uewl/9xNXdLiOB/QlBGLufMrd0QfKYhdBtIkRVOXog/tRqbx2cneXxaTlBWtqWefBu1c
+        1P8uOu48nIvAIRYrl7zv84Ahnz1LJJTUDASqncItmJ9LWMPbq4/Py5qJWhVUj23PoV+Js=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iShUq-0004MO-V5; Thu, 07 Nov 2019 13:06:45 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2584C27431AF; Thu,  7 Nov 2019 13:06:44 +0000 (GMT)
+Date:   Thu, 7 Nov 2019 13:06:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     daniel.thompson@linaro.org, arnd@arndb.de,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, baohua@kernel.org,
+        stephan@gerhold.net, Barry Song <Baohua.Song@csr.com>
+Subject: Re: [PATCH 1/1] mfd: mfd-core: Honour Device Tree's request to
+ disable a child-device
+Message-ID: <20191107130644.GF6159@sirena.co.uk>
+References: <20191107111950.1189-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191107124538.GC11372@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="b8GWCKCLzrXbuNet"
+Content-Disposition: inline
+In-Reply-To: <20191107111950.1189-1-lee.jones@linaro.org>
+X-Cookie: I've read SEVEN MILLION books!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--b8GWCKCLzrXbuNet
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/7/2019 8:45 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Nov 07, 2019 at 03:47:16PM +0800, Jin Yao escreveu:
->> This patch provides helper routines to support new
->> columns for block info output.
-> 
-> This breaks bisection, some of my build containers complained about:
-> 
-> util/block-info.c:395:20: error: unused function 'set_fmt' [-Werror,-Wunused-function]
-> static inline void set_fmt(struct block_fmt *block_fmt,
->                     ^
-> 1 error generated.
-> mv: can't rename '/tmp/build/perf/util/.block-info.o.tmp': No such file or directory
-> 
-> 
-> Because you add a static inline function to a .c file and don't use it,
-> I'll try moving it to when it finally gets used.
->   
+On Thu, Nov 07, 2019 at 11:19:50AM +0000, Lee Jones wrote:
+> Until now, MFD has assumed all child devices passed to it (via
+> mfd_cells) are to be registered. It does not take into account
+> requests from Device Tree and the like to disable child devices
+> on a per-platform basis.
 
-Oh, very sorry, my fault. I should delete the set_fmt(). In new version, 
-it's not used. But unfortunately my build machine didn't report the 
-error. :(
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-Thanks
-Jin Yao
+--b8GWCKCLzrXbuNet
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> The new columns are:
->>
->> Sampled Cycles%
->> Sampled Cycles
->> Avg Cycles%
->> Avg Cycles
->> [Program Block Range]
->> Shared Object
->>
->>   v5:
->>   ---
->>   1. Move more block related functions from builtin-report.c to
->>      block-info.c
->>
->>   2. Set ms (map+sym) in block hist_entry. Because this info
->>      is needed for reporting the block range (i.e. source line)
->>
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->> ---
->>   tools/perf/util/block-info.c | 317 +++++++++++++++++++++++++++++++++++
->>   tools/perf/util/block-info.h |  33 +++-
->>   tools/perf/util/hist.c       |   4 +
->>   3 files changed, 352 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
->> index b9954a32b8f4..1242c3a33509 100644
->> --- a/tools/perf/util/block-info.c
->> +++ b/tools/perf/util/block-info.c
->> @@ -6,6 +6,40 @@
->>   #include "sort.h"
->>   #include "annotate.h"
->>   #include "symbol.h"
->> +#include "dso.h"
->> +#include "map.h"
->> +#include "srcline.h"
->> +#include "evlist.h"
->> +
->> +static struct block_header_column{
->> +	const char *name;
->> +	int width;
->> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
->> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT] = {
->> +		.name = "Sampled Cycles%",
->> +		.width = 15,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
->> +		.name = "Sampled Cycles",
->> +		.width = 14,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
->> +		.name = "Avg Cycles%",
->> +		.width = 11,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
->> +		.name = "Avg Cycles",
->> +		.width = 10,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
->> +		.name = "[Program Block Range]",
->> +		.width = 70,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
->> +		.name = "Shared Object",
->> +		.width = 20,
->> +	}
->> +};
->>   
->>   struct block_info *block_info__get(struct block_info *bi)
->>   {
->> @@ -127,3 +161,286 @@ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
->>   
->>   	return 0;
->>   }
->> +
->> +static int block_column_header(struct perf_hpp_fmt *fmt,
->> +			       struct perf_hpp *hpp,
->> +			       struct hists *hists __maybe_unused,
->> +			       int line __maybe_unused,
->> +			       int *span __maybe_unused)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->> +			 block_fmt->header);
->> +}
->> +
->> +static int block_column_width(struct perf_hpp_fmt *fmt,
->> +			      struct perf_hpp *hpp __maybe_unused,
->> +			      struct hists *hists __maybe_unused)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +
->> +	return block_fmt->width;
->> +}
->> +
->> +static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
->> +					struct perf_hpp *hpp,
->> +					struct hist_entry *he)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +	struct block_info *bi = he->block_info;
->> +	double ratio = 0.0;
->> +	char buf[16];
->> +
->> +	if (block_fmt->total_cycles)
->> +		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
->> +
->> +	sprintf(buf, "%.2f%%", 100.0 * ratio);
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
->> +}
->> +
->> +static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
->> +					   struct hist_entry *left,
->> +					   struct hist_entry *right)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +	struct block_info *bi_l = left->block_info;
->> +	struct block_info *bi_r = right->block_info;
->> +	double l, r;
->> +
->> +	if (block_fmt->total_cycles) {
->> +		l = ((double)bi_l->cycles /
->> +			(double)block_fmt->total_cycles) * 100000.0;
->> +		r = ((double)bi_r->cycles /
->> +			(double)block_fmt->total_cycles) * 100000.0;
->> +		return (int64_t)l - (int64_t)r;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void cycles_string(u64 cycles, char *buf, int size)
->> +{
->> +	if (cycles >= 1000000)
->> +		scnprintf(buf, size, "%.1fM", (double)cycles / 1000000.0);
->> +	else if (cycles >= 1000)
->> +		scnprintf(buf, size, "%.1fK", (double)cycles / 1000.0);
->> +	else
->> +		scnprintf(buf, size, "%1d", cycles);
->> +}
->> +
->> +static int block_cycles_lbr_entry(struct perf_hpp_fmt *fmt,
->> +				  struct perf_hpp *hpp, struct hist_entry *he)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +	struct block_info *bi = he->block_info;
->> +	char cycles_buf[16];
->> +
->> +	cycles_string(bi->cycles_aggr, cycles_buf, sizeof(cycles_buf));
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->> +			 cycles_buf);
->> +}
->> +
->> +static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
->> +				  struct perf_hpp *hpp, struct hist_entry *he)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +	struct block_info *bi = he->block_info;
->> +	double ratio = 0.0;
->> +	u64 avg;
->> +	char buf[16];
->> +
->> +	if (block_fmt->block_cycles && bi->num_aggr) {
->> +		avg = bi->cycles_aggr / bi->num_aggr;
->> +		ratio = (double)avg / (double)block_fmt->block_cycles;
->> +	}
->> +
->> +	sprintf(buf, "%.2f%%", 100.0 * ratio);
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
->> +}
->> +
->> +static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
->> +				  struct perf_hpp *hpp,
->> +				  struct hist_entry *he)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +	struct block_info *bi = he->block_info;
->> +	char cycles_buf[16];
->> +
->> +	cycles_string(bi->cycles_aggr / bi->num_aggr, cycles_buf,
->> +		      sizeof(cycles_buf));
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->> +			 cycles_buf);
->> +}
->> +
->> +static int block_range_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->> +			     struct hist_entry *he)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +	struct block_info *bi = he->block_info;
->> +	char buf[128];
->> +	char *start_line, *end_line;
->> +
->> +	symbol_conf.disable_add2line_warn = true;
->> +
->> +	start_line = map__srcline(he->ms.map, bi->sym->start + bi->start,
->> +				  he->ms.sym);
->> +
->> +	end_line = map__srcline(he->ms.map, bi->sym->start + bi->end,
->> +				he->ms.sym);
->> +
->> +	if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
->> +		scnprintf(buf, sizeof(buf), "[%s -> %s]",
->> +			  start_line, end_line);
->> +	} else {
->> +		scnprintf(buf, sizeof(buf), "[%7lx -> %7lx]",
->> +			  bi->start, bi->end);
->> +	}
->> +
->> +	free_srcline(start_line);
->> +	free_srcline(end_line);
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
->> +}
->> +
->> +static int block_dso_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->> +			   struct hist_entry *he)
->> +{
->> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->> +	struct map *map = he->ms.map;
->> +
->> +	if (map && map->dso) {
->> +		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->> +				 map->dso->short_name);
->> +	}
->> +
->> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->> +			 "[unknown]");
->> +}
->> +
->> +static void init_block_header(struct block_fmt *block_fmt)
->> +{
->> +	struct perf_hpp_fmt *fmt = &block_fmt->fmt;
->> +
->> +	BUG_ON(block_fmt->idx >= PERF_HPP_REPORT__BLOCK_MAX_INDEX);
->> +
->> +	block_fmt->header = block_columns[block_fmt->idx].name;
->> +	block_fmt->width = block_columns[block_fmt->idx].width;
->> +
->> +	fmt->header = block_column_header;
->> +	fmt->width = block_column_width;
->> +}
->> +
->> +static void hpp_register(struct block_fmt *block_fmt, int idx,
->> +			 struct perf_hpp_list *hpp_list)
->> +{
->> +	struct perf_hpp_fmt *fmt = &block_fmt->fmt;
->> +
->> +	block_fmt->idx = idx;
->> +	INIT_LIST_HEAD(&fmt->list);
->> +	INIT_LIST_HEAD(&fmt->sort_list);
->> +
->> +	switch (idx) {
->> +	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
->> +		fmt->entry = block_total_cycles_pct_entry;
->> +		fmt->cmp = block_info__cmp;
->> +		fmt->sort = block_total_cycles_pct_sort;
->> +		break;
->> +	case PERF_HPP_REPORT__BLOCK_LBR_CYCLES:
->> +		fmt->entry = block_cycles_lbr_entry;
->> +		break;
->> +	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
->> +		fmt->entry = block_cycles_pct_entry;
->> +		break;
->> +	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
->> +		fmt->entry = block_avg_cycles_entry;
->> +		break;
->> +	case PERF_HPP_REPORT__BLOCK_RANGE:
->> +		fmt->entry = block_range_entry;
->> +		break;
->> +	case PERF_HPP_REPORT__BLOCK_DSO:
->> +		fmt->entry = block_dso_entry;
->> +		break;
->> +	default:
->> +		return;
->> +	}
->> +
->> +	init_block_header(block_fmt);
->> +	perf_hpp_list__column_register(hpp_list, fmt);
->> +}
->> +
->> +static void register_block_columns(struct perf_hpp_list *hpp_list,
->> +				   struct block_fmt *block_fmts)
->> +{
->> +	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++)
->> +		hpp_register(&block_fmts[i], i, hpp_list);
->> +}
->> +
->> +static void init_block_hist(struct block_hist *bh, struct block_fmt *block_fmts)
->> +{
->> +	__hists__init(&bh->block_hists, &bh->block_list);
->> +	perf_hpp_list__init(&bh->block_list);
->> +	bh->block_list.nr_header_lines = 1;
->> +
->> +	register_block_columns(&bh->block_list, block_fmts);
->> +
->> +	perf_hpp_list__register_sort_field(&bh->block_list,
->> +		&block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
->> +}
->> +
->> +static inline void set_fmt(struct block_fmt *block_fmt,
->> +			   u64 total_cycles, u64 block_cycles)
->> +{
->> +	block_fmt->total_cycles = total_cycles;
->> +	block_fmt->block_cycles = block_cycles;
->> +}
->> +
->> +static void process_block_report(struct hists *hists,
->> +				 struct block_report *block_report,
->> +				 u64 total_cycles)
->> +{
->> +	struct rb_node *next = rb_first_cached(&hists->entries);
->> +	struct block_hist *bh = &block_report->hist;
->> +	struct hist_entry *he;
->> +
->> +	init_block_hist(bh, block_report->fmts);
->> +
->> +	while (next) {
->> +		he = rb_entry(next, struct hist_entry, rb_node);
->> +		block_info__process_sym(he, bh, &block_report->cycles,
->> +					total_cycles);
->> +		next = rb_next(&he->rb_node);
->> +	}
->> +
->> +	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++) {
->> +		block_report->fmts[i].total_cycles = total_cycles;
->> +		block_report->fmts[i].block_cycles = block_report->cycles;
->> +	}
->> +
->> +	hists__output_resort(&bh->block_hists, NULL);
->> +}
->> +
->> +struct block_report *block_info__create_report(struct evlist *evlist,
->> +					       u64 total_cycles)
->> +{
->> +	struct block_report *block_reports;
->> +	int nr_hists = evlist->core.nr_entries, i = 0;
->> +	struct evsel *pos;
->> +
->> +	block_reports = calloc(nr_hists, sizeof(struct block_report));
->> +	if (!block_reports)
->> +		return NULL;
->> +
->> +	evlist__for_each_entry(evlist, pos) {
->> +		struct hists *hists = evsel__hists(pos);
->> +
->> +		process_block_report(hists, &block_reports[i], total_cycles);
->> +		i++;
->> +	}
->> +
->> +	return block_reports;
->> +}
->> diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
->> index d55dfc2fda6f..b5266588d476 100644
->> --- a/tools/perf/util/block-info.h
->> +++ b/tools/perf/util/block-info.h
->> @@ -4,8 +4,9 @@
->>   
->>   #include <linux/types.h>
->>   #include <linux/refcount.h>
->> -#include "util/hist.h"
->> -#include "util/symbol.h"
->> +#include "hist.h"
->> +#include "symbol.h"
->> +#include "sort.h"
->>   
->>   struct block_info {
->>   	struct symbol		*sym;
->> @@ -20,6 +21,31 @@ struct block_info {
->>   	refcount_t		refcnt;
->>   };
->>   
->> +struct block_fmt {
->> +	struct perf_hpp_fmt	fmt;
->> +	int			idx;
->> +	int			width;
->> +	const char		*header;
->> +	u64			total_cycles;
->> +	u64			block_cycles;
->> +};
->> +
->> +enum {
->> +	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
->> +	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
->> +	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
->> +	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
->> +	PERF_HPP_REPORT__BLOCK_RANGE,
->> +	PERF_HPP_REPORT__BLOCK_DSO,
->> +	PERF_HPP_REPORT__BLOCK_MAX_INDEX
->> +};
->> +
->> +struct block_report {
->> +	struct block_hist	hist;
->> +	u64			cycles;
->> +	struct block_fmt	fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
->> +};
->> +
->>   struct block_hist;
->>   
->>   struct block_info *block_info__new(void);
->> @@ -40,4 +66,7 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
->>   int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
->>   			    u64 *block_cycles_aggr, u64 total_cycles);
->>   
->> +struct block_report *block_info__create_report(struct evlist *evlist,
->> +					       u64 total_cycles);
->> +
->>   #endif /* __PERF_BLOCK_H */
->> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
->> index 0e27d6830011..7cf137b0451b 100644
->> --- a/tools/perf/util/hist.c
->> +++ b/tools/perf/util/hist.c
->> @@ -758,6 +758,10 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
->>   	struct hist_entry entry = {
->>   		.block_info = block_info,
->>   		.hists = hists,
->> +		.ms = {
->> +			.map = al->map,
->> +			.sym = al->sym,
->> +		},
->>   	}, *he = hists__findnew_entry(hists, &entry, al, false);
->>   
->>   	return he;
->> -- 
->> 2.17.1
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3EFuMACgkQJNaLcl1U
+h9DOfgf1EfrL7iW8jYtk5Biqjwei6g5GDnp8DyidE4DXUkMjga1au5u+4zBxmuwG
+fwKP2lcJOi5mFF71oN83bftFA2tQatKTqhQJH9sbd79xKpqknQNknos/38eZiikc
+3mmCJ/lZZuX2HkL3Yyk8IN8JFCO8KayOp07AfBM/6jMpBXxJfuM+DOi5Xjajdf0r
+VrOhwOp937yMePl8MwIB3l9F1xYB5Sf1CJkAOa85ir+reKIeQlwFOfN7bpkl6N3P
+nGdvkRcaT1bcDTKmyuLrU9eLb9sPxD1lz9etFroyg3Cyjz8qU8cWXlBPpGuu39pi
+D+SXLyMrkGYOUaWgEYmrzC2dH2vg
+=n1Zs
+-----END PGP SIGNATURE-----
+
+--b8GWCKCLzrXbuNet--
