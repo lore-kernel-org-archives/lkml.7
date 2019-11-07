@@ -2,359 +2,124 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A73C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF309C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D078C2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C297921882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HFW77gim"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HtcOTn3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbfKGT0e (ORCPT
+        id S1726374AbfKGT2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:26:34 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60824 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfKGT0e (ORCPT
+        Thu, 7 Nov 2019 14:28:01 -0500
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:38516 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfKGT2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:26:34 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C3E7971D;
-        Thu,  7 Nov 2019 20:26:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1573154791;
-        bh=BTjvrnkouWPguQyJ5E5PL72S3gkRE72vanKVV4Lz0HY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HFW77gimpx+nQZiUUzjKYt4Boqsz8CFp7kaCMQjJJCjHaUkosan5zswJZIcVbuQCB
-         8Sp4mVGgsdFy0A6YE3rvMcI9lcvBJxUQSLyxO9XqjLCV1oS7+V/nWOAxbtd0g+I8D6
-         I9p4JYi9j/OChFuJYYK97Gyfw/AxfDzPl0Ll9x7U=
-Date:   Thu, 7 Nov 2019 21:26:21 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, sam@ravnborg.org
-Subject: Re: [PATCH v3 3/8] drm: Add bus timings helper
-Message-ID: <20191107192621.GH24983@pendragon.ideasonboard.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1567017402-5895-4-git-send-email-fabrizio.castro@bp.renesas.com>
+        Thu, 7 Nov 2019 14:28:00 -0500
+Received: by mail-wm1-f46.google.com with SMTP id z19so3757932wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:27:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Gv7piqE0NJN9u+0/VWapMYLQDSNoGwEvnT95iHm9RBo=;
+        b=HtcOTn3ZWuljOuXCKi45eCAIudeUIys2Dkd9s1VzbtZBEhaaoS8zOnRZwxOfvhBLUL
+         20VFcYDA4SLxa8GFKo1Lj+z4zT43fdIOMwT/N+cJe98m9j8UdntCOsyL0JEGk4otgB5l
+         RIFqOT130uNTHlN/Dt2C1kIeTZpmdasLP/YMFnmD6M1fxfQd9wtHu1U2WjswYfNyvrea
+         r6usN/YEMsHo/YZeJAJNdfU8syPHGIo9fa8me7orjakE58e3i+Dm9qXVSDoNbAmv+kJb
+         nm2WOuXdWaqLkoDqMGTfP8U5ac40hmssQCOifSwsQnl4H/N3SGk0jWeHexVorbAqXxVb
+         99Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gv7piqE0NJN9u+0/VWapMYLQDSNoGwEvnT95iHm9RBo=;
+        b=cevlnzBe85Shw9mDO/fyDhAYBlKfDgmveiKHPmlxEclJNLIllMyA4vzoXZiV5+2yRa
+         d+3PB9Roxb2FMpahOChqmFkC/Ke7Iqmh25bjkdansMshvbdavLgr6Ar3QIzLWdh30if5
+         Va94pskT+Tt4PnzMAUg7bgGGvT/qCeKsDH8t66Di5Yco/MruH415m3gmlFarYA7ZiWiV
+         JtdlnK9O1n2j2qsKq3d0FxCZc8sQiN8k2KdEbnG77sdEqygkEM6T8PqZpWQsFrgVXB2M
+         oxsdZwYNrzIoDcuXAUS8vUs2WNHOZ7HZJbDLdiiPtMW+d5KudPEVEc8i4LEvtJ0r1vnI
+         Z53g==
+X-Gm-Message-State: APjAAAVBD8MwfbuquQ+4i9Sl9zi4ljykRIf8Sqh2GSOMnnXrPvmvBzDC
+        bgQjre2D1Moz2rHLHoYPd98+cg==
+X-Google-Smtp-Source: APXvYqxREIEDk8O6HqF7vSZ9tSUM1PBDhhLxYdS4Yag/N3kjj8SeQRoalxsyu/NnPxvHHEwkS9Yp1g==
+X-Received: by 2002:a1c:6405:: with SMTP id y5mr4840693wmb.175.1573154877932;
+        Thu, 07 Nov 2019 11:27:57 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id j67sm3096216wmb.43.2019.11.07.11.27.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 11:27:57 -0800 (PST)
+Date:   Thu, 7 Nov 2019 19:27:53 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, linux-kernel@vger.kernel.org,
+        aaron.lwe@gmail.com, valentin.schneider@arm.com, mingo@kernel.org,
+        pauld@redhat.com, jdesfossez@digitalocean.com,
+        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        kernel-team@android.com, john.stultz@linaro.org
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+Message-ID: <20191107192753.GA55494@google.com>
+References: <20191028174603.GA246917@google.com>
+ <20191106120525.GX4131@hirez.programming.kicks-ass.net>
+ <33643a5b-1b83-8605-2347-acd1aea04f93@virtuozzo.com>
+ <20191106165437.GX4114@hirez.programming.kicks-ass.net>
+ <20191106172737.GM5671@hirez.programming.kicks-ass.net>
+ <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
+ <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
+ <20191107153848.GA31774@google.com>
+ <20191107184356.GF4114@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567017402-5895-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20191107184356.GF4114@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Wed, Aug 28, 2019 at 07:36:37PM +0100, Fabrizio Castro wrote:
-> Helper to provide bus timing information.
-
-You may want to expand this a bit. And actually fix it too, as the
-helper you introduce isn't related to timings (same for the subject
-line).
-
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Thursday 07 Nov 2019 at 19:43:56 (+0100), Peter Zijlstra wrote:
+> But you mean something like:
 > 
-> ---
-> v2->v3:
-> * new patch
-> ---
->  drivers/gpu/drm/Makefile          |  3 +-
->  drivers/gpu/drm/drm_bus_timings.c | 97 +++++++++++++++++++++++++++++++++++++++
->  include/drm/drm_bus_timings.h     | 21 +++++++++
->  3 files changed, 120 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/drm_bus_timings.c
->  create mode 100644 include/drm/drm_bus_timings.h
+> 	for (class = prev->sched_class; class; class = class->next) {
+> 		if (class->balance(rq, rf))
+> 			break;
+> 	}
 > 
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index 9f0d2ee..a270063 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -17,7 +17,8 @@ drm-y       :=	drm_auth.o drm_cache.o \
->  		drm_plane.o drm_color_mgmt.o drm_print.o \
->  		drm_dumb_buffers.o drm_mode_config.o drm_vblank.o \
->  		drm_syncobj.o drm_lease.o drm_writeback.o drm_client.o \
-> -		drm_client_modeset.o drm_atomic_uapi.o drm_hdcp.o
-> +		drm_client_modeset.o drm_atomic_uapi.o drm_hdcp.o \
-> +		drm_bus_timings.o
->  
->  drm-$(CONFIG_DRM_LEGACY) += drm_legacy_misc.o drm_bufs.o drm_context.o drm_dma.o drm_scatter.o drm_lock.o
->  drm-$(CONFIG_DRM_LIB_RANDOM) += lib/drm_random.o
-> diff --git a/drivers/gpu/drm/drm_bus_timings.c b/drivers/gpu/drm/drm_bus_timings.c
-> new file mode 100644
-> index 0000000..e2ecd22
-> --- /dev/null
-> +++ b/drivers/gpu/drm/drm_bus_timings.c
-> @@ -0,0 +1,97 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <drm/drm_bus_timings.h>
-> +#include <linux/errno.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/of.h>
-> +#include <linux/types.h>
-> +
-> +#define DRM_OF_LVDS_ODD		1
-> +#define DRM_OF_LVDS_EVEN	2
-> +
-> +static int drm_of_lvds_get_port_pixels_type(struct device_node *port_node)
-> +{
-> +	bool even_pixels, odd_pixels;
-> +
-> +	even_pixels = of_property_read_bool(port_node, "dual-lvds-even-pixels");
-> +	odd_pixels = of_property_read_bool(port_node, "dual-lvds-odd-pixels");
-> +	return  even_pixels * DRM_OF_LVDS_EVEN + odd_pixels * DRM_OF_LVDS_ODD;
+> 	put_prev_task(rq, prev);
+> 
+> 	for_each_class(class) {
+> 		p = class->pick_next_task(rq);
+> 		if (p)
+> 			return p;
+> 	}
+> 
+> 	BUG();
+> 
+> like?
 
-s/  / /
+Right, something like that, though what I had was basically doing the
+pull from within the pick_next_task_*() functions directly, like we were
+doing before. I'm now seeing how easy it is to get this wrong, and that
+even good-looking code in this area can be broken in very subtle ways,
+so I didn't feel comfortable refactoring again so close to rc7. If you
+feel more confident, I'm more than happy to test a patch implemeting the
+above :)
 
-But I would make these bitflags.
+> I had convinced myself we didn't need that, but that DL to RT case is
+> pesky and might require it after all.
 
-enum drm_of_lvds_pixels {
-	DRM_OF_LVDS_EVEN = BIT(0),
-	DRM_OF_LVDS_ODD = BIT(1),
-};
+Yep, I don't see a way to avoid iterating all classes to do the balance,
+one way or another ...
 
-static int drm_of_lvds_get_port_pixels_type(struct device_node *port)
-{
-	bool even_pixels = of_property_read_bool(port, "dual-lvds-even-pixels");
-	bool odd_pixels = of_property_read_bool(port, "dual-lvds-odd-pixels");
-
-	return (even_pixels ? DRM_OF_LVDS_EVEN : 0) |
-	       (odd_pixels ? DRM_OF_LVDS_ODD : 0);
-}
-
-> +}
-> +
-> +/**
-> + * drm_of_lvds_get_dual_link_configuration - get the dual-LVDS configuration
-
-Should we name this drm_of_lvds_get_dual_link_pixel_order to better
-reflect its purpose ?
-
-> + * @p1: device tree node corresponding to the first port of the source
-> + * @p2: device tree node corresponding to the second port of the source
-
-Maybe port1 and port2 to make this more explicit ?
-
-> + *
-> + * An LVDS dual-link bus is made of two connections, even pixels transit on one
-> + * connection, and odd pixels transit on the other connection.
-
-To match the DT bindings documentation, I would recommand
-
-"An LVDS dual-link connection is made of two links, with even pixels
-transitting on one link, and odd pixels on the other link."
-
-> + * This function walks the DT (from the source ports to the sink ports) looking
-> + * for a dual-LVDS bus. A dual-LVDS bus is identfied by markers found on the DT
-> + * ports of the sink device(s). If such a bus is found, this function returns
-> + * its configuration (either p1 connected to the even pixels port and p2
-> + * connected to the odd pixels port, or p1 connected to the odd pixels port and
-> + * p2 connected to the even pixels port).
-
-"walking the DT" sounds like the function goes through the whole graph.
-How about the following ?
-
-/**
- * drm_of_lvds_get_dual_link_pixel_order - Get LVDS dual-link pixel order
- * @port1: First DT port node of the Dual-link LVDS source
- * @port2: Second DT port node of the Dual-link LVDS source
- *
- * An LVDS dual-link connection is made of two links, with even pixels
- * transitting on one link, and odd pixels on the other link. This function
- * returns, for two ports of an LVDS dual-link source, which port shall transmit
- * the even and off pixels, based on the requirements of the connected sink.
- *
- * The pixel order is determined from the dual-lvds-even-pixels and
- * dual-lvds-odd-pixels properties in the sink's DT port nodes. If those
- * properties are not present, or if their usage is not valid, this function
- * returns -EINVAL.
- *
- * @port1 and @port2 are typically DT sibling nodes, but may have different
- * parents when, for instance, two separate LVDS encoders carry the even and odd
- * pixels.
- *
- * Return:
- * * DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS - @port1 carries even pixels and @port2
- *   carries odd pixels
- * * DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS - @port1 carries odd pixels and @port1
- *   carries even pixels
- * * -EINVAL - @port1 and @port2 are not connected to a dual-link LVDS sink, or
- *   the sink configuration is invalid
- */
-
-We could also add -EPIPE as a return code for the case where port1 or
-port2 are not connected.
-
-> + *
-> + * Return: A code describing the bus configuration when a valid dual-LVDS bus is
-> + * found, or an error code when no valid dual-LVDS bus is found
-> + *
-> + * Possible codes for the bus configuration are:
-> + *
-> + * - DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS: when p1 is connected to the even pixels
-> + *   port and p2 is connected to the odd pixels port
-> + * - DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS: when p1 is connected to the odd pixels
-> + *   port and p2 is connected to the even pixels port
-> + *
-> + */
-> +int drm_of_lvds_get_dual_link_configuration(const struct device_node *p1,
-> +					    const struct device_node *p2)
-> +{
-> +	struct device_node *remote_p1 = NULL, *remote_p2 = NULL;
-> +	struct device_node *parent_p1 = NULL, *parent_p2 = NULL;
-
-There's no need to initialize those two variables.
-
-> +	struct device_node *ep1 = NULL, *ep2 = NULL;
-> +	u32 reg_p1, reg_p2;
-> +	int ret = -EINVAL, remote_p1_pt, remote_p2_pt;
-
-Please split this last line, as it otherwise hides the initialization of
-ret in the middle.
-
-> +
-> +	if (!p1 || !p2)
-> +		return ret;
-
-You can return -EINVAL directly.
-
-
-> +	if (of_property_read_u32(p1, "reg", &reg_p1) ||
-> +	    of_property_read_u32(p2, "reg", &reg_p2))
-> +		return ret;
-
-Same here.
-
-> +	parent_p1 = of_get_parent(p1);
-> +	parent_p2 = of_get_parent(p2);
-> +	if (!parent_p1 || !parent_p2)
-> +		goto done;
-> +	ep1 = of_graph_get_endpoint_by_regs(parent_p1, reg_p1, 0);
-> +	ep2 = of_graph_get_endpoint_by_regs(parent_p2, reg_p2, 0);
-> +	if (!ep1 || !ep2)
-> +		goto done;
-
-If you only support the first endpoint, this should be mentioned in the
-documentation. Alternatively you could pass the endpoint nodes instead
-of the port nodes, or you could pass the endpoint number.
-
-It's also a bit inefficient to use of_graph_get_endpoint_by_regs() when
-you already have the port nodes. How about adding the following helper
-function ?
-
-struct device_node *of_graph_get_port_endpoint(struct device_node *port, int reg)
-{
-	struct device_node *endpoint = NULL;
-
-	for_each_child_of_node(port, endpoint) {
-		u32 id;
-
-		if (!of_node_name_eq(endpoint, "endpoint") ||
-			continue;
-
-		if (reg == -1)
-			return endpoint;
-
-		if (of_property_read_u32(node, "reg", &id) < 0)
-			continue;
-
-		if (reg == id)
-			return endpoint;
-	}
-
-	return NULL;
-}
-
-If you're concerned that adding a core helper would delay this patch
-series, you could add it as a local helper, and move it to of_graph.h in
-a second step.
-
-> +	remote_p1 = of_graph_get_remote_port(ep1);
-> +	remote_p2 = of_graph_get_remote_port(ep2);
-> +	if (!remote_p1 || !remote_p2)
-> +		goto done;
-> +	remote_p1_pt = drm_of_lvds_get_port_pixels_type(remote_p1);
-> +	remote_p2_pt = drm_of_lvds_get_port_pixels_type(remote_p2);
-> +	/*
-> +	 * A valid dual-lVDS bus is found when one remote port is marked with
-> +	 * "dual-lvds-even-pixels", and the other remote port is marked with
-> +	 * "dual-lvds-odd-pixels", bail out if the markers are not right.
-> +	 */
-> +	if (!remote_p1_pt || !remote_p2_pt ||
-> +	    remote_p1_pt + remote_p2_pt != DRM_OF_LVDS_EVEN + DRM_OF_LVDS_ODD)
-> +		goto done;
-> +	if (remote_p1_pt == DRM_OF_LVDS_EVEN)
-> +		/* The sink expects even pixels through the first port */
-> +		ret = DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS;
-> +	else
-> +		/* The sink expects odd pixels through the first port */
-> +		ret = DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS;
-> +
-> +done:
-> +	of_node_put(ep1);
-> +	of_node_put(ep2);
-> +	of_node_put(parent_p1);
-> +	of_node_put(parent_p2);
-> +	of_node_put(remote_p1);
-> +	of_node_put(remote_p2);
-> +	return ret;
-
-This is heavy, I would add blank lines to make the code easier to read.
-
-> +}
-> +EXPORT_SYMBOL_GPL(drm_of_lvds_get_dual_link_configuration);
-> diff --git a/include/drm/drm_bus_timings.h b/include/drm/drm_bus_timings.h
-> new file mode 100644
-> index 0000000..db8a385
-> --- /dev/null
-> +++ b/include/drm/drm_bus_timings.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __DRM_BUS_TIMINGS__
-> +#define __DRM_BUS_TIMINGS__
-> +
-> +struct device_node;
-> +
-> +#define DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS	0
-> +#define DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS	1
-
-These should be documented with kerneldoc. How about also turning them
-into an enum ?
-
-> +
-> +#ifdef CONFIG_OF
-> +int drm_of_lvds_get_dual_link_configuration(const struct device_node *p1,
-> +					    const struct device_node *p2);
-> +#else
-> +int drm_of_lvds_get_dual_link_configuration(const struct device_node *p1,
-> +					    const struct device_node *p2)
-> +{
-> +	return -EINVAL;
-> +}
-> +#endif
-> +
-> +#endif /* __DRM_BUS_TIMINGS__ */
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Quentin
