@@ -2,53 +2,84 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4090DFC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A992178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158532178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388430AbfKGNVt (ORCPT
+        id S2388612AbfKGNWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:21:49 -0500
-Received: from mga05.intel.com ([192.55.52.43]:28009 "EHLO mga05.intel.com"
+        Thu, 7 Nov 2019 08:22:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:56012 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730980AbfKGNVs (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:21:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 05:21:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
-   d="scan'208";a="214595803"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.212.56]) ([10.254.212.56])
-  by orsmga002.jf.intel.com with ESMTP; 07 Nov 2019 05:21:41 -0800
-Subject: Re: [PATCH v7 4/7] perf util: Support block formats with
- compare/sort/display
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-References: <20191107074719.26139-1-yao.jin@linux.intel.com>
- <20191107074719.26139-5-yao.jin@linux.intel.com>
- <20191107124538.GC11372@kernel.org>
- <37278655-c021-113b-4dcb-80af4ab638d7@linux.intel.com>
- <20191107131751.GD11372@kernel.org>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <86741bc6-7714-42c4-75df-a95d9632fcf6@linux.intel.com>
-Date:   Thu, 7 Nov 2019 21:21:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2388368AbfKGNWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:22:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3172D31B;
+        Thu,  7 Nov 2019 05:22:18 -0800 (PST)
+Received: from [10.163.1.22] (unknown [10.163.1.22])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7406D3F6C4;
+        Thu,  7 Nov 2019 05:21:59 -0800 (PST)
+Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
+ helpers
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
+ <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
+ <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr>
+ <0e0c2ce9-636d-1153-2451-baf7317ed45f@arm.com>
+ <87tv7f4zkf.fsf@mpe.ellerman.id.au>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <83f14c65-035c-8387-3216-5dee8a287cfb@arm.com>
+Date:   Thu, 7 Nov 2019 18:52:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191107131751.GD11372@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <87tv7f4zkf.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -56,470 +87,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 11/7/2019 9:17 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Nov 07, 2019 at 09:05:21PM +0800, Jin, Yao escreveu:
+On 11/07/2019 06:24 PM, Michael Ellerman wrote:
+> Anshuman Khandual <anshuman.khandual@arm.com> writes:
+>> On 11/06/2019 12:11 PM, Christophe Leroy wrote:
+>>> Le 06/11/2019 à 04:22, Anshuman Khandual a écrit :
+>>>> On 10/28/2019 10:59 AM, Anshuman Khandual wrote:
+>>>>> +    -----------------------
+>>>>> +    |         arch |status|
+>>>>> +    -----------------------
+>>>>> +    |       alpha: | TODO |
+>>>>> +    |         arc: | TODO |
+>>>>> +    |         arm: | TODO |
+>>>>> +    |       arm64: |  ok  |
+>>>>> +    |         c6x: | TODO |
+>>>>> +    |        csky: | TODO |
+>>>>> +    |       h8300: | TODO |
+>>>>> +    |     hexagon: | TODO |
+>>>>> +    |        ia64: | TODO |
+>>>>> +    |        m68k: | TODO |
+>>>>> +    |  microblaze: | TODO |
+>>>>> +    |        mips: | TODO |
+>>>>> +    |       nds32: | TODO |
+>>>>> +    |       nios2: | TODO |
+>>>>> +    |    openrisc: | TODO |
+>>>>> +    |      parisc: | TODO |
+>>>>> +    |     powerpc: | TODO |
+>>>>> +    |       ppc32: |  ok  |
+>>>
+>>> Note that ppc32 is a part of powerpc, not a standalone arch.
 >>
->>
->> On 11/7/2019 8:45 PM, Arnaldo Carvalho de Melo wrote:
->>> Em Thu, Nov 07, 2019 at 03:47:16PM +0800, Jin Yao escreveu:
->>>> This patch provides helper routines to support new
->>>> columns for block info output.
->>>
->>> This breaks bisection, some of my build containers complained about:
->>>
->>> util/block-info.c:395:20: error: unused function 'set_fmt' [-Werror,-Wunused-function]
->>> static inline void set_fmt(struct block_fmt *block_fmt,
->>>                      ^
->>> 1 error generated.
->>> mv: can't rename '/tmp/build/perf/util/.block-info.o.tmp': No such file or directory
->>>
->>>
->>> Because you add a static inline function to a .c file and don't use it,
->>> I'll try moving it to when it finally gets used.
->>
->> Oh, very sorry, my fault. I should delete the set_fmt(). In new version,
->> it's not used. But unfortunately my build machine didn't report the error.
->> :(
+>> Right, I understand. But we are yet to hear about how this test
+>> came about on powerpc server platforms. Will update 'powerpc'
+>> arch listing above once we get some confirmation. May be once
+>> this works on all relevant powerpc platforms, we can just merge
+>> 'powerpc' and 'ppc32' entries here as just 'powerpc'.
 > 
-> I got it just because I had the containers building it as I was
-> applying your patches, got it from several, but had difficulty
-> reproducing, no problem fixed now, I double checked and it really isn't
-> being used.
+> On pseries:
 > 
-> No need to resend, I already fixed this and restarted the full container
-> build series.
+>   watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [swapper/0:1]
+>   Modules linked in:
+>   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty #152
+>   NIP:  c0000000010435a0 LR: c0000000010434b4 CTR: 0000000000000000
+>   REGS: c00000003a403980 TRAP: 0901   Not tainted  (5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty)
+>   MSR:  8000000002009033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 44000222  XER: 00000000
+>   CFAR: c0000000010435a8 IRQMASK: 0 
+>   GPR00: c0000000010434b4 c00000003a403c10 c000000001295000 05210001000000c0 
+>   GPR04: 8000000000000105 0000000000400dc0 000000003eb00000 0000000000000001 
+>   GPR08: 0000000000000000 ffffffffffffffff 0000000000000001 0000000000000100 
+>   GPR12: 0000000000000000 c0000000018f0000 
+>   NIP [c0000000010435a0] debug_vm_pgtable+0x43c/0x82c
+>   LR [c0000000010434b4] debug_vm_pgtable+0x350/0x82c
+>   Call Trace:
+>   [c00000003a403c10] [c00000000104346c] debug_vm_pgtable+0x308/0x82c (unreliable)
+>   [c00000003a403ce0] [c000000001004310] kernel_init_freeable+0x1d0/0x39c
+>   [c00000003a403db0] [c000000000010da0] kernel_init+0x24/0x174
+>   [c00000003a403e20] [c00000000000bdc4] ret_from_kernel_thread+0x5c/0x78
+>   Instruction dump:
+>   7d075078 7ce74b78 7ce0f9ad 40c2fff0 38800000 7f83e378 4b02eee1 60000000 
+>   48000080 3920ffff 39400001 39000000 <7ea0f8a8> 7ea75039 40c2fff8 7ea74878 
 > 
-> - Arnaldo
->   
+> Looking at the asm I think it's stuck in hash__pte_update() waiting for
+> H_PAGE_BUSY to clear, but not sure why.
+> 
+> That's just using qemu TCG, instructions here if anyone wants to test it
+> themselves :)
+> 
+>   https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu
+> 
+> 
+> If I boot with -cpu power9 (using Radix MMU), I get a plain old BUG:
+> 
+>   debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
+>   ------------[ cut here ]------------
+>   kernel BUG at arch/powerpc/mm/pgtable.c:274!
+>   Oops: Exception in kernel mode, sig: 5 [#1]
+>   LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=32 NUMA pSeries
+>   Modules linked in:
+>   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty #152
+>   NIP:  c0000000000724e8 LR: c00000000104358c CTR: 0000000000000000
+>   REGS: c00000003a483980 TRAP: 0700   Not tainted  (5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty)
+>   MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 24000224  XER: 20000000
+>   CFAR: c000000001043588 IRQMASK: 0 
+>   GPR00: c00000000104358c c00000003a483c10 c000000001295000 0000000000000009 
+>   GPR04: 0000000000000000 0000000000000005 0000000000000000 0000000000000009 
+>   GPR08: 0000000000000001 000000000000000e 0000000000000001 c00000003a5f0000 
+>   GPR12: 0000000000000000 c0000000018f0000 c000000000010d84 0000000000000000 
+>   GPR16: 0000000000000000 0000000000000000 c00000003a5f0000 8000000000000105 
+>   GPR20: c000000001003ab8 0000000000000015 0500613a00000080 0900603a00000080 
+>   GPR24: 09202e3a00000080 c00000000133bd90 c00000000133bd98 c00000000133bda0 
+>   GPR28: c00000003a5e0000 c00000003a600af8 c00000003a2e2d48 c00000003a6100a0 
+>   NIP [c0000000000724e8] assert_pte_locked+0x88/0x190
+>   LR [c00000000104358c] debug_vm_pgtable+0x428/0x82c
+>   Call Trace:
+>   [c00000003a483c10] [c00000000104346c] debug_vm_pgtable+0x308/0x82c (unreliable)
+>   [c00000003a483ce0] [c000000001004310] kernel_init_freeable+0x1d0/0x39c
+>   [c00000003a483db0] [c000000000010da0] kernel_init+0x24/0x174
+>   [c00000003a483e20] [c00000000000bdc4] ret_from_kernel_thread+0x5c/0x78
+>   Instruction dump:
+>   7d251a14 39070010 7d463030 7d084a14 38c6ffff 7c884436 7cc607b4 7d083038 
+>   79081f24 7ccb402a 7cc80074 7908d182 <0b080000> 78cb0022 54c8c03e 7d473830 
+>   ---[ end trace a694f1bc56529c0e ]---
 
-Oh, thanks Arnaldo! :)
+Oops. Does not seem like a quick problem to fix :) Though assert_pte_locked()
+gets checked only when DEBUG_VM is enabled. Probably will have to keep this
+test disabled on powerpc for now.
 
-Thanks
-Jin Yao
-
->> Thanks
->> Jin Yao
->>
->>>> The new columns are:
->>>>
->>>> Sampled Cycles%
->>>> Sampled Cycles
->>>> Avg Cycles%
->>>> Avg Cycles
->>>> [Program Block Range]
->>>> Shared Object
->>>>
->>>>    v5:
->>>>    ---
->>>>    1. Move more block related functions from builtin-report.c to
->>>>       block-info.c
->>>>
->>>>    2. Set ms (map+sym) in block hist_entry. Because this info
->>>>       is needed for reporting the block range (i.e. source line)
->>>>
->>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->>>> ---
->>>>    tools/perf/util/block-info.c | 317 +++++++++++++++++++++++++++++++++++
->>>>    tools/perf/util/block-info.h |  33 +++-
->>>>    tools/perf/util/hist.c       |   4 +
->>>>    3 files changed, 352 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
->>>> index b9954a32b8f4..1242c3a33509 100644
->>>> --- a/tools/perf/util/block-info.c
->>>> +++ b/tools/perf/util/block-info.c
->>>> @@ -6,6 +6,40 @@
->>>>    #include "sort.h"
->>>>    #include "annotate.h"
->>>>    #include "symbol.h"
->>>> +#include "dso.h"
->>>> +#include "map.h"
->>>> +#include "srcline.h"
->>>> +#include "evlist.h"
->>>> +
->>>> +static struct block_header_column{
->>>> +	const char *name;
->>>> +	int width;
->>>> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
->>>> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT] = {
->>>> +		.name = "Sampled Cycles%",
->>>> +		.width = 15,
->>>> +	},
->>>> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
->>>> +		.name = "Sampled Cycles",
->>>> +		.width = 14,
->>>> +	},
->>>> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
->>>> +		.name = "Avg Cycles%",
->>>> +		.width = 11,
->>>> +	},
->>>> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
->>>> +		.name = "Avg Cycles",
->>>> +		.width = 10,
->>>> +	},
->>>> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
->>>> +		.name = "[Program Block Range]",
->>>> +		.width = 70,
->>>> +	},
->>>> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
->>>> +		.name = "Shared Object",
->>>> +		.width = 20,
->>>> +	}
->>>> +};
->>>>    struct block_info *block_info__get(struct block_info *bi)
->>>>    {
->>>> @@ -127,3 +161,286 @@ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
->>>>    	return 0;
->>>>    }
->>>> +
->>>> +static int block_column_header(struct perf_hpp_fmt *fmt,
->>>> +			       struct perf_hpp *hpp,
->>>> +			       struct hists *hists __maybe_unused,
->>>> +			       int line __maybe_unused,
->>>> +			       int *span __maybe_unused)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +
->>>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->>>> +			 block_fmt->header);
->>>> +}
->>>> +
->>>> +static int block_column_width(struct perf_hpp_fmt *fmt,
->>>> +			      struct perf_hpp *hpp __maybe_unused,
->>>> +			      struct hists *hists __maybe_unused)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +
->>>> +	return block_fmt->width;
->>>> +}
->>>> +
->>>> +static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
->>>> +					struct perf_hpp *hpp,
->>>> +					struct hist_entry *he)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +	struct block_info *bi = he->block_info;
->>>> +	double ratio = 0.0;
->>>> +	char buf[16];
->>>> +
->>>> +	if (block_fmt->total_cycles)
->>>> +		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
->>>> +
->>>> +	sprintf(buf, "%.2f%%", 100.0 * ratio);
->>>> +
->>>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
->>>> +}
->>>> +
->>>> +static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
->>>> +					   struct hist_entry *left,
->>>> +					   struct hist_entry *right)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +	struct block_info *bi_l = left->block_info;
->>>> +	struct block_info *bi_r = right->block_info;
->>>> +	double l, r;
->>>> +
->>>> +	if (block_fmt->total_cycles) {
->>>> +		l = ((double)bi_l->cycles /
->>>> +			(double)block_fmt->total_cycles) * 100000.0;
->>>> +		r = ((double)bi_r->cycles /
->>>> +			(double)block_fmt->total_cycles) * 100000.0;
->>>> +		return (int64_t)l - (int64_t)r;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static void cycles_string(u64 cycles, char *buf, int size)
->>>> +{
->>>> +	if (cycles >= 1000000)
->>>> +		scnprintf(buf, size, "%.1fM", (double)cycles / 1000000.0);
->>>> +	else if (cycles >= 1000)
->>>> +		scnprintf(buf, size, "%.1fK", (double)cycles / 1000.0);
->>>> +	else
->>>> +		scnprintf(buf, size, "%1d", cycles);
->>>> +}
->>>> +
->>>> +static int block_cycles_lbr_entry(struct perf_hpp_fmt *fmt,
->>>> +				  struct perf_hpp *hpp, struct hist_entry *he)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +	struct block_info *bi = he->block_info;
->>>> +	char cycles_buf[16];
->>>> +
->>>> +	cycles_string(bi->cycles_aggr, cycles_buf, sizeof(cycles_buf));
->>>> +
->>>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->>>> +			 cycles_buf);
->>>> +}
->>>> +
->>>> +static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
->>>> +				  struct perf_hpp *hpp, struct hist_entry *he)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +	struct block_info *bi = he->block_info;
->>>> +	double ratio = 0.0;
->>>> +	u64 avg;
->>>> +	char buf[16];
->>>> +
->>>> +	if (block_fmt->block_cycles && bi->num_aggr) {
->>>> +		avg = bi->cycles_aggr / bi->num_aggr;
->>>> +		ratio = (double)avg / (double)block_fmt->block_cycles;
->>>> +	}
->>>> +
->>>> +	sprintf(buf, "%.2f%%", 100.0 * ratio);
->>>> +
->>>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
->>>> +}
->>>> +
->>>> +static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
->>>> +				  struct perf_hpp *hpp,
->>>> +				  struct hist_entry *he)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +	struct block_info *bi = he->block_info;
->>>> +	char cycles_buf[16];
->>>> +
->>>> +	cycles_string(bi->cycles_aggr / bi->num_aggr, cycles_buf,
->>>> +		      sizeof(cycles_buf));
->>>> +
->>>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->>>> +			 cycles_buf);
->>>> +}
->>>> +
->>>> +static int block_range_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->>>> +			     struct hist_entry *he)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +	struct block_info *bi = he->block_info;
->>>> +	char buf[128];
->>>> +	char *start_line, *end_line;
->>>> +
->>>> +	symbol_conf.disable_add2line_warn = true;
->>>> +
->>>> +	start_line = map__srcline(he->ms.map, bi->sym->start + bi->start,
->>>> +				  he->ms.sym);
->>>> +
->>>> +	end_line = map__srcline(he->ms.map, bi->sym->start + bi->end,
->>>> +				he->ms.sym);
->>>> +
->>>> +	if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
->>>> +		scnprintf(buf, sizeof(buf), "[%s -> %s]",
->>>> +			  start_line, end_line);
->>>> +	} else {
->>>> +		scnprintf(buf, sizeof(buf), "[%7lx -> %7lx]",
->>>> +			  bi->start, bi->end);
->>>> +	}
->>>> +
->>>> +	free_srcline(start_line);
->>>> +	free_srcline(end_line);
->>>> +
->>>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
->>>> +}
->>>> +
->>>> +static int block_dso_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->>>> +			   struct hist_entry *he)
->>>> +{
->>>> +	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
->>>> +	struct map *map = he->ms.map;
->>>> +
->>>> +	if (map && map->dso) {
->>>> +		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->>>> +				 map->dso->short_name);
->>>> +	}
->>>> +
->>>> +	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
->>>> +			 "[unknown]");
->>>> +}
->>>> +
->>>> +static void init_block_header(struct block_fmt *block_fmt)
->>>> +{
->>>> +	struct perf_hpp_fmt *fmt = &block_fmt->fmt;
->>>> +
->>>> +	BUG_ON(block_fmt->idx >= PERF_HPP_REPORT__BLOCK_MAX_INDEX);
->>>> +
->>>> +	block_fmt->header = block_columns[block_fmt->idx].name;
->>>> +	block_fmt->width = block_columns[block_fmt->idx].width;
->>>> +
->>>> +	fmt->header = block_column_header;
->>>> +	fmt->width = block_column_width;
->>>> +}
->>>> +
->>>> +static void hpp_register(struct block_fmt *block_fmt, int idx,
->>>> +			 struct perf_hpp_list *hpp_list)
->>>> +{
->>>> +	struct perf_hpp_fmt *fmt = &block_fmt->fmt;
->>>> +
->>>> +	block_fmt->idx = idx;
->>>> +	INIT_LIST_HEAD(&fmt->list);
->>>> +	INIT_LIST_HEAD(&fmt->sort_list);
->>>> +
->>>> +	switch (idx) {
->>>> +	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
->>>> +		fmt->entry = block_total_cycles_pct_entry;
->>>> +		fmt->cmp = block_info__cmp;
->>>> +		fmt->sort = block_total_cycles_pct_sort;
->>>> +		break;
->>>> +	case PERF_HPP_REPORT__BLOCK_LBR_CYCLES:
->>>> +		fmt->entry = block_cycles_lbr_entry;
->>>> +		break;
->>>> +	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
->>>> +		fmt->entry = block_cycles_pct_entry;
->>>> +		break;
->>>> +	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
->>>> +		fmt->entry = block_avg_cycles_entry;
->>>> +		break;
->>>> +	case PERF_HPP_REPORT__BLOCK_RANGE:
->>>> +		fmt->entry = block_range_entry;
->>>> +		break;
->>>> +	case PERF_HPP_REPORT__BLOCK_DSO:
->>>> +		fmt->entry = block_dso_entry;
->>>> +		break;
->>>> +	default:
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	init_block_header(block_fmt);
->>>> +	perf_hpp_list__column_register(hpp_list, fmt);
->>>> +}
->>>> +
->>>> +static void register_block_columns(struct perf_hpp_list *hpp_list,
->>>> +				   struct block_fmt *block_fmts)
->>>> +{
->>>> +	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++)
->>>> +		hpp_register(&block_fmts[i], i, hpp_list);
->>>> +}
->>>> +
->>>> +static void init_block_hist(struct block_hist *bh, struct block_fmt *block_fmts)
->>>> +{
->>>> +	__hists__init(&bh->block_hists, &bh->block_list);
->>>> +	perf_hpp_list__init(&bh->block_list);
->>>> +	bh->block_list.nr_header_lines = 1;
->>>> +
->>>> +	register_block_columns(&bh->block_list, block_fmts);
->>>> +
->>>> +	perf_hpp_list__register_sort_field(&bh->block_list,
->>>> +		&block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
->>>> +}
->>>> +
->>>> +static inline void set_fmt(struct block_fmt *block_fmt,
->>>> +			   u64 total_cycles, u64 block_cycles)
->>>> +{
->>>> +	block_fmt->total_cycles = total_cycles;
->>>> +	block_fmt->block_cycles = block_cycles;
->>>> +}
->>>> +
->>>> +static void process_block_report(struct hists *hists,
->>>> +				 struct block_report *block_report,
->>>> +				 u64 total_cycles)
->>>> +{
->>>> +	struct rb_node *next = rb_first_cached(&hists->entries);
->>>> +	struct block_hist *bh = &block_report->hist;
->>>> +	struct hist_entry *he;
->>>> +
->>>> +	init_block_hist(bh, block_report->fmts);
->>>> +
->>>> +	while (next) {
->>>> +		he = rb_entry(next, struct hist_entry, rb_node);
->>>> +		block_info__process_sym(he, bh, &block_report->cycles,
->>>> +					total_cycles);
->>>> +		next = rb_next(&he->rb_node);
->>>> +	}
->>>> +
->>>> +	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++) {
->>>> +		block_report->fmts[i].total_cycles = total_cycles;
->>>> +		block_report->fmts[i].block_cycles = block_report->cycles;
->>>> +	}
->>>> +
->>>> +	hists__output_resort(&bh->block_hists, NULL);
->>>> +}
->>>> +
->>>> +struct block_report *block_info__create_report(struct evlist *evlist,
->>>> +					       u64 total_cycles)
->>>> +{
->>>> +	struct block_report *block_reports;
->>>> +	int nr_hists = evlist->core.nr_entries, i = 0;
->>>> +	struct evsel *pos;
->>>> +
->>>> +	block_reports = calloc(nr_hists, sizeof(struct block_report));
->>>> +	if (!block_reports)
->>>> +		return NULL;
->>>> +
->>>> +	evlist__for_each_entry(evlist, pos) {
->>>> +		struct hists *hists = evsel__hists(pos);
->>>> +
->>>> +		process_block_report(hists, &block_reports[i], total_cycles);
->>>> +		i++;
->>>> +	}
->>>> +
->>>> +	return block_reports;
->>>> +}
->>>> diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
->>>> index d55dfc2fda6f..b5266588d476 100644
->>>> --- a/tools/perf/util/block-info.h
->>>> +++ b/tools/perf/util/block-info.h
->>>> @@ -4,8 +4,9 @@
->>>>    #include <linux/types.h>
->>>>    #include <linux/refcount.h>
->>>> -#include "util/hist.h"
->>>> -#include "util/symbol.h"
->>>> +#include "hist.h"
->>>> +#include "symbol.h"
->>>> +#include "sort.h"
->>>>    struct block_info {
->>>>    	struct symbol		*sym;
->>>> @@ -20,6 +21,31 @@ struct block_info {
->>>>    	refcount_t		refcnt;
->>>>    };
->>>> +struct block_fmt {
->>>> +	struct perf_hpp_fmt	fmt;
->>>> +	int			idx;
->>>> +	int			width;
->>>> +	const char		*header;
->>>> +	u64			total_cycles;
->>>> +	u64			block_cycles;
->>>> +};
->>>> +
->>>> +enum {
->>>> +	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
->>>> +	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
->>>> +	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
->>>> +	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
->>>> +	PERF_HPP_REPORT__BLOCK_RANGE,
->>>> +	PERF_HPP_REPORT__BLOCK_DSO,
->>>> +	PERF_HPP_REPORT__BLOCK_MAX_INDEX
->>>> +};
->>>> +
->>>> +struct block_report {
->>>> +	struct block_hist	hist;
->>>> +	u64			cycles;
->>>> +	struct block_fmt	fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
->>>> +};
->>>> +
->>>>    struct block_hist;
->>>>    struct block_info *block_info__new(void);
->>>> @@ -40,4 +66,7 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
->>>>    int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
->>>>    			    u64 *block_cycles_aggr, u64 total_cycles);
->>>> +struct block_report *block_info__create_report(struct evlist *evlist,
->>>> +					       u64 total_cycles);
->>>> +
->>>>    #endif /* __PERF_BLOCK_H */
->>>> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
->>>> index 0e27d6830011..7cf137b0451b 100644
->>>> --- a/tools/perf/util/hist.c
->>>> +++ b/tools/perf/util/hist.c
->>>> @@ -758,6 +758,10 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
->>>>    	struct hist_entry entry = {
->>>>    		.block_info = block_info,
->>>>    		.hists = hists,
->>>> +		.ms = {
->>>> +			.map = al->map,
->>>> +			.sym = al->sym,
->>>> +		},
->>>>    	}, *he = hists__findnew_entry(hists, &entry, al, false);
->>>>    	return he;
->>>> -- 
->>>> 2.17.1
->>>
+> 
+> 
+> cheers
 > 
