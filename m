@@ -2,83 +2,87 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D2AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DA9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7DA2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246D92085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389515AbfKGRYg (ORCPT
+        id S2389577AbfKGRZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:24:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48846 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729669AbfKGRYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:24:36 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iSlWM-0002KO-3t; Thu, 07 Nov 2019 18:24:34 +0100
-Date:   Thu, 7 Nov 2019 18:24:34 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Dennis Zhou <dennis@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] percpu-refcount: Use normal instead of RCU-sched"
-Message-ID: <20191107172434.ylz4hyxw4rbmhre2@linutronix.de>
-References: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
- <20191107091319.6zf5tmdi54amtann@linutronix.de>
- <20191107161749.GA93945@dennisz-mbp>
- <20191107162842.2qgd3db2cjmmsxeh@linutronix.de>
- <20191107165519.GA99408@dennisz-mbp>
+        Thu, 7 Nov 2019 12:25:19 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:51428 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728847AbfKGRZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 12:25:18 -0500
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1iSlWw-0000Nu-2Y; Thu, 07 Nov 2019 10:25:11 -0700
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+References: <PS2P216MB075530CB1B7B099AAF9F42D580780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c7de4e19-377c-7b82-3afd-f0fe40dcc20f@deltatee.com>
+Date:   Thu, 7 Nov 2019 10:25:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <PS2P216MB075530CB1B7B099AAF9F42D580780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191107165519.GA99408@dennisz-mbp>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: benh@kernel.crashing.org, corbet@lwn.net, mika.westerberg@linux.intel.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nicholas.johnson-opensource@outlook.com.au
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 0/1] Fix bug resulting in double hpmemsize being assigned
+ to MMIO window
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-07 11:55:19 [-0500], Dennis Zhou wrote:
-> On Thu, Nov 07, 2019 at 05:28:42PM +0100, Sebastian Andrzej Siewior wrote:
-> > > I just want to clarify a little bit. Is this patch aimed at fixing an
-> > > issue with RT kernels specifically? 
-> > 
-> > Due to the implications of preempt_disable() on RT kernels it fixes
-> > problems with RT kernels.
-> > 
+
+
+On 2019-11-07 6:50 a.m., Nicholas Johnson wrote:
+> I have split this patch off my main series, as I realised that it does 
+> not need to be part of that series.
 > 
-> Great, do you mind adding this explanation with what the implications
-> are in the commit message?
-
-some RCU section here invoke callbacks which acquire spinlock_t locks.
-This does not work on RT with disabled preemption.
-
-> > > It'd also be nice to have the
-> > > numbers as well as if the kernel was RT or non-RT.
-> > 
-> > The benchmark was done on a CONFIG_PREEMPT kernel. As said in the commit
-> > log, the numbers were mostly the same, I can re-run the test and post
-> > numbers if you want them.
-> > This patch makes no difference on PREEMPT_NONE or PREEMPT_VOLUNTARY
-> > kernels.
-> > 
+> I have made some recent improvements to add assurance against it 
+> breaking existing behaviour. Instead of returning the first resource of 
+> the desired type regardless of it being assigned, now it goes through 
+> all of the resources and returns only those of type that are not 
+> assigned. Only then does it go through and return the first resource of 
+> desired type that is assigned. If none are found then it returns NULL as 
+> usual.
 > 
-> I think a more explicit explanation in the commit message would suffice.
+> I have made extensive changes to the patch notes, also.
+> 
+> Logan Gunthorpe <logang@deltatee.com> has an alternative method of 
+> fixing this same bug. Please also consider his patch and accept 
+> whichever is best for Linux. All I care is that the bug be fixed.
 
-What do you mean by "more explicit explanation"? The part with the
-numbers or that it makes no difference for PREEMPT_NONE and
-PREEMPT_VOLUNTARY?
+Oh, yes, I haven't had time to follow up on this. My patch is here[1].
+It has a bit more info in the commit message and is a bit less
+intrusive. However, Nicholas's approach is more of a cleanup and may be
+a bit cleaner going forward.
 
-> Thanks,
-> Dennis
+I also had another bug fix in that series I really need to find time to
+update and resend. I'll try to do it in the next cycle.
 
-Sebastian
+Logan
+
+[1]
+https://lore.kernel.org/linux-pci/20190531171216.20532-2-logang@deltatee.com/
