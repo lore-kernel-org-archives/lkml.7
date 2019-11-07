@@ -2,120 +2,103 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BC9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF77C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA17E214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IxmL8NC5"
+	by mail.kernel.org (Postfix) with ESMTP id 06DAB214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388093AbfKGLd6 (ORCPT
+        id S2388080AbfKGLgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:33:58 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:53722 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfKGLd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:33:57 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7BOd77056436;
-        Thu, 7 Nov 2019 11:31:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Czv8pVqfVxDd0LKsdSWLqwv2PVZZcgc54wLOCYMQZpI=;
- b=IxmL8NC5gDs35jgU5KDXQWFaY6gRj6hkmvOc7nat9QD+kZvucJ3ra2JTVeHCHQJvyMTu
- Ri92gGhFoDOdV+086QQZpBQR+85j3rFpn75uiBe+JJIt6eVElHh5g/GGdaAbeDTGSCB2
- W/1C1jUXTTWhICSoHbN3IOswf8WRZ51u4Jilg8yCj8VDVzzpoAoqmGf5o2Ow6+85Bz0s
- i+sUs3DyIF3avPnqOccY/C2KJ+c1RSp8WRROhlfDPFbH4mcCUkYMVlYAW/YkryitMg6j
- o8zOc1fRM/wOYARIMsUDZcUdDhhNQR51q45jlMviezMw46e+DX30lFJ+Emx5SUQql0T/ Nw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2w41w0wev6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 11:31:51 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7BSjdh171874;
-        Thu, 7 Nov 2019 11:31:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2w41wepmft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 11:31:50 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA7BVfka020250;
-        Thu, 7 Nov 2019 11:31:46 GMT
-Received: from tomti.i.net-space.pl (/10.175.179.76)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Nov 2019 03:31:40 -0800
-Date:   Thu, 7 Nov 2019 12:31:34 +0100
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     hpa@zytor.com
-Cc:     Borislav Petkov <bp@alien8.de>, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, ard.biesheuvel@linaro.org,
-        boris.ostrovsky@oracle.com, corbet@lwn.net,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        eric.snowberg@oracle.com, jgross@suse.com,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v5 0/3] x86/boot: Introduce the kernel_info et consortes
-Message-ID: <20191107113134.yl7e4rwxowr52tzf@tomti.i.net-space.pl>
-References: <20191104151354.28145-1-daniel.kiper@oracle.com>
- <20191106170333.GD28380@zn.tnic>
- <3EABBAB2-5BEF-4FEE-8BB4-9EB4B0180B10@zytor.com>
+        Thu, 7 Nov 2019 06:36:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:54592 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727278AbfKGLga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:36:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D43AD7CD;
+        Thu,  7 Nov 2019 03:36:29 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C5283F6C4;
+        Thu,  7 Nov 2019 03:36:27 -0800 (PST)
+Subject: Re: [Patch v5 2/6] sched/fair: Add infrastructure to store and update
+ instantaneous thermal pressure
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Quentin Perret <qperret@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+ <1572979786-20361-3-git-send-email-thara.gopinath@linaro.org>
+ <20191105202037.GA17494@e108754-lin> <5DC1E348.2090104@linaro.org>
+ <20191105211446.GA25349@e108754-lin> <5DC1E9BC.1010001@linaro.org>
+ <20191105215233.GA6450@e108754-lin>
+ <436ad772-c727-127e-1469-d99549db03fc@arm.com> <5DC3088B.8070401@linaro.org>
+ <943a8368-1f19-d981-7583-0db4e32895af@arm.com>
+ <CAKfTPtBkDzYv5cFgCNjOHN53KBQZJBAJ77ft-CARo=g=GuZ8Sg@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <7f93ad5f-cce2-707b-7562-5860bcdd4ae1@arm.com>
+Date:   Thu, 7 Nov 2019 12:36:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3EABBAB2-5BEF-4FEE-8BB4-9EB4B0180B10@zytor.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=632
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=717 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070117
+In-Reply-To: <CAKfTPtBkDzYv5cFgCNjOHN53KBQZJBAJ77ft-CARo=g=GuZ8Sg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 09:56:48AM -0800, hpa@zytor.com wrote:
-> On November 6, 2019 9:03:33 AM PST, Borislav Petkov <bp@alien8.de> wrote:
-> >On Mon, Nov 04, 2019 at 04:13:51PM +0100, Daniel Kiper wrote:
-> >> Hi,
-> >>
-> >> Due to very limited space in the setup_header this patch series introduces new
-> >> kernel_info struct which will be used to convey information from the kernel to
-> >> the bootloader. This way the boot protocol can be extended regardless of the
-> >> setup_header limitations. Additionally, the patch series introduces some
-> >> convenience features like the setup_indirect struct and the
-> >> kernel_info.setup_type_max field.
-> >
-> >That's all fine and dandy but I'm missing an example about what that'll
-> >be used for, in practice.
-> >
-> >Thx.
->
-> For one thing, we already have people asking for more than 4 GiB worth
-> of initramfs, and especially with initramfs that huge it would make a
-> *lot* of sense to allow loading it in chunks without having to
-> concatenate them. I have been asking for a long time for initramfs
-> creators to split the kernel-dependent and kernel independent parts
-> into separate initramfs modules.
+On 07/11/2019 11:48, Vincent Guittot wrote:
+> On Thu, 7 Nov 2019 at 10:32, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 06/11/2019 18:53, Thara Gopinath wrote:
+>>> On 11/06/2019 07:50 AM, Dietmar Eggemann wrote:
+>>>> On 05/11/2019 22:53, Ionela Voinescu wrote:
+>>>>> On Tuesday 05 Nov 2019 at 16:29:32 (-0500), Thara Gopinath wrote:
+>>>>>> On 11/05/2019 04:15 PM, Ionela Voinescu wrote:
+>>>>>>> On Tuesday 05 Nov 2019 at 16:02:00 (-0500), Thara Gopinath wrote:
+>>>>>>>> On 11/05/2019 03:21 PM, Ionela Voinescu wrote:
 
-Another user of this patchset is the TrenchBoot project on which we are
-working on. We have to introduce separate entry point for Intel TXT MLE
-startup code. That is why we need the kernel_info struct.
+[...]
 
-Daniel
+> In fact, trigger_thermal_pressure_average is only there because of
+> shifting the clock which is introduced only in patch 6.
+> So remove trigger_thermal_pressure_average from this patch and call directly
+> 
+> +       update_thermal_load_avg(rq_clock_task(rq), rq,
+> +                               per_cpu(thermal_pressure, cpu_of(rq)));
+> 
+> in patch3
+
+I like the rq_clock_thermal() idea in
+https://lore.kernel.org/r/20191107104901.GA472@linaro.org to get rid of
+trigger_thermal_pressure_average().
+
+>> That's not the issue here. The issue is the extra shim layer which is
+>> unnecessary in the current implementation.
+>>
+>> update_blocked_averages()
+>> {
+>>     ...
+>>     update_rt_rq_load_avg()
+>>     update_dl_rq_load_avg()
+>>     update_irq_load_avg()
+>>     trigger_thermal_pressure_average() <--- ?
+>>     ...
+>> }
+
+[...]
