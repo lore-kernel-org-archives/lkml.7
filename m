@@ -2,103 +2,88 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F38C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9B1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B012084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754C621D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I8MRldZa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZUM/7cXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389753AbfKGRme (ORCPT
+        id S1730739AbfKGRns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:42:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37929 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727132AbfKGRme (ORCPT
+        Thu, 7 Nov 2019 12:43:48 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34193 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729830AbfKGRns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:42:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573148553;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X1foU4cyX2MhxBVBENJ4jXE1nzS/4a8PcCvLYQvqpsc=;
-        b=I8MRldZasAUCkppfLsj5z/l1loKZR+DDCxqazbPnIRaO55R+IjGt6WZI5hOn5urGYZrGPj
-        2ZorB40ied/l0RQEls/xePlVywr5dz/3hdjrIqtAEPjy3HpJKeTK3lsw3OxXRbf/DURfHJ
-        kMwwBU9mxVNSSRwGOdnYiOala4zJCEM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-D-hZqIeRMxO76CIz0f9Q7w-1; Thu, 07 Nov 2019 12:42:29 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 026A5477;
-        Thu,  7 Nov 2019 17:42:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9AEB5C6DC;
-        Thu,  7 Nov 2019 17:42:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wiJ+jaT5Ev-wCg7iGNNO_JFUyMDcat0KDdA2b_+n_cZCQ@mail.gmail.com>
-References: <CAHk-=wiJ+jaT5Ev-wCg7iGNNO_JFUyMDcat0KDdA2b_+n_cZCQ@mail.gmail.com> <157262967752.13142.696874122947836210.stgit@warthog.procyon.org.uk> <20191107090306.GV29418@shao2-debian>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, lkp report check <rong.a.chen@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkp@lists.01.org
-Subject: Re: [pipe] d60337eff1: phoronix-test-suite.noise-level.0.activity_level 144.0% improvement
+        Thu, 7 Nov 2019 12:43:48 -0500
+Received: by mail-pg1-f195.google.com with SMTP id e4so2528155pgs.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:43:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:to:cc:user-agent:date;
+        bh=i/bPZYpoTgBBA0/FNFZyzs4p1x5dRwvEFsGyW1K155c=;
+        b=ZUM/7cXSrgbDE42yKYLMhG25QGuPe992yvgtfqjaqDYXj7+yjfnf3SsTzMw0AJ/BNk
+         YwwYE7udeNrqXvEu9r9ZsbUgCHhDEANgkV9C4Aqoad6abD5bjEzSFBCX2ofNmNej9aWe
+         3XiwKjGOpqhuiKZMTkiKgtWIPRk3ov+7Aus2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
+         :user-agent:date;
+        bh=i/bPZYpoTgBBA0/FNFZyzs4p1x5dRwvEFsGyW1K155c=;
+        b=JvAcpK4+bpkpy8cW3qh7kXwEeLFZZHLsPrStbSCd2ukXdghsfdEcMrINeooKUDTi/F
+         Vj6w3ukC9HZkgnYevuyxGWbejFTHM+XfQIXN5RZ4H8pIxFPXBQFUe8Yc4yG/YMV3DW8c
+         juu8hhdnfAaWQm6Qjtp61R4+f62Z9nOabcOeHscux6lPLuqtadCaxbBjHSWx5cFNUU4P
+         IqS6lqlVcUit6f3rRnm1QtwOX7wNKYYr3acl9VYBuOOxJO/FZWKZk5uxmEdH35QPuyEj
+         fwctI+RRcK8I8/H1S8NyyhMfBjO4JyTt7ytYuU1xTOEfbO2+jUzD04PW0rSbQWbPGHda
+         hJ7w==
+X-Gm-Message-State: APjAAAVVKuq5rXILM6HvoGE2GFEEWok/Q2bllif73vdHav8HsTqadZLm
+        sL9bFZny0s6uPs94cgO2aHH8yg==
+X-Google-Smtp-Source: APXvYqyKl8+9hlEMt2RuqCuK+QVNWgd3w09FeHcCuF7GvMgHbVE+27A0VSv47omCaySvcInXiNiHXA==
+X-Received: by 2002:a63:d802:: with SMTP id b2mr5935568pgh.414.1573148627379;
+        Thu, 07 Nov 2019 09:43:47 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s26sm3138076pga.67.2019.11.07.09.43.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 09:43:46 -0800 (PST)
+Message-ID: <5dc457d2.1c69fb81.839ab.803b@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-ID: <25251.1573148538.1@warthog.procyon.org.uk>
-Date:   Thu, 07 Nov 2019 17:42:18 +0000
-Message-ID: <25252.1573148538@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: D-hZqIeRMxO76CIz0f9Q7w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191106065017.22144-2-rnayak@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-2-rnayak@codeaurora.org>
+Subject: Re: [PATCH v4 01/14] dt-bindings: qcom: Add SC7180 bindings
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 09:43:45 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> > FYI, we noticed a 144.0% improvement of phoronix-test-suite.noise-level=
-.0.activity_level due to commit:
-> >
-> > commit: d60337eff18a3c587832ab8053a567f1da9710d2 ("[RFC PATCH 04/11] pi=
-pe: Use head and tail pointers for the ring, not cursor and length [ver #3]=
-")
+Quoting Rajendra Nayak (2019-11-05 22:50:04)
+> Add a SoC string 'sc7180' for the qualcomm SC7180 SoC.
+> Also add a new board type 'idp'
 >=20
-> That sounds nice, but is odd. That commit really shouldn't change
-> anything noticeable. David, any idea?
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-Yeah, it does sound odd - the only thing that springs particularly to mind =
-is
-that maybe it's an effect of one of the preceding patches that affects the
-waitqueue stuff.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-TBH, I'm not sure what the Phoronix test suite is actually testing from the
-report.  "noise-level-1.1.0" seems more a reporting script than an actual
-test.
-
-David
+I see that it isn't sorted but o well!
 
