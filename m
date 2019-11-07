@@ -2,60 +2,56 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA25C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22576C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF1E2077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66F7207FA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389557AbfKGNng (ORCPT
+        id S2389623AbfKGNnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:43:36 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:37959 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389006AbfKGNmH (ORCPT
+        Thu, 7 Nov 2019 08:43:49 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44346 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388956AbfKGNmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:42:07 -0500
-Received: by mail-io1-f69.google.com with SMTP id q4so989483ion.5
+        Thu, 7 Nov 2019 08:42:06 -0500
+Received: by mail-io1-f71.google.com with SMTP id q13so1848630iot.11
         for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:42:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=+84sf74G2+LtOjaIUAIm5mQgUcZUIwnjbC/PvAs6V+Y=;
-        b=RyOyBRnsmA0GF28L+9c8EeDiVSgrh3VR6Hll8poUyUWYnVsxOPhnW6wG91JqktU8D4
-         NQgeSX+G+lYDv5tosJrx/BOdcGN0NfOvwI6LmEZj0rM1qHl+zG6BAOBN6Ff5n6v5NlT0
-         4QFYJ2eMXvTR/4FoiKL4kRmD842uKNojxW9Q/j/6GN0VUm+BEI4qWzKyQ1w+iuVIxBZI
-         87WRPUZHs2hfIPT46+rVszEOygHguncHYe8USa0Ux6G59Opjr6VtMAA2//jT6G8cz9Ru
-         QYJcb6jXMI90U50slq/nPkvFLW0TZUGYr99aFQGXm9MHejjm3v6hFFDd2I1tIhti5cih
-         fEKQ==
-X-Gm-Message-State: APjAAAXqHXt7e4WZh586JsKHiEH+/dWLPzwLZIh8wX3lZ4xWnkg6XI6b
-        ZI29LXFzQUE+a2mmt4SlyG/aBa8rXQRUJ1E5QRfpHZ1kDX5c
-X-Google-Smtp-Source: APXvYqyDXVEYlUfk7geo3GgENWWqznzoIPNLvT/v/4WhhgkMFihALxGFrTFCqPjEvWIS25EzJfmt9/ngeJ+New1kGdinWyOcoDmF
+        bh=Vf6K/h0qpqQKsSoL002ZxeehhKzDYr+4ythimfWKfZ8=;
+        b=a9tqGOvdZ/uDUZSIL4LzFZQN3e7qxA4ZstmAGSHy65QbFvY/BWaS1/7lnfhvfwAakJ
+         QDnMMJprY4+9GcTov+KbEyybXfIwNpUUzIcvQRN0DJWp8SYohosDVxJwHWl+OvE8W/NZ
+         fihCM0/8OOLhJA45zwy/gP/triqGCbic1G0LZbPknXzNHYbXM8N7Kcp1l30pdXfye31v
+         b8VmNfv+zpx4P0CXCE8Hgibphdzl7Bx1sAEkM0/w3sdKTt97EHEBCw/LzqowCoa/pXV+
+         ahC3gYa9gfLPhOBCrBbWQz5fnQcCeByHqMzZ2dOzFpxcCRK+OK0h0y+aU9KFUSbtBbOY
+         RJOg==
+X-Gm-Message-State: APjAAAVArvS+RD/B8EzSZLc7Cs08Hnomgur90ge4LXpYbe293U5kuL8r
+        exl03WisR8bsQUCzYlc17h1WIIJiJOTCRedmk5wTUEOZK001
+X-Google-Smtp-Source: APXvYqxtqS9jnDj10uHB/QHrMRUKjJWOjaExI73Hx2xEMNtJxQbyy5I+Msc61BdsDsl5SzjhgXSd4Tpv0SaNrrMljsv9YcDnaitG
 MIME-Version: 1.0
-X-Received: by 2002:a6b:14ca:: with SMTP id 193mr3506977iou.140.1573134126410;
- Thu, 07 Nov 2019 05:42:06 -0800 (PST)
-Date:   Thu, 07 Nov 2019 05:42:06 -0800
-In-Reply-To: <00000000000080601805795ada2e@google.com>
+X-Received: by 2002:a5e:aa10:: with SMTP id s16mr1261527ioe.113.1573134125893;
+ Thu, 07 Nov 2019 05:42:05 -0800 (PST)
+Date:   Thu, 07 Nov 2019 05:42:05 -0800
+In-Reply-To: <00000000000054395605708fbd13@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c9f0a40596c1d46b@google.com>
-Subject: Re: INFO: task hung in vivid_stop_generating_vid_cap
-From:   syzbot <syzbot+06283a66a648cd073885@syzkaller.appspotmail.com>
-To:     andy@greyhouse.net, davem@davemloft.net, dvyukov@google.com,
-        hans.verkuil@cisco.com, helen.koike@collabora.com,
-        hverkuil-cisco@xs4all.nl, hverkuil@xs4all.nl, j.vosburgh@gmail.com,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, maheshb@google.com,
-        mchehab+samsung@kernel.org, mchehab@kernel.org,
-        mchehab@s-opensource.com, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tfiga@chromium.org,
-        vfalico@gmail.com
+Message-ID: <000000000000c214300596c1d487@google.com>
+Subject: Re: BUG: corrupted list in p9_conn_cancel
+From:   syzbot <syzbot+ad0832746849421bba05@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dominique.martinet@cea.fr, ericvh@gmail.com,
+        jiangyiwen@huwei.com, linux-kernel@vger.kernel.org,
+        lucho@ionkov.net, netdev@vger.kernel.org, rminnich@sandia.gov,
+        syzkaller-bugs@googlegroups.com, tomasbortoli@gmail.com,
+        v9fs-developer@lists.sourceforge.net
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,22 +60,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 syzbot suspects this bug was fixed by commit:
 
-commit d65842f7126aa1a87fb44b7c9980c12630ed4f33
-Author: Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Mon Nov 19 11:09:00 2018 +0000
+commit 9f476d7c540cb57556d3cc7e78704e6cd5100f5f
+Author: Tomas Bortoli <tomasbortoli@gmail.com>
+Date:   Mon Jul 23 18:42:53 2018 +0000
 
-     media: vb2: add waiting_in_dqbuf flag
+     net/9p/trans_fd.c: fix race by holding the lock
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1417a04a600000
-start commit:   9f51ae62 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11adad06600000
+start commit:   c25c74b7 Merge tag 'trace-v4.18-rc3-2' of git://git.kernel..
 git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=62118286bb772a24
-dashboard link: https://syzkaller.appspot.com/bug?extid=06283a66a648cd073885
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15701a33400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154c8e4d400000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=25856fac4e580aa7
+dashboard link: https://syzkaller.appspot.com/bug?extid=ad0832746849421bba05
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13d8db0c400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c12a58400000
 
 If the result looks correct, please mark the bug fixed by replying with:
 
-#syz fix: media: vb2: add waiting_in_dqbuf flag
+#syz fix: net/9p/trans_fd.c: fix race by holding the lock
 
 For information about bisection process see: https://goo.gl/tpsmEJ#bisection
