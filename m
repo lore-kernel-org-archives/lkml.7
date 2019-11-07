@@ -2,94 +2,137 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D44AC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADECFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3F8214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30635214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:25:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UW+6NMZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388567AbfKGMXf (ORCPT
+        id S2388412AbfKGMZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:23:35 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388220AbfKGMXf (ORCPT
+        Thu, 7 Nov 2019 07:25:37 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46334 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbfKGMZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:23:35 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7CDFiV171381
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 07:23:34 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w41w578sw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:23:33 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Thu, 7 Nov 2019 12:23:31 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 12:23:29 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7CNSis44302724
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 12:23:28 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 792EE42052;
-        Thu,  7 Nov 2019 12:23:28 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8C7B42045;
-        Thu,  7 Nov 2019 12:23:23 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.199.48.202])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  7 Nov 2019 12:23:23 +0000 (GMT)
-Subject: Re: [PATCH v2] x86/stacktrace: update kconfig help text for reliable
- unwinders
-To:     Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>
-References: <20191107032958.14034-1-joe.lawrence@redhat.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Date:   Thu, 7 Nov 2019 17:53:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 7 Nov 2019 07:25:37 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA7CPAai081212;
+        Thu, 7 Nov 2019 06:25:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573129510;
+        bh=E4MS55kwaW5g/5KMrdjN4z1SWbBuXuTiMq2j/PcjEiY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UW+6NMZI2DNcg8/Yc8M2AkH9YUhIjG0ug6zMpSF8759STfMnQIXvG15KKYOZAgo98
+         va4Aooa7y2zRrtfb1gpbKTaiyzGKmaUyAAewm0RR+d6N0Q1IJ5hL9uzN+uqqMCbNdy
+         RhjwN1TNyhG3OWeWQSVS9D3FIK/DfoxqTx5ovUFo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA7CPAqU108742
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 Nov 2019 06:25:10 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 7 Nov
+ 2019 06:24:55 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 7 Nov 2019 06:24:55 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA7CP57p097478;
+        Thu, 7 Nov 2019 06:25:06 -0600
+Subject: Re: [PATCH 1/2] mtd: mtk-quadspi: add support for memory-mapped flash
+ reading
+To:     Chuanhong Guo <gch981213@gmail.com>
+CC:     <linux-mtd@lists.infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191106140748.13100-1-gch981213@gmail.com>
+ <20191106140748.13100-2-gch981213@gmail.com>
+ <bc917a56-e688-d701-2279-87df460d6055@ti.com>
+ <CAJsYDVJgUNxLhcO9iLKwRZHPQ9FT8XuKQq8ru_djD2nryT5o9A@mail.gmail.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <efd471a6-daad-a191-5528-62313dd4e4a4@ti.com>
+Date:   Thu, 7 Nov 2019 17:55:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191107032958.14034-1-joe.lawrence@redhat.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <CAJsYDVJgUNxLhcO9iLKwRZHPQ9FT8XuKQq8ru_djD2nryT5o9A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110712-0028-0000-0000-000003B389A1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110712-0029-0000-0000-00002475E95D
-Message-Id: <06cfbe3c-83ac-d3c4-66a4-501dc3754ddf@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=872 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070125
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/7/19 8:59 AM, Joe Lawrence wrote:
-> commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
-> for the ORC unwinder") added the ORC unwinder as a "reliable" unwinder.
-> Update the help text to reflect that change: the frame pointer unwinder
-> is no longer the only one that can provide HAVE_RELIABLE_STACKTRACE.
-> 
-> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+
+On 07/11/19 3:01 PM, Chuanhong Guo wrote:
+> Hi!
+> 
+> On Thu, Nov 7, 2019 at 2:05 PM Vignesh Raghavendra <vigneshr@ti.com> wrote:
+>>> @@ -272,6 +273,11 @@ static ssize_t mtk_nor_read(struct spi_nor *nor, loff_t from, size_t length,
+>>>       mtk_nor_set_read_mode(mtk_nor);
+>>>       mtk_nor_set_addr(mtk_nor, addr);
+>>>
+>>> +     if (mtk_nor->flash_base) {
+>>> +             memcpy_fromio(buffer, mtk_nor->flash_base + from, length);
+>>> +             return length;
+>>> +     }
+>>> +
+>>
+>> Don't you need to check if access is still within valid memory mapped
+>> window?
+> 
+> The mapped area is 256MB and I don't quite believe there will be such
+> a big NOR flash.
+> I'll add a check here in the next version.
+>
+
+
+There are 256MB (2GiB) NORs out there in market already. So, pretty
+soon, 256MB window won't be big enough :)
+
+>>
+>>>       for (i = 0; i < length; i++) {
+>>>               ret = mtk_nor_execute_cmd(mtk_nor, MTK_NOR_PIO_READ_CMD);
+>>>               if (ret < 0)
+>>> @@ -475,6 +481,11 @@ static int mtk_nor_drv_probe(struct platform_device *pdev)
+>>>       if (IS_ERR(mtk_nor->base))
+>>>               return PTR_ERR(mtk_nor->base);
+>>>
+>>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>> +     mtk_nor->flash_base = devm_ioremap_resource(&pdev->dev, res);
+>>
+>> There is a single API now: devm_platform_ioremap_resource().
+> 
+> Cool. I'll change it.
+> Should I add another patch to change the same mapping operation right
+> above this piece of code?
+> 
+
+That would be nice to do too, please send a separate patch.
 
 -- 
-Kamalesh
-
+Regards
+Vignesh
