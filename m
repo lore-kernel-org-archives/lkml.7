@@ -2,125 +2,197 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05699C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0467C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01DE20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WyLgxS3T";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ctjyyEhK"
+	by mail.kernel.org (Postfix) with ESMTP id 7BD7220656
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573120121;
+	bh=En5yYArrVQ/eJQz8LxueVMSEk0Wh7aZQ0ttcAzZP0p0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jZHIWdAIP3oE1IbZpwGcVQmW+deieZmQVF+ZdtPKAGOCvxZddlI5tMZhUw7im4rZ+
+	 WhLm9U3UwMZvyWN1W048l/FnmkJtwq6gluA5I+ZM+xn4X9wppXtEexU0yhOTPUGyPs
+	 yOZlMKkBbuXLhO7CxZXb9OflREYFEHXdaij0FqTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbfKGJsh (ORCPT
+        id S2387929AbfKGJsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:48:37 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:60414 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727632AbfKGJsh (ORCPT
+        Thu, 7 Nov 2019 04:48:40 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44276 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387629AbfKGJsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 04:48:37 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 67C0360A50; Thu,  7 Nov 2019 09:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573120115;
-        bh=sDQBDxXRZCeKsQ9VGvBn0JftH8Dvu3dtqOVJgd7P6j0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WyLgxS3TUyv52mYh1gGR4DYua/ykK0pNxS5epiS66S7dG2PZ7CjJ5QCd75SC6NQbt
-         e/Uj/hpdrPQ5/NJjfax5lNNGYujkR6SMh3dPhAoCk2CfhduHJd460WUjFqlH1Bmyi7
-         2FNBloa2OuUOa6cw7NeRQ0w/egu9mLSCjxVpE9NU=
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 41B6E60A23;
-        Thu,  7 Nov 2019 09:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573120111;
-        bh=sDQBDxXRZCeKsQ9VGvBn0JftH8Dvu3dtqOVJgd7P6j0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ctjyyEhKV92rf8JKW36joQ+UKJ4yE6LsPta5eMin9sZnEfPeHCezOfu21A9Owe0ow
-         o9nmr63L9bx3V0tdOdouWkBwUNWs0l1vFsgS5FylZ+W3EEGRuR3CgX5tACobbYOjhd
-         Fs/FXu79kkRTgBWTjTaUi1ZSx9FTC8yLOlYxnTrs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 41B6E60A23
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/6] scsi: ufs: set load before setting voltage in regulators
-Date:   Thu,  7 Nov 2019 01:47:53 -0800
-Message-Id: <1573120078-15547-3-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573120078-15547-1-git-send-email-cang@codeaurora.org>
-References: <1573120078-15547-1-git-send-email-cang@codeaurora.org>
+Received: by mail-ed1-f67.google.com with SMTP id a67so1337771edf.11;
+        Thu, 07 Nov 2019 01:48:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ryVCGfYMOEex1ENMBo3WtYsy72Zmz0c5VfDM/zRq6jQ=;
+        b=iRrmkvhuuwcK/3ifMAhuUt7/1itMUSd/1uW0JxDY6JGLtO1WWlWtQ0AZpxQqJVfvEN
+         zYqRDByMsnUAcIKNhfzkSBx+IYFvVEPZFjM+shutSaYF50k29lx3JiFP5V9IU6WsNJF5
+         4RW8V8Pr3tVY27FkqBHO4MzDA19uNE4G74NYcGPF2NGuBcg+1BC/ZiVaSFGiynX0SYni
+         N4+OHmd7/4rSUSnbyF7L9tf40pKLe2HwES49jO7cH7CWbLdWsJP9bf9057bGdI9hjsjm
+         JKiF5NoKVilMGL93C8PHt4PowhTX9nGMFSHId49EUg9xHM3Pf5PYPLhgFFnnVjHYaN/6
+         F2vg==
+X-Gm-Message-State: APjAAAVqg7w6Tcj9ohxhvshUWtmJMwoICFJii1gryY99FUjzpuedFv2W
+        z0aN0lheEcv50JlBLKG5K6k=
+X-Google-Smtp-Source: APXvYqxtciFqyfuAvEMMp+eSFo/4y6pUhhge7L1IjrIdDo63s82J7dG7Ds8DoAxmytx2VsSq7WgHBQ==
+X-Received: by 2002:a17:906:49d1:: with SMTP id w17mr2089977ejv.101.1573120115626;
+        Thu, 07 Nov 2019 01:48:35 -0800 (PST)
+Received: from pi3 ([194.230.155.180])
+        by smtp.googlemail.com with ESMTPSA id p12sm41369edr.4.2019.11.07.01.48.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 01:48:34 -0800 (PST)
+Date:   Thu, 7 Nov 2019 10:48:32 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marian Mihailescu <mihailescu2m@gmail.com>
+Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kgene@kernel.org
+Subject: Re: [PATCH v4 2/2] ARM: dts: exynos5420: add mali dt node and enable
+ mali on Odroid XU3/4
+Message-ID: <20191107094832.GA2142@pi3>
+References: <20191106225527.9121-1-mihailescu2m@gmail.com>
+ <20191106225527.9121-2-mihailescu2m@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191106225527.9121-2-mihailescu2m@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Asutosh Das <asutoshd@codeaurora.org>
+On Thu, Nov 07, 2019 at 09:25:27AM +1030, Marian Mihailescu wrote:
+> Add device tree node for Mali GPU for Exynos 542x SoC.
+> GPU is disabled by default, and is enabled for each board after the
+> regulator is defined. Tested on Odroid-XU4.
+> 
+> Changes since v3:
+> - fixed compatible to match bindings
 
-This sequence change is required to avoid dips in voltage
-during boot-up.
+Changelog does not go to commit message. Put it after msg separator
+(---).
 
-Apparently, this dip is caused because in the original
-sequence, the regulators are initialized in lpm mode.
-And then when the load is set to high, and more current
-is drawn, than is allowed in lpm, the dip is seen.
+Except this looks good so I will fix it up while applying.
 
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Best regards,
+Krzysztof
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index c2de29f..c386c2d 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -7225,6 +7225,11 @@ static int ufshcd_config_vreg(struct device *dev,
- 	name = vreg->name;
- 
- 	if (regulator_count_voltages(reg) > 0) {
-+		uA_load = on ? vreg->max_uA : 0;
-+		ret = ufshcd_config_vreg_load(dev, vreg, uA_load);
-+		if (ret)
-+			goto out;
-+
- 		if (vreg->min_uV && vreg->max_uV) {
- 			min_uV = on ? vreg->min_uV : 0;
- 			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
-@@ -7235,11 +7240,6 @@ static int ufshcd_config_vreg(struct device *dev,
- 				goto out;
- 			}
- 		}
--
--		uA_load = on ? vreg->max_uA : 0;
--		ret = ufshcd_config_vreg_load(dev, vreg, uA_load);
--		if (ret)
--			goto out;
- 	}
- out:
- 	return ret;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
 
+> 
+> Changes since v2:
+> - separate patch for bindings
+> - fixed bindings typo
+> 
+> Changes since v1:
+> - used generic node and label for GPU
+> - added bindings for compatible
+> - fixed irq indentation
+> - fixed interrupt-names to match bindings
+> - added cooling cells for future TMU connection
+> - used generic node and label for GPU opp table
+> - removed always-on from SoC GPU regulator
+> 
+> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi             | 50 +++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  6 +++-
+>  2 files changed, 55 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 7d51e0f4ab79..31b5f7ba0e3b 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -670,6 +670,56 @@
+>  			iommus = <&sysmmu_gscl1>;
+>  		};
+>  
+> +		gpu: gpu@11800000 {
+> +			compatible = "samsung,exynos5420-mali", "arm,mali-t628";
+> +			reg = <0x11800000 0x5000>;
+> +			interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "job", "mmu", "gpu";
+> +
+> +			clocks = <&clock CLK_G3D>;
+> +			clock-names = "core";
+> +			power-domains = <&g3d_pd>;
+> +			operating-points-v2 = <&gpu_opp_table>;
+> +
+> +			status = "disabled";
+> +			#cooling-cells = <2>;
+> +
+> +			gpu_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				opp@177000000 {
+> +					opp-hz = /bits/ 64 <177000000>;
+> +					opp-microvolt = <812500>;
+> +				};
+> +				opp@266000000 {
+> +					opp-hz = /bits/ 64 <266000000>;
+> +					opp-microvolt = <862500>;
+> +				};
+> +				opp@350000000 {
+> +					opp-hz = /bits/ 64 <350000000>;
+> +					opp-microvolt = <912500>;
+> +				};
+> +				opp-420000000 {
+> +					opp-hz = /bits/ 64 <420000000>;
+> +					opp-microvolt = <962500>;
+> +				};
+> +				opp-480000000 {
+> +					opp-hz = /bits/ 64 <480000000>;
+> +					opp-microvolt = <1000000>;
+> +				};
+> +				opp-543000000 {
+> +					opp-hz = /bits/ 64 <543000000>;
+> +					opp-microvolt = <1037500>;
+> +				};
+> +				opp-600000000 {
+> +					opp-hz = /bits/ 64 <600000000>;
+> +					opp-microvolt = <1150000>;
+> +				};
+> +			};
+> +		};
+> +
+>  		scaler_0: scaler@12800000 {
+>  			compatible = "samsung,exynos5420-scaler";
+>  			reg = <0x12800000 0x1294>;
+> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> index 422692b20c46..ce774f7b2ce0 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> @@ -522,7 +522,6 @@
+>  				regulator-name = "vdd_g3d";
+>  				regulator-min-microvolt = <800000>;
+>  				regulator-max-microvolt = <1400000>;
+> -				regulator-always-on;
+>  				regulator-boot-on;
+>  
+>  				regulator-state-mem {
+> @@ -659,6 +658,11 @@
+>  	status = "okay";
+>  };
+>  
+> +&gpu {
+> +	mali-supply = <&buck4_reg>;
+> +	status = "okay";
+> +};
+> +
+>  &rtc {
+>  	status = "okay";
+>  	clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
+> -- 
+> 2.14.1
+> 
