@@ -2,87 +2,114 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05B0FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE51C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94226222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB442178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388721AbfKGNAQ (ORCPT
+        id S2388729AbfKGNAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:00:16 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:34209 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfKGNAQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:00:16 -0500
-Received: from localhost ([46.78.193.225]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MVdYY-1iItlD1uIm-00RbhR; Thu, 07 Nov 2019 13:59:43 +0100
-Date:   Thu, 7 Nov 2019 13:59:38 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
-Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
-        tglx@linutronix.de, mchehab+samsung@kernel.org,
-        davem@davemloft.net, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] iio: add driver for ping))) and laserping sensors
-Message-ID: <20191107125936.ylsfkerxi5tfiaoc@arbad>
+        Thu, 7 Nov 2019 08:00:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:55734 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbfKGNAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:00:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 865C331B;
+        Thu,  7 Nov 2019 05:00:29 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1BAE3F6C4;
+        Thu,  7 Nov 2019 05:00:27 -0800 (PST)
+Subject: Re: [Patch v5 5/6] thermal/cpu-cooling: Update thermal pressure in
+ case of a maximum frequency capping
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+ <1572979786-20361-6-git-send-email-thara.gopinath@linaro.org>
+ <05c53b6f-fd16-3e8b-e8da-ea56325cec33@arm.com>
+Message-ID: <b97dab99-6796-3427-0c6d-57ea6c3dfb1f@arm.com>
+Date:   Thu, 7 Nov 2019 14:00:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:dQQZLcFHM0gjAQfgLrHIW/FPizZ3tzk9WpK/cOCGEdlA5djD9RE
- GDegTPWzUrbwQvF44FOeQmrQW5001GzXlwlc6b2yIwO9qAIO9NPaax++0rPXyJUxg9bvT6S
- c2Zzow360wsYlKH0/tgq9gm7TcIZejzZORtVbThmduyzRoTeH7Kc5AgrCn7EVUaP3W2KFsC
- XQvNySdzd3GOPEuOwaBmQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2MhI4ECH7Y4=:bh88XNQu7ElxS5Lc71VJ0c
- rvppYyzIUqrLSgyIaFy4cYTKqaGlXBMUmAwrxn4VmmhvQwpWq6tQCy376dfNFRxiBOnySFdYS
- U+IU8INrboXrCNw7uSd1xpiru3BhIXWsEbQI3ueyWaBF5nVU7ur8VvRxwWGFc17CH7tfua9zD
- 4jdknih01C6ughY8Q6XovO0PjEeL1G9LDQ3allL7hUsmBnG8ypFOxo2v8EcAc2rPRVtBwgmo7
- vD8C1OZHRt/1GtPMP5ZSYMPi8jGvbsLokfBA/FFGYCfKalPg7WQIDuWjQV3NetTAcMmGjhNim
- OpZBaS2C0OCqGBucaM3IVZPHVfqbYgWniwS5zLGb7aNpa5Dd2FxaJHl6xeJYnEnMQKYT2uxSR
- 8saU4+nFdG7bREnTPQ65UVb3EMgI+NWrtXwzWE/IsGxLtqcKEaB8sWBhScP8QV7h3ICfpf/km
- fwDHPq5TzcaVLJMTXNc2XWHxYTpcp4D1QUMC6Pvmjb03+vHQKbiJkP2plVGQnsES/FtpgrixJ
- uMRQiYb9QcsRgui3asBsFir2FcOsKlHgxTpSaPwkepNFUelfuA5EWhhlXeeCVNZt+sxH/+FgK
- 0ShVff2oxuCKWClphHk9pK9LKBCODO1BACPPytDR1q0QV34Jj8L0Dx53Dohxa5tfW8JxIsbKl
- +ybbdbCeTn4CSiB0yQUHqtPSzWsowqNUiQm6TIH6MpaFhH55g84nfV60PwGkaoqrHypRFHJ8Q
- m0KdKeDnZfrcmwCAeNA2STcovuXBjEAOYFxmz+r5ry+LGXCmZiJ2joGLkKj3TegGPEJt0rNEV
- /hq5PQDMzJUO35b35fq2Ty7mLMGmVhKo5Afutlq3VO18p2OtZNs+pUO8jVRF+UeUCucKpxL1m
- CoOpogdFZsek/SESDDmg==
+In-Reply-To: <05c53b6f-fd16-3e8b-e8da-ea56325cec33@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for parallax PING))) and LaserPING sensors as
-iio driver. The driver is derived from srf04 but the device is using only
-one GPIO for both triggering and the echo.
 
-Andreas Klinger (5):
-  dt-bindings: add vendor prefix parallax
-  dt-bindings: add parallax ping sensors
-  iio: ping: add parallax ping sensors
-  iio: add ping sensors to kernel configuration
-  MAINTAINERS: add maintainer for ping iio sensors
 
- .../bindings/iio/proximity/parallax-ping.yaml      |  51 ++++
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- MAINTAINERS                                        |   7 +
- drivers/iio/proximity/Kconfig                      |  15 +
- drivers/iio/proximity/Makefile                     |   1 +
- drivers/iio/proximity/ping.c                       | 336 +++++++++++++++++++++
- 6 files changed, 412 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
- create mode 100644 drivers/iio/proximity/ping.c
+On 06/11/2019 13:50, Dietmar Eggemann wrote:
+> On 05/11/2019 19:49, Thara Gopinath wrote:
+> 
+> [...]
+> 
+>> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+>> index 391f397..c65b7c4 100644
+>> --- a/drivers/thermal/cpu_cooling.c
+>> +++ b/drivers/thermal/cpu_cooling.c
+>> @@ -218,6 +218,27 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+>>  }
+>>  
+>>  /**
+>> + * update_sched_max_capacity - update scheduler about change in cpu
+>> + *				max frequency.
+>> + * @cpus: list of cpus whose max capacity needs udating in scheduler.
+>> + * @cur_max_freq: current maximum frequency.
+>> + * @max_freq: highest possible frequency.
+>> + */
+>> +static void update_sched_max_capacity(struct cpumask *cpus,
+>> +				      unsigned int cur_max_freq,
+>> +				      unsigned int max_freq)
+>> +{
+>> +	int cpu;
+>> +	unsigned long capacity;
+>> +
+>> +	for_each_cpu(cpu, cpus) {
+>> +		capacity = cur_max_freq * arch_scale_cpu_capacity(cpu);
+>> +		capacity /= max_freq;
+>> +		update_thermal_pressure(cpu, capacity);
+>> +	}
+>> +}
+>> +
+>> +/**
+> 
+> Have you seen
+> https://lore.kernel.org/r/2b19d7da-412c-932f-7251-110eadbef3e3@arm.com ?
+> 
+> Also the naming 'update_thermal_pressure()' is not really suitable for
+> an external task scheduler interface. If I see this called in the
+> cooling device code, I wouldn't guess that this is a task scheduler
+> interface.
+> 
+> [...]
 
--- 
-2.11.0
+The current interface to bring in frequency and uarch (CPU) invariance
+information into the task scheduler is arch_scale_[freq|cpu]_capacity.
+
+So why not follow this approach for the thermal->sched interface?
+
++#ifndef arch_scale_thermal_capacity
++static __always_inline
++unsigned long arch_scale_thermal_capacity(int cpu)
++{
++       return 0;
++}
++#endif
+
+Leave per_cpu(thermal_pressure, cpu) within cpu cooling and let cpu
+cooling (or even platform) #define arch_scale_thermal_capacity.
