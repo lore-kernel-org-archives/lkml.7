@@ -2,163 +2,144 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3182DC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C26AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C4E2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285912178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:47:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E51YJRIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388805AbfKGMrl (ORCPT
+        id S2388855AbfKGMrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:47:41 -0500
-Received: from mga01.intel.com ([192.55.52.88]:28893 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbfKGMrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:47:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 04:47:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
-   d="scan'208";a="402726877"
-Received: from test-hp-compaq-8100-elite-cmt-pc.igk.intel.com ([10.237.149.93])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Nov 2019 04:47:39 -0800
-From:   Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mingo@redhat.com, andriy.shevchenko@intel.com,
-        cezary.rojewski@intel.com, gustaw.lewandowski@intel.com,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Subject: [PATCH v2 1/2] seq_buf: Add printing formatted hex dumps
-Date:   Thu,  7 Nov 2019 13:45:37 +0100
-Message-Id: <1573130738-29390-1-git-send-email-piotrx.maziarz@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 7 Nov 2019 07:47:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27465 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388809AbfKGMrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 07:47:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573130865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6JCLnR+p53kKswMpd/tgwGKk8bAUuYcLBcEADrD2khI=;
+        b=E51YJRImZoO5KdTnQdkGPvewmD6/lQROvydi4FLYiMvSro0UJHPQAWEiEB3Y+X+jAx9d9P
+        l9f794kS8ApvRgjbgItwlamcaX80BcnimBfjccfTp0tpXkN8f3I0WDPdc77cV+Fc9FRWt/
+        LMc9jeWxHVOppltrQ8B9bFDGfvruDHQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-178-REO-JpoKPgyjT7qK3lkRcQ-1; Thu, 07 Nov 2019 07:47:41 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAA438017E0;
+        Thu,  7 Nov 2019 12:47:37 +0000 (UTC)
+Received: from [10.72.12.21] (ovpn-12-21.pek2.redhat.com [10.72.12.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E34295E241;
+        Thu,  7 Nov 2019 12:47:08 +0000 (UTC)
+Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+From:   Jason Wang <jasowang@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191106133531.693-1-jasowang@redhat.com>
+ <20191106133531.693-7-jasowang@redhat.com>
+ <20191107040700-mutt-send-email-mst@kernel.org>
+ <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
+ <20191107061942-mutt-send-email-mst@kernel.org>
+ <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+Message-ID: <c588c724-04da-2991-9f88-f36c0d04364a@redhat.com>
+Date:   Thu, 7 Nov 2019 20:47:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: REO-JpoKPgyjT7qK3lkRcQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provided function is an analogue of print_hex_dump().
 
-Implementing this function in seq_buf allows using for multiple
-purposes (e.g. for tracing) and therefore prevents from code duplication
-in every layer that uses seq_buf.
+On 2019/11/7 =E4=B8=8B=E5=8D=888:43, Jason Wang wrote:
+>
+> On 2019/11/7 =E4=B8=8B=E5=8D=887:21, Michael S. Tsirkin wrote:
+>> On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
+>>> On 2019/11/7 =E4=B8=8B=E5=8D=885:08, Michael S. Tsirkin wrote:
+>>>> On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
+>>>>> This sample driver creates mdev device that simulate virtio net=20
+>>>>> device
+>>>>> over virtio mdev transport. The device is implemented through vringh
+>>>>> and workqueue. A device specific dma ops is to make sure HVA is used
+>>>>> directly as the IOVA. This should be sufficient for kernel virtio
+>>>>> driver to work.
+>>>>>
+>>>>> Only 'virtio' type is supported right now. I plan to add 'vhost' type
+>>>>> on top which requires some virtual IOMMU implemented in this sample
+>>>>> driver.
+>>>>>
+>>>>> Acked-by: Cornelia Huck<cohuck@redhat.com>
+>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>> I'd prefer it that we call this something else, e.g.
+>>>> mvnet-loopback. Just so people don't expect a fully
+>>>> functional device somehow. Can be renamed when applying?
+>>> Actually, I plan to extend it as another standard network interface for
+>>> kernel. It could be either a standalone pseudo device or a stack=20
+>>> device.
+>>> Does this sounds good to you?
+>>>
+>>> Thanks
+>> That's a big change in an interface so it's a good reason
+>> to rename the driver at that point right?
+>> Oherwise users of an old kernel would expect a stacked driver
+>> and get a loopback instead.
+>>
+>> Or did I miss something?
+>
+>
+> My understanding is that it was a sample driver in /doc. It should not=20
+> be used in production environment. Otherwise we need to move it to=20
+> driver/virtio.
+>
+> But if you insist, I can post a V11.
+>
+> Thanks=20
 
-print_hex_dump() is an essential part of logging data to dmesg. Adding
-similar capability for other purposes is beneficial to all users.
 
-Example usage:
-seq_buf_hex_dump(seq, "", DUMP_PREFIX_OFFSET, 16, 4, buf,
-		 ARRAY_SIZE(buf), true);
-Example output:
-00000000: 00000000 ffffff10 ffffff32 ffff3210  ........2....2..
-00000010: ffff3210 83d00437 c0700000 00000000  .2..7.....p.....
-00000020: 02010004 0000000f 0000000f 00004002  .............@..
-00000030: 00000fff 00000000                    ........
+Or maybe it's better to rename the type of current mdev from 'virtio' to=20
+'virtio-loopback'. Then we can add more types in the future.
 
-Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
----
-v2
-Add kernel doc header
-Explain linebuf magic number size
+Thanks
 
-Decided not to change declaration order or remaining -= rowsize to
-remaining -= linelen in order to stay aligned with base print_hex_dump
-function. However I can change it if requested.
-
- include/linux/seq_buf.h |  3 +++
- lib/seq_buf.c           | 62 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
-
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index aa5deb0..fb0205d 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -125,6 +125,9 @@ extern int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len);
- extern int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
- 			      unsigned int len);
- extern int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc);
-+extern int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str,
-+			    int prefix_type, int rowsize, int groupsize,
-+			    const void *buf, size_t len, bool ascii);
- 
- #ifdef CONFIG_BINARY_PRINTF
- extern int
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index bd807f5..4e865d4 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -328,3 +328,65 @@ int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
- 	s->readpos += cnt;
- 	return cnt;
- }
-+
-+/**
-+ * seq_buf_hex_dump - print formatted hex dump into the sequence buffer
-+ * @s: seq_buf descriptor
-+ * @prefix_str: string to prefix each line with;
-+ *  caller supplies trailing spaces for alignment if desired
-+ * @prefix_type: controls whether prefix of an offset, address, or none
-+ *  is printed (%DUMP_PREFIX_OFFSET, %DUMP_PREFIX_ADDRESS, %DUMP_PREFIX_NONE)
-+ * @rowsize: number of bytes to print per line; must be 16 or 32
-+ * @groupsize: number of bytes to print at a time (1, 2, 4, 8; default = 1)
-+ * @buf: data blob to dump
-+ * @len: number of bytes in the @buf
-+ * @ascii: include ASCII after the hex output
-+ *
-+ * Function is an analogue of print_hex_dump() and thus has similar interface.
-+ *
-+ * linebuf size is maximal length for one line.
-+ * 32 * 3 - maximum bytes per line, each printed into 2 chars + 1 for
-+ *	separating space
-+ * 2 - spaces separating hex dump and ascii representation
-+ * 32 - ascii representation
-+ * 1 - terminating '\0'
-+ *
-+ * Returns zero on success, -1 on overflow
-+ */
-+int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str, int prefix_type,
-+		     int rowsize, int groupsize,
-+		     const void *buf, size_t len, bool ascii)
-+{
-+	const u8 *ptr = buf;
-+	int i, linelen, remaining = len;
-+	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
-+	int ret;
-+
-+	if (rowsize != 16 && rowsize != 32)
-+		rowsize = 16;
-+
-+	for (i = 0; i < len; i += rowsize) {
-+		linelen = min(remaining, rowsize);
-+		remaining -= rowsize;
-+
-+		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
-+				   linebuf, sizeof(linebuf), ascii);
-+
-+		switch (prefix_type) {
-+		case DUMP_PREFIX_ADDRESS:
-+			ret = seq_buf_printf(s, "%s%p: %s\n",
-+			       prefix_str, ptr + i, linebuf);
-+			break;
-+		case DUMP_PREFIX_OFFSET:
-+			ret = seq_buf_printf(s, "%s%.8x: %s\n",
-+					     prefix_str, i, linebuf);
-+			break;
-+		default:
-+			ret = seq_buf_printf(s, "%s%s\n", prefix_str, linebuf);
-+			break;
-+		}
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
--- 
-2.7.4
 
