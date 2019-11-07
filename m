@@ -2,210 +2,138 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E73EFC6196
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA30FC6194
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19654217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F3B2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrYAJcfj"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Apvtew3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733133AbfKGCwi (ORCPT
+        id S1733047AbfKGDCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:52:38 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42839 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728334AbfKGCwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:52:37 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i185so639821oif.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:52:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LKlERTl9DvESYF3m/JsPRK2Ra4f773JCe1klUlJdfm8=;
-        b=hrYAJcfjB5EUPkKmDUrpuOx0lOQSIA3j08ysAaXeXLKb013qoG8F1U6i/uTp1u8D/j
-         fqryyYhwNLlzpm+LXUPaswVejzLsCS+peFQOt/ppVHTmoWcZUa8qdu2HWkt9U0X6Ey73
-         bUtJkqxyxnUdRj/m0t9D9khHaLSUXvAIoSrMmDg8DvTCTz6lsQVTFuRkNIeo1fX+sRiL
-         cqrTz/Stsei5t2BjQwO4UxGaex6ar7Q1ucu7SJGWY3q+jUemNmuN7rCnaXM1QJugbHl3
-         n0v+r+JzONbo2agmPVu+BpZpJiFWgEBy83Yb554Rkq/4yqOlT0krKIeXL5ohHFTBnhbJ
-         0NQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LKlERTl9DvESYF3m/JsPRK2Ra4f773JCe1klUlJdfm8=;
-        b=oDR7P5+hxQjg4QDXNnm4V1WTYSvdrT2JLMdtpMa+IwF5DVcI7ETMA84XR0IoAremht
-         heh6NXS9BD78QrZT7YdPKOn5pLp/sqE0yFpjvK53W4dmpkUJJx/Gz/BURLFoL6ItngF2
-         A49owS1/mJGNo4gfF25LCEcjXitjYqJY6/LVfnE772d3tI1B8jG5gbRQ0MqX8xc7SChH
-         /B/w13cgU+8+G46ruu+iPBSrsBpY+QUAs0kWOt1+Pe8xlN04ctmL+NtQ0dYXzsFp3GqS
-         h2DMYMfZUzlxD9chvxI2e5kHbtvaQRLD5YgjPG4dwle1uc3wVXhCnz6tRqj1XdnUQM5+
-         etIg==
-X-Gm-Message-State: APjAAAVQ7CP6f86CmakDoOvEbenUCnajVEQYFKj/3fysh5jQ9Tz3lNX1
-        X8Up+LLbnFFXkIJGqOX4lmV1OwOFFtTQXJVb6ukcYg==
-X-Google-Smtp-Source: APXvYqxLSyryF3fKienTgCOzEZBGe6VVLooYyUdjdZWIh5gWqNJaOwiIFMEpUA637TIkM9C7K86t7b/a/gCOhlrRXzw=
-X-Received: by 2002:aca:4fce:: with SMTP id d197mr1237938oib.142.1573095155625;
- Wed, 06 Nov 2019 18:52:35 -0800 (PST)
+        Wed, 6 Nov 2019 22:02:39 -0500
+Received: from mail-eopbgr10048.outbound.protection.outlook.com ([40.107.1.48]:55885
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727665AbfKGDCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 22:02:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g2dDzL2winvZ11JdSk6FnEAUBPorxhA2TfGYLlmIjc39MoCidEkenhPPBTfHzDNhkUstT0NjBaoIO1Mzd/g68szpMuQmvrIIQLVeCGLcesq+Gt7tv3pOSDdNX34S/MdhKuvOSY/EBYiXt32wLHcxg3lJCaL2eAj25XDBTYAYcc7SAbZihE73Axkcx2e2I3GPkR6wGg/F3ZxGMwsRb5H792vxVsXCjG2boC9Msgq5KeiSgoaYCJ5wVm4zVroKq55B67N7CuxI4skL9vV1T7y0jB2svjVWzMcfmoPaahDR6gw3HpYfa1i3JMDGcY8ZKzRifhWmhgTcRVGr4J6zcxO4vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mZv4NopV23VFj1A5wzNaysOILdV0J0HgwrzEEO+i07I=;
+ b=EANzX9FfY/8Gm1UtgXWAcV1piuCbFakytR5VCQF2J7Fc1+Akz87DoMEo+wqyE9rDfTWXlJ7hjbpG0r9QflmHlJsW6NwekpVi//macwS3ms3SUmvSUSTyFT6N0XZk3SZpmdBg2a36m2kb2EuJXJ0TkWICP/noXugmrlrZWJ0r7OSlmdqqxg9nAlKDSYXj9NrJviA7LsETH5DoK6aTbYue1+5/7Cv6fkr/CkteqGzYKhU3yWTV2aja5XMaggptdG7uNq3CoralC/4/ecT4Ldnx2QnIr0RM3MH6eMHIDGYLZwxa6EQczD2ZkkSj92Fr4nSigXlZOZbyInMBrkff1sdTQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mZv4NopV23VFj1A5wzNaysOILdV0J0HgwrzEEO+i07I=;
+ b=Apvtew3b7rUHHksD+/Spy0L0Eo6kfbDZMZ6G4tvt9wUUCcn9jFVWOVbjvn8ExiZNqOZN/NF+xV/KDHrlRu9vcIsXdIvkFt3Az2C4S11BWqzXgatI7zL59NGi5EJKeWEfy8/BEoLI0+sHp57PXvBvGXkV1u7xwX4tO0QtlehBHDg=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5156.eurprd04.prod.outlook.com (20.177.42.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Thu, 7 Nov 2019 03:02:34 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2408.028; Thu, 7 Nov 2019
+ 03:02:34 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Duan <fugang.duan@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] tty: serial: imx: use the sg count from dma_map_sg
+Thread-Topic: [PATCH] tty: serial: imx: use the sg count from dma_map_sg
+Thread-Index: AQHVlRfNofENwEaBB0GOB39FR9UWaw==
+Date:   Thu, 7 Nov 2019 03:02:34 +0000
+Message-ID: <1573095656-749-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR06CA0004.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::16) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 475b17a9-c588-4dd6-c533-08d7632eeffb
+x-ms-traffictypediagnostic: AM0PR04MB5156:|AM0PR04MB5156:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB51560C55260D323459F1144988780@AM0PR04MB5156.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(396003)(376002)(366004)(199004)(189003)(99286004)(66476007)(25786009)(50226002)(186003)(6116002)(2906002)(66066001)(52116002)(6486002)(8936002)(81156014)(386003)(8676002)(6506007)(64756008)(81166006)(5660300002)(66556008)(14454004)(4744005)(66446008)(6436002)(3846002)(2501003)(26005)(478600001)(316002)(2201001)(4326008)(66946007)(305945005)(102836004)(86362001)(256004)(14444005)(486006)(2616005)(44832011)(36756003)(110136005)(71190400001)(54906003)(7736002)(6512007)(71200400001)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5156;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IK3P7FK6ckhx6PkXhmK5LUcmscCVilQJOdJmDml+/DI6Bl5FQFjPMgd2bSfyMlrZR40hP/3hIP0weugc0oO9dAM9nsxbhxR2GsbFWi3ihTAVunzH3vnQtwyrAY4RcvA/7chqR6ze83WMAWLJA6oepsTOSGq7nN3pLzxmj3pDjM4bTO8r0sZYoOOLEzHPWigO25cHlFSHKuE5WekBPhNKbVmOJOSjtdlnVLrTgGEx2yXELn62pA0agFIHw+PJ8EnvXy6PMAp1BDi3FT6Howu/+Ojk4vZnj42k/wyon+BRYMUgTLP1/h2FEN9midRfWR5qd+VEvB6kpbzbCI9hSdcJvM9lL5duZ9Gd2rO+zj85kSOq2pRsle6/ZGUEjTpu+J1GII/U7KwyZhuTHdVm6c64Hba2r/MAiKGrDoSyJwE8c+MqVtty1GPjmrH+c/JcF2Aj
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190603210746.15800-1-hannes@cmpxchg.org> <20190603210746.15800-10-hannes@cmpxchg.org>
-In-Reply-To: <20190603210746.15800-10-hannes@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 6 Nov 2019 18:52:23 -0800
-Message-ID: <CALvZod6rYcJ4jimyaTTKUvXVZ4a3-G-+wqnRkV875u5npUUeAQ@mail.gmail.com>
-Subject: Re: [PATCH 09/11] mm: vmscan: move file exhaustion detection to the
- node level
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 475b17a9-c588-4dd6-c533-08d7632eeffb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 03:02:34.6662
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RPMswWn5PSJFh9+pV87nsP9zGF9Kvx7wIyhuJCHWajwyZoB1uGg3bBK2sg+Rtcw1j3QCh/wn9IpUizADxCu48g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 3:08 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> When file pages are lower than the watermark on a node, we try to
-> force scan anonymous pages to counter-act the balancing algorithms
-> preference for new file pages when they are likely thrashing. This is
-> node-level decision, but it's currently made each time we look at an
-> lruvec. This is unnecessarily expensive and also a layering violation
-> that makes the code harder to understand.
->
-> Clean this up by making the check once per node and setting a flag in
-> the scan_control.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+From: Peng Fan <peng.fan@nxp.com>
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+The dmaengine_prep_slave_sg needs to use sg count returned
+by dma_map_sg, not use sport->dma_tx_nents, because the return
+value of dma_map_sg is not always same with "nents".
 
+And update sport->dma_tx_nents with value from dma_map_sg to avoid
+modifing dma_unmap_sg
 
-> ---
->  mm/vmscan.c | 80 ++++++++++++++++++++++++++++-------------------------
->  1 file changed, 42 insertions(+), 38 deletions(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index eb535c572733..cabf94dfa92d 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -104,6 +104,9 @@ struct scan_control {
->         /* One of the zones is ready for compaction */
->         unsigned int compaction_ready:1;
->
-> +       /* The file pages on the current node are dangerously low */
-> +       unsigned int file_is_tiny:1;
-> +
->         /* Allocation order */
->         s8 order;
->
-> @@ -2219,45 +2222,16 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
->         }
->
+Fixes: b4cdc8f61beb("serial: imx: add DMA support for imx6q")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/tty/serial/imx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Unrelated to the patch. I think we need to revisit all the heuristics
-that were added here over the years. get_scan_count() has become
-really complicated and weird.
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 87c58f9f6390..bda7f59ec60e 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -619,6 +619,9 @@ static void imx_uart_dma_tx(struct imx_port *sport)
+ 		dev_err(dev, "DMA mapping error for TX.\n");
+ 		return;
+ 	}
++
++	sport->dma_tx_nents =3D ret;
++
+ 	desc =3D dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
+ 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
+ 	if (!desc) {
+--=20
+2.16.4
 
->         /*
-> -        * Prevent the reclaimer from falling into the cache trap: as
-> -        * cache pages start out inactive, every cache fault will tip
-> -        * the scan balance towards the file LRU.  And as the file LRU
-> -        * shrinks, so does the window for rotation from references.
-> -        * This means we have a runaway feedback loop where a tiny
-> -        * thrashing file LRU becomes infinitely more attractive than
-> -        * anon pages.  Try to detect this based on file LRU size.
-> +        * If the system is almost out of file pages, force-scan anon.
-> +        * But only if there are enough inactive anonymous pages on
-> +        * the LRU. Otherwise, the small LRU gets thrashed.
->          */
-> -       if (!cgroup_reclaim(sc)) {
-> -               unsigned long pgdatfile;
-> -               unsigned long pgdatfree;
-> -               int z;
-> -               unsigned long total_high_wmark = 0;
-> -
-> -               pgdatfree = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
-> -               pgdatfile = node_page_state(pgdat, NR_ACTIVE_FILE) +
-> -                          node_page_state(pgdat, NR_INACTIVE_FILE);
-> -
-> -               for (z = 0; z < MAX_NR_ZONES; z++) {
-> -                       struct zone *zone = &pgdat->node_zones[z];
-> -                       if (!managed_zone(zone))
-> -                               continue;
-> -
-> -                       total_high_wmark += high_wmark_pages(zone);
-> -               }
-> -
-> -               if (unlikely(pgdatfile + pgdatfree <= total_high_wmark)) {
-> -                       /*
-> -                        * Force SCAN_ANON if there are enough inactive
-> -                        * anonymous pages on the LRU in eligible zones.
-> -                        * Otherwise, the small LRU gets thrashed.
-> -                        */
-> -                       if (!inactive_list_is_low(lruvec, false, sc, false) &&
-> -                           lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, sc->reclaim_idx)
-> -                                       >> sc->priority) {
-> -                               scan_balance = SCAN_ANON;
-> -                               goto out;
-> -                       }
-> -               }
-> +       if (sc->file_is_tiny &&
-> +           !inactive_list_is_low(lruvec, false, sc, false) &&
-> +           lruvec_lru_size(lruvec, LRU_INACTIVE_ANON,
-> +                           sc->reclaim_idx) >> sc->priority) {
-> +               scan_balance = SCAN_ANON;
-> +               goto out;
->         }
->
->         /*
-> @@ -2718,6 +2692,36 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->         nr_reclaimed = sc->nr_reclaimed;
->         nr_scanned = sc->nr_scanned;
->
-> +       /*
-> +        * Prevent the reclaimer from falling into the cache trap: as
-> +        * cache pages start out inactive, every cache fault will tip
-> +        * the scan balance towards the file LRU.  And as the file LRU
-> +        * shrinks, so does the window for rotation from references.
-> +        * This means we have a runaway feedback loop where a tiny
-> +        * thrashing file LRU becomes infinitely more attractive than
-> +        * anon pages.  Try to detect this based on file LRU size.
-> +        */
-> +       if (!cgroup_reclaim(sc)) {
-> +               unsigned long file;
-> +               unsigned long free;
-> +               int z;
-> +               unsigned long total_high_wmark = 0;
-> +
-> +               free = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
-> +               file = node_page_state(pgdat, NR_ACTIVE_FILE) +
-> +                          node_page_state(pgdat, NR_INACTIVE_FILE);
-> +
-> +               for (z = 0; z < MAX_NR_ZONES; z++) {
-> +                       struct zone *zone = &pgdat->node_zones[z];
-> +                       if (!managed_zone(zone))
-> +                               continue;
-> +
-> +                       total_high_wmark += high_wmark_pages(zone);
-> +               }
-> +
-> +               sc->file_is_tiny = file + free <= total_high_wmark;
-> +       }
-> +
->         shrink_node_memcgs(pgdat, sc);
->
->         if (reclaim_state) {
-> --
-> 2.21.0
->
