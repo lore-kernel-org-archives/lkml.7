@@ -2,126 +2,251 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EEFC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A975C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B100C2075C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447DD2075C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="csf58IPg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KMNY2d8a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388369AbfKGNiy (ORCPT
+        id S2388886AbfKGNjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:38:54 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35544 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbfKGNix (ORCPT
+        Thu, 7 Nov 2019 08:39:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39921 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727858AbfKGNjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:38:53 -0500
-Received: by mail-yb1-f194.google.com with SMTP id i12so935182ybg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:38:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UR+FMpDRyPvXwNuet63hIA/KDaiYBztB4W2oxpuqt4A=;
-        b=csf58IPg/w9lQ2Nl9oTvOEkFzDSskXTPBRw8RrWxLtI2rQy0W4i6vmQjsgLc6BoO+F
-         YTwCDTgQVpF7vOqHSlyNAoDkvZPu8DoGhp4BImq5C36qnqFYH+f7ZnATq69eSOifv8Vu
-         FSqy2tMQSkpc+MJ5dsMIbD4sVXsKkMrstvBaLhTvk8DoTkXYAaB+uta+3AVkJanTarNL
-         EIIb/RnSDc0la+ZBS/pl2Qde1zl1wO453vc7F21/7iTG+a8J6RH+7gXYi/0zBvk5chRL
-         se/x7c6J5b1pPsDWS+s/sbSoRs1b+WqYISDDPF9PZqfyCv6ZkcTYwGvP8qxTeqBIOwJ2
-         PJTA==
+        Thu, 7 Nov 2019 08:39:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573133956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tq2JeUBVUQ/XsuBt3nC8IiPmPbwKvnLljLM+JcrAMJk=;
+        b=KMNY2d8aZwBcqGuLQVwZMWK5L2y8WMKXk5SSK2uvfi/LLOa4rnDOSoH4nXz8nidHG6x1NW
+        03KKNd0OUA7hRM6bakJDUfBHtdZZONhMJQsoCKsAcAP096pXZLW9btoYn+Khzvp9vPwQNl
+        4lu/4KxhjDCIpCf6Z8VARoBwVOBzhMI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-Xcs4GK4rNDixMXRgLGnU6Q-1; Thu, 07 Nov 2019 08:39:14 -0500
+Received: by mail-wm1-f70.google.com with SMTP id i23so790591wmb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:39:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UR+FMpDRyPvXwNuet63hIA/KDaiYBztB4W2oxpuqt4A=;
-        b=lViU49+FPWdEyBLi5UkwyD4PWZp0BT4XcX+6SpTLXyLhmdCk0wiSwwTk29e0BPBmIx
-         pJEBPkniukEWM28Z1EDX0lTriCBZyWtwbrUxfOuXhW+lh+U+DXowqlwjvMLIm2cPZsRY
-         rmC3o2tWYspBgY/XNqpLtkfy6NRJGfJkD6Pxp+ZR8qimAmPRTHCowMBljrwj7yo4cs+S
-         U4HJTysL8cYBI4MYqF1hatEPmATVtz87xQiNr9pENPZAo5OGYUza/qUeKx+8Ww2EScOH
-         XXmYSujUv8J5M9AuFmy2sq+KxKUR2WzI//vx5k16ewNNf1Sf3BrqQW2tqdb8CPhcm1z5
-         N9mw==
-X-Gm-Message-State: APjAAAXajbw40CBTsO/j1zE72qX60CnGBpuITwPWVexygMBYDjbVdand
-        kRMgN+o525ofmPsRi2kmoGMzNAZYxYw=
-X-Google-Smtp-Source: APXvYqxMAOnQy88pixXrXkLY51EbFIn3dNn0lEnxFRVO0u+p/OxQmgx371p0fYm+lPnMmM6+RPfj8A==
-X-Received: by 2002:a5b:d07:: with SMTP id y7mr3445302ybp.313.1573133932475;
-        Thu, 07 Nov 2019 05:38:52 -0800 (PST)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id i125sm750756ywa.68.2019.11.07.05.38.51
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=R0mNyYZd6bScGehmpEaPxSSN+C3Fm91zz0KVrfqWw10=;
+        b=hUd/UMFrLcLoyi0QEm2kC9gIgoCFp/osEvro8khSJi1GKRSl6KnN7wl3ZWsLfGVgz5
+         NDVS9gDKuQBoXbqsxQLNK2CL3XhXJWNYAprvjxdCuZ5GgBbm2KEUhzUg6NXuSGjBxXa8
+         KAX6KbVMEupBQsUHJPQsJ7YF5CjQeTA/10PS4wHqg36BuDKS7Nxc87mKO2ojCOsoYltP
+         CR/ovq9vgpERTzVyp1rLpf+z93sGeWV4GT1Ln5F+GuOlgrYJJdkEUp1mRlIrJ/ukxnfU
+         FHHVFhDMQTMtiOgiBRrDl0xFOWEw7l29CO988z4xH+zSL5s8UfXD8bJgd+vqkXLO0iH2
+         Cwhg==
+X-Gm-Message-State: APjAAAVNIEaf5oiUvE7LCdX3N01iUIcsWeZAGW7YnoMACruKUbv2rSFQ
+        Tf9Zg2uJeMtYfJO9Yxpaajit3zz2mM0FxBnhiWZM/yQ6sx4sWiPunYwKE1ZFo5Q1YZxYLqHiHF4
+        h+lLkfg4FxEFwqbB5dt/pVyDi
+X-Received: by 2002:a05:6000:101:: with SMTP id o1mr3011985wrx.394.1573133953386;
+        Thu, 07 Nov 2019 05:39:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxlJH4U7SHbrC8hxVGAeT6H8Xo6YW+iuKy+hdOOvg2QwqKGRTGrF+FvXRmJs1SP18+ynLahVA==
+X-Received: by 2002:a05:6000:101:: with SMTP id o1mr3011954wrx.394.1573133953071;
+        Thu, 07 Nov 2019 05:39:13 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id c15sm1843353wmb.45.2019.11.07.05.39.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 05:38:51 -0800 (PST)
-Date:   Thu, 7 Nov 2019 08:38:51 -0500
-From:   Sean Paul <sean@poorly.run>
-To:     Joe Perches <joe@perches.com>
-Cc:     Wambui Karuga <wambui.karugax@gmail.com>, hjc@rock-chips.com,
-        heiko@sntech.de, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/rockchip: use DRM_DEV_ERROR for log output
-Message-ID: <20191107133851.GF63329@art_vandelay>
-References: <20191107092945.15513-1-wambui.karugax@gmail.com>
- <4c74db2614cefe23f888d0643c2d7c356086745a.camel@perches.com>
+        Thu, 07 Nov 2019 05:39:12 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Olaf Hering <olaf@aepfle.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Olaf Hering <olaf@aepfle.de>
+Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
+In-Reply-To: <20191024144943.26199-1-olaf@aepfle.de>
+References: <20191024144943.26199-1-olaf@aepfle.de>
+Date:   Thu, 07 Nov 2019 14:39:11 +0100
+Message-ID: <874kzfbybk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c74db2614cefe23f888d0643c2d7c356086745a.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: Xcs4GK4rNDixMXRgLGnU6Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 01:54:22AM -0800, Joe Perches wrote:
-> On Thu, 2019-11-07 at 12:29 +0300, Wambui Karuga wrote:
-> > Replace the use of the dev_err macro with the DRM_DEV_ERROR
-> > DRM helper macro.
-> 
-> The commit message should show the reason _why_ you are doing
-> this instead of just stating that you are doing this.
-> 
-> It's not that dev_err is uncommon in drivers/gpu/drm.
-> 
+Olaf Hering <olaf@aepfle.de> writes:
 
-It is uncommon (this is the sole instance) in rockchip, however. So it makes
-sense to convert the dev_* prints in rockchip to DRM_DEV for consistency.
+> The hostname is resolved just once since commit 58125210ab3b ("Tools:
+> hv: cache FQDN in kvp_daemon to avoid timeouts") to make sure the VM
+> responds within the timeout limits to requests from the host.
+>
+> If for some reason getaddrinfo fails, the string returned by the
+> "FullyQualifiedDomainName" request contains some error string, which is
+> then used by tools on the host side.
+>
+> Adjust the code to resolve the current hostname in a separate thread.
+> This thread loops until getaddrinfo returns success. During this time
+> all "FullyQualifiedDomainName" requests will be answered with an empty
+> string.
+>
+> Signed-off-by: Olaf Hering <olaf@aepfle.de>
+> ---
+>  tools/hv/Makefile        |  2 ++
+>  tools/hv/hv_kvp_daemon.c | 69 ++++++++++++++++++++++++++++++++----------=
+------
+>  2 files changed, 48 insertions(+), 23 deletions(-)
+>
+> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+> index b57143d9459c..3b5481015a84 100644
+> --- a/tools/hv/Makefile
+> +++ b/tools/hv/Makefile
+> @@ -22,6 +22,8 @@ ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS=
+))
+> =20
+>  ALL_SCRIPTS :=3D hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.=
+sh
+> =20
+> +$(OUTPUT)hv_kvp_daemon: LDFLAGS +=3D -lpthread
+> +
+>  all: $(ALL_PROGRAMS)
+> =20
+>  export srctree OUTPUT CC LD CFLAGS
+> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> index e9ef4ca6a655..22cf1c4dbf5c 100644
+> --- a/tools/hv/hv_kvp_daemon.c
+> +++ b/tools/hv/hv_kvp_daemon.c
+> @@ -41,6 +41,7 @@
+>  #include <net/if.h>
+>  #include <limits.h>
+>  #include <getopt.h>
+> +#include <pthread.h>
+> =20
+>  /*
+>   * KVP protocol: The user mode component first registers with the
+> @@ -85,7 +86,7 @@ static char *processor_arch;
+>  static char *os_build;
+>  static char *os_version;
+>  static char *lic_version =3D "Unknown version";
+> -static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
+> +static char *full_domain_name;
+>  static struct utsname uts_buf;
+> =20
+>  /*
+> @@ -1327,27 +1328,53 @@ static int kvp_set_ip_info(char *if_name, struct =
+hv_kvp_ipaddr_value *new_val)
+>  =09return error;
+>  }
+> =20
+> -
+> -static void
+> -kvp_get_domain_name(char *buffer, int length)
+> +/*
+> + * Async retrival of Fully Qualified Domain Name because getaddrinfo tak=
+es an
+> + * unpredictable amount of time to finish.
+> + */
+> +static void *kvp_getaddrinfo(void *p)
+>  {
+> -=09struct addrinfo=09hints, *info ;
+> -=09int error =3D 0;
+> +=09char *tmp, **str_ptr =3D (char **)p;
+> +=09char hostname[HOST_NAME_MAX + 1];
+> +=09struct addrinfo=09*info, hints =3D {
+> +=09=09.ai_family =3D AF_INET, /* Get only ipv4 addrinfo. */
+> +=09=09.ai_socktype =3D SOCK_STREAM,
+> +=09=09.ai_flags =3D AI_CANONNAME,
+> +=09};
+> +=09int ret;
+> +
+> +=09if (gethostname(hostname, sizeof(hostname) - 1) < 0)
+> +=09=09goto out;
+> +
+> +=09do {
+> +=09=09ret =3D getaddrinfo(hostname, NULL, &hints, &info);
+> +=09=09if (ret)
+> +=09=09=09sleep(1);
 
-Wambui, could you also please convert the dev_warn instance as well?
+Is it only EAI_AGAIN or do you see any other return values which justify
+the retry? I'm afraid that in case of a e.g. non-existing hostname we'll
+be infinitely looping with EAI_FAIL.
 
-I'll apply this to drm-misc-next and expand on the commit message a bit.
+> +=09} while (ret);
+> +
+> +=09ret =3D asprintf(&tmp, "%s", info->ai_canonname);
+> +=09freeaddrinfo(info);
+> +=09if (ret <=3D 0)
+> +=09=09goto out;
+> +
+> +=09if (ret > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)
+> +=09=09tmp[HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1] =3D '\0';
+> +=09*str_ptr =3D tmp;
+> =20
+> -=09gethostname(buffer, length);
+> -=09memset(&hints, 0, sizeof(hints));
+> -=09hints.ai_family =3D AF_INET; /*Get only ipv4 addrinfo. */
+> -=09hints.ai_socktype =3D SOCK_STREAM;
+> -=09hints.ai_flags =3D AI_CANONNAME;
+> +out:
+> +=09pthread_exit(NULL);
+> +}
+> +
+> +static void kvp_obtain_domain_name(char **str_ptr)
+> +{
+> +=09pthread_t t;
+> =20
+> -=09error =3D getaddrinfo(buffer, NULL, &hints, &info);
+> -=09if (error !=3D 0) {
+> -=09=09snprintf(buffer, length, "getaddrinfo failed: 0x%x %s",
+> -=09=09=09error, gai_strerror(error));
+> +=09if (pthread_create(&t, NULL, kvp_getaddrinfo, str_ptr)) {
+> +=09=09syslog(LOG_ERR, "pthread_create failed; error: %d %s",
+> +=09=09=09errno, strerror(errno));
+>  =09=09return;
+>  =09}
+> -=09snprintf(buffer, length, "%s", info->ai_canonname);
+> -=09freeaddrinfo(info);
+> +=09pthread_detach(t);
 
-Thanks,
+I think this should be complemented with pthread_cancel/pthread_join
+before exiting main().
 
-Sean
+>  }
+> =20
+>  void print_usage(char *argv[])
+> @@ -1412,11 +1439,7 @@ int main(int argc, char *argv[])
+>  =09 * Retrieve OS release information.
+>  =09 */
+>  =09kvp_get_os_info();
+> -=09/*
+> -=09 * Cache Fully Qualified Domain Name because getaddrinfo takes an
+> -=09 * unpredictable amount of time to finish.
+> -=09 */
+> -=09kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
+> +=09kvp_obtain_domain_name(&full_domain_name);
+> =20
+>  =09if (kvp_file_init()) {
+>  =09=09syslog(LOG_ERR, "Failed to initialize the pools");
+> @@ -1571,7 +1594,7 @@ int main(int argc, char *argv[])
+> =20
+>  =09=09switch (hv_msg->body.kvp_enum_data.index) {
+>  =09=09case FullyQualifiedDomainName:
+> -=09=09=09strcpy(key_value, full_domain_name);
+> +=09=09=09strcpy(key_value, full_domain_name ? : "");
+>  =09=09=09strcpy(key_name, "FullyQualifiedDomainName");
+>  =09=09=09break;
+>  =09=09case IntegrationServicesVersion:
 
-> $ git grep -w dev_err drivers/gpu/drm | wc -l
-> 1950
-> $ git grep -w DRM_DEV_ERROR drivers/gpu/drm | wc -l
-> 756
-> 
-> > diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-> []
-> > @@ -916,7 +916,7 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
-> >  	}
-> >  
-> >  	if (!dsi->cdata) {
-> > -		dev_err(dev, "no dsi-config for %s node\n", np->name);
-> > +		DRM_DEV_ERROR(dev, "no dsi-config for %s node\n", np->name);
-> >  		return -EINVAL;
-> >  	}
-> 
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+--=20
+Vitaly
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
