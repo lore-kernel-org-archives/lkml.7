@@ -2,86 +2,117 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20691FC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D4FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B982166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106A42166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573089078;
-	bh=rIU6EyvBYO9j9IVhetnly4HBKdPEzu5PrktOv5FywjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pGVuGCG1XO2xI9kcWTnMj8eNs2YERMZ218JylNxeojFzpV58jHm8mq7UxQBFW+GXi
-	 lqOa5U5LyeNnuwGvUt/ZwJkfWLCgxteCiaUmKEVrtDBn7mRJVTaRSbWz+fGvYKUG9A
-	 vian9e1fndd1xLPF2urwo/8gqFlOUvAbf3g8Zofs=
+	s=default; t=1573089098;
+	bh=A3IuF9cZ30dT7CLYfgSYH8DNDwM08zBgkl7nEior09g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=daxKJE9ATStpXTaCn+BTHjj5B4sBiWymzoMmXW27GTkzYMdL6bBoPV2+JX56JhITV
+	 1p0sCKiqTKElA5K0boOJIZ9Eoe6sCFER6Za7WlV/GzLFJRuOGgO3F2YKzv86XLdjkz
+	 OHWjKZblaMqroCCsgMAeh65I6PtKxt9u25xTPnMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732897AbfKGBLQ (ORCPT
+        id S1732902AbfKGBLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:11:16 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43022 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGBLQ (ORCPT
+        Wed, 6 Nov 2019 20:11:36 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37563 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKGBLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:11:16 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l20so459722oie.10;
-        Wed, 06 Nov 2019 17:11:15 -0800 (PST)
+        Wed, 6 Nov 2019 20:11:36 -0500
+Received: by mail-lj1-f195.google.com with SMTP id l20so316682lje.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:11:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kYzJNbIs0O9a8dPgX0R29N35kZPtuAANCvpSCPAwGWc=;
+        b=gIByO5nFUKaSU/PpIZE6gMaLdyUfcKBOsp22xIL7XQAtKXEsAu84aBWKAefFC7n3Cx
+         4oJTqrxjc+3i7v8IuyG2wJAIOUl+AAQ/9qA8e7kGRh9fmgpAL8vhTDTxQ7LbYIb7VaKE
+         e50qm4JqsB6MFzM+IqvPwzndOuDKYHHc18Gnk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=icw6S2OVXRtdcU89hq1ruG6UsmLeUp//TCbYMm2btBk=;
-        b=LBnx0RY7ec1S3kbRk3qvTH4Pa1dt8KKBvTZsmY9Vy+pwy5Se0WsjFIu8mqYIgtm/I6
-         mUyiBNlzRdRu5xH2QfJeDf7Sgui3Vyh5SdDI6oXDURQu1sfzBAjZ6xw+zhLtuodUycLV
-         feur7j5x5AltPb5oVElqudphYC+WDLo8g20Z8/zrNNBXQiPF1A5UQFXsFZVvgzQ129j/
-         LUMAJpKAn5p53z6pY+9MnHrui/q6PbRbBcWZZMVUUdpHBrsb4EobcgCLId3MJtbXSDzz
-         TyAYVCna45ihhVVVxFR84iHBivrNSybLf47BSWtLbGVyvelfPHIvTZ3sc90StelOx8j6
-         hnPQ==
-X-Gm-Message-State: APjAAAVkj2Jj8Ef0qcA1zEiV+OHnbu86XILsKrC6OgeDs2sZ0yI/ak/I
-        b6R+Y7Qd2gJfeHu+7fYS7g==
-X-Google-Smtp-Source: APXvYqxWuabs3rv1PDOsLYIr4ybg0LIvCamfpGN0rR9RPj39X3hmAT+aHnyaQu14PBYsExoD+RRE3Q==
-X-Received: by 2002:a05:6808:2d8:: with SMTP id a24mr824426oid.127.1573089075340;
-        Wed, 06 Nov 2019 17:11:15 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m25sm233558otj.62.2019.11.06.17.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 17:11:14 -0800 (PST)
-Date:   Wed, 6 Nov 2019 19:11:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        yuenn@google.com, venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au, openbmc@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: Re: [PATCH v5 2/3] dt-bindings: reset: Add binding constants for
- NPCM7xx reset controller
-Message-ID: <20191107011114.GA19324@bogus>
-References: <20191106145331.25740-1-tmaimon77@gmail.com>
- <20191106145331.25740-3-tmaimon77@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kYzJNbIs0O9a8dPgX0R29N35kZPtuAANCvpSCPAwGWc=;
+        b=qPZKFfHUg2vKKtnjTTM5G3gJ5bbtclgosDe/07E/NLj9NtUAqhMvuBUZ4Z691sZmOz
+         v0WzHXxpK0crXGlSxO+tLvFIy5LWIghChBBPB7XWFUnLWaAZPoxOMj9KGFrHLXsW+vcT
+         MFw2uMjcCYI9JikwltoGB7KhKc/D6ExtnLpF9HMIkLWygP9gKSU4gECp6lBYndhBxOiT
+         rl2NKngfASLxxX+b/EZv/mTbs7/l8j6XJ21uuLtaphzkYu0+bRHfVDsEZqyh5BzGFWu/
+         xUogXzpZUb4qJ1xBd1oqRWRQhhB6D/jKrqI20sDN7TIbVTEpaPX/2v7haDDDRTzropx+
+         Y+yw==
+X-Gm-Message-State: APjAAAVrP9qvPq4Tct8PzQJvfgCbCEEqFRu9U/gxJb0v1+/6YYuqgsKc
+        zK8HW3B2wVGpom7o95z++rxsO+pxWSo=
+X-Google-Smtp-Source: APXvYqzqUiUFCRKWVRpL4qjH8x3Y4lt0obOO0Xfk3XE1FQt+f4PMElmjI+SjJk0rQCeFZtnoqGXWXg==
+X-Received: by 2002:a2e:6c03:: with SMTP id h3mr250721ljc.86.1573089093854;
+        Wed, 06 Nov 2019 17:11:33 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id f25sm215188lfm.26.2019.11.06.17.11.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 17:11:32 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id v8so309376ljh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:11:32 -0800 (PST)
+X-Received: by 2002:a2e:8809:: with SMTP id x9mr249100ljh.82.1573089091962;
+ Wed, 06 Nov 2019 17:11:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106145331.25740-3-tmaimon77@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de>
+In-Reply-To: <20191106202806.241007755@linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 6 Nov 2019 17:11:15 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjXcS--G3Wd8ZGEOdCNRAWPaUneyN1ryShQL-_yi1kvOA@mail.gmail.com>
+Message-ID: <CAHk-=wjXcS--G3Wd8ZGEOdCNRAWPaUneyN1ryShQL-_yi1kvOA@mail.gmail.com>
+Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage further
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 16:53:30 +0200, Tomer Maimon wrote:
-> Add device tree binding constants for Nuvoton BMC NPCM7xx
-> reset controller.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 91 +++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-> 
+On Wed, Nov 6, 2019 at 12:57 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Calculate both the position of the first zero bit and the last zero bit to
+> limit the range which needs to be copied. This does not solve the problem
+> when the previous tasked had only byte 0 cleared and the next one has only
+> byte 65535 cleared, but trying to solve that would be too complex and
+> heavyweight for the context switch path. As the ioperm() usage is very rare
+> the case which is optimized is the single task/process which uses ioperm().
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hmm.
+
+I may read this patch wrong, but from what I can tell, if we really
+have just one process with an io bitmap, we're doing unnecessary
+copies.
+
+If we really have just one process that has an iobitmap, I think we
+could just keep the bitmap of that process entirely unchanged. Then,
+when we switch away from it, we set the io_bitmap_base to an invalid
+base outside the TSS segment, and when we switch back, we set it back
+to the valid one. No actual bitmap copies at all.
+
+So I think that rather than the "begin/end offset" games, we should
+perhaps have a "what was the last process that used the IO bitmap for
+this TSS" pointer (and, I think, some sequence counter, so that when
+the process updates its bitmap, it invalidates that case)?
+
+ Of course, you can do *nboth*, but if we really think that the common
+case is "one special process", then I think the begin/end offset is
+useless, but a "last bitmap process" would be very useful.
+
+Am I missing something?
+
+               Linus
