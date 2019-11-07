@@ -2,483 +2,154 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C6DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221BBC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42F221D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32EB214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4VuklTp"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Rrv3XhZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKGGcv (ORCPT
+        id S1726889AbfKGGg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:32:51 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46430 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbfKGGcv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:32:51 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 193so1699157pfc.13;
-        Wed, 06 Nov 2019 22:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:mime-version
-         :content-disposition:user-agent;
-        bh=/4U36y3xmQ4QFbuOayOaY4azxYpC5imTmiXbF20Lh/E=;
-        b=C4VuklTpZS0a9JdPkj0FG3aDlZv7GzTc1/v/wnuLvYkPRu7HuGm+UOHHIZlAqlvs6I
-         I6Gr/5McutidZZJR8uV92S6zIZDLv1PLkA7LfnSNT1D2zWH/4mhs0gYtPG5/J6hCiOmm
-         CSBKlP3AJXj4F67wBq9mMNxCPnpoDFsTrRjJIGdknn1Mzhl87Efwy83k+4jfiBPYpfOn
-         5VadeJrX8Lu8KNPy/BxwJLo7SAwA6CXB+ofjHXLhqZazMpifXsmwa6k+jWCLE0pfJnTz
-         ZtILMFXrpbPTpA5CS0eFdKsk26YXelNvD8bjslg1zxxI4TouAuWLGcMYTRy6c5TJRES/
-         UyEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mime-version:content-disposition:user-agent;
-        bh=/4U36y3xmQ4QFbuOayOaY4azxYpC5imTmiXbF20Lh/E=;
-        b=VAvl2Dkt8X05GUA4a/Z/VTxKposYfoQWotYGBGW2mKrV5tGkj7V/exAi4Kza52qNWU
-         8gf1e2feuinvKc5qwi8JgIyRjVfOESAaRMW8WsV03PEH3I1iWIz83b3PNtk4pMRGQrkt
-         7onBtuQMr8+42cgVj7kyKmeOUS6h1t0K+dO8TcjqeLZSLslo6L3Y1Xu3cfKz2Vz4PU3Z
-         unqbhJDGKKn967xByjw198b0ZFQOU6hliq6Km6cdSjU+dsaP0hgPoP4L6AJw24B4bVVd
-         zA764KYLaE8juBG15tsiMKYkgV7i8vYqdBZ008GWNh6FuEkSvZ7EkixVotNsjdAk5O9N
-         kGNA==
-X-Gm-Message-State: APjAAAWT3wzGK+Cy2LkY/MbZNJNHcLG83Bl5YQqEyDp4i9pk3sAeeHvy
-        2pKIXD/WQ5gBOntRJBmbXNA=
-X-Google-Smtp-Source: APXvYqzEq+Owu0wE00U8hFXFiqwDSb1sXT/0co/jBI32FfkkNMYJqSiQ8yY8Bi63zq20ns4AflFrLg==
-X-Received: by 2002:a17:90a:3565:: with SMTP id q92mr2945680pjb.28.1573108369872;
-        Wed, 06 Nov 2019 22:32:49 -0800 (PST)
-Received: from workstation-kernel-dev ([139.5.253.183])
-        by smtp.gmail.com with ESMTPSA id u7sm1075321pfh.84.2019.11.06.22.32.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 22:32:49 -0800 (PST)
-Date:   Thu, 7 Nov 2019 12:02:41 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     rcu@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Phong Tran <tranmanphong@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH v2] Documentation: RCU: rcubarrier: Convert to reST
-Message-ID: <20191107063241.GA2234@workstation-kernel-dev>
-Reply-To: 15512469-fc7e-24c8-d407-72ba7015a099@gmail.com
+        Thu, 7 Nov 2019 01:36:57 -0500
+Received: from mail-eopbgr30073.outbound.protection.outlook.com ([40.107.3.73]:49474
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725763AbfKGGg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 01:36:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LAuI5Bu0tvj3jgkq6Q5oqwk5nKxm3jaVGi6euptC5Xm1JGPvhwPz5vJvTK4Q0AUNkAWrYTQbbd64yqo6OzxeEU8TePj/NiOeU4wLxbT/BBs5Joa7xPeL5az9Y8imBjAykk1e9gHzRTAG5EFlf2QCNHMdd3zc1jWdFS79j2tgIgBJ+zoV1IfFif/ROw+JZ2Bgomy7OCy4VDqKGTYK3rYGEDVbltF3Sd4bUP0C1lOjgbPI4ls68xpaO1GsZjaif1UczlYRX9EOSDXyy4i8V7I74DqKa18WSBOxTWA4zBUYZ1qZcwWAUCPiyexP0TOqwLArIbx7FSkvNt6OPPR08daWnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bSnGdMNHEUvKj6lC+s8Aqsw2IbOhrzb8BJg5V2UqlOc=;
+ b=eRH0x3X2HwnaMLWb+mz0pVHWnO3nf2il232e2suOzVxOIPpmTGEptgoOtspmXGRhunH36QA9z0WsSZCs9RrU/LXqp7bsjNNzFhzEj1f0YiXke0uvi5G5uOsw894iBF1mnDqIzSBtP5Yxe+hZ8AC1prg0zAhJj9St3cQJYoABCrGGX9BmTQH2DYIF6yeX05YzkLonnoXKtxG1QtnYGe2zxylC18pRG/j/bzyodx23cpwiVa5PoCTUp8cUREPGh/7ESh/5JnQXmzfNfTMf0iDtHgMb1mgkxk5ZYMHm466dQ9RAh73ASXFCR5wmRjsbXaPShrEQQh77ewgALD+JZ5C6zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bSnGdMNHEUvKj6lC+s8Aqsw2IbOhrzb8BJg5V2UqlOc=;
+ b=Rrv3XhZ6tzPHvSO3jWOZp2aegRFo7PEk5o9aoOjjBjr+sDoYA+tYfPKo9p2+Hun2QSPaKSCxA+0M1dso67JQT/spTjVf00jq6DK4T2+YdffMviYgONFeAJVFYG/jth4xypFlov+5lfi0eMz1z+OKmkwYVr7+HMtehEtcfd3rGZ0=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4108.eurprd04.prod.outlook.com (52.135.128.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Thu, 7 Nov 2019 06:36:52 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::115f:1e4f:9ceb:2a2c]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::115f:1e4f:9ceb:2a2c%7]) with mapi id 15.20.2430.020; Thu, 7 Nov 2019
+ 06:36:52 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Duan <fugang.duan@nxp.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH V2] tty: serial: fsl_lpuart: use the sg count from
+ dma_map_sg
+Thread-Topic: [PATCH V2] tty: serial: fsl_lpuart: use the sg count from
+ dma_map_sg
+Thread-Index: AQHVlRYSjb10LGdSBU+AJ5B7rW7xA6d/QS9A
+Date:   Thu, 7 Nov 2019 06:36:52 +0000
+Message-ID: <DB7PR04MB4490FC1A30F476F876D99D2788780@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <1573094911-448-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1573094911-448-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 85afdbe5-0f06-476b-560f-08d7634ce02d
+x-ms-traffictypediagnostic: DB7PR04MB4108:|DB7PR04MB4108:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB41081E73706CCFADCB05812B88780@DB7PR04MB4108.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(136003)(366004)(346002)(189003)(199004)(102836004)(110136005)(2201001)(66066001)(8676002)(64756008)(229853002)(99286004)(6246003)(86362001)(26005)(71200400001)(76176011)(66476007)(7696005)(66446008)(9686003)(256004)(55016002)(6436002)(6506007)(66946007)(76116006)(66556008)(44832011)(8936002)(25786009)(486006)(11346002)(3846002)(446003)(476003)(81156014)(81166006)(4326008)(52536014)(71190400001)(2906002)(54906003)(186003)(7736002)(6116002)(478600001)(14454004)(5660300002)(74316002)(316002)(305945005)(33656002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4108;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: b+RJrLOQT0li735avcV5C7/J3RYMVRLkhjR97KdMiegG9nHx7rxvUgThlANDEq7ebAgDGwh0GQVKR3+o0WaiAX5vkXCno1ncrx8s4KlvFiVM4kgTN4z+BW+OKPtPtIU6r761spAhmZqYeYUzkI36F6TwfPBk8KV/33ZAvbxhEGTnysT/aAIJHkISc88jVFs/5iQH1zDHR/nlqwwD2rAqtHGMYcrwtrVoz9d2/ingQ8YP0j78o20rpqC0XqzxAKvahEwcV2Nhio4WV8YWD1FKeG53W9T10nAvxKGNHQ7P0qHkJbhailnZxrvL7cZM/ecsK9za43P+jveDP5UZhIrLXs8pNQ3lbhVd2A3BfavCIrMuOIgCm7ZoGvAYMgTGToxYgxTGszvmgHcIiBzDuJ45HCbH3SYgs4Hm9Sl83hbCkNdZKJ4a3+W7+2xGuIWdEAPf
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85afdbe5-0f06-476b-560f-08d7634ce02d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 06:36:52.5586
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7dne+H+3uBUiLaR5lBza/fQUfQtf9xq0WrQ89gpGhyJ4hB4LkrmrJgVIEuP41ytJBhpwOJnlWLriqkFr4REM6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert rcubarrier.txt to rcubarrier.rst and
-add it to index.rst
+> Subject: [PATCH V2] tty: serial: fsl_lpuart: use the sg count from dma_ma=
+p_sg
 
-Format file according to reST
-- Add headings and sub-headings
-- Add code segments
-- Add cross-references to quizes and answers
+Ignore this patch. Keep v1.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- Documentation/RCU/index.rst                   |   1 +
- .../RCU/{rcubarrier.txt => rcubarrier.rst}    | 222 ++++++++++--------
- 2 files changed, 126 insertions(+), 97 deletions(-)
- rename Documentation/RCU/{rcubarrier.txt => rcubarrier.rst} (72%)
+Thanks,
+Peng.
 
-diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-index c81d0e4fd999..81a0a1e5f767 100644
---- a/Documentation/RCU/index.rst
-+++ b/Documentation/RCU/index.rst
-@@ -8,6 +8,7 @@ RCU concepts
-    :maxdepth: 3
- 
-    arrayRCU
-+   rcubarrier
-    rcu_dereference
-    whatisRCU
-    rcu
-diff --git a/Documentation/RCU/rcubarrier.txt b/Documentation/RCU/rcubarrier.rst
-similarity index 72%
-rename from Documentation/RCU/rcubarrier.txt
-rename to Documentation/RCU/rcubarrier.rst
-index a2782df69732..f64f4413a47c 100644
---- a/Documentation/RCU/rcubarrier.txt
-+++ b/Documentation/RCU/rcubarrier.rst
-@@ -1,4 +1,7 @@
-+.. _rcu_barrier:
-+
- RCU and Unloadable Modules
-+==========================
- 
- [Originally published in LWN Jan. 14, 2007: http://lwn.net/Articles/217484/]
- 
-@@ -21,7 +24,7 @@ given that readers might well leave absolutely no trace of their
- presence? There is a synchronize_rcu() primitive that blocks until all
- pre-existing readers have completed. An updater wishing to delete an
- element p from a linked list might do the following, while holding an
--appropriate lock, of course:
-+appropriate lock, of course::
- 
- 	list_del_rcu(p);
- 	synchronize_rcu();
-@@ -32,13 +35,13 @@ primitive must be used instead. This primitive takes a pointer to an
- rcu_head struct placed within the RCU-protected data structure and
- another pointer to a function that may be invoked later to free that
- structure. Code to delete an element p from the linked list from IRQ
--context might then be as follows:
-+context might then be as follows::
- 
- 	list_del_rcu(p);
- 	call_rcu(&p->rcu, p_callback);
- 
- Since call_rcu() never blocks, this code can safely be used from within
--IRQ context. The function p_callback() might be defined as follows:
-+IRQ context. The function p_callback() might be defined as follows::
- 
- 	static void p_callback(struct rcu_head *rp)
- 	{
-@@ -49,6 +52,7 @@ IRQ context. The function p_callback() might be defined as follows:
- 
- 
- Unloading Modules That Use call_rcu()
-+-------------------------------------
- 
- But what if p_callback is defined in an unloadable module?
- 
-@@ -69,10 +73,11 @@ in realtime kernels in order to avoid excessive scheduling latencies.
- 
- 
- rcu_barrier()
-+-------------
- 
- We instead need the rcu_barrier() primitive.  Rather than waiting for
- a grace period to elapse, rcu_barrier() waits for all outstanding RCU
--callbacks to complete.  Please note that rcu_barrier() does -not- imply
-+callbacks to complete.  Please note that rcu_barrier() does **not** imply
- synchronize_rcu(), in particular, if there are no RCU callbacks queued
- anywhere, rcu_barrier() is within its rights to return immediately,
- without waiting for a grace period to elapse.
-@@ -88,79 +93,79 @@ must match the flavor of rcu_barrier() with that of call_rcu().  If your
- module uses multiple flavors of call_rcu(), then it must also use multiple
- flavors of rcu_barrier() when unloading that module.  For example, if
- it uses call_rcu(), call_srcu() on srcu_struct_1, and call_srcu() on
--srcu_struct_2(), then the following three lines of code will be required
--when unloading:
-+srcu_struct_2, then the following three lines of code will be required
-+when unloading::
- 
-  1 rcu_barrier();
-  2 srcu_barrier(&srcu_struct_1);
-  3 srcu_barrier(&srcu_struct_2);
- 
- The rcutorture module makes use of rcu_barrier() in its exit function
--as follows:
-+as follows::
- 
-- 1 static void
-- 2 rcu_torture_cleanup(void)
-- 3 {
-- 4   int i;
-+ 1  static void
-+ 2  rcu_torture_cleanup(void)
-+ 3  {
-+ 4    int i;
-  5
-- 6   fullstop = 1;
-- 7   if (shuffler_task != NULL) {
-+ 6    fullstop = 1;
-+ 7    if (shuffler_task != NULL) {
-  8     VERBOSE_PRINTK_STRING("Stopping rcu_torture_shuffle task");
-  9     kthread_stop(shuffler_task);
--10   }
--11   shuffler_task = NULL;
--12
--13   if (writer_task != NULL) {
--14     VERBOSE_PRINTK_STRING("Stopping rcu_torture_writer task");
--15     kthread_stop(writer_task);
--16   }
--17   writer_task = NULL;
--18
--19   if (reader_tasks != NULL) {
--20     for (i = 0; i < nrealreaders; i++) {
--21       if (reader_tasks[i] != NULL) {
--22         VERBOSE_PRINTK_STRING(
--23           "Stopping rcu_torture_reader task");
--24         kthread_stop(reader_tasks[i]);
--25       }
--26       reader_tasks[i] = NULL;
--27     }
--28     kfree(reader_tasks);
--29     reader_tasks = NULL;
--30   }
--31   rcu_torture_current = NULL;
--32
--33   if (fakewriter_tasks != NULL) {
--34     for (i = 0; i < nfakewriters; i++) {
--35       if (fakewriter_tasks[i] != NULL) {
--36         VERBOSE_PRINTK_STRING(
--37           "Stopping rcu_torture_fakewriter task");
--38         kthread_stop(fakewriter_tasks[i]);
--39       }
--40       fakewriter_tasks[i] = NULL;
--41     }
--42     kfree(fakewriter_tasks);
--43     fakewriter_tasks = NULL;
--44   }
--45
--46   if (stats_task != NULL) {
--47     VERBOSE_PRINTK_STRING("Stopping rcu_torture_stats task");
--48     kthread_stop(stats_task);
--49   }
--50   stats_task = NULL;
--51
--52   /* Wait for all RCU callbacks to fire. */
--53   rcu_barrier();
--54
--55   rcu_torture_stats_print(); /* -After- the stats thread is stopped! */
--56
--57   if (cur_ops->cleanup != NULL)
--58     cur_ops->cleanup();
--59   if (atomic_read(&n_rcu_torture_error))
--60     rcu_torture_print_module_parms("End of test: FAILURE");
--61   else
--62     rcu_torture_print_module_parms("End of test: SUCCESS");
--63 }
-+ 10   }
-+ 11   shuffler_task = NULL;
-+ 12
-+ 13   if (writer_task != NULL) {
-+ 14     VERBOSE_PRINTK_STRING("Stopping rcu_torture_writer task");
-+ 15     kthread_stop(writer_task);
-+ 16   }
-+ 17   writer_task = NULL;
-+ 18
-+ 19   if (reader_tasks != NULL) {
-+ 20     for (i = 0; i < nrealreaders; i++) {
-+ 21       if (reader_tasks[i] != NULL) {
-+ 22         VERBOSE_PRINTK_STRING(
-+ 23           "Stopping rcu_torture_reader task");
-+ 24         kthread_stop(reader_tasks[i]);
-+ 25       }
-+ 26       reader_tasks[i] = NULL;
-+ 27     }
-+ 28     kfree(reader_tasks);
-+ 29     reader_tasks = NULL;
-+ 30   }
-+ 31   rcu_torture_current = NULL;
-+ 32
-+ 33   if (fakewriter_tasks != NULL) {
-+ 34     for (i = 0; i < nfakewriters; i++) {
-+ 35       if (fakewriter_tasks[i] != NULL) {
-+ 36         VERBOSE_PRINTK_STRING(
-+ 37           "Stopping rcu_torture_fakewriter task");
-+ 38         kthread_stop(fakewriter_tasks[i]);
-+ 39       }
-+ 40       fakewriter_tasks[i] = NULL;
-+ 41     }
-+ 42     kfree(fakewriter_tasks);
-+ 43     fakewriter_tasks = NULL;
-+ 44   }
-+ 45
-+ 46   if (stats_task != NULL) {
-+ 47     VERBOSE_PRINTK_STRING("Stopping rcu_torture_stats task");
-+ 48     kthread_stop(stats_task);
-+ 49   }
-+ 50   stats_task = NULL;
-+ 51
-+ 52   /* Wait for all RCU callbacks to fire. */
-+ 53   rcu_barrier();
-+ 54
-+ 55   rcu_torture_stats_print(); /* -After- the stats thread is stopped! */
-+ 56
-+ 57   if (cur_ops->cleanup != NULL)
-+ 58     cur_ops->cleanup();
-+ 59   if (atomic_read(&n_rcu_torture_error))
-+ 60     rcu_torture_print_module_parms("End of test: FAILURE");
-+ 61   else
-+ 62     rcu_torture_print_module_parms("End of test: SUCCESS");
-+ 63 }
- 
- Line 6 sets a global variable that prevents any RCU callbacks from
- re-posting themselves. This will not be necessary in most cases, since
-@@ -176,9 +181,14 @@ for any pre-existing callbacks to complete.
- Then lines 55-62 print status and do operation-specific cleanup, and
- then return, permitting the module-unload operation to be completed.
- 
--Quick Quiz #1: Is there any other situation where rcu_barrier() might
-+.. _rcubarrier_quiz_1:
-+
-+Quick Quiz #1:
-+	Is there any other situation where rcu_barrier() might
- 	be required?
- 
-+:ref:`Answer to Quick Quiz #1 <answer_rcubarrier_quiz_1>`
-+
- Your module might have additional complications. For example, if your
- module invokes call_rcu() from timers, you will need to first cancel all
- the timers, and only then invoke rcu_barrier() to wait for any remaining
-@@ -188,11 +198,12 @@ Of course, if you module uses call_rcu(), you will need to invoke
- rcu_barrier() before unloading.  Similarly, if your module uses
- call_srcu(), you will need to invoke srcu_barrier() before unloading,
- and on the same srcu_struct structure.  If your module uses call_rcu()
---and- call_srcu(), then you will need to invoke rcu_barrier() -and-
-+**and** call_srcu(), then you will need to invoke rcu_barrier() **and**
- srcu_barrier().
- 
- 
- Implementing rcu_barrier()
-+--------------------------
- 
- Dipankar Sarma's implementation of rcu_barrier() makes use of the fact
- that RCU callbacks are never reordered once queued on one of the per-CPU
-@@ -200,19 +211,19 @@ queues. His implementation queues an RCU callback on each of the per-CPU
- callback queues, and then waits until they have all started executing, at
- which point, all earlier RCU callbacks are guaranteed to have completed.
- 
--The original code for rcu_barrier() was as follows:
-+The original code for rcu_barrier() was as follows::
- 
-- 1 void rcu_barrier(void)
-- 2 {
-- 3   BUG_ON(in_interrupt());
-- 4   /* Take cpucontrol mutex to protect against CPU hotplug */
-- 5   mutex_lock(&rcu_barrier_mutex);
-- 6   init_completion(&rcu_barrier_completion);
-- 7   atomic_set(&rcu_barrier_cpu_count, 0);
-- 8   on_each_cpu(rcu_barrier_func, NULL, 0, 1);
-- 9   wait_for_completion(&rcu_barrier_completion);
--10   mutex_unlock(&rcu_barrier_mutex);
--11 }
-+ 1  void rcu_barrier(void)
-+ 2  {
-+ 3    BUG_ON(in_interrupt());
-+ 4    /* Take cpucontrol mutex to protect against CPU hotplug */
-+ 5    mutex_lock(&rcu_barrier_mutex);
-+ 6    init_completion(&rcu_barrier_completion);
-+ 7    atomic_set(&rcu_barrier_cpu_count, 0);
-+ 8    on_each_cpu(rcu_barrier_func, NULL, 0, 1);
-+ 9    wait_for_completion(&rcu_barrier_completion);
-+ 10   mutex_unlock(&rcu_barrier_mutex);
-+ 11 }
- 
- Line 3 verifies that the caller is in process context, and lines 5 and 10
- use rcu_barrier_mutex to ensure that only one rcu_barrier() is using the
-@@ -226,18 +237,18 @@ This code was rewritten in 2008 and several times thereafter, but this
- still gives the general idea.
- 
- The rcu_barrier_func() runs on each CPU, where it invokes call_rcu()
--to post an RCU callback, as follows:
-+to post an RCU callback, as follows::
- 
-- 1 static void rcu_barrier_func(void *notused)
-- 2 {
-- 3 int cpu = smp_processor_id();
-- 4 struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
-- 5 struct rcu_head *head;
-+ 1  static void rcu_barrier_func(void *notused)
-+ 2  {
-+ 3    int cpu = smp_processor_id();
-+ 4    struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
-+ 5    struct rcu_head *head;
-  6
-- 7 head = &rdp->barrier;
-- 8 atomic_inc(&rcu_barrier_cpu_count);
-- 9 call_rcu(head, rcu_barrier_callback);
--10 }
-+ 7    head = &rdp->barrier;
-+ 8    atomic_inc(&rcu_barrier_cpu_count);
-+ 9    call_rcu(head, rcu_barrier_callback);
-+ 10 }
- 
- Lines 3 and 4 locate RCU's internal per-CPU rcu_data structure,
- which contains the struct rcu_head that needed for the later call to
-@@ -248,20 +259,25 @@ the current CPU's queue.
- 
- The rcu_barrier_callback() function simply atomically decrements the
- rcu_barrier_cpu_count variable and finalizes the completion when it
--reaches zero, as follows:
-+reaches zero, as follows::
- 
-  1 static void rcu_barrier_callback(struct rcu_head *notused)
-  2 {
-- 3 if (atomic_dec_and_test(&rcu_barrier_cpu_count))
-- 4 complete(&rcu_barrier_completion);
-+ 3   if (atomic_dec_and_test(&rcu_barrier_cpu_count))
-+ 4     complete(&rcu_barrier_completion);
-  5 }
- 
--Quick Quiz #2: What happens if CPU 0's rcu_barrier_func() executes
-+.. _rcubarrier_quiz_2:
-+
-+Quick Quiz #2:
-+	What happens if CPU 0's rcu_barrier_func() executes
- 	immediately (thus incrementing rcu_barrier_cpu_count to the
- 	value one), but the other CPU's rcu_barrier_func() invocations
- 	are delayed for a full grace period? Couldn't this result in
- 	rcu_barrier() returning prematurely?
- 
-+:ref:`Answer to Quick Quiz #2 <answer_rcubarrier_quiz_2>`
-+
- The current rcu_barrier() implementation is more complex, due to the need
- to avoid disturbing idle CPUs (especially on battery-powered systems)
- and the need to minimally disturb non-idle CPUs in real-time systems.
-@@ -269,6 +285,7 @@ However, the code above illustrates the concepts.
- 
- 
- rcu_barrier() Summary
-+---------------------
- 
- The rcu_barrier() primitive has seen relatively little use, since most
- code using RCU is in the core kernel rather than in modules. However, if
-@@ -277,8 +294,12 @@ so that your module may be safely unloaded.
- 
- 
- Answers to Quick Quizzes
-+------------------------
-+
-+.. _answer_rcubarrier_quiz_1:
- 
--Quick Quiz #1: Is there any other situation where rcu_barrier() might
-+Quick Quiz #1:
-+	Is there any other situation where rcu_barrier() might
- 	be required?
- 
- Answer: Interestingly enough, rcu_barrier() was not originally
-@@ -292,7 +313,12 @@ Answer: Interestingly enough, rcu_barrier() was not originally
- 	implementing rcutorture, and found that rcu_barrier() solves
- 	this problem as well.
- 
--Quick Quiz #2: What happens if CPU 0's rcu_barrier_func() executes
-+:ref:`Back to Quick Quiz #1 <rcubarrier_quiz_1>`
-+
-+.. _answer_rcubarrier_quiz_2:
-+
-+Quick Quiz #2:
-+	What happens if CPU 0's rcu_barrier_func() executes
- 	immediately (thus incrementing rcu_barrier_cpu_count to the
- 	value one), but the other CPU's rcu_barrier_func() invocations
- 	are delayed for a full grace period? Couldn't this result in
-@@ -323,3 +349,5 @@ Answer: This cannot happen. The reason is that on_each_cpu() has its last
- 	is to add an rcu_read_lock() before line 8 of rcu_barrier()
- 	and an rcu_read_unlock() after line 8 of this same function. If
- 	you can think of a better change, please let me know!
-+
-+:ref:`Back to Quick Quiz #2 <rcubarrier_quiz_2>`
--- 
-2.20.1
+>=20
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> The dmaengine_prep_slave_sg needs to use sg count returned by
+> dma_map_sg, not use sport->dma_tx_nents, because the return value of
+> dma_map_sg is not always same with "nents".
+>=20
+> When enabling iommu for lpuart + edma, iommu framework may concatenate
+> two sgs into one.
+>=20
+> Fixes: 6250cc30c4c4e ("tty: serial: fsl_lpuart: Use scatter/gather DMA fo=
+r Tx")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>=20
+> V2:
+>  Assign ret to sport->dma_tx_nents, then we no need to fix dma_unmap_sg
+> Hi Greg,
+>   I saw v1 patch merged to tty-next, please help to replace with V2 if th=
+is
+>   is ok for you, or you need I have a follow up fix for v1.
+>=20
+>  drivers/tty/serial/fsl_lpuart.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpu=
+art.c index
+> 3e17bb8a0b16..ec5ea098669e 100644
+> --- a/drivers/tty/serial/fsl_lpuart.c
+> +++ b/drivers/tty/serial/fsl_lpuart.c
+> @@ -436,6 +436,7 @@ static void lpuart_dma_tx(struct lpuart_port *sport)
+>  		return;
+>  	}
+>=20
+> +	sport->dma_tx_nents =3D ret;
+>  	sport->dma_tx_desc =3D dmaengine_prep_slave_sg(sport->dma_tx_chan,
+> sgl,
+>  					sport->dma_tx_nents,
+>  					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
+> --
+> 2.16.4
 
