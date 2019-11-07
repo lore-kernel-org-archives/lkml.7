@@ -2,265 +2,191 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F9BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A80BC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A40021D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0E921D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tgcB84XV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfKGHJm (ORCPT
+        id S1727141AbfKGHPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:09:42 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7565 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726571AbfKGHJl (ORCPT
+        Thu, 7 Nov 2019 02:15:15 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:31178 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfKGHPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:09:41 -0500
-X-UUID: 21749321a0e943fe830c4c9ded955ed7-20191107
-X-UUID: 21749321a0e943fe830c4c9ded955ed7-20191107
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 452767178; Thu, 07 Nov 2019 15:09:38 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 7 Nov 2019 15:09:35 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 7 Nov 2019 15:09:35 +0800
-Message-ID: <1573110577.14882.2.camel@mtksdaap41>
-Subject: Re: [PATCH v16 2/5] soc: mediatek: cmdq: define the instruction
- struct
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-Date:   Thu, 7 Nov 2019 15:09:37 +0800
-In-Reply-To: <20191024052732.7767-3-bibby.hsieh@mediatek.com>
-References: <20191024052732.7767-1-bibby.hsieh@mediatek.com>
-         <20191024052732.7767-3-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+        Thu, 7 Nov 2019 02:15:14 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id xA77EmTD001696;
+        Thu, 7 Nov 2019 16:14:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xA77EmTD001696
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573110889;
+        bh=hKXFdZI4OG5Bwd3Rg5XUb8POB9vmznYDXPnjaoLVFtA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tgcB84XVNluKiN3kXGpzG+n4QKlgwEUWh4s+aP2v2fuh52yr4CM6fJuIsjMMvOF5n
+         29HMvDaJ/zjKY/H/j77FLDC+HPkGlRInH9jMHeMgD9zCC6JHbewrQtKVLEL1qy5m2q
+         mAFe1XlXJYkIi4K0DI4BSAjUZuL0tVLCgfgIowW9gFIkWWDQHt3/xaya6k8RSlU9tB
+         51P22Vpf03OheN7qdstdfpJhPcwLcgwWFLMSO1j71s2YdRbTZpt66j5H4rVhJ8GJLZ
+         3j1C+mASx770sgwPJ6rGAslOA0rpxtmObIgWREMuUXVK8ZAE///RE0aZDa0Qa4GDoH
+         izjQFBRTpyP5A==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 2/2] kbuild: move headers_check rule to usr/include/Makefile
+Date:   Thu,  7 Nov 2019 16:14:41 +0900
+Message-Id: <20191107071441.1067-2-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191107071441.1067-1-yamada.masahiro@socionext.com>
+References: <20191107071441.1067-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
+Currently, some sanity checks for uapi headers are done by
+scripts/headers_check.pl, which is wired up to the 'headers_check'
+target in the top Makefile.
 
-On Thu, 2019-10-24 at 13:27 +0800, Bibby Hsieh wrote:
-> Define an instruction structure for gce driver to append command.
-> This structure can make the client's code more readability.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 75 ++++++++++++++++--------
->  include/linux/mailbox/mtk-cmdq-mailbox.h | 10 ++++
->  2 files changed, 60 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 5ea509e86488..11bfcc150ebd 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -9,12 +9,24 @@
->  #include <linux/mailbox_controller.h>
->  #include <linux/soc/mediatek/mtk-cmdq.h>
->  
-> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
->  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
->  #define CMDQ_EOC_IRQ_EN		BIT(0)
->  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
->  				<< 32 | CMDQ_EOC_IRQ_EN)
->  
-> +struct cmdq_instruction {
-> +	union {
-> +		u32 value;
-> +		u32 mask;
-> +	};
-> +	union {
-> +		u16 offset;
-> +		u16 event;
-> +	};
-> +	u8 subsys;
-> +	u8 op;
-> +};
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> @@ -110,10 +122,10 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_destroy);
->  
-> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> -				   u32 arg_a, u32 arg_b)
-> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt,
-> +				   struct cmdq_instruction inst)
->  {
-> -	u64 *cmd_ptr;
-> +	struct cmdq_instruction *cmd_ptr;
->  
->  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
->  		/*
-> @@ -129,8 +141,9 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  			__func__, (u32)pkt->buf_size);
->  		return -ENOMEM;
->  	}
-> +
->  	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-> +	*cmd_ptr = inst;
->  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
->  
->  	return 0;
-> @@ -138,27 +151,34 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  
->  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
->  {
-> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-> -		    (subsys << CMDQ_SUBSYS_SHIFT);
-> +	struct cmdq_instruction inst;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
-> +	inst.op = CMDQ_CODE_WRITE;
-> +	inst.value = value;
-> +	inst.offset = offset;
-> +	inst.subsys = subsys;
-> +
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write);
->  
->  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->  			u16 offset, u32 value, u32 mask)
->  {
-> -	u32 offset_mask = offset;
-> +	struct cmdq_instruction inst = { {0} };
-> +	u16 offset_mask = offset;
->  	int err;
->  
->  	if (mask != 0xffffffff) {
-> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> +		inst.op = CMDQ_CODE_MASK;
-> +		inst.mask = ~mask;
-> +		err = cmdq_pkt_append_command(pkt, inst);
->  		if (err < 0)
->  			return err;
->  
->  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
->  	}
-> -	err = cmdq_pkt_write(pkt, value, subsys, offset_mask);
-> +	err = cmdq_pkt_write(pkt, subsys, offset_mask, value);
+It is true compiling headers has better test coverage, but there
+are still several headers excluded from the compile test. I like
+to keep headers_check.pl for a while, but we can delete a lot of
+code by moving the build rule to usr/include/Makefile.
 
-This looks like a bug fix, so move to a separate patch.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Regards,
-CK
+ Makefile                     | 11 +++--------
+ lib/Kconfig.debug            | 11 -----------
+ scripts/Makefile.headersinst | 18 ------------------
+ usr/include/Makefile         |  9 ++++++---
+ 4 files changed, 9 insertions(+), 40 deletions(-)
 
->  
->  	return err;
->  }
-> @@ -166,45 +186,50 @@ EXPORT_SYMBOL(cmdq_pkt_write_mask);
->  
->  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
->  {
-> -	u32 arg_b;
-> +	struct cmdq_instruction inst = { {0} };
->  
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * WFE arg_b
-> -	 * bit 0-11: wait value
-> -	 * bit 15: 1 - wait, 0 - no wait
-> -	 * bit 16-27: update value
-> -	 * bit 31: 1 - update, 0 - no update
-> -	 */
-> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +	inst.op = CMDQ_CODE_WFE;
-> +	inst.value = CMDQ_WFE_OPTION;
-> +	inst.event = event;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_wfe);
->  
->  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  {
-> +	struct cmdq_instruction inst = { {0} };
-> +
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> -				       CMDQ_WFE_UPDATE);
-> +	inst.op = CMDQ_CODE_WFE;
-> +	inst.value = CMDQ_WFE_UPDATE;
-> +	inst.event = event;
-> +
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
->  
->  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->  {
-> +	struct cmdq_instruction inst = { {0} };
->  	int err;
->  
->  	/* insert EOC and generate IRQ for each command iteration */
-> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> +	inst.op = CMDQ_CODE_EOC;
-> +	inst.value = CMDQ_EOC_IRQ_EN;
-> +	err = cmdq_pkt_append_command(pkt, inst);
->  	if (err < 0)
->  		return err;
->  
->  	/* JUMP to end */
-> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> +	inst.op = CMDQ_CODE_JUMP;
-> +	inst.value = CMDQ_JUMP_PASS;
-> +	err = cmdq_pkt_append_command(pkt, inst);
->  
->  	return err;
->  }
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index e6f54ef6698b..678760548791 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -20,6 +20,16 @@
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
->  
-> +/*
-> + * WFE arg_b
-> + * bit 0-11: wait value
-> + * bit 15: 1 - wait, 0 - no wait
-> + * bit 16-27: update value
-> + * bit 31: 1 - update, 0 - no update
-> + */
-> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
-> +					CMDQ_WFE_WAIT_VALUE)
-> +
->  /** cmdq event maximum */
->  #define CMDQ_MAX_EVENT			0x3ff
->  
-
+diff --git a/Makefile b/Makefile
+index 225884bd0d86..778f92e58020 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1192,19 +1192,15 @@ headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders archscripts
+ 	$(Q)$(MAKE) $(hdr-inst)=include/uapi
+ 	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi
+ 
++# Deprecated. It is no-op now.
+ PHONY += headers_check
+-headers_check: headers
+-	$(Q)$(MAKE) $(hdr-inst)=include/uapi HDRCHECK=1
+-	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi HDRCHECK=1
++headers_check:
++	@:
+ 
+ ifdef CONFIG_HEADERS_INSTALL
+ prepare: headers
+ endif
+ 
+-ifdef CONFIG_HEADERS_CHECK
+-all: headers_check
+-endif
+-
+ PHONY += scripts_unifdef
+ scripts_unifdef: scripts_basic
+ 	$(Q)$(MAKE) $(build)=scripts scripts/unifdef
+@@ -1472,7 +1468,6 @@ help:
+ 	@echo  '  versioncheck    - Sanity check on version.h usage'
+ 	@echo  '  includecheck    - Check for duplicate included header files'
+ 	@echo  '  export_report   - List the usages of all exported symbols'
+-	@echo  '  headers_check   - Sanity check on exported headers'
+ 	@echo  '  headerdep       - Detect inclusion cycles in headers'
+ 	@echo  '  coccicheck      - Check with Coccinelle'
+ 	@echo  ''
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 93d97f9b0157..f61d834e02fe 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -299,17 +299,6 @@ config HEADERS_INSTALL
+ 	  user-space program samples. It is also needed by some features such
+ 	  as uapi header sanity checks.
+ 
+-config HEADERS_CHECK
+-	bool "Run sanity checks on uapi headers when building 'all'"
+-	depends on HEADERS_INSTALL
+-	help
+-	  This option will run basic sanity checks on uapi headers when
+-	  building the 'all' target, for example, ensure that they do not
+-	  attempt to include files which were not exported, etc.
+-
+-	  If you're making modifications to header files which are
+-	  relevant for userspace, say 'Y'.
+-
+ config OPTIMIZE_INLINING
+ 	def_bool y
+ 	help
+diff --git a/scripts/Makefile.headersinst b/scripts/Makefile.headersinst
+index 1b405a7ed14f..708fbd08a2c5 100644
+--- a/scripts/Makefile.headersinst
++++ b/scripts/Makefile.headersinst
+@@ -56,9 +56,6 @@ new-dirs      := $(filter-out $(existing-dirs), $(wanted-dirs))
+ $(if $(new-dirs), $(shell mkdir -p $(new-dirs)))
+ 
+ # Rules
+-
+-ifndef HDRCHECK
+-
+ quiet_cmd_install = HDRINST $@
+       cmd_install = $(CONFIG_SHELL) $(srctree)/scripts/headers_install.sh $< $@
+ 
+@@ -81,21 +78,6 @@ existing-headers := $(filter $(old-headers), $(all-headers))
+ 
+ -include $(foreach f,$(existing-headers),$(dir $(f)).$(notdir $(f)).cmd)
+ 
+-else
+-
+-quiet_cmd_check = HDRCHK  $<
+-      cmd_check = $(PERL) $(srctree)/scripts/headers_check.pl $(dst) $(SRCARCH) $<; touch $@
+-
+-check-files := $(addsuffix .chk, $(all-headers))
+-
+-$(check-files): $(dst)/%.chk : $(dst)/% $(srctree)/scripts/headers_check.pl
+-	$(call cmd,check)
+-
+-__headers: $(check-files)
+-	@:
+-
+-endif
+-
+ PHONY += FORCE
+ FORCE:
+ 
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index a7c3e2f81680..604dfdcd6d3c 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -92,11 +92,14 @@ endif
+ # asm-generic/*.h is used by asm/*.h, and should not be included directly
+ header-test- += asm-generic/%
+ 
+-extra-y := $(patsubst %.h,%.hdrtest, $(filter-out $(header-test-), \
+-		$(patsubst $(obj)/%,%, $(shell find $(obj) -name '*.h'))))
++extra-y := $(patsubst $(obj)/%.h,%.hdrtest, $(shell find $(obj) -name '*.h'))
+ 
+ quiet_cmd_hdrtest = HDRTEST $<
+-      cmd_hdrtest = $(CC) $(c_flags) -S -o /dev/null -x c /dev/null -include $<; touch $@
++      cmd_hdrtest = \
++		$(CC) $(c_flags) -S -o /dev/null -x c /dev/null \
++			$(if $(filter-out $(header-test-), $*.h), -include $<); \
++		$(PERL) $(srctree)/scripts/headers_check.pl $(obj) $(SRCARCH) $<; \
++		touch $@
+ 
+ $(obj)/%.hdrtest: $(obj)/%.h FORCE
+ 	$(call if_changed_dep,hdrtest)
+-- 
+2.17.1
 
