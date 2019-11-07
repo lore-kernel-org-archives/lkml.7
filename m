@@ -2,117 +2,118 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D4FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8911EFC6196
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 106A42166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573089098;
-	bh=A3IuF9cZ30dT7CLYfgSYH8DNDwM08zBgkl7nEior09g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=daxKJE9ATStpXTaCn+BTHjj5B4sBiWymzoMmXW27GTkzYMdL6bBoPV2+JX56JhITV
-	 1p0sCKiqTKElA5K0boOJIZ9Eoe6sCFER6Za7WlV/GzLFJRuOGgO3F2YKzv86XLdjkz
-	 OHWjKZblaMqroCCsgMAeh65I6PtKxt9u25xTPnMk=
+	by mail.kernel.org (Postfix) with ESMTP id 58C8C21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:13:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="q1dvCrlD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbfKGBLg (ORCPT
+        id S1732816AbfKGBNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:11:36 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37563 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGBLg (ORCPT
+        Wed, 6 Nov 2019 20:13:02 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48992 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfKGBNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:11:36 -0500
-Received: by mail-lj1-f195.google.com with SMTP id l20so316682lje.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:11:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kYzJNbIs0O9a8dPgX0R29N35kZPtuAANCvpSCPAwGWc=;
-        b=gIByO5nFUKaSU/PpIZE6gMaLdyUfcKBOsp22xIL7XQAtKXEsAu84aBWKAefFC7n3Cx
-         4oJTqrxjc+3i7v8IuyG2wJAIOUl+AAQ/9qA8e7kGRh9fmgpAL8vhTDTxQ7LbYIb7VaKE
-         e50qm4JqsB6MFzM+IqvPwzndOuDKYHHc18Gnk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kYzJNbIs0O9a8dPgX0R29N35kZPtuAANCvpSCPAwGWc=;
-        b=qPZKFfHUg2vKKtnjTTM5G3gJ5bbtclgosDe/07E/NLj9NtUAqhMvuBUZ4Z691sZmOz
-         v0WzHXxpK0crXGlSxO+tLvFIy5LWIghChBBPB7XWFUnLWaAZPoxOMj9KGFrHLXsW+vcT
-         MFw2uMjcCYI9JikwltoGB7KhKc/D6ExtnLpF9HMIkLWygP9gKSU4gECp6lBYndhBxOiT
-         rl2NKngfASLxxX+b/EZv/mTbs7/l8j6XJ21uuLtaphzkYu0+bRHfVDsEZqyh5BzGFWu/
-         xUogXzpZUb4qJ1xBd1oqRWRQhhB6D/jKrqI20sDN7TIbVTEpaPX/2v7haDDDRTzropx+
-         Y+yw==
-X-Gm-Message-State: APjAAAVrP9qvPq4Tct8PzQJvfgCbCEEqFRu9U/gxJb0v1+/6YYuqgsKc
-        zK8HW3B2wVGpom7o95z++rxsO+pxWSo=
-X-Google-Smtp-Source: APXvYqzqUiUFCRKWVRpL4qjH8x3Y4lt0obOO0Xfk3XE1FQt+f4PMElmjI+SjJk0rQCeFZtnoqGXWXg==
-X-Received: by 2002:a2e:6c03:: with SMTP id h3mr250721ljc.86.1573089093854;
-        Wed, 06 Nov 2019 17:11:33 -0800 (PST)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id f25sm215188lfm.26.2019.11.06.17.11.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 17:11:32 -0800 (PST)
-Received: by mail-lj1-f177.google.com with SMTP id v8so309376ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:11:32 -0800 (PST)
-X-Received: by 2002:a2e:8809:: with SMTP id x9mr249100ljh.82.1573089091962;
- Wed, 06 Nov 2019 17:11:31 -0800 (PST)
+        Wed, 6 Nov 2019 20:13:01 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CA908365A;
+        Thu,  7 Nov 2019 14:12:56 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1573089176;
+        bh=BRGEYlyoHZxHSnXUdYbHANXyj64ZkbYo9cpJq3/Hmcs=;
+        h=From:To:Cc:Subject:Date;
+        b=q1dvCrlDc9Tclr+trmoR0TahhRju1SeYal0jv5KCqXXT+PaGDXZrVe01gQsicEy4e
+         44LY2myFUIImDyHMeMi0uEy+HN3zs39ZD6KiJUienQpork3lPsa6mrQX7fbfp/mpS2
+         Z1H+sI8UR42dBVZYh7eEuDZcGr117dkgajptclnTaL3kry6XTIHi35e1gleNicGD9h
+         0++AXdyjdWe+yJgwOg0dMYhlSirvnzbDo0cYfBCijSEFvmLj41iRaj9VTilhjE0Qmb
+         aBdcN/4bsTZ0djEvqRKi1UPc8rhvsUzXGCxIcTY0Q0r3ZHif+vXkk1o74vq2tWbMKe
+         P6vqHsu2mv0TA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dc36f950000>; Thu, 07 Nov 2019 14:12:56 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 9A15213EEEB;
+        Thu,  7 Nov 2019 14:12:52 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id F3EAC28005F; Thu,  7 Nov 2019 14:12:52 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Collis <john.collis@alliedtelesis.co.nz>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] rtc: ds1307: check for oscillator fault on ds1388
+Date:   Thu,  7 Nov 2019 14:12:45 +1300
+Message-Id: <20191107011245.26796-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de>
-In-Reply-To: <20191106202806.241007755@linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 6 Nov 2019 17:11:15 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjXcS--G3Wd8ZGEOdCNRAWPaUneyN1ryShQL-_yi1kvOA@mail.gmail.com>
-Message-ID: <CAHk-=wjXcS--G3Wd8ZGEOdCNRAWPaUneyN1ryShQL-_yi1kvOA@mail.gmail.com>
-Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage further
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:57 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Calculate both the position of the first zero bit and the last zero bit to
-> limit the range which needs to be copied. This does not solve the problem
-> when the previous tasked had only byte 0 cleared and the next one has only
-> byte 65535 cleared, but trying to solve that would be too complex and
-> heavyweight for the context switch path. As the ioperm() usage is very rare
-> the case which is optimized is the single task/process which uses ioperm().
+Ensure that the oscillator is running and check the OSF bit for the
+ds1388 variant. The FLAG and CONTROL registers are at a different
+location to the other supported RTCs so this requires an extra case in
+the existing switch statement.
 
-Hmm.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/rtc/rtc-ds1307.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-I may read this patch wrong, but from what I can tell, if we really
-have just one process with an io bitmap, we're doing unnecessary
-copies.
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 1f7e8aefc1eb..865c06347d0a 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -101,6 +101,10 @@ enum ds_type {
+ #	define DS1337_BIT_A2I		0x02
+ #	define DS1337_BIT_A1I		0x01
+ #define DS1339_REG_ALARM1_SECS	0x07
++#define DS1388_REG_FLAG		0x0b
++#	define DS1388_BIT_OSF		0x80
++#define DS1388_REG_CONTROL	0x0c
++#	define DS1388_BIT_nEOSC		0x80
+=20
+ #define DS13XX_TRICKLE_CHARGER_MAGIC	0xa0
+=20
+@@ -1688,6 +1692,26 @@ static int ds1307_probe(struct i2c_client *client,
+ 		}
+ 		break;
+=20
++	case ds_1388:
++		err =3D regmap_bulk_read(ds1307->regmap, DS1388_REG_FLAG,
++				       regs, 2);
++		if (err) {
++			dev_dbg(ds1307->dev, "read error %d\n", err);
++			goto exit;
++		}
++
++		if (regs[1] & DS1388_BIT_nEOSC) {
++			regmap_write(ds1307->regmap, DS1388_REG_CONTROL,
++				     regs[1] & ~DS1388_BIT_nEOSC);
++		}
++
++		if (regs[0] & DS1388_BIT_OSF) {
++			regmap_write(ds1307->regmap, DS1388_REG_FLAG,
++				     regs[0]  & ~DS1388_BIT_OSF);
++			dev_warn(ds1307->dev, "SET TIME!\n");
++		}
++		break;
++
+ 	case rx_8025:
+ 		err =3D regmap_bulk_read(ds1307->regmap,
+ 				       RX8025_REG_CTRL1 << 4 | 0x08, regs, 2);
+--=20
+2.24.0
 
-If we really have just one process that has an iobitmap, I think we
-could just keep the bitmap of that process entirely unchanged. Then,
-when we switch away from it, we set the io_bitmap_base to an invalid
-base outside the TSS segment, and when we switch back, we set it back
-to the valid one. No actual bitmap copies at all.
-
-So I think that rather than the "begin/end offset" games, we should
-perhaps have a "what was the last process that used the IO bitmap for
-this TSS" pointer (and, I think, some sequence counter, so that when
-the process updates its bitmap, it invalidates that case)?
-
- Of course, you can do *nboth*, but if we really think that the common
-case is "one special process", then I think the begin/end offset is
-useless, but a "last bitmap process" would be very useful.
-
-Am I missing something?
-
-               Linus
