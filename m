@@ -2,202 +2,161 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B341BFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1174C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2152166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573116728;
-	bh=D7fJbf/YlbzggoeKvmikXB4Uhwz5VXlZUeKI6QZk1lk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ARa/DEqwuhTG/gdfJijqz0oQvxMqrHmwfYaswOkGFc+bOba43n1guYMI6tNMc15Yr
-	 rKwYin3RVlnmcWVlgy111wxeW7ZGs2YZIord2obVDmt10XPDwrF0ycqnv8wVUgyCIE
-	 WYLN1RZ56NN8D8CClY8NbjFl57WxO7eycGYuBrJc=
+	by mail.kernel.org (Postfix) with ESMTP id AA07F2166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:52:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="G7HveYk1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733268AbfKGIwH (ORCPT
+        id S1733293AbfKGIwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:52:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbfKGIwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:52:06 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8040A2077C;
-        Thu,  7 Nov 2019 08:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573116723;
-        bh=D7fJbf/YlbzggoeKvmikXB4Uhwz5VXlZUeKI6QZk1lk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y9fiUz/eZanesu7evppYHgZE6pgFy/JCCk1xE455FY3Bfbn+B60edBsfjWMuO1t1F
-         XaCIQLPBN53I4asESdV4mllWdjxye7FE4XM0oRT6Zy6uo/AEKP0avyVnUY6Gfxz1YH
-         qWRtAREp30iJG/4BYxDf5TX1igsjGny2W8Bk/JGE=
-Date:   Thu, 7 Nov 2019 09:52:00 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: hisilicon: no need to check return value of
- debugfs_create functions
-Message-ID: <20191107085200.GB1274176@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 7 Nov 2019 03:52:39 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41317 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733257AbfKGIwj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:52:39 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p26so2115288pfq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:52:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=WYgJCjRBqhwY0ulINWDVeN12R2Tn8RH5kuZplnJEZos=;
+        b=G7HveYk1IudPQMGmvQ2c7tpccDcJSLzQvM5gihotCO9sU2EOQLD2dorDNKZBfLnQbT
+         N299NgJA3fiMAGdZgC783yJ9ZXiHACZgpJKpgs7L982cA26pzAI5GYZNrG7ANQNxjnXb
+         qd0j7fsekgVSkMUTPu4TaxKbzSWwciTPEeZu+WoSCijwnzq0YqxWwyK+Y4jCYbuOIWMm
+         Vpk/29WFu6gz7HwqVrz/+GW+0eRA2epF1LgMr271rBQUiHgEZMG8EBtg/A3gmYIt6z3x
+         Gx9CKuJfuUJMDCInxFFvPWBGivrfBPjMSyqDt8Y96fYzEzxlSWkV1iu6zyuHfFBBAl7S
+         K6lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=WYgJCjRBqhwY0ulINWDVeN12R2Tn8RH5kuZplnJEZos=;
+        b=S3xXqPbYHzK/EP5hHiWuQMSVacikGWvFgrnRnesXluppdaHmzPNS+WibwTy6APOYkT
+         8ElvLOgvVJLVMb1ONdd/F5AIdqzpXor6bGXys0guyL3PzeYFNvGh7q+KMnm6Svg8MPwu
+         ZuOE/li3ZaJREBPjasEaVkDbAaUNWIxLuYngeC85/LryTOl025PqEajTPaSmTOtF5xJx
+         NReB1IdpxIPFMcArr/d+sY8eu7B64xF2JrOVnT2OrZzXroFMsf4K7FUGhyu5af0R3xo4
+         3Oc+BLpI7AvH2l25/56JhnbaLjfc2YySCSSb52adE98HpC79ww7JmqPQA7qE/9MkoSQI
+         R1lA==
+X-Gm-Message-State: APjAAAWgPh/nTikUGL2Er1jAlLw8nP9WuI9i+8BAZW43WmScZQZPhYd0
+        4KucZrgWhkgsciTo0E2s1I7PbA==
+X-Google-Smtp-Source: APXvYqzwiffXH7qAwTNlrwNnSzFYjok1bc9tn4Pi6HSzCFjYW64y7zo3+tmzH1fmx6SaC2g7igW/Ig==
+X-Received: by 2002:a63:d405:: with SMTP id a5mr3054839pgh.79.1573116756735;
+        Thu, 07 Nov 2019 00:52:36 -0800 (PST)
+Received: from localhost.localdomain (36-228-119-18.dynamic-ip.hinet.net. [36.228.119.18])
+        by smtp.gmail.com with ESMTPSA id a33sm2402361pgb.57.2019.11.07.00.52.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 00:52:36 -0800 (PST)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/4] dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+Date:   Thu,  7 Nov 2019 16:49:19 +0800
+Message-Id: <20191107084955.7580-2-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191107084955.7580-1-green.wan@sifive.com>
+References: <20191107084955.7580-1-green.wan@sifive.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+Add DT bindings document for Platform DMA(PDMA) driver of board,
+HiFive Unleashed Rev A00.
 
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+Signed-off-by: Green Wan <green.wan@sifive.com>
 ---
- drivers/crypto/hisilicon/qm.c           | 19 +++++--------------
- drivers/crypto/hisilicon/zip/zip_main.c | 24 ++++++------------------
- 2 files changed, 11 insertions(+), 32 deletions(-)
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
 
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index f975c393a603..ed6f4c70bc19 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -963,13 +963,11 @@ static const struct file_operations qm_regs_fops = {
- 
- static int qm_create_debugfs_file(struct hisi_qm *qm, enum qm_debug_file index)
- {
--	struct dentry *qm_d = qm->debug.qm_d, *tmp;
-+	struct dentry *qm_d = qm->debug.qm_d;
- 	struct debugfs_file *file = qm->debug.files + index;
- 
--	tmp = debugfs_create_file(qm_debug_file_name[index], 0600, qm_d, file,
--				  &qm_debug_fops);
--	if (IS_ERR(tmp))
--		return -ENOENT;
-+	debugfs_create_file(qm_debug_file_name[index], 0600, qm_d, file,
-+			    &qm_debug_fops);
- 
- 	file->index = index;
- 	mutex_init(&file->lock);
-@@ -1780,12 +1778,10 @@ EXPORT_SYMBOL_GPL(hisi_qm_stop);
-  */
- int hisi_qm_debug_init(struct hisi_qm *qm)
- {
--	struct dentry *qm_d, *qm_regs;
-+	struct dentry *qm_d;
- 	int i, ret;
- 
- 	qm_d = debugfs_create_dir("qm", qm->debug.debug_root);
--	if (IS_ERR(qm_d))
--		return -ENOENT;
- 	qm->debug.qm_d = qm_d;
- 
- 	/* only show this in PF */
-@@ -1796,12 +1792,7 @@ int hisi_qm_debug_init(struct hisi_qm *qm)
- 				goto failed_to_create;
- 			}
- 
--	qm_regs = debugfs_create_file("qm_regs", 0444, qm->debug.qm_d, qm,
--				      &qm_regs_fops);
--	if (IS_ERR(qm_regs)) {
--		ret = -ENOENT;
--		goto failed_to_create;
--	}
-+	debugfs_create_file("qm_regs", 0444, qm->debug.qm_d, qm, &qm_regs_fops);
- 
- 	return 0;
- 
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 1b2ee96c888d..f203fa824912 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -511,7 +511,7 @@ static int hisi_zip_core_debug_init(struct hisi_zip_ctrl *ctrl)
- 	struct hisi_qm *qm = &hisi_zip->qm;
- 	struct device *dev = &qm->pdev->dev;
- 	struct debugfs_regset32 *regset;
--	struct dentry *tmp_d, *tmp;
-+	struct dentry *tmp_d;
- 	char buf[HZIP_BUF_SIZE];
- 	int i;
- 
-@@ -521,10 +521,6 @@ static int hisi_zip_core_debug_init(struct hisi_zip_ctrl *ctrl)
- 		else
- 			sprintf(buf, "decomp_core%d", i - HZIP_COMP_CORE_NUM);
- 
--		tmp_d = debugfs_create_dir(buf, ctrl->debug_root);
--		if (!tmp_d)
--			return -ENOENT;
--
- 		regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
- 		if (!regset)
- 			return -ENOENT;
-@@ -533,9 +529,8 @@ static int hisi_zip_core_debug_init(struct hisi_zip_ctrl *ctrl)
- 		regset->nregs = ARRAY_SIZE(hzip_dfx_regs);
- 		regset->base = qm->io_base + core_offsets[i];
- 
--		tmp = debugfs_create_regset32("regs", 0444, tmp_d, regset);
--		if (!tmp)
--			return -ENOENT;
-+		tmp_d = debugfs_create_dir(buf, ctrl->debug_root);
-+		debugfs_create_regset32("regs", 0444, tmp_d, regset);
- 	}
- 
- 	return 0;
-@@ -543,7 +538,6 @@ static int hisi_zip_core_debug_init(struct hisi_zip_ctrl *ctrl)
- 
- static int hisi_zip_ctrl_debug_init(struct hisi_zip_ctrl *ctrl)
- {
--	struct dentry *tmp;
- 	int i;
- 
- 	for (i = HZIP_CURRENT_QM; i < HZIP_DEBUG_FILE_NUM; i++) {
-@@ -551,11 +545,9 @@ static int hisi_zip_ctrl_debug_init(struct hisi_zip_ctrl *ctrl)
- 		ctrl->files[i].ctrl = ctrl;
- 		ctrl->files[i].index = i;
- 
--		tmp = debugfs_create_file(ctrl_debug_file_name[i], 0600,
--					  ctrl->debug_root, ctrl->files + i,
--					  &ctrl_debug_fops);
--		if (!tmp)
--			return -ENOENT;
-+		debugfs_create_file(ctrl_debug_file_name[i], 0600,
-+				    ctrl->debug_root, ctrl->files + i,
-+				    &ctrl_debug_fops);
- 	}
- 
- 	return hisi_zip_core_debug_init(ctrl);
-@@ -569,8 +561,6 @@ static int hisi_zip_debugfs_init(struct hisi_zip *hisi_zip)
- 	int ret;
- 
- 	dev_d = debugfs_create_dir(dev_name(dev), hzip_debugfs_root);
--	if (!dev_d)
--		return -ENOENT;
- 
- 	qm->debug.debug_root = dev_d;
- 	ret = hisi_qm_debug_init(qm);
-@@ -955,8 +945,6 @@ static void hisi_zip_register_debugfs(void)
- 		return;
- 
- 	hzip_debugfs_root = debugfs_create_dir("hisi_zip", NULL);
--	if (IS_ERR_OR_NULL(hzip_debugfs_root))
--		hzip_debugfs_root = NULL;
- }
- 
- static void hisi_zip_unregister_debugfs(void)
+diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+new file mode 100644
+index 000000000000..2ca3ddbe1ff4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive Unleashed Rev C000 Platform DMA
++
++maintainers:
++  - Green Wan <green.wan@sifive.com>
++  - Palmer Debbelt <palmer@sifive.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
++
++description: |
++  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
++  channels. Each channel has 2 interrupts. One is for DMA done and
++  the other is for DME error.
++
++  In different SoC, DMA could be attached to different IRQ line.
++  DT file need to be changed to meet the difference. For technical
++  doc,
++
++  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-pdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 8
++
++  '#dma-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#dma-cells'
++
++examples:
++  - |
++    dma@3000000 {
++      compatible = "sifive,fu540-c000-pdma";
++      reg = <0x0 0x3000000 0x0 0x8000>;
++      interrupts = <23 24 25 26 27 28 29 30>;
++      #dma-cells = <1>;
++    };
++
++...
 -- 
-2.23.0
+2.17.1
 
