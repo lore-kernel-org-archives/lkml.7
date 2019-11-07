@@ -2,88 +2,186 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C683FC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577A8FC6197
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259AB2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210F921848
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BE4ywyGS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ArKI6Gja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732996AbfKGCUN (ORCPT
+        id S1733022AbfKGCUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:20:13 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48800 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbfKGCUM (ORCPT
+        Wed, 6 Nov 2019 21:20:20 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39394 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732865AbfKGCUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:20:12 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D31A720B7192;
-        Wed,  6 Nov 2019 18:20:11 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D31A720B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573093211;
-        bh=ANqKC9zirBL5qVf7a2LGzuVHY9L9E5urFo/RJfIMoL0=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=BE4ywyGSSwGkBhjWTxO594+Es8EzO/EXt+Y1G9pwAUUyBvB2ZFoEfbTWUxWLGo42i
-         +B+7AcJrTK+tuf3gs7iqJIK6dubUMt+Z3EDhtVRDr9gic04bFgdGTlFojGXvJsG/e/
-         D2tQ23Cd2VtkBCbZxj4xrj0eWlCzaluhj8R8n0us=
-Subject: Re: [PATCH v4 08/10] IMA: Defined functions to queue and dequeue keys
- for measurement
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191106190116.2578-1-nramas@linux.microsoft.com>
- <20191106190116.2578-9-nramas@linux.microsoft.com>
- <1573080281.5028.314.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <b9f293d8-6e58-4d56-1917-5819f0b8931a@linux.microsoft.com>
-Date:   Wed, 6 Nov 2019 18:20:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 21:20:19 -0500
+Received: by mail-pl1-f196.google.com with SMTP id o9so372739plk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:20:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H+QqKLPEQoeG1GGGgw3cHviviQT0DnHW7MBvGPeHz6k=;
+        b=ArKI6GjaGqnXyXXJugquFesbMPo4+FgiRDM8C38iV5D242vyprAXN+S3nkmPK/OMVm
+         SuIClw+4vYZMtzpL46SY9Q1c3tqqHMt0C8odoR6ghGzVtvoR1QVVjHRYjpR2GFqSu03K
+         RoNm7pOKyX1kbfrT+ftQrMhpwUX2OZgavt9vT/tSLAOtvJJo4zc/k6uuAEQ/gt5nH3zl
+         WaLigY0cKkQ+WUTN3M6i0YtWSKn2GA8f51dMOZawULnuJZ2X6p3irFUE5iLeE5YX4Csr
+         fMucxcs03GCVx4tnBl1cSjKFf0ttE/ivjDB3O9/CHD/VLXG3Mxd7nKFHuRS3J9nizG/X
+         NL8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H+QqKLPEQoeG1GGGgw3cHviviQT0DnHW7MBvGPeHz6k=;
+        b=OO316MFGDcl/+mEbBn82Ug6kXLG+cKFdz8+2G8ink3uuY5veYiJjY1wN8O2O9LM1dc
+         gW1D+vfRCVMGaMCF5Ny5yad4Wxp84QzMLe915vDZ0kbzeNNx4QCdl7GGLJYcfJyK2eZP
+         uOG8XsewLNvku4/r0T1gjwVo+kiAh3RMy5e1xuRlsJpshPuETz63SDh+zlWyCVUeSjbF
+         zVAIymJ8sGR8EJ+oNzPdxb/mduXYT6QfJF/vKqW2ksULZ1WgNWxHgsx77atzVM/TiEcN
+         luloWbIBWhqtXgKGj0yA2tqa6GNQNMmDAXdg0ZjI3k+e/X8W3Dthg7WGxw/rd4/dxxf8
+         s+1A==
+X-Gm-Message-State: APjAAAVvILY8MSoSoWmyTpZ/Oxs0aZ3EHGmgeioPErTIy4ud8x8i12UN
+        3xBTlYd/6DG3MnY7mGhcouBLgg==
+X-Google-Smtp-Source: APXvYqw5NEouYeHvrSFPg8kUw7qbtEhGDZ0vtBPCr/SO2elR5vBWUuBiUcos9vmJW6rYBJKddhrR3w==
+X-Received: by 2002:a17:902:8208:: with SMTP id x8mr1033222pln.232.1573093217114;
+        Wed, 06 Nov 2019 18:20:17 -0800 (PST)
+Received: from localhost ([122.171.110.253])
+        by smtp.gmail.com with ESMTPSA id j126sm354534pfg.4.2019.11.06.18.20.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 18:20:16 -0800 (PST)
+Date:   Thu, 7 Nov 2019 07:50:12 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 06/11] thermal: mediatek: Appease the kernel-doc deity
+Message-ID: <20191107022012.o7wfyoerhomc3ztu@vireshk-i7>
+References: <cover.1573046440.git.amit.kucheria@linaro.org>
+ <2961e4ac4b32ea7db8b5f6916751a5c02ee85960.1573046440.git.amit.kucheria@linaro.org>
+ <20191107021929.hsuyzswcl27n7wqt@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <1573080281.5028.314.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107021929.hsuyzswcl27n7wqt@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 2:44 PM, Mimi Zohar wrote:
-
-Hi Mimi,
-
->> +
->> +	if (ima_initialized) {
+On 07-11-19, 07:49, Viresh Kumar wrote:
+> On 06-11-19, 18:58, Amit Kucheria wrote:
+> > Replace a comment starting with /** by simply /* to avoid having it
+> > interpreted as a kernel-doc comment. Describe missing function
+> > parameters where needed.
+> > 
+> > Fixes up the following warnings when compiled with make W=1:
+> > 
+> > linux.git/drivers/thermal/mtk_thermal.c:374: warning: cannot understand
+> > function prototype: 'const struct mtk_thermal_data mt8173_thermal_data =
+> > '
+> > linux.git/drivers/thermal/mtk_thermal.c:413: warning: cannot understand
+> > function prototype: 'const struct mtk_thermal_data mt2701_thermal_data =
+> > '
+> > linux.git/drivers/thermal/mtk_thermal.c:443: warning: cannot understand
+> > function prototype: 'const struct mtk_thermal_data mt2712_thermal_data =
+> > '
+> > linux.git/drivers/thermal/mtk_thermal.c:499: warning: cannot understand
+> > function prototype: 'const struct mtk_thermal_data mt8183_thermal_data =
+> > '
+> > linux.git/drivers/thermal/mtk_thermal.c:529: warning: Function parameter
+> > or member 'sensno' not described in 'raw_to_mcelsius'
+> > 
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  drivers/thermal/mtk_thermal.c | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+> > index acf4854cbb8b8..76e30603d4d58 100644
+> > --- a/drivers/thermal/mtk_thermal.c
+> > +++ b/drivers/thermal/mtk_thermal.c
+> > @@ -358,7 +358,7 @@ static const int mt7622_mux_values[MT7622_NUM_SENSORS] = { 0, };
+> >  static const int mt7622_vts_index[MT7622_NUM_SENSORS] = { VTS1 };
+> >  static const int mt7622_tc_offset[MT7622_NUM_CONTROLLER] = { 0x0, };
+> >  
+> > -/**
+> > +/*
+> >   * The MT8173 thermal controller has four banks. Each bank can read up to
+> >   * four temperature sensors simultaneously. The MT8173 has a total of 5
+> >   * temperature sensors. We use each bank to measure a certain area of the
+> > @@ -400,7 +400,7 @@ static const struct mtk_thermal_data mt8173_thermal_data = {
+> >  	.sensor_mux_values = mt8173_mux_values,
+> >  };
+> >  
+> > -/**
+> > +/*
+> >   * The MT2701 thermal controller has one bank, which can read up to
+> >   * three temperature sensors simultaneously. The MT2701 has a total of 3
+> >   * temperature sensors.
+> > @@ -430,7 +430,7 @@ static const struct mtk_thermal_data mt2701_thermal_data = {
+> >  	.sensor_mux_values = mt2701_mux_values,
+> >  };
+> >  
+> > -/**
+> > +/*
+> >   * The MT2712 thermal controller has one bank, which can read up to
+> >   * four temperature sensors simultaneously. The MT2712 has a total of 4
+> >   * temperature sensors.
+> > @@ -484,7 +484,7 @@ static const struct mtk_thermal_data mt7622_thermal_data = {
+> >  	.sensor_mux_values = mt7622_mux_values,
+> >  };
+> >  
+> > -/**
+> > +/*
+> >   * The MT8183 thermal controller has one bank for the current SW framework.
+> >   * The MT8183 has a total of 6 temperature sensors.
+> >   * There are two thermal controller to control the six sensor.
+> > @@ -495,7 +495,6 @@ static const struct mtk_thermal_data mt7622_thermal_data = {
+> >   * data, and this indeed needs the temperatures of the individual banks
+> >   * for making better decisions.
+> >   */
+> > -
+> >  static const struct mtk_thermal_data mt8183_thermal_data = {
+> >  	.auxadc_channel = MT8183_TEMP_AUXADC_CHANNEL,
+> >  	.num_banks = MT8183_NUM_SENSORS_PER_ZONE,
+> > @@ -519,7 +518,8 @@ static const struct mtk_thermal_data mt8183_thermal_data = {
+> >  
+> >  /**
+> >   * raw_to_mcelsius - convert a raw ADC value to mcelsius
+> > - * @mt:		The thermal controller
+> > + * @mt:	The thermal controller
+> > + * @sensno:	sensor number
+> >   * @raw:	raw ADC value
 > 
-> ima_initialized is being set in ima_init(), before a custom policy is
-> loaded.  I would think that is too early.  ima_update_policy() is
-> called after loading a custom policy.  Please see how to detect when a
-> custom policy is loaded.
+> This doesn't look related to $subject
 
-ima_init_policy() is called before ima_initialized flag is set.
+I take this statement back :)
 
-As far as I understand ima_init_policy() loads custom policies as well. 
-So custom policies (such as arch specific policies, secure boot 
-policies, etc.) are loaded before the queued keys are processed.
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-But if CONFIG_IMA_WRITE_POLICY is enabled, the policy can be updated 
-anytime. This scenario is not handled in my implementation.
-
-Please correct me if my understanding is wrong.
-
-thanks,
-  -lakshmi
-
-
-
+-- 
+viresh
