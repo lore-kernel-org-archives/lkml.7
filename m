@@ -2,97 +2,204 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396EEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898B1FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECF4214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62ED421882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="Q+i+RF/W"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IalNoteq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbfKGSMH (ORCPT
+        id S1730060AbfKGSMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:12:07 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:32539 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbfKGSMH (ORCPT
+        Thu, 7 Nov 2019 13:12:13 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60140 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKGSMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:12:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573150325;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=wlYx0jYIMA60CF4+HfsceKorAaRJb8L+ckAK3oldZp4=;
-        b=Q+i+RF/W1DmjZLSFNL2y/Us5oLQemnoWRUGRohti3x59yv/RlRz65WwiP2GH94Lwu8
-        rkh/hO+nBSNhyKEKdZxR4/Z75jl4Z02dV8m51/V2luI/mwhrkkip8UIGWiD74OXXXDJN
-        jbIMe7kqrdAezzrZglbh0tAhpEzoAheScQxSDj67kLDNpZ5K3YGDkmqXzg629qA26GrG
-        pYYcNssYQPYhaFu2lI+FK7TNvAu5x6sOVD4DZMRqrLKpvrlhmxlLCyFNEyGFgXZ5p6zJ
-        oQl6WZGiUl8jnd2kK+40TKSWH0jJL67rZbMSXV8w95LqlQ/ZlJed0QaX1DPhzSIlxnKF
-        r2Cg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJDd+zEsL6f"
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vA7IC3oLV
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 19:12:03 +0100 (CET)
-Date:   Thu, 7 Nov 2019 19:12:00 +0100
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thu, 7 Nov 2019 13:12:13 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5AA3C99A;
+        Thu,  7 Nov 2019 19:12:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1573150330;
+        bh=qY+9wqw2HKjEleKyepixfIuCgZVEoPDFaahUGDwjj9U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IalNoteqDBi42927UGCCa5rhXplV5XO4SMZO08+97RIpbJNDkQp1a58JXQWsNGqgD
+         +vkONog7X97rmGJ3qI+EKSiMHpRp37v2qUoIL3ZELdg1ps5R7cSfpKdRe4v+W2l1oi
+         GW2j+y11mkyXk7NPXpA2fC+WzoKQrma0CRlv1D3U=
+Date:   Thu, 7 Nov 2019 20:12:00 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] iio: imu: mpu6050: Add support for vdd-supply
- regulator
-Message-ID: <20191107181140.GA908@gerhold.net>
-References: <20191106183536.123070-1-stephan@gerhold.net>
- <20191106183536.123070-2-stephan@gerhold.net>
- <MN2PR12MB3373CA676226F02BE0C804A8C4790@MN2PR12MB3373.namprd12.prod.outlook.com>
- <20191106213359.GA130672@gerhold.net>
- <MN2PR12MB3373846E85AA1A396198F46EC4780@MN2PR12MB3373.namprd12.prod.outlook.com>
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v3 2/8] dt-bindings: display: Add idk-2121wr binding
+Message-ID: <20191107181200.GB24231@pendragon.ideasonboard.com>
+References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1567017402-5895-3-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <MN2PR12MB3373846E85AA1A396198F46EC4780@MN2PR12MB3373.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1567017402-5895-3-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 01:29:33PM +0000, Jean-Baptiste Maneyrol wrote:
-> Hi Stephan,
+Hi Fabrizio,
+
+Thank you for the patch.
+
+On Wed, Aug 28, 2019 at 07:36:36PM +0100, Fabrizio Castro wrote:
+> Add binding for the idk-2121wr LVDS panel from Advantech.
 > 
-> I think the regulator_bulk usage is good, and the core_enable/disable_regulator functions implemented the way you did is perfect for the init/shutdown phase.
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
 > 
-> We just need to change the suspend/resume implementation to use something different.
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> ---
+> v2->v3:
+> * new patch
+> ---
+>  .../display/panel/advantech,idk-2121wr.yaml        | 90 ++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> new file mode 100644
+> index 0000000..b2ccdc8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
+> +
+> +maintainers:
+> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +
+> +description: |
+> +  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
+> +
+> +  The panels expects odd pixels from the first port, and even pixels from
 
-As far as I can tell, the regulator bulk API is designed to be used when
-you want to enable/disable multiple regulators at the same time.
-It does not really allow controlling one of its regulators separately
-(in a clean way).
+s/panels/panel/
+Maybe s/from the/on the/g ?
 
-E.g. if you would use regulator_bulk_disable() but already disabled one
-of the regulators at some point earlier, you would run into a warning
-because the regulator is disabled twice.
+> +  the second port, therefore the ports must be marked accordingly.
+> +
+> +allOf:
+> +  - $ref: lvds.yaml#
+> +  - $ref: ../bus-timings/lvds.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: advantech,idk-2121wr
+> +      - {} # panel-lvds, but not listed here to avoid false select
+> +
+> +  data-mapping:
+> +    const: vesa-24
+> +
+> +  width-mm:
+> +    const: 476
+> +
+> +  height-mm:
+> +    const: 268
+> +
+> +  panel-timing: true
+> +  ports: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
 
-My updated patch is still clean enough (in my opinion), so I would say
-it is better to avoid the regulator bulk API for this situation.
-I will send v2 shortly.
+Shouldn't data-mapping, width-mm, height-mm and ports be required too ?
 
-Thanks,
-Stephan
+As you mentioned in the cover letter, validating ports, port and the new
+dual-lvds-*-pixels properties would be nice. I'm not YAML schema
+specialist, so I'm fine with a best effort approach here, but as far as
+I understand Rob proposed a way forward, could you try it ?
+
+Apart from that, the bindings look sne to me, so
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+once the above issues get addressed.
+
+> +
+> +examples:
+> +  - |+
+> +    panel-lvds {
+> +      compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +      width-mm = <476>;
+> +      height-mm = <268>;
+> +
+> +      data-mapping = "vesa-24";
+> +
+> +      panel-timing {
+> +        clock-frequency = <148500000>;
+> +        hactive = <1920>;
+> +        vactive = <1080>;
+> +        hsync-len = <44>;
+> +        hfront-porch = <88>;
+> +        hback-porch = <148>;
+> +        vfront-porch = <4>;
+> +        vback-porch = <36>;
+> +        vsync-len = <5>;
+> +      };
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +          dual-lvds-odd-pixels;
+> +          panel_in0: endpoint {
+> +            remote-endpoint = <&lvds0_out>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          reg = <1>;
+> +          dual-lvds-even-pixels;
+> +          panel_in1: endpoint {
+> +            remote-endpoint = <&lvds1_out>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
