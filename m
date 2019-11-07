@@ -2,84 +2,94 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC1AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D44AC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342E9214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3F8214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388516AbfKGMXQ (ORCPT
+        id S2388567AbfKGMXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:23:16 -0500
-Received: from hetzy.fluff.org ([88.198.11.153]:46264 "EHLO hetzy.fluff.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbfKGMXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:23:15 -0500
-X-Greylist: delayed 1382 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Nov 2019 07:23:15 EST
-Received: from ben by hetzy.fluff.org with local (Exim 4.89)
-        (envelope-from <ben@fluff.org>)
-        id 1iSgSA-0004Xt-TZ; Thu, 07 Nov 2019 11:59:54 +0000
-Date:   Thu, 7 Nov 2019 11:59:54 +0000
-From:   Ben Dooks <ben@fluff.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: Linux-next-20191106 : arm64: Internal error: Oops: 96000007
-Message-ID: <20191107115954.7sfjflcxwejcolpb@hetzy.fluff.org>
-References: <CA+G9fYvm_QEq+9e+dni1Y+bJswr9bU5=shJcC+wKjjOyiPsXXQ@mail.gmail.com>
- <bfced8c8-c64f-982e-8797-d48b5ec65291@arm.com>
- <20191106161705.GA11849@sirena.co.uk>
- <CACRpkdY5JObOobs7VW043QYGd_xufwnQDBJseKp+_QWv4kdzaQ@mail.gmail.com>
- <20191107114553.GA6159@sirena.co.uk>
+        Thu, 7 Nov 2019 07:23:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63980 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388220AbfKGMXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 07:23:35 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7CDFiV171381
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 07:23:34 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w41w578sw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 07:23:33 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Thu, 7 Nov 2019 12:23:31 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 7 Nov 2019 12:23:29 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7CNSis44302724
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 Nov 2019 12:23:28 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 792EE42052;
+        Thu,  7 Nov 2019 12:23:28 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8C7B42045;
+        Thu,  7 Nov 2019 12:23:23 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.48.202])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  7 Nov 2019 12:23:23 +0000 (GMT)
+Subject: Re: [PATCH v2] x86/stacktrace: update kconfig help text for reliable
+ unwinders
+To:     Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>
+References: <20191107032958.14034-1-joe.lawrence@redhat.com>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Thu, 7 Nov 2019 17:53:21 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107114553.GA6159@sirena.co.uk>
-X-Disclaimer: These are my views alone.
-X-URL:  http://www.fluff.org/
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: ben@fluff.org
-X-SA-Exim-Scanned: No (on hetzy.fluff.org); SAEximRunCond expanded to false
+In-Reply-To: <20191107032958.14034-1-joe.lawrence@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110712-0028-0000-0000-000003B389A1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110712-0029-0000-0000-00002475E95D
+Message-Id: <06cfbe3c-83ac-d3c4-66a4-501dc3754ddf@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=872 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911070125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 11:45:53AM +0000, Mark Brown wrote:
-> On Thu, Nov 07, 2019 at 09:00:25AM +0100, Linus Walleij wrote:
+On 11/7/19 8:59 AM, Joe Lawrence wrote:
+> commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
+> for the ORC unwinder") added the ORC unwinder as a "reliable" unwinder.
+> Update the help text to reflect that change: the frame pointer unwinder
+> is no longer the only one that can provide HAVE_RELIABLE_STACKTRACE.
 > 
-> > I wonder if it's worth to look at the static checkers like checkpatch
-> > to warn for this?
-> 
-> I noticed this due to the warning emitted in the build process so I'm
-> not sure there'd be much more chance that people would notice (though
-> admittedly the warning during the build doesn't suggest a boot problem).
-> There's hundreds of other examples in the tree that don't trigger
-> crashes for whatever reason, I think this one was just noticable because
-> it got built in.
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 
-Is it worth hving a attribute for 'can't be initdata' to add to sparse to
-catch things like this. Not sure if checkpatch would be able to do the sort
-of full level of catch for this.
-
-
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
 -- 
-Ben Dooks, ben@fluff.org, http://www.fluff.org/ben/
-
-Large Hadron Colada: A large Pina Colada that makes the universe disappear.
+Kamalesh
 
