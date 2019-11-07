@@ -2,195 +2,230 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CF3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00AEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FB42178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FCF2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y5YC+/pS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aeNxoh4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388634AbfKGPDe (ORCPT
+        id S2388697AbfKGPDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:03:34 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:54462 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKGPDd (ORCPT
+        Thu, 7 Nov 2019 10:03:37 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57625 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726810AbfKGPDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:03:33 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7EiQQf050951;
-        Thu, 7 Nov 2019 15:02:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=WIrFjT89+Gu5N4D3hmBKexKVwTCS1SDwd3tM6/hO4o4=;
- b=Y5YC+/pSrp7sYP+/eudVtCqXnEXyWhvFJX5hW5Z5b9kAbLphFmM3cAxSIIcLJIqmUp6s
- Ee/R5jK2gZCgBz3FILobpIxrkRN4cTUz2en9wOT74i5ZBzCAdmEVJCzf79pf20dOmCLu
- 7jhRoQ/Psrc/Yf2D4n20RKyrxx2/EFVj3COe+3//SihJwC5f67ZdifrPEaIzMdur5YC0
- RResaZS9Edmvzy2r6tWCwIvYyipTk8z1/y66uZ2Q+viVO7Ngjtv8iuPFZHxmcUXSXp3H
- y/sM2sSELo2G5q1F6i8gJiRgWkBv4IUAtbB6R3YrvNfMdF+49eDFdG30FDHuvvpm/iQ/ AA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2w41w16s7e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 15:02:38 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7Eia3k131529;
-        Thu, 7 Nov 2019 15:02:38 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2w4k2vee2x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 15:02:36 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA7F2WhJ024079;
-        Thu, 7 Nov 2019 15:02:34 GMT
-Received: from [192.168.14.112] (/79.182.207.213)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Nov 2019 07:02:32 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is
- trustworthy
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <943488A8-2DD7-4471-B3C7-9F21A0B0BCF9@dinechin.org>
-Date:   Thu, 7 Nov 2019 17:02:26 +0200
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+        Thu, 7 Nov 2019 10:03:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573139015;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rz7Flxivq/MsSwcTJWISr8XdYwP7g8dNxx0v7qQboaY=;
+        b=aeNxoh4+5saKvptwaMqT8MgK1nhBU9UINOftBAIPVTja1PRHv6/1iwBD3XLSMBMYgCTIrw
+        erez4VFhcRQavrvJKF+tzLDrTls0S6q+wQDOtOO5YI2x9PvPsf4veKt2/CtsRtyLPlyYiS
+        tAK5KIyKvnfH7YqsuqeOydxcSouds1o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-RVqa4xSAOlWCaLzfVm6j3A-1; Thu, 07 Nov 2019 10:03:32 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66FAA1800D6B;
+        Thu,  7 Nov 2019 15:03:30 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7E71F5D6A0;
+        Thu,  7 Nov 2019 15:03:24 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  7 Nov 2019 16:03:30 +0100 (CET)
+Date:   Thu, 7 Nov 2019 16:03:23 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <darren@dvhart.com>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Yang Tao <yang.tao172@zte.com.cn>,
+        Florian Weimer <fweimer@redhat.com>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [patch 00/12] futex: Cure robust/PI futex exit races
+Message-ID: <20191107150323.GA24042@redhat.com>
+References: <20191106215534.241796846@linutronix.de>
+MIME-Version: 1.0
+In-Reply-To: <20191106215534.241796846@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: RVqa4xSAOlWCaLzfVm6j3A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <713ECF67-6A6C-4956-8AC6-7F4C05961328@oracle.com>
-References: <20191105161737.21395-1-vkuznets@redhat.com>
- <20191105193749.GA20225@linux.intel.com>
- <20191105232500.GA25887@linux.intel.com>
- <943488A8-2DD7-4471-B3C7-9F21A0B0BCF9@dinechin.org>
-To:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070144
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070144
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/06, Thomas Gleixner wrote:
+>
+>  fs/exec.c                |    2=20
+>  include/linux/compat.h   |    2=20
+>  include/linux/futex.h    |   38 +++--
+>  include/linux/sched.h    |    3=20
+>  include/linux/sched/mm.h |    6=20
+>  kernel/exit.c            |   30 ----
+>  kernel/fork.c            |   40 ++---
+>  kernel/futex.c           |  324 ++++++++++++++++++++++++++++++++++++++++=
+-------
+>  8 files changed, 330 insertions(+), 115 deletions(-)
+
+The whole series looks good to me.
+
+But I am just curious, what do you all think about the patch below
+instead of 10/12 and 12/12 ?
+
+Oleg.
 
 
-> On 7 Nov 2019, at 16:00, Christophe de Dinechin =
-<christophe.de.dinechin@gmail.com> wrote:
->=20
->=20
->=20
->> On 6 Nov 2019, at 00:25, Sean Christopherson =
-<sean.j.christopherson@intel.com> wrote:
->>=20
->> On Tue, Nov 05, 2019 at 11:37:50AM -0800, Sean Christopherson wrote:
->>> On Tue, Nov 05, 2019 at 05:17:37PM +0100, Vitaly Kuznetsov wrote:
->>>> Virtualized guests may pick a different strategy to mitigate =
-hardware
->>>> vulnerabilities when it comes to hyper-threading: disable SMT =
-completely,
->>>> use core scheduling, or, for example, opt in for STIBP. Making the
->>>> decision, however, requires an extra bit of information which is =
-currently
->>>> missing: does the topology the guest see match hardware or if it is =
-'fake'
->>>> and two vCPUs which look like different cores from guest's =
-perspective can
->>>> actually be scheduled on the same physical core. Disabling SMT or =
-doing
->>>> core scheduling only makes sense when the topology is trustworthy.
->>>>=20
->>>> Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the =
-meaning
->>>> that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the =
-exposed SMT
->>>> topology is actually trustworthy. It would, of course, be possible =
-to get
->>>> away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose =
-backwards
->>>> compatibility but the current approach looks more straightforward.
->>>=20
->>> I'd stay away from "trustworthy", especially if this is controlled =
-by
->>> userspace.  Whether or not the hint is trustworthy is purely up to =
-the
->>> guest.  Right now it doesn't really matter, but that will change as =
-we
->>> start moving pieces of the host out of the guest's TCB.
->>>=20
->>> It may make sense to split the two (or even three?) cases, e.g.
->>> KVM_FEATURE_NO_SMT and KVM_FEATURE_ACCURATE_TOPOLOGY.  KVM can =
-easily
->>> enforce NO_SMT _today_, i.e. allow it to be set if and only if SMT =
-is
->>> truly disabled.  Verifying that the topology exposed to the guest is =
-legit
->>> is a completely different beast.
->>=20
->> Scratch the ACCURATE_TOPOLOGY idea, I doubt there's a real use case =
-for
->> setting ACCURATE_TOPOLOGY and not KVM_HINTS_REALTIME.  A feature flag =
-to
->> state that SMT is disabled seems simple and useful.
-
-A bit such as NoNonArchitecturalCoreSharing can be set even when host =
-SMT is enabled.
-For example, when host use core-scheduling to group together vCPUs that =
-run as sibling hyperthreads.
-Therefore, I wouldn=E2=80=99t want to tie the feature-flag semantics to =
-host SMT being enabled/disabled.
-It=E2=80=99s just true that this bit can be set when host SMT is =
-disabled.
-
->=20
-> I share that concern about the naming, although I do see some
-> value in exposing the cpu_smt_possible() result. I think it=E2=80=99s =
-easier
-> to state that something does not work than to state something does
-> work.
->=20
-> Also, with respect to mitigation, we may want to split the two cases
-> that Paolo outlined, i.e. have KVM_HINTS_REALTIME,
-> KVM_HINTS_CORES_CROSSTALK and
-> KVM_HINTS_CORES_LEAKING,
-> where CORES_CROSSTALKS indicates there may be some
-> cross-talk between what the guest thinks are isolated cores,
-> and CORES_LEAKING indicates that cores may leak data
-> to some other guest.
->=20
-> The problem with my approach is that it is shouting =E2=80=9Cdon=E2=80=99=
-t trust me=E2=80=9D
-> a bit too loudly.
-
-I don=E2=80=99t see a value in exposing CORES_LEAKING to guest. As guest =
-have nothing to do with it.
-
--Liran
-
-
-
-
-
-
-
-
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9e0de08..ad18433 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -621,6 +621,11 @@ struct wake_q_node {
+ =09struct wake_q_node *next;
+ };
+=20
++struct wake_q_head {
++=09struct wake_q_node *first;
++=09struct wake_q_node **lastp;
++};
++
+ struct task_struct {
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ =09/*
+@@ -1055,6 +1060,7 @@ struct task_struct {
+ =09struct list_head=09=09pi_state_list;
+ =09struct futex_pi_state=09=09*pi_state_cache;
+ =09unsigned int=09=09=09futex_state;
++=09struct wake_q_head=09=09futex_exit_q;
+ #endif
+ #ifdef CONFIG_PERF_EVENTS
+ =09struct perf_event_context=09*perf_event_ctxp[perf_nr_task_contexts];
+diff --git a/include/linux/sched/wake_q.h b/include/linux/sched/wake_q.h
+index 26a2013..62805b5 100644
+--- a/include/linux/sched/wake_q.h
++++ b/include/linux/sched/wake_q.h
+@@ -35,11 +35,6 @@
+=20
+ #include <linux/sched.h>
+=20
+-struct wake_q_head {
+-=09struct wake_q_node *first;
+-=09struct wake_q_node **lastp;
+-};
+-
+ #define WAKE_Q_TAIL ((struct wake_q_node *) 0x01)
+=20
+ #define DEFINE_WAKE_Q(name)=09=09=09=09\
+diff --git a/kernel/futex.c b/kernel/futex.c
+index 4b36bc8..87763c7 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -1176,6 +1176,24 @@ static int attach_to_pi_state(u32 __user *uaddr, u32=
+ uval,
+ =09return ret;
+ }
+=20
++static void wait_for_owner_exiting(int ret)
++{
++=09struct wake_q_node *node =3D &current->wake_q;
++
++=09if (ret !=3D -EBUSY) {
++=09=09WARN_ON_ONCE(node->next); // XXX not really correct ...
++=09=09return;
++=09}
++
++=09for (;;) {
++=09=09set_current_state(TASK_UNINTERRUPTIBLE);
++=09=09if (!READ_ONCE(node->next))
++=09=09=09break;
++=09=09schedule();
++=09}
++=09__set_current_state(TASK_RUNNING);
++}
++
+ static int handle_exit_race(u32 __user *uaddr, u32 uval,
+ =09=09=09    struct task_struct *tsk)
+ {
+@@ -1185,8 +1203,10 @@ static int handle_exit_race(u32 __user *uaddr, u32 u=
+val,
+ =09 * If the futex exit state is not yet FUTEX_STATE_DEAD, tell the
+ =09 * caller that the alleged owner is busy.
+ =09 */
+-=09if (tsk && tsk->futex_state !=3D FUTEX_STATE_DEAD)
++=09if (tsk && tsk->futex_state !=3D FUTEX_STATE_DEAD) {
++=09=09wake_q_add(&tsk->futex_exit_q, current);
+ =09=09return -EBUSY;
++=09}
+=20
+ =09/*
+ =09 * Reread the user space value to handle the following situation:
+@@ -2104,6 +2124,7 @@ static int futex_requeue(u32 __user *uaddr1, unsigned=
+ int flags,
+ =09=09=09hb_waiters_dec(hb2);
+ =09=09=09put_futex_key(&key2);
+ =09=09=09put_futex_key(&key1);
++=09=09=09wait_for_owner_exiting(ret);
+ =09=09=09cond_resched();
+ =09=09=09goto retry;
+ =09=09default:
+@@ -2855,6 +2876,7 @@ static int futex_lock_pi(u32 __user *uaddr, unsigned =
+int flags,
+ =09=09=09queue_unlock(hb);
+ =09=09=09put_futex_key(&q.key);
+ =09=09=09cond_resched();
++=09=09=09wait_for_owner_exiting(ret);
+ =09=09=09goto retry;
+ =09=09default:
+ =09=09=09goto out_unlock_put_key;
+@@ -3701,6 +3723,7 @@ static void futex_cleanup(struct task_struct *tsk)
+ void futex_exit_recursive(struct task_struct *tsk)
+ {
+ =09tsk->futex_state =3D FUTEX_STATE_DEAD;
++=09wake_up_q(&tsk->futex_exit_q);
+ }
+=20
+ static void futex_cleanup_begin(struct task_struct *tsk)
+@@ -3718,16 +3741,17 @@ static void futex_cleanup_begin(struct task_struct =
+*tsk)
+ =09 */
+ =09raw_spin_lock_irq(&tsk->pi_lock);
+ =09tsk->futex_state =3D FUTEX_STATE_EXITING;
++=09wake_q_init(&tsk->futex_exit_q);
+ =09raw_spin_unlock_irq(&tsk->pi_lock);
+ }
+=20
+ static void futex_cleanup_end(struct task_struct *tsk, int state)
+ {
+-=09/*
+-=09 * Lockless store. The only side effect is that an observer might
+-=09 * take another loop until it becomes visible.
+-=09 */
++=09raw_spin_lock_irq(&tsk->pi_lock);
+ =09tsk->futex_state =3D state;
++=09raw_spin_unlock_irq(&tsk->pi_lock);
++
++=09wake_up_q(&tsk->futex_exit_q);
+ }
+=20
+ void futex_exec_release(struct task_struct *tsk)
 
