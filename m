@@ -2,108 +2,145 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2311C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5C9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D072084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3220F2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JEB1F12i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IzWCw6Jo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfKGSrX (ORCPT
+        id S1727427AbfKGSsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:47:23 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45067 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfKGSrX (ORCPT
+        Thu, 7 Nov 2019 13:48:51 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37291 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726965AbfKGSsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:47:23 -0500
-Received: by mail-il1-f196.google.com with SMTP id o18so2744339ils.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:47:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LlH/emK43X7VQlux0XjazW6nVpP1+OhxUnqAKnN/vBs=;
-        b=JEB1F12iTYfjJYno9PiUHEyIvfvFi+cWQhuSPBKHPuy1ugZuXn4+uxYA3Ey4McDqlF
-         PvDtJzEOxJSnnwrAitdgUXRRfeq3SlbXPFIE6k67sa3xWjywqkMIXl2xZ9MziBmUPsAl
-         QX+sIqfsd0HwsZoDRs/WK9nqC6eBfcG0Vm9gLGk8eQg56BI/CqY5tritxhJkvt3pb2a5
-         uCR5rJtp8GXjIT4bMlrgdU4gghxt2xZNnrZRtp0lqc0S4lQ5JDbicq98gKRi039be6sD
-         LumACIvxVvtdh2nbwrwLoZJm2SfXnunI5xJzIHARQGFZ8A8Qw0M/nwMrX0Oah7XPbLBt
-         FE8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LlH/emK43X7VQlux0XjazW6nVpP1+OhxUnqAKnN/vBs=;
-        b=mOacFJ5rDo2iB0VYaw/4BWky0i+j1mzmgX9dPxKrETulzAbkGVbE9IyK0b+l4LQoUF
-         CLptwjldOimejnbBOtZAcm2lQL6lDnhsevgB2tLwurXqSKAIf8T4oetZgbzZ7leLtlGE
-         DFkliAra1x53BzfvQPgt847KknpKj/xQxxETY8fDcPCsRoSz9GNuzpAlqmanUX7bvEpe
-         Fc5Y7uv2MavcjhiWcfc4gU7yru1hdw1t6nE54To77lVutUCVlQCD/x23ij7kkxQ8vQle
-         8jAbMoI/jYq2t70Wi989Te63hwGwBAkDzFE0mznP25qQhvInB0shiSBMrVhw2RyQxmWw
-         GP8Q==
-X-Gm-Message-State: APjAAAW7KfxZBk3JYFOtluY4iiw5zCwF2KQjVlHvawNQHIuS9rytx0t/
-        SY89/QAxV/eCBzI/UDYdf+C+RyfXyXRAeZHoz4KusQ==
-X-Google-Smtp-Source: APXvYqzAVWigadbsfFuHoFmMfkvGVyLArpcA4tXnCqWDWZyByyzokkk8+aogfdz1WchCA9laZjOZIHtQihQ5pjFV66o=
-X-Received: by 2002:a92:350a:: with SMTP id c10mr6317836ila.140.1573152441970;
- Thu, 07 Nov 2019 10:47:21 -0800 (PST)
+        Thu, 7 Nov 2019 13:48:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573152530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UHB0JrKl2/lgoy546a6o5x0iXWhc257PTYUJn/4Bje0=;
+        b=IzWCw6Joj6xY0pxmrt8uf+HitdTf1u5HxPuCNhyPwd+atj0HVEEvvcfqnXDHJq5Q3iMUs1
+        mYP8gP15+qfCHcfUawOYCNJ0A6HvzQWv3FpQSZZ40HpBK69B913VawjCUjhMl+9oEoazo5
+        wcoHY8T3eYEVFyOIQYvdO6F58R4aLKc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-B9RjU769P3eP409e546QHA-1; Thu, 07 Nov 2019 13:48:44 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70429800C61;
+        Thu,  7 Nov 2019 18:48:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 54380600D3;
+        Thu,  7 Nov 2019 18:48:38 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com>
+References: <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com> <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk> <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 04/14] pipe: Add O_NOTIFICATION_PIPE [ver #2]
 MIME-Version: 1.0
-References: <20191106115651.113943-1-weiyongjun1@huawei.com>
-In-Reply-To: <20191106115651.113943-1-weiyongjun1@huawei.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 7 Nov 2019 11:47:11 -0700
-Message-ID: <CANLsYkxKAC9FLYkFjuehj_oFHTVyd=8_R8bAKjPxTXQyAGkwYw@mail.gmail.com>
-Subject: Re: [PATCH -next] coresight: replicator: Fix missing spin_lock_init()
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Yabin Cui <yabinc@google.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-ID: <6963.1573152517.1@warthog.procyon.org.uk>
+Date:   Thu, 07 Nov 2019 18:48:37 +0000
+Message-ID: <6964.1573152517@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: B9RjU769P3eP409e546QHA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Nov 2019 at 04:57, Wei Yongjun <weiyongjun1@huawei.com> wrote:
->
-> The driver allocates the spinlock but not initialize it.
-> Use spin_lock_init() on it to initialize it correctly.
->
-> This is detected by Coccinelle semantic patch.
->
-> Fixes: 0093875ad129 ("coresight: Serialize enabling/disabling a link device.")
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  drivers/hwtracing/coresight/coresight-replicator.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index 43304196a1a6..e7dc1c31d20d 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -248,6 +248,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
->         }
->         dev->platform_data = pdata;
->
-> +       spin_lock_init(&drvdata->spinlock);
+Andy Lutomirski <luto@kernel.org> wrote:
 
-I have applied both patches but removed the "Fixes" line since the
-commit is only visible in my local coresight next tree.
+> > Add an O_NOTIFICATION_PIPE flag that can be passed to pipe2() to indica=
+te
+> > that the pipe being created is going to be used for notifications.  Thi=
+s
+> > suppresses the use of splice(), vmsplice(), tee() and sendfile() on the
+> > pipe as calling iov_iter_revert() on a pipe when a kernel notification
+> > message has been inserted into the middle of a multi-buffer splice will=
+ be
+> > messy.
+>
+> How messy?
 
-Thanks,
-Mathieu
+Well, iov_iter_revert() on a pipe iterator simply walks backwards along the
+ring discarding the last N contiguous slots (where N is normally the number=
+ of
+slots that were filled by whatever operation is being reverted).
 
->         desc.type = CORESIGHT_DEV_TYPE_LINK;
->         desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
->         desc.ops = &replicator_cs_ops;
->
->
->
+However, unless the code that transfers stuff into the pipe takes the spinl=
+ock
+spinlock and disables softirqs for the duration of its ring filling, what w=
+ere
+N contiguous slots may now have kernel notifications interspersed - even if=
+ it
+has been holding the pipe mutex.
+
+So, now what do you do?  You have to free up just the buffers relevant to t=
+he
+iterator and then you can either compact down the ring to free up the space=
+ or
+you can leave null slots and let the read side clean them up, thereby
+reducing the capacity of the pipe temporarily.
+
+Either way, iov_iter_revert() gets more complex and has to hold the spinloc=
+k.
+
+And if you don't take the spinlock whilst you're reverting, more notificati=
+ons
+can come in to make your life more interesting.
+
+There's also a problem with splicing out from a notification pipe that the
+messages are scribed onto preallocated buffers, but now the buffers need
+refcounts and, in any case, are of limited quantity.
+
+> And is there some way to make it impossible for this to happen?
+
+Yes.  That's what I'm doing by declaring the pipe to be unspliceable up fro=
+nt.
+
+> Adding a new flag to pipe2() to avoid messy kernel code seems
+> like a poor tradeoff.
+
+By far the easiest place to check whether a pipe can be spliced to is in
+get_pipe_info().  That's checking the file anyway.  After that, you can't m=
+ake
+the check until the pipe is locked.
+
+Furthermore, if it's not done upfront, the change to the pipe might happen
+during a splicing operation that's residing in pipe_wait()... which drops t=
+he
+pipe mutex.
+
+David
+
