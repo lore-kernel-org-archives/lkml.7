@@ -2,95 +2,100 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4EEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F181C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BF92085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="Ai9WM98m"
+	by mail.kernel.org (Postfix) with ESMTP id 4BC5F2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 16:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbfKGQpF (ORCPT
+        id S2388849AbfKGQp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 11:45:05 -0500
-Received: from mail-pg1-f178.google.com ([209.85.215.178]:38556 "EHLO
-        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbfKGQpE (ORCPT
+        Thu, 7 Nov 2019 11:45:29 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:46490 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729692AbfKGQp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 11:45:04 -0500
-Received: by mail-pg1-f178.google.com with SMTP id 15so2431303pgh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 08:45:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9fDi5idh+0YnvsfvGNTaSXXIz2wOd4ohinrW8IQawHE=;
-        b=Ai9WM98mSwL01Q2QhsAJu8HDLzq4+33bhwhJvmfjcVBsES0tv5mMMQsexCSS1snU1Y
-         3TPWT6H+KtvrvxVf7DBc+lx3ruOQYCX4U7ul/wsua8x7/WQuhMRoCTXWQ2BXcaOcFSEb
-         xacYaHsrvSb4zgfgGd/32QGI9REG1u1H66l4LNgHqQ/+96BFsIyxNGTSqokYTxYSKG2V
-         1K5n95/9akHkpIHkldMY/2cwouaK2NTz/0jbvEbKC5WvGFjJcP9jxvk+vZLCMPsNaAyo
-         84Q7NpGMTQHaY5WeIdVcGgSBsti1Vk5WxpJc0IsbWdZaIsE2CPRR2frS5M5QJdrqw3YG
-         BtPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9fDi5idh+0YnvsfvGNTaSXXIz2wOd4ohinrW8IQawHE=;
-        b=dRRAl0NIbT8G+UfKQbWdLnYDxrjhs7HJquFZfZxU+PInNS/NnfQK6ZrXC/eqeL/Vhk
-         mGEbJsFR9lCDV9aLVbOt690R1izoIBXdMzxutqLDOhMBfrnl3SxfweItbXUy3/QduFnt
-         2FkRymaf8Bti3FUOLi+pojAVP1I6exsFl55vTraDKN02+nIy8/xD4BD0s5cYT2AivC4G
-         +WnqjH6/u1HLbrmDYdoFb1BGTJIGr2yaX+h2X4gIZ7OQ6F5WabzvMPPRNjMG20OcVdik
-         SSY6ae+2FjzDZI086F2SYuPhCj3+aa5yMCSFYkWCjokvBbmuElTwJb2DAlH577Z4vrPp
-         aY1g==
-X-Gm-Message-State: APjAAAVNiF0T/2MEJF6odUxgfrL24cWiJVnrEDntRQ8xbVTy/yjH7K1C
-        G7jzcTq65ZrfgFhiUWA2PXm9BA==
-X-Google-Smtp-Source: APXvYqy2+RDZHukJZxBehyElTALNAHz6//WJVn3zuSzoUUNMpH9DtJr54A5LaAn+v2HcnkYBI2KfEQ==
-X-Received: by 2002:aa7:8610:: with SMTP id p16mr5205592pfn.185.1573145103593;
-        Thu, 07 Nov 2019 08:45:03 -0800 (PST)
-Received: from shemminger-XPS-13-9360 ([167.220.105.73])
-        by smtp.gmail.com with ESMTPSA id s11sm2386550pjp.26.2019.11.07.08.45.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 08:45:03 -0800 (PST)
-Date:   Thu, 7 Nov 2019 08:44:55 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Willy Tarreau <w@1wt.eu>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thu, 7 Nov 2019 11:45:28 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iSkuV-0002be-08; Thu, 07 Nov 2019 09:45:27 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iSkuT-0000Il-F4; Thu, 07 Nov 2019 09:45:26 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     hpa@zytor.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch 8/9] x86/iopl: Remove legacy IOPL option
-Message-ID: <20191107084455.00f24f49@shemminger-XPS-13-9360>
-In-Reply-To: <c6269309-0035-002c-8fee-72b37d42bb33@suse.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
 References: <20191106193459.581614484@linutronix.de>
-        <20191106202806.518518372@linutronix.de>
-        <c6269309-0035-002c-8fee-72b37d42bb33@suse.com>
+        <20191106202806.241007755@linutronix.de>
+        <CAHk-=wjXcS--G3Wd8ZGEOdCNRAWPaUneyN1ryShQL-_yi1kvOA@mail.gmail.com>
+        <20191107082541.GF30739@gmail.com> <20191107091704.GA15536@1wt.eu>
+        <alpine.DEB.2.21.1911071058260.4256@nanos.tec.linutronix.de>
+        <71DE81AC-3AD4-47B3-9CBA-A2C7841A3370@zytor.com>
+        <20191107102756.GD15536@1wt.eu>
+        <5AAEF116-EC9D-4C58-878F-9D27189E123A@zytor.com>
+        <20191107125638.GB15642@1wt.eu>
+Date:   Thu, 07 Nov 2019 10:45:09 -0600
+In-Reply-To: <20191107125638.GB15642@1wt.eu> (Willy Tarreau's message of "Thu,
+        7 Nov 2019 13:56:38 +0100")
+Message-ID: <87h83fd4a2.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-XM-SPF: eid=1iSkuT-0000Il-F4;;;mid=<87h83fd4a2.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19xgL3tAqiNSAGXW1BXqYlMObhsRFFKuX8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage further
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 07:11:49 +0100
-J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrote:
+Willy Tarreau <w@1wt.eu> writes:
 
-> On 06.11.19 20:35, Thomas Gleixner wrote:
-> > The IOPL emulation via the I/O bitmap is sufficient. Remove the legacy
-> > cruft dealing with the (e)flags based IOPL mechanism.
-> >=20
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de> =20
->=20
-> Reviewed-by: Juergen Gross <jgross@suse.com> (Paravirt and Xen parts)
+> On Thu, Nov 07, 2019 at 02:50:20AM -0800, hpa@zytor.com wrote:
+>> You get access to the ports you are assigned, just like pages you are
+>> assigned... the rest is kernel policy, or, for that matter, privileged
+>> userspace (get permissions to the necessary ports, then drop privilege... the
+>> usual stuff.)
+>
+> I agree, my point is that there's already no policy checking at the
+> moment ports are assigned, hence a process having the permissions to
+> request just port 0x70-0x71 to read the hwclock will also have permission
+> to request access to the sensor chip a 0x2E and trigger a watchdog
+> reset or stop the CPU fan. Thus any policy enforcement is solely done
+> by the requesting process itself, assuming it doesn't simply use iopl()
+> already, which grants everything.
+>
+> This is why I'm really wondering if the real use cases that need all
+> this stuff still exist at all in practice.
 
-I am happy to see this go. The DPDK only did initially because it
-was only way virtio would work at the time.
+My memory is that the applications that didn't need fine grain access to
+ports would just use iopl.
 
-Acked-by: Stephen Hemminger <stephen@networkplumber.org>
+Further a quick look shows that dosemu uses ioperm in a fine grained
+manner.  From memory it would allow a handful of ports to allow directly
+accessing a device and depended on the rest of the port accesses to be
+disallowed so it could trap and emulate them.
+
+So yes I do believe making ioperm ioperm(all) will break userspace.
+
+Eric
+
