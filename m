@@ -2,148 +2,141 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0D4C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A56C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18EA214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:59:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JXVM/MiD"
+	by mail.kernel.org (Postfix) with ESMTP id 66D0A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389008AbfKGN7i (ORCPT
+        id S1730985AbfKGODa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:59:38 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41866 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfKGN7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:59:37 -0500
-Received: by mail-lf1-f67.google.com with SMTP id j14so1668145lfb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:59:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=zUtIMonLuqK+iWfJbM+SRmDj7hvvfURy8hJeahep4/Y=;
-        b=JXVM/MiDFcTdxX8cy44MVmFzKHZugo548aLLV3zop3h5hHOXAzYT6dhtTgattam5zn
-         ZHy819NPhLltJnzWcFS5twZCvlR/8x3QLB6r3t4Po1F5oZONbOnSc5g9AgbLwvWauhAi
-         yotfq3heZSqtcjbCavMNKNiRu404KbTrb8pgpcIdV9hTDi58CHPXULq304hVVwb2hBg0
-         6LODreUSFrglTydMSlJB/vAnPGzhHTgpXFAVvGI4lUsl2yd05M9aWPgtQwLxEHa4m1b5
-         FBx+2dk1QMCjwaR6V/2DuSKPMW6c83nrwZUb94/uuRwUAIdlFIbwl3gnqLM4MRRIp0Pm
-         be8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=zUtIMonLuqK+iWfJbM+SRmDj7hvvfURy8hJeahep4/Y=;
-        b=iCxlAfefGtkgBvgfZMEuymEyscw6COBPuXBdaJOYR9ZL+Z7dnQpsBj4BhxShTj5Yer
-         qSYs9Jr9LdhViZlYlRe7NZBVgfnHMmCRKRvZAUKHQCWWg0f5XI0M6FQzbAT2toiZ2j8T
-         WcBUyRYXWxVxwiKklfvHlo+XYtegBZaWzqLLr3/BJ2yVYOcGZMsBPDONzrU4qtIk7bye
-         sflKphN5hVaiXNEzeIg0OItaMezq2ZBQQOfSzAC3iJCQbAA4koZGDSsJnFCZXybijLA4
-         JSWcbtJpKzP7qr4zobARP5RlzZyCy5rmGK4BU7vWYS7hZVhoZ9dIBfHpad3J2+HPhw7k
-         LuQQ==
-X-Gm-Message-State: APjAAAVoWNTHUIxA5j07Zb1dKj9IxTriw5k6SQ6tp1XiIStOeRXZA1tV
-        WrstCgW0nvmQSYOhh9Zf918ksfihd8cjipwSENcwBw==
-X-Google-Smtp-Source: APXvYqxuBAK2h3pUAqLUZxbZFw8/Si0iNv8WQG1sEpgRk4H5vaETXamgdrUD+1wEZUttCeRSrNtVZwS+MutL6tIi1p8=
-X-Received: by 2002:ac2:5930:: with SMTP id v16mr2612552lfi.67.1573135174476;
- Thu, 07 Nov 2019 05:59:34 -0800 (PST)
+        Thu, 7 Nov 2019 09:03:30 -0500
+Received: from ox4u.de ([212.118.221.216]:54322 "EHLO s1.ox4u.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726754AbfKGODa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:03:30 -0500
+X-Greylist: delayed 514 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Nov 2019 09:03:29 EST
+Received: by s1.ox4u.de (Postfix, from userid 65534)
+        id D9EFB26012A; Thu,  7 Nov 2019 14:54:53 +0100 (CET)
+Received: from ws-140106.localnet (unknown [212.185.67.146])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by s1.ox4u.de (Postfix) with ESMTPSA id 0A753260113;
+        Thu,  7 Nov 2019 14:54:52 +0100 (CET)
+From:   Alexander Stein <alexander.stein@systec-electronic.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] iio: core: Fix fractional format generation
+Date:   Thu, 07 Nov 2019 14:54:52 +0100
+Message-ID: <4116142.9TFg0imz4M@ws-140106>
+In-Reply-To: <20190822060607.25339-1-alexander.stein@systec-electronic.com>
+References: <20190822060607.25339-1-alexander.stein@systec-electronic.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 7 Nov 2019 19:29:23 +0530
-Message-ID: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com>
-Subject: LTP: diotest4.c:476: read to read-only space. returns 0: Success
-To:     LTP List <ltp@lists.linux.it>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Cc:     Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LTP test case dio04 test failed on 32bit kernel running linux next
-20191107 kernel.
-Linux version 5.4.0-rc6-next-20191107.
+Gentle ping
 
-diotest4    1  TPASS  :  Negative Offset
-diotest4    2  TPASS  :  removed
-diotest4    3  TPASS  :  Odd count of read and write
-diotest4    4  TPASS  :  Read beyond the file size
-diotest4    5  TPASS  :  Invalid file descriptor
-diotest4    6  TPASS  :  Out of range file descriptor
-diotest4    7  TPASS  :  Closed file descriptor
-diotest4    8  TPASS  :  removed
-diotest4    9  TCONF  :  diotest4.c:345: Direct I/O on /dev/null is
-not supported
-diotest4   10  TPASS  :  read, write to a mmaped file
-diotest4   11  TPASS  :  read, write to an unmapped file
-diotest4   12  TPASS  :  read from file not open for reading
-diotest4   13  TPASS  :  write to file not open for writing
-diotest4   14  TPASS  :  read, write with non-aligned buffer
-diotest4   15  TFAIL  :  diotest4.c:476: read to read-only space.
-returns 0: Success
-diotest4   16  TFAIL  :  diotest4.c:180: read, write buffer in read-only space
-diotest4   17  TFAIL  :  diotest4.c:114: read allows  nonexistant
-space. returns 0: Success
-diotest4   18  TFAIL  :  diotest4.c:129: write allows  nonexistant
-space.returns -1: Invalid argument
-diotest4   19  TFAIL  :  diotest4.c:180: read, write in non-existant space
-diotest4   20  TPASS  :  read, write for file with O_SYNC
-diotest4    0  TINFO  :  2/15 test blocks failed
+On Thursday, August 22, 2019, 8:06:07 AM CET Alexander Stein wrote:
+> In case the result is -0.3252 tmp0 is 0 after the div_s64_rem, so tmp0 is
+> non-negative which results in an output of 0.3252.
+> Fix this by explicitly handling the negative sign ourselves.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
+> ---
+> Changes in v2:
+> * Support vals[0] >= and vals[1] < 0 in IIO_VAL_FRACTIONAL
+> * Note: IIO_VAL_FRACTIONAL is untested, as I lack hardware
+> * Note2: Currently IIO_VAL_FRACTIONAL is only called with vals[1] from
+>          in-kernel drivers AFAICS
+> 
+>  drivers/iio/industrialio-core.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 245b5844028d..247338142c87 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -568,6 +568,7 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+>  {
+>  	unsigned long long tmp;
+>  	int tmp0, tmp1;
+> +	char *sign;
+>  	bool scale_db = false;
+>  
+>  	switch (type) {
+> @@ -593,11 +594,17 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+>  		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+>  		tmp1 = vals[1];
+>  		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
+> -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+> +		if (vals[1] < 0) {
+> +			sign = vals[0] >= 0 ? "-" : "";
+> +		} else {
+> +			sign = vals[0] < 0 ? "-" : "";
+> +		}
+> +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
+>  	case IIO_VAL_FRACTIONAL_LOG2:
+> +		sign = vals[0] < 0 ? "-" : "";
+>  		tmp = shift_right((s64)vals[0] * 1000000000LL, vals[1]);
+>  		tmp0 = (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
+> -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+> +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
+>  	case IIO_VAL_INT_MULTIPLE:
+>  	{
+>  		int i;
+> 
 
-Test results comparison link,
-https://qa-reports.linaro.org/lkft/linux-next-oe/tests/ltp-dio-tests/dio04
 
-Test case source link,
-https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/io/direct_io/diotest4.c
+-- 
+Dipl-Inf. Alexander Stein
 
-Test case description:
+SYS TEC electronic AG
+Am Windrad 2
+08468 Heinsdorfergrund
+Germany
+Tel: +49-3765-38600-0, Fax: +49-3765-38600-4100
+Email   : alexander.stein@systec-electronic.com
+Internet: http://www.systec-electronic.com
 
-* NAME
-* diotest4.c
-*
-* DESCRIPTION
-* The program generates error conditions and verifies the error
-* code generated with the expected error value. The program also
-* tests some of the boundary condtions. The size of test file created
-* is filesize_in_blocks * 4k.
-* Test blocks:
-* [1] Negative Offset
-* [2] Negative count - removed 08/01/2003 - robbiew
-* [3] Odd count of read and write
-* [4] Read beyond the file size
-* [5] Invalid file descriptor
-* [6] Out of range file descriptor
-* [7] Closed file descriptor
-* [8] Directory read, write - removed 10/7/2002 - plars
-* [9] Character device (/dev/null) read, write
-* [10] read, write to a mmaped file
-* [11] read, write to an unmaped file with munmap
-* [12] read from file not open for reading
-* [13] write to file not open for writing
-* [14] read, write with non-aligned buffer
-* [15] read, write buffer in read-only space
-* [16] read, write in non-existant space
-* [17] read, write for file with O_SYNC
+Board of Directors: Dipl.-Ing. Ronald Sieber, Dipl.-Ing. Dirk Bause
+Chairman of the Supervisory Board: Dipl.-Phys. Siegmar Schmidt
+Commercial registry: Amtsgericht Chemnitz, HRB 32220; USt.-Id Nr. 
+DE150534010
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: c68c5373c504078cc0e0edc7d5c88b47ca308144
-  git describe: next-20191107
-  make_kernelversion: 5.4.0-rc6
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/641/config
-  build-location:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/641
+--------------------------------------------------------------------------
 
-Best regards
-Naresh Kamboju
+Diese E-Mail enthält vertrauliche und/oder rechtlich geschützte 
+Informationen.
+
+Wenn Sie nicht der richtige Adressat sind oder diese E-Mail irrtümlich 
+erhalten haben, informieren Sie bitte sofort den Absender und vernichten 
+Sie diese Mail.
+
+Das unerlaubte Kopieren sowie die unbefugte Weitergabe dieser Mail sind 
+nicht gestattet.
+
+--------------------------------------------------------------------------
+
+This e-mail may contain confidential and/or privileged information.
+
+If you are not the intended recipient (or have received this e-mail in 
+error) please notify the sender immediately and destroy this e-mail.
+
+Any unauthorized copying, disclosure or distribution of the material in 
+this e-mail is strictly forbidden.
+
+--------------------------------------------------------------------------
+
+
