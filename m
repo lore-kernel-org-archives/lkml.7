@@ -2,101 +2,125 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55232C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18ADBC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237FA21D7B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:00:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I14DfnkJ"
+	by mail.kernel.org (Postfix) with ESMTP id E929A2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfKGIAj (ORCPT
+        id S1727481AbfKGIBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:00:39 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41372 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfKGIAi (ORCPT
+        Thu, 7 Nov 2019 03:01:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46430 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfKGIBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:00:38 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m9so1143561ljh.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:00:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MhaY0ugk8kwsxq3FKugkspL2MYGqh9zusrvzrZWI37A=;
-        b=I14DfnkJr2s5xHB5Em9zNk3CnxEv+KsQd0RLv0S2M8Zbd+JBPrWQJLyDLI7UsFnUyU
-         jewSW9KGU/5Mj9rdaNo/E2CyOlWqdkGPzV0FKD8pzXnXD3OmuC/TsBCYNhSg17P6FrJ5
-         yO/9vByIOBxYr8lAEcOkeM/NE1hghWfDpsgq3uX5OL8n451FtpVVRIhZkjqCAZ7uX944
-         lPTNCMOLpkf4y0CWt1TIVJuYzQfJ5LVPfLv4/nI9ZLCt88eZu1rYn+LQ/rUHDWf9xG3A
-         PTkIKjTPMdR856l4uTDdUmyGArjXOYE5n9URj12P9bxKJYTmmXrwUZqQ+7tFtbtsxz5R
-         tAag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MhaY0ugk8kwsxq3FKugkspL2MYGqh9zusrvzrZWI37A=;
-        b=Q6LowDMOPXSDuQWrJCMkzvZCb6pzRQIAPWS55wapRgDEqb4NNKg1tlIx9cLYAyTUmf
-         pq+TSWLpiSNjodN2ntbR6E5c7lw3ul3P/QI6mstHCUsOp2pDz1WFmp5y0/fQKeW6I0oU
-         JIbhjYuSGWAK3GEXaNBOUsYzQj6wUrfx7MRkR1y4HbVtoGQ209GxTwvb/mnWlnkoItf7
-         yptNvtJS/OTjb7xpsciP80ozkLfn3BAW4YtGWNNw6Y4MwRb1eiToS5p8/7o+DdUCfMbO
-         BwY9XnKxl7MbnP9yi7gKQBN1+ILuQPvRpGVk1cdBS2kAlA+mlXT4QhgMCEcS28xaOlBV
-         hTnQ==
-X-Gm-Message-State: APjAAAVJsY9ELaKXcAMHds9nRl1pu7rK2ezP4fIf08FSP1JMHyajorwb
-        q9mVlGAtiSxIpnrJw+/D4Bs8fYj9I+aIsMI6r5PTuQ==
-X-Google-Smtp-Source: APXvYqzRSNCULNUNJVqaJNgU2Aq5iaQhDKeZCxYwvKxqVktkZ0uhZzJPx1LEXl2tE4KbyibfhtzJ5OdCkeugYriABVE=
-X-Received: by 2002:a2e:5c46:: with SMTP id q67mr1273474ljb.42.1573113636714;
- Thu, 07 Nov 2019 00:00:36 -0800 (PST)
+        Thu, 7 Nov 2019 03:01:43 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iScjQ-0000io-4h; Thu, 07 Nov 2019 09:01:28 +0100
+Date:   Thu, 7 Nov 2019 09:01:26 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jianyong Wu <jianyong.wu@arm.com>
+cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        maz@kernel.org, richardcochran@gmail.com, Mark.Rutland@arm.com,
+        will@kernel.org, suzuki.poulose@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        nd@arm.com
+Subject: Re: [RFC PATCH v6 5/7] psci: Add hvc call service for ptp_kvm.
+In-Reply-To: <20191024110209.21328-6-jianyong.wu@arm.com>
+Message-ID: <alpine.DEB.2.21.1911070856100.1869@nanos.tec.linutronix.de>
+References: <20191024110209.21328-1-jianyong.wu@arm.com> <20191024110209.21328-6-jianyong.wu@arm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CA+G9fYvm_QEq+9e+dni1Y+bJswr9bU5=shJcC+wKjjOyiPsXXQ@mail.gmail.com>
- <bfced8c8-c64f-982e-8797-d48b5ec65291@arm.com> <20191106161705.GA11849@sirena.co.uk>
-In-Reply-To: <20191106161705.GA11849@sirena.co.uk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 09:00:25 +0100
-Message-ID: <CACRpkdY5JObOobs7VW043QYGd_xufwnQDBJseKp+_QWv4kdzaQ@mail.gmail.com>
-Subject: Re: Linux-next-20191106 : arm64: Internal error: Oops: 96000007
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 5:17 PM Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Nov 06, 2019 at 04:07:52PM +0000, Robin Murphy wrote:
->
-> > FWIW this smells like a builtin driver had its of_device_id table marked
-> > __init, leaving drv->of_match_table as a dangling pointer to freed memory by
-> > this point.
->
-> Indeed, in fact I sent a fix for this to Linus Walleij yesterday having
-> seen the relevant build warning when testing -next.  Someone already
-> reported that it fixed the boot issues.  Hopefully Linus will pick it up
-> soon :/
+On Thu, 24 Oct 2019, Jianyong Wu wrote:
 
-Yeah picked it up and pushed out now. I wish I'd been quicker with
-it but the patch spot activity has been high. (Bad signal-to-noise
-ratio on the mailing lists.)
+> This patch is the base of ptp_kvm for arm64.
 
-I wonder if it's worth to look at the static checkers like checkpatch
-to warn for this?
+This patch ...
 
-There is always a bit of delicate balance between just fixing some
-weird one-off problems and making sure they never happen again.
+> ptp_kvm modules will call hvc to get this service.
+> The service offers real time and counter cycle of host for guest.
+> 
+> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> ---
+>  drivers/clocksource/arm_arch_timer.c |  2 ++
+>  include/clocksource/arm_arch_timer.h |  4 ++++
+>  include/linux/arm-smccc.h            | 12 ++++++++++++
+>  virt/kvm/arm/psci.c                  | 22 ++++++++++++++++++++++
+>  4 files changed, 40 insertions(+)
+> 
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index 07e57a49d1e8..e4ad38042ef6 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -29,6 +29,7 @@
+>  #include <asm/virt.h>
+>  
+>  #include <clocksource/arm_arch_timer.h>
+> +#include <linux/clocksource_ids.h>
 
-Yours,
-Linus Walleij
+Same ordering issue and lack of file.
+ 
+> diff --git a/include/clocksource/arm_arch_timer.h b/include/clocksource/arm_arch_timer.h
+> index 1d68d5613dae..426d749e8cf8 100644
+> --- a/include/clocksource/arm_arch_timer.h
+> +++ b/include/clocksource/arm_arch_timer.h
+> @@ -104,6 +104,10 @@ static inline bool arch_timer_evtstrm_available(void)
+>  	return false;
+>  }
+>  
+> +bool is_arm_arch_counter(void *unuse)
+
+A global function in a header file? You might want to make this static
+inline. And while at it please s/unuse/unused/
+
+> +{
+> +	return false;
+> +}
+>  #endif
+>  #include <linux/linkage.h>
+> diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c
+> index 0debf49bf259..339bcbafac7b 100644
+> --- a/virt/kvm/arm/psci.c
+> +++ b/virt/kvm/arm/psci.c
+> @@ -15,6 +15,7 @@
+>  #include <asm/kvm_host.h>
+>  
+>  #include <kvm/arm_psci.h>
+> +#include <linux/clocksource_ids.h>
+
+Sigh.
+  
+>  /*
+>   * This is an implementation of the Power State Coordination Interface
+> @@ -392,6 +393,8 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+>  	u32 func_id = smccc_get_function(vcpu);
+>  	u32 val[4] = {};
+>  	u32 option;
+> +	u64 cycles;
+> +	struct system_time_snapshot systime_snapshot;
+
+Also here you might notice that the variables are not randomly ordered.
+
+Thanks,
+
+	tglx
