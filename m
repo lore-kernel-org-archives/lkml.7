@@ -2,64 +2,64 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E7DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E87FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAA520869
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E7C206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 20:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="umWywYcP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJruocL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfKGUhO (ORCPT
+        id S1726906AbfKGUkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 15:37:14 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50817 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfKGUhL (ORCPT
+        Thu, 7 Nov 2019 15:40:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36524 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfKGUkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 15:37:11 -0500
-Received: by mail-wm1-f67.google.com with SMTP id l17so3154636wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:37:08 -0800 (PST)
+        Thu, 7 Nov 2019 15:40:23 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c22so4002186wmd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:40:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TP2gfIB44smTv89rJyokmz9BkOyIn2LvUmWAiBH1d+E=;
-        b=umWywYcPK3FTy94uZjfwZArOxYGDSgRVzysG9MhLIphBRp4npsSGJ8NhBmJ12FkTY/
-         L2UOnAS0ObAT1aqj87ue1joW7soLQsnkIHtpXyx3/qXUAwfANwh80RpLDaUROptOYb4v
-         gSjbCuS1S21wE5AfwBQD9fnNyo6eBD1QNbZxLXwSe73fhlUxeftUzek8uLeRdJ5gbxxX
-         xQGi7jifnf/uOK5IixDVewN3GPKyVTT3S00PymXSl9B0h+C+tjPfaVUh6ehSLXLQTidS
-         u128ewtd6//6/798cB7kY/pBZyB1K2mXHjsASpGDjJgt8baWaxV9vad1XGAvDPITfyFX
-         fbjg==
+        bh=/pKH0tT7IUWPxlqReLKSDJjr+ZKqHoHFlpAU48nDsb8=;
+        b=YJruocL3WMHsSdrAyY52mp704CIZlMgZTUFDzjAsr0YlHFddlJA0cTV1nlVZRLwFHb
+         jUQfYrr/sRxB7PFJ4W08gutrX2v/Clmr3WpGEORKeKLuxqF/cVtZOoi5Mfq+Jc/5psVV
+         SSBjEKQVrwI9IptIxB6HyM5eXh9id07j8C7r8KeprTTreRrvLqAK/qRzRmIsoetJ9xKG
+         FP4C2TdMB62F4KwRRzxluS4yXYRAuFR77Xp5SAmlgh9SPA9/lrDbeT4PhAK0N9Mn4Udl
+         C4lx+IzKQiOfy+WDLgquCQEJN5AAJFuuv62ZVkLB6DnuKLCNe/wDVDtIB8hUJASWVtal
+         +1mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TP2gfIB44smTv89rJyokmz9BkOyIn2LvUmWAiBH1d+E=;
-        b=cddGqgwJxofezlPtjSVdUP9FIA6mVDo5JZc0S8avea9l/AqOL0xjOOdGeBdOT/DAxZ
-         f/SUfwkjvxhJV/O82xRp6WzVIkIfH+5Iy10MIWsVGRFxSSdpGz9I8vA2UZWNkIz5/U1t
-         XjBcvoRgGMkstwWKcUXpZw7MLHq8XrQJpg4ZjEcjfOhxb1QA8qqUgRvK0uWOD/YHF6cV
-         vd1D0DJpI5Tr6SVh1q7zDwxPbxuJxWSn8blgJspfhwp6hF6ozFZcOOAmV5ShW+Qwib75
-         60GaEa3eQgrpcyUPTVYD49bfx8u3h7tngwlYZpaOJBqZgmLHhsX3KEYgjuEA0btDw0ka
-         M8zQ==
-X-Gm-Message-State: APjAAAX4w+SPrk6O4f75/powfnN+lVpVCNz2GRO8JWH3S/cKgRIwIm7e
-        rckLgkYdeWTcoX02xP/yf9CoRZcDj59RzBewl+hvHw==
-X-Google-Smtp-Source: APXvYqztqexKXKcO7Zyo/fIvnofwCL3joaaYVmLLlUTPXYs6q4ub3xzzwDEzsVrXL4C7WaxlF/O0r6SM0zNDk3CgHIw=
-X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr5135816wme.92.1573159027084;
- Thu, 07 Nov 2019 12:37:07 -0800 (PST)
+        bh=/pKH0tT7IUWPxlqReLKSDJjr+ZKqHoHFlpAU48nDsb8=;
+        b=KSwTucXStbg/WNH2SAtuTccxD8GoO6y0zvR8cut4xENQRWn2+2yev4joPCnUBrRQUi
+         dDLN42/p2N7tB+vLaXXqTwbwRMPOYXrtNDYaKuYvFhfUG+/FFLbh6b9g/9h3bswYse9w
+         x5JUc5FQOUYn1JcepavOwRLx6vAUDl258UGxF+NuR7dEjzHX27cVUbKp3ahrQmO3Z4Hb
+         PyAtthZgiL3CBem81vTExltYzI8R+h/z3Ix7so1ioIAIOqQZPXwtJP+fJl2jQhowyvQO
+         MSpMqplcWEd3kOtPrL598fc+minOfmrKKTEcBgFXEZJtbfSbvsj8qq06at43H0UIXT+n
+         HOww==
+X-Gm-Message-State: APjAAAWdAfgR0W35xQizZYTUZB0xH5WkrImVkd05hUeJOOqQy8iSCCKg
+        cx2+cZobTqO4uSI7h69RVCk9HVoNPVsldaZpuJYkjt3B
+X-Google-Smtp-Source: APXvYqwJSeRni4hQ3v3vC2wuYAdNlSyGM6v5AS0hn8e7JMxXC+lI4FPDSl05I/OcHMJOn0gPs4pgz+LQyi9uFGs8jEA=
+X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr5148663wme.92.1573159221150;
+ Thu, 07 Nov 2019 12:40:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20191107132755.8517-1-jonas@norrbonn.se> <20191107132755.8517-2-jonas@norrbonn.se>
-In-Reply-To: <20191107132755.8517-2-jonas@norrbonn.se>
+References: <20191107132755.8517-1-jonas@norrbonn.se>
+In-Reply-To: <20191107132755.8517-1-jonas@norrbonn.se>
 From:   =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS14KS+4KSwKQ==?= 
         <maheshb@google.com>
-Date:   Thu, 7 Nov 2019 12:36:50 -0800
-Message-ID: <CAF2d9jjRLZ07Qx0NJ9fi1iUpHn+qYEJ+cacKgBmeZ2FvZLObEQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] rtnetlink: allow RTM_SETLINK to reference other namespaces
+Date:   Thu, 7 Nov 2019 12:40:04 -0800
+Message-ID: <CAF2d9jjteagJGmt64mNFH-pFmGg_eM8_NNBrDtROcaVKhcNkRQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Add namespace awareness to Netlink methods
 To:     Jonas Bonn <jonas@norrbonn.se>
 Cc:     nicolas.dichtel@6wind.com, linux-netdev <netdev@vger.kernel.org>,
         linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>
@@ -71,126 +71,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Nov 7, 2019 at 5:30 AM Jonas Bonn <jonas@norrbonn.se> wrote:
 >
-> Netlink currently has partial support for acting on interfaces outside
-> the current namespace.  This patch extends RTM_SETLINK with this
-> functionality.
+> Changed in v3:
+> - added patch 6 for setting IPv6 address outside current namespace
+> - address checkpatch warnings
+> - address comment from Nicolas
 >
-> The current implementation has an unfortunate semantic ambiguity in the
-> IFLA_TARGET_NETNSID attribute.  For setting the interface namespace, one
-> may pass the IFLA_TARGET_NETNSID attribute with the namespace to move the
-> interface to.  This conflicts with the meaning of this attribute for all
-> other methods where IFLA_TARGET_NETNSID identifies the namespace in
-> which to search for the interface to act upon:  the pair (namespace,
-> ifindex) is generally given by (IFLA_TARGET_NETNSID, ifi->ifi_index).
+> Changed in v2:
+> - address comment from Nicolas
+> - add accumulated ACK's
 >
-> In order to change the namespace of an interface outside the current
-> namespace, we would need to specify both an IFLA_TARGET_NETNSID
-> attribute and a namespace to move to using IFLA_NET_NS_[PID|FD].  This is
-> currently now allowed as only one of these three flags may be specified.
+> Currently, Netlink has partial support for acting outside of the current
+> namespace.  It appears that the intention was to extend this to all the
+> methods eventually, but it hasn't been done to date.
 >
-> This patch loosens the restrictions a bit but tries to maintain
-> compatibility with the previous behaviour:
-> i)  IFLA_TARGET_NETNSID may be passed together with one of
-> IFLA_NET_NS_[PID|FD]
-> ii)  IFLA_TARGET_NETNSID is primarily defined to be the namespace in
-> which to find the interface to act upon
-> iii)  In order to maintain backwards compatibility, if the device is not
-> found in the specified namespace, we also look for it in the current
-> namespace
-> iv)  If only IFLA_TARGET_NETNSID is given, the device is still moved to
-> that namespace, as before; and, as before, IFLA_NET_NS_[PID|FD] take
-> precedence as namespace selectors
+> With this series RTM_SETLINK, RTM_NEWLINK, RTM_NEWADDR, and RTM_NEWNSID
+> are extended to respect the selection of the namespace to work in.
 >
-> Ideally, IFLA_TARGET_NETNSID would only ever have been used to select the
-> namespace of the device to act upon.  A separate flag, IFLA_NET_NS_ID
-> would have been made available for changing namespaces
->
-> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-> Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-> ---
->  net/core/rtnetlink.c | 37 ++++++++++++++++++++++++++++++-------
->  1 file changed, 30 insertions(+), 7 deletions(-)
->
-> diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-> index c81cd80114d9..aa3924c9813c 100644
-> --- a/net/core/rtnetlink.c
-> +++ b/net/core/rtnetlink.c
-> @@ -2109,13 +2109,7 @@ static int rtnl_ensure_unique_netns(struct nlattr *tb[],
->                 return -EOPNOTSUPP;
->         }
->
-> -       if (tb[IFLA_TARGET_NETNSID] && (tb[IFLA_NET_NS_PID] || tb[IFLA_NET_NS_FD]))
-> -               goto invalid_attr;
-> -
-> -       if (tb[IFLA_NET_NS_PID] && (tb[IFLA_TARGET_NETNSID] || tb[IFLA_NET_NS_FD]))
-> -               goto invalid_attr;
-> -
-> -       if (tb[IFLA_NET_NS_FD] && (tb[IFLA_TARGET_NETNSID] || tb[IFLA_NET_NS_PID]))
-> +       if (tb[IFLA_NET_NS_PID] && tb[IFLA_NET_NS_FD])
->                 goto invalid_attr;
->
->         return 0;
-> @@ -2727,6 +2721,7 @@ static int rtnl_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
->                         struct netlink_ext_ack *extack)
->  {
->         struct net *net = sock_net(skb->sk);
-> +       struct net *tgt_net = NULL;
->         struct ifinfomsg *ifm;
->         struct net_device *dev;
->         int err;
-> @@ -2742,6 +2737,15 @@ static int rtnl_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
->         if (err < 0)
->                 goto errout;
->
-> +       if (tb[IFLA_TARGET_NETNSID]) {
-> +               s32 netnsid = nla_get_s32(tb[IFLA_TARGET_NETNSID]);
-> +
-> +               tgt_net = rtnl_get_net_ns_capable(NETLINK_CB(skb).sk, netnsid);
-> +               if (IS_ERR(net))
-> +                       return PTR_ERR(net);
-> +               net = tgt_net;
-> +       }
-> +
->         if (tb[IFLA_IFNAME])
->                 nla_strlcpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
->         else
-> @@ -2756,6 +2760,23 @@ static int rtnl_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
->         else
->                 goto errout;
->
-> +       /* A hack to preserve kernel<->userspace interface.
-> +        * It was previously allowed to pass the IFLA_TARGET_NETNSID
-> +        * attribute as a way to _set_ the network namespace.  In this
-> +        * case, the device interface was assumed to be in the  _current_
-> +        * namespace.
-> +        * If the device cannot be found in the target namespace then we
-> +        * assume that the request is to set the device in the current
-> +        * namespace and thus we attempt to find the device there.
-> +        */
-Could this bypasses the ns_capable() check? i.e. if the target is
-"foo" but your current ns is bar. The process may be "capable" is foo
-but the interface is not found in foo but present in bar and ends up
-modifying it (especially when you are not capable in bar)?
+This is nice, is there a plan to update userspace commands using this?
 
-> +       if (!dev && tgt_net) {
-> +               net = sock_net(skb->sk);
-> +               if (ifm->ifi_index > 0)
-> +                       dev = __dev_get_by_index(net, ifm->ifi_index);
-> +               else if (tb[IFLA_IFNAME])
-> +                       dev = __dev_get_by_name(net, ifname);
-> +       }
-> +
->         if (dev == NULL) {
->                 err = -ENODEV;
->                 goto errout;
-> @@ -2763,6 +2784,8 @@ static int rtnl_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
+> /Jonas
 >
->         err = do_setlink(skb, dev, ifm, extack, tb, ifname, 0);
->  errout:
-> +       if (tgt_net)
-> +               put_net(tgt_net);
->         return err;
->  }
+> Jonas Bonn (6):
+>   rtnetlink: allow RTM_SETLINK to reference other namespaces
+>   rtnetlink: skip namespace change if already effect
+>   rtnetlink: allow RTM_NEWLINK to act upon interfaces in arbitrary
+>     namespaces
+>   net: ipv4: allow setting address on interface outside current
+>     namespace
+>   net: namespace: allow setting NSIDs outside current namespace
+>   net: ipv6: allow setting address on interface outside current
+>     namespace
+>
+>  net/core/net_namespace.c | 19 ++++++++++
+>  net/core/rtnetlink.c     | 80 ++++++++++++++++++++++++++++++++++------
+>  net/ipv4/devinet.c       | 61 ++++++++++++++++++++++--------
+>  net/ipv6/addrconf.c      | 13 +++++++
+>  4 files changed, 145 insertions(+), 28 deletions(-)
 >
 > --
 > 2.20.1
