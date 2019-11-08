@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA237C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EE2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFE82085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A252085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215037;
-	bh=pJS58U8mwZIYJHL/49hU2S6Sd3AeaEcSOOkKJJyeS8U=;
+	s=default; t=1573215044;
+	bh=z42NMZtRegQyAv3PPGmyHQ/taWk4UXkfZVgfVcUHReg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNC5lkymo4ZnryEfyl6OR6uMqLJJPDJTV8Ndb/6d3Z3YPs4CWBnmf10aOIQ24XBFk
-	 uCHbcOJPjMzozzwkwTA1CDYDV5sUX9Rdh/jiJz9+cgYKCOwe81A8QfJWOeMaE3eIfi
-	 WiB08u2eoy2evmbCxh8zvAIiw71KzCihtaakwBkk=
+	b=vxGgsA28Bt+usheZXjC03MY1wgqy+m0y2n5bQDOrY+Ha4dGXcNTzMGrp0lg60umS/
+	 SqMNijKRm1Za1BdOmJl0YScMiicMVpznfdWb+Tz2HUPwEktwkUOMUHyg+qCv0UpDDY
+	 TuZKqd31q+gAvMSKa1aSKqP2c1SvZ9AnVWR0gI9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387592AbfKHLjd (ORCPT
+        id S2387435AbfKHLj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:39:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52248 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:39:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733196AbfKHLjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:16 -0500
+        id S1733122AbfKHLjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E5121D7E;
-        Fri,  8 Nov 2019 11:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 975EF222C2;
+        Fri,  8 Nov 2019 11:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213156;
-        bh=pJS58U8mwZIYJHL/49hU2S6Sd3AeaEcSOOkKJJyeS8U=;
+        s=default; t=1573213150;
+        bh=z42NMZtRegQyAv3PPGmyHQ/taWk4UXkfZVgfVcUHReg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYJhczio4Ss8oj0I9NDpewqurt2PJTEUAZIsM5nIVSqhltzMTpysmItqPumuB1jP6
-         p1yrQeqXtm6fiYm6aZEd1K7jdvZ8291ahRyDsP5i8o1R9CPnWpF8Yr3QWT8Rx6+zKv
-         vjm5+XZDgMxbI6Y8dCATuFx8HFZK/qqkz/A24xGk=
+        b=Kd9yJOdOfSy+ANIfAmpfTV/vNHkFRbxToUGg8vL0ldej2shjAl2N57T4+l3wNp06g
+         BfF/wN4NTEf5DKAAivkU+VV0s6R2jSpyhZ9eTWWQdduYxEGzu69MPZwy1IiVtlvXfS
+         pU8onYvDpoeMcseFaA0nFsfm9G9uFEA4a0bYSxc4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel@ziswiler.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 063/205] ARM: dts: pxa: fix power i2c base address
-Date:   Fri,  8 Nov 2019 06:35:30 -0500
-Message-Id: <20191108113752.12502-63-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 059/205] media: vicodec: fix out-of-range values when decoding
+Date:   Fri,  8 Nov 2019 06:35:26 -0500
+Message-Id: <20191108113752.12502-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,32 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel@ziswiler.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit 8a1ecc01a473b75ab97be9b36f623e4551a6e9ae ]
+[ Upstream commit be5a1509af8dd8a78fea24a35fe4a82d4cd0ae70 ]
 
-There is one too many zeroes in the Power I2C base address. Fix this.
+While decoding you need to make sure you do not get values < 0
+or > 255. Note that since this code will also be used in userspace
+utilities the clamp macro isn't used since that is kernel-only.
 
-Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/pxa27x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/vicodec/vicodec-codec.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 2ab6986433c82..3228ad5fb725f 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -71,7 +71,7 @@
- 			clocks = <&clks CLK_PWM1>;
- 		};
+diff --git a/drivers/media/platform/vicodec/vicodec-codec.c b/drivers/media/platform/vicodec/vicodec-codec.c
+index 2d047646f6147..d854b2344f12b 100644
+--- a/drivers/media/platform/vicodec/vicodec-codec.c
++++ b/drivers/media/platform/vicodec/vicodec-codec.c
+@@ -588,8 +588,14 @@ static void fill_decoder_block(u8 *dst, const s16 *input, int stride)
+ 	int i, j;
  
--		pwri2c: i2c@40f000180 {
-+		pwri2c: i2c@40f00180 {
- 			compatible = "mrvl,pxa-i2c";
- 			reg = <0x40f00180 0x24>;
- 			interrupts = <6>;
+ 	for (i = 0; i < 8; i++) {
+-		for (j = 0; j < 8; j++)
+-			*dst++ = *input++;
++		for (j = 0; j < 8; j++, input++, dst++) {
++			if (*input < 0)
++				*dst = 0;
++			else if (*input > 255)
++				*dst = 255;
++			else
++				*dst = *input;
++		}
+ 		dst += stride - 8;
+ 	}
+ }
 -- 
 2.20.1
 
