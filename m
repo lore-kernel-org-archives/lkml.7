@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC1EFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996A9215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C216721D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239857;
-	bh=zy4tbe8pw1MO7Bj4qek8GqStWBL+RTXZSE5eYlxDNkQ=;
+	s=default; t=1573239860;
+	bh=1uRWxPfvmf2mM6P/WjTN+icFavAWs1wCndMKnSbc0dY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMX3YqJGMTIacCFbGBl2sP/KIMsszeKyG/+z1ETwSxUQyLx6VzBrr2znCWuHF6e1d
-	 wwNd7sI0tuha8dKwsdSWCrli/LTd+whKwgwB350wYBDWSI/mRM374ppmPIda+6WVDz
-	 hInnZ6qdiqFF7dqxRqFHepHe6BCHjAbBGVTFesw4=
+	b=F20C9Troie3ogFBLWo3jb/0TVPcmfBY1/506/o/vdm3Q4J1xYoGMKbUCk8ZdZ1etj
+	 mHWi6a6R+pNngrrAO7gx1kwWh9Ink3cqbN8sr8UVQNVNGjcAN+kwdBgEOc7fAgP/6I
+	 XYwv4Jrq2s/lYHlN0Nt4zF8idaZAflWRRY5HPZyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390987AbfKHTEQ (ORCPT
+        id S2390961AbfKHTEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:04:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34088 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:04:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732428AbfKHTEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:04:15 -0500
+        id S2389057AbfKHTEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:04:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E282067B;
-        Fri,  8 Nov 2019 19:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 344362067B;
+        Fri,  8 Nov 2019 19:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239854;
-        bh=zy4tbe8pw1MO7Bj4qek8GqStWBL+RTXZSE5eYlxDNkQ=;
+        s=default; t=1573239848;
+        bh=1uRWxPfvmf2mM6P/WjTN+icFavAWs1wCndMKnSbc0dY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HCnaHklPiBqmaud6hLe+Bs1FpvuzA17jx7xiPY6IbzFizk61HW6Snnep3sMcXNtcq
-         jd8w9AETkzRy8L784nLbvvW+S11tFl18ZUBnHgsKFQRra479J2JPCS4Xfh31+8N7Fl
-         yUm4A/nhri1TThvV3zKD2q5etTM3O9tZSOdGnkbQ=
+        b=P2/QKKPnEiqGhDeq+PvueO2enNdM9aVjOF5Fq09LnXcMTpd80tLTs30+StXeHDDLH
+         tmXvwWf4TSohwaIPL42T+sQnq0O6LUK3jfYIsb2M3jGSmmy7eIHDlHB1aZ0GUKfBx3
+         wAvp4jq76WF3fRtPCGvvEGQvy+B1HNkNU/fycrd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.19 77/79] ASoC: pcm3168a: The codec does not support S32_LE
-Date:   Fri,  8 Nov 2019 19:50:57 +0100
-Message-Id: <20191108174829.033434277@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Thiemo Nagel <tnagel@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 40/79] inet: stop leaking jiffies on the wire
+Date:   Fri,  8 Nov 2019 19:50:20 +0100
+Message-Id: <20191108174809.065126514@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,36 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 7b2db65b59c30d58c129d3c8b2101feca686155a upstream.
+[ Upstream commit a904a0693c189691eeee64f6c6b188bd7dc244e9 ]
 
-24 bits is supported in all modes and 16 bit only when the codec is slave
-and the DAI is set to RIGHT_J.
+Historically linux tried to stick to RFC 791, 1122, 2003
+for IPv4 ID field generation.
 
-Remove the unsupported sample format.
+RFC 6864 made clear that no matter how hard we try,
+we can not ensure unicity of IP ID within maximum
+lifetime for all datagrams with a given source
+address/destination address/protocol tuple.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20190919071652.31724-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Linux uses a per socket inet generator (inet_id), initialized
+at connection startup with a XOR of 'jiffies' and other
+fields that appear clear on the wire.
+
+Thiemo Nagel pointed that this strategy is a privacy
+concern as this provides 16 bits of entropy to fingerprint
+devices.
+
+Let's switch to a random starting point, this is just as
+good as far as RFC 6864 is concerned and does not leak
+anything critical.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Thiemo Nagel <tnagel@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/soc/codecs/pcm3168a.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/crypto/chelsio/chtls/chtls_cm.c |    2 +-
+ net/dccp/ipv4.c                         |    2 +-
+ net/ipv4/datagram.c                     |    2 +-
+ net/ipv4/tcp_ipv4.c                     |    4 ++--
+ net/sctp/socket.c                       |    2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/sound/soc/codecs/pcm3168a.c
-+++ b/sound/soc/codecs/pcm3168a.c
-@@ -24,8 +24,7 @@
+--- a/drivers/crypto/chelsio/chtls/chtls_cm.c
++++ b/drivers/crypto/chelsio/chtls/chtls_cm.c
+@@ -1276,7 +1276,7 @@ static void make_established(struct sock
+ 	tp->write_seq = snd_isn;
+ 	tp->snd_nxt = snd_isn;
+ 	tp->snd_una = snd_isn;
+-	inet_sk(sk)->inet_id = tp->write_seq ^ jiffies;
++	inet_sk(sk)->inet_id = prandom_u32();
+ 	assign_rxopt(sk, opt);
  
- #define PCM3168A_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | \
- 			 SNDRV_PCM_FMTBIT_S24_3LE | \
--			 SNDRV_PCM_FMTBIT_S24_LE | \
--			 SNDRV_PCM_FMTBIT_S32_LE)
-+			 SNDRV_PCM_FMTBIT_S24_LE)
+ 	if (tp->rcv_wnd > (RCV_BUFSIZ_M << 10))
+--- a/net/dccp/ipv4.c
++++ b/net/dccp/ipv4.c
+@@ -121,7 +121,7 @@ int dccp_v4_connect(struct sock *sk, str
+ 						    inet->inet_daddr,
+ 						    inet->inet_sport,
+ 						    inet->inet_dport);
+-	inet->inet_id = dp->dccps_iss ^ jiffies;
++	inet->inet_id = prandom_u32();
  
- #define PCM3168A_FMT_I2S		0x0
- #define PCM3168A_FMT_LEFT_J		0x1
+ 	err = dccp_connect(sk);
+ 	rt = NULL;
+--- a/net/ipv4/datagram.c
++++ b/net/ipv4/datagram.c
+@@ -77,7 +77,7 @@ int __ip4_datagram_connect(struct sock *
+ 	reuseport_has_conns(sk, true);
+ 	sk->sk_state = TCP_ESTABLISHED;
+ 	sk_set_txhash(sk);
+-	inet->inet_id = jiffies;
++	inet->inet_id = prandom_u32();
+ 
+ 	sk_dst_set(sk, &rt->dst);
+ 	err = 0;
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -305,7 +305,7 @@ int tcp_v4_connect(struct sock *sk, stru
+ 						 inet->inet_daddr);
+ 	}
+ 
+-	inet->inet_id = tp->write_seq ^ jiffies;
++	inet->inet_id = prandom_u32();
+ 
+ 	if (tcp_fastopen_defer_connect(sk, &err))
+ 		return err;
+@@ -1436,7 +1436,7 @@ struct sock *tcp_v4_syn_recv_sock(const
+ 	inet_csk(newsk)->icsk_ext_hdr_len = 0;
+ 	if (inet_opt)
+ 		inet_csk(newsk)->icsk_ext_hdr_len = inet_opt->opt.optlen;
+-	newinet->inet_id = newtp->write_seq ^ jiffies;
++	newinet->inet_id = prandom_u32();
+ 
+ 	if (!dst) {
+ 		dst = inet_csk_route_child_sock(sk, newsk, req);
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -8777,7 +8777,7 @@ void sctp_copy_sock(struct sock *newsk,
+ 	newinet->inet_rcv_saddr = inet->inet_rcv_saddr;
+ 	newinet->inet_dport = htons(asoc->peer.port);
+ 	newinet->pmtudisc = inet->pmtudisc;
+-	newinet->inet_id = asoc->next_tsn ^ jiffies;
++	newinet->inet_id = prandom_u32();
+ 
+ 	newinet->uc_ttl = inet->uc_ttl;
+ 	newinet->mc_loop = 1;
 
 
