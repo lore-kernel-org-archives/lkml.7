@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B57DFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177A5FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E79206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41A82067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240504;
-	bh=OSa49LhWO0fQPrA54M1luI/Olq9wf5UzWACp8mVh660=;
+	s=default; t=1573240510;
+	bh=Zi2pA8zM32y+SK/W1EncEJTDCZ+rY6LFsZ8hoPnHxuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IM0/LeqbGX2FEpOSkhomIj0oZwZD6fsQk5vOPU0e6z2mTEP9rUdiC/E1TsIbNOjfT
-	 VwA6isgzjkxNKshisck11IPGCN0JCDzOilredi58o0IOOQ0bcexifAKH40GYITsQpO
-	 S/tsVjm8LlV8WBioF2mia6gGUbCcDdOpw8CGwGpc=
+	b=wdUM7SW/jVFV8usNuQs30GS8fKIuaRznCKGx8r7yqeXV+yagokAe3elIDq6WOBIva
+	 X970VN4Enh1PJh3QXjObYXNj+p96oj5wdj521IJOK5EMuk3PljaKFb6TwB9YEBSeEn
+	 eCW+lNxFyLUITlunHlxQw9ExZxxqHD2u0LPA4F9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391080AbfKHTPC (ORCPT
+        id S1731886AbfKHTFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:15:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36064 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:05:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389181AbfKHTFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:50 -0500
+        id S2389724AbfKHTFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADF5F21D82;
-        Fri,  8 Nov 2019 19:05:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27952067B;
+        Fri,  8 Nov 2019 19:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239950;
-        bh=OSa49LhWO0fQPrA54M1luI/Olq9wf5UzWACp8mVh660=;
+        s=default; t=1573239930;
+        bh=Zi2pA8zM32y+SK/W1EncEJTDCZ+rY6LFsZ8hoPnHxuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4HkxTpUAlsjAMAZiVV83rxN3iDb9+K8G4NDJsqgjchUZFJhiT2j7TC3drMgmcyt5
-         /dJQn/zfKBw8D7PqVls9zDmuotpsQGPmzAkKzhuxhpi9TEwBn1hNFO2lEijoV7bs19
-         woLX+UFtj+XvLj+8nedmON2P1S6wD/WqD/XjVoIU=
+        b=nPsTILvZ1Wc0yPECbPNrLaQVnyOWutsYEpRYSaWCP6D0jxcGxzk/5tetCnN0MbkAB
+         nh/HKATq9blmhwaIS/mdYi3zc1ZaaRdpC5rrBE4qmcRDQ0nFl+p53KfVbihukIjLqU
+         tT8F+xJAI45GFXUdH+1Y4SBzP1j1OcbA6eYGSnHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 038/140] scsi: fix kconfig dependency warning related to 53C700_LE_ON_BE
-Date:   Fri,  8 Nov 2019 19:49:26 +0100
-Message-Id: <20191108174907.676197012@linuxfoundation.org>
+Subject: [PATCH 5.3 009/140] arm64: dts: Fix gpio to pinmux mapping
+Date:   Fri,  8 Nov 2019 19:48:57 +0100
+Message-Id: <20191108174901.656421509@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,40 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit 8cbf0c173aa096dda526d1ccd66fc751c31da346 ]
+[ Upstream commit 965f6603e3335a953f4f876792074cb36bf65f7f ]
 
-When building a kernel with SCSI_SNI_53C710 enabled, Kconfig warns:
+There are total of 151 non-secure gpio (0-150) and four
+pins of pinmux (91, 92, 93 and 94) are not mapped to any
+gpio pin, hence update same in DT.
 
-WARNING: unmet direct dependencies detected for 53C700_LE_ON_BE
-  Depends on [n]: SCSI_LOWLEVEL [=y] && SCSI [=y] && SCSI_LASI700 [=n]
-  Selected by [y]:
-  - SCSI_SNI_53C710 [=y] && SCSI_LOWLEVEL [=y] && SNI_RM [=y] && SCSI [=y]
-
-Add the missing depends SCSI_SNI_53C710 to 53C700_LE_ON_BE to fix it.
-
-Link: https://lore.kernel.org/r/20191009151128.32411-1-tbogendoerfer@suse.de
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi | 5 +++--
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi         | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index 1b92f3c19ff32..90cf4691b8c35 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -898,7 +898,7 @@ config SCSI_SNI_53C710
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+index 8a3a770e8f2ce..56789ccf94545 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+@@ -42,13 +42,14 @@
  
- config 53C700_LE_ON_BE
- 	bool
--	depends on SCSI_LASI700
-+	depends on SCSI_LASI700 || SCSI_SNI_53C710
- 	default y
+ 		pinmux: pinmux@14029c {
+ 			compatible = "pinctrl-single";
+-			reg = <0x0014029c 0x250>;
++			reg = <0x0014029c 0x26c>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			pinctrl-single,register-width = <32>;
+ 			pinctrl-single,function-mask = <0xf>;
+ 			pinctrl-single,gpio-range = <
+-				&range 0 154 MODE_GPIO
++				&range 0  91 MODE_GPIO
++				&range 95 60 MODE_GPIO
+ 				>;
+ 			range: gpio-range {
+ 				#pinctrl-single,gpio-range-cells = <3>;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index 71e2e34400d40..0098dfdef96c0 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -464,8 +464,7 @@
+ 					<&pinmux 108 16 27>,
+ 					<&pinmux 135 77 6>,
+ 					<&pinmux 141 67 4>,
+-					<&pinmux 145 149 6>,
+-					<&pinmux 151 91 4>;
++					<&pinmux 145 149 6>;
+ 		};
  
- config SCSI_STEX
+ 		i2c1: i2c@e0000 {
 -- 
 2.20.1
 
