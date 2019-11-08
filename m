@@ -6,277 +6,103 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B61FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA26FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F5720650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAC7215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388436AbfKHViH (ORCPT
+        id S2388525AbfKHVi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:38:07 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:60555 "EHLO
+        Fri, 8 Nov 2019 16:38:29 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:43755 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731097AbfKHViG (ORCPT
+        with ESMTP id S2388444AbfKHVi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:38:06 -0500
+        Fri, 8 Nov 2019 16:38:29 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mn2Fb-1i1nwX1PPz-00k9z1; Fri, 08 Nov 2019 22:37:50 +0100
+ 1N0WwO-1hfVjv2o8i-00wTtI; Fri, 08 Nov 2019 22:37:59 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
+To:     y2038@lists.linaro.org, Stefan Richter <stefanr@s5r6.in-berlin.de>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Rob Herring <robh@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH 15/16] drm/etnaviv: use ktime_t for timeouts
-Date:   Fri,  8 Nov 2019 22:32:53 +0100
-Message-Id: <20191108213257.3097633-16-arnd@arndb.de>
+        Clemens Ladisch <clemens@ladisch.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux1394-devel@lists.sourceforge.net
+Subject: [PATCH 16/16] firewire: ohci: stop using get_seconds() for BUS_TIME
+Date:   Fri,  8 Nov 2019 22:32:54 +0100
+Message-Id: <20191108213257.3097633-17-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
 References: <20191108213257.3097633-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:0mG/AeRqRfllKNyxjsRTf1Lcjrue4mA0fTazDskyMcSc5mlcPDP
- zbVsx/cHjwgO02t9e22UWWZH0DGv7RXqjSXbPD3DPZRjW5iWLttQosFa3M1orsc35xqlood
- /rkgvkWdLpjLCGamV2uyd9Sryst2A5hYqyZWYH/dUS/hCt8Wq+k4A3DvFqlkufIJb052pjX
- VppE3uMwAwBi6LBZ1hkIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F261wtjEcT0=:5B/i1CyfuUrOw9eZBz/PLK
- hjY0gVwJQdkRM7obOi8iEsKCYl+fPz3Dv27PPeQlVcVrhOw3R+dP6IpEdAxei2BjnXxYDjh66
- aPS3OBOQHslKZ3OeyDJe9DmgX80C9S4tPkEbPHSgPVbUtvgJy8vtHxnoJ4xm7PnhRQxegtk9a
- GcsKvnDoZG+y63G/aYXmWuGOfC78Z2a4TJsnmCnF90pjnwXkC+yX1pGfkWd+FTfvrZLnSBn+v
- JGpXkQOSAzUDk/drEENpyjc5UA0Ydbigu7yyJzGxQTJUF8HL50B1HrvxI8QUI4QQsRfD85Fop
- kZ3a/3mhjjoZ9cxBYB5UbA+uWxoUe95Envho17lWGtXR8cuxetz5LiB20PGbXjCH7YTAVinpv
- VJkM63TNTTBs70tRux/sfx+Bw0nsTEzzWqeZzagG1U4LG5SgdWMO/R98kfP+KVIi1W/mC0kNX
- WGlMUs6ky38u2v1UBIUHLUm0ncTwQR6YYIngKvnAB6UFI9mYlQLkdL8q7wh3qweT4UE0o2v5d
- 9vOK2DGYLusxNChy8p6OOfl6MNxMO6+EiPQMzhTKCWofZZFPuSPY6kJeTcPZWmQBaIc2WMfaF
- yUZKM7Wkw8plvQjy7E3cQ2TORmryKWPOZMd3fOeIxRw0Gevld+v64UDQRoYGqP7D7I10e2HfE
- hXQ72fC34kg8nUPPlRxm8dZdtXI/B5P3FLJ1UdMjYVWs/HD/EC+PfeiGvR1FOLBunfS81QB4y
- w1BVo7MZVUOrUaC27tXh3gQP4MIW2IQp8aYYhs2Pc5GNL3SjdDY4KNDGtcH5pUATj4TkMBpsD
- KP2LkzB5gi4EglpnawANVaSU3QqOZyZfqt8ei3wG3DyKxlUJGPpYjXvaIbX+ihtBYPK0NI0J8
- bYuwzkontVfVbF+ibFlQ==
+X-Provags-ID: V03:K1:ShTMGp4lVNVsHj+KLbB1IsdO5sH5jn0FUtExiYeIktC9NBhPH68
+ Eo6Di/s4x1/c0s0lLRtXEL3+pUqH2jXe+lTpS1u0fj9Wj5g2hSZfutPCDmz9vVx1gkCHN+t
+ lGkblZXmLSCwyqit9GXFDVWTAAGNnFLncfw6TYZEMKhOitqIsxr/7PMTbimFz3Ksb8vTWOR
+ lcjupetSVcK3O/vCeAMtQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:leyoQLNXbQg=:XqNTH//TUd2wRfId2+/xfy
+ eQ+WZQp1hTDWEnjaAb3rr/ypuDM/uWEbbd+ht2cL4NNSBam+Merhk3GCl8f9Na4vCuujDmXp8
+ dTjKewx5lcZM1j2vniPAnG5tRQtmf4DXuVdbRTg/AJW7r2nGu5oaik/cj+FLrQALbLu5W3S2g
+ gn9HXG8FzCIFPb/yCthoolqyFw1m2CxJZI9yWZgM2EqbmeJkf1nAHcVCMqKOF6TCy1SC0r0pV
+ YnTSdvXiIpNhzoHR2kfebW4bI7Jj+aN39JoSq370yilI8ABf3QPD/FULOrAElxyBBCVnigEUv
+ qCDQH5Lo1X/AMa0go2UF08ZtuZ3WfXhE9/ULxTNV6KqnBU6W+jSU1tyAJtszmDnwmNIi6v8si
+ jSBExJE9oZ5quHrJTc9DZ577cTb/GNuAJUDmoAub3HEkdJ2KxO5YZI0PUcsG22ysKX/+U0i6C
+ 0meZYkHhON7G/I6cH0I6NivXIWpO7MNRerECpI5I5D4h5NGqscYeORHflrzpCI25c9GxtLPQJ
+ JgpoygF3V4/4nBEOZTUOYfpCRWcaWMe+ZyAt/gYF5GRy5WAU3VETV85RWCDjhPLFKp2LvhP8I
+ BZDS6CJDy7h1TOWLwOBMIGvM5bLAayvlR1dex0YsaPLpEh1b22ozGKQF8+DrZy42ok1EDxLpJ
+ SJhNU7KVWt3RglSABWD8Pc98EBImv87rsCwacFTUKL806Y2GIsiTq/6DqDKWKsih4BhsCtQax
+ TV2lC6jZ38zsEPk/ETTxzKlYrkyogQt7gehGY9ObecJ2WRR+9e6JIM0XpYWBTEeXkZLIY2mLc
+ Kn/cN2Ga7qkgoMkPqDxRkgz/aavM11Cuw+uzN2F84JYcYiOLXxXTBZLQ5pqciOre7GWcnWYXf
+ 8sV8mV4nOIfQV8FMpaVQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct timespec is being removed from the kernel because it often leads
-to code that is not y2038-safe.
+The ohci driver uses the get_seconds() function to implement the 32-bit
+CSR_BUS_TIME register. This was added in 2010 commit a48777e03ad5
+("firewire: add CSR BUS_TIME support").
 
-In the etnaviv driver, monotonic timestamps are used, which do not suffer
-from overflow, but using ktime_t still leads to better code overall.
+As get_seconds() returns a 32-bit value (on 32-bit architectures), it
+seems like a good fit for that register, but it is also deprecated because
+of the y2038/y2106 overflow problem, and should be replaced throughout
+the kernel with either ktime_get_real_seconds() or ktime_get_seconds().
 
-The conversion is straightforward for the most part, except for
-etnaviv_timeout_to_jiffies(), which needs to handle arguments larger
-than MAX_JIFFY_OFFSET on 32-bit architectures.
+I'm using the latter here, which uses monotonic time. This has the
+advantage of behaving better during concurrent settimeofday() updates
+or leap second adjustments and won't overflow a 32-bit integer, but
+the downside of using CLOCK_MONOTONIC instead of CLOCK_REALTIME is
+that the observed values are not related to external clocks.
 
+If we instead need UTC but can live with clock jumps or overflows,
+then we should use ktime_get_real_seconds() instead, retaining the
+existing behavior.
+
+Reviewed-by: Clemens Ladisch <clemens@ladisch.de>
+Cc: Stefan Richter <stefanr@s5r6.in-berlin.de>
+Link: https://lore.kernel.org/lkml/20180711124923.1205200-1-arnd@arndb.de/
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 19 +++++++++----------
- drivers/gpu/drm/etnaviv/etnaviv_drv.h | 21 +++++++++------------
- drivers/gpu/drm/etnaviv/etnaviv_gem.c |  5 ++---
- drivers/gpu/drm/etnaviv/etnaviv_gem.h |  2 +-
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c |  4 ++--
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  4 ++--
- 6 files changed, 25 insertions(+), 30 deletions(-)
+ drivers/firewire/ohci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 1f9c01be40d7..1250c5e06329 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -282,16 +282,13 @@ static int etnaviv_ioctl_gem_new(struct drm_device *dev, void *data,
- 			args->flags, &args->handle);
- }
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 522f3addb5bd..33269316f111 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -1752,7 +1752,7 @@ static u32 update_bus_time(struct fw_ohci *ohci)
  
--#define TS(t) ((struct timespec){ \
--	.tv_sec = (t).tv_sec, \
--	.tv_nsec = (t).tv_nsec \
--})
--
- static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
- 		struct drm_file *file)
- {
- 	struct drm_etnaviv_gem_cpu_prep *args = data;
- 	struct drm_gem_object *obj;
-+	ktime_t timeout = ktime_set(args->timeout.tv_sec,
-+				    args->timeout.tv_nsec);
- 	int ret;
- 
- 	if (args->op & ~(ETNA_PREP_READ | ETNA_PREP_WRITE | ETNA_PREP_NOSYNC))
-@@ -301,7 +298,7 @@ static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
- 	if (!obj)
- 		return -ENOENT;
- 
--	ret = etnaviv_gem_cpu_prep(obj, args->op, &TS(args->timeout));
-+	ret = etnaviv_gem_cpu_prep(obj, args->op, timeout);
- 
- 	drm_gem_object_put_unlocked(obj);
- 
-@@ -354,7 +351,8 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
- {
- 	struct drm_etnaviv_wait_fence *args = data;
- 	struct etnaviv_drm_private *priv = dev->dev_private;
--	struct timespec *timeout = &TS(args->timeout);
-+	ktime_t timeout = ktime_set(args->timeout.tv_sec,
-+				    args->timeout.tv_nsec);
- 	struct etnaviv_gpu *gpu;
- 
- 	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
-@@ -368,7 +366,7 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
- 		return -ENXIO;
- 
- 	if (args->flags & ETNA_WAIT_NONBLOCK)
--		timeout = NULL;
-+		timeout = ktime_set(0, 0);
- 
- 	return etnaviv_gpu_wait_fence_interruptible(gpu, args->fence,
- 						    timeout);
-@@ -403,7 +401,8 @@ static int etnaviv_ioctl_gem_wait(struct drm_device *dev, void *data,
- {
- 	struct etnaviv_drm_private *priv = dev->dev_private;
- 	struct drm_etnaviv_gem_wait *args = data;
--	struct timespec *timeout = &TS(args->timeout);
-+	ktime_t timeout = ktime_set(args->timeout.tv_sec,
-+				    args->timeout.tv_nsec);
- 	struct drm_gem_object *obj;
- 	struct etnaviv_gpu *gpu;
- 	int ret;
-@@ -423,7 +422,7 @@ static int etnaviv_ioctl_gem_wait(struct drm_device *dev, void *data,
- 		return -ENOENT;
- 
- 	if (args->flags & ETNA_WAIT_NONBLOCK)
--		timeout = NULL;
-+		timeout = ktime_set(0, 0);
- 
- 	ret = etnaviv_gem_wait_bo(gpu, obj, timeout);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-index 32cfa5a48d42..57a4e247bbcf 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-@@ -60,8 +60,7 @@ struct drm_gem_object *etnaviv_gem_prime_import_sg_table(struct drm_device *dev,
- int etnaviv_gem_prime_pin(struct drm_gem_object *obj);
- void etnaviv_gem_prime_unpin(struct drm_gem_object *obj);
- void *etnaviv_gem_vmap(struct drm_gem_object *obj);
--int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
--		struct timespec *timeout);
-+int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op, ktime_t timeout);
- int etnaviv_gem_cpu_fini(struct drm_gem_object *obj);
- void etnaviv_gem_free_object(struct drm_gem_object *obj);
- int etnaviv_gem_new_handle(struct drm_device *dev, struct drm_file *file,
-@@ -106,22 +105,20 @@ static inline size_t size_vstruct(size_t nelem, size_t elem_size, size_t base)
-  * We need to calculate the timeout in terms of number of jiffies
-  * between the specified timeout and the current CLOCK_MONOTONIC time.
-  */
--static inline unsigned long etnaviv_timeout_to_jiffies(
--	const struct timespec *timeout)
-+static inline unsigned long etnaviv_timeout_to_jiffies(ktime_t timeout)
- {
--	struct timespec64 ts, to;
--
--	to = timespec_to_timespec64(*timeout);
--
--	ktime_get_ts64(&ts);
-+	s64 remain = ktime_to_ns(ktime_sub(timeout, ktime_get()));
- 
- 	/* timeouts before "now" have already expired */
--	if (timespec64_compare(&to, &ts) <= 0)
-+	if (remain < 0)
- 		return 0;
- 
--	ts = timespec64_sub(to, ts);
-+#ifndef CONFIG_64BIT
-+	if (remain > ((s64)MAX_JIFFY_OFFSET * NSEC_PER_SEC / HZ))
-+		return MAX_JIFFY_OFFSET;
-+#endif
- 
--	return timespec64_to_jiffies(&ts);
-+	return nsecs_to_jiffies(remain);
- }
- 
- #endif /* __ETNAVIV_DRV_H__ */
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-index cb1faaac380a..febe5196788e 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-@@ -372,8 +372,7 @@ static inline enum dma_data_direction etnaviv_op_to_dma_dir(u32 op)
- 		return DMA_BIDIRECTIONAL;
- }
- 
--int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
--		struct timespec *timeout)
-+int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op, ktime_t timeout)
- {
- 	struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
- 	struct drm_device *dev = obj->dev;
-@@ -431,7 +430,7 @@ int etnaviv_gem_cpu_fini(struct drm_gem_object *obj)
- }
- 
- int etnaviv_gem_wait_bo(struct etnaviv_gpu *gpu, struct drm_gem_object *obj,
--	struct timespec *timeout)
-+			ktime_t timeout)
- {
- 	struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.h b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-index d6270acce619..a3461a554a6c 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-@@ -112,7 +112,7 @@ struct etnaviv_gem_submit {
- void etnaviv_submit_put(struct etnaviv_gem_submit * submit);
- 
- int etnaviv_gem_wait_bo(struct etnaviv_gpu *gpu, struct drm_gem_object *obj,
--	struct timespec *timeout);
-+	ktime_t timeout);
- int etnaviv_gem_new_private(struct drm_device *dev, size_t size, u32 flags,
- 	const struct etnaviv_gem_ops *ops, struct etnaviv_gem_object **res);
- void etnaviv_gem_obj_add(struct drm_device *dev, struct drm_gem_object *obj);
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index d47d1a8e0219..e42b1c4d902c 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1132,7 +1132,7 @@ static void event_free(struct etnaviv_gpu *gpu, unsigned int event)
-  * Cmdstream submission/retirement:
-  */
- int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
--	u32 id, struct timespec *timeout)
-+	u32 id, ktime_t timeout)
- {
- 	struct dma_fence *fence;
- 	int ret;
-@@ -1179,7 +1179,7 @@ int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
-  * that lock in this function while waiting.
-  */
- int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
--	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout)
-+	struct etnaviv_gem_object *etnaviv_obj, ktime_t timeout)
- {
- 	unsigned long remaining;
- 	long ret;
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-index 8f9bd4edc96a..6d352a435427 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-@@ -169,9 +169,9 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m);
- void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu);
- void etnaviv_gpu_retire(struct etnaviv_gpu *gpu);
- int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
--	u32 fence, struct timespec *timeout);
-+	u32 fence, ktime_t timeout);
- int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
--	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout);
-+	struct etnaviv_gem_object *etnaviv_obj, ktime_t timeout);
- struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit);
- int etnaviv_gpu_pm_get_sync(struct etnaviv_gpu *gpu);
- void etnaviv_gpu_pm_put(struct etnaviv_gpu *gpu);
+ 	if (unlikely(!ohci->bus_time_running)) {
+ 		reg_write(ohci, OHCI1394_IntMaskSet, OHCI1394_cycle64Seconds);
+-		ohci->bus_time = (lower_32_bits(get_seconds()) & ~0x7f) |
++		ohci->bus_time = (lower_32_bits(ktime_get_seconds()) & ~0x7f) |
+ 		                 (cycle_time_seconds & 0x40);
+ 		ohci->bus_time_running = true;
+ 	}
 -- 
 2.20.0
 
