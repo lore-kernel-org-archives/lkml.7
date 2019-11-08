@@ -2,381 +2,221 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF42FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D16C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACB4214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB56214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eL0UU4Ts"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UdIr02Tw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfKHNzx (ORCPT
+        id S1729311AbfKHN4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:55:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36462 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726650AbfKHNzw (ORCPT
+        Fri, 8 Nov 2019 08:56:16 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33263 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfKHN4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:55:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573221350;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=POOAOo3UbsazSgAaio5sRRSw+QDs6Cpf36t92K3ueEo=;
-        b=eL0UU4TsDokwgReUgGz9hcCgLDeuHl3kPrII/tVVG9PrCpA0+CbEF78SK2dKCr//eUylqB
-        o50mm+CrI9oXhKD6/xUmum4y4KgqWbsHt3rSIiyJsY7o66AL/ZgrERdEIBD6CsDEw8Ko7s
-        vNGHFCm8eu5mSCqyXtlg2muPh62/l+s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-PSmf9Gf4McWli0-LE5bWuw-1; Fri, 08 Nov 2019 08:55:46 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DE351005500;
-        Fri,  8 Nov 2019 13:55:45 +0000 (UTC)
-Received: from [10.36.116.54] (ovpn-116-54.ams2.redhat.com [10.36.116.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D078A1001938;
-        Fri,  8 Nov 2019 13:55:40 +0000 (UTC)
-Subject: Re: [PATCH v7 07/11] iommu/vt-d: Add nested translation helper
- function
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1571946904-86776-8-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <162b418a-dea3-eabb-1833-a8cd56ab829f@redhat.com>
-Date:   Fri, 8 Nov 2019 14:55:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 8 Nov 2019 08:56:16 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 71so5346610qkl.0;
+        Fri, 08 Nov 2019 05:56:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gCAeybLe0NU7m7647n7l4SIquRQF/E2OQ7kqEsPTDCo=;
+        b=UdIr02TwSKfPv7e3SZdwnZqpS81eX5D5cFK3hR/Uq4UgO7WQksLY2taK7FB4KajQnm
+         agMhDj6xHm7g9ihSTvl7hj8GAx7aMCbearL3y0rbavW92GfCo5/biU+tm45l6U1yV3WQ
+         OqmIVF4ItMrdieimGqS/efCPtV9OqKPgjVZ373HNwAR2aPVE1AATihNJo+pzdy0X2ANB
+         z4F7B9w8bFI4xeTRc6f8BfJYkwHiKyFuDFFHPzT/k+7nyjYSjP6cFdHiSjJsjiOtG4Te
+         UJlLDJX0NFWWy5lbD0VgGZ1u2ZoSkvhpzQwRPIsnz0Z+Cd3dGSoMLBrxpAnf8XJykUIk
+         eqMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gCAeybLe0NU7m7647n7l4SIquRQF/E2OQ7kqEsPTDCo=;
+        b=dq5ob1wphPCB2GWghWJoinQbQ6v65vTmJFqaa2JFBsGzkV6ClCyqzylTXy5BeJh34j
+         6bS2+OeqZq2xpDFUPrae6xlANPhlHBoJCif34FNtBSEdguEgjzIjFxH6+5Dm3SCTZA2O
+         RijbFv9JJ4ibKpe9ZEYcCImnxBXKf3uLzPK7lR5wJK3VW3Nfn/UYkzs8BQX9oVGJdd0T
+         M2jhWiSbk9ekbHLpki+6ORQmI8vgx5TFggp3m+KAOuVZXWb+vrw1atjtvDlwnjlfuvUX
+         /oC8wihLxdPS0C2tw89EoPA4k7FIX+8eKNW0uIEd96rodGIFxknsXITjXve9QtNrzdqm
+         oEyg==
+X-Gm-Message-State: APjAAAWJHyqwCfgZAj1rjl5PjA961lBMaMFJj5sJoJ6YaqnvSNJwrHnJ
+        H1Y0LixNPLtPKLuXAhJM520=
+X-Google-Smtp-Source: APXvYqwz6uCw0d2ZWvQV7FHEvdst3SlTAX5suY795WniLDYHJ5j5ICzRMoa1G88Pnd4MDGI5CkWjzA==
+X-Received: by 2002:a37:8b03:: with SMTP id n3mr6571831qkd.493.1573221375073;
+        Fri, 08 Nov 2019 05:56:15 -0800 (PST)
+Received: from smtp.gmail.com ([2804:d43:422:3955:b4df:7a81:96e1:236e])
+        by smtp.gmail.com with ESMTPSA id o17sm509058qkg.4.2019.11.08.05.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 05:56:14 -0800 (PST)
+Date:   Fri, 8 Nov 2019 10:56:09 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     jic23@kernel.org, robh@kernel.org
+Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
+Message-ID: <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
+References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1571946904-86776-8-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: PSmf9Gf4McWli0-LE5bWuw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+Add a devicetree schema for AD7292 monitor and control system.
 
-On 10/24/19 9:55 PM, Jacob Pan wrote:
-> Nested translation mode is supported in VT-d 3.0 Spec.CH 3.8.
-> With PASID granular translation type set to 0x11b, translation
-> result from the first level(FL) also subject to a second level(SL)
-> page table translation. This mode is used for SVA virtualization,
-> where FL performs guest virtual to guest physical translation and
-> SL performs guest physical to host physical translation.
->=20
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> ---
->  drivers/iommu/intel-pasid.c | 207 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/iommu/intel-pasid.h |  12 +++
->  2 files changed, 219 insertions(+)
->=20
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index ffbd416ed3b8..f846a907cfcf 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -415,6 +415,76 @@ pasid_set_flpm(struct pasid_entry *pe, u64 value)
->  =09pasid_set_bits(&pe->val[2], GENMASK_ULL(3, 2), value << 2);
->  }
-> =20
-> +/*
-> + * Setup the Extended Memory Type(EMT) field (Bits 91-93)
-> + * of a scalable mode PASID entry.
-> + */
-> +static inline void
-> +pasid_set_emt(struct pasid_entry *pe, u64 value)
-> +{
-> +=09pasid_set_bits(&pe->val[1], GENMASK_ULL(29, 27), value << 27);
-> +}
-> +
-> +/*
-> + * Setup the Page Attribute Table (PAT) field (Bits 96-127)
-> + * of a scalable mode PASID entry.
-> + */
-> +static inline void
-> +pasid_set_pat(struct pasid_entry *pe, u64 value)
-> +{
-> +=09pasid_set_bits(&pe->val[1], GENMASK_ULL(63, 32), value << 27);
-> +}
-> +
-> +/*
-> + * Setup the Cache Disable (CD) field (Bit 89)
-> + * of a scalable mode PASID entry.
-> + */
-> +static inline void
-> +pasid_set_cd(struct pasid_entry *pe)
-> +{
-> +=09pasid_set_bits(&pe->val[1], 1 << 25, 1);
-should be pasid_set_bits(&pe->val[1], 1 << 25, 1 << 25);
-and same for below individual bit settings.
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+---
+Changelog V3 -> V4:
+- updated SPDX identifier to GPL-2.0-only
+- changed maxitems constraint on channel property
 
-a macro could be introduced, taking the offset (up to 511) and the size
-and this would automatically select the right pe->val[n] and convert the
-offset into a 64b one. I think the readability would be improved versus
-the spec.
+ .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
+ MAINTAINERS                                   |   7 ++
+ 2 files changed, 111 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
 
-Not related to this patch but it may be worth to "&" the "bits" value
-with the mask to avoid any wrong value to overwrite other fields?
-
-> +}
-> +
-> +/*
-> + * Setup the Extended Memory Type Enable (EMTE) field (Bit 90)
-> + * of a scalable mode PASID entry.
-> + */
-> +static inline void
-> +pasid_set_emte(struct pasid_entry *pe)
-> +{
-> +=09pasid_set_bits(&pe->val[1], 1 << 26, 1);
-> +}
-> +
-> +/*
-> + * Setup the Extended Access Flag Enable (EAFE) field (Bit 135)
-> + * of a scalable mode PASID entry.
-> + */
-> +static inline void
-> +pasid_set_eafe(struct pasid_entry *pe)
-> +{
-> +=09pasid_set_bits(&pe->val[2], 1 << 7, 1);> +}
-> +
-> +/*
-> + * Setup the Page-level Cache Disable (PCD) field (Bit 95)
-> + * of a scalable mode PASID entry.
-> + */
-> +static inline void
-> +pasid_set_pcd(struct pasid_entry *pe)
-> +{
-> +=09pasid_set_bits(&pe->val[1], 1 << 31, 1);
-> +}
-> +
-> +/*
-> + * Setup the Page-level Write-Through (PWT)) field (Bit 94)
-> + * of a scalable mode PASID entry.
-> + */
-> +static inline void
-> +pasid_set_pwt(struct pasid_entry *pe)
-> +{
-> +=09pasid_set_bits(&pe->val[1], 1 << 30, 1);
-> +}
-> +
->  static void
->  pasid_cache_invalidation_with_pasid(struct intel_iommu *iommu,
->  =09=09=09=09    u16 did, int pasid)
-> @@ -647,3 +717,140 @@ int intel_pasid_setup_pass_through(struct intel_iom=
-mu *iommu,
-> =20
->  =09return 0;
->  }
-> +
-> +static int intel_pasid_setup_bind_data(struct intel_iommu *iommu,
-> +=09=09=09=09struct pasid_entry *pte,
-> +=09=09=09=09struct iommu_gpasid_bind_data_vtd *pasid_data)
-> +{
-> +=09/*
-> +=09 * Not all guest PASID table entry fields are passed down during bind=
-,
-> +=09 * here we only set up the ones that are dependent on guest settings.
-> +=09 * Execution related bits such as NXE, SMEP are not meaningful to IOM=
-MU,
-> +=09 * therefore not set. Other fields, such as snoop related, are set ba=
-sed
-> +=09 * on host needs regardless of  guest settings.
-> +=09 */
-> +=09if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_SRE) {
-> +=09=09if (!ecap_srs(iommu->ecap)) {
-> +=09=09=09pr_err("No supervisor request support on %s\n",
-> +=09=09=09       iommu->name);
-> +=09=09=09return -EINVAL;
-> +=09=09}
-> +=09=09pasid_set_sre(pte);
-> +=09}
-> +
-> +=09if ((pasid_data->flags & IOMMU_SVA_VTD_GPASID_EAFE) && ecap_eafs(iomm=
-u->ecap))
-> +=09=09pasid_set_eafe(pte);
-> +
-> +=09if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_EMTE) {
-> +=09=09pasid_set_emte(pte);
-> +=09=09pasid_set_emt(pte, pasid_data->emt);
-> +=09}
-> +
-> +=09/*
-> +=09 * Memory type is only applicable to devices inside processor coheren=
-t
-> +=09 * domain. PCIe devices are not included. We can skip the rest of the
-> +=09 * flags if IOMMU does not support MTS.
-> +=09 */
-> +=09if (!ecap_mts(iommu->ecap)) {
-> +=09=09pr_info("%s does not support memory type bind guest PASID\n",
-> +=09=09=09iommu->name);
-> +=09=09return 0;
-> +=09}
-> +
-> +=09if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_PCD)
-> +=09=09pasid_set_pcd(pte);
-> +=09if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_PWT)
-> +=09=09pasid_set_pwt(pte);
-> +=09if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_CD)
-> +=09=09pasid_set_cd(pte);
-> +=09pasid_set_pat(pte, pasid_data->pat);
-> +
-> +=09return 0;
-> +
-> +}
-> +
-> +/**
-> + * intel_pasid_setup_nested() - Set up PASID entry for nested translatio=
-n
-> + * which is used for vSVA. The first level page tables are used for
-> + * GVA-GPA translation in the guest, second level page tables are used
-> + * for GPA to HPA translation.
-> + *
-> + * @iommu:      Iommu which the device belong to
-belongs
-> + * @dev:        Device to be set up for translation
-> + * @gpgd:       FLPTPTR: First Level Page translation pointer in GPA
-> + * @pasid:      PASID to be programmed in the device PASID table
-> + * @pasid_data: Additional PASID info from the guest bind request
-> + * @domain:     Domain info for setting up second level page tables
-> + * @addr_width: Address width of the first level (guest)
-> + */
-> +int intel_pasid_setup_nested(struct intel_iommu *iommu,
-> +=09=09=09struct device *dev, pgd_t *gpgd,
-> +=09=09=09int pasid, struct iommu_gpasid_bind_data_vtd *pasid_data,
-> +=09=09=09struct dmar_domain *domain,
-> +=09=09=09int addr_width)
-> +{
-> +=09struct pasid_entry *pte;
-> +=09struct dma_pte *pgd;
-> +=09u64 pgd_val;
-> +=09int agaw;
-> +=09u16 did;
-> +
-> +=09if (!ecap_nest(iommu->ecap)) {
-> +=09=09pr_err("IOMMU: %s: No nested translation support\n",
-> +=09=09       iommu->name);
-> +=09=09return -EINVAL;
-> +=09}
-> +
-> +=09pte =3D intel_pasid_get_entry(dev, pasid);
-> +=09if (WARN_ON(!pte))
-> +=09=09return -EINVAL;
-> +
-> +=09pasid_clear_entry(pte);
-> +
-> +=09/* Sanity checking performed by caller to make sure address
-> +=09 * width matching in two dimensions:
-s/matching/match
-> +=09 * 1. CPU vs. IOMMU
-> +=09 * 2. Guest vs. Host.
-> +=09 */
-> +=09switch (addr_width) {
-> +=09case 57:
-> +=09=09pasid_set_flpm(pte, 1);
-> +=09=09break;
-> +=09case 48:
-> +=09=09pasid_set_flpm(pte, 0);
-> +=09=09break;
-> +=09default:
-> +=09=09dev_err(dev, "Invalid paging mode %d\n", addr_width);
-> +=09=09return -EINVAL;
-> +=09}
-> +
-> +=09pasid_set_flptr(pte, (u64)gpgd);
-> +
-> +=09intel_pasid_setup_bind_data(iommu, pte, pasid_data);
-> +
-> +=09/* Setup the second level based on the given domain */
-> +=09pgd =3D domain->pgd;
-> +
-> +=09for (agaw =3D domain->agaw; agaw !=3D iommu->agaw; agaw--) {
-> +=09=09pgd =3D phys_to_virt(dma_pte_addr(pgd));
-> +=09=09if (!dma_pte_present(pgd)) {
-> +=09=09=09dev_err(dev, "Invalid domain page table\n");
-> +=09=09=09return -EINVAL;
-> +=09=09}
-> +=09}
-> +=09pgd_val =3D virt_to_phys(pgd);
-> +=09pasid_set_slptr(pte, pgd_val);
-> +=09pasid_set_fault_enable(pte);
-> +
-> +=09did =3D domain->iommu_did[iommu->seq_id];
-> +=09pasid_set_domain_id(pte, did);
-> +
-> +=09pasid_set_address_width(pte, agaw);
-> +=09pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
-> +
-> +=09pasid_set_translation_type(pte, PASID_ENTRY_PGTT_NESTED);
-> +=09pasid_set_present(pte);
-> +=09pasid_flush_caches(iommu, pte, pasid, did);
-> +
-> +=09return 0;
-> +}
-> diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
-> index e413e884e685..09c85db73b77 100644
-> --- a/drivers/iommu/intel-pasid.h
-> +++ b/drivers/iommu/intel-pasid.h
-> @@ -46,6 +46,7 @@
->   * to vmalloc or even module mappings.
->   */
->  #define PASID_FLAG_SUPERVISOR_MODE=09BIT(0)
-> +#define PASID_FLAG_NESTED=09=09BIT(1)
-> =20
->  struct pasid_dir_entry {
->  =09u64 val;
-> @@ -55,6 +56,11 @@ struct pasid_entry {
->  =09u64 val[8];
->  };
-> =20
-> +#define PASID_ENTRY_PGTT_FL_ONLY=09(1)
-> +#define PASID_ENTRY_PGTT_SL_ONLY=09(2)
-> +#define PASID_ENTRY_PGTT_NESTED=09=09(3)
-> +#define PASID_ENTRY_PGTT_PT=09=09(4)
-> +
->  /* The representative of a PASID table */
->  struct pasid_table {
->  =09void=09=09=09*table;=09=09/* pasid table pointer */
-> @@ -103,6 +109,12 @@ int intel_pasid_setup_second_level(struct intel_iomm=
-u *iommu,
->  int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
->  =09=09=09=09   struct dmar_domain *domain,
->  =09=09=09=09   struct device *dev, int pasid);
-> +int intel_pasid_setup_nested(struct intel_iommu *iommu,
-> +=09=09=09struct device *dev, pgd_t *pgd,
-> +=09=09=09int pasid,
-> +=09=09=09struct iommu_gpasid_bind_data_vtd *pasid_data,
-> +=09=09=09struct dmar_domain *domain,
-> +=09=09=09int addr_width);
->  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
->  =09=09=09=09 struct device *dev, int pasid);
->  int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid);
->=20
-Thanks
-
-Eric
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+new file mode 100644
+index 000000000000..b68be3aaf587
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+@@ -0,0 +1,104 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7292 10-Bit Monitor and Control System
++
++maintainers:
++  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
++
++description: |
++  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
++  Temperature Sensor, and GPIOs
++
++  Specifications about the part can be found at:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7292
++
++  reg:
++    maxItems: 1
++
++  vref-supply:
++    description: |
++      The regulator supply for ADC and DAC reference voltage.
++
++  spi-cpha: true
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - spi-cpha
++
++patternProperties:
++  "^channel@[0-7]$":
++    type: object
++    description: |
++      Represents the external channels which are connected to the ADC.
++      See Documentation/devicetree/bindings/iio/adc/adc.txt.
++
++    properties:
++      reg:
++        description: |
++          The channel number. It can have up to 8 channels numbered from 0 to 7.
++        items:
++          maximum: 7
++
++      diff-channels:
++        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
++        maxItems: 1
++
++    required:
++      - reg
++
++examples:
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      ad7292: adc@0 {
++        compatible = "adi,ad7292";
++        reg = <0>;
++        spi-max-frequency = <25000000>;
++        vref-supply = <&adc_vref>;
++        spi-cpha;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        channel@0 {
++          reg = <0>;
++          diff-channels = <0 1>;
++        };
++        channel@2 {
++          reg = <2>;
++        };
++        channel@3 {
++          reg = <3>;
++        };
++        channel@4 {
++          reg = <4>;
++        };
++        channel@5 {
++          reg = <5>;
++        };
++        channel@6 {
++          reg = <6>;
++        };
++        channel@7 {
++          reg = <7>;
++        };
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32bf5f8116d0..5d00e871c4c6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -813,6 +813,13 @@ S:	Supported
+ F:	drivers/iio/adc/ad7124.c
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+ 
++ANALOG DEVICES INC AD7292 DRIVER
++M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
++L:	linux-iio@vger.kernel.org
++W:	http://ez.analog.com/community/linux-device-drivers
++S:	Supported
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
++
+ ANALOG DEVICES INC AD7606 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
+ L:	linux-iio@vger.kernel.org
+-- 
+2.23.0
 
