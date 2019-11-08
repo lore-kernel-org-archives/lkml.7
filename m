@@ -2,106 +2,136 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373B9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C895DFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1F92178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6CD2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qtpBO4Vl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PUruFUfe";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KdDIXPBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbfKHJZq (ORCPT
+        id S1730868AbfKHJ2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:25:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59170 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730144AbfKHJZq (ORCPT
+        Fri, 8 Nov 2019 04:28:45 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:37150 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfKHJ2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:25:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iOfuQrgwDQHEEc9u8dvBDH4RtXgvlA6VBhp4ub5fX7E=; b=qtpBO4Vl5+z4b3XslqvkmHVCP
-        93vG3fG9QiTNctOzPlmdEhvbCGO54U5C6k+2DiOO6ByYnsFYRClscR2i/QV6XTzdWlGY7ROx2+l+1
-        xbZCvzAWPlZPkecRey8ZTHrlCMFPiF9dI4FsDGE0nVOT+zLr0KsPdCkxWIrib15ITCSPr3qofmMiW
-        19h3xkeHh2Kao+MjwEoPseuk3SNFShk1gGs0OTuYoAgXjeGlTpHVTD2BNw2fciehUQuhjcOZzWa15
-        mX8nZZ1tlY/RprWFB5Qy6e0Q0fsSfskSVlrwKLDYNkE7UaK/+n1xk/DEQuuxfcMR6loep2KZoikVc
-        TOBJeyu5A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iT0WP-0007MK-N4; Fri, 08 Nov 2019 09:25:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2502A301A79;
-        Fri,  8 Nov 2019 10:24:29 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 058E12022B9E1; Fri,  8 Nov 2019 10:25:34 +0100 (CET)
-Date:   Fri, 8 Nov 2019 10:25:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] Speed booting by sorting ORC unwind tables at
- build time
-Message-ID: <20191108092533.GN5671@hirez.programming.kicks-ass.net>
-References: <20191107143205.206606-1-shile.zhang@linux.alibaba.com>
- <20191107152244.GD4114@hirez.programming.kicks-ass.net>
- <85abe498-f241-4752-81b5-6c0314f5a1e8@linux.alibaba.com>
- <20191108092136.GH4114@hirez.programming.kicks-ass.net>
+        Fri, 8 Nov 2019 04:28:45 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1C19B60B16; Fri,  8 Nov 2019 09:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573205324;
+        bh=wO2DnYHf47BbPnoIyv+w4BOr4cls9NbNRlyggcCjCWI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PUruFUfeKn7FvnO1wPJs4mkMaDukBrZYo/zxLec9f/Q3XP0Fywki0ft8/dHgNI9hC
+         /qQejJPaW69YDX5nzi7L+poL3q5j6XDOfptpREMpxUHBtk1pu9QZbE1XIiiEExu71G
+         qM+7tGGWNZ/BWK4jglcomeYKF/ypmDA41pwgpwTA=
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79186607EB;
+        Fri,  8 Nov 2019 09:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573205323;
+        bh=wO2DnYHf47BbPnoIyv+w4BOr4cls9NbNRlyggcCjCWI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KdDIXPBIReplcrhoohxxxsx8zj6kRhBf0Fvw2skQHmzTqZV1WcDPYSLmC67ISAPgS
+         8MJVXO2zcc/Jkz9xYw/tFxdxaOrsr40kstRM42vujfQiR/7SXEOwlURdDJ/pRurz1T
+         0XJFFvrA7rMJDM/USmth9xhAvy5J01rzUxyUTGDE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79186607EB
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v5 00/13] Add device tree support for sc7180
+Date:   Fri,  8 Nov 2019 14:58:11 +0530
+Message-Id: <20191108092824.9773-1-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108092136.GH4114@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:21:36AM +0100, Peter Zijlstra wrote:
-> On Fri, Nov 08, 2019 at 09:42:55AM +0800, Shile Zhang wrote:
-> 
-> > > Can sort{ex,orc}table() be ran concurrently? Do they want to be the same
-> > > (threaded) tool?
-> 
-> > I think it is possible to do those sort work concurrently, likes deferred
-> > memory init which is big boot time speed up.
-> > But I don't know if the exception table and ORC unwind tables can be
-> > deferred, due to those tables might be used in early boot time, for early
-> > exception handling and early debugging. I'm not familiar with that.
-> 
-> I meant at link time, run both sorts concurrently such that we only have
-> to wait for the longest, instead of the sum of them.
-> 
-> They're not changing the same part of the ELF file, so it should be
-> possible to have one tool have multiple threads, each sorting a
-> different table.
-> 
-> Aside from the .ex_table and ORC there's also .jump_table that wants
-> sorting (see jump_label_sort_entries()).
+Bjorn/Andy, this patch series is now fairly reviewed and ack'ed,
+and given the dependent gcc patches (dt bindings header dependency
+for dts) have now landed in clk-next, can we pull these in as part
+of your second PR for 5.5?
 
-Oh, and I'll be adding .static_call_sites soon, see:
+Changes in v5:
+* Dropped the arm-smmu binding update patch, pulled in by Rob H
+* Updated 1/13 to also sort SoC and board names
+* Dropped clock-output-names for sleep_clk
+* Dropped the label for rsc node
 
-  https://lkml.kernel.org/r/20191007082708.013939311@infradead.org
+Changes in v4:
+* Rebased on top of Rob;s for-next
+* reorderd patches to take care of pdc dependency
+* Updated pdc binding to use a soc specific and soc independent compatible
+* Other updates based on v3 feedback, changes listed in each patch
 
-(I should repost that)
+Changes in v3:
+* PATCH 2/11: Updated the qup and uart lables to be consistent
+with the naming convention followed in sdm845 as suggested
+by Matthias
+* Dropped 2 patches from v2 which added the new compatible and
+binding updates for sc7180 pdc and reused sdm845 compatible instead
+as suggested by Marc Z
 
-That gives us 4 tables to sort which we can do concurrently in 4
-threads.
+This series adds DT support for basic peripherals on qualcomm's sc7180 SoC,
+drivers for which are already upstream.
 
-> I agree that doing it at link time makes sense, I just hate to do all
-> this sorting in sequence and blowing up the link time. I don't build for
-> customers, I build for single use boot and linking _SUCKS_.
+Kiran Gunda (3):
+  arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter device
+  arm64: dts: qcom: pm6150: Add PM6150/PM6150L PMIC peripherals
+  arm64: dts: qcom: sc7180-idp: Add RPMh regulators
+
+Maulik Shah (3):
+  arm64: dts: qcom: sc7180: Add cmd_db reserved area
+  arm64: dts: qcom: sc7180: Add rpmh-rsc node
+  arm64: dts: qcom: sc7180: Add pdc interrupt controller
+
+Rajendra Nayak (4):
+  dt-bindings: qcom: Add SC7180 bindings
+  arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
+  drivers: irqchip: qcom-pdc: Move to an SoC independent compatible
+  dt-bindings: qcom,pdc: Add compatible for sc7180
+
+Roja Rani Yarubandi (1):
+  arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+
+Taniya Das (1):
+  arm64: dts: qcom: SC7180: Add node for rpmhcc clock driver
+
+Vivek Gautam (1):
+  arm64: dts: sc7180: Add device node for apps_smmu
+
+ .../devicetree/bindings/arm/qcom.yaml         |   44 +-
+ .../interrupt-controller/qcom,pdc.txt         |    3 +-
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ arch/arm64/boot/dts/qcom/pm6150.dtsi          |   72 ++
+ arch/arm64/boot/dts/qcom/pm6150l.dtsi         |   31 +
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts       |  402 ++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 1131 +++++++++++++++++
+ drivers/irqchip/qcom-pdc.c                    |    2 +-
+ 8 files changed, 1665 insertions(+), 21 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-idp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180.dtsi
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
