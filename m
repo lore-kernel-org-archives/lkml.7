@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FF8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D928C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D575207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378CE207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213990;
-	bh=EM/ae9hhkuNWZohlWx0eu1ZZYFSYW5nNEk4i47F0nXQ=;
+	s=default; t=1573213999;
+	bh=7t+zd6ApZDLHyDBXxaHnsvqdU5V0/DfKsl898ThufDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmxRpClt1LCALZma9DmznrDiQGwef444Jl6l+6yKXAFihuckNn2rRHkoEok6PBVMJ
-	 Ok6uYYmFCaiBbicUk3CcO9v79jzvXr3b+nOTbdB241kLvE6/XJJrHXEcgpwPTDIJ7W
-	 hS9XE9fgbHmnV5HA2HgrK97UC6dGR+bWZIyUiS0U=
+	b=1C3B9BgLSB/W2laUndjxB1gRIgMTnkD9Q2AjeGt7Tz3UKVg4vN1/QkcDDvsUzr9Wm
+	 eYLVlPU28MqMfJeyYuQ6UNFoRFRil4PmbBTkj5OiI7r64/bWA6JV1X5y9eK8wP5+8B
+	 M7pv9Up4XSotbiA7ugR0Ct2CdjYFcileuKThKtPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391636AbfKHLxI (ORCPT
+        id S2391654AbfKHLxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:53:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:53:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391472AbfKHLq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:56 -0500
+        id S2390515AbfKHLqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A3622459;
-        Fri,  8 Nov 2019 11:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FA5F218AE;
+        Fri,  8 Nov 2019 11:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213616;
-        bh=EM/ae9hhkuNWZohlWx0eu1ZZYFSYW5nNEk4i47F0nXQ=;
+        s=default; t=1573213612;
+        bh=7t+zd6ApZDLHyDBXxaHnsvqdU5V0/DfKsl898ThufDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OaWjhw1Nbsb//hKlM0Yq/+Lo/FoeDzjd5W68bRNj2uwb4SC853yrKmQbxUYP9BCpC
-         oQ/b98od1IeUfVsfghpSmBZBiscEtTA6xC4WoTB9yWdU+FWIJ9jXZxyJRRq8snlcc3
-         ENxLp4fUl6+CHbyvFwwHLo5ZB0rmCWn0NDeUF2qY=
+        b=M46XlYmndMDZSK6sl1pRCC5UR0lUxcvk5+hoI/DscbEK9aPjTtIpSTlwGDIBMvevO
+         15L58qs9EX74DBAgY7dh0tZdMcwJaDO9yzDGhIteF3UK7+GMGDLu/Nz0/oWhjyNa72
+         rf7MaVqv7pL/u9D/J5P9U6mQ7+bUZWL+PyS07ck8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 50/64] pinctrl: at91-pio4: fix has_config check in atmel_pctl_dt_subnode_to_map()
-Date:   Fri,  8 Nov 2019 06:45:31 -0500
-Message-Id: <20191108114545.15351-50-sashal@kernel.org>
+Cc:     Lao Wei <zrlw@qq.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 47/64] media: fix: media: pci: meye: validate offset to avoid arbitrary access
+Date:   Fri,  8 Nov 2019 06:45:28 -0500
+Message-Id: <20191108114545.15351-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,68 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Lao Wei <zrlw@qq.com>
 
-[ Upstream commit b97760ae8e3dc8bb91881c13425a0bff55f2bd85 ]
+[ Upstream commit eac7230fdb4672c2cb56f6a01a1744f562c01f80 ]
 
-Smatch complains about this condition:
+Motion eye video4linux driver for Sony Vaio PictureBook desn't validate user-controlled parameter
+'vma->vm_pgoff', a malicious process might access all of kernel memory from user space by trying
+pass different arbitrary address.
+Discussion: http://www.openwall.com/lists/oss-security/2018/07/06/1
 
-	if (has_config && num_pins >= 1)
-
-The "has_config" variable is either uninitialized or true.  The
-"num_pins" variable is unsigned and we verified that it is non-zero on
-the lines before so we know "num_pines >= 1" is true.  Really, we could
-just check "num_configs" directly and remove the "has_config" variable.
-
-Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Lao Wei <zrlw@qq.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-at91-pio4.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/media/pci/meye/meye.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index 88ba9c50cc8ed..b596f45426ea0 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -479,7 +479,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	unsigned num_pins, num_configs, reserve;
- 	unsigned long *configs;
- 	struct property	*pins;
--	bool has_config;
- 	u32 pinfunc;
- 	int ret, i;
+diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
+index ba887e8e1b171..a85c5199ccd30 100644
+--- a/drivers/media/pci/meye/meye.c
++++ b/drivers/media/pci/meye/meye.c
+@@ -1469,7 +1469,7 @@ static int meye_mmap(struct file *file, struct vm_area_struct *vma)
+ 	unsigned long page, pos;
  
-@@ -495,9 +494,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 		return ret;
+ 	mutex_lock(&meye.lock);
+-	if (size > gbuffers * gbufsize) {
++	if (size > gbuffers * gbufsize || offset > gbuffers * gbufsize - size) {
+ 		mutex_unlock(&meye.lock);
+ 		return -EINVAL;
  	}
- 
--	if (num_configs)
--		has_config = true;
--
- 	num_pins = pins->length / sizeof(u32);
- 	if (!num_pins) {
- 		dev_err(pctldev->dev, "no pins found in node %s\n",
-@@ -511,7 +507,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	 * map for each pin.
- 	 */
- 	reserve = 1;
--	if (has_config && num_pins >= 1)
-+	if (num_configs)
- 		reserve++;
- 	reserve *= num_pins;
- 	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps, num_maps,
-@@ -534,7 +530,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 		pinctrl_utils_add_map_mux(pctldev, map, reserved_maps, num_maps,
- 					  group, func);
- 
--		if (has_config) {
-+		if (num_configs) {
- 			ret = pinctrl_utils_add_map_configs(pctldev, map,
- 					reserved_maps, num_maps, group,
- 					configs, num_configs,
 -- 
 2.20.1
 
