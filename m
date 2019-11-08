@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ABDFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66906C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEE3206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D86206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214212;
-	bh=fyEovHonIi28L8n/cm3MK/odCyRSRZIyQ7OjuLbLtdA=;
+	s=default; t=1573214219;
+	bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=txdvbc3A+RMSKMd0Hx4JeQbFqHzLLUPRcWoNP086ua6vpfnYbfei8FszZG8Lxz56J
-	 BKEN4IWLa0yAr/coza8ZzOnPwIjS/7DIW4xI9fQU52txX/+y936AwQSADyi8HqWKIp
-	 Ms/xtGgac6d5gRMaV9q/SMXx/zb2ZrRnesiquFsI=
+	b=OMFHnId3mf3X8ba06cowI/AOe2BlL8TWZG5kBRWzn3AUZ0E8pnsEOw1GyLIirURSs
+	 o6VmzZquOhIGc8Z3vMHHdGyh3XooqPubjV8muUOL1FN6EDaBrsHv5FZumrOBL+qAiT
+	 4ufWobBfhyzlUcmxkdxSNwBt6uicU3q6lUO9aRcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390220AbfKHL4u (ORCPT
+        id S2391665AbfKHL46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:56:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60776 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:56:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732513AbfKHLp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:26 -0500
+        id S2391079AbfKHLpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB412222CB;
-        Fri,  8 Nov 2019 11:45:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C195222C2;
+        Fri,  8 Nov 2019 11:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213525;
-        bh=fyEovHonIi28L8n/cm3MK/odCyRSRZIyQ7OjuLbLtdA=;
+        s=default; t=1573213517;
+        bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0W3ESCLNEtHNQryRMtid4/fJg1Sz5w2nncdLqTihuLNx2ErR+I99wdsD6TLHkbd70
-         YnStqrg/wvKQWAjMiPdjF3CMD/cFIGbVPisduNIU+qU7bmvx7NwNbawmugYvb+rA+x
-         Stj7u7KOuuGEyu0ZM0tCcn2DUnXjzvDfQk4q0A7M=
+        b=j6XYP7hFwK+18ilaSvD+gWPIttX0EyzUHeEs7l5hkjtJJDp2G+zRxArwH3R1NhvWH
+         F+DnoNbuX3bXRbDl0l9/bhWqsU6ydUWEnuYCXj05NKBvjZxMzr1iIM+JQriDQTqYZh
+         BYIehtLGQ/zCarxul8rSvD9d9+4bC50G83WZBnYs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Modra <amodra@gmail.com>, Reza Arbab <arbab@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 089/103] powerpc/vdso: Correct call frame information
-Date:   Fri,  8 Nov 2019 06:42:54 -0500
-Message-Id: <20191108114310.14363-89-sashal@kernel.org>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 086/103] llc: avoid blocking in llc_sap_close()
+Date:   Fri,  8 Nov 2019 06:42:51 -0500
+Message-Id: <20191108114310.14363-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,98 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Modra <amodra@gmail.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 56d20861c027498b5a1112b4f9f05b56d906fdda ]
+[ Upstream commit 9708d2b5b7c648e8e0a40d11e8cea12f6277f33c ]
 
-Call Frame Information is used by gdb for back-traces and inserting
-breakpoints on function return for the "finish" command.  This failed
-when inside __kernel_clock_gettime.  More concerning than difficulty
-debugging is that CFI is also used by stack frame unwinding code to
-implement exceptions.  If you have an app that needs to handle
-asynchronous exceptions for some reason, and you are unlucky enough to
-get one inside the VDSO time functions, your app will crash.
+llc_sap_close() is called by llc_sap_put() which
+could be called in BH context in llc_rcv(). We can't
+block in BH.
 
-What's wrong:  There is control flow in __kernel_clock_gettime that
-reaches label 99 without saving lr in r12.  CFI info however is
-interpreted by the unwinder without reference to control flow: It's a
-simple matter of "Execute all the CFI opcodes up to the current
-address".  That means the unwinder thinks r12 contains the return
-address at label 99.  Disabuse it of that notion by resetting CFI for
-the return address at label 99.
+There is no reason to block it here, kfree_rcu() should
+be sufficient.
 
-Note that the ".cfi_restore lr" could have gone anywhere from the
-"mtlr r12" a few instructions earlier to the instruction at label 99.
-I put the CFI as late as possible, because in general that's best
-practice (and if possible grouped with other CFI in order to reduce
-the number of CFI opcodes executed when unwinding).  Using r12 as the
-return address is perfectly fine after the "mtlr r12" since r12 on
-that code path still contains the return address.
-
-__get_datapage also has a CFI error.  That function temporarily saves
-lr in r0, and reflects that fact with ".cfi_register lr,r0".  A later
-use of r0 means the CFI at that point isn't correct, as r0 no longer
-contains the return address.  Fix that too.
-
-Signed-off-by: Alan Modra <amodra@gmail.com>
-Tested-by: Reza Arbab <arbab@linux.ibm.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso32/datapage.S     | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 1 +
- arch/powerpc/kernel/vdso64/datapage.S     | 1 +
- arch/powerpc/kernel/vdso64/gettimeofday.S | 1 +
- 4 files changed, 4 insertions(+)
+ include/net/llc.h  | 1 +
+ net/llc/llc_core.c | 4 +---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 3745113fcc652..2a7eb5452aba7 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 769c2624e0a6b..1e0bc5955a400 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -139,6 +139,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
-index abf17feffe404..bf96686915116 100644
---- a/arch/powerpc/kernel/vdso64/datapage.S
-+++ b/arch/powerpc/kernel/vdso64/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index 3820213248836..09b2a49f6dd53 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -124,6 +124,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
+diff --git a/include/net/llc.h b/include/net/llc.h
+index 890a87318014d..df282d9b40170 100644
+--- a/include/net/llc.h
++++ b/include/net/llc.h
+@@ -66,6 +66,7 @@ struct llc_sap {
+ 	int sk_count;
+ 	struct hlist_nulls_head sk_laddr_hash[LLC_SK_LADDR_HASH_ENTRIES];
+ 	struct hlist_head sk_dev_hash[LLC_SK_DEV_HASH_ENTRIES];
++	struct rcu_head rcu;
+ };
+ 
+ static inline
+diff --git a/net/llc/llc_core.c b/net/llc/llc_core.c
+index 260b3dc1b4a2a..64d4bef04e730 100644
+--- a/net/llc/llc_core.c
++++ b/net/llc/llc_core.c
+@@ -127,9 +127,7 @@ void llc_sap_close(struct llc_sap *sap)
+ 	list_del_rcu(&sap->node);
+ 	spin_unlock_bh(&llc_sap_list_lock);
+ 
+-	synchronize_rcu();
+-
+-	kfree(sap);
++	kfree_rcu(sap, rcu);
+ }
+ 
+ static struct packet_type llc_packet_type __read_mostly = {
 -- 
 2.20.1
 
