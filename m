@@ -2,137 +2,68 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9EEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182FAC5DF61
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9E32084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47BF21D79
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfKHCIg (ORCPT
+        id S1728965AbfKHCJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 21:08:36 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46252 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725940AbfKHCIf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 21:08:35 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA822UWV030672
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 21:08:34 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w4tumqqb1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 21:08:34 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
-        Fri, 8 Nov 2019 02:08:32 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Nov 2019 02:08:29 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA828SPT62390484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 02:08:28 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 925C4AE045;
-        Fri,  8 Nov 2019 02:08:28 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15D1EAE056;
-        Fri,  8 Nov 2019 02:08:27 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.36.138])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Nov 2019 02:08:26 +0000 (GMT)
-Subject: Re: [PATCH] ext4: deaccount delayed allocations at freeing inode in
- ext4_evict_inode()
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
-        linux-kernel@vger.kernel.org
-Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Eric Whitney <enwlinux@gmail.com>
-References: <157233344808.4027.17162642259754563372.stgit@buzz>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Fri, 8 Nov 2019 07:38:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 7 Nov 2019 21:09:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41066 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726094AbfKHCJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 21:09:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CFB6EAF35;
+        Fri,  8 Nov 2019 02:09:08 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 18:04:56 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
+Message-ID: <20191108020456.sulyjskhq3s5zcaa@linux-p48b>
+Mail-Followup-To: Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>
+References: <20191107190628.22667-1-longman@redhat.com>
+ <20191107195441.GF11823@bombadil.infradead.org>
+ <ed46ef09-7766-eb80-a4ad-4c72d8dba188@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <157233344808.4027.17162642259754563372.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110802-0020-0000-0000-0000038394DC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110802-0021-0000-0000-000021D9CB6A
-Message-Id: <20191108020827.15D1EAE056@d06av26.portsmouth.uk.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=18 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080018
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ed46ef09-7766-eb80-a4ad-4c72d8dba188@oracle.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 07 Nov 2019, Mike Kravetz wrote:
 
+>Note that huge_pmd_share now increments the page count with the semaphore
+>held just in read mode.  It is OK to do increments in parallel without
+>synchronization.  However, we don't want anyone else changing the count
+>while that check in huge_pmd_unshare is happening.  Hence, the need for
+>taking the semaphore in write mode.
 
-On 10/29/19 12:47 PM, Konstantin Khlebnikov wrote:
-> If inode->i_blocks is zero then ext4_evict_inode() skips ext4_truncate().
-> Delayed allocation extents are freed later in ext4_clear_inode() but this
-> happens when quota reference is already dropped. This leads to leak of
-> reserved space in quota block, which disappears after umount-mount.
-> 
-> This seems broken for a long time but worked somehow until recent changes
-> in delayed allocation.
+This would be a nice addition to the changelog methinks.
 
-Sorry, I may have missed it, but could you please help understand
-what recent changes in delayed allocation make this break or worse?
-
-
-A silly query, since I couldn't figure it out. Maybe the code has been
-there ever since like this:-
-So why can't we just move drop_dquot later after the 
-ext4_es_remove_extent() (in function ext4_clear_inode)? Any known
-problems around that?
-
--ritesh
-
-
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> ---
->   fs/ext4/inode.c |    9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 516faa280ced..580898145e8f 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -293,6 +293,15 @@ void ext4_evict_inode(struct inode *inode)
->   				   inode->i_ino, err);
->   			goto stop_handle;
->   		}
-> +	} else if (EXT4_I(inode)->i_reserved_data_blocks) {
-> +		/* Deaccount reserve if inode has only delayed allocations. */
-> +		err = ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
-> +		if (err) {
-> +			ext4_warning(inode->i_sb,
-> +				     "couldn't remove extents %lu (err %d)",
-> +				     inode->i_ino, err);
-> +			goto stop_handle;
-> +		}
->   	}
-> 
->   	/* Remove xattr references. */
-> 
-
+Thanks,
+Davidlohr
