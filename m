@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C37AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88614C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB92B222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5463B2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239907;
-	bh=RR+w7adT0I5Z7lEfES6VOEqvuA92c5DKM6Bs1k4wfsk=;
+	s=default; t=1573239910;
+	bh=LZ1uuoVZmGLcMHbaav7oEKhJaVPSZG6TswowuEgtj50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yFQ18EdRmL8vTX42hXXVVfADUsR0fRNyHyOMyjqpdB6Hxifgko0IWMNGbJ0Wv4YC1
-	 Zz0eWZViqcI+XqPRfaFbreGC3NL6xzBjqIqxSoqj9lN6Kajv/vOEhPLT0bSIy5NJ6o
-	 VfsDtEcrlbfOpOQ2+KGabCMdKmNfuGf7viKCIPnM=
+	b=C14251D7jM9w/IkO3CYUOHIiK3gUZ7ymKMBUGi5EX8ahQrJ+3vOA7YRtBghIOAIrY
+	 RCC2uekyYFWS5r1zkBETW+gQ+wEJL1u0enArdVgmQAj5IVciNacNwgQKxKFb4F/wih
+	 rHoAPg8GAmg1CXRdNUjurhj8VI4DGHXP26XB7WOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389501AbfKHTFF (ORCPT
+        id S1732352AbfKHTFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35118 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:05:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391097AbfKHTFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:02 -0500
+        id S2391102AbfKHTFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F992218AE;
-        Fri,  8 Nov 2019 19:05:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A272067B;
+        Fri,  8 Nov 2019 19:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239901;
-        bh=RR+w7adT0I5Z7lEfES6VOEqvuA92c5DKM6Bs1k4wfsk=;
+        s=default; t=1573239903;
+        bh=LZ1uuoVZmGLcMHbaav7oEKhJaVPSZG6TswowuEgtj50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ptpl8u51RXbNB/Gxc3nZS2Re4ILJwIWTDGrmdBX4DtH0Xa9alyAkPI9znXE6mMQON
-         M2OJn+FlIYO+3i7ErNCl9ScgHGh9iZBFBiEnWmqR8glGuhi5IDw0QoMTOIMEValGE3
-         oWAtyRqNWXCcJeK2eZ+XAwpJ6flmGIUP0IBO/Owc=
+        b=QcEDUuafDSLi2chFF7SfArJg5PFYBLfJ5QBu5HyS4xMlx5eHfEmCIdLH6p5v8Bmxe
+         7ZOT0UVRuhF2b0im3ienuo6CPCyAh6y5FVj5a4vBb40Esm8gZa4QXsu5aCgSeQEHHp
+         /FT7Q5vni0ZjNiO4CyzcBR1ab5gO+kUB8yINZ2gA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
+        stable@vger.kernel.org,
+        Stuart Henderson <stuarth@opensource.cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 020/140] regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
-Date:   Fri,  8 Nov 2019 19:49:08 +0100
-Message-Id: <20191108174904.045931917@linuxfoundation.org>
+Subject: [PATCH 5.3 021/140] ASoC: wm_adsp: Dont generate kcontrols without READ flags
+Date:   Fri,  8 Nov 2019 19:49:09 +0100
+Message-Id: <20191108174904.166184449@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,42 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit 1252b283141f03c3dffd139292c862cae10e174d ]
+[ Upstream commit 3ae7359c0e39f42a96284d6798fc669acff38140 ]
 
-In function pfuze100_regulator_probe(), variable "val" could be
-initialized if regmap_read() fails. However, "val" is used to
-decide the control flow later in the if statement, which is
-potentially unsafe.
+User space always expects to be able to read ALSA controls, so ensure
+no kcontrols are generated without an appropriate READ flag. In the case
+of a read of such a control zeros will be returned.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Link: https://lore.kernel.org/r/20190929170957.14775-1-yzhai003@ucr.edu
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20191002084240.21589-1-ckeepax@opensource.cirrus.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pfuze100-regulator.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/soc/codecs/wm_adsp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index df5df1c495adb..689537927f6f7 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -788,7 +788,13 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index f5fbadc5e7e25..914fb3be5feae 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -1259,8 +1259,7 @@ static unsigned int wmfw_convert_flags(unsigned int in, unsigned int len)
+ 	}
  
- 		/* SW2~SW4 high bit check and modify the voltage value table */
- 		if (i >= sw_check_start && i <= sw_check_end) {
--			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
-+			ret = regmap_read(pfuze_chip->regmap,
-+						desc->vsel_reg, &val);
-+			if (ret) {
-+				dev_err(&client->dev, "Fails to read from the register.\n");
-+				return ret;
-+			}
-+
- 			if (val & sw_hi) {
- 				if (pfuze_chip->chip_id == PFUZE3000 ||
- 					pfuze_chip->chip_id == PFUZE3001) {
+ 	if (in) {
+-		if (in & WMFW_CTL_FLAG_READABLE)
+-			out |= rd;
++		out |= rd;
+ 		if (in & WMFW_CTL_FLAG_WRITEABLE)
+ 			out |= wr;
+ 		if (in & WMFW_CTL_FLAG_VOLATILE)
 -- 
 2.20.1
 
