@@ -2,112 +2,127 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4D6FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505C4FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 803F62084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2525020869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:26:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWT1qsvq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W9g2gzSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732760AbfKHVXo (ORCPT
+        id S1731387AbfKHV0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:23:44 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44936 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727655AbfKHVXo (ORCPT
+        Fri, 8 Nov 2019 16:26:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24153 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726819AbfKHV0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:23:44 -0500
-Received: by mail-il1-f193.google.com with SMTP id i6so6364952ilr.11;
-        Fri, 08 Nov 2019 13:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jCOt2Rtumxvf/Biz+Vs4wvQqytGG66Sp0P52B5IVXcw=;
-        b=hWT1qsvqdYiewCmdOmHSEMDeWIM+8pNjUsNBz/qCr7IroTCfl1cs27AODC7QjRIjzY
-         owpslhoOcJnJAoygT9Yewln/sHZjpd+WUqoF+uA1/CNz7b6JZx+0QWd3amC2TSwcOeiv
-         uPGhDMZLcYVlegyNUgxmG10Syz+QvrSBSQkjdUFnV+dwnCue0kyb2n4ImAQNzV/nInoi
-         ncnJ+pCyEdBC7QJxJ9mMNXpWLzsczuvj5o6qQ0P3k29ulatzD0YQaeID/ute9DEzowbw
-         FDjNRbllELYsu3jqzq8/Pzx/v8/jKaQzlqJataskqkBvRm7/olHyJv3FE6f+Q2BpMpvO
-         cYhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jCOt2Rtumxvf/Biz+Vs4wvQqytGG66Sp0P52B5IVXcw=;
-        b=uALbqfEsC+W29tR7yGemVptvkTIqRDWnFMFd3/DhSLcIdGl2WM6bJ6gb5Mi40tRiCw
-         V7h4NnW1ydcflRo118Icf6He60PGpCvmp1vSosu5T6ZOlgo5ptdjQi5j+Eh0p3TT/ZKO
-         PM+mYjGep9DYIzcjfR19MDxnMkavoiKovGnOrjLWxOBMyZua6SxhKuAiBWKxL3YRgwWz
-         DVJzcAiO0xiF8kmSDsIKu/xUNCSJX4BMtJP0lRn6rwFJfTo+yxPkVP09amq71X8RsMGN
-         yYS5EmEj5yXklzkIvSpn8IgOiZ/zYAuycu1QVzP+wZLsEmifqPOn/LJmfStLol1PEV6k
-         e0Sw==
-X-Gm-Message-State: APjAAAXav0+Psob8nHozroRK/yBC+Av5EWe3DtWqbIHv7RLFa+hxBzRP
-        29Np+xOKJOQ9g3KQmbeUoazwZ8VRXfll+/TRrCw=
-X-Google-Smtp-Source: APXvYqwzNYRYwEpdo5RlEzzhZ9LrBF3z1Xy1bKoz4OsjEJrlcSAsftBHl5mKd+SoT9fzNNGhzCyrlztUVdlSafiTG+8=
-X-Received: by 2002:a92:ca8d:: with SMTP id t13mr14584088ilo.58.1573248223229;
- Fri, 08 Nov 2019 13:23:43 -0800 (PST)
+        Fri, 8 Nov 2019 16:26:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573248390;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kOlt9+gXfWdePLvgUtAlW7sjmc7CI8AXBtdIXNN9dd4=;
+        b=W9g2gzSLglMIsiO3dqo+Ni3qcha1Yb3l1ABlPoUWsUYL7cwP1RQibAetOt3lgfHHHjYG4U
+        yphiBB2eYbhfJQAyuEnpy/Oeaw9HZ/DbXpczowOI5NUYxcJr1drzJyoblM1lBB6BYcp5+L
+        uoNK72IBLSpFeaMgY+DfVp4YQm1sMKM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-fEBVoNgAPgaqpLBVIXrIsw-1; Fri, 08 Nov 2019 16:26:27 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 659531800D7B;
+        Fri,  8 Nov 2019 21:26:26 +0000 (UTC)
+Received: from mail (ovpn-125-151.rdu2.redhat.com [10.10.125.151])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EC9C5D6AE;
+        Fri,  8 Nov 2019 21:26:26 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 16:26:25 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>
+Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
+Message-ID: <20191108212625.GB532@redhat.com>
+References: <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
+ <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
+ <20191105135414.GA30717@redhat.com>
+ <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
+ <20191105145651.GD30717@redhat.com>
+ <ab18744b-afc7-75d4-b5f3-e77e9aae41a6@redhat.com>
+ <20191108135631.GA22507@linux-8ccs>
+ <b77283e5-a4bc-1849-fbfa-27741ab2dbd5@redhat.com>
+ <20191108200103.GA532@redhat.com>
+ <9a3d2936-bd26-430f-a962-9b0f6fe0c2a0@redhat.com>
 MIME-Version: 1.0
-References: <20191108205954.20136-1-aford173@gmail.com> <20191108211717.GR5610@atomide.com>
-In-Reply-To: <20191108211717.GR5610@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 8 Nov 2019 15:23:32 -0600
-Message-ID: <CAHCN7xL3h4r3eTmJj_+jEy0NPwkPfP8qjLpuNjjoKQkq9gqdow@mail.gmail.com>
-Subject: Re: [PATCH] thermal: ti-soc-thermal: Enable addition power management
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9a3d2936-bd26-430f-a962-9b0f6fe0c2a0@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: fEBVoNgAPgaqpLBVIXrIsw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 3:17 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Adam Ford <aford173@gmail.com> [191108 21:00]:
-> > +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-> > +                               unsigned long cmd, void *v);
-> >
-> >  /***   Helper functions to access registers and their bitfields   ***/
-> >
-> > @@ -1025,6 +1033,9 @@ int ti_bandgap_probe(struct platform_device *pdev)
-> >               }
-> >       }
-> >
-> > +     bgp->nb.notifier_call = bandgap_omap_cpu_notifier;
-> > +     cpu_pm_register_notifier(&bgp->nb);
-> > +
->
-> Hmm looks like you're missing the related call to
-> cpu_pm_unregister_notifier(), right?
+On Fri, Nov 08, 2019 at 10:02:52PM +0100, Paolo Bonzini wrote:
+> kvm_intel.ko or kvm_amd.ko, I'm not sure why that would be worse for TLB
+> or RAM usage.  The hard part is recording the location of the call sites
 
-Good catch.  I'm new to this PM stuff.  :-)
+Let's ignore the different code complexity of supporting self
+modifying code: kvm.ko and kvm-*.ko will be located in different
+pages, hence it'll waste 1 iTLB for every vmexit and 2k of RAM in
+average. The L1 icache also will be wasted. It'll simply run slower.
 
->
-> Other than that, it also works on droid4, so please
-> feel free to add:
+Now about the code complexity, it is even higher than pvops:
 
-Awesome!
+   KVM=09=09=09=09pvops
+   =3D=3D=3D=3D=3D=3D=3D=3D=3D                    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+1) Changes daily=09=09Never change
 
->
-> Reviewed-by: Tony Lindgren <tony@atomide.com>
-> Tested-by: Tony Lindgren <tony@atomide.com>
+2) Patched at runtime=09=09Patched only at boot time early on
+   during module load
+   and multiple times
+   at every load of kvm-*.ko
 
-Thank you.  I have already resent V2
+3) The patching points to=09All patch destinations are linked into
+   code in kernel modules       the kernel
 
-adam
+Why exactly should we go through such a complication when it runs
+slower in the end and it's much more complex to implement and maintain
+and in fact even more complex than pvops already is?
 
->
+Runtime patching the indirect call like pvops do is strictly required
+when you are forced to resolve the linking at runtime. The alternative
+would be to ship two different Linux kernels for PV and bare
+metal. Maintaining a whole new kernel rpm and having to install a
+different rpm depending on the hypervisor/bare metal is troublesome so
+pvops is worth it.
+
+With kvm-amd and kvm-intel we can avoid the whole runtime patching of
+the call sites as already proven by KVM monolithic patchset, and it'll
+run faster in the CPU and it'll save RAM, so I'm not exactly sure how
+anybody could prefer runtime patching here when the only benefit is a
+few mbytes of disk space saved on disk.
+
+Furthermore by linking the thing statically we'll also enable LTO and
+other gcc features which would never be possible with those indirect
+calls.
+
+Thanks,
+Andrea
+
