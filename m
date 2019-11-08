@@ -2,199 +2,133 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F8CFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73996FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3C1222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FA1222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ory/CuML"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtUZYW3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfKHOXm (ORCPT
+        id S1726964AbfKHOYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:23:42 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43218 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfKHOXl (ORCPT
+        Fri, 8 Nov 2019 09:24:46 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34669 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfKHOYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:23:41 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n1so7220019wra.10
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:23:39 -0800 (PST)
+        Fri, 8 Nov 2019 09:24:45 -0500
+Received: by mail-pl1-f196.google.com with SMTP id k7so4162582pll.1;
+        Fri, 08 Nov 2019 06:24:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cE0H/lLtUQTdWA4Vcuht2GzWTV6rZlF0FP9RhMPfa+4=;
-        b=ory/CuML+B+1tukFzKeXnY81XBcGq1vwfIl7kbFAQz+tbADKR+CJPKZy/BESKMtLlE
-         cfe4lPBu0aHoQMgFg3wqNkUUXcZSPOuiHfl+Dp4nenLqnPmRz1Fq9OqGOF3xosOU1zA1
-         S1Ma9nEpT1N8PhAFz5NQZu3UirsZc6RXdSlnH602I62QBX0NM2NGcSf4hdG9Drm93xJ5
-         o92Bli0UhHpFi4zTUBHMYr900Pj+qAzWq0/Jn4peXOKpbsgWDJiSk2XL6Y1btlzEP3BO
-         T6T7qIwCGl/ExdpiwKN+PwjdTw4s7MmCYwCu5XqG94A58Z1uzvF1jFnhoOlKEc3iWoal
-         2JNQ==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JSdryO8eXVojEIgiGi6/MOU8GHzrDfHfveNE8M0VA90=;
+        b=AtUZYW3J0oNtdFnuggazotKKoiYQGbkNOGQNhTI8Ly7D7GuZ+mwqFssMKhSS2pY2oy
+         KRcxfbsGCuX780NlynrPwAY3ssLO98dF1QR+l6Tlv5x5F3YkUg6TuDmjDZY3ln890zbe
+         qYXaAD7vETGYXBFSgLVmRiTD/f//Ma5ytkiPocr4yK4ySZQrDupogLO5XB/LtvEtbXPi
+         eaG4WWlsxrl/n6pm5lCCo1DWbzLpUK72QfiIVVP/TqBxUjKZ8IWccydNIWr01IxljNmT
+         jETtSto8V+BUNQnlXLK5nGgOEjqFB10xi3ODQPxMqGosbhfzTnfa9LHXP5orMhg8Ti/N
+         h8cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cE0H/lLtUQTdWA4Vcuht2GzWTV6rZlF0FP9RhMPfa+4=;
-        b=Nm7LogBDpFmvnk4WtDdt3zMUKgRzxIWS/9rZj58RjYK+iI+kI6mDbIln4R/XwWVlMY
-         vj47lhfID+d6J21MHrziRhUTk081CqzfChwWe7AV0rSQZcCNzDrQ/xc+20kHXuAB+iMO
-         C7v+GtzmM4D+T0Q1GJlVYBO+eUbLfLgYfDdvtxhydDreLl7pEPXOYEFlApxgBj+c3Avr
-         8mAYjdosRWKv21m+ujbSrIq+cVsMxGDmbPsrJ2pvdShVVUxc5II17r3o5n4KZMIMefpc
-         Cf0c/+6tn232I3UIhqqchjDxWK7yknf8PbSYnQorIJrtgbEBSHgjiS0tkqb8BGhbTOqR
-         vhzQ==
-X-Gm-Message-State: APjAAAUGb8/UDaD/1PHU8rmUnLF3gnFDO9H3iUUGhGCLgSB08kFVl9g0
-        dy+iDk64P7sBc89skfmpJqaLuQ==
-X-Google-Smtp-Source: APXvYqz6emxsafgwEh4kYnaj0O+HdDcno9ONkicjP+nqCSK6nZWbJAM5LqbPHf/CTE/PLeuiqFCJBQ==
-X-Received: by 2002:adf:df09:: with SMTP id y9mr6302486wrl.25.1573223018529;
-        Fri, 08 Nov 2019 06:23:38 -0800 (PST)
-Received: from google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id d4sm5377200wrw.83.2019.11.08.06.23.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 06:23:37 -0800 (PST)
-Date:   Fri, 8 Nov 2019 15:23:31 +0100
-From:   Marco Elver <elver@google.com>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu,
-        Alexander Potapenko <glider@google.com>,
-        parri.andrea@gmail.com, andreyknvl@google.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, boqun.feng@gmail.com,
-        Borislav Petkov <bp@alien8.de>, dja@axtens.net,
-        dlustig@nvidia.com, Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, luc.maranget@inria.fr,
-        Mark Rutland <mark.rutland@arm.com>, npiggin@gmail.com,
-        paulmck@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v3 1/9] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20191108142331.GA201027@google.com>
-References: <20191104142745.14722-1-elver@google.com>
- <20191104142745.14722-2-elver@google.com>
- <CACi5LpMt1Jp3zi3dQXe-x=nZ4ikADoD2Sr4-6t4HKaarLs7uxw@mail.gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JSdryO8eXVojEIgiGi6/MOU8GHzrDfHfveNE8M0VA90=;
+        b=QgZtyrr744fR38N10f4IxKhoygev/m8lzEKQjaoeb1yEP+V2Yog42jdKg4J0kQJtNZ
+         B+wFop5NrYZjn5nU6UbpDdYx2lKVQAbZloAbT5IQwdVOaPDxjAAXFNCtuBZKEyvDpJES
+         GxC3XZncLpRf5usfiqyoS4z/Q4reqOOjXg5axC1f7hTzEyEI4KbPWtnwNTl//ey43iMJ
+         flbz66WRLeLAmKRIXOPd25txMEE4xFVbrIJfGK/YW2Bh+7fPfLG8Ad9ZF6Vcmusnr8iF
+         6YhWTbEuV2ypKxsCsI2f1RxETT93FMCZNoBnyWr76dTfoCQXD8z5B+DfHqarKnsLuXQv
+         ZbYQ==
+X-Gm-Message-State: APjAAAVw1UnVQvi9AszcEKSG7RwVGN7Bnwm0nYSZe7dkFRZAhEaFNX3M
+        xF2C55FFhgotC2wVQMrYtiuzBPox
+X-Google-Smtp-Source: APXvYqwaeB5xoNb/VifPiYhNFyeGVE4opk7Jr0DWPaz3iNceFwFsDfBcFGrgaDvCmjJC8EsYrVAbDg==
+X-Received: by 2002:a17:902:b203:: with SMTP id t3mr10340394plr.51.1573223084656;
+        Fri, 08 Nov 2019 06:24:44 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e59sm9000783pjk.28.2019.11.08.06.24.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Nov 2019 06:24:43 -0800 (PST)
+Subject: Re: [PATCH] watchdog: sprd: Fix the incorrect pointer getting from
+ driver data
+To:     Baolin Wang <baolin.wang@linaro.org>, wim@linux-watchdog.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        dongwei.wang@unisoc.com, shuiqing.li@unisoc.com,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <76d4687189ec940baa90cb8d679a8d4c8f02ee80.1573210405.git.baolin.wang@linaro.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <3cd61e17-0fd1-6900-47bf-04fcfdef9108@roeck-us.net>
+Date:   Fri, 8 Nov 2019 06:24:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACi5LpMt1Jp3zi3dQXe-x=nZ4ikADoD2Sr4-6t4HKaarLs7uxw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <76d4687189ec940baa90cb8d679a8d4c8f02ee80.1573210405.git.baolin.wang@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
-
-Thanks for your comments, see answers below.
-
-On Fri, 08 Nov 2019, Bhupesh Sharma wrote:
-
-> Sorry for the late comments, but I am just trying to understand the
-> new KCSAN feature (which IMO seems very useful for debugging issues).
+On 11/8/19 2:57 AM, Baolin Wang wrote:
+> From: Shuiqing Li <shuiqing.li@unisoc.com>
 > 
-> Some comments inline:
+> The device driver data saved the 'struct sprd_wdt' object, it is
+> incorrect to get 'struct watchdog_device' object from the driver
+> data, thus fix it.
 > 
-> On Mon, Nov 4, 2019 at 7:59 PM Marco Elver <elver@google.com> wrote:
-> >
-...
-> > diff --git a/include/linux/kcsan.h b/include/linux/kcsan.h
-> > new file mode 100644
-> > index 000000000000..bd8122acae01
-> > --- /dev/null
-> > +++ b/include/linux/kcsan.h
-> > @@ -0,0 +1,115 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef _LINUX_KCSAN_H
-> > +#define _LINUX_KCSAN_H
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/kcsan-checks.h>
+> Fixes: 477603467009 ("watchdog: Add Spreadtrum watchdog driver")
+> Reported-by: Dongwei Wang <dongwei.wang@unisoc.com>
+> Signed-off-by: Shuiqing Li <shuiqing.li@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>   drivers/watchdog/sprd_wdt.c |    6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> For the new changes introduced (especially the new header files), can
-> we please try to keep the alphabetical order
-> for the include'd files.
+> diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
+> index 0bb17b0..65cb55f 100644
+> --- a/drivers/watchdog/sprd_wdt.c
+> +++ b/drivers/watchdog/sprd_wdt.c
+> @@ -327,10 +327,9 @@ static int sprd_wdt_probe(struct platform_device *pdev)
+>   
+>   static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+>   {
+> -	struct watchdog_device *wdd = dev_get_drvdata(dev);
+>   	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+>   
+> -	if (watchdog_active(wdd))
+> +	if (watchdog_active(&wdt->wdd))
+>   		sprd_wdt_stop(&wdt->wdd);
+>   	sprd_wdt_disable(wdt);
+>   
+> @@ -339,7 +338,6 @@ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+>   
+>   static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+>   {
+> -	struct watchdog_device *wdd = dev_get_drvdata(dev);
+>   	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+>   	int ret;
+>   
+> @@ -347,7 +345,7 @@ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+>   	if (ret)
+>   		return ret;
+>   
+> -	if (watchdog_active(wdd)) {
+> +	if (watchdog_active(&wdt->wdd)) {
+>   		ret = sprd_wdt_start(&wdt->wdd);
+>   		if (ret) {
+>   			sprd_wdt_disable(wdt);
 > 
-> The same comment applies for changes below ...
 
-Done for v4.
-
-...
-> > +void kcsan_disable_current(void)
-> > +{
-> > +       ++get_ctx()->disable_count;
-> > +}
-> > +EXPORT_SYMBOL(kcsan_disable_current);
-> > +
-> > +void kcsan_enable_current(void)
-> > +{
-> > +       if (get_ctx()->disable_count-- == 0) {
-> > +               kcsan_disable_current(); /* restore to 0 */
-> > +               kcsan_disable_current();
-> > +               WARN(1, "mismatching %s", __func__);
-> 
-> I am not sure I understand, why we need to call
-> 'kcsan_disable_current()' twice and what the WARN message conveys.
-> May-be you can add a comment here, or a more descriptive WARN meesage.
-
-This branch is entered when there is an imbalance between
-kcsan_disable_current and kcsan_enable_current calls. When entering the
-branch, the decrement transitioned disable_count to -1, which should not
-happen. The call to kcsan_disable_current restores it to 0, and the
-following kcsan_disable_current actually disables KCSAN for generating
-the warning.
-
-> > +               kcsan_enable_current();
-> > +       }
-> > +}
-> > +EXPORT_SYMBOL(kcsan_enable_current);
-> > +
-> > +void kcsan_nestable_atomic_begin(void)
-> > +{
-> > +       /*
-> > +        * Do *not* check and warn if we are in a flat atomic region: nestable
-> > +        * and flat atomic regions are independent from each other.
-> > +        * See include/linux/kcsan.h: struct kcsan_ctx comments for more
-> > +        * comments.
-> > +        */
-> > +
-> > +       ++get_ctx()->atomic_nest_count;
-> > +}
-> > +EXPORT_SYMBOL(kcsan_nestable_atomic_begin);
-> > +
-> > +void kcsan_nestable_atomic_end(void)
-> > +{
-> > +       if (get_ctx()->atomic_nest_count-- == 0) {
-> > +               kcsan_nestable_atomic_begin(); /* restore to 0 */
-> > +               kcsan_disable_current();
-> > +               WARN(1, "mismatching %s", __func__);
-> 
-> .. Same as above.
-
-Same situation, except for atomic_nest_count. Here also
-atomic_nest_count is -1 which should not happen.
-
-I've added some more comments.
-
-> > +               kcsan_enable_current();
-> > +       }
-> > +}
-> > +EXPORT_SYMBOL(kcsan_nestable_atomic_end);
-
-Best Wishes,
--- Marco
