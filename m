@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51089FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256E1FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C06922478
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE20321D82
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213507;
-	bh=vn/21sVwQ2K1AtlyTNj8Njl/NzU1TgIYkZgxejPPKHE=;
+	s=default; t=1573213515;
+	bh=oA0SjtyPdBmFx777on6n0gmKh9e4CxtsuhtGwP5lMsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R6/8+gZWRv75WNWx30atD4cOY0Gbi4LiUYp9ELA98Ao6XH3daZLD/ACs4k2Znfghi
-	 lwtPlJkLeBhr7wdlNfGWpRLLzDSVjlQorxK1LMYTFAelIXK0AQnediRiJ9d8hoC+bT
-	 EVtJuJ2PEWQ5MZWhK95N1ipit9IipS6jLTXegSD4=
+	b=1DA/OnILqQjgHPMhvXEjN+bBdhQdU6txJYosUGsyqzHMcQhU8uwt+HVM1H716qhfF
+	 gzt2djmb9VCX35k44kQPlTZJTMStpiCBjirKS6FHk2e4NAIY4+X3OaXRzxKqGpeuEV
+	 1kXaQRlesdJWDsIK9VuujRjZNapH+o+f5UejNhko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388235AbfKHLpF (ORCPT
+        id S2391056AbfKHLpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59940 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390961AbfKHLoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:55 -0500
+        id S2391022AbfKHLpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8CE7222C4;
-        Fri,  8 Nov 2019 11:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7CD72245B;
+        Fri,  8 Nov 2019 11:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213495;
-        bh=vn/21sVwQ2K1AtlyTNj8Njl/NzU1TgIYkZgxejPPKHE=;
+        s=default; t=1573213507;
+        bh=oA0SjtyPdBmFx777on6n0gmKh9e4CxtsuhtGwP5lMsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vD4+ovqqFXfJd4l0LXE4QMGLbo/Dz9FesLqM8l0eNAFnKMHjD4alMUimShBse8zWp
-         cTOCnlINONnzEo0SpvXuK69DWFEr1502hDr5j5XTwyE9VeWqBqpFllrM9UQsayvEII
-         EYKiapC1BYcwzJbDmA+cc6J7rRRE3sS3PDS67LT8=
+        b=p2yeuJOYkvYlRJu+b30DOz61y/CoUfIARVqGgEsTvAgcZ9eofJkBRqnfal0f3UcMQ
+         WrCllm5MEdSfaxTVNHY3Ipu1ekxqcrIPLY+alePGGY2lZwA9I7sdPUJUE2rZ4j9IEx
+         F9IdYkHpP47glRgVOF2wevrPe5CshaVzBVc02FY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 073/103] ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff" is set
-Date:   Fri,  8 Nov 2019 06:42:38 -0500
-Message-Id: <20191108114310.14363-73-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 081/103] media: dvb: fix compat ioctl translation
+Date:   Fri,  8 Nov 2019 06:42:46 -0500
+Message-Id: <20191108114310.14363-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,72 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 8148d2136002da2e2887caf6a07bbd9c033f14f3 ]
+[ Upstream commit 1ccbeeb888ac33627d91f1ccf0b84ef3bcadef24 ]
 
-One of the Freescale recommended sequences for power off with external
-PMIC is the following:
-...
-3.  SoC is programming PMIC for power off when standby is asserted.
-4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
+The VIDEO_GET_EVENT and VIDEO_STILLPICTURE was added back in 2005 but
+it never worked because the command number is wrong.
 
-See:
-http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
-page 5083
+Using the right command number means we have a better chance of them
+actually doing the right thing, though clearly nobody has ever tried
+it successfully.
 
-This patch implements step 4. of this sequence.
+I noticed these while auditing the remaining users of compat_time_t
+for y2038 bugs. This one is fine in that regard, it just never did
+anything.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 6e87abd0b8cb ("[DVB]: Add compat ioctl handling.")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ fs/compat_ioctl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index ecdf071653d4d..6078bcc9f594a 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -604,6 +604,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
- 				   IMX6Q_GPR1_GINT);
- }
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index ea52b98b39fa1..033e8e6aabb77 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -161,6 +161,7 @@ struct compat_video_event {
+ 		unsigned int frame_rate;
+ 	} u;
+ };
++#define VIDEO_GET_EVENT32 _IOR('o', 28, struct compat_video_event)
  
-+static void imx6_pm_stby_poweroff(void)
-+{
-+	imx6_set_lpm(STOP_POWER_OFF);
-+	imx6q_suspend_finish(0);
-+
-+	mdelay(1000);
-+
-+	pr_emerg("Unable to poweroff system\n");
-+}
-+
-+static int imx6_pm_stby_poweroff_probe(void)
-+{
-+	if (pm_power_off) {
-+		pr_warn("%s: pm_power_off already claimed  %p %pf!\n",
-+			__func__, pm_power_off, pm_power_off);
-+		return -EBUSY;
-+	}
-+
-+	pm_power_off = imx6_pm_stby_poweroff;
-+	return 0;
-+}
-+
- void __init imx6_pm_ccm_init(const char *ccm_compat)
- {
- 	struct device_node *np;
-@@ -620,6 +642,9 @@ void __init imx6_pm_ccm_init(const char *ccm_compat)
- 	val = readl_relaxed(ccm_base + CLPCR);
- 	val &= ~BM_CLPCR_LPM;
- 	writel_relaxed(val, ccm_base + CLPCR);
-+
-+	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
-+		imx6_pm_stby_poweroff_probe();
- }
+ static int do_video_get_event(struct file *file,
+ 		unsigned int cmd, struct compat_video_event __user *up)
+@@ -172,7 +173,7 @@ static int do_video_get_event(struct file *file,
+ 	if (kevent == NULL)
+ 		return -EFAULT;
  
- void __init imx6q_pm_init(void)
+-	err = do_ioctl(file, cmd, (unsigned long)kevent);
++	err = do_ioctl(file, VIDEO_GET_EVENT, (unsigned long)kevent);
+ 	if (!err) {
+ 		err  = convert_in_user(&kevent->type, &up->type);
+ 		err |= convert_in_user(&kevent->timestamp, &up->timestamp);
+@@ -191,6 +192,7 @@ struct compat_video_still_picture {
+         compat_uptr_t iFrame;
+         int32_t size;
+ };
++#define VIDEO_STILLPICTURE32 _IOW('o', 30, struct compat_video_still_picture)
+ 
+ static int do_video_stillpicture(struct file *file,
+ 		unsigned int cmd, struct compat_video_still_picture __user *up)
+@@ -213,7 +215,7 @@ static int do_video_stillpicture(struct file *file,
+ 	if (err)
+ 		return -EFAULT;
+ 
+-	err = do_ioctl(file, cmd, (unsigned long) up_native);
++	err = do_ioctl(file, VIDEO_STILLPICTURE, (unsigned long) up_native);
+ 
+ 	return err;
+ }
+@@ -1476,9 +1478,9 @@ static long do_ioctl_trans(unsigned int cmd,
+ 		return rtc_ioctl(file, cmd, argp);
+ 
+ 	/* dvb */
+-	case VIDEO_GET_EVENT:
++	case VIDEO_GET_EVENT32:
+ 		return do_video_get_event(file, cmd, argp);
+-	case VIDEO_STILLPICTURE:
++	case VIDEO_STILLPICTURE32:
+ 		return do_video_stillpicture(file, cmd, argp);
+ 	case VIDEO_SET_SPU_PALETTE:
+ 		return do_video_set_spu_palette(file, cmd, argp);
 -- 
 2.20.1
 
