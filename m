@@ -2,171 +2,127 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860EDFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8E3FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655CA21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3302218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="fR/E8RyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbfKHJmj (ORCPT
+        id S1731585AbfKHJml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:42:39 -0500
-Received: from mga05.intel.com ([192.55.52.43]:10456 "EHLO mga05.intel.com"
+        Fri, 8 Nov 2019 04:42:41 -0500
+Received: from ozlabs.org ([203.11.71.1]:53119 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731411AbfKHJmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:42:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 01:42:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
-   d="scan'208";a="354053281"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 08 Nov 2019 01:42:35 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v5 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Fri,  8 Nov 2019 17:42:23 +0800
-Message-Id: <5e0396e0e95e042b968b70b8c1f66d6432981ce4.1573196057.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
+        id S1731436AbfKHJmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:42:39 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 478b0W3jgtz9sP6;
+        Fri,  8 Nov 2019 20:42:34 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573206156;
+        bh=HX/zf896+L+aLj5O52hjw0t0TJACu18gwzubsdQDKao=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=fR/E8RyIIV9SH5jJ24k4CkSnV7QgtDW3LJ+kkvk99VO/lnDNUOeEMuzs+17FqtD9s
+         f9aDOFogdkIoR66y2NBPqigmk+WXxeltzF0G18vpZNKTHgjj1tVXNfIl4qcwr49R+4
+         KjvsjjfYuOPp1jNkkvlHTM308O3ZfX5yO6V74oyTLvNWwFqPkL1vDIlRqjih0EXEeZ
+         /YnjCKOb7FacQDI7/ZRvygb/VyPh+EZRIvOhLR9gsJ9Jp8PPUWb//aUfqzafQDh4vo
+         roR1lEI0zAvgko5ZtaCyObtNxgeQDkeADjto2j3KY+ZDFRFBaBnwMwY+aVCteqyxZ1
+         JhwFXFnfFOOPw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Eric Richter <erichte@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH v7 4/4] powerpc: load firmware trusted keys/hashes into kernel keyring
+In-Reply-To: <20191107042205.13710-5-erichte@linux.ibm.com>
+References: <20191107042205.13710-1-erichte@linux.ibm.com> <20191107042205.13710-5-erichte@linux.ibm.com>
+Date:   Fri, 08 Nov 2019 20:42:26 +1100
+Message-ID: <87eeyi4scd.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+Eric Richter <erichte@linux.ibm.com> writes:
+> From: Nayna Jain <nayna@linux.ibm.com>
+>
+> The keys used to verify the Host OS kernel are managed by firmware as
+> secure variables. This patch loads the verification keys into the .platform
+> keyring and revocation hashes into .blacklist keyring. This enables
+> verification and loading of the kernels signed by the boot time keys which
+> are trusted by firmware.
+>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: Eric Richter <erichte@linux.ibm.com>
+> ---
+>  arch/powerpc/Kconfig                          |  1 +
+>  security/integrity/Kconfig                    |  8 ++
+>  security/integrity/Makefile                   |  4 +-
+>  .../integrity/platform_certs/load_powerpc.c   | 98 +++++++++++++++++++
+>  4 files changed, 110 insertions(+), 1 deletion(-)
+>  create mode 100644 security/integrity/platform_certs/load_powerpc.c
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index cabc091f3fe1..498967a5ef4e 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -939,6 +939,7 @@ config PPC_SECURE_BOOT
+>  	bool
+>  	depends on PPC_POWERNV
+>  	depends on IMA_ARCH_POLICY
+> +	select LOAD_PPC_KEYS
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 104 +++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+This gave me a warning:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..64edd3115131
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+          - enum:
-+              - 0 #PINMUX_GPIO
-+              - 1
-+              - 2
-+              - 3
-+              - 4
-+
-+      bias-pull-up:
-+        type: boolean
-+      bias-pull-down:
-+        type: boolean
-+      drive-strength:
-+        type: boolean
-+      slew-rate:
-+        type: boolean
-+      drive-open-drain:
-+        type: boolean
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0-pins: uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+WARNING: unmet direct dependencies detected for LOAD_PPC_KEYS
+  Depends on [n]: INTEGRITY [=y] && INTEGRITY_PLATFORM_KEYRING [=n] && PPC_SECURE_BOOT [=y]
+  Selected by [y]:
+  - PPC_SECURE_BOOT [=y] && PPC_POWERNV [=y] && IMA_ARCH_POLICY [=y]
 
+I think you should probably just drop the select ..
+
+> diff --git a/security/integrity/Kconfig b/security/integrity/Kconfig
+> index 0bae6adb63a9..26abee23e4e3 100644
+> --- a/security/integrity/Kconfig
+> +++ b/security/integrity/Kconfig
+> @@ -72,6 +72,14 @@ config LOAD_IPL_KEYS
+>         depends on S390
+>         def_bool y
+>  
+> +config LOAD_PPC_KEYS
+> +	bool "Enable loading of platform and blacklisted keys for POWER"
+> +	depends on INTEGRITY_PLATFORM_KEYRING
+> +	depends on PPC_SECURE_BOOT
+> +	help
+> +	  Enable loading of keys to the .platform keyring and blacklisted
+> +	  hashes to the .blacklist keyring for powerpc based platforms.
+
+And instead make this default y, if you think it should be enabled by
+default when its prerequisites are met.
+
+cheers
