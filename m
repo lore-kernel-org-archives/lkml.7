@@ -2,233 +2,114 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998D2FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BA2FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B91F20865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785792178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TwbUgVQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbfKHWSP (ORCPT
+        id S1731064AbfKHWSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:18:15 -0500
-Received: from mga03.intel.com ([134.134.136.65]:2880 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbfKHWSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:18:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 14:18:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
-   d="scan'208";a="377883818"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 08 Nov 2019 14:18:13 -0800
-Date:   Fri, 8 Nov 2019 14:22:42 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v7 02/11] iommu/vt-d: Enlightened PASID allocation
-Message-ID: <20191108142242.5eb2b0bc@jacob-builder>
-In-Reply-To: <79e3f867-8892-2314-e6f6-eac7d9b4f15b@redhat.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571946904-86776-3-git-send-email-jacob.jun.pan@linux.intel.com>
-        <79e3f867-8892-2314-e6f6-eac7d9b4f15b@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 8 Nov 2019 17:18:51 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45525 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfKHWSv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 17:18:51 -0500
+Received: by mail-pg1-f194.google.com with SMTP id w11so4852105pga.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:18:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7IqcEdYpIhKi7OhB48nFEV4cOEv0bt3kSka2RQuhHz8=;
+        b=TwbUgVQWwmE9El4cplMMqkhD6lFeocES3EUaM4ERY+x67cSpXlpUv0iPKzXbSuwJWv
+         m+j1IRJnoXZl66UtGaV7D2vEt5/G19fT1Qri0hTubfAKw1Sn/19KXh6eOskZM4yRwdLa
+         Eg+P2n6vrhkm1ROMj9E7U4NZu620y1DJGNS/ZeMzJInzmu0ciIAAf5w8pZKOyT3m95W9
+         5GJ3831+TWQJmCCsY7CprfqE+476rujpBTIEAa/Ma7rDb2LwnkWD0+wUGkweH7UO9sh2
+         AaJMfiyFIS2nW1u2fIP5eXA7g3IU1GyvDEltuUdVWjsmIDsUyhSgbHT8AwKac/YMlBBm
+         4nTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7IqcEdYpIhKi7OhB48nFEV4cOEv0bt3kSka2RQuhHz8=;
+        b=n1LWxQNghbNIXadMEcVln2Y3AJXUr+otYiwh6MhBHBQd9cswuQtZK8MNsA2CnM3tkJ
+         usDLl6lME1sdpyVDqo7hXAb4SfKvkUakb/Z/utQwRMru/ad+T7/T1+PyyAQWeNpv3t0C
+         qi3/j2dKJ+sucWtCqrqS5g4tTPiIU8MBHjwlo+uYOGuOGsNjueX0RT1VDn0V173tePx9
+         cHFJ2lt0AdiFakJg+H+a+g8bpSGgr7LF1Kq9xvA9HGW39GLdEuo5883UVuiOc11ecRPy
+         KrxPSqby3EdwvxsbtlGvpCEAFLor7YbLFjWr1U/l2J6bdSmKv0dOT5YXzAcQA3l2fyyu
+         LWvQ==
+X-Gm-Message-State: APjAAAU2LrJ5QrOeSJVL7C4/2JWxkMqnk5MHbQLI2YEc95T86usyVU7K
+        p+Yuw821vG9/QA4F1Rw/D4vcbcGsbOGgKgXSIdZc9Q==
+X-Google-Smtp-Source: APXvYqzdyUzLuAwMhZW4y2OkjG5vQLw1oKoAkmXM11M5t1OqHZxwhul/lYCXfT3gnN8OvRnQ28xVp9c+pxtGRtMIXwk=
+X-Received: by 2002:a17:90a:35d0:: with SMTP id r74mr16848412pjb.47.1573251530363;
+ Fri, 08 Nov 2019 14:18:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1573236684.git.andreyknvl@google.com> <Pine.LNX.4.44L0.1911081642461.1498-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1911081642461.1498-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 8 Nov 2019 23:18:39 +0100
+Message-ID: <CAAeHK+zyvqJs_5X61NriLdHoityTdVJ0O=a-xrcq+-7Vb_F0FQ@mail.gmail.com>
+Subject: Re: [PATCH 0/1] usb: gadget: add raw-gadget interface
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Felipe Balbi <balbi@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019 11:33:22 +0100
-Auger Eric <eric.auger@redhat.com> wrote:
+On Fri, Nov 8, 2019 at 10:45 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Fri, 8 Nov 2019, Andrey Konovalov wrote:
+>
+> > This patchset (currently a single patch) adds a new userspace interface
+> > for the USB Gadget subsystem called USB Raw Gadget (I don't mind changing
+> > the name to something else if there are better ideas). This is what
+> > currently being used to enable coverage-buided USB fuzzing with syzkaller:
+> >
+> > https://github.com/google/syzkaller/blob/master/docs/linux/external_fuzzing_usb.md
+> >
+> > Initially I was using GadgetFS (together with the Dummy HCD/UDC module)
+> > to perform emulation of USB devices for fuzzing, but later switched to a
+> > custom written interface. The incentive to implement a different interface
+> > was to provide a somewhat raw and direct access to the USB Gadget layer
+> > for the userspace, where every USB request is passed to the userspace to
+> > get a response. See documentation for the list of differences between
+> > Raw Gadget and GadgetFS.
+> >
+> > This patchset has been pushed to the public Linux kernel Gerrit instance:
+> >
+> > https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2144
+> >
+> > Andrey Konovalov (1):
+> >   usb: gadget: add raw-gadget interface
+> >
+> >  Documentation/usb/index.rst         |    1 +
+> >  Documentation/usb/raw-gadget.rst    |   60 ++
+> >  drivers/usb/gadget/Kconfig          |    9 +
+> >  drivers/usb/gadget/Makefile         |    2 +
+> >  drivers/usb/gadget/raw.c            | 1150 +++++++++++++++++++++++++++
+>
+> As a general rule, gadget drivers don't go directly in
+> drivers/usb/gadget.  raw.c counts as a legacy driver (because it's not
+> written to use the composite gadget framework), so it belongs in
+> drivers/usb/gadget/legacy.  That's where the gadgetfs driver lives, for
+> example.
 
-> Hi Jacob,
-> On 10/24/19 9:54 PM, Jacob Pan wrote:
-> > From: Lu Baolu <baolu.lu@linux.intel.com>
-> > 
-> > Enabling IOMMU in a guest requires communication with the host
-> > driver for certain aspects. Use of PASID ID to enable Shared Virtual
-> > Addressing (SVA) requires managing PASID's in the host. VT-d 3.0
-> > spec provides a Virtual Command Register (VCMD) to facilitate this.
-> > Writes to this register in the guest are trapped by QEMU which
-> > proxies the call to the host driver.
-> > 
-> > This virtual command interface consists of a capability register,
-> > a virtual command register, and a virtual response register. Refer
-> > to section 10.4.42, 10.4.43, 10.4.44 for more information.
-> > 
-> > This patch adds the enlightened PASID allocation/free interfaces
-> > via the virtual command interface.
-> > 
-> > Cc: Ashok Raj <ashok.raj@intel.com>
-> > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> > ---
-> >  drivers/iommu/intel-pasid.c | 56
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> > drivers/iommu/intel-pasid.h | 13 ++++++++++-
-> > include/linux/intel-iommu.h |  2 ++ 3 files changed, 70
-> > insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index 040a445be300..d81e857d2b25
-> > 100644 --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -63,6 +63,62 @@ void *intel_pasid_lookup_id(int pasid)
-> >  	return p;
-> >  }
-> >  
-> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid) +{
-> > +	unsigned long flags;
-> > +	u8 status_code;
-> > +	int ret = 0;
-> > +	u64 res;
-> > +
-> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, VCMD_CMD_ALLOC);
-> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> > +		      !(res & VCMD_VRSP_IP), res);
-> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> > +
-> > +	status_code = VCMD_VRSP_SC(res);
-> > +	switch (status_code) {
-> > +	case VCMD_VRSP_SC_SUCCESS:
-> > +		*pasid = VCMD_VRSP_RESULT(res);
-> > +		break;
-> > +	case VCMD_VRSP_SC_NO_PASID_AVAIL:
-> > +		pr_info("IOMMU: %s: No PASID available\n",
-> > iommu->name);
-> > +		ret = -ENOMEM;
-> > +		break;
-> > +	default:
-> > +		ret = -ENODEV;
-> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-> > +			iommu->name, status_code);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
-> > +{
-> > +	unsigned long flags;
-> > +	u8 status_code;
-> > +	u64 res;
-> > +
-> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, (pasid << 8) |
-> > VCMD_CMD_FREE);
-> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> > +		      !(res & VCMD_VRSP_IP), res);
-> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> > +
-> > +	status_code = VCMD_VRSP_SC(res);
-> > +	switch (status_code) {
-> > +	case VCMD_VRSP_SC_SUCCESS:
-> > +		break;
-> > +	case VCMD_VRSP_SC_INVALID_PASID:
-> > +		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
-> > +		break;
-> > +	default:
-> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-> > +			iommu->name, status_code);
-> > +	}
-> > +}
-> > +
-> >  /*
-> >   * Per device pasid table management:
-> >   */
-> > diff --git a/drivers/iommu/intel-pasid.h
-> > b/drivers/iommu/intel-pasid.h index fc8cd8f17de1..e413e884e685
-> > 100644 --- a/drivers/iommu/intel-pasid.h
-> > +++ b/drivers/iommu/intel-pasid.h
-> > @@ -23,6 +23,16 @@
-> >  #define is_pasid_enabled(entry)		(((entry)->lo >> 3)
-> > & 0x1) #define get_pasid_dir_size(entry)	(1 <<
-> > ((((entry)->lo >> 9) & 0x7) + 7)) 
-> > +/* Virtual command interface for enlightened pasid management. */
-> > +#define VCMD_CMD_ALLOC			0x1
-> > +#define VCMD_CMD_FREE			0x2
-> > +#define VCMD_VRSP_IP			0x1
-> > +#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
-> > +#define VCMD_VRSP_SC_SUCCESS		0
-> > +#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
-> > +#define VCMD_VRSP_SC_INVALID_PASID	1
-> > +#define VCMD_VRSP_RESULT(e)		(((e) >> 8) & 0xfffff)  
-> nit: pasid is 20b but result field is 56b large
-> Just in case a new command were to be added later on.
-Good point, will rename to VCMD_VRSP_RESULT_PASID andd new macros for
-future new commands with different results.
-> > +
-> >  /*
-> >   * Domain ID reserved for pasid entries programmed for first-level
-> >   * only and pass-through transfer modes.
-> > @@ -95,5 +105,6 @@ int intel_pasid_setup_pass_through(struct
-> > intel_iommu *iommu, struct device *dev, int pasid);
-> >  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
-> >  				 struct device *dev, int pasid);
-> > -
-> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid); +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned
-> > int pasid); #endif /* __INTEL_PASID_H */
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index 2e1bed9b7eef..1d4b8dcdc5d8
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -161,6 +161,7 @@
-> >  #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
-> >  #define ecap_flts(e)		(((e) >> 47) & 0x1)
-> >  #define ecap_slts(e)		(((e) >> 46) & 0x1)
-> > +#define ecap_vcs(e)		(((e) >> 44) & 0x1)  
-> nit: this addition is not related to this patch
-> may be moved to [3] as vccap_pasid
-Sounds good.
-
-Thanks
-> >  #define ecap_smts(e)		(((e) >> 43) & 0x1)
-> >  #define ecap_dit(e)		((e >> 41) & 0x1)
-> >  #define ecap_pasid(e)		((e >> 40) & 0x1)
-> > @@ -282,6 +283,7 @@
-> >  
-> >  /* PRS_REG */
-> >  #define DMA_PRS_PPR	((u32)1)
-> > +#define DMA_VCS_PAS	((u64)1)
-> >  
-> >  #define IOMMU_WAIT_OP(iommu, offset, op, cond,
-> > sts)			\ do
-> > {
-> > \ 
-> Otherwise looks good to me
-> 
-> Thanks
-> 
-> Eric
-> 
-
-[Jacob Pan]
+Hi Alan! Sure, I'll move it to legacy/ in v2. Thanks!
