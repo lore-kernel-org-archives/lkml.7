@@ -2,120 +2,56 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9BFFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4134FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BC321848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:38:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vOZvnoNT"
+	by mail.kernel.org (Postfix) with ESMTP id 9F6D721848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfKHQiH (ORCPT
+        id S1727824AbfKHQiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:38:07 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:30830 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727412AbfKHQiB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:38:01 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8GMENE032766;
-        Fri, 8 Nov 2019 17:37:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=smoPj/z5Sn90v90H2JHjnC4eM+rbToGswr/u4f90j/g=;
- b=vOZvnoNT0YRkphaJ2ZC3jspcjSv811wxUyT0b9/ZWw5tLJmJqA4sBs5DoWg97XZODQjH
- aJWcICZALYH86Hkrcb+O8b1TTHAi+ntFz0bBX5co2GlXx4qk2kO+iu8a//U+DYeXx8ln
- rLG570a9czCepj+Q5dsQ0QyQfMK47rWkEBOXeJYcCuUmBWO9OtXLjH9okTcNFWY25rH8
- Ly0dbrzclGaVJjkzFtbb6PNI8AFJ+W1A1qhSuALX/0d2xsP/Jgwut836msmunfZHTkE4
- fahvm3uD91TBOpBcCxybYKxBidp6NfR9h14UTXW9oogkIo54URafitsGD2EjSAD4bw5T eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w41vmvpvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 17:37:50 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1290D10002A;
-        Fri,  8 Nov 2019 17:37:50 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 064AF2C38AC;
-        Fri,  8 Nov 2019 17:37:50 +0100 (CET)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 8 Nov 2019
- 17:37:49 +0100
-Received: from localhost (10.48.0.192) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 8 Nov 2019 17:37:49 +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <alexandre.torgue@st.com>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <fabrice.gasnier@st.com>
-Subject: [PATCH 2/2] ARM: dts: stm32: add ADC support to stm32mp157c-ed1
-Date:   Fri, 8 Nov 2019 17:37:39 +0100
-Message-ID: <1573231059-395-3-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
-References: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
+        Fri, 8 Nov 2019 11:38:23 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:33050 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbfKHQiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:38:23 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iT7H4-0002KZ-2x; Fri, 08 Nov 2019 17:38:14 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        finley.xiao@rock-chips.com, zhangqing@rock-chips.com,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH 1/5] clk: rockchip: Add div50 clock-ids for sdmmc on px30 and nandc
+Date:   Fri, 08 Nov 2019 17:38:10 +0100
+Message-ID: <4980410.dClP0N2Ixt@diego>
+In-Reply-To: <20190917081903.25139-1-heiko@sntech.de>
+References: <20190917081903.25139-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-08_05:2019-11-08,2019-11-08 signatures=0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ADC support to stm32mp157c-ed1 board.
-Following ADC signals are dedicated for analog and routed to connectors:
-- ADC1/2 in0 (ANA0)
-- ADC1/2 in1 (ANA1)
-- ADC1 in6 (PF12)
-Configure ADC1 with these signals. But keep it disabled by default, so
-PF12 can be used as gpio by default.
-Add VDD and VDDA supplies to ADC on stm32mp157c-ed1 board. This allows to
-get full ADC analog performances in case VDDA is below 2.7V (not the case
-by default).
+Am Dienstag, 17. September 2019, 10:18:59 CET schrieb Heiko Stuebner:
+> From: Finley Xiao <finley.xiao@rock-chips.com>
+> 
+> EMMC and SDIO already have these clock-ids (still unused) only sdmmc is
+> missing them, so fix that.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+applied all 5 for 5.5
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index b8cc0fb..d889813 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -89,6 +89,22 @@
- 	};
- };
- 
-+&adc {
-+	/* ANA0, ANA1 are dedicated pins and don't need pinctrl: only in6. */
-+	pinctrl-0 = <&adc1_in6_pins_a>;
-+	pinctrl-names = "default";
-+	vdd-supply = <&vdd>;
-+	vdda-supply = <&vdda>;
-+	vref-supply = <&vdda>;
-+	status = "disabled";
-+	adc1: adc@0 {
-+		st,adc-channels = <0 1 6>;
-+		/* 16.5 ck_cycles sampling time */
-+		st,min-sample-time-nsecs = <400>;
-+		status = "okay";
-+	};
-+};
-+
- &dac {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&dac_ch1_pins_a &dac_ch2_pins_a>;
--- 
-2.7.4
 
