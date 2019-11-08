@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F73C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D5BFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DED521848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27FC20869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573232503;
-	bh=kzlgTQkG1R1MYvXiLB+EEi+LR7BxeVnjf/aJMUBqADw=;
+	s=default; t=1573232506;
+	bh=VVtq+ZHdbjrlTwd/SCnm4uvq7L7ueujETZx9zl4iAGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BRh0bHTcjEsw3CnMTdzX6jHogiZOmm29ZxH+neKgycREUTGnZmtaU9x1glKVDN39c
-	 XR+2A4Uo1Wk8b9LVuMBGpm/bnA5Cd5pjArtFZxZ0KRhesmKUToJHhLl4xYb00wBaD4
-	 EoJ6eA9ZI6zhZ1RYdVA8ltz84/iO4hDQBKDqPi+I=
+	b=z5IKb6mREesLLlMkDglEm0N2BEiSOSAJ3Am8cQQDQqpv0wLAcmehKgfHiRQaNeacl
+	 CDuANPjoBYcnNnCWdcoWLtT+Wlz1i1cxrcr6BR/RLtmRYlFjOA//My3YzA6smhIobQ
+	 uc4t6HObVb400srFskGfnmbZXEzQ0LuGAl4dm03w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbfKHRBm (ORCPT
+        id S1730510AbfKHRBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:01:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 12:01:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729232AbfKHRBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:01:39 -0500
+        id S1728734AbfKHRBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:01:43 -0500
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95EB721D7E;
-        Fri,  8 Nov 2019 17:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78A5F21924;
+        Fri,  8 Nov 2019 17:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573232499;
-        bh=kzlgTQkG1R1MYvXiLB+EEi+LR7BxeVnjf/aJMUBqADw=;
+        s=default; t=1573232502;
+        bh=VVtq+ZHdbjrlTwd/SCnm4uvq7L7ueujETZx9zl4iAGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VviKsmgq2Tt9rr+MDGQITpsAKGIPvYSnn9a1+KfqrGSBXH1Uj7H7EVsR3P9RoFLRH
-         9VjGBZorIo9ijF2ERfJULRCDiDnSR39b39roKT4YooZqYfrBhM7dQWWId5lFyMSnod
-         +RnYKmJxOvs9aNXG866OWneGK5uStUPHhLMIHYaQ=
+        b=YUa1yoEc+Oh4+7c5Af2VchosNGv2bBcCTGJQqem5RTN2ec+m0vFv2pfV/XmoM+JOY
+         bdqQi841G7zyMtYyjENHqVGoXCClsC/RUl4ZOihf2FqGe55wW8edq0ymGNm63qG2vm
+         SP+GQB8maD3cEt16jtgShBi8H4QwIgsDxLQnWXVY=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Yunjae Lee <lyj7694@gmail.com>,
@@ -56,9 +56,9 @@ Cc:     Will Deacon <will@kernel.org>, Yunjae Lee <lyj7694@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
         Boqun Feng <boqun.feng@gmail.com>, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH 03/13] READ_ONCE: Allow __READ_ONCE_SIZE cases to be overridden by the architecture
-Date:   Fri,  8 Nov 2019 17:01:10 +0000
-Message-Id: <20191108170120.22331-4-will@kernel.org>
+Subject: [PATCH 04/13] vhost: Remove redundant use of read_barrier_depends() barrier
+Date:   Fri,  8 Nov 2019 17:01:11 +0000
+Message-Id: <20191108170120.22331-5-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108170120.22331-1-will@kernel.org>
 References: <20191108170120.22331-1-will@kernel.org>
@@ -69,66 +69,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The meat and potatoes of 'READ_ONCE()' is defined by the
-'__READ_ONCE_SIZE()' macro, which uses volatile casts in an attempt to
-avoid tearing of byte, halfword, word and double-word accesses. Allow
-this to be overridden by the architecture code in the case that things
-like memory barriers are also required.
+Since commit 76ebbe78f739 ("locking/barriers: Add implicit
+smp_read_barrier_depends() to READ_ONCE()"), there is no need to use
+'smp_read_barrier_depends()' outside of the Alpha architecture code.
 
+Unfortunately, there is precisely >one< user in the vhost code, and
+there isn't an obvious 'READ_ONCE()' access making the barrier
+redundant. However, on closer inspection (thanks, Jason), it appears
+that vring synchronisation between the producer and consumer occurs via
+the 'avail_idx' field, which is followed up by an 'rmb()' in
+'vhost_get_vq_desc()', making the 'read_barrier_depends()' redundant on
+Alpha.
+
+Jason says:
+
+  | I'm also confused about the barrier here, basically in driver side
+  | we did:
+  |
+  | 1) allocate pages
+  | 2) store pages in indirect->addr
+  | 3) smp_wmb()
+  | 4) increase the avail idx (somehow a tail pointer of vring)
+  |
+  | in vhost we did:
+  |
+  | 1) read avail idx
+  | 2) smp_rmb()
+  | 3) read indirect->addr
+  | 4) read from indirect->addr
+  |
+  | It looks to me even the data dependency barrier is not necessary
+  | since we have rmb() which is sufficient for us to the correct
+  | indirect->addr and driver are not expected to do any writing to
+  | indirect->addr after avail idx is increased
+
+Remove the redundant barrier invocation.
+
+Suggested-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- include/asm-generic/rwonce.h | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ drivers/vhost/vhost.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/include/asm-generic/rwonce.h b/include/asm-generic/rwonce.h
-index abf326634ecd..2c2ac0948c94 100644
---- a/include/asm-generic/rwonce.h
-+++ b/include/asm-generic/rwonce.h
-@@ -33,13 +33,29 @@
- 
- #include <asm/barrier.h>
- 
-+#ifndef __read_once_size_1
-+#define __read_once_size_1(p)	(*(volatile __u8 *)(p))
-+#endif
-+
-+#ifndef __read_once_size_2
-+#define __read_once_size_2(p)	(*(volatile __u16 *)(p))
-+#endif
-+
-+#ifndef __read_once_size_4
-+#define __read_once_size_4(p)	(*(volatile __u32 *)(p))
-+#endif
-+
-+#ifndef __read_once_size_8
-+#define __read_once_size_8(p)	(*(volatile __u64 *)(p))
-+#endif
-+
- #define __READ_ONCE_SIZE						\
- ({									\
- 	switch (size) {							\
--	case 1: *(__u8 *)res = *(volatile __u8 *)p; break;		\
--	case 2: *(__u16 *)res = *(volatile __u16 *)p; break;		\
--	case 4: *(__u32 *)res = *(volatile __u32 *)p; break;		\
--	case 8: *(__u64 *)res = *(volatile __u64 *)p; break;		\
-+	case 1: *(__u8 *)res = __read_once_size_1(p); break;		\
-+	case 2: *(__u16 *)res = __read_once_size_2(p); break;		\
-+	case 4: *(__u32 *)res = __read_once_size_4(p); break;		\
-+	case 8: *(__u64 *)res = __read_once_size_8(p); break;		\
- 	default:							\
- 		barrier();						\
- 		__builtin_memcpy((void *)res, (const void *)p, size);	\
-@@ -59,6 +75,10 @@ void __read_once_size_nocheck(const volatile void *p, void *res, int size)
- 	__READ_ONCE_SIZE;
- }
- 
-+#undef __read_once_size_1
-+#undef __read_once_size_2
-+#undef __read_once_size_4
-+#undef __read_once_size_8
- #undef __READ_ONCE_SIZE
- 
- static __always_inline void __write_once_size(volatile void *p, void *res, int size)
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 36ca2cf419bf..865bc91b783c 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2128,11 +2128,6 @@ static int get_indirect(struct vhost_virtqueue *vq,
+ 		return ret;
+ 	}
+ 	iov_iter_init(&from, READ, vq->indirect, ret, len);
+-
+-	/* We will use the result as an address to read from, so most
+-	 * architectures only need a compiler barrier here. */
+-	read_barrier_depends();
+-
+ 	count = len / sizeof desc;
+ 	/* Buffers are chained via a 16 bit next field, so
+ 	 * we can have at most 2^16 of these. */
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
