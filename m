@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71576FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80563FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F3A21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4301E21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213287;
-	bh=BsYITncQjbDdzgjbZ7L3lXwyTDl12qrWP9tYAragwzg=;
+	s=default; t=1573213292;
+	bh=ij0fpTMs+VIPq+Mtv/Rltj5I1qlhRyELJ2VMzh8RZxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GG0pkIjAWgO3gF/KXYkOA+eFQw3EzZbcc8kKHO4y4wQXT/b1Xe4t3UM7HpJYJhdOs
-	 JGpHMmaImty0KInXkIbBQ9d2pZqCcmKsgTqZfxUvrugpR7E3zzERxl3ILXCZ803RCr
-	 zLJF6F/lP78wL+kstXuVWAfT7rqp/bZQ/CPzz7+A=
+	b=TGTuqRi+SCrUfiaco17+8g5eLCJ1os6YAVFcWy2jatrw8Ri9dYuEcNlffFHR2Fp5O
+	 VvhrkrSPihqI56a/DvbDM8UuyhcaWlGI/ixKMwLl8HP4jxRqrWO7T6Upy+VnGLI5uO
+	 WBCiZ7tyqcYkXaK3NJjB0O9ry2Df4fnIyzThLuRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389448AbfKHLl0 (ORCPT
+        id S2389489AbfKHLlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54572 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732718AbfKHLlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:18 -0500
+        id S2389416AbfKHLlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69EC322473;
-        Fri,  8 Nov 2019 11:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D4922245A;
+        Fri,  8 Nov 2019 11:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213278;
-        bh=BsYITncQjbDdzgjbZ7L3lXwyTDl12qrWP9tYAragwzg=;
+        s=default; t=1573213283;
+        bh=ij0fpTMs+VIPq+Mtv/Rltj5I1qlhRyELJ2VMzh8RZxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFYAvhRgntCDCwJ64gEI4rtGeINnZbIHXjxvsajh3EhbECgT1y2dzUh4jMXpQ4gEn
-         XgqmJUBnoLB4RAHLqxmowh6yUSnIrz45U55fMKGgod8FgEVkvesrt8BlSpepPKBtuE
-         Fx2ZrqawqduLbcUPLhLLdZRbvsduoyII+qPt/NaQ=
+        b=Gjku4gr6gd7QjHLvfcWCSLUZa+vwcVXii/7oZj2TBCggBD6S1LIRTj8ZNe4sdnnZD
+         IedGMBUxsXVCaXyRj/om1GoUsx2rBF/xk7HeGgMrohx4izpJUyWOuAmi/929EqD68j
+         D22tG//GnzhochFtcknHkwBgIRnQTKzcTLA9ArkU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Quinn Tran <quinn.tran@cavium.com>,
         Himanshu Madhani <himanshu.madhani@cavium.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 139/205] scsi: qla2xxx: Defer chip reset until target mode is enabled
-Date:   Fri,  8 Nov 2019 06:36:46 -0500
-Message-Id: <20191108113752.12502-139-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 144/205] scsi: qla2xxx: Fix port speed display on chip reset
+Date:   Fri,  8 Nov 2019 06:36:51 -0500
+Message-Id: <20191108113752.12502-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -62,69 +62,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Quinn Tran <quinn.tran@cavium.com>
 
-[ Upstream commit 93eca6135183f7a71e36acd47655a085ed11bcdc ]
+[ Upstream commit 5d74c87a20adcc77b19753c315ad9c320b2288be ]
 
-For target mode, any chip reset triggered before target mode is enabled will
-be held off until user is ready to enable.  This prevents the chip from
-starting or running before it is intended.
+Clear port speed value on chip reset.
 
 Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
 Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 60b6019a2fcae..bfbdec61b3c6e 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -6051,12 +6051,27 @@ qla2x00_do_dpc(void *data)
- 		if (test_and_clear_bit
- 		    (ISP_ABORT_NEEDED, &base_vha->dpc_flags) &&
- 		    !test_bit(UNLOADING, &base_vha->dpc_flags)) {
-+			bool do_reset = true;
-+
-+			switch (ql2x_ini_mode) {
-+			case QLA2XXX_INI_MODE_ENABLED:
-+				break;
-+			case QLA2XXX_INI_MODE_DISABLED:
-+				if (!qla_tgt_mode_enabled(base_vha))
-+					do_reset = false;
-+				break;
-+			case QLA2XXX_INI_MODE_DUAL:
-+				if (!qla_dual_mode_enabled(base_vha))
-+					do_reset = false;
-+				break;
-+			default:
-+				break;
-+			}
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 8f502505aa796..653d535e3052f 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -6502,6 +6502,7 @@ qla2x00_abort_isp_cleanup(scsi_qla_host_t *vha)
+ 	if (!(IS_P3P_TYPE(ha)))
+ 		ha->isp_ops->reset_chip(vha);
  
--			ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
--			    "ISP abort scheduled.\n");
--			if (!(test_and_set_bit(ABORT_ISP_ACTIVE,
-+			if (do_reset && !(test_and_set_bit(ABORT_ISP_ACTIVE,
- 			    &base_vha->dpc_flags))) {
--
-+				ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
-+				    "ISP abort scheduled.\n");
- 				if (ha->isp_ops->abort_isp(base_vha)) {
- 					/* failed. retry later */
- 					set_bit(ISP_ABORT_NEEDED,
-@@ -6064,10 +6079,9 @@ qla2x00_do_dpc(void *data)
- 				}
- 				clear_bit(ABORT_ISP_ACTIVE,
- 						&base_vha->dpc_flags);
-+				ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
-+				    "ISP abort end.\n");
- 			}
--
--			ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
--			    "ISP abort end.\n");
- 		}
- 
- 		if (test_and_clear_bit(FCPORT_UPDATE_NEEDED,
++	ha->link_data_rate = PORT_SPEED_UNKNOWN;
+ 	SAVE_TOPO(ha);
+ 	ha->flags.rida_fmt2 = 0;
+ 	ha->flags.n2n_ae = 0;
 -- 
 2.20.1
 
