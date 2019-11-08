@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E917FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F5FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C521222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480F7222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213641;
-	bh=yghk864Qu3p4uLxrXvRwD8kPFl/idh9sgYH6Bz1/LXI=;
+	s=default; t=1573213643;
+	bh=uvTzRYFfk/sJXWEWGYxYzMFli1kGT3IeXso2izXmZUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aX1VSgacvi9h0K5Xi0M7KAmrlQcZubUlmc78GoRUEXHuZ4Y+pAwnJGw4firZ5WtLO
-	 78cmd89ZKhDAFyVYCLVL5aV83zSoFbiTH7mRXR8VaOYP5ltZ0wFWtJ2ZdunXdKA9/i
-	 ov8Si65TXmtrgh26zsZjHP7KsUPEGzOMy7svnFGI=
+	b=Y6dLptTxO4DC4a7a5vBvN+tZ94B/NaNxCd+9GKJfDbOQEjRZjbFgRqB0W9wtP7nIL
+	 PPamMCm7EZfCrdZZEANG9AkdS9p4Y/DFasjKqsR1GjQ85+CpXwakm/uskmhc6uT63Q
+	 Ti4hSJ3kAhjZxRYS5dKzmqhZGvisXy2/HxQXPOG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403840AbfKHLrU (ORCPT
+        id S2391509AbfKHLrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35540 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391509AbfKHLrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:14 -0500
+        id S2391456AbfKHLrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B89BC21D82;
-        Fri,  8 Nov 2019 11:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6266222C2;
+        Fri,  8 Nov 2019 11:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213633;
-        bh=yghk864Qu3p4uLxrXvRwD8kPFl/idh9sgYH6Bz1/LXI=;
+        s=default; t=1573213635;
+        bh=uvTzRYFfk/sJXWEWGYxYzMFli1kGT3IeXso2izXmZUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WRKvW1jlFaUI6u+nD1BQQV+I6a3TokhnRxSBFPRN9Avc1a2koE3lEhwMpBpREsmOc
-         CLlrq7Qju0zAlJxAHjGe1OTCFP2dPgxmpExgPJtGCEqnZZ7keaXtDsd/gLOofEW3r6
-         YLt07Z3LawQp86NDq2ebcI19Zz3SKbW+yEKelR7k=
+        b=xIyMTGRiwXycc+1Oftgy2NCNEiVNmDenFKTninQUNuHN+ka7Oll41lviKgcCTF9Vd
+         Fxfo6/Jy77rPiaxTCZw7k2LztNBCCQb6jzu0LFc8nFkkLVNvwoe3aNlZM44yoYV/34
+         u7MecPoq20D4EYFZzZwfLtheI0dkZlmxbTn38hXU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Banajit Goswami <bgoswami@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 60/64] component: fix loop condition to call unbind() if bind() fails
-Date:   Fri,  8 Nov 2019 06:45:41 -0500
-Message-Id: <20191108114545.15351-60-sashal@kernel.org>
+Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        Jiri Benc <jbenc@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 62/64] ip_gre: fix parsing gre header in ipgre_err
+Date:   Fri,  8 Nov 2019 06:45:43 -0500
+Message-Id: <20191108114545.15351-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,50 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Banajit Goswami <bgoswami@codeaurora.org>
+From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-[ Upstream commit bdae566d5d9733b6e32b378668b84eadf28a94d4 ]
+[ Upstream commit b0350d51f001e6edc13ee4f253b98b50b05dd401 ]
 
-During component_bind_all(), if bind() fails for any
-particular component associated with a master, unbind()
-should be called for all previous components in that
-master's match array, whose bind() might have completed
-successfully. As per the current logic, if bind() fails
-for the component at position 'n' in the master's match
-array, it would start calling unbind() from component in
-'n'th position itself and work backwards, and will always
-skip calling unbind() for component in 0th position in the
-master's match array.
-Fix this by updating the loop condition, and the logic to
-refer to the components in master's match array, so that
-unbind() is called for all components starting from 'n-1'st
-position in the array, until (and including) component in
-0th position.
+gre_parse_header stops parsing when csum_err is encountered, which means
+tpi->key is undefined and ip_tunnel_lookup will return NULL improperly.
 
-Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch introduce a NULL pointer as csum_err parameter. Even when
+csum_err is encountered, it won't return error and continue parsing gre
+header as expected.
+
+Fixes: 9f57c67c379d ("gre: Remove support for sharing GRE protocol hook.")
+Reported-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/component.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/ipv4/gre_demux.c | 7 ++++---
+ net/ipv4/ip_gre.c    | 9 +++------
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 89b032f2ffd22..08da6160e94dd 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -461,9 +461,9 @@ int component_bind_all(struct device *master_dev, void *data)
+diff --git a/net/ipv4/gre_demux.c b/net/ipv4/gre_demux.c
+index b798862b6be5d..7efe740c06ebf 100644
+--- a/net/ipv4/gre_demux.c
++++ b/net/ipv4/gre_demux.c
+@@ -86,13 +86,14 @@ int gre_parse_header(struct sk_buff *skb, struct tnl_ptk_info *tpi,
+ 
+ 	options = (__be32 *)(greh + 1);
+ 	if (greh->flags & GRE_CSUM) {
+-		if (skb_checksum_simple_validate(skb)) {
++		if (!skb_checksum_simple_validate(skb)) {
++			skb_checksum_try_convert(skb, IPPROTO_GRE, 0,
++						 null_compute_pseudo);
++		} else if (csum_err) {
+ 			*csum_err = true;
+ 			return -EINVAL;
  		}
  
- 	if (ret != 0) {
--		for (; i--; )
--			if (!master->match->compare[i].duplicate) {
--				c = master->match->compare[i].component;
-+		for (; i > 0; i--)
-+			if (!master->match->compare[i - 1].duplicate) {
-+				c = master->match->compare[i - 1].component;
- 				component_unbind(c, master, data);
- 			}
+-		skb_checksum_try_convert(skb, IPPROTO_GRE, 0,
+-					 null_compute_pseudo);
+ 		options++;
  	}
+ 
+diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
+index 576f705d81809..9609ad71dd260 100644
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -224,13 +224,10 @@ static void gre_err(struct sk_buff *skb, u32 info)
+ 	const int type = icmp_hdr(skb)->type;
+ 	const int code = icmp_hdr(skb)->code;
+ 	struct tnl_ptk_info tpi;
+-	bool csum_err = false;
+ 
+-	if (gre_parse_header(skb, &tpi, &csum_err, htons(ETH_P_IP),
+-			     iph->ihl * 4) < 0) {
+-		if (!csum_err)		/* ignore csum errors. */
+-			return;
+-	}
++	if (gre_parse_header(skb, &tpi, NULL, htons(ETH_P_IP),
++			     iph->ihl * 4) < 0)
++		return;
+ 
+ 	if (type == ICMP_DEST_UNREACH && code == ICMP_FRAG_NEEDED) {
+ 		ipv4_update_pmtu(skb, dev_net(skb->dev), info,
 -- 
 2.20.1
 
