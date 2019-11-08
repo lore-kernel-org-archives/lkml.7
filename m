@@ -2,188 +2,103 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E3BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA02AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C805B20865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32C720865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:46:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyHZ5XeS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XI94blL8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfKHQpy (ORCPT
+        id S1726976AbfKHQqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:45:54 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39020 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfKHQpy (ORCPT
+        Fri, 8 Nov 2019 11:46:42 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43950 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfKHQqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:45:54 -0500
-Received: by mail-lj1-f195.google.com with SMTP id p18so6914376ljc.6;
-        Fri, 08 Nov 2019 08:45:52 -0800 (PST)
+        Fri, 8 Nov 2019 11:46:42 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f24so1946182lfh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 08:46:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gCwDRHsjMshwUjrnqGW1EzKHumkWqiiCQKHVnFSnF9E=;
-        b=RyHZ5XeSBZdOFsYP3XbnSFbcW5JAvJ/lbSGnoyyZ78hyCwaQ2x+kSZ1DTXU6wg3ilt
-         RZEsOTsq7qqpn+fTm6ATTEJ0x0Y7Fx82cBjpl39ESZlVYf2xLYTTMst7w9wnhuMfS8je
-         Nya4qVRhOJxtgYH8OLEG5jJ4+7irdC2X8rJumxzR7qMDHHL3hi3GRIZLH9wtJRDhYb4l
-         F66cP6zPTPXFUc7nD05c4JjXENsNCf+s4m6UZCMuU5MUAO1IrA02LFpOctaiJBIHcAf+
-         e2meX7kS5gGLV+eyO6q+BerCnKrQNv45tfFD6dSsnrz2q+OVJuYhk5n5l8N69Xrl6TCg
-         Y1xw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N1YtJwBdMz8DfJCnnNe85KyIPh5dMFDmxUzXGxWKf0s=;
+        b=XI94blL8CWNwIB6SaFlfGIZGpUFIk3NdYg1RBL23lQHZ4JayOudyrItuGmktqxnn6E
+         mS0lbOkMBJt28YmpiQeP5tYrmrTW5V04HfYFAclAyy7PSM5G0Bb0jLkfPD2Rmn8z+Ur1
+         GdOll4NDlqayun9wQKNvhEbjgR4OQrkpD0Y1fQVG7XUfpowkdMyqP0e39RSt5EbjbgQ9
+         NAwxG00MhVELq+CX7/JETTakbOkLTQ4zm8w22KjOgjSXW+l2hrAfXVKwRGwv5FdeG7m6
+         mlThYnIjRvni+/7JqAlNFsPozNilaeM2MnbA7Bi1Hmt8i9H6ZRbBbPKePeFO4hXbwIHR
+         V9Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gCwDRHsjMshwUjrnqGW1EzKHumkWqiiCQKHVnFSnF9E=;
-        b=tyT3HlhV/ppP7I73epp07k/BZQhWWyLvE52RPepYUilMDUI4XPrr5Unu22LMJCp+/q
-         ksD/MKCK8mi85LrqURaXE9O90kl8UyLv6I0TIvcQ5R7RYmsHA/GLy0JUiwwMlVrrv7xR
-         zsOp/ZVVGVmRig7D7jYuBWA4CTuFeiV4fOGWZ9EfYk8wvAUJbhkhtrnwTsWkQCif5LIQ
-         zS9+O6TyLo/W1SI8JA/Bg3lWZCltXtciDP3mHunFlDNo19NAQhWA5uhwyV76oJ7JuEYE
-         BveieJHEJeG1spztN/wB06uJC/aCSPlfpReOPOKqYEpcLbP/bWYhDzwxkSGwR5kpXrSU
-         7Leg==
-X-Gm-Message-State: APjAAAV2fcT27H3oKx/tAKKhUgX1nWpgwNEQxfKDLKMPQuQM8tSe4jN8
-        avuPVn87EB/kaqXqiYOrZYCx9dETKzg=
-X-Google-Smtp-Source: APXvYqxNeXNznXar9K/SaRmW1l/terky20bwTvI63gvGUqLPzCfSMQrwm9riTTcHnNu4NbIhrxwf8w==
-X-Received: by 2002:a2e:4703:: with SMTP id u3mr424645lja.126.1573231551883;
-        Fri, 08 Nov 2019 08:45:51 -0800 (PST)
-Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id d4sm2727416lfi.32.2019.11.08.08.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 08:45:51 -0800 (PST)
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
-        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
-        Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v4 2/3] asus_wmi: Support fan boost mode on FX505DY/FX705DY
-Date:   Fri,  8 Nov 2019 18:45:37 +0200
-Message-Id: <20191108164537.3123-1-leonmaxx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191108164317.2874-1-leonmaxx@gmail.com>
-References: <20191108164317.2874-1-leonmaxx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N1YtJwBdMz8DfJCnnNe85KyIPh5dMFDmxUzXGxWKf0s=;
+        b=CnUPS+KkRSDGVLMdrL6LsGGs2HQJwj/9Q+qMcyGPES7+UlNagZSle6+F6csUr4v6UA
+         B2NPQc0Xd4HJzxQF5mr7zhQ7J/OZhse82jLgrBhOqGpEP77/5fx96eDdQoerFh+vqwMW
+         isbh9E7yqo3QWZxeqPtVvYdL2pa0A1IBiX/eHZE81HEJTxqjudfpct/Em4ei1TvXVVN1
+         bfCPKw74oZYVi/0EgG9a+8HzJ9G5jQkWdAl1B4BZ/8kk6Z5P+YZksvl++E5GaP2rl4kE
+         wc4M4A8Bwfil1Cwa6NYeH3KfcbrUtmiIgr2VNHL/wFadg3pvHUy/ROJgK9cDAHZAMCwS
+         N9eQ==
+X-Gm-Message-State: APjAAAV7unkTNffTE32783oDPnsXtMwGMFgfR0+gS5HCP2911jj4gswE
+        5AGJ8WLpSweFkGc1+jxSZVgn8xsa4hqVDoRpymhZsg==
+X-Google-Smtp-Source: APXvYqyrgPD06+zE/pLgVNB1jEJeghnWUheO+58eCNXrXDcwSO6xfujh+eoKn5kJR0qa0sXuzYEo6Exc+LTBN13+rDY=
+X-Received: by 2002:ac2:5589:: with SMTP id v9mr2163012lfg.32.1573231599982;
+ Fri, 08 Nov 2019 08:46:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191108131553.027892369@infradead.org> <20191108131909.603037345@infradead.org>
+ <20191108143348.GB123156@google.com>
+In-Reply-To: <20191108143348.GB123156@google.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 8 Nov 2019 17:46:28 +0100
+Message-ID: <CAKfTPtBM_AKD7iMyPo6Wv=FOvG3bBaDvZLyrD=RZHrdUzaQNxg@mail.gmail.com>
+Subject: Re: [PATCH 4/7] sched: Optimize pick_next_task()
+To:     Quentin Perret <qperret@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, ktkhai@virtuozzo.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On ASUS FX505DY/FX705DY laptops fan boost mode is same as in other
-TUF laptop models but have different ACPI device ID and different hotkey
-code.
+On Fri, 8 Nov 2019 at 15:33, Quentin Perret <qperret@google.com> wrote:
+>
+> On Friday 08 Nov 2019 at 14:15:57 (+0100), Peter Zijlstra wrote:
+> > Ever since we moved the sched_class defenitions into their own files,
+>
+> s/defenitions/definitions
+>
+> > the constant expression {fair,idle}_sched_class.pick_next_task() is
+> > not in fact a compile time constant anymore and results in an indirect
+> > call (barring LTO).
+> >
+> > Fix that by exposing pick_next_task_{fair,idle}() directly, this gets
+> > rid of the indirect call (and RETPOLINE) on the fast path.
+> >
+> > Also remove the unlikely() from the idle case, it is in fact /the/ way
+> > we select idle -- and that is a very common thing to do.
+>
+> I assumed this was to optimize the case where we did find a cfs task to
+> run. That is, we can afford to hit the unlikely case when there is no
+> work to do after, but when there is, we shouldn't spend time checking
+> the idle case. Makes sense ?
 
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c            | 29 ++++++++++++++++------
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 23 insertions(+), 7 deletions(-)
+I have the same understanding as Quentin
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 723aa4d969dc..4f9c0b99f352 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -61,6 +61,7 @@ MODULE_LICENSE("GPL");
- #define NOTIFY_KBD_BRTDWN		0xc5
- #define NOTIFY_KBD_BRTTOGGLE		0xc7
- #define NOTIFY_KBD_FBM			0x99
-+#define NOTIFY_KBD_FBM_2		0xae
- 
- #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
- 
-@@ -195,6 +196,7 @@ struct asus_wmi {
- 	int agfn_pwm;
- 
- 	bool fan_boost_mode_available;
-+	u32 fan_boost_mode_dev_id;
- 	u8 fan_boost_mode_mask;
- 	u8 fan_boost_mode;
- 
-@@ -1611,15 +1613,12 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
- 
- /* Fan mode *******************************************************************/
- 
--static int fan_boost_mode_check_present(struct asus_wmi *asus)
-+static int fan_boost_mode_check_device(struct asus_wmi *asus, u32 dev_id)
- {
- 	u32 result;
- 	int err;
- 
--	asus->fan_boost_mode_available = false;
--
--	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FAN_BOOST_MODE,
--				    &result);
-+	err = asus_wmi_get_devstate(asus, dev_id, &result);
- 	if (err) {
- 		if (err == -ENODEV)
- 			return 0;
-@@ -1630,12 +1629,27 @@ static int fan_boost_mode_check_present(struct asus_wmi *asus)
- 	if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
- 			(result & ASUS_FAN_BOOST_MODES_MASK)) {
- 		asus->fan_boost_mode_available = true;
-+		asus->fan_boost_mode_dev_id = dev_id;
- 		asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
- 	}
- 
- 	return 0;
- }
- 
-+static int fan_boost_mode_check_present(struct asus_wmi *asus)
-+{
-+	int err;
-+
-+	asus->fan_boost_mode_available = false;
-+	err = fan_boost_mode_check_device(asus, ASUS_WMI_DEVID_FAN_BOOST_MODE);
-+
-+	if (err || asus->fan_boost_mode_available)
-+		return err;
-+
-+	return fan_boost_mode_check_device(asus,
-+					   ASUS_WMI_DEVID_FAN_BOOST_MODE_2);
-+}
-+
- static int fan_boost_mode_write(struct asus_wmi *asus)
- {
- 	int err;
-@@ -1645,7 +1659,7 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
- 	value = asus->fan_boost_mode;
- 
- 	pr_info("Set fan boost mode: %u\n", value);
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_FAN_BOOST_MODE, value,
-+	err = asus_wmi_set_devstate(asus->fan_boost_mode_dev_id, value,
- 				    &retval);
- 	if (err) {
- 		pr_warn("Failed to set fan boost mode: %d\n", err);
-@@ -2000,7 +2014,8 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 	}
- 
--	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
-+	if (asus->fan_boost_mode_available &&
-+			(code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_FBM_2)) {
- 		fan_boost_mode_switch_next(asus);
- 		return;
- 	}
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 60249e22e844..714782b193b3 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -58,6 +58,7 @@
- #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
- #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
- #define ASUS_WMI_DEVID_FAN_BOOST_MODE	0x00110018
-+#define ASUS_WMI_DEVID_FAN_BOOST_MODE_2	0x00120075
- 
- /* Misc */
- #define ASUS_WMI_DEVID_CAMERA		0x00060013
--- 
-2.23.0
-
+>
+> Thanks,
+> Quentin
