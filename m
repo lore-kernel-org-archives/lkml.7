@@ -2,60 +2,58 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C8FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317D1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B7A2178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A2A218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239358;
-	bh=3Lntj0YJJmf+8l/kLro8iPsjmwtakiQ9erPUHVvONrw=;
+	s=default; t=1573239362;
+	bh=owHE3ZeIOv3rXmhivjkG2BGzQ+rYjTJYyoFrtT9JlVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f79CB5qE3B/OOZRmx4ejjBwDRVXQt5xNz4tzFlc1P0Fcl2fhA5VliQwZUoGgcsN0J
-	 eZYWfRR5eZSPRxJTVsMX+JugFxih3FfiAh3MjdJfuVu3mBhQbcxHUGtfZLhzdXFIL2
-	 h1Dkew6O2n+LL3iCkVsTBGrk/z/QC4vVQRdhwakQ=
+	b=HiKvu8bQFkykLMK95g+JA/NcqBYupYjB/o6LZAUg68ejyog/M7TR2tJ7e5I53Ty6I
+	 jnM4mtRJnUTx/TfGZL4CDDrqh/ZuxM1U2hpg2h+Bh2sIZkJiHbyNX2nbfLzZh+LMPf
+	 lsA02RmKyzH0jX6raS1HMuAPxf2O2EM/II2OZ7do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387832AbfKHSzw (ORCPT
+        id S1732161AbfKHS4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:55:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53006 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:56:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387662AbfKHSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:55:36 -0500
+        id S2387848AbfKHSzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:55:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248ED20865;
-        Fri,  8 Nov 2019 18:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0BB5218AE;
+        Fri,  8 Nov 2019 18:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239336;
-        bh=3Lntj0YJJmf+8l/kLro8iPsjmwtakiQ9erPUHVvONrw=;
+        s=default; t=1573239348;
+        bh=owHE3ZeIOv3rXmhivjkG2BGzQ+rYjTJYyoFrtT9JlVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2k1sWYMp/SgybmED63y95CCViLVPinfgZbktAHvjXy9GT1lSrvgn89CR3sPWGpYq
-         E0LB6z53bpAf1/zyZYvf+ckqGxvRxGOtqH/S98pgXfB0yEihkldXmur6oqRRzmjChC
-         IAVvgd8wn83j6fQWBKP1109Z/UEMXeOlYSTBVuXY=
+        b=oakz9beQXkFsMB4WGOtcYvCUcS4gBwr6mNrFWooshVsayv8mUSVtYQSX+Ko+dtpkn
+         ljm1cqqqpQizUdBGKHJScfTZQAkfa2s1T7/T7hbpsLWg5IdYN9tpv+rA2SeKeOErlN
+         MAdKE3oDt5+qd8reR1locLtdPs6omYjOYqZduV70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
-        <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "David A. Long" <dave.long@linaro.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 43/75] ARM: bugs: add support for per-processor bug checking
-Date:   Fri,  8 Nov 2019 19:50:00 +0100
-Message-Id: <20191108174749.716102119@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 01/34] regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
+Date:   Fri,  8 Nov 2019 19:50:08 +0100
+Message-Id: <20191108174620.512838356@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
-References: <20191108174708.135680837@linuxfoundation.org>
+In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
+References: <20191108174618.266472504@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,77 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Axel Lin <axel.lin@ingics.com>
 
-Commit 9d3a04925deeabb97c8e26d940b501a2873e8af3 upstream.
+[ Upstream commit f64db548799e0330897c3203680c2ee795ade518 ]
 
-Add support for per-processor bug checking - each processor function
-descriptor gains a function pointer for this check, which must not be
-an __init function.  If non-NULL, this will be called whenever a CPU
-enters the kernel via which ever path (boot CPU, secondary CPU startup,
-CPU resuming, etc.)
+ti_abb_wait_txdone() may return -ETIMEDOUT when ti_abb_check_txdone()
+returns true in the latest iteration of the while loop because the timeout
+value is abb->settling_time + 1. Similarly, ti_abb_clear_all_txdone() may
+return -ETIMEDOUT when ti_abb_check_txdone() returns false in the latest
+iteration of the while loop. Fix it.
 
-This allows processor specific bug checks to validate that workaround
-bits are properly enabled by firmware via all entry paths to the kernel.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Boot-tested-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: David A. Long <dave.long@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Nishanth Menon <nm@ti.com>
+Link: https://lore.kernel.org/r/20190929095848.21960-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/proc-fns.h |    4 ++++
- arch/arm/kernel/bugs.c          |    4 ++++
- arch/arm/mm/proc-macros.S       |    3 ++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/regulator/ti-abb-regulator.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
---- a/arch/arm/include/asm/proc-fns.h
-+++ b/arch/arm/include/asm/proc-fns.h
-@@ -37,6 +37,10 @@ extern struct processor {
- 	 */
- 	void (*_proc_init)(void);
- 	/*
-+	 * Check for processor bugs
-+	 */
-+	void (*check_bugs)(void);
-+	/*
- 	 * Disable any processor specifics
- 	 */
- 	void (*_proc_fin)(void);
---- a/arch/arm/kernel/bugs.c
-+++ b/arch/arm/kernel/bugs.c
-@@ -5,6 +5,10 @@
+diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
+index d2f9942987535..6d17357b3a248 100644
+--- a/drivers/regulator/ti-abb-regulator.c
++++ b/drivers/regulator/ti-abb-regulator.c
+@@ -173,19 +173,14 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
+ 	while (timeout++ <= abb->settling_time) {
+ 		status = ti_abb_check_txdone(abb);
+ 		if (status)
+-			break;
++			return 0;
  
- void check_other_bugs(void)
- {
-+#ifdef MULTI_CPU
-+	if (processor.check_bugs)
-+		processor.check_bugs();
-+#endif
+ 		udelay(1);
+ 	}
+ 
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
  }
  
- void __init check_bugs(void)
---- a/arch/arm/mm/proc-macros.S
-+++ b/arch/arm/mm/proc-macros.S
-@@ -258,13 +258,14 @@
- 	mcr	p15, 0, ip, c7, c10, 4		@ data write barrier
- 	.endm
+ /**
+@@ -205,19 +200,14 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
  
--.macro define_processor_functions name:req, dabort:req, pabort:req, nommu=0, suspend=0
-+.macro define_processor_functions name:req, dabort:req, pabort:req, nommu=0, suspend=0, bugs=0
- 	.type	\name\()_processor_functions, #object
- 	.align 2
- ENTRY(\name\()_processor_functions)
- 	.word	\dabort
- 	.word	\pabort
- 	.word	cpu_\name\()_proc_init
-+	.word	\bugs
- 	.word	cpu_\name\()_proc_fin
- 	.word	cpu_\name\()_reset
- 	.word	cpu_\name\()_do_idle
+ 		status = ti_abb_check_txdone(abb);
+ 		if (!status)
+-			break;
++			return 0;
+ 
+ 		udelay(1);
+ 	}
+ 
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
+ }
+ 
+ /**
+-- 
+2.20.1
+
 
 
