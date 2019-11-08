@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D669C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3931EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7420E2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5E221924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214586;
-	bh=8C77Ah9eGNmpKFrXn+KY6E4yKZ1R8Yn9FxFLckt44Sg=;
+	s=default; t=1573214589;
+	bh=ENGAVoNEsilAix5+Fhardf+5+hp2R8Zkomic5SD8fds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGgx5GaVPwDnJVLKZ0v14h1sDmuPwtIz7lbC07ppMx5AHxUVCY/4qmramqYlRYEX+
-	 99TZnX2CrSbT81pO/G+OH6ABtrC7h/N22ctNqcs4veuW4vHYO8vcbNLPR8B0xY8QcB
-	 X/6/oX5ZZEcKzQxrPijY3DmbGPXuAo/GEQI22y6k=
+	b=PV4o5rhzYF/Is1mNJcDCUyqwWf/nGUPW+PYExuitnBxdTuyL8RJbcEnIU5p5lNGLb
+	 jQCwH4/Ylzm0GbxznDWnlXWnhjNG99yVQ6H0Bx4oKQG4u0smkgXLY2GXra4m2ihSl0
+	 0p7dXnus+h8AcH1rVppqsERrwIfjWZ61HIsqNyZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388120AbfKHLmu (ORCPT
+        id S2391575AbfKHMDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56942 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:03:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390159AbfKHLmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:47 -0500
+        id S2390189AbfKHLmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368C8222C5;
-        Fri,  8 Nov 2019 11:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C9021D82;
+        Fri,  8 Nov 2019 11:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213366;
-        bh=8C77Ah9eGNmpKFrXn+KY6E4yKZ1R8Yn9FxFLckt44Sg=;
+        s=default; t=1573213370;
+        bh=ENGAVoNEsilAix5+Fhardf+5+hp2R8Zkomic5SD8fds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lc9BkQgBg602v4bPkH5xpIqo61dR+xmj7J07vkqPmRu8Ejk7DRGv7xh41LvbHEUtj
-         SU2PhkaHCvpNBNraWzFi2gzJNSfFRck8d9z4K7If7UTs2i9zQgOyHiFn3JNi/CnliA
-         ZB9k3rTvBWBHKn01uEHYYNyMKlKkr/nBXn+tKQ3I=
+        b=ABcoPQ0fN6QvqwqBC9r/G8ICnBk9YKiUs/FZdvFB1plmGmODT9YaCXCg3qTQGGUA/
+         /jvZ2mIsVN0I7sRJEbBCsP7g7rfo/PBYCKtSuAgQ2OPO32dxjqcOQAO5VOa1UAf+E/
+         +9FvhrOXTCceAdSJfHk3MXfWX76SFPLPeUvVHitU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 194/205] power: reset: at91-poweroff: do not procede if at91_shdwc is allocated
-Date:   Fri,  8 Nov 2019 06:37:41 -0500
-Message-Id: <20191108113752.12502-194-sashal@kernel.org>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Tejun Heo <tj@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 197/205] kernfs: Fix range checks in kernfs_get_target_path
+Date:   Fri,  8 Nov 2019 06:37:44 -0500
+Message-Id: <20191108113752.12502-197-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,36 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-[ Upstream commit 9f1e44774be578fb92776add95f1fcaf8284d692 ]
+[ Upstream commit a75e78f21f9ad4b810868c89dbbabcc3931591ca ]
 
-There should be only one instance of struct shdwc in the system. This is
-referenced through at91_shdwc. Return in probe if at91_shdwc is already
-allocated.
+The terminating NUL byte is only there because the buffer is
+allocated with kzalloc(PAGE_SIZE, GFP_KERNEL), but since the
+range-check is off-by-one, and PAGE_SIZE==PATH_MAX, the
+returned string may not be zero-terminated if it is exactly
+PATH_MAX characters long.  Furthermore also the initial loop
+may theoretically exceed PATH_MAX and cause a fault.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/reset/at91-sama5d2_shdwc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/kernfs/symlink.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/reset/at91-sama5d2_shdwc.c b/drivers/power/reset/at91-sama5d2_shdwc.c
-index 0206cce328b3d..d9493e893d64e 100644
---- a/drivers/power/reset/at91-sama5d2_shdwc.c
-+++ b/drivers/power/reset/at91-sama5d2_shdwc.c
-@@ -246,6 +246,9 @@ static int __init at91_shdwc_probe(struct platform_device *pdev)
- 	if (!pdev->dev.of_node)
- 		return -ENODEV;
+diff --git a/fs/kernfs/symlink.c b/fs/kernfs/symlink.c
+index 305b220af45d3..162f43b80c84c 100644
+--- a/fs/kernfs/symlink.c
++++ b/fs/kernfs/symlink.c
+@@ -72,6 +72,9 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 		if (base == kn)
+ 			break;
  
-+	if (at91_shdwc)
-+		return -EBUSY;
++		if ((s - path) + 3 >= PATH_MAX)
++			return -ENAMETOOLONG;
 +
- 	at91_shdwc = devm_kzalloc(&pdev->dev, sizeof(*at91_shdwc), GFP_KERNEL);
- 	if (!at91_shdwc)
- 		return -ENOMEM;
+ 		strcpy(s, "../");
+ 		s += 3;
+ 		base = base->parent;
+@@ -88,7 +91,7 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 	if (len < 2)
+ 		return -EINVAL;
+ 	len--;
+-	if ((s - path) + len > PATH_MAX)
++	if ((s - path) + len >= PATH_MAX)
+ 		return -ENAMETOOLONG;
+ 
+ 	/* reverse fillup of target string from target to base */
 -- 
 2.20.1
 
