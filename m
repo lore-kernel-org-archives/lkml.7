@@ -2,136 +2,160 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBEDFC6199
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F4FFC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2302C214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:11:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RGuUvakd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nHIXCDK3"
+	by mail.kernel.org (Postfix) with ESMTP id D18AC2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbfKHVLF (ORCPT
+        id S1732533AbfKHVLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:11:05 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:33116 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHVLF (ORCPT
+        Fri, 8 Nov 2019 16:11:07 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:58533 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731386AbfKHVLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 16:11:05 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F279C60D51; Fri,  8 Nov 2019 21:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573247464;
-        bh=gMzql+Ix2g0NxIDneQUQZiZH3kBmF6KyzpHa+IqKM94=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RGuUvakd1kfgtcNvFquFLz8H9xKEocpsXph56HyjnYhoGW9GpMykKDJl2zZdU9wzl
-         3y2cSUYy4mtHGzeuayqOc7jjBzDRZX/vC+kfLY7I2AqKq5tBAk64CF+0mxhthuugXd
-         qM6fU80B0S3eAoBcQfZglxLeC8QlM6/+FVEedU3I=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E743E60D51;
-        Fri,  8 Nov 2019 21:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573247463;
-        bh=gMzql+Ix2g0NxIDneQUQZiZH3kBmF6KyzpHa+IqKM94=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nHIXCDK3uVtepwNXZsxda7MsFEOjFXJ3/QVRJCXVdvwGrq5IL5HTzSqHP5OGMiR89
-         EHoGjRedfI1cRqhTBumL8GIJLLIUldlLz4Ue9P1uANpRHxMXZ11TO42rB+O+7VURH/
-         tC8LuCL0bqthYHqWxrfvZUXg3waIiBHsUBhHz/vo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E743E60D51
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     david.brown@linaro.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v7 0/6] MSM8998 Multimedia Clock Controller
-Date:   Fri,  8 Nov 2019 14:10:50 -0700
-Message-Id: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MrQR7-1i6FJk2Bdf-00oUk0; Fri, 08 Nov 2019 22:10:27 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-um@lists.infradead.org
+Subject: [PATCH 05/23] y2038: vdso: change time_t to __kernel_old_time_t
+Date:   Fri,  8 Nov 2019 22:07:25 +0100
+Message-Id: <20191108210824.1534248-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:o8Zkr+sOZ52wm0ae45/RQryAsK7xYXnsT+HPUpQaufkmPH+Q6/t
+ Mx1QjONjSFAcKcXg6d+qmIO5Nz2Z1PzDnxY6Ir3M0ox/+vbOAVauXJZo7+cMsdRcRszJBe7
+ Aj8ZN5RLd1R69CpmSVEU9MTURTureJNFvVMuvJJDqIIb4Y4IhYa+4XE+s6Ccc/3w7U5VVCC
+ UD2jKhDgaH7FjqUd1a5VA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1Ts/01x3JdM=:/uunyXLl4bvJWCavpfEcb/
+ 9UoHBVyzqBkcj75fodAjDhjhAyjHi2SMlxz2uJbRFRUmXsG6e6eAogVfcdfts7c47d1reojiA
+ KrgDDY253RADofyZtnh5viCrKGzvxm4TKGABjrnBJ0bt1w3KfIWjCYWav1trSnZDSOZooRHfO
+ WWwwqG5TUQys5Sv+D10PdDh1BmV1PkR0uQvqi3CJd4F1tM+ZGkEG/J9xbVfFsiF8+0dbqDPUQ
+ hr3zgVglY92iRK6SwZ3FDgYMfVogf9R2bfVq1QDRbmGdrtFL2VujlHW7nH5WANGKBkOXxZHrO
+ gXnN2qQQM31mucJGqTVaHLg+IF8tEGR7WvtN5gFD771I0OsvEOSfwY4xnWz6Z8mPCLoTrrfg0
+ iO1f2ahEO0l71Q3MDRR9pChW632vnUMGqXR0Ky4OTVKsj1JqLoKg32dGg6Nf2QnNk4+i5Nn4N
+ 8P3pt9RnLY3nZ8uRAevHKgNdEPEzkueh4uRRA1fLHzn7oheQgyQ958Xc84M2+/zWIdm4pq7h/
+ ReSWhlc/Z0PIHrf6SCL/pkAUlTZ0nXkqcG2+JlONuaSiCIQ1UBPDIwAPipVV24b3qpbmW4+uZ
+ ELTyVt3T3AirdIi6KcrlMebb/OnK4+Dpa2LEw92WHUcZ8wj70YTk2UptblgI1j60iH9hZBR7V
+ DB3kobMcaX8Q7kGMdND8zIaTooRs/2vF0yOcrx4+3ujrUla+IZhROs6oWdLsansep6RTDDz3R
+ 3oqTybQw5FsZaFfFrXLoFrDZGx9IkW9T7vaKNmv/iEf/bxmME60Q+D50eSBPH5cE5flykxY1y
+ 89ZLtDAK60bylXgCvCP2fF5he1cpwrsVM+CNavdYFN4bEulPNhEaj7Ri0q4m9ntK04XxaoFqh
+ BWMSp+QkU2j1ZURv5T0w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The multimedia clock controller (mmcc) is the main clock controller for
-the multimedia subsystem and is required to enable things like display and
-camera.
+Only x86 uses the 'time' syscall in vdso, so change that to
+__kernel_old_time_t as a preparation for removing 'time_t' and
+'__kernel_time_t' later.
 
-v7:
--port to gcc.yaml.  Drop reviewed-by for DT changes as they got completely
-rewritten
--drop "clk: qcom: smd: Add XO clock for MSM8998".  Will need to find another
-solution and this is not blocking right now
--convert mmcc to yaml
--drop errant clk.h include
--use blank entries in the DT when no clock is available
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/entry/vdso/vclock_gettime.c  | 6 +++---
+ arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
+ arch/x86/um/vdso/um_vdso.c            | 4 ++--
+ lib/vdso/gettimeofday.c               | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-v6:
--drop clk_get from mmcc clock provider
-
-v5:
--handle the case where gcc uses rpmcc for xo, but the link is not specified in dt
--have gcc select rpmcc
-
-v4:
--fix makefile to use correct config item
--pick up tags
--fix ordering of clocks and clock-names in dt
--drop MODULE_ALIAS
--wait for xo in mmcc since that was found to be useful in some debug configs
-
-v3:
--Rebase onto linux-next to get the final version of the clk parent rewrite
-series
--Moved the bindings header to the bindings patch per Rob
--Made xo manditory for GCC to work around the lack of clk orphan probe defer
-to avoid the uart console glitch
-
-v2:
--Rebased on the "Rewrite clk parent handling" series and updated to the clk init
-mechanisms introduced there.
--Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
-"incorrectly" during late init
--Corrected the name of the XO clock to "xo"
--Dropped the fake XO clock in GCC to prevent a namespace conflict
--Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
--Cleaned up the weird newlines in the added DT node
--Added DT header file to msm8998 DT for future clients
-
-Jeffrey Hugo (6):
-  dt-bindings: clock: Document external clocks for MSM8998 gcc
-  arm64: dts: msm8998: Add xo clock to gcc node
-  dt-bindings: clock: Convert qcom,mmcc to DT schema
-  dt-bindings: clock: Add support for the MSM8998 mmcc
-  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
-  arm64: dts: qcom: msm8998: Add mmcc node
-
- .../devicetree/bindings/clock/qcom,gcc.yaml   |   47 +-
- .../devicetree/bindings/clock/qcom,mmcc.txt   |   28 -
- .../devicetree/bindings/clock/qcom,mmcc.yaml  |   96 +
- arch/arm64/boot/dts/qcom/msm8998.dtsi         |   40 +
- drivers/clk/qcom/Kconfig                      |    9 +
- drivers/clk/qcom/Makefile                     |    1 +
- drivers/clk/qcom/mmcc-msm8998.c               | 2913 +++++++++++++++++
- include/dt-bindings/clock/qcom,mmcc-msm8998.h |  210 ++
- 8 files changed, 3302 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
- create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
- create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
-
+diff --git a/arch/x86/entry/vdso/vclock_gettime.c b/arch/x86/entry/vdso/vclock_gettime.c
+index d9ff616bb0f6..7d70935b6758 100644
+--- a/arch/x86/entry/vdso/vclock_gettime.c
++++ b/arch/x86/entry/vdso/vclock_gettime.c
+@@ -15,7 +15,7 @@
+ #include "../../../../lib/vdso/gettimeofday.c"
+ 
+ extern int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz);
+-extern time_t __vdso_time(time_t *t);
++extern __kernel_old_time_t __vdso_time(__kernel_old_time_t *t);
+ 
+ int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+ {
+@@ -25,12 +25,12 @@ int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+ int gettimeofday(struct __kernel_old_timeval *, struct timezone *)
+ 	__attribute__((weak, alias("__vdso_gettimeofday")));
+ 
+-time_t __vdso_time(time_t *t)
++__kernel_old_time_t __vdso_time(__kernel_old_time_t *t)
+ {
+ 	return __cvdso_time(t);
+ }
+ 
+-time_t time(time_t *t)	__attribute__((weak, alias("__vdso_time")));
++__kernel_old_time_t time(__kernel_old_time_t *t)	__attribute__((weak, alias("__vdso_time")));
+ 
+ 
+ #if defined(CONFIG_X86_64) && !defined(BUILD_VDSO32_64)
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index 76e62bcb8d87..bba5bfdb2a56 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -194,7 +194,7 @@ bool emulate_vsyscall(unsigned long error_code,
+ 		break;
+ 
+ 	case 1:
+-		if (!write_ok_or_segv(regs->di, sizeof(time_t))) {
++		if (!write_ok_or_segv(regs->di, sizeof(__kernel_old_time_t))) {
+ 			ret = -EFAULT;
+ 			goto check_fault;
+ 		}
+diff --git a/arch/x86/um/vdso/um_vdso.c b/arch/x86/um/vdso/um_vdso.c
+index 371724cf70da..2112b8d14668 100644
+--- a/arch/x86/um/vdso/um_vdso.c
++++ b/arch/x86/um/vdso/um_vdso.c
+@@ -37,7 +37,7 @@ int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+ int gettimeofday(struct __kernel_old_timeval *, struct timezone *)
+ 	__attribute__((weak, alias("__vdso_gettimeofday")));
+ 
+-time_t __vdso_time(time_t *t)
++__kernel_old_time_t __vdso_time(__kernel_old_time_t *t)
+ {
+ 	long secs;
+ 
+@@ -47,7 +47,7 @@ time_t __vdso_time(time_t *t)
+ 
+ 	return secs;
+ }
+-time_t time(time_t *t) __attribute__((weak, alias("__vdso_time")));
++__kernel_old_time_t time(__kernel_old_time_t *t) __attribute__((weak, alias("__vdso_time")));
+ 
+ long
+ __vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 45f57fd2db64..9ecfd3b547ba 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -164,10 +164,10 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+ }
+ 
+ #ifdef VDSO_HAS_TIME
+-static __maybe_unused time_t __cvdso_time(time_t *time)
++static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time)
+ {
+ 	const struct vdso_data *vd = __arch_get_vdso_data();
+-	time_t t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
++	__kernel_old_time_t t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
+ 
+ 	if (time)
+ 		*time = t;
 -- 
-2.17.1
+2.20.0
 
