@@ -2,106 +2,81 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E159C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C45BFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1B02084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F0E207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214427;
-	bh=RloCVusTu2nmMd+17/acGPUt6gZueL7/1blIIxEjGAg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XcJqlmJq7JeR4H/1thYK5lF7MrF2DaISHTzdlDIyWs7HGWOYlAX+uB2JdLO58KOi5
-	 C4sR3oiuJRXkI5OtGl/YR48BWjM9fjQqlE8YoURb0eJEEtVPbholX08zm7LQZ4KlQw
-	 06fc8Zgsq26t8j+4sv50BFzJXPg0ZW+SDvJljmls=
+	s=default; t=1573214431;
+	bh=XJkOJnmVzzu1WF4iJ88czizyhtISED7rDbwYuR6TvZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v9GiajoH69+RbUcZ6o3TXTMdc3KTEwVDsB9qvDJ3vhf+QdhIv2UeYiQ3N7hguTVth
+	 5uiU6bG3dV/bz+jYojuuEEaLm6EBxPR0MkrhDwW8YglhIlKx5Zu7v9xi9oUWvQDpsA
+	 9qQltDiKjx8Rxro6kfhMA1jcF4heeepJ2xlPpZ+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391755AbfKHMAZ (ORCPT
+        id S2389129AbfKHMA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:00:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:00:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387999AbfKHLnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:51 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387999AbfKHMA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 07:00:27 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42F04222C2;
-        Fri,  8 Nov 2019 11:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1262207FA;
+        Fri,  8 Nov 2019 12:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213431;
-        bh=RloCVusTu2nmMd+17/acGPUt6gZueL7/1blIIxEjGAg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yEEnwzFv7wao9AGDZse6BkcqLBuZElcBLKMWrHUj+914GgWOfRFmFaz5jeF8FExu+
-         Rue7Mrta1lpTdQrKQ9ASJ7M0XL6/plasdgrDwfsa1HbJME7/wzsnSDbLMyI2KuD2mY
-         Lqb6uqcb02zW+uf0yJWq7gsQ8NIayvTUlsYloFFs=
+        s=default; t=1573214427;
+        bh=XJkOJnmVzzu1WF4iJ88czizyhtISED7rDbwYuR6TvZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i49W6rhXXlR3HhamWhhUZcqfI602+zidDSeIgJasb8YLAgymiEEenGgv5XJWn3lpX
+         cvgkKn2T6v2Qnf62hWbUnnmm+lAsrXa2W7cUZvCc2RjV9PtresLozTntziGK2t9NiQ
+         llEv/z2UtN3QJDSc1fvAn0nHojYUxZZR68wTCuyg=
+Date:   Fri, 8 Nov 2019 07:00:25 -0500
 From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 029/103] iwlwifi: mvm: avoid sending too many BARs
-Date:   Fri,  8 Nov 2019 06:41:54 -0500
-Message-Id: <20191108114310.14363-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
-References: <20191108114310.14363-1-sashal@kernel.org>
+To:     Julian Wiedmann <jwi@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 204/205] s390/qeth: limit csum offload
+ erratum to L3 devices
+Message-ID: <20191108120025.GM4787@sasha-vm>
+References: <20191108113752.12502-1-sashal@kernel.org>
+ <20191108113752.12502-204-sashal@kernel.org>
+ <2e4553d6-de1f-bb61-33e4-10a5c23f0aa7@linux.ibm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <2e4553d6-de1f-bb61-33e4-10a5c23f0aa7@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+On Fri, Nov 08, 2019 at 12:50:24PM +0100, Julian Wiedmann wrote:
+>On 08.11.19 12:37, Sasha Levin wrote:
+>> From: Julian Wiedmann <jwi@linux.ibm.com>
+>>
+>> [ Upstream commit f231dc9dbd789b0f98a15941e3cebedb4ad72ad5 ]
+>>
+>> Combined L3+L4 csum offload is only required for some L3 HW. So for
+>> L2 devices, don't offload the IP header csum calculation.
+>>
+>
+>NACK, this has no relevance for stable.
 
-[ Upstream commit 1a19c139be18ed4d6d681049cc48586fae070120 ]
+Sure, I'll drop it.
 
-When we receive TX response, we may release a few packets
-due to a hole that was closed in the transmission window.
+Do you have an idea why the centos and ubuntu folks might have
+backported this commit into their kernels?
 
-However, if that frame failed, we will mark all the released
-frames as failed and will send multiple BARs.
-
-This affects statistics badly, and cause unnecessary frames
-transmission.
-
-Instead, mark all the following packets as success, with the
-desired result of sending a bar for the failed frame only.
-
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index efef28012a6b9..ac1e05b93a9ad 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -1378,6 +1378,14 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
- 			break;
- 		}
- 
-+		/*
-+		 * If we are freeing multiple frames, mark all the frames
-+		 * but the first one as acked, since they were acknowledged
-+		 * before
-+		 * */
-+		if (skb_freed > 1)
-+			info->flags |= IEEE80211_TX_STAT_ACK;
-+
- 		iwl_mvm_tx_status_check_trigger(mvm, status);
- 
- 		info->status.rates[0].count = tx_resp->failure_frame + 1;
 -- 
-2.20.1
-
+Thanks,
+Sasha
