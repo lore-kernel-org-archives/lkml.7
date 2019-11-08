@@ -2,88 +2,149 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7C7FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AF1FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBF6206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JFDvfMdZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1F818206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573240413;
+	bh=/idMyIy3EstznScmSyy4e32Pa8RU7vF8zAOKGKWH8Qw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OxRV6yeAviFotBiZ4BB0UNMkXN+1EfKhnqiO76qzMeUrILW2a0myu1xaOSHyLhQZj
+	 ZyMzvfTqfhkWRoiaxCO1kNdUKGrkmtJ8m5mIMllBOU5Hyxg1hv8UW1Vbgl88OUpv1A
+	 uQtyw7TRRUfElMTqok7LnVN9pMOo6WxUC4GWIgls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390878AbfKHTN3 (ORCPT
+        id S2390651AbfKHTN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:13:29 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37327 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390416AbfKHTHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:13:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391464AbfKHTHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 14:07:35 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g8so311523plt.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:07:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=kikk2WY5kfcxGjTzJAhY6RUjMX79xyo2nvmOqI9NKHM=;
-        b=JFDvfMdZ5Y0xxtanpVxlYiQHlNVk+Z9yQ83f74eGrenWkdufHlpK8NqhFqwY1ff20M
-         buoDVI3VxY5kZG4l5Ob1JEvmUj+eb5L0Ma02ASUUGACaYD6gU/TLztfHmscpQsj8xP+R
-         MsYzNvmY8GqYQonkW8iFXop4RnW+pIJHoGoMc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=kikk2WY5kfcxGjTzJAhY6RUjMX79xyo2nvmOqI9NKHM=;
-        b=mKhmYYIjBm55EQQWESrH2qy6gwd6lEz92jhJHdX87veCbOmAtUYLUk/L7laQJ2r0uV
-         enEfo67GlU60hcpWyL9rq83mqlu0quunHM9V87zKov56Mvv9SMcUxwLQ71xQockVrj3C
-         u49upTXHjLTY2lM2yAxn1ql38W6M2TzWlALSugX+L0Om9V+e91GpNFblVqNAlkinn9mA
-         Q9Nlw2r55ONb9SBYo8EOmfgEQ2gy3C8UuSLQDuBI0EKd9sVVDhmnQgb2H/Snu+h0og6r
-         GImskNwDsKZvMYcfMF1Q3hzOwvLpAXlBD0FvdbF25GmDe/dBRQd9GYQJy6tP0gH3N7gK
-         4juQ==
-X-Gm-Message-State: APjAAAUw6BuswBJBXMRxZlFMgqSxnERcYeO/r0TFe0wSyGw/qD6YBdu3
-        2yISTDtSIg+jMnfUtug5OZ/dmQ==
-X-Google-Smtp-Source: APXvYqxoH5Z0CCe1PUE3xdaqaiDsVPjDsTLej5DIBq/bQpgGRGi2K8JEAyDFmgRNW/c+v8ue+O5XoA==
-X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr11544949plo.319.1573240054508;
-        Fri, 08 Nov 2019 11:07:34 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id d4sm7368030pjs.9.2019.11.08.11.07.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 11:07:34 -0800 (PST)
-Message-ID: <5dc5bcf6.1c69fb81.f3fb6.2bf3@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74216206A3;
+        Fri,  8 Nov 2019 19:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573240055;
+        bh=/idMyIy3EstznScmSyy4e32Pa8RU7vF8zAOKGKWH8Qw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HVZV1Y275l4bvTYNsMDjplCQpz8kJhuP4bt+6TR/JM/sKJudJFLSjl2BWvb89Gnem
+         QBWJEuHYB/NnkH2EkJdvDDyjnUqKKSF0Dulj6RFaHGVH6YRFMz92Uyws+fyfjj2hTv
+         C67eWsOgkyiCcJQRNvAh8bdAZ7Bla0KcfLaCbzlo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 031/140] ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2
+Date:   Fri,  8 Nov 2019 19:49:19 +0100
+Message-Id: <20191108174906.056525827@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
+References: <20191108174900.189064908@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191108092824.9773-12-rnayak@codeaurora.org>
-References: <20191108092824.9773-1-rnayak@codeaurora.org> <20191108092824.9773-12-rnayak@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v5 11/13] arm64: dts: qcom: sc7180-idp: Add RPMh regulators
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 11:07:33 -0800
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-08 01:28:22)
-> From: Kiran Gunda <kgunda@codeaurora.org>
->=20
-> Add the rpmh regulators for the sc7180 idp platform. This platform
-> consists of PMIC PM6150 and PM6150l
->=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+[ Upstream commit bcab05880f9306e94531b0009c627421db110a74 ]
+
+This patch adds missing MIX2 path on RX1/2 which take IIR1 and
+IIR2 as inputs.
+
+Without this patch sound card fails to intialize with below warning:
+
+ ASoC: no sink widget found for RX1 MIX2 INP1
+ ASoC: Failed to add route IIR1 -> IIR1 -> RX1 MIX2 INP1
+ ASoC: no sink widget found for RX2 MIX2 INP1
+ ASoC: Failed to add route IIR1 -> IIR1 -> RX2 MIX2 INP1
+ ASoC: no sink widget found for RX1 MIX2 INP1
+ ASoC: Failed to add route IIR2 -> IIR2 -> RX1 MIX2 INP1
+ ASoC: no sink widget found for RX2 MIX2 INP1
+ ASoC: Failed to add route IIR2 -> IIR2 -> RX2 MIX2 INP1
+
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20191009111944.28069-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/codecs/msm8916-wcd-digital.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
+index 1db7e43ec203e..5963d170df432 100644
+--- a/sound/soc/codecs/msm8916-wcd-digital.c
++++ b/sound/soc/codecs/msm8916-wcd-digital.c
+@@ -243,6 +243,10 @@ static const char *const rx_mix1_text[] = {
+ 	"ZERO", "IIR1", "IIR2", "RX1", "RX2", "RX3"
+ };
+ 
++static const char * const rx_mix2_text[] = {
++	"ZERO", "IIR1", "IIR2"
++};
++
+ static const char *const dec_mux_text[] = {
+ 	"ZERO", "ADC1", "ADC2", "ADC3", "DMIC1", "DMIC2"
+ };
+@@ -270,6 +274,16 @@ static const struct soc_enum rx3_mix1_inp_enum[] = {
+ 	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX3_B2_CTL, 0, 6, rx_mix1_text),
+ };
+ 
++/* RX1 MIX2 */
++static const struct soc_enum rx_mix2_inp1_chain_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX1_B3_CTL,
++		0, 3, rx_mix2_text);
++
++/* RX2 MIX2 */
++static const struct soc_enum rx2_mix2_inp1_chain_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX2_B3_CTL,
++		0, 3, rx_mix2_text);
++
+ /* DEC */
+ static const struct soc_enum dec1_mux_enum = SOC_ENUM_SINGLE(
+ 				LPASS_CDC_CONN_TX_B1_CTL, 0, 6, dec_mux_text);
+@@ -309,6 +323,10 @@ static const struct snd_kcontrol_new rx3_mix1_inp2_mux = SOC_DAPM_ENUM(
+ 				"RX3 MIX1 INP2 Mux", rx3_mix1_inp_enum[1]);
+ static const struct snd_kcontrol_new rx3_mix1_inp3_mux = SOC_DAPM_ENUM(
+ 				"RX3 MIX1 INP3 Mux", rx3_mix1_inp_enum[2]);
++static const struct snd_kcontrol_new rx1_mix2_inp1_mux = SOC_DAPM_ENUM(
++				"RX1 MIX2 INP1 Mux", rx_mix2_inp1_chain_enum);
++static const struct snd_kcontrol_new rx2_mix2_inp1_mux = SOC_DAPM_ENUM(
++				"RX2 MIX2 INP1 Mux", rx2_mix2_inp1_chain_enum);
+ 
+ /* Digital Gain control -38.4 dB to +38.4 dB in 0.3 dB steps */
+ static const DECLARE_TLV_DB_SCALE(digital_gain, -3840, 30, 0);
+@@ -740,6 +758,10 @@ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
+ 			 &rx3_mix1_inp2_mux),
+ 	SND_SOC_DAPM_MUX("RX3 MIX1 INP3", SND_SOC_NOPM, 0, 0,
+ 			 &rx3_mix1_inp3_mux),
++	SND_SOC_DAPM_MUX("RX1 MIX2 INP1", SND_SOC_NOPM, 0, 0,
++			 &rx1_mix2_inp1_mux),
++	SND_SOC_DAPM_MUX("RX2 MIX2 INP1", SND_SOC_NOPM, 0, 0,
++			 &rx2_mix2_inp1_mux),
+ 
+ 	SND_SOC_DAPM_MUX("CIC1 MUX", SND_SOC_NOPM, 0, 0, &cic1_mux),
+ 	SND_SOC_DAPM_MUX("CIC2 MUX", SND_SOC_NOPM, 0, 0, &cic2_mux),
+-- 
+2.20.1
+
+
 
