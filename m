@@ -2,183 +2,130 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59626FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CA7FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F912084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA6B2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="u3f2l8qn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvJos1CO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbfKHWLL (ORCPT
+        id S1730043AbfKHWMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:11:11 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37997 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfKHWLK (ORCPT
+        Fri, 8 Nov 2019 17:12:41 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35952 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfKHWMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:11:10 -0500
-Received: by mail-ot1-f67.google.com with SMTP id v24so6534151otp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:11:09 -0800 (PST)
+        Fri, 8 Nov 2019 17:12:41 -0500
+Received: by mail-io1-f67.google.com with SMTP id s3so8029725ioe.3;
+        Fri, 08 Nov 2019 14:12:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5KpRmywjJeE+4W6tQj+g4HCES1tRk6e1MGgIomASk0A=;
-        b=u3f2l8qnQa4IB/3bCa5xVtOxB9hQlyfGZC3zvshPZU6EkSGeZgNZ0ao5kua009oqsy
-         44lV49NstYWPOS/t3pOdD0wUQTsDYyrJYoLgnNb8kDLKGCsFOT61W/vttRyuY8Ds7jmX
-         cVi5CpRfF0FNzNk3HYsGg643eP6VD9KcB1Aatsy9z1xZlCKHO9VLtxgvLfxGxqDKytEk
-         15kgYRFhJw2nLMpeyHVND/eWC67for5H6u93z/D516LEnBP+XSf8kalORoS/ZriSoPpE
-         4gzzls4GHaE+ZxCLv36wZBjjd0pNH17Juj347I6GJLkpfV80X/fOlnS0hy1uFXs1tMc0
-         al7g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VP7wzPTh3axuUTTJzTE2O0Yvg4rYT63oka2jFERivYw=;
+        b=BvJos1COGV7s6Cc1rkvcxs/EByFGDz8rXSGaYgt+s0GChqZR3f9N2yT/jsTzEquUwY
+         2T9IkfFqMXmbGpMZaWUE8R2KfgJdityZ9kQ1Kjj/wh90qNlgbYWHd/PXaHdXjzy/WDtu
+         iD/zZoqKgESpFL1ayUvTXr9vj5faGQTz6FBVi1Rs9u+xAcXXbytw8aCKiI9xMzX6VUw8
+         spODN7nOy1J6hB2EVK0E4qE1xF1r9DCQDB3UQi/4IbRmfqYVYrp9rJfWdWi4YoL6yAm0
+         SVSU0+GExY6K1XtJUYf6addLiRAt7c+KE+l/hTdsU18kRBGPK4AkJjqmbCmUTxLap1Cb
+         Jx4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5KpRmywjJeE+4W6tQj+g4HCES1tRk6e1MGgIomASk0A=;
-        b=Q7ixhq8nfQm6Xw/mW5SVCot+vXbUhS14lo/F0SHZoRC/CEwQm1esRZ6ilTrIdr3kpv
-         CEiYHIXHWr6jEDIxjw7tqUVv3+eEREWt00G4758YdcyIdedvlmimy+MIhxwiHTwuEO5R
-         fAzMqlZOIGB/ppEAeyB/TueVVfuFJoJzE8veBzhoHfki9Z3VW7Sj4q7pJr790hv5V9AS
-         CjnFUyTliptyxSZ+8thoejGtUZSG4n5l0sN44cWWl7uM7WXxxryvWeIhZZBZhkk7rJfb
-         fcaUsKnsdOAtrb6I/pKA0Uoj/ZyDWGnfrRRt2vR5Z7eL8OJi3C18Xj6/1ZeTiwaKmd8k
-         AEfw==
-X-Gm-Message-State: APjAAAUEcvIs6ZcF2Q2SDSALCEEC+7R5G96MnY7g94bDsMpj3o/Nv+p3
-        54mI5QIgm9IAf8or6i9/3Re7Eg==
-X-Google-Smtp-Source: APXvYqyodqON+OMREpWCiY78XW1yFB1s64QQ/7TZd35N1EsiNbbU7RBvAcSguKkEqtQhVcRLMvXUYQ==
-X-Received: by 2002:a9d:634d:: with SMTP id y13mr6625886otk.202.1573251068916;
-        Fri, 08 Nov 2019 14:11:08 -0800 (PST)
-Received: from minyard.net ([47.184.136.59])
-        by smtp.gmail.com with ESMTPSA id e62sm2206504oif.12.2019.11.08.14.11.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Nov 2019 14:11:08 -0800 (PST)
-Date:   Fri, 8 Nov 2019 16:11:06 -0600
-From:   Corey Minyard <cminyard@mvista.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, Corey Minyard <minyard@acm.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net
-Subject: Re: [PATCH 4/8] ipmi: kill off 'timespec' usage again
-Message-ID: <20191108221106.GT10313@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20191108203435.112759-1-arnd@arndb.de>
- <20191108203435.112759-5-arnd@arndb.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VP7wzPTh3axuUTTJzTE2O0Yvg4rYT63oka2jFERivYw=;
+        b=kzTJHTUwx4fOtiPJr39ZqjAJEfHEg0DSJZCxPEeel9IECSqQysLLNBrEwYuT5NowAs
+         /tNpUlyUdtKRq5dqBnFS/Avb2r/WyZyvQ2mDQNVrUcRzMlTpHg4o4JwBpZEd19VT7fC0
+         BBQJZOAgtiigb4qFH2+KVOEP7cJ+f3nZyOJe2lqpofCwdgN2pvn1Q0kzOJG67dv5OReH
+         Z/2OU/tADLYXETN8P5KzUuMnBGaj/tjUfFrZKH1Ibs4kZfKKg96XNu3Lm84o2thr2Io/
+         ijSwUd3BgPKC9ESIBzqDtH17AEZ6ImpkvugxQOWg0sehlHhuWJQfWekzSWJAADog3+fC
+         b/pg==
+X-Gm-Message-State: APjAAAV6URwb0Rzr++16Guxnzj1xxyjMSR49g+eSqnNWfJXTrnvvTQNR
+        5W/VrrW3w+Uq/nEoEqTNeie6inOYLAJoj43l2sY=
+X-Google-Smtp-Source: APXvYqy74eTMXO2Bj8kE7ehtqnYovvN+7sRr+xSwJFSn6HaKnfhynYsLnin/wm4/30Ybps3M0mXYER00BmutigydhI4=
+X-Received: by 2002:a6b:7846:: with SMTP id h6mr12161721iop.33.1573251159632;
+ Fri, 08 Nov 2019 14:12:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108203435.112759-5-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191108212840.13586-1-stephan@gerhold.net>
+In-Reply-To: <20191108212840.13586-1-stephan@gerhold.net>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 8 Nov 2019 15:12:28 -0700
+Message-ID: <CAOCk7No7r6Frdu8jSbdBCroXeF+HY=kqEQoJnK0HbkyjLse5Rg@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH] drm/msm/dsi: Delay drm_panel_enable() until dsi_mgr_bridge_enable()
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Jasper Korten <jja2000@gmail.com>,
+        Hai Li <hali@codeaurora.org>, David Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 09:34:27PM +0100, Arnd Bergmann wrote:
-> 'struct timespec' is getting removed from the kernel. The usage in ipmi
-> was fixed before in commit 48862ea2ce86 ("ipmi: Update timespec usage
-> to timespec64"), but unfortunately it crept back in.
-> 
-> The busy looping code can better use ktime_t anyway, so use that
-> there to simplify the implementation.
-
-Thanks, this is a big improvement.  I have this queued, but if you
-are going to submit this, I can remove it, and:
-
-Reviewed-by: Corey Minyard <cminyard@mvista.com>
-
-Do you think this should go in to 5.4?
-
--corey
-
-> 
-> Fixes: cbb19cb1eef0 ("ipmi_si: Convert timespec64 to timespec")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Fri, Nov 8, 2019 at 2:29 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+>
+> At the moment, the MSM DSI driver calls drm_panel_enable() rather early
+> from the DSI bridge pre_enable() function. At this point, the encoder
+> (e.g. MDP5) is not enabled, so we have not started transmitting
+> video data.
+>
+> However, the drm_panel_funcs documentation states that enable()
+> should be called on the panel *after* video data is being transmitted:
+>
+>   The .prepare() function is typically called before the display controller
+>   starts to transmit video data. [...] After the display controller has
+>   started transmitting video data, it's safe to call the .enable() function.
+>   This will typically enable the backlight to make the image on screen visible.
+>
+> Calling drm_panel_enable() too early causes problems for some panels:
+> The TFT LCD panel used in the Samsung Galaxy Tab A 9.7 (2015) (APQ8016)
+> uses the MIPI_DCS_SET_DISPLAY_BRIGHTNESS command to control
+> backlight/brightness of the screen. The enable sequence is therefore:
+>
+>   drm_panel_enable()
+>     drm_panel_funcs.enable():
+>       backlight_enable()
+>         backlight_ops.update_status():
+>           mipi_dsi_dcs_set_display_brightness(dsi, bl->props.brightness);
+>
+> The panel seems to silently ignore the MIPI_DCS_SET_DISPLAY_BRIGHTNESS
+> command if it is sent too early. This prevents setting the initial brightness,
+> causing the display to be enabled with minimum brightness instead.
+> Adding various delays in the panel initialization code does not result
+> in any difference.
+>
+> On the other hand, moving drm_panel_enable() to dsi_mgr_bridge_enable()
+> fixes the problem, indicating that the panel requires the video stream
+> to be active before the brightness command is accepted.
+>
+> Therefore: Move drm_panel_enable() to dsi_mgr_bridge_enable() to
+> delay calling it until video data is being transmitted.
+>
+> Move drm_panel_disable() to dsi_mgr_bridge_disable() for similar reasons.
+> (This is not strictly required for the panel affected above...)
+>
+> Tested-by: Jasper Korten <jja2000@gmail.com>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 > ---
->  drivers/char/ipmi/ipmi_si_intf.c | 40 +++++++++++---------------------
->  1 file changed, 13 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-> index 6b9a0593d2eb..c7cc8538b84a 100644
-> --- a/drivers/char/ipmi/ipmi_si_intf.c
-> +++ b/drivers/char/ipmi/ipmi_si_intf.c
-> @@ -265,10 +265,10 @@ static void cleanup_ipmi_si(void);
->  #ifdef DEBUG_TIMING
->  void debug_timestamp(char *msg)
->  {
-> -	struct timespec t;
-> +	struct timespec64 t;
->  
-> -	ktime_get_ts(&t);
-> -	pr_debug("**%s: %ld.%9.9ld\n", msg, (long) t.tv_sec, t.tv_nsec);
-> +	ktime_get_ts64(&t);
-> +	pr_debug("**%s: %lld.%9.9ld\n", msg, t.tv_sec, t.tv_nsec);
->  }
->  #else
->  #define debug_timestamp(x)
-> @@ -935,38 +935,25 @@ static void set_run_to_completion(void *send_info, bool i_run_to_completion)
->  }
->  
->  /*
-> - * Use -1 in the nsec value of the busy waiting timespec to tell that
-> - * we are spinning in kipmid looking for something and not delaying
-> - * between checks
-> + * Use -1 as a special constant to tell that we are spinning in kipmid
-> + * looking for something and not delaying between checks
->   */
-> -static inline void ipmi_si_set_not_busy(struct timespec *ts)
-> -{
-> -	ts->tv_nsec = -1;
-> -}
-> -static inline int ipmi_si_is_busy(struct timespec *ts)
-> -{
-> -	return ts->tv_nsec != -1;
-> -}
-> -
-> +#define IPMI_TIME_NOT_BUSY ns_to_ktime(-1ull)
->  static inline bool ipmi_thread_busy_wait(enum si_sm_result smi_result,
->  					 const struct smi_info *smi_info,
-> -					 struct timespec *busy_until)
-> +					 ktime_t *busy_until)
->  {
->  	unsigned int max_busy_us = 0;
->  
->  	if (smi_info->si_num < num_max_busy_us)
->  		max_busy_us = kipmid_max_busy_us[smi_info->si_num];
->  	if (max_busy_us == 0 || smi_result != SI_SM_CALL_WITH_DELAY)
-> -		ipmi_si_set_not_busy(busy_until);
-> -	else if (!ipmi_si_is_busy(busy_until)) {
-> -		ktime_get_ts(busy_until);
-> -		timespec_add_ns(busy_until, max_busy_us * NSEC_PER_USEC);
-> +		*busy_until = IPMI_TIME_NOT_BUSY;
-> +	else if (*busy_until == IPMI_TIME_NOT_BUSY) {
-> +		*busy_until = ktime_get() + max_busy_us * NSEC_PER_USEC;
->  	} else {
-> -		struct timespec now;
-> -
-> -		ktime_get_ts(&now);
-> -		if (unlikely(timespec_compare(&now, busy_until) > 0)) {
-> -			ipmi_si_set_not_busy(busy_until);
-> +		if (unlikely(ktime_get() > *busy_until)) {
-> +			*busy_until = IPMI_TIME_NOT_BUSY;
->  			return false;
->  		}
->  	}
-> @@ -988,9 +975,8 @@ static int ipmi_thread(void *data)
->  	struct smi_info *smi_info = data;
->  	unsigned long flags;
->  	enum si_sm_result smi_result;
-> -	struct timespec busy_until = { 0, 0 };
-> +	ktime_t busy_until = IPMI_TIME_NOT_BUSY;
->  
-> -	ipmi_si_set_not_busy(&busy_until);
->  	set_user_nice(current, MAX_NICE);
->  	while (!kthread_should_stop()) {
->  		int busy_wait;
-> -- 
-> 2.20.0
-> 
+> Since this is a core change I thought it would be better to send this
+> early. I believe Jasper still wants to finish some other changes before
+> submitting the initial device tree for the Samsung Galaxy Tab A 9.7 (2015). ;)
+>
+> I also tested it on msm8916-samsung-a5u-eur, its display is working fine
+> with or without this patch.
+
+Nack, please.  I was curious so I threw this on the Lenovo Miix 630
+laptop.  I don't get a display back with this patch.  I'll try to
+figure out why, but currently I can't get into the machine.
