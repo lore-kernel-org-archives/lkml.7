@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF03CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF32BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD4120656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984A120865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240976;
-	bh=G/onHIpcO3h97TEJ7qui0iEg3XF5Ui989sFBSybWCAQ=;
+	s=default; t=1573240979;
+	bh=JqBJ33MfxgJoV04Jkn6Y2nD3m+tGGlp3H9Rs53UmXYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMkyI2U2BrbSH1hFuAraFzEV0TlJVq80RSh6JCqDNByfW72b/JOD40Oy3JqlxkO/W
-	 AoZ6TVvulnfoXRyTpPw+EjZ5qgPvpPoKt9sDavNQLEOQeNU8XUaUgUhOJQsQb3N8mZ
-	 XG4w974KSG3tIid+DUeLPV/eeJd2g6jdEmClbv9I=
+	b=HvNLzBYeThw03MpyuWjDW19rkPQrYf+zjgY+osCpSlLJwkZybA5MzsNcoLERUUhXR
+	 D5MR7ciFwhQ4HEqb1sj6HEpN5CbFd5n6jWVKtt+nx7Ar2RN3xnGNhUkNwSfn0HbbO5
+	 bJHUlAcb/E/OT+ab408o5BtjujJjUqyqK2rHj/ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390774AbfKHTWz (ORCPT
+        id S1731717AbfKHSz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:22:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52820 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:55:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730596AbfKHSz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:55:28 -0500
+        id S1731643AbfKHSzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:55:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24DEC21D7F;
-        Fri,  8 Nov 2019 18:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAAC121D7B;
+        Fri,  8 Nov 2019 18:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239327;
-        bh=G/onHIpcO3h97TEJ7qui0iEg3XF5Ui989sFBSybWCAQ=;
+        s=default; t=1573239319;
+        bh=JqBJ33MfxgJoV04Jkn6Y2nD3m+tGGlp3H9Rs53UmXYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YiPsnEcHHrAHKks06cvh6lzsEANRNTQQ9xJDZNxySTw+AloJPLN7NL4Cn3oUBHZPM
-         QB/NNm+7re09RLf2e2cN11RAP8ByO4LbPOB1x33qRv4Bsv+NIqj8hqesfd7+cxf5DU
-         s6yVYvvLt4HOIPoBmbKZIPDJ3KiEiA3ehQFUanqk=
+        b=HJSRF6y/rPA1qXOwdfPHjdRuS1YPOM4CUXvNxsNnaM+gXyHaOh8b25PwqcGP3BmnX
+         9SDgZfcI/Ver5SvPl7EVj4salZwOA7CzBl0ukA6c+eIqH22qDm4R6+EZETIfPrVqTh
+         CcExgjWahOq50EHUsfAbv5O0n+M3domKfJaBf8OY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
         <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
         "David A. Long" <dave.long@linaro.org>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 40/75] ARM: add more CPU part numbers for Cortex and Brahma B15 CPUs
-Date:   Fri,  8 Nov 2019 19:49:57 +0100
-Message-Id: <20191108174748.298689915@linuxfoundation.org>
+Subject: [PATCH 4.4 73/75] ARM: fix the cockup in the previous patch
+Date:   Fri,  8 Nov 2019 19:50:30 +0100
+Message-Id: <20191108174812.725818389@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -66,42 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Commit f5683e76f35b4ec5891031b6a29036efe0a1ff84 upstream.
+Commit d6951f582cc50ba0ad22ef46b599740966599b14 upstream.
 
-Add CPU part numbers for Cortex A53, A57, A72, A73, A75 and the
-Broadcom Brahma B15 CPU.
+The intention in the previous patch was to only place the processor
+tables in the .rodata section if big.Little was being built and we
+wanted the branch target hardening, but instead (due to the way it
+was tested) it ended up always placing the tables into the .rodata
+section.
 
+Although harmless, let's correct this anyway.
+
+Fixes: 3a4d0c2172bc ("ARM: ensure that processor vtables is not lost after boot")
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Boot-tested-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: David A. Long <dave.long@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/include/asm/cputype.h |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/mm/proc-macros.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/include/asm/cputype.h
-+++ b/arch/arm/include/asm/cputype.h
-@@ -74,8 +74,16 @@
- #define ARM_CPU_PART_CORTEX_A12		0x4100c0d0
- #define ARM_CPU_PART_CORTEX_A17		0x4100c0e0
- #define ARM_CPU_PART_CORTEX_A15		0x4100c0f0
-+#define ARM_CPU_PART_CORTEX_A53		0x4100d030
-+#define ARM_CPU_PART_CORTEX_A57		0x4100d070
-+#define ARM_CPU_PART_CORTEX_A72		0x4100d080
-+#define ARM_CPU_PART_CORTEX_A73		0x4100d090
-+#define ARM_CPU_PART_CORTEX_A75		0x4100d0a0
- #define ARM_CPU_PART_MASK		0xff00fff0
+--- a/arch/arm/mm/proc-macros.S
++++ b/arch/arm/mm/proc-macros.S
+@@ -263,7 +263,7 @@
+  * If we are building for big.Little with branch predictor hardening,
+  * we need the processor function tables to remain available after boot.
+  */
+-#if 1 // defined(CONFIG_BIG_LITTLE) && defined(CONFIG_HARDEN_BRANCH_PREDICTOR)
++#if defined(CONFIG_BIG_LITTLE) && defined(CONFIG_HARDEN_BRANCH_PREDICTOR)
+ 	.section ".rodata"
+ #endif
+ 	.type	\name\()_processor_functions, #object
+@@ -301,7 +301,7 @@ ENTRY(\name\()_processor_functions)
+ 	.endif
  
-+/* Broadcom cores */
-+#define ARM_CPU_PART_BRAHMA_B15		0x420000f0
-+
- #define ARM_CPU_XSCALE_ARCH_MASK	0xe000
- #define ARM_CPU_XSCALE_ARCH_V1		0x2000
- #define ARM_CPU_XSCALE_ARCH_V2		0x4000
+ 	.size	\name\()_processor_functions, . - \name\()_processor_functions
+-#if 1 // defined(CONFIG_BIG_LITTLE) && defined(CONFIG_HARDEN_BRANCH_PREDICTOR)
++#if defined(CONFIG_BIG_LITTLE) && defined(CONFIG_HARDEN_BRANCH_PREDICTOR)
+ 	.previous
+ #endif
+ .endm
 
 
