@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69391FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068B7FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEAD206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CF3206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215185;
-	bh=/WDj+UaCQBC6rLVEd/0zDBRi5NNk/rG3ku09g+amH2s=;
+	s=default; t=1573215190;
+	bh=DWeebrJx8H6xViZvK61SrP4XsgVD2r/OoVtegmbXWEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i9oISKX3fP0Ozy5eOqhIFgjOEYwZc7fyHhZyH3p5UI5Qw0dm+aFExkREjbon0NpQZ
-	 7uuj+VHH0HwQP/yWB9A5j2/MogVFygouzONfgA3pqhlvKuYgEAwt2xCQpK3g9nPMgy
-	 fgsXW+TLR+rS+3vBJKXfImE7g2vlkrrXGq9Qf1vg=
+	b=0jN46HuO24g6LjC/u2xwW0tEJ3Y9ixmiWzm+QXfw+Ygz5JZDkjOq8RpTGgy4ios2n
+	 0P4uV3R7g7+3KNZrYuDqVVWY39ORd67pBsska/QWuM8YALQk/1z32qH61tj+PljUoY
+	 pniWsP3O5d6PSgdIjSdoW1ZLRUr5r90uTWmJseTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392008AbfKHMND (ORCPT
+        id S1732668AbfKHLia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:13:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51432 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:38:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732681AbfKHLib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:31 -0500
+        id S1732499AbfKHLiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C2AF21D7B;
-        Fri,  8 Nov 2019 11:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 647EA222C2;
+        Fri,  8 Nov 2019 11:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213111;
-        bh=/WDj+UaCQBC6rLVEd/0zDBRi5NNk/rG3ku09g+amH2s=;
+        s=default; t=1573213101;
+        bh=DWeebrJx8H6xViZvK61SrP4XsgVD2r/OoVtegmbXWEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFMBF6i0m3FW53SbPhfI/f4opCGnTBxsJSkIQfKg3hs4UzcsCx0hyRLr3AJ5D3cwu
-         3M/HvGeYJBwcsirmP7WEUKa0baCAlc2B64O6Hdqyw2zsYq0k+VAmoU4zuPJQMwlZ1H
-         A5QU6nRU9m7ID5bWwDsJW4LgpDRPA6HjLWvZfJyc=
+        b=ahVc+eFTfO4RMuAXD4vSR7UF9Bcd+9f3PeU188QHveSo0YyNMQuD437kUtnjm0BwE
+         T3O4hwDzv3mqTjTVPuX4jkxrL4UgToOAuCgR+xfaJOmT5hS1KTH9uMXyhgYkCMBHHV
+         6ILnSSYV08NRAPS50tvKtO3PIjATdstHRFzO5XZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Tony Brelinski <tonyx.brelinski@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 033/205] ice: Fix and update driver version string
-Date:   Fri,  8 Nov 2019 06:35:00 -0500
-Message-Id: <20191108113752.12502-33-sashal@kernel.org>
+Cc:     Dedy Lansky <dlansky@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 025/205] wil6210: drop Rx multicast packets that are looped-back to STA
+Date:   Fri,  8 Nov 2019 06:34:52 -0500
+Message-Id: <20191108113752.12502-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,34 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+From: Dedy Lansky <dlansky@codeaurora.org>
 
-[ Upstream commit 9ea47d81a7f17c6b77211ab75fbca2127719ad39 ]
+[ Upstream commit 9a65064abdf82934e0ed4744125f9f466f421f57 ]
 
-Remove the "ice" prefix for the driver version string and bump version
-to 0.7.1-k.
+Delivering a looped-back multicast packet to network stack can cause
+higher layer protocols to fail like for example IPv6 DAD.
+In STA mode, upon receiving Rx multicast packet, check if the source
+MAC address is equal to our own MAC address and if so drop the packet.
 
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Tony Brelinski <tonyx.brelinski@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/wil6210/txrx.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index e1f95e7a51393..00c833cd2b3ae 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -7,7 +7,7 @@
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index 1b1b58e0129a3..25a65ca424c84 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -766,7 +766,14 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
+ 		return;
+ 	}
  
- #include "ice.h"
- 
--#define DRV_VERSION	"ice-0.7.0-k"
-+#define DRV_VERSION	"0.7.1-k"
- #define DRV_SUMMARY	"Intel(R) Ethernet Connection E800 Series Linux Driver"
- const char ice_drv_ver[] = DRV_VERSION;
- static const char ice_driver_string[] = DRV_SUMMARY;
+-	if (wdev->iftype == NL80211_IFTYPE_AP && !vif->ap_isolate) {
++	if (wdev->iftype == NL80211_IFTYPE_STATION) {
++		if (mcast && ether_addr_equal(eth->h_source, ndev->dev_addr)) {
++			/* mcast packet looped back to us */
++			rc = GRO_DROP;
++			dev_kfree_skb(skb);
++			goto stats;
++		}
++	} else if (wdev->iftype == NL80211_IFTYPE_AP && !vif->ap_isolate) {
+ 		if (mcast) {
+ 			/* send multicast frames both to higher layers in
+ 			 * local net stack and back to the wireless medium
 -- 
 2.20.1
 
