@@ -2,99 +2,60 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B15C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF89121D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213803;
-	bh=iy1DT5bUu1OBLH5vlxDMPqVN+I2GP5m989sEYk4zcWw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u8tmjT26njKVEs14K9MV7hHSYx1iZFqVPhv55KpkcEgdD0b00joJkNoJ+SiReRG0C
-	 UI+t00fMidoW5s2ie8wVWXQaXqTwyfxaMvlvhpbTcU2lJCuZy+1arXfpEmGAt0fWes
-	 oi2Ms/gUqe+IxKyLv16l09Xwdd1FD/C+Y92M+K0o=
+	by mail.kernel.org (Postfix) with ESMTP id D22E2222D1
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390427AbfKHLuA (ORCPT
+        id S2390125AbfKHLuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:50:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391692AbfKHLry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:54 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8AB521924;
-        Fri,  8 Nov 2019 11:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213674;
-        bh=iy1DT5bUu1OBLH5vlxDMPqVN+I2GP5m989sEYk4zcWw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JktKvbldXm4wtg7rYtWKvrr3Cj42pfXAaGcT4/rnPdQgF7YHUwLXepPUvZiaie2t/
-         tN8SU85vATpTqfIs/MOiMpie9lueDHhaNP0taTnpTPM1QiXbOIi1ECMUUOJCp2zQoi
-         jyH2adoodWKIihEgTSJ7/w98R6/Wu95gmoHL4wQI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 25/44] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
-Date:   Fri,  8 Nov 2019 06:47:01 -0500
-Message-Id: <20191108114721.15944-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
-References: <20191108114721.15944-1-sashal@kernel.org>
+        Fri, 8 Nov 2019 06:50:05 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63750 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388183AbfKHLuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:50:02 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 1a3ae1af6712ba25; Fri, 8 Nov 2019 12:49:59 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 0/5] PCI: PM: Cleanups related to power state changes
+Date:   Fri, 08 Nov 2019 12:49:59 +0100
+Message-ID: <10030157.3aYrIYsZTJ@kreacher>
+In-Reply-To: <20191106190250.GA238633@google.com>
+References: <20191106190250.GA238633@google.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+On Wednesday, November 6, 2019 8:02:50 PM CET Bjorn Helgaas wrote:
+> On Tue, Nov 05, 2019 at 11:11:57AM +0100, Rafael J. Wysocki wrote:
+> > Hi,
+> > 
+> > This series rearranges some PCI power management code to make it somewhat
+> > easier to follow and explicitly consolidate the power-up (transitions to
+> > D0) code path.
+> > 
+> > It is not intended to change the functionality of the code.
+> 
+> Applied with Mika's reviewed-by to pci/pm for v5.5, thanks!
 
-[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
+Any chance to push this out, though?  That would help with integration/testing
+a bit ...
 
-If the first process started (aka /sbin/init) receives a SIGKILL it
-will panic the system if it is delivered.  Making the system unusable
-and undebugable.  It isn't much better if the first process started
-receives SIGSTOP.
 
-So always ignore SIGSTOP and SIGKILL sent to init.
-
-This is done in a separate clause in sig_task_ignored as force_sig_info
-can clear SIG_UNKILLABLE and this protection should work even then.
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/signal.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 072fd152ab01e..3095b2309876d 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -71,6 +71,10 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
- 
- 	handler = sig_handler(t, sig);
- 
-+	/* SIGKILL and SIGSTOP may not be sent to the global init */
-+	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
-+		return true;
-+
- 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
- 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
- 		return 1;
--- 
-2.20.1
 
