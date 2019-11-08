@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE01FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE96FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27C32087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9D2222CF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="e/P1lD7z"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="btUNt8m0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfKHNCE (ORCPT
+        id S1729795AbfKHNCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:02:04 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36717 "EHLO
+        Fri, 8 Nov 2019 08:02:06 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45387 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbfKHNCB (ORCPT
+        with ESMTP id S1729448AbfKHNCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:02:01 -0500
-Received: by mail-lj1-f194.google.com with SMTP id k15so6145621lja.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:01:58 -0800 (PST)
+        Fri, 8 Nov 2019 08:02:03 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n21so6106070ljg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/C1Eg1dR+pzbI0uF0+AzerXAuAR/n78tvkDzoMBSgLI=;
-        b=e/P1lD7zvmjURhmsvbX23QE+8ASowwEgb4BpM1IFfQWI91Tr3jDWiq0X6CrLk99wVN
-         mPk6Txdn0NvIKorqKDh7HBcWVDg2Ic5Yi9fVd1R5QMWlVvOdwlxoWhTPHcB8cInVr8Dv
-         yoknf6mGfRANkmWuDMLpwcTHs5OfxaRyfaFd0=
+        bh=UljkrHErTTnMZOnzGC3cVx/3LEJEQ4UWt74UluMX0lk=;
+        b=btUNt8m0uV4K7rFRwIU8q6zzflOOAMijjQeLyfrjzcaIczK5jbDtdELyjy9dr04RD6
+         VsDmKA7rt6Vd7Bj8D6PEuCjxR7+LvQCtJVl/OhH5dz/1en8np2tnjoWXw+wArp7P9bhz
+         9UKoh5jfu0tbKnJOUZqtsYgj/Cn0lm7JvLu4k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/C1Eg1dR+pzbI0uF0+AzerXAuAR/n78tvkDzoMBSgLI=;
-        b=UAjsgPzIBYJ8OMGGPqwoe00bCIJsDKdSATN8e1c2V0qbtOfXwf4Nd+F1UwYpavdA8H
-         aEnM5xwy/M8Ndr+8+5+z2UOt7wql7pasEaXN/i2rd5HkLeFYivj1fwRL8nhH/gPVmXwP
-         go8bvEoi5DZ4PpzzS9ML9b0RWUf7g0dFLLPa7VgJZ+ApgnFM+CGd2HLkOgWC57ZvL94G
-         I7G2XfRGfY7h1nTHTvDCes+z5N5WdSwlDudYLgh7Yd+8432SK3gn42jOUUUYSmfQEPnd
-         nE1QewLrNZP8XpADUlIaUTRbaAR2zhRDBYpuZeYmcQRC1uQsbopX3wKXpjH2ppdMEihb
-         EMIw==
-X-Gm-Message-State: APjAAAWDqRz4j242PPZhIjC+ct4C6cR7hrcpuuUZ36shw48508JKaD08
-        DPkSyXYWTloI56bAkAu1VGqAAA==
-X-Google-Smtp-Source: APXvYqxZ1oqYp4p6l2IsGiGO+a6bcfmX2jCuzyyob5hxO/rAt/CL2aEGqAw4ukWNphNhXQIN4rIjrw==
-X-Received: by 2002:a2e:b5a2:: with SMTP id f2mr6611603ljn.108.1573218118236;
-        Fri, 08 Nov 2019 05:01:58 -0800 (PST)
+        bh=UljkrHErTTnMZOnzGC3cVx/3LEJEQ4UWt74UluMX0lk=;
+        b=gFsU2IucWXfjvnNBA24deqUS3ugmaFh/ajE5u+YC2sarhlylTXgSvLN/YXQribpB5P
+         TJQp8f5h5o9dSudvLG8+3Q7Rd/huwbJ4Rqqp41rnHgP1Mq8/96N0N1CXmiRWm8s8BfCM
+         1T0GbtN6BGt02vIz+8D7NV2ySjk4HsIMSmBf15v/yEULIWP+9r6yaRo6msMPZ+hhY5aP
+         LVJSasbRxw+GwVZewh1Vr8zrIhsnVdZCgmw32H+qDpvXgmtWEQ8odtQZW3D/YSEv/o+B
+         ynP+lTIlKUx2kuavdSv0n2GFjkUqJ8WEknROT3WsQApKqA7SC3FcBAaCxnfFkm2JRNo4
+         jZng==
+X-Gm-Message-State: APjAAAVG8aoc/bzP8IjgJTZqH4NAUUj5u1nvWRVCGP5Dj+TszJ55+Uam
+        23Ahp7mercC6xsX7IOSwOAzBIg==
+X-Google-Smtp-Source: APXvYqxTzVF8/JKsKMHYte+9aWvfI7aAER8ibdsachcG+KIWPQShSZfW9EYappa6aFPy4j79NTv/Bg==
+X-Received: by 2002:a05:651c:119b:: with SMTP id w27mr6123930ljo.221.1573218119558;
+        Fri, 08 Nov 2019 05:01:59 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.57
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:01:57 -0800 (PST)
+        Fri, 08 Nov 2019 05:01:59 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v4 24/47] soc: fsl: qe: qe_io.c: access device tree property using be32_to_cpu
-Date:   Fri,  8 Nov 2019 14:01:00 +0100
-Message-Id: <20191108130123.6839-25-linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 25/47] soc: fsl: qe: qe_io.c: use of_property_read_u32() in par_io_init()
+Date:   Fri,  8 Nov 2019 14:01:01 +0100
+Message-Id: <20191108130123.6839-26-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
@@ -73,46 +73,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to apply be32_to_cpu to make this work correctly on
-little-endian hosts.
+This is necessary for this to work on little-endian hosts.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe_io.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/soc/fsl/qe/qe_io.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/soc/fsl/qe/qe_io.c b/drivers/soc/fsl/qe/qe_io.c
-index 99aeb01586bd..61dd8eb8c0fe 100644
+index 61dd8eb8c0fe..11ea08e97db7 100644
 --- a/drivers/soc/fsl/qe/qe_io.c
 +++ b/drivers/soc/fsl/qe/qe_io.c
-@@ -142,7 +142,7 @@ int par_io_of_config(struct device_node *np)
+@@ -28,7 +28,7 @@ int par_io_init(struct device_node *np)
  {
- 	struct device_node *pio;
- 	int pio_map_len;
--	const unsigned int *pio_map;
-+	const __be32 *pio_map;
+ 	struct resource res;
+ 	int ret;
+-	const u32 *num_ports;
++	u32 num_ports;
  
- 	if (par_io == NULL) {
- 		printk(KERN_ERR "par_io not initialized\n");
-@@ -167,9 +167,15 @@ int par_io_of_config(struct device_node *np)
- 	}
+ 	/* Map Parallel I/O ports registers */
+ 	ret = of_address_to_resource(np, 0, &res);
+@@ -36,9 +36,8 @@ int par_io_init(struct device_node *np)
+ 		return ret;
+ 	par_io = ioremap(res.start, resource_size(&res));
  
- 	while (pio_map_len > 0) {
--		par_io_config_pin((u8) pio_map[0], (u8) pio_map[1],
--				(int) pio_map[2], (int) pio_map[3],
--				(int) pio_map[4], (int) pio_map[5]);
-+		u8 port        = be32_to_cpu(pio_map[0]);
-+		u8 pin         = be32_to_cpu(pio_map[1]);
-+		int dir        = be32_to_cpu(pio_map[2]);
-+		int open_drain = be32_to_cpu(pio_map[3]);
-+		int assignment = be32_to_cpu(pio_map[4]);
-+		int has_irq    = be32_to_cpu(pio_map[5]);
-+
-+		par_io_config_pin(port, pin, dir, open_drain,
-+				  assignment, has_irq);
- 		pio_map += 6;
- 		pio_map_len -= 6;
- 	}
+-	num_ports = of_get_property(np, "num-ports", NULL);
+-	if (num_ports)
+-		num_par_io_ports = *num_ports;
++	if (!of_property_read_u32(np, "num-ports", &num_ports))
++		num_par_io_ports = num_ports;
+ 
+ 	return 0;
+ }
 -- 
 2.23.0
 
