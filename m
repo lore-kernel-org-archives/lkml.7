@@ -2,122 +2,197 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBF6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CF1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5269E215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A509220679
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3EhIS0N"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bmdDEV7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfKHP72 (ORCPT
+        id S1727040AbfKHQDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:59:28 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52171 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727573AbfKHP70 (ORCPT
+        Fri, 8 Nov 2019 11:03:30 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58750 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKHQDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:59:26 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q70so6707216wme.1;
-        Fri, 08 Nov 2019 07:59:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Eu4oX7xYfa5MEOO1wKRiehoOBepBzuAtMWUC++GMKtE=;
-        b=O3EhIS0N4Mze/93XT+emgHlgTwiEdn9OmkMPFV2qdEc5qMhzCvrwLQPPJgS33bfyI1
-         IcipeV0LpTcRCXghFTvpyrjHpYWt8ifpiY1XJZaUhGkxoz8APXsGEnCeNzVt5JvRzZm9
-         P9L41Cwd+ChvKUppQJV7pCqMw9hyWjRiYUFhqS9og7Ex1qzkeS0AlpFTrfV/DZCCyc3h
-         pCqCt6vgCDSLQsOuhPTMUohx8By7pbJQ58YK86z6TstqwRKzjsWe/F3A8VPIdSPQAW4F
-         17Mjyj04SvXeusPbrkr7yy54QfEScGG2XWE2kkqa5TIVMPK8NTSysc13Fsx8eWW8myKV
-         nTLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Eu4oX7xYfa5MEOO1wKRiehoOBepBzuAtMWUC++GMKtE=;
-        b=YCceqBsTiuoKpeHP5+rtACMKySqiEEU7YbkTYWu5Go0TmJBulrgRul9Oa9boOA+aED
-         qY/bubEEjFDCOIH2VgFEW0zs/Prcx0AKN1k3uQtoD3GGZbeWD5PPiAAKu+aLBA0oMF6h
-         sPE/GIO83lkhtLk1uznGXTPf4DaG9hILwBgmou2CizLR+7H/MntJ7iLLrY7rZfnBZ7h5
-         dSEEn0zPPKG7DHzOpB+//m26i9UrJtNex0R+EE2E/FBYK9XudSRp1w3IqfCYXyZEeA/W
-         j82fMlY/eNoe64LPijXDC5TbwQnuraooxHL1BCcZpBHnT81t1SiRU4GQg6QI3zgAAM2D
-         /0Fg==
-X-Gm-Message-State: APjAAAXgMQSQKWX+49wACgwF66WQhmAIxLvsl2fuH290CqsxSC0D8cCh
-        qeBfvUUcyQ40yyQ5c+yQ549Gb3mGNKXb0xp494k=
-X-Google-Smtp-Source: APXvYqyEmUfcU1PW2fm96T31Va0NOmni7iNU//QiUgaoi1CjjVsFn1p8BeZm43843cv7FWTvU9yhl3zmTMCNsup0ZQ0=
-X-Received: by 2002:a1c:790b:: with SMTP id l11mr9302935wme.127.1573228764346;
- Fri, 08 Nov 2019 07:59:24 -0800 (PST)
+        Fri, 8 Nov 2019 11:03:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA8G33u3080555;
+        Fri, 8 Nov 2019 10:03:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573228983;
+        bh=u4gsuJ0OJ+HEZB/Xhok1JnEaGMFtpAhmu8kN1Pe4jhQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=bmdDEV7QGrYbIWe6/nh9q/ja1owTdoHJxXzEVlbSkuYgmDFmbaVhamIFANOp8qDT8
+         T/fI164BsQgkBiCwMcJtZDCirX2eLxICjdz4faL9IO9J6j99B9cKcGCysn1KH6o5NN
+         AHDi9V1yQ9K1B3LXiVFgoOyHpFEJWF8nT55JU6Qo=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA8G32QB032789
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Nov 2019 10:03:02 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 8 Nov
+ 2019 10:02:46 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 8 Nov 2019 10:02:46 -0600
+Received: from [10.250.132.49] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA8G2xhr034183;
+        Fri, 8 Nov 2019 10:03:00 -0600
+Subject: Re: [PATCH v5 6/6] mtd: spi-nor: Rename Quad Enable methods
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20191107084135.22122-1-tudor.ambarus@microchip.com>
+ <20191107084135.22122-7-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <d71a58fb-90a5-3ebb-1ce8-046be7f0be1f@ti.com>
+Date:   Fri, 8 Nov 2019 21:32:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191108163110.32c19752@canb.auug.org.au>
-In-Reply-To: <20191108163110.32c19752@canb.auug.org.au>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 8 Nov 2019 10:59:12 -0500
-Message-ID: <CADnq5_M3dMPm3vr9xV1wK2bHJs123nG39z3sbxkBdWdonmVjPA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the amdgpu tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191107084135.22122-7-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 12:31 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the amdgpu tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->
-> In file included from <command-line>:
-> include/drm/gpu_scheduler.h:98:21: error: field 'entity_idle' has incomplete type
->    98 |  struct completion  entity_idle;
->       |                     ^~~~~~~~~~~
->
-> followed by lots of similar errors.
->
-> Caused by commit
->
->   83a7772ba223 ("drm/sched: Use completion to wait for sched->thread idle v2.")
->
-> I added the following patch for today.
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Fri, 8 Nov 2019 16:21:32 +1100
-> Subject: [PATCH] drm/sched: struct completion requires linux/completion.h
->  inclusion
->
-> Fixes: 83a7772ba223 ("drm/sched: Use completion to wait for sched->thread idle v2.")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-Applied.  Thanks!
 
-Alex
+On 07-Nov-19 2:12 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> Rename macronix_quad_enable() to a generic name:
+> spi_nor_sr1_bit6_quad_enable().
+> 
+> Prepend "spi_nor_" to "sr2_bit7_quad_enable". All SPI NOR generic
+> methods should be prepended by "spi_nor_".
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+Regards
+Vignesh
 
 > ---
->  include/drm/gpu_scheduler.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> index 6619d2ac6fa3..684692a8ed76 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -26,6 +26,7 @@
->
->  #include <drm/spsc_queue.h>
->  #include <linux/dma-fence.h>
-> +#include <linux/completion.h>
->
->  #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
->
-> --
-> Cheers,
-> Stephen Rothwell
+>  drivers/mtd/spi-nor/spi-nor.c | 25 ++++++++++++-------------
+>  include/linux/mtd/spi-nor.h   |  2 +-
+>  2 files changed, 13 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 16fb3c7d0daf..824649eecd59 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2078,16 +2078,15 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>  }
+>  
+>  /**
+> - * macronix_quad_enable() - set QE bit in Status Register.
+> + * spi_nor_sr1_bit6_quad_enable() - Set the Quad Enable BIT(6) in the Status
+> + * Register 1.
+>   * @nor:	pointer to a 'struct spi_nor'
+>   *
+> - * Set the Quad Enable (QE) bit in the Status Register.
+> - *
+> - * bit 6 of the Status Register is the QE bit for Macronix like QSPI memories.
+> + * Bit 6 of the Status Register 1 is the QE bit for Macronix like QSPI memories.
+>   *
+>   * Return: 0 on success, -errno otherwise.
+>   */
+> -static int macronix_quad_enable(struct spi_nor *nor)
+> +static int spi_nor_sr1_bit6_quad_enable(struct spi_nor *nor)
+>  {
+>  	int ret;
+>  
+> @@ -2095,10 +2094,10 @@ static int macronix_quad_enable(struct spi_nor *nor)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (nor->bouncebuf[0] & SR_QUAD_EN_MX)
+> +	if (nor->bouncebuf[0] & SR1_QUAD_EN_BIT6)
+>  		return 0;
+>  
+> -	nor->bouncebuf[0] |= SR_QUAD_EN_MX;
+> +	nor->bouncebuf[0] |= SR1_QUAD_EN_BIT6;
+>  
+>  	return spi_nor_write_sr1_and_check(nor, nor->bouncebuf[0]);
+>  }
+> @@ -2130,7 +2129,7 @@ static int spi_nor_sr2_bit1_quad_enable(struct spi_nor *nor)
+>  }
+>  
+>  /**
+> - * sr2_bit7_quad_enable() - set QE bit in Status Register 2.
+> + * spi_nor_sr2_bit7_quad_enable() - set QE bit in Status Register 2.
+>   * @nor:	pointer to a 'struct spi_nor'
+>   *
+>   * Set the Quad Enable (QE) bit in the Status Register 2.
+> @@ -2141,7 +2140,7 @@ static int spi_nor_sr2_bit1_quad_enable(struct spi_nor *nor)
+>   *
+>   * Return: 0 on success, -errno otherwise.
+>   */
+> -static int sr2_bit7_quad_enable(struct spi_nor *nor)
+> +static int spi_nor_sr2_bit7_quad_enable(struct spi_nor *nor)
+>  {
+>  	u8 *sr2 = nor->bouncebuf;
+>  	int ret;
+> @@ -2281,7 +2280,7 @@ static void gd25q256_default_init(struct spi_nor *nor)
+>  	 * indicate the quad_enable method for this case, we need
+>  	 * to set it in the default_init fixup hook.
+>  	 */
+> -	nor->params.quad_enable = macronix_quad_enable;
+> +	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
+>  }
+>  
+>  static struct spi_nor_fixups gd25q256_fixups = {
+> @@ -3661,12 +3660,12 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+>  
+>  	case BFPT_DWORD15_QER_SR1_BIT6:
+>  		nor->flags &= ~SNOR_F_HAS_16BIT_SR;
+> -		params->quad_enable = macronix_quad_enable;
+> +		params->quad_enable = spi_nor_sr1_bit6_quad_enable;
+>  		break;
+>  
+>  	case BFPT_DWORD15_QER_SR2_BIT7:
+>  		nor->flags &= ~SNOR_F_HAS_16BIT_SR;
+> -		params->quad_enable = sr2_bit7_quad_enable;
+> +		params->quad_enable = spi_nor_sr2_bit7_quad_enable;
+>  		break;
+>  
+>  	case BFPT_DWORD15_QER_SR2_BIT1:
+> @@ -4569,7 +4568,7 @@ static void intel_set_default_init(struct spi_nor *nor)
+>  
+>  static void macronix_set_default_init(struct spi_nor *nor)
+>  {
+> -	nor->params.quad_enable = macronix_quad_enable;
+> +	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
+>  	nor->params.set_4byte = macronix_set_4byte;
+>  }
+>  
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index 364309845de0..9eae35c60bce 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -133,7 +133,7 @@
+>  #define SR_E_ERR		BIT(5)
+>  #define SR_P_ERR		BIT(6)
+>  
+> -#define SR_QUAD_EN_MX		BIT(6)	/* Macronix Quad I/O */
+> +#define SR1_QUAD_EN_BIT6	BIT(6)
+>  
+>  /* Enhanced Volatile Configuration Register bits */
+>  #define EVCR_QUAD_EN_MICRON	BIT(7)	/* Micron Quad I/O */
+> 
