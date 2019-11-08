@@ -2,107 +2,115 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502D0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C58FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237F32178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6848321D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fewmUdz8"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="HmP/WZTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbfKHIpm (ORCPT
+        id S1730976AbfKHIpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:45:42 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33192 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730743AbfKHIpe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 03:45:41 -0500
+Received: from cmta20.telus.net ([209.171.16.93]:44019 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730733AbfKHIpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 03:45:34 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a17so6017714wmb.0;
-        Fri, 08 Nov 2019 00:45:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
-        b=fewmUdz8Bc1voBvS9gkVz79gCkt7venyCUove7xWvuUQ7Y4j/5GuWd2AXvvgJu1Kfj
-         N0dQ5nNqgLQudUbMeirlTSoTROX+NXDVjv7tmF7iOf3rJrWmkKmh2vS/eJjIzlX3uqx4
-         STJgeC8x6DSUy9PENPKGwtPtmXM483oVZq4Tm20Sg9l4PF42SkfQzBy8FNi7A54AoFCP
-         k5F6YhLTTRPhmtsmFWLs8KjOql5qNPJDr74p2c7q4oNgfFgToC/aHzfjzHqwBIH5YJcz
-         u/9zV1l8RwIgs5Kml7dx0uYElJGbgKN5fExDkFmeNqi4iAmfvBOItS7w5LRN0zL+qcHs
-         ssbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
-        b=rJg1cIZnjA1j/18+0GfLSqJG7FV3ZyFOozrzAgJX1OKGg5PBwbwldvO+Ft/6fg7swT
-         UqwfIOQ+8ccayn/7xEmLiwFyIWLUPxyvyQlWoiMBB7/5tOhm64KEt498nz/VtuOi/C1A
-         Xgn26Bf5h70ZwvEnjU20VOPktKNVCtN7+z0S0AYaw4egVa9dJeQIJY8udfeeHWsP6V/C
-         BCxbAOhUwcZUQE8aM4QqOCcUn4sQAdJBzpU/ONK/5qf7g6mh7uyrJcK/kQTpZfMYUZMW
-         6zdHTDfgP52FfiFYW2eEy6y2T1GWVQt3UPgXuO8zBLb0PAeCLs1sohxCsRcErqvM6K+i
-         cgoA==
-X-Gm-Message-State: APjAAAVmE3+dSPATC3w3YnyKwhpm4//U2H+IuChlE4Ad0gfzNKbxu313
-        WOcvSBJxwQXtA+m6lenBG/4=
-X-Google-Smtp-Source: APXvYqzDrSyXBmSgmOwIGNCEnIg0mdtNJewcjpzu3/9Z4+a5/R+2nI67UgxKiYB47MIydRckpkp04g==
-X-Received: by 2002:a1c:558a:: with SMTP id j132mr6983373wmb.21.1573202731677;
-        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
-Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 7/7] [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
-Date:   Fri,  8 Nov 2019 09:45:17 +0100
-Message-Id: <20191108084517.21617-8-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
-References: <20191108084517.21617-1-peron.clem@gmail.com>
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id SztYi3gdQN5I9SztaiPS24; Fri, 08 Nov 2019 01:45:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1573202731; bh=ie2dbAGhUyWCSpx+oGNevVwBz5QNF8EP99PGBuqPKWI=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=HmP/WZTe3r0+QDUGN4zpkYswbzMu6BPYPSTDUQvY4QG4YFkMD/rPATajQ4uWlyX+E
+         RYIQe0/uwpeugUwQaN1xRVa00W/swrET1gNKX9b8YPVaQuiA65Dht60omNcdgbFQkT
+         RKhwkAniyDQz/XBmzhA4X9tq6qqvASSkLdRGHxVAS3M0Mj9VaSbUtJgDVlz7deG+n6
+         BPYJHIvQyfPdUr8SAy60yaxgAwfriuYyuHd8AWIN6hJfPT/3z380QJYZnSA9PFUljP
+         eO18mhZTesprUJHOHvi0JcxUKsXlKsQbAW3dGrRRtLTYTogAHoHwlklDVsKA9Kfpy9
+         284fW1Qu98k1g==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=p-nOP-kxAAAA:8 a=QyXUC8HyAAAA:8 a=_hFHagcAZGCVafNjFckA:9
+ a=QEXdDO2ut3YA:10 a=XN2wCei03jY4uMu7D0Wg:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rafael@kernel.org>
+Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <10494959.bKODIZ00nm@kreacher> <3269796.AzLOQfDnpo@kreacher> <CAJZ5v0jM3+qMvO6dx=FmK-xF0q3YKOwBf-yUPXSBfRjxJ59Cpg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jM3+qMvO6dx=FmK-xF0q3YKOwBf-yUPXSBfRjxJ59Cpg@mail.gmail.com>
+Subject: RE: [PATCH v2] cpuidle: Use nanoseconds as the unit of time
+Date:   Fri, 8 Nov 2019 00:45:27 -0800
+Message-ID: <000701d59610$e0b3caa0$a21b5fe0$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdWV1g4iCCd318waQi+CY9jC+yyrqQADB+KA
+X-CMAE-Envelope: MS4wfDzxfM0VkZsRp0A/7IQo1ZXuWE2Mjnz8zSbOPu2O+hUwFwHeJr/uy9KnONeoZpqVhj2SEujJBeiAtoqz5db4kLLU6EAlSINYvtLFdJ5J2Pt6v0ecpHxH
+ GQNP55tHSEHCRPf0ugs/pJiRStdStw50qoJx8g8tKKmIw/z4YzX2t4mp/omz9kEusg/XIVfTq1G7uKbGjDRnPv4iJHwzJBz4Pv4x7kA2EkUV6143uQx12EqV
+ zpoOu3FAr4FBp+ZFV2yyCQ4BO4xFQJ8AwalWT8kHpzlS2mADANQLJaiYtFWtjoi8YUZS9xgObooesQ5lx0LWPluU67HW4fDpLrT24skEOs9deEWFiuumQZKE
+ ppHnBiaZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+On 2019.11.07 17:44 Rafael J. Wysocki wrote:
+> On Thu, Nov 7, 2019 at 3:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>>
+>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>> Currently, the cpuidle subsystem uses microseconds as the unit of
+>> time which (among other things) causes the idle loop to incur some
+>> integer division overhead for no clear benefit.
+>>
+>> In order to allow cpuidle to measure time in nanoseconds, add two
+>> additional fields, exit_latency_ns and target_residency_ns, to
+>> represent the exit latency and target residency of an idle state
+>> in nanoseconds, respectively, to struct cpuidle_state_usage and
+>> initialize them with the help of the corresponding values in
+>> microseconds provided by drivers.  In addition to that, change
+>> cpuidle_governor_latency_req() to return the idle state exit
+>> latency constraint in nanoseconds.
+>>
+>> With that, meeasure idle state residency (last_residency_ns in
+>> struct cpuidle_device and time_ns in struct cpuidle_driver) in
+>> nanoseconds and update the cpuidle core and governors accordingly.
+>>
+>> However, the menu governor still computes typical intervals in
+>> microseconds to avoid integer overflows.
+>
+> Since this addresses all of the comments received by the RFC version
+> that was posted over a month ago and I don't see any more issues with
+> it, I'm tempted to simply queue it up for 5.5 unless somebody sees a
+> good enough reason why that would be a bad idea.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 1d05d570142f..38aba7e5bbd9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -131,6 +131,10 @@
- 	vcc-pg-supply = <&reg_aldo1>;
- };
- 
-+&pwm {
-+	status = "okay";
-+};
-+
- &r_i2c {
- 	status = "okay";
- 
--- 
-2.20.1
+Could I please have another day or two?
+
+I did try the RFC version, but not much as I went off on those
+teo issues and backtracked pretty quickly.
+
+I have been running this v2 today, with both menu and teo
+governors. Acquiring some baseline reference data to compare
+to now. The menu governor response seems different (Supporting
+information/graphs will come later).
+teo just started.
+
+I lost a bunch of time due to being somewhat linux-next challenged.
+
+... Doug
+
 
