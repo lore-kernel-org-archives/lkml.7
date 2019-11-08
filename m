@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42A7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C117FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9512721D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93989206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240089;
-	bh=z62dywJAMWmfYIJF3fIu6pSyjyH7/Oe9eeZghcAxork=;
+	s=default; t=1573240092;
+	bh=OLuwf24e/31bhS3CECSY0LveJTZ4yHq+llR+jExCtEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LkVHAmxRFJgjDy2EBGTYEohMDHh5Pw0MfvgNYnw5HVCt71Wuwm8aZKz63u+S/l6iM
-	 wGmRVD2M1hF5npZsPfTZ8F/sJJetBUeJ3DHo/Mt/Pe5jBRwMx7kKvpSD9C/hpeCFG2
-	 BCciSevsjj1yYlgcuxfXGRYeTxwOnB/eUpukTVBk=
+	b=0rPrXqf5rR4uVPjXYXofhNB7rI87bbRcAGqgruZb9s1PaMk3bIJgVMpIOI55DbMrV
+	 T2tyNt6mgTUe60AKddOFNvL6//IS2drFBuK6f7grM75aio2sXn3v2H7y1xPAHusO1x
+	 MeAQnw2Yh0DBZYMWR/KV7h+TsmOTA9v8TScl1lMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387775AbfKHTII (ORCPT
+        id S2391571AbfKHTIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:08:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391551AbfKHTIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:05 -0500
+        id S2391556AbfKHTII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:08:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905A021D7F;
-        Fri,  8 Nov 2019 19:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B679920673;
+        Fri,  8 Nov 2019 19:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240084;
-        bh=z62dywJAMWmfYIJF3fIu6pSyjyH7/Oe9eeZghcAxork=;
+        s=default; t=1573240087;
+        bh=OLuwf24e/31bhS3CECSY0LveJTZ4yHq+llR+jExCtEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkuTcr/bqv8MvQCkwfkZGg3PhwTPUMB9wecpY6CyuR5L1V/i9qxAW2DljwfGw7h+G
-         tlEje1jnola01sMCHCG3WELBoZ0QKz3E+i77w6MIWmq6lsT+Y+8v0KPZzfgZmUQHD/
-         r+4XbVctNkhH3j2Wn3Jmp/yOs+HBHtqCWdpcId/Q=
+        b=K170Vp86J+FGgCLNQldPSvbOa/A1IB1VBbNOMG1xv1R/ftpdqAoLVXkF/Uozqusvx
+         q5E5DIiGW4R7bbMeQKZgdH4pSp8i7aM+9WwUOeE9Yzh7MReTN100+Jf+qqVnIJsTJE
+         Pv7ew+hkI5E7ZJ/JYEAD5gnMkH2WDv7toYPsXIio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 084/140] net: annotate accesses to sk->sk_incoming_cpu
-Date:   Fri,  8 Nov 2019 19:50:12 +0100
-Message-Id: <20191108174910.393815813@linuxfoundation.org>
+Subject: [PATCH 5.3 085/140] net: annotate lockless accesses to sk->sk_napi_id
+Date:   Fri,  8 Nov 2019 19:50:13 +0100
+Message-Id: <20191108174910.455835258@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -62,156 +62,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 7170a977743b72cf3eb46ef6ef89885dc7ad3621 ]
+[ Upstream commit ee8d153d46a3b98c064ee15c0c0a3bbf1450e5a1 ]
 
-This socket field can be read and written by concurrent cpus.
+We already annotated most accesses to sk->sk_napi_id
 
-Use READ_ONCE() and WRITE_ONCE() annotations to document this,
-and avoid some compiler 'optimizations'.
+We missed sk_mark_napi_id() and sk_mark_napi_id_once()
+which might be called without socket lock held in UDP stack.
 
 KCSAN reported :
+BUG: KCSAN: data-race in udpv6_queue_rcv_one_skb / udpv6_queue_rcv_one_skb
 
-BUG: KCSAN: data-race in tcp_v4_rcv / tcp_v4_rcv
-
-write to 0xffff88812220763c of 4 bytes by interrupt on cpu 0:
- sk_incoming_cpu_update include/net/sock.h:953 [inline]
- tcp_v4_rcv+0x1b3c/0x1bb0 net/ipv4/tcp_ipv4.c:1934
- ip_protocol_deliver_rcu+0x4d/0x420 net/ipv4/ip_input.c:204
- ip_local_deliver_finish+0x110/0x140 net/ipv4/ip_input.c:231
+write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 0:
+ sk_mark_napi_id include/net/busy_poll.h:125 [inline]
+ __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
+ udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
+ udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
+ udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
+ __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
+ udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
+ ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
+ ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
  NF_HOOK include/linux/netfilter.h:305 [inline]
  NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_local_deliver+0x133/0x210 net/ipv4/ip_input.c:252
+ ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
  dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish+0x121/0x160 net/ipv4/ip_input.c:413
+ ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
  NF_HOOK include/linux/netfilter.h:305 [inline]
  NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_rcv+0x18f/0x1a0 net/ipv4/ip_input.c:523
+ ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
  __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
  __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
  process_backlog+0x1d3/0x420 net/core/dev.c:5955
  napi_poll net/core/dev.c:6392 [inline]
  net_rx_action+0x3ae/0xa90 net/core/dev.c:6460
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
- do_softirq.part.0+0x6b/0x80 kernel/softirq.c:337
- do_softirq kernel/softirq.c:329 [inline]
- __local_bh_enable_ip+0x76/0x80 kernel/softirq.c:189
 
-read to 0xffff88812220763c of 4 bytes by interrupt on cpu 1:
- sk_incoming_cpu_update include/net/sock.h:952 [inline]
- tcp_v4_rcv+0x181a/0x1bb0 net/ipv4/tcp_ipv4.c:1934
- ip_protocol_deliver_rcu+0x4d/0x420 net/ipv4/ip_input.c:204
- ip_local_deliver_finish+0x110/0x140 net/ipv4/ip_input.c:231
+write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 1:
+ sk_mark_napi_id include/net/busy_poll.h:125 [inline]
+ __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
+ udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
+ udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
+ udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
+ __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
+ udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
+ ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
+ ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
  NF_HOOK include/linux/netfilter.h:305 [inline]
  NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_local_deliver+0x133/0x210 net/ipv4/ip_input.c:252
+ ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
  dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish+0x121/0x160 net/ipv4/ip_input.c:413
+ ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
  NF_HOOK include/linux/netfilter.h:305 [inline]
  NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_rcv+0x18f/0x1a0 net/ipv4/ip_input.c:523
+ ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
  __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
  __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
  process_backlog+0x1d3/0x420 net/core/dev.c:5955
- napi_poll net/core/dev.c:6392 [inline]
- net_rx_action+0x3ae/0xa90 net/core/dev.c:6460
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
- smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
 
 Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.4.0-rc3+ #0
+CPU: 1 PID: 10890 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 
+Fixes: e68b6e50fa35 ("udp: enable busy polling for all sockets")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/sock.h          |    4 ++--
- net/core/sock.c             |    4 ++--
- net/ipv4/inet_hashtables.c  |    2 +-
- net/ipv4/udp.c              |    2 +-
- net/ipv6/inet6_hashtables.c |    2 +-
- net/ipv6/udp.c              |    2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
+ include/net/busy_poll.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -949,8 +949,8 @@ static inline void sk_incoming_cpu_updat
+--- a/include/net/busy_poll.h
++++ b/include/net/busy_poll.h
+@@ -122,7 +122,7 @@ static inline void skb_mark_napi_id(stru
+ static inline void sk_mark_napi_id(struct sock *sk, const struct sk_buff *skb)
  {
- 	int cpu = raw_smp_processor_id();
- 
--	if (unlikely(sk->sk_incoming_cpu != cpu))
--		sk->sk_incoming_cpu = cpu;
-+	if (unlikely(READ_ONCE(sk->sk_incoming_cpu) != cpu))
-+		WRITE_ONCE(sk->sk_incoming_cpu, cpu);
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+-	sk->sk_napi_id = skb->napi_id;
++	WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+ #endif
+ 	sk_rx_queue_set(sk, skb);
+ }
+@@ -132,8 +132,8 @@ static inline void sk_mark_napi_id_once(
+ 					const struct sk_buff *skb)
+ {
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+-	if (!sk->sk_napi_id)
+-		sk->sk_napi_id = skb->napi_id;
++	if (!READ_ONCE(sk->sk_napi_id))
++		WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+ #endif
  }
  
- static inline void sock_rps_record_flow_hash(__u32 hash)
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1125,7 +1125,7 @@ set_rcvbuf:
- 		break;
- 		}
- 	case SO_INCOMING_CPU:
--		sk->sk_incoming_cpu = val;
-+		WRITE_ONCE(sk->sk_incoming_cpu, val);
- 		break;
- 
- 	case SO_CNX_ADVICE:
-@@ -1474,7 +1474,7 @@ int sock_getsockopt(struct socket *sock,
- 		break;
- 
- 	case SO_INCOMING_CPU:
--		v.val = sk->sk_incoming_cpu;
-+		v.val = READ_ONCE(sk->sk_incoming_cpu);
- 		break;
- 
- 	case SO_MEMINFO:
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -240,7 +240,7 @@ static inline int compute_score(struct s
- 			return -1;
- 
- 		score = sk->sk_family == PF_INET ? 2 : 1;
--		if (sk->sk_incoming_cpu == raw_smp_processor_id())
-+		if (READ_ONCE(sk->sk_incoming_cpu) == raw_smp_processor_id())
- 			score++;
- 	}
- 	return score;
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -388,7 +388,7 @@ static int compute_score(struct sock *sk
- 		return -1;
- 	score += 4;
- 
--	if (sk->sk_incoming_cpu == raw_smp_processor_id())
-+	if (READ_ONCE(sk->sk_incoming_cpu) == raw_smp_processor_id())
- 		score++;
- 	return score;
- }
---- a/net/ipv6/inet6_hashtables.c
-+++ b/net/ipv6/inet6_hashtables.c
-@@ -105,7 +105,7 @@ static inline int compute_score(struct s
- 			return -1;
- 
- 		score = 1;
--		if (sk->sk_incoming_cpu == raw_smp_processor_id())
-+		if (READ_ONCE(sk->sk_incoming_cpu) == raw_smp_processor_id())
- 			score++;
- 	}
- 	return score;
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -135,7 +135,7 @@ static int compute_score(struct sock *sk
- 		return -1;
- 	score++;
- 
--	if (sk->sk_incoming_cpu == raw_smp_processor_id())
-+	if (READ_ONCE(sk->sk_incoming_cpu) == raw_smp_processor_id())
- 		score++;
- 
- 	return score;
 
 
