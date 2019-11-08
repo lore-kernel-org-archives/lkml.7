@@ -2,170 +2,153 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63BBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78D1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22322084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD3A2084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VawW4RrT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JG+3TGFr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfKHAmw (ORCPT
+        id S1727926AbfKHApC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:42:52 -0500
-Received: from ozlabs.org ([203.11.71.1]:44927 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfKHAmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:42:52 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 478M1d2pBVz9sPT;
-        Fri,  8 Nov 2019 11:42:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573173768;
-        bh=R9/oYo60qxfQ7WsMW0HX0R46GovOjFzuX/xtvjhGC2o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VawW4RrTMjde+At/oSAmmp0PAE5yueJk8cifC7zA7M+8Mh25Zw8S41LhE1ap9FycD
-         3dbr4NkMgA+1FLQVBgXeC20fQe/GUCpwJyRTQn4Q6Koi9vFO+uj5wD3OUM6G5gTjmY
-         xKMBEAWPRmTtIOKUENe0Ardz9T4pfVciduIMy3lEQE9uwg2UWXGzzY516qRkutW05P
-         DubLLKrUnKaQ4tLtOCKWDKlHZ5fhEsK2OpyWCIE9RXkCRQnTXjpiVfseNtRcj7CDzA
-         nTNhA00SxmCZCkezHawIjdZ2eKHhKv8F08TSre4fpnd+eWG7/Ngm3oNvHi+IwRm3TL
-         qvQjlzl7vKD/w==
-Date:   Fri, 8 Nov 2019 11:42:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: linux-next: manual merge of the drm tree with the
- drm-intel-fixes tree
-Message-ID: <20191108114244.357c594f@canb.auug.org.au>
-In-Reply-To: <20191031113315.4183cc7a@canb.auug.org.au>
-References: <20191031113315.4183cc7a@canb.auug.org.au>
+        Thu, 7 Nov 2019 19:45:02 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44845 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfKHApB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 19:45:01 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v4so3043160lfd.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 16:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SncMCZY11gPJIfKbfsmrvxmuN/67o00wSU4yUgQ2zL0=;
+        b=JG+3TGFrcv/9M9GIXFwmuqadILvxRaOJD6hZNFXM928X+RZ2USWGkQ1+IuQWVZ/NMK
+         ZtJo2s+KTeIF3ceufpu/jBJzuz/WxGSbfnss4XgB+ne5tX73CYGixbfD6KrymjvndVkE
+         JHQ8+4jmZA81gPeoTmM61ZEQIZ5dwHFQ3W6Nrjl6bxU7KxkA54JtN0tHzz6jx1kXvsD7
+         JQMRWR+qlCJyR7aOroxmXMaMZzfw+GRo10VTJPgRmNk5acjYCYT+NzPYorkCFbaa+nVm
+         FMLdBRKPu4JE02giveSEKuwW0owEIaumTYmRfU0C00ZIJ1VvWv7vp/UV9hefbUcpWcNE
+         FB2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SncMCZY11gPJIfKbfsmrvxmuN/67o00wSU4yUgQ2zL0=;
+        b=naSWimY9Mcv9c4WPEGB46c7b4TkaT1u8dp85LO3z2lfjF3MR6KyGhitxpPLzWuN+Xf
+         GQDlIUCMpk9o0O5Y2wHB9xIfK3oWJMMU+K2E+MCVg0BbIVbZYG4kvBPgi+pRdAAatGDu
+         9N2pw2SSXGKD4RLviim2/lCNrmIWYAbyMu76yVtx+F6ESkdamEBubfTJtDHHPZMQJJIg
+         7Ye8JDNXW9DCzwxzkuixh+NC95K+cwR8JeZ7F3wiTEapEwKkSLKhxphJ6P2cuZRvou4u
+         Dueb+uZIxRv/PaV6kB/qsbMFix39ieu1TJfXdiGBjYFaAOzunLqc6f2whIDopcO9s4wD
+         TwAg==
+X-Gm-Message-State: APjAAAVeuOL9uSJbZBjN1t26j9q/SH/VRTTKaizdM1JBUL9I8idd93To
+        v0mj9tmKQ8GTpwiwRZnyIeE=
+X-Google-Smtp-Source: APXvYqwM1abusWEJ9GBD5a7TrzO7cvXBlvs/lyTxJwFfjI971RgSgp9eXL8yJ0PQ6mYK4iAlrdWITA==
+X-Received: by 2002:a19:fc1e:: with SMTP id a30mr4467814lfi.167.1573173899613;
+        Thu, 07 Nov 2019 16:44:59 -0800 (PST)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id y6sm2029544ljn.40.2019.11.07.16.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 16:44:58 -0800 (PST)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     linux-xtensa@linux-xtensa.org
+Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Petr Mladek <pmladek@suse.com>, Joe Perches <joe@perches.com>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH v2] xtensa: improve stack dumping
+Date:   Thu,  7 Nov 2019 16:44:48 -0800
+Message-Id: <20191108004448.5386-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8O7Q52mKl9Pw5johfOYOCiA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8O7Q52mKl9Pw5johfOYOCiA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Calculate printable stack size and use print_hex_dump instead of
+opencoding it.
+Make size of stack dump configurable.
+Drop extra newline output in show_trace as its output format does not
+depend on CONFIG_KALLSYMS.
 
-Hi all,
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+---
+Changes v1->v2:
+- use print_hex_dump.
 
-This is now a conflict between the drm tree and Linus' tree.
+ arch/xtensa/Kconfig.debug  |  7 +++++++
+ arch/xtensa/kernel/traps.c | 24 ++++++++----------------
+ 2 files changed, 15 insertions(+), 16 deletions(-)
 
-On Thu, 31 Oct 2019 11:33:15 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the drm tree got a conflict in:
->=20
->   drivers/gpu/drm/i915/i915_drv.h
->=20
-> between commit:
->=20
->   59cd826fb5e7 ("drm/i915: Fix PCH reference clock for FDI on HSW/BDW")
->=20
-> from the drm-intel-fixes tree and commit:
->=20
->   7d423af9bfb1 ("drm/i915: Implement a better i945gm vblank irq vs. C-sta=
-tes workaround")
->=20
-> from the drm tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc drivers/gpu/drm/i915/i915_drv.h
-> index 953e1d12c23c,8882c0908c3b..000000000000
-> --- a/drivers/gpu/drm/i915/i915_drv.h
-> +++ b/drivers/gpu/drm/i915/i915_drv.h
-> @@@ -1704,34 -1339,17 +1339,19 @@@ struct drm_i915_private=20
->   	struct {
->   		struct notifier_block pm_notifier;
->  =20
-> - 		/**
-> - 		 * We leave the user IRQ off as much as possible,
-> - 		 * but this means that requests will finish and never
-> - 		 * be retired once the system goes idle. Set a timer to
-> - 		 * fire periodically while the ring is running. When it
-> - 		 * fires, go retire requests.
-> - 		 */
-> - 		struct delayed_work retire_work;
-> -=20
-> - 		/**
-> - 		 * When we detect an idle GPU, we want to turn on
-> - 		 * powersaving features. So once we see that there
-> - 		 * are no more requests outstanding and no more
-> - 		 * arrive within a small period of time, we fire
-> - 		 * off the idle_work.
-> - 		 */
-> - 		struct work_struct idle_work;
-> + 		struct i915_gem_contexts {
-> + 			spinlock_t lock; /* locks list */
-> + 			struct list_head list;
-> +=20
-> + 			struct llist_head free_list;
-> + 			struct work_struct free_work;
-> + 		} contexts;
->   	} gem;
->  =20
->  +	u8 pch_ssc_use;
->  +
-> - 	/* For i945gm vblank irq vs. C3 workaround */
-> - 	struct {
-> - 		struct work_struct work;
-> - 		struct pm_qos_request pm_qos;
-> - 		u8 c3_disable_latency;
-> - 		u8 enabled;
-> - 	} i945gm_vblank;
-> + 	/* For i915gm/i945gm vblank irq workaround */
-> + 	u8 vblank_enabled;
->  =20
->   	/* perform PHY state sanity checks? */
->   	bool chv_phy_assert[2];
+diff --git a/arch/xtensa/Kconfig.debug b/arch/xtensa/Kconfig.debug
+index 39de98e20018..83cc8d12fa0e 100644
+--- a/arch/xtensa/Kconfig.debug
++++ b/arch/xtensa/Kconfig.debug
+@@ -31,3 +31,10 @@ config S32C1I_SELFTEST
+ 	  It is easy to make wrong hardware configuration, this test should catch it early.
+ 
+ 	  Say 'N' on stable hardware.
++
++config PRINT_STACK_DEPTH
++	int "Stack depth to print" if DEBUG_KERNEL
++	default 64
++	help
++	  This option allows you to set the stack depth that the kernel
++	  prints in stack traces.
+diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
+index 4a6c495ce9b6..fe090ab1cab8 100644
+--- a/arch/xtensa/kernel/traps.c
++++ b/arch/xtensa/kernel/traps.c
+@@ -491,32 +491,24 @@ void show_trace(struct task_struct *task, unsigned long *sp)
+ 
+ 	pr_info("Call Trace:\n");
+ 	walk_stackframe(sp, show_trace_cb, NULL);
+-#ifndef CONFIG_KALLSYMS
+-	pr_cont("\n");
+-#endif
+ }
+ 
+-static int kstack_depth_to_print = 24;
++static int kstack_depth_to_print = CONFIG_PRINT_STACK_DEPTH;
+ 
+ void show_stack(struct task_struct *task, unsigned long *sp)
+ {
+-	int i = 0;
+-	unsigned long *stack;
++	size_t len;
+ 
+ 	if (!sp)
+ 		sp = stack_pointer(task);
+-	stack = sp;
+ 
+-	pr_info("Stack:\n");
++	len = min((-(unsigned long)sp) & (THREAD_SIZE - 4),
++		  kstack_depth_to_print * 4ul);
+ 
+-	for (i = 0; i < kstack_depth_to_print; i++) {
+-		if (kstack_end(sp))
+-			break;
+-		pr_cont(" %08lx", *sp++);
+-		if (i % 8 == 7)
+-			pr_cont("\n");
+-	}
+-	show_trace(task, stack);
++	pr_info("Stack:\n");
++	print_hex_dump(KERN_INFO, " ", DUMP_PREFIX_NONE, 32, 4,
++		       sp, len, false);
++	show_trace(task, sp);
+ }
+ 
+ DEFINE_SPINLOCK(die_lock);
+-- 
+2.20.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/8O7Q52mKl9Pw5johfOYOCiA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3EugQACgkQAVBC80lX
-0GzchggAo5oRTxB+fN/Mf6fDT2ym3SzxMVItmzy9m+ld+RlJkEDjux3LHOtiDug5
-jqd9z1rmX+4s+yTznDEHwgHqZx0AWZsr4Ex+3MYhciWU6e5ey4jIA6JRSjfonlZ3
-XxkkD/JNJEa+LUaS8c1OAQawMemJKgb8Yt31yqkR4ZAs29A9Dd1pTxyGXL1T6WaG
-Hk8XrJ30TtNvIGvjCsQ5kX1tyuDy/BshS9tK9q5056f0uS6FD87OYJVEslKY+Er7
-rvM3I4c14xajf2zc8ooVWw+7OTezYI4ZuJII5rbehyFN8houk/TGnZTrsySkSET0
-uDrXSB+pUjMBNXQKqHtk/tl8z9iMIg==
-=3cJp
------END PGP SIGNATURE-----
-
---Sig_/8O7Q52mKl9Pw5johfOYOCiA--
