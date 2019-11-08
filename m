@@ -2,566 +2,159 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22A6FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE61FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B0F215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437BA215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vaXWLcUC"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="VtbCiPyl";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="CMj5groS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfKHNdf (ORCPT
+        id S1729430AbfKHNeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:33:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43874 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727563AbfKHNdf (ORCPT
+        Fri, 8 Nov 2019 08:34:23 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:42688 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727431AbfKHNeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:33:35 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 3so4555589pfb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:33:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ih0gjgftVSq40UymBQOagIAp1xQi1B6tEC0FaP+FShA=;
-        b=vaXWLcUCFjX5Aa5cPXCDhkqdMFY1j8eZF6Oa1immZ7KoCWLDdRX757hj7pT/Y+da8R
-         cUHZGwE9u+co/d7pFhNyWaPlM2amGt8jer5P85tRkFNQYMJIkBd6tRddNuIAgOkhnBZD
-         +WYZMHb6MfWYNaNsEu0fp1GjAi2pVV1dT/CbyhVrccCuyFlRuoUpEEWgUoJDu620N2Jy
-         IKlkMdQ+1/UZVIZtSdXY2QxhCQ0La8ilag0gEcHCibzIhaE39S1+e4JSN8zE36ogBNkv
-         rXakGjrGAh9x1YxFNP4EA0KOvGank8x72wYH9M5ZvRCsv6L0/Yy+jSDPdCe93P1bSDAF
-         +slQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ih0gjgftVSq40UymBQOagIAp1xQi1B6tEC0FaP+FShA=;
-        b=cjovVUAtmz0NkuRRjC2wiKJx4NS6qJdrYYAikIA1zv2GAuMl/2Uz/tMaR4pzNKLTwg
-         0DO1ntD+ne1a0i064TL3kZ3Bd/lwy/u/BHRnWSwb+GyQlTdkxj+/vlYgHJuotko4qXMV
-         wT02INFVGwsHDC+/winbxGXc/3GThB7i2vrEWoV03CZdfWNj3llpP/a0d4W0Nq9l7GGn
-         brx2zuE8DzdyxEBlbVmx/sMZZQ3UfyfEYfjGNu789Lyy7um2EWYesHvS/HORXsrnVWxZ
-         TTzWd+lFlZZ5Av2KcXYENggsMS81HUpotHf9iPw/F4xYTtdOMm/1zvjip8XKifEPaj7L
-         mCuQ==
-X-Gm-Message-State: APjAAAWddXCzdMv8eqp2FDVs2iytNFFWk3Sl6sVsON1UBTw99trYjjks
-        1OIClBORMTgAZhFr2Mwl4RuaOg==
-X-Google-Smtp-Source: APXvYqyZNTBG8iJbLnHZM7R0yS2RhR6VRFqIKdP22w6/RYCv90ajmPgx5nbICzcdEqam7VFZE5KPqQ==
-X-Received: by 2002:a63:f48:: with SMTP id 8mr12071411pgp.329.1573220013948;
-        Fri, 08 Nov 2019 05:33:33 -0800 (PST)
-Received: from localhost.localdomain ([240e:362:48f:8f00:79bd:a8a7:1834:2d1a])
-        by smtp.gmail.com with ESMTPSA id 12sm7626483pjm.11.2019.11.08.05.33.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 08 Nov 2019 05:33:33 -0800 (PST)
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [RESEND PATCH v8 3/3] crypto: hisilicon - register zip engine to uacce
-Date:   Fri,  8 Nov 2019 21:31:44 +0800
-Message-Id: <1573219904-17594-4-git-send-email-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573219904-17594-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1573219904-17594-1-git-send-email-zhangfei.gao@linaro.org>
+        Fri, 8 Nov 2019 08:34:22 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8DY2Ek020618;
+        Fri, 8 Nov 2019 05:34:08 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=sH8GahJdAlNq0AWGOBm6yysVkAnTlgB71aPt0ZG4lQ0=;
+ b=VtbCiPyl24WhJBSGEkqTtBuzfT4Q1bE3YpwQZ/vujn7KAy3HIZRWqT9IxJUle68/EhfG
+ Rst8OkcmPjHspD4c90o9GIM8YtBKAev683sitxtRD/saUZJ//VnuyrSfLgAUrp/1hjj8
+ gZ7fCzUs8RLf/LupEmpReLIiza2twsdsNRpZUrqtKkR6yXTgBvnOorbABquD2rjUtfiu
+ jaKCGZdij6QKSYsnNOS5rhaNuQhMxjLiMznhEta4f3TSnjEBUq0cyhFLJ5pcb64yFrML
+ P1q/jx9BXVKwjWi4BFTT4MlXI1v4bexrNorXbIni5Nxk3CNLnzsEsSyRLlUBpvvbHIYA 5Q== 
+Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2052.outbound.protection.outlook.com [104.47.40.52])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2w41txhcje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 05:34:07 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lpVZHVmKIX1ZuQ+uHoKHomJwSMx3rI38CmNCJE2f5w2yh+sHvSG7weeyWDAC1ZjG5FUajO0+hRk0I9390iJSd9Hc70GfoYEz3L9Aa34tA5+fS7J/j6GOulvShl4A+10rLWgp2nspFfyF3TLHUTwZR4X5OPg5RlTHtjy12qBcs1k1qgrC5onrJkDtKtmLh8H5vrBJxfgRX8gxl5E6PuBDvlklurssg9Y/uuyfDgvkNwRQreQffYVfqPVWRklIVtlZ39Kkr1C0VXrV1xq3IDBBO6Sco72KF4L+dtM1xPFO2FvTYiQJkD6ojDqLEGXRjsEvjM/FeLpUXFkzzskGovwE1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sH8GahJdAlNq0AWGOBm6yysVkAnTlgB71aPt0ZG4lQ0=;
+ b=SiugDiaz6OPdSAFgMSlp6DED4eeqOlIt6N2S8bmbEpsgu+cRhBajMolN2TuS5dIGVpXW4bft3VJbuo0TCrKPzGSkgmVCautquIKjZYr43Wx7WrjwnGfH1d8zmSXPW2KhdLs9d3+VP8+Cj779Jj3bHyH47UudAuJ5zYJz2Hr1vax0JhLCjix0xEoLzkD+p9ZV8g27I3ySt9DyT00ixR2eUYCrLBPFnIFIyu8UOqhiaOvTQf/wyuRE8+RT7Mn2GKffMKvyK7OaSQjEC0U5q6uemys+WaYh/SmJVPRr5cwVLpCoQcJllziAMzfdB0RM1LduuHKbn2WVfvk0zdEzVQuAQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.243) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sH8GahJdAlNq0AWGOBm6yysVkAnTlgB71aPt0ZG4lQ0=;
+ b=CMj5groSp5FUD0f6XNR6G2Ogy8cvaMze87XzgakOUYmwyRub1D9B5hUclUANcYeyN1NXl1ulYqvMyscnQXyz8fWi5WEcSxFny0GCZ5/jt4Mo2zyfgSvT9Gx5x/a7LRKv6T3fRYTHEm10gkS0c+7Ktp/i58N/oN/hZ8bzU1otneg=
+Received: from CH2PR07CA0031.namprd07.prod.outlook.com (2603:10b6:610:20::44)
+ by CH2PR07MB7320.namprd07.prod.outlook.com (2603:10b6:610:a7::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22; Fri, 8 Nov
+ 2019 13:34:04 +0000
+Received: from DM3NAM05FT048.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e51::201) by CH2PR07CA0031.outlook.office365.com
+ (2603:10b6:610:20::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22 via Frontend
+ Transport; Fri, 8 Nov 2019 13:34:03 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.243 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.243; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
+ DM3NAM05FT048.mail.protection.outlook.com (10.152.98.162) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.15 via Frontend Transport; Fri, 8 Nov 2019 13:34:02 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id xA8DXs1R133720
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 05:33:56 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Fri, 8 Nov 2019 14:33:54 +0100
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Fri, 8 Nov 2019 14:33:54 +0100
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id xA8DXmpw015962;
+        Fri, 8 Nov 2019 13:33:52 GMT
+From:   Milind Parab <mparab@cadence.com>
+To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
+        <davem@davemloft.net>, <f.fainelli@gmail.com>
+CC:     <netdev@vger.kernel.org>, <hkallweit1@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <piotrs@cadence.com>,
+        <dkangude@cadence.com>, <ewanm@cadence.com>, <arthurm@cadence.com>,
+        <stevenh@cadence.com>, Milind Parab <mparab@cadence.com>
+Subject: [PATCH 0/4] net: macb: cover letter 
+Date:   Fri, 8 Nov 2019 13:33:47 +0000
+Message-ID: <1573220027-15842-1-git-send-email-mparab@cadence.com>
+X-Mailer: git-send-email 2.2.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(136003)(39860400002)(199004)(36092001)(189003)(110136005)(26005)(5660300002)(8676002)(50466002)(478600001)(7126003)(4744005)(70586007)(186003)(53416004)(81166006)(2616005)(81156014)(126002)(70206006)(47776003)(476003)(305945005)(16586007)(356004)(54906003)(50226002)(48376002)(2201001)(4743002)(8936002)(426003)(486006)(106002)(2906002)(86362001)(7696005)(51416003)(6666004)(36906005)(316002)(336012)(36756003)(107886003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR07MB7320;H:wcmailrelayl01.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:ErrorRetry;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 73712cc3-2541-4647-e93d-08d7645051b2
+X-MS-TrafficTypeDiagnostic: CH2PR07MB7320:
+X-Microsoft-Antispam-PRVS: <CH2PR07MB7320C2F55BB9D4B9E05DDD1FD37B0@CH2PR07MB7320.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 0215D7173F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Xm7XYaHvkWS9h/GAvNAkmbn/+Vybg3mdU6FgOz5a86iXM6oUmh2RRNmkPaPs3byv8S2iof1DxO7LWeisvyv9u/T655iM3yUeTTgYeVPUv6umLuITHXnJ/L2NQUouGQjkA89kG34DwMHKDbkpksYfFVSqu25Ey+jpMuW/ACOCihBR83GGkddQKjz1vp4/u6WFDsKqBrwo5vUyMwwh9UU+qS2JtTfE1tnDD9m60IyFZ6cPol3uJtU7v8Wnzp8F+llS5DbxAFIjo5rOUll0Wzf3EmBwNvIbpgeOabDtrxo5Ol12TJXbvZezwdb4gs5o7w8JHVM0GCwAWgd48FL08efX/9eDbE/qgjKAPfyuB5x0oQ5h+nPyhWPeReskTWBM1wLmnWnk98MmbjXTroji38IctI9+tQRwZf6fSJrjBbaut7vU6GXgIBfBJXuHDkVsV4tBoMbJtbnww+BEjrzTN0snRw==
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2019 13:34:02.5844
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73712cc3-2541-4647-e93d-08d7645051b2
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR07MB7320
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-08_04:2019-11-08,2019-11-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 clxscore=1011
+ phishscore=0 suspectscore=0 mlxlogscore=695 bulkscore=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911080135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register qm to uacce framework for user crypto driver
+Hi,
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
----
- drivers/crypto/hisilicon/qm.c           | 256 ++++++++++++++++++++++++++++++--
- drivers/crypto/hisilicon/qm.h           |  11 ++
- drivers/crypto/hisilicon/zip/zip_main.c |  38 ++---
- include/uapi/misc/uacce/hisi_qm.h       |  23 +++
- 4 files changed, 289 insertions(+), 39 deletions(-)
- create mode 100644 include/uapi/misc/uacce/hisi_qm.h
+This patch set contains following patches
+for Cadence 10G ethernet controller driver.
 
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index a8ed6990..bf8442d 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -9,6 +9,9 @@
- #include <linux/log2.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
-+#include <linux/uacce.h>
-+#include <linux/uaccess.h>
-+#include <uapi/misc/uacce/hisi_qm.h>
- #include "qm.h"
- 
- /* eq/aeq irq enable */
-@@ -465,17 +468,22 @@ static void qm_cq_head_update(struct hisi_qp *qp)
- 
- static void qm_poll_qp(struct hisi_qp *qp, struct hisi_qm *qm)
- {
--	struct qm_cqe *cqe = qp->cqe + qp->qp_status.cq_head;
--
--	if (qp->req_cb) {
--		while (QM_CQE_PHASE(cqe) == qp->qp_status.cqc_phase) {
--			dma_rmb();
--			qp->req_cb(qp, qp->sqe + qm->sqe_size * cqe->sq_head);
--			qm_cq_head_update(qp);
--			cqe = qp->cqe + qp->qp_status.cq_head;
--			qm_db(qm, qp->qp_id, QM_DOORBELL_CMD_CQ,
--			      qp->qp_status.cq_head, 0);
--			atomic_dec(&qp->qp_status.used);
-+	struct qm_cqe *cqe;
-+
-+	if (qp->event_cb) {
-+		qp->event_cb(qp);
-+	} else {
-+		cqe = qp->cqe + qp->qp_status.cq_head;
-+
-+		if (qp->req_cb) {
-+			while (QM_CQE_PHASE(cqe) == qp->qp_status.cqc_phase) {
-+				dma_rmb();
-+				qp->req_cb(qp, qp->sqe + qm->sqe_size *
-+					   cqe->sq_head);
-+				qm_cq_head_update(qp);
-+				cqe = qp->cqe + qp->qp_status.cq_head;
-+				atomic_dec(&qp->qp_status.used);
-+			}
- 		}
- 
- 		/* set c_flag */
-@@ -1271,7 +1279,7 @@ static int qm_qp_ctx_cfg(struct hisi_qp *qp, int qp_id, int pasid)
-  * @qp: The qp we want to start to run.
-  * @arg: Accelerator specific argument.
-  *
-- * After this function, qp can receive request from user. Return qp_id if
-+ * After this function, qp can receive request from user. Return 0 if
-  * successful, Return -EBUSY if failed.
-  */
- int hisi_qm_start_qp(struct hisi_qp *qp, unsigned long arg)
-@@ -1316,7 +1324,7 @@ int hisi_qm_start_qp(struct hisi_qp *qp, unsigned long arg)
- 
- 	dev_dbg(dev, "queue %d started\n", qp_id);
- 
--	return qp_id;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(hisi_qm_start_qp);
- 
-@@ -1397,6 +1405,213 @@ static void hisi_qm_cache_wb(struct hisi_qm *qm)
- 	}
- }
- 
-+static void qm_qp_event_notifier(struct hisi_qp *qp)
-+{
-+	wake_up_interruptible(&qp->uacce_q->wait);
-+}
-+
-+static int hisi_qm_get_available_instances(struct uacce_device *uacce)
-+{
-+	int i, ret;
-+	struct hisi_qm *qm = uacce->priv;
-+
-+	read_lock(&qm->qps_lock);
-+	for (i = 0, ret = 0; i < qm->qp_num; i++)
-+		if (!qm->qp_array[i])
-+			ret++;
-+	read_unlock(&qm->qps_lock);
-+
-+	return ret;
-+}
-+
-+static int hisi_qm_uacce_get_queue(struct uacce_device *uacce,
-+				   unsigned long arg,
-+				   struct uacce_queue *q)
-+{
-+	struct hisi_qm *qm = uacce->priv;
-+	struct hisi_qp *qp;
-+	u8 alg_type = 0;
-+
-+	qp = hisi_qm_create_qp(qm, alg_type);
-+	if (IS_ERR(qp))
-+		return PTR_ERR(qp);
-+
-+	q->priv = qp;
-+	q->uacce = uacce;
-+	qp->uacce_q = q;
-+	qp->event_cb = qm_qp_event_notifier;
-+	qp->pasid = arg;
-+
-+	return 0;
-+}
-+
-+static void hisi_qm_uacce_put_queue(struct uacce_queue *q)
-+{
-+	struct hisi_qp *qp = q->priv;
-+
-+	hisi_qm_cache_wb(qp->qm);
-+	hisi_qm_release_qp(qp);
-+}
-+
-+/* map sq/cq/doorbell to user space */
-+static int hisi_qm_uacce_mmap(struct uacce_queue *q,
-+			      struct vm_area_struct *vma,
-+			      struct uacce_qfile_region *qfr)
-+{
-+	struct hisi_qp *qp = q->priv;
-+	struct hisi_qm *qm = qp->qm;
-+	size_t sz = vma->vm_end - vma->vm_start;
-+	struct pci_dev *pdev = qm->pdev;
-+	struct device *dev = &pdev->dev;
-+	unsigned long vm_pgoff;
-+	int ret;
-+
-+	switch (qfr->type) {
-+	case UACCE_QFRT_MMIO:
-+		if (qm->ver == QM_HW_V2) {
-+			if (sz > PAGE_SIZE * (QM_DOORBELL_PAGE_NR +
-+			    QM_DOORBELL_SQ_CQ_BASE_V2 / PAGE_SIZE))
-+				return -EINVAL;
-+		} else {
-+			if (sz > PAGE_SIZE * QM_DOORBELL_PAGE_NR)
-+				return -EINVAL;
-+		}
-+
-+		vma->vm_flags |= VM_IO;
-+
-+		return remap_pfn_range(vma, vma->vm_start,
-+				       qm->phys_base >> PAGE_SHIFT,
-+				       sz, pgprot_noncached(vma->vm_page_prot));
-+	case UACCE_QFRT_DUS:
-+		if (sz != qp->qdma.size)
-+			return -EINVAL;
-+
-+		/*
-+		 * dma_mmap_coherent() requires vm_pgoff as 0
-+		 * restore vm_pfoff to initial value for mmap()
-+		 */
-+		vm_pgoff = vma->vm_pgoff;
-+		vma->vm_pgoff = 0;
-+		ret = dma_mmap_coherent(dev, vma, qp->qdma.va,
-+					qp->qdma.dma, sz);
-+		vma->vm_pgoff = vm_pgoff;
-+		return ret;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int hisi_qm_uacce_start_queue(struct uacce_queue *q)
-+{
-+	struct hisi_qp *qp = q->priv;
-+
-+	return hisi_qm_start_qp(qp, qp->pasid);
-+}
-+
-+static void hisi_qm_uacce_stop_queue(struct uacce_queue *q)
-+{
-+	hisi_qm_stop_qp(q->priv);
-+}
-+
-+static int qm_set_sqctype(struct uacce_queue *q, u16 type)
-+{
-+	struct hisi_qm *qm = q->uacce->priv;
-+	struct hisi_qp *qp = q->priv;
-+
-+	write_lock(&qm->qps_lock);
-+	qp->alg_type = type;
-+	write_unlock(&qm->qps_lock);
-+
-+	return 0;
-+}
-+
-+static long hisi_qm_uacce_ioctl(struct uacce_queue *q, unsigned int cmd,
-+				unsigned long arg)
-+{
-+	struct hisi_qp *qp = q->priv;
-+	struct hisi_qp_ctx qp_ctx;
-+
-+	if (cmd == UACCE_CMD_QM_SET_QP_CTX) {
-+		if (copy_from_user(&qp_ctx, (void __user *)arg,
-+				   sizeof(struct hisi_qp_ctx)))
-+			return -EFAULT;
-+
-+		if (qp_ctx.qc_type != 0 && qp_ctx.qc_type != 1)
-+			return -EINVAL;
-+
-+		qm_set_sqctype(q, qp_ctx.qc_type);
-+		qp_ctx.id = qp->qp_id;
-+
-+		if (copy_to_user((void __user *)arg, &qp_ctx,
-+				 sizeof(struct hisi_qp_ctx)))
-+			return -EFAULT;
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct uacce_ops uacce_qm_ops = {
-+	.get_available_instances = hisi_qm_get_available_instances,
-+	.get_queue = hisi_qm_uacce_get_queue,
-+	.put_queue = hisi_qm_uacce_put_queue,
-+	.start_queue = hisi_qm_uacce_start_queue,
-+	.stop_queue = hisi_qm_uacce_stop_queue,
-+	.mmap = hisi_qm_uacce_mmap,
-+	.ioctl = hisi_qm_uacce_ioctl,
-+};
-+
-+static int qm_register_uacce(struct hisi_qm *qm)
-+{
-+	struct pci_dev *pdev = qm->pdev;
-+	struct uacce_device *uacce;
-+	unsigned long mmio_page_nr;
-+	unsigned long dus_page_nr;
-+	struct uacce_interface interface = {
-+		.flags = UACCE_DEV_SVA,
-+		.ops = &uacce_qm_ops,
-+	};
-+
-+	strncpy(interface.name, pdev->driver->name, sizeof(interface.name));
-+
-+	uacce = uacce_register(&pdev->dev, &interface);
-+	if (IS_ERR(uacce))
-+		return PTR_ERR(uacce);
-+
-+	if (uacce->flags & UACCE_DEV_SVA) {
-+		qm->use_sva = true;
-+	} else {
-+		/* only consider sva case */
-+		uacce_unregister(uacce);
-+		return -EINVAL;
-+	}
-+
-+	uacce->is_vf = pdev->is_virtfn;
-+	uacce->priv = qm;
-+	uacce->algs = qm->algs;
-+
-+	if (qm->ver == QM_HW_V1) {
-+		mmio_page_nr = QM_DOORBELL_PAGE_NR;
-+		uacce->api_ver = HISI_QM_API_VER_BASE;
-+	} else {
-+		mmio_page_nr = QM_DOORBELL_PAGE_NR +
-+			QM_DOORBELL_SQ_CQ_BASE_V2 / PAGE_SIZE;
-+		uacce->api_ver = HISI_QM_API_VER2_BASE;
-+	}
-+
-+	dus_page_nr = (PAGE_SIZE - 1 + qm->sqe_size * QM_Q_DEPTH +
-+		       sizeof(struct qm_cqe) * QM_Q_DEPTH) >> PAGE_SHIFT;
-+
-+	uacce->qf_pg_num[UACCE_QFRT_MMIO] = mmio_page_nr;
-+	uacce->qf_pg_num[UACCE_QFRT_DUS]  = dus_page_nr;
-+
-+	qm->uacce = uacce;
-+
-+	return 0;
-+}
-+
- /**
-  * hisi_qm_init() - Initialize configures about qm.
-  * @qm: The qm needing init.
-@@ -1421,10 +1636,14 @@ int hisi_qm_init(struct hisi_qm *qm)
- 		return -EINVAL;
- 	}
- 
-+	ret = qm_register_uacce(qm);
-+	if (ret < 0)
-+		dev_warn(&pdev->dev, "fail to register uacce (%d)\n", ret);
-+
- 	ret = pci_enable_device_mem(pdev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to enable device mem!\n");
--		return ret;
-+		goto err_unregister_uacce;
- 	}
- 
- 	ret = pci_request_mem_regions(pdev, qm->dev_name);
-@@ -1433,8 +1652,9 @@ int hisi_qm_init(struct hisi_qm *qm)
- 		goto err_disable_pcidev;
- 	}
- 
--	qm->io_base = ioremap(pci_resource_start(pdev, PCI_BAR_2),
--			      pci_resource_len(qm->pdev, PCI_BAR_2));
-+	qm->phys_base = pci_resource_start(pdev, PCI_BAR_2);
-+	qm->phys_size = pci_resource_len(qm->pdev, PCI_BAR_2);
-+	qm->io_base = ioremap(qm->phys_base, qm->phys_size);
- 	if (!qm->io_base) {
- 		ret = -EIO;
- 		goto err_release_mem_regions;
-@@ -1476,6 +1696,8 @@ int hisi_qm_init(struct hisi_qm *qm)
- 	pci_release_mem_regions(pdev);
- err_disable_pcidev:
- 	pci_disable_device(pdev);
-+err_unregister_uacce:
-+	uacce_unregister(qm->uacce);
- 
- 	return ret;
- }
-@@ -1504,6 +1726,8 @@ void hisi_qm_uninit(struct hisi_qm *qm)
- 	iounmap(qm->io_base);
- 	pci_release_mem_regions(pdev);
- 	pci_disable_device(pdev);
-+
-+	uacce_unregister(qm->uacce);
- }
- EXPORT_SYMBOL_GPL(hisi_qm_uninit);
- 
-diff --git a/drivers/crypto/hisilicon/qm.h b/drivers/crypto/hisilicon/qm.h
-index 103e2fd..16a176f 100644
---- a/drivers/crypto/hisilicon/qm.h
-+++ b/drivers/crypto/hisilicon/qm.h
-@@ -77,6 +77,9 @@
- 
- #define HISI_ACC_SGL_SGE_NR_MAX		255
- 
-+/* page number for queue file region */
-+#define QM_DOORBELL_PAGE_NR		1
-+
- enum qp_state {
- 	QP_STOP,
- };
-@@ -161,7 +164,12 @@ struct hisi_qm {
- 	u32 error_mask;
- 	u32 msi_mask;
- 
-+	const char *algs;
- 	bool use_dma_api;
-+	bool use_sva;
-+	resource_size_t phys_base;
-+	resource_size_t phys_size;
-+	struct uacce_device *uacce;
- };
- 
- struct hisi_qp_status {
-@@ -191,10 +199,13 @@ struct hisi_qp {
- 	struct hisi_qp_ops *hw_ops;
- 	void *qp_ctx;
- 	void (*req_cb)(struct hisi_qp *qp, void *data);
-+	void (*event_cb)(struct hisi_qp *qp);
- 	struct work_struct work;
- 	struct workqueue_struct *wq;
- 
- 	struct hisi_qm *qm;
-+	u16 pasid;
-+	struct uacce_queue *uacce_q;
- };
- 
- int hisi_qm_init(struct hisi_qm *qm);
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 1b2ee96..1c91587 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -316,8 +316,14 @@ static void hisi_zip_set_user_domain_and_cache(struct hisi_zip *hisi_zip)
- 	writel(AXUSER_BASE, base + HZIP_BD_RUSER_32_63);
- 	writel(AXUSER_BASE, base + HZIP_SGL_RUSER_32_63);
- 	writel(AXUSER_BASE, base + HZIP_BD_WUSER_32_63);
--	writel(AXUSER_BASE, base + HZIP_DATA_RUSER_32_63);
--	writel(AXUSER_BASE, base + HZIP_DATA_WUSER_32_63);
-+
-+	if (hisi_zip->qm.use_sva) {
-+		writel(AXUSER_BASE | AXUSER_SSV, base + HZIP_DATA_RUSER_32_63);
-+		writel(AXUSER_BASE | AXUSER_SSV, base + HZIP_DATA_WUSER_32_63);
-+	} else {
-+		writel(AXUSER_BASE, base + HZIP_DATA_RUSER_32_63);
-+		writel(AXUSER_BASE, base + HZIP_DATA_WUSER_32_63);
-+	}
- 
- 	/* let's open all compression/decompression cores */
- 	writel(DECOMP_CHECK_ENABLE | ALL_COMP_DECOMP_EN,
-@@ -672,23 +678,12 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	qm->pdev = pdev;
- 	qm->ver = rev_id;
- 
-+	qm->use_dma_api = true;
-+	qm->algs = "zlib\ngzip\n";
- 	qm->sqe_size = HZIP_SQE_SIZE;
- 	qm->dev_name = hisi_zip_name;
- 	qm->fun_type = (pdev->device == PCI_DEVICE_ID_ZIP_PF) ? QM_HW_PF :
- 								QM_HW_VF;
--	switch (uacce_mode) {
--	case 0:
--		qm->use_dma_api = true;
--		break;
--	case 1:
--		qm->use_dma_api = false;
--		break;
--	case 2:
--		qm->use_dma_api = true;
--		break;
--	default:
--		return -EINVAL;
--	}
- 
- 	ret = hisi_qm_init(qm);
- 	if (ret) {
-@@ -976,12 +971,10 @@ static int __init hisi_zip_init(void)
- 		goto err_pci;
- 	}
- 
--	if (uacce_mode == 0 || uacce_mode == 2) {
--		ret = hisi_zip_register_to_crypto();
--		if (ret < 0) {
--			pr_err("Failed to register driver to crypto.\n");
--			goto err_crypto;
--		}
-+	ret = hisi_zip_register_to_crypto();
-+	if (ret < 0) {
-+		pr_err("Failed to register driver to crypto.\n");
-+		goto err_crypto;
- 	}
- 
- 	return 0;
-@@ -996,8 +989,7 @@ static int __init hisi_zip_init(void)
- 
- static void __exit hisi_zip_exit(void)
- {
--	if (uacce_mode == 0 || uacce_mode == 2)
--		hisi_zip_unregister_from_crypto();
-+	hisi_zip_unregister_from_crypto();
- 	pci_unregister_driver(&hisi_zip_pci_driver);
- 	hisi_zip_unregister_debugfs();
- }
-diff --git a/include/uapi/misc/uacce/hisi_qm.h b/include/uapi/misc/uacce/hisi_qm.h
-new file mode 100644
-index 0000000..6435f0b
---- /dev/null
-+++ b/include/uapi/misc/uacce/hisi_qm.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-+#ifndef _UAPI_HISI_QM_H
-+#define _UAPI_HISI_QM_H
-+
-+#include <linux/types.h>
-+
-+/**
-+ * struct hisi_qp_ctx - User data for hisi qp.
-+ * @id: qp_index return to user space
-+ * @qc_type: Accelerator algorithm type
-+ */
-+struct hisi_qp_ctx {
-+	__u16 id;
-+	__u16 qc_type;
-+};
-+
-+#define HISI_QM_API_VER_BASE "hisi_qm_v1"
-+#define HISI_QM_API_VER2_BASE "hisi_qm_v2"
-+
-+/* UACCE_CMD_QM_SET_QP_CTX: Set qp algorithm type */
-+#define UACCE_CMD_QM_SET_QP_CTX	_IOWR('H', 10, struct hisi_qp_ctx)
-+
-+#endif
--- 
-2.7.4
+1. 0001-net-macb-add-phylink-support.patch
+   Replace phylib API's with phylink API's.
+2. 0002-net-macb-add-support-for-sgmii-MAC-PHY-interface.patch
+   This patch add support for SGMII mode.
+3. 0003-net-macb-add-support-for-c45-PHY.patch
+   This patch is to support C45 PHY.
+4. 0004-net-macb-add-support-for-high-speed-interface
+   This patch add support for 10G fixed mode.
+
+Thanks,
+Milind Parab
+
+Milind Parab (4):
+  net: macb: add phylink support
+  net: macb: add support for sgmii MAC-PHY interface
+  net: macb: add support for c45 PHY
+  net: macb: add support for high speed interface
+
+ drivers/net/ethernet/cadence/Kconfig     |    2 +-
+ drivers/net/ethernet/cadence/macb.h      |  100 +++++-
+ drivers/net/ethernet/cadence/macb_main.c |  521 +++++++++++++++++++++---------
+ 3 files changed, 449 insertions(+), 174 deletions(-)
 
