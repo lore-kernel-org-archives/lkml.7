@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34955FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840FDFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34BF21D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB5022459
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213629;
-	bh=v1prjkhELBhwKJpCCsadHkv68GhTa67gCjrparn07S0=;
+	s=default; t=1573213631;
+	bh=pK3JiVdDG4pG661QQcM6zzwb4qeK05/7/x0H6NkhWIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ke8M/XFafRv7ZBvhtKQ5L6YVOeAj2VqM7PhIoiPFRkWFfLa+ALuuicDB/2GpdqXAC
-	 nSyV5R4kKH0STRYQLCcIvyqb6wcDtZS4LgTVlfeYplS84c55yTbn84vG5upCT+kW3T
-	 O0S60JXK/8teGor9gQyaa+WABDgcbOuUARYYXRpc=
+	b=g057KZRhrEPue83XNQCdoAcQF/QOEJeNdJV67BfXgEx/Aa/k4RZpWvsmbZkAbvgIL
+	 QS6PCoqtCRwnFot9l4h/Q2mopIigvlDOdSkNmFMJkMMZH08uvlrqk1ClWj3mZ2qJQy
+	 aJ22Hv9sdaPvBJIFaS5R2QFCjjSdus6t3l76TPtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391483AbfKHLrI (ORCPT
+        id S2391490AbfKHLrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391445AbfKHLqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:49 -0500
+        id S2391456AbfKHLqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D163D2245A;
-        Fri,  8 Nov 2019 11:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF1522459;
+        Fri,  8 Nov 2019 11:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213609;
-        bh=v1prjkhELBhwKJpCCsadHkv68GhTa67gCjrparn07S0=;
+        s=default; t=1573213613;
+        bh=pK3JiVdDG4pG661QQcM6zzwb4qeK05/7/x0H6NkhWIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLu3RjxR0l7uVAG7HO6imnDe3EdpaUGP2ljlXR4eLNi9fllKHjR55bNQkUJVgyzOq
-         JUoqDQ70bcPmYQlUCsJKz1FBtX3noD27OF4K99xQL5yoKUnZsEytcOlBhhAf6PWilB
-         HM/6GyNfx5Oeu53v/ShChiSXTtZ7GWBYyidXqrZE=
+        b=FzXTv3ypcivacx+jgK7OxE9bY7cmpiv2xa3pSxgxMWMtdCdxcKglyAq+Ihq0p0Zn0
+         79HQf9CJoUHCgKM2pWgvsx/tPcWjU3SYyq5Jrzo2xfSaWWk2y2Cdi8RVTdUPREtnU0
+         8czwMVeEQ0HTcAVS7eRU1vPUVF/px0Azw7Szq5Bc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 46/64] nvmem: core: return error code instead of NULL from nvmem_device_get
-Date:   Fri,  8 Nov 2019 06:45:27 -0500
-Message-Id: <20191108114545.15351-46-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 48/64] media: dvb: fix compat ioctl translation
+Date:   Fri,  8 Nov 2019 06:45:29 -0500
+Message-Id: <20191108114545.15351-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,34 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit ca6ac25cecf0e740d7cc8e03e0ebbf8acbeca3df ]
+[ Upstream commit 1ccbeeb888ac33627d91f1ccf0b84ef3bcadef24 ]
 
-nvmem_device_get() should return ERR_PTR() on error or valid pointer
-on success, but one of the code path seems to return NULL, so fix it.
+The VIDEO_GET_EVENT and VIDEO_STILLPICTURE was added back in 2005 but
+it never worked because the command number is wrong.
 
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Using the right command number means we have a better chance of them
+actually doing the right thing, though clearly nobody has ever tried
+it successfully.
+
+I noticed these while auditing the remaining users of compat_time_t
+for y2038 bugs. This one is fine in that regard, it just never did
+anything.
+
+Fixes: 6e87abd0b8cb ("[DVB]: Add compat ioctl handling.")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/compat_ioctl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 9ca24e4d5d49c..2a0c5f3b0e509 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -609,7 +609,7 @@ static struct nvmem_device *nvmem_find(const char *name)
- 	d = bus_find_device(&nvmem_bus_type, NULL, (void *)name, nvmem_match);
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index 4b7da4409c60c..5b832e83772a6 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -160,6 +160,7 @@ struct compat_video_event {
+ 		unsigned int frame_rate;
+ 	} u;
+ };
++#define VIDEO_GET_EVENT32 _IOR('o', 28, struct compat_video_event)
  
- 	if (!d)
--		return NULL;
-+		return ERR_PTR(-ENOENT);
+ static int do_video_get_event(struct file *file,
+ 		unsigned int cmd, struct compat_video_event __user *up)
+@@ -171,7 +172,7 @@ static int do_video_get_event(struct file *file,
+ 	if (kevent == NULL)
+ 		return -EFAULT;
  
- 	return to_nvmem_device(d);
+-	err = do_ioctl(file, cmd, (unsigned long)kevent);
++	err = do_ioctl(file, VIDEO_GET_EVENT, (unsigned long)kevent);
+ 	if (!err) {
+ 		err  = convert_in_user(&kevent->type, &up->type);
+ 		err |= convert_in_user(&kevent->timestamp, &up->timestamp);
+@@ -190,6 +191,7 @@ struct compat_video_still_picture {
+         compat_uptr_t iFrame;
+         int32_t size;
+ };
++#define VIDEO_STILLPICTURE32 _IOW('o', 30, struct compat_video_still_picture)
+ 
+ static int do_video_stillpicture(struct file *file,
+ 		unsigned int cmd, struct compat_video_still_picture __user *up)
+@@ -212,7 +214,7 @@ static int do_video_stillpicture(struct file *file,
+ 	if (err)
+ 		return -EFAULT;
+ 
+-	err = do_ioctl(file, cmd, (unsigned long) up_native);
++	err = do_ioctl(file, VIDEO_STILLPICTURE, (unsigned long) up_native);
+ 
+ 	return err;
  }
+@@ -1484,9 +1486,9 @@ static long do_ioctl_trans(unsigned int cmd,
+ 		return rtc_ioctl(file, cmd, argp);
+ 
+ 	/* dvb */
+-	case VIDEO_GET_EVENT:
++	case VIDEO_GET_EVENT32:
+ 		return do_video_get_event(file, cmd, argp);
+-	case VIDEO_STILLPICTURE:
++	case VIDEO_STILLPICTURE32:
+ 		return do_video_stillpicture(file, cmd, argp);
+ 	case VIDEO_SET_SPU_PALETTE:
+ 		return do_video_set_spu_palette(file, cmd, argp);
 -- 
 2.20.1
 
