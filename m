@@ -2,125 +2,68 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF71FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEBEFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BF0215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11A421848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573249807;
+	bh=wB44KTNLx4zivLpP5jo3n08ALKXJKuThlbJQVcom1cY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=BCuvHl7p68HfjZO96JCStUn6DG2WFmoVhka89UOizHP8SzqzRgC3QnXB/gMpoBlMO
+	 O3Knp4xSNJlUmrha2mOaWhFGvhDtFmuBkbiGUbijJ6igmjwOE5UYw2F2w/Q+A17x0r
+	 f1Z6FFkavoFpIV9WISOfsw3Sn3M66m9niJSLnZ3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfKHVse (ORCPT
+        id S1729617AbfKHVuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:48:34 -0500
-Received: from mga17.intel.com ([192.55.52.151]:20333 "EHLO mga17.intel.com"
+        Fri, 8 Nov 2019 16:50:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfKHVsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:48:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 13:48:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
-   d="scan'208";a="197038024"
-Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by orsmga008.jf.intel.com with ESMTP; 08 Nov 2019 13:48:32 -0800
-From:   thor.thayer@linux.intel.com
-To:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [PATCH] arm64: dts: agilex: Add EDAC Device Tree
-Date:   Fri,  8 Nov 2019 15:50:25 -0600
-Message-Id: <1573249825-21769-1-git-send-email-thor.thayer@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726462AbfKHVuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:50:05 -0500
+Subject: Re: [GIT PULL] Ceph fixes for 5.4-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573249805;
+        bh=wB44KTNLx4zivLpP5jo3n08ALKXJKuThlbJQVcom1cY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=rbvH3ylTTfDKN1altPwkWGqGRZnRKnu6S++B+fTmlpXV2hm70vVcXBYI4D+6ryLan
+         BNucHxaz0GYTRzjwINhZn544D4xRDJt/ZlOVxKA2y4BqBkk2Gokc8atRkXfYWffYuE
+         6iw2z0Yk+PrhZAW/7MfjA66NYVsFPFA2Z5U7tgBk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191108155853.23314-1-idryomov@gmail.com>
+References: <20191108155853.23314-1-idryomov@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191108155853.23314-1-idryomov@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
+ tags/ceph-for-5.4-rc7
+X-PR-Tracked-Commit-Id: ff29fde84d1fc82f233c7da0daa3574a3942bec7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0689acfad34e4f60a25e354af2835e1569da81ba
+Message-Id: <157324980496.30145.3297312279339956877.pr-tracker-bot@kernel.org>
+Date:   Fri, 08 Nov 2019 21:50:04 +0000
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+The pull request you sent on Fri,  8 Nov 2019 16:58:53 +0100:
 
-Add the device tree nodes required to support the Intel
-Agilex SoCFPGA EDAC framework.
+> https://github.com/ceph/ceph-client.git tags/ceph-for-5.4-rc7
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 59 +++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0689acfad34e4f60a25e354af2835e1569da81ba
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index f9d1b26a3384..2b3468590f30 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -534,6 +534,65 @@
- 			reg = <0xf8011100 0xc0>;
- 		};
- 
-+		eccmgr {
-+			compatible = "altr,socfpga-s10-ecc-manager",
-+				     "altr,socfpga-a10-ecc-manager";
-+			altr,sysmgr-syscon = <&sysmgr>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			interrupts = <0 15 4>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			ranges;
-+
-+			sdramedac {
-+				compatible = "altr,sdram-edac-s10";
-+				altr,sdr-syscon = <&sdr>;
-+				interrupts = <16 4>;
-+			};
-+
-+			ocram-ecc@ff8cc000 {
-+				compatible = "altr,socfpga-s10-ocram-ecc",
-+					     "altr,socfpga-a10-ocram-ecc";
-+				reg = <0xff8cc000 0x100>;
-+				altr,ecc-parent = <&ocram>;
-+				interrupts = <1 4>;
-+			};
-+
-+			usb0-ecc@ff8c4000 {
-+				compatible = "altr,socfpga-s10-usb-ecc",
-+					     "altr,socfpga-usb-ecc";
-+				reg = <0xff8c4000 0x100>;
-+				altr,ecc-parent = <&usb0>;
-+				interrupts = <2 4>;
-+			};
-+
-+			emac0-rx-ecc@ff8c0000 {
-+				compatible = "altr,socfpga-s10-eth-mac-ecc",
-+					     "altr,socfpga-eth-mac-ecc";
-+				reg = <0xff8c0000 0x100>;
-+				altr,ecc-parent = <&gmac0>;
-+				interrupts = <4 4>;
-+			};
-+
-+			emac0-tx-ecc@ff8c0400 {
-+				compatible = "altr,socfpga-s10-eth-mac-ecc",
-+					     "altr,socfpga-eth-mac-ecc";
-+				reg = <0xff8c0400 0x100>;
-+				altr,ecc-parent = <&gmac0>;
-+				interrupts = <5 4>;
-+			};
-+
-+			sdmmca-ecc@ff8c8c00 {
-+				compatible = "altr,socfpga-s10-sdmmc-ecc",
-+					     "altr,socfpga-sdmmc-ecc";
-+				reg = <0xff8c8c00 0x100>;
-+				altr,ecc-parent = <&mmc>;
-+				interrupts = <14 4>,
-+					     <15 4>;
-+			};
-+		};
-+
- 		qspi: spi@ff8d2000 {
- 			compatible = "cdns,qspi-nor";
- 			#address-cells = <1>;
+Thank you!
+
 -- 
-2.7.4
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
