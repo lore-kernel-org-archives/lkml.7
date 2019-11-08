@@ -2,59 +2,60 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642B5FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D000FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380B1214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42171214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giOoN2iC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqXvYCt3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfKHFUB (ORCPT
+        id S1726645AbfKHFUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:20:01 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42180 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfKHFUA (ORCPT
+        Fri, 8 Nov 2019 00:20:06 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39715 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfKHFUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:20:00 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q17so3291605pgt.9;
-        Thu, 07 Nov 2019 21:20:00 -0800 (PST)
+        Fri, 8 Nov 2019 00:20:05 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so3270427plk.6;
+        Thu, 07 Nov 2019 21:20:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eFsH+L829oE/OwopODh0Rlc4QU2iHdxkZ2p54c8xCJE=;
-        b=giOoN2iCH2gl4XYTC0DGivxErEzR5sLnO1BZwomEBJoVbi1J6uhyraLvE7dTiDRgey
-         RkWQdvxY70+dcIFsnXXexmPODvZCOPIlDXW/h7JVh2rwqwO4IcSi2Xp2LHO5jmI6n6tB
-         bSG64yvooZ4nvkoNm4Qujv/rOpUCB7Xx4fKc7nozepHxazodVWLgjGT1QV2j9BUqLXOb
-         sjJOLcPM7mW+l1DR7IwNuGUDOOCUmyFf2w9zUslEEMAWW2Y2q7OpRZz42SNw2lhx5IQO
-         UHG1cfVpvu3+COKSodN2RSBXIdlb06DLj4zDduX2n4+TrzKvHoGLE0BgQiEZD1irrt4k
-         GUgw==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yc0niyL+e0o1G++JHufjcorcLLXvUhYDXt59boslzgg=;
+        b=VqXvYCt3yjpIemP9x5nAW9klS4OYDVtIurvAczrm8dcH4b8jG/vIFrq7HA1zhqdEn1
+         WMmjWTT2tVk9wuQjqUzpDZlm/M8CCbwrETRX7+w+0nUluHW3CNl2B/iGn3Ja6NnEbsXp
+         kf8vL/FOvPYedRq62dRG9jVGyG7wieYlyIv4oBqusl9akmvh0RKK6TKcIeooBUcOob/I
+         H7lb4QLWxAzI8BaclZ2jWIpDuwDKY52OplmZwGyNALIK1a6EBhRcfKBfeCy2IvL3Xpao
+         amyUwRxPbHN4UXXl8WWQKP/7RN3AW2p44AoRbPCEUf0riQEEJjiWwtQlnYHOykFdN9c8
+         p44g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=eFsH+L829oE/OwopODh0Rlc4QU2iHdxkZ2p54c8xCJE=;
-        b=eRRau7hwkcFkl+vorjqKw8nJkLvPZuU7LVDP7GW9ePmefTEhF8CfHhy4r80lV7aal2
-         KQ1EimxbvuMfH+bztzY1PxxOKYJhOuTr8qGKpHFqsCWOTAgrJuKYwOxI8PX/ZSmu6nMl
-         v7zHl1734vDCf5olEhbfWCxf89qnB9Wj7xSpbXrOhWQMVnrHQKbnS9NV2GNUTindJTi5
-         sqXnklD/YAtgANQSKCyRUMb23KsfBRvVQO1lg1bS+eHXPUBbhkmF7Ip88mU+999nZ3YB
-         dcOcpPG3JbAnx1fVTAPV7dB5IXGO++aNfW4yltw2WfmYtyF0+cn1SL6GbWbkKlX/dv15
-         AVMA==
-X-Gm-Message-State: APjAAAVZjZot3RuxcDkYs0pTxFmbSITO4pn8Uepnuaydzd9p0cyqCKE7
-        wgFlyY2IQvybfjs80csDEkY=
-X-Google-Smtp-Source: APXvYqyH/KD6c9XA8sPBchDP+LUk0Aegmnor+q9X7ysQCpoU4EoBt0as0FnheT5yRmG7x8dClNiuiQ==
-X-Received: by 2002:a63:234c:: with SMTP id u12mr9239958pgm.384.1573190399697;
-        Thu, 07 Nov 2019 21:19:59 -0800 (PST)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=yc0niyL+e0o1G++JHufjcorcLLXvUhYDXt59boslzgg=;
+        b=ibpGaxS2RBIee4jXTi8/nvwlLLBgmk9C3pzjTToC0BCNOyQLSmCPb19rdZH4lT9+mY
+         qJc4HjrDh32B7fqtb8654uS+5hbjXDJojweqCOqp+lrLuoWd2uGIs+vt6lLlKiSzoVrG
+         Ish7EFfbu+J6Gi+k5kTdHaA2rDz2jiSYW6r5xGs1290NFcz388Oady7WlZa3IPtnXx5W
+         hRuzsqSj6d2rtiI9JuaDtousxcmBfgOnICzBGUGfLbTRuHyqKhWOkOD5u1+HwzN/xxMM
+         i8k6Km+yjqZFrONHAfFmIi5mMExu4xNGcVZsOwKvbyPjhy0s89YidyIkU9vmWkzyude0
+         TzKQ==
+X-Gm-Message-State: APjAAAVCsrw1hhBDXB5FcwfhL9+1MsO11E2B4JB2hGtXFkHJE2MmZw2o
+        0Ghr0RZ1CKASP/OWwRegca+cruJkUr91sA==
+X-Google-Smtp-Source: APXvYqxc7+DDnJiPlXxQJe9LqipaDRCwapIGhvHz7o6az10ji38/hskICugffhdh+/IZ6mIRKsHrrg==
+X-Received: by 2002:a17:90a:9741:: with SMTP id i1mr10898615pjw.41.1573190404659;
+        Thu, 07 Nov 2019 21:20:04 -0800 (PST)
 Received: from voyager.ibm.com ([36.255.48.244])
-        by smtp.gmail.com with ESMTPSA id v19sm3798443pjr.14.2019.11.07.21.19.55
+        by smtp.gmail.com with ESMTPSA id v19sm3798443pjr.14.2019.11.07.21.20.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 21:19:59 -0800 (PST)
+        Thu, 07 Nov 2019 21:20:04 -0800 (PST)
 From:   Joel Stanley <joel@jms.id.au>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg KH <gregkh@linuxfoundation.org>,
@@ -65,10 +66,12 @@ Cc:     Alistar Popple <alistair@popple.id.au>,
         Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-fsi@lists.ozlabs.org
-Subject: [PATCH v2 00/11] fsi: Patches for 5.5
-Date:   Fri,  8 Nov 2019 15:49:34 +1030
-Message-Id: <20191108051945.7109-1-joel@jms.id.au>
+Subject: [PATCH v2 01/11] fsi: Add fsi-master class
+Date:   Fri,  8 Nov 2019 15:49:35 +1030
+Message-Id: <20191108051945.7109-2-joel@jms.id.au>
 X-Mailer: git-send-email 2.24.0.rc1
+In-Reply-To: <20191108051945.7109-1-joel@jms.id.au>
+References: <20191108051945.7109-1-joel@jms.id.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,55 +79,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series forms the FSI pull request for 5.5.
+From: Jeremy Kerr <jk@ozlabs.org>
 
-1-3 adds a FSI class type and updates the documentation for the sysfs files
-4-7 makes some cleanups and fixes to the fsi core
-8-10 adds the support for the FSI master in the ASPEED AST2600 BMC 
+This change adds a device class for FSI masters, allowing access under
+/sys/class/fsi-master/, and easier udev rules.
 
-The driver has been tested on hardware for most operations. Future
-enhancements include robust error recovery, DMA support and interrupt
-support.
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/fsi/fsi-core.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-The fix for byte order registers is not squashed in as Andrew's commit
-message is a piece of art that deserves to be in the kernel history. It
-does not need to go to stable as it fixes a patch earlier in this
-series.
-
-Andrew Jeffery (3):
-  trace: fsi: Print transfer size unsigned
-  fsi: core: Fix small accesses and unaligned offsets via sysfs
-  fsi: aspeed: Fix OPB0 byte order register values
-
-Jeremy Kerr (2):
-  fsi: Add fsi-master class
-  fsi: Move master attributes to fsi-master class
-
-Joel Stanley (5):
-  ABI: Update FSI path documentation
-  fsi: Move defines to common header
-  dt-bindings: fsi: Add description of FSI master
-  fsi: Add ast2600 master driver
-  fsi: aspeed: Add trace points
-
-kbuild test robot (1):
-  fsi: fsi_master_class can be static
-
- Documentation/ABI/testing/sysfs-bus-fsi       |  16 +-
- .../bindings/fsi/fsi-master-aspeed.txt        |  24 +
- drivers/fsi/Kconfig                           |   8 +
- drivers/fsi/Makefile                          |   1 +
- drivers/fsi/fsi-core.c                        |  67 ++-
- drivers/fsi/fsi-master-aspeed.c               | 544 ++++++++++++++++++
- drivers/fsi/fsi-master-hub.c                  |  46 --
- drivers/fsi/fsi-master.h                      |  71 +++
- include/trace/events/fsi.h                    |   6 +-
- include/trace/events/fsi_master_aspeed.h      |  77 +++
- 10 files changed, 785 insertions(+), 75 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
- create mode 100644 drivers/fsi/fsi-master-aspeed.c
- create mode 100644 include/trace/events/fsi_master_aspeed.h
-
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 1f76740f33b6..0861f6097b33 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -1241,6 +1241,10 @@ static ssize_t master_break_store(struct device *dev,
+ 
+ static DEVICE_ATTR(break, 0200, NULL, master_break_store);
+ 
++struct class fsi_master_class = {
++	.name = "fsi-master",
++};
++
+ int fsi_master_register(struct fsi_master *master)
+ {
+ 	int rc;
+@@ -1249,6 +1253,7 @@ int fsi_master_register(struct fsi_master *master)
+ 	mutex_init(&master->scan_lock);
+ 	master->idx = ida_simple_get(&master_ida, 0, INT_MAX, GFP_KERNEL);
+ 	dev_set_name(&master->dev, "fsi%d", master->idx);
++	master->dev.class = &fsi_master_class;
+ 
+ 	rc = device_register(&master->dev);
+ 	if (rc) {
+@@ -1350,8 +1355,15 @@ static int __init fsi_init(void)
+ 	rc = bus_register(&fsi_bus_type);
+ 	if (rc)
+ 		goto fail_bus;
++
++	rc = class_register(&fsi_master_class);
++	if (rc)
++		goto fail_class;
++
+ 	return 0;
+ 
++ fail_class:
++	bus_unregister(&fsi_bus_type);
+  fail_bus:
+ 	unregister_chrdev_region(fsi_base_dev, FSI_CHAR_MAX_DEVICES);
+ 	return rc;
+@@ -1360,6 +1372,7 @@ postcore_initcall(fsi_init);
+ 
+ static void fsi_exit(void)
+ {
++	class_unregister(&fsi_master_class);
+ 	bus_unregister(&fsi_bus_type);
+ 	unregister_chrdev_region(fsi_base_dev, FSI_CHAR_MAX_DEVICES);
+ 	ida_destroy(&fsi_minor_ida);
 -- 
 2.24.0.rc1
 
