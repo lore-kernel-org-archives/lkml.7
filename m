@@ -2,98 +2,103 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4B7FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48672C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C224720865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="ZJ6lnqpm"
+	by mail.kernel.org (Postfix) with ESMTP id 16C3B214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573239129;
+	bh=USMjmXUw22LlFO1YGkbIfAKSOwExD4n4ycItUQoQCHs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ak1IPYtpjktCfmk+q/A0elSx1/a418PqUphp5FBMZ1gisZH9NDayS6cRYOxBRY5HM
+	 4Li047cQBXeCWzjoP6yLuNi7/iekDStzXFer6oYTQf6/zR41xDkd6Fpxz3UaleUlsO
+	 IZkIob5uG3QecUrMLFwjHAP/ls6v+iIfgi4WSEaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbfKHSvl (ORCPT
+        id S1730319AbfKHSwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:51:41 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25894 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfKHSvl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:51:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1573239085; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=jOPLF+E8aLQ2cGDr2I8xarrs5hWYbyz1Ht0fLRLZ3VmtCFzhEAN20q8MEb5S5M7qIXKSkBEfPk+eoxDoeGD8LzzITJjX3R8D5tYXtiDzXzmCwyaYdVDlOGtl3WPIW9DU2x9pqdDhReU7hjDoT5QuM1bivR5/GXJWJ7TC3SQTb1k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1573239085; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=5cyruCeaBNmdqRxDvTFo4TZqRrFp+acIqpIM6/1ElnQ=; 
-        b=MYI24kr7NyrDnB0OtDIq/vg9B0UjSEpB5U7rHGUJa/OlBSTco0vYxeEzWxDGO4PPwPFvwvrGA1LnUsNSaCyHQO2D6gbLR3VsU/9Oa4ux71wYS9UsLAZ6Av0778M8nHaXv8xxNVk7pEdCiZgyzJEtFUHps6FiRVwwCG60ZMcq9jY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=V2661Eqp3OM9xq/9mjNHpvwVFe4LW7OQs0M5YtTouTdsn9w4emwV+8tTZCQpAJfIdPqGJ3B0Ty45
-    w4Z744ZY29LKVGbPdErtpuylsMSEALNa7TdGUwbqcGY+0+9TqvBY  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573239085;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=680; bh=5cyruCeaBNmdqRxDvTFo4TZqRrFp+acIqpIM6/1ElnQ=;
-        b=ZJ6lnqpmAgIUUFrtziBzGZ4zCjvp7qSJ0qCCQwcljGr3je/uig/I07m3GEDypVOB
-        z6Q8E+/VYBJrNAtx720ygSKhDnJncdaS2wrV40SWjJQUTKnFKH3TIV57DFI0oq0ZBu4
-        U+XP7cbQK6znd5sYYGvrOCDXMAdTP62YodAbNKHY=
-Received: from [192.168.10.218] (171.221.112.68 [171.221.112.68]) by mx.zohomail.com
-        with SMTPS id 157323908329694.68268716331704; Fri, 8 Nov 2019 10:51:23 -0800 (PST)
-Subject: Re: dmaengine: JZ4780: Add support for the X1000 v2
-To:     Vinod Koul <vkoul@kernel.org>
-References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
- <1571937670-30828-1-git-send-email-zhouyanjie@zoho.com>
- <20191106171156.GK952516@vkoul-mobl>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paul@crapouillou.net,
-        mark.rutland@arm.com, Zubair.Kakakhel@imgtec.com,
-        dan.j.williams@intel.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DC5B923.2020204@zoho.com>
-Date:   Sat, 9 Nov 2019 02:51:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Fri, 8 Nov 2019 13:52:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726394AbfKHSwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:52:07 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC65D2087E;
+        Fri,  8 Nov 2019 18:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573239127;
+        bh=USMjmXUw22LlFO1YGkbIfAKSOwExD4n4ycItUQoQCHs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cHKxqwHkS8MET/ZAfk+D1qzwWuR6iQ06bo8151j5TNCak0FflwcnbXBtGNogTLPo2
+         AB/C45mn1hP2L6bxohgu3o1tcZDRDowikYg5LUr+XY9eDh9pI4wF3RKR3A/LNzkjDd
+         9JPCg3hx9yTVE+WIyoSG7i8+jYNBSwbeDsxTSsaA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/75] kbuild: add -fcf-protection=none when using retpoline flags
+Date:   Fri,  8 Nov 2019 19:49:18 +0100
+Message-Id: <20191108174708.947436520@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
+References: <20191108174708.135680837@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20191106171156.GK952516@vkoul-mobl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+From: Seth Forshee <seth.forshee@canonical.com>
 
-On 2019=E5=B9=B411=E6=9C=8807=E6=97=A5 01:11, Vinod Koul wrote:
-> On 25-10-19, 01:21, Zhou Yanjie wrote:
->> v1->v2:remove flag JZ_SOC_DATA_ALLOW_LEGACY_DT.
->>
-> Hmm this cover letter is devoid of any details for the series. One would
-> expect a description of the series attempting to address.
->
-> Neverthless I have applied, but in future please take care to write a
-> *decent* cover letter and also document changes as you done in the only
-> line.
->
-> Also auto generate the letter using --cover-letter option, it shows up
-> nice diff stat which helps while applying
->
-> Thanks
->
+[ Upstream commit 29be86d7f9cb18df4123f309ac7857570513e8bc ]
 
-Thanks, I will pay more attention in the future.
+The gcc -fcf-protection=branch option is not compatible with
+-mindirect-branch=thunk-extern. The latter is used when
+CONFIG_RETPOLINE is selected, and this will fail to build with
+a gcc which has -fcf-protection=branch enabled by default. Adding
+-fcf-protection=none when building with retpoline enabled
+prevents such build failures.
 
-Best regards!
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index 6b09890b170cd..43d0a98a9fe60 100644
+--- a/Makefile
++++ b/Makefile
+@@ -823,6 +823,12 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=strict-prototypes)
+ # Prohibit date/time macros, which would make the build non-deterministic
+ KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
+ 
++# ensure -fcf-protection is disabled when using retpoline as it is
++# incompatible with -mindirect-branch=thunk-extern
++ifdef CONFIG_RETPOLINE
++KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
++endif
++
+ # use the deterministic mode of AR if available
+ KBUILD_ARFLAGS := $(call ar-option,D)
+ 
+-- 
+2.20.1
+
 
 
