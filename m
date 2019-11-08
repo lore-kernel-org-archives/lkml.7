@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB26FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DCBFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B392067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAD32087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239708;
-	bh=tF0E1giTSXxJHmVP2hupSm5VRPNu7THTyO2tRFdVq+4=;
+	s=default; t=1573239710;
+	bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=riCUAAiGhQh9vWxQ/ySFWEFFDxGi71dnUmjzwjZlH2fZOJ8KVft5XtArxbheEWED3
-	 UvlCNWYNofxSZDd4KOAVAmD2M/rRqbJ19Wm9q3+nW+6M0b94Ll8L+ILTTrI+K/eBLc
-	 ZWZFTyUYjIMpkbAzwDejEe4zxS9XJJoRiMuz73OE=
+	b=vpN/3ouk5PQqIPdxW+xTtAL8OtDbAomyThOJW+vf+DRIHfqNkw+odfYwbEKL4KTSB
+	 jl3NX7Lf8hSMY3rzIs2OvidCSxvSx+QDy6HyietPrh0cJTN8w54mwuN5/JYPeVmMIi
+	 wOVIl1MprRPDT0/xLeitbSDaL0fM5iys2NEKhsZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390335AbfKHTBr (ORCPT
+        id S2390303AbfKHTBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59072 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:01:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390258AbfKHTBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:40 -0500
+        id S1732559AbfKHTBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:01:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BF8221D7E;
-        Fri,  8 Nov 2019 19:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0AE2067B;
+        Fri,  8 Nov 2019 19:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239699;
-        bh=tF0E1giTSXxJHmVP2hupSm5VRPNu7THTyO2tRFdVq+4=;
+        s=default; t=1573239703;
+        bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKDoaKp2/Ql18zSbWuYeB7sBhi5vIRykWDf3EYuQg5BN3S6halnxW5XymIgjtDENE
-         91fJkJ0DlwYRA2mwRXmzRS6NV99Zh483tYHvANJQkvyvzoobDhvppBrAJvz6iuc4V/
-         khCmN+yTrK08ejck8yMHTIo0fI3uSsMBwChyynyw=
+        b=xPVhRFwD43vzOQNEWwrG/oAPkct3w79LcSyOb3Z770xLY/KM4ISCQEoU4UwGjzcvx
+         KPv3Ao+tnTw2VdsMj/U0PRGCJ2C+kaukKR+GDd2uExsDxobweAfQdwPlJSzwDENEHE
+         oPEqtnfO6q4s8d1fkaLeuR34g5kf4aUJEYiyEV5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/79] irqchip/gic-v3-its: Use the exact ITSList for VMOVP
-Date:   Fri,  8 Nov 2019 19:50:10 +0100
-Message-Id: <20191108174802.507057166@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 04/79] arm64: dts: allwinner: a64: pine64-plus: Add PHY regulator delay
+Date:   Fri,  8 Nov 2019 19:49:44 +0100
+Message-Id: <20191108174747.567732384@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -59,89 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 8424312516e5d9baeeb0a95d0e4523579b7aa395 ]
+[ Upstream commit 2511366797fa6ab4a404b4b000ef7cd262aaafe8 ]
 
-On a system without Single VMOVP support (say GITS_TYPER.VMOVP == 0),
-we will map vPEs only on ITSs that will actually control interrupts
-for the given VM.  And when moving a vPE, the VMOVP command will be
-issued only for those ITSs.
+Depending on kernel and bootloader configuration, it's possible that
+Realtek ethernet PHY isn't powered on properly. According to the
+datasheet, it needs 30ms to power up and then some more time before it
+can be used.
 
-But when issuing VMOVPs we seemed fail to present the exact ITSList
-to ITSs who are actually included in the synchronization operation.
-The its_list_map we're currently using includes all ITSs in the system,
-even though some of them don't have the corresponding vPE mapping at all.
+Fix that by adding 100ms ramp delay to regulator responsible for
+powering PHY.
 
-Introduce get_its_list() to get the per-VM its_list_map, to indicate
-which ITSs have vPE mappings for the given VM, and use this map as
-the expected ITSList when building VMOVP. This is hopefully a performance
-gain not to do some synchronization with those unsuspecting ITSs.
-And initialize the whole command descriptor to zero at beginning, since
-the seq_num and its_list should be RES0 when GITS_TYPER.VMOVP == 1.
-
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1571802386-2680-1-git-send-email-yuzenghui@huawei.com
+Fixes: 94dcfdc77fc5 ("arm64: allwinner: pine64-plus: Enable dwmac-sun8i")
+Suggested-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index e7549a2b1482b..050d6e040128d 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -182,6 +182,22 @@ static DEFINE_IDA(its_vpeid_ida);
- #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
- #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
- 
-+static u16 get_its_list(struct its_vm *vm)
-+{
-+	struct its_node *its;
-+	unsigned long its_list = 0;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+index 24f1aac366d64..d5b6e8159a335 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+@@ -63,3 +63,12 @@
+ 		reg = <1>;
+ 	};
+ };
 +
-+	list_for_each_entry(its, &its_nodes, entry) {
-+		if (!its->is_v4)
-+			continue;
-+
-+		if (vm->vlpi_count[its->list_nr])
-+			__set_bit(its->list_nr, &its_list);
-+	}
-+
-+	return (u16)its_list;
-+}
-+
- static struct its_collection *dev_event_to_col(struct its_device *its_dev,
- 					       u32 event)
- {
-@@ -983,17 +999,15 @@ static void its_send_vmapp(struct its_node *its,
- 
- static void its_send_vmovp(struct its_vpe *vpe)
- {
--	struct its_cmd_desc desc;
-+	struct its_cmd_desc desc = {};
- 	struct its_node *its;
- 	unsigned long flags;
- 	int col_id = vpe->col_idx;
- 
- 	desc.its_vmovp_cmd.vpe = vpe;
--	desc.its_vmovp_cmd.its_list = (u16)its_list_map;
- 
- 	if (!its_list_map) {
- 		its = list_first_entry(&its_nodes, struct its_node, entry);
--		desc.its_vmovp_cmd.seq_num = 0;
- 		desc.its_vmovp_cmd.col = &its->collections[col_id];
- 		its_send_single_vcommand(its, its_build_vmovp_cmd, &desc);
- 		return;
-@@ -1010,6 +1024,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
- 	raw_spin_lock_irqsave(&vmovp_lock, flags);
- 
- 	desc.its_vmovp_cmd.seq_num = vmovp_seq_num++;
-+	desc.its_vmovp_cmd.its_list = get_its_list(vpe->its_vm);
- 
- 	/* Emit VMOVPs */
- 	list_for_each_entry(its, &its_nodes, entry) {
++&reg_dc1sw {
++	/*
++	 * Ethernet PHY needs 30ms to properly power up and some more
++	 * to initialize. 100ms should be plenty of time to finish
++	 * whole process.
++	 */
++	regulator-enable-ramp-delay = <100000>;
++};
 -- 
 2.20.1
 
