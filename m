@@ -2,115 +2,391 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BECC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6848FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF91E2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12D2206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8Gr6k0B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgNwXhZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfKHNJn (ORCPT
+        id S1727882AbfKHNJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:09:43 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43484 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbfKHNJm (ORCPT
+        Fri, 8 Nov 2019 08:09:55 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34367 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfKHNJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:09:42 -0500
-Received: by mail-il1-f193.google.com with SMTP id r9so5056894ilq.10;
-        Fri, 08 Nov 2019 05:09:41 -0800 (PST)
+        Fri, 8 Nov 2019 08:09:55 -0500
+Received: by mail-pg1-f196.google.com with SMTP id e4so3951436pgs.1;
+        Fri, 08 Nov 2019 05:09:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rJF/YD72i5fHPPeqzHZ2BQYlNx1MC8h3ru4+Z6Wwmbo=;
-        b=o8Gr6k0BMdvpPgMU7PhMawO0XyFRTbc5aM4fQ75VGr43ItlOqf+zqnJQTevQ/NqjQn
-         +NFpKCU+OypZTM+6ml4/xooGa0TBkBO/2fvkfHAedilZS5vdrVRLfqzH28nAv7xVhon/
-         hdHDlhR0T2x8QPfP/DWWSy9CMUl+QwEz9un/P8ZhMz4wEYkx85yNhVMRR62IU5CFwoje
-         2bqxkTymSdX5k74tFHqgifSAuBhAkaEnokxl0xBC3ao05slXKgmlL6XHOzuCtAE+4uKa
-         i3/HK5GmWkmkWrnAH6ZzW3pcai0hsJELLvJYRLc/MiLEcicWTH3+MCJ5cd0p+pJ19PQs
-         uODQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=GcSRBv+6yTz1aWV2wpvc++0ONMW5Gc651FnwYD+LCXY=;
+        b=AgNwXhZjuQufrlApx1Jt4Pc0HtcVyvwwVSLlsT0Y0iUejJKTiLItU0kX2vW9nbTulQ
+         y8oUnlCp/keIMjsp4eE1qOqq6FaCFY7BpYN2GaPGHicCpYe02HrCmJt+Pyou5zsntIlq
+         hvN+AXnd4MMjA1DvaTIrq1RRnkizwggFpRaFwKqgyAjlHPFlWecpJAWNmK9MS0000bkL
+         ZoI9CRzQM75ObTfSPARlY7juiBvzzdVnTqGyqv9X/Qg1P/QzI2sgijADyR9bZcD/dJed
+         +7BqyiqP2gyi2g2T4qbg0sO2jCexf6NG2a4XdjWEcxim3ikpt8X2b46p/MCKk5jCgK+Z
+         wrJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rJF/YD72i5fHPPeqzHZ2BQYlNx1MC8h3ru4+Z6Wwmbo=;
-        b=gwktir3PThVcCY2BH3y9t+pRWSaZjrkPe898FpiReUKCA6iCcJt3MusSj0P2Ucl5rs
-         nL3qHHXzxchDOD1MdDj6WEnQpV2HFlPDe7Xv17w1kNuzveUjdR7BuXYTV4cTlumKp+3G
-         PkiQp14D0ODM63TTlyFTkRZjXAL1DjtTsx7F0AgKBnOliidSsslNl/hDNQucD9tkHOzh
-         dBE1+LYfPFy9QnhfPS4c7JhnBGkH5NGarj9FFCaQZNAhDW/MLCRdsTQi34cAReIqk30q
-         8g2GaWl63uAGqYcquePPdp1d90iAbEfS2bruiGuuPlYQlupZ7Rw5OakR4OKGRxjxQYT4
-         ED1w==
-X-Gm-Message-State: APjAAAUtc4M3b6b6Te+JJ4S2S2YoE0tS1zGNgURo/0Gtb0IlxW0m9OtT
-        T7Mpx35sikunGUl01Eefx7Ol2Bq3ZJjhxxFvwgb7rQtw
-X-Google-Smtp-Source: APXvYqwWYULlI3VvKJhU0KPPMIqzkdyHNpZENx+E3UNKg1yimmZ3T04hQGKbD7uSJQlLhcwRQFiH8wA81wgQGD7jBQ0=
-X-Received: by 2002:a92:5c4f:: with SMTP id q76mr12172286ilb.158.1573218581134;
- Fri, 08 Nov 2019 05:09:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20191018124938.29313-1-aford173@gmail.com> <7b8b6eba-2cb3-9b25-66e2-e128cc09ceb4@ti.com>
-In-Reply-To: <7b8b6eba-2cb3-9b25-66e2-e128cc09ceb4@ti.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 8 Nov 2019 07:09:31 -0600
-Message-ID: <CAHCN7xJjX4jWhcRstJV02py0D4Wq_XHoWt9aHTxXANEOwdp+rg@mail.gmail.com>
-Subject: Re: [PATCH] fbdev/omap: fix max fclk divider for omap36xx
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     linux-fbdev@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GcSRBv+6yTz1aWV2wpvc++0ONMW5Gc651FnwYD+LCXY=;
+        b=pGiBRXEAWVxDmWOIx4UN0l5lIR44rcZj7fU0OIzjXVBpQsUmuLrxXKGnErl73u0+mO
+         CAAEyGfakU7uwL4SIPlTCx0f+oF3/x37xE64wyEYIJ1WKvKYQoz5iHUSEbJah/WhQGnP
+         ZhAVxbW8EAeNvgFcrbdHoH0rVMZFc2egEJAxOmOcl3hD1cbG7VDtECsScth2aF0g/v4k
+         mMOYTiVUUwj+ynYv6lFU4ssH4pUyOhZ+qlEW/uvG03bExUmkWoMIXqzmpUJd4isPb9jT
+         ePimt8cIUF1mO6eTttKgyGa61+ZXWcK9wt0Kf5nP3swSMNSUqNDXISfGA4nslJcRm/fG
+         ExFw==
+X-Gm-Message-State: APjAAAXumxfSIguNUAq/QHN6LAUsJ0ra7ESkJri4PPssK6jWzzGdL4Qr
+        gBH8c3n/DoCWQA3xo/GFC1I=
+X-Google-Smtp-Source: APXvYqxxrcn6kFUEnC0t1jD0cIy6EM9JE3qdhbm9La/8uN+duByFOP1K8RDli97qPAJSimst4cYNSA==
+X-Received: by 2002:a63:f94e:: with SMTP id q14mr7489585pgk.411.1573218593385;
+        Fri, 08 Nov 2019 05:09:53 -0800 (PST)
+Received: from localhost (97.64.17.87.16clouds.com. [97.64.17.87])
+        by smtp.gmail.com with ESMTPSA id n21sm3384316pjq.13.2019.11.08.05.09.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Nov 2019 05:09:52 -0800 (PST)
+From:   Song Qiang <songqiang1304521@gmail.com>
+To:     lars@metafoo.de, Michael.Hennerich@analog.com,
+        stefan.popa@analog.com, jic23@kernel.org, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Song Qiang <songqiang1304521@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: iio: adc: add support for AD5940
+Date:   Fri,  8 Nov 2019 21:09:44 +0800
+Message-Id: <20191108130946.14740-1-songqiang1304521@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 3:42 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->
-> On 18/10/2019 15:49, Adam Ford wrote:
-> > The OMAP36xx and AM/DM37x TRMs say that the maximum divider for DSS fclk
-> > (in CM_CLKSEL_DSS) is 32. Experimentation shows that this is not
-> > correct, and using divider of 32 breaks DSS with a flood or underflows
-> > and sync losts. Dividers up to 31 seem to work fine.
-> >
-> > There is another patch to the DT files to limit the divider correctly,
-> > but as the DSS driver also needs to know the maximum divider to be able
-> > to iteratively find good rates, we also need to do the fix in the DSS
-> > driver.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Cc: stable@vger.kernel.org #linux-4.9.y+
-> >
-> > diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> > index 48c6500c24e1..4429ad37b64c 100644
-> > --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> > +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> > @@ -843,7 +843,7 @@ static const struct dss_features omap34xx_dss_feats = {
-> >   };
-> >
-> >   static const struct dss_features omap3630_dss_feats = {
-> > -     .fck_div_max            =       32,
-> > +     .fck_div_max            =       31,
-> >       .dss_fck_multiplier     =       1,
-> >       .parent_clk_name        =       "dpll4_ck",
-> >       .dpi_select_source      =       &dss_dpi_select_source_omap2_omap3,
-> >
->
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Add yaml devicetree description file and a header file for
+helping configure positive and negtive input of AD5940.
 
-What is the next step to get these integrated into 4.9+?
+Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+---
+ .../bindings/iio/adc/adi,ad5940.yaml          | 240 ++++++++++++++++++
+ include/dt-bindings/iio/adc/adi,ad5940.h      |  52 ++++
+ 2 files changed, 292 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+ create mode 100644 include/dt-bindings/iio/adc/adi,ad5940.h
 
-adam
->
->   Tomi
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+new file mode 100644
+index 000000000000..f7f034fdd8ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+@@ -0,0 +1,240 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright 2019 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5940.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD5940 Device Tree Bindings
++
++maintainers:
++  - Song Qiang <songqiang1304521@gmail.com>
++
++description: |
++  Analog Devices AD5940 High Precision, Impedance, and Electrochemical Front End.
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5940.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad5940
++
++  reg:
++    maxItems: 1
++
++  vref-supply:
++    description:
++      The regulator to be used to supply the reference voltage.
++    maxItems: 1
++
++  adi,interrupt-io:
++    description:
++      Output GPIO index of interrupt controller of AD5940.
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [0, 3, 6, 7]
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - adi,interrupt-io
++
++patternProperties:
++  # 'channel@0-255'
++  "^channel@([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$":
++    type: object
++    description: |
++      Represents the external channels which are connected to the ADC.
++      See Documentation/devicetree/bindings/iio/adc/adc.txt.
++    properties:
++      reg:
++        description:
++          Index of this channel, must be starting from 0.
++        maxItems: 1
++
++      diff-channels:
++        description:
++          Positive input and negtive input of the ADC buffer of this channel.
++          Input candidates are defined in include/dt-bindings/iio/adc/adi,ad5940.h.
++        minItems: 2
++        maxItems: 2
++        items:
++          - description: Positive input channel
++          - enum:
++            - AD5940_ADC_INPUTP_EXCITATION
++            - AD5940_ADC_INPUTP_FLOATING
++            - AD5940_ADC_INPUTP_HSTIA
++            - AD5940_ADC_INPUTP_LPTIA_LP
++            - AD5940_ADC_INPUTP_AIN0
++            - AD5940_ADC_INPUTP_AIN1
++            - AD5940_ADC_INPUTP_AIN2
++            - AD5940_ADC_INPUTP_AIN3
++            - AD5940_ADC_INPUTP_AVDD_2
++            - AD5940_ADC_INPUTP_DVDD_2
++            - AD5940_ADC_INPUTP_AVDD_REG_2
++            - AD5940_ADC_INPUTP_TEMP
++            - AD5940_ADC_INPUTP_VBIAS_CAP
++            - AD5940_ADC_INPUTP_DE0
++            - AD5940_ADC_INPUTP_SE0
++            - AD5940_ADC_INPUTP_VREF_2V5_2
++            - AD5940_ADC_INPUTP_VREF_1V82
++            - AD5940_ADC_INPUTP_P_TEMP_N
++            - AD5940_ADC_INPUTP_AIN4
++            - AD5940_ADC_INPUTP_AIN6
++            - AD5940_ADC_INPUTP_VZERO
++            - AD5940_ADC_INPUTP_VBIAS0
++            - AD5940_ADC_INPUTP_VCE0
++            - AD5940_ADC_INPUTP_VRE0
++            - AD5940_ADC_INPUTP_VCE0_2
++            - AD5940_ADC_INPUTP_LPTIA
++            - AD5940_ADC_INPUTP_AGND_REF
++
++          - description: Negtive input channel
++          - enum:
++              # Negtive input candidates
++              - AD5940_ADC_INPUTN_FLOATING
++              - AD5940_ADC_INPUTN_HSTIA
++              - AD5940_ADC_INPUTN_LPTIA
++              - AD5940_ADC_INPUTN_AIN0
++              - AD5940_ADC_INPUTN_AIN1
++              - AD5940_ADC_INPUTN_AIN2
++              - AD5940_ADC_INPUTN_AIN3
++              - AD5940_ADC_INPUTN_VBIAS_CA8
++              - AD5940_ADC_INPUTN_TEMP_N
++              - AD5940_ADC_INPUTN_AIN4
++              - AD5940_ADC_INPUTN_AIN6
++              - AD5940_ADC_INPUTN_VZERO
++              - AD5940_ADC_INPUTN_VBIAS0
++              - AD5940_ADC_INPUTN_EXCITATION
++
++      channel-name:
++        description:
++          Any string format name you would like to assign to this channel.
++        maxItems: 1
++
++    required:
++      - reg
++      - diff-channels
++      - channel-name
++
++examples:
++  - |
++    ad5940: ad5940@0 {
++      compatible = "adi,ad5940";
++      reg = <0>;
++      spi-max-frequency = <16000000>;
++      vref-supply = <&adc_vref>;
++      interrupt-parent = <&gpio>;
++      interrupts = <24 2>;
++
++      adi,interrupt-io = <0>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      channel@0 {
++        reg = <0>;
++        diff-channels = <AD5940_ADC_INPUTP_VCE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vce-Vbias";
++      };
++
++      channel@1 {
++        reg = <1>;
++        diff-channels = <AD5940_ADC_INPUTP_VRE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vre-Vbias";
++      };
++
++      channel@2 {
++        reg = <2>;
++        diff-channels = <AD5940_ADC_INPUTP_SE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vse-Vbias";
++      };
++
++      channel@3 {
++        reg = <3>;
++        diff-channels = <AD5940_ADC_INPUTP_DE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vde-Vbias";
++      };
++
++      channel@4 {
++        reg = <4>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain0-Vbias";
++      };
++
++      channel@5 {
++        reg = <5>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN1
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain1-Vbias";
++      };
++
++      channel@6 {
++        reg = <6>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN2
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain2-Vbias";
++      };
++
++      channel@7 {
++        reg = <7>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN3
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain3-Vbias";
++      };
++
++      channel@8 {
++        reg = <8>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN4
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain4-Vbias";
++      };
++
++      channel@9 {
++        reg = <9>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN6
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain6-Vbias";
++      };
++
++      channel@10 {
++        reg = <10>;
++        diff-channels = <AD5940_ADC_INPUTP_LPTIA_LP
++                         AD5940_ADC_INPUTN_LPTIA>;
++        channel-name = "Low power TIA DC";
++      };
++
++      channel@11 {
++        reg = <11>;
++        diff-channels = <AD5940_ADC_INPUTP_LPTIA
++                         AD5940_ADC_INPUTN_LPTIA>;
++        channel-name = "Low power TIA AC";
++      };
++
++      channel@12 {
++        reg = <12>;
++        diff-channels = <AD5940_ADC_INPUTP_HSTIA
++                         AD5940_ADC_INPUTN_HSTIA>;
++        channel-name = "High Speed TIA";
++      };
++
++      channel@13 {
++        reg = <13>;
++        diff-channels = <AD5940_ADC_INPUTP_TEMP
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Temperature";
++      };
++    };
+diff --git a/include/dt-bindings/iio/adc/adi,ad5940.h b/include/dt-bindings/iio/adc/adi,ad5940.h
+new file mode 100644
+index 000000000000..c17826f2f654
+--- /dev/null
++++ b/include/dt-bindings/iio/adc/adi,ad5940.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for configuring the AD5940 AFE
++ */
++
++#ifndef _DT_BINDINGS_IIO_ADC_AD5940_H
++#define _DT_BINDINGS_IIO_ADC_AD5940_H
++
++#define AD5940_ADC_INPUTN_FLOATING	0
++#define AD5940_ADC_INPUTN_HSTIA		1
++#define AD5940_ADC_INPUTN_LPTIA		2
++#define AD5940_ADC_INPUTN_AIN0		4
++#define AD5940_ADC_INPUTN_AIN1		5
++#define AD5940_ADC_INPUTN_AIN2		6
++#define AD5940_ADC_INPUTN_AIN3		7
++#define AD5940_ADC_INPUTN_VBIAS_CA8	10
++#define AD5940_ADC_INPUTN_TEMP_N	11
++#define AD5940_ADC_INPUTN_AIN4		12
++#define AD5940_ADC_INPUTN_AIN6		14
++#define AD5940_ADC_INPUTN_VZERO		16
++#define AD5940_ADC_INPUTN_VBIAS0	17
++#define AD5940_ADC_INPUTN_EXCITATION	20
++
++#define AD5940_ADC_INPUTP_FLOATING	0
++#define AD5940_ADC_INPUTP_HSTIA		1
++#define AD5940_ADC_INPUTP_LPTIA_LP	2
++#define AD5940_ADC_INPUTP_AIN0		4
++#define AD5940_ADC_INPUTP_AIN1		5
++#define AD5940_ADC_INPUTP_AIN2		6
++#define AD5940_ADC_INPUTP_AIN3		7
++#define AD5940_ADC_INPUTP_AVDD_2	8
++#define AD5940_ADC_INPUTP_DVDD_2	9
++#define AD5940_ADC_INPUTP_AVDD_REG_2	10
++#define AD5940_ADC_INPUTP_TEMP		11
++#define AD5940_ADC_INPUTP_VBIAS_CAP	12
++#define AD5940_ADC_INPUTP_DE0		13
++#define AD5940_ADC_INPUTP_SE0		14
++#define AD5940_ADC_INPUTP_VREF_2V5_2	16
++#define AD5940_ADC_INPUTP_VREF_1V82	18
++#define AD5940_ADC_INPUTP_P_TEMP_N	19
++#define AD5940_ADC_INPUTP_AIN4		20
++#define AD5940_ADC_INPUTP_AIN6		22
++#define AD5940_ADC_INPUTP_VZERO		23
++#define AD5940_ADC_INPUTP_VBIAS0	24
++#define AD5940_ADC_INPUTP_VCE0		25
++#define AD5940_ADC_INPUTP_VRE0		26
++#define AD5940_ADC_INPUTP_VCE0_2	31
++#define AD5940_ADC_INPUTP_LPTIA		33
++#define AD5940_ADC_INPUTP_AGND_REF	35
++#define AD5940_ADC_INPUTP_EXCITATION	36
++
++#endif /* _DT_BINDINGS_IIO_ADC_AD5940 */
+-- 
+2.17.1
+
