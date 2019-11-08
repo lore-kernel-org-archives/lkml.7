@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4943EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C8FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165AD21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B7A2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239357;
-	bh=VEGzoeTLT8lvGWnWPd25boqWXP9L00aDYn7nZXOnfPc=;
+	s=default; t=1573239358;
+	bh=3Lntj0YJJmf+8l/kLro8iPsjmwtakiQ9erPUHVvONrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QttwW66fQejEcjt2HA1QVX4BRbYU8eeQhj1eCXYNeYdJx049Udif7iedTbCRSc2cy
-	 cJg5NnpNgeOO5WoP/zQVXXpAR4rRKPkuMUQD3JIR9cHe3p8iBvJJb67T0IhzlpqHpR
-	 PZ/+cLk7CnH/Naak8OO6yewn1tIp4o1uw+4VoxT4=
+	b=f79CB5qE3B/OOZRmx4ejjBwDRVXQt5xNz4tzFlc1P0Fcl2fhA5VliQwZUoGgcsN0J
+	 eZYWfRR5eZSPRxJTVsMX+JugFxih3FfiAh3MjdJfuVu3mBhQbcxHUGtfZLhzdXFIL2
+	 h1Dkew6O2n+LL3iCkVsTBGrk/z/QC4vVQRdhwakQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387856AbfKHSz4 (ORCPT
+        id S2387832AbfKHSzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:55:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:55:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730810AbfKHSzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:55:51 -0500
+        id S2387662AbfKHSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:55:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 966FA21D7F;
-        Fri,  8 Nov 2019 18:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 248ED20865;
+        Fri,  8 Nov 2019 18:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239345;
-        bh=VEGzoeTLT8lvGWnWPd25boqWXP9L00aDYn7nZXOnfPc=;
+        s=default; t=1573239336;
+        bh=3Lntj0YJJmf+8l/kLro8iPsjmwtakiQ9erPUHVvONrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONptGQM18LRqrTZyrDbioTJ+F2Q76jNihm3hFNMw1ZtGh/bRQ4+s7uYsUq19j7FG1
-         fODF9CJKovevWhmIH53hyABquHKmQO/XJZ2VL5sJgBqtrsoUh+1yzWd3b8EnraAVGh
-         rjlpKKH0uOxlx2/93t2kGc6NWUo4YjAvZ0BXixKE=
+        b=r2k1sWYMp/SgybmED63y95CCViLVPinfgZbktAHvjXy9GT1lSrvgn89CR3sPWGpYq
+         E0LB6z53bpAf1/zyZYvf+ckqGxvRxGOtqH/S98pgXfB0yEihkldXmur6oqRRzmjChC
+         IAVvgd8wn83j6fQWBKP1109Z/UEMXeOlYSTBVuXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
+        <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
         Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 4.4 36/75] arm/arm64: smccc: Implement SMCCC v1.1 inline primitive
-Date:   Fri,  8 Nov 2019 19:49:53 +0100
-Message-Id: <20191108174745.026583460@linuxfoundation.org>
+        "David A. Long" <dave.long@linaro.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 4.4 43/75] ARM: bugs: add support for per-processor bug checking
+Date:   Fri,  8 Nov 2019 19:50:00 +0100
+Message-Id: <20191108174749.716102119@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -64,177 +64,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit f2d3b2e8759a5833df6f022e42df2d581e6d843c upstream.
+Commit 9d3a04925deeabb97c8e26d940b501a2873e8af3 upstream.
 
-One of the major improvement of SMCCC v1.1 is that it only clobbers
-the first 4 registers, both on 32 and 64bit. This means that it
-becomes very easy to provide an inline version of the SMC call
-primitive, and avoid performing a function call to stash the
-registers that would otherwise be clobbered by SMCCC v1.0.
+Add support for per-processor bug checking - each processor function
+descriptor gains a function pointer for this check, which must not be
+an __init function.  If non-NULL, this will be called whenever a CPU
+enters the kernel via which ever path (boot CPU, secondary CPU startup,
+CPU resuming, etc.)
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com> [v4.9 backport]
-Tested-by: Greg Hackmann <ghackmann@google.com>
+This allows processor specific bug checks to validate that workaround
+bits are properly enabled by firmware via all entry paths to the kernel.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Boot-tested-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: David A. Long <dave.long@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/arm-smccc.h |  141 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 141 insertions(+)
+ arch/arm/include/asm/proc-fns.h |    4 ++++
+ arch/arm/kernel/bugs.c          |    4 ++++
+ arch/arm/mm/proc-macros.S       |    3 ++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -123,5 +123,146 @@ asmlinkage void arm_smccc_hvc(unsigned l
- 			unsigned long a5, unsigned long a6, unsigned long a7,
- 			struct arm_smccc_res *res);
+--- a/arch/arm/include/asm/proc-fns.h
++++ b/arch/arm/include/asm/proc-fns.h
+@@ -37,6 +37,10 @@ extern struct processor {
+ 	 */
+ 	void (*_proc_init)(void);
+ 	/*
++	 * Check for processor bugs
++	 */
++	void (*check_bugs)(void);
++	/*
+ 	 * Disable any processor specifics
+ 	 */
+ 	void (*_proc_fin)(void);
+--- a/arch/arm/kernel/bugs.c
++++ b/arch/arm/kernel/bugs.c
+@@ -5,6 +5,10 @@
  
-+/* SMCCC v1.1 implementation madness follows */
-+#ifdef CONFIG_ARM64
-+
-+#define SMCCC_SMC_INST	"smc	#0"
-+#define SMCCC_HVC_INST	"hvc	#0"
-+
-+#elif defined(CONFIG_ARM)
-+#include <asm/opcodes-sec.h>
-+#include <asm/opcodes-virt.h>
-+
-+#define SMCCC_SMC_INST	__SMC(0)
-+#define SMCCC_HVC_INST	__HVC(0)
-+
+ void check_other_bugs(void)
+ {
++#ifdef MULTI_CPU
++	if (processor.check_bugs)
++		processor.check_bugs();
 +#endif
-+
-+#define ___count_args(_0, _1, _2, _3, _4, _5, _6, _7, _8, x, ...) x
-+
-+#define __count_args(...)						\
-+	___count_args(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
-+
-+#define __constraint_write_0						\
-+	"+r" (r0), "=&r" (r1), "=&r" (r2), "=&r" (r3)
-+#define __constraint_write_1						\
-+	"+r" (r0), "+r" (r1), "=&r" (r2), "=&r" (r3)
-+#define __constraint_write_2						\
-+	"+r" (r0), "+r" (r1), "+r" (r2), "=&r" (r3)
-+#define __constraint_write_3						\
-+	"+r" (r0), "+r" (r1), "+r" (r2), "+r" (r3)
-+#define __constraint_write_4	__constraint_write_3
-+#define __constraint_write_5	__constraint_write_4
-+#define __constraint_write_6	__constraint_write_5
-+#define __constraint_write_7	__constraint_write_6
-+
-+#define __constraint_read_0
-+#define __constraint_read_1
-+#define __constraint_read_2
-+#define __constraint_read_3
-+#define __constraint_read_4	"r" (r4)
-+#define __constraint_read_5	__constraint_read_4, "r" (r5)
-+#define __constraint_read_6	__constraint_read_5, "r" (r6)
-+#define __constraint_read_7	__constraint_read_6, "r" (r7)
-+
-+#define __declare_arg_0(a0, res)					\
-+	struct arm_smccc_res   *___res = res;				\
-+	register u32           r0 asm("r0") = a0;			\
-+	register unsigned long r1 asm("r1");				\
-+	register unsigned long r2 asm("r2");				\
-+	register unsigned long r3 asm("r3")
-+
-+#define __declare_arg_1(a0, a1, res)					\
-+	struct arm_smccc_res   *___res = res;				\
-+	register u32           r0 asm("r0") = a0;			\
-+	register typeof(a1)    r1 asm("r1") = a1;			\
-+	register unsigned long r2 asm("r2");				\
-+	register unsigned long r3 asm("r3")
-+
-+#define __declare_arg_2(a0, a1, a2, res)				\
-+	struct arm_smccc_res   *___res = res;				\
-+	register u32           r0 asm("r0") = a0;			\
-+	register typeof(a1)    r1 asm("r1") = a1;			\
-+	register typeof(a2)    r2 asm("r2") = a2;			\
-+	register unsigned long r3 asm("r3")
-+
-+#define __declare_arg_3(a0, a1, a2, a3, res)				\
-+	struct arm_smccc_res   *___res = res;				\
-+	register u32           r0 asm("r0") = a0;			\
-+	register typeof(a1)    r1 asm("r1") = a1;			\
-+	register typeof(a2)    r2 asm("r2") = a2;			\
-+	register typeof(a3)    r3 asm("r3") = a3
-+
-+#define __declare_arg_4(a0, a1, a2, a3, a4, res)			\
-+	__declare_arg_3(a0, a1, a2, a3, res);				\
-+	register typeof(a4) r4 asm("r4") = a4
-+
-+#define __declare_arg_5(a0, a1, a2, a3, a4, a5, res)			\
-+	__declare_arg_4(a0, a1, a2, a3, a4, res);			\
-+	register typeof(a5) r5 asm("r5") = a5
-+
-+#define __declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res)		\
-+	__declare_arg_5(a0, a1, a2, a3, a4, a5, res);			\
-+	register typeof(a6) r6 asm("r6") = a6
-+
-+#define __declare_arg_7(a0, a1, a2, a3, a4, a5, a6, a7, res)		\
-+	__declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res);		\
-+	register typeof(a7) r7 asm("r7") = a7
-+
-+#define ___declare_args(count, ...) __declare_arg_ ## count(__VA_ARGS__)
-+#define __declare_args(count, ...)  ___declare_args(count, __VA_ARGS__)
-+
-+#define ___constraints(count)						\
-+	: __constraint_write_ ## count					\
-+	: __constraint_read_ ## count					\
-+	: "memory"
-+#define __constraints(count)	___constraints(count)
-+
-+/*
-+ * We have an output list that is not necessarily used, and GCC feels
-+ * entitled to optimise the whole sequence away. "volatile" is what
-+ * makes it stick.
-+ */
-+#define __arm_smccc_1_1(inst, ...)					\
-+	do {								\
-+		__declare_args(__count_args(__VA_ARGS__), __VA_ARGS__);	\
-+		asm volatile(inst "\n"					\
-+			     __constraints(__count_args(__VA_ARGS__)));	\
-+		if (___res)						\
-+			*___res = (typeof(*___res)){r0, r1, r2, r3};	\
-+	} while (0)
-+
-+/*
-+ * arm_smccc_1_1_smc() - make an SMCCC v1.1 compliant SMC call
-+ *
-+ * This is a variadic macro taking one to eight source arguments, and
-+ * an optional return structure.
-+ *
-+ * @a0-a7: arguments passed in registers 0 to 7
-+ * @res: result values from registers 0 to 3
-+ *
-+ * This macro is used to make SMC calls following SMC Calling Convention v1.1.
-+ * The content of the supplied param are copied to registers 0 to 7 prior
-+ * to the SMC instruction. The return values are updated with the content
-+ * from register 0 to 3 on return from the SMC instruction if not NULL.
-+ */
-+#define arm_smccc_1_1_smc(...)	__arm_smccc_1_1(SMCCC_SMC_INST, __VA_ARGS__)
-+
-+/*
-+ * arm_smccc_1_1_hvc() - make an SMCCC v1.1 compliant HVC call
-+ *
-+ * This is a variadic macro taking one to eight source arguments, and
-+ * an optional return structure.
-+ *
-+ * @a0-a7: arguments passed in registers 0 to 7
-+ * @res: result values from registers 0 to 3
-+ *
-+ * This macro is used to make HVC calls following SMC Calling Convention v1.1.
-+ * The content of the supplied param are copied to registers 0 to 7 prior
-+ * to the HVC instruction. The return values are updated with the content
-+ * from register 0 to 3 on return from the HVC instruction if not NULL.
-+ */
-+#define arm_smccc_1_1_hvc(...)	__arm_smccc_1_1(SMCCC_HVC_INST, __VA_ARGS__)
-+
- #endif /*__ASSEMBLY__*/
- #endif /*__LINUX_ARM_SMCCC_H*/
+ }
+ 
+ void __init check_bugs(void)
+--- a/arch/arm/mm/proc-macros.S
++++ b/arch/arm/mm/proc-macros.S
+@@ -258,13 +258,14 @@
+ 	mcr	p15, 0, ip, c7, c10, 4		@ data write barrier
+ 	.endm
+ 
+-.macro define_processor_functions name:req, dabort:req, pabort:req, nommu=0, suspend=0
++.macro define_processor_functions name:req, dabort:req, pabort:req, nommu=0, suspend=0, bugs=0
+ 	.type	\name\()_processor_functions, #object
+ 	.align 2
+ ENTRY(\name\()_processor_functions)
+ 	.word	\dabort
+ 	.word	\pabort
+ 	.word	cpu_\name\()_proc_init
++	.word	\bugs
+ 	.word	cpu_\name\()_proc_fin
+ 	.word	cpu_\name\()_reset
+ 	.word	cpu_\name\()_do_idle
 
 
