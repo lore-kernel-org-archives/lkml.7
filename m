@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA53EFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B59CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EDD222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A21F20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213568;
-	bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
+	s=default; t=1573213575;
+	bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UiQ4DsJepqDU0Gvjh27H8nFp8adTazBYocyj23//yupMdpsE3Z+cL8IleuOdyUXUI
-	 x1GFROKU/4JcoyoL10eiXRVuklh8iksrqLr2AvmA9tGecu9UX+tmV0Vaocfgc1lpnf
-	 1YPLw70osGyf56xNWd/LY88Pk2bitTqNAKpLDMHc=
+	b=NM3313CQKatBXPycjTXpVxnv69OC8tlDMcIUxAAJQa1WZo5WVepEtOs2uItoYgeT6
+	 pZCWYjJPfg1oXiXCqrSsAtHEI0tZcJwERMn8NvVjpkIliIQAY8/DWK1IZsQepNuasC
+	 qLPdUsVXf+3WeG7kajQWo6AhE2mI2t0ZqASLI4vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391259AbfKHLqG (ORCPT
+        id S2391282AbfKHLqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391244AbfKHLqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:03 -0500
+        id S2391263AbfKHLqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D844721D82;
-        Fri,  8 Nov 2019 11:46:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BC1E222D4;
+        Fri,  8 Nov 2019 11:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213562;
-        bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
+        s=default; t=1573213567;
+        bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xWgsfV2zikTa8FAxNqZBZ4o6niF58kOj42cUrafpYD127xs+uy1U86gMru5ee0Xt6
-         OiuYrJbowUFJraqF3bBw3p4WIIV4mXJW9Atavhw1+y8N9AFlLwR1woJmBlnsL8Nwo+
-         63qxxVSENvLKHMcdAa78ikKJIkp+gXs+Cc+UWmBk=
+        b=pEWSvYtMCbGpzc4iTZzP3QRKo5Wn7PgpImITZFvVrt4/9qkwngbFAP+z4CGwu1sJA
+         rTbhsdybF1kTG5CkBOgAxZHYd5Y1jMNiuXBTXtk4tCtGIt3w8e9XdtpWbDWcl8YsHc
+         UX049XygglFR8jKMC/yUMkpkUHMvWn0tSAVKg5Lw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Burton <paul.burton@mips.com>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        linux-mips@linux-mips.org, Sasha Levin <sashal@kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/64] MIPS: BCM47XX: Enable USB power on Netgear WNDR3400v3
-Date:   Fri,  8 Nov 2019 06:44:52 -0500
-Message-Id: <20191108114545.15351-11-sashal@kernel.org>
+Cc:     =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/64] i40e: hold the rtnl lock on clearing interrupt scheme
+Date:   Fri,  8 Nov 2019 06:44:56 -0500
+Message-Id: <20191108114545.15351-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -63,53 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+From: Patryk Małek <patryk.malek@intel.com>
 
-[ Upstream commit feef7918667b84f9d5653c501542dd8d84ae32af ]
+[ Upstream commit 5cba17b14182696d6bb0ec83a1d087933f252241 ]
 
-Setting GPIO 21 high seems to be required to enable power to USB ports
-on the WNDR3400v3. As there is already similar code for WNR3500L,
-make the existing USB power GPIO code generic and use that.
+Hold the rtnl lock when we're clearing interrupt scheme
+in i40e_shutdown and in i40e_remove.
 
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20259/
-Cc: Rafał Miłecki <zajec5@gmail.com>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Patryk Małek <patryk.malek@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/bcm47xx/workarounds.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/mips/bcm47xx/workarounds.c b/arch/mips/bcm47xx/workarounds.c
-index e81ce4623070e..06fb94370c7c9 100644
---- a/arch/mips/bcm47xx/workarounds.c
-+++ b/arch/mips/bcm47xx/workarounds.c
-@@ -4,9 +4,8 @@
- #include <bcm47xx_board.h>
- #include <bcm47xx.h>
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 886378c5334fa..043b69b5843b0 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -11360,6 +11360,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 	mutex_destroy(&hw->aq.asq_mutex);
  
--static void __init bcm47xx_workarounds_netgear_wnr3500l(void)
-+static void __init bcm47xx_workarounds_enable_usb_power(int usb_power)
- {
--	const int usb_power = 12;
- 	int err;
+ 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
++	rtnl_lock();
+ 	i40e_clear_interrupt_scheme(pf);
+ 	for (i = 0; i < pf->num_alloc_vsi; i++) {
+ 		if (pf->vsi[i]) {
+@@ -11368,6 +11369,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 			pf->vsi[i] = NULL;
+ 		}
+ 	}
++	rtnl_unlock();
  
- 	err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
-@@ -22,7 +21,10 @@ void __init bcm47xx_workarounds(void)
+ 	for (i = 0; i < I40E_MAX_VEB; i++) {
+ 		kfree(pf->veb[i]);
+@@ -11513,7 +11515,13 @@ static void i40e_shutdown(struct pci_dev *pdev)
+ 	wr32(hw, I40E_PFPM_WUFC,
+ 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
  
- 	switch (board) {
- 	case BCM47XX_BOARD_NETGEAR_WNR3500L:
--		bcm47xx_workarounds_netgear_wnr3500l();
-+		bcm47xx_workarounds_enable_usb_power(12);
-+		break;
-+	case BCM47XX_BOARD_NETGEAR_WNDR3400_V3:
-+		bcm47xx_workarounds_enable_usb_power(21);
- 		break;
- 	default:
- 		/* No workaround(s) needed */
++	/* Since we're going to destroy queues during the
++	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
++	 * whole section
++	 */
++	rtnl_lock();
+ 	i40e_clear_interrupt_scheme(pf);
++	rtnl_unlock();
+ 
+ 	if (system_state == SYSTEM_POWER_OFF) {
+ 		pci_wake_from_d3(pdev, pf->wol_en);
 -- 
 2.20.1
 
