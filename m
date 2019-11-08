@@ -2,105 +2,87 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E93FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEBFFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215E8222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234BE21848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbfKHLYs (ORCPT
+        id S1731985AbfKHLZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:24:48 -0500
-Received: from mga09.intel.com ([134.134.136.24]:55770 "EHLO mga09.intel.com"
+        Fri, 8 Nov 2019 06:25:00 -0500
+Received: from smtp.asem.it ([151.1.184.197]:64272 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfKHLYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:24:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 03:24:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
-   d="scan'208";a="213227330"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Nov 2019 03:24:42 -0800
-Subject: Re: [PATCH v5 4/4] mmc: host: sdhci: Add a variable to defer to
- complete data requests if needed
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        baolin.wang7@gmail.com, linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1572326519.git.baolin.wang@linaro.org>
- <19910a2f34b9be81f64637a5a5fc8d07bd5f4885.1572326519.git.baolin.wang@linaro.org>
- <a9f42792-3432-48f2-c5c4-8b03c32995dd@intel.com>
- <CAMz4kuK=wV1qtO4tOCcqibzKAFD-_p8+OzGOjdkvajVymJ5EgA@mail.gmail.com>
- <2ed0bcd1-fa74-d095-97ee-7d0c46a4fdbb@intel.com>
- <CAMz4kuJe64hdVGBTCvZW3t4_JGnTBRF=NhYDookrzNPiXacq_w@mail.gmail.com>
- <CAMz4ku+KVWw-M4AaPJ=Yn8xeLNaD2W4+gVqEN_P0QRwne3wwzA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <0c70b5cf-4453-b21b-5622-f97ff069cf1b@intel.com>
-Date:   Fri, 8 Nov 2019 13:23:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725730AbfKHLY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:24:59 -0500
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 06:24:58 EST
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG004227403.MSG 
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 12:19:50 +0100S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Fri, 8
+ Nov 2019 12:19:49 +0100
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
+ Transport; Fri, 8 Nov 2019 12:19:49 +0100
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     rokhov <dmitry.torokhov@gmail.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH] input: ar1021: fix typo in preprocessor macro name
+Date:   Fri, 8 Nov 2019 12:19:07 +0100
+Message-ID: <1573211947-660-1-git-send-email-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <CAMz4ku+KVWw-M4AaPJ=Yn8xeLNaD2W4+gVqEN_P0QRwne3wwzA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-SGHeloLookup-Result: hardfail smtp.helo=webmail.asem.it (does not match 172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090207.5DC54F56.0033,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/19 1:08 PM, Baolin Wang wrote:
-> On 06/11/2019, Baolin Wang <baolin.wang@linaro.org> wrote:
->> On Wed, 6 Nov 2019 at 20:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>
->>> To move ahead in the meantime without a new host API, just defer always
-> 
-> Before new version, I want to make things clear in case I
-> misunderstood your points, so you mean I should set always_defer_done
-> = true for our Spreadtrum host driver in this patch? Or just like
-> below patch? Thanks.
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 850241f..4bef066 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct
-> sdhci_host *host,
->  {
->         struct mmc_data *data = mrq->data;
-> 
-> -       return host->pending_reset ||
-> +       return host->pending_reset || host->always_defer_done ||
->                ((host->flags & SDHCI_REQ_USE_DMA) && data &&
->                 data->host_cookie == COOKIE_MAPPED);
->  }
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index d89cdb9..a73ce89 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -533,6 +533,7 @@ struct sdhci_host {
->         bool pending_reset;     /* Cmd/data reset is pending */
->         bool irq_wake_enabled;  /* IRQ wakeup is enabled */
->         bool v4_mode;           /* Host Version 4 Enable */
-> +       bool always_defer_done; /* Always defer to complete requests */
-> 
->         struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];  /* Requests done */
->         struct mmc_command *cmd;        /* Current command */
-> 
+Fix spelling mistake.
 
-Yes
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ drivers/input/touchscreen/ar1021_i2c.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/ar1021_i2c.c b/drivers/input/touchscreen/ar1021_i2c.c
+index 28644f3..c0d5c24 100644
+--- a/drivers/input/touchscreen/ar1021_i2c.c
++++ b/drivers/input/touchscreen/ar1021_i2c.c
+@@ -13,7 +13,7 @@
+ #include <linux/irq.h>
+ #include <linux/interrupt.h>
+ 
+-#define AR1021_TOCUH_PKG_SIZE	5
++#define AR1021_TOUCH_PKG_SIZE	5
+ 
+ #define AR1021_MAX_X	4095
+ #define AR1021_MAX_Y	4095
+@@ -25,7 +25,7 @@
+ struct ar1021_i2c {
+ 	struct i2c_client *client;
+ 	struct input_dev *input;
+-	u8 data[AR1021_TOCUH_PKG_SIZE];
++	u8 data[AR1021_TOUCH_PKG_SIZE];
+ };
+ 
+ static irqreturn_t ar1021_i2c_irq(int irq, void *dev_id)
+-- 
+2.7.4
 
