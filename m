@@ -2,119 +2,143 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8889FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DC8FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870E8214DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A417214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="mownslAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbfKHI6M (ORCPT
+        id S1730865AbfKHI7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:58:12 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36884 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730005AbfKHI6L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:58:11 -0500
-Received: by mail-io1-f69.google.com with SMTP id u13so4647965iob.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 00:58:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2MJ4JwOdeIflnsknF0Y5CtsGEv4aAsO6Kz3RgLYo/Zo=;
-        b=A9fBMhrhDo3ye6sZaPNA36LsjPQG2yYsBtRHqkcMCEzzvDPBnYDqB8xAUeH9Nf+dwn
-         XOkBrYaSUabYzF1MQU97pqzg4ffDLgiEdWKowa+Gk9LDuemitxgvgaj5UoXSUsk3FOYw
-         XXZBTimlB5l69hq0rbgxr8MGbyAgPRNARbCXgkgIPYDjwwqUJ+rut5fz4KHcdh2QBp7w
-         edYKxVOMUmMRrt3ADMVOCv2cU0G2xAq6v3h5Nd7NkwrZFKe6SVSq2D1nRhq7UgDTt8vm
-         RqoJBvwT/eyH6xiGHhrY0CbOQKRzIQY3wZXIGRowyBpvpN3a6ZC6MofaOIc/of5fGW+O
-         3IEg==
-X-Gm-Message-State: APjAAAXuTe+m+wSxLzJ+te3sa66wCdd4gOp1XpeiWVzFzqzPiHtfEKWo
-        1eIcpTAdmI1f5KScnI10I0m26acbcD5Bej7mAuW53oEMiuXo
-X-Google-Smtp-Source: APXvYqz9BMWTyKrpiCo4kSdUfqLjyYid3sMHPZ/B5YkypwRE2tnRy3x1leIg54zjKuTWVY+Iv+TvYYuYi2QctJ7Rb8k49vbJUzoH
+        Fri, 8 Nov 2019 03:59:09 -0500
+Received: from mail-eopbgr790092.outbound.protection.outlook.com ([40.107.79.92]:27392
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730258AbfKHI7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 03:59:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jnIiw+bO66YeotkXTpkaOFzJ+AMXcf7Etn4WhT5zmoYrABEl2nYTsM0Ju3urlWS+Qp1XdqMqrkmDwur/qr2+3OW3BKvoOqwvPZMuajz60DCkEMs4uehqs8ArJNX7kQnysJ94LFHMNyzQQhqp5e8IpnQu/33/vFdO1gdNAyj49gsFmLxYIBLtjqbSWpp9Sj+xpHgR4H6DjPpwAdrM5ZjyliOUKkacL4LefHDmLu5h5dS3Tx74bW7yhBXutaXzE950DfM+fV1i49g+TpvcyKm68J5XYGO2RHe2Us+zXLDFyiKj1qbXphfgoOaQztdXibxKr0ZdB15yVPhY8JfTy414wQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sFjHGx+Kbi4l1RRILG6GNPCOWVs6nm9FnVIb1i+4AlI=;
+ b=ku5Vh00EsLRBB95AD2XNDLXt3dpUOr6Aia7YRCXghLZnpHKyQ3BIASu+exGA6OsKjCBED2du/MgaBCZJo/1y3SPvGoPuy/g1dJ7J17tZZxWce2YMf9HP6Myt5AOmw/6KZf244aEbF9c0OGhivv75CReaijTa7CW0/+sNqNBvhw/Ez5/NALbMBo8zNYhTocGv1w0f++UKzwAns2sSrLdGUtzCcGHOhRpgKsA3hJpHLELJYcLyRs/RgEh0w+EztrzHCKHyhFx0tv8k5E91s0beHz5fFFplw1kJsn47ar/+8zJb0bRfx6vGQVoEHF7hhQYGomkiteNes7R/vifA0vRy0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sFjHGx+Kbi4l1RRILG6GNPCOWVs6nm9FnVIb1i+4AlI=;
+ b=mownslAcagLZSPAOYdRrYbvytNbTIY5XbAR5GTqIutPw1Bedj8COCetGrouMXlvpYq3iou+5VbqJKO6cNkyPC9uGXFSGUpxlHIGlPRg1AnfbvFyZs8nuq0wQzf03wfYLml1bwTZvIW/d/aRTDNi7mJ7Ja8F2WEfOwPLlZE1aLbA=
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
+ SN6PR04MB4942.namprd04.prod.outlook.com (52.135.114.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Fri, 8 Nov 2019 08:58:33 +0000
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::859:2d31:1f00:fa16]) by SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::859:2d31:1f00:fa16%5]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
+ 08:58:33 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v3 0/2] Add initial support for slimport anx7625
+Thread-Topic: [PATCH v3 0/2] Add initial support for slimport anx7625
+Thread-Index: AQHVlhKyDegwd7ihkkKNeWETzvlDsQ==
+Date:   Fri, 8 Nov 2019 08:58:32 +0000
+Message-ID: <cover.1573203022.git.xji@analogixsemi.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR02CA0136.apcprd02.prod.outlook.com
+ (2603:1096:202:16::20) To SN6PR04MB4543.namprd04.prod.outlook.com
+ (2603:10b6:805:a8::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4b7fcd43-e3f5-4cde-c833-08d76429d506
+x-ms-traffictypediagnostic: SN6PR04MB4942:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR04MB49422FF7DB19E00A42F8834AC77B0@SN6PR04MB4942.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0215D7173F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(376002)(136003)(39840400004)(346002)(189003)(199004)(53754006)(71200400001)(256004)(2501003)(486006)(8676002)(54906003)(2906002)(6486002)(107886003)(6512007)(14444005)(6436002)(2616005)(4326008)(476003)(25786009)(102836004)(66066001)(8936002)(26005)(7416002)(52116002)(7736002)(66446008)(66476007)(66556008)(66946007)(99286004)(316002)(5660300002)(86362001)(71190400001)(186003)(36756003)(305945005)(386003)(81166006)(110136005)(81156014)(3846002)(6506007)(14454004)(4744005)(6116002)(64756008)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4942;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yC6yXjseGYJDvZwI/86y2n+L8lhMNukUdLUNKL6zW2/dWOjVg9g5+tli/ecbTEinvx5QE0k3pSjwI35zII0zuHbL/IRrk+nAhIWhi/yqFTTp8Z3dzAnj5A6T3dW0KGhPceu5Ej/1qtECcu4Y/Nr6mXwxWpIZKb7XeHtBhHxDDjhCrJIsTUABEvO4mjCez7GiHm0/giqX8fV3RBlpLc3wVTgGg6qeLZnkwROefnKV1BHYlr6rS3O6VWpAXWqxiEZSatDMuuZJVuzSe4WvBFoIImN9XkZKgpO0quguSoa0alh1+30Z1lbGaYjLNOe3eke1KNW00+FCT8vqpZLqN8/608QKqH996bnKC/TSYTs/PySlO3oRdQoVgtUkkWFoEcXCONrwxe7KZRt/0152bz9xs8AZ5RTufHO5jrMEQbeyhVdVx1SITgTKZsp/2F57PnUv
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A34ACF29C0458440A376E7E65BEB7237@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c010:: with SMTP id u16mr9018293iol.275.1573203488435;
- Fri, 08 Nov 2019 00:58:08 -0800 (PST)
-Date:   Fri, 08 Nov 2019 00:58:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001677ca0596d1fb43@google.com>
-Subject: WARNING in devlink_port_type_warn
-From:   syzbot <syzbot+b0a18ed7b08b735d2f41@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jiri@mellanox.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b7fcd43-e3f5-4cde-c833-08d76429d506
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 08:58:33.5727
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bldGUqKQtciGaVAl7woIAebFJbKso2XUttYXaumBVa4h7hBYBYimQO1ftF5EiCs1WdHHFbY9fcDaLD9fX/VYcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4942
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi all,
 
-syzbot found the following crash on:
+The following series add initial support for the Slimport ANX7625 transmitt=
+er, a
+ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable dev=
+ice.
 
-HEAD commit:    c68c5373 Add linux-next specific files for 20191107
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b177fae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
-dashboard link: https://syzkaller.appspot.com/bug?extid=b0a18ed7b08b735d2f41
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+This is the initial version, any mistakes, please let me know, I will fix i=
+t in
+the next series.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b0a18ed7b08b735d2f41@syzkaller.appspotmail.com
-
-hid-generic 0000:0000:0000.0009: unknown main item tag 0x0
-hid-generic 0000:0000:0000.0009: unknown main item tag 0x0
-hid-generic 0000:0000:0000.0009: hidraw0: <UNKNOWN> HID v0.00 Device [syz1]  
-on syz1
-------------[ cut here ]------------
-Type was not set for devlink port.
-WARNING: CPU: 1 PID: 50 at net/core/devlink.c:6342  
-devlink_port_type_warn+0x15/0x20 net/core/devlink.c:6342
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 50 Comm: kworker/1:1 Not tainted 5.4.0-rc6-next-20191107 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events devlink_port_type_warn
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x35 kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:devlink_port_type_warn+0x15/0x20 net/core/devlink.c:6342
-Code: 89 df e8 de 44 ec fb e9 d3 fe ff ff 66 0f 1f 84 00 00 00 00 00 55 48  
-89 e5 e8 f7 19 b0 fb 48 c7 c7 e0 ef 4a 88 e8 63 2b 81 fb <0f> 0b 5d c3 0f  
-1f 80 00 00 00 00 55 48 89 e5 41 55 49 89 f5 41 54
-RSP: 0018:ffff8880a9b07d30 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815d0b86 RDI: ffffed1015360f98
-RBP: ffff8880a9b07d30 R08: ffff8880a9b365c0 R09: fffffbfff14f374c
-R10: fffffbfff14f374b R11: ffffffff8a79ba5f R12: ffff888076daecc0
-R13: 0000000000000080 R14: ffff8880a99aa900 R15: ffff8880ae934540
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2263
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2409
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Thanks,
+Xin
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Xin Ji (2):
+  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
+  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ .../bindings/display/bridge/anx7625.yaml           |   91 +
+ drivers/gpu/drm/bridge/Makefile                    |    2 +-
+ drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c          | 2042 ++++++++++++++++=
+++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h          |  406 ++++
+ 6 files changed, 2547 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
+5.yaml
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+
+--=20
+2.7.4
+
