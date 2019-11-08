@@ -2,450 +2,231 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CE3FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBC4FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB9E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3913921848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:20:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R2G5oq2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbfKHLNa (ORCPT
+        id S1731299AbfKHLUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:13:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48304 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727573AbfKHLN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:13:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF5EEAF62;
-        Fri,  8 Nov 2019 11:13:25 +0000 (UTC)
-Message-ID: <50e0292949a9f95cf756688eafe0b15a1cf3136e.camel@suse.de>
-Subject: Re: [PATCH 3/4] PCI: brcmstb: add Broadcom STB PCIe host controller
- driver
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     mbrugger@suse.com, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, james.quinlan@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri, 08 Nov 2019 12:13:20 +0100
-In-Reply-To: <87e5117a-f8ff-2a1b-379b-5f43383aa7c0@gmx.net>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-4-nsaenzjulienne@suse.de>
-         <87e5117a-f8ff-2a1b-379b-5f43383aa7c0@gmx.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-7LN/3ZhiuzOWe383zsu9"
-User-Agent: Evolution 3.34.1 
+        Fri, 8 Nov 2019 06:20:11 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38572 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730144AbfKHLUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:20:11 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA8BJxaQ061094;
+        Fri, 8 Nov 2019 05:19:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573211999;
+        bh=1sYnVYmhFnu7+WIH7nNDITfLUYTO+zpaIxaGA/cU59U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=R2G5oq2KJJvCBmW8d1xZpPU+SFWdMrcwHZMJmbgAidMwgedWq9tQrbgDKxLhS0Nqo
+         fWg73CQgDB+BjvXVpX5L6C8c+baTfkAD2XJ9YPCMBa5PKWJOQAnibCIS+7kKrSea0W
+         FaDCSZHr1Oz7Uelh/E0Ksbl5xvt0kTbA0Ca1qMH4=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA8BJxpC106318
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Nov 2019 05:19:59 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 8 Nov
+ 2019 05:19:42 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 8 Nov 2019 05:19:42 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA8BJtIp107908;
+        Fri, 8 Nov 2019 05:19:56 -0600
+Subject: Re: [RFC 0/2] gpio: Support for shared GPIO lines on boards
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Grant Likely <glikely@secretlab.ca>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+References: <20191030114530.872-1-peter.ujfalusi@ti.com>
+ <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
+Date:   Fri, 8 Nov 2019 13:21:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---=-7LN/3ZhiuzOWe383zsu9
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 01/11/2019 17.56, Linus Walleij wrote:
+> Hi folks,
+> 
+> cutting all the discussions in this thread
 
-Hi Stefan,
-thanks for the review!
+the mail got disconnected from the thread and almost missed it ;)
 
-On Thu, 2019-11-07 at 18:50 +0100, Stefan Wahren wrote:
-> Hi Nicolas,
->=20
-> Am 06.11.19 um 22:45 schrieb Nicolas Saenz Julienne:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > This commit adds the basic Broadcom STB PCIe controller.  Missing is th=
-e
-> > ability to process MSI. This functionality is added in a subsequent
-> > commit.
-> >=20
-> > The PCIe block contains an MDIO interface.  This is a local interface
-> > only accessible by the PCIe controller.  It cannot be used or shared
-> > by any other HW.  As such, the small amount of code for this
-> > controller is included in this driver as there is little upside to put
-> > it elsewhere.
-> >=20
-> > This is based on Jim's original submission[1] but adapted and tailored
-> > specifically to bcm2711's needs (that's the Raspberry Pi 4). Support fo=
-r
-> > the rest of the brcmstb family will soon follow once we get support for
-> > multiple dma-ranges in dma/direct.
-> >=20
-> > [1] https://patchwork.kernel.org/patch/10605959/
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  drivers/pci/controller/Kconfig        |  12 +
-> >  drivers/pci/controller/Makefile       |   1 +
-> >  drivers/pci/controller/pcie-brcmstb.c | 973 ++++++++++++++++++++++++++
-> >  3 files changed, 986 insertions(+)
-> >  create mode 100644 drivers/pci/controller/pcie-brcmstb.c
-> >=20
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kc=
-onfig
-> > index f5de9119e8d3..8b3aae91d8af 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -281,6 +281,18 @@ config VMD
-> >  	  To compile this driver as a module, choose M here: the
-> >  	  module will be called vmd.
-> >=20
-> > +config PCIE_BRCMSTB
-> > +	bool "Broadcom Brcmstb PCIe host controller"
-> looking at the driver suggests me a tristate instead of bool.
-> > +	depends on ARCH_BRCMSTB || BMIPS_GENERIC
-> please add ARCH_BCM2835 for the Raspberry Pi 4
-> > +	depends on OF
-> > +	depends on SOC_BRCMSTB
-> Why is this needed?
+> we need to see the bigger
+> pattern:
+> 
+> On GPIO rails
+> 
+> People want "something like rails" for GPIO. In power supplies
+> and thus the regulator subsystem, rails are connected to many
+> logical endpoints.
+> 
+> - The suggested inverter bindings would be effectively an
+>   inverter on a GPIO rail.
+> 
+> - This suggestion would be equal to many power consumers
+>   on a rail, such as the usecase of shared gpio-enable lines in
+>   the regulator subsystem already provides.
+> 
+> The former seems to have been identified as solveable for the
+> userspace that needed it and absorbed into the drafts for a
+> virtualized GPIO controller. (Aggregating and creating a new
+> virtual GPIO chip for some select physical GPIO lines.)
+> 
+> I haven't seen an exact rationale from the DT community as
+> to why these things should not be modeled, but as can be
+> clearly seen in
+> Documentation/devicetree/bindings/regulator/regulator.yaml
+> the "rail abstraction" from the regulator subsystem which
+> is in effect struct regulation_constraints and it sibling
+> struct regulator_init_data is not in the DT bindings, instead
+> this is encoded as properties in the regulator itself, so this
+> is pretty consistent: the phandle from regulator to consumer
+> *is* the rail.
+> 
+> This goes back to Rajendras initial DT regulator support code
+> see:
+> git log -p 69511a452e6d
+> 
+> So it would be logical then to just have:
+> 
+> - More than one phandle taking the same GPIO line
+> - Figure this situation out in the gpiolib OF core
+> - Resolve the manageability of the situation (same
+>   consumer flags etc)
+> - Instantiate a kernel component as suggested,
+>   mediating requests.
+> - Handle it from there.
+> 
+> So:
+> 
+> gpio: gpio-controller@0 {
+>         compatible = "foo,gpio";
+>         gpio-controller;
+>         #gpio-cells = <2>;
+> };
+> 
+> consumer-a {
+>        compatible = "foo,consumer-a";
+>        rst-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
+> };
+> 
+> consumer-b {
+>        compatible = "foo,consumer-b";
+>        rst-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
+> };
 
-It's not, I missed it. For now, I edited it so it only depends on ARCH_BCM2=
-835.
+Should be fine I think.
+Again, I would trust the board design to take into consideration of the
+consumer's needs when sharing the same GPIO line for any purpose.
 
-> > +	default ARCH_BRCMSTB || BMIPS_GENERIC
-> also this needs ARCH_BCM2835
-> > +	help
-> > +	  Say Y here to enable PCIe host controller support for
-> > +	  Broadcom Settop Box SOCs.  A Broadcom SOC will may have
-> > +	  multiple host controllers as opposed to a single host
-> > +	  controller with multiple ports.
-> > +
-> >  config PCI_HYPERV_INTERFACE
-> >  	tristate "Hyper-V PCI Interface"
-> >  	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-> > diff --git a/drivers/pci/controller/Makefile
-> > b/drivers/pci/controller/Makefile
-> > index a2a22c9d91af..3fc0b0cf5b5b 100644
-> > --- a/drivers/pci/controller/Makefile
-> > +++ b/drivers/pci/controller/Makefile
-> > @@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) +=3D pcie-mediatek.o
-> >  obj-$(CONFIG_PCIE_MOBIVEIL) +=3D pcie-mobiveil.o
-> >  obj-$(CONFIG_PCIE_TANGO_SMP8759) +=3D pcie-tango.o
-> >  obj-$(CONFIG_VMD) +=3D vmd.o
-> > +obj-$(CONFIG_PCIE_BRCMSTB) +=3D pcie-brcmstb.o
-> >  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
-> >  obj-y				+=3D dwc/
-> >=20
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> > b/drivers/pci/controller/pcie-brcmstb.c
-> > new file mode 100644
-> > index 000000000000..880ec11d06a1
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -0,0 +1,973 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (C) 2009 - 2019 Broadcom */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/compiler.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/init.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/ioport.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/list.h>
-> > +#include <linux/log2.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_pci.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/printk.h>
-> > +#include <linux/sizes.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +#include <linux/types.h>
-> > +
-> > +#include "../pci.h"
-> > +
-> > ...
-> >=20
-> > +
-> > +/* L23 is a low-power PCIe link state */
-> > +static void enter_l23(struct brcm_pcie *pcie)
-> > +{
-> > +	void __iomem *base =3D pcie->base;
-> > +	int l23, i;
-> > +
-> > +	/* assert request for L23 */
-> > +	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 1);
-> > +
-> > +	/* Wait up to 30 msec for L23 */
-> 36 msec?
+> Hi kernel: figure it out.
+> 
+> From this point the kernel driver(s) have to figure it out.
+> 
+> I don't think this requires any changes to the DT bindings
+> other than perhaps spelling out that if you link more than one
+> phandle to a GPIO line, magic will happen. (We should probably
+> make very verbose dmesg prints about this magic.)
 
-Yes :)
+To start with I would let GPIO core to allow requesting the same GPIO
+line by multiple consumers all the time.
 
-> > +	l23 =3D RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
-> > +	for (i =3D 0; i < 15 && !l23; i++) {
-> > +		usleep_range(2000, 2400);
-> > +		l23 =3D RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
-> > +	}
-> > +
-> > +	if (!l23)
-> > +		dev_err(pcie->dev, "failed to enter L23\n");
->=20
-> I think most user don't know anything about L23.
->=20
-> How about:
->=20
-> failed to enter low-power link state
+If the flags for the gpio_request does not contain
+GPIOD_FLAGS_BIT_NONEXCLUSIVE (probably we can have another define for
+BIT(4) as GPIOD_FLAGS_BIT_MIGHT_BE_SHARED?) then print with dev_warn()
+to get the attention of the developer that all users of the shared GPIO
+line must be checked and change the current dev_info() to dev_dbg() when
+the flag is provided.
 
-Noted
+When the consumer drivers are checked (and modified if needed) that they
+behave OK in this situation we can snap the
+GPIOD_FLAGS_BIT_MIGHT_BE_SHARED to silence the warning.
 
-> > +}
-> > +
-> > +static void turn_off(struct brcm_pcie *pcie)
-> > +{
-> > +	void __iomem *base =3D pcie->base;
-> > +
-> > +	if (brcm_pcie_link_up(pcie))
-> > +		enter_l23(pcie);
-> > +	/* Assert fundamental reset */
-> > +	brcm_pcie_perst_set(pcie, 1);
-> > +	/* Deassert request for L23 in case it was asserted */
-> > +	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 0);
-> > +	/* Turn off SerDes */
-> > +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 1);
-> > +	/* Shutdown PCIe bridge */
-> > +	brcm_pcie_bridge_sw_init_set(pcie, 1);
-> > +}
-> > +
-> > +static int brcm_pcie_suspend(struct device *dev)
-> > +{
-> > +	struct brcm_pcie *pcie =3D dev_get_drvdata(dev);
-> > +
-> > +	turn_off(pcie);
-> > +	clk_disable_unprepare(pcie->clk);
-> > +	pcie->suspended =3D true;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int brcm_pcie_resume(struct device *dev)
-> > +{
-> > +	struct brcm_pcie *pcie =3D dev_get_drvdata(dev);
-> > +	void __iomem *base;
-> > +	int ret;
-> > +
-> > +	base =3D pcie->base;
-> > +	clk_prepare_enable(pcie->clk);
-> > +
-> > +	/* Take bridge out of reset so we can access the SerDes reg */
-> > +	brcm_pcie_bridge_sw_init_set(pcie, 0);
-> > +
-> > +	/* Turn on SerDes */
-> > +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 0);
-> > +	/* Wait for SerDes to be stable */
-> > +	usleep_range(100, 200);
-> > +
-> > +	ret =3D brcm_pcie_setup(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	pcie->suspended =3D false;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void _brcm_pcie_remove(struct brcm_pcie *pcie)
-> > +{
-> > +	turn_off(pcie);
-> > +	clk_disable_unprepare(pcie->clk);
-> > +	clk_put(pcie->clk);
-> > +}
-> > +
-> > +static int brcm_pcie_remove(struct platform_device *pdev)
-> > +{
-> > +	struct brcm_pcie *pcie =3D platform_get_drvdata(pdev);
-> > +
-> > +	pci_stop_root_bus(pcie->root_bus);
-> > +	pci_remove_root_bus(pcie->root_bus);
-> > +	_brcm_pcie_remove(pcie);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id brcm_pcie_match[] =3D {
-> > +	{ .compatible =3D "brcm,bcm2711-pcie", .data =3D &bcm2711_cfg },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, brcm_pcie_match);
-> > +
-> > +static int brcm_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *dn =3D pdev->dev.of_node;
-> > +	const struct of_device_id *of_id;
-> > +	const struct pcie_cfg_data *data;
-> > +	struct resource *res;
-> > +	int ret;
-> > +	struct brcm_pcie *pcie;
-> > +	void __iomem *base;
-> > +	struct pci_host_bridge *bridge;
-> > +	struct pci_bus *child;
-> > +
-> > +	bridge =3D devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
-> > +	if (!bridge)
-> > +		return -ENOMEM;
-> > +
-> > +	pcie =3D pci_host_bridge_priv(bridge);
-> > +
-> > +	of_id =3D of_match_node(brcm_pcie_match, dn);
-> > +	if (!of_id) {
-> > +		dev_err(&pdev->dev, "failed to look up compatible string\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	data =3D of_id->data;
-> > +	pcie->reg_offsets =3D data->offsets;
-> > +	pcie->reg_field_info =3D data->reg_field_info;
-> > +	pcie->type =3D data->type;
-> > +	pcie->dn =3D dn;
-> > +	pcie->dev =3D &pdev->dev;
-> > +
-> > +	/* We use the domain number as our controller number */
-> > +	pcie->id =3D of_get_pci_domain_nr(dn);
-> > +	if (pcie->id < 0)
-> > +		return pcie->id;
-> > +
-> > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	if (!res)
-> > +		return -EINVAL;
-> > +
-> > +	base =3D devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(base))
-> > +		return PTR_ERR(base);
-> > +
-> > +	pcie->clk =3D of_clk_get_by_name(dn, "sw_pcie");
-> > +	if (IS_ERR(pcie->clk)) {
-> we should handle EPROBE_DEFER here
+> This is enough to start with. After that we can discuss adding
+> flags and constraint properties to a certain GPIO line if
+> need be. (That will be a big discussion as well, as we haven't
+> even figured out how to assign default values to individual
+> GPIO lines yet.)
 
-Yes, I'll keep it in mind.
+Not sure how the core would refcount things, but to align with what Rob
+was saying about the misleading API naming:
+gpiod_set_value(priv->en_gpio, 1/0) against the DT's
+GPIO_ACTIVE_HIGH/LOW of the line's active state we might want to have:
+gpiod_assert(priv->en_gpio);
+gpiod_deassert(priv->en_gpio);
 
-> > +		dev_err(&pdev->dev, "could not get clock\n");
-> > +		pcie->clk =3D NULL;
-> > +	}
-> > +	pcie->base =3D base;
-> > +
-> > +	ret =3D of_pci_get_max_link_speed(dn);
-> > +	pcie->gen =3D (ret < 0) ? 0 : ret;
-> > +
-> > +	pcie->ssc =3D of_property_read_bool(dn, "brcm,enable-ssc");
-> > +
-> > +	ret =3D irq_of_parse_and_map(pdev->dev.of_node, 0);
-> > +	if (ret =3D=3D 0)
-> > +		/* keep going, as we don't use this intr yet */
-> > +		dev_warn(pcie->dev, "cannot get PCIe interrupt\n");
-> > +	else
-> > +		pcie->irq =3D ret;
-> > +
-> > +	ret =3D pci_parse_request_of_pci_ranges(pcie->dev, &bridge->windows,
-> > +					      &bridge->dma_ranges, NULL);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D clk_prepare_enable(pcie->clk);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "could not enable clock\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret =3D brcm_pcie_setup(pcie);
-> > +	if (ret)
-> > +		goto fail;
-> > +
-> > +	bridge->dev.parent =3D &pdev->dev;
-> > +	bridge->busnr =3D 0;
-> > +	bridge->ops =3D &brcm_pcie_ops;
-> > +	bridge->sysdata =3D pcie;
-> > +	bridge->map_irq =3D of_irq_parse_and_map_pci;
-> > +	bridge->swizzle_irq =3D pci_common_swizzle;
-> > +
-> > +	ret =3D pci_scan_root_bus_bridge(bridge);
-> > +	if (ret < 0) {
-> > +		dev_err(pcie->dev, "Scanning root bridge failed\n");
-> > +		goto fail;
-> > +	}
-> > +
-> > +	pci_assign_unassigned_bus_resources(bridge->bus);
-> > +	list_for_each_entry(child, &bridge->bus->children, node)
-> > +		pcie_bus_configure_settings(child);
-> > +	pci_bus_add_devices(bridge->bus);
-> > +	platform_set_drvdata(pdev, pcie);
-> > +	pcie->root_bus =3D bridge->bus;
-> > +
-> > +	return 0;
-> > +
-> > +fail:
-> > +	_brcm_pcie_remove(pcie);
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct dev_pm_ops brcm_pcie_pm_ops =3D {
-> > +	.suspend_noirq =3D brcm_pcie_suspend,
-> > +	.resume_noirq =3D brcm_pcie_resume,
-> > +};
-> > +
-> > +static struct platform_driver brcm_pcie_driver =3D {
-> > +	.probe =3D brcm_pcie_probe,
-> > +	.remove =3D brcm_pcie_remove,
-> > +	.driver =3D {
-> > +		.name =3D "brcm-pcie",
-> > +		.owner =3D THIS_MODULE,
-> This is already done by module_platform_driver
+Basically assert would set the level to the active state defined by the
+DT. deassert would, well, de-assert the active state.
 
-Noted
+gpiod_deassert() would be equivalent to Philipp's
+gpiod_politely_suggest_value()
 
-> > +		.of_match_table =3D brcm_pcie_match,
-> > +		.pm =3D &brcm_pcie_pm_ops,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(brcm_pcie_driver);
-> > +
-> > +MODULE_LICENSE("GPL v2");
->=20
-> This is a mismatch to the SPDX (GPL 2 and higher), because this says GPL
-> v2 only
+Gradually drivers can be moved to this API pair from gpiod_set_value()
+when it makes sense.
+The current gpiod_set_* would operate like as it is right now by not
+asking politely a level, whatever it is.
 
-Noted
+Hrm, probably both gpiod_assert() and gpiod_deassert() should be polite
+when asking for level change?
 
-Regards,
-Nicolas
+If all consumers of the shared line is using gpiod_assert/deassert, then
+the core should 'protect' the raw level of the gpiod_assert() calls.
 
+At the end we will see drivers converted to assert/deassert API when a
+developer faces issues that they use shared GPIO line on a board.
 
---=-7LN/3ZhiuzOWe383zsu9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+gpiod_get should also use the polite version when setting the initial
+level most likely.
 
------BEGIN PGP SIGNATURE-----
+Another thing is that currently gpio core does not have refcounting and
+most of the client drivers treat it like that. It is perfectly fine to
+gpiod_get(priv->en_gpio,1);
+gpiod_get(priv->en_gpio,1);
+gpiod_get(priv->en_gpio,1);
+gpiod_get(priv->en_gpio,0);
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3FTdAACgkQlfZmHno8
-x/4phggAp6vKbULup21um9NuRa1mXPrMJTBuptz2RdcIJ8hKYs6itL0vP/dyYCsK
-es3Ibkd6EUWwX6yYlKPCGju0kvsZwR1DQ+Nqwmz/yW2abbKRt7K0e0m7xsnSzGmI
-D5C4SZh9LLdjwEcUFq27ZoDG9SbkxXoAzivEZ4oumhLQJa1ie+PdjJ0gJKN0t5pD
-XflTJ7sAIU3jNf0SucygBLVDzrnn3fO6Ml/D/qr7m2VfzqKKrods5SsBsqL2NjJ3
-KxVUMP0Pk3rj3l85bmUXL1Awab2s6BMPYAXmKDZHerAcc3VMtAW55Pm85mPtIh6w
-yZFRF088gUmXSdz9DmRTV59q9UqvNA==
-=3++k
------END PGP SIGNATURE-----
+at the last call the GPIO value is going to be set to 0 no matter if it
+was set to 1 three times prior, but I guess this can be worked out when
+the driver(s) are converted to assert/deassert.
 
---=-7LN/3ZhiuzOWe383zsu9--
+- Péter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
