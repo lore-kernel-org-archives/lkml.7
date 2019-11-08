@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DA8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B893FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD98D21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818732178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239340;
-	bh=BUTuqTi7EGNrt+/TX54y9XivWt9zhd35Hvj5orNffp8=;
+	s=default; t=1573239344;
+	bh=OUxU/eQZ6HEuqMpH2FbTVFsxnOXLUuvEPUkI2xixscQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HvExuchBlLI6J+3lGm+vwEucNWGhhDYx+dTi/KicfZFRCOF1/r5HMnGnztZNZ643E
-	 cueyBAmDYZSbNTXT/DpymMt0EPT778Vhd7KGQd1jpZwPUH4ftZzEv/KKGsPheynynj
-	 vU0je3TLxlM1kXmain5a2BDlyk6iS9lz3CwvNt1g=
+	b=JrlxWe8r/EqzM0az4GRCog2dOCWYPBeSlo05oJJDK+EVssIiOFICqsggZ0WCGXqog
+	 rKKmU3gPX/2C80wY+y/RjHGzb5TS5uynephXEdNijH3YOexrwQjDru6JZTNR0zVywq
+	 FSLkhp1SCClCxAukwUNjCHfyoL7zgq1RNB4HF/YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387703AbfKHSzj (ORCPT
+        id S2387792AbfKHSzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:55:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52864 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:55:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387543AbfKHSzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:55:31 -0500
+        id S2387707AbfKHSzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:55:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370E220865;
-        Fri,  8 Nov 2019 18:55:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAEF82178F;
+        Fri,  8 Nov 2019 18:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239330;
-        bh=BUTuqTi7EGNrt+/TX54y9XivWt9zhd35Hvj5orNffp8=;
+        s=default; t=1573239339;
+        bh=OUxU/eQZ6HEuqMpH2FbTVFsxnOXLUuvEPUkI2xixscQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o12XQ2hiU6rdy3vh6lzVwxB8KHkUpg/IAKKR1qf5kooJ2Dl9RHRFW9Ldvy3VqBIQN
-         2bBW8ebAlla6BFYyehh7uU9HIl23bpHkpfj4F+UXyfxHQ8IUfcNAjuz3VdIZr7pGLE
-         U1y71kJ3RIKBuQzlf0dK+V2SaCVAPqjDKIQEV5Nc=
+        b=qDMisU73ddlhpssefBRHB/CiIfkeATLb1uoPQ0pwhYOLi9nT2F+q1KidWunJTl1E9
+         K+hPjKc0PlFRSCwowKAtC6/aUgxCA/i5eTrav+xUbP1QSO0juYo56aEEj9ruK0oUvN
+         wvTDMC/KNH67NO+9YvzJWjqgt2Xid2ysP41pj9Lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Marc Zyngier <marc.zyngier@arm.com>,
         "David A. Long" <dave.long@linaro.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 41/75] ARM: bugs: prepare processor bug infrastructure
-Date:   Fri,  8 Nov 2019 19:49:58 +0100
-Message-Id: <20191108174749.239886670@linuxfoundation.org>
+Subject: [PATCH 4.4 44/75] ARM: spectre: add Kconfig symbol for CPUs vulnerable to Spectre
+Date:   Fri,  8 Nov 2019 19:50:01 +0100
+Message-Id: <20191108174750.253744224@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -66,10 +66,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Commit a5b9177f69329314721aa7022b7e69dab23fa1f0 upstream.
+Commit c58d237d0852a57fde9bc2c310972e8f4e3d155d upstream.
 
-Prepare the processor bug infrastructure so that it can be expanded to
-check for per-processor bugs.
+Add a Kconfig symbol for CPUs which are vulnerable to the Spectre
+attacks.
 
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
@@ -81,47 +81,28 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/include/asm/bugs.h |    4 ++--
- arch/arm/kernel/Makefile    |    1 +
- arch/arm/kernel/bugs.c      |    9 +++++++++
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ arch/arm/mm/Kconfig |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm/include/asm/bugs.h
-+++ b/arch/arm/include/asm/bugs.h
-@@ -10,10 +10,10 @@
- #ifndef __ASM_BUGS_H
- #define __ASM_BUGS_H
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -396,6 +396,7 @@ config CPU_V7
+ 	select CPU_CP15_MPU if !MMU
+ 	select CPU_HAS_ASID if MMU
+ 	select CPU_PABRT_V7
++	select CPU_SPECTRE if MMU
+ 	select CPU_TLB_V7 if MMU
  
--#ifdef CONFIG_MMU
- extern void check_writebuffer_bugs(void);
+ # ARMv7M
+@@ -793,6 +794,9 @@ config CPU_BPREDICT_DISABLE
+ 	help
+ 	  Say Y here to disable branch prediction.  If unsure, say N.
  
--#define check_bugs() check_writebuffer_bugs()
-+#ifdef CONFIG_MMU
-+extern void check_bugs(void);
- #else
- #define check_bugs() do { } while (0)
- #endif
---- a/arch/arm/kernel/Makefile
-+++ b/arch/arm/kernel/Makefile
-@@ -30,6 +30,7 @@ else
- obj-y		+= entry-armv.o
- endif
- 
-+obj-$(CONFIG_MMU)		+= bugs.o
- obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o
- obj-$(CONFIG_ISA_DMA_API)	+= dma.o
- obj-$(CONFIG_FIQ)		+= fiq.o fiqasm.o
---- /dev/null
-+++ b/arch/arm/kernel/bugs.c
-@@ -0,0 +1,9 @@
-+// SPDX-Identifier: GPL-2.0
-+#include <linux/init.h>
-+#include <asm/bugs.h>
-+#include <asm/proc-fns.h>
++config CPU_SPECTRE
++	bool
 +
-+void __init check_bugs(void)
-+{
-+	check_writebuffer_bugs();
-+}
+ config TLS_REG_EMUL
+ 	bool
+ 	select NEED_KUSER_HELPERS
 
 
