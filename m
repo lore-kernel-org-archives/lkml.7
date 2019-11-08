@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF45CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5591FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B833B21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAFB214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239181;
-	bh=bnqnoiQvoBRI+CacKWPbzl9Bx0OGbwcI9MPPmbbRMrs=;
+	s=default; t=1573239184;
+	bh=3z24VMb6w2aEusAaHy6nE0web8vjYf2I0RI5Q+3sXNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tfSUplWobbdpVms+qti2JYe81de1LDy7QywZtq2A/hRqKLWpgbJW5kLPKZls0F24q
-	 zh+svFZ5eLLFtAdHqOmM8EitQTXSbycDbChfg+k0E85rhSJ2ljqVckfZ+jHGv0F9SK
-	 cO5oHJ+crtKMmIpR8TObTuN1TegcXzG5KmnidcZg=
+	b=xXYkSyDm6GCgE2edh/ctM9s2fdVBFnJeJpT2PxGe6iVL3CgM2yF/svnlptxYSMPyJ
+	 obA5DQ+VCP09UlMNQF7B7Vcz3BgxQK+KcqyklypiuhyvZSsf8r/zocOL1weGE4UB8d
+	 ij0SQIC946VPG5DQlI9kUM2J9zArMmfGBRowoPzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732040AbfKHSxA (ORCPT
+        id S1732099AbfKHSxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:53:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49400 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:53:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731956AbfKHSw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:52:57 -0500
+        id S1732030AbfKHSxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:53:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A71C9218AE;
-        Fri,  8 Nov 2019 18:52:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0592214DB;
+        Fri,  8 Nov 2019 18:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239176;
-        bh=bnqnoiQvoBRI+CacKWPbzl9Bx0OGbwcI9MPPmbbRMrs=;
+        s=default; t=1573239179;
+        bh=3z24VMb6w2aEusAaHy6nE0web8vjYf2I0RI5Q+3sXNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yf3OodHrNGGcngxP+Pp1gUcdX1v69YNRzb0DP+PTLmKSBbkiXpRxWbPz6SVqQs4qA
-         IYHiaOagXDAdxkKqAhH/Py53/9Dm/UKhhscx6fAy3eukfADVtftGVe9c0wwgVOiQyw
-         IR2BRWeNrBVp8mHlnezZEOBJa13LcEjqaJZyiWmg=
+        b=GVxJS/RHh4/fU/DaUIxKITCgZ+g7F6pEQWkhL9zVWa14nwZeaOYwjHnLlA1exioBf
+         7PXSnFgrl+47XdEwerUgPDp2TcuMPXuPe12Efq66f+vIAyQ7YRrKtlgREjtZRcwHsc
+         FtpXItvdpHeQIBpwnWqCzH33R3UdRLMElQubW/00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lars Persson <lars.persson@axis.com>,
         Jens Wiklander <jens.wiklander@linaro.org>,
         Russell King <rmk+kernel@arm.linux.org.uk>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 25/75] ARM: 8478/2: arm/arm64: add arm-smccc
-Date:   Fri,  8 Nov 2019 19:49:42 +0100
-Message-Id: <20191108174732.203467155@linuxfoundation.org>
+Subject: [PATCH 4.4 26/75] ARM: 8479/2: add implementation for arm-smccc
+Date:   Fri,  8 Nov 2019 19:49:43 +0100
+Message-Id: <20191108174733.563457851@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -63,42 +63,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jens Wiklander <jens.wiklander@linaro.org>
 
-Commit 98dd64f34f47ce19b388d9015f767f48393a81eb upstream.
+Commit b329f95d70f3f955093e9a2b18ac1ed3587a8f73 upstream.
 
-Adds helpers to do SMC and HVC based on ARM SMC Calling Convention.
-CONFIG_HAVE_ARM_SMCCC is enabled for architectures that may support the
-SMC or HVC instruction. It's the responsibility of the caller to know if
-the SMC instruction is supported by the platform.
+Adds implementation for arm-smccc and enables CONFIG_HAVE_SMCCC for
+architectures that may support arm-smccc. It's the responsibility of the
+caller to know if the SMC instruction is supported by the platform.
 
-This patch doesn't provide an implementation of the declared functions.
-Later patches will bring in implementations and set
-CONFIG_HAVE_ARM_SMCCC for ARM and ARM64 respectively.
-
-Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Lars Persson <lars.persson@axis.com>
 Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/firmware/Kconfig  |    3 +
- include/linux/arm-smccc.h |  104 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 107 insertions(+)
+ arch/arm/Kconfig             |    1 
+ arch/arm/kernel/Makefile     |    2 +
+ arch/arm/kernel/armksyms.c   |    6 ++++
+ arch/arm/kernel/smccc-call.S |   62 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 71 insertions(+)
 
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -174,6 +174,9 @@ config QCOM_SCM_64
- 	def_bool y
- 	depends on QCOM_SCM && ARM64
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -37,6 +37,7 @@ config ARM
+ 	select HAVE_ARCH_KGDB if !CPU_ENDIAN_BE32
+ 	select HAVE_ARCH_SECCOMP_FILTER if (AEABI && !OABI_COMPAT)
+ 	select HAVE_ARCH_TRACEHOOK
++	select HAVE_ARM_SMCCC if CPU_V7
+ 	select HAVE_BPF_JIT
+ 	select HAVE_CC_STACKPROTECTOR
+ 	select HAVE_CONTEXT_TRACKING
+--- a/arch/arm/kernel/Makefile
++++ b/arch/arm/kernel/Makefile
+@@ -91,4 +91,6 @@ obj-y				+= psci-call.o
+ obj-$(CONFIG_SMP)		+= psci_smp.o
+ endif
  
-+config HAVE_ARM_SMCCC
-+	bool
++obj-$(CONFIG_HAVE_ARM_SMCCC)	+= smccc-call.o
 +
- source "drivers/firmware/broadcom/Kconfig"
- source "drivers/firmware/google/Kconfig"
- source "drivers/firmware/efi/Kconfig"
+ extra-y := $(head-y) vmlinux.lds
+--- a/arch/arm/kernel/armksyms.c
++++ b/arch/arm/kernel/armksyms.c
+@@ -16,6 +16,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/uaccess.h>
+ #include <linux/io.h>
++#include <linux/arm-smccc.h>
+ 
+ #include <asm/checksum.h>
+ #include <asm/ftrace.h>
+@@ -175,3 +176,8 @@ EXPORT_SYMBOL(__gnu_mcount_nc);
+ EXPORT_SYMBOL(__pv_phys_pfn_offset);
+ EXPORT_SYMBOL(__pv_offset);
+ #endif
++
++#ifdef CONFIG_HAVE_ARM_SMCCC
++EXPORT_SYMBOL(arm_smccc_smc);
++EXPORT_SYMBOL(arm_smccc_hvc);
++#endif
 --- /dev/null
-+++ b/include/linux/arm-smccc.h
-@@ -0,0 +1,104 @@
++++ b/arch/arm/kernel/smccc-call.S
+@@ -0,0 +1,62 @@
 +/*
 + * Copyright (c) 2015, Linaro Limited
 + *
@@ -112,96 +135,54 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 + * GNU General Public License for more details.
 + *
 + */
-+#ifndef __LINUX_ARM_SMCCC_H
-+#define __LINUX_ARM_SMCCC_H
-+
 +#include <linux/linkage.h>
-+#include <linux/types.h>
++
++#include <asm/opcodes-sec.h>
++#include <asm/opcodes-virt.h>
++#include <asm/unwind.h>
++
++	/*
++	 * Wrap c macros in asm macros to delay expansion until after the
++	 * SMCCC asm macro is expanded.
++	 */
++	.macro SMCCC_SMC
++	__SMC(0)
++	.endm
++
++	.macro SMCCC_HVC
++	__HVC(0)
++	.endm
++
++	.macro SMCCC instr
++UNWIND(	.fnstart)
++	mov	r12, sp
++	push	{r4-r7}
++UNWIND(	.save	{r4-r7})
++	ldm	r12, {r4-r7}
++	\instr
++	pop	{r4-r7}
++	ldr	r12, [sp, #(4 * 4)]
++	stm	r12, {r0-r3}
++	bx	lr
++UNWIND(	.fnend)
++	.endm
 +
 +/*
-+ * This file provides common defines for ARM SMC Calling Convention as
-+ * specified in
-+ * http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
++ * void smccc_smc(unsigned long a0, unsigned long a1, unsigned long a2,
++ *		  unsigned long a3, unsigned long a4, unsigned long a5,
++ *		  unsigned long a6, unsigned long a7, struct arm_smccc_res *res)
 + */
++ENTRY(arm_smccc_smc)
++	SMCCC SMCCC_SMC
++ENDPROC(arm_smccc_smc)
 +
-+#define ARM_SMCCC_STD_CALL		0
-+#define ARM_SMCCC_FAST_CALL		1
-+#define ARM_SMCCC_TYPE_SHIFT		31
-+
-+#define ARM_SMCCC_SMC_32		0
-+#define ARM_SMCCC_SMC_64		1
-+#define ARM_SMCCC_CALL_CONV_SHIFT	30
-+
-+#define ARM_SMCCC_OWNER_MASK		0x3F
-+#define ARM_SMCCC_OWNER_SHIFT		24
-+
-+#define ARM_SMCCC_FUNC_MASK		0xFFFF
-+
-+#define ARM_SMCCC_IS_FAST_CALL(smc_val)	\
-+	((smc_val) & (ARM_SMCCC_FAST_CALL << ARM_SMCCC_TYPE_SHIFT))
-+#define ARM_SMCCC_IS_64(smc_val) \
-+	((smc_val) & (ARM_SMCCC_SMC_64 << ARM_SMCCC_CALL_CONV_SHIFT))
-+#define ARM_SMCCC_FUNC_NUM(smc_val)	((smc_val) & ARM_SMCCC_FUNC_MASK)
-+#define ARM_SMCCC_OWNER_NUM(smc_val) \
-+	(((smc_val) >> ARM_SMCCC_OWNER_SHIFT) & ARM_SMCCC_OWNER_MASK)
-+
-+#define ARM_SMCCC_CALL_VAL(type, calling_convention, owner, func_num) \
-+	(((type) << ARM_SMCCC_TYPE_SHIFT) | \
-+	((calling_convention) << ARM_SMCCC_CALL_CONV_SHIFT) | \
-+	(((owner) & ARM_SMCCC_OWNER_MASK) << ARM_SMCCC_OWNER_SHIFT) | \
-+	((func_num) & ARM_SMCCC_FUNC_MASK))
-+
-+#define ARM_SMCCC_OWNER_ARCH		0
-+#define ARM_SMCCC_OWNER_CPU		1
-+#define ARM_SMCCC_OWNER_SIP		2
-+#define ARM_SMCCC_OWNER_OEM		3
-+#define ARM_SMCCC_OWNER_STANDARD	4
-+#define ARM_SMCCC_OWNER_TRUSTED_APP	48
-+#define ARM_SMCCC_OWNER_TRUSTED_APP_END	49
-+#define ARM_SMCCC_OWNER_TRUSTED_OS	50
-+#define ARM_SMCCC_OWNER_TRUSTED_OS_END	63
-+
-+/**
-+ * struct arm_smccc_res - Result from SMC/HVC call
-+ * @a0-a3 result values from registers 0 to 3
++/*
++ * void smccc_hvc(unsigned long a0, unsigned long a1, unsigned long a2,
++ *		  unsigned long a3, unsigned long a4, unsigned long a5,
++ *		  unsigned long a6, unsigned long a7, struct arm_smccc_res *res)
 + */
-+struct arm_smccc_res {
-+	unsigned long a0;
-+	unsigned long a1;
-+	unsigned long a2;
-+	unsigned long a3;
-+};
-+
-+/**
-+ * arm_smccc_smc() - make SMC calls
-+ * @a0-a7: arguments passed in registers 0 to 7
-+ * @res: result values from registers 0 to 3
-+ *
-+ * This function is used to make SMC calls following SMC Calling Convention.
-+ * The content of the supplied param are copied to registers 0 to 7 prior
-+ * to the SMC instruction. The return values are updated with the content
-+ * from register 0 to 3 on return from the SMC instruction.
-+ */
-+asmlinkage void arm_smccc_smc(unsigned long a0, unsigned long a1,
-+			unsigned long a2, unsigned long a3, unsigned long a4,
-+			unsigned long a5, unsigned long a6, unsigned long a7,
-+			struct arm_smccc_res *res);
-+
-+/**
-+ * arm_smccc_hvc() - make HVC calls
-+ * @a0-a7: arguments passed in registers 0 to 7
-+ * @res: result values from registers 0 to 3
-+ *
-+ * This function is used to make HVC calls following SMC Calling
-+ * Convention.  The content of the supplied param are copied to registers 0
-+ * to 7 prior to the HVC instruction. The return values are updated with
-+ * the content from register 0 to 3 on return from the HVC instruction.
-+ */
-+asmlinkage void arm_smccc_hvc(unsigned long a0, unsigned long a1,
-+			unsigned long a2, unsigned long a3, unsigned long a4,
-+			unsigned long a5, unsigned long a6, unsigned long a7,
-+			struct arm_smccc_res *res);
-+
-+#endif /*__LINUX_ARM_SMCCC_H*/
++ENTRY(arm_smccc_hvc)
++	SMCCC SMCCC_HVC
++ENDPROC(arm_smccc_hvc)
 
 
