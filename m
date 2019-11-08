@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9064FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE37FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835C121D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8852196F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240049;
-	bh=ht9JGwRvyPE1oQY2tPbaSAi9RSWCgC0V/DymEc6snjA=;
+	s=default; t=1573240052;
+	bh=UqFlpraDJaXRjMuRU9H3HABmoY0nCuDWN0BpkO5x+OQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nh0Iucsv4Wwx+IewK9JfZ1Y+1XNdywVH3+4JzRVxKbJKKCY3sW/dIyPUO14j7oh4/
-	 I96dSfHTfOegCEZodbKoCLAl/GuGVOVX6va2HT+aEXg3a07H17pVwygZ+/zTflcNQK
-	 8GU6eMvvNStZ4clZoiBxXb4QL+v8N6RB5n5Q02ic=
+	b=d0ugp0+6MJ+PY4BQwCiOnVh8cQWRug8rRR0JrDDLBLI/7ZAnmqtLRdQ2OPElz4Yny
+	 egNTStFKgoOCkNMPhmDh9QVhoQp1UpRQIbWbeZPS1S7zc++dGH2ITjt1CntfiMOnw5
+	 QcGnOLcSAWR3KaihLvCuRy+i8FCVoaW5P8r80xDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391456AbfKHTH1 (ORCPT
+        id S2390485AbfKHTHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:07:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38116 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:07:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391441AbfKHTHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:24 -0500
+        id S2391452AbfKHTH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:07:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29F4D2087E;
-        Fri,  8 Nov 2019 19:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0420D2196F;
+        Fri,  8 Nov 2019 19:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240043;
-        bh=ht9JGwRvyPE1oQY2tPbaSAi9RSWCgC0V/DymEc6snjA=;
+        s=default; t=1573240046;
+        bh=UqFlpraDJaXRjMuRU9H3HABmoY0nCuDWN0BpkO5x+OQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ELCo2DyELWLDC1Tw39q2GwiAB7M2EwB3rDegDSNvqiJA2uNeDHCnaYpcd8gy7z6+I
-         W017ZD7ObaeqYRi7qrlwrT7FPoP5yg03zwVqtxPf4XM16SXC9AHBn2CvOwaqcFcsOd
-         rYla0iSzKFYRRS4PpCXnaHyjD/EMTfyTIEXKdVFM=
+        b=REXUrYAuY6iT/nQNZhBgMhAz2v2bEKWSmCgNycVeO2SuQ5oXkByI47aToe7MO8Er3
+         OjZ96r886wLY1zwYRhKLFU/iIcPtu/PKMP/fwDXkDRpd/CRKbGOzekoOv8dVUF8aVX
+         D6pr26N2sbS7niYYfyVdqMVOUYvKmJggKMdxrCZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 067/140] ALSA: hda: Add Tigerlake/Jasperlake PCI ID
-Date:   Fri,  8 Nov 2019 19:49:55 +0100
-Message-Id: <20191108174909.430405131@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 068/140] of: unittest: fix memory leak in unittest_data_add
+Date:   Fri,  8 Nov 2019 19:49:56 +0100
+Message-Id: <20191108174909.481189005@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,39 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Xiuli <xiuli.pan@linux.intel.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 4750c212174892d26645cdf5ad73fb0e9d594ed3 ]
+[ Upstream commit e13de8fe0d6a51341671bbe384826d527afe8d44 ]
 
-Add HD Audio Device PCI ID for the Intel Tigerlake and Jasperlake
-platform.
+In unittest_data_add, a copy buffer is created via kmemdup. This buffer
+is leaked if of_fdt_unflatten_tree fails. The release for the
+unittest_data buffer is added.
 
-Signed-off-by: Pan Xiuli <xiuli.pan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191022194402.23178-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: b951f9dc7f25 ("Enabling OF selftest to run without machine's devicetree")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/of/unittest.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index b0de3e3b33e5c..e1791d01ccc01 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2431,6 +2431,12 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Icelake */
- 	{ PCI_DEVICE(0x8086, 0x34c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	/* Jasperlake */
-+	{ PCI_DEVICE(0x8086, 0x38c8),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	/* Tigerlake */
-+	{ PCI_DEVICE(0x8086, 0xa0c8),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Elkhart Lake */
- 	{ PCI_DEVICE(0x8086, 0x4b55),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index e6b175370f2eb..8b7bd48224657 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1205,6 +1205,7 @@ static int __init unittest_data_add(void)
+ 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+ 	if (!unittest_data_node) {
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
++		kfree(unittest_data);
+ 		return -ENODATA;
+ 	}
+ 
 -- 
 2.20.1
 
