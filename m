@@ -2,131 +2,112 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D6FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B20FC6199
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4AB2178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573248017;
-	bh=W/41aRz8a8e9Jzva0r1YTdxOVETPDBmfjwIJpNNiqTo=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=KDzUqq/0Ja+DIkxJ3B56J5iABpvttOefAIICVNW1jZS5Xw4b92p09K53b+thB5Dvt
-	 yn6D/Q0X3KkOJiqPBjmYgywyB6VrcTt+0xCdFkL+OqSm0oqxe0X2eBP5I6NWyrWYHl
-	 VZPpEK6gexKefGkExau9Jf/8izUdXORZbXZpcIMg=
+	by mail.kernel.org (Postfix) with ESMTP id 3EDEB207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbfKHVUQ (ORCPT
+        id S1732645AbfKHVVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:20:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58872 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 16:21:39 -0500
+Received: from muru.com ([72.249.23.125]:41276 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727558AbfKHVUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:20:15 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07BC720869;
-        Fri,  8 Nov 2019 21:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573248015;
-        bh=W/41aRz8a8e9Jzva0r1YTdxOVETPDBmfjwIJpNNiqTo=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=Me4X4kOP6rnHyQzvR7U+RS3BdTpdzXkCGMlKfLEKkPOQQTryEtc5EnICH4UTyxRxe
-         L8e3Hx/hWXqBzqJyYQIQV5lINo5swzsVWD3rGH7cP5RgO++f4s6unqKLhuHSGdzE/M
-         iEsMjCqCROMDMaZLuXWIkRGnFffYUdUeITafEutM=
-Content-Type: text/plain; charset="utf-8"
+        id S1731643AbfKHVVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:21:38 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id D25AA80D4;
+        Fri,  8 Nov 2019 21:22:12 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 13:21:33 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+Message-ID: <20191108212133.GS5610@atomide.com>
+References: <20191007220540.30690-1-aford173@gmail.com>
+ <20191022162223.GU5610@atomide.com>
+ <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
+ <20191022221919.GF5610@atomide.com>
+ <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+ <20191023143646.GG5610@atomide.com>
+ <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
+ <20191108205139.GP5610@atomide.com>
+ <CAHCN7xLv9K07ya4Ssj_zs_7pwGwWVT_P4QbH88Bz0wPjB=HX_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1565984527-5272-12-git-send-email-skomatineni@nvidia.com>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-12-git-send-email-skomatineni@nvidia.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
-        jonathanh@nvidia.com, linus.walleij@linaro.org,
-        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
-        tglx@linutronix.de, thierry.reding@gmail.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        skomatineni@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 11/22] clk: tegra: clk-dfll: Add suspend and resume support
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 13:20:14 -0800
-Message-Id: <20191108212015.07BC720869@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xLv9K07ya4Ssj_zs_7pwGwWVT_P4QbH88Bz0wPjB=HX_A@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2019-08-16 12:41:56)
-> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
-> index f8688c2ddf1a..c051d92c2bbf 100644
-> --- a/drivers/clk/tegra/clk-dfll.c
-> +++ b/drivers/clk/tegra/clk-dfll.c
-> @@ -1487,6 +1487,7 @@ static int dfll_init(struct tegra_dfll *td)
->         td->last_unrounded_rate =3D 0;
-> =20
->         pm_runtime_enable(td->dev);
-> +       pm_runtime_irq_safe(td->dev);
+* Adam Ford <aford173@gmail.com> [191108 21:05]:
+> On Fri, Nov 8, 2019 at 2:51 PM Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > * Adam Ford <aford173@gmail.com> [191108 20:03]:
+> > > On Wed, Oct 23, 2019 at 9:36 AM Tony Lindgren <tony@atomide.com> wrote:
+> > > > My guess is we need to call clk_disable() and call
+> > > > ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
+> > > > what ti_bandgap_suspend does. And then restore it on
+> > > > CPU_CLUSTER_PM_EXIT.
+> > > >
+> > > > There's a similar example already in gpio_omap_cpu_notifier().
+> > > > Not sure if there is some related errata to deal with too,
+> > > > probably the old Nokia n900 or n9 would provide some hints
+> > > > on what exactly needs to be done.
+> > >
+> > > I 'think' I have a patch ready that does what you're asking, but I
+> > > will fully admit that I don't completely grasp what's going on.
+> > >
+> > > I'll submit it as an RFC, but I am not even sure I understand what to
+> > > put into the description, so if you're OK with reviewing the RFC, feel
+> > > free to mark up the actual commit message as well.
+> > >
+> > > From what I can see, the changes haven't negatively impact stuff. I
+> > > didn't see the power consumption go up before, so I am not sure I can
+> > > replicate your findings.
+> > >
+> > > It'll be posted shortly.
+> >
+> > Yeah seems to do the job, thanks for fixing this issue.
+> 
+> I am glad I could help!  I am learning new stuff.  :-)
+> 
+> Once the other patch to fix the bandgap clock idling, will it be
+> possible to accept this as-is, or do you need me to re-base and submit
+> again?
 
-Why irq_safe? It would be good to mention it in the commit text or
-something.
+No need to resend, I've tagged it again to apply after the
+driver fix hits the mainline kernel.
 
->         pm_runtime_get_sync(td->dev);
-> =20
->         dfll_set_mode(td, DFLL_DISABLED);
-> @@ -1513,6 +1514,61 @@ static int dfll_init(struct tegra_dfll *td)
->         return ret;
->  }
-> =20
-> +/**
-> + * tegra_dfll_suspend - check DFLL is disabled
-> + * @dev: DFLL device *
-> + *
-> + * DFLL clock should be disabled by the CPUFreq driver. So, make
-> + * sure it is disabled and disable all clocks needed by the DFLL.
-> + */
-> +int tegra_dfll_suspend(struct device *dev)
-> +{
-> +       struct tegra_dfll *td =3D dev_get_drvdata(dev);
-> +
-> +       if (dfll_is_running(td)) {
-> +               dev_err(td->dev, "DFLL still enabled while suspending\n");
-> +               return -EBUSY;
-> +       }
-> +
-> +       reset_control_assert(td->dvco_rst);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL(tegra_dfll_suspend);
-> +
-> +/**
-> + * tegra_dfll_resume - reinitialize DFLL on resume
-> + * @dev: DFLL instance
+> Ideally, once we get the thermal stuff in and we can drop Nikolaus'
+> turbo option on the 1GHz processor and just let the processor scale to
+> 1GHz without having to deal with the boost stuff since it should
+> throttle back when the junction temp hits its threshold.
 
-I prefer this description for tegra_dfll_suspend's 'dev' argument.
+Right. AFAIK we also still need some way to represent the
+arch/arm/mach-omap2/voltage.c as drivers/regulator some kind
+of regulator controller regulator for cpufreq to use.
 
-> + *
-> + * DFLL is disabled and reset during suspend and resume.
-> + * So, reinitialize the DFLL IP block back for use.
-> + * DFLL clock is enabled later in closed loop mode by CPUFreq
-> + * driver before switching its clock source to DFLL output.
-> + */
-> +int tegra_dfll_resume(struct device *dev)
-> +{
-> +       struct tegra_dfll *td =3D dev_get_drvdata(dev);
-> +
-> +       reset_control_deassert(td->dvco_rst);
-> +
-> +       pm_runtime_get_sync(td->dev);
-> +
-> +       dfll_set_mode(td, DFLL_DISABLED);
-> +       dfll_set_default_params(td);
+> If you want me to re-base, please let me know which branch I should use.
+
+No need for that.
+
+Thanks,
+
+Tony
