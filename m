@@ -2,123 +2,114 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EC4C5DF61
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E3BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6962178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F12214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PSXZrH1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfKHBMO (ORCPT
+        id S1728211AbfKHBN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 20:12:14 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38140 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725928AbfKHBMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 20:12:13 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 191CBEA3289722D713FD;
-        Fri,  8 Nov 2019 09:12:11 +0800 (CST)
-Received: from [127.0.0.1] (10.133.224.57) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 8 Nov 2019
- 09:12:04 +0800
-Subject: Re: [PATCH] pci: lock the pci_cfg_wait queue for the consistency of
- data
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <bhelgaas@google.com>, <wangxiongfeng2@huawei.com>,
-        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
-        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>
-References: <20191028091809.35212-1-zhengxiang9@huawei.com>
- <20191028163041.GA8257@bombadil.infradead.org>
- <14e7d02e-215d-30dc-548c-e605f3ffdf1e@huawei.com>
-Message-ID: <5692a244-d6c7-8bd4-c7c4-e4532e7ff07c@huawei.com>
-Date:   Fri, 8 Nov 2019 09:12:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 7 Nov 2019 20:13:59 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:48289 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbfKHBN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 20:13:58 -0500
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id xA81C9Rt1394965
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 7 Nov 2019 17:12:09 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com xA81C9Rt1394965
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019091901; t=1573175531;
+        bh=43nSIPM3zepQghDp/jhr28I5z95qZarMcNvR5GrYr0E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PSXZrH1vpjXgx1nKOpIBf/AJG3lZ8XnIMPAVA6TNg+11B7KTtMSJJ3gHZfbB64e38
+         l0NTHtqU1zg3zMAZkooW1JuCkasknsC3QjyljFeBiTZMJu2EUcQkpExYNFXQTEGPWX
+         TranzDOhqSY/Fp3wZXTZAgCe3tVRobLdInFT13/pYsTBAKHm34a2yiAOe+z8RSRTaW
+         sKOwH1/PvUZ1cc18wbxbCToSOx72ToKS9AheiviBIS14NqN7qPU6nOeGj5xmr7Qz84
+         qjzApv/2ljeRWThyHhnC81l1/CqBtoU35Mguexde4jGEBglHYAz0QSPpqG9aiFDTR8
+         T0ddcrK6+BqNQ==
+Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
+ further
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Brian Gerst <brgerst@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20191106193459.581614484@linutronix.de>
+ <20191106202806.241007755@linutronix.de>
+ <CAMzpN2juuUyLuQ-tiV7hKZvG4agsHKP=rRAt_V4sZhpZW7cv9g@mail.gmail.com>
+ <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
+ <CAMzpN2gt4qM41=96GpNHL-kbgBsjD-zphq+5oK0BXqoCFN4F4Q@mail.gmail.com>
+ <CAHk-=wjocTzo+8OMwyKPX0MCVV=N4wtU8ifwSZ_qJJnDBgKJ8Q@mail.gmail.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <6cac6943-2f6c-d48a-658e-08b3bf87921a@zytor.com>
+Date:   Thu, 7 Nov 2019 17:12:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <14e7d02e-215d-30dc-548c-e605f3ffdf1e@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAHk-=wjocTzo+8OMwyKPX0MCVV=N4wtU8ifwSZ_qJJnDBgKJ8Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping...
-
-On 2019/10/29 11:34, Xiang Zheng wrote:
-> 
-> 
-> On 2019/10/29 0:30, Matthew Wilcox wrote:
->> On Mon, Oct 28, 2019 at 05:18:09PM +0800, Xiang Zheng wrote:
->>> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
->>> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
->>>
->>> However, since the commit "cdcb33f98244" merged, the accesses to
->>> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
->>> insufficient and we need to hold an additional queue lock while
->>> read/write the wait queue.
->>>
->>> So let's use the add_wait_queue()/remove_wait_queue() instead of
->>> __add_wait_queue()/__remove_wait_queue().
+On 2019-11-07 13:44, Linus Torvalds wrote:
+> On Thu, Nov 7, 2019 at 1:00 PM Brian Gerst <brgerst@gmail.com> wrote:
 >>
->> As I said earlier, this reintroduces the deadlock addressed by
->> cdcb33f9824429a926b971bf041a6cec238f91ff
->>
+>> There wouldn't have to be a flush on every task switch.
 > 
-> Thanks Matthew, sorry for that I did not understand the way to reintroduce
-> the deadlock and sent this patch. If what I think is right, the possible
-> deadlock may be caused by the condition in which there are three processes:
+> No. But we'd have to flush on any switch that currently does that memcpy.
 > 
->    *Process*                          *Acquired*         *Wait For*
->    wake_up_all()                      wq_head->lock      pi_lock
->    snbep_uncore_pci_read_counter()    pi_lock            pci_lock
->    pci_wait_cfg()                     pci_lock           wq_head->lock
+> And my point is that a tlb flush (even the single-page case) is likely
+> more expensive than the memcpy.
 > 
-> These processes suffer from the nested locks.:)
+>> Going a step further, we could track which task is mapped to the
+>> current cpu like proposed above, and only flush when a different task
+>> needs the IO bitmap, or when the bitmap is being freed on task exit.
 > 
-> But for this problem, what do you think about the solution below:
+> Well, that's exactly my "track the last task" optimization for copying
+> the thing.
 > 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 2fccb5762c76..09342a74e5ea 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
->  {
->         DECLARE_WAITQUEUE(wait, current);
+> IOW, it's the same optimization as avoiding the memcpy.
 > 
-> -       __add_wait_queue(&pci_cfg_wait, &wait);
->         do {
->                 set_current_state(TASK_UNINTERRUPTIBLE);
->                 raw_spin_unlock_irq(&pci_lock);
-> +               add_wait_queue(&pci_cfg_wait, &wait);
->                 schedule();
-> +               remove_wait_queue(&pci_cfg_wait, &wait);
->                 raw_spin_lock_irq(&pci_lock);
->         } while (dev->block_cfg_access);
-> -       __remove_wait_queue(&pci_cfg_wait, &wait);
->  }
+> Which I think is likely very effective, but also makes it fairly
+> pointless to then try to be clever..
 > 
->  /* Returns 0 on success, negative values indicate error. */
+> So the basic issue remains that playing VM games has almost
+> universally been slower and more complex than simply not playing VM
+> games. TLB flushes - even invlpg - tends to be pretty slow.
 > 
-> 
-> 
->> .
->>
+> Of course, we probably end up invalidating the TLB's anyway, so maybe
+> in this case we don't care. The ioperm bitmap is _technically_
+> per-thread, though, so it should be flushed even if the VM isn't
+> flushed...
 > 
 
--- 
+One option, probably a lot saner (if we care at all, after all, copying 8K
+really isn't that much, but it might have some impact on real-time processes,
+which is one of the rather few use cases for direct I/O) would be to keep the
+bitmask in a pre-formatted TSS (ioperm being per thread, so no concerns about
+the TSS being in use on another processor), and copy the TSS fields (88 bytes)
+over if and only if the thread has been migrated to a different CPU, then
+switch the TSS rather than switching  For the common case (no ioperms) we use
+the standard per-cpu TSS.
 
-Thanks,
-Xiang
+That being said, I don't actually know that copying 88 bytes + LTR is any
+cheaper than copying 8K.
 
+	-hpa
