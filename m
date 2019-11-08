@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350C1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF78C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A76214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A2E2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239649;
-	bh=2mGqoX6FAGM5sBwdslHPp6bbqh5CBhXcNDWgI5fLKL0=;
+	s=default; t=1573239653;
+	bh=MEbPA6Qcubxag4Ew2M//KXeX4cegr3py9JHVD7ZNsRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEqGzOC2yQ6MfLMfxXshQTSQi19k8koOl5lAsozS/ZCdwCT8hK+qBsQnIr8CP3iUL
-	 HKoOsmYyBmbJgkTwsS5rwZ8mKaHHWbb5mZ8kYUd3Pfp9GuMwz8f+eolfxjkm21EFlt
-	 aTBxW6IXpzRXNKzaWzuwo1TQhxa6rwUslKKRG81Q=
+	b=N0N7V3H8nT2A7p0wH4wtOZLKfUNWkWDYzWeYJAZ9xvnbGgIja7Ggi6ZunveIdz4qG
+	 vUqTMd05ombSA+PlJBKmhYB5y8caI0G2kUO6tElycKnx5VgYIXx0/AFbEsg8qDbMAu
+	 7xvRFDgmFRz6wQU9TuWeeCX+d7PVfxbHTZejwDLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389945AbfKHTAs (ORCPT
+        id S2390013AbfKHTAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389769AbfKHTAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:35 -0500
+        id S2389908AbfKHTAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0C32067B;
-        Fri,  8 Nov 2019 19:00:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CC82067B;
+        Fri,  8 Nov 2019 19:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239633;
-        bh=2mGqoX6FAGM5sBwdslHPp6bbqh5CBhXcNDWgI5fLKL0=;
+        s=default; t=1573239644;
+        bh=MEbPA6Qcubxag4Ew2M//KXeX4cegr3py9JHVD7ZNsRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=neaSXm3/igqg0/FQfvetPdTHpDeiPFbPUrxY+dBrCp8PXMdAX8rVD5VSAh4b0DzH+
-         8MA5Tclx0a3lt8Z1avy5pUi5GZLvER/zkICXBieJotUO23A2xwJZmJBaNOqpiBNQHU
-         JWr/zKcrqVJXT33yS01HtpYlABAMAYj0REfPoj8o=
+        b=DHJ1b2s1dxtdVw2gGlbuX0E8FSkGWoG4W++NUujTKI7jbHCU0gbhDz8QJRJ4Ak6Mp
+         BskEOulPGAV1B+nJzlSzUvKipcf+5OqgGJK+HStgEoqsIkUAo2vTsqsSuyDscg+x9d
+         rj8iiqBoMXYTD6XzppwSlbss1YM2ejdN5/hfyn0A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/79] kbuild: add -fcf-protection=none when using retpoline flags
-Date:   Fri,  8 Nov 2019 19:49:41 +0100
-Message-Id: <20191108174746.110230059@linuxfoundation.org>
+Subject: [PATCH 4.19 13/79] pinctrl: ns2: Fix off by one bugs in ns2_pinmux_enable()
+Date:   Fri,  8 Nov 2019 19:49:53 +0100
+Message-Id: <20191108174752.160133693@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,41 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seth Forshee <seth.forshee@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 29be86d7f9cb18df4123f309ac7857570513e8bc ]
+[ Upstream commit 39b65fbb813089e366b376bd8acc300b6fd646dc ]
 
-The gcc -fcf-protection=branch option is not compatible with
--mindirect-branch=thunk-extern. The latter is used when
-CONFIG_RETPOLINE is selected, and this will fail to build with
-a gcc which has -fcf-protection=branch enabled by default. Adding
--fcf-protection=none when building with retpoline enabled
-prevents such build failures.
+The pinctrl->functions[] array has pinctrl->num_functions elements and
+the pinctrl->groups[] array is the same way.  These are set in
+ns2_pinmux_probe().  So the > comparisons should be >= so that we don't
+read one element beyond the end of the array.
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: b5aa1006e4a9 ("pinctrl: ns2: add pinmux driver support for Broadcom NS2 SoC")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20190926081426.GB2332@mwanda
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 6af1c13d8753b..729467fe0933f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -835,6 +835,12 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
- # change __FILE__ to the relative path from the srctree
- KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+index 4b5cf0e0f16e2..951090faa6a91 100644
+--- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+@@ -640,8 +640,8 @@ static int ns2_pinmux_enable(struct pinctrl_dev *pctrl_dev,
+ 	const struct ns2_pin_function *func;
+ 	const struct ns2_pin_group *grp;
  
-+# ensure -fcf-protection is disabled when using retpoline as it is
-+# incompatible with -mindirect-branch=thunk-extern
-+ifdef CONFIG_RETPOLINE
-+KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
-+endif
-+
- # use the deterministic mode of AR if available
- KBUILD_ARFLAGS := $(call ar-option,D)
+-	if (grp_select > pinctrl->num_groups ||
+-		func_select > pinctrl->num_functions)
++	if (grp_select >= pinctrl->num_groups ||
++		func_select >= pinctrl->num_functions)
+ 		return -EINVAL;
  
+ 	func = &pinctrl->functions[func_select];
 -- 
 2.20.1
 
