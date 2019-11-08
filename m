@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20C0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74446FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E57206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF27206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240537;
-	bh=MHW0luiPaqgSp6RWgLAofFIV7t1ewHWBTRcgExBUYDY=;
+	s=default; t=1573240542;
+	bh=qBIHlVIiMD+DatNMRp0koo/R95x0y31dpttHdv2ls+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vK44sQXtUk1i3chd0i0lMGt/7d2/IBKaFk1vEt+R69TpnPQmAwAgO0HaGyePfSsXo
-	 pEzpxCzeVbn18wYtCC+tnHfPh9XhVE+eXTdOE//J4YWAN1FFI7xKFzuEIibKo+Hu3P
-	 XX60PPrh5HF+GwNaQxDRy6BldS9fC+hDlg8zKl+I=
+	b=f+35w/qjnXlwJr/stZVFTXgcxAO4T1vkZ6I4Zsg/WTmLEZmhoj+1d2JlINNN6fRA5
+	 TuSVCQ+nuBRIkZeSE4XN09rLBbMI1rKdhYVhwcu5uGZVP+Iq8RF7X2wHRSS7nca5iV
+	 sW2t7rFysyY5htrXnGjXXsFRNwr8V1W2veoB96C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbfKHTPg (ORCPT
+        id S2390787AbfKHTPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:15:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:15:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389262AbfKHTE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:04:58 -0500
+        id S2391068AbfKHTEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:04:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C5E621D7F;
-        Fri,  8 Nov 2019 19:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0AE220650;
+        Fri,  8 Nov 2019 19:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239897;
-        bh=MHW0luiPaqgSp6RWgLAofFIV7t1ewHWBTRcgExBUYDY=;
+        s=default; t=1573239886;
+        bh=qBIHlVIiMD+DatNMRp0koo/R95x0y31dpttHdv2ls+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tB5dC+OjRb3c79HBySW0ozsfkIc3PmLqnBzgG6EPzoi7mOLHMxExY3brezI2o9/fo
-         yiAfhaK0qqd8trXsG/+sisp+xSOxHdqG8iAgcrQDOXsSvldmiJ8bXSV7UuDryqFpOb
-         HS+aOx8LIbFJOS2eCEe/HJLJ7w01y6VlP//jDB/U=
+        b=jtjwdrni8vEOA5pmQCiOBlL07552AC7wTe0cuQjoDKzEM7lzX0BEHWRbiFpU4lQjT
+         U2y2vTh8xDF9KW8QKEYr0OAC3/2bYG1kSlBWvOJp7QyPLzksM1RY4xu1qNAxIrL8oY
+         GBw+K300kFSAIXUz7y15/45KF2srcAQKmtMUSVZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 002/140] ASoC: samsung: arndale: Add missing OF node dereferencing
-Date:   Fri,  8 Nov 2019 19:48:50 +0100
-Message-Id: <20191108174900.436488516@linuxfoundation.org>
+Subject: [PATCH 5.3 016/140] ASoC: SOF: Intel: hda: Disable DMI L1 entry during capture
+Date:   Fri,  8 Nov 2019 19:49:04 +0100
+Message-Id: <20191108174903.236003016@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -63,97 +62,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit fb629fa2587d0c150792d87e3053664bfc8dc78c ]
+[ Upstream commit 43b2ab9009b13bfff47fcc1893de9244b39bdd54 ]
 
-Ensure there is no OF node references kept when the driver
-is removed/unbound.
+There is a known issue on some Intel platforms which causes
+pause/release to run into xrun's during capture usecases.
+The suggested workaround to address the issue is to
+disable the entry of lower power L1 state in the physical
+DMI link when there is a capture stream open.
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20190920130218.32690-3-s.nawrocki@samsung.com
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190927200538.660-14-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/arndale_rt5631.c | 34 ++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
+ sound/soc/sof/intel/Kconfig      | 10 +++++++
+ sound/soc/sof/intel/hda-ctrl.c   | 12 +++------
+ sound/soc/sof/intel/hda-stream.c | 45 +++++++++++++++++++++++++++-----
+ sound/soc/sof/intel/hda.h        |  5 +++-
+ 4 files changed, 56 insertions(+), 16 deletions(-)
 
-diff --git a/sound/soc/samsung/arndale_rt5631.c b/sound/soc/samsung/arndale_rt5631.c
-index c213913eb9848..fd8c6642fb0df 100644
---- a/sound/soc/samsung/arndale_rt5631.c
-+++ b/sound/soc/samsung/arndale_rt5631.c
-@@ -5,6 +5,7 @@
- //  Author: Claude <claude@insginal.co.kr>
+diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
+index dd14ce92fe102..a5fd356776ee9 100644
+--- a/sound/soc/sof/intel/Kconfig
++++ b/sound/soc/sof/intel/Kconfig
+@@ -241,6 +241,16 @@ config SND_SOC_SOF_HDA_AUDIO_CODEC
+ 	  Say Y if you want to enable HDAudio codecs with SOF.
+ 	  If unsure select "N".
  
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- 
-@@ -74,6 +75,17 @@ static struct snd_soc_card arndale_rt5631 = {
- 	.num_links = ARRAY_SIZE(arndale_rt5631_dai),
- };
- 
-+static void arndale_put_of_nodes(struct snd_soc_card *card)
-+{
-+	struct snd_soc_dai_link *dai_link;
-+	int i;
++config SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1
++	bool "SOF enable DMI Link L1"
++	help
++	  This option enables DMI L1 for both playback and capture
++	  and disables known workarounds for specific HDaudio platforms.
++	  Only use to look into power optimizations on platforms not
++	  affected by DMI L1 issues. This option is not recommended.
++	  Say Y if you want to enable DMI Link L1
++	  If unsure, select "N".
 +
-+	for_each_card_prelinks(card, i, dai_link) {
-+		of_node_put(dai_link->cpus->of_node);
-+		of_node_put(dai_link->codecs->of_node);
-+	}
-+}
-+
- static int arndale_audio_probe(struct platform_device *pdev)
+ endif ## SND_SOC_SOF_HDA_COMMON
+ 
+ config SND_SOC_SOF_HDA_LINK_BASELINE
+diff --git a/sound/soc/sof/intel/hda-ctrl.c b/sound/soc/sof/intel/hda-ctrl.c
+index ea63f83a509bb..760094d49f18f 100644
+--- a/sound/soc/sof/intel/hda-ctrl.c
++++ b/sound/soc/sof/intel/hda-ctrl.c
+@@ -139,20 +139,16 @@ void hda_dsp_ctrl_misc_clock_gating(struct snd_sof_dev *sdev, bool enable)
+  */
+ int hda_dsp_ctrl_clock_power_gating(struct snd_sof_dev *sdev, bool enable)
  {
- 	int n, ret;
-@@ -103,18 +115,31 @@ static int arndale_audio_probe(struct platform_device *pdev)
- 		if (!arndale_rt5631_dai[0].codecs->of_node) {
- 			dev_err(&pdev->dev,
- 			"Property 'samsung,audio-codec' missing or invalid\n");
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto err_put_of_nodes;
+-#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+-	struct hdac_bus *bus = sof_to_bus(sdev);
+-#endif
+ 	u32 val;
+ 
+ 	/* enable/disable audio dsp clock gating */
+ 	val = enable ? PCI_CGCTL_ADSPDCGE : 0;
+ 	snd_sof_pci_update_bits(sdev, PCI_CGCTL, PCI_CGCTL_ADSPDCGE, val);
+ 
+-#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+-	/* enable/disable L1 support */
+-	val = enable ? SOF_HDA_VS_EM2_L1SEN : 0;
+-	snd_hdac_chip_updatel(bus, VS_EM2, SOF_HDA_VS_EM2_L1SEN, val);
+-#endif
++	/* enable/disable DMI Link L1 support */
++	val = enable ? HDA_VS_INTEL_EM2_L1SEN : 0;
++	snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR, HDA_VS_INTEL_EM2,
++				HDA_VS_INTEL_EM2_L1SEN, val);
+ 
+ 	/* enable/disable audio dsp power gating */
+ 	val = enable ? 0 : PCI_PGCTL_ADSPPGD;
+diff --git a/sound/soc/sof/intel/hda-stream.c b/sound/soc/sof/intel/hda-stream.c
+index ad8d41f22e92d..2c74471884025 100644
+--- a/sound/soc/sof/intel/hda-stream.c
++++ b/sound/soc/sof/intel/hda-stream.c
+@@ -185,6 +185,17 @@ hda_dsp_stream_get(struct snd_sof_dev *sdev, int direction)
+ 			direction == SNDRV_PCM_STREAM_PLAYBACK ?
+ 			"playback" : "capture");
+ 
++	/*
++	 * Disable DMI Link L1 entry when capture stream is opened.
++	 * Workaround to address a known issue with host DMA that results
++	 * in xruns during pause/release in capture scenarios.
++	 */
++	if (!IS_ENABLED(SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1))
++		if (stream && direction == SNDRV_PCM_STREAM_CAPTURE)
++			snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
++						HDA_VS_INTEL_EM2,
++						HDA_VS_INTEL_EM2_L1SEN, 0);
++
+ 	return stream;
+ }
+ 
+@@ -193,23 +204,43 @@ int hda_dsp_stream_put(struct snd_sof_dev *sdev, int direction, int stream_tag)
+ {
+ 	struct hdac_bus *bus = sof_to_bus(sdev);
+ 	struct hdac_stream *s;
++	bool active_capture_stream = false;
++	bool found = false;
+ 
+ 	spin_lock_irq(&bus->reg_lock);
+ 
+-	/* find used stream */
++	/*
++	 * close stream matching the stream tag
++	 * and check if there are any open capture streams.
++	 */
+ 	list_for_each_entry(s, &bus->stream_list, list) {
+-		if (s->direction == direction &&
+-		    s->opened && s->stream_tag == stream_tag) {
++		if (!s->opened)
++			continue;
++
++		if (s->direction == direction && s->stream_tag == stream_tag) {
+ 			s->opened = false;
+-			spin_unlock_irq(&bus->reg_lock);
+-			return 0;
++			found = true;
++		} else if (s->direction == SNDRV_PCM_STREAM_CAPTURE) {
++			active_capture_stream = true;
  		}
  	}
  
- 	ret = devm_snd_soc_register_card(card->dev, card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card() failed: %d\n", ret);
-+		goto err_put_of_nodes;
-+	}
-+	return 0;
+ 	spin_unlock_irq(&bus->reg_lock);
  
--	if (ret)
--		dev_err(&pdev->dev, "snd_soc_register_card() failed:%d\n", ret);
--
-+err_put_of_nodes:
-+	arndale_put_of_nodes(card);
- 	return ret;
+-	dev_dbg(sdev->dev, "stream_tag %d not opened!\n", stream_tag);
+-	return -ENODEV;
++	/* Enable DMI L1 entry if there are no capture streams open */
++	if (!IS_ENABLED(SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1))
++		if (!active_capture_stream)
++			snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
++						HDA_VS_INTEL_EM2,
++						HDA_VS_INTEL_EM2_L1SEN,
++						HDA_VS_INTEL_EM2_L1SEN);
++
++	if (!found) {
++		dev_dbg(sdev->dev, "stream_tag %d not opened!\n", stream_tag);
++		return -ENODEV;
++	}
++
++	return 0;
  }
  
-+static int arndale_audio_remove(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = platform_get_drvdata(pdev);
-+
-+	arndale_put_of_nodes(card);
-+	return 0;
-+}
-+
- static const struct of_device_id samsung_arndale_rt5631_of_match[] __maybe_unused = {
- 	{ .compatible = "samsung,arndale-rt5631", },
- 	{ .compatible = "samsung,arndale-alc5631", },
-@@ -129,6 +154,7 @@ static struct platform_driver arndale_audio_driver = {
- 		.of_match_table = of_match_ptr(samsung_arndale_rt5631_of_match),
- 	},
- 	.probe = arndale_audio_probe,
-+	.remove = arndale_audio_remove,
- };
+ int hda_dsp_stream_trigger(struct snd_sof_dev *sdev,
+diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
+index d9c17146200b3..2cc789f0e83c4 100644
+--- a/sound/soc/sof/intel/hda.h
++++ b/sound/soc/sof/intel/hda.h
+@@ -39,7 +39,6 @@
+ #define SOF_HDA_WAKESTS			0x0E
+ #define SOF_HDA_WAKESTS_INT_MASK	((1 << 8) - 1)
+ #define SOF_HDA_RIRBSTS			0x5d
+-#define SOF_HDA_VS_EM2_L1SEN            BIT(13)
  
- module_platform_driver(arndale_audio_driver);
+ /* SOF_HDA_GCTL register bist */
+ #define SOF_HDA_GCTL_RESET		BIT(0)
+@@ -228,6 +227,10 @@
+ #define HDA_DSP_REG_HIPCIE		(HDA_DSP_IPC_BASE + 0x0C)
+ #define HDA_DSP_REG_HIPCCTL		(HDA_DSP_IPC_BASE + 0x10)
+ 
++/* Intel Vendor Specific Registers */
++#define HDA_VS_INTEL_EM2		0x1030
++#define HDA_VS_INTEL_EM2_L1SEN		BIT(13)
++
+ /*  HIPCI */
+ #define HDA_DSP_REG_HIPCI_BUSY		BIT(31)
+ #define HDA_DSP_REG_HIPCI_MSG_MASK	0x7FFFFFFF
 -- 
 2.20.1
 
