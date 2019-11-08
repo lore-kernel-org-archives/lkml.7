@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB627C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850E4FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830FC222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E0221D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213378;
-	bh=KIk9cKBAlYSu52MEBaNKdwuUofEr+nQ0flIVxSGQwz0=;
+	s=default; t=1573213383;
+	bh=iPEPDvHbozR84hkIztkr8rhaoWmU3zId6OhRs5uz0Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JpcLNChjS28wX9fsJN+K+H295sNbahvduQqjbPPqFSFPH0m9uRBj+kSNtBJilwefp
-	 0sJ5aIRhchrH0wVM7IMjS03LUi5lO1lb8x+7xriF5RDFyBrnY45ap2KzUL5m+RBPPQ
-	 uhaTcZ2e9xCdQBzdwok4qEAUxcikFysu3b+H4M/0=
+	b=HdUhudmivwZ4czSgUVmhCWx6PQ2MAeSHzXegmOyWhzBL7XPSbtsG9AFyFRBvPvIuX
+	 j8N8DsBvy5Dfno8AS8P0eNOAQC1cD02TPfmPrW4zi4APkVbAHjeqBywkztsAhPogfM
+	 IB4PCRC4oO+IKxrKKRYF8y5GHUEEAp/XnFen4v4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390248AbfKHLm5 (ORCPT
+        id S2390299AbfKHLnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:43:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390178AbfKHLmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:54 -0500
+        id S2390256AbfKHLm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B8F222C4;
-        Fri,  8 Nov 2019 11:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3C85222C6;
+        Fri,  8 Nov 2019 11:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213374;
-        bh=KIk9cKBAlYSu52MEBaNKdwuUofEr+nQ0flIVxSGQwz0=;
+        s=default; t=1573213378;
+        bh=iPEPDvHbozR84hkIztkr8rhaoWmU3zId6OhRs5uz0Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T4Yo9EjGn4W+TxaSEX8fnBqJujMnpP+4tdFAiesPf3JNG8v2zLTypLk196SzQ37p5
-         YM/8I+e32MwFUeUHTd3xJflmUMdw3pLMkI0FRYfG9I7eo9MRrgntrplVKsYhsSilXj
-         Hepm87tKaxBNX528iYWeXriV/QrjMhO+r8iontyE=
+        b=b0RfyYkSnEHLKSK+ZKn7WpLjWZjA6Q/YP+Jjm9x1tc2rUNwjDHy7/ZJSM/1dIKKAT
+         B0rEqMyZLhuK1wmOhsjSYI73qBcQkzZ3Oz7MpoITX/KOPWyVYz6cxfGY0PmpoJ1O75
+         jqZotgUQvVR5p9g9BEKugVQ0yXkR8a18pSXS1Iyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 199/205] scsi: ufshcd: Fix NULL pointer dereference for in ufshcd_init
-Date:   Fri,  8 Nov 2019 06:37:46 -0500
-Message-Id: <20191108113752.12502-199-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 202/205] ACPI / LPSS: Exclude I2C busses shared with PUNIT from pmc_atom_d3_mask
+Date:   Fri,  8 Nov 2019 06:37:49 -0500
+Message-Id: <20191108113752.12502-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -63,140 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit eebcc19646489b68399ce7b35d9c38eb9f4ec40f ]
+[ Upstream commit 86b62e5cd8965d3056f9e9ccdec51631c37add81 ]
 
-Error paths in ufshcd_init() ufshcd_hba_exit() killed clk_scaling workqueue
-when the workqueue is actually created quite late in ufshcd_init().  So, we
-end up getting NULL pointer dereference in such error paths.  Fix this by
-moving clk_scaling initialization and kill codes to two separate methods, and
-call them at required places.
+lpss_iosf_enter_d3_state() checks if all hw-blocks using the DMA
+controllers are in d3 before powering down the DMA controllers.
 
-Fixes: 401f1e4490ee ("scsi: ufs: don't suspend clock scaling during clock
-gating")
+But on devices, where the I2C bus connected to the PMIC is shared by
+the PUNIT, the controller for that bus will never reach d3 since it has
+an effectively empty _PS3 method. Instead it appears to automatically
+power-down during S0i3 and we never see it as being in d3.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This causes the DMA controllers to never be powered-down on these devices,
+causing them to never reach S0i3. This commit uses the ACPI _SEM method
+to detect if an I2C bus is shared with the PUNIT and if it is, it removes
+it from the mask of devices which lpss_iosf_enter_d3_state() checks for.
+
+This fixes these devices never reaching any S0ix states.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 53 +++++++++++++++++++++++++--------------
- 1 file changed, 34 insertions(+), 19 deletions(-)
+ drivers/acpi/acpi_lpss.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 4aaba3e030554..8bce755e0f5bc 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1772,6 +1772,34 @@ out:
- 	return count;
- }
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index c651e206d7960..7eda27d43b482 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -99,6 +99,9 @@ struct lpss_private_data {
+ 	u32 prv_reg_ctx[LPSS_PRV_REG_COUNT];
+ };
  
-+static void ufshcd_init_clk_scaling(struct ufs_hba *hba)
-+{
-+	char wq_name[sizeof("ufs_clkscaling_00")];
++/* Devices which need to be in D3 before lpss_iosf_enter_d3_state() proceeds */
++static u32 pmc_atom_d3_mask = 0xfe000ffe;
 +
-+	if (!ufshcd_is_clkscaling_supported(hba))
-+		return;
-+
-+	INIT_WORK(&hba->clk_scaling.suspend_work,
-+		  ufshcd_clk_scaling_suspend_work);
-+	INIT_WORK(&hba->clk_scaling.resume_work,
-+		  ufshcd_clk_scaling_resume_work);
-+
-+	snprintf(wq_name, sizeof(wq_name), "ufs_clkscaling_%d",
-+		 hba->host->host_no);
-+	hba->clk_scaling.workq = create_singlethread_workqueue(wq_name);
-+
-+	ufshcd_clkscaling_init_sysfs(hba);
-+}
-+
-+static void ufshcd_exit_clk_scaling(struct ufs_hba *hba)
-+{
-+	if (!ufshcd_is_clkscaling_supported(hba))
-+		return;
-+
-+	destroy_workqueue(hba->clk_scaling.workq);
-+	ufshcd_devfreq_remove(hba);
-+}
-+
- static void ufshcd_init_clk_gating(struct ufs_hba *hba)
+ /* LPSS run time quirks */
+ static unsigned int lpss_quirks;
+ 
+@@ -175,6 +178,21 @@ static void byt_pwm_setup(struct lpss_private_data *pdata)
+ 
+ static void byt_i2c_setup(struct lpss_private_data *pdata)
  {
- 	char wq_name[sizeof("ufs_clk_gating_00")];
-@@ -6676,6 +6704,7 @@ out:
- 	 */
- 	if (ret && !ufshcd_eh_in_progress(hba) && !hba->pm_op_in_progress) {
- 		pm_runtime_put_sync(hba->dev);
-+		ufshcd_exit_clk_scaling(hba);
- 		ufshcd_hba_exit(hba);
- 	}
- 
-@@ -7223,12 +7252,9 @@ static void ufshcd_hba_exit(struct ufs_hba *hba)
- 		ufshcd_variant_hba_exit(hba);
- 		ufshcd_setup_vreg(hba, false);
- 		ufshcd_suspend_clkscaling(hba);
--		if (ufshcd_is_clkscaling_supported(hba)) {
-+		if (ufshcd_is_clkscaling_supported(hba))
- 			if (hba->devfreq)
- 				ufshcd_suspend_clkscaling(hba);
--			destroy_workqueue(hba->clk_scaling.workq);
--			ufshcd_devfreq_remove(hba);
--		}
- 		ufshcd_setup_clocks(hba, false);
- 		ufshcd_setup_hba_vreg(hba, false);
- 		hba->is_powered = false;
-@@ -7908,6 +7934,7 @@ void ufshcd_remove(struct ufs_hba *hba)
- 	ufshcd_disable_intr(hba, hba->intr_mask);
- 	ufshcd_hba_stop(hba, true);
- 
-+	ufshcd_exit_clk_scaling(hba);
- 	ufshcd_exit_clk_gating(hba);
- 	if (ufshcd_is_clkscaling_supported(hba))
- 		device_remove_file(hba->dev, &hba->clk_scaling.enable_attr);
-@@ -8079,6 +8106,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 
- 	ufshcd_init_clk_gating(hba);
- 
-+	ufshcd_init_clk_scaling(hba);
++	const char *uid_str = acpi_device_uid(pdata->adev);
++	acpi_handle handle = pdata->adev->handle;
++	unsigned long long shared_host = 0;
++	acpi_status status;
++	long uid = 0;
 +
- 	/*
- 	 * In order to avoid any spurious interrupt immediately after
- 	 * registering UFS controller interrupt handler, clear any pending UFS
-@@ -8117,21 +8146,6 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 		goto out_remove_scsi_host;
- 	}
++	/* Expected to always be true, but better safe then sorry */
++	if (uid_str)
++		uid = simple_strtol(uid_str, NULL, 10);
++
++	/* Detect I2C bus shared with PUNIT and ignore its d3 status */
++	status = acpi_evaluate_integer(handle, "_SEM", NULL, &shared_host);
++	if (ACPI_SUCCESS(status) && shared_host && uid)
++		pmc_atom_d3_mask &= ~(BIT_LPSS2_F1_I2C1 << (uid - 1));
++
+ 	lpss_deassert_reset(pdata);
  
--	if (ufshcd_is_clkscaling_supported(hba)) {
--		char wq_name[sizeof("ufs_clkscaling_00")];
--
--		INIT_WORK(&hba->clk_scaling.suspend_work,
--			  ufshcd_clk_scaling_suspend_work);
--		INIT_WORK(&hba->clk_scaling.resume_work,
--			  ufshcd_clk_scaling_resume_work);
--
--		snprintf(wq_name, sizeof(wq_name), "ufs_clkscaling_%d",
--			 host->host_no);
--		hba->clk_scaling.workq = create_singlethread_workqueue(wq_name);
--
--		ufshcd_clkscaling_init_sysfs(hba);
--	}
--
- 	/*
- 	 * Set the default power management level for runtime and system PM.
- 	 * Default power saving mode is to keep UFS link in Hibern8 state
-@@ -8169,6 +8183,7 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- out_remove_scsi_host:
- 	scsi_remove_host(hba->host);
- exit_gating:
-+	ufshcd_exit_clk_scaling(hba);
- 	ufshcd_exit_clk_gating(hba);
- out_disable:
- 	hba->is_irq_enabled = false;
+ 	if (readl(pdata->mmio_base + pdata->dev_desc->prv_offset))
+@@ -894,7 +912,7 @@ static void lpss_iosf_enter_d3_state(void)
+ 	 * Here we read the values related to LPSS power island, i.e. LPSS
+ 	 * devices, excluding both LPSS DMA controllers, along with SCC domain.
+ 	 */
+-	u32 func_dis, d3_sts_0, pmc_status, pmc_mask = 0xfe000ffe;
++	u32 func_dis, d3_sts_0, pmc_status;
+ 	int ret;
+ 
+ 	ret = pmc_atom_read(PMC_FUNC_DIS, &func_dis);
+@@ -912,7 +930,7 @@ static void lpss_iosf_enter_d3_state(void)
+ 	 * Shutdown both LPSS DMA controllers if and only if all other devices
+ 	 * are already in D3hot.
+ 	 */
+-	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_mask;
++	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_atom_d3_mask;
+ 	if (pmc_status)
+ 		goto exit;
+ 
 -- 
 2.20.1
 
