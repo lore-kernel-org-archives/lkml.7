@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AF1FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A085FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F818206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5C620650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240413;
-	bh=/idMyIy3EstznScmSyy4e32Pa8RU7vF8zAOKGKWH8Qw=;
+	s=default; t=1573240424;
+	bh=9gjFkp5kO1oP3E8xCnnU6ER7abXY5+MJTsp64cWYHpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OxRV6yeAviFotBiZ4BB0UNMkXN+1EfKhnqiO76qzMeUrILW2a0myu1xaOSHyLhQZj
-	 ZyMzvfTqfhkWRoiaxCO1kNdUKGrkmtJ8m5mIMllBOU5Hyxg1hv8UW1Vbgl88OUpv1A
-	 uQtyw7TRRUfElMTqok7LnVN9pMOo6WxUC4GWIgls=
+	b=azJJqEd1qnwFFS1aLvbaucAO2V9QFVApSU+3hBugTyXj1n1cfGG7vOg8QAQ/hktsb
+	 Gv8syfVwMudajVXu5W2v0ZEPJbLUT5C5IICfAGctA2vOx1UL3C7irZihA/JxOlDZVZ
+	 8eonXb7ef3lGNaRgNK5CsrAx21+04pHh6233au78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390651AbfKHTN2 (ORCPT
+        id S2391394AbfKHTHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:07:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391464AbfKHTHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:35 -0500
+        id S2391384AbfKHTG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:06:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74216206A3;
-        Fri,  8 Nov 2019 19:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC601222C6;
+        Fri,  8 Nov 2019 19:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240055;
-        bh=/idMyIy3EstznScmSyy4e32Pa8RU7vF8zAOKGKWH8Qw=;
+        s=default; t=1573240017;
+        bh=9gjFkp5kO1oP3E8xCnnU6ER7abXY5+MJTsp64cWYHpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVZV1Y275l4bvTYNsMDjplCQpz8kJhuP4bt+6TR/JM/sKJudJFLSjl2BWvb89Gnem
-         QBWJEuHYB/NnkH2EkJdvDDyjnUqKKSF0Dulj6RFaHGVH6YRFMz92Uyws+fyfjj2hTv
-         C67eWsOgkyiCcJQRNvAh8bdAZ7Bla0KcfLaCbzlo=
+        b=whACLfSnykrVh7NfV/Yi9CDocnH8IdfaT055uU0UuMCzoBaBHHxBnr37dD3IbjhEL
+         pvtHV0Zp2eAmjNSYtshsesPtRk8+Iko1RhG58S+W+eEbgTQFJ0K1NgiH8Phqy2wPnS
+         zIHD1gR/Ab59pcw/Xh+ayqUB4gb8IdxLKlg35yHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        stable@vger.kernel.org, Dragos Tarcatu <dragos_tarcatu@mentor.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 031/140] ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2
-Date:   Fri,  8 Nov 2019 19:49:19 +0100
-Message-Id: <20191108174906.056525827@linuxfoundation.org>
+Subject: [PATCH 5.3 059/140] ASoC: SOF: control: return true when kcontrol values change
+Date:   Fri,  8 Nov 2019 19:49:47 +0100
+Message-Id: <20191108174908.995980180@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,88 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
 
-[ Upstream commit bcab05880f9306e94531b0009c627421db110a74 ]
+[ Upstream commit 95a32c98055f664f9b3f34c41e153d4dcedd0eff ]
 
-This patch adds missing MIX2 path on RX1/2 which take IIR1 and
-IIR2 as inputs.
+All the kcontrol put() functions are currently returning 0 when
+successful. This does not go well with alsamixer as it does
+not seem to get notified on SND_CTL_EVENT_MASK_VALUE callbacks
+when values change for (some of) the sof kcontrols.
+This patch fixes that by returning true for volume, switch
+and enum type kcontrols when values do change in put().
 
-Without this patch sound card fails to intialize with below warning:
-
- ASoC: no sink widget found for RX1 MIX2 INP1
- ASoC: Failed to add route IIR1 -> IIR1 -> RX1 MIX2 INP1
- ASoC: no sink widget found for RX2 MIX2 INP1
- ASoC: Failed to add route IIR1 -> IIR1 -> RX2 MIX2 INP1
- ASoC: no sink widget found for RX1 MIX2 INP1
- ASoC: Failed to add route IIR2 -> IIR2 -> RX1 MIX2 INP1
- ASoC: no sink widget found for RX2 MIX2 INP1
- ASoC: Failed to add route IIR2 -> IIR2 -> RX2 MIX2 INP1
-
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20191009111944.28069-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191018123806.18063-1-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-digital.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ sound/soc/sof/control.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
-index 1db7e43ec203e..5963d170df432 100644
---- a/sound/soc/codecs/msm8916-wcd-digital.c
-+++ b/sound/soc/codecs/msm8916-wcd-digital.c
-@@ -243,6 +243,10 @@ static const char *const rx_mix1_text[] = {
- 	"ZERO", "IIR1", "IIR2", "RX1", "RX2", "RX3"
- };
+diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
+index a4983f90ff5b3..2b8711eda362b 100644
+--- a/sound/soc/sof/control.c
++++ b/sound/soc/sof/control.c
+@@ -60,13 +60,16 @@ int snd_sof_volume_put(struct snd_kcontrol *kcontrol,
+ 	struct snd_sof_dev *sdev = scontrol->sdev;
+ 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
+ 	unsigned int i, channels = scontrol->num_channels;
++	bool change = false;
++	u32 value;
  
-+static const char * const rx_mix2_text[] = {
-+	"ZERO", "IIR1", "IIR2"
-+};
-+
- static const char *const dec_mux_text[] = {
- 	"ZERO", "ADC1", "ADC2", "ADC3", "DMIC1", "DMIC2"
- };
-@@ -270,6 +274,16 @@ static const struct soc_enum rx3_mix1_inp_enum[] = {
- 	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX3_B2_CTL, 0, 6, rx_mix1_text),
- };
+ 	/* update each channel */
+ 	for (i = 0; i < channels; i++) {
+-		cdata->chanv[i].value =
+-			mixer_to_ipc(ucontrol->value.integer.value[i],
++		value = mixer_to_ipc(ucontrol->value.integer.value[i],
+ 				     scontrol->volume_table, sm->max + 1);
++		change = change || (value != cdata->chanv[i].value);
+ 		cdata->chanv[i].channel = i;
++		cdata->chanv[i].value = value;
+ 	}
  
-+/* RX1 MIX2 */
-+static const struct soc_enum rx_mix2_inp1_chain_enum =
-+	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX1_B3_CTL,
-+		0, 3, rx_mix2_text);
-+
-+/* RX2 MIX2 */
-+static const struct soc_enum rx2_mix2_inp1_chain_enum =
-+	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX2_B3_CTL,
-+		0, 3, rx_mix2_text);
-+
- /* DEC */
- static const struct soc_enum dec1_mux_enum = SOC_ENUM_SINGLE(
- 				LPASS_CDC_CONN_TX_B1_CTL, 0, 6, dec_mux_text);
-@@ -309,6 +323,10 @@ static const struct snd_kcontrol_new rx3_mix1_inp2_mux = SOC_DAPM_ENUM(
- 				"RX3 MIX1 INP2 Mux", rx3_mix1_inp_enum[1]);
- static const struct snd_kcontrol_new rx3_mix1_inp3_mux = SOC_DAPM_ENUM(
- 				"RX3 MIX1 INP3 Mux", rx3_mix1_inp_enum[2]);
-+static const struct snd_kcontrol_new rx1_mix2_inp1_mux = SOC_DAPM_ENUM(
-+				"RX1 MIX2 INP1 Mux", rx_mix2_inp1_chain_enum);
-+static const struct snd_kcontrol_new rx2_mix2_inp1_mux = SOC_DAPM_ENUM(
-+				"RX2 MIX2 INP1 Mux", rx2_mix2_inp1_chain_enum);
+ 	/* notify DSP of mixer updates */
+@@ -76,8 +79,7 @@ int snd_sof_volume_put(struct snd_kcontrol *kcontrol,
+ 					      SOF_CTRL_TYPE_VALUE_CHAN_GET,
+ 					      SOF_CTRL_CMD_VOLUME,
+ 					      true);
+-
+-	return 0;
++	return change;
+ }
  
- /* Digital Gain control -38.4 dB to +38.4 dB in 0.3 dB steps */
- static const DECLARE_TLV_DB_SCALE(digital_gain, -3840, 30, 0);
-@@ -740,6 +758,10 @@ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
- 			 &rx3_mix1_inp2_mux),
- 	SND_SOC_DAPM_MUX("RX3 MIX1 INP3", SND_SOC_NOPM, 0, 0,
- 			 &rx3_mix1_inp3_mux),
-+	SND_SOC_DAPM_MUX("RX1 MIX2 INP1", SND_SOC_NOPM, 0, 0,
-+			 &rx1_mix2_inp1_mux),
-+	SND_SOC_DAPM_MUX("RX2 MIX2 INP1", SND_SOC_NOPM, 0, 0,
-+			 &rx2_mix2_inp1_mux),
+ int snd_sof_switch_get(struct snd_kcontrol *kcontrol,
+@@ -105,11 +107,15 @@ int snd_sof_switch_put(struct snd_kcontrol *kcontrol,
+ 	struct snd_sof_dev *sdev = scontrol->sdev;
+ 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
+ 	unsigned int i, channels = scontrol->num_channels;
++	bool change = false;
++	u32 value;
  
- 	SND_SOC_DAPM_MUX("CIC1 MUX", SND_SOC_NOPM, 0, 0, &cic1_mux),
- 	SND_SOC_DAPM_MUX("CIC2 MUX", SND_SOC_NOPM, 0, 0, &cic2_mux),
+ 	/* update each channel */
+ 	for (i = 0; i < channels; i++) {
+-		cdata->chanv[i].value = ucontrol->value.integer.value[i];
++		value = ucontrol->value.integer.value[i];
++		change = change || (value != cdata->chanv[i].value);
+ 		cdata->chanv[i].channel = i;
++		cdata->chanv[i].value = value;
+ 	}
+ 
+ 	/* notify DSP of mixer updates */
+@@ -120,7 +126,7 @@ int snd_sof_switch_put(struct snd_kcontrol *kcontrol,
+ 					      SOF_CTRL_CMD_SWITCH,
+ 					      true);
+ 
+-	return 0;
++	return change;
+ }
+ 
+ int snd_sof_enum_get(struct snd_kcontrol *kcontrol,
+@@ -148,11 +154,15 @@ int snd_sof_enum_put(struct snd_kcontrol *kcontrol,
+ 	struct snd_sof_dev *sdev = scontrol->sdev;
+ 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
+ 	unsigned int i, channels = scontrol->num_channels;
++	bool change = false;
++	u32 value;
+ 
+ 	/* update each channel */
+ 	for (i = 0; i < channels; i++) {
+-		cdata->chanv[i].value = ucontrol->value.enumerated.item[i];
++		value = ucontrol->value.enumerated.item[i];
++		change = change || (value != cdata->chanv[i].value);
+ 		cdata->chanv[i].channel = i;
++		cdata->chanv[i].value = value;
+ 	}
+ 
+ 	/* notify DSP of enum updates */
+@@ -163,7 +173,7 @@ int snd_sof_enum_put(struct snd_kcontrol *kcontrol,
+ 					      SOF_CTRL_CMD_ENUM,
+ 					      true);
+ 
+-	return 0;
++	return change;
+ }
+ 
+ int snd_sof_bytes_get(struct snd_kcontrol *kcontrol,
 -- 
 2.20.1
 
