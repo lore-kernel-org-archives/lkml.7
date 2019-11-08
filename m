@@ -2,221 +2,109 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D16C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4E9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB56214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UdIr02Tw"
+	by mail.kernel.org (Postfix) with ESMTP id 107BA21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573221402;
+	bh=n9ystWPITpLlZG9fAxteJieqtPVAxlo0c6o7Uuvsikw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2WV6aUOzLhm+Ku3Y32g/7cCUyPHRQKk4UGbf0vuiSxJmsL0cSvTC5cz9DBIQWeuWy
+	 hW1TUUlrcnjboAAMUFZVQar6GQq0f9DbrLErd/wJ4Qp97ZkavcW+A1g/GNXdtnxycU
+	 IJu5LrizZFiumrtrcdWT7pQmZdWOe5f9a1Q8i/VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbfKHN4Q (ORCPT
+        id S1729616AbfKHN4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:56:16 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33263 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfKHN4Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:56:16 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 71so5346610qkl.0;
-        Fri, 08 Nov 2019 05:56:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gCAeybLe0NU7m7647n7l4SIquRQF/E2OQ7kqEsPTDCo=;
-        b=UdIr02TwSKfPv7e3SZdwnZqpS81eX5D5cFK3hR/Uq4UgO7WQksLY2taK7FB4KajQnm
-         agMhDj6xHm7g9ihSTvl7hj8GAx7aMCbearL3y0rbavW92GfCo5/biU+tm45l6U1yV3WQ
-         OqmIVF4ItMrdieimGqS/efCPtV9OqKPgjVZ373HNwAR2aPVE1AATihNJo+pzdy0X2ANB
-         z4F7B9w8bFI4xeTRc6f8BfJYkwHiKyFuDFFHPzT/k+7nyjYSjP6cFdHiSjJsjiOtG4Te
-         UJlLDJX0NFWWy5lbD0VgGZ1u2ZoSkvhpzQwRPIsnz0Z+Cd3dGSoMLBrxpAnf8XJykUIk
-         eqMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gCAeybLe0NU7m7647n7l4SIquRQF/E2OQ7kqEsPTDCo=;
-        b=dq5ob1wphPCB2GWghWJoinQbQ6v65vTmJFqaa2JFBsGzkV6ClCyqzylTXy5BeJh34j
-         6bS2+OeqZq2xpDFUPrae6xlANPhlHBoJCif34FNtBSEdguEgjzIjFxH6+5Dm3SCTZA2O
-         RijbFv9JJ4ibKpe9ZEYcCImnxBXKf3uLzPK7lR5wJK3VW3Nfn/UYkzs8BQX9oVGJdd0T
-         M2jhWiSbk9ekbHLpki+6ORQmI8vgx5TFggp3m+KAOuVZXWb+vrw1atjtvDlwnjlfuvUX
-         /oC8wihLxdPS0C2tw89EoPA4k7FIX+8eKNW0uIEd96rodGIFxknsXITjXve9QtNrzdqm
-         oEyg==
-X-Gm-Message-State: APjAAAWJHyqwCfgZAj1rjl5PjA961lBMaMFJj5sJoJ6YaqnvSNJwrHnJ
-        H1Y0LixNPLtPKLuXAhJM520=
-X-Google-Smtp-Source: APXvYqwz6uCw0d2ZWvQV7FHEvdst3SlTAX5suY795WniLDYHJ5j5ICzRMoa1G88Pnd4MDGI5CkWjzA==
-X-Received: by 2002:a37:8b03:: with SMTP id n3mr6571831qkd.493.1573221375073;
-        Fri, 08 Nov 2019 05:56:15 -0800 (PST)
-Received: from smtp.gmail.com ([2804:d43:422:3955:b4df:7a81:96e1:236e])
-        by smtp.gmail.com with ESMTPSA id o17sm509058qkg.4.2019.11.08.05.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:56:14 -0800 (PST)
-Date:   Fri, 8 Nov 2019 10:56:09 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     jic23@kernel.org, robh@kernel.org
-Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
-Message-ID: <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
-References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
+        Fri, 8 Nov 2019 08:56:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbfKHN4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 08:56:40 -0500
+Received: from linux-8ccs (x2f7fce5.dyn.telefonica.de [2.247.252.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A56B7214DB;
+        Fri,  8 Nov 2019 13:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573221399;
+        bh=n9ystWPITpLlZG9fAxteJieqtPVAxlo0c6o7Uuvsikw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FojtLrtALDOI9gVhEgdOdfgo9H8nnaaqZlSjepLU7bnBYMXgCFTVqA/8RxEPPkQ4C
+         gxzMDjTKKqrGgLB9785qbuuxp7Np3WO575y5i610Bq46Xxmy6C/XGY+WouXnhoVm/4
+         2jqdx3/gokNhHxPe1+TdeK7g1iOEw7NnqRCBx5bE=
+Date:   Fri, 8 Nov 2019 14:56:31 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>
+Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
+Message-ID: <20191108135631.GA22507@linux-8ccs>
+References: <20191104230001.27774-1-aarcange@redhat.com>
+ <20191104230001.27774-4-aarcange@redhat.com>
+ <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
+ <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
+ <20191105135414.GA30717@redhat.com>
+ <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
+ <20191105145651.GD30717@redhat.com>
+ <ab18744b-afc7-75d4-b5f3-e77e9aae41a6@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <ab18744b-afc7-75d4-b5f3-e77e9aae41a6@redhat.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a devicetree schema for AD7292 monitor and control system.
++++ Paolo Bonzini [05/11/19 16:10 +0100]:
+>On 05/11/19 15:56, Andrea Arcangeli wrote:
+>>>> I think we should:
+>>>>
+>>>> 1) whitelist to shut off the warnings on demand
+>>>
+>>> Do you mean adding a whitelist to modpost?  That would work, though I am
+>>> not sure if the module maintainer (Jessica Yu) would accept that.
+>>
+>> Yes that's exactly what I meant.
+>
+>Ok, thanks.  Jessica, the issue here is that we have two (mutually
+>exclusive) modules providing the same interface to a third module.
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
----
-Changelog V3 -> V4:
-- updated SPDX identifier to GPL-2.0-only
-- changed maxitems constraint on channel property
+>Andrea will check that, when the same symbol is exported by two modules,
+>the second-loaded module correctly fails insmod.
 
- .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
- MAINTAINERS                                   |   7 ++
- 2 files changed, 111 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+Hi Paolo, thanks for getting me up to speed.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-new file mode 100644
-index 000000000000..b68be3aaf587
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD7292 10-Bit Monitor and Control System
-+
-+maintainers:
-+  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-+
-+description: |
-+  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-+  Temperature Sensor, and GPIOs
-+
-+  Specifications about the part can be found at:
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7292
-+
-+  reg:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description: |
-+      The regulator supply for ADC and DAC reference voltage.
-+
-+  spi-cpha: true
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - spi-cpha
-+
-+patternProperties:
-+  "^channel@[0-7]$":
-+    type: object
-+    description: |
-+      Represents the external channels which are connected to the ADC.
-+      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-+
-+    properties:
-+      reg:
-+        description: |
-+          The channel number. It can have up to 8 channels numbered from 0 to 7.
-+        items:
-+          maximum: 7
-+
-+      diff-channels:
-+        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-+        maxItems: 1
-+
-+    required:
-+      - reg
-+
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      ad7292: adc@0 {
-+        compatible = "adi,ad7292";
-+        reg = <0>;
-+        spi-max-frequency = <25000000>;
-+        vref-supply = <&adc_vref>;
-+        spi-cpha;
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        channel@0 {
-+          reg = <0>;
-+          diff-channels = <0 1>;
-+        };
-+        channel@2 {
-+          reg = <2>;
-+        };
-+        channel@3 {
-+          reg = <3>;
-+        };
-+        channel@4 {
-+          reg = <4>;
-+        };
-+        channel@5 {
-+          reg = <5>;
-+        };
-+        channel@6 {
-+          reg = <6>;
-+        };
-+        channel@7 {
-+          reg = <7>;
-+        };
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 32bf5f8116d0..5d00e871c4c6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -813,6 +813,13 @@ S:	Supported
- F:	drivers/iio/adc/ad7124.c
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
- 
-+ANALOG DEVICES INC AD7292 DRIVER
-+M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+W:	http://ez.analog.com/community/linux-device-drivers
-+S:	Supported
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-+
- ANALOG DEVICES INC AD7606 DRIVER
- M:	Stefan Popa <stefan.popa@analog.com>
- L:	linux-iio@vger.kernel.org
--- 
-2.23.0
+The module loader already rejects loading a module with
+duplicate exported symbols.
 
+> If that is okay, we will also need modpost not to warn for these
+> symbols in sym_add_exported.
+
+I think it's certainly doable in modpost, for example we could pass a
+list of whitelisted symbols and have modpost read them in and not warn
+if it encounters the whitelisted symbols more than once.  Modpost will
+also have to be modified to accomodate duplicate symbols.  I'm not
+sure how ugly this would be without seeing the actual patch.  And I am
+not sure what Masahiro (who takes care of all things kbuild-related)
+thinks of this idea. But before implementing all this, is there
+absolutely no way around having the duplicated exported symbols? (e.g.,
+could the modules be configured/built in a mutally exclusive way? I'm
+lacking the context from the rest of the thread, so not sure which are
+the problematic modules.)
+
+Thanks,
+
+Jessica
