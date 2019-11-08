@@ -2,54 +2,51 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A013FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF0FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65684206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8474F20673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240103;
-	bh=cMt5YAt95pX48cSuDTwnwLaBMwlc6FmPpw6y1/VngAo=;
+	s=default; t=1573240107;
+	bh=N4KjHgFK9d/d12dmfSPmyBLi3zVooy+ZWFOBJe3ffqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l/JKUD/Em0ALeIewI3W/6MR0OnEJqYABjSIVBOTdENRfmN9YAjf20MRKYDuJOKUQ3
-	 TGYY77N5S1NxqLSazk4vNGfZpjgrfFu+QySQtJDnpK1/BoX8UckP09Aay+xJbqk5DW
-	 rAgl6DmdPiJXRippb1jc8vrFFz2o4rRVpRV4LFEY=
+	b=WDi9sTTRBByyd651rMR1zOUy95Rs/KQp25P5W3nx0UvW/TAMQqHtpJM4nCLVGKQam
+	 QQn2dBXgeR/yeoZX1THGQrcKx7tGq54wrOHO59+78XFTSEUewEzSkZgjCZr0uf/H+X
+	 7n/3MPssVf7nW94EN8l5tv4SbCDfJUNAN30XJAVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732811AbfKHTIV (ORCPT
+        id S2391622AbfKHTIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39274 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:08:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391603AbfKHTIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:19 -0500
+        id S2388102AbfKHTIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:08:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6228D206A3;
-        Fri,  8 Nov 2019 19:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A9720673;
+        Fri,  8 Nov 2019 19:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240098;
-        bh=cMt5YAt95pX48cSuDTwnwLaBMwlc6FmPpw6y1/VngAo=;
+        s=default; t=1573240101;
+        bh=N4KjHgFK9d/d12dmfSPmyBLi3zVooy+ZWFOBJe3ffqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MWwDPjb3Xxc3A78vu9uAEw8g3GTxeScDZPzFU3nPge21mxMyG4X1sXbTXd4kSMXt7
-         R++7ZdI+opTERxNO2JhmuPM2d8PIQFNLJdjObZTGBX/LB0sGCuaedDzmynSZdWOqCx
-         l08HHyzOQJBJ3G52utOzIVcyq25kiNGQLmCfBSvU=
+        b=1lAfgIdgNDRJN4Uxu4L1dQ8EwbHOCxtajfRuPhqLRpnDnTmPuqG4wdnsBn0RmiuI6
+         ihBLo4MQVpOHa2aIHPWE8iyBri7LNvXSnxr86lrAnGhosu/X3LjFBS3Ve8xrhhhEv6
+         AgsYki8IAoa12d+RP6z7Sam+cVUBCmpcFQPLESYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Parent <fparent@baylibre.com>,
-        Cengiz Can <cengiz@kernel.wtf>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulrich Hecht <uli@fpond.eu>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 071/140] i2c: mt65xx: fix NULL ptr dereference
-Date:   Fri,  8 Nov 2019 19:49:59 +0100
-Message-Id: <20191108174909.634264641@linuxfoundation.org>
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 089/140] net: hisilicon: Fix ping latency when deal with high throughput
+Date:   Fri,  8 Nov 2019 19:50:17 +0100
+Message-Id: <20191108174910.699178710@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -62,45 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabien Parent <fparent@baylibre.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 62931ac2f9015ea38d80494ec37658ab3df6a6d7 ]
+[ Upstream commit e56bd641ca61beb92b135298d5046905f920b734 ]
 
-Since commit abf4923e97c3 ("i2c: mediatek: disable zero-length transfers
-for mt8183"), there is a NULL pointer dereference for all the SoCs
-that don't have any quirk. mtk_i2c_functionality is not checking that
-the quirks pointer is not NULL before starting to use it.
+This is due to error in over budget processing.
+When dealing with high throughput, the used buffers
+that exceeds the budget is not cleaned up. In addition,
+it takes a lot of cycles to clean up the used buffer,
+and then the buffer where the valid data is located can take effect.
 
-This commit add a call to i2c_check_quirks which will check whether
-the quirks pointer is set, and if so will check if the IP has the
-NO_ZERO_LEN quirk.
-
-Fixes: abf4923e97c3 ("i2c: mediatek: disable zero-length transfers for mt8183")
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
-Reviewed-by: Cengiz Can <cengiz@kernel.wtf>
-Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Tested-by: Ulrich Hecht <uli@fpond.eu>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/busses/i2c-mt65xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 29eae1bf4f861..2152ec5f535c1 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -875,7 +875,7 @@ static irqreturn_t mtk_i2c_irq(int irqno, void *dev_id)
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -237,6 +237,7 @@ struct hip04_priv {
+ 	dma_addr_t rx_phys[RX_DESC_NUM];
+ 	unsigned int rx_head;
+ 	unsigned int rx_buf_size;
++	unsigned int rx_cnt_remaining;
  
- static u32 mtk_i2c_functionality(struct i2c_adapter *adap)
- {
--	if (adap->quirks->flags & I2C_AQ_NO_ZERO_LEN)
-+	if (i2c_check_quirks(adap, I2C_AQ_NO_ZERO_LEN))
- 		return I2C_FUNC_I2C |
- 			(I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
- 	else
--- 
-2.20.1
-
+ 	struct device_node *phy_node;
+ 	struct phy_device *phy;
+@@ -575,7 +576,6 @@ static int hip04_rx_poll(struct napi_str
+ 	struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
+ 	struct net_device *ndev = priv->ndev;
+ 	struct net_device_stats *stats = &ndev->stats;
+-	unsigned int cnt = hip04_recv_cnt(priv);
+ 	struct rx_desc *desc;
+ 	struct sk_buff *skb;
+ 	unsigned char *buf;
+@@ -588,8 +588,8 @@ static int hip04_rx_poll(struct napi_str
+ 
+ 	/* clean up tx descriptors */
+ 	tx_remaining = hip04_tx_reclaim(ndev, false);
+-
+-	while (cnt && !last) {
++	priv->rx_cnt_remaining += hip04_recv_cnt(priv);
++	while (priv->rx_cnt_remaining && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+ 		if (unlikely(!skb)) {
+@@ -635,11 +635,13 @@ refill:
+ 		hip04_set_recv_desc(priv, phys);
+ 
+ 		priv->rx_head = RX_NEXT(priv->rx_head);
+-		if (rx >= budget)
++		if (rx >= budget) {
++			--priv->rx_cnt_remaining;
+ 			goto done;
++		}
+ 
+-		if (--cnt == 0)
+-			cnt = hip04_recv_cnt(priv);
++		if (--priv->rx_cnt_remaining == 0)
++			priv->rx_cnt_remaining += hip04_recv_cnt(priv);
+ 	}
+ 
+ 	if (!(priv->reg_inten & RCV_INT)) {
+@@ -724,6 +726,7 @@ static int hip04_mac_open(struct net_dev
+ 	int i;
+ 
+ 	priv->rx_head = 0;
++	priv->rx_cnt_remaining = 0;
+ 	priv->tx_head = 0;
+ 	priv->tx_tail = 0;
+ 	hip04_reset_ppe(priv);
 
 
