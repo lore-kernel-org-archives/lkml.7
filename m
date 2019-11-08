@@ -2,56 +2,56 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BE8FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB3CFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5A221D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D6F2067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239629;
-	bh=D4v9sx3RRX0dU7Q3sH3IEQS/k618r0wxMght8d1CSyU=;
+	s=default; t=1573239636;
+	bh=VF547Q+UrNwRXr4sDr3Y7MlkbWR5j1ZST7OYdWdPn2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STqU69SrzXWi7emiHwFWu/hLH6B8A6n8u55tLR9LPuBTMUV6rIzcpxnaJfF/iVpSp
-	 WIw6fFpT4cCXQAceXa5vlMX3KA/fqRbYbT0Vt54AlWbb/B3dLep1hkx1LqVvmCl4xh
-	 DSfCcTnMmIpmusj99AvESDUlpx0jJITVFhVzPkSg=
+	b=qMuiLWo+WJH00j5d72XnkhdrJ7JbQes0gZ4nGpGwsTlhTYaXV2yMh67FXZpCPU7qB
+	 kkzggo3xJP3QdAbsnTRURQ0iv1zuB6odjY4uy749mTkiIFvobDgAtrkEZi+b5aje3e
+	 VJzu9Vg5lHGf/gD1g4Mx8aZNxM+te5a02MtHgXG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389729AbfKHTA2 (ORCPT
+        id S1732948AbfKHTAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57274 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389526AbfKHTAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389524AbfKHTAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 14:00:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A97321D7B;
-        Fri,  8 Nov 2019 18:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3873224A1;
+        Fri,  8 Nov 2019 18:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239443;
-        bh=D4v9sx3RRX0dU7Q3sH3IEQS/k618r0wxMght8d1CSyU=;
+        s=default; t=1573239525;
+        bh=VF547Q+UrNwRXr4sDr3Y7MlkbWR5j1ZST7OYdWdPn2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CGhdQGgfI0iuciqpZYsKrWsYyDtJn3XsaAhlAXZGbGbH5AiZZ4wY+hBi4QpDX6+H
-         KCrtnDGbLr0M9BCAMwYOnrWg2vFF1A8ZiHfSPuPZZUvbbWjP8QALFUPDV46Gqis4pZ
-         xNYwN9A3YoDB1S6NlCMPwOIk3+ZnvP1sX44Rce9w=
+        b=mi1Uk+ZWg4jClYXjeGbC6lZe4lsbh19g1SpM3FMouZuTtF2BDI/UNWpPHyy+f+Pwf
+         /MWDyMeuBCQOelORlkK680v8n9nsd9YDqsVymZUGLajW7jXuwgJ7FbNttibN1R2XPr
+         vw3lJXsX5Y7vAlHA5M+WYC6tLRKYF+rNUpqDICf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/34] of: unittest: fix memory leak in unittest_data_add
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 34/62] udp: fix data-race in udp_set_dev_scratch()
 Date:   Fri,  8 Nov 2019 19:50:22 +0100
-Message-Id: <20191108174635.453042112@linuxfoundation.org>
+Message-Id: <20191108174745.061425151@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
-References: <20191108174618.266472504@linuxfoundation.org>
+In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
+References: <20191108174719.228826381@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,37 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e13de8fe0d6a51341671bbe384826d527afe8d44 ]
+[ Upstream commit a793183caa9afae907a0d7ddd2ffd57329369bf5 ]
 
-In unittest_data_add, a copy buffer is created via kmemdup. This buffer
-is leaked if of_fdt_unflatten_tree fails. The release for the
-unittest_data buffer is added.
+KCSAN reported a data-race in udp_set_dev_scratch() [1]
 
-Fixes: b951f9dc7f25 ("Enabling OF selftest to run without machine's devicetree")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The issue here is that we must not write over skb fields
+if skb is shared. A similar issue has been fixed in commit
+89c22d8c3b27 ("net: Fix skb csum races when peeking")
+
+While we are at it, use a helper only dealing with
+udp_skb_scratch(skb)->csum_unnecessary, as this allows
+udp_set_dev_scratch() to be called once and thus inlined.
+
+[1]
+BUG: KCSAN: data-race in udp_set_dev_scratch / udpv6_recvmsg
+
+write to 0xffff888120278317 of 1 bytes by task 10411 on cpu 1:
+ udp_set_dev_scratch+0xea/0x200 net/ipv4/udp.c:1308
+ __first_packet_length+0x147/0x420 net/ipv4/udp.c:1556
+ first_packet_length+0x68/0x2a0 net/ipv4/udp.c:1579
+ udp_poll+0xea/0x110 net/ipv4/udp.c:2720
+ sock_poll+0xed/0x250 net/socket.c:1256
+ vfs_poll include/linux/poll.h:90 [inline]
+ do_select+0x7d0/0x1020 fs/select.c:534
+ core_sys_select+0x381/0x550 fs/select.c:677
+ do_pselect.constprop.0+0x11d/0x160 fs/select.c:759
+ __do_sys_pselect6 fs/select.c:784 [inline]
+ __se_sys_pselect6 fs/select.c:769 [inline]
+ __x64_sys_pselect6+0x12e/0x170 fs/select.c:769
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffff888120278317 of 1 bytes by task 10413 on cpu 0:
+ udp_skb_csum_unnecessary include/net/udp.h:358 [inline]
+ udpv6_recvmsg+0x43e/0xe90 net/ipv6/udp.c:310
+ inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
+ sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
+ ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
+ do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
+ __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
+ __do_sys_recvmmsg net/socket.c:2703 [inline]
+ __se_sys_recvmmsg net/socket.c:2696 [inline]
+ __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 10413 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 2276f58ac589 ("udp: use a separate rx queue for packet reception")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/of/unittest.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/udp.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 0a1ebbbd3f163..92530525e3556 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -933,6 +933,7 @@ static int __init unittest_data_add(void)
- 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
-+		kfree(unittest_data);
- 		return -ENODATA;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1195,6 +1195,20 @@ static void udp_set_dev_scratch(struct s
+ 		scratch->_tsize_state |= UDP_SKB_IS_STATELESS;
+ }
+ 
++static void udp_skb_csum_unnecessary_set(struct sk_buff *skb)
++{
++	/* We come here after udp_lib_checksum_complete() returned 0.
++	 * This means that __skb_checksum_complete() might have
++	 * set skb->csum_valid to 1.
++	 * On 64bit platforms, we can set csum_unnecessary
++	 * to true, but only if the skb is not shared.
++	 */
++#if BITS_PER_LONG == 64
++	if (!skb_shared(skb))
++		udp_skb_scratch(skb)->csum_unnecessary = true;
++#endif
++}
++
+ static int udp_skb_truesize(struct sk_buff *skb)
+ {
+ 	return udp_skb_scratch(skb)->_tsize_state & ~UDP_SKB_IS_STATELESS;
+@@ -1430,10 +1444,7 @@ static struct sk_buff *__first_packet_le
+ 			*total += skb->truesize;
+ 			kfree_skb(skb);
+ 		} else {
+-			/* the csum related bits could be changed, refresh
+-			 * the scratch area
+-			 */
+-			udp_set_dev_scratch(skb);
++			udp_skb_csum_unnecessary_set(skb);
+ 			break;
+ 		}
  	}
- 	of_node_set_flag(unittest_data_node, OF_DETACHED);
--- 
-2.20.1
-
 
 
