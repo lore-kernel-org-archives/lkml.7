@@ -2,69 +2,272 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDBEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8259DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB72214DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49113214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O84mdoRO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a6IQU56K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfKHJbn (ORCPT
+        id S1731095AbfKHJdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:31:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33128 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729873AbfKHJbn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:31:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mmNnULM/VKjYavmcObobx5Rd93KoR1x/7NkcWKtN1+Q=; b=O84mdoRO2yNi9tsZBrBodcX/E
-        5E6ZDTyfmxhjwCMaOtvdi7eVL6nxVo1Vp3n1GDN1wcodPVMDAiGcI3RrRfZZPVALovO7AIeileEyM
-        vm4d2KnKmPxLcLntBWldGGcFygj2lSnLIBhCZoz0vd2r7vafR3xcvApdGB+pt9RrYIFE4jSy1be03
-        msmvyZo5AoBNNcDNljebfvRPWa/CKJ9nqoJqtZQFMr8S/ePgYqkJAUxRR6ugOQz0dhtaxtnM2G2HA
-        eC3I+m5SUMy0YsNdf79D5WITW7wDa6RSuoPRhliCB7A5JpCuzKVcAZFS2uY9AlNSK8fUHHsNloW6A
-        sDoPV4Xng==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iT0cF-00018T-KV; Fri, 08 Nov 2019 09:31:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 67F77301A79;
-        Fri,  8 Nov 2019 10:30:31 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 136362022B9E1; Fri,  8 Nov 2019 10:31:36 +0100 (CET)
-Date:   Fri, 8 Nov 2019 10:31:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tim <xiejingfeng@linux.alibaba.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] psi:fix divide by zero in psi_update_stats
-Message-ID: <20191108093136.GI4114@hirez.programming.kicks-ass.net>
-References: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
+        Fri, 8 Nov 2019 04:33:20 -0500
+Received: from mail-eopbgr60066.outbound.protection.outlook.com ([40.107.6.66]:17986
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726987AbfKHJdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:33:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YKXUh3Dva9hreQmFN4J2W7agVUbsiBhNtg+JAA2Xcccp6VVKsPsA/9vgScqtPu6uMNYm1EgNdilrmCvj17HaeVe3F8YpxgIWdUc65ba/GS2YSq1vUGyCjLiMJ1xq+2pm4Riull1F52y26xclIGFSrH9etoOWbYN2ixNwuygzr9SggNR8Ko+jNAhGInIfaFk9aYDEbVA2akrB4KOdinxxsDO+bAXyf2OQQazoZapRqLsfy9nKjvVZEgn5J6SVoyNTzDieWM11QXhcqsoBlIwn3AafOwcl5ZylW1EgzVm/RB00gGOReqdBmsa1/Up5VcDdGi8AeLuvJxuyuEorxxczzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FkIwcfNXLoFA7sFJe5zf6H9izbbPjvCGIu8DAMTptVo=;
+ b=iXUM7b2eqgeYMWNPtNpX3OM+AK3k8mVRGddeRJW1ILdwAPP3Q4TgDh4TF/kR4yAUi3Msi6Dqg5Jt3x9YAbyyN95z2EPyepX+RWclriGbymoyW9UHkp32+SnUYEyiUap7w5fdkqZAPZrXSMnXK8xne9zMZKfLeAxgUrHHFPKS/FlN3Lv9KJsxUO1e3v3zY9MYzwjs2amvBeiX1PPyUzPtUj3o4g/CGTDVrNeKAP8VE6sTnaX5TFe8t7Ug4/IFxXyqJUhi515B7eBGcnqjC6gEWY1+tSaCS8CNLRd3xXph92M5a8Mm8YpG2JNE4QVcIi4sj4b9rMdn0vvgERXKGC7mSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FkIwcfNXLoFA7sFJe5zf6H9izbbPjvCGIu8DAMTptVo=;
+ b=a6IQU56KyNR1Er5OesFRXdiCNw5/XQOtZTqIWDdrqaiO+amkObIs2pnc/KVe/g7M9bHZ9r/cAFGYMs6cus2pWxFVFgLMAdM+unOZjntuHJ561/MY08ng4Pv9VhG8kbyEjZNcxtaWgfjNgN8v4ulUZJBvYdfoCvdgZ8z7ai6Vx/Q=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5121.eurprd04.prod.outlook.com (20.176.214.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Fri, 8 Nov 2019 09:33:14 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
+ 09:33:14 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V10 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Topic: [PATCH V10 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Index: AQHVd1cZbembLLIl0UWluk5SdDoXkKdRjZNQgC+ygtA=
+Date:   Fri, 8 Nov 2019 09:33:14 +0000
+Message-ID: <AM0PR04MB448121C973D3A62C4BD00722887B0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1569824287-4263-1-git-send-email-peng.fan@nxp.com>
+ <AM0PR04MB4481F68159D932DA455634A988950@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB4481F68159D932DA455634A988950@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ef7846d8-93e1-4604-93f9-08d7642eade2
+x-ms-traffictypediagnostic: AM0PR04MB5121:|AM0PR04MB5121:
+x-ms-exchange-purlcount: 6
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB51216E78BEF1F77B9C995132887B0@AM0PR04MB5121.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0215D7173F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(396003)(346002)(366004)(189003)(199004)(7696005)(99286004)(26005)(2501003)(186003)(71200400001)(6246003)(8676002)(66066001)(81156014)(71190400001)(4326008)(76176011)(8936002)(81166006)(2906002)(44832011)(55016002)(9686003)(6306002)(14444005)(33656002)(256004)(486006)(229853002)(5660300002)(476003)(66446008)(64756008)(66556008)(66476007)(76116006)(74316002)(11346002)(446003)(6436002)(305945005)(6506007)(15650500001)(7736002)(102836004)(52536014)(54906003)(478600001)(2201001)(25786009)(966005)(86362001)(6116002)(316002)(14454004)(110136005)(66946007)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5121;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RUTYUCQ0yUNRsn4ST5aSjIrCs6fEm3ZkStC+dY0Y2N7/YF35slPdjLG8Ps2mA/0fa4mEMB1hlrc0vDzzPoX7dWRz6QWCAuC8exX5zEKP5QUzM9ryGrbXTm4wfUhHifk/FIpybWNPbBQ13Aa3s30b+KNdYBa8N1hHbHj935tPVoRTxtNEMna8kJn2zWiHmkk0N+GzxoPfKBHOHWH+9/7UQwPWSoNiut04tQjP0Fs4LwdlPRdapoa6w3Y+S7oisCbSZPvOwTEROp/0y4PUjFF7y5NiDi3ipQhpxx0TqlPR3m9ljivASPXOSimLJ/Cx/tVPcSyWleu038LTX2yttGIcxfxA5saLhDgmt4JHr8COhYs6aKwE4Jdw1aiSj01zOdBnc0v5e4Os45V3WaKITwL7FmDMW3lmOnjWQovIvBXQqQ62Rh9mFulTBDbiBsKO1GcaL6zRVZ47lD9gWiMLW+2kUiKH8yCgXETI2Qocr71CutY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef7846d8-93e1-4604-93f9-08d7642eade2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 09:33:14.2886
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XS9hWGAekdX9IeVLVvXCXwEyNhnWF9aZYmYMm2f84FOgWCW3yqnoJdX9Mj2Yeenhy/G1g0/qD7EFDqLhrWk1Ww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 03:33:24PM +0800, tim wrote:
-> In psi_update_stats, it is possible that period has value like
-> 0xXXXXXXXX00000000 where the lower 32 bit is 0, then it calls div_u64 which
+Hi Jass,
 
-How can this happen? Is that a valid case or should we be avoiding that?
+> Subject: RE: [PATCH V10 0/2] mailbox: arm: introduce smc triggered mailbo=
+x
+
+Sorry to ping again. Would you queue this patch set into your next tree for=
+ 5.5?
+
+Thanks,
+Peng.
+
+>=20
+> Hi Jassi,
+>=20
+> > Subject: [PATCH V10 0/2] mailbox: arm: introduce smc triggered mailbox
+>=20
+> Are you fine with this patch set?
+>=20
+> Thanks,
+> Peng.
+>=20
+> >
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > V10:
+> >  - Add R-b tag from Andre, Rob and Florian
+> >  - Two minor fixes
+> >   - Drop "passed from consumers" in patch 1/2 per Andre's comments
+> >   - Drop interrupts.h in patch 2/2 per Andre's comments
+> >
+> > V9:
+> >  - Add Florian's R-b tag in patch 1/2
+> >  - Mark arm,func-id as a required property per Andre's comments in
+> > patch 1/2.
+> >  - Make invoke_smc_mbox_fn as a private entry in a channal per Florian'=
+s
+> >    comments in pach 2/2
+> >  - Include linux/types.h in arm-smccc-mbox.h in patch 2/2
+> >  - Drop function_id from arm_smccc_mbox_cmd since func-id is from DT
+> >    in patch 2/2/.
+> >
+> >    Andre,
+> >     I have marked arm,func-id as a required property and dropped
+> > function-id
+> >     from client, please see whether you are happy with the patchset.
+> >     Hope we could finalize and get patches land in.
+> >
+> >    Thanks,
+> >    Peng.
+> >
+> > V8:
+> > Add missed arm-smccc-mbox.h
+> >
+> > V7:
+> > Typo fix
+> > #mbox-cells changed to 0
+> > Add a new header file arm-smccc-mbox.h Use ARM_SMCCC_IS_64
+> >
+> > Andre,
+> >   The function_id is still kept in arm_smccc_mbox_cmd, because
+> > arm,func-id property is optional, so clients could pass function_id to =
+mbox
+> driver.
+> >
+> > V6:
+> > Switch to per-channel a mbox controller Drop arm,num-chans,
+> > transports, method Add arm,hvc-mbox compatible Fix smc/hvc args, drop
+> > client id and use correct type.
+> > https://patchwork.kernel.org/cover/11146641/
+> >
+> > V5:
+> > yaml fix
+> > https://patchwork.kernel.org/cover/11117741/
+> >
+> > V4:
+> > yaml fix for num-chans in patch 1/2.
+> > https://patchwork.kernel.org/cover/11116521/
+> >
+> > V3:
+> > Drop interrupt
+> > Introduce transports for mem/reg usage Add chan-id for mem usage
+> > Convert to yaml format https://patchwork.kernel.org/cover/11043541/
+> >
+> > V2:
+> > This is a modified version from Andre Przywara's patch series
+> > https://lore.kernel.org/patchwork/cover/812997/.
+> > The modification are mostly:
+> > Introduce arm,num-chans
+> > Introduce arm_smccc_mbox_cmd
+> > txdone_poll and txdone_irq are both set to false arm,func-ids are
+> > kept, but as an optional property.
+> > Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+> > Introduce interrupts notification.
+> >
+> > [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+> > use smc as mailbox, power/clk is included, but only part of clk has
+> > been implemented to work with hardware, power domain only supports get
+> > name for now.
+> >
+> > The traditional Linux mailbox mechanism uses some kind of dedicated
+> > hardware IP to signal a condition to some other processing unit,
+> > typically a dedicated management processor.
+> > This mailbox feature is used for instance by the SCMI protocol to
+> > signal a request for some action to be taken by the management processo=
+r.
+> > However some SoCs does not have a dedicated management core to
+> provide
+> > those services. In order to service TEE and to avoid linux shutdown
+> > power and clock that used by TEE, need let firmware to handle power
+> > and clock, the firmware here is ARM Trusted Firmware that could also ru=
+n
+> SCMI service.
+> >
+> > The existing SCMI implementation uses a rather flexible shared memory
+> > region to communicate commands and their parameters, it still requires
+> > a mailbox to actually trigger the action.
+> >
+> > This patch series provides a Linux mailbox compatible service which
+> > uses smc calls to invoke firmware code, for instance taking care of SCM=
+I
+> requests.
+> > The actual requests are still communicated using the standard SCMI way
+> > of shared memory regions, but a dedicated mailbox hardware IP can be
+> > replaced via this new driver.
+> >
+> > This simple driver uses the architected SMC calling convention to
+> > trigger firmware services, also allows for using "HVC" calls to call
+> > into hypervisors or firmware layers running in the EL2 exception level.
+> >
+> > Patch 1 contains the device tree binding documentation, patch 2
+> > introduces the actual mailbox driver.
+> >
+> > Please note that this driver just provides a generic mailbox
+> > mechanism, It could support synchronous TX/RX, or synchronous TX with
+> asynchronous RX.
+> > And while providing SCMI services was the reason for this exercise,
+> > this driver is in no way bound to this use case, but can be used
+> > generically where the OS wants to signal a mailbox condition to firmwar=
+e or
+> a hypervisor.
+> > Also the driver is in no way meant to replace any existing firmware
+> > interface, but actually to complement existing interfaces.
+> >
+> > [1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+> >
+> >
+> >
+> > Peng Fan (2):
+> >   dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+> >   mailbox: introduce ARM SMC based mailbox
+> >
+> >  .../devicetree/bindings/mailbox/arm-smc.yaml       |  96
+> > ++++++++++++
+> >  drivers/mailbox/Kconfig                            |   7 +
+> >  drivers/mailbox/Makefile                           |   2 +
+> >  drivers/mailbox/arm-smc-mailbox.c                  | 166
+> > +++++++++++++++++++++
+> >  include/linux/mailbox/arm-smccc-mbox.h             |  20 +++
+> >  5 files changed, 291 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
+> > 100644 include/linux/mailbox/arm-smccc-mbox.h
+> >
+> > --
+> > 2.16.4
 
