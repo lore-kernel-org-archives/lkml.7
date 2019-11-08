@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DCBFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A552BFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D13521924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A3321D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214999;
-	bh=kxpznDMExbY+NIj9/CH/dtzZrDEOQHhlfV8VAdGz+C4=;
+	s=default; t=1573215008;
+	bh=l5eDrJZdYwLniJsJUyQLApbmXinBmUoHA75bjz8sMss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rw3Segsl/ZeTMUl8mnwIQDVfarcBkJksE4e9YGLecwPHm7U88kfeWCPOCVcBOmWUy
-	 OlpSY2AcDd610S0TX/JdFfJcUCcutkiNYJvvuuopQb9m4QLSWT8VMQEjdqeMoBbaIJ
-	 uYvChQzNC6nWzuUMFm63lTlkaQRw9ljfKG4MeZmU=
+	b=TNgd4YnlM4yN7+05JxKwmcgcO2xkXeNiyux5aYNTkbgiE69fWP2hDQbzi4sVrYlFo
+	 C4+OoKKDp6dzO7bLW1YpznMcsDPHIBsnw2NMBwd/YsC5F9rvUqD6fcafGOG3irf28E
+	 UT74uLGdzjPwZzocUXfEW5jHbXxspm8torlkr8S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391254AbfKHMJ6 (ORCPT
+        id S2391951AbfKHMKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:09:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52662 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:10:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388041AbfKHLjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:49 -0500
+        id S2388018AbfKHLjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E3E5222C4;
-        Fri,  8 Nov 2019 11:39:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44AFE20869;
+        Fri,  8 Nov 2019 11:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213188;
-        bh=kxpznDMExbY+NIj9/CH/dtzZrDEOQHhlfV8VAdGz+C4=;
+        s=default; t=1573213186;
+        bh=l5eDrJZdYwLniJsJUyQLApbmXinBmUoHA75bjz8sMss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m2tQBUebA1Q2+/HYXzlfJoNaGMlSxpEi7po7k9O+JE5PejkWP9QrXqiUCPcQfMhWt
-         HadUF2gmWFJJPJT69YcZV3tg6JskiPlEdZm0w12xbrpMFNAIb9f6IguYI5aDrtpLHN
-         LgXsbYguTY8gtGpobZDDG4wpXrql+hwIzeq5WanQ=
+        b=pzuwNRBuMu4j7/NXv5X5JD7CXC54o9kaNHsVXQppmyB/EZ1K7Xxj8IdERzxjBSf+T
+         vToWfXkRYiSPlkP3oKxY1beoG9nJd7JjafP4eOreSa0KGiy9ah/2Pu+8a94QEpjFa/
+         w2qi3/zyWIM9I/C5FsQcVeYgy/kcR17KvSEfP1Ks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 078/205] ARM: dts: meson8: fix the clock controller register size
-Date:   Fri,  8 Nov 2019 06:35:45 -0500
-Message-Id: <20191108113752.12502-78-sashal@kernel.org>
+Cc:     Quentin Schulz <quentin.schulz@bootlin.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 077/205] net: phy: mscc: read 'vsc8531, edge-slowdown' as an u32
+Date:   Fri,  8 Nov 2019 06:35:44 -0500
+Message-Id: <20191108113752.12502-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,42 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-[ Upstream commit f7f9da89bc4f61e33f7b9f5c75c4efdc1f0455d8 ]
+[ Upstream commit 36c53cf0f46526b898390659b125155939f67892 ]
 
-The clock controller registers are not 0x460 wide because the reset
-controller starts at CBUS 0x4404. This currently overlaps with the
-clock controller (which is at CBUS 0x4000).
+In the DT binding, it is specified nowhere that 'vsc8531,edge-slowdown'
+is an u8, even though it's read as an u8 in the driver.
 
-There is no public documentation available on the actual size of the
-clock controller's register area (also called "HHI"). However, in
-Amlogic's GPL kernel sources the last "HHI" register is
-HHI_HDMI_PHY_CNTL2 at CBUS + 0x43a8. 0x400 was chosen because that size
-doesn't seem unlikely.
+Let's update the driver to take into consideration that the
+'vsc8531,edge-slowdown' property is of the default type u32.
 
-Fixes: 2c323c43a3d619 ("ARM: dts: meson8: add and use the real clock controller")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/mscc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index d77dcf890cfc8..7162e0ca05b0a 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -194,7 +194,7 @@
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		compatible = "amlogic,meson8-clkc";
--		reg = <0x8000 0x4>, <0x4000 0x460>;
-+		reg = <0x8000 0x4>, <0x4000 0x400>;
- 	};
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 53d63a71a03e2..36647b70b9a36 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -112,7 +112,7 @@ struct vsc8531_private {
+ #ifdef CONFIG_OF_MDIO
+ struct vsc8531_edge_rate_table {
+ 	u32 vddmac;
+-	u8 slowdown[8];
++	u32 slowdown[8];
+ };
  
- 	reset: reset-controller@4404 {
+ static const struct vsc8531_edge_rate_table edge_table[] = {
+@@ -375,8 +375,7 @@ out_unlock:
+ #ifdef CONFIG_OF_MDIO
+ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ {
+-	u8 sd;
+-	u32 vdd;
++	u32 vdd, sd;
+ 	int rc, i, j;
+ 	struct device *dev = &phydev->mdio.dev;
+ 	struct device_node *of_node = dev->of_node;
+@@ -389,7 +388,7 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	if (rc != 0)
+ 		vdd = MSCC_VDDMAC_3300;
+ 
+-	rc = of_property_read_u8(of_node, "vsc8531,edge-slowdown", &sd);
++	rc = of_property_read_u32(of_node, "vsc8531,edge-slowdown", &sd);
+ 	if (rc != 0)
+ 		sd = 0;
+ 
 -- 
 2.20.1
 
