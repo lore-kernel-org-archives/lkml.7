@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A10C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B90C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D09207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A06207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214356;
-	bh=LgKwpI801EVXj3JAAieFokiqCwcnqiuqcE8MVpd00js=;
+	s=default; t=1573214365;
+	bh=1YNBzt0jbY+niUzO7ze/IcroOlW0T0+ZDdhYKHwxpCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjQ9oVnC+2WeemWJwnOES7C+O9kKURYYvrrdmuViGIFgoUQ+fW5kCu/K6nOY4xH6d
-	 jdbAjramWH8aq+sAcmjlyRnVgUYMbM6rYrKMwacPmtCzURoIpc/UG646xOfJC7yTSe
-	 X1fJx0EIlHLI2UyrK+m31fDsAOpga3yST5O6PqTM=
+	b=cRtLdYHxoCmjeSCNGdEUU84VzU30Ti8nypDuUKN/QjQ9ZEcK6DRFgLbETe+7hWNeQ
+	 OFyXFGIRl2ANS/lutlBTpuSznzBmuzESY/JOU2bqGUWQpuTZ2O0M9GohinXVZ120fo
+	 LT9KDLJRGRCulTm8PeMhP1SKvk4TeYNcfUboXRP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391506AbfKHL7O (ORCPT
+        id S2389157AbfKHL7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:59:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:59:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733207AbfKHLoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:23 -0500
+        id S1733257AbfKHLoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0CBB222D4;
-        Fri,  8 Nov 2019 11:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4F0421D82;
+        Fri,  8 Nov 2019 11:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213463;
-        bh=LgKwpI801EVXj3JAAieFokiqCwcnqiuqcE8MVpd00js=;
+        s=default; t=1573213456;
+        bh=1YNBzt0jbY+niUzO7ze/IcroOlW0T0+ZDdhYKHwxpCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fn3YNn7lFKYW2V3txEnfJx/8XpZQMh0IAfkvFVFgaIaaCSC+D6xH0MoCq8YKhGG4O
-         7TT+dqJesK3EOeoaYzd6v+1P8uAB4VJ2nXwoglgQAunQM53jV+zCdZa0227UYuUPTP
-         k1hdPu3xRw9+16G8vhWhlqWyj/vGAnTLDd3uSWZI=
+        b=zOe4V7J2CzbeZvMog1hLkQtsxx0r03ebsklcq5rVDi15kbhAyFe6yURPv2tcKepxc
+         /2DARTKKzRS7Tf8CspV64Zf2nlheyorB+tQAAK3bt5ngY+xXHGrr4RTy1Y1YQbvY3S
+         TA71Pesm7R5jXY1oe8a4y/bdFvEK7ImMiKB8qoWk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/103] ARM: dts: omap3-gta04: give spi_lcd node a label so that we can overwrite in other DTS files
-Date:   Fri,  8 Nov 2019 06:42:14 -0500
-Message-Id: <20191108114310.14363-49-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 045/103] RDMA/core: Follow correct unregister order between sysfs and cgroup
+Date:   Fri,  8 Nov 2019 06:42:10 -0500
+Message-Id: <20191108114310.14363-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -60,33 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit fa0d7dc355c890725b6178dab0cc11b194203afa ]
+[ Upstream commit c715a39541bb399eb03d728a996b224d90ce1336 ]
 
-needed for device variants based on GTA04 board but with
-different display panel (driver).
+During register_device() init sequence is,
+(a) register with rdma cgroup followed by
+(b) register with sysfs
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Therefore, unregister_device() sequence should follow the reverse order.
+
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+ drivers/infiniband/core/device.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 4504908c23fe9..0b0aa020a8d5d 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -71,7 +71,7 @@
- 		#sound-dai-cells = <0>;
- 	};
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 61ade4b3e7bb5..6b0d1d8609cad 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -599,8 +599,8 @@ void ib_unregister_device(struct ib_device *device)
+ 	}
+ 	up_read(&lists_rwsem);
  
--	spi_lcd {
-+	spi_lcd: spi_lcd {
- 		compatible = "spi-gpio";
- 		#address-cells = <0x1>;
- 		#size-cells = <0x0>;
+-	ib_device_unregister_rdmacg(device);
+ 	ib_device_unregister_sysfs(device);
++	ib_device_unregister_rdmacg(device);
+ 
+ 	mutex_unlock(&device_mutex);
+ 
 -- 
 2.20.1
 
