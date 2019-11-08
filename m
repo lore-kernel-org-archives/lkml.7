@@ -2,55 +2,55 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA1FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EA5FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D58920656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DFE20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240867;
-	bh=A3uqWeLulKyaW7+d0XIyZEE7zNmEG+d7VfGmmdfZ+n0=;
+	s=default; t=1573240881;
+	bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xQ09p5ZKeVfMoOSvJ1+nB8Iq87fgncAVGL8g4LDHwxHMP1gSREL2aqyP0h1u32NB0
-	 z318+IA+h6CQqivKErnMsHDHeXkvLWvZO/ogHJ7ysolbqDTsXGDKmWOpG9Rm3aWspO
-	 5qud31VQY9UUCTfcUzLbyo24rrPxJ3h+NKy4B6Vk=
+	b=oG0WsY0rjvzcnGxof+sLW2QnarmfOu6A5LjxqBgYBNesj0mGR4D9cnDmuxEFBY4AK
+	 i4ACk0y2uoKvFvkFSKpBMQTgt2WtzGORYE3OQwhJI/6FP7f3OnoZEwOKS7hTQ2BFyg
+	 vQIjsmpO2hkY/wl3gmXHTWC0W11ifmkP0VSI4Hys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391451AbfKHTVF (ORCPT
+        id S2388922AbfKHS7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:21:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57180 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:59:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389366AbfKHTAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:05 -0500
+        id S1732877AbfKHS5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:57:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66B7E224ED;
-        Fri,  8 Nov 2019 18:59:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91A3E20865;
+        Fri,  8 Nov 2019 18:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239545;
-        bh=A3uqWeLulKyaW7+d0XIyZEE7zNmEG+d7VfGmmdfZ+n0=;
+        s=default; t=1573239432;
+        bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0zLn+Rzx/nZBw1drtVy+O91uok+GvADJF33cA0CTeeRtlvtS+vwzJQ8/FqXpPUE0
-         61wnB/idJTQN5bPnlAw6NmBANqwo1f3dsmkNHXJjnFBf3Gbv6q8IrJTzXNogMY7k8K
-         O/HzK36jfk/GKf+Zk4Bo2xfQfBYUJQQQBFc6l3F8=
+        b=PLCAcBaxwMOhBqrdtQS+4CFCbn4d6KB/r3qD52kf73ondylvSF96XUYvLKH3pIvLf
+         iQHv9P9QK5gciqIoatxGXzOl0hu7My7+IPApvmTSxx3fTNY7qtaCLzvjxNEc+XlmCS
+         FTyiofBA/EbQRqJKO4TjXPwPBTbFCIQ2uMoNmyyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 40/62] net: dsa: fix switch tree list
-Date:   Fri,  8 Nov 2019 19:50:28 +0100
-Message-Id: <20191108174748.430097798@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 11/34] ARM: dts: imx7s: Correct GPTs ipg clock source
+Date:   Fri,  8 Nov 2019 19:50:18 +0100
+Message-Id: <20191108174631.560071914@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
-References: <20191108174719.228826381@linuxfoundation.org>
+In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
+References: <20191108174618.266472504@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,32 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivien Didelot <vivien.didelot@gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 50c7d2ba9de20f60a2d527ad6928209ef67e4cdd ]
+[ Upstream commit 252b9e21bcf46b0d16f733f2e42b21fdc60addee ]
 
-If there are multiple switch trees on the device, only the last one
-will be listed, because the arguments of list_add_tail are swapped.
+i.MX7S/D's GPT ipg clock should be from GPT clock root and
+controlled by CCM's GPT CCGR, using correct clock source for
+GPT ipg clock instead of IMX7D_CLK_DUMMY.
 
-Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
-Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/dsa/dsa2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -62,7 +62,7 @@ static struct dsa_switch_tree *dsa_add_d
- 		return NULL;
- 	dst->tree = tree;
- 	INIT_LIST_HEAD(&dst->list);
--	list_add_tail(&dsa_switch_trees, &dst->list);
-+	list_add_tail(&dst->list, &dsa_switch_trees);
- 	kref_init(&dst->refcount);
- 
- 	return dst;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index edc5ddeb851a7..0a7ea1a765f99 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -437,7 +437,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302d0000 0x10000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT1_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 			};
+@@ -446,7 +446,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302e0000 0x10000>;
+ 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT2_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -456,7 +456,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302f0000 0x10000>;
+ 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT3_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -466,7 +466,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x30300000 0x10000>;
+ 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT4_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+-- 
+2.20.1
+
 
 
