@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6C7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4140FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD81222CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96C021D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240261;
-	bh=BLtrOtnub7LSTPsUgTcVqvc3DdOlGwM06VlUWBIztuE=;
+	s=default; t=1573240262;
+	bh=VEYYR7bD4FTmSODOnA+DpEKBm0gjVXVQvA7r9m/ayOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYAR5p5ps/sIX1FrssJ5nRpsswr77/45jMNjpx6vTqAGQuRBD3Hpaoi9mFtBqf6b2
-	 2YOZMimDxC5ZzYWA7yzdCRIG8JqUeIV/yS1MFw4WG5ZEKVclY1tRCt3RC3qxori5Io
-	 ++zgFx7hCTXV8GHhg2uvdVe/tSEoO3igEEpDHaU0=
+	b=cwZA4EDgEvhbwqm6yDcx1FBvY5OWm1nZ9aww11bHeKzTKs6WMrwwwZFnp39gwhWrB
+	 Q81uc60dK7/WUxsR2Rv8Ew58ccGe6zt0mxHzo25+K8PW+PbPS6xNBaZVVSBaRjPfp1
+	 r4TC9Nq7VbXV1q4SHWuFww/613FEa8I45sAP/cVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389462AbfKHTK7 (ORCPT
+        id S2391963AbfKHTLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:10:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:11:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389656AbfKHTKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:10:53 -0500
+        id S2391953AbfKHTK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:10:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59AF721D82;
-        Fri,  8 Nov 2019 19:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB8320673;
+        Fri,  8 Nov 2019 19:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240252;
-        bh=BLtrOtnub7LSTPsUgTcVqvc3DdOlGwM06VlUWBIztuE=;
+        s=default; t=1573240258;
+        bh=VEYYR7bD4FTmSODOnA+DpEKBm0gjVXVQvA7r9m/ayOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHARY4Ne1c1s0QnE//qWOEqAH//ie2GCuqcHzlet9TOFKcY01puieHnDnU0Yhq6a3
-         /Docxbac8EkZqmHVu2GSISoK6adusfuShUFMj1QHR1M4OnePQWzou/TPX5ZuVnbynP
-         K+6fq0qmt+JYI8OgyB5bEveN/PQkX+XVJZZzo27A=
+        b=mIDWc8i0sjHnYYGo3Wc5uB2AXVw5RBrXR5iM9cN3mGBwIo+J/pdjMAokiElxaK69E
+         C40Xwyx2u+ZUfmhE2zgtVXNKaBUsB+QWGKjuBf9L03oVvxYXzjao7Cf2KmQ527pDTO
+         ae5hS5UgvsI6mZ2RhxBKBMYm4PzVyNPMk4XwTlxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 117/140] r8169: fix wrong PHY ID issue with RTL8168dp
-Date:   Fri,  8 Nov 2019 19:50:45 +0100
-Message-Id: <20191108174912.169385668@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 119/140] net/mlx5e: Fix handling of compressed CQEs in case of low NAPI budget
+Date:   Fri,  8 Nov 2019 19:50:47 +0100
+Message-Id: <20191108174912.273017519@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -59,39 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 62bdc8fd1c21d4263ebd18bec57f82532d09249f ]
+[ Upstream commit 9df86bdb6746d7fcfc2fda715f7a7c3d0ddb2654 ]
 
-As reported in [0] at least one RTL8168dp version has problems
-establishing a link. This chip version has an integrated RTL8211b PHY,
-however the chip seems to report a wrong PHY ID, resulting in a wrong
-PHY driver (for Generic Realtek PHY) being loaded.
-Work around this issue by adding a hook to r8168dp_2_mdio_read()
-for returning the correct PHY ID.
+When CQE compression is enabled, compressed CQEs use the following
+structure: a title is followed by one or many blocks, each containing 8
+mini CQEs (except the last, which may contain fewer mini CQEs).
 
-[0] https://bbs.archlinux.org/viewtopic.php?id=246508
+Due to NAPI budget restriction, a complete structure is not always
+parsed in one NAPI run, and some blocks with mini CQEs may be deferred
+to the next NAPI poll call - we have the mlx5e_decompress_cqes_cont call
+in the beginning of mlx5e_poll_rx_cq. However, if the budget is
+extremely low, some blocks may be left even after that, but the code
+that follows the mlx5e_decompress_cqes_cont call doesn't check it and
+assumes that a new CQE begins, which may not be the case. In such cases,
+random memory corruptions occur.
 
-Fixes: 242cd9b5866a ("r8169: use phy_resume/phy_suspend")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+An extremely low NAPI budget of 8 is used when busy_poll or busy_read is
+active.
+
+This commit adds a check to make sure that the previous compressed CQE
+has been completely parsed after mlx5e_decompress_cqes_cont, otherwise
+it prevents a new CQE from being fetched in the middle of a compressed
+CQE.
+
+This commit fixes random crashes in __build_skb, __page_pool_put_page
+and other not-related-directly places, that used to happen when both CQE
+compression and busy_poll/busy_read were enabled.
+
+Fixes: 7219ab34f184 ("net/mlx5e: CQE compression")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169_main.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -976,6 +976,10 @@ static int r8168dp_2_mdio_read(struct rt
- {
- 	int value;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -1367,8 +1367,11 @@ int mlx5e_poll_rx_cq(struct mlx5e_cq *cq
+ 	if (unlikely(!test_bit(MLX5E_RQ_STATE_ENABLED, &rq->state)))
+ 		return 0;
  
-+	/* Work around issue with chip reporting wrong PHY ID */
-+	if (reg == MII_PHYSID2)
-+		return 0xc912;
-+
- 	r8168dp_2_mdio_start(tp);
+-	if (rq->cqd.left)
++	if (rq->cqd.left) {
+ 		work_done += mlx5e_decompress_cqes_cont(rq, cqwq, 0, budget);
++		if (rq->cqd.left || work_done >= budget)
++			goto out;
++	}
  
- 	value = r8169_mdio_read(tp, reg);
+ 	cqe = mlx5_cqwq_get_cqe(cqwq);
+ 	if (!cqe) {
 
 
