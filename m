@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2E1FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49347C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACE32084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8EB2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214376;
-	bh=HTtoqZyvVxPeVVf9GFCb236etSkJ8xztU8o8/+LFI4M=;
+	s=default; t=1573214382;
+	bh=etxpC8JZZJWPy8F/xgvTzSrSpq2DAsTTtvter5MD1QY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YSgV8Pu9gOmZ7ZFtz3NY1dMkPehs8uPZ5b2DyXXUeAGLZ/HTnO7l8uSTClNdXKIeu
-	 thVJMuN1Ml4hZnc0VHHx7+Y1k6KwgaG2UADgPBRbkwguRL5iR2u1Mvw2fGQrccSa4r
-	 /dnUDJJ7QyTfzf/fY/unD+zkFVFI4+xg7l3K45Mo=
+	b=ku00sXSfFncD5x+37RURgqT707kvEmbxdeFy8PPSF0K93nu4/b/Y583My9ob6IYvm
+	 O5S/m4a2mgQjvpPvP8boIRSLr4kRRxvvsnGJ/HSjtrxUONqnWOvQQQ+UQVbT20Vwca
+	 p1/nMbyDp1RRdswin8+VGB7phEMXW6R0n5o1Rv90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403800AbfKHL7f (ORCPT
+        id S2391277AbfKHL7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:59:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:59:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390676AbfKHLoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:08 -0500
+        id S2390666AbfKHLoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DA75222CE;
-        Fri,  8 Nov 2019 11:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3991E21D6C;
+        Fri,  8 Nov 2019 11:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213447;
-        bh=HTtoqZyvVxPeVVf9GFCb236etSkJ8xztU8o8/+LFI4M=;
+        s=default; t=1573213446;
+        bh=etxpC8JZZJWPy8F/xgvTzSrSpq2DAsTTtvter5MD1QY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xuek+e3YKn6xcLLrVBnWgUv4r1zWoZrsvmsUD4k7koB53dl67PN4uEMIfDxqT3dBz
-         nf8aMUx8iCdkpglQXhCpsmtwFZiqdPKD63AAlA9g5PtlpppExfmNB2fYELr5fKuYMx
-         XLN8OI7ax7Oi6l5/QGDtiJqL0HO8yceMUyxfQUXc=
+        b=x1ZtLg4TqysK753qEV6z3F2Y4ua6kYjwC3Dlr3Uti1YXct9LIv9+EhKRQXWVpeKYB
+         /iemsMQhdG19y1ho4sgw5euzxID0ZsC2wqt3dMrhnRFp0egbLY12Rm4PXNAkWUGsLm
+         LmkGo40FcVqCCQIDijfb5I0Y+bpU5BnmLPON+nuc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 041/103] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
-Date:   Fri,  8 Nov 2019 06:42:06 -0500
-Message-Id: <20191108114310.14363-41-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 040/103] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
+Date:   Fri,  8 Nov 2019 06:42:05 -0500
+Message-Id: <20191108114310.14363-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,49 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
+[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
 
-S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
-external pull-up resistors, so disable any pull control for it in
-in controller node. This fixes support for S5M8767 interrupts and
-enables operation of wakeup from S5M8767 RTC alarm.
+In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
+is set to zero and later vol_quot is computed by dividing by
+lo_vag causing a division by zero error.  Fix this by avoiding
+a zero division and set vol_quot to zero in this specific case
+so that the lowest setting for i is correctly set.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/soc/codecs/sgtl5000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 18a7f396ac5f7..abd1705635f9b 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -169,6 +169,8 @@
- 		reg = <0x66>;
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&s5m8767_irq>;
- 
- 		vinb1-supply = <&main_dc_reg>;
- 		vinb2-supply = <&main_dc_reg>;
-@@ -544,6 +546,13 @@
- 	cap-sd-highspeed;
- };
- 
-+&pinctrl_0 {
-+	s5m8767_irq: s5m8767-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+};
-+
- &rtc {
- 	status = "okay";
- };
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 10764c1e854e2..ca8a70ab22a82 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1314,7 +1314,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
+ 	 * Searching for a suitable index solving this formula:
+ 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
+ 	 */
+-	vol_quot = (vag * 100) / lo_vag;
++	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
+ 	lo_vol = 0;
+ 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
+ 		if (vol_quot >= vol_quot_table[i])
 -- 
 2.20.1
 
