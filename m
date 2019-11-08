@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1821BFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751CDC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D76222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F69821D82
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213595;
-	bh=WGnB8l6nh78KgnYEQaV1JLhwTwx6oRVh2j+0HHYbXbE=;
+	s=default; t=1573213599;
+	bh=Kx5WbgmCL5mfO8gSfx6FdAr1u5gtEdfOWa2t00s3loc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZA4Vpc3FBpXSLA9TdoVdf+bVUaAXxB/6hMPJJhYlpMeFLqkB+KG2g7vjC1p5lkMr2
-	 mZQuBmCGfEoK+5BSDqwssXeiLNGq95ujdPzxwQgG8Y6kkyRXRuoi58vzfuZFhPVq3W
-	 Qaacyim+uECyuwiFWCuT970obyeeoQWwK7JAOkxQ=
+	b=u1zVsPpcnpAKwJ6hnlyT9Mq5BYD4DnR7npki5auhT6O/3CjPRSXSahyqxGMECXrRi
+	 KnPM0LaLgMoYGPM1KVQ8C/M0ntGOV5eLNi3hIJ9UME8eowfYdhFVIqjuaoyFo+eU6V
+	 bBk4U38cMdJiYkZ0ggcE8xxPpoS4WQlxeZLTHMZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391369AbfKHLqe (ORCPT
+        id S2391388AbfKHLqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33974 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391305AbfKHLqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:18 -0500
+        id S2391315AbfKHLqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D177921D82;
-        Fri,  8 Nov 2019 11:46:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D68B4222CF;
+        Fri,  8 Nov 2019 11:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213577;
-        bh=WGnB8l6nh78KgnYEQaV1JLhwTwx6oRVh2j+0HHYbXbE=;
+        s=default; t=1573213578;
+        bh=Kx5WbgmCL5mfO8gSfx6FdAr1u5gtEdfOWa2t00s3loc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wn0DSKfTsiaodwrHwTBowms2Ddu2LEa5cguY7G9wov3COlyucby6j5jBf8CoiEsln
-         rqTokERLLev8xXy7QZOlOtsKi8o5cHdV1XiNtNlYI0qZvG2+TEjpIxVcFLPl2OpfLx
-         RHDVSMJB78l7s44vU3CL2jyu3wePKP2ovpGMhilk=
+        b=q7pWi4Y9DSTwYtKVqX9c6ZUEsNjrDDQwQ+sdPR49XnQrOWi99g9v/+mjGCxRR0qgV
+         VChFq2oHPd7XIdPAcJYAAAjhHeRPmlSzfUYjIY5LcEmRLczGlW04l1gFTKXmLTsWlZ
+         LbicP1A/Rot/S2N+OPCAt3axhkWnQcFXecyjlikw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 23/64] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
-Date:   Fri,  8 Nov 2019 06:45:04 -0500
-Message-Id: <20191108114545.15351-23-sashal@kernel.org>
+Cc:     Erik Stromdahl <erik.stromdahl@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 24/64] ath10k: wmi: disable softirq's while calling ieee80211_rx
+Date:   Fri,  8 Nov 2019 06:45:05 -0500
+Message-Id: <20191108114545.15351-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,49 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Erik Stromdahl <erik.stromdahl@gmail.com>
 
-[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
+[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
 
-S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
-external pull-up resistors, so disable any pull control for it in
-in controller node. This fixes support for S5M8767 interrupts and
-enables operation of wakeup from S5M8767 RTC alarm.
+This is done in order not to trig the below warning in
+ieee80211_rx_napi:
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+WARN_ON_ONCE(softirq_count() == 0);
+
+ieee80211_rx_napi requires that softirq's are disabled during
+execution.
+
+The High latency bus drivers (SDIO and USB) sometimes call the wmi
+ep_rx_complete callback from non softirq context, resulting in a trigger
+of the above warning.
+
+Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
+softirq context) should be safe as the local_bh_disable and
+local_bh_enable functions (called from ieee80211_rx_ni) are fully
+reentrant.
+
+Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 6098dacd09f11..1b2709af2a42b 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -170,6 +170,8 @@
- 		reg = <0x66>;
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&s5m8767_irq>;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index bbfe7be214e12..c208fed048554 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -2384,7 +2384,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		   status->freq, status->band, status->signal,
+ 		   status->rate_idx);
  
- 		vinb1-supply = <&main_dc_reg>;
- 		vinb2-supply = <&main_dc_reg>;
-@@ -547,6 +549,13 @@
- 	cap-sd-highspeed;
- };
- 
-+&pinctrl_0 {
-+	s5m8767_irq: s5m8767-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+};
+-	ieee80211_rx(ar->hw, skb);
++	ieee80211_rx_ni(ar->hw, skb);
 +
- &rtc {
- 	status = "okay";
- };
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
