@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918E9FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663D0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F09F222CF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3927B22459
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213773;
-	bh=4weDkqTsOQdRJ1VVtlFZaJNDdQk1IFqH0ZSgQo7C+Gw=;
+	s=default; t=1573213779;
+	bh=IKe3NgO/UtZdXa4rzM4MFaxevILnmTQeYY26tJYkwg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jzjOGtkQBqPKrxCm/LcuoJixUUib3YWNqPD3do+oVWbCrAS7X7U2RgL2TQ4skNLKN
-	 b6ftu8ManjrKNS1cRHqIc3Nw4OfdjPhQe8Y4+phNaWBtYOQUZRVB0yILeR5+2C4EO7
-	 SHgtCOnHYkORN1vTxm5A05IPzZ71sO0D0Wcpgn14=
+	b=PmoUkupF/0zOXaff0tvM+opn6AanU7eoqsi1tMQDpx41JhCwtlBfeQLjX7Gnaa21t
+	 HvFfdDs/bMeVo52NxjD2YsFAFgIAeffQR0hw8rS7GoTpx53rllU3Clmo1uaFtpF2gc
+	 Cwq53kcPL5H07b/2jrleyYRT6JrykNnvYTTc2Bj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388066AbfKHLsP (ORCPT
+        id S1732217AbfKHLth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:48:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36582 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:49:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391661AbfKHLrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:49 -0500
+        id S2388048AbfKHLsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:48:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04147206A3;
-        Fri,  8 Nov 2019 11:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8907222D1;
+        Fri,  8 Nov 2019 11:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213668;
-        bh=4weDkqTsOQdRJ1VVtlFZaJNDdQk1IFqH0ZSgQo7C+Gw=;
+        s=default; t=1573213690;
+        bh=IKe3NgO/UtZdXa4rzM4MFaxevILnmTQeYY26tJYkwg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCzbuIE/DblqSWBaBi0mK4evRLCf2FBQdlxdnuPi5JepE4cYVZWhU17f7zE0G0Soz
-         wiXgl6gm5tinOttn4yhC52IK4+3l5pJZRtJT1+/se8URKugIcIWB1WZ+0JEYWFZoPh
-         /NfzySOF2leba06tARq/vEt54wfLe0zsi534eO/E=
+        b=0xudPmSPJWRom6q+9IhdZfpo5x09UHpYDhlV0WKgPtfgvbybM/POiPGgeAl1mF2au
+         pg/xWoTrPYm5oA9SY/jlS6inqC6C9sc5Rmq1SxsJlNaiZoEyH3xCo35nTCfJrC+kvE
+         sBYsYZi1U1JtO2LW4BgfJMpzr+TcDZmGWy+3oJNY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/44] ARM: dts: omap3-gta04: tvout: enable as display1 alias
-Date:   Fri,  8 Nov 2019 06:46:57 -0500
-Message-Id: <20191108114721.15944-21-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 35/44] ALSA: intel8x0m: Register irq handler after register initializations
+Date:   Fri,  8 Nov 2019 06:47:11 -0500
+Message-Id: <20191108114721.15944-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -60,33 +57,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
+[ Upstream commit 7064f376d4a10686f51c879401a569bb4babf9c6 ]
 
-The omap dss susbystem takes the display aliases to find
-out which displays exist. To enable tv-out we must define
-an alias.
+The interrupt handler has to be acquired after the other resource
+initialization when allocated with IRQF_SHARED.  Otherwise it's
+triggered before the resource gets ready, and may lead to unpleasant
+behavior.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/intel8x0m.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 9b9510e057f3f..196b3f5158c90 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -28,6 +28,7 @@
+diff --git a/sound/pci/intel8x0m.c b/sound/pci/intel8x0m.c
+index 1bc98c867133d..2286dfd72ff7e 100644
+--- a/sound/pci/intel8x0m.c
++++ b/sound/pci/intel8x0m.c
+@@ -1171,16 +1171,6 @@ static int snd_intel8x0m_create(struct snd_card *card,
+ 	}
  
- 	aliases {
- 		display0 = &lcd;
-+		display1 = &tv0;
- 	};
+  port_inited:
+-	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
+-			KBUILD_MODNAME, chip)) {
+-		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
+-		snd_intel8x0m_free(chip);
+-		return -EBUSY;
+-	}
+-	chip->irq = pci->irq;
+-	pci_set_master(pci);
+-	synchronize_irq(chip->irq);
+-
+ 	/* initialize offsets */
+ 	chip->bdbars_count = 2;
+ 	tbl = intel_regs;
+@@ -1224,11 +1214,21 @@ static int snd_intel8x0m_create(struct snd_card *card,
+ 	chip->int_sta_reg = ICH_REG_GLOB_STA;
+ 	chip->int_sta_mask = int_sta_masks;
  
- 	gpio-keys {
++	pci_set_master(pci);
++
+ 	if ((err = snd_intel8x0m_chip_init(chip, 1)) < 0) {
+ 		snd_intel8x0m_free(chip);
+ 		return err;
+ 	}
+ 
++	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
++			KBUILD_MODNAME, chip)) {
++		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
++		snd_intel8x0m_free(chip);
++		return -EBUSY;
++	}
++	chip->irq = pci->irq;
++
+ 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
+ 		snd_intel8x0m_free(chip);
+ 		return err;
 -- 
 2.20.1
 
