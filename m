@@ -2,74 +2,121 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2E4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DB4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915DD20865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="djxI05yK"
+	by mail.kernel.org (Postfix) with ESMTP id B814620869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfKHHZY (ORCPT
+        id S1729996AbfKHHa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 02:25:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53076 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfKHHZY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 02:25:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aZt31Z8grhfzi23SdM9LJl0YetqCl+x1hzNaAJKV3DQ=; b=djxI05yKFzfYUWz690/pwh+FC
-        z5SIzw0jVzWgu11u+rNRF0jHfjJ5w7Phs23jsGiHHDbf8T549WvTzDDFNydvMxOU0tSrUbgmNXmuM
-        6p8sA1djPZH5tT0KHvBV3ecmQtuiD8bd8o0T/pN+a5ycRhtpdDEgMSI8VpASpH+1KFxKKApeKPUb7
-        xtcCj0+19CPcnabzov9FxCkjfo+13G/6+StoFNqLc2Y5q5nBydbSg9oIJpmcIcn/tvMFHE77Dv1Tu
-        cPYXUOF1gcYSoWPEbmpGVkZyyWfPE/Qk1D0eFrx8gDX6g9mIcPv9+q92znp8iODivmS0s3jA+UTFb
-        IXmrRSkTA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSye3-0006ea-Gc; Fri, 08 Nov 2019 07:25:23 +0000
-Date:   Thu, 7 Nov 2019 23:25:23 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Zong Li <zong.li@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        paul.walmsley@sifive.com, palmer@sifive.com, Anup.Patel@wdc.com
-Subject: Re: [PATCH v2] riscv: Use PMD_SIZE to repalce PTE_PARENT_SIZE
-Message-ID: <20191108072523.GA20338@infradead.org>
-References: <1572920412-15661-1-git-send-email-zong.li@sifive.com>
+        Fri, 8 Nov 2019 02:30:29 -0500
+Received: from mx.socionext.com ([202.248.49.38]:10541 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbfKHHa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 02:30:29 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 08 Nov 2019 16:30:27 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 95741180B84;
+        Fri,  8 Nov 2019 16:30:27 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 8 Nov 2019 16:30:35 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 635E740364;
+        Fri,  8 Nov 2019 16:30:27 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 27386121B00;
+        Fri,  8 Nov 2019 16:30:27 +0900 (JST)
+Date:   Fri, 08 Nov 2019 16:30:27 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+In-Reply-To: <20191107124617.GA43905@e119886-lin.cambridge.arm.com>
+References: <20191107205239.65C1.4A936039@socionext.com> <20191107124617.GA43905@e119886-lin.cambridge.arm.com>
+Message-Id: <20191108163026.0DFB.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572920412-15661-1-git-send-email-zong.li@sifive.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 06:20:12PM -0800, Zong Li wrote:
->  	uintptr_t map_size = PAGE_SIZE;
->  
-> -	/* Upgrade to PMD/PGDIR mappings whenever possible */
-> -	if (!(base & (PTE_PARENT_SIZE - 1)) &&
-> -	    !(size & (PTE_PARENT_SIZE - 1)))
-> -		map_size = PTE_PARENT_SIZE;
-> +	/* Upgrade to PMD_SIZE mappings whenever possible */
-> +	if (!(base & (PMD_SIZE - 1)) &&
-> +	    !(size & (PMD_SIZE - 1)))
-> +		map_size = PMD_SIZE;
+Hi Andrew,
++CC Kishon
 
-The check easily fits onto a single line now.  Also the map_size
-variable is rather pointless.  Why not:
+On Thu, 7 Nov 2019 12:46:17 +0000 <andrew.murray@arm.com> wrote:
 
-	if ((base & (PMD_SIZE - 1) || (size & (PMD_SIZE - 1)))
-		return PAGE_SIZE;
-	return PMD_SIZE;
+> On Thu, Nov 07, 2019 at 08:52:39PM +0900, Kunihiko Hayashi wrote:
+> > Hi Andrew,
+> > Thank you for your comments.
+> > 
+> > On Thu, 7 Nov 2019 10:02:08 +0000 <andrew.murray@arm.com> wrote:
+> > 
+> > > On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
+> > > > When PERST# is asserted once, EP configuration will be initialized.
+> > > 
+> > > I don't quite understand this - does the EP/RC mode depend on how often
+> > > PERST# is toggled?
+> > 
+> > I think of connecting this RC controller and EP based on `Linux PCI
+> > endpoint framework' in another machine.
+> > 
+> > While this RC driver is probing, the EP driver might be also probing and
+> > configurating itself using configfs. If PERST# is toggled after the EP
+> > has done its configuration, this configuration will be lost.
+> > 
+> > I expect that the EP configurates after RC has toggled PERST#, however,
+> > there is no way to synchronize both of them.
+> > 
+> 
+> OK I understand where you are coming from now. Please ensure the commit
+> message gives this rationale.
+
+I'll explain about that in the commit message next.
+
+> However, If I understand correctly, doesn't your solution only work some
+> of the time? What happens if you boot both machines at the same time,
+> and PERST# isn't asserted prior to the kernel booting?
+
+I think it contains an annoying problem.
+
+If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
+and the RC driver can't access PCI bus.
+
+As a result, this patch works and deasserts PERST# (and EP configuration will
+be lost). So boot sequence needs to include deasserting PERST#.
+
+> The only way you can ensure the EP is started after the RC is initialised
+> is to start the EP after the RC is initialised.
+
+Yes, it's the only soution for now.
+
+> I'm not sure what the solution is here, but it feels like this approach
+> only partially solves it.
+
+Surely relying on outside of the driver doesn't seem to be a complete solution.
+
+If there is the way that `Linux PCI endpoint framework' assumes,
+I'd like to follow it, however, I can't find the other way.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
+
