@@ -2,123 +2,68 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25FDFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6727214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7872920869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573185281;
+	bh=MIIXRJaBYrNEXOYhmNyw15hFAChncCB29PqU5uPxEfc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sh2+W8tBTKzrgljTIPaiq/AF0lT0nNVbFoosa7pkIdNP582NkeXd7hJn4q/kRahgu
+	 jGWwYU+MyqB+iJuIEl8TirOhD2q7H6ywdtWiRES2TuFOAMIaDr7muT/oq2r75I/W5I
+	 llWWQeKz0KX0rR+mqlVmQnNOwybsMJT74tp5nwjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfKHDyJ (ORCPT
+        id S1729933AbfKHDyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:54:09 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:35940 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfKHDyJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:54:09 -0500
-Received: by mail-il1-f199.google.com with SMTP id y7so5234958ilb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 19:54:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=W83r1/lZ6zESLRM4Fopc0wEMOk3/4fzAB2DwiCCyggc=;
-        b=AoZKc665IPxxc/c4sakCGMvoz2yUUiecXtztJkN7/wjDHOhZGTw35AV1W9m1gLiQK6
-         uz65kT5FNzDlGljvnReznHx6bKJ+G3rqgq3RzUgbhoHbv2hFAMuJvVfXWDOU44Mkjr3Q
-         ywgvtTUB05VFgUHMAciPB9ZB9Naiv+5he+QGto1W9HcsFPIVhsa+hsduJ03U1tN/hiTn
-         z2574+Bas7lNdfw2++ZvVoA5PKmu8JxcEse71Zo9ebTPuLjcJptwJHpkUEcKGIQLPUcF
-         OXI7f4iFx+t/QrAKlRFVljR99fplYGfl/IiRKsxUhPMJZ7i/8RTCQyfV4rkA28mlPw14
-         gmkg==
-X-Gm-Message-State: APjAAAV/yFNLSlie0EIgUCsN/WM9BlHoOn9LwogjjzbCJX9qz2swlW5c
-        764wtB3n+BTT5NsaJkAtAKAwbhXK2irFJQrEysk1KTBif/61
-X-Google-Smtp-Source: APXvYqxTWgZVvHNue8/pTOr8dUdvs47O4ecJE22Cfy+F/KCKlFB7lkiFhD9g2lAAZfYTRWVa/tQX4NTO34z2yWCvodIxKyXlUpaz
+        Thu, 7 Nov 2019 22:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728302AbfKHDyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 22:54:40 -0500
+Received: from localhost (unknown [106.200.194.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09D58214DB;
+        Fri,  8 Nov 2019 03:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573185279;
+        bh=MIIXRJaBYrNEXOYhmNyw15hFAChncCB29PqU5uPxEfc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=glynSCKHMYu10EcMhBORu0ErVBKrUcV98fhZ85ehrkiuejf16AuHEIuP6/tgXO7Xm
+         R+mpks1IK23r3mS/Lj+B9ra8S7pqE+j4peTTVcxubI5Ui8tSR8/zjslW/6iqSFoqKi
+         3VS1n5/WKhODgXPpJ8t1Z0vY/WwCCYnolu4VCC6c=
+Date:   Fri, 8 Nov 2019 09:24:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: dma-jz4780: add missed clk_disable_unprepare
+ in remove
+Message-ID: <20191108035435.GR952516@vkoul-mobl>
+References: <20191104161622.11758-1-hslester96@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:7829:: with SMTP id p41mr8608601jac.73.1573185248455;
- Thu, 07 Nov 2019 19:54:08 -0800 (PST)
-Date:   Thu, 07 Nov 2019 19:54:08 -0800
-In-Reply-To: <000000000000ec7273058b877e1f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e676b00596cdbbde@google.com>
-Subject: Re: BUG: MAX_LOCKDEP_ENTRIES too low!
-From:   syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dev@openvswitch.org, jack@suse.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104161622.11758-1-hslester96@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On 05-11-19, 00:16, Chuhong Yuan wrote:
+> The remove misses to disable and unprepare jzdma->clk.
+> Add a call to clk_disable_unprepare to fix it.
 
-HEAD commit:    99a8efbb NFC: st21nfca: fix double free
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ed70d8e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cbbed3e8d4eb64bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=cd0ec5211ac07c18c049
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13cf5594e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1036c762e00000
+Applied, thanks
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com
-
-device 5580n entered promiscuous mode
-BUG: MAX_LOCKDEP_ENTRIES too low!
-turning off the locking correctness validator.
-CPU: 0 PID: 14197 Comm: syz-executor527 Not tainted 5.4.0-rc5+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  alloc_list_entry.cold+0x11/0x18 kernel/locking/lockdep.c:1292
-  add_lock_to_list kernel/locking/lockdep.c:1313 [inline]
-  check_prev_add kernel/locking/lockdep.c:2528 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain kernel/locking/lockdep.c:2971 [inline]
-  __lock_acquire+0x2a15/0x4a00 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  netif_addr_lock_bh include/linux/netdevice.h:4055 [inline]
-  dev_set_rx_mode+0x20/0x40 net/core/dev.c:7808
-  dev_set_promiscuity+0xbf/0xe0 net/core/dev.c:7716
-  internal_dev_create+0x387/0x550 net/openvswitch/vport-internal_dev.c:196
-  ovs_vport_add+0x150/0x500 net/openvswitch/vport.c:199
-  new_vport+0x1b/0x1d0 net/openvswitch/datapath.c:194
-  ovs_dp_cmd_new+0x5e5/0xe30 net/openvswitch/datapath.c:1644
-  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
-  genl_rcv_msg+0xca/0x170 net/netlink/genetlink.c:654
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441779
-Code: e8 9c ad 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffea7e5fcc8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441779
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 0000000000058f66 R08: 00007ffe00000025 R09: 00007ffe00000025
-R10: 0000000000000004 R11: 0000000000000246 R12: 00000000006cdbc0
-R13: 0000000000000013 R14: 0000000000000000 R15: 0000000000000000
-
+-- 
+~Vinod
