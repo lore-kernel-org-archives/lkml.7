@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D09EFC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51449FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F712178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3272B222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732970AbfKHVew (ORCPT
+        id S1732241AbfKHVfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:34:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34640 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 16:35:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732891AbfKHVev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:34:51 -0500
+        id S1732905AbfKHVew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:34:52 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD95621848;
-        Fri,  8 Nov 2019 21:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7312421D7F;
+        Fri,  8 Nov 2019 21:34:51 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iTBu5-0007vd-S1; Fri, 08 Nov 2019 16:34:49 -0500
-Message-Id: <20191108213449.749335774@goodmis.org>
+        id 1iTBu6-0007xZ-EJ; Fri, 08 Nov 2019 16:34:50 -0500
+Message-Id: <20191108213450.319164080@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 08 Nov 2019 16:28:35 -0500
+Date:   Fri, 08 Nov 2019 16:28:39 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -43,8 +43,7 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 01/10] ftrace: Separate out the copying of a ftrace_hash from
- __ftrace_hash_move()
+Subject: [PATCH 05/10] ftrace: Add sample module that uses register_ftrace_direct()
 References: <20191108212834.594904349@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -55,73 +54,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Most of the functionality of __ftrace_hash_move() can be reused, but not all
-of it. That is, __ftrace_hash_move() is used to simply make a new hash from
-an existing one, using the same size as the original. Creating a dup_hash(),
-where we can specify a new size will be useful when we want to create a hash
-with a default size, or simply copy the old one.
+Add a sample module that shows a simple use case for
+regsiter_ftrace_direct(), and how to use it.
 
-Signed-off-by: Steven Rostedt (VMWare) <rostedt@goodmis.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ samples/Kconfig                |  7 ++++++
+ samples/Makefile               |  1 +
+ samples/ftrace/Makefile        |  3 +++
+ samples/ftrace/ftrace-direct.c | 45 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 56 insertions(+)
+ create mode 100644 samples/ftrace/Makefile
+ create mode 100644 samples/ftrace/ftrace-direct.c
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 89e9128652ef..76e5de8c7822 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1372,23 +1372,15 @@ ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
- static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
- 				       struct ftrace_hash *new_hash);
+diff --git a/samples/Kconfig b/samples/Kconfig
+index c8dacb4dda80..6481b1f7705d 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -19,6 +19,13 @@ config SAMPLE_TRACE_PRINTK
+ 	 This builds a module that calls trace_printk() and can be used to
+ 	 test various trace_printk() calls from a module.
  
--static struct ftrace_hash *
--__ftrace_hash_move(struct ftrace_hash *src)
-+static struct ftrace_hash *dup_hash(struct ftrace_hash *src, int size)
- {
- 	struct ftrace_func_entry *entry;
--	struct hlist_node *tn;
--	struct hlist_head *hhd;
- 	struct ftrace_hash *new_hash;
--	int size = src->count;
-+	struct hlist_head *hhd;
-+	struct hlist_node *tn;
- 	int bits = 0;
- 	int i;
- 
--	/*
--	 * If the new source is empty, just return the empty_hash.
--	 */
--	if (ftrace_hash_empty(src))
--		return EMPTY_HASH;
--
- 	/*
- 	 * Make the hash size about 1/2 the # found
- 	 */
-@@ -1413,10 +1405,23 @@ __ftrace_hash_move(struct ftrace_hash *src)
- 			__add_hash_entry(new_hash, entry);
- 		}
- 	}
--
- 	return new_hash;
- }
- 
-+static struct ftrace_hash *
-+__ftrace_hash_move(struct ftrace_hash *src)
++config SAMPLE_FTRACE_DIRECT
++	tristate "Build register_ftrace_direct() example"
++	depends on DYNAMIC_FTRACE_WITH_DIRECT_CALLS && m
++	help
++	  This builds an ftrace direct function example
++	  that hooks to wake_up_process and prints the parameters.
++
+ config SAMPLE_KOBJECT
+ 	tristate "Build kobject examples"
+ 	help
+diff --git a/samples/Makefile b/samples/Makefile
+index 7d6e4ca28d69..cd496d633370 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
+ subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
+ obj-$(CONFIG_SAMPLE_TRACE_EVENTS)	+= trace_events/
+ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
++obj-$(CONFIG_SAMPLE_FTRACE_DIRECT)	+= ftrace/
+ obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
+ obj-y					+= vfio-mdev/
+ subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
+diff --git a/samples/ftrace/Makefile b/samples/ftrace/Makefile
+new file mode 100644
+index 000000000000..3718ab39eba3
+--- /dev/null
++++ b/samples/ftrace/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct.o
+diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
+new file mode 100644
+index 000000000000..1483f067b000
+--- /dev/null
++++ b/samples/ftrace/ftrace-direct.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/module.h>
++
++#include <linux/sched.h> /* for wake_up_process() */
++#include <linux/ftrace.h>
++
++void my_direct_func(struct task_struct *p)
 +{
-+	int size = src->count;
-+
-+	/*
-+	 * If the new source is empty, just return the empty_hash.
-+	 */
-+	if (ftrace_hash_empty(src))
-+		return EMPTY_HASH;
-+
-+	return dup_hash(src, size);
++	trace_printk("wakeing up %s-%d\n", p->comm, p->pid);
 +}
 +
- static int
- ftrace_hash_move(struct ftrace_ops *ops, int enable,
- 		 struct ftrace_hash **dst, struct ftrace_hash *src)
++extern void my_tramp(void *);
++
++asm (
++"	.pushsection    .text, \"ax\", @progbits\n"
++"   my_tramp:"
++"	pushq %rbp\n"
++"	movq %rsp, %rbp\n"
++"	pushq %rdi\n"
++"	call my_direct_func\n"
++"	popq %rdi\n"
++"	leave\n"
++"	ret\n"
++"	.popsection\n"
++);
++
++
++static int __init ftrace_direct_init(void)
++{
++	return register_ftrace_direct((unsigned long)wake_up_process,
++				     (unsigned long)my_tramp);
++}
++
++static void __exit ftrace_direct_exit(void)
++{
++	unregister_ftrace_direct((unsigned long)wake_up_process,
++				 (unsigned long)my_tramp);
++}
++
++module_init(ftrace_direct_init);
++module_exit(ftrace_direct_exit);
++
++MODULE_AUTHOR("Steven Rostedt");
++MODULE_DESCRIPTION("Example use case of using register_ftrace_direct()");
++MODULE_LICENSE("GPL");
 -- 
 2.23.0
 
