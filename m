@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0884C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F18C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA02207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD0E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214184;
-	bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
+	s=default; t=1573214189;
+	bh=n2Kq4bKS+TGDHgmOJCQsdltB/pApKesDKfkqxEbgnqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ttezbJvSV8UyZkYvJbFjqT1q8u/lbuiktQDnF/UNGZDKcETjYCFqtG4jXb+oHytx8
-	 PA7AvgqmRe0U9w7cBERXU+ShSH2Z3/cgG9t/fBekDVL0jP/ZHdJ7vFylTlgxK7X+1N
-	 vdTk/CoZ4tj66eDOqGrLy6NGHcS+KZOC3GaWMCi8=
+	b=uW3eftlleJWbhvFlXacOWMPAS9bfK3Mq7bX1alPJJW4s76CztVjzGlkpS8LD0mt/5
+	 bzA+gjVHWb09G5bATpyJyOnZ+REDfNXxJq4fnd0fP9QslOIf/OikUJi1pkYb6TY1sM
+	 IPdv2WCLpMUZOeOpaV2iYkI0bjuUL3elJYSYNDXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390468AbfKHL4W (ORCPT
+        id S2391612AbfKHL42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:56:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:56:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391139AbfKHLpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:35 -0500
+        id S2391133AbfKHLpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A334E2245A;
-        Fri,  8 Nov 2019 11:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FF1B20656;
+        Fri,  8 Nov 2019 11:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213534;
-        bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
+        s=default; t=1573213532;
+        bh=n2Kq4bKS+TGDHgmOJCQsdltB/pApKesDKfkqxEbgnqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXtRpyDJH8Gan9ZE7OYXjisbY+Xv8MezrcHWPlfovh318yWTzo6SkTRdSNp0ZWB1R
-         1y4s7q8KPBAPLzHsfkYeuNULaDgKviQTamzNb1kksQT4aCPwMVBE4cstsPh/2lBYK5
-         RoXkwL3FRTOTtikLgHCPLL+DlNM4r4nosiE/dods=
+        b=rxxqHEp7ZUIxlxoToDOUi70/v5byEwUKLuHcyRlD2Zij1VLGfIOYwMp/wpFXBKiGV
+         uJjd5xSvCDkBVV5B+kTL8an8zyydL+9ie5ZjhWnka3Px+H5VKuhud32LMIgDq8ZCc+
+         jlapWuqvUXV5iFS1CmYxxP8WZ0Iex5rB7CGWpfRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 097/103] power: supply: max8998-charger: Fix platform data retrieval
-Date:   Fri,  8 Nov 2019 06:43:02 -0500
-Message-Id: <20191108114310.14363-97-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 095/103] power: supply: ab8500_fg: silence uninitialized variable warnings
+Date:   Fri,  8 Nov 2019 06:43:00 -0500
+Message-Id: <20191108114310.14363-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,36 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Figa <tomasz.figa@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit cb90a2c6f77fe9b43d1e3f759bb2f13fe7fa1811 ]
+[ Upstream commit 54baff8d4e5dce2cef61953b1dc22079cda1ddb1 ]
 
-Since the max8998 MFD driver supports instantiation by DT, platform data
-retrieval is handled in MFD probe and cell drivers should get use
-the pdata field of max8998_dev struct to obtain them.
+If kstrtoul() fails then we print "charge_full" when it's uninitialized.
+The debug printk doesn't add anything so I deleted it and cleaned these
+two functions up a bit.
 
-Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/max8998_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/supply/ab8500_fg.c | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/power/supply/max8998_charger.c b/drivers/power/supply/max8998_charger.c
-index b64cf0f141425..66438029bdd0c 100644
---- a/drivers/power/supply/max8998_charger.c
-+++ b/drivers/power/supply/max8998_charger.c
-@@ -85,7 +85,7 @@ static const struct power_supply_desc max8998_battery_desc = {
- static int max8998_battery_probe(struct platform_device *pdev)
+diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
+index c569f82a00718..b87768238b702 100644
+--- a/drivers/power/supply/ab8500_fg.c
++++ b/drivers/power/supply/ab8500_fg.c
+@@ -2437,17 +2437,14 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
+ 				 size_t count)
  {
- 	struct max8998_dev *iodev = dev_get_drvdata(pdev->dev.parent);
--	struct max8998_platform_data *pdata = dev_get_platdata(iodev->dev);
-+	struct max8998_platform_data *pdata = iodev->pdata;
- 	struct power_supply_config psy_cfg = {};
- 	struct max8998_battery_data *max8998;
- 	struct i2c_client *i2c;
+ 	unsigned long charge_full;
+-	ssize_t ret;
++	int ret;
+ 
+ 	ret = kstrtoul(buf, 10, &charge_full);
++	if (ret)
++		return ret;
+ 
+-	dev_dbg(di->dev, "Ret %zd charge_full %lu", ret, charge_full);
+-
+-	if (!ret) {
+-		di->bat_cap.max_mah = (int) charge_full;
+-		ret = count;
+-	}
+-	return ret;
++	di->bat_cap.max_mah = (int) charge_full;
++	return count;
+ }
+ 
+ static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
+@@ -2459,20 +2456,16 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
+ 				 size_t count)
+ {
+ 	unsigned long charge_now;
+-	ssize_t ret;
++	int ret;
+ 
+ 	ret = kstrtoul(buf, 10, &charge_now);
++	if (ret)
++		return ret;
+ 
+-	dev_dbg(di->dev, "Ret %zd charge_now %lu was %d",
+-		ret, charge_now, di->bat_cap.prev_mah);
+-
+-	if (!ret) {
+-		di->bat_cap.user_mah = (int) charge_now;
+-		di->flags.user_cap = true;
+-		ret = count;
+-		queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
+-	}
+-	return ret;
++	di->bat_cap.user_mah = (int) charge_now;
++	di->flags.user_cap = true;
++	queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
++	return count;
+ }
+ 
+ static struct ab8500_fg_sysfs_entry charge_full_attr =
 -- 
 2.20.1
 
