@@ -2,83 +2,83 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FA2FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15646FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3923C214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4429215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbfKHUvn (ORCPT
+        id S1730571AbfKHUxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:51:43 -0500
-Received: from muru.com ([72.249.23.125]:41202 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbfKHUvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:51:43 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 4755C80D4;
-        Fri,  8 Nov 2019 20:52:18 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 12:51:39 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
-Message-ID: <20191108205139.GP5610@atomide.com>
-References: <20191007220540.30690-1-aford173@gmail.com>
- <20191022162223.GU5610@atomide.com>
- <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
- <20191022221919.GF5610@atomide.com>
- <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
- <20191023143646.GG5610@atomide.com>
- <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
+        Fri, 8 Nov 2019 15:53:13 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60386 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfKHUxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 15:53:13 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id ACD2F1C0BEC; Fri,  8 Nov 2019 21:53:11 +0100 (CET)
+Date:   Fri, 8 Nov 2019 21:53:11 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@denx.de>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: mmc_spi: Use proper debounce time for CD GPIO
+Message-ID: <20191108205311.GD23750@amd>
+References: <20191108160900.3280960-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="8w3uRX/HFJGApMzv"
 Content-Disposition: inline
-In-Reply-To: <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191108160900.3280960-1-thierry.reding@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [191108 20:03]:
-> On Wed, Oct 23, 2019 at 9:36 AM Tony Lindgren <tony@atomide.com> wrote:
-> > My guess is we need to call clk_disable() and call
-> > ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
-> > what ti_bandgap_suspend does. And then restore it on
-> > CPU_CLUSTER_PM_EXIT.
-> >
-> > There's a similar example already in gpio_omap_cpu_notifier().
-> > Not sure if there is some related errata to deal with too,
-> > probably the old Nokia n900 or n9 would provide some hints
-> > on what exactly needs to be done.
-> 
-> I 'think' I have a patch ready that does what you're asking, but I
-> will fully admit that I don't completely grasp what's going on.
-> 
-> I'll submit it as an RFC, but I am not even sure I understand what to
-> put into the description, so if you're OK with reviewing the RFC, feel
-> free to mark up the actual commit message as well.
-> 
-> From what I can see, the changes haven't negatively impact stuff. I
-> didn't see the power consumption go up before, so I am not sure I can
-> replicate your findings.
-> 
-> It'll be posted shortly.
 
-Yeah seems to do the job, thanks for fixing this issue.
+--8w3uRX/HFJGApMzv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tony
+On Fri 2019-11-08 17:09:00, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>=20
+> According to the comment, board files used to specify 1 ms for the
+> debounce time. gpiod_set_debounce() needs the debounce time to be
+> specified in units of microseconds, so make sure to multiply the value
+> by 1000.
+>=20
+> Note that, according to the git log, the board files actually did
+> specify 1 us for bounce times, but that seems really low. Device tree
+> bindings for this type of GPIO typically specify the debounce times in
+> milliseconds, so setting this default value to 1 ms seems like it would
+> be somewhat safer.
+>=20
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+
+Acked-by: Pavel Machek <pavel@denx.de>
+
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--8w3uRX/HFJGApMzv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXcXVtwAKCRAw5/Bqldv6
+8i60AJ9+HnW7KWLQ4Gzd+50rSbaEhAlNzQCgvmtOhTJcKVQRoI00YK/ZOpkBmjg=
+=+1yy
+-----END PGP SIGNATURE-----
+
+--8w3uRX/HFJGApMzv--
