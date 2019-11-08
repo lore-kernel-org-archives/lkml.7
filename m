@@ -2,282 +2,92 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F8DFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D46FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA4621882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tA15s+Eh"
+	by mail.kernel.org (Postfix) with ESMTP id 9029921D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573183531;
+	bh=OQWLutCvyBNF31F7nVyat1ronJZrpce2IWGhQEDJklg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FK4x6RaXdxQzM5T3hLlANSKYUMBsrUHFL39TMCFhgT3srfTzNZ3fhS4Lx4Eo0h9Fl
+	 Uwq2XAZ3IHkR/r4+rixVEa1GYcN89CN/U9yDd3BEd6CKBk4EYrRwSe8sL3FIWyIjGu
+	 essBzDjZNBtG5EUxAHIApCw6DhIEQefrUqDMxkDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbfKHDZC (ORCPT
+        id S1729588AbfKHDZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:25:02 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:10121 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbfKHDZB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:25:01 -0500
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191108032457epoutp01971298d68674aa4e3c78cead3ea1c5cf~VEg5O-8eS3007030070epoutp01M
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Nov 2019 03:24:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191108032457epoutp01971298d68674aa4e3c78cead3ea1c5cf~VEg5O-8eS3007030070epoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573183497;
-        bh=avcypUAnpCI6Psa4aWP4Hr0up9UCkFGxgp69nmi97vQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=tA15s+EheljpVM+FCMVmEFmVKVci6BoXwvqJNZ2brXz578berNGnbIRfLWg93pb6z
-         lOotYLVstOss803KtUDPdO08BHc6KxLzbvMnSM4rzxEMx/ge6JfpVTkjEeNSLQljqA
-         VthiHVeGVRVeiagqP1RdLk1jVpLYjXBPJQx2DZ0Q=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20191108032456epcas5p2eac61e73aa800eb3ab5d86a4c8376849~VEg4t9ZoC0856608566epcas5p2C;
-        Fri,  8 Nov 2019 03:24:56 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FB.4E.20293.800E4CD5; Fri,  8 Nov 2019 12:24:56 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191108032456epcas5p345dd5896ae5f1c80618e68adadae56e5~VEg4VHn8J2403424034epcas5p3Z;
-        Fri,  8 Nov 2019 03:24:56 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191108032456epsmtrp1a2112a3b0e5ee351e56e7d10630c807e~VEg4UOqgB1128611286epsmtrp1b;
-        Fri,  8 Nov 2019 03:24:56 +0000 (GMT)
-X-AuditID: b6c32a49-ffbff70000014f45-c5-5dc4e0089897
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6C.07.25663.800E4CD5; Fri,  8 Nov 2019 12:24:56 +0900 (KST)
-Received: from pankajdubey02 (unknown [107.111.85.21]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191108032454epsmtip21762285d895199d9f28c8004fe3140a9~VEg2nYSp60356403564epsmtip2D;
-        Fri,  8 Nov 2019 03:24:54 +0000 (GMT)
-From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Andrew Murray'" <andrew.murray@arm.com>,
-        "'Rob Herring'" <robh@kernel.org>, <kishon@ti.com>
-Cc:     "'Anvesh Salveru'" <anvesh.s@samsung.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
-        <gustavo.pimentel@synopsys.com>, <jingoohan1@gmail.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>
-In-Reply-To: <20191106095340.GO9723@e119886-lin.cambridge.arm.com>
-Subject: RE: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
- ZRX-DC PHY property
-Date:   Fri, 8 Nov 2019 08:54:53 +0530
-Message-ID: <001601d595e4$17d8e470$478aad50$@samsung.com>
-MIME-Version: 1.0
+        Thu, 7 Nov 2019 22:25:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfKHDZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 22:25:29 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C222084D;
+        Fri,  8 Nov 2019 03:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573183529;
+        bh=OQWLutCvyBNF31F7nVyat1ronJZrpce2IWGhQEDJklg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EL2vfDt6Mw43aU8kaHTYInmtABbFRAMAOtsu/cUlsSL+yYrhw0c5kItTFOXfkIjl8
+         Y0b/qWgeolc6lq72oqbSsaPu3G7EN0ptlwK005z41DkQtbsDfU/HxzMGK8hKMkguIH
+         SfXE8gnrqWFYUWlSvy6ewTwdns60UlSGCNDkbslM=
+Date:   Thu, 7 Nov 2019 19:25:28 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Nicolas Geoffray <ngeoffray@google.com>,
+        kernel-team@android.com, Hugh Dickins <hughd@google.com>,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 1/2] memfd: Fix COW issue on MAP_PRIVATE and
+ F_SEAL_FUTURE_WRITE mappings
+Message-Id: <20191107192528.0c22e8e122a04d4f8d29c5eb@linux-foundation.org>
+In-Reply-To: <20191108020614.GA99567@google.com>
+References: <20191107195355.80608-1-joel@joelfernandes.org>
+        <20191107170023.0695732bb67eb80acd4caee5@linux-foundation.org>
+        <20191108020614.GA99567@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFcSt4EB3+Q9Aj/V+pNnFXbxKeLIQH/YaH4AmF60YIB5E6AIwHHR6CyqDLHRPA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcRzH932ee+6eo+NxbD4k5WotGmKpp62lSfO0qTV/9ENMF88wjtsd
-        ijYZQqditMZNR8qP7Mx2yelSJLpjGFGoyY+YUWphpdLU3aPlv9fn83l/fry3D4mLewhnMjYh
-        iVUkSOMlfCte0wt3d09yoiN8j2l1P521pifoXsNdgr6fGUOXd/QRtGEsT0DXLpcK6P6Z63x6
-        0FDGp3s1Rj5dNTyA0WstzYLD1oxWo0XMY/WYgKnQJTO6umt85mZjHWIaW5cQYxzRY8ySzvUk
-        GWp1MIqNj01hFd6HzlvFlJWqkHzc91KbaRzLQCO7VIgkgdoLg1pMhaxIMfUEQX/uT8QFiwie
-        5b8nuOAbgrHifIEKCS0dRavlyMxi6imC7AVbTvQRwdXWZUuBT3lD34qGMLMDFQmVXW8sY3Eq
-        F4PnNWsWkZAKAO18N25meyoCGjILLXketQOmln/zzCyiDoBhdhjn2A66SqcteZzaCvqFMpy7
-        aBv8mKkmzH4cqBPQUHeakzjCXGeHwLwXKI0ARnvnMc5zINQ3Heda7WHe2LhuzBnmCnLWORFW
-        7hXhXG82gmLjHYIr+EPbUBnPPAen3KHB4M3tsoEbv6bXx4sgL0fMqXfC99me9StdYDKrCuOY
-        gbEqFa8Quak3GFNvMKbe4ED9f1kF4tUhJ1aulEWzSj+5TwJ70UsplSmTE6K9IhNlOmT5MY9j
-        zUjdF9yOKBJJNonOunSEiwlpijJV1o6AxCUOImH235QoSpqaxioSIxTJ8ayyHW0meRJHURHx
-        OkxMRUuT2DiWlbOKf1WMFDpnoM53rG2IwkGoD3G95dcWap3UVqMt2D0t+qzDfZ1LtKNblp2G
-        Kr2r9MxAVIuv/0J6nEj2NmsCSz8zGfSp2qbllfFofcVlgVtgWFdn0AdjpJ3nA1n+S1Pp4r61
-        Lw9LQo/kBUyFKm53Bw/3q0/ZXvH6+uhcnl5/YUYea0raXmtaStNKeMoYqY8HrlBK/wC/d/r+
-        XwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7bCSvC7HgyOxBjNbJSya/29ntTi7ayGr
-        xZKmDIv5R86xWuy628FuseLLTHaLC0972Cwu75rDZnF23nE2i6XXLzJZ/N+zg92B22PNvDWM
-        Hjtn3WX3WLCp1GPTqk42j74tqxg9tuz/zOhx/MZ2Jo/Pm+QCOKK4bFJSczLLUov07RK4MubM
-        7GIsuG9UceDEfaYGxhsaXYycHBICJhKT/sxn7GLk4hAS2M0o8XHOOzaIhIzE5NUrWCFsYYmV
-        /56zg9hCAi8ZJXYeswCx2QT0Jc79mAdUw8EhIpAqsfuBEkiYWaCfSeLGUz6ImUuYJE4tfgDW
-        yyngJLHm1SlmkHphgViJGTsFQcIsAioSj778ZQGxeQUsJXY9v84MYQtKnJz5hAWknFlAT6Jt
-        IyPEeHmJ7W/nMENcpiDx8+kyqAv8JNavCocoEZd4efQI+wRG4VlIBs1CGDQLyaBZSDoWMLKs
-        YpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQIjkMtrR2MJ07EH2IU4GBU4uGNkDkSK8Sa
-        WFZcmXuIUYKDWUmEl7MFKMSbklhZlVqUH19UmpNafIhRmoNFSZxXPv9YpJBAemJJanZqakFq
-        EUyWiYNTqoGxl0mhfZrh7qJVjW+W6RavvT73qbuNMVeKy93pN28qBLTkuDWK/cvfsu3y8jiJ
-        V2mZjD77fXJcFi+umG1adS0k66f2IgWnC1VS2yceTHOewZ/9aYPQmex/kZW/Bavzs/3m26bZ
-        Xp2/6rCkcvic+XKmdtYJEVdTPs90bm/WDVDN6L365X97XoESS3FGoqEWc1FxIgB6nLzbvwIA
-        AA==
-X-CMS-MailID: 20191108032456epcas5p345dd5896ae5f1c80618e68adadae56e5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191028121748epcas5p3054c9583c14a2edde9f725d005895a04
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
-        <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
-        <20191105215332.GA19296@bogus>
-        <20191106095340.GO9723@e119886-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 7 Nov 2019 21:06:14 -0500 Joel Fernandes <joel@joelfernandes.org> wrote:
 
-
-> -----Original Message-----
-> From: Andrew Murray <andrew.murray@arm.com>
-> Sent: Wednesday, November 6, 2019 3:24 PM
-> To: Rob Herring <robh@kernel.org>
-> Cc: Anvesh Salveru <anvesh.s@samsung.com>; linux-pci@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> bhelgaas@google.com; gustavo.pimentel@synopsys.com;
-> jingoohan1@gmail.com; pankaj.dubey@samsung.com; Mark Rutland
-> <mark.rutland@arm.com>
-> Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
-ZRX-
-> DC PHY property
+> On Thu, Nov 07, 2019 at 05:00:23PM -0800, Andrew Morton wrote:
+> > On Thu,  7 Nov 2019 14:53:54 -0500 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> > 
+> > > F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
+> > > A private mapping created after the memfd file that gets sealed with
+> > > F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
+> > > children and parent share the same memory, even though the mapping is
+> > > private.
+> > 
+> > That sounds fairly serious.  Should this be backported into -stable kernels?
 > 
-> On Tue, Nov 05, 2019 at 03:53:32PM -0600, Rob Herring wrote:
-> > On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
-> > > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to
-> > > ZRX-DC specification, then after every 100ms link should transition
-> > > to recovery state during the low power states which increases power
-> consumption.
-> > >
-> > > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> > > property in DesignWare controller DT node.
-> > >
-> > > CC: Rob Herring <robh+dt@kernel.org>
-> > > CC: Mark Rutland <mark.rutland@arm.com>
-> > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > ---
-> > > Change in v2: None
-> > >
-> > >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > index 78494c4050f7..9507ac38ac89 100644
-> > > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > @@ -38,6 +38,8 @@ Optional properties:
-> > >     for data corruption. CDM registers include standard PCIe
-configuration
-> > >     space registers, Port Logic registers, DMA and iATU (internal
-Address
-> > >     Translation Unit) registers.
-> > > +- snps,phy-zrxdc-compliant: This property is needed if phy complies
-> > > +with the
-> > > +  ZRX-DC specification.
-> >
-> > If this is a property of the phy, then it belongs in the phy node or
-> > should just be implied by the phy's compatible.
-> 
-Yes, from HW point of view this is a property of the PHY. As PHY is the one
-which is ZRXDC compliant or non-compliant.  But as the DW controller
-programming needs to be altered for handling such phys, so we added it as a
-DT binding of DW controller driver.
+> Yes, it should be.
 
-We can't use PHY's compatible in case we want this to be in common code
-(pcie-designware.c), as PHY compatible for each of the platform would be
-different and PCIe DWC core file is not aware of this compatible. Of-course
-this can be handled in platform specific driver, but then in that case each
-of these drivers will add similar code to handle this.
+I added
 
-> As suggested in the previous revision of this series [1], this is
-absolutely a
-> property of the phy.
+Fixes: ab3948f58ff84 ("mm/memfd: add an F_SEAL_FUTURE_WRITE seal to memfd")
+Cc: <stable@vger.kernel.org>
 
-Agreed, but as I tried to explain in series [1], this we are adding in
-controller driver, as controller driver needs to program it's register based
-on PHY HW property. 
+> The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so
+> v5.3.x stable kernels would need a backport. I can submit a backport tomorrow
+> unless we are Ok with stable automatically picking it up (I believe the
+> stable folks "auto select" fixes which should detect this is a fix since I
+> have said it is a fix in the subject line).
 
-> 
-> > IOW, you should be able
-> > to support this or not without changing DTs.
-> >
-> > Is this spec Synopys specific? (About the only thing Google turns up
-> > are your patches.) If not, then probably shouldn't have a 'snps' prefix.
-> 
-> This was also unfamiliar to me, however my current understanding is that
-Zrx-dc
-> describes the 'Receiver DC single ended impedance' limits, this is
-specified in the
-> PCI specification (table 'Common Receiver Parameters'), with a different
-limit
-> for each speed.
-> 
-> I believe the purpose of this series is to to satisfy the following
-implementation
-> note in the spec "Ports that meet the Zrx-dc specification for 2.5 GT/s
-while in
-> the L1.Idle state are therefore not required to implement the 100 ms
-timeout
-> and transition to Recovery should avoid implementing it, since it will
-reduce the
-> power savings expected from the
-> L1 state".
->
-
-> In other words, if it is known that the phy is compliant then an
-unnecessary
-> transition to a higher energy state can be avoided. Though it's the PCI
-controller
-> (in this case) that must action this and must find out about the phy it is
-> connected to.
->
-
-Thanks, this is exactly the purpose of the patch. Currently this is being
-handled in respective platform's driver, this patch intends to move this in
-common code, where any platform driver using DesignWare controller can use
-it without repeating same piece of code.
- 
-> So in my view 'phy-zrxdc-compliant' should be a property of a phy (without
-snps
-> prefix), and if a controller wants to determine if it is compliant then
-there must
-> be a phandle to the phy so the controller can find out.
-
-
-Removing snps prefix, I am OK with it. But for moving this property to PHY
-node, we need to find solution, how PCIe controller driver will access this
-property of PHY device.
- 
-Platform driver which are using DesignWare controller driver has a phandle
-to PHY, but question is here how does DesignWare controller driver will
-infer this information from PHY driver. Some approaches which I can think of
-are:
-1) If PHY framework has some generic API to check if a particular property
-exists in PHY node then it will be useful in such cases. Currently I don't
-see any such API exists. Though I am not sure if it is OK to add such API in
-PHY framework for such cases? Adding Kishon to comment on this.
-2) Currently phandle to PHY is being stored as part of private data
-structure of platform specific controller driver, and DesignWare core driver
-can't access the phandle. So we need to move or keep copy of phandle pointer
-to DesignWare core driver structure instead of keeping it in platform
-specific private structure. 
-
-I am open to any suggestion which can help us in keeping common piece of
-code in DesignWare controller driver than repeating same in each and every
-platform driver using DWC controller.
-
-
-Thanks,
-Pankaj Dubey
-
-> 
-> [1] https://patchwork.kernel.org/patch/11202121/
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
-> >
-> > >  RC mode:
-> > >  - num-viewport: number of view ports configured in hardware. If a
-platform
-> > >    does not specify it, the driver assumes 2.
-> > > --
-> > > 2.17.1
-> > >
+The Cc:stable tag should trigger the appropriate actions, assisted by
+the Fixes:.  I doubt if "fix" in the Subject has much effect.
 
