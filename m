@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E600DFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728D6FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C922087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6FA215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239815;
-	bh=ytOnAIfcvG/evQ4MVX4cYVpQ3AXN30n2C5Jn3Jr09eo=;
+	s=default; t=1573239820;
+	bh=ffIQ5dJGnYJzi9DjSzvkcNshyzB7rOklGtY+nCx3KnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HubTUWuA9vEp6lImClruHL5XQQa0ChqFAmMXmm3Dx0msD2uMGajRem+XHP0UMRhBa
-	 iT4gMX/T6rH1ihVJHPPBbVnV+JXqvwyqLkTJwqNkJtywa2NC3ELqu1a7IFT3P5JfZ0
-	 6n42Be8+C93RVQssAytOoFl/z40JHDyInm1WQQ2g=
+	b=lhQGTJvWd4dRmJRmRdVGPtOs2JTC9XiXvNPYhAhocgXl9R+VXXxOk7KCRxAZjvoaH
+	 wzR1SWnJmoUjELz+EuvM74WZTAG/bdL2/iAjy85s7qVdb3/iCIzBvwOn3kil/tR9th
+	 jqzCFU3T7d8xiHEvIhRBvc1ZzZqgb1T+XVLO+izA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390802AbfKHTDe (ORCPT
+        id S2390813AbfKHTDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:03:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:03:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390775AbfKHTDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:31 -0500
+        id S2390801AbfKHTDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:03:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AB7A2067B;
-        Fri,  8 Nov 2019 19:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45DD62067B;
+        Fri,  8 Nov 2019 19:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239810;
-        bh=ytOnAIfcvG/evQ4MVX4cYVpQ3AXN30n2C5Jn3Jr09eo=;
+        s=default; t=1573239813;
+        bh=ffIQ5dJGnYJzi9DjSzvkcNshyzB7rOklGtY+nCx3KnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nXClX1wRqGAu+LUkugdO0UcHBp+lyC5tWFAuKQpBAVB8zasMxstr7TuDwXpLpD+j
-         WgHVqbkYgCvujVQAdEhmCGPgDxbArPaBdUPsCqhsJGsJFwrmaohsuozQf4El/DUlvj
-         hTmPPBleRe2ZEmGwqc9PMraRD3EdakFOWbE7sYVg=
+        b=n6GSJrS979VgHpHq7LUbjvzpxLcvMwm9aAB5pmz5VC6a3dwrTZBsPnOmkaoMBXjrQ
+         0Rhc+1ORglvuZRGfrksomBQniF+nvh4j3Ddrri2l4yIZ2Tenvojunzw0RgWB/tpiVa
+         8sv+eDMf2SialQGdbK17zsrIcRgvQIF/z7zCtrOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 68/79] net: usb: lan78xx: Connect PHY before registering MAC
-Date:   Fri,  8 Nov 2019 19:50:48 +0100
-Message-Id: <20191108174823.372405814@linuxfoundation.org>
+Subject: [PATCH 4.19 69/79] net: dsa: fix switch tree list
+Date:   Fri,  8 Nov 2019 19:50:49 +0100
+Message-Id: <20191108174823.875664780@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,60 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Vivien Didelot <vivien.didelot@gmail.com>
 
-[ Upstream commit 38b4fe320119859c11b1dc06f6b4987a16344fa1 ]
+[ Upstream commit 50c7d2ba9de20f60a2d527ad6928209ef67e4cdd ]
 
-As soon as the netdev is registers, the kernel can start using the
-interface. If the driver connects the MAC to the PHY after the netdev
-is registered, there is a race condition where the interface can be
-opened without having the PHY connected.
+If there are multiple switch trees on the device, only the last one
+will be listed, because the arguments of list_add_tail are swapped.
 
-Change the order to close this race condition.
-
-Fixes: 92571a1aae40 ("lan78xx: Connect phy early")
-Reported-by: Daniel Wagner <dwagner@suse.de>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Tested-by: Daniel Wagner <dwagner@suse.de>
+Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
+Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/lan78xx.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/dsa/dsa2.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3799,10 +3799,14 @@ static int lan78xx_probe(struct usb_inte
- 	/* driver requires remote-wakeup capability during autosuspend. */
- 	intf->needs_remote_wakeup = 1;
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -49,7 +49,7 @@ static struct dsa_switch_tree *dsa_tree_
+ 	dst->index = index;
  
-+	ret = lan78xx_phy_init(dev);
-+	if (ret < 0)
-+		goto out4;
-+
- 	ret = register_netdev(netdev);
- 	if (ret != 0) {
- 		netif_err(dev, probe, netdev, "couldn't register the device\n");
--		goto out4;
-+		goto out5;
- 	}
+ 	INIT_LIST_HEAD(&dst->list);
+-	list_add_tail(&dsa_tree_list, &dst->list);
++	list_add_tail(&dst->list, &dsa_tree_list);
  
- 	usb_set_intfdata(intf, dev);
-@@ -3815,14 +3819,10 @@ static int lan78xx_probe(struct usb_inte
- 	pm_runtime_set_autosuspend_delay(&udev->dev,
- 					 DEFAULT_AUTOSUSPEND_DELAY);
+ 	kref_init(&dst->refcount);
  
--	ret = lan78xx_phy_init(dev);
--	if (ret < 0)
--		goto out5;
--
- 	return 0;
- 
- out5:
--	unregister_netdev(netdev);
-+	phy_disconnect(netdev->phydev);
- out4:
- 	usb_free_urb(dev->urb_intr);
- out3:
 
 
