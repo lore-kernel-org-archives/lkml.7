@@ -2,303 +2,182 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6926AC17440
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07569C17440
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EB7215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4E6214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UVKyPo8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfKHWui (ORCPT
+        id S1728572AbfKHWvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:50:38 -0500
-Received: from mga03.intel.com ([134.134.136.65]:5184 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbfKHWuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:50:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 14:50:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
-   d="scan'208";a="206140788"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 08 Nov 2019 14:50:36 -0800
-Date:   Fri, 8 Nov 2019 14:55:06 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v7 04/11] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-Message-ID: <20191108145506.6bcb6f9e@jacob-builder>
-In-Reply-To: <b69e22f9-a0cf-51e2-6840-44ac523e9e28@redhat.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571946904-86776-5-git-send-email-jacob.jun.pan@linux.intel.com>
-        <b69e22f9-a0cf-51e2-6840-44ac523e9e28@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 8 Nov 2019 17:51:16 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41728 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726095AbfKHWvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 17:51:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573253474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d464DpcuE6mdspnzUiHTqmDKb3ctMZKVUfOjByI5RRw=;
+        b=UVKyPo8zunMkv7A2fwhJ//BNRLoNYWfoe1xTgJrj4M7jQf9nKlApjOOBPVKnNnIrQc029f
+        uaNAcHKwUJMfOQfiDTnsVIkhxmOYDDBsdO2GAslcvHHg/PrOyfHOVYZFqRqnv0AA0vHfZH
+        1GTIo+E3XRYcvRFO5vp4BM9jGX1tlF0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-nzSRBjVrMreFWSL-Q56U7A-1; Fri, 08 Nov 2019 17:51:10 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 796A7107ACC4;
+        Fri,  8 Nov 2019 22:51:08 +0000 (UTC)
+Received: from treble (ovpn-123-141.rdu2.redhat.com [10.10.123.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C051B5D9E2;
+        Fri,  8 Nov 2019 22:51:02 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 16:51:00 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Subject: Re: [PATCH 00/10] ftrace: Add register_ftrace_direct()
+Message-ID: <20191108225100.ea3bhsbdf6oerj6g@treble>
+References: <20191108212834.594904349@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191108212834.594904349@goodmis.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: nzSRBjVrMreFWSL-Q56U7A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019 12:30:31 +0100
-Auger Eric <eric.auger@redhat.com> wrote:
+On Fri, Nov 08, 2019 at 04:28:34PM -0500, Steven Rostedt wrote:
+>=20
+> Alexei mentioned that he would like a way to access the ftrace fentry
+> code to jump directly to a custom eBPF trampoline instead of using
+> ftrace regs caller, as he said it would be faster.
+>=20
+> I proposed a new register_ftrace_direct() function that would allow
+> this to happen and still work with the ftrace infrastructure. I posted
+> a proof of concept patch here:
+>=20
+>  https://lore.kernel.org/r/20191023122307.756b4978@gandalf.local.home
+>=20
+> This patch series is a more complete version, and the start of the
+> actual implementation. I haven't run it through my full test suite but
+> it passes my smoke tests and some other custom tests I built.
+>=20
+> I also realized that I need to make the sample modules depend on X86_64
+> as it has inlined assembly in it that requires that dependency.
+>=20
+> This is based on 5.4-rc6 plus the permanent patches that prevent
+> a ftrace_ops from being disabled by /proc/sys/kernel/ftrace_enabled
+>=20
+> Below is the tree that contains this code.
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+> ftrace/direct
 
-> Hi Jacob,
-> 
-> On 10/24/19 9:54 PM, Jacob Pan wrote:
-> > Make use of generic IOASID code to manage PASID allocation,
-> > free, and lookup. Replace Intel specific code.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-iommu.c | 12 ++++++------
-> >  drivers/iommu/intel-pasid.c | 36
-> > ------------------------------------ drivers/iommu/intel-svm.c   |
-> > 39 +++++++++++++++++++++++---------------- 3 files changed, 29
-> > insertions(+), 58 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index ced1d89ef977..2ea09b988a23
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -5311,7 +5311,7 @@ static void auxiliary_unlink_device(struct
-> > dmar_domain *domain, domain->auxd_refcnt--;
-> >  
-> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> > -		intel_pasid_free_id(domain->default_pasid);
-> > +		ioasid_free(domain->default_pasid);
-> >  }
-> >  
-> >  static int aux_domain_add_dev(struct dmar_domain *domain,
-> > @@ -5329,10 +5329,10 @@ static int aux_domain_add_dev(struct
-> > dmar_domain *domain, if (domain->default_pasid <= 0) {
-> >  		int pasid;
-> >  
-> > -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
-> > -
-> > pci_max_pasids(to_pci_dev(dev)),
-> > -					     GFP_KERNEL);
-> > -		if (pasid <= 0) {
-> > +		/* No private data needed for the default pasid */
-> > +		pasid = ioasid_alloc(NULL, PASID_MIN,
-> > pci_max_pasids(to_pci_dev(dev)) - 1,
-> > +				NULL);
-> > +		if (pasid == INVALID_IOASID) {
-> >  			pr_err("Can't allocate default pasid\n");
-> >  			return -ENODEV;
-> >  		}
-> > @@ -5368,7 +5368,7 @@ static int aux_domain_add_dev(struct
-> > dmar_domain *domain, spin_unlock(&iommu->lock);
-> >  	spin_unlock_irqrestore(&device_domain_lock, flags);
-> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> > -		intel_pasid_free_id(domain->default_pasid);
-> > +		ioasid_free(domain->default_pasid);
-> >  
-> >  	return ret;
-> >  }
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index d81e857d2b25..e79d680fe300
-> > 100644 --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -26,42 +26,6 @@
-> >   */
-> >  static DEFINE_SPINLOCK(pasid_lock);
-> >  u32 intel_pasid_max_id = PASID_MAX;
-> > -static DEFINE_IDR(pasid_idr);
-> > -
-> > -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
-> > -{
-> > -	int ret, min, max;
-> > -
-> > -	min = max_t(int, start, PASID_MIN);
-> > -	max = min_t(int, end, intel_pasid_max_id);
-> > -
-> > -	WARN_ON(in_interrupt());
-> > -	idr_preload(gfp);
-> > -	spin_lock(&pasid_lock);
-> > -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
-> > -	spin_unlock(&pasid_lock);
-> > -	idr_preload_end();
-> > -
-> > -	return ret;
-> > -}
-> > -
-> > -void intel_pasid_free_id(int pasid)
-> > -{
-> > -	spin_lock(&pasid_lock);
-> > -	idr_remove(&pasid_idr, pasid);
-> > -	spin_unlock(&pasid_lock);
-> > -}
-> > -
-> > -void *intel_pasid_lookup_id(int pasid)
-> > -{
-> > -	void *p;
-> > -
-> > -	spin_lock(&pasid_lock);
-> > -	p = idr_find(&pasid_idr, pasid);
-> > -	spin_unlock(&pasid_lock);
-> > -
-> > -	return p;
-> > -}
-> >  
-> >  int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid) {
-> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> > index 9b159132405d..a9a7f85a09bc 100644
-> > --- a/drivers/iommu/intel-svm.c
-> > +++ b/drivers/iommu/intel-svm.c
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/dmar.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/mm_types.h>
-> > +#include <linux/ioasid.h>
-> >  #include <asm/page.h>
-> >  
-> >  #include "intel-pasid.h"
-> > @@ -318,16 +319,15 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (pasid_max >
-> > intel_pasid_max_id) pasid_max = intel_pasid_max_id;
-> >  
-> > -		/* Do not use PASID 0 in caching mode (virtualised
-> > IOMMU) */
-> > -		ret = intel_pasid_alloc_id(svm,
-> > -					   !!cap_caching_mode(iommu->cap),
-> > -					   pasid_max - 1,
-> > GFP_KERNEL);
-> > -		if (ret < 0) {
-> > +		/* Do not use PASID 0, reserved for RID to PASID */
-> > +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
-> > +					pasid_max - 1, svm);  
-> pasid_max -1 is inclusive. whereas max param in intel_pasid_alloc_id()
-> is exclusive right? If you fixed an issue, you can mention it in the
-> commit message.
-yes, i should mention that. intel_pasid_alloc_id() uses IDR which is
-end exclusive. ioasid uses xarray, which is inclusive. 
-> > +		if (svm->pasid == INVALID_IOASID) {  
-> >  			kfree(svm);>
-> > kfree(sdev);  
-> > +			ret = ENOSPC;  
-> -ENOSPC.
-> Nit: in 2/11 vcmd_alloc_pasid returned -ENOMEM
-yes, it should be -ENOSPC as well.
+Here's the fix for the objtool warning:
 
-> >  			goto out;
-> >  		}
-> > -		svm->pasid = ret;
-> >  		svm->notifier.ops = &intel_mmuops;
-> >  		svm->mm = mm;
-> >  		svm->flags = flags;
-> > @@ -337,7 +337,7 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (mm) {
-> >  			ret =
-> > mmu_notifier_register(&svm->notifier, mm); if (ret) {
-> > -				intel_pasid_free_id(svm->pasid);
-> > +				ioasid_free(svm->pasid);
-> >  				kfree(svm);
-> >  				kfree(sdev);
-> >  				goto out;
-> > @@ -353,7 +353,7 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (ret) {
-> >  			if (mm)
-> >  				mmu_notifier_unregister(&svm->notifier,
-> > mm);
-> > -			intel_pasid_free_id(svm->pasid);
-> > +			ioasid_free(svm->pasid);
-> >  			kfree(svm);
-> >  			kfree(sdev);
-> >  			goto out;
-> > @@ -401,7 +401,12 @@ int intel_svm_unbind_mm(struct device *dev,
-> > int pasid) if (!iommu)
-> >  		goto out;
-> >  
-> > -	svm = intel_pasid_lookup_id(pasid);
-> > +	svm = ioasid_find(NULL, pasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> > +		goto out;
-> > +	}
-> > +
-> >  	if (!svm)
-> >  		goto out;
-> >  
-> > @@ -423,7 +428,9 @@ int intel_svm_unbind_mm(struct device *dev, int
-> > pasid) kfree_rcu(sdev, rcu);
-> >  
-> >  				if (list_empty(&svm->devs)) {
-> > -
-> > intel_pasid_free_id(svm->pasid);
-> > +					/* Clear private data so
-> > that free pass check */> +
-> > ioasid_set_data(svm->pasid, NULL);  
-> I don't get the above comment. Why is it needed?
-Having private data associated with an IOASID is an indicator that this
-IOASID is busy. So we have to clear it to signal it is free.
-Actually, I am planning to introduce a refcount per IOASID since there
-will be multiple users of IOASID, e.g. IOMMU driver and KVM. When
-refcount == 0, we can free.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] ftrace/x86: Tell objtool to ignore nondeterministic ftrace=
+ stack layout
 
-> > +					ioasid_free(svm->pasid);
-> >  					if (svm->mm)
-> >  						mmu_notifier_unregister(&svm->notifier,
-> > svm->mm); 
-> > @@ -458,10 +465,11 @@ int intel_svm_is_pasid_valid(struct device
-> > *dev, int pasid) if (!iommu)
-> >  		goto out;
-> >  
-> > -	svm = intel_pasid_lookup_id(pasid);
-> > -	if (!svm)
-> > +	svm = ioasid_find(NULL, pasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> >  		goto out;
-> > -
-> > +	}
-> >  	/* init_mm is used in this case */
-> >  	if (!svm->mm)
-> >  		ret = 1;
-> > @@ -568,13 +576,12 @@ static irqreturn_t prq_event_thread(int irq,
-> > void *d) 
-> >  		if (!svm || svm->pasid != req->pasid) {
-> >  			rcu_read_lock();
-> > -			svm = intel_pasid_lookup_id(req->pasid);
-> > +			svm = ioasid_find(NULL, req->pasid, NULL);
-> >  			/* It *can't* go away, because the driver
-> > is not permitted
-> >  			 * to unbind the mm while any page faults
-> > are outstanding.
-> >  			 * So we only need RCU to protect the
-> > internal idr code. */ rcu_read_unlock();
-> > -
-> > -			if (!svm) {
-> > +			if (IS_ERR(svm) || !svm) {
-> >  				pr_err("%s: Page request for
-> > invalid PASID %d: %08llx %08llx\n", iommu->name, req->pasid,
-> > ((unsigned long long *)req)[0], ((unsigned long long *)req)[1]);
-> >   
-> Thanks
-> 
-> Eric
-> 
+Objtool complains about the new ftrace direct trampoline code:
 
-[Jacob Pan]
+  arch/x86/kernel/ftrace_64.o: warning: objtool: ftrace_regs_caller()+0x190=
+: stack state mismatch: cfa1=3D7+16 cfa2=3D7+24
+
+Typically, code has a deterministic stack layout, such that at a given
+instruction address, the stack frame size is always the same.
+
+That's not the case for the new ftrace_regs_caller() code after it
+adjusts the stack for the direct case.  Just plead ignorance and assume
+it's always the non-direct path.  Note this creates a tiny window for
+ORC to get confused.
+
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/x86/include/asm/unwind_hints.h |  8 ++++++++
+ arch/x86/kernel/ftrace_64.S         | 12 +++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/unwind_hints.h b/arch/x86/include/asm/unw=
+ind_hints.h
+index 0bcdb1279361..f5e2eb12cb71 100644
+--- a/arch/x86/include/asm/unwind_hints.h
++++ b/arch/x86/include/asm/unwind_hints.h
+@@ -86,6 +86,14 @@
+ =09UNWIND_HINT sp_offset=3D\sp_offset
+ .endm
+=20
++.macro UNWIND_HINT_SAVE
++=09UNWIND_HINT type=3DUNWIND_HINT_TYPE_SAVE
++.endm
++
++.macro UNWIND_HINT_RESTORE
++=09UNWIND_HINT type=3DUNWIND_HINT_TYPE_RESTORE
++.endm
++
+ #else /* !__ASSEMBLY__ */
+=20
+ #define UNWIND_HINT(sp_reg, sp_offset, type, end)=09=09\
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 5d946ab40b52..1c79624a36b2 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -175,6 +175,8 @@ ENTRY(ftrace_regs_caller)
+ =09/* Save the current flags before any operations that can change them */
+ =09pushfq
+=20
++=09UNWIND_HINT_SAVE
++
+ =09/* added 8 bytes to save flags */
+ =09save_mcount_regs 8
+ =09/* save_mcount_regs fills in first two parameters */
+@@ -249,8 +251,16 @@ GLOBAL(ftrace_regs_call)
+ 1:=09restore_mcount_regs
+=20
+=20
++2:
++=09/*
++=09 * The stack layout is nondetermistic here, depending on which path was
++=09 * taken.  This confuses objtool and ORC, rightfully so.  For now,
++=09 * pretend the stack always looks like the non-direct case.
++=09 */
++=09UNWIND_HINT_RESTORE
++
+ =09/* Restore flags */
+-2:=09popfq
++=09popfq
+=20
+ =09/*
+ =09 * As this jmp to ftrace_epilogue can be a short jump
+--=20
+2.20.1
+
