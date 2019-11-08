@@ -2,135 +2,189 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70774C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5295FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493FC215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC69215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:55:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="H1ot3bDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfKHPyL (ORCPT
+        id S1727385AbfKHPzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:54:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:34115 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfKHPyK (ORCPT
+        Fri, 8 Nov 2019 10:55:16 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49444 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfKHPzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:54:10 -0500
-Received: by mail-il1-f198.google.com with SMTP id m12so4030342ilq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 07:54:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=s332cRTbvTcjjlLB46ZkzaXl2NaFeaIwaT6ESHp+Drs=;
-        b=Qm2nFLRHywPVOEzJJEqjjqPDglIT8S4FI4db1MAjsARu/9B75nTomF7Ch706+qOU4Z
-         CwJIAFw3WSinx5w+LkGjkRavU5fGEonwriIbABNayEKTS+raGeUQCsPMkFD0FSwRW1Eb
-         6a9I0vuU/j5DWjgx7doru0rHKV95ttL+dsVgCcTgvBHuDDx6xPTAdblhVYRjMjRzeiRQ
-         48tYh+0bLpXn1dqFNRVGwqyCPIsQzESQeKLXN9MoIftKR6NOPS9hV8XovBWhaDx+tJng
-         PSsjYAz6lmg6iTlR8xLigP3j0O/nsvMRSzFf0DDYrbH2uNlZYPCmeb3bn09UsHgcbMm3
-         AZqQ==
-X-Gm-Message-State: APjAAAVaxz1RlujQei/kuK+dUuv0gzkJyiidJliUJyhNbtZE2L5PUno+
-        o6Rc2zyO/Mn4whj/hHkTbr3ts1Pfyryaef4hGAexoJckNGYy
-X-Google-Smtp-Source: APXvYqzIc8qMPr+vhqnH6XJzsuF/upi1JbflEe2c6XqHSfDW5wG+XIWeG4APhbntX+YnhLgNg8sgrdIAAI6g8fUnSF9koOM5NU/M
+        Fri, 8 Nov 2019 10:55:16 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3DDE12D1;
+        Fri,  8 Nov 2019 16:55:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1573228513;
+        bh=YRsA6vcCgdk4mfuNf52nuEX3rzRLI9LEz84JKn/0KI8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H1ot3bDSK5ws2hJLk+trov2yH6k6/jcIaz8RQju9T4Rim1qY9qFZ7vc73D0616kbQ
+         RsQ1jwst9TaQ3AAl8P/pTaK+dse5Lz+BZuOxXhpSaQp9UmaXrjTOtUA1KZSxbsRQYG
+         J35uk5d5/VLCYaQbv96KU/Bfih6N4lec9bbsvzPQ=
+Date:   Fri, 8 Nov 2019 17:55:03 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andreyknvl@google.com, gregkh@linuxfoundation.org,
+        akpm@linux-foundation.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
+ to malformed USB descriptors
+Message-ID: <20191108155503.GB15731@pendragon.ideasonboard.com>
+References: <20191108154838.21487-1-will@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:9641:: with SMTP id c59mr11764083jai.40.1573228449602;
- Fri, 08 Nov 2019 07:54:09 -0800 (PST)
-Date:   Fri, 08 Nov 2019 07:54:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e3a8e00596d7ca32@google.com>
-Subject: KMSAN: uninit-value in kernel_sendmsg
-From:   syzbot <syzbot+4b6f070bb7a8ea5420d4@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dhowells@redhat.com, glider@google.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191108154838.21487-1-will@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Will,
 
-syzbot found the following crash on:
+Thank you for the patch.
 
-HEAD commit:    124037e0 kmsan: drop inlines, rename do_kmsan_task_create()
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1648eb9d600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=4b6f070bb7a8ea5420d4
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
+I'm sorry for the delay, and will have to ask you to be a bit more
+patient I'm afraid. I will leave tomorrow for a week without computer
+access and will only be able to go through my backlog when I will be
+back on the 17th.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+On Fri, Nov 08, 2019 at 03:48:38PM +0000, Will Deacon wrote:
+> Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
+> up the following WARNING from the UVC chain scanning code:
+> 
+>   | list_add double add: new=ffff880069084010, prev=ffff880069084010,
+>   | next=ffff880067d22298.
+>   | ------------[ cut here ]------------
+>   | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
+>   | Modules linked in:
+>   | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
+>   | 4.14.0-rc2-42613-g1488251d1a98 #238
+>   | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+>   | Workqueue: usb_hub_wq hub_event
+>   | task: ffff88006b01ca40 task.stack: ffff880064358000
+>   | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
+>   | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
+>   | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
+>   | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
+>   | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
+>   | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
+>   | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
+>   | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
+>   | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
+>   | Call Trace:
+>   |  __list_add ./include/linux/list.h:59
+>   |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
+>   |  uvc_scan_chain_forward.isra.8+0x373/0x416
+>   | drivers/media/usb/uvc/uvc_driver.c:1471
+>   |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
+>   |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
+>   |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
+> 
+> Looking into the output from usbmon, the interesting part is the
+> following data packet:
+> 
+>   ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
+>   00090403 00000e01 00000924 03000103 7c003328 010204db
+> 
+> If we drop the lead configuration and interface descriptors, we're left
+> with an output terminal descriptor describing a generic display:
+> 
+>   /* Output terminal descriptor */
+>   buf[0]	09
+>   buf[1]	24
+>   buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
+>   buf[3]	00	/* ID */
+>   buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
+>   buf[5]	03
+>   buf[6]	7c
+>   buf[7]	00	/* source ID refers to self! */
+>   buf[8]	33
+> 
+> The problem with this descriptor is that it is self-referential: the
+> source ID of 0 matches itself! This causes the 'struct uvc_entity'
+> representing the display to be added to its chain list twice during
+> 'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
+> processed directly from the 'dev->entities' list and then again
+> immediately afterwards when trying to follow the source ID in
+> 'uvc_scan_chain_forward()'
+> 
+> Add a check before adding an entity to a chain list to ensure that the
+> entity is not already part of a chain.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Kostya Serebryany <kcc@google.com>
+> Cc: <stable@vger.kernel.org>
+> Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+> Reported-by: Andrey Konovalov <andreyknvl@google.com>
+> Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+> 
+> That's right, it's the same patch again! No changes since either of:
+> 
+>   http://lkml.kernel.org/r/20191002112753.21630-1-will@kernel.org
+>   https://lore.kernel.org/lkml/20191016195800.22099-1-will@kernel.org
+> 
+> Please consider merging.
+> 
+>  drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 66ee168ddc7e..e24420b1750a 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct uvc_video_chain *chain,
+>  			break;
+>  		if (forward == prev)
+>  			continue;
+> +		if (forward->chain.next || forward->chain.prev) {
+> +			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
+> +				"entity %d already in chain.\n", forward->id);
+> +			return -EINVAL;
+> +		}
+>  
+>  		switch (UVC_ENTITY_TYPE(forward)) {
+>  		case UVC_VC_EXTENSION_UNIT:
+> @@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struct uvc_video_chain *chain,
+>  				return -1;
+>  			}
+>  
+> +			if (term->chain.next || term->chain.prev) {
+> +				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
+> +					"entity %d already in chain.\n",
+> +					term->id);
+> +				return -EINVAL;
+> +			}
+> +
+>  			if (uvc_trace_param & UVC_TRACE_PROBE)
+>  				printk(KERN_CONT " %d", term->id);
+>  
+> -- 
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+> 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4b6f070bb7a8ea5420d4@syzkaller.appspotmail.com
+-- 
+Regards,
 
-=====================================================
-BUG: KMSAN: uninit-value in rxrpc_send_keepalive+0x2fa/0x830  
-net/rxrpc/output.c:655
-CPU: 0 PID: 3367 Comm: kworker/0:2 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: krxrpcd rxrpc_peer_keepalive_worker
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  kernel_sendmsg+0x2c9/0x440 net/socket.c:677
-  rxrpc_send_keepalive+0x2fa/0x830 net/rxrpc/output.c:655
-  rxrpc_peer_keepalive_dispatch net/rxrpc/peer_event.c:369 [inline]
-  rxrpc_peer_keepalive_worker+0xb82/0x1510 net/rxrpc/peer_event.c:430
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
-  kmsan_internal_poison_shadow+0x53/0x100 mm/kmsan/kmsan.c:134
-  kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:103
-  slab_alloc_node mm/slub.c:2790 [inline]
-  slab_alloc mm/slub.c:2799 [inline]
-  kmem_cache_alloc_trace+0x8c5/0xd20 mm/slub.c:2816
-  kmalloc include/linux/slab.h:552 [inline]
-  __hw_addr_create_ex net/core/dev_addr_lists.c:30 [inline]
-  __hw_addr_add_ex net/core/dev_addr_lists.c:76 [inline]
-  __hw_addr_add net/core/dev_addr_lists.c:84 [inline]
-  dev_addr_init+0x152/0x700 net/core/dev_addr_lists.c:464
-  alloc_netdev_mqs+0x2a9/0x1650 net/core/dev.c:9150
-  rtnl_create_link+0x559/0x1190 net/core/rtnetlink.c:2931
-  __rtnl_newlink net/core/rtnetlink.c:3186 [inline]
-  rtnl_newlink+0x2757/0x38d0 net/core/rtnetlink.c:3254
-  rtnetlink_rcv_msg+0x115a/0x1580 net/core/rtnetlink.c:5223
-  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
-  rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5241
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0xf6c/0x1050 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x110f/0x1330 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
-  __sys_sendmsg net/socket.c:2356 [inline]
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Laurent Pinchart
