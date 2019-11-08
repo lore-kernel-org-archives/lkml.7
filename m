@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FAEFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7864FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703A5222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD992218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239257;
-	bh=3noFGW8Pm/o5hVE6Hpp9E/Fq3VyYfeQjanBRA8WH0H8=;
+	s=default; t=1573239263;
+	bh=bRmfyd7OviorcsMZ8j6OOceDwq3JkZAQ9a8Dio6IMIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjmYjOvJb22GoM1Twmts6JeJ7mwsJTrmnb276QMGlhRFdrLfgmBWXqHqn4v92ufGE
-	 KaQgyp6UAmZXbQb/EsbKzawUx0YJY7R0cBFRzE0mtPgx0e15dyOd6TyzL9UThc6mGC
-	 EEf4o8f9U4IZ3WvXR7NpTl50MamDYwBPCNcDhpGA=
+	b=T37prVkFlbT3ufm7hhvdkP7mHHmU3YywhB3gDOpwLe6XTSTbyvI5T/k+HxLdzs1yX
+	 n2+vsametwa8I+ICjRF5TV3cSuCtPxhFWoqARpLcSC5vvj3nxEpbiVZEu0FWEVt91T
+	 jReEGYlLj1oCEf6uFOIYcfMh7qgC/EvQg1m26Tfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732853AbfKHSyQ (ORCPT
+        id S1732915AbfKHSyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:54:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:54:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732757AbfKHSyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:54:12 -0500
+        id S1732879AbfKHSyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:54:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3124F20865;
-        Fri,  8 Nov 2019 18:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41074218AE;
+        Fri,  8 Nov 2019 18:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239237;
-        bh=3noFGW8Pm/o5hVE6Hpp9E/Fq3VyYfeQjanBRA8WH0H8=;
+        s=default; t=1573239257;
+        bh=bRmfyd7OviorcsMZ8j6OOceDwq3JkZAQ9a8Dio6IMIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2N72eW0wDdhgPvCRLDAaWiimss/iY3MCpxGZSKI8jM2WYyKNW9FBLz6rHHLMgSxgr
-         /ejYyKQXA0oha8UiIzhSHi46HFsTnbpSZIT+KgT1kfHJdoeWUeOkPEkzasEH7sosjg
-         pYKjt0eN2ZV7dGRc/0WRtRljlWKH0wyN1cSg36bQ=
+        b=h+bnDd78vxQEGFwfRPrNWro3P/foWDITCJ8sosw8ThmS/BqbtBS/zMCgRAru81ThU
+         XVd7SSj6KPlhz959zVTt6akqcfRBvUOwwhVAnhoc2gejz+IXHX4rfwZ3X9xmCWZKuh
+         QZK7mTyW3mcgicIFey0/5SVOdfDGWj+z9JxhZjUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
-        <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
+        <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         "David A. Long" <dave.long@linaro.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 47/75] ARM: spectre-v2: harden user aborts in kernel space
-Date:   Fri,  8 Nov 2019 19:50:04 +0100
-Message-Id: <20191108174752.269412572@linuxfoundation.org>
+Subject: [PATCH 4.4 54/75] ARM: vfp: use __copy_from_user() when restoring VFP state
+Date:   Fri,  8 Nov 2019 19:50:11 +0100
+Message-Id: <20191108174756.555402852@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -64,223 +64,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Commit f5fe12b1eaee220ce62ff9afb8b90929c396595f upstream.
+Commit 42019fc50dfadb219f9e6ddf4c354f3837057d80 upstream.
 
-In order to prevent aliasing attacks on the branch predictor,
-invalidate the BTB or instruction cache on CPUs that are known to be
-affected when taking an abort on a address that is outside of a user
-task limit:
+__get_user_error() is used as a fast accessor to make copying structure
+members in the signal handling path as efficient as possible.  However,
+with software PAN and the recent Spectre variant 1, the efficiency is
+reduced as these are no longer fast accessors.
 
-Cortex A8, A9, A12, A17, A73, A75: flush BTB.
-Cortex A15, Brahma B15: invalidate icache.
+In the case of software PAN, it has to switch the domain register around
+each access, and with Spectre variant 1, it would have to repeat the
+access_ok() check for each access.
 
-If the IBE bit is not set, then there is little point to enabling the
-workaround.
+Use __copy_from_user() rather than __get_user_err() for individual
+members when restoring VFP state.
 
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Boot-tested-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: David A. Long <dave.long@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/include/asm/cp15.h        |    3 +
- arch/arm/include/asm/system_misc.h |   15 +++++++
- arch/arm/mm/fault.c                |    3 +
- arch/arm/mm/proc-v7-bugs.c         |   73 ++++++++++++++++++++++++++++++++++---
- arch/arm/mm/proc-v7.S              |    8 ++--
- 5 files changed, 94 insertions(+), 8 deletions(-)
+ arch/arm/include/asm/thread_info.h |    4 ++--
+ arch/arm/kernel/signal.c           |   17 ++++++++---------
+ arch/arm/vfp/vfpmodule.c           |   17 +++++++----------
+ 3 files changed, 17 insertions(+), 21 deletions(-)
 
---- a/arch/arm/include/asm/cp15.h
-+++ b/arch/arm/include/asm/cp15.h
-@@ -64,6 +64,9 @@
- #define __write_sysreg(v, r, w, c, t)	asm volatile(w " " c : : "r" ((t)(v)))
- #define write_sysreg(v, ...)		__write_sysreg(v, __VA_ARGS__)
+--- a/arch/arm/include/asm/thread_info.h
++++ b/arch/arm/include/asm/thread_info.h
+@@ -126,8 +126,8 @@ struct user_vfp_exc;
  
-+#define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
-+#define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
-+
- extern unsigned long cr_alignment;	/* defined in entry-armv.S */
- 
- static inline unsigned long get_cr(void)
---- a/arch/arm/include/asm/system_misc.h
-+++ b/arch/arm/include/asm/system_misc.h
-@@ -7,6 +7,7 @@
- #include <linux/linkage.h>
- #include <linux/irqflags.h>
- #include <linux/reboot.h>
-+#include <linux/percpu.h>
- 
- extern void cpu_init(void);
- 
-@@ -14,6 +15,20 @@ void soft_restart(unsigned long);
- extern void (*arm_pm_restart)(enum reboot_mode reboot_mode, const char *cmd);
- extern void (*arm_pm_idle)(void);
- 
-+#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
-+typedef void (*harden_branch_predictor_fn_t)(void);
-+DECLARE_PER_CPU(harden_branch_predictor_fn_t, harden_branch_predictor_fn);
-+static inline void harden_branch_predictor(void)
-+{
-+	harden_branch_predictor_fn_t fn = per_cpu(harden_branch_predictor_fn,
-+						  smp_processor_id());
-+	if (fn)
-+		fn();
-+}
-+#else
-+#define harden_branch_predictor() do { } while (0)
-+#endif
-+
- #define UDBG_UNDEFINED	(1 << 0)
- #define UDBG_SYSCALL	(1 << 1)
- #define UDBG_BADABORT	(1 << 2)
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -163,6 +163,9 @@ __do_user_fault(struct task_struct *tsk,
- {
- 	struct siginfo si;
- 
-+	if (addr > TASK_SIZE)
-+		harden_branch_predictor();
-+
- #ifdef CONFIG_DEBUG_USER
- 	if (((user_debug & UDBG_SEGV) && (sig == SIGSEGV)) ||
- 	    ((user_debug & UDBG_BUS)  && (sig == SIGBUS))) {
---- a/arch/arm/mm/proc-v7-bugs.c
-+++ b/arch/arm/mm/proc-v7-bugs.c
-@@ -2,7 +2,61 @@
- #include <linux/kernel.h>
- #include <linux/smp.h>
- 
--static __maybe_unused void cpu_v7_check_auxcr_set(bool *warned,
-+#include <asm/cp15.h>
-+#include <asm/cputype.h>
-+#include <asm/system_misc.h>
-+
-+#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
-+DEFINE_PER_CPU(harden_branch_predictor_fn_t, harden_branch_predictor_fn);
-+
-+static void harden_branch_predictor_bpiall(void)
-+{
-+	write_sysreg(0, BPIALL);
-+}
-+
-+static void harden_branch_predictor_iciallu(void)
-+{
-+	write_sysreg(0, ICIALLU);
-+}
-+
-+static void cpu_v7_spectre_init(void)
-+{
-+	const char *spectre_v2_method = NULL;
-+	int cpu = smp_processor_id();
-+
-+	if (per_cpu(harden_branch_predictor_fn, cpu))
-+		return;
-+
-+	switch (read_cpuid_part()) {
-+	case ARM_CPU_PART_CORTEX_A8:
-+	case ARM_CPU_PART_CORTEX_A9:
-+	case ARM_CPU_PART_CORTEX_A12:
-+	case ARM_CPU_PART_CORTEX_A17:
-+	case ARM_CPU_PART_CORTEX_A73:
-+	case ARM_CPU_PART_CORTEX_A75:
-+		per_cpu(harden_branch_predictor_fn, cpu) =
-+			harden_branch_predictor_bpiall;
-+		spectre_v2_method = "BPIALL";
-+		break;
-+
-+	case ARM_CPU_PART_CORTEX_A15:
-+	case ARM_CPU_PART_BRAHMA_B15:
-+		per_cpu(harden_branch_predictor_fn, cpu) =
-+			harden_branch_predictor_iciallu;
-+		spectre_v2_method = "ICIALLU";
-+		break;
-+	}
-+	if (spectre_v2_method)
-+		pr_info("CPU%u: Spectre v2: using %s workaround\n",
-+			smp_processor_id(), spectre_v2_method);
-+}
-+#else
-+static void cpu_v7_spectre_init(void)
-+{
-+}
-+#endif
-+
-+static __maybe_unused bool cpu_v7_check_auxcr_set(bool *warned,
- 						  u32 mask, const char *msg)
- {
- 	u32 aux_cr;
-@@ -13,24 +67,33 @@ static __maybe_unused void cpu_v7_check_
- 		if (!*warned)
- 			pr_err("CPU%u: %s", smp_processor_id(), msg);
- 		*warned = true;
-+		return false;
- 	}
-+	return true;
- }
- 
- static DEFINE_PER_CPU(bool, spectre_warned);
- 
--static void check_spectre_auxcr(bool *warned, u32 bit)
-+static bool check_spectre_auxcr(bool *warned, u32 bit)
- {
--	if (IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR) &&
-+	return IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR) &&
- 		cpu_v7_check_auxcr_set(warned, bit,
- 				       "Spectre v2: firmware did not set auxiliary control register IBE bit, system vulnerable\n");
- }
- 
- void cpu_v7_ca8_ibe(void)
- {
--	check_spectre_auxcr(this_cpu_ptr(&spectre_warned), BIT(6));
-+	if (check_spectre_auxcr(this_cpu_ptr(&spectre_warned), BIT(6)))
-+		cpu_v7_spectre_init();
- }
- 
- void cpu_v7_ca15_ibe(void)
- {
--	check_spectre_auxcr(this_cpu_ptr(&spectre_warned), BIT(0));
-+	if (check_spectre_auxcr(this_cpu_ptr(&spectre_warned), BIT(0)))
-+		cpu_v7_spectre_init();
-+}
-+
-+void cpu_v7_bugs_init(void)
-+{
-+	cpu_v7_spectre_init();
- }
---- a/arch/arm/mm/proc-v7.S
-+++ b/arch/arm/mm/proc-v7.S
-@@ -474,8 +474,10 @@ __v7_setup_stack:
- 
- 	__INITDATA
- 
-+	.weak cpu_v7_bugs_init
-+
- 	@ define struct processor (see <asm/proc-fns.h> and proc-macros.S)
--	define_processor_functions v7, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
-+	define_processor_functions v7, dabort=v7_early_abort, pabort=v7_pabort, suspend=1, bugs=cpu_v7_bugs_init
- 
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- 	@ generic v7 bpiall on context switch
-@@ -490,7 +492,7 @@ __v7_setup_stack:
- 	globl_equ	cpu_v7_bpiall_do_suspend,	cpu_v7_do_suspend
- 	globl_equ	cpu_v7_bpiall_do_resume,	cpu_v7_do_resume
- #endif
--	define_processor_functions v7_bpiall, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
-+	define_processor_functions v7_bpiall, dabort=v7_early_abort, pabort=v7_pabort, suspend=1, bugs=cpu_v7_bugs_init
- 
- #define HARDENED_BPIALL_PROCESSOR_FUNCTIONS v7_bpiall_processor_functions
- #else
-@@ -526,7 +528,7 @@ __v7_setup_stack:
- 	globl_equ	cpu_ca9mp_switch_mm,	cpu_v7_switch_mm
- #endif
- 	globl_equ	cpu_ca9mp_set_pte_ext,	cpu_v7_set_pte_ext
--	define_processor_functions ca9mp, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
-+	define_processor_functions ca9mp, dabort=v7_early_abort, pabort=v7_pabort, suspend=1, bugs=cpu_v7_bugs_init
+ extern int vfp_preserve_user_clear_hwstate(struct user_vfp __user *,
+ 					   struct user_vfp_exc __user *);
+-extern int vfp_restore_user_hwstate(struct user_vfp __user *,
+-				    struct user_vfp_exc __user *);
++extern int vfp_restore_user_hwstate(struct user_vfp *,
++				    struct user_vfp_exc *);
  #endif
  
- 	@ Cortex-A15 - needs iciallu switch_mm for hardening
+ /*
+--- a/arch/arm/kernel/signal.c
++++ b/arch/arm/kernel/signal.c
+@@ -107,21 +107,20 @@ static int preserve_vfp_context(struct v
+ 	return vfp_preserve_user_clear_hwstate(&frame->ufp, &frame->ufp_exc);
+ }
+ 
+-static int restore_vfp_context(struct vfp_sigframe __user *frame)
++static int restore_vfp_context(struct vfp_sigframe __user *auxp)
+ {
+-	unsigned long magic;
+-	unsigned long size;
+-	int err = 0;
++	struct vfp_sigframe frame;
++	int err;
+ 
+-	__get_user_error(magic, &frame->magic, err);
+-	__get_user_error(size, &frame->size, err);
++	err = __copy_from_user(&frame, (char __user *) auxp, sizeof(frame));
+ 
+ 	if (err)
+-		return -EFAULT;
+-	if (magic != VFP_MAGIC || size != VFP_STORAGE_SIZE)
++		return err;
++
++	if (frame.magic != VFP_MAGIC || frame.size != VFP_STORAGE_SIZE)
+ 		return -EINVAL;
+ 
+-	return vfp_restore_user_hwstate(&frame->ufp, &frame->ufp_exc);
++	return vfp_restore_user_hwstate(&frame.ufp, &frame.ufp_exc);
+ }
+ 
+ #endif
+--- a/arch/arm/vfp/vfpmodule.c
++++ b/arch/arm/vfp/vfpmodule.c
+@@ -601,13 +601,11 @@ int vfp_preserve_user_clear_hwstate(stru
+ }
+ 
+ /* Sanitise and restore the current VFP state from the provided structures. */
+-int vfp_restore_user_hwstate(struct user_vfp __user *ufp,
+-			     struct user_vfp_exc __user *ufp_exc)
++int vfp_restore_user_hwstate(struct user_vfp *ufp, struct user_vfp_exc *ufp_exc)
+ {
+ 	struct thread_info *thread = current_thread_info();
+ 	struct vfp_hard_struct *hwstate = &thread->vfpstate.hard;
+ 	unsigned long fpexc;
+-	int err = 0;
+ 
+ 	/* Disable VFP to avoid corrupting the new thread state. */
+ 	vfp_flush_hwstate(thread);
+@@ -616,17 +614,16 @@ int vfp_restore_user_hwstate(struct user
+ 	 * Copy the floating point registers. There can be unused
+ 	 * registers see asm/hwcap.h for details.
+ 	 */
+-	err |= __copy_from_user(&hwstate->fpregs, &ufp->fpregs,
+-				sizeof(hwstate->fpregs));
++	memcpy(&hwstate->fpregs, &ufp->fpregs, sizeof(hwstate->fpregs));
+ 	/*
+ 	 * Copy the status and control register.
+ 	 */
+-	__get_user_error(hwstate->fpscr, &ufp->fpscr, err);
++	hwstate->fpscr = ufp->fpscr;
+ 
+ 	/*
+ 	 * Sanitise and restore the exception registers.
+ 	 */
+-	__get_user_error(fpexc, &ufp_exc->fpexc, err);
++	fpexc = ufp_exc->fpexc;
+ 
+ 	/* Ensure the VFP is enabled. */
+ 	fpexc |= FPEXC_EN;
+@@ -635,10 +632,10 @@ int vfp_restore_user_hwstate(struct user
+ 	fpexc &= ~(FPEXC_EX | FPEXC_FP2V);
+ 	hwstate->fpexc = fpexc;
+ 
+-	__get_user_error(hwstate->fpinst, &ufp_exc->fpinst, err);
+-	__get_user_error(hwstate->fpinst2, &ufp_exc->fpinst2, err);
++	hwstate->fpinst = ufp_exc->fpinst;
++	hwstate->fpinst2 = ufp_exc->fpinst2;
+ 
+-	return err ? -EFAULT : 0;
++	return 0;
+ }
+ 
+ /*
 
 
