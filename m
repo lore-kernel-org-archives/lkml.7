@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6544C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD16AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAF6214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79677214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239157;
-	bh=7uzewt8hdsiAqgQV0KAbgITKBU6rxAT/QGpAOMXsW8w=;
+	s=default; t=1573239160;
+	bh=Nltidl9nOoh1f2F+7murHOmp8tnBH76sMED4nsQk5mY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1EgY+cy2oIAr1f1sSkCYCiA1zD9c2P/CENlxVGFDWcUSpgHSmtp/bZeF6gcHSLykt
-	 SSW6us5C3fRtR0bPV63xBCbGL8ZVq3GABld+/zNAqnzqownomGbX9roKZbT93GqaBi
-	 cyf8KmFQtp60STyoGwregAI8nE0B65KEWl1wcqhs=
+	b=GL5ZNrupHD3l5lxuRkBUQ8v5e20AqTmD51LxxDGioZgebuo5Zx6OQ2G1IOg66VfkP
+	 Ek2OvlkJqhBrFdxLiTof3DdyqZ3XrtZgbcnEMizHQd0L6K3EM0fivUC6UNOo1t1gVH
+	 t2/qvKvJppvJ4IzFeED18L2/SWAF+AKky1z3d/Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbfKHSwg (ORCPT
+        id S1731541AbfKHSwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:52:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:52:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbfKHSwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:52:34 -0500
+        id S1731483AbfKHSwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:52:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 961112178F;
-        Fri,  8 Nov 2019 18:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B258321D7E;
+        Fri,  8 Nov 2019 18:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239153;
-        bh=7uzewt8hdsiAqgQV0KAbgITKBU6rxAT/QGpAOMXsW8w=;
+        s=default; t=1573239156;
+        bh=Nltidl9nOoh1f2F+7murHOmp8tnBH76sMED4nsQk5mY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oHmGPRuPCNcz8sSIVNduLhBlht9GRM8px6I157XF8vhDhXrkjSbgsWNtbUu7yB1pL
-         bwy/VhMLsVwVVv2uE2DIinfNWiw4Dj+gCH7SSoNLwkxqEpHKnhHV1dYwhNl6CQccyV
-         UDEgIvd+QPBDirxB7S33KA+D/PwDzdmOHgoqwNpQ=
+        b=1BFX3hSQ905Zo/lHe3JnUut2FMR19pWD3fHasQLrvIjfF7ixBTeB8Lg7hGA4PkhAP
+         gRoD4BldfZIFfeHs2ngtT62UCKFEQvFdFfPHAd3yhGfjLTSEieI0p+UE4jiy62MCfX
+         rzruDTgmqz8rBT3+D7iCUJrrhF3oYc7hG8ikUy2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 18/75] net: add READ_ONCE() annotation in __skb_wait_for_more_packets()
-Date:   Fri,  8 Nov 2019 19:49:35 +0100
-Message-Id: <20191108174724.355845852@linuxfoundation.org>
+Subject: [PATCH 4.4 19/75] vxlan: check tun_info options_len properly
+Date:   Fri,  8 Nov 2019 19:49:36 +0100
+Message-Id: <20191108174726.087323143@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -60,79 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 7c422d0ce97552dde4a97e6290de70ec6efb0fc6 ]
+[ Upstream commit eadf52cf1852196a1363044dcda22fa5d7f296f7 ]
 
-__skb_wait_for_more_packets() can be called while other cpus
-can feed packets to the socket receive queue.
+This patch is to improve the tun_info options_len by dropping
+the skb when TUNNEL_VXLAN_OPT is set but options_len is less
+than vxlan_metadata. This can void a potential out-of-bounds
+access on ip_tun_info.
 
-KCSAN reported :
-
-BUG: KCSAN: data-race in __skb_wait_for_more_packets / __udp_enqueue_schedule_skb
-
-write to 0xffff888102e40b58 of 8 bytes by interrupt on cpu 0:
- __skb_insert include/linux/skbuff.h:1852 [inline]
- __skb_queue_before include/linux/skbuff.h:1958 [inline]
- __skb_queue_tail include/linux/skbuff.h:1991 [inline]
- __udp_enqueue_schedule_skb+0x2d7/0x410 net/ipv4/udp.c:1470
- __udp_queue_rcv_skb net/ipv4/udp.c:1940 [inline]
- udp_queue_rcv_one_skb+0x7bd/0xc70 net/ipv4/udp.c:2057
- udp_queue_rcv_skb+0xb5/0x400 net/ipv4/udp.c:2074
- udp_unicast_rcv_skb.isra.0+0x7e/0x1c0 net/ipv4/udp.c:2233
- __udp4_lib_rcv+0xa44/0x17c0 net/ipv4/udp.c:2300
- udp_rcv+0x2b/0x40 net/ipv4/udp.c:2470
- ip_protocol_deliver_rcu+0x4d/0x420 net/ipv4/ip_input.c:204
- ip_local_deliver_finish+0x110/0x140 net/ipv4/ip_input.c:231
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_local_deliver+0x133/0x210 net/ipv4/ip_input.c:252
- dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish+0x121/0x160 net/ipv4/ip_input.c:413
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_rcv+0x18f/0x1a0 net/ipv4/ip_input.c:523
- __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
- __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
- process_backlog+0x1d3/0x420 net/core/dev.c:5955
-
-read to 0xffff888102e40b58 of 8 bytes by task 13035 on cpu 1:
- __skb_wait_for_more_packets+0xfa/0x320 net/core/datagram.c:100
- __skb_recv_udp+0x374/0x500 net/ipv4/udp.c:1683
- udp_recvmsg+0xe1/0xb10 net/ipv4/udp.c:1712
- inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
- sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
- ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
- do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
- __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
- __do_sys_recvmmsg net/socket.c:2703 [inline]
- __se_sys_recvmmsg net/socket.c:2696 [inline]
- __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 13035 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: ee122c79d422 ("vxlan: Flow based tunneling")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/datagram.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/vxlan.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -96,7 +96,7 @@ static int wait_for_more_packets(struct
- 	if (error)
- 		goto out_err;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2006,8 +2006,11 @@ static void vxlan_xmit_one(struct sk_buf
+ 		ttl = info->key.ttl;
+ 		tos = info->key.tos;
  
--	if (sk->sk_receive_queue.prev != skb)
-+	if (READ_ONCE(sk->sk_receive_queue.prev) != skb)
- 		goto out;
- 
- 	/* Socket shut down? */
+-		if (info->options_len)
++		if (info->options_len) {
++			if (info->options_len < sizeof(*md))
++				goto drop;
+ 			md = ip_tunnel_info_opts(info);
++		}
+ 	} else {
+ 		md->gbp = skb->mark;
+ 	}
 
 
