@@ -2,111 +2,71 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9142FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C933BFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B438421882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573189629;
-	bh=Nml6ZqPGIxeHePwEoMl3uFywnf+kk1nTeP99Kndi+gU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ROL9aNR87eNxro96mfjlQChwSSIiGVs72oawqwj0Fl4n9yOCB0ID2rg7h37qUTHvb
-	 HxE6qY3j4dpcmuCxF2ZcM1zkkF8wZTWzaS15jM5sFMalEMuEtt3IuW8mA5k3Y9pFdZ
-	 58jAxLabXiwKjLAlBtloeI0sPE8jOF1CVr+QGeNo=
+	by mail.kernel.org (Postfix) with ESMTP id A78D121848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfKHFHI (ORCPT
+        id S1726424AbfKHFOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:07:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 00:14:40 -0500
+Received: from verein.lst.de ([213.95.11.211]:32868 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfKHFHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:07:08 -0500
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8797B21D82
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Nov 2019 05:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573189626;
-        bh=Nml6ZqPGIxeHePwEoMl3uFywnf+kk1nTeP99Kndi+gU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bAdWTsYRTkqedcC/+Z5sINwapybfyle+SAfQCYzh0EWS5bFnoTWCp8gEp5sb9cWnI
-         O5bF/n5f1DTs5DQ85rVVTZbzCY3ybfp9Rs/y1P5HNCiBgUd2Nw3kHKIgcB9HugJvZn
-         vVLMDAwji8m5eynkuo8EBnTeCAjeGmxaYmxlk+Hs=
-Received: by mail-wm1-f47.google.com with SMTP id q70so4831090wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 21:07:06 -0800 (PST)
-X-Gm-Message-State: APjAAAVWyen7ku32ENgL69L1ZJXMV3+16WvrEhyOGQOgW+e69+x5Z5Ph
-        cMo0lRdM+UBDns0RqBBEboh4gwc71LIaaeCYtkJF9g==
-X-Google-Smtp-Source: APXvYqx08Mv0U8UmADt1yPzJqTiWQTH/61DB5ak1MBLcnJribE7k+KhLlnxirQA97U78di+ySNLiALLNE6nRtXo4CT0=
-X-Received: by 2002:a7b:c1ca:: with SMTP id a10mr6805119wmj.161.1573189624926;
- Thu, 07 Nov 2019 21:07:04 -0800 (PST)
+        id S1725769AbfKHFOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 00:14:39 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6282368BE1; Fri,  8 Nov 2019 06:14:34 +0100 (CET)
+Date:   Fri, 8 Nov 2019 06:14:33 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        openrisc@lists.librecores.org, linux-mtd@lists.infradead.org,
+        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: generic-iomap tree for linux-next
+Message-ID: <20191108051433.GA29611@lst.de>
+References: <20191029064834.23438-1-hch@lst.de> <20191107204743.GA22863@lst.de> <20191108132000.3e7bd5b8@canb.auug.org.au> <20191108155248.0a32a03a@canb.auug.org.au>
 MIME-Version: 1.0
-References: <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk>
- <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk>
- <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com> <6964.1573152517@warthog.procyon.org.uk>
-In-Reply-To: <6964.1573152517@warthog.procyon.org.uk>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 7 Nov 2019 21:06:53 -0800
-X-Gmail-Original-Message-ID: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com>
-Message-ID: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/14] pipe: Add O_NOTIFICATION_PIPE [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108155248.0a32a03a@canb.auug.org.au>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 10:48 AM David Howells <dhowells@redhat.com> wrote:
->
-> Andy Lutomirski <luto@kernel.org> wrote:
->
-> > > Add an O_NOTIFICATION_PIPE flag that can be passed to pipe2() to indicate
-> > > that the pipe being created is going to be used for notifications.  This
-> > > suppresses the use of splice(), vmsplice(), tee() and sendfile() on the
-> > > pipe as calling iov_iter_revert() on a pipe when a kernel notification
-> > > message has been inserted into the middle of a multi-buffer splice will be
-> > > messy.
+On Fri, Nov 08, 2019 at 03:52:48PM +1100, Stephen Rothwell wrote:
+> Hi Christoph,
+> 
+> On Fri, 8 Nov 2019 13:20:00 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > >
-> > How messy?
->
-> Well, iov_iter_revert() on a pipe iterator simply walks backwards along the
-> ring discarding the last N contiguous slots (where N is normally the number of
-> slots that were filled by whatever operation is being reverted).
->
-> However, unless the code that transfers stuff into the pipe takes the spinlock
-> spinlock and disables softirqs for the duration of its ring filling, what were
-> N contiguous slots may now have kernel notifications interspersed - even if it
-> has been holding the pipe mutex.
->
-> So, now what do you do?  You have to free up just the buffers relevant to the
-> iterator and then you can either compact down the ring to free up the space or
-> you can leave null slots and let the read side clean them up, thereby
-> reducing the capacity of the pipe temporarily.
->
-> Either way, iov_iter_revert() gets more complex and has to hold the spinlock.
+> > On Thu, 7 Nov 2019 21:47:43 +0100 Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > can you add the generic-ioremap tree:
+> > > 
+> > >    git://git.infradead.org/users/hch/ioremap.git
+> > > 
+> > > to linux-next?   
+> > 
+> > I assume you mean the for-next branch?
+> 
+> With that assumption, added from today.
 
-I feel like I'm missing something fundamental here.
-
-I can open a normal pipe from userspace (with pipe() or pipe2()), and
-I can have two threads.  One thread writes to the pipe with write().
-The other thread writes with splice().  Everything works fine.  What's
-special about notifications?
+Yes, and thanks!
