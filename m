@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CCAC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316B6FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C738E2067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018E4206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240475;
-	bh=Du/6PTSuGoZ0Qf9UkdU/yHUEIgefC9EtDGfESH88STo=;
+	s=default; t=1573240479;
+	bh=gvchYWgY+bPpWKuR3Es1o61Fq4TsZ/yX9t1jjgL5Mnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HgUZODCk1K9hYoXenwMZqpfp+RFeXOQxPduafTiY6Cp4mGMHiw8I2w2g0HPOebhte
-	 sXeEEHg3JA41E9V7PVmKkZ0Sp6YdF1XFI8ud7AhZbc3MHUibYMAGmH+JD3Ll5EWgQf
-	 oNHWBZDpnzY7ibTaLOdErpUF7KDwt+N8XwqD9PW4=
+	b=DSCLYZj3HUHKDRMUGWNt6eiYuapoHqHXoCiIsgEDv2M8YzvpxqwdJuEdaMr1hkDP6
+	 ChYq14+/xWbubr5ltvK9fAgE8GbuYTKjE8I+g3MaUknPEroFyH2vcGo7BKvDxwYa3t
+	 jyxTucLu8+yIb7HK11srIDeQkZf+ADiA1P95bDOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390266AbfKHTGO (ORCPT
+        id S2391511AbfKHTOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:06:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36440 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:14:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391211AbfKHTGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:06:08 -0500
+        id S1733251AbfKHTGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:06:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B1E2087E;
-        Fri,  8 Nov 2019 19:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA0F3215EA;
+        Fri,  8 Nov 2019 19:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239967;
-        bh=Du/6PTSuGoZ0Qf9UkdU/yHUEIgefC9EtDGfESH88STo=;
+        s=default; t=1573239973;
+        bh=gvchYWgY+bPpWKuR3Es1o61Fq4TsZ/yX9t1jjgL5Mnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hFz9u37iEslZMSJANv9y5/tgsbyzkR6lnNZzo254V4cFaEXSEwZdOG4qliWbv/gCv
-         kT8U4KI0vR+rLQ5aCnZkYqxq9l31GwpRpdIWKzvJNcL5O+9MXdbUPyCZPDPbxOUvxh
-         iBv3YMtXPRpUy4zyLX+OGx8Ny4elpmBCTvkLmAcQ=
+        b=rYBMmFP5r2cnQOMFb6MwiT36XcXk0EmS/P+KX/cD8wv8MAbRzZ7sBk/otn0w6BxHv
+         n5qTJhvN6EtrjV+/FI9Em40iypIUUH7StO9OHrlAbgEed9URTEFg9QCup5bvC1yCbw
+         Ggl7ipFY7sTnJVSkJcmWjaNXP0VGxQdEUQTLa4/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Soeren Moch <smoch@web.de>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Jeff White <jeff.white@zii.aero>,
+        Rick Ramstetter <rick@anteaterllc.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 026/140] arm64: dts: rockchip: fix RockPro64 sdhci settings
-Date:   Fri,  8 Nov 2019 19:49:14 +0100
-Message-Id: <20191108174904.989259730@linuxfoundation.org>
+Subject: [PATCH 5.3 045/140] ARM: dts: vf610-zii-scu4-aib: Specify i2c-mux-idle-disconnect
+Date:   Fri,  8 Nov 2019 19:49:33 +0100
+Message-Id: <20191108174908.274573711@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,41 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Soeren Moch <smoch@web.de>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 2558b3b1b11a1b32b336be2dd0aabfa6d35ddcb5 ]
+[ Upstream commit 71936a6d18c33c63b4e9e0359fb987306cbe9fae ]
 
-The RockPro64 schematics [1], [2] show that the rk3399 EMMC_STRB pin is
-connected to the RESET pin instead of the DATA_STROBE pin of the eMMC module.
-So the data strobe cannot be used for its intended purpose on this board,
-and so the HS400 eMMC mode is not functional. Limit the controller to HS200.
+Specify 'i2c-mux-idle-disconnect' for both I2C switches present on the
+board, since both are connected to the same parent bus and all of
+their children have the same I2C address.
 
-[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
-[2] http://files.pine64.org/doc/rock64/PINE64_eMMC_Module_20170719.pdf
-
-Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
-Signed-off-by: Soeren Moch <smoch@web.de>
-Link: https://lore.kernel.org/r/20191003215036.15023-2-smoch@web.de
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: ca4b4d373fcc ("ARM: dts: vf610: Add ZII SCU4 AIB board")
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Jeff White <jeff.white@zii.aero>
+Cc: Rick Ramstetter <rick@anteaterllc.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Tested-by: Chris Healy <cphealy@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index cad314f708300..1ff617230f6c4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -625,8 +625,7 @@
+diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+index d7019e89f5887..8136e0ca10d54 100644
+--- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
++++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+@@ -600,6 +600,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		reg = <0x70>;
++		i2c-mux-idle-disconnect;
  
- &sdhci {
- 	bus-width = <8>;
--	mmc-hs400-1_8v;
--	mmc-hs400-enhanced-strobe;
-+	mmc-hs200-1_8v;
- 	non-removable;
- 	status = "okay";
- };
+ 		sff0_i2c: i2c@1 {
+ 			#address-cells = <1>;
+@@ -638,6 +639,7 @@
+ 		reg = <0x71>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
+ 
+ 		sff5_i2c: i2c@1 {
+ 			#address-cells = <1>;
 -- 
 2.20.1
 
