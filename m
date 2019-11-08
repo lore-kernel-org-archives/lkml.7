@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5D6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB070C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDD721D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9732084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/ucsawO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vF9qL09N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfKHASU (ORCPT
+        id S1728856AbfKHASY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:18:20 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42884 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfKHASM (ORCPT
+        Thu, 7 Nov 2019 19:18:24 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38069 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfKHASQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:18:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s5so3526105pfh.9;
-        Thu, 07 Nov 2019 16:18:11 -0800 (PST)
+        Thu, 7 Nov 2019 19:18:16 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 15so2990413pgh.5;
+        Thu, 07 Nov 2019 16:18:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ayUB+Zje9XOtWri2ZwkcqJ23e3BRsxjTr/FbRYD45nI=;
-        b=P/ucsawOyj4iGInyifA2hv7QVl0/QAqgCzVr5FrXFfq0KKI54sdD3sqrUytcCkocwW
-         D52lmH7MUN4kuCzhl/+ax3xZuhX6enoIIX+gwPN50DURhVxqYRilBkGATsmcUDijksMv
-         qNWdxqy0nETUC2MQQAtlHhsY/A8RZcSl8ZN8CIXB4UhTcVFXQai8dPoo2zKtjskDHxGG
-         dV0Fy3HJcBJq4k5BhcS6AdY91UQPB0M8tOP87Q1LqL9Ut0JnMViI81L6MipO+MKgD6e5
-         cmF9/SZWdPM86dUU762kIa+sZXqMxCY+AFWtsCtrhcNrSIohwO8CLn9GzXivkw4MaObp
-         h/gw==
+        bh=RFrM/IahGbn36aeCNSBF2NbdB2UIEkSbp7j1U/R43X8=;
+        b=vF9qL09Nc5VFyECrfx2/sutggpKwZRxb5vzvhEYLHuLdOjx3aVC9RH575LhqNTX8k6
+         xUV++MKeUYwv1idw9qQh6ZsqXRWwFHWcUEDIAEwS/M2Ui2S22u+BSHvWh3M9VC0RY2lW
+         tMOcHfnw0xj0VziFuwnuN9+DsRJ32aQ7Ywf5MQi0xcwLYkCkAxQz885XUjMUJDS0dn0s
+         K74NlGvfBKQaQoKom+Jw3UKEPCHQNJ0VU8OGr4+iuoQzFq1a8oj4hEibrTpLhnwPUZX9
+         E0qpZ1Fh4lVBSQgn1s5N2+dDdoVjEvfxvX5QPdKwMbTePS3+v8IwNsp7hijKoJvTZvFg
+         WEPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ayUB+Zje9XOtWri2ZwkcqJ23e3BRsxjTr/FbRYD45nI=;
-        b=aoudvfpNzqEkooVuSE/ph+vcugP+RrMRnDhgxRrpDuFgouoJ+aj4ePt50gkxRNQDir
-         +aeIamO4w3W3hsnRNnwPjkG2dKNABaHmKKmqUEMm8g0By+UfAq7Lfe/hTu/7Dst4PfIK
-         txwZRZ54DL/GLVij0i/74Bs4gpb0eJJCdSN2kBVf6WOmwd1Ke85D4R71wquwlZWuyTha
-         d43npMkBpsyYjolYZ4OtGNT9nljsmhjpDAO9Vc+zKNF7yNDkQoo5hJVOT+K3iuAmYBjN
-         1mZkujCE/7wWH0X9gWSkDshF9sGdhHOrDROPrlfogo2ta0YLeqoV+v8J3Je5ptF36je0
-         XSSQ==
-X-Gm-Message-State: APjAAAXq40oTxuZTFD8yGT7lVqYOCn9dJ66w1FP9SLqdJPN4mLRHi9JQ
-        yJMlDFfU0G/7DnpYg3/Fw4A=
-X-Google-Smtp-Source: APXvYqwu6VQrGGJUTJXh9OYfuGqb5Ahu8tXNV4vuTGbVZu9rbN3sra2CZkTyBPvYXfE2xvUN4xdcRg==
-X-Received: by 2002:a62:e818:: with SMTP id c24mr7922214pfi.125.1573172291079;
-        Thu, 07 Nov 2019 16:18:11 -0800 (PST)
+        bh=RFrM/IahGbn36aeCNSBF2NbdB2UIEkSbp7j1U/R43X8=;
+        b=nq/Gy/cUlNsvPbT2vvK5rDqzwPgXGa+aZAeA6pGm38HgzVb1R/KY6bxjh3EYCzUy/H
+         sl47qMrpN3S5R8jBL2JHHjg0iPi8S3h8QpZXBQRHZEnIQv9n2i8hD7FuH/oKuXh0XKaW
+         T2hssXmY9LC6jz4S6JhwzMoCJFOfInBZYQbgQDOdwXBc+2dJhAClE2MVKwxCwgNLbb2A
+         lUKJnuEhUjqWbSQTSx73hu2pV25UoCuqmPnGnPggjy29o78NhfqX/0vSwDvY8C1fU099
+         kX9iG+28R4nmE0HNIV58GIRcpHZM18WnGLU1mMyiwdxbJNQkwDYkCVbWPbIemN4hCSFy
+         DWrQ==
+X-Gm-Message-State: APjAAAWFDnSqZfE9RReqPl2LDqxaKyWSHW7HwRomQ7FBDwbFVOFbAQIc
+        VJSd+5FbTknKreKlPenTLtM=
+X-Google-Smtp-Source: APXvYqyuEbXnFkngCDNfkfHDVosVsyKpIs9kq6iPrcvoyP97dZ+2NdtDJbtaSOizO2TXFemeUjEzmw==
+X-Received: by 2002:a17:902:441:: with SMTP id 59mr7033736ple.300.1573172295178;
+        Thu, 07 Nov 2019 16:18:15 -0800 (PST)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id m68sm3688764pfb.122.2019.11.07.16.18.10
+        by smtp.gmail.com with ESMTPSA id m68sm3688764pfb.122.2019.11.07.16.18.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 16:18:10 -0800 (PST)
+        Thu, 07 Nov 2019 16:18:14 -0800 (PST)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
@@ -66,9 +66,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v7 3/6] software node: implement reference properties
-Date:   Thu,  7 Nov 2019 16:18:00 -0800
-Message-Id: <20191108001803.191541-4-dmitry.torokhov@gmail.com>
+Subject: [PATCH v7 6/6] software node: add basic tests for property entries
+Date:   Thu,  7 Nov 2019 16:18:03 -0800
+Message-Id: <20191108001803.191541-7-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 In-Reply-To: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
 References: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
@@ -79,225 +79,506 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible to store references to software nodes in the same fashion as
-other static properties, so that users do not need to define separate
-structures:
+This adds tests for creating software nodes with properties supplied by
+PROPERTY_ENTRY_XXX() macros and fetching and validating data from said
+nodes/properties.
 
-static const struct software_node gpio_bank_b_node = {
-	.name = "B",
-};
-
-static const struct property_entry simone_key_enter_props[] = {
-	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
-	PROPERTY_ENTRY_STRING("label", "enter"),
-	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
-	{ }
-};
+We are using KUnit framework for the tests.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 49 ++++++++++++++++++++++++++++------
- include/linux/property.h | 57 +++++++++++++++++++++++++++++-----------
- 2 files changed, 82 insertions(+), 24 deletions(-)
+ drivers/base/test/Makefile              |   2 +
+ drivers/base/test/property-entry-test.c | 472 ++++++++++++++++++++++++
+ 2 files changed, 474 insertions(+)
+ create mode 100644 drivers/base/test/property-entry-test.c
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index ce7f202b2455e..809146f57aa45 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -246,6 +246,13 @@ static int property_entry_copy_data(struct property_entry *dst,
- 	if (!src->is_inline && !src->length)
- 		return -ENODATA;
- 
-+	/*
-+	 * Reference properties are never stored inline as
-+	 * they are too big.
-+	 */
-+	if (src->type == DEV_PROP_REF && src->is_inline)
-+		return -EINVAL;
+diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
+index 0f1f7277a0139..22143102e5d21 100644
+--- a/drivers/base/test/Makefile
++++ b/drivers/base/test/Makefile
+@@ -1,2 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
 +
- 	if (src->length <= sizeof(dst->value)) {
- 		dst_ptr = &dst->value;
- 		dst->is_inline = true;
-@@ -473,21 +480,47 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- {
- 	struct swnode *swnode = to_swnode(fwnode);
- 	const struct software_node_reference *ref;
-+	const struct software_node_ref_args *ref_array;
-+	const struct software_node_ref_args *ref_args;
- 	const struct property_entry *prop;
- 	struct fwnode_handle *refnode;
- 	int i;
- 
--	if (!swnode || !swnode->node->references)
-+	if (!swnode)
- 		return -ENOENT;
- 
--	for (ref = swnode->node->references; ref->name; ref++)
--		if (!strcmp(ref->name, propname))
--			break;
-+	prop = property_entry_get(swnode->node->properties, propname);
-+	if (prop) {
-+		if (prop->type != DEV_PROP_REF)
-+			return -EINVAL;
- 
--	if (!ref->name || index > (ref->nrefs - 1))
--		return -ENOENT;
-+		/*
-+		 * We expect that references are never stored inline, even
-+		 * single ones, as they are too big.
-+		 */
-+		if (prop->is_inline)
-+			return -EINVAL;
++obj-$(CONFIG_KUNIT) += property-entry-test.o
+diff --git a/drivers/base/test/property-entry-test.c b/drivers/base/test/property-entry-test.c
+new file mode 100644
+index 0000000000000..d6ac84c8ebd06
+--- /dev/null
++++ b/drivers/base/test/property-entry-test.c
+@@ -0,0 +1,472 @@
++// SPDX-License-Identifier: GPL-2.0
++// Unit tests for property entries API
++//
++// Copyright 2019 Google LLC.
 +
-+		if (index * sizeof(*ref_args) >= prop->length)
-+			return -ENOENT;
++#include <kunit/test.h>
++#include <linux/property.h>
++#include <linux/types.h>
 +
-+		ref_array = prop->pointer;
-+		ref_args = &ref_array[index];
-+	} else {
-+		if (!swnode->node->references)
-+			return -ENOENT;
++static void pe_test_uints(struct kunit *test)
++{
++	const struct property_entry entries[] = {
++		PROPERTY_ENTRY_U8("prop-u8", 8),
++		PROPERTY_ENTRY_U16("prop-u16", 16),
++		PROPERTY_ENTRY_U32("prop-u32", 32),
++		PROPERTY_ENTRY_U64("prop-u64", 64),
++		{ }
++	};
 +
-+		for (ref = swnode->node->references; ref->name; ref++)
-+			if (!strcmp(ref->name, propname))
-+				break;
++	struct fwnode_handle *node;
++	u8 val_u8, array_u8[2];
++	u16 val_u16, array_u16[2];
++	u32 val_u32, array_u32[2];
++	u64 val_u64, array_u64[2];
++	int error;
 +
-+		if (!ref->name || index > (ref->nrefs - 1))
-+			return -ENOENT;
++	node = fwnode_create_software_node(entries, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
 +
-+		ref_args = &ref->refs[index];
-+	}
- 
--	refnode = software_node_fwnode(ref->refs[index].node);
-+	refnode = software_node_fwnode(ref_args->node);
- 	if (!refnode)
- 		return -ENOENT;
- 
-@@ -506,7 +539,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 	args->nargs = nargs;
- 
- 	for (i = 0; i < nargs; i++)
--		args->args[i] = ref->refs[index].args[i];
-+		args->args[i] = ref_args->args[i];
- 
- 	return 0;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index dad0ad11b55e2..68655c094b395 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -22,6 +22,7 @@ enum dev_prop_type {
- 	DEV_PROP_U32,
- 	DEV_PROP_U64,
- 	DEV_PROP_STRING,
-+	DEV_PROP_REF,
- };
- 
- enum dev_dma_attr {
-@@ -223,6 +224,20 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
- 	return fwnode_property_read_u64_array(fwnode, propname, NULL, 0);
- }
- 
-+struct software_node;
++	error = fwnode_property_read_u8(node, "prop-u8", &val_u8);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u8, 8);
 +
-+/**
-+ * struct software_node_ref_args - Reference property with additional arguments
-+ * @node: Reference to a software node
-+ * @nargs: Number of elements in @args array
-+ * @args: Integer arguments
-+ */
-+struct software_node_ref_args {
-+	const struct software_node *node;
-+	unsigned int nargs;
-+	u64 args[NR_FWNODE_REFERENCE_ARGS];
-+};
++	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u8[0], 8);
 +
- /**
-  * struct property_entry - "Built-in" device property representation.
-  * @name: Name of the property.
-@@ -260,14 +275,20 @@ struct property_entry {
- #define __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_)				\
- 	sizeof(((struct property_entry *)NULL)->value._elem_)
- 
--#define __PROPERTY_ENTRY_ARRAY_LEN(_name_, _elem_, _Type_, _val_, _len_)\
-+#define __PROPERTY_ENTRY_ARRAY_ELSIZE_LEN(_name_, _elsize_, _Type_,	\
-+					  _val_, _len_)			\
- (struct property_entry) {						\
- 	.name = _name_,							\
--	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
-+	.length = (_len_) * (_elsize_),					\
- 	.type = DEV_PROP_##_Type_,					\
- 	{ .pointer = _val_ },						\
- }
- 
-+#define __PROPERTY_ENTRY_ARRAY_LEN(_name_, _elem_, _Type_, _val_, _len_)\
-+	__PROPERTY_ENTRY_ARRAY_ELSIZE_LEN(_name_,			\
-+				__PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
-+				_Type_, _val_, _len_)
++	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 2);
++	KUNIT_EXPECT_NE(test, error, 0);
 +
- #define PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, _len_)		\
- 	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u8_data, U8, _val_, _len_)
- #define PROPERTY_ENTRY_U16_ARRAY_LEN(_name_, _val_, _len_)		\
-@@ -278,6 +299,10 @@ struct property_entry {
- 	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u64_data, U64, _val_, _len_)
- #define PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, _len_)		\
- 	__PROPERTY_ENTRY_ARRAY_LEN(_name_, str, STRING, _val_, _len_)
-+#define PROPERTY_ENTRY_REF_ARRAY_LEN(_name_, _val_, _len_)		\
-+	__PROPERTY_ENTRY_ARRAY_ELSIZE_LEN(_name_,			\
-+				sizeof(struct software_node_ref_args),	\
-+				REF, _val_, _len_)
- 
- #define PROPERTY_ENTRY_U8_ARRAY(_name_, _val_)				\
- 	PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
-@@ -289,6 +314,8 @@ struct property_entry {
- 	PROPERTY_ENTRY_U64_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
- #define PROPERTY_ENTRY_STRING_ARRAY(_name_, _val_)			\
- 	PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
-+#define PROPERTY_ENTRY_REF_ARRAY(_name_, _val_)			\
-+	PROPERTY_ENTRY_REF_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
- 
- #define __PROPERTY_ENTRY_ELEMENT(_name_, _elem_, _Type_, _val_)		\
- (struct property_entry) {						\
-@@ -316,6 +343,18 @@ struct property_entry {
- 	.is_inline = true,			\
- }
- 
-+#define PROPERTY_ENTRY_REF(_name_, _ref_, ...)				\
-+(struct property_entry) {						\
-+	.name = _name_,							\
-+	.length = sizeof(struct software_node_ref_args),		\
-+	.type = DEV_PROP_REF,						\
-+	{ .pointer = &(const struct software_node_ref_args) {		\
-+		.node = _ref_,						\
-+		.nargs = ARRAY_SIZE(((u64[]){ 0, ##__VA_ARGS__ })) - 1,	\
-+		.args = { __VA_ARGS__ },				\
-+	} },								\
++	error = fwnode_property_read_u8(node, "no-prop-u8", &val_u8);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u8_array(node, "no-prop-u8", array_u8, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u16(node, "prop-u16", &val_u16);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u16, 16);
++
++	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u16[0], 16);
++
++	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 2);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u16(node, "no-prop-u16", &val_u16);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u16_array(node, "no-prop-u16", array_u16, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u32(node, "prop-u32", &val_u32);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u32, 32);
++
++	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u32[0], 32);
++
++	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 2);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u32(node, "no-prop-u32", &val_u32);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u32_array(node, "no-prop-u32", array_u32, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u64(node, "prop-u64", &val_u64);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u64, 64);
++
++	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u64[0], 64);
++
++	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 2);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u64(node, "no-prop-u64", &val_u64);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u64_array(node, "no-prop-u64", array_u64, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	fwnode_remove_software_node(node);
 +}
 +
- struct property_entry *
- property_entries_dup(const struct property_entry *properties);
- 
-@@ -379,20 +418,6 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
- 
--struct software_node;
--
--/**
-- * struct software_node_ref_args - Reference with additional arguments
-- * @node: Reference to a software node
-- * @nargs: Number of elements in @args array
-- * @args: Integer arguments
-- */
--struct software_node_ref_args {
--	const struct software_node *node;
--	unsigned int nargs;
--	u64 args[NR_FWNODE_REFERENCE_ARGS];
--};
--
- /**
-  * struct software_node_reference - Named software node reference property
-  * @name: Name of the property
++static void pe_test_uint_arrays(struct kunit *test)
++{
++	u8 a_u8[16] = { 8, 9 };
++	u16 a_u16[16] = { 16, 17 };
++	u32 a_u32[16] = { 32, 33 };
++	u64 a_u64[16] = { 64, 65 };
++	const struct property_entry entries[] = {
++		PROPERTY_ENTRY_U8_ARRAY("prop-u8", a_u8),
++		PROPERTY_ENTRY_U16_ARRAY("prop-u16", a_u16),
++		PROPERTY_ENTRY_U32_ARRAY("prop-u32", a_u32),
++		PROPERTY_ENTRY_U64_ARRAY("prop-u64", a_u64),
++		{ }
++	};
++
++	struct fwnode_handle *node;
++	u8 val_u8, array_u8[32];
++	u16 val_u16, array_u16[32];
++	u32 val_u32, array_u32[32];
++	u64 val_u64, array_u64[32];
++	int error;
++
++	node = fwnode_create_software_node(entries, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
++
++	error = fwnode_property_read_u8(node, "prop-u8", &val_u8);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u8, 8);
++
++	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u8[0], 8);
++
++	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 2);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u8[0], 8);
++	KUNIT_EXPECT_EQ(test, (int)array_u8[1], 9);
++
++	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 17);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u8(node, "no-prop-u8", &val_u8);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u8_array(node, "no-prop-u8", array_u8, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u16(node, "prop-u16", &val_u16);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u16, 16);
++
++	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u16[0], 16);
++
++	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 2);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u16[0], 16);
++	KUNIT_EXPECT_EQ(test, (int)array_u16[1], 17);
++
++	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 17);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u16(node, "no-prop-u16", &val_u16);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u16_array(node, "no-prop-u16", array_u16, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u32(node, "prop-u32", &val_u32);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u32, 32);
++
++	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u32[0], 32);
++
++	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 2);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u32[0], 32);
++	KUNIT_EXPECT_EQ(test, (int)array_u32[1], 33);
++
++	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 17);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u32(node, "no-prop-u32", &val_u32);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u32_array(node, "no-prop-u32", array_u32, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u64(node, "prop-u64", &val_u64);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)val_u64, 64);
++
++	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 1);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u64[0], 64);
++
++	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 2);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_EQ(test, (int)array_u64[0], 64);
++	KUNIT_EXPECT_EQ(test, (int)array_u64[1], 65);
++
++	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 17);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u64(node, "no-prop-u64", &val_u64);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_u64_array(node, "no-prop-u64", array_u64, 1);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	fwnode_remove_software_node(node);
++}
++
++static void pe_test_strings(struct kunit *test)
++{
++	const char *strings[] = {
++		"string-a",
++		"string-b",
++	};
++
++	const struct property_entry entries[] = {
++		PROPERTY_ENTRY_STRING("str", "single"),
++		PROPERTY_ENTRY_STRING("empty", ""),
++		PROPERTY_ENTRY_STRING_ARRAY("strs", strings),
++		{ }
++	};
++
++	struct fwnode_handle *node;
++	const char *str;
++	const char *strs[10];
++	int error;
++
++	node = fwnode_create_software_node(entries, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
++
++	error = fwnode_property_read_string(node, "str", &str);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_STREQ(test, str, "single");
++
++	error = fwnode_property_read_string_array(node, "str", strs, 1);
++	KUNIT_EXPECT_EQ(test, error, 1);
++	KUNIT_EXPECT_STREQ(test, strs[0], "single");
++
++	/* asking for more data returns what we have */
++	error = fwnode_property_read_string_array(node, "str", strs, 2);
++	KUNIT_EXPECT_EQ(test, error, 1);
++	KUNIT_EXPECT_STREQ(test, strs[0], "single");
++
++	error = fwnode_property_read_string(node, "no-str", &str);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_read_string_array(node, "no-str", strs, 1);
++	KUNIT_EXPECT_LT(test, error, 0);
++
++	error = fwnode_property_read_string(node, "empty", &str);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_STREQ(test, str, "");
++
++	error = fwnode_property_read_string_array(node, "strs", strs, 3);
++	KUNIT_EXPECT_EQ(test, error, 2);
++	KUNIT_EXPECT_STREQ(test, strs[0], "string-a");
++	KUNIT_EXPECT_STREQ(test, strs[1], "string-b");
++
++	error = fwnode_property_read_string_array(node, "strs", strs, 1);
++	KUNIT_EXPECT_EQ(test, error, 1);
++	KUNIT_EXPECT_STREQ(test, strs[0], "string-a");
++
++	/* NULL argument -> returns size */
++	error = fwnode_property_read_string_array(node, "strs", NULL, 0);
++	KUNIT_EXPECT_EQ(test, error, 2);
++
++	/* accessing array as single value */
++	error = fwnode_property_read_string(node, "strs", &str);
++	KUNIT_EXPECT_EQ(test, error, 0);
++	KUNIT_EXPECT_STREQ(test, str, "string-a");
++
++	fwnode_remove_software_node(node);
++}
++
++static void pe_test_bool(struct kunit *test)
++{
++	const struct property_entry entries[] = {
++		PROPERTY_ENTRY_BOOL("prop"),
++		{ }
++	};
++
++	struct fwnode_handle *node;
++
++	node = fwnode_create_software_node(entries, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
++
++	KUNIT_EXPECT_TRUE(test, fwnode_property_read_bool(node, "prop"));
++	KUNIT_EXPECT_FALSE(test, fwnode_property_read_bool(node, "not-prop"));
++
++	fwnode_remove_software_node(node);
++}
++
++/* Verifies that small U8 array is stored inline when property is copied */
++static void pe_test_move_inline_u8(struct kunit *test)
++{
++	u8 u8_array_small[8] = { 1, 2, 3, 4 };
++	u8 u8_array_big[128] = { 5, 6, 7, 8 };
++	struct property_entry entries[] = {
++		PROPERTY_ENTRY_U8_ARRAY("small", u8_array_small),
++		PROPERTY_ENTRY_U8_ARRAY("big", u8_array_big),
++		{ }
++	};
++	struct property_entry *copy;
++	const u8 *data_ptr;
++
++	copy = property_entries_dup(entries);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, copy);
++
++	KUNIT_EXPECT_TRUE(test, copy[0].is_inline);
++	data_ptr = (u8 *)&copy[0].value;
++	KUNIT_EXPECT_EQ(test, (int)data_ptr[0], 1);
++	KUNIT_EXPECT_EQ(test, (int)data_ptr[1], 2);
++
++	KUNIT_EXPECT_FALSE(test, copy[1].is_inline);
++	data_ptr = copy[1].pointer;
++	KUNIT_EXPECT_EQ(test, (int)data_ptr[0], 5);
++	KUNIT_EXPECT_EQ(test, (int)data_ptr[1], 6);
++
++	property_entries_free(copy);
++}
++
++/* Verifies that single string array is stored inline when property is copied */
++static void pe_test_move_inline_str(struct kunit *test)
++{
++	char *str_array_small[] = { "a" };
++	char *str_array_big[] = { "b", "c", "d", "e" };
++	char *str_array_small_empty[] = { "" };
++	struct property_entry entries[] = {
++		PROPERTY_ENTRY_STRING_ARRAY("small", str_array_small),
++		PROPERTY_ENTRY_STRING_ARRAY("big", str_array_big),
++		PROPERTY_ENTRY_STRING_ARRAY("small-empty", str_array_small_empty),
++		{ }
++	};
++	struct property_entry *copy;
++	const char * const *data_ptr;
++
++	copy = property_entries_dup(entries);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, copy);
++
++	KUNIT_EXPECT_TRUE(test, copy[0].is_inline);
++	KUNIT_EXPECT_STREQ(test, copy[0].value.str, "a");
++
++	KUNIT_EXPECT_FALSE(test, copy[1].is_inline);
++	data_ptr = copy[1].pointer;
++	KUNIT_EXPECT_STREQ(test, data_ptr[0], "b");
++	KUNIT_EXPECT_STREQ(test, data_ptr[1], "c");
++
++	KUNIT_EXPECT_TRUE(test, copy[2].is_inline);
++	KUNIT_EXPECT_STREQ(test, copy[2].value.str, "");
++
++	property_entries_free(copy);
++}
++
++/* Handling of reference properties */
++static void pe_test_reference(struct kunit *test)
++{
++	const struct software_node nodes[] = {
++		{ .name = "1", },
++		{ .name = "2", },
++	};
++
++	const struct software_node_ref_args refs[] = {
++		{
++			.node = &nodes[0],
++			.nargs = 0,
++		},
++		{
++			.node = &nodes[1],
++			.nargs = 2,
++			.args = { 3, 4 },
++		},
++	};
++
++	const struct property_entry entries[] = {
++		PROPERTY_ENTRY_REF("ref-1", &nodes[0]),
++		PROPERTY_ENTRY_REF("ref-2", &nodes[1], 1, 2),
++		PROPERTY_ENTRY_REF_ARRAY("ref-3", refs),
++		{ }
++	};
++
++	struct fwnode_handle *node;
++	struct fwnode_reference_args ref;
++	int error;
++
++	error = software_node_register_nodes(nodes);
++	KUNIT_ASSERT_EQ(test, error, 0);
++
++	node = fwnode_create_software_node(entries, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
++
++	error = fwnode_property_get_reference_args(node, "ref-1", NULL,
++						   0, 0, &ref);
++	KUNIT_ASSERT_EQ(test, error, 0);
++	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[0]);
++	KUNIT_EXPECT_EQ(test, ref.nargs, 0U);
++
++	/* wrong index */
++	error = fwnode_property_get_reference_args(node, "ref-1", NULL,
++						   0, 1, &ref);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
++						   1, 0, &ref);
++	KUNIT_ASSERT_EQ(test, error, 0);
++	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
++	KUNIT_EXPECT_EQ(test, ref.nargs, 1U);
++	KUNIT_EXPECT_EQ(test, ref.args[0], 1LLU);
++
++	/* asking for more args, padded with zero data */
++	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
++						   3, 0, &ref);
++	KUNIT_ASSERT_EQ(test, error, 0);
++	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
++	KUNIT_EXPECT_EQ(test, ref.nargs, 3U);
++	KUNIT_EXPECT_EQ(test, ref.args[0], 1LLU);
++	KUNIT_EXPECT_EQ(test, ref.args[1], 2LLU);
++	KUNIT_EXPECT_EQ(test, ref.args[2], 0LLU);
++
++	/* wrong index */
++	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
++						   2, 1, &ref);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	/* array of references */
++	error = fwnode_property_get_reference_args(node, "ref-3", NULL,
++						   0, 0, &ref);
++	KUNIT_ASSERT_EQ(test, error, 0);
++	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[0]);
++	KUNIT_EXPECT_EQ(test, ref.nargs, 0U);
++
++	/* second reference in the array */
++	error = fwnode_property_get_reference_args(node, "ref-3", NULL,
++						   2, 1, &ref);
++	KUNIT_ASSERT_EQ(test, error, 0);
++	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
++	KUNIT_EXPECT_EQ(test, ref.nargs, 2U);
++	KUNIT_EXPECT_EQ(test, ref.args[0], 3LLU);
++	KUNIT_EXPECT_EQ(test, ref.args[1], 4LLU);
++
++	/* wrong index */
++	error = fwnode_property_get_reference_args(node, "ref-1", NULL,
++						   0, 2, &ref);
++	KUNIT_EXPECT_NE(test, error, 0);
++
++	fwnode_remove_software_node(node);
++	software_node_unregister_nodes(nodes);
++}
++
++static struct kunit_case property_entry_test_cases[] = {
++	KUNIT_CASE(pe_test_uints),
++	KUNIT_CASE(pe_test_uint_arrays),
++	KUNIT_CASE(pe_test_strings),
++	KUNIT_CASE(pe_test_bool),
++	KUNIT_CASE(pe_test_move_inline_u8),
++	KUNIT_CASE(pe_test_move_inline_str),
++	KUNIT_CASE(pe_test_reference),
++	{ }
++};
++
++static struct kunit_suite property_entry_test_suite = {
++	.name = "property-entry",
++	.test_cases = property_entry_test_cases,
++};
++
++kunit_test_suite(property_entry_test_suite);
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
