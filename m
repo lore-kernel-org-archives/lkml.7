@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5040BFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AC9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0162087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D2F2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="URxmLDTd"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="aPlA/IoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbfKHNCN (ORCPT
+        id S1730359AbfKHNCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:02:13 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40026 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbfKHNCJ (ORCPT
+        Fri, 8 Nov 2019 08:02:17 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38536 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729973AbfKHNCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:02:09 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f4so4413268lfk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:06 -0800 (PST)
+        Fri, 8 Nov 2019 08:02:11 -0500
+Received: by mail-lf1-f66.google.com with SMTP id q28so4420718lfa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A4Xv5WoIG3tnGwzAreyDrYqib6OrZF77Ddvl40A6T0E=;
-        b=URxmLDTdcAq80aCnMhvo9+yxriyxiXCl2huzwXJbiNzXqU4LBIzlQJxwIlqwDb0B6D
-         4l1aeb0I3lz6KK864Ho3RFQFugG/ukSM1ds9W4OZWaEV8jGHwac3TWVpT/rSftXjdWZi
-         hxoY84qVs4c5q00EAZcnrdRF2IW6X2EmBpgMo=
+        bh=D4oV4L5jtcWTxjf1oA8VyXP7dsMMZPn/dF9MUNC7L/c=;
+        b=aPlA/IoEhffEEFblnc9V412rJ8ksNjaxqTklchpJf/K3W357zmqd5+CvTMVOjUGR9f
+         vHpBOP8gHlMWtsf0tBnmICEexywoHMojiuEDFPSR7FbopkcwuW99c0TFG3mLnJli/rDJ
+         uIN1m9iOBe+LG2yqEIrL2SRuPet7yWk+uHSH4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A4Xv5WoIG3tnGwzAreyDrYqib6OrZF77Ddvl40A6T0E=;
-        b=iUw1KqX14q9379SxPzvMtDXI5sTntMUGTR3CuXmcRbHItTk+3Mmgvc7cBYQSi8UzM+
-         8lb/4r3YsAGvR9B8zHHujSL9QGzdtCGmTW58xnB+VYqrBAZiLu39+A8hTcI/LusNoEZu
-         vuPggQbK13Q8lM6CdXgNI+mmVG7KjvgS6gxiGUZ3cz3kMbIIj5hQ7d766lbmtfKDvm8m
-         5Qfi3XUrhOpJeaOVTZ+Gzmjee5rdxZviOqwFi8HRQkt5OlWyepOzzkhNUUWYBNjCCSPf
-         iDBbEcZypiSzyi0mmncO377Hs39SJ/tsZmfOBzL5+OacJ1P9zKGxX8tEGfJJoeeMs+Wd
-         z1/w==
-X-Gm-Message-State: APjAAAWt1HEwyrj7EK6h8N4FzHBruZx9tgUq7B480B/S1trLTuhyv0VW
-        7+P3f6mvCloSIKqPjvy7YYrFpQ==
-X-Google-Smtp-Source: APXvYqxok15BiW8QWqekpOKDoemwZFfMMm68NncqzQP8AGYfQOjWESyeOU61ee1ET9EOKFQzN2AVDQ==
-X-Received: by 2002:ac2:4a8a:: with SMTP id l10mr6565299lfp.185.1573218126060;
-        Fri, 08 Nov 2019 05:02:06 -0800 (PST)
+        bh=D4oV4L5jtcWTxjf1oA8VyXP7dsMMZPn/dF9MUNC7L/c=;
+        b=R9fy9GIdJnPo9FaO5GWPBm7wKNhzMTmiX8TseJu3vAEj7Bz7Qfpcu3lW9WizUZeJpT
+         xfuS8tBxvPZAyUXC9+Y/SPrd6hU3V2tgYrBhtL6AnVCnzbn1hFUL5lujMkVpV/DeNBhd
+         jT2sK2GI7725G011zFYxOgliAKJgf39Bj6ZJorGjd6gAJB1mTcVY2G4SAwMoFPK7bRTy
+         pj8yFS0qS9OgBUcq9RYxKJOCczq9fm4z5xMn8suY4SxhgqxFjZg7RhtB+rzPqTqBEUu7
+         Xb59xvObqnquLrkz/ZBgOOMHfdywrKNJmDBR5u4DlO88dAs7fnlQbF7LQnFfn2kIvv5u
+         parA==
+X-Gm-Message-State: APjAAAXHbqkapnrnb0XN8O+QOgrXWNMQHknbOy2V9E9rRcGF/xQ5Xesh
+        AxwRvNeKcUsGR7gBYQu3LWLNhw==
+X-Google-Smtp-Source: APXvYqx/gMz4mkd5jKISKNXvWqvyaBmxQjDUwz3+6YpcYYTuJ8t1hWtanWE3i6cbS5YimIzMWNnZtg==
+X-Received: by 2002:a19:911c:: with SMTP id t28mr6379304lfd.84.1573218128817;
+        Fri, 08 Nov 2019 05:02:08 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.02.04
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.02.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:02:05 -0800 (PST)
+        Fri, 08 Nov 2019 05:02:08 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -61,9 +61,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         Scott Wood <oss@buserror.net>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-serial@vger.kernel.org
-Subject: [PATCH v4 30/47] serial: ucc_uart: factor out soft_uart initialization
-Date:   Fri,  8 Nov 2019 14:01:06 +0100
-Message-Id: <20191108130123.6839-31-linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 32/47] serial: ucc_uart: use of_property_read_u32() in ucc_uart_probe()
+Date:   Fri,  8 Nov 2019 14:01:08 +0100
+Message-Id: <20191108130123.6839-33-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
@@ -74,159 +74,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "soft uart" mechanism is a workaround for a silicon bug which (as
-far as I know) only affects some PPC-based SOCs.
-
-The code that determines which microcode blob to request relies on
-some powerpc-specific bits (e.g. the mfspr(SPRN_SVR) and hence also
-the asm/reg.h header). This makes it a little awkward to allow this
-driver to be built for non-PPC based SOCs with a QE, even if they are
-not affected by that silicon bug and thus don't need any of the Soft
-UART logic.
-
-There's no way around guarding those bits with some ifdeffery, so to
-keep that isolated, factor out the
-do-we-need-soft-uart-and-if-so-handle-the-firmware to a separate
-function, which we can then easily stub out for non-PPC.
+For this to work correctly on little-endian hosts, don't access the
+device-tree properties directly in native endianness, but use the
+of_property_read_u32() helper.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/tty/serial/ucc_uart.c | 110 ++++++++++++++++++----------------
- 1 file changed, 58 insertions(+), 52 deletions(-)
+ drivers/tty/serial/ucc_uart.c | 41 +++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-index 8a378ee5d34f..f286e91714cb 100644
+index 313697842e24..f5ea84928a3b 100644
 --- a/drivers/tty/serial/ucc_uart.c
 +++ b/drivers/tty/serial/ucc_uart.c
-@@ -1183,70 +1183,76 @@ static void uart_firmware_cont(const struct firmware *fw, void *context)
- 	release_firmware(fw);
- }
- 
--static int ucc_uart_probe(struct platform_device *ofdev)
-+static int soft_uart_init(struct platform_device *ofdev)
+@@ -1256,10 +1256,10 @@ static int soft_uart_init(struct platform_device *ofdev)
+ static int ucc_uart_probe(struct platform_device *ofdev)
  {
  	struct device_node *np = ofdev->dev.of_node;
 -	const unsigned int *iprop;      /* Integer OF properties */
--	const char *sprop;      /* String OF properties */
--	struct uart_qe_port *qe_port = NULL;
--	struct resource res;
-+	struct qe_firmware_info *qe_fw_info;
+ 	const char *sprop;      /* String OF properties */
+ 	struct uart_qe_port *qe_port = NULL;
+ 	struct resource res;
++	u32 val;
  	int ret;
  
--	/*
--	 * Determine if we need Soft-UART mode
--	 */
- 	if (of_find_property(np, "soft-uart", NULL)) {
- 		dev_dbg(&ofdev->dev, "using Soft-UART mode\n");
- 		soft_uart = 1;
-+	} else {
-+		return 0;
+ 	/*
+@@ -1290,23 +1290,19 @@ static int ucc_uart_probe(struct platform_device *ofdev)
+ 
+ 	/* Get the UCC number (device ID) */
+ 	/* UCCs are numbered 1-7 */
+-	iprop = of_get_property(np, "cell-index", NULL);
+-	if (!iprop) {
+-		iprop = of_get_property(np, "device-id", NULL);
+-		if (!iprop) {
+-			dev_err(&ofdev->dev, "UCC is unspecified in "
+-				"device tree\n");
+-			ret = -EINVAL;
+-			goto out_free;
+-		}
++	if (of_property_read_u32(np, "cell-index", &val) &&
++	    of_property_read_u32(np, "device-id", &val)) {
++		dev_err(&ofdev->dev, "UCC is unspecified in device tree\n");
++		ret = -EINVAL;
++		goto out_free;
  	}
  
--	/*
--	 * If we are using Soft-UART, determine if we need to upload the
--	 * firmware, too.
--	 */
--	if (soft_uart) {
--		struct qe_firmware_info *qe_fw_info;
--
--		qe_fw_info = qe_get_firmware_info();
--
--		/* Check if the firmware has been uploaded. */
--		if (qe_fw_info && strstr(qe_fw_info->id, "Soft-UART")) {
--			firmware_loaded = 1;
--		} else {
--			char filename[32];
--			unsigned int soc;
--			unsigned int rev_h;
--			unsigned int rev_l;
--
--			soc = soc_info(&rev_h, &rev_l);
--			if (!soc) {
--				dev_err(&ofdev->dev, "unknown CPU model\n");
--				return -ENXIO;
--			}
--			sprintf(filename, "fsl_qe_ucode_uart_%u_%u%u.bin",
--				soc, rev_h, rev_l);
--
--			dev_info(&ofdev->dev, "waiting for firmware %s\n",
--				filename);
-+	qe_fw_info = qe_get_firmware_info();
+-	if ((*iprop < 1) || (*iprop > UCC_MAX_NUM)) {
+-		dev_err(&ofdev->dev, "no support for UCC%u\n", *iprop);
++	if (val < 1 || val > UCC_MAX_NUM) {
++		dev_err(&ofdev->dev, "no support for UCC%u\n", val);
+ 		ret = -ENODEV;
+ 		goto out_free;
+ 	}
+-	qe_port->ucc_num = *iprop - 1;
++	qe_port->ucc_num = val - 1;
  
--			/*
--			 * We call request_firmware_nowait instead of
--			 * request_firmware so that the driver can load and
--			 * initialize the ports without holding up the rest of
--			 * the kernel.  If hotplug support is enabled in the
--			 * kernel, then we use it.
--			 */
--			ret = request_firmware_nowait(THIS_MODULE,
--				FW_ACTION_HOTPLUG, filename, &ofdev->dev,
--				GFP_KERNEL, &ofdev->dev, uart_firmware_cont);
--			if (ret) {
--				dev_err(&ofdev->dev,
--					"could not load firmware %s\n",
--					filename);
--				return ret;
--			}
-+	/* Check if the firmware has been uploaded. */
-+	if (qe_fw_info && strstr(qe_fw_info->id, "Soft-UART")) {
-+		firmware_loaded = 1;
-+	} else {
-+		char filename[32];
-+		unsigned int soc;
-+		unsigned int rev_h;
-+		unsigned int rev_l;
-+
-+		soc = soc_info(&rev_h, &rev_l);
-+		if (!soc) {
-+			dev_err(&ofdev->dev, "unknown CPU model\n");
-+			return -ENXIO;
-+		}
-+		sprintf(filename, "fsl_qe_ucode_uart_%u_%u%u.bin",
-+			soc, rev_h, rev_l);
-+
-+		dev_info(&ofdev->dev, "waiting for firmware %s\n",
-+			 filename);
-+
-+		/*
-+		 * We call request_firmware_nowait instead of
-+		 * request_firmware so that the driver can load and
-+		 * initialize the ports without holding up the rest of
-+		 * the kernel.  If hotplug support is enabled in the
-+		 * kernel, then we use it.
-+		 */
-+		ret = request_firmware_nowait(THIS_MODULE,
-+					      FW_ACTION_HOTPLUG, filename, &ofdev->dev,
-+					      GFP_KERNEL, &ofdev->dev, uart_firmware_cont);
-+		if (ret) {
-+			dev_err(&ofdev->dev,
-+				"could not load firmware %s\n",
-+				filename);
-+			return ret;
+ 	/*
+ 	 * In the future, we should not require the BRG to be specified in the
+@@ -1350,13 +1346,12 @@ static int ucc_uart_probe(struct platform_device *ofdev)
+ 	}
+ 
+ 	/* Get the port number, numbered 0-3 */
+-	iprop = of_get_property(np, "port-number", NULL);
+-	if (!iprop) {
++	if (of_property_read_u32(np, "port-number", &val)) {
+ 		dev_err(&ofdev->dev, "missing port-number in device tree\n");
+ 		ret = -EINVAL;
+ 		goto out_free;
+ 	}
+-	qe_port->port.line = *iprop;
++	qe_port->port.line = val;
+ 	if (qe_port->port.line >= UCC_MAX_UART) {
+ 		dev_err(&ofdev->dev, "port-number must be 0-%u\n",
+ 			UCC_MAX_UART - 1);
+@@ -1386,31 +1381,29 @@ static int ucc_uart_probe(struct platform_device *ofdev)
  		}
  	}
-+	return 0;
-+}
-+
-+static int ucc_uart_probe(struct platform_device *ofdev)
-+{
-+	struct device_node *np = ofdev->dev.of_node;
-+	const unsigned int *iprop;      /* Integer OF properties */
-+	const char *sprop;      /* String OF properties */
-+	struct uart_qe_port *qe_port = NULL;
-+	struct resource res;
-+	int ret;
-+
-+	/*
-+	 * Determine if we need Soft-UART mode
-+	 */
-+	ret = soft_uart_init(ofdev);
-+	if (ret)
-+		return ret;
  
- 	qe_port = kzalloc(sizeof(struct uart_qe_port), GFP_KERNEL);
- 	if (!qe_port) {
+-	iprop = of_get_property(np, "brg-frequency", NULL);
+-	if (!iprop) {
++	if (of_property_read_u32(np, "brg-frequency", &val)) {
+ 		dev_err(&ofdev->dev,
+ 		       "missing brg-frequency in device tree\n");
+ 		ret = -EINVAL;
+ 		goto out_np;
+ 	}
+ 
+-	if (*iprop)
+-		qe_port->port.uartclk = *iprop;
++	if (val)
++		qe_port->port.uartclk = val;
+ 	else {
+ 		/*
+ 		 * Older versions of U-Boot do not initialize the brg-frequency
+ 		 * property, so in this case we assume the BRG frequency is
+ 		 * half the QE bus frequency.
+ 		 */
+-		iprop = of_get_property(np, "bus-frequency", NULL);
+-		if (!iprop) {
++		if (of_property_read_u32(np, "bus-frequency", &val)) {
+ 			dev_err(&ofdev->dev,
+ 				"missing QE bus-frequency in device tree\n");
+ 			ret = -EINVAL;
+ 			goto out_np;
+ 		}
+-		if (*iprop)
+-			qe_port->port.uartclk = *iprop / 2;
++		if (val)
++			qe_port->port.uartclk = val / 2;
+ 		else {
+ 			dev_err(&ofdev->dev,
+ 				"invalid QE bus-frequency in device tree\n");
 -- 
 2.23.0
 
