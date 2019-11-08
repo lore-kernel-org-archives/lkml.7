@@ -2,110 +2,114 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E3FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3BDFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A45F21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:41:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ec4plKZT"
+	by mail.kernel.org (Postfix) with ESMTP id 1D7262084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfKHNlc (ORCPT
+        id S1727074AbfKHNpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:41:32 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:56566 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfKHNlb (ORCPT
+        Fri, 8 Nov 2019 08:45:36 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:11767 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbfKHNpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:41:31 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8DdJBp173349;
-        Fri, 8 Nov 2019 13:39:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=EN/SCcok43dz7bv91DbkS1Cf4aZc0oMNFHRA92kmMBk=;
- b=ec4plKZTwIJ70M53HTN2vrxpUQlTbWawXoH78zVVd7xv5KQHBovO01FBfvfhKCO2AuBL
- lvaVz/WsLyiMxLpK5y7s975OQslHJ9J038te/d0cV4XdALBup9k5ijXMCuajcMfoa7zW
- 5G2pGqtQ9OTKVkZ2ykc1n82NP1VSxjeEKu30lnjkgqE0bCjo/B3AQdahiaIuCMo4cxGP
- hNTC+IfUni0MlRqR1nfMuwWQ45BLaEI+D8LgiFlKr1oUvE9KaFd0v+TBZFjolQ4VQisP
- UHZb7jGUk3MiRKTReK1k6UrngUQ6wHvCpkV6KydGbO6dpxETtlR3pyK+OLKaoyvon4A7 +g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2w41w15b8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 13:39:46 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8DdBFa108201;
-        Fri, 8 Nov 2019 13:39:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2w41whtvpq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 13:39:45 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA8DddH7017631;
-        Fri, 8 Nov 2019 13:39:39 GMT
-Received: from tomti.i.net-space.pl (/10.175.202.125)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 Nov 2019 05:39:38 -0800
-Date:   Fri, 8 Nov 2019 14:39:31 +0100
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org,
-        ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        corbet@lwn.net, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, eric.snowberg@oracle.com, hpa@zytor.com,
-        jgross@suse.com, kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v5 2/3] x86/boot: Introduce the kernel_info.setup_type_max
-Message-ID: <20191108133931.ah2an7o4wqqax6fj@tomti.i.net-space.pl>
-References: <20191104151354.28145-1-daniel.kiper@oracle.com>
- <20191104151354.28145-3-daniel.kiper@oracle.com>
- <20191108100930.GA4503@zn.tnic>
- <20191108104702.vwfmvehbeuza4j5w@tomti.i.net-space.pl>
- <20191108110703.GB4503@zn.tnic>
- <20191108125248.drmm7xakn7t7oyul@tomti.i.net-space.pl>
- <20191108130338.GD4503@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108130338.GD4503@zn.tnic>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=891
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911080136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=969 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911080136
+        Fri, 8 Nov 2019 08:45:35 -0500
+X-Greylist: delayed 368 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 08:45:33 EST
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 08 Nov 2019 19:09:24 +0530
+IronPort-SDR: NWkI7rgL15orLupgRLT1GeV9BYDxTslGyQtTOhFGy4B+0G3VzwbWz4Re9HT5IIqunHcrUkYa+o
+ bpcDX/OMf84FkvdTEAmN5/L2mmiwJplaCRgC8/PBNDfl51QnOKcxlu242AQZ8oEiCIUlyCAWYj
+ Bz7e59YhBrYNhb+KK5tqE9gwjuqHr/VNUL0cFXuaeF164X/UtxTivynR1jt81ozGSDPTVkkXsT
+ +tVSJzn1smua0TMXo83+FBlkYFdJomJEu4nL+0tzAaoG+Q8EIcauNPy6No0c6YbRP3HWSO2nec
+ sP2JpV3JtjVYi5w6cT/N+WMA
+Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 08 Nov 2019 19:09:00 +0530
+Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
+        id C56B34949; Fri,  8 Nov 2019 19:08:58 +0530 (IST)
+From:   Pradeep P V K <ppvk@codeaurora.org>
+To:     adrian.hunter@intel.com, georgi.djakov@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org, vbadigan@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, sboyd@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: [RFC-v2 1/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported strings
+Date:   Fri,  8 Nov 2019 19:08:38 +0530
+Message-Id: <1573220319-4287-2-git-send-email-ppvk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
+References: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 02:03:38PM +0100, Borislav Petkov wrote:
-> On Fri, Nov 08, 2019 at 01:52:48PM +0100, Daniel Kiper wrote:
-> > OK, got your comments. I will repost the patch series probably on Tuesday.
-> > I hope that it will land in 5.5 then.
->
-> I don't see why not if you base it ontop of tip:x86/boot and test it
-> properly before sending.
+Add Bus bandwidth voting supported strings for qcom-sdhci controller.
 
-Great!
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+---
+ .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-> Out of curiosity, is there any particular reason this should be in 5.5?
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index da4edb1..22fb140 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -39,6 +39,25 @@ Required properties:
+ 	"cal"	- reference clock for RCLK delay calibration (optional)
+ 	"sleep"	- sleep clock for RCLK delay calibration (optional)
+ 
++Optional Properties:
++* Following bus parameters are required for bus bw voting:
++- interconnects: Pairs of phandles and interconnect provider specifier
++		 to denote the edge source and destination ports of
++		 the interconnect path. Please refer to
++		 Documentation/devicetree/bindings/interconnect/
++		 for more details.
++- interconnect-names: List of interconnect path name strings sorted in the same
++		order as the interconnects property. Consumers drivers will use
++		interconnect-names to match interconnect paths with interconnect
++		specifiers. Please refer to Documentation/devicetree/bindings/
++		interconnect/ for more details.
++- msm-bus,name: string describing the bus path
++- msm-bus,num-cases: number of configurations in which sdhc can operate in
++- msm-bus,num-paths: number of paths to vote for
++- msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples for 2
++				num-paths) The number of these entries *must*
++				be same as num-cases.
++
+ Example:
+ 
+ 	sdhc_1: sdhci@f9824900 {
+@@ -56,6 +75,19 @@ Example:
+ 
+ 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+ 		clock-names = "core", "iface";
++		interconnects = <&qnoc 50 &qnoc 512>,
++				<&qnoc 1 &qnoc 544>;
++		interconnect-names = "sdhc-ddr","cpu-sdhc";
++		msm-bus,name = "sdhc1";
++		msm-bus,num-cases = <3>;
++		msm-bus,num-paths = <2>;
++		msm-bus,vectors-KBps =
++		/* No Vote */
++		<0 0>, <0 0>,
++		/* 50 MB/s */
++		<130718 200000>, <133320 133320>,
++		/* 200 MB/s */
++		<1338562 4096000>, <1338562 4096000>;
+ 	};
+ 
+ 	sdhc_2: sdhci@f98a4900 {
+-- 
+1.9.1
 
-Just want to have it done... :-))) ...and continue work on stuff which
-depends on it.
-
-Daniel
