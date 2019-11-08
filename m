@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66906C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F5CFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D86206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DF8206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214219;
-	bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
+	s=default; t=1573214232;
+	bh=hmx5Rpbn7yfuwK7i95I3Vro9XyTui2okvZWKHzrJrQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMFHnId3mf3X8ba06cowI/AOe2BlL8TWZG5kBRWzn3AUZ0E8pnsEOw1GyLIirURSs
-	 o6VmzZquOhIGc8Z3vMHHdGyh3XooqPubjV8muUOL1FN6EDaBrsHv5FZumrOBL+qAiT
-	 4ufWobBfhyzlUcmxkdxSNwBt6uicU3q6lUO9aRcs=
+	b=nfN/38HJzTciX/p601ae8+4F9v3hi/PRh1rMtpW7GRaBq9qwZ/ih4gMdm6s2RfLZy
+	 wgaP2xKxuPlXmjY5EDX/rhtcFhhNXA+gGC8s3+aROUYhWCX+w07vuwGMyRTCtZysoC
+	 PQY4oVKqhTHAMfnfQY55wQ8tp11YR9wkmER7T1dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391665AbfKHL46 (ORCPT
+        id S2391051AbfKHLpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60584 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391079AbfKHLpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:18 -0500
+        id S2390989AbfKHLpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C195222C2;
-        Fri,  8 Nov 2019 11:45:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C15FA222D1;
+        Fri,  8 Nov 2019 11:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213517;
-        bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
+        s=default; t=1573213500;
+        bh=hmx5Rpbn7yfuwK7i95I3Vro9XyTui2okvZWKHzrJrQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6XYP7hFwK+18ilaSvD+gWPIttX0EyzUHeEs7l5hkjtJJDp2G+zRxArwH3R1NhvWH
-         F+DnoNbuX3bXRbDl0l9/bhWqsU6ydUWEnuYCXj05NKBvjZxMzr1iIM+JQriDQTqYZh
-         BYIehtLGQ/zCarxul8rSvD9d9+4bC50G83WZBnYs=
+        b=sTZty8DAdEBDHT4WIALcrttyNc01UkznJ5JCcVxjxljFI/5+SKAkxYCbpUh9DohVe
+         QSCcijha0W+To5eteUmkbeF0e6kUY3NDkRfoyu61AFvfNxo9I5bHD5OeO0EROVq8ui
+         EXhA5MYjScxJzKlKA9XcgTTpsXjW/ru6diWTv9Po=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 086/103] llc: avoid blocking in llc_sap_close()
-Date:   Fri,  8 Nov 2019 06:42:51 -0500
-Message-Id: <20191108114310.14363-86-sashal@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 077/103] Drivers: hv: vmbus: Fix synic per-cpu context initialization
+Date:   Fri,  8 Nov 2019 06:42:42 -0500
+Message-Id: <20191108114310.14363-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,52 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Michael Kelley <mikelley@microsoft.com>
 
-[ Upstream commit 9708d2b5b7c648e8e0a40d11e8cea12f6277f33c ]
+[ Upstream commit f25a7ece08bdb1f2b3c4bbeae942682fc3a99dde ]
 
-llc_sap_close() is called by llc_sap_put() which
-could be called in BH context in llc_rcv(). We can't
-block in BH.
+If hv_synic_alloc() errors out, the state of the per-cpu context
+for some CPUs is unknown since the zero'ing is done as each
+CPU is iterated over.  In such case, hv_synic_cleanup() may try to
+free memory based on uninitialized values.  Fix this by zero'ing
+the per-cpu context for all CPUs before doing any memory
+allocations that might fail.
 
-There is no reason to block it here, kfree_rcu() should
-be sufficient.
-
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/llc.h  | 1 +
- net/llc/llc_core.c | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/hv/hv.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/llc.h b/include/net/llc.h
-index 890a87318014d..df282d9b40170 100644
---- a/include/net/llc.h
-+++ b/include/net/llc.h
-@@ -66,6 +66,7 @@ struct llc_sap {
- 	int sk_count;
- 	struct hlist_nulls_head sk_laddr_hash[LLC_SK_LADDR_HASH_ENTRIES];
- 	struct hlist_head sk_dev_hash[LLC_SK_DEV_HASH_ENTRIES];
-+	struct rcu_head rcu;
- };
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index fe041f22521da..23f312b4c6aa2 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -148,6 +148,17 @@ static void hv_init_clockevent_device(struct clock_event_device *dev, int cpu)
+ int hv_synic_alloc(void)
+ {
+ 	int cpu;
++	struct hv_per_cpu_context *hv_cpu;
++
++	/*
++	 * First, zero all per-cpu memory areas so hv_synic_free() can
++	 * detect what memory has been allocated and cleanup properly
++	 * after any failures.
++	 */
++	for_each_present_cpu(cpu) {
++		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
++		memset(hv_cpu, 0, sizeof(*hv_cpu));
++	}
  
- static inline
-diff --git a/net/llc/llc_core.c b/net/llc/llc_core.c
-index 260b3dc1b4a2a..64d4bef04e730 100644
---- a/net/llc/llc_core.c
-+++ b/net/llc/llc_core.c
-@@ -127,9 +127,7 @@ void llc_sap_close(struct llc_sap *sap)
- 	list_del_rcu(&sap->node);
- 	spin_unlock_bh(&llc_sap_list_lock);
+ 	hv_context.hv_numa_map = kzalloc(sizeof(struct cpumask) * nr_node_ids,
+ 					 GFP_ATOMIC);
+@@ -157,10 +168,8 @@ int hv_synic_alloc(void)
+ 	}
  
--	synchronize_rcu();
--
--	kfree(sap);
-+	kfree_rcu(sap, rcu);
- }
+ 	for_each_present_cpu(cpu) {
+-		struct hv_per_cpu_context *hv_cpu
+-			= per_cpu_ptr(hv_context.cpu_context, cpu);
++		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
  
- static struct packet_type llc_packet_type __read_mostly = {
+-		memset(hv_cpu, 0, sizeof(*hv_cpu));
+ 		tasklet_init(&hv_cpu->msg_dpc,
+ 			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
+ 
 -- 
 2.20.1
 
