@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4D3FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BECFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD0E222D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC04215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214164;
-	bh=yghk864Qu3p4uLxrXvRwD8kPFl/idh9sgYH6Bz1/LXI=;
+	s=default; t=1573214167;
+	bh=d999pwMigJEppsr13vUh55zksJ5+AulgB9PyRUebJXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hfddNQGNa4IN0lJXJ3c2rWmk3y+h+rIlAVuKEF37mhzj8RLTLIOPBe3qnBTVBBBd5
-	 YsZwe5SktajuKoSFcjdkDYCjuKT3yBhH+lpBhJSqmZHBYdglv/+ktK5IJM8bKa37rw
-	 p7fr0slDQdehTRCr/3idVaNQg2sMzc2QoUEIPVCg=
+	b=lEf98odtQo3ojeoi+pW5KE5VoMItTdJ83C/mjwSPguK2te9DRf3b8Fv6tAQ+RfYni
+	 mutUNnL5bP5wlppc7IDCiJdkEiOiv+O1nOB0sNqoI8mlz4izQrVXjgaGDNyQY0MQR7
+	 Rri53tq9uojAIjGF+iOc+fNnEmCdUfplZNKwUBbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403764AbfKHLpl (ORCPT
+        id S2391457AbfKHL4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:56:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391143AbfKHLpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:36 -0500
+        id S2391161AbfKHLpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFA7020656;
-        Fri,  8 Nov 2019 11:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1C720656;
+        Fri,  8 Nov 2019 11:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213535;
-        bh=yghk864Qu3p4uLxrXvRwD8kPFl/idh9sgYH6Bz1/LXI=;
+        s=default; t=1573213539;
+        bh=d999pwMigJEppsr13vUh55zksJ5+AulgB9PyRUebJXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ossi6c4sD42EguPxfVJ1YFdSrECduH7BwUqI/+CaYb5DrEhj+d3Bmtxwi+btXVGJq
-         XRh6rmMqHAQKmqJZfdNLFOEvFvOqdZ68uwJo+AqBIGqeSP7x5vUHkzFNCOUX8ZePp+
-         TEPXyWCDJgu0OnOPl5JbYkwoNTNGAd5I9m9cuPKI=
+        b=oBtak9kyEZJXGaSfrZkWpHhB8f3GDozMFWRo/say8G+YD12LvkPZTAfelX19epIdo
+         nqZOU0cyjzaH481qaeGkN7Uw9X/zchYa8hZihZZR/CaTS8qvcSxV/Jh8a9EONd4yl8
+         3VJMOE9tncJHmXHbDRQsEXFgDH3f56VsxkV0pE9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Banajit Goswami <bgoswami@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 098/103] component: fix loop condition to call unbind() if bind() fails
-Date:   Fri,  8 Nov 2019 06:43:03 -0500
-Message-Id: <20191108114310.14363-98-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 102/103] ACPI / LPSS: Exclude I2C busses shared with PUNIT from pmc_atom_d3_mask
+Date:   Fri,  8 Nov 2019 06:43:07 -0500
+Message-Id: <20191108114310.14363-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,50 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Banajit Goswami <bgoswami@codeaurora.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit bdae566d5d9733b6e32b378668b84eadf28a94d4 ]
+[ Upstream commit 86b62e5cd8965d3056f9e9ccdec51631c37add81 ]
 
-During component_bind_all(), if bind() fails for any
-particular component associated with a master, unbind()
-should be called for all previous components in that
-master's match array, whose bind() might have completed
-successfully. As per the current logic, if bind() fails
-for the component at position 'n' in the master's match
-array, it would start calling unbind() from component in
-'n'th position itself and work backwards, and will always
-skip calling unbind() for component in 0th position in the
-master's match array.
-Fix this by updating the loop condition, and the logic to
-refer to the components in master's match array, so that
-unbind() is called for all components starting from 'n-1'st
-position in the array, until (and including) component in
-0th position.
+lpss_iosf_enter_d3_state() checks if all hw-blocks using the DMA
+controllers are in d3 before powering down the DMA controllers.
 
-Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But on devices, where the I2C bus connected to the PMIC is shared by
+the PUNIT, the controller for that bus will never reach d3 since it has
+an effectively empty _PS3 method. Instead it appears to automatically
+power-down during S0i3 and we never see it as being in d3.
+
+This causes the DMA controllers to never be powered-down on these devices,
+causing them to never reach S0i3. This commit uses the ACPI _SEM method
+to detect if an I2C bus is shared with the PUNIT and if it is, it removes
+it from the mask of devices which lpss_iosf_enter_d3_state() checks for.
+
+This fixes these devices never reaching any S0ix states.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/component.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/acpi/acpi_lpss.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 89b032f2ffd22..08da6160e94dd 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -461,9 +461,9 @@ int component_bind_all(struct device *master_dev, void *data)
- 		}
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 51592dd45b066..1ab8d7223b252 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -98,6 +98,9 @@ struct lpss_private_data {
+ 	u32 prv_reg_ctx[LPSS_PRV_REG_COUNT];
+ };
  
- 	if (ret != 0) {
--		for (; i--; )
--			if (!master->match->compare[i].duplicate) {
--				c = master->match->compare[i].component;
-+		for (; i > 0; i--)
-+			if (!master->match->compare[i - 1].duplicate) {
-+				c = master->match->compare[i - 1].component;
- 				component_unbind(c, master, data);
- 			}
- 	}
++/* Devices which need to be in D3 before lpss_iosf_enter_d3_state() proceeds */
++static u32 pmc_atom_d3_mask = 0xfe000ffe;
++
+ /* LPSS run time quirks */
+ static unsigned int lpss_quirks;
+ 
+@@ -174,6 +177,21 @@ static void byt_pwm_setup(struct lpss_private_data *pdata)
+ 
+ static void byt_i2c_setup(struct lpss_private_data *pdata)
+ {
++	const char *uid_str = acpi_device_uid(pdata->adev);
++	acpi_handle handle = pdata->adev->handle;
++	unsigned long long shared_host = 0;
++	acpi_status status;
++	long uid = 0;
++
++	/* Expected to always be true, but better safe then sorry */
++	if (uid_str)
++		uid = simple_strtol(uid_str, NULL, 10);
++
++	/* Detect I2C bus shared with PUNIT and ignore its d3 status */
++	status = acpi_evaluate_integer(handle, "_SEM", NULL, &shared_host);
++	if (ACPI_SUCCESS(status) && shared_host && uid)
++		pmc_atom_d3_mask &= ~(BIT_LPSS2_F1_I2C1 << (uid - 1));
++
+ 	lpss_deassert_reset(pdata);
+ 
+ 	if (readl(pdata->mmio_base + pdata->dev_desc->prv_offset))
+@@ -789,7 +807,7 @@ static void lpss_iosf_enter_d3_state(void)
+ 	 * Here we read the values related to LPSS power island, i.e. LPSS
+ 	 * devices, excluding both LPSS DMA controllers, along with SCC domain.
+ 	 */
+-	u32 func_dis, d3_sts_0, pmc_status, pmc_mask = 0xfe000ffe;
++	u32 func_dis, d3_sts_0, pmc_status;
+ 	int ret;
+ 
+ 	ret = pmc_atom_read(PMC_FUNC_DIS, &func_dis);
+@@ -807,7 +825,7 @@ static void lpss_iosf_enter_d3_state(void)
+ 	 * Shutdown both LPSS DMA controllers if and only if all other devices
+ 	 * are already in D3hot.
+ 	 */
+-	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_mask;
++	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_atom_d3_mask;
+ 	if (pmc_status)
+ 		goto exit;
+ 
 -- 
 2.20.1
 
