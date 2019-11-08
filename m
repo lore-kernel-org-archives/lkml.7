@@ -2,140 +2,111 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2943C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9142FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A101121848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="AzLFd+Cb"
+	by mail.kernel.org (Postfix) with ESMTP id B438421882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573189629;
+	bh=Nml6ZqPGIxeHePwEoMl3uFywnf+kk1nTeP99Kndi+gU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ROL9aNR87eNxro96mfjlQChwSSIiGVs72oawqwj0Fl4n9yOCB0ID2rg7h37qUTHvb
+	 HxE6qY3j4dpcmuCxF2ZcM1zkkF8wZTWzaS15jM5sFMalEMuEtt3IuW8mA5k3Y9pFdZ
+	 58jAxLabXiwKjLAlBtloeI0sPE8jOF1CVr+QGeNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbfKHFBD (ORCPT
+        id S1727571AbfKHFHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:01:03 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38942 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfKHFBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:01:03 -0500
-Received: by mail-qt1-f196.google.com with SMTP id t8so5091545qtc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 21:01:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EzvfMWm6lZTVenEz2A6tfcXxFYBZS2NeEfsJ5Lwl6mU=;
-        b=AzLFd+Cb5WJAEHsyabvIPlF0a7RZVRiSU5hO06pXcPIiMFJDYhjlrUIjq6QL3fT5QN
-         bk5cziYWINSekUHNpsa1t+vBMEzyaYlG2mxE0zu+Bw1PQhCLLF26w5Fipfx5WTql/Pdf
-         yAiSutINib4a8E0u6unKohosDbgbb4NPODr44=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EzvfMWm6lZTVenEz2A6tfcXxFYBZS2NeEfsJ5Lwl6mU=;
-        b=ar/nrkj4EHpLUYQw2PN/rUXxbZZ8S1sNO0DNkbfW3WPHKzZGHk6GdGnB2WMDPozUH1
-         aT7e/GQm3el1Ltt/BXBcPuxKzOTYxDhOFuui69g8FrsM2LPAX0KRq4I2BR7upyrIv7bc
-         i5bgHV6jFHQX7/3wFRQPBJLnZMlwAsum1Z81Op+GXJjYjMq9+YW2LrF45H0w24TuxXV4
-         /afpGI6+5zgeXRt5RBp3PriTJb/jiKgL6l+YgDCHqnIznbKSCf8qtUmKUwIeYkczSPk3
-         qdRKrm0SJ511SwMkLv4iXEW5UF5jQSnthUVgFaZH6/K+72F40WIuOkCha56tefZzXW1K
-         sADw==
-X-Gm-Message-State: APjAAAXs+so5ZvjG19iz+siOJVk8pbYcgi4vUauU2nOx4p5hXczRjHES
-        QnzBQfFdS398NuhS6qVbhWdbCHg1I7PBWA97Usc=
-X-Google-Smtp-Source: APXvYqwvg0y+AJatjjjsSTKJ+mkQ8J2a0Hivs0KSjM7GMpfAoNbYepX0PslWxlvr7BgidrfQr9iUe4b7H1gJwQufsec=
-X-Received: by 2002:aed:3baf:: with SMTP id r44mr8335775qte.255.1573189261694;
- Thu, 07 Nov 2019 21:01:01 -0800 (PST)
+        Fri, 8 Nov 2019 00:07:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbfKHFHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 00:07:08 -0500
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8797B21D82
+        for <linux-kernel@vger.kernel.org>; Fri,  8 Nov 2019 05:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573189626;
+        bh=Nml6ZqPGIxeHePwEoMl3uFywnf+kk1nTeP99Kndi+gU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bAdWTsYRTkqedcC/+Z5sINwapybfyle+SAfQCYzh0EWS5bFnoTWCp8gEp5sb9cWnI
+         O5bF/n5f1DTs5DQ85rVVTZbzCY3ybfp9Rs/y1P5HNCiBgUd2Nw3kHKIgcB9HugJvZn
+         vVLMDAwji8m5eynkuo8EBnTeCAjeGmxaYmxlk+Hs=
+Received: by mail-wm1-f47.google.com with SMTP id q70so4831090wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 21:07:06 -0800 (PST)
+X-Gm-Message-State: APjAAAVWyen7ku32ENgL69L1ZJXMV3+16WvrEhyOGQOgW+e69+x5Z5Ph
+        cMo0lRdM+UBDns0RqBBEboh4gwc71LIaaeCYtkJF9g==
+X-Google-Smtp-Source: APXvYqx08Mv0U8UmADt1yPzJqTiWQTH/61DB5ak1MBLcnJribE7k+KhLlnxirQA97U78di+ySNLiALLNE6nRtXo4CT0=
+X-Received: by 2002:a7b:c1ca:: with SMTP id a10mr6805119wmj.161.1573189624926;
+ Thu, 07 Nov 2019 21:07:04 -0800 (PST)
 MIME-Version: 1.0
-References: <CACPK8XdtyQhK6OHJKbP=Fk50jRQQZeWzxqKDbX6kW0S5=eGuTg@mail.gmail.com>
- <20191107141736.GA109902@kroah.com>
-In-Reply-To: <20191107141736.GA109902@kroah.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 8 Nov 2019 05:00:49 +0000
-Message-ID: <CACPK8XdCwjtwXGmXs-F__sGA7ux_WVSFgGM72LQ0+9xDXVgSww@mail.gmail.com>
-Subject: Re: [GIT PULL] fsi changes for 5.5
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-fsi@lists.ozlabs.org, Jeremy Kerr <jk@ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>
+References: <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk>
+ <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk>
+ <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com> <6964.1573152517@warthog.procyon.org.uk>
+In-Reply-To: <6964.1573152517@warthog.procyon.org.uk>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 7 Nov 2019 21:06:53 -0800
+X-Gmail-Original-Message-ID: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com>
+Message-ID: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/14] pipe: Add O_NOTIFICATION_PIPE [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 at 14:17, Greg KH <gregkh@linuxfoundation.org> wrote:
+On Thu, Nov 7, 2019 at 10:48 AM David Howells <dhowells@redhat.com> wrote:
 >
-> On Thu, Nov 07, 2019 at 12:09:50PM +0000, Joel Stanley wrote:
-> > Hi Greg,
-> >
-> > Here's a set of changes I'd like merged for 5.5. They've been well
-> > tested in the openbmc tree over the past month or so as we've done
-> > hardware bring up using them. Aside from the three fixes I applied
-> > today they have seen time in linux-next too.
-> >
-> > This is the first time I've sent you a pull request, so please let me
-> > know if you'd prefer it done differently.
-> >
-> > The following changes since commit 755b0ef68f1802c786d0a53647145a5a7e46052a:
-> >
-> >   fsi: aspeed: Clean up defines and documentation (2019-11-07 22:24:18 +1030)
+> Andy Lutomirski <luto@kernel.org> wrote:
 >
-> The pull request looks good, but some of the individual patches, I have
-> questions on.  Also, a diffstat would be good so that I know I got it
-> right for the next time you send this.
-
+> > > Add an O_NOTIFICATION_PIPE flag that can be passed to pipe2() to indicate
+> > > that the pipe being created is going to be used for notifications.  This
+> > > suppresses the use of splice(), vmsplice(), tee() and sendfile() on the
+> > > pipe as calling iov_iter_revert() on a pipe when a kernel notification
+> > > message has been inserted into the middle of a multi-buffer splice will be
+> > > messy.
+> >
+> > How messy?
 >
-> As they aren't here in the emails, let me try to figure out how to
-> respond:
->         - You have new dt bindings, yet no review from the DT
->           maintainers.
-
-That was a mistake. I had it on the list but Rob must have not seen it
-yet, as he's reviewed other patches of mine in the mean time.
-
->         - you move things around in sysfs, yet no documentation updates
->           happen
-
-The documentation was incorrect, and these changes make the layout
-closer to what is described in Documentation/ABI. I will include a
-patch to clarify.
-
->         - in 0005-fsi-Add-ast2600-master-driver.patch you have lots of
->           dev_dbg() lines left that shoudl be dropped as that's what
->           ftrace is for
->         - you don't have any reviewers for some of these patches, that's
->           not good to stick in a pull request.
-
-To give you some background, the code has all been closely reviewed as
-it underwent development on the public openbmc list. We discussed
-sending all of the patches with history preserved, but decided there
-was very little value in having that history in the mainline kernel,
-with the exception of patch 7 I mention below.
-
-Unfortunately my co-developers are on leave or snowed under, so they
-didn't get a chance to respond with r-b tags to the series I sent out
-last week:
-
-https://lore.kernel.org/linux-arm-kernel/20191101112905.7282-2-joel@jms.id.au/
-
->         - 0007-fsi-aspeed-Fix-OPB0-byte-order-register-values.patch does
->           not have a Fixes: tag, nor a stable@vger cc:, why not?
-
-This patch is a fix for an earlier patch in the series. I did not
-squash it in as I wanted the commit message to be part of history.
-
->         - 0010-fsi-fsi_master_class-can-be-static.patch has no changelog
->           text at all, which is not ok.
+> Well, iov_iter_revert() on a pipe iterator simply walks backwards along the
+> ring discarding the last N contiguous slots (where N is normally the number of
+> slots that were filled by whatever operation is being reverted).
 >
-> Can you fix all of this up, and send it as a set of normal patches so at
-> least I can review the things that do not have any other reviewers on
-> it?
+> However, unless the code that transfers stuff into the pipe takes the spinlock
+> spinlock and disables softirqs for the duration of its ring filling, what were
+> N contiguous slots may now have kernel notifications interspersed - even if it
+> has been holding the pipe mutex.
+>
+> So, now what do you do?  You have to free up just the buffers relevant to the
+> iterator and then you can either compact down the ring to free up the space or
+> you can leave null slots and let the read side clean them up, thereby
+> reducing the capacity of the pipe temporarily.
+>
+> Either way, iov_iter_revert() gets more complex and has to hold the spinlock.
 
-I will do this today.
+I feel like I'm missing something fundamental here.
 
-Cheers,
-
-Joel
+I can open a normal pipe from userspace (with pipe() or pipe2()), and
+I can have two threads.  One thread writes to the pipe with write().
+The other thread writes with splice().  Everything works fine.  What's
+special about notifications?
