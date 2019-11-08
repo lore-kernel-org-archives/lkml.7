@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF24FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E42C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35970222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DA421D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213212;
-	bh=UBcwiqcs+4h2OQNhYlEoP/ApOIVZSmpdBOgLMo93mcE=;
+	s=default; t=1573213218;
+	bh=rmvVJUanAKAsUv3kGo40KfhFzGB1VQW2ebOCc4xWCzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9An96Bju3VUOC83mRVQihPUlGWH5mSTOEXkpb6jpeYnIKFui/4EYxyD43ArCZTYx
-	 ZrF4UwjAO2ac+Gdcc1SDT+5iySUBvE2RiO2GqMyHVsa1WRWzFxEfS/xeqxacof764M
-	 MSbO6BDFNTpVpATgJyr+Fyru2OrdUTWm465FYIfM=
+	b=YQtZsqkJHRDNdK0ptaZYgrONsftascUDDth+abr1QHlAqjrfLmnLR4Alnhq+UNDV5
+	 f9WL5/+libR2MvFDSJVzYMzUzB/5oGs4LjHtxghau82aNc6pDUdN6j9eX9nhpR/udE
+	 znZp1IiwyLkNKz+dqg6DMaR3GX2NfYZ0HBVlJSHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388504AbfKHLkL (ORCPT
+        id S1732001AbfKHLkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52968 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388340AbfKHLkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:05 -0500
+        id S2388406AbfKHLkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF32E222C6;
-        Fri,  8 Nov 2019 11:40:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14E921D6C;
+        Fri,  8 Nov 2019 11:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213204;
-        bh=UBcwiqcs+4h2OQNhYlEoP/ApOIVZSmpdBOgLMo93mcE=;
+        s=default; t=1573213206;
+        bh=rmvVJUanAKAsUv3kGo40KfhFzGB1VQW2ebOCc4xWCzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PnWLnaNw/NUcfuDGG2fH8PnRDxp5+Ch3F9ItyUtCO1Kj6+tfPJqqQi2hyNlwTUIyJ
-         DmZUrlBhAz4O24jZxNYqvlZJmOipLftpO/xR2MD0aodfaJnSKZVxAbXhYE3J8p9R/W
-         dKq52rsgBxCSIQlv11N0R86jqlNJs6eNJX8Sn5F0=
+        b=DdQiFKYylFV9WoNX1Ynuy2dngD6+uyQ7Phmr3ZlFA5ZVSQkzAUyCrtP3IB/mJIbcw
+         rqos3Adu8Xsy6tC609jwOtE1oO9dMA4SGwyVWqugZQO8R3m5a5BiVQwZ0eKKdWTs5S
+         XbSRQdGjIS7HllCDtzezrE1RElmKLsfb15nR4QOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 087/205] cfg80211: validate wmm rule when setting
-Date:   Fri,  8 Nov 2019 06:35:54 -0500
-Message-Id: <20191108113752.12502-87-sashal@kernel.org>
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Raghuram Chary Jallipalli 
+        <raghuramchary.jallipalli@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 089/205] net: lan78xx: Bail out if lan78xx_get_endpoints fails
+Date:   Fri,  8 Nov 2019 06:35:56 -0500
+Message-Id: <20191108113752.12502-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,122 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit 014f5a250fc49fa8c6cd50093e725e71f3ae52da ]
+[ Upstream commit fa8cd98c06407b5798b927cd7fd14d30f360ed02 ]
 
-Add validation check for wmm rule when copy rules from fwdb and print
-error when rule is invalid.
+We need to bail out if lan78xx_get_endpoints() fails, otherwise the
+result is overwritten.
 
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Raghuram Chary Jallipalli <raghuramchary.jallipalli@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 64 +++++++++++++++++++++++++---------------------
- 1 file changed, 35 insertions(+), 29 deletions(-)
+ drivers/net/usb/lan78xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 68ae97ef8bf0b..64841238df855 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -847,22 +847,36 @@ static bool valid_regdb(const u8 *data, unsigned int size)
- 	return true;
- }
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index e20266bd209e2..9e995767dbfe3 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2947,6 +2947,11 @@ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
+ 	int i;
  
--static void set_wmm_rule(struct ieee80211_reg_rule *rrule,
--			 struct fwdb_wmm_rule *wmm)
--{
--	struct ieee80211_wmm_rule *rule = &rrule->wmm_rule;
--	unsigned int i;
-+static void set_wmm_rule(const struct fwdb_header *db,
-+			 const struct fwdb_country *country,
-+			 const struct fwdb_rule *rule,
-+			 struct ieee80211_reg_rule *rrule)
-+{
-+	struct ieee80211_wmm_rule *wmm_rule = &rrule->wmm_rule;
-+	struct fwdb_wmm_rule *wmm;
-+	unsigned int i, wmm_ptr;
-+
-+	wmm_ptr = be16_to_cpu(rule->wmm_ptr) << 2;
-+	wmm = (void *)((u8 *)db + wmm_ptr);
-+
-+	if (!valid_wmm(wmm)) {
-+		pr_err("Invalid regulatory WMM rule %u-%u in domain %c%c\n",
-+		       be32_to_cpu(rule->start), be32_to_cpu(rule->end),
-+		       country->alpha2[0], country->alpha2[1]);
-+		return;
+ 	ret = lan78xx_get_endpoints(dev, intf);
++	if (ret) {
++		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
++			    ret);
++		return ret;
 +	}
  
- 	for (i = 0; i < IEEE80211_NUM_ACS; i++) {
--		rule->client[i].cw_min =
-+		wmm_rule->client[i].cw_min =
- 			ecw2cw((wmm->client[i].ecw & 0xf0) >> 4);
--		rule->client[i].cw_max = ecw2cw(wmm->client[i].ecw & 0x0f);
--		rule->client[i].aifsn =  wmm->client[i].aifsn;
--		rule->client[i].cot = 1000 * be16_to_cpu(wmm->client[i].cot);
--		rule->ap[i].cw_min = ecw2cw((wmm->ap[i].ecw & 0xf0) >> 4);
--		rule->ap[i].cw_max = ecw2cw(wmm->ap[i].ecw & 0x0f);
--		rule->ap[i].aifsn = wmm->ap[i].aifsn;
--		rule->ap[i].cot = 1000 * be16_to_cpu(wmm->ap[i].cot);
-+		wmm_rule->client[i].cw_max = ecw2cw(wmm->client[i].ecw & 0x0f);
-+		wmm_rule->client[i].aifsn =  wmm->client[i].aifsn;
-+		wmm_rule->client[i].cot =
-+			1000 * be16_to_cpu(wmm->client[i].cot);
-+		wmm_rule->ap[i].cw_min = ecw2cw((wmm->ap[i].ecw & 0xf0) >> 4);
-+		wmm_rule->ap[i].cw_max = ecw2cw(wmm->ap[i].ecw & 0x0f);
-+		wmm_rule->ap[i].aifsn = wmm->ap[i].aifsn;
-+		wmm_rule->ap[i].cot = 1000 * be16_to_cpu(wmm->ap[i].cot);
- 	}
+ 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
  
- 	rrule->has_wmm = true;
-@@ -870,7 +884,7 @@ static void set_wmm_rule(struct ieee80211_reg_rule *rrule,
- 
- static int __regdb_query_wmm(const struct fwdb_header *db,
- 			     const struct fwdb_country *country, int freq,
--			     struct ieee80211_reg_rule *rule)
-+			     struct ieee80211_reg_rule *rrule)
- {
- 	unsigned int ptr = be16_to_cpu(country->coll_ptr) << 2;
- 	struct fwdb_collection *coll = (void *)((u8 *)db + ptr);
-@@ -879,18 +893,14 @@ static int __regdb_query_wmm(const struct fwdb_header *db,
- 	for (i = 0; i < coll->n_rules; i++) {
- 		__be16 *rules_ptr = (void *)((u8 *)coll + ALIGN(coll->len, 2));
- 		unsigned int rule_ptr = be16_to_cpu(rules_ptr[i]) << 2;
--		struct fwdb_rule *rrule = (void *)((u8 *)db + rule_ptr);
--		struct fwdb_wmm_rule *wmm;
--		unsigned int wmm_ptr;
-+		struct fwdb_rule *rule = (void *)((u8 *)db + rule_ptr);
- 
--		if (rrule->len < offsetofend(struct fwdb_rule, wmm_ptr))
-+		if (rule->len < offsetofend(struct fwdb_rule, wmm_ptr))
- 			continue;
- 
--		if (freq >= KHZ_TO_MHZ(be32_to_cpu(rrule->start)) &&
--		    freq <= KHZ_TO_MHZ(be32_to_cpu(rrule->end))) {
--			wmm_ptr = be16_to_cpu(rrule->wmm_ptr) << 2;
--			wmm = (void *)((u8 *)db + wmm_ptr);
--			set_wmm_rule(rule, wmm);
-+		if (freq >= KHZ_TO_MHZ(be32_to_cpu(rule->start)) &&
-+		    freq <= KHZ_TO_MHZ(be32_to_cpu(rule->end))) {
-+			set_wmm_rule(db, country, rule, rrule);
- 			return 0;
- 		}
- 	}
-@@ -972,12 +982,8 @@ static int regdb_query_country(const struct fwdb_header *db,
- 		if (rule->len >= offsetofend(struct fwdb_rule, cac_timeout))
- 			rrule->dfs_cac_ms =
- 				1000 * be16_to_cpu(rule->cac_timeout);
--		if (rule->len >= offsetofend(struct fwdb_rule, wmm_ptr)) {
--			u32 wmm_ptr = be16_to_cpu(rule->wmm_ptr) << 2;
--			struct fwdb_wmm_rule *wmm = (void *)((u8 *)db + wmm_ptr);
--
--			set_wmm_rule(rrule, wmm);
--		}
-+		if (rule->len >= offsetofend(struct fwdb_rule, wmm_ptr))
-+			set_wmm_rule(db, country, rule, rrule);
- 	}
- 
- 	return reg_schedule_apply(regdom);
 -- 
 2.20.1
 
