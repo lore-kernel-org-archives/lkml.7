@@ -2,126 +2,144 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5805FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA7CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA1A21848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACA421924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pABRQS8I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l0Eck43b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731787AbfKHL1P (ORCPT
+        id S1731852AbfKHL1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:27:15 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34504 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730690AbfKHL1P (ORCPT
+        Fri, 8 Nov 2019 06:27:46 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37844 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730005AbfKHL1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:27:15 -0500
-Received: by mail-lj1-f194.google.com with SMTP id 139so5834523ljf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 03:27:14 -0800 (PST)
+        Fri, 8 Nov 2019 06:27:45 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p24so4383982pfn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 03:27:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G6JiAIssBOVEi2xc5+XvlkE+IwHQEpAFSY9OyXbjbm0=;
-        b=pABRQS8Ifv7HSJlZkf+BV3CXrc+JD059RcyVYWDf2ZKVtyzTkdbg+/ldmIr3E5qVju
-         blc+Kh9MYGQ2qX9Y6vdEsovWO/vZZT9tabO4mYAC+/CjNV2GEZO9ModtNXGA+wjnyhaR
-         2FaDpy4Nada5Ebmt33Y1zUM/e9b3mQUCOr+jqlMGnW7Ob1x864IR5LG7+KLVzOTYmvmW
-         ey1YCrYWGWUgcjnBsA4mtrdvElarsgKk/U7RpSfAJDhNO7HITb8F/T/XjCQUnSIsMEWs
-         unE3YBS/S/B4M4AbYVzlp6DC/Xhm3FZ4+fmZ9rmwP+epeXceDvt9kKAbFwrmXgkVatMI
-         IcNw==
+        h=from:to:cc:subject:date:message-id;
+        bh=1QFtqzKg2ixpAmWo62ifCiTiHn31FCP9xZyuBEbe8lo=;
+        b=l0Eck43b/1EVOGX/WInrm0EECdVDDccSPSN7ISAhH5c2x69BdaSwsuvjSpnY90CaKH
+         IzbWTKyt+0S8G9zcIL6Z4AtJfLq1Exg3YQ+vMjCD+GN1IlhchQZ3m1HcgwDZlSIRQ+a9
+         QCQ7dl8cv3qSBxIViCmYKzB2VoH8zoHIx+RYrTRp3anfx4N/h0ZDS3HR5lqJSW3D7NUd
+         Y7Egxer5hrdvAVH3hBaia8dmEidY11BrQMcqWgkGC4PRKvIzQVfZcXdoy9YKuuIp2CoU
+         fH6yzt2MN/+cs1zSU4H4hQOWof+J5yuhvJKlfLQBLY9LPC7c6rf0ddNqaH62kftFJ3bc
+         rXuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G6JiAIssBOVEi2xc5+XvlkE+IwHQEpAFSY9OyXbjbm0=;
-        b=adiHPPVhXlFTij6VLl7F7Te6UBxy//D6kcB+hCYTic58oYtrjFa9bLggZP/ByQNBfe
-         khxN0krfsS5B6bV3iFA/JK6GQJ4Hl182r+yAk3uGD/PeZ4hPkC0YN6bKWWMLrII8Zqhe
-         xJRUcE0rYdPj+pCEYEgvxHRsVjvns09ailu27mm6sKyDJcts+ZrNbGl4cRI1DrmoT8Or
-         YqGo26RG4ugU/BFkyRoKY0MIDGZR5IME4/JOFG6GRSYcx+GOw/BUkEV6sUUwOWgMZfGm
-         yJErOkJw8ZRkrbufXmgpT1HgkuptJ6WHBUaKbaPn0401CkZiq6aZBMUND6yAfjUPuo8/
-         nQJA==
-X-Gm-Message-State: APjAAAUFDJ67oHEJH+clInzqvQHP9zYKrvr3ZUlw3xi1n4Q0OH/pE8Ii
-        YQGKTUdz9mbTlzmJ4YJ01rKEDTNHedgQzFP9W/iPKg==
-X-Google-Smtp-Source: APXvYqyYZXM623Eo2BJ6ZYR5PkkZw7K96pCoJuYr4fvai4kTlGG1EG/G/RPh1v5brnbpA6ZqXG7mKACgjJFvbjccsMo=
-X-Received: by 2002:a2e:8809:: with SMTP id x9mr6440155ljh.82.1573212433300;
- Fri, 08 Nov 2019 03:27:13 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1572326519.git.baolin.wang@linaro.org> <19910a2f34b9be81f64637a5a5fc8d07bd5f4885.1572326519.git.baolin.wang@linaro.org>
- <a9f42792-3432-48f2-c5c4-8b03c32995dd@intel.com> <CAMz4kuK=wV1qtO4tOCcqibzKAFD-_p8+OzGOjdkvajVymJ5EgA@mail.gmail.com>
- <2ed0bcd1-fa74-d095-97ee-7d0c46a4fdbb@intel.com> <CAMz4kuJe64hdVGBTCvZW3t4_JGnTBRF=NhYDookrzNPiXacq_w@mail.gmail.com>
- <CAMz4ku+KVWw-M4AaPJ=Yn8xeLNaD2W4+gVqEN_P0QRwne3wwzA@mail.gmail.com> <0c70b5cf-4453-b21b-5622-f97ff069cf1b@intel.com>
-In-Reply-To: <0c70b5cf-4453-b21b-5622-f97ff069cf1b@intel.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Fri, 8 Nov 2019 19:27:01 +0800
-Message-ID: <CAMz4kuLT_3Hun_=ZiwRsqOcwxNoSasgFTfj7_1naBtVneSiJpg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] mmc: host: sdhci: Add a variable to defer to
- complete data requests if needed
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        baolin.wang7@gmail.com, linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1QFtqzKg2ixpAmWo62ifCiTiHn31FCP9xZyuBEbe8lo=;
+        b=Fk6Yd1Eo1xzYJ1Be3Bgf3yA1NM7MyF0nHqKOujonfHgBKt1yFyXCnwURpNY9TiKHuY
+         TV988T9LQkN2hLIvMNWd8Symp+e6enuDd5eUdFy4MJH9tgi36IsgI4v5wRCUGBG4ZD88
+         SF2Tp3Hh8mbZxOWo2Qmn7B+3unjdYHh7jtbOBXnFLAIxjLI8/FC9cIAfHD3d+T/+kiNU
+         lKhnMKw9A/ulnsnOY3P2QB3T6m+I1SJJXNcxLZrP6JKmixo9GjyvdInGCNSZJDUYA4dk
+         AdYkJRqNAHIBN/E92i/HdjYVdd+iWQE8Z558d914fpqsYw47lB5vZWWIa9CibjZUxA6N
+         FnJA==
+X-Gm-Message-State: APjAAAXXYD6ImrdkGC9uOS9tI/9blZ9XG8rXE25AR0opuBE13Sn12y1f
+        7JQ8aIXuUT8ZlOcuv2ZXELCS3A==
+X-Google-Smtp-Source: APXvYqwmIDzwk1fRutiWl2g+f7BsL569BQ6nqn4n4X1haMj85au9jq9xMfBCLtpoIvSKipk3+VGuQg==
+X-Received: by 2002:a17:90a:195e:: with SMTP id 30mr13056144pjh.60.1573212463142;
+        Fri, 08 Nov 2019 03:27:43 -0800 (PST)
+Received: from localhost.localdomain ([117.252.68.208])
+        by smtp.gmail.com with ESMTPSA id f26sm5263973pgf.22.2019.11.08.03.27.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 08 Nov 2019 03:27:42 -0800 (PST)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     jens.wiklander@linaro.org, Volodymyr_Babchuk@epam.com
+Cc:     tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
+        etienne.carriere@linaro.org, Sumit Garg <sumit.garg@linaro.org>
+Subject: [Patch v2] tee: optee: Fix dynamic shm pool allocations
+Date:   Fri,  8 Nov 2019 16:57:14 +0530
+Message-Id: <1573212434-25526-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019 at 19:24, Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 8/11/19 1:08 PM, Baolin Wang wrote:
-> > On 06/11/2019, Baolin Wang <baolin.wang@linaro.org> wrote:
-> >> On Wed, 6 Nov 2019 at 20:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>>
-> >>> To move ahead in the meantime without a new host API, just defer always
-> >
-> > Before new version, I want to make things clear in case I
-> > misunderstood your points, so you mean I should set always_defer_done
-> > = true for our Spreadtrum host driver in this patch? Or just like
-> > below patch? Thanks.
-> >
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index 850241f..4bef066 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct
-> > sdhci_host *host,
-> >  {
-> >         struct mmc_data *data = mrq->data;
-> >
-> > -       return host->pending_reset ||
-> > +       return host->pending_reset || host->always_defer_done ||
-> >                ((host->flags & SDHCI_REQ_USE_DMA) && data &&
-> >                 data->host_cookie == COOKIE_MAPPED);
-> >  }
-> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> > index d89cdb9..a73ce89 100644
-> > --- a/drivers/mmc/host/sdhci.h
-> > +++ b/drivers/mmc/host/sdhci.h
-> > @@ -533,6 +533,7 @@ struct sdhci_host {
-> >         bool pending_reset;     /* Cmd/data reset is pending */
-> >         bool irq_wake_enabled;  /* IRQ wakeup is enabled */
-> >         bool v4_mode;           /* Host Version 4 Enable */
-> > +       bool always_defer_done; /* Always defer to complete requests */
-> >
-> >         struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];  /* Requests done */
-> >         struct mmc_command *cmd;        /* Current command */
-> >
->
-> Yes
+In case of dynamic shared memory pool, kernel memory allocated using
+dmabuf_mgr pool needs to be registered with OP-TEE prior to its usage
+during optee_open_session() or optee_invoke_func().
 
-Got it. Thanks for your confirming.
+So fix dmabuf_mgr pool allocations via an additional call to
+optee_shm_register().
 
+Also, allow kernel pages to be registered as shared memory with OP-TEE.
+
+Fixes: 9733b072a12a ("optee: allow to work without static shared memory")
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+
+Changes in v2:
+Merge the dependency patch: https://lkml.org/lkml/2019/10/31/431
+
+ drivers/tee/optee/call.c     |  7 +++++++
+ drivers/tee/optee/shm_pool.c | 12 +++++++++++-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
+index 13b0269..cf2367b 100644
+--- a/drivers/tee/optee/call.c
++++ b/drivers/tee/optee/call.c
+@@ -554,6 +554,13 @@ static int check_mem_type(unsigned long start, size_t num_pages)
+ 	struct mm_struct *mm = current->mm;
+ 	int rc;
+ 
++	/*
++	 * Allow kernel address to register with OP-TEE as kernel
++	 * pages are configured as normal memory only.
++	 */
++	if (virt_addr_valid(start))
++		return 0;
++
+ 	down_read(&mm->mmap_sem);
+ 	rc = __check_mem_type(find_vma(mm, start),
+ 			      start + num_pages * PAGE_SIZE);
+diff --git a/drivers/tee/optee/shm_pool.c b/drivers/tee/optee/shm_pool.c
+index de1d9b8..0332a53 100644
+--- a/drivers/tee/optee/shm_pool.c
++++ b/drivers/tee/optee/shm_pool.c
+@@ -17,6 +17,7 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
+ {
+ 	unsigned int order = get_order(size);
+ 	struct page *page;
++	int rc = 0;
+ 
+ 	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
+ 	if (!page)
+@@ -26,12 +27,21 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
+ 	shm->paddr = page_to_phys(page);
+ 	shm->size = PAGE_SIZE << order;
+ 
+-	return 0;
++	if (shm->flags & TEE_SHM_DMA_BUF) {
++		shm->flags |= TEE_SHM_REGISTER;
++		rc = optee_shm_register(shm->ctx, shm, &page, 1 << order,
++					(unsigned long)shm->kaddr);
++	}
++
++	return rc;
+ }
+ 
+ static void pool_op_free(struct tee_shm_pool_mgr *poolm,
+ 			 struct tee_shm *shm)
+ {
++	if (shm->flags & TEE_SHM_DMA_BUF)
++		optee_shm_unregister(shm->ctx, shm);
++
+ 	free_pages((unsigned long)shm->kaddr, get_order(shm->size));
+ 	shm->kaddr = NULL;
+ }
 -- 
-Baolin Wang
-Best Regards
+2.7.4
+
