@@ -2,109 +2,73 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6839DFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE573FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEAF215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:49:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q+of8ZJx"
+	by mail.kernel.org (Postfix) with ESMTP id 8466A2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573246197;
+	bh=NU9LZfDj7rqOVx1J7c1N4B2P7rGl8SnDbxr51wObu+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z1MbDXLawqrpmHTs0dUb/53Y5PF+9pECaqWnGsKfdmh6ZP4GXOl9PzOK7zrrvq6pv
+	 yxzZ+OaqTR9J90zG0DYxsfn/zFc8KlQRC6RYQ9R8gxtZpShWyhVYookRh4RVhZEqsz
+	 qkK49f/CHH5c9UEm4aY7vV8sJtt8NCQknV6h65Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfKHUty (ORCPT
+        id S1727699AbfKHUtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:49:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57854 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfKHUtx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 15:49:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+OQ0mKAT8YcDsu48iWgScPcjStVBrGF5BQwSrPXTmnI=; b=Q+of8ZJxHcSftLfmHZpXCD4Yc
-        b+W3C/xFjDh97snZfWDTmgrXu4SmTL+NlkUPMRU0Z6MVaqs1bb5eXVwPv97i+n7SgcQF9pl+DH4Ej
-        yHwwGcKwrNIKT/dHaUzqN2Po/43lWYFuiN78bpX6igPwiHQvMy1Z6Sjz0wjaCeuwoB5edx8qY4Osj
-        NyUqMWJfzLhnneLT2ZkLtAnOvcm9Wd6O+Ohy/fPRwkcfVO0ENJhi/vjTwd2hmAn951TFckPpCmzZX
-        DvzWX4WPn6Hgqt1sd17U5vxvC+ZYmuAEWySh6WvG5TRvXQgppHS9Iwn/KXpJRX6HIrtsDq6+K6wyP
-        rj2rs87WA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iTBCQ-0007N5-4Z; Fri, 08 Nov 2019 20:49:42 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C3BE8980E2D; Fri,  8 Nov 2019 21:49:40 +0100 (CET)
-Date:   Fri, 8 Nov 2019 21:49:40 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, qperret@google.com,
-        qais.yousef@arm.com, ktkhai@virtuozzo.com
-Subject: Re: [PATCH 1/7] sched: Fix pick_next_task() vs change pattern race
-Message-ID: <20191108204940.GL3079@worktop.programming.kicks-ass.net>
-References: <20191108131553.027892369@infradead.org>
- <20191108131909.428842459@infradead.org>
- <e19c566b-dc14-a5aa-de4f-c67cdb17620c@arm.com>
+Received: from mail.kernel.org ([198.145.29.99]:50594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726462AbfKHUtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 15:49:53 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D1052085B;
+        Fri,  8 Nov 2019 20:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573246192;
+        bh=NU9LZfDj7rqOVx1J7c1N4B2P7rGl8SnDbxr51wObu+A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bQu/a5LlcxVJr1NlhxtPKZEo8isDcsKQf1jrbx65DhI2Mk/x1B8b2CMhWbJmzyY8B
+         WMAPI0s44fePKYJDz+mSMTIcp07QVIncncPCmnMkjO/pKy/W9t7iKwoMwxfsEXsgGs
+         S+z+kZq1HzH0i4cQb69PzIo/7vk54ok0R+rJoR0I=
+Date:   Fri, 8 Nov 2019 21:49:49 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Omer Shalev <omerdeshalev@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media:usb:cpia2: Properly check framebuffer mmap offsets
+Message-ID: <20191108204949.GA1277001@kroah.com>
+References: <20191108215038.59170-1-omerdeshalev@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e19c566b-dc14-a5aa-de4f-c67cdb17620c@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191108215038.59170-1-omerdeshalev@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 04:05:25PM +0000, Valentin Schneider wrote:
-> On 08/11/2019 13:15, Peter Zijlstra wrote:
-> > +static int balance_rt(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
-> > +{
-> > +	if (!on_rt_rq(&p->rt) && need_pull_rt_task(rq, p)) {
-> > +		/*
-> > +		 * This is OK, because current is on_cpu, which avoids it being
-> > +		 * picked for load-balance and preemption/IRQs are still
-> > +		 * disabled avoiding further scheduler activity on it and we've
-> > +		 * not yet started the picking loop.
-> > +		 */
-> > +		rq_unpin_lock(rq, rf);
-> > +		pull_rt_task(rq);
-> > +		rq_repin_lock(rq, rf);
-> > +	}
-> > +
-> > +	return sched_stop_runnable(rq) || sched_dl_runnable(rq) || sched_rt_runnable(rq);
-> 
-> So we already have some dependencies on the class ordering (e.g. fair->idle),
-> but I'm wondering if would it make sense to have these runnable functions be
-> defined as sched_class callbacks?
-> 
-> e.g.
-> 
->   rt_sched_class.runnable = rt_runnable
-> 
-> w/ rt_runnable() just being a non-inlined sched_rt_runnable() you define
-> further down the patch (or a wrapper to it). The balance return pattern could
-> then become:
-> 
->   for_class_range(class, sched_class_highest, rt_sched_class->next)
->   	if (class->runnable(rq))
-> 		return true;
->   return false;
-> 
-> (and replace rt_sched_class by whatever class' balance callback this is)
-> 
-> It's a bit neater, but I'm pretty sure it's going to run worse :/
-> The only unaffected one would be fair, since newidle_balance() already does
-> that "for free".
+On Fri, Nov 08, 2019 at 09:50:36PM +0000, Omer Shalev wrote:
+> The cpai2 driver's mmap implementation wasn't properly check for all
+> possible offset values. Given a huge offset value , the calculation
+> start_offset + size can wrap around to a low value and pass the check
 
-Yeah, it'll be pretty terrible :/
+I thought we checked that in the core of the kernel now, to keep all
+drivers from not having to do this type of thing (as they obviously all
+forgot to.)  Why is this still needed here as well?
 
-That said, I might have some clues on how to get rid of all the indirect
-calls, but I need to play around a bit. It'll be invasive though :/
-(like that ever stopped me).
+thanks,
+
+greg k-h
