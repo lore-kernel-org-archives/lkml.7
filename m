@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9390FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5E7FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9623221D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3EEB21D82
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213332;
-	bh=Namszi3+CY32Cp3LiVs8v5sb0kNQove0cRjpl1dbsm0=;
+	s=default; t=1573213334;
+	bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9iD5xIce4F1BEC6p90bMDl4nmKQSMmI3x1ATTnB//YuFnbWDYychlZIsMOHL7S4M
-	 ElYs8yjAI/D38DtCrNMcwaL+aDbQNd2praIafKy2bsENE3KWyatfZdSSVmVRpNTsuW
-	 60XAaA+NJEbZpRfm+0+KZmvQ4TF3jqXoEhcWeAM8=
+	b=NYsps5taL140pg4eFMfpiELBoH6bcQxiidfmv65XX1dgTn66xhBK/cYM/KZ2J6UHH
+	 jXAOf0fHxX1ruws+PMVZt9ZP0EsTzlSBd+fnGWajN+epUjZ7GiVMIP5YcsZHN37XUM
+	 1Kouh/x1fGjtjPEJ9T7S/Ch44AX3NZ2t8jqinA8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389820AbfKHLmL (ORCPT
+        id S2389807AbfKHLmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55810 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389788AbfKHLmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:08 -0500
+        id S2389769AbfKHLmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97CBC222C4;
-        Fri,  8 Nov 2019 11:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4752F21D82;
+        Fri,  8 Nov 2019 11:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213327;
-        bh=Namszi3+CY32Cp3LiVs8v5sb0kNQove0cRjpl1dbsm0=;
+        s=default; t=1573213325;
+        bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNDRgzAibqVKfFjuL6ARILEbza7nyeX9xAuESpt/IiiUhVE/26TeJis8ERjeJlqB7
-         mXSpKDtbNxCznT4dKsgeZv/SN9WzdMm8nzj1LmL3cmPaf8Nre3ruqmIgI8IrBcCOZR
-         bmKZ9cDIfJj74u/lEdEVo/1qAWXqymwX8mOwIWpU=
+        b=yzM/i+MRIwzcICvMcwgFRTgXnXpO2xsvxP4dSMXYynyzfszjb0JR3pkdhOQhTgyY9
+         7hO4Uo++sXZuoB9CpMu4cUZEqPbo+roeIcPI0Z8EQQ6Ba3UNWoD19R2NaZIVAFmzTr
+         TWB05034Rf9JEcNfPBygR6LRg4LVZuPKPNFdOpUM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+Cc:     Magnus Damm <damm+renesas@opensource.se>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 169/205] arm64: dts: renesas: r8a77965: Fix clock/reset for usb2_phy1
-Date:   Fri,  8 Nov 2019 06:37:16 -0500
-Message-Id: <20191108113752.12502-169-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 167/205] arm64: dts: renesas: r8a77965: Attach the SYS-DMAC to the IPMMU
+Date:   Fri,  8 Nov 2019 06:37:14 -0500
+Message-Id: <20191108113752.12502-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,37 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Magnus Damm <damm+renesas@opensource.se>
 
-[ Upstream commit 7a590fe317488783a229e5a80e91868942e8463f ]
+[ Upstream commit 4d76ad7d9de05506f1ee9a7b22416440468be090 ]
 
-usb2_phy1 accidentally uses the same clock/reset as usb2_phy0.
+For R-Car M3-N hook up SYS-DMAC0, SYS-DMAC1 and SYS-DMAC2 to
+IPMMU-DS0 and IPMMU-DS1 in same way as for R-Car M3-W.
+This follows the R-Car Gen3 Rev.1.00 (April 2018) datasheet.
 
-Fixes: b5857630a829a8d5 ("arm64: dts: renesas: r8a77965: add usb2_phy nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 24 +++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 2ccb1138cdf0c..f1dfd17413b9e 100644
+index f60f08ba1a6f9..0da4841162610 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -1479,9 +1479,9 @@
- 			compatible = "renesas,usb2-phy-r8a77965",
- 				     "renesas,rcar-gen3-usb2-phy";
- 			reg = <0 0xee0a0200 0 0x700>;
--			clocks = <&cpg CPG_MOD 703>;
-+			clocks = <&cpg CPG_MOD 702>;
- 			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
--			resets = <&cpg 703>;
-+			resets = <&cpg 702>;
- 			#phy-cells = <0>;
- 			status = "disabled";
+@@ -634,6 +634,14 @@
+ 			resets = <&cpg 219>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <16>;
++			iommus = <&ipmmu_ds0 0>, <&ipmmu_ds0 1>,
++			       <&ipmmu_ds0 2>, <&ipmmu_ds0 3>,
++			       <&ipmmu_ds0 4>, <&ipmmu_ds0 5>,
++			       <&ipmmu_ds0 6>, <&ipmmu_ds0 7>,
++			       <&ipmmu_ds0 8>, <&ipmmu_ds0 9>,
++			       <&ipmmu_ds0 10>, <&ipmmu_ds0 11>,
++			       <&ipmmu_ds0 12>, <&ipmmu_ds0 13>,
++			       <&ipmmu_ds0 14>, <&ipmmu_ds0 15>;
  		};
+ 
+ 		dmac1: dma-controller@e7300000 {
+@@ -668,6 +676,14 @@
+ 			resets = <&cpg 218>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <16>;
++			iommus = <&ipmmu_ds1 0>, <&ipmmu_ds1 1>,
++			       <&ipmmu_ds1 2>, <&ipmmu_ds1 3>,
++			       <&ipmmu_ds1 4>, <&ipmmu_ds1 5>,
++			       <&ipmmu_ds1 6>, <&ipmmu_ds1 7>,
++			       <&ipmmu_ds1 8>, <&ipmmu_ds1 9>,
++			       <&ipmmu_ds1 10>, <&ipmmu_ds1 11>,
++			       <&ipmmu_ds1 12>, <&ipmmu_ds1 13>,
++			       <&ipmmu_ds1 14>, <&ipmmu_ds1 15>;
+ 		};
+ 
+ 		dmac2: dma-controller@e7310000 {
+@@ -702,6 +718,14 @@
+ 			resets = <&cpg 217>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <16>;
++			iommus = <&ipmmu_ds1 16>, <&ipmmu_ds1 17>,
++			       <&ipmmu_ds1 18>, <&ipmmu_ds1 19>,
++			       <&ipmmu_ds1 20>, <&ipmmu_ds1 21>,
++			       <&ipmmu_ds1 22>, <&ipmmu_ds1 23>,
++			       <&ipmmu_ds1 24>, <&ipmmu_ds1 25>,
++			       <&ipmmu_ds1 26>, <&ipmmu_ds1 27>,
++			       <&ipmmu_ds1 28>, <&ipmmu_ds1 29>,
++			       <&ipmmu_ds1 30>, <&ipmmu_ds1 31>;
+ 		};
+ 
+ 		ipmmu_ds0: mmu@e6740000 {
 -- 
 2.20.1
 
