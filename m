@@ -2,87 +2,130 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94357FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A55FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BDD215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFB42178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732882AbfKHVes (ORCPT
+        id S1733026AbfKHVex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:34:48 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:58019 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfKHVes (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:34:48 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mt7Ll-1he6UG37Rx-00tSYX; Fri, 08 Nov 2019 22:34:45 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 05/16] xtensa: ISS: avoid struct timeval
-Date:   Fri,  8 Nov 2019 22:32:43 +0100
-Message-Id: <20191108213257.3097633-6-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
-References: <20191108213257.3097633-1-arnd@arndb.de>
+        Fri, 8 Nov 2019 16:34:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732900AbfKHVev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:34:51 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 074DE218AE;
+        Fri,  8 Nov 2019 21:34:51 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1iTBu6-0007w7-0C; Fri, 08 Nov 2019 16:34:50 -0500
+Message-Id: <20191108213449.887070634@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Fri, 08 Nov 2019 16:28:36 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 02/10] ftrace: Separate out functionality from ftrace_location_range()
+References: <20191108212834.594904349@goodmis.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bIxykHQtSe97eNRKLWHHi2P7ZpF4kFV26LIaUxopMvMff0Y6TwS
- EHpMHJbnqxFRE8Lm5mODfRoD+r3eac3XJ0c2PcWDZciqhG0ddLpIau+NTbR+edYv8nKhw4c
- x4o34A3GVlLMI4yZ3Ma/1hhqFfNBaWeZIjAeJ37oPMTD+TXbHKYAq6eu7I8i9slW930BcPK
- uhy384Y8WEvKnM/Tfn7NA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lglGieAmDc8=:3SS5HATOoJTa0ueQh98NLR
- Txq527OJbLubazTSr+uZbynA65G8JKR8FiyGu6CNvP0AQ32h7g+xGSpr8KDkgjg6Ph960bVun
- ri/dCTTEQHWtfX6vfF++BnXPBMt2QpLEs8w5KGiRvroySsmvXQmcbV+wc7xDMIuH+cn1qZHzL
- CPeNZkgShvd+R/OkvTA8qME4QJiIfM1AqQgOwgn2jd5M7Z6E+47pk7FqrYJAbA9yoGo0ZhDbB
- Yc4J6nLzSqtbccBN1wvVGMgx4qBsJWdnA6ZZj0b7nNJ6hKvNGIn2qGzKh/eXQ7Khbo0TC1o60
- HahpmBei2f6Ju7rWmM/Fy66k473y7VhiRgBI6vmRJSu5BtcS35JReSDDVeBEbmWWqK1c6Byu0
- fZHcfeu0a4UuTijAKQvBXiDX6dcGPb7gOfPq9xCgEY9G2QyPBg4Ob6L24lFxO+bJL1dRnK9Xu
- sLeNB980MVhsnNP2zMLm+bRUSlunldL+oXLle4T1UkEf+arXhxLduDNjJEOz374eWKw7VlTtG
- T9OyLt2wqJseNFgNDd6xPu7Ub7jEASZ0k18yZxD6XTUo0BVVAy4ZgD22x5F5MkZnkYIzeDITN
- IxyZ7hiMFPnSQSPWDzxwRSu26Sf0Lk+xqOfuHxg2Z2kCn0Tb3ny49wvlFUuAQLik+3o3bPUHR
- Chfejv9lBsD9zZCeU+njQadrcMbzdweuiX7UlWBYTp2FAKgFs6EssCzXKuXLNE4DA0zV/X8Z5
- 0OtdBvZ6j7Sp/25taXA+vU7QaGjufxoDIR7QUh74aFmFBHAh5baLWAZ6cQG6wmWUpA5Qv8Rkf
- misaXsiy87/On/4iHib79b4GzF3K3vcELrp1Cg9qkAnKZTQMWgA5ri9eaF6RecZ1hG3JSwyQg
- 5lu1Uf1n9ZMLp209ZYTg==
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'struct timeval' will get removed from the kernel, change the one
-user in arch/xtensa to avoid referencing it, by using a fixed-length
-array instead.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Create a new function called lookup_rec() from the functionality of
+ftrace_location_range(). The difference between lookup_rec() is that it
+returns the record that it finds, where as ftrace_location_range() returns
+only if it found a match or not.
+
+The lookup_rec() is static, and can be used for new functionality where
+ftrace needs to find a record of a specific address.
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- arch/xtensa/platforms/iss/include/platform/simcall.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/ftrace.c | 38 +++++++++++++++++++++++---------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
 
-diff --git a/arch/xtensa/platforms/iss/include/platform/simcall.h b/arch/xtensa/platforms/iss/include/platform/simcall.h
-index 2ba45858e50a..4e2a48380dbf 100644
---- a/arch/xtensa/platforms/iss/include/platform/simcall.h
-+++ b/arch/xtensa/platforms/iss/include/platform/simcall.h
-@@ -113,9 +113,9 @@ static inline int simc_write(int fd, const void *buf, size_t count)
- 
- static inline int simc_poll(int fd)
- {
--	struct timeval tv = { .tv_sec = 0, .tv_usec = 0 };
-+	long timeval[2] = { 0, 0 };
- 
--	return __simc(SYS_select_one, fd, XTISS_SELECT_ONE_READ, (int)&tv);
-+	return __simc(SYS_select_one, fd, XTISS_SELECT_ONE_READ, (int)&timeval);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 76e5de8c7822..b0e7f03919de 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1541,6 +1541,26 @@ static int ftrace_cmp_recs(const void *a, const void *b)
+ 	return 0;
  }
  
- static inline int simc_lseek(int fd, uint32_t off, int whence)
++static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
++{
++	struct ftrace_page *pg;
++	struct dyn_ftrace *rec = NULL;
++	struct dyn_ftrace key;
++
++	key.ip = start;
++	key.flags = end;	/* overload flags, as it is unsigned long */
++
++	for (pg = ftrace_pages_start; pg; pg = pg->next) {
++		if (end < pg->records[0].ip ||
++		    start >= (pg->records[pg->index - 1].ip + MCOUNT_INSN_SIZE))
++			continue;
++		rec = bsearch(&key, pg->records, pg->index,
++			      sizeof(struct dyn_ftrace),
++			      ftrace_cmp_recs);
++	}
++	return rec;
++}
++
+ /**
+  * ftrace_location_range - return the first address of a traced location
+  *	if it touches the given ip range
+@@ -1555,23 +1575,11 @@ static int ftrace_cmp_recs(const void *a, const void *b)
+  */
+ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+ {
+-	struct ftrace_page *pg;
+ 	struct dyn_ftrace *rec;
+-	struct dyn_ftrace key;
+ 
+-	key.ip = start;
+-	key.flags = end;	/* overload flags, as it is unsigned long */
+-
+-	for (pg = ftrace_pages_start; pg; pg = pg->next) {
+-		if (end < pg->records[0].ip ||
+-		    start >= (pg->records[pg->index - 1].ip + MCOUNT_INSN_SIZE))
+-			continue;
+-		rec = bsearch(&key, pg->records, pg->index,
+-			      sizeof(struct dyn_ftrace),
+-			      ftrace_cmp_recs);
+-		if (rec)
+-			return rec->ip;
+-	}
++	rec = lookup_rec(start, end);
++	if (rec)
++		return rec->ip;
+ 
+ 	return 0;
+ }
 -- 
-2.20.0
+2.23.0
+
 
