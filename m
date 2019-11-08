@@ -1,131 +1,190 @@
 Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Level: **
+X-Spam-Status: No, score=2.4 required=3.0 tests=CHARSET_FARAWAY_HEADER,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729FBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46233C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404E92084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:12:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eO8018ep"
+	by mail.kernel.org (Postfix) with ESMTP id 0E3BE2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfKHCMu (ORCPT
+        id S1728574AbfKHCTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 21:12:50 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38269 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfKHCMu (ORCPT
+        Thu, 7 Nov 2019 21:19:16 -0500
+Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:12462 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726219AbfKHCTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 21:12:50 -0500
-Received: by mail-io1-f68.google.com with SMTP id i13so3284737ioj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 18:12:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mI2H1/JiMrgWfOQwsYN77DP2fyTgPIoA8PWUrElgIAQ=;
-        b=eO8018epbWTB8R8wRPyM0TCODeYfAWo28VHUOHQpZBgRVCa0U7Z2a794XD3/Lchxn1
-         UpNjqP75vS35IFdq+6xkpSkjEt0N47mu00Yivj50HCG43ZWaDX0N16baTt7X86Xp5IlY
-         Rymy1/1GNTxm43BtviiHAJO6H7sfIS4F8HfVBIi7QAbzPv/mxMaU+ZjQoMHdS8E2yfXV
-         7SKtL/cFZskmkgP8qMNmZ/PXPj1kkvuwWO6H/sN7Y3DYcgbq9a/7ZC5+5a/aD+CT4egJ
-         bJyx0zPn32qakht5SQAIhgJavGTUAi0YTmJnCnkxcLpgx16HassQo05wf0FoX1WX21Pk
-         /a5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mI2H1/JiMrgWfOQwsYN77DP2fyTgPIoA8PWUrElgIAQ=;
-        b=NyjmQ1hwDkQab+ONABp3hspDt4fuelP2Nq0dQyvuGKg9By78TTympJx5jLAJ+EY+1S
-         itLnzcI6BkAARfCdXBSNZ0s2/MBLMld5LGPmYM9bAav2zPGosqbcQigTRPSFXDnzXN7b
-         ++HRuHK8xbrm4ZRK7sejBVpLnRWmekP9rVQDcdGiA6Gdaj6lO96gSAXDNgqKVHF7j/j/
-         7SNcl4cN4ulBMXiLg6BuUhOcThMrRKFA1xNoO5Dvj2sJOl+g7uKs+96+B3z/RhbcKE44
-         q7J9GZSOpYHGFEI3M3WS/ZuEi7GHtARH9kM2g5OL2wjr5SwG9pFu1pFya8CSFml5Fkna
-         8//Q==
-X-Gm-Message-State: APjAAAVPKINH2tapYfPHBcKazcw0a1QANXlcVCgYXVgM+agHL04Tt6Du
-        vx3VU+PbU+OGDXI9P5zMZBjZSvWM2EkvauqSwA==
-X-Google-Smtp-Source: APXvYqzY9STxjC9gLO/kjIsthshQUi/v0Ta7sCk09dsOFWeTEwlWPLLDT3FORJqPU8kn1oLY/33hdBrXOcR/4O6nrVU=
-X-Received: by 2002:a6b:8b02:: with SMTP id n2mr7288982iod.66.1573179169510;
- Thu, 07 Nov 2019 18:12:49 -0800 (PST)
+        Thu, 7 Nov 2019 21:19:16 -0500
+Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+        by SHSQR01.spreadtrum.com with ESMTPS id xA82GTW0012313
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 8 Nov 2019 10:16:30 +0800 (CST)
+        (envelope-from lvqiang.huang@unisoc.com)
+Received: from BJMBX01.spreadtrum.com (10.0.64.7) by BJMBX02.spreadtrum.com
+ (10.0.64.8) with Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 8 Nov 2019
+ 10:16:37 +0800
+Received: from BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7]) by
+ BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7%16]) with mapi id
+ 15.00.0847.030; Fri, 8 Nov 2019 10:16:19 +0800
+From:   =?gb2312?B?u8bCwMe/IChMdnFpYW5nIEh1YW5nKQ==?= 
+        <lvqiang.huang@unisoc.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'26332949@qq.com'" <26332949@qq.com>,
+        =?gb2312?B?s/6298C0IChFbmxhaSBDaHUp?= <enlai.chu@unisoc.com>
+Subject: RE: [PATCH] ARM: check __ex_table in do_bad()
+Thread-Topic: [PATCH] ARM: check __ex_table in do_bad()
+Thread-Index: AQHVlT9LZv+9LX02T0yFglLQtX/ntKd+6ZYAgAEL2yeAAIimAA==
+Date:   Fri, 8 Nov 2019 02:16:18 +0000
+Message-ID: <2bf9a1c1950941aabc383fd196e5768a@BJMBX01.spreadtrum.com>
+References: <1573112713-10115-1-git-send-email-Lvqiang.Huang@unisoc.com>,<20191107092404.GV25745@shell.armlinux.org.uk>
+ <CE4726AD-630F-44A0-862B-23BC8E6A7E4C@unisoc.com>
+In-Reply-To: <CE4726AD-630F-44A0-862B-23BC8E6A7E4C@unisoc.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.64.20]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de>
- <CAMzpN2juuUyLuQ-tiV7hKZvG4agsHKP=rRAt_V4sZhpZW7cv9g@mail.gmail.com>
- <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
- <CAMzpN2gt4qM41=96GpNHL-kbgBsjD-zphq+5oK0BXqoCFN4F4Q@mail.gmail.com>
- <CAHk-=wjocTzo+8OMwyKPX0MCVV=N4wtU8ifwSZ_qJJnDBgKJ8Q@mail.gmail.com> <6cac6943-2f6c-d48a-658e-08b3bf87921a@zytor.com>
-In-Reply-To: <6cac6943-2f6c-d48a-658e-08b3bf87921a@zytor.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Thu, 7 Nov 2019 21:12:38 -0500
-Message-ID: <CAMzpN2hCrcQg_u5sp7WWGjOBv13+ZWtSAecp6bWpT6rsTyo+-Q@mail.gmail.com>
-Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage further
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MAIL: SHSQR01.spreadtrum.com xA82GTW0012313
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 8:12 PM H. Peter Anvin <hpa@zytor.com> wrote:
->
-> On 2019-11-07 13:44, Linus Torvalds wrote:
-> > On Thu, Nov 7, 2019 at 1:00 PM Brian Gerst <brgerst@gmail.com> wrote:
-> >>
-> >> There wouldn't have to be a flush on every task switch.
-> >
-> > No. But we'd have to flush on any switch that currently does that memcpy.
-> >
-> > And my point is that a tlb flush (even the single-page case) is likely
-> > more expensive than the memcpy.
-> >
-> >> Going a step further, we could track which task is mapped to the
-> >> current cpu like proposed above, and only flush when a different task
-> >> needs the IO bitmap, or when the bitmap is being freed on task exit.
-> >
-> > Well, that's exactly my "track the last task" optimization for copying
-> > the thing.
-> >
-> > IOW, it's the same optimization as avoiding the memcpy.
-> >
-> > Which I think is likely very effective, but also makes it fairly
-> > pointless to then try to be clever..
-> >
-> > So the basic issue remains that playing VM games has almost
-> > universally been slower and more complex than simply not playing VM
-> > games. TLB flushes - even invlpg - tends to be pretty slow.
-> >
-> > Of course, we probably end up invalidating the TLB's anyway, so maybe
-> > in this case we don't care. The ioperm bitmap is _technically_
-> > per-thread, though, so it should be flushed even if the VM isn't
-> > flushed...
-> >
->
-> One option, probably a lot saner (if we care at all, after all, copying 8K
-> really isn't that much, but it might have some impact on real-time processes,
-> which is one of the rather few use cases for direct I/O) would be to keep the
-> bitmask in a pre-formatted TSS (ioperm being per thread, so no concerns about
-> the TSS being in use on another processor), and copy the TSS fields (88 bytes)
-> over if and only if the thread has been migrated to a different CPU, then
-> switch the TSS rather than switching  For the common case (no ioperms) we use
-> the standard per-cpu TSS.
->
-> That being said, I don't actually know that copying 88 bytes + LTR is any
-> cheaper than copying 8K.
 
-I don't think that can work.  The TSS has to be at a fixed address in
-the cpu_entry_area so that it is visible when running in usermode
-(thanks to Meltdown).
+U29ycnkgZm9yIG5vdCBoYXZpbmcgZGVzY3JpYmVkIGl0IGNsZWFybHksIHBsZWFzZSBsZXQgbWUg
+YWRkIHNvbWUgbW9yZSBpbmZvcm1hdGlvbi4gDQoNClRoZSBrZXJuZWwgbG9nIGZvciB0aGUgc2Nl
+bmFyaW8NClsyMDQ2MS4yNzEzNzRdIHN5c3JxOiBTeXNScSA6IFNob3cgQmxvY2tlZCBTdGF0ZQ0K
+WzIwNDYxLjI3MTQwNV0gICB0YXNrICAgICAgICAgICAgICAgIFBDIHN0YWNrICAgcGlkIGZhdGhl
+cg0KWzIwNDYxLjI3MTQzNl0gbWJveC1zZW5kLXRocmVhIEQgYzA4Y2ZhZDggICAgIDAgICAgMzgg
+ICAgICAyIDB4MDAwMDAwMDANCi8qYW5kIGlnbm9yZSBzb21lIGxvZ3MgYWJvcnQgdGhlIGJhY2t0
+cmFjZSBkdW1wIG9mIHNvbWUgVEFTS19VTklOVEVSUlVQVElCTEUgdGFza3MgKi8NClsyMDQ2MS4y
+NzMzODddIGZzY2suZXhmYXQgICAgICBEIGMwOGNmYWQ4ICAgICAwICA2MjIxICAgMjI3NiAweDAw
+MDAwMDAwDQpbMjA0NjEuMjczNDA4XSBCYWNrdHJhY2U6DQpbMjA0NjEuMjczNDMwXSBbPGMwOGNm
+NWQwPl0gKF9fc2NoZWR1bGUpIGZyb20gWzxjMDhjZmY4ND5dIChzY2hlZHVsZSsweDkwLzB4YTgp
+DQpbMjA0NjEuMjczNDQyXSAgcjEwOmNlMDA5ZWYwIHI5OmNlMDA5ZGY0IHI4OmMwZDA3OTBjIHI3
+OjAwMDAwMDgyIHI2OjdmZmZmZmZmIHI1OjAwMDAwMDAwDQpbMjA0NjEuMjczNDc3XSAgcjQ6Y2Uw
+MDgwMDANClsyMDQ2MS4yNzM0OTddIFs8YzA4Y2ZlZjQ+XSAoc2NoZWR1bGUpIGZyb20gWzxjMDhk
+MmI5MD5dIChzY2hlZHVsZV90aW1lb3V0KzB4MmMvMHgyNmMpDQpbMjA0NjEuMjczNTA5XSAgcjQ6
+N2ZmZmZmZmYgcjM6ZGM4YmE2OTMNClsyMDQ2MS4yNzM1NjFdIFVuaGFuZGxlZCBmYXVsdDogcGFn
+ZSBkb21haW4gZmF1bHQgKDB4MDFiKSBhdCAweDMyODQ4YzAyDQpbMjA0NjEuMjczNTc2XSBwZ2Qg
+PSBkMTg1NDAwMA0KWzIwNDYxLjI3MzU4N10gWzMyODQ4YzAyXSAqcGdkPWJiMjFlODM1DQpbMjA0
+NjEuMjczNjA3XSBJbnRlcm5hbCBlcnJvcjogOiAxYiBbIzFdIFBSRUVNUFQgU01QIEFSTQ0KWzIw
+NDYxLjI3ODkwM10gQ1BVOiAyIFBJRDogNTkxNyBDb21tOiB3YXRjaGRvZyBUYWludGVkOiBHICAg
+ICAgICBXICBPICAgIDQuNC4xNDcrICMxDQpbMjA0NjEuMjc4OTI5XSB0YXNrOiBlOWJlZWNjMCB0
+YXNrLnN0YWNrOiBlMzBhNDAwMA0KWzIwNDYxLjI3ODk0OV0gUEMgaXMgYXQgZm9yX2VhY2hfZnJh
+bWUrMHgxOC8weDg4DQpbMjA0NjEuMjc4OTY1XSBMUiBpcyBhdCB2cHJpbnRrX2VtaXQrMHg0NzAv
+MHg0ZWMNCg0KVGhlIFRhc2sgQTogZmluYWxseSBjcmFzaGVkIHRhc2ssIFBJRDogNTkxNyBDb21t
+OiB3YXRjaGRvZywgcnVubmluZyBvbiBDUFUgMiwgZHVtcGluZyBiYWNrdHJhY2Ugb2YgYWxsIFVO
+IHRhc2tzLg0KVGhlIFRhc2sgQjogVEFTS19VTklOVEVSUlVQVElCTEUgdG8gVEFTS19SVU5OSU5H
+IHdoZW4gVGFzayBBIGlzIHRyeWluZyB0byBkdW1wIGl0cyBiYWNrdHJhY2UuIA0KDQpUaGUgZmly
+c3QgMiBmcmFtZXMgZHVtcCBmb3IgdGFzayBCIGFyZSBvaywgc2VlIA0KWzIwNDYxLjI3MzQzMF0g
+WzxjMDhjZjVkMD5dIChfX3NjaGVkdWxlKSBmcm9tIFs8YzA4Y2ZmODQ+XSAoc2NoZWR1bGUrMHg5
+MC8weGE4KQ0KWzIwNDYxLjI3MzQ5N10gWzxjMDhjZmVmND5dIChzY2hlZHVsZSkgZnJvbSBbPGMw
+OGQyYjkwPl0gKHNjaGVkdWxlX3RpbWVvdXQrMHgyYy8weDI2YykNCg0KVGhlbiB0YXNrIEEgY3Jh
+c2hlZDoNClsyMDQ2MS4yNzM1NjFdIFVuaGFuZGxlZCBmYXVsdDogcGFnZSBkb21haW4gZmF1bHQg
+KDB4MDFiKSBhdCAweDMyODQ4YzAyDQoNCkZyb20gdGhlIFJBTSBkdW1wIGFmdGVyIGtlcm5lbCBj
+cmFzaCwgd2UgY2FuIHNlZSBUYXNrIEIgaGFkIGJlZW4gc2NoZWR1bGVkIHRvIHJ1bm5pbmcgb24g
+Q1BVIDAuIA0KY3Jhc2hfYXJtPiBwcyA2MjIxDQogICBQSUQgICAgUFBJRCAgQ1BVICAgVEFTSyAg
+ICBTVCAgJU1FTSAgICAgVlNaICAgIFJTUyAgQ09NTQ0KPiAgNjIyMSAgIDIyNzYgICAwICBjZGUw
+NDg4MCAgUlUgICAwLjQgICAxNzc4NCAgMTM1OTYgIGZzY2suZXhmYXQNCg0KQW5kIHRoZSBiYWNr
+dHJhY2Ugc2hvdWxkIGNoYW5nZWQsIHdoaWNoIGNhdXNlIHRoZSBjcmFzaCBvZiBUYXNrIEEuDQpj
+cmFzaF9hcm0+IGJ0IDYyMjENClBJRDogNjIyMSAgIFRBU0s6IGNkZTA0ODgwICBDUFU6IDAgICBD
+T01NQU5EOiAiZnNjay5leGZhdCINCiAjMCBbPGMwMTE3YTVjPl0gKF9fa3VubWFwX2F0b21pYykg
+ZnJvbSBbPGMwNDEzYWU4Pl0NCiAjMSBbPGMwNDEzODk0Pl0gKGNvcHlfcGFnZV90b19pdGVyKSBm
+cm9tIFs8YzAxZjQ3ODg+XQ0KICMyIFs8YzAxZjQzOWM+XSAoZ2VuZXJpY19maWxlX3JlYWRfaXRl
+cikgZnJvbSBbPGMwMjcyNWU4Pl0NCiAjMyBbPGMwMjcyNTdjPl0gKGJsa2Rldl9yZWFkX2l0ZXIp
+IGZyb20gWzxjMDIzYjViMD5dDQogIzQgWzxjMDIzYjRmOD5dIChfX3Zmc19yZWFkKSBmcm9tIFs8
+YzAyM2JkMDQ+XQ0KICM1IFs8YzAyM2JjNzg+XSAodmZzX3JlYWQpIGZyb20gWzxjMDIzYzdlMD5d
+DQogIzYgWzxjMDIzYzc2Yz5dIChzeXNfcHJlYWQ2NCkgZnJvbSBbPGMwMTA3OWEwPl0NCg0KVGhp
+cyBpcyB0aGUgcmFjZSBjb25kaXRpb24sIHRyeSB0byBiYWNrdHJhY2UgYW5vdGhlciB0YXNrIGlz
+IG5vdCBzYWZlLiBXZSBjYW4ndCBhc3N1bWUgdGhlIHRhc2sgd29uJ3QgYmUgc2NoZWR1bGVkIHRv
+IGV4ZWN1dGlvbiBkdXJpbmcgdGhlIGJhY2t0cmFjZSBkdW1wLiBUaGUgc3RhY2sgZnJhbWUgc2hv
+dWxkIHRvdGFsbHkgY2hhbmdlIG9uY2UgZXhlY3V0ZSBhZ2Fpbi4gDQoNClRoZSBfX2V4X3RhYmxl
+IGVudHJ5IGluIEBmb3JfZWFjaF9mcmFtZSBzaG91bGQgYWRkaW5nIGZvciB0aGlzIHNjZW5hcmlv
+LiBCdXQgd2l0aCBDT05GSUdfQ1BVX1NXX0RPTUFJTl9QQU49eSwgcGFnZSBkb21haW4gZmF1bHQg
+bWF5IGhpdCBhbmQgZ28gdGhlIGRvX2JhZCgpIGluc3RlYWQgb2YgZG9fcGFnZV9mYXVsdCgpLg0K
+DQpUaGUgcGF0aCBtYXkgbm90IGFuIG9wdGltYWwgc29sdXRpb24sIEkganVzdCB3YW50IHRvIHBv
+aW50IG91dCB0aGUgcHJvYmxlbSwgYW5kIGlzIHRoZXJlIGFueSBjb25jZXJuIGlmIHdlIGNoZWNr
+IF9fZXhfdGFibGUgaW4gZG9fYmFkKCk/IA0KDQpOb3csIG91ciBwcm9qZWN0IGhhZCBlbmFibGVk
+IENPTkZJR19BUk1fVU5XSU5EPXksIGl0IHdpbGwgZmFpbCB0byBnZXQgYW4gdW53aW5kX2lkeCB3
+aGVuIGdldCBhIHdyb25nIHN2X3BjLCB0aGVuIHRoZSB1bndpbmQgYWJvcnQgd2l0aG91dCBrZXJu
+ZWwgY3Jhc2guDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiC7xsLAx78gKEx2
+cWlhbmcgSHVhbmcpIA0KU2VudDogRnJpZGF5LCBOb3ZlbWJlciAwOCwgMjAxOSAxOjIzIEFNDQpU
+bzogUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IGFkbWluDQpDYzogZWJpZWRlcm1AeG1pc3Npb24u
+Y29tOyBkYXZlLmhhbnNlbkBsaW51eC5pbnRlbC5jb207IGFuc2h1bWFuLmtoYW5kdWFsQGFybS5j
+b207IGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc7IGYuZmFpbmVsbGlAZ21haWwuY29tOyB3aWxs
+QGtlcm5lbC5vcmc7IHRnbHhAbGludXRyb25peC5kZTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBSZTog
+W1BBVENIXSBBUk06IGNoZWNrIF9fZXhfdGFibGUgaW4gZG9fYmFkKCkNCg0KDQo+INTaIDIwMTnE
+6jEx1MI3yNWjrDE3OjI0o6xSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggYWRtaW4gDQo+IDxsaW51
+eEBhcm1saW51eC5vcmcudWs+INC0tcCjug0KPiANCj4+IE9uIFRodSwgTm92IDA3LCAyMDE5IGF0
+IDAzOjQ1OjEzUE0gKzA4MDAsIEx2cWlhbmcgd3JvdGU6DQo+PiANCj4+IFdlIGdvdCBtYW55IGNy
+YXNocyBpbiBmb3JfZWFjaF9mcmFtZSsweDE4IGFyY2gvYXJtL2xpYi9iYWNrdHJhY2UuUw0KPj4g
+ICAgMTAwMzogbGRyIHIyLCBbc3ZfcGMsICMtNF0NCj4+IA0KPj4gVGhlIGJhY2t0cmFjZSBpcw0K
+Pj4gICAgZHVtcF9iYWNrdHJhY2UNCj4+ICAgIHNob3dfc3RhY2sNCj4+ICAgIHNjaGVkX3Nob3df
+dGFzaw0KPj4gICAgc2hvd19zdGF0ZV9maWx0ZXINCj4+ICAgIHN5c3JxX2hhbmRsZV9zaG93c3Rh
+dGVfYmxvY2tlZA0KPj4gICAgX19oYW5kbGVfc3lzcnENCj4+ICAgIHdyaXRlX3N5c3JxX3RyaWdn
+ZXINCj4+ICAgIHByb2NfcmVnX3dyaXRlDQo+PiAgICBfX3Zmc193cml0ZQ0KPj4gICAgdmZzX3dy
+aXRlDQo+PiAgICBzeXNfd3JpdGUNCj4+IA0KPj4gUmVsYXRlZCBLZXJuZWwgY29uZmlnDQo+PiAg
+ICBDT05GSUdfQ1BVX1NXX0RPTUFJTl9QQU49eQ0KPj4gICAgIyBDT05GSUdfQVJNX1VOV0lORCBp
+cyBub3Qgc2V0DQo+PiAgICBDT05GSUdfRlJBTUVfUE9JTlRFUj15DQo+PiANCj4+IFRoZSB0YXNr
+IEEgd2FzIGR1bXBpbmcgdGhlIHN0YWNrIG9mIGFuIFVOIHRhc2sgQi4gSG93ZXZlciwgdGhlIHRh
+c2sgQg0KPiANCj4gV2hhdCBpcyAiYW4gVU4gdGFzayBCIj8NCg0KVU4gbWVhbnMgVEFTS19VTklO
+VEVSUlVQVElCTEUuIA0KKFNvcnJ5IGZvciB0aGUgdHlwbyBpbiB0aGUgbGFzdCByZXBseSkNCg0K
+Pj4gc2NoZWR1bGVkIHRvIHJ1biBvbiBhbm90aGVyIENQVSwgd2hpY2ggY2F1c2UgaXQgc3RhY2sg
+Y29udGVudCBjaGFuZ2VkLg0KPj4gVGhlbiwgdGFzayBBIG1heSBoaXQgYSBwYWdlIGRvbWFpbiBm
+YXVsdCBhbmQgZGllKCkuDQo+PiAgICBbNTIwLjY2MTMxNF0gVW5oYW5kbGVkIGZhdWx0OiBwYWdl
+IGRvbWFpbiBmYXVsdCAoMHgwMWIpIGF0IA0KPj4gMHgzMjg0OGMwMg0KPiANCj4gU28sIHRoZSBi
+YWNrdHJhY2UgY29kZSBpcyB0cnlpbmcgdG8gYWNjZXNzIHVzZXJzcGFjZS4gIEl0IGlzbid0IA0K
+PiBzdXBwb3NlZCB0byBiZSBhY2Nlc3NpbmcgdXNlcnNwYWNlIC0gdGhlcmUgYXJlIG5vIGd1YXJh
+bnRlZXMgdGhhdCANCj4gdXNlcnNwYWNlIHdpbGwgYmUgdXNpbmcgZnJhbWUgcG9pbnRlcnMuICBU
+aGF0IGlzIHRoZSBidWcuDQo+IA0KDQpUaGVyZSBpcyBhIHJhY2UgY29uZGl0aW9uIHdoZW4gdHJ5
+IHRvIGdldCB0aGUgYmFja3RyYWNlIG9mIGFub3RoZXIgdGFza6Osd2hvc2UgZnJhbWVzIG1heSB0
+b3RhbGx5IGNoYW5nZWQgZHVyaW5nIHRoZSBleGVjdXRpb24uIA0KDQo+IC0tDQo+IFJNSydzIFBh
+dGNoIHN5c3RlbTogaHR0cHM6Ly93d3cuYXJtbGludXgub3JnLnVrL2RldmVsb3Blci9wYXRjaGVz
+Lw0KPiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lIGluIHN1YnVyYmlhOiBzeW5jIGF0
+IDEyLjFNYnBzIGRvd24gDQo+IDYyMmticHMgdXAgQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQ6
+IDExLjlNYnBzIGRvd24gNTAwa2JwcyB1cA0KDQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClRoaXMg
+ZW1haWwgKGluY2x1ZGluZyBpdHMgYXR0YWNobWVudHMpIGlzIGludGVuZGVkIG9ubHkgZm9yIHRo
+ZSBwZXJzb24gb3IgZW50aXR5IHRvIHdoaWNoIGl0IGlzIGFkZHJlc3NlZCBhbmQgbWF5IGNvbnRh
+aW4gaW5mb3JtYXRpb24gdGhhdCBpcyBwcml2aWxlZ2VkLCBjb25maWRlbnRpYWwgb3Igb3RoZXJ3
+aXNlIHByb3RlY3RlZCBmcm9tIGRpc2Nsb3N1cmUuIFVuYXV0aG9yaXplZCB1c2UsIGRpc3NlbWlu
+YXRpb24sIGRpc3RyaWJ1dGlvbiBvciBjb3B5aW5nIG9mIHRoaXMgZW1haWwgb3IgdGhlIGluZm9y
+bWF0aW9uIGhlcmVpbiBvciB0YWtpbmcgYW55IGFjdGlvbiBpbiByZWxpYW5jZSBvbiB0aGUgY29u
+dGVudHMgb2YgdGhpcyBlbWFpbCBvciB0aGUgaW5mb3JtYXRpb24gaGVyZWluLCBieSBhbnlvbmUg
+b3RoZXIgdGhhbiB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBvciBhbiBlbXBsb3llZSBvciBhZ2Vu
+dCByZXNwb25zaWJsZSBmb3IgZGVsaXZlcmluZyB0aGUgbWVzc2FnZSB0byB0aGUgaW50ZW5kZWQg
+cmVjaXBpZW50LCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50
+ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2UgZG8gbm90IHJlYWQsIGNvcHksIHVzZSBvciBkaXNjbG9z
+ZSBhbnkgcGFydCBvZiB0aGlzIGUtbWFpbCB0byBvdGhlcnMuIFBsZWFzZSBub3RpZnkgdGhlIHNl
+bmRlciBpbW1lZGlhdGVseSBhbmQgcGVybWFuZW50bHkgZGVsZXRlIHRoaXMgZS1tYWlsIGFuZCBh
+bnkgYXR0YWNobWVudHMgaWYgeW91IHJlY2VpdmVkIGl0IGluIGVycm9yLiBJbnRlcm5ldCBjb21t
+dW5pY2F0aW9ucyBjYW5ub3QgYmUgZ3VhcmFudGVlZCB0byBiZSB0aW1lbHksIHNlY3VyZSwgZXJy
+b3ItZnJlZSBvciB2aXJ1cy1mcmVlLiBUaGUgc2VuZGVyIGRvZXMgbm90IGFjY2VwdCBsaWFiaWxp
+dHkgZm9yIGFueSBlcnJvcnMgb3Igb21pc3Npb25zLiANCrG+08q8/rywxuS4vbz+vt/T0LGjw9zQ
+1NbKo6zK3Leowsmxo7uksru1w9C5wrajrL32t6LLzbj4sb7Tyrz+y/nWuMzYtqjK1bz+yMuho9HP
+vfu3x76tytrIqMq508OhotD7tKuhoreisry78ri01saxvtPKvP678sbkxNrI3aGjyPS3x7jDzNi2
+qMrVvP7Iy6Osx+vO8NTEtsGhori01sahoiDKudPDu/LF+8K2sb7Tyrz+tcTIzrrOxNrI3aGjyPTO
+88rVsb7Tyrz+o6zH67TTz7XNs9bQ08C+w9DUyb6z/bG+08q8/rywy/nT0Li9vP6jrLKi0tS72Li0
+08q8/rXEt73Kvby0v8y45taqt6K8/sjLoaPO3reosaPWpLulwarN+M2o0MW8sMqxoaKwssiroaLO
+3s7zu/K3wLa+oaO3orz+yMu21MjOus607cKpvvmyu7PQtaPU8MjOoaMNCg==
 
---
-Brian Gerst
