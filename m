@@ -2,583 +2,137 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB070C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AD7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9732084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565622084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vF9qL09N"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HpVmfJD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfKHASY (ORCPT
+        id S1727686AbfKHAUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:18:24 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38069 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728567AbfKHASQ (ORCPT
+        Thu, 7 Nov 2019 19:20:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35724 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726054AbfKHAUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:18:16 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 15so2990413pgh.5;
-        Thu, 07 Nov 2019 16:18:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RFrM/IahGbn36aeCNSBF2NbdB2UIEkSbp7j1U/R43X8=;
-        b=vF9qL09Nc5VFyECrfx2/sutggpKwZRxb5vzvhEYLHuLdOjx3aVC9RH575LhqNTX8k6
-         xUV++MKeUYwv1idw9qQh6ZsqXRWwFHWcUEDIAEwS/M2Ui2S22u+BSHvWh3M9VC0RY2lW
-         tMOcHfnw0xj0VziFuwnuN9+DsRJ32aQ7Ywf5MQi0xcwLYkCkAxQz885XUjMUJDS0dn0s
-         K74NlGvfBKQaQoKom+Jw3UKEPCHQNJ0VU8OGr4+iuoQzFq1a8oj4hEibrTpLhnwPUZX9
-         E0qpZ1Fh4lVBSQgn1s5N2+dDdoVjEvfxvX5QPdKwMbTePS3+v8IwNsp7hijKoJvTZvFg
-         WEPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RFrM/IahGbn36aeCNSBF2NbdB2UIEkSbp7j1U/R43X8=;
-        b=nq/Gy/cUlNsvPbT2vvK5rDqzwPgXGa+aZAeA6pGm38HgzVb1R/KY6bxjh3EYCzUy/H
-         sl47qMrpN3S5R8jBL2JHHjg0iPi8S3h8QpZXBQRHZEnIQv9n2i8hD7FuH/oKuXh0XKaW
-         T2hssXmY9LC6jz4S6JhwzMoCJFOfInBZYQbgQDOdwXBc+2dJhAClE2MVKwxCwgNLbb2A
-         lUKJnuEhUjqWbSQTSx73hu2pV25UoCuqmPnGnPggjy29o78NhfqX/0vSwDvY8C1fU099
-         kX9iG+28R4nmE0HNIV58GIRcpHZM18WnGLU1mMyiwdxbJNQkwDYkCVbWPbIemN4hCSFy
-         DWrQ==
-X-Gm-Message-State: APjAAAWFDnSqZfE9RReqPl2LDqxaKyWSHW7HwRomQ7FBDwbFVOFbAQIc
-        VJSd+5FbTknKreKlPenTLtM=
-X-Google-Smtp-Source: APXvYqyuEbXnFkngCDNfkfHDVosVsyKpIs9kq6iPrcvoyP97dZ+2NdtDJbtaSOizO2TXFemeUjEzmw==
-X-Received: by 2002:a17:902:441:: with SMTP id 59mr7033736ple.300.1573172295178;
-        Thu, 07 Nov 2019 16:18:15 -0800 (PST)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id m68sm3688764pfb.122.2019.11.07.16.18.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 16:18:14 -0800 (PST)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v7 6/6] software node: add basic tests for property entries
-Date:   Thu,  7 Nov 2019 16:18:03 -0800
-Message-Id: <20191108001803.191541-7-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
-References: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
+        Thu, 7 Nov 2019 19:20:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573172449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5gCaMc6tX9QOhF6O+c6COJocW0Fk5ySJnwtoUCLt61c=;
+        b=HpVmfJD/DQBRv/cvvDjvriBP+VXRY5WTbazk7tug5xze4QzsM8kReqpiBwmnTi9Zo6RNrS
+        5ujPrW/W+JFqcUeZWSd9lC3OgHwJXH4OtpjYm5/am+u+YnXM5e0s7t5Y7dczZJnjXBG5Hi
+        ipS3sbIx7yxsJ6S4aXnNXcMLaRd3oKk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-iBgSgiDTNUSAR9EJuJy-IQ-1; Thu, 07 Nov 2019 19:20:46 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61750800C61;
+        Fri,  8 Nov 2019 00:20:44 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E05F5C3FD;
+        Fri,  8 Nov 2019 00:20:44 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id BA74118095FF;
+        Fri,  8 Nov 2019 00:20:43 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 19:20:43 -0500 (EST)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>, darrick.wong@oracle.com
+Cc:     LTP List <ltp@lists.linux.it>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, chrubis <chrubis@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        lkft-triage@lists.linaro.org
+Message-ID: <852514139.11036267.1573172443439.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com>
+References: <CA+G9fYtmA5F174nTAtyshr03wkSqMS7+7NTDuJMd_DhJF6a4pw@mail.gmail.com>
+Subject: Re: LTP: diotest4.c:476: read to read-only space. returns 0:
+ Success
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.17.163, 10.4.195.16]
+Thread-Topic: diotest4.c:476: read to read-only space. returns 0: Success
+Thread-Index: XegtwwjoOKT9tnnmixJeWQ/ZMQQAiQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: iBgSgiDTNUSAR9EJuJy-IQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds tests for creating software nodes with properties supplied by
-PROPERTY_ENTRY_XXX() macros and fetching and validating data from said
-nodes/properties.
 
-We are using KUnit framework for the tests.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/base/test/Makefile              |   2 +
- drivers/base/test/property-entry-test.c | 472 ++++++++++++++++++++++++
- 2 files changed, 474 insertions(+)
- create mode 100644 drivers/base/test/property-entry-test.c
+----- Original Message -----
+> LTP test case dio04 test failed on 32bit kernel running linux next
+> 20191107 kernel.
+> Linux version 5.4.0-rc6-next-20191107.
+>=20
+> diotest4    1  TPASS  :  Negative Offset
+> diotest4    2  TPASS  :  removed
+> diotest4    3  TPASS  :  Odd count of read and write
+> diotest4    4  TPASS  :  Read beyond the file size
+> diotest4    5  TPASS  :  Invalid file descriptor
+> diotest4    6  TPASS  :  Out of range file descriptor
+> diotest4    7  TPASS  :  Closed file descriptor
+> diotest4    8  TPASS  :  removed
+> diotest4    9  TCONF  :  diotest4.c:345: Direct I/O on /dev/null is
+> not supported
+> diotest4   10  TPASS  :  read, write to a mmaped file
+> diotest4   11  TPASS  :  read, write to an unmapped file
+> diotest4   12  TPASS  :  read from file not open for reading
+> diotest4   13  TPASS  :  write to file not open for writing
+> diotest4   14  TPASS  :  read, write with non-aligned buffer
+> diotest4   15  TFAIL  :  diotest4.c:476: read to read-only space.
+> returns 0: Success
+> diotest4   16  TFAIL  :  diotest4.c:180: read, write buffer in read-only
+> space
+> diotest4   17  TFAIL  :  diotest4.c:114: read allows  nonexistant
+> space. returns 0: Success
+> diotest4   18  TFAIL  :  diotest4.c:129: write allows  nonexistant
+> space.returns -1: Invalid argument
+> diotest4   19  TFAIL  :  diotest4.c:180: read, write in non-existant spac=
+e
+> diotest4   20  TPASS  :  read, write for file with O_SYNC
+> diotest4    0  TINFO  :  2/15 test blocks failed
 
-diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
-index 0f1f7277a0139..22143102e5d21 100644
---- a/drivers/base/test/Makefile
-+++ b/drivers/base/test/Makefile
-@@ -1,2 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
-+
-+obj-$(CONFIG_KUNIT) += property-entry-test.o
-diff --git a/drivers/base/test/property-entry-test.c b/drivers/base/test/property-entry-test.c
-new file mode 100644
-index 0000000000000..d6ac84c8ebd06
---- /dev/null
-+++ b/drivers/base/test/property-entry-test.c
-@@ -0,0 +1,472 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Unit tests for property entries API
-+//
-+// Copyright 2019 Google LLC.
-+
-+#include <kunit/test.h>
-+#include <linux/property.h>
-+#include <linux/types.h>
-+
-+static void pe_test_uints(struct kunit *test)
-+{
-+	const struct property_entry entries[] = {
-+		PROPERTY_ENTRY_U8("prop-u8", 8),
-+		PROPERTY_ENTRY_U16("prop-u16", 16),
-+		PROPERTY_ENTRY_U32("prop-u32", 32),
-+		PROPERTY_ENTRY_U64("prop-u64", 64),
-+		{ }
-+	};
-+
-+	struct fwnode_handle *node;
-+	u8 val_u8, array_u8[2];
-+	u16 val_u16, array_u16[2];
-+	u32 val_u32, array_u32[2];
-+	u64 val_u64, array_u64[2];
-+	int error;
-+
-+	node = fwnode_create_software_node(entries, NULL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
-+
-+	error = fwnode_property_read_u8(node, "prop-u8", &val_u8);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u8, 8);
-+
-+	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u8[0], 8);
-+
-+	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 2);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u8(node, "no-prop-u8", &val_u8);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u8_array(node, "no-prop-u8", array_u8, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u16(node, "prop-u16", &val_u16);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u16, 16);
-+
-+	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u16[0], 16);
-+
-+	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 2);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u16(node, "no-prop-u16", &val_u16);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u16_array(node, "no-prop-u16", array_u16, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u32(node, "prop-u32", &val_u32);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u32, 32);
-+
-+	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u32[0], 32);
-+
-+	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 2);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u32(node, "no-prop-u32", &val_u32);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u32_array(node, "no-prop-u32", array_u32, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u64(node, "prop-u64", &val_u64);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u64, 64);
-+
-+	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u64[0], 64);
-+
-+	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 2);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u64(node, "no-prop-u64", &val_u64);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u64_array(node, "no-prop-u64", array_u64, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	fwnode_remove_software_node(node);
-+}
-+
-+static void pe_test_uint_arrays(struct kunit *test)
-+{
-+	u8 a_u8[16] = { 8, 9 };
-+	u16 a_u16[16] = { 16, 17 };
-+	u32 a_u32[16] = { 32, 33 };
-+	u64 a_u64[16] = { 64, 65 };
-+	const struct property_entry entries[] = {
-+		PROPERTY_ENTRY_U8_ARRAY("prop-u8", a_u8),
-+		PROPERTY_ENTRY_U16_ARRAY("prop-u16", a_u16),
-+		PROPERTY_ENTRY_U32_ARRAY("prop-u32", a_u32),
-+		PROPERTY_ENTRY_U64_ARRAY("prop-u64", a_u64),
-+		{ }
-+	};
-+
-+	struct fwnode_handle *node;
-+	u8 val_u8, array_u8[32];
-+	u16 val_u16, array_u16[32];
-+	u32 val_u32, array_u32[32];
-+	u64 val_u64, array_u64[32];
-+	int error;
-+
-+	node = fwnode_create_software_node(entries, NULL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
-+
-+	error = fwnode_property_read_u8(node, "prop-u8", &val_u8);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u8, 8);
-+
-+	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u8[0], 8);
-+
-+	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 2);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u8[0], 8);
-+	KUNIT_EXPECT_EQ(test, (int)array_u8[1], 9);
-+
-+	error = fwnode_property_read_u8_array(node, "prop-u8", array_u8, 17);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u8(node, "no-prop-u8", &val_u8);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u8_array(node, "no-prop-u8", array_u8, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u16(node, "prop-u16", &val_u16);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u16, 16);
-+
-+	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u16[0], 16);
-+
-+	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 2);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u16[0], 16);
-+	KUNIT_EXPECT_EQ(test, (int)array_u16[1], 17);
-+
-+	error = fwnode_property_read_u16_array(node, "prop-u16", array_u16, 17);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u16(node, "no-prop-u16", &val_u16);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u16_array(node, "no-prop-u16", array_u16, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u32(node, "prop-u32", &val_u32);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u32, 32);
-+
-+	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u32[0], 32);
-+
-+	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 2);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u32[0], 32);
-+	KUNIT_EXPECT_EQ(test, (int)array_u32[1], 33);
-+
-+	error = fwnode_property_read_u32_array(node, "prop-u32", array_u32, 17);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u32(node, "no-prop-u32", &val_u32);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u32_array(node, "no-prop-u32", array_u32, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u64(node, "prop-u64", &val_u64);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)val_u64, 64);
-+
-+	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 1);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u64[0], 64);
-+
-+	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 2);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_EQ(test, (int)array_u64[0], 64);
-+	KUNIT_EXPECT_EQ(test, (int)array_u64[1], 65);
-+
-+	error = fwnode_property_read_u64_array(node, "prop-u64", array_u64, 17);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u64(node, "no-prop-u64", &val_u64);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_u64_array(node, "no-prop-u64", array_u64, 1);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	fwnode_remove_software_node(node);
-+}
-+
-+static void pe_test_strings(struct kunit *test)
-+{
-+	const char *strings[] = {
-+		"string-a",
-+		"string-b",
-+	};
-+
-+	const struct property_entry entries[] = {
-+		PROPERTY_ENTRY_STRING("str", "single"),
-+		PROPERTY_ENTRY_STRING("empty", ""),
-+		PROPERTY_ENTRY_STRING_ARRAY("strs", strings),
-+		{ }
-+	};
-+
-+	struct fwnode_handle *node;
-+	const char *str;
-+	const char *strs[10];
-+	int error;
-+
-+	node = fwnode_create_software_node(entries, NULL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
-+
-+	error = fwnode_property_read_string(node, "str", &str);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_STREQ(test, str, "single");
-+
-+	error = fwnode_property_read_string_array(node, "str", strs, 1);
-+	KUNIT_EXPECT_EQ(test, error, 1);
-+	KUNIT_EXPECT_STREQ(test, strs[0], "single");
-+
-+	/* asking for more data returns what we have */
-+	error = fwnode_property_read_string_array(node, "str", strs, 2);
-+	KUNIT_EXPECT_EQ(test, error, 1);
-+	KUNIT_EXPECT_STREQ(test, strs[0], "single");
-+
-+	error = fwnode_property_read_string(node, "no-str", &str);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_read_string_array(node, "no-str", strs, 1);
-+	KUNIT_EXPECT_LT(test, error, 0);
-+
-+	error = fwnode_property_read_string(node, "empty", &str);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_STREQ(test, str, "");
-+
-+	error = fwnode_property_read_string_array(node, "strs", strs, 3);
-+	KUNIT_EXPECT_EQ(test, error, 2);
-+	KUNIT_EXPECT_STREQ(test, strs[0], "string-a");
-+	KUNIT_EXPECT_STREQ(test, strs[1], "string-b");
-+
-+	error = fwnode_property_read_string_array(node, "strs", strs, 1);
-+	KUNIT_EXPECT_EQ(test, error, 1);
-+	KUNIT_EXPECT_STREQ(test, strs[0], "string-a");
-+
-+	/* NULL argument -> returns size */
-+	error = fwnode_property_read_string_array(node, "strs", NULL, 0);
-+	KUNIT_EXPECT_EQ(test, error, 2);
-+
-+	/* accessing array as single value */
-+	error = fwnode_property_read_string(node, "strs", &str);
-+	KUNIT_EXPECT_EQ(test, error, 0);
-+	KUNIT_EXPECT_STREQ(test, str, "string-a");
-+
-+	fwnode_remove_software_node(node);
-+}
-+
-+static void pe_test_bool(struct kunit *test)
-+{
-+	const struct property_entry entries[] = {
-+		PROPERTY_ENTRY_BOOL("prop"),
-+		{ }
-+	};
-+
-+	struct fwnode_handle *node;
-+
-+	node = fwnode_create_software_node(entries, NULL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
-+
-+	KUNIT_EXPECT_TRUE(test, fwnode_property_read_bool(node, "prop"));
-+	KUNIT_EXPECT_FALSE(test, fwnode_property_read_bool(node, "not-prop"));
-+
-+	fwnode_remove_software_node(node);
-+}
-+
-+/* Verifies that small U8 array is stored inline when property is copied */
-+static void pe_test_move_inline_u8(struct kunit *test)
-+{
-+	u8 u8_array_small[8] = { 1, 2, 3, 4 };
-+	u8 u8_array_big[128] = { 5, 6, 7, 8 };
-+	struct property_entry entries[] = {
-+		PROPERTY_ENTRY_U8_ARRAY("small", u8_array_small),
-+		PROPERTY_ENTRY_U8_ARRAY("big", u8_array_big),
-+		{ }
-+	};
-+	struct property_entry *copy;
-+	const u8 *data_ptr;
-+
-+	copy = property_entries_dup(entries);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, copy);
-+
-+	KUNIT_EXPECT_TRUE(test, copy[0].is_inline);
-+	data_ptr = (u8 *)&copy[0].value;
-+	KUNIT_EXPECT_EQ(test, (int)data_ptr[0], 1);
-+	KUNIT_EXPECT_EQ(test, (int)data_ptr[1], 2);
-+
-+	KUNIT_EXPECT_FALSE(test, copy[1].is_inline);
-+	data_ptr = copy[1].pointer;
-+	KUNIT_EXPECT_EQ(test, (int)data_ptr[0], 5);
-+	KUNIT_EXPECT_EQ(test, (int)data_ptr[1], 6);
-+
-+	property_entries_free(copy);
-+}
-+
-+/* Verifies that single string array is stored inline when property is copied */
-+static void pe_test_move_inline_str(struct kunit *test)
-+{
-+	char *str_array_small[] = { "a" };
-+	char *str_array_big[] = { "b", "c", "d", "e" };
-+	char *str_array_small_empty[] = { "" };
-+	struct property_entry entries[] = {
-+		PROPERTY_ENTRY_STRING_ARRAY("small", str_array_small),
-+		PROPERTY_ENTRY_STRING_ARRAY("big", str_array_big),
-+		PROPERTY_ENTRY_STRING_ARRAY("small-empty", str_array_small_empty),
-+		{ }
-+	};
-+	struct property_entry *copy;
-+	const char * const *data_ptr;
-+
-+	copy = property_entries_dup(entries);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, copy);
-+
-+	KUNIT_EXPECT_TRUE(test, copy[0].is_inline);
-+	KUNIT_EXPECT_STREQ(test, copy[0].value.str, "a");
-+
-+	KUNIT_EXPECT_FALSE(test, copy[1].is_inline);
-+	data_ptr = copy[1].pointer;
-+	KUNIT_EXPECT_STREQ(test, data_ptr[0], "b");
-+	KUNIT_EXPECT_STREQ(test, data_ptr[1], "c");
-+
-+	KUNIT_EXPECT_TRUE(test, copy[2].is_inline);
-+	KUNIT_EXPECT_STREQ(test, copy[2].value.str, "");
-+
-+	property_entries_free(copy);
-+}
-+
-+/* Handling of reference properties */
-+static void pe_test_reference(struct kunit *test)
-+{
-+	const struct software_node nodes[] = {
-+		{ .name = "1", },
-+		{ .name = "2", },
-+	};
-+
-+	const struct software_node_ref_args refs[] = {
-+		{
-+			.node = &nodes[0],
-+			.nargs = 0,
-+		},
-+		{
-+			.node = &nodes[1],
-+			.nargs = 2,
-+			.args = { 3, 4 },
-+		},
-+	};
-+
-+	const struct property_entry entries[] = {
-+		PROPERTY_ENTRY_REF("ref-1", &nodes[0]),
-+		PROPERTY_ENTRY_REF("ref-2", &nodes[1], 1, 2),
-+		PROPERTY_ENTRY_REF_ARRAY("ref-3", refs),
-+		{ }
-+	};
-+
-+	struct fwnode_handle *node;
-+	struct fwnode_reference_args ref;
-+	int error;
-+
-+	error = software_node_register_nodes(nodes);
-+	KUNIT_ASSERT_EQ(test, error, 0);
-+
-+	node = fwnode_create_software_node(entries, NULL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, node);
-+
-+	error = fwnode_property_get_reference_args(node, "ref-1", NULL,
-+						   0, 0, &ref);
-+	KUNIT_ASSERT_EQ(test, error, 0);
-+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[0]);
-+	KUNIT_EXPECT_EQ(test, ref.nargs, 0U);
-+
-+	/* wrong index */
-+	error = fwnode_property_get_reference_args(node, "ref-1", NULL,
-+						   0, 1, &ref);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
-+						   1, 0, &ref);
-+	KUNIT_ASSERT_EQ(test, error, 0);
-+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
-+	KUNIT_EXPECT_EQ(test, ref.nargs, 1U);
-+	KUNIT_EXPECT_EQ(test, ref.args[0], 1LLU);
-+
-+	/* asking for more args, padded with zero data */
-+	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
-+						   3, 0, &ref);
-+	KUNIT_ASSERT_EQ(test, error, 0);
-+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
-+	KUNIT_EXPECT_EQ(test, ref.nargs, 3U);
-+	KUNIT_EXPECT_EQ(test, ref.args[0], 1LLU);
-+	KUNIT_EXPECT_EQ(test, ref.args[1], 2LLU);
-+	KUNIT_EXPECT_EQ(test, ref.args[2], 0LLU);
-+
-+	/* wrong index */
-+	error = fwnode_property_get_reference_args(node, "ref-2", NULL,
-+						   2, 1, &ref);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	/* array of references */
-+	error = fwnode_property_get_reference_args(node, "ref-3", NULL,
-+						   0, 0, &ref);
-+	KUNIT_ASSERT_EQ(test, error, 0);
-+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[0]);
-+	KUNIT_EXPECT_EQ(test, ref.nargs, 0U);
-+
-+	/* second reference in the array */
-+	error = fwnode_property_get_reference_args(node, "ref-3", NULL,
-+						   2, 1, &ref);
-+	KUNIT_ASSERT_EQ(test, error, 0);
-+	KUNIT_EXPECT_PTR_EQ(test, to_software_node(ref.fwnode), &nodes[1]);
-+	KUNIT_EXPECT_EQ(test, ref.nargs, 2U);
-+	KUNIT_EXPECT_EQ(test, ref.args[0], 3LLU);
-+	KUNIT_EXPECT_EQ(test, ref.args[1], 4LLU);
-+
-+	/* wrong index */
-+	error = fwnode_property_get_reference_args(node, "ref-1", NULL,
-+						   0, 2, &ref);
-+	KUNIT_EXPECT_NE(test, error, 0);
-+
-+	fwnode_remove_software_node(node);
-+	software_node_unregister_nodes(nodes);
-+}
-+
-+static struct kunit_case property_entry_test_cases[] = {
-+	KUNIT_CASE(pe_test_uints),
-+	KUNIT_CASE(pe_test_uint_arrays),
-+	KUNIT_CASE(pe_test_strings),
-+	KUNIT_CASE(pe_test_bool),
-+	KUNIT_CASE(pe_test_move_inline_u8),
-+	KUNIT_CASE(pe_test_move_inline_str),
-+	KUNIT_CASE(pe_test_reference),
-+	{ }
-+};
-+
-+static struct kunit_suite property_entry_test_suite = {
-+	.name = "property-entry",
-+	.test_cases = property_entry_test_cases,
-+};
-+
-+kunit_test_suite(property_entry_test_suite);
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+Smaller reproducer for 32-bit system and ext4 is:
+  openat(AT_FDCWD, "testdata-4.5918", O_RDWR|O_DIRECT) =3D 4
+  mmap2(NULL, 4096, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) =3D 0xb7f7=
+b000
+  read(4, 0xb7f7b000, 4096)              =3D 0 // expects -EFAULT
+
+Problem appears to be conversion in ternary operator at
+iomap_dio_bio_actor() return. Test passes for me with
+following tweak:
+
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 2f88d64c2a4d..8615b1f78389 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -318,7 +318,7 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, lo=
+ff_t length,
+                if (pad)
+                        iomap_dio_zero(dio, iomap, pos, fs_block_size - pad=
+);
+        }
+-       return copied ? copied : ret;
++       return copied ? (loff_t) copied : ret;
+ }
+
+ static loff_t
 
