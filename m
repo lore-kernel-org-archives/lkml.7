@@ -2,226 +2,111 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA101C17442
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2954CC17442
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7E1215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28D121848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:38:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRfysVkE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4c+EHEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfKHXgI (ORCPT
+        id S1728363AbfKHXiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 18:36:08 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45635 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHXgI (ORCPT
+        Fri, 8 Nov 2019 18:38:24 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34821 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKHXiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 18:36:08 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 14so797850oir.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 15:36:07 -0800 (PST)
+        Fri, 8 Nov 2019 18:38:23 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r7so7949318ljg.2;
+        Fri, 08 Nov 2019 15:38:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iDoGjHfNdP7CEHEDPPCtVFhc3W4zkYgSKdJEK3JXJd0=;
-        b=qRfysVkEgETlDzoUQQSvtUASI7EhYk4fThC5U9CCPg2HA60AvRpiM+eIJuvxwJatts
-         Tt29h6e4CWwvEhnG0fQZe40G9jvAXzWnDzTDI64eIgPGJvok2bmvbQfVR9/3sVp9QX9p
-         FfCY41q4VHptJUL4iGEQz51Ho4eDYl8fICsTixxXqRpFm8sSEwIGBYgdkaefai/km3QD
-         HcYJD51fKf/gyEDlKrnkkWmeUA0hDDJhvA5HE9PoEVdK/raVrX9QAb9kuOIErEQe+T21
-         dHIPeBGlWj5RDGkH5INfq9PqIyUVyi/GfcpijHghJlEa2m5M7u0ogxH17Hk9vGJmaSLn
-         VgJw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7g5vTbYZHmeYxWc2Gp9Pqp9iJ2yMYEuiir3i4U6QyGc=;
+        b=g4c+EHEmb/zwM04L6VsDL30KBvGNvRnetX4OgsnUMzeSIvfsNNMpr7R04r1t36mD1g
+         9N1m/Zxmz0XL4qs1HL0kX9pb93U58ukQJP0DOpUqVsSj8z+XhQ0K1I3NzRuQSX/Xly41
+         m0SRo/ziYu2HH+QVrBiQAj2HXcgyCOQMsbnr/dEg6BqOxBMiHQTxohH10+5PANOlmaoQ
+         Tl9TvVkcHRxwnCh3TW0Vnd5nB8sDfxpwqAa9ImpAL8ANI8tsp/axNPL4rQZZ0bogO231
+         c8vhCOauNTFoeu/q2r5NsyQNJBMc9U1ywy5Nt+reRVSwvIfee+ONnXutViIQR48cU2HG
+         /fDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iDoGjHfNdP7CEHEDPPCtVFhc3W4zkYgSKdJEK3JXJd0=;
-        b=nyb3jZcu5WhO77xE8Nv4iBDTUJqj46PUrIyXx+0/AYDajwBZDCsKZGX8//5nJhLEK6
-         /2yW0NYIrG6diBiLQ05NklrVuNQJYwsgNAT7EqLV+WXLpRRwzUr0KWtVLlxBSnpIXys1
-         VumZ1ZUJcPjtFANEdxpAzsx3ToIWG8hssZ57WPxKOhTA4NwH+WwuOXWiUWUdAo47p77B
-         wF6SB1SUKa15J3JgTwwlYl1yyTYZ9jxZ0kbYgXPtC82GshHFQAksOP0OieqNSto6Ln+0
-         6l575ro5j+Z5YFvJHvk+kN4JDBInyuZh+93fkEZrda+kdhgJlxLep2UNjgPzdcCWqsdI
-         NtIA==
-X-Gm-Message-State: APjAAAXmurdkiSk+0K/zieifHcGzS87AoJtZQnVUQdIQj4uflojM/47E
-        cSrIVTWC7n+Jz9i6ewARDQ/NwVMwLfAgdy8OpTKiNw==
-X-Google-Smtp-Source: APXvYqx5lVByzI30bfOZKF+9P00wWxnRqtrwswlwA7cd4uf7yQSeCTKB5Ykql4XWeoS0urkg89cB/9USVEYDE4mteLw=
-X-Received: by 2002:aca:1101:: with SMTP id 1mr12627382oir.103.1573256166162;
- Fri, 08 Nov 2019 15:36:06 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7g5vTbYZHmeYxWc2Gp9Pqp9iJ2yMYEuiir3i4U6QyGc=;
+        b=ayX8AKH753WRo4COxGRoPSlSNmRK3BjEkr4XRNTLPc6m84WeQ1BC9GeRf1YsjHlG2T
+         PstL5nTdKcoQMe6BEan/eD0kmvoTEbMj31m4aa1+1/vV+nC0/F74swJFjI26x8irnmFB
+         mtIPBuobasgkt9ytlf7mxhFKv8PE0We39DeTfOAzvatPdC1sJK8egKTP+yrMSOkUtPSx
+         eQ7chU1YtdHNyRsNpXwLoDYA26mGU7goW7RgmSoFMWkmMZ1ATiFRPD0AyYqdcKG69Zv+
+         gJ8IzrCjdFGT5LkaW/7+ThfOz/SLv5GvecC0GI8djMqWEL14E0SLXUJA9SkybWE73HSH
+         EsoA==
+X-Gm-Message-State: APjAAAVkv0ybh1VoGEKqVOZ4Opj+GuMA/8i7ki6cadCSnRg2TiVa+tYv
+        VsHi3A2vaO53964vml/RrXk5UL4s
+X-Google-Smtp-Source: APXvYqxaj9XZxFaWcLquzKkYuOY6emBFDT9DQB76RUhm8CVhIxzy0iJ36Ofx4pSQCHKNBl6ONxjr1g==
+X-Received: by 2002:a2e:b0f6:: with SMTP id h22mr8250988ljl.171.1573256300397;
+        Fri, 08 Nov 2019 15:38:20 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id n21sm3053273ljc.67.2019.11.08.15.38.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2019 15:38:19 -0800 (PST)
+Subject: Re: [PATCH v9 11/22] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        thierry.reding@gmail.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
+ <1565984527-5272-12-git-send-email-skomatineni@nvidia.com>
+ <20191108212015.07BC720869@mail.kernel.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f644adda-dc6b-9b7e-3fc2-94091a38c99a@gmail.com>
+Date:   Sat, 9 Nov 2019 02:38:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191030013701.39647-1-almasrymina@google.com> <78f07acf-47ba-4fa5-34c2-78a17eb7c16f@oracle.com>
-In-Reply-To: <78f07acf-47ba-4fa5-34c2-78a17eb7c16f@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 8 Nov 2019 15:35:55 -0800
-Message-ID: <CAHS8izPp9aW=uxA2z6BLmRXgaiDVyKYvAbnrH0rcirN4wTD55g@mail.gmail.com>
-Subject: Re: [PATCH v8 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191108212015.07BC720869@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 3:42 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> Cc: Andrew
-> This series is getting closer to consideration for the mm tree.
-> Mina,
-> Be sure to cc Andrew with next version of series.
->
+09.11.2019 00:20, Stephen Boyd пишет:
+> Quoting Sowjanya Komatineni (2019-08-16 12:41:56)
+>> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+>> index f8688c2ddf1a..c051d92c2bbf 100644
+>> --- a/drivers/clk/tegra/clk-dfll.c
+>> +++ b/drivers/clk/tegra/clk-dfll.c
+>> @@ -1487,6 +1487,7 @@ static int dfll_init(struct tegra_dfll *td)
+>>         td->last_unrounded_rate = 0;
+>>  
+>>         pm_runtime_enable(td->dev);
+>> +       pm_runtime_irq_safe(td->dev);
+> 
+> Why irq_safe? It would be good to mention it in the commit text or
+> something.
 
-Absolutely!
+That's a good catch. It was somewhat relevant for some older version of
+this patch, but should be irrelevant now.
 
-> On 10/29/19 6:36 PM, Mina Almasry wrote:
-> > These counters will track hugetlb reservations rather than hugetlb
-> > memory faulted in. This patch only adds the counter, following patches
-> > add the charging and uncharging of the counter.
->
-> I honestly am not sure the preferred method for including the overall
-> design in a commit message.  Certainly it should be in the first patch.
-> Perhaps, say this is patch 1 of a 9 patch series here.
->
-
-Will do. I read somewhere I can't find right now it's better this way
-so that the useful information becomes part of the git log. If anyone
-has strong opinions on this I'll just go back to putting it into a
-cover letter.
-
-> > Problem:
-> > Currently tasks attempting to allocate more hugetlb memory than is available get
-> > a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
-> > However, if a task attempts to allocate hugetlb memory only more than its
-> > hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
-> > but will SIGBUS the task when it attempts to fault the memory in.
-> >
-> > We have developers interested in using hugetlb_cgroups, and they have expressed
-> > dissatisfaction regarding this behavior. We'd like to improve this
-> > behavior such that tasks violating the hugetlb_cgroup limits get an error on
-> > mmap/shmget time, rather than getting SIGBUS'd when they try to fault
-> > the excess memory in.
-> >
-> > The underlying problem is that today's hugetlb_cgroup accounting happens
-> > at hugetlb memory *fault* time, rather than at *reservation* time.
-> > Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
-> > the offending task gets SIGBUS'd.
-> >
-> > Proposed Solution:
-> > A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
-> > counter has slightly different semantics than
-> > hugetlb.xMB.[limit|usage]_in_bytes:
-> >
-> > - While usage_in_bytes tracks all *faulted* hugetlb memory,
-> > reservation_usage_in_bytes tracks all *reserved* hugetlb memory and
-> > hugetlb memory faulted in without a prior reservation.
-> >
-> > - If a task attempts to reserve more memory than limit_in_bytes allows,
-> > the kernel will allow it to do so. But if a task attempts to reserve
-> > more memory than reservation_limit_in_bytes, the kernel will fail this
-> > reservation.
-> >
-> > This proposal is implemented in this patch series, with tests to verify
-> > functionality and show the usage. We also added cgroup-v2 support to
-> > hugetlb_cgroup so that the new use cases can be extended to v2.
-> >
-> > Alternatives considered:
-> > 1. A new cgroup, instead of only a new page_counter attached to
-> >    the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
-> >    duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
-> >    hugetlb_cgroup seemed cleaner as well.
-> >
-> > 2. Instead of adding a new counter, we considered adding a sysctl that modifies
-> >    the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
-> >    reservation time rather than fault time. Adding a new page_counter seems
-> >    better as userspace could, if it wants, choose to enforce different cgroups
-> >    differently: one via limit_in_bytes, and another via
-> >    reservation_limit_in_bytes. This could be very useful if you're
-> >    transitioning how hugetlb memory is partitioned on your system one
-> >    cgroup at a time, for example. Also, someone may find usage for both
-> >    limit_in_bytes and reservation_limit_in_bytes concurrently, and this
-> >    approach gives them the option to do so.
-> >
-> > Testing:
->
-> I think that simply mentioning the use of hugetlbfs for regression testing
-> would be sufficient here.
->
-
-Will do.
-
-> > - Added tests passing.
-> > - libhugetlbfs tests mostly passing, but some tests have trouble with and
-> >   without this patch series. Seems environment issue rather than code:
-> >   - Overall results:
-> >     ********** TEST SUMMARY
-> >     *                      2M
-> >     *                      32-bit 64-bit
-> >     *     Total testcases:    84      0
-> >     *             Skipped:     0      0
-> >     *                PASS:    66      0
-> >     *                FAIL:    14      0
-> >     *    Killed by signal:     0      0
-> >     *   Bad configuration:     4      0
-> >     *       Expected FAIL:     0      0
-> >     *     Unexpected PASS:     0      0
-> >     *    Test not present:     0      0
-> >     * Strange test result:     0      0
-> >     **********
->
-> It is curious that you only ran the tests for 32 bit applications.  Certainly
-> the more common case today is 64 bit.  I don't think there are any surprises
-> for you as I also have been running hugetlbfs on this series.
-
-I did run them, with similar results. I'll add them.
-
-> --
-> Mike Kravetz
->
-> >   - Failing tests:
-> >     - elflink_rw_and_share_test("linkhuge_rw") segfaults with and without this
-> >       patch series.
-> >     - LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc (2M: 32):
-> >       FAIL    Address is not hugepage
-> >     - LD_PRELOAD=libhugetlbfs.so HUGETLB_RESTRICT_EXE=unknown:malloc
-> >       HUGETLB_MORECORE=yes malloc (2M: 32):
-> >       FAIL    Address is not hugepage
-> >     - LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc_manysmall (2M: 32):
-> >       FAIL    Address is not hugepage
-> >     - GLIBC_TUNABLES=glibc.malloc.tcache_count=0 LD_PRELOAD=libhugetlbfs.so
-> >       HUGETLB_MORECORE=yes heapshrink (2M: 32):
-> >       FAIL    Heap not on hugepages
-> >     - GLIBC_TUNABLES=glibc.malloc.tcache_count=0 LD_PRELOAD=libhugetlbfs.so
-> >       libheapshrink.so HUGETLB_MORECORE=yes heapshrink (2M: 32):
-> >       FAIL    Heap not on hugepages
-> >     - HUGETLB_ELFMAP=RW linkhuge_rw (2M: 32): FAIL    small_data is not hugepage
-> >     - HUGETLB_ELFMAP=RW HUGETLB_MINIMAL_COPY=no linkhuge_rw (2M: 32):
-> >       FAIL    small_data is not hugepage
-> >     - alloc-instantiate-race shared (2M: 32):
-> >       Bad configuration: sched_setaffinity(cpu1): Invalid argument -
-> >       FAIL    Child 1 killed by signal Killed
-> >     - shmoverride_linked (2M: 32):
-> >       FAIL    shmget failed size 2097152 from line 176: Invalid argument
-> >     - HUGETLB_SHM=yes shmoverride_linked (2M: 32):
-> >       FAIL    shmget failed size 2097152 from line 176: Invalid argument
-> >     - shmoverride_linked_static (2M: 32):
-> >       FAIL shmget failed size 2097152 from line 176: Invalid argument
-> >     - HUGETLB_SHM=yes shmoverride_linked_static (2M: 32):
-> >       FAIL shmget failed size 2097152 from line 176: Invalid argument
-> >     - LD_PRELOAD=libhugetlbfs.so shmoverride_unlinked (2M: 32):
-> >       FAIL shmget failed size 2097152 from line 176: Invalid argument
-> >     - LD_PRELOAD=libhugetlbfs.so HUGETLB_SHM=yes shmoverride_unlinked (2M: 32):
-> >       FAIL    shmget failed size 2097152 from line 176: Invalid argument
-> >
-> > [1]: https://www.kernel.org/doc/html/latest/vm/hugetlbfs_reserv.html
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> > Acked-by: Hillf Danton <hdanton@sina.com>
+[snip]
