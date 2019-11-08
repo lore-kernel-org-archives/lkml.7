@@ -2,115 +2,125 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C58FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87E0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6848321D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEF220869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="HmP/WZTe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1qm1SPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbfKHIpl (ORCPT
+        id S1731058AbfKHIpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:45:41 -0500
-Received: from cmta20.telus.net ([209.171.16.93]:44019 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730733AbfKHIpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:45:34 -0500
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id SztYi3gdQN5I9SztaiPS24; Fri, 08 Nov 2019 01:45:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1573202731; bh=ie2dbAGhUyWCSpx+oGNevVwBz5QNF8EP99PGBuqPKWI=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=HmP/WZTe3r0+QDUGN4zpkYswbzMu6BPYPSTDUQvY4QG4YFkMD/rPATajQ4uWlyX+E
-         RYIQe0/uwpeugUwQaN1xRVa00W/swrET1gNKX9b8YPVaQuiA65Dht60omNcdgbFQkT
-         RKhwkAniyDQz/XBmzhA4X9tq6qqvASSkLdRGHxVAS3M0Mj9VaSbUtJgDVlz7deG+n6
-         BPYJHIvQyfPdUr8SAy60yaxgAwfriuYyuHd8AWIN6hJfPT/3z380QJYZnSA9PFUljP
-         eO18mhZTesprUJHOHvi0JcxUKsXlKsQbAW3dGrRRtLTYTogAHoHwlklDVsKA9Kfpy9
-         284fW1Qu98k1g==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=IkcTkHD0fZMA:10 a=p-nOP-kxAAAA:8 a=QyXUC8HyAAAA:8 a=_hFHagcAZGCVafNjFckA:9
- a=QEXdDO2ut3YA:10 a=XN2wCei03jY4uMu7D0Wg:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rafael@kernel.org>
-Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <10494959.bKODIZ00nm@kreacher> <3269796.AzLOQfDnpo@kreacher> <CAJZ5v0jM3+qMvO6dx=FmK-xF0q3YKOwBf-yUPXSBfRjxJ59Cpg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jM3+qMvO6dx=FmK-xF0q3YKOwBf-yUPXSBfRjxJ59Cpg@mail.gmail.com>
-Subject: RE: [PATCH v2] cpuidle: Use nanoseconds as the unit of time
-Date:   Fri, 8 Nov 2019 00:45:27 -0800
-Message-ID: <000701d59610$e0b3caa0$a21b5fe0$@net>
+        Fri, 8 Nov 2019 03:45:50 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39056 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730692AbfKHIpd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 03:45:33 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t26so5299727wmi.4;
+        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=n0fXA0HzdVYuMz+Yhj3TQjNmtcRgY2Ng0Cfj0PwkXk0=;
+        b=D1qm1SPDt8A+Vradbdz+NjuzHC3n4lBb5MQIo2TILRUGKh3ZesXy/5dY+ojmZZlJMA
+         HEC7oYdHVO5tzy9/xg3R/T8rNfSdAE0gsnMXQ0RRXbVfyCv2ndh5STSSlPaQnPVpB8RD
+         L6RCBuhRtjIC8SY8CrI7BoeSjlUS8EY9z0wDzYBNe0fTVqQpOPNZkmHsNuGIUTrdvPED
+         IlHnB++2WeruWNFQHdwtEI90y55KjFmKidqYkPeBMtFdDgbm2WInoaioHeK8KAPPXVYz
+         eCHENLiXN1Bj9ASqFoUtAZ7OjxSgbUd9QE756mC6/LRhS2FdfuqqlP7sfUjgF3Gi484j
+         H7hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=n0fXA0HzdVYuMz+Yhj3TQjNmtcRgY2Ng0Cfj0PwkXk0=;
+        b=r5bWf09c3SdJhoZTd4vatE/j4ACWyL+FV/dVjRfG4KJ6/QY2WMWWFntFpCkmMAGcat
+         4qZhbMlbd5JQ28SbE0NNA/nWzO8d0xJG/7Nj1xSAf/hMGC87IBLk78jjLuVbuOxjB2Hz
+         jSn/XjW9+OMt8BUpd8oPbNjAzHOKOERUHuH8v4+MzXoMF4m0A4QTos1NxCpOCeI7kAS3
+         SIjf9hXkEE1KIfyvM9kbi5JbKK1UvsfVwvg0gQ7eh46uvextC+7X80L5bP73X/w+xLSX
+         +cUdY/GzWOwRycAQXYGJDjxNAJv3flUk18tu0yh+XexJM3hW4TdhCl2uU1cezmH7TgPv
+         I9OQ==
+X-Gm-Message-State: APjAAAUKAg8K7xMUww6NMC40ztX36wUD6unZ8XzbMiWnu5C7BMyymC2o
+        B2uN3REg/NfK8xFFb0jhUsU=
+X-Google-Smtp-Source: APXvYqw6E/M1y7UeZTduVCL8358877o3jME7J6MDaZJII3rFx5yNJyEOeWFuDlIotS5YQXzjenELiw==
+X-Received: by 2002:a1c:ab0a:: with SMTP id u10mr7503819wme.0.1573202731003;
+        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 00:45:30 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v4 6/7] arm64: dts: allwinner: h6: Add PWM node
+Date:   Fri,  8 Nov 2019 09:45:16 +0100
+Message-Id: <20191108084517.21617-7-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
+References: <20191108084517.21617-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdWV1g4iCCd318waQi+CY9jC+yyrqQADB+KA
-X-CMAE-Envelope: MS4wfDzxfM0VkZsRp0A/7IQo1ZXuWE2Mjnz8zSbOPu2O+hUwFwHeJr/uy9KnONeoZpqVhj2SEujJBeiAtoqz5db4kLLU6EAlSINYvtLFdJ5J2Pt6v0ecpHxH
- GQNP55tHSEHCRPf0ugs/pJiRStdStw50qoJx8g8tKKmIw/z4YzX2t4mp/omz9kEusg/XIVfTq1G7uKbGjDRnPv4iJHwzJBz4Pv4x7kA2EkUV6143uQx12EqV
- zpoOu3FAr4FBp+ZFV2yyCQ4BO4xFQJ8AwalWT8kHpzlS2mADANQLJaiYtFWtjoi8YUZS9xgObooesQ5lx0LWPluU67HW4fDpLrT24skEOs9deEWFiuumQZKE
- ppHnBiaZ
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.11.07 17:44 Rafael J. Wysocki wrote:
-> On Thu, Nov 7, 2019 at 3:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->>
->> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>
->> Currently, the cpuidle subsystem uses microseconds as the unit of
->> time which (among other things) causes the idle loop to incur some
->> integer division overhead for no clear benefit.
->>
->> In order to allow cpuidle to measure time in nanoseconds, add two
->> additional fields, exit_latency_ns and target_residency_ns, to
->> represent the exit latency and target residency of an idle state
->> in nanoseconds, respectively, to struct cpuidle_state_usage and
->> initialize them with the help of the corresponding values in
->> microseconds provided by drivers.  In addition to that, change
->> cpuidle_governor_latency_req() to return the idle state exit
->> latency constraint in nanoseconds.
->>
->> With that, meeasure idle state residency (last_residency_ns in
->> struct cpuidle_device and time_ns in struct cpuidle_driver) in
->> nanoseconds and update the cpuidle core and governors accordingly.
->>
->> However, the menu governor still computes typical intervals in
->> microseconds to avoid integer overflows.
->
-> Since this addresses all of the comments received by the RFC version
-> that was posted over a month ago and I don't see any more issues with
-> it, I'm tempted to simply queue it up for 5.5 unless somebody sees a
-> good enough reason why that would be a bad idea.
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Could I please have another day or two?
+Allwinner H6 PWM is similar to that in A20 except that it has additional
+bus clock and reset line.
 
-I did try the RFC version, but not much as I went off on those
-teo issues and backtracked pretty quickly.
+Note that first PWM channel is connected to output pin and second
+channel is used internally, as a clock source to AC200 co-packaged chip.
+This means that any combination of these two channels can be used and
+thus it doesn't make sense to add pinctrl nodes at this point.
 
-I have been running this v2 today, with both menu and teo
-governors. Acquiring some baseline reference data to compare
-to now. The menu governor response seems different (Supporting
-information/graphs will come later).
-teo just started.
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-I lost a bunch of time due to being somewhat linux-next challenged.
-
-... Doug
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 0d5ea19336a1..b0d9ee1ead13 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -222,6 +222,16 @@
+ 			status = "disabled";
+ 		};
+ 
++		pwm: pwm@300a000 {
++			compatible = "allwinner,sun50i-h6-pwm";
++			reg = <0x0300a000 0x400>;
++			clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
++			clock-names = "mod", "bus";
++			resets = <&ccu RST_BUS_PWM>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
++
+ 		pio: pinctrl@300b000 {
+ 			compatible = "allwinner,sun50i-h6-pinctrl";
+ 			reg = <0x0300b000 0x400>;
+-- 
+2.20.1
 
