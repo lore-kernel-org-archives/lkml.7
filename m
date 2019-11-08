@@ -2,109 +2,90 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24ECEFC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E6CFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013942178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD7B2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573247337;
+	bh=JHqRS3uSKLO7yNAzjFw7Q1nOi5AO9AvovI8DqhUNkqQ=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=ll9Pm9roQf1tOyiIAD1UDsYiBIDGmx1UB9twSbYYSUj7CcaRCDU9kfR1DrrdtBS6G
+	 gE6/zN/N3bsIKL7sgLocCWqeTVjx32VW/UcOeim6PUtOLAVb5UiWLY2ApsfHtRow5H
+	 FoEA0iNwYbVaGrHH66cWunHjEn/2wv3d8BFHEBVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732304AbfKHVIy (ORCPT
+        id S1732389AbfKHVI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:08:54 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:33093 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHVIy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:08:54 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N5mSj-1hrrj32IW3-017H8q; Fri, 08 Nov 2019 22:08:46 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 02/23] y2038: add __kernel_old_timespec and __kernel_old_time_t
-Date:   Fri,  8 Nov 2019 22:07:22 +0100
-Message-Id: <20191108210824.1534248-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
-References: <20191108210236.1296047-1-arnd@arndb.de>
+        Fri, 8 Nov 2019 16:08:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732305AbfKHVIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:08:55 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95C8C20869;
+        Fri,  8 Nov 2019 21:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573247334;
+        bh=JHqRS3uSKLO7yNAzjFw7Q1nOi5AO9AvovI8DqhUNkqQ=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=LIEyKga2iyXN5fFNmksNgPPGuuAoe7udgxU7uuYQRwcthQLdQkQpEOx62ACht245V
+         JR8r5BgmMHaeOU7WpybnQSm78GwxSrqBCcCTr29Rt3dE0g3+EswURrQH4vOgL9IE/M
+         FEmOsrn0YtW1KaB+o607/aQRtq65Cixnwyb4LzXs=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:b5N3TpWxS8V8FWtAAfXOHjyNkW2dd6vsCxc3KrZ6/bDozC0UzGX
- z868QcmcxcXwLNvP/3j81Fa4z9V7PlenxpvccLoVz4hKjdilYMaDe/ddhT2s8zuc6t343yp
- NWgkAlequJ80TyMQU6XoRmbEi9koTAj5AzKTrifgQcLBQRXriFwCnD+Qaqn8hJqr6IlGUan
- MybHnAEMRxVEmgjwINzdA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:q5HMqU+dZb4=:uY+qkO0lXE59wSs58wgWT+
- 9hOYnpRnXLK3Q5CA7O6So4C2b7pZDg8dPtx9dcZ0BzX9ToZrv84PD++2Y366m7viED6W2R8by
- Jt9dhtGloAaPP3DuCRY0+vmILayaAm7UraXmlPaw+ToPZ/OFZ/6VOO16cGYzLvuFECU3nUNhQ
- AIcjQ0GkQo5E1LaNXdF622Vyj2QD+tBUemLVc7vlTY7as80tyjmrgBKD1KtVWfy8OJH6yeTkU
- G7hwfS4qvnRAYdRa+9VJY5W/J3QNbGtkyp7audhrk4nnvxldr6Lj44Lal8YJLRiBMhHhq7AbA
- 1NgnLMS3UZkLRCIxIIfCp3KLHep5m+IAtOfdjKs5hUEM1ueWJiP8PAKkLmaDFGp5W18s4yHWF
- MYUO/mvHXcvYTUe9/jn2VjWe5MZaVQ/JiCpRfI0zV/lnH6Fg7BbfegkwiUwdifmCpiWhRfnjH
- KEbL1KDCUiVrLJkWgNPfiHoRqEz57pn64uYrV+bNK7cpswlfQU13Wi3vRPNyfsiKFyc3tgP2m
- 7iSEfQqLqADbdHdhiy3wm7nYVDEXWzU8NG9DFm+Xl/pb5/UG+YspYxTvsfO4GjZiHOp9QVg7+
- pf7Va5/5mNKVJTbSjHuhGd3BxU8vsw/7V/AX0s2alLrCJeg0Dmlj53MWdBEqcJGZbaLuLiV5J
- rGKQZb34B2HxnRMnKEp3LyYiBV7ltEEQLUDq2Lv8Og6C0VgHuOJV68fpNj4MG6rtF9JF7rfHI
- dWxx0lRApWFEtY/5cWnHsJorajJ0X7o/DPVdd0yQGLCJgwJJHwPfxQk8CCJRDu+dHnbB40MKh
- 6U2XmdRyQoyHCsXkr4TeAFe2JZbkwjMe66DT8QLzALG9LVsfhFh1j4HmvkK8vYUosdOTd35wW
- +m0gcm31rHmV5xpdHInQ==
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108071718.17985-1-alexandru.ardelean@analog.com>
+References: <20191106113551.5557-1-alexandru.ardelean@analog.com> <20191108071718.17985-1-alexandru.ardelean@analog.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     mturquette@baylibre.com, jsarha@ti.com, ce3a@gmx.de,
+        geert+renesas@glider.be, horms@verge.net.au, magnus.damm@gmail.com,
+        wsa+renesas@sang-engineering.com,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v3] clk: clk-gpio: propagate rate change to parent
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 13:08:53 -0800
+Message-Id: <20191108210854.95C8C20869@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'struct timespec' definition can no longer be part of the uapi headers
-because it conflicts with a a now incompatible libc definition. Also,
-we really want to remove it in order to prevent new uses from creeping in.
+Quoting Alexandru Ardelean (2019-11-07 23:17:18)
+> From: Michael Hennerich <michael.hennerich@analog.com>
+>=20
+> For an external clock source, which is gated via a GPIO, the
+> rate change should typically be propagated to the parent clock.
+>=20
+> The situation where we are requiring this propagation, is when an
+> external clock is connected to override an internal clock (which typically
+> has a fixed rate). The external clock can have a different rate than the
+> internal one, and may also be variable, thus requiring the rate
+> propagation.
+>=20
+> This rate change wasn't propagated until now, and it's unclear about cases
+> where this shouldn't be propagated. Thus, it's unclear whether this is
+> fixing a bug, or extending the current driver behavior. Also, it's unsure
+> about whether this may break any existing setups; in the case that it doe=
+s,
+> a device-tree property may be added to disable this flag.
+>=20
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
 
-The same namespace conflict exists with time_t, which should also be
-removed. __kernel_time_t could be used safely, but adding 'old' in the
-name makes it clearer that this should not be used for new interfaces.
+Applied to clk-next
 
-Add a replacement __kernel_old_timespec structure and __kernel_old_time_t
-along the lines of __kernel_old_timeval.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/uapi/asm-generic/posix_types.h | 1 +
- include/uapi/linux/time_types.h        | 5 +++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/include/uapi/asm-generic/posix_types.h b/include/uapi/asm-generic/posix_types.h
-index f0733a26ebfc..2f9c80595ba7 100644
---- a/include/uapi/asm-generic/posix_types.h
-+++ b/include/uapi/asm-generic/posix_types.h
-@@ -86,6 +86,7 @@ typedef struct {
-  */
- typedef __kernel_long_t	__kernel_off_t;
- typedef long long	__kernel_loff_t;
-+typedef __kernel_long_t	__kernel_old_time_t;
- typedef __kernel_long_t	__kernel_time_t;
- typedef long long __kernel_time64_t;
- typedef __kernel_long_t	__kernel_clock_t;
-diff --git a/include/uapi/linux/time_types.h b/include/uapi/linux/time_types.h
-index 27bfc8fc6904..60b37f29842d 100644
---- a/include/uapi/linux/time_types.h
-+++ b/include/uapi/linux/time_types.h
-@@ -28,6 +28,11 @@ struct __kernel_old_timeval {
- };
- #endif
- 
-+struct __kernel_old_timespec {
-+	__kernel_time_t	tv_sec;			/* seconds */
-+	long		tv_nsec;		/* nanoseconds */
-+};
-+
- struct __kernel_sock_timeval {
- 	__s64 tv_sec;
- 	__s64 tv_usec;
--- 
-2.20.0
+Next time please send as a new topic instead of a reply to the original
+patch. Makes it easier for me to apply the patch.
 
