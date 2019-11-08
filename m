@@ -2,110 +2,283 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82694C17440
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39594C17441
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7B020865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0959320865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfKHXs5 (ORCPT
+        id S1727041AbfKHXvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 18:48:57 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42544 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKHXs5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 18:48:57 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b16so6687474otk.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 15:48:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XMVjsfRFCMgyyIBo6SJuyhGa3vmCkYAAcBk1J2DsBuY=;
-        b=YOypcbEulcKRFNEeo74kAHj0uxzm2uvzEGicVDq789QS7jwPDKYLe6iejRXiN5RS14
-         AS3tmmfmlkd6JibhHlSHzABdbSZwptFAF8AkImt13JGhC20vzYaEs9NDCz4oZPvEHT3L
-         fvTsomaJVL/+D9gigwM5OCTRykq4/j+Sb6J6aigwNxV7tRcq27L071+Cc3IBu1/LNIY6
-         43+H29zQx7JbxXl7m12GLqF6XZDUxiiAvHZD6QFtm6PfaUwLkumW/O1IhFPxcAg0XDa8
-         P/BCODwIeN5VyLN4SpXyNID83UQhDHO6+ISQ4lQHS8l64fltjYVX1yTRU+mGwMXVRmML
-         NDFQ==
-X-Gm-Message-State: APjAAAUVc3fLXcAqbH5bML+mSYOjSuuxxBdQoZB8Ye1NAXkp21etU3/4
-        0GOID/cAD/pL4wNnW2dkafBbqgmW9CE=
-X-Google-Smtp-Source: APXvYqzfLa/na2KkCHcTsUpnCUBcHYiWwMmVFytQYAe3IU0LMQuGz0c+e5thdD/3/Ex+jy3pSzCTaA==
-X-Received: by 2002:a9d:458a:: with SMTP id x10mr10711707ote.365.1573256935749;
-        Fri, 08 Nov 2019 15:48:55 -0800 (PST)
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
-        by smtp.gmail.com with ESMTPSA id y14sm2342622otk.20.2019.11.08.15.48.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 15:48:55 -0800 (PST)
-Received: by mail-ot1-f46.google.com with SMTP id 94so6677695oty.8
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 15:48:54 -0800 (PST)
-X-Received: by 2002:a05:6830:17c2:: with SMTP id p2mr11400428ota.74.1573256934498;
- Fri, 08 Nov 2019 15:48:54 -0800 (PST)
+        Fri, 8 Nov 2019 18:51:25 -0500
+Received: from vps-vb.mhejs.net ([37.28.154.113]:59784 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfKHXvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 18:51:25 -0500
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1iTE25-0005W3-7R; Sat, 09 Nov 2019 00:51:13 +0100
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To:     Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>
+Cc:     Vitaly Wool <vitalywool@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] zswap: allow setting default status, compressor and allocator in Kconfig
+Date:   Sat,  9 Nov 2019 00:51:07 +0100
+Message-Id: <20191108235107.2837339-1-mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk> <20191108130123.6839-48-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191108130123.6839-48-linux@rasmusvillemoes.dk>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 8 Nov 2019 17:48:43 -0600
-X-Gmail-Original-Message-ID: <CADRPPNQwnmPCh8nzQ5vBTLoieO-r2u0huh17mwcinhfhNgo04A@mail.gmail.com>
-Message-ID: <CADRPPNQwnmPCh8nzQ5vBTLoieO-r2u0huh17mwcinhfhNgo04A@mail.gmail.com>
-Subject: Re: [PATCH v4 47/47] soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 7:05 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> There are also ARM and ARM64 based SOCs with a QUICC Engine, and the
-> core QE code as well as net/wan/fsl_ucc_hdlc and tty/serial/ucc_uart
-> has now been modified to not rely on ppcisms.
->
-> So extend the architectures that can select QUICC_ENGINE, and add the
-> rather modest requirements of OF && HAS_IOMEM.
->
-> The core code as well as the ucc_uart driver has been tested on an
-> LS1021A (arm), and it has also been tested that the QE code still
-> works on an mpc8309 (ppc).
->
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->  drivers/soc/fsl/qe/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/fsl/qe/Kconfig b/drivers/soc/fsl/qe/Kconfig
-> index cfa4b2939992..f1974f811572 100644
-> --- a/drivers/soc/fsl/qe/Kconfig
-> +++ b/drivers/soc/fsl/qe/Kconfig
-> @@ -5,7 +5,8 @@
->
->  config QUICC_ENGINE
->         bool "QUICC Engine (QE) framework support"
-> -       depends on FSL_SOC && PPC32
-> +       depends on OF && HAS_IOMEM
-> +       depends on PPC32 || ARM || ARM64 || COMPILE_TEST
+The compressed cache for swap pages (zswap) currently needs from 1 to 3
+extra kernel command line parameters in order to make it work: it has to be
+enabled by adding a "zswap.enabled=1" command line parameter and if one
+wants a different compressor or pool allocator than the default lzo / zbud
+combination then these choices also need to be specified on the kernel
+command line in additional parameters.
 
-Can you also add PPC64?  It is also used on some PPC64 platforms
-(QorIQ T series).
+Using a different compressor and allocator for zswap is actually pretty
+common as guides often recommend using the lz4 / z3fold pair instead of
+the default one.
+In such case it is also necessary to remember to enable the appropriate
+compression algorithm and pool allocator in the kernel config manually.
 
->         select GENERIC_ALLOCATOR
->         select CRC32
->         help
-> --
-> 2.23.0
->
+Let's avoid the need for adding these kernel command line parameters and
+automatically pull in the dependencies for the selected compressor
+algorithm and pool allocator by adding an appropriate default switches to
+Kconfig.
+
+The default values for these options match what the code was using
+previously as its defaults.
+
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+---
+Changes from v1:
+Rename CONFIG_ZSWAP_DEFAULT_COMP_* to CONFIG_ZSWAP_COMPRESSOR_DEFAULT_*
+and CONFIG_ZSWAP_DEFAULT_ZPOOL_* to CONFIG_ZSWAP_ZPOOL_DEFAULT_* while
+dropping the "_NAME" suffix from the final string option in both cases.
+
+Changes from v2:
+Add zsmalloc as a pool allocator choice, add a link to a page with
+benchmarks of various compression algorithms to the compression
+algorithm prompt option.
+
+ mm/Kconfig | 116 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ mm/zswap.c |  26 +++++++-----
+ 2 files changed, 130 insertions(+), 12 deletions(-)
+
+diff --git a/mm/Kconfig b/mm/Kconfig
+index a5dae9a7eb51..4a00d9ebf774 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -525,7 +525,6 @@ config MEM_SOFT_DIRTY
+ config ZSWAP
+ 	bool "Compressed cache for swap pages (EXPERIMENTAL)"
+ 	depends on FRONTSWAP && CRYPTO=y
+-	select CRYPTO_LZO
+ 	select ZPOOL
+ 	help
+ 	  A lightweight compressed cache for swap pages.  It takes
+@@ -541,6 +540,121 @@ config ZSWAP
+ 	  they have not be fully explored on the large set of potential
+ 	  configurations and workloads that exist.
+ 
++choice
++	prompt "Compressed cache for swap pages default compressor"
++	depends on ZSWAP
++	default ZSWAP_COMPRESSOR_DEFAULT_LZO
++	help
++	  Selects the default compression algorithm for the compressed cache
++	  for swap pages.
++
++	  For an overview what kind of performance can be expected from
++	  a particular compression algorithm please refer to the benchmarks
++	  available at the following LWN page:
++	  https://lwn.net/Articles/751795/
++
++	  If in doubt, select 'LZO'.
++
++	  The selection made here can be overridden by using the kernel
++	  command line 'zswap.compressor=' option.
++
++config ZSWAP_COMPRESSOR_DEFAULT_DEFLATE
++	bool "Deflate"
++	select CRYPTO_DEFLATE
++	help
++	  Use the Deflate algorithm as the default compression algorithm.
++
++config ZSWAP_COMPRESSOR_DEFAULT_LZO
++	bool "LZO"
++	select CRYPTO_LZO
++	help
++	  Use the LZO algorithm as the default compression algorithm.
++
++config ZSWAP_COMPRESSOR_DEFAULT_842
++	bool "842"
++	select CRYPTO_842
++	help
++	  Use the 842 algorithm as the default compression algorithm.
++
++config ZSWAP_COMPRESSOR_DEFAULT_LZ4
++	bool "LZ4"
++	select CRYPTO_LZ4
++	help
++	  Use the LZ4 algorithm as the default compression algorithm.
++
++config ZSWAP_COMPRESSOR_DEFAULT_LZ4HC
++	bool "LZ4HC"
++	select CRYPTO_LZ4HC
++	help
++	  Use the LZ4HC algorithm as the default compression algorithm.
++
++config ZSWAP_COMPRESSOR_DEFAULT_ZSTD
++	bool "zstd"
++	select CRYPTO_ZSTD
++	help
++	  Use the zstd algorithm as the default compression algorithm.
++endchoice
++
++config ZSWAP_COMPRESSOR_DEFAULT
++       string
++       default "deflate" if ZSWAP_COMPRESSOR_DEFAULT_DEFLATE
++       default "lzo" if ZSWAP_COMPRESSOR_DEFAULT_LZO
++       default "842" if ZSWAP_COMPRESSOR_DEFAULT_842
++       default "lz4" if ZSWAP_COMPRESSOR_DEFAULT_LZ4
++       default "lz4hc" if ZSWAP_COMPRESSOR_DEFAULT_LZ4HC
++       default "zstd" if ZSWAP_COMPRESSOR_DEFAULT_ZSTD
++       default ""
++
++choice
++	prompt "Compressed cache for swap pages default allocator"
++	depends on ZSWAP
++	default ZSWAP_ZPOOL_DEFAULT_ZBUD
++	help
++	  Selects the default allocator for the compressed cache for
++	  swap pages.
++	  The default is 'zbud' for compatibility, however please do
++	  read the description of each of the allocators below before
++	  making a right choice.
++
++	  The selection made here can be overridden by using the kernel
++	  command line 'zswap.zpool=' option.
++
++config ZSWAP_ZPOOL_DEFAULT_ZBUD
++	bool "zbud"
++	select ZBUD
++	help
++	  Use the zbud allocator as the default allocator.
++
++config ZSWAP_ZPOOL_DEFAULT_Z3FOLD
++	bool "z3fold"
++	select Z3FOLD
++	help
++	  Use the z3fold allocator as the default allocator.
++
++config ZSWAP_ZPOOL_DEFAULT_ZSMALLOC
++	bool "zsmalloc"
++	select ZSMALLOC
++	help
++	  Use the zsmalloc allocator as the default allocator.
++endchoice
++
++config ZSWAP_ZPOOL_DEFAULT
++       string
++       default "zbud" if ZSWAP_ZPOOL_DEFAULT_ZBUD
++       default "z3fold" if ZSWAP_ZPOOL_DEFAULT_Z3FOLD
++       default "zsmalloc" if ZSWAP_ZPOOL_DEFAULT_ZSMALLOC
++       default ""
++
++config ZSWAP_DEFAULT_ON
++	bool "Enable the compressed cache for swap pages by default"
++	depends on ZSWAP
++	help
++	  If selected, the compressed cache for swap pages will be enabled
++	  at boot, otherwise it will be disabled.
++
++	  The selection made here can be overridden by using the kernel
++	  command line 'zswap.enabled=' option.
++
+ config ZPOOL
+ 	tristate "Common API for compressed memory storage"
+ 	help
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 46a322316e52..71795b6f5b71 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -71,8 +71,12 @@ static u64 zswap_duplicate_entry;
+ 
+ #define ZSWAP_PARAM_UNSET ""
+ 
+-/* Enable/disable zswap (disabled by default) */
++/* Enable/disable zswap */
++#ifdef CONFIG_ZSWAP_DEFAULT_ON
++static bool zswap_enabled = true;
++#else
+ static bool zswap_enabled;
++#endif
+ static int zswap_enabled_param_set(const char *,
+ 				   const struct kernel_param *);
+ static struct kernel_param_ops zswap_enabled_param_ops = {
+@@ -82,8 +86,7 @@ static struct kernel_param_ops zswap_enabled_param_ops = {
+ module_param_cb(enabled, &zswap_enabled_param_ops, &zswap_enabled, 0644);
+ 
+ /* Crypto compressor to use */
+-#define ZSWAP_COMPRESSOR_DEFAULT "lzo"
+-static char *zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
++static char *zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
+ static int zswap_compressor_param_set(const char *,
+ 				      const struct kernel_param *);
+ static struct kernel_param_ops zswap_compressor_param_ops = {
+@@ -95,8 +98,7 @@ module_param_cb(compressor, &zswap_compressor_param_ops,
+ 		&zswap_compressor, 0644);
+ 
+ /* Compressed storage zpool to use */
+-#define ZSWAP_ZPOOL_DEFAULT "zbud"
+-static char *zswap_zpool_type = ZSWAP_ZPOOL_DEFAULT;
++static char *zswap_zpool_type = CONFIG_ZSWAP_ZPOOL_DEFAULT;
+ static int zswap_zpool_param_set(const char *, const struct kernel_param *);
+ static struct kernel_param_ops zswap_zpool_param_ops = {
+ 	.set =		zswap_zpool_param_set,
+@@ -569,11 +571,12 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
+ 	bool has_comp, has_zpool;
+ 
+ 	has_comp = crypto_has_comp(zswap_compressor, 0, 0);
+-	if (!has_comp && strcmp(zswap_compressor, ZSWAP_COMPRESSOR_DEFAULT)) {
++	if (!has_comp && strcmp(zswap_compressor,
++				CONFIG_ZSWAP_COMPRESSOR_DEFAULT)) {
+ 		pr_err("compressor %s not available, using default %s\n",
+-		       zswap_compressor, ZSWAP_COMPRESSOR_DEFAULT);
++		       zswap_compressor, CONFIG_ZSWAP_COMPRESSOR_DEFAULT);
+ 		param_free_charp(&zswap_compressor);
+-		zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
++		zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
+ 		has_comp = crypto_has_comp(zswap_compressor, 0, 0);
+ 	}
+ 	if (!has_comp) {
+@@ -584,11 +587,12 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
+ 	}
+ 
+ 	has_zpool = zpool_has_pool(zswap_zpool_type);
+-	if (!has_zpool && strcmp(zswap_zpool_type, ZSWAP_ZPOOL_DEFAULT)) {
++	if (!has_zpool && strcmp(zswap_zpool_type,
++				 CONFIG_ZSWAP_ZPOOL_DEFAULT)) {
+ 		pr_err("zpool %s not available, using default %s\n",
+-		       zswap_zpool_type, ZSWAP_ZPOOL_DEFAULT);
++		       zswap_zpool_type, CONFIG_ZSWAP_ZPOOL_DEFAULT);
+ 		param_free_charp(&zswap_zpool_type);
+-		zswap_zpool_type = ZSWAP_ZPOOL_DEFAULT;
++		zswap_zpool_type = CONFIG_ZSWAP_ZPOOL_DEFAULT;
+ 		has_zpool = zpool_has_pool(zswap_zpool_type);
+ 	}
+ 	if (!has_zpool) {
