@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D19C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AA2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01ED8206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58521222C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240010;
-	bh=RoOwuTEoleM5cqE4Jh826MjpsBVUMzm5KeiWX26H0Vo=;
+	s=default; t=1573240013;
+	bh=WuQLmPEfBsjVnEpbu69Sp690ofNhB83WUOxpWR1JbBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Sj0gF7pSpAwC0SBamhYFlE3JYuSXJP1pPQxsg95dYOuSrOMEbNwCMY7VXhq5xOBj
-	 ASFxiXwqd0HiqLFru8FTk5wLm5yH7pZRZl/geu7UV9fTheewBKb1rFjqgr1AESY4jV
-	 0gMpTkBMKCB1eUgtd7D5klzRjsVgO70cPZi8QAHA=
+	b=weRNgXNQ++4nFm8MzFcIARPXC47Y81eQh04zRe3OSBJYJUp2lelliemAnnTr3t9Cr
+	 vDmUnW7bYnukV3pNaLXRk0zX+sJFneC/iTNmdTT2TTMimz004OLgVHrVv+g1lL+Ie5
+	 uwoUg35AaHuzpEKtAY5P095tJyX+F3PPW6wPFP60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391346AbfKHTGt (ORCPT
+        id S2390737AbfKHTGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:06:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:06:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733176AbfKHTGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:06:46 -0500
+        id S2391344AbfKHTGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:06:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30FA320673;
-        Fri,  8 Nov 2019 19:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD16E20673;
+        Fri,  8 Nov 2019 19:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240005;
-        bh=RoOwuTEoleM5cqE4Jh826MjpsBVUMzm5KeiWX26H0Vo=;
+        s=default; t=1573240008;
+        bh=WuQLmPEfBsjVnEpbu69Sp690ofNhB83WUOxpWR1JbBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t7p25BBWs3WMN27yLIpsy3CTSCoTxFZ8nm7Oli/555NlK81vmvi6ZnMMmaucuxmGu
-         6MAkRyGORsUEES0nNKr75DxHNhee8KUMAsk+FHJJoIk8SyD520IPBcxBAsADpFJsoo
-         Xg5fPs1ZR1+IOjvKPAlpTEDjGzNSlwxXdNv2plG4=
+        b=xDXfBh5l4ZS+xQwY88oogeBbTPuvIpLXZJCzTepQW8T7tUP5b6Qv8Q0KIFc62n2jQ
+         lgP3yAr1gEYHXCKDREA66iKkXGKbyRWpK+HQRZaTsc9U8Ku71npfW6lTnxFAyk+NFw
+         L5FVUOONozpmra3ucjcHfir6DaWDPL27Y+z7s3i0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 055/140] drm/amdgpu: fix error handling in amdgpu_bo_list_create
-Date:   Fri,  8 Nov 2019 19:49:43 +0100
-Message-Id: <20191108174908.790526222@linuxfoundation.org>
+Subject: [PATCH 5.3 056/140] scsi: target: core: Do not overwrite CDB byte 1
+Date:   Fri,  8 Nov 2019 19:49:44 +0100
+Message-Id: <20191108174908.841936312@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -62,38 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit de51a5019ff32960218da8fd899fa3f361b031e9 ]
+[ Upstream commit 27e84243cb63601a10e366afe3e2d05bb03c1cb5 ]
 
-We need to drop normal and userptr BOs separately.
+passthrough_parse_cdb() - used by TCMU and PSCSI - attepts to reset the LUN
+field of SCSI-2 CDBs (bits 5,6,7 of byte 1).  The current code is wrong as
+for newer commands not having the LUN field it overwrites relevant command
+bits (e.g. for SECURITY PROTOCOL IN / OUT). We think this code was
+unnecessary from the beginning or at least it is no longer useful. So we
+remove it entirely.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Acked-by: Huang Rui <ray.huang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/12498eab-76fd-eaad-1316-c2827badb76a@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/target/target_core_device.c | 21 ---------------------
+ 1 file changed, 21 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-index 61e38e43ad1d5..85b0515c0fdcf 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-@@ -140,7 +140,12 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
- 	return 0;
+diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+index 04bf2acd3800d..2d19f0e332b01 100644
+--- a/drivers/target/target_core_device.c
++++ b/drivers/target/target_core_device.c
+@@ -1074,27 +1074,6 @@ passthrough_parse_cdb(struct se_cmd *cmd,
+ 	struct se_device *dev = cmd->se_dev;
+ 	unsigned int size;
  
- error_free:
--	while (i--) {
-+	for (i = 0; i < last_entry; ++i) {
-+		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(array[i].tv.bo);
-+
-+		amdgpu_bo_unref(&bo);
-+	}
-+	for (i = first_userptr; i < num_entries; ++i) {
- 		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(array[i].tv.bo);
- 
- 		amdgpu_bo_unref(&bo);
+-	/*
+-	 * Clear a lun set in the cdb if the initiator talking to use spoke
+-	 * and old standards version, as we can't assume the underlying device
+-	 * won't choke up on it.
+-	 */
+-	switch (cdb[0]) {
+-	case READ_10: /* SBC - RDProtect */
+-	case READ_12: /* SBC - RDProtect */
+-	case READ_16: /* SBC - RDProtect */
+-	case SEND_DIAGNOSTIC: /* SPC - SELF-TEST Code */
+-	case VERIFY: /* SBC - VRProtect */
+-	case VERIFY_16: /* SBC - VRProtect */
+-	case WRITE_VERIFY: /* SBC - VRProtect */
+-	case WRITE_VERIFY_12: /* SBC - VRProtect */
+-	case MAINTENANCE_IN: /* SPC - Parameter Data Format for SA RTPG */
+-		break;
+-	default:
+-		cdb[1] &= 0x1f; /* clear logical unit number */
+-		break;
+-	}
+-
+ 	/*
+ 	 * For REPORT LUNS we always need to emulate the response, for everything
+ 	 * else, pass it up.
 -- 
 2.20.1
 
