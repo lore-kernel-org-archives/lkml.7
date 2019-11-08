@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093BFFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40F8C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1812067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F88821D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239416;
-	bh=62vY4g6/bESYO88NRwrlwzQy36mMS6grugZ4Uu9XJ9o=;
+	s=default; t=1573239420;
+	bh=Yzrfcd5cKL6KuXv+Ofw10dPyZQkvoE/R25g2YhQEWUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRY/W1aclt8D/BmBR20VAXw2PYMrsBC/OD0CkZgjM+88MU4OeEeyHQRyVHGJ2PbmN
-	 3p79QOfYP9kcdgbk13wa74wtVCt3o6YDdysy1yoLfT/9bPWtIidRHSbr3DRZWkFreO
-	 CdBmSHe5sQvL7zLJX+TOz57A8/58afrPFpDK5dxY=
+	b=Ym1+amLUbg5P95uVah2exVuVtIdCkVvTb/DkAFD8wCxNrGYeGZXtvuI17qYz4oGB5
+	 teVgZzRiu3uJdliQr7GTYgmc25s2yMPKzTMy6KuSK+Q+npiIt6Q3Q6LLVYbinBJ15h
+	 EBb8IwZA1tgMVnFBhgdiHx4KwCluCT3BZmEZOEqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbfKHS4z (ORCPT
+        id S1732790AbfKHS46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:56:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54500 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:56:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732635AbfKHS4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:49 -0500
+        id S1732607AbfKHS44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CF7B21D7F;
-        Fri,  8 Nov 2019 18:56:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779102067B;
+        Fri,  8 Nov 2019 18:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239409;
-        bh=62vY4g6/bESYO88NRwrlwzQy36mMS6grugZ4Uu9XJ9o=;
+        s=default; t=1573239415;
+        bh=Yzrfcd5cKL6KuXv+Ofw10dPyZQkvoE/R25g2YhQEWUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KNNNzQiZvT7dCdrRzcVvskWj3p8/S7ez1VEc3gzlrSOrVRypIVmjCmvBlaMj31+Hw
-         xyJGnU09OB6eVahEH+QQs8DJCkDDuq0HQn/TZf3gdY6/i8V+bMxPDSHj0lRth70oBK
-         al2qM12goNTlCQetxtRuLJv6d9qX+OFCrPwbtLEw=
+        b=S4cpywrpEpgUWK0daunbjEbBXhmcNHAwhwyAyBl8PLYKLdda39+GWm87BkA9U+457
+         omEZoA3yJBGrlGyPr/sA/WuzkNh6wsSE9TQC9b5QJKy65P+AKTnzHZ2iF6NIUtR0cT
+         GeFUFGUlCwUw5ikXD6W5ubngsLF2PxTPd7zKZOvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 29/34] Kbuild: make designated_init attribute fatal
-Date:   Fri,  8 Nov 2019 19:50:36 +0100
-Message-Id: <20191108174651.103667553@linuxfoundation.org>
+Subject: [PATCH 4.9 31/34] kbuild: add -fcf-protection=none when using retpoline flags
+Date:   Fri,  8 Nov 2019 19:50:38 +0100
+Message-Id: <20191108174653.027224327@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
 References: <20191108174618.266472504@linuxfoundation.org>
@@ -60,33 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Seth Forshee <seth.forshee@canonical.com>
 
-[ Upstream commit c834f0e8a8bb3025aac38e802fca2e686720f544 ]
+[ Upstream commit 29be86d7f9cb18df4123f309ac7857570513e8bc ]
 
-If a structure is marked with __attribute__((designated_init)) from
-GCC or Sparse, it needs to have all static initializers using designated
-initialization. Fail the build for any missing cases. This attribute will
-be used by the randstruct plugin to make sure randomized structures are
-being correctly initialized.
+The gcc -fcf-protection=branch option is not compatible with
+-mindirect-branch=thunk-extern. The latter is used when
+CONFIG_RETPOLINE is selected, and this will fail to build with
+a gcc which has -fcf-protection=branch enabled by default. Adding
+-fcf-protection=none when building with retpoline enabled
+prevents such build failures.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/Makefile b/Makefile
-index b7f6639f4e7a2..19c7e30684077 100644
+index 62ce3766032c9..1d50905aaf425 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -834,6 +834,9 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
- # enforce correct pointer usage
- KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
+@@ -840,6 +840,12 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
+ # change __FILE__ to the relative path from the srctree
+ KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
  
-+# Require designated initializers for all marked structures
-+KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
++# ensure -fcf-protection is disabled when using retpoline as it is
++# incompatible with -mindirect-branch=thunk-extern
++ifdef CONFIG_RETPOLINE
++KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
++endif
 +
  # use the deterministic mode of AR if available
  KBUILD_ARFLAGS := $(call ar-option,D)
