@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79069FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016BEFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F30C215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BFE215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214855;
-	bh=6Wjnw45fi1Pp9pwaOW/zFICTaYR/dlHhA6uONnThtAM=;
+	s=default; t=1573214860;
+	bh=zgtQn59xKSHLgHf3t2ThmqyQQy/k5Hd9egH/wHnXQc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WmYliJbIJz3C17ypSd/OBJotWsQ9v0CjJ5sMv7tvCTtiZAg9xnp8W8HbCFFhQMdRj
-	 B4b89YVCg9br8TeW+fQQyvJTNHSXwi/64Sczffhk6Qvl/plgbC4rPDXcmF83hn8Q4v
-	 Simfewf0j6WunWgXrcH/60POLjUh86H++SC8Wlvo=
+	b=HkJ3XJqkIRKvlsZp75HNvdOho56sX0ykoy3iuRAaT2FWU1Iaih0JXKEx2gocWivMC
+	 /uk1GYNWWoE0RPfzwaZx0ZmTC6suzMv2yp1dLFc/+2Os70Sg2cAbTGnP0LX3zxGOls
+	 D+9WJIKaZsFDr+0yMw9PoJIkBSi0hgJvzH/4K7A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391797AbfKHMHd (ORCPT
+        id S2391602AbfKHMHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:07:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53908 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:07:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389043AbfKHLky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:54 -0500
+        id S1732382AbfKHLku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE4521D7E;
-        Fri,  8 Nov 2019 11:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A168521D7E;
+        Fri,  8 Nov 2019 11:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213253;
-        bh=6Wjnw45fi1Pp9pwaOW/zFICTaYR/dlHhA6uONnThtAM=;
+        s=default; t=1573213249;
+        bh=zgtQn59xKSHLgHf3t2ThmqyQQy/k5Hd9egH/wHnXQc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Thl/n9uC/fb4uFfpVje9nRtTtWTAQIDOo05DxG3qxVEZx3l9Prevee7H4e6pIRr/m
-         wTx3fcwjWR2ykmQIl7Im/ePqbmxAmrOuFcOWPHsunuoLf7REdqF7ACWaP3eXwKQ7XA
-         LdhEkPZhrcM4+v0khNkHiYxBLiLycNYC573UHusk=
+        b=0iLX8P4p3Uc0jtDTOUntuGCZghvtYLu/qRo1HuHDfwlbIRBOU7CJV/Ndle2o57FcJ
+         P+brYzKHvLz/9XUxGzMRT1YFHN0kWIi3PSrYxfLqriqsRoIrWWbwwRbFRaOr8XstZ6
+         Lwtr5+LA1SdxrxGJwjLVStNdnXNU7uJznPJcCO8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Radu Pirea <radu.pirea@microchip.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 118/205] tty/serial: atmel: Change the driver to work under at91-usart MFD
-Date:   Fri,  8 Nov 2019 06:36:25 -0500
-Message-Id: <20191108113752.12502-118-sashal@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 116/205] firmware: arm_scmi: use strlcpy to ensure NULL-terminated strings
+Date:   Fri,  8 Nov 2019 06:36:23 -0500
+Message-Id: <20191108113752.12502-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -63,182 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radu Pirea <radu.pirea@microchip.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b ]
+[ Upstream commit ca64b719a1e665ac7449b6a968059176af7365a8 ]
 
-This patch modifies the place where resources and device tree properties
-are searched.
+Replace all the memcpy() for copying name strings from the firmware with
+strlcpy() to make sure we are bounded by the source buffer size and we
+also always have NULL-terminated strings.
 
-Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Richard Genoud <richard.genoud@gmail.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This is needed to avoid out of bounds accesses if the firmware returns
+a non-terminated string.
+
+Reported-by: Olof Johansson <olof@lixom.net>
+Acked-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/Kconfig        |  1 +
- drivers/tty/serial/atmel_serial.c | 42 ++++++++++++++++++++-----------
- 2 files changed, 28 insertions(+), 15 deletions(-)
+ drivers/firmware/arm_scmi/base.c    | 2 +-
+ drivers/firmware/arm_scmi/clock.c   | 2 +-
+ drivers/firmware/arm_scmi/perf.c    | 2 +-
+ drivers/firmware/arm_scmi/power.c   | 2 +-
+ drivers/firmware/arm_scmi/sensors.c | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index df8bd0c7b97db..32886c3046413 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -118,6 +118,7 @@ config SERIAL_ATMEL
- 	depends on ARCH_AT91 || COMPILE_TEST
- 	select SERIAL_CORE
- 	select SERIAL_MCTRL_GPIO if GPIOLIB
-+	select MFD_AT91_USART
- 	help
- 	  This enables the driver for the on-chip UARTs of the Atmel
- 	  AT91 processors.
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index dd8949e8fcd7a..251f708f47f76 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -195,8 +195,7 @@ static struct console atmel_console;
+diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
+index 9dff33ea6416f..204390297f4bd 100644
+--- a/drivers/firmware/arm_scmi/base.c
++++ b/drivers/firmware/arm_scmi/base.c
+@@ -208,7 +208,7 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
  
- #if defined(CONFIG_OF)
- static const struct of_device_id atmel_serial_dt_ids[] = {
--	{ .compatible = "atmel,at91rm9200-usart" },
--	{ .compatible = "atmel,at91sam9260-usart" },
-+	{ .compatible = "atmel,at91rm9200-usart-serial" },
- 	{ /* sentinel */ }
- };
- #endif
-@@ -926,6 +925,7 @@ static void atmel_tx_dma(struct uart_port *port)
- static int atmel_prepare_tx_dma(struct uart_port *port)
- {
- 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
-+	struct device *mfd_dev = port->dev->parent;
- 	dma_cap_mask_t		mask;
- 	struct dma_slave_config config;
- 	int ret, nent;
-@@ -933,7 +933,7 @@ static int atmel_prepare_tx_dma(struct uart_port *port)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
+ 	ret = scmi_do_xfer(handle, t);
+ 	if (!ret)
+-		memcpy(name, t->rx.buf, SCMI_MAX_STR_SIZE);
++		strlcpy(name, t->rx.buf, SCMI_MAX_STR_SIZE);
  
--	atmel_port->chan_tx = dma_request_slave_channel(port->dev, "tx");
-+	atmel_port->chan_tx = dma_request_slave_channel(mfd_dev, "tx");
- 	if (atmel_port->chan_tx == NULL)
- 		goto chan_err;
- 	dev_info(port->dev, "using %s for tx DMA transfers\n",
-@@ -1104,6 +1104,7 @@ static void atmel_rx_from_dma(struct uart_port *port)
- static int atmel_prepare_rx_dma(struct uart_port *port)
- {
- 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
-+	struct device *mfd_dev = port->dev->parent;
- 	struct dma_async_tx_descriptor *desc;
- 	dma_cap_mask_t		mask;
- 	struct dma_slave_config config;
-@@ -1115,7 +1116,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_CYCLIC, mask);
+ 	scmi_xfer_put(handle, t);
  
--	atmel_port->chan_rx = dma_request_slave_channel(port->dev, "rx");
-+	atmel_port->chan_rx = dma_request_slave_channel(mfd_dev, "rx");
- 	if (atmel_port->chan_rx == NULL)
- 		goto chan_err;
- 	dev_info(port->dev, "using %s for rx DMA transfers\n",
-@@ -2246,8 +2247,8 @@ static const char *atmel_type(struct uart_port *port)
-  */
- static void atmel_release_port(struct uart_port *port)
- {
--	struct platform_device *pdev = to_platform_device(port->dev);
--	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
-+	struct platform_device *mpdev = to_platform_device(port->dev->parent);
-+	int size = resource_size(mpdev->resource);
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index e4119eb34986c..30fc04e284312 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -111,7 +111,7 @@ static int scmi_clock_attributes_get(const struct scmi_handle *handle,
  
- 	release_mem_region(port->mapbase, size);
+ 	ret = scmi_do_xfer(handle, t);
+ 	if (!ret)
+-		memcpy(clk->name, attr->name, SCMI_MAX_STR_SIZE);
++		strlcpy(clk->name, attr->name, SCMI_MAX_STR_SIZE);
+ 	else
+ 		clk->name[0] = '\0';
  
-@@ -2262,8 +2263,8 @@ static void atmel_release_port(struct uart_port *port)
-  */
- static int atmel_request_port(struct uart_port *port)
- {
--	struct platform_device *pdev = to_platform_device(port->dev);
--	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
-+	struct platform_device *mpdev = to_platform_device(port->dev->parent);
-+	int size = resource_size(mpdev->resource);
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index 64342944d9175..87c99d296ecd3 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -174,7 +174,7 @@ scmi_perf_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
+ 			dom_info->mult_factor =
+ 					(dom_info->sustained_freq_khz * 1000) /
+ 					dom_info->sustained_perf_level;
+-		memcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
++		strlcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
+ 	}
  
- 	if (!request_mem_region(port->mapbase, size, "atmel_serial"))
- 		return -EBUSY;
-@@ -2365,27 +2366,28 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
- {
- 	int ret;
- 	struct uart_port *port = &atmel_port->uart;
-+	struct platform_device *mpdev = to_platform_device(pdev->dev.parent);
+ 	scmi_xfer_put(handle, t);
+diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
+index cfa033b05aed5..62f3401a1f01e 100644
+--- a/drivers/firmware/arm_scmi/power.c
++++ b/drivers/firmware/arm_scmi/power.c
+@@ -106,7 +106,7 @@ scmi_power_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
+ 		dom_info->state_set_notify = SUPPORTS_STATE_SET_NOTIFY(flags);
+ 		dom_info->state_set_async = SUPPORTS_STATE_SET_ASYNC(flags);
+ 		dom_info->state_set_sync = SUPPORTS_STATE_SET_SYNC(flags);
+-		memcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
++		strlcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
+ 	}
  
- 	atmel_init_property(atmel_port, pdev);
- 	atmel_set_ops(port);
+ 	scmi_xfer_put(handle, t);
+diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+index 27f2092b9882a..b53d5cc9c9f6c 100644
+--- a/drivers/firmware/arm_scmi/sensors.c
++++ b/drivers/firmware/arm_scmi/sensors.c
+@@ -140,7 +140,7 @@ static int scmi_sensor_description_get(const struct scmi_handle *handle,
+ 			s = &si->sensors[desc_index + cnt];
+ 			s->id = le32_to_cpu(buf->desc[cnt].id);
+ 			s->type = SENSOR_TYPE(attrh);
+-			memcpy(s->name, buf->desc[cnt].name, SCMI_MAX_STR_SIZE);
++			strlcpy(s->name, buf->desc[cnt].name, SCMI_MAX_STR_SIZE);
+ 		}
  
--	uart_get_rs485_mode(&pdev->dev, &port->rs485);
-+	uart_get_rs485_mode(&mpdev->dev, &port->rs485);
- 
- 	port->iotype		= UPIO_MEM;
- 	port->flags		= UPF_BOOT_AUTOCONF | UPF_IOREMAP;
- 	port->ops		= &atmel_pops;
- 	port->fifosize		= 1;
- 	port->dev		= &pdev->dev;
--	port->mapbase	= pdev->resource[0].start;
--	port->irq	= pdev->resource[1].start;
-+	port->mapbase		= mpdev->resource[0].start;
-+	port->irq		= mpdev->resource[1].start;
- 	port->rs485_config	= atmel_config_rs485;
--	port->membase	= NULL;
-+	port->membase		= NULL;
- 
- 	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
- 
- 	/* for console, the clock could already be configured */
- 	if (!atmel_port->clk) {
--		atmel_port->clk = clk_get(&pdev->dev, "usart");
-+		atmel_port->clk = clk_get(&mpdev->dev, "usart");
- 		if (IS_ERR(atmel_port->clk)) {
- 			ret = PTR_ERR(atmel_port->clk);
- 			atmel_port->clk = NULL;
-@@ -2718,13 +2720,22 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
- static int atmel_serial_probe(struct platform_device *pdev)
- {
- 	struct atmel_uart_port *atmel_port;
--	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np = pdev->dev.parent->of_node;
- 	void *data;
- 	int ret = -ENODEV;
- 	bool rs485_enabled;
- 
- 	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
- 
-+	/*
-+	 * In device tree there is no node with "atmel,at91rm9200-usart-serial"
-+	 * as compatible string. This driver is probed by at91-usart mfd driver
-+	 * which is just a wrapper over the atmel_serial driver and
-+	 * spi-at91-usart driver. All attributes needed by this driver are
-+	 * found in of_node of parent.
-+	 */
-+	pdev->dev.of_node = np;
-+
- 	ret = of_alias_get_id(np, "serial");
- 	if (ret < 0)
- 		/* port id not found in platform data nor device-tree aliases:
-@@ -2860,6 +2871,7 @@ static int atmel_serial_remove(struct platform_device *pdev)
- 
- 	clk_put(atmel_port->clk);
- 	atmel_port->clk = NULL;
-+	pdev->dev.of_node = NULL;
- 
- 	return ret;
- }
-@@ -2870,7 +2882,7 @@ static struct platform_driver atmel_serial_driver = {
- 	.suspend	= atmel_serial_suspend,
- 	.resume		= atmel_serial_resume,
- 	.driver		= {
--		.name			= "atmel_usart",
-+		.name			= "atmel_usart_serial",
- 		.of_match_table		= of_match_ptr(atmel_serial_dt_ids),
- 	},
- };
+ 		desc_index += num_returned;
 -- 
 2.20.1
 
