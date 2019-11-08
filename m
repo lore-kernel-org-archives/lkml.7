@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3702C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F41FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB8CE2067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1764218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239700;
-	bh=aF3caouMCJR+I05UNHMA4nYiaKKB5pBJ0PHu03c3BEg=;
+	s=default; t=1573239702;
+	bh=E/66I8gVAHeHm9drdzDI89rAtaP9NZE3+thIh4jkC9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HEVLcmH+nTSJ6HSJp6OYb1t5h3E54/a6P4AGBfi6ZBOiHcdAVcHLdVNjwsmy2ghfP
-	 RGDvhHprHlH50BS3CqOMokzzHAZ81wB94UhTfcqUSsry0ZvJdX/6vhCbUuTXxue6rX
-	 NbEcGaChIgInHHoy+YGQfUohMNkDxtWCfh85YKZc=
+	b=bYVCvuDwxSpBTBtdJooWeHkyXV8+B4uay6tBeoNb0vqq5B9gciIkjjB96UXBluYAn
+	 s33rwtDM3MP8t6dm8xrQK3yrSS4eHRFYFtiNjYJXvDz85gAjaQcZz0EZQDuJSovnNE
+	 krl7x73fe+N/z8raYqx4roQQMqKhwV5Dz35IMJfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390255AbfKHTBk (ORCPT
+        id S2390270AbfKHTBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:01:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58944 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:01:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390233AbfKHTBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:35 -0500
+        id S1733266AbfKHTBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:01:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77B092067B;
-        Fri,  8 Nov 2019 19:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4BC3218AE;
+        Fri,  8 Nov 2019 19:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239694;
-        bh=aF3caouMCJR+I05UNHMA4nYiaKKB5pBJ0PHu03c3BEg=;
+        s=default; t=1573239697;
+        bh=E/66I8gVAHeHm9drdzDI89rAtaP9NZE3+thIh4jkC9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yhrVnSOdjAMQhULbI9Uf2xX3SmEY+vXggIV8RMwWhfhu0mzf0NQpe+Z95jZDWo5wb
-         HVLNQ06GwU334MVCO6uikyvh2Y1NBRzNtITzamaC3DE/07P5roG7dH2jNAZu29l4zM
-         /mXIVhbHLUBD0YZehnAClvVf9Cid0ib8Zzsd52m0=
+        b=yA5QgI1Z+cnnayhvJpFnlrd5UVqEetO75deN8ZH2DtFc5SsMCLc5edOjRY7KvJ0z7
+         5S/u7QwZAClJLSjBnZH0pDx60HoVx+/JvpLXWv+pIMcQU7J9zGt/N09NUoC1namYNJ
+         ihB7s+zC/JZKA9+8G597CPSrbAqxGb2H//VnRuxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/79] MIPS: bmips: mark exception vectors as char arrays
-Date:   Fri,  8 Nov 2019 19:50:09 +0100
-Message-Id: <20191108174801.754009894@linuxfoundation.org>
+Subject: [PATCH 4.19 03/79] ASoC: wm8994: Do not register inapplicable controls for WM1811
+Date:   Fri,  8 Nov 2019 19:49:43 +0100
+Message-Id: <20191108174746.904621393@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -63,105 +63,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Gorski <jonas.gorski@gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-[ Upstream commit e4f5cb1a9b27c0f94ef4f5a0178a3fde2d3d0e9e ]
+[ Upstream commit ca2347190adb5e4eece73a2b16e96e651c46246b ]
 
-The vectors span more than one byte, so mark them as arrays.
+In case of WM1811 device there are currently being registered controls
+referring to registers not existing on that device.
+It has been noticed when getting values of "AIF1ADC2 Volume", "AIF1DAC2
+Volume" controls was failing during ALSA state restoring at boot time:
+ "amixer: Mixer hw:0 load error: Device or resource busy"
 
-Fixes the following build error when building when using GCC 8.3:
+Reading some registers through I2C was failing with EBUSY error and
+indeed these registers were not available according to the datasheet.
 
-In file included from ./include/linux/string.h:19,
-                 from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/mips/include/asm/processor.h:15,
-                 from ./arch/mips/include/asm/thread_info.h:16,
-                 from ./include/linux/thread_info.h:38,
-                 from ./include/asm-generic/preempt.h:5,
-                 from ./arch/mips/include/generated/asm/preempt.h:1,
-                 from ./include/linux/preempt.h:81,
-                 from ./include/linux/spinlock.h:51,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/bootmem.h:8,
-                 from arch/mips/bcm63xx/prom.c:10:
-arch/mips/bcm63xx/prom.c: In function 'prom_init':
-./arch/mips/include/asm/string.h:162:11: error: '__builtin_memcpy' forming offset [2, 32] is out of the bounds [0, 1] of object 'bmips_smp_movevec' with type 'char' [-Werror=array-bounds]
-   __ret = __builtin_memcpy((dst), (src), __len); \
-           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/bcm63xx/prom.c:97:3: note: in expansion of macro 'memcpy'
-   memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
-   ^~~~~~
-In file included from arch/mips/bcm63xx/prom.c:14:
-./arch/mips/include/asm/bmips.h:80:13: note: 'bmips_smp_movevec' declared here
- extern char bmips_smp_movevec;
+To fix this controls not available on WM1811 are moved to a separate
+array and registered only for WM8994 and WM8958.
 
-Fixes: 18a1eef92dcd ("MIPS: BMIPS: Introduce bmips.h")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
+There are some further differences between WM8994 and WM1811,
+e.g. registers 603h, 604h, 605h, which are not covered in this patch.
+
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Link: https://lore.kernel.org/r/20190920130218.32690-2-s.nawrocki@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/bcm63xx/prom.c      |  2 +-
- arch/mips/include/asm/bmips.h | 10 +++++-----
- arch/mips/kernel/smp-bmips.c  |  8 ++++----
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ sound/soc/codecs/wm8994.c | 43 +++++++++++++++++++++++----------------
+ 1 file changed, 26 insertions(+), 17 deletions(-)
 
-diff --git a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
-index 7019e2967009e..bbbf8057565b2 100644
---- a/arch/mips/bcm63xx/prom.c
-+++ b/arch/mips/bcm63xx/prom.c
-@@ -84,7 +84,7 @@ void __init prom_init(void)
- 		 * Here we will start up CPU1 in the background and ask it to
- 		 * reconfigure itself then go back to sleep.
- 		 */
--		memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
-+		memcpy((void *)0xa0000200, bmips_smp_movevec, 0x20);
- 		__sync();
- 		set_c0_cause(C_SW0);
- 		cpumask_set_cpu(1, &bmips_booted_mask);
-diff --git a/arch/mips/include/asm/bmips.h b/arch/mips/include/asm/bmips.h
-index bf6a8afd7ad27..581a6a3c66e40 100644
---- a/arch/mips/include/asm/bmips.h
-+++ b/arch/mips/include/asm/bmips.h
-@@ -75,11 +75,11 @@ static inline int register_bmips_smp_ops(void)
- #endif
- }
+diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
+index 14f1b0c0d286a..01acb8da2f48e 100644
+--- a/sound/soc/codecs/wm8994.c
++++ b/sound/soc/codecs/wm8994.c
+@@ -537,13 +537,10 @@ static SOC_ENUM_SINGLE_DECL(dac_osr,
+ static SOC_ENUM_SINGLE_DECL(adc_osr,
+ 			    WM8994_OVERSAMPLING, 1, osr_text);
  
--extern char bmips_reset_nmi_vec;
--extern char bmips_reset_nmi_vec_end;
--extern char bmips_smp_movevec;
--extern char bmips_smp_int_vec;
--extern char bmips_smp_int_vec_end;
-+extern char bmips_reset_nmi_vec[];
-+extern char bmips_reset_nmi_vec_end[];
-+extern char bmips_smp_movevec[];
-+extern char bmips_smp_int_vec[];
-+extern char bmips_smp_int_vec_end[];
+-static const struct snd_kcontrol_new wm8994_snd_controls[] = {
++static const struct snd_kcontrol_new wm8994_common_snd_controls[] = {
+ SOC_DOUBLE_R_TLV("AIF1ADC1 Volume", WM8994_AIF1_ADC1_LEFT_VOLUME,
+ 		 WM8994_AIF1_ADC1_RIGHT_VOLUME,
+ 		 1, 119, 0, digital_tlv),
+-SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
+-		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
+-		 1, 119, 0, digital_tlv),
+ SOC_DOUBLE_R_TLV("AIF2ADC Volume", WM8994_AIF2_ADC_LEFT_VOLUME,
+ 		 WM8994_AIF2_ADC_RIGHT_VOLUME,
+ 		 1, 119, 0, digital_tlv),
+@@ -560,8 +557,6 @@ SOC_ENUM("AIF2DACR Source", aif2dacr_src),
  
- extern int bmips_smp_enabled;
- extern int bmips_cpu_offset;
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 159e83add4bb3..5ec546b5eed1c 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -457,10 +457,10 @@ static void bmips_wr_vec(unsigned long dst, char *start, char *end)
+ SOC_DOUBLE_R_TLV("AIF1DAC1 Volume", WM8994_AIF1_DAC1_LEFT_VOLUME,
+ 		 WM8994_AIF1_DAC1_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
+-SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
+-		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
+ SOC_DOUBLE_R_TLV("AIF2DAC Volume", WM8994_AIF2_DAC_LEFT_VOLUME,
+ 		 WM8994_AIF2_DAC_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
  
- static inline void bmips_nmi_handler_setup(void)
- {
--	bmips_wr_vec(BMIPS_NMI_RESET_VEC, &bmips_reset_nmi_vec,
--		&bmips_reset_nmi_vec_end);
--	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, &bmips_smp_int_vec,
--		&bmips_smp_int_vec_end);
-+	bmips_wr_vec(BMIPS_NMI_RESET_VEC, bmips_reset_nmi_vec,
-+		bmips_reset_nmi_vec_end);
-+	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, bmips_smp_int_vec,
-+		bmips_smp_int_vec_end);
- }
+@@ -569,17 +564,12 @@ SOC_SINGLE_TLV("AIF1 Boost Volume", WM8994_AIF1_CONTROL_2, 10, 3, 0, aif_tlv),
+ SOC_SINGLE_TLV("AIF2 Boost Volume", WM8994_AIF2_CONTROL_2, 10, 3, 0, aif_tlv),
  
- struct reset_vec_info {
+ SOC_SINGLE("AIF1DAC1 EQ Switch", WM8994_AIF1_DAC1_EQ_GAINS_1, 0, 1, 0),
+-SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
+ SOC_SINGLE("AIF2 EQ Switch", WM8994_AIF2_EQ_GAINS_1, 0, 1, 0),
+ 
+ WM8994_DRC_SWITCH("AIF1DAC1 DRC Switch", WM8994_AIF1_DRC1_1, 2),
+ WM8994_DRC_SWITCH("AIF1ADC1L DRC Switch", WM8994_AIF1_DRC1_1, 1),
+ WM8994_DRC_SWITCH("AIF1ADC1R DRC Switch", WM8994_AIF1_DRC1_1, 0),
+ 
+-WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
+-WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
+-WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
+-
+ WM8994_DRC_SWITCH("AIF2DAC DRC Switch", WM8994_AIF2_DRC_1, 2),
+ WM8994_DRC_SWITCH("AIF2ADCL DRC Switch", WM8994_AIF2_DRC_1, 1),
+ WM8994_DRC_SWITCH("AIF2ADCR DRC Switch", WM8994_AIF2_DRC_1, 0),
+@@ -598,9 +588,6 @@ SOC_SINGLE("Sidetone HPF Switch", WM8994_SIDETONE, 6, 1, 0),
+ SOC_ENUM("AIF1ADC1 HPF Mode", aif1adc1_hpf),
+ SOC_DOUBLE("AIF1ADC1 HPF Switch", WM8994_AIF1_ADC1_FILTERS, 12, 11, 1, 0),
+ 
+-SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
+-SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
+-
+ SOC_ENUM("AIF2ADC HPF Mode", aif2adc_hpf),
+ SOC_DOUBLE("AIF2ADC HPF Switch", WM8994_AIF2_ADC_FILTERS, 12, 11, 1, 0),
+ 
+@@ -641,6 +628,24 @@ SOC_SINGLE("AIF2DAC 3D Stereo Switch", WM8994_AIF2_DAC_FILTERS_2,
+ 	   8, 1, 0),
+ };
+ 
++/* Controls not available on WM1811 */
++static const struct snd_kcontrol_new wm8994_snd_controls[] = {
++SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
++		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
++		 1, 119, 0, digital_tlv),
++SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
++		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
++
++SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
++
++WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
++WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
++WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
++
++SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
++SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
++};
++
+ static const struct snd_kcontrol_new wm8994_eq_controls[] = {
+ SOC_SINGLE_TLV("AIF1DAC1 EQ1 Volume", WM8994_AIF1_DAC1_EQ_GAINS_1, 11, 31, 0,
+ 	       eq_tlv),
+@@ -4262,13 +4267,15 @@ static int wm8994_component_probe(struct snd_soc_component *component)
+ 	wm8994_handle_pdata(wm8994);
+ 
+ 	wm_hubs_add_analogue_controls(component);
+-	snd_soc_add_component_controls(component, wm8994_snd_controls,
+-			     ARRAY_SIZE(wm8994_snd_controls));
++	snd_soc_add_component_controls(component, wm8994_common_snd_controls,
++				       ARRAY_SIZE(wm8994_common_snd_controls));
+ 	snd_soc_dapm_new_controls(dapm, wm8994_dapm_widgets,
+ 				  ARRAY_SIZE(wm8994_dapm_widgets));
+ 
+ 	switch (control->type) {
+ 	case WM8994:
++		snd_soc_add_component_controls(component, wm8994_snd_controls,
++					       ARRAY_SIZE(wm8994_snd_controls));
+ 		snd_soc_dapm_new_controls(dapm, wm8994_specific_dapm_widgets,
+ 					  ARRAY_SIZE(wm8994_specific_dapm_widgets));
+ 		if (control->revision < 4) {
+@@ -4288,8 +4295,10 @@ static int wm8994_component_probe(struct snd_soc_component *component)
+ 		}
+ 		break;
+ 	case WM8958:
++		snd_soc_add_component_controls(component, wm8994_snd_controls,
++					       ARRAY_SIZE(wm8994_snd_controls));
+ 		snd_soc_add_component_controls(component, wm8958_snd_controls,
+-				     ARRAY_SIZE(wm8958_snd_controls));
++					       ARRAY_SIZE(wm8958_snd_controls));
+ 		snd_soc_dapm_new_controls(dapm, wm8958_dapm_widgets,
+ 					  ARRAY_SIZE(wm8958_dapm_widgets));
+ 		if (control->revision < 1) {
 -- 
 2.20.1
 
