@@ -2,54 +2,52 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96C0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081D3FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C377420650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20412067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239731;
-	bh=Yryrw8btORmLzFL2hJEnT0zESURDGptQcMl5Pp9dUxc=;
+	s=default; t=1573239734;
+	bh=yu+rq+SA466Xn7ml/q+o8rWhDnka4/eh7uZ3ek7ak78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o8kSCubdP59D8+03AmVV1LHcAhSNaqgEf/i8Xl+z4cMj45CdTPXrDyo0Lt5O0UFw/
-	 zEaPaW9AKr4bD2KrVUZkLN0wvhrNhpGRo4S3UB2ymp4WcU0Gss6bKQrYgPUIUEY+n+
-	 wiKl3QGYv9AOfy34bHMgQxebEzeVqM3lS4UQV49Y=
+	b=n+1KxrQROuHAL1Af8ShcIGLOX/qoTXKh1j4dYjBetpl9z590DYyVA4uSQ8Q7DmnSO
+	 U+qX9047g05fYLBZrU8b/7Q13OGXYm1NhS+/3P7AO0Jvg6IYZlqTl+5al+H9U2xJs0
+	 pR8DfuGvf0xb6bvF793TlbwxkLLpjeLTX0yZKoh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390461AbfKHTCK (ORCPT
+        id S2390481AbfKHTCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:02:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:02:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390378AbfKHTB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:57 -0500
+        id S2390448AbfKHTCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:02:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FB4720650;
-        Fri,  8 Nov 2019 19:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0B8222C9;
+        Fri,  8 Nov 2019 19:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239708;
-        bh=Yryrw8btORmLzFL2hJEnT0zESURDGptQcMl5Pp9dUxc=;
+        s=default; t=1573239729;
+        bh=yu+rq+SA466Xn7ml/q+o8rWhDnka4/eh7uZ3ek7ak78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xp8nXSAZd5L56ooUI2bKGfytwSwtemt/Tztb7M2TMZp0wDGxGrp2UitjrmJC+Acp3
-         UUnNuCmqsUpOyeWahD1mrXvxNHOnh9OfCfbcd3b38dD7ClsW0WM6CPLHE5CKnedKyc
-         sFT/wFs6S9VBZz6MSbfVwVMOVz1j/LALqG6jlEsg=
+        b=bok2G+NHZCjmNvpHOlhFE8lyJg30O7K8Bwb2BKb4H+7xHhEia7+7VpqoAyR0+jFAH
+         Ikfo2epy+NQ2KxY31BBfzJnqNxweN6y7niK2baMf7IrnljcQiTqkhj0TlaNrkRwFhK
+         iO6Kb7J0PJFs6G77VenDHPCqpWk/ktQHP7iZy/Lg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 06/79] arm64: dts: Fix gpio to pinmux mapping
-Date:   Fri,  8 Nov 2019 19:49:46 +0100
-Message-Id: <20191108174748.426994807@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 42/79] net: annotate lockless accesses to sk->sk_napi_id
+Date:   Fri,  8 Nov 2019 19:50:22 +0100
+Message-Id: <20191108174810.358804365@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -62,61 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 965f6603e3335a953f4f876792074cb36bf65f7f ]
+[ Upstream commit ee8d153d46a3b98c064ee15c0c0a3bbf1450e5a1 ]
 
-There are total of 151 non-secure gpio (0-150) and four
-pins of pinmux (91, 92, 93 and 94) are not mapped to any
-gpio pin, hence update same in DT.
+We already annotated most accesses to sk->sk_napi_id
 
-Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We missed sk_mark_napi_id() and sk_mark_napi_id_once()
+which might be called without socket lock held in UDP stack.
+
+KCSAN reported :
+BUG: KCSAN: data-race in udpv6_queue_rcv_one_skb / udpv6_queue_rcv_one_skb
+
+write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 0:
+ sk_mark_napi_id include/net/busy_poll.h:125 [inline]
+ __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
+ udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
+ udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
+ udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
+ __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
+ udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
+ ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
+ ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
+ dst_input include/net/dst.h:442 [inline]
+ ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
+ __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
+ __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
+ process_backlog+0x1d3/0x420 net/core/dev.c:5955
+ napi_poll net/core/dev.c:6392 [inline]
+ net_rx_action+0x3ae/0xa90 net/core/dev.c:6460
+
+write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 1:
+ sk_mark_napi_id include/net/busy_poll.h:125 [inline]
+ __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
+ udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
+ udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
+ udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
+ __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
+ udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
+ ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
+ ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
+ dst_input include/net/dst.h:442 [inline]
+ ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
+ __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
+ __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
+ process_backlog+0x1d3/0x420 net/core/dev.c:5955
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 10890 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: e68b6e50fa35 ("udp: enable busy polling for all sockets")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi | 5 +++--
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi         | 3 +--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ include/net/busy_poll.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-index 8a3a770e8f2ce..56789ccf94545 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-@@ -42,13 +42,14 @@
+--- a/include/net/busy_poll.h
++++ b/include/net/busy_poll.h
+@@ -134,7 +134,7 @@ static inline void skb_mark_napi_id(stru
+ static inline void sk_mark_napi_id(struct sock *sk, const struct sk_buff *skb)
+ {
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+-	sk->sk_napi_id = skb->napi_id;
++	WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+ #endif
+ 	sk_rx_queue_set(sk, skb);
+ }
+@@ -144,8 +144,8 @@ static inline void sk_mark_napi_id_once(
+ 					const struct sk_buff *skb)
+ {
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+-	if (!sk->sk_napi_id)
+-		sk->sk_napi_id = skb->napi_id;
++	if (!READ_ONCE(sk->sk_napi_id))
++		WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+ #endif
+ }
  
- 		pinmux: pinmux@14029c {
- 			compatible = "pinctrl-single";
--			reg = <0x0014029c 0x250>;
-+			reg = <0x0014029c 0x26c>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			pinctrl-single,register-width = <32>;
- 			pinctrl-single,function-mask = <0xf>;
- 			pinctrl-single,gpio-range = <
--				&range 0 154 MODE_GPIO
-+				&range 0  91 MODE_GPIO
-+				&range 95 60 MODE_GPIO
- 				>;
- 			range: gpio-range {
- 				#pinctrl-single,gpio-range-cells = <3>;
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index e283480bfc7e5..84101ea1fd2cb 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -463,8 +463,7 @@
- 					<&pinmux 108 16 27>,
- 					<&pinmux 135 77 6>,
- 					<&pinmux 141 67 4>,
--					<&pinmux 145 149 6>,
--					<&pinmux 151 91 4>;
-+					<&pinmux 145 149 6>;
- 		};
- 
- 		i2c1: i2c@e0000 {
--- 
-2.20.1
-
 
 
