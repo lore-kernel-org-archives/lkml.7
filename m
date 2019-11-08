@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB47FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3824FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E286B20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF4C20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240694;
-	bh=juIE9O2WkTITwnXcJG4/fb/ZHO3ZRRo7h5kUhivQu6g=;
+	s=default; t=1573240696;
+	bh=NhFgaETRNIdu3H6KVQg/gsjF9aOflfa/TtuGfDhAfsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJBvjhC4fmU0jGOfKbxc7zHm1vn7NZ5fL+h0XG9rfU0BLcbyksfcRxyReSfjt5LrB
-	 WBMoQQs4G5WAF2tzUkrksBhE7hAYpshm8pw4huC7iiYD9NbOs/711yhr7Yg2c20QkC
-	 /qFcCMdAKMye3ckmrN2jMB29mV2UEQLiL7AHWSOE=
+	b=oHruCHRLB1G+HOkOdwEYt6EV/EJcAwfQjxS1+bpd/gTEyFtOCRRrxreciW+NRybLt
+	 j/ouUS0mJHGBwy6R6NKvi2cVpcjT4oZbrr7VKO1SwbdyTunnwtl9NAtIwW5nY5xdmY
+	 pm9S6Fh80FRF6eJ57Ju4YkqeW3CjK92MPUKXU3WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732160AbfKHTAd (ORCPT
+        id S1732907AbfKHTAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389531AbfKHTAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389528AbfKHTAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 14:00:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 589C22178F;
-        Fri,  8 Nov 2019 19:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5914F20865;
+        Fri,  8 Nov 2019 18:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239606;
-        bh=juIE9O2WkTITwnXcJG4/fb/ZHO3ZRRo7h5kUhivQu6g=;
+        s=default; t=1573239437;
+        bh=NhFgaETRNIdu3H6KVQg/gsjF9aOflfa/TtuGfDhAfsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0bl1Tc5Y62zWxRCmaq9jtJ2g8uG3ottw09CZdCugvUmyZ7FKkW5DS8pJVkflsmhue
-         ifj2KQaLBARGBmovOh7Ed96D3N9cUmc8IlSGChTOmwY5i/4ZFtPUebJunRgXNseReG
-         agd7bkzlXjTrmvjCpsWoNFQ8LcEd1idXP0jvrw8I=
+        b=BINZZl72TS5AT2wtw9Qae0KuYtlu0supKa4csgYFNTEM1VMqyZpbI1O7laTqBz4dF
+         J0pNyp8VMcooCp/7C8/YtHgclGEj3xAsRHmO2RcHYkvF4JddTq1ano0m8ItZVQGBi1
+         UhLk+Z9/zXI59JGAq5dNwh5Y7CjFo+Ah4rPHRbgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 53/62] kbuild: add -fcf-protection=none when using retpoline flags
-Date:   Fri,  8 Nov 2019 19:50:41 +0100
-Message-Id: <20191108174756.304875093@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 13/34] ARM: davinci: dm365: Fix McBSP dma_slave_map entry
+Date:   Fri,  8 Nov 2019 19:50:20 +0100
+Message-Id: <20191108174633.284473354@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
-References: <20191108174719.228826381@linuxfoundation.org>
+In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
+References: <20191108174618.266472504@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,41 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seth Forshee <seth.forshee@canonical.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 29be86d7f9cb18df4123f309ac7857570513e8bc ]
+[ Upstream commit 564b6bb9d42d31fc80c006658cf38940a9b99616 ]
 
-The gcc -fcf-protection=branch option is not compatible with
--mindirect-branch=thunk-extern. The latter is used when
-CONFIG_RETPOLINE is selected, and this will fail to build with
-a gcc which has -fcf-protection=branch enabled by default. Adding
--fcf-protection=none when building with retpoline enabled
-prevents such build failures.
+dm365 have only single McBSP, so the device name is without .0
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 0c750e1fe481d ("ARM: davinci: dm365: Add dma_slave_map to edma")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/mach-davinci/dm365.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 61660387eb34b..52aaa6150099e 100644
---- a/Makefile
-+++ b/Makefile
-@@ -843,6 +843,12 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
- # change __FILE__ to the relative path from the srctree
- KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index ef3add9992631..8db549c56914d 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -864,8 +864,8 @@ static s8 dm365_queue_priority_mapping[][2] = {
+ };
  
-+# ensure -fcf-protection is disabled when using retpoline as it is
-+# incompatible with -mindirect-branch=thunk-extern
-+ifdef CONFIG_RETPOLINE
-+KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
-+endif
-+
- # use the deterministic mode of AR if available
- KBUILD_ARFLAGS := $(call ar-option,D)
- 
+ static const struct dma_slave_map dm365_edma_map[] = {
+-	{ "davinci-mcbsp.0", "tx", EDMA_FILTER_PARAM(0, 2) },
+-	{ "davinci-mcbsp.0", "rx", EDMA_FILTER_PARAM(0, 3) },
++	{ "davinci-mcbsp", "tx", EDMA_FILTER_PARAM(0, 2) },
++	{ "davinci-mcbsp", "rx", EDMA_FILTER_PARAM(0, 3) },
+ 	{ "davinci_voicecodec", "tx", EDMA_FILTER_PARAM(0, 2) },
+ 	{ "davinci_voicecodec", "rx", EDMA_FILTER_PARAM(0, 3) },
+ 	{ "spi_davinci.2", "tx", EDMA_FILTER_PARAM(0, 10) },
 -- 
 2.20.1
 
