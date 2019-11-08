@@ -2,140 +2,102 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E30FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF251FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCA52178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q3LChfPN"
+	by mail.kernel.org (Postfix) with ESMTP id CB97E206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbfKHVAl (ORCPT
+        id S1730139AbfKHVCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:00:41 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42027 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfKHVAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:00:40 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s5so5404654pfh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 13:00:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/6fKp6CqSBNNTOH5oGG1bShIqpaCFBeopQl1N5ozmL8=;
-        b=Q3LChfPNrqBoMIG+qk93Z/uRgabqJU5Yonk/5lavcG+A5aoQNZBbgh8W+gvdW+O3WF
-         Ph6NUvQFnHQa7qpWvvFQPpx6nX+S2/K9cuYiXfe1HqfaHUUDASWrTZfdctHnYl7VXUQ4
-         H0NfOV+Xg64eoLm+H0RV9vZZrnHE8UMtJ3A5s=
+        Fri, 8 Nov 2019 16:02:55 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:49568 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727065AbfKHVCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:02:55 -0500
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C8DEC057F52
+        for <linux-kernel@vger.kernel.org>; Fri,  8 Nov 2019 21:02:55 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id h191so3527607wme.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 13:02:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/6fKp6CqSBNNTOH5oGG1bShIqpaCFBeopQl1N5ozmL8=;
-        b=FfC+0LGsLPncdU5DG7rDE9kp2h+7EmF/su5dSJRtesTC2sZlAikyBAS5ihAXHePY4R
-         bSCfHh5lnhec2ytJVtWdTtskHRnne92rFEnV3XKJjCmqBuyp7hHDni9ZHeNfRLXQ0iC6
-         5QArEIZi7MW83cDHsAxCDzlZ1DnlaRw/F/nyCnM+GttvDUEqAvZDjsiSHEsvprcmsKhy
-         Av+ncuObvhQKD7Ad+4o6OD4aQ+dXWLmg6XAKSmLbSU3/b7b1eDV0GfGvz23k4dNUBw1L
-         VSc9312BB8qv9JqnDNLl1oo9hq8ELNHArRvOlm3lbWmqeFEsppFL7LgWw3PfiWW6pKWa
-         QYdw==
-X-Gm-Message-State: APjAAAUjft5vCrsMFfkXkUWFKONs3nWQt1P5CvWx11Hq76T4+M+r2D+H
-        /bpyZcHuRtBAzHDnOTNnF5WWzw==
-X-Google-Smtp-Source: APXvYqx76TYGNxxUb3yK5CBsoS/H4otOJib03kZygL8sBTWdWl3BQi6ZSlS+rjuyQyVx9kxt8prGIQ==
-X-Received: by 2002:a63:f849:: with SMTP id v9mr12888750pgj.99.1573246838531;
-        Fri, 08 Nov 2019 13:00:38 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j22sm6388221pff.42.2019.11.08.13.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 13:00:37 -0800 (PST)
-Date:   Fri, 8 Nov 2019 13:00:36 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        keescook+coverity-bot@chromium.org, narmstrong@baylibre.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: amlogic - fix two resources leak
-Message-ID: <201911081300.B869D22BB@keescook>
-References: <1573206317-9926-1-git-send-email-clabbe@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Nmq1GRytWblh4euOCRxuEbZgIoXZxuuSJXUDKh29oIk=;
+        b=ltIfLzSQTMtPVB51kMxraCy8xppbBFOq/oPrV1nH6m9O3I7Jtsk84C0DEd/ZW9LQmQ
+         S/Mz3A2siz5MKyN3okWbPD3kiz/3wJOkdEJL5+8XLb8JVsYZ6N5k3dfinCrQqG9UH420
+         8+67qLz6PfC3yC+JoyGHFjwvdWCa3nHrQAPo0Cpd61N4iEWfEO2sfKmzRRuZeO54oTga
+         3WfCtmWs9qZ9vrXCys3Ml0UmSCsfWxOJqMwMdTqIFHo+6EMvDQyzWOZe9EL6X272qlc7
+         m/n3d4D0LjoSRZPuPfDpacXDAqewM8SR4LgaM8a/jv6q+I++lWMGJ2i63tvssRQkT6Tf
+         3tFQ==
+X-Gm-Message-State: APjAAAWCsHkmwCwF/ph9eKSdHIMW7gbzYqMs1VOIfqTLIqQdIS45Hlj9
+        94uzU/0a31rp2ToOyRJo9mYaK8pqJMZ7M9EuGZSW3N23QnIANlIMc4XMTdyTwH44dDZPdI8LT27
+        +DmylVgv8mA8esFSr8UgtV3Yd
+X-Received: by 2002:a1c:dd45:: with SMTP id u66mr9706141wmg.12.1573246973743;
+        Fri, 08 Nov 2019 13:02:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy/r6N66RU82TBDTILIQyY7RHqJh4iD/jrgGSamtcwPgbTwlkWB5WWPfNwcD7uzL3Q1oJWlbw==
+X-Received: by 2002:a1c:dd45:: with SMTP id u66mr9706123wmg.12.1573246973469;
+        Fri, 08 Nov 2019 13:02:53 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:e8cd:9f0f:a5dc:7ad5? ([2001:b07:6468:f312:e8cd:9f0f:a5dc:7ad5])
+        by smtp.gmail.com with ESMTPSA id y8sm5515162wmi.9.2019.11.08.13.02.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2019 13:02:52 -0800 (PST)
+Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>
+References: <20191104230001.27774-1-aarcange@redhat.com>
+ <20191104230001.27774-4-aarcange@redhat.com>
+ <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
+ <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
+ <20191105135414.GA30717@redhat.com>
+ <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
+ <20191105145651.GD30717@redhat.com>
+ <ab18744b-afc7-75d4-b5f3-e77e9aae41a6@redhat.com>
+ <20191108135631.GA22507@linux-8ccs>
+ <b77283e5-a4bc-1849-fbfa-27741ab2dbd5@redhat.com>
+ <20191108200103.GA532@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <9a3d2936-bd26-430f-a962-9b0f6fe0c2a0@redhat.com>
+Date:   Fri, 8 Nov 2019 22:02:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573206317-9926-1-git-send-email-clabbe@baylibre.com>
+In-Reply-To: <20191108200103.GA532@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 09:45:17AM +0000, Corentin Labbe wrote:
-> This patch fixes two resources leak that occur on error path.
+On 08/11/19 21:01, Andrea Arcangeli wrote:
+> On Fri, Nov 08, 2019 at 08:51:04PM +0100, Paolo Bonzini wrote:
+>> I suppose we could use code patching mechanism to avoid the retpolines.
+>>  Andrea, what do you think about that?  That would have the advantage
+>> that we won't have to remove kvm_x86_ops. :)
 > 
-> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-> Addresses-Coverity-ID: 1487403 ("RESOURCE_LEAK")
-> Addresses-Coverity-ID: 1487401 ("Resource leaks")
-> Fixes: 48fe583fe541 ("crypto: amlogic - Add crypto accelerator for amlogic GXL")
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-
-Thanks!
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  drivers/crypto/amlogic/amlogic-gxl-cipher.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+> page 17 covers pvops:
 > 
-> diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-> index e9283ffdbd23..58b717aab6e8 100644
-> --- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-> +++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-> @@ -131,7 +131,8 @@ static int meson_cipher(struct skcipher_request *areq)
->  	if (areq->iv && ivsize > 0) {
->  		if (ivsize > areq->cryptlen) {
->  			dev_err(mc->dev, "invalid ivsize=%d vs len=%d\n", ivsize, areq->cryptlen);
-> -			return -EINVAL;
-> +			err = -EINVAL;
-> +			goto theend;
->  		}
->  		memcpy(bkeyiv + 32, areq->iv, ivsize);
->  		keyivlen = 48;
-> @@ -151,9 +152,10 @@ static int meson_cipher(struct skcipher_request *areq)
->  
->  	phykeyiv = dma_map_single(mc->dev, bkeyiv, keyivlen,
->  				  DMA_TO_DEVICE);
-> -	if (dma_mapping_error(mc->dev, phykeyiv)) {
-> +	err = dma_mapping_error(mc->dev, phykeyiv);
-> +	if (err) {
->  		dev_err(mc->dev, "Cannot DMA MAP KEY IV\n");
-> -		return -EFAULT;
-> +		goto theend;
->  	}
->  
->  	tloffset = 0;
-> @@ -245,7 +247,6 @@ static int meson_cipher(struct skcipher_request *areq)
->  	if (areq->iv && ivsize > 0) {
->  		if (rctx->op_dir == MESON_DECRYPT) {
->  			memcpy(areq->iv, backup_iv, ivsize);
-> -			kzfree(backup_iv);
->  		} else {
->  			scatterwalk_map_and_copy(areq->iv, areq->dst,
->  						 areq->cryptlen - ivsize,
-> @@ -254,6 +255,7 @@ static int meson_cipher(struct skcipher_request *areq)
->  	}
->  theend:
->  	kzfree(bkeyiv);
-> +	kzfree(backup_iv);
->  
->  	return err;
->  }
-> -- 
-> 2.23.0
-> 
+> https://people.redhat.com/~aarcange/slides/2019-KVM-monolithic.pdf
 
--- 
-Kees Cook
+You can patch call instructions directly using text_poke when
+kvm_intel.ko or kvm_amd.ko, I'm not sure why that would be worse for TLB
+or RAM usage.  The hard part is recording the location of the call sites
+using some pushsection/popsection magic.
+
+Paolo
