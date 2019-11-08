@@ -2,95 +2,114 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1746FFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FFCFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA38214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CD8214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2U5fy1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388365AbfKHUTD (ORCPT
+        id S2389009AbfKHUTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:19:03 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19602 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727794AbfKHUS7 (ORCPT
+        Fri, 8 Nov 2019 15:19:09 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36823 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727992AbfKHUS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:18:59 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8KHebi145253;
-        Fri, 8 Nov 2019 15:18:47 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w5bydxxua-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 15:18:47 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA8KGOS7021312;
-        Fri, 8 Nov 2019 20:18:50 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01wdc.us.ibm.com with ESMTP id 2w41ukn704-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 20:18:50 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8KIkOB48628146
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 20:18:46 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BB0828058;
-        Fri,  8 Nov 2019 20:18:46 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DC1228059;
-        Fri,  8 Nov 2019 20:18:45 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.103.158])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Nov 2019 20:18:45 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au,
-        maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH 12/12] ARM: dts: aspeed: tacoma: Enable XDMA engine
-Date:   Fri,  8 Nov 2019 14:18:33 -0600
-Message-Id: <1573244313-9190-13-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
-References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=650 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080195
+        Fri, 8 Nov 2019 15:18:58 -0500
+Received: by mail-il1-f193.google.com with SMTP id s75so6255680ilc.3;
+        Fri, 08 Nov 2019 12:18:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Buzlffd6qPZ251pCZD0B39C9+fvZzH1TSbcG09q8kOM=;
+        b=E2U5fy1GS15GNw8LWY0zWj+xg+cFRiv3arN9dfOCfPpp8SeACKDuwjQx35uGwKkxJq
+         rYXGLQh5316oaljNVZYrfIPN67Mdle/ZpOdqFDyVUD+ZVJc09VstOgZ0qwN4LtUAmybG
+         dCYvqagCutIWKJ3fFcbprCjA+Jcwex90SoMOHUCDpdeOBw8N/h8uusTl11YBUC0km6wY
+         YPmwAcCukRny/ZJfFYsw0QoUlAPkaGNh4szDNH7WAau7Dx1Tdbsj+j6a/fCRR0b1v6+Q
+         0Gdbkv2bDEa6YyDZ4mXsw/FpLCzcj8clZZNituJYCWxY0/GkLfk8eBoUFnrXckDQb4WN
+         5F8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Buzlffd6qPZ251pCZD0B39C9+fvZzH1TSbcG09q8kOM=;
+        b=HM8pX1HsaFmgXYnijs8yD+TV5TK81vne5r5MLMPN0JqD3RdYcp4vfAE5jmU+WkOhGD
+         BI9VZt4Lgnqg30rfj0rEJDetTliG6x1xXHwB4bf2RYDzwCcekDOL+eWbc6JYNjPn5wvP
+         cb705HEXk5nkB/VB78UEvI96q7YHXxVKQDZyqt2kkQFr98uH2KXQcE/r26FBeba3DrMW
+         4wtvu9mYSYENKQt7Bhjw/YBFzfL90zfMzmJ0nDUAXJ/jQRCJyS+4xSUhpDL6sedES3rC
+         T5Ijy6+4b35Q0RlJJrQKPlrGqJsRBMY+0JgZsNLJ7JYyXceOSYhy3tOUyU8BekpK8ZH8
+         lZJg==
+X-Gm-Message-State: APjAAAUChOsrwJOOlRHmFkvWUFRUfgKq420R1oCLh1krp2Ydxx6+is9m
+        Ffc0Wmx0o7pPhxEOzAIPevWOlx5i47sLD/rwVv8=
+X-Google-Smtp-Source: APXvYqwl51D2sksVNbNWnw3MblkRidAPR3sW4psWmp9RV0h3tFjpgG3mZY7AvHGAjxlVmCjySEmRNAp3bsgKVmyRfSQ=
+X-Received: by 2002:a92:297:: with SMTP id 145mr14835935ilc.85.1573244336215;
+ Fri, 08 Nov 2019 12:18:56 -0800 (PST)
+MIME-Version: 1.0
+References: <CAOesGMjVUCd9bN=pggS-ECjMR42b0SqXKewsp+NYFSVqRgSWrg@mail.gmail.com>
+ <20191107211801.GA107543@google.com> <20191108110736.GA10708@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191108110736.GA10708@e121166-lin.cambridge.arm.com>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Fri, 8 Nov 2019 14:18:45 -0600
+Message-ID: <CABhMZUV=757JyGEuMQsfbrpiHUhn8uDgiKTRvxQNFAmxfmX0TQ@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the pci tree with the arm-soc tree
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the XDMA engine node.
+On Fri, Nov 8, 2019 at 5:07 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Thu, Nov 07, 2019 at 03:18:01PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Nov 07, 2019 at 10:27:20AM -0800, Olof Johansson wrote:
+> > > On Wed, Nov 6, 2019 at 2:46 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > >
+> > > > Hi all,
+> > > >
+> > > > Today's linux-next merge of the pci tree got a conflict in:
+> > > >
+> > > >   arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > >
+> > > > between commit:
+> > > >
+> > > >   68e36a429ef5 ("arm64: dts: ls1028a: Move thermal-zone out of SoC")
+> > > >
+> > > > from the arm-soc tree and commit:
+> > > >
+> > > >   8d49ebe713ab ("arm64: dts: ls1028a: Add PCIe controller DT nodes")
+> > >
+> > > Bjorn, we ask that driver subsystem maintainers don't pick up DT
+> > > changes since it causes conflicts like these.
+> > >
+> > > Is it easy for you to drop this patch, or are we stuck with it?
+> > > Ideally it should never have been sent to you in the first place. :(
+> >
+> > Lorenzo, is it feasible for you to drop it from your pci/layerscape
+> > branch and repush it?  If so, I can redo the merge into my "next"
+> > branch.
+>
+> Done. ...
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-index f02de4a..cbaa1bd 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-@@ -1193,3 +1193,7 @@
- 	pinctrl-0 = <&pinctrl_lpc_default>,
- 		    <&pinctrl_lsirq_default>;
- };
-+
-+&xdma {
-+	status = "okay";
-+};
--- 
-1.8.3.1
-
+Thanks, I updated my "next" branch to incorporate this.
