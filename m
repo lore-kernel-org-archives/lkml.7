@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5C5C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0BAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74D9215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8452084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214019;
-	bh=a2N2NeSITxrAOOlwfTqxDag1/GXbGj4O/fPQtEpoYJU=;
+	s=default; t=1573214032;
+	bh=3jIzAoGEAbLTkPA56joQwREDvF++1UpiLp04sayvO+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bU50AlRBcMaWtTttDdsX/MuGNqAG3kbIeVgInfRVJpYcGiTFkHlke0ZfPXuZp90JX
-	 mHWLlh/kq2d7PBXS7Obgbw/4/b6AhsO+5SYBV21DWOtLPNm+ZJW3izZWYeiS+ekBmo
-	 u5Ljz9fKK6y50r9gG7VzE8LajFKJuiOqWYU7yX/U=
+	b=eqkdSVxkTU2RAPp3QzpPtvlCSpdKLpcoMoWiim9uv/ErGBxpWHTM9yWI5tJvyEbXV
+	 +3I+lrPaZSjaLEtwaevtyl+VklwRjkJky5lZ6MmMYKkVYvoSIzLXmH8lrslxgqsuyK
+	 XR+2MXzwg3xOfNjnJQzyxsSPEM9nhoojYF5HHVOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391256AbfKHLxh (ORCPT
+        id S2390471AbfKHLxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:53:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34568 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:53:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391400AbfKHLqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:40 -0500
+        id S2391360AbfKHLqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755D7222CF;
-        Fri,  8 Nov 2019 11:46:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49F7222CF;
+        Fri,  8 Nov 2019 11:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213600;
-        bh=a2N2NeSITxrAOOlwfTqxDag1/GXbGj4O/fPQtEpoYJU=;
+        s=default; t=1573213592;
+        bh=3jIzAoGEAbLTkPA56joQwREDvF++1UpiLp04sayvO+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nQUYqIf3YJ6LmwlKKmtFW7Yof6aLEhcq/rlhCwLxTY74VyGng8yKhChnDIHhY7llW
-         a4l62zQxZ0ch5WdANZ0pasrkG8x3cAudfG0gh648BY3S8UDRheRXImtx2e8K66vLxe
-         CPcmfH5P9LG+v7f9dE3tznYQ4mgtGkTc8Dcpp0XU=
+        b=vtY2MSEGmBMbRt86SNr+zWcU2NNXZcNrsnJdxS9iLvAVHjspkTRQPz70Ob71g/ryb
+         0rYJwssrKDIhHq9fm6LVBEAhnAScYe9/qSoM9gRD19cX3ZLqCo7uLdCdZuLXNPrxJ4
+         3n6Z2xU73RoHGYqB9uX/zohVk2+yt/l1kIeOujt0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 39/64] signal: Properly deliver SIGSEGV from x86 uprobes
-Date:   Fri,  8 Nov 2019 06:45:20 -0500
-Message-Id: <20191108114545.15351-39-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 34/64] dmaengine: dma-jz4780: Don't depend on MACH_JZ4780
+Date:   Fri,  8 Nov 2019 06:45:15 -0500
+Message-Id: <20191108114545.15351-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,43 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 4a63c1ffd384ebdce40aac9c997dab68379137be ]
+[ Upstream commit c558ecd21c852c97ff98dc6c61f715ba420ec251 ]
 
-For userspace to tell the difference between an random signal
-and an exception, the exception must include siginfo information.
+If we make this driver depend on MACH_JZ4780, that means it can be
+enabled only if we're building a kernel specially crafted for a
+JZ4780-based board, while most GNU/Linux distributions will want one
+generic MIPS kernel that works on multiple boards.
 
-Using SEND_SIG_FORCED for SIGSEGV is thus wrong, and it will result in
-userspace seeing si_code == SI_USER (like a random signal) instead of
-si_code == SI_KERNEL or a more specific si_code as all exceptions
-deliver.
-
-Therefore replace force_sig_info(SIGSEGV, SEND_SIG_FORCE, current)
-with force_sig(SIG_SEGV, current) which gets this right and is shorter
-and easier to type.
-
-Fixes: 791eca10107f ("uretprobes/x86: Hijack return address")
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/uprobes.c | 2 +-
+ drivers/dma/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index e35466afe989d..eac679ab543f6 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -983,7 +983,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
- 		pr_err("uprobe: return address clobbered: pid=%d, %%sp=%#lx, "
- 			"%%ip=%#lx\n", current->pid, regs->sp, regs->ip);
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 141aefbe37ec9..b0f798244a897 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -120,7 +120,7 @@ config DMA_JZ4740
  
--		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
-+		force_sig(SIGSEGV, current);
- 	}
- 
- 	return -1;
+ config DMA_JZ4780
+ 	tristate "JZ4780 DMA support"
+-	depends on MACH_JZ4780 || COMPILE_TEST
++	depends on MIPS || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
 -- 
 2.20.1
 
