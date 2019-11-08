@@ -7,55 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091A6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02272FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE24421D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB29821D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213256;
-	bh=nbOFxwzTXJEvjhEzo/ISqTtdrt+QvFHEEBN114iqTos=;
+	s=default; t=1573213260;
+	bh=a8iXu8RnT4u8d3wUf+Xu8tDfl5Vhe4ENrPCED6Q5Btk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N8WeZ2YT3JgCxi1gswOFb+TyA7YeTHuN8lMck30GWh+q6ZwRvn73+ARizYZll0KAX
-	 GBNmZj1PDt/Q71b58IDQwHaf8zsx55eE5Olp8vO1cwKGPagGSLlKxIuY7j0lr25Cv1
-	 rAB9YM7EP9iKju6+rH84QH2vfEfWjAsw1H9hWWqU=
+	b=wBRKIVOEYJqPvO+/7ov+XLVIbOSyBCb89bnRz2ECBTKS4M86Dy6wsD4WQjl1keKay
+	 R5KJ5Xlhc5Dx4lAlBaqdqTolyc8OCImqGpyF02d50e7Yd5xzj+pnGqfkx0P4waEXFa
+	 bE5ucUIzqq1oLAiI2D/N9yf7hzH4lTu++mJspbPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389061AbfKHLkz (ORCPT
+        id S2389100AbfKHLk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53780 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388997AbfKHLks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:48 -0500
+        id S2389015AbfKHLkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05E9421D7B;
-        Fri,  8 Nov 2019 11:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7DC5222CD;
+        Fri,  8 Nov 2019 11:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213248;
-        bh=nbOFxwzTXJEvjhEzo/ISqTtdrt+QvFHEEBN114iqTos=;
+        s=default; t=1573213251;
+        bh=a8iXu8RnT4u8d3wUf+Xu8tDfl5Vhe4ENrPCED6Q5Btk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xVgIZPvlbyhPSA418e34SCfDifdTWQy+b8xW7yfZJ2KHtVcsgxeXYN7y8DhwhWFSL
-         VLJ+O2BYkPP0B6wOZArOMk/AGyq1jUFw89InTOVr6MoEifxSV3tjSbB0p4yUdhG2J8
-         S1jJb04p1N03BR3Q0aULj1weMuKYha9rO8dbE5Jw=
+        b=Y8+43vhvCSyTkqgzyBHReF05H+Ezkcwl4m4l5SG/PJ9sdi/WDDfcavTJTNJrYunYW
+         1tXyH5Brrru/jMgg11VkZjN/xyqv+ZMeZJiphrtcP/Zv7dCs7sVTIRgnDtRAoBPvIQ
+         c+gQstsel3rz4j9xRvJy5ZcW7Sux9Wgg4GhIyms8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel@pengutronix.de,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 115/205] sched/debug: Use symbolic names for task state constants
-Date:   Fri,  8 Nov 2019 06:36:22 -0500
-Message-Id: <20191108113752.12502-115-sashal@kernel.org>
+Cc:     Vicente Bergas <vicencb@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 117/205] arm64: dts: rockchip: Fix VCC5V0_HOST_EN on rk3399-sapphire
+Date:   Fri,  8 Nov 2019 06:36:24 -0500
+Message-Id: <20191108113752.12502-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,53 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Vicente Bergas <vicencb@gmail.com>
 
-[ Upstream commit ff28915fd31ccafc0d38e6f84b66df280ed9e86a ]
+[ Upstream commit bcdb578a5f5b4aea79441606ab7f0a2e076b4474 ]
 
-include/trace/events/sched.h includes <linux/sched.h> (via
-<linux/sched/numa_balancing.h>) and so knows about the TASK_* constants
-used to interpret .prev_state. So instead of duplicating the magic
-numbers make use of the defined macros to ease understanding the
-mapping from state bits to letters which isn't completely intuitive for
-an outsider.
+The pin is GPIO4-D1 not GPIO1-D1, see schematic, page 15 for reference.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: kernel@pengutronix.de
-Link: http://lkml.kernel.org/r/20180905093636.24068-1-u.kleine-koenig@pengutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Vicente Bergas <vicencb@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/sched.h | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 5e1a7578c9edd..9a4bdfadab077 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -169,9 +169,14 @@ TRACE_EVENT(sched_switch,
- 
- 		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
- 		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
--				{ 0x01, "S" }, { 0x02, "D" }, { 0x04, "T" },
--				{ 0x08, "t" }, { 0x10, "X" }, { 0x20, "Z" },
--				{ 0x40, "P" }, { 0x80, "I" }) :
-+				{ TASK_INTERRUPTIBLE, "S" },
-+				{ TASK_UNINTERRUPTIBLE, "D" },
-+				{ __TASK_STOPPED, "T" },
-+				{ __TASK_TRACED, "t" },
-+				{ EXIT_DEAD, "X" },
-+				{ EXIT_ZOMBIE, "Z" },
-+				{ TASK_PARKED, "P" },
-+				{ TASK_DEAD, "I" }) :
- 		  "R",
- 
- 		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+index 36b60791c156d..8b33ef3306820 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+@@ -116,7 +116,7 @@
+ 	vcc5v0_host: vcc5v0-host-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio1 RK_PD1 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&vcc5v0_host_en>;
+ 		regulator-name = "vcc5v0_host";
 -- 
 2.20.1
 
