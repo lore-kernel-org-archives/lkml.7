@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE71AFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31495C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC8F2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8E021848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214767;
-	bh=dCT13uGBIsVx/oGMOfn3IyzwIG3bK91+YxGQFljnVqc=;
+	s=default; t=1573214774;
+	bh=QIt9cB9KftKcL9TswJa78nCGJhZ52XYOCwqoXAAJRJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bY+ZEueUfPbEFlvoikln8FjfvIJNzl6I+KBGtWZ4I0Zfnrvftp3mL+gk9a0bBzaWz
-	 gbmKvQPkryaFGFbSJ+IZQ/wAAnKfldXmq1ufeuDc4UiYQi5sasmdSEWX+hiX3JVcrg
-	 mNLWOv6ET5qwwGBDtXvlB9aISHYBhB0eo514r8CU=
+	b=hbJ+8Ado4JTyEE5jN4E2SLUOb5/a2blpdoL5kFnTen+3WX5dRiuUBTGi3JjnqJK3a
+	 FYsinXDetQ/Q9M4SnCCUGWiKO5REY8vXP8Ghq/rTZjAKCaa5fSB51cDq+ePKJAuL1D
+	 j6sGfvcF5ZfaLNDX3rKthjjMcc/MMTFgpsYAF4jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391798AbfKHMGG (ORCPT
+        id S2389333AbfKHLlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:06:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389358AbfKHLlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:21 -0500
+        id S2389229AbfKHLlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFEF1222CE;
-        Fri,  8 Nov 2019 11:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8CC3222D4;
+        Fri,  8 Nov 2019 11:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213280;
-        bh=dCT13uGBIsVx/oGMOfn3IyzwIG3bK91+YxGQFljnVqc=;
+        s=default; t=1573213273;
+        bh=QIt9cB9KftKcL9TswJa78nCGJhZ52XYOCwqoXAAJRJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L9muJ4FPPYxpGBpLbXkVqHDxf9Swk4xgh1h4jmVHduFavQjgDyqN9Q2Jp8Eb3fj+y
-         cA5JvN/qZIczGDBgUr36saDVVdsaM4EX59Jf0rT9xvZAvs4o//lE1AD6i3jjKTmUry
-         lKLhjc4T0fQUmXfpyzfzDqL0Lhids4luWu8Ij3FE=
+        b=Uzg5/5Ge6mn6O+/kEm6UI+7/CjWoST2pqsWG5PO9p3f9pIFsU4Fk4g7ptfuJ+15oB
+         J3kPJUwh/96l+69OqpPcJbFJpCh6OOe6Dmafhl8dw591qE8fNkdXBSO2n1ebhyBce0
+         CHvz2Yjfth7J95KSRzkeoQXDCnMmHoCkB5aWnk5U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <quinn.tran@cavium.com>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 141/205] scsi: qla2xxx: Fix deadlock between ATIO and HW lock
-Date:   Fri,  8 Nov 2019 06:36:48 -0500
-Message-Id: <20191108113752.12502-141-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 135/205] f2fs: fix memory leak of percpu counter in fill_super()
+Date:   Fri,  8 Nov 2019 06:36:42 -0500
+Message-Id: <20191108113752.12502-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,150 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <quinn.tran@cavium.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 1073daa470d906f1853ed4b828f16e2350a5875c ]
+[ Upstream commit 4a70e255449c9a13eed7a6eeecc85a1ea63cef76 ]
 
-Move ATIO queue processing out of hardware_lock to prevent deadlock.
+In fill_super -> init_percpu_info, we should destroy percpu counter
+in error path, otherwise memory allcoated for percpu counter will
+leak.
 
-Fixes: 3bb67df5b5f8 ("qla2xxx: Check for online flag instead of active reset when transmitting responses")
-Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
-Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 17 +++---------
- drivers/scsi/qla2xxx/qla_isr.c  | 48 +++++++++++++++------------------
- 2 files changed, 26 insertions(+), 39 deletions(-)
+ fs/f2fs/super.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index e5ecef94aebdb..733a55c09b1ca 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -4869,19 +4869,10 @@ qla2x00_configure_loop(scsi_qla_host_t *vha)
- 			 */
- 			if (qla_tgt_mode_enabled(vha) ||
- 			    qla_dual_mode_enabled(vha)) {
--				if (IS_QLA27XX(ha) || IS_QLA83XX(ha)) {
--					spin_lock_irqsave(&ha->tgt.atio_lock,
--					    flags);
--					qlt_24xx_process_atio_queue(vha, 0);
--					spin_unlock_irqrestore(
--					    &ha->tgt.atio_lock, flags);
--				} else {
--					spin_lock_irqsave(&ha->hardware_lock,
--					    flags);
--					qlt_24xx_process_atio_queue(vha, 1);
--					spin_unlock_irqrestore(
--					    &ha->hardware_lock, flags);
--				}
-+				spin_lock_irqsave(&ha->tgt.atio_lock, flags);
-+				qlt_24xx_process_atio_queue(vha, 0);
-+				spin_unlock_irqrestore(&ha->tgt.atio_lock,
-+				    flags);
- 			}
- 		}
- 	}
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 88d8acf86a2a4..f559beda8d5ad 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -3121,6 +3121,7 @@ qla24xx_intr_handler(int irq, void *dev_id)
- 	uint16_t	mb[8];
- 	struct rsp_que *rsp;
- 	unsigned long	flags;
-+	bool process_atio = false;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 588c575bd72b0..18534d03d112b 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2510,8 +2510,12 @@ static int init_percpu_info(struct f2fs_sb_info *sbi)
+ 	if (err)
+ 		return err;
  
- 	rsp = (struct rsp_que *) dev_id;
- 	if (!rsp) {
-@@ -3181,22 +3182,13 @@ qla24xx_intr_handler(int irq, void *dev_id)
- 			qla24xx_process_response_queue(vha, rsp);
- 			break;
- 		case INTR_ATIO_QUE_UPDATE_27XX:
--		case INTR_ATIO_QUE_UPDATE:{
--			unsigned long flags2;
--			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
--			qlt_24xx_process_atio_queue(vha, 1);
--			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
-+		case INTR_ATIO_QUE_UPDATE:
-+			process_atio = true;
- 			break;
--		}
--		case INTR_ATIO_RSP_QUE_UPDATE: {
--			unsigned long flags2;
--			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
--			qlt_24xx_process_atio_queue(vha, 1);
--			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
--
-+		case INTR_ATIO_RSP_QUE_UPDATE:
-+			process_atio = true;
- 			qla24xx_process_response_queue(vha, rsp);
- 			break;
--		}
- 		default:
- 			ql_dbg(ql_dbg_async, vha, 0x504f,
- 			    "Unrecognized interrupt type (%d).\n", stat * 0xff);
-@@ -3210,6 +3202,12 @@ qla24xx_intr_handler(int irq, void *dev_id)
- 	qla2x00_handle_mbx_completion(ha, status);
- 	spin_unlock_irqrestore(&ha->hardware_lock, flags);
- 
-+	if (process_atio) {
-+		spin_lock_irqsave(&ha->tgt.atio_lock, flags);
-+		qlt_24xx_process_atio_queue(vha, 0);
-+		spin_unlock_irqrestore(&ha->tgt.atio_lock, flags);
-+	}
+-	return percpu_counter_init(&sbi->total_valid_inode_count, 0,
++	err = percpu_counter_init(&sbi->total_valid_inode_count, 0,
+ 								GFP_KERNEL);
++	if (err)
++		percpu_counter_destroy(&sbi->alloc_valid_block_count);
 +
- 	return IRQ_HANDLED;
++	return err;
  }
  
-@@ -3256,6 +3254,7 @@ qla24xx_msix_default(int irq, void *dev_id)
- 	uint32_t	hccr;
- 	uint16_t	mb[8];
- 	unsigned long flags;
-+	bool process_atio = false;
- 
- 	rsp = (struct rsp_que *) dev_id;
- 	if (!rsp) {
-@@ -3312,22 +3311,13 @@ qla24xx_msix_default(int irq, void *dev_id)
- 			qla24xx_process_response_queue(vha, rsp);
- 			break;
- 		case INTR_ATIO_QUE_UPDATE_27XX:
--		case INTR_ATIO_QUE_UPDATE:{
--			unsigned long flags2;
--			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
--			qlt_24xx_process_atio_queue(vha, 1);
--			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
-+		case INTR_ATIO_QUE_UPDATE:
-+			process_atio = true;
- 			break;
--		}
--		case INTR_ATIO_RSP_QUE_UPDATE: {
--			unsigned long flags2;
--			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
--			qlt_24xx_process_atio_queue(vha, 1);
--			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
--
-+		case INTR_ATIO_RSP_QUE_UPDATE:
-+			process_atio = true;
- 			qla24xx_process_response_queue(vha, rsp);
- 			break;
--		}
- 		default:
- 			ql_dbg(ql_dbg_async, vha, 0x5051,
- 			    "Unrecognized interrupt type (%d).\n", stat & 0xff);
-@@ -3338,6 +3328,12 @@ qla24xx_msix_default(int irq, void *dev_id)
- 	qla2x00_handle_mbx_completion(ha, status);
- 	spin_unlock_irqrestore(&ha->hardware_lock, flags);
- 
-+	if (process_atio) {
-+		spin_lock_irqsave(&ha->tgt.atio_lock, flags);
-+		qlt_24xx_process_atio_queue(vha, 0);
-+		spin_unlock_irqrestore(&ha->tgt.atio_lock, flags);
-+	}
-+
- 	return IRQ_HANDLED;
- }
- 
+ #ifdef CONFIG_BLK_DEV_ZONED
 -- 
 2.20.1
 
