@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55616FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7171C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A61620674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E1B20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240699;
-	bh=u4om3tbxfcn5qsLyuRNyA7htMtOOVZY1cPZ9PRVQ2xc=;
+	s=default; t=1573240703;
+	bh=x6BT/75/qDFn1tPMF/cgo7AAEbpLurxXlLVLSynDj74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s3LB/hj1VxVWJugdOGvXnznxt5rfEhiqo/Yn5jw67tbjSBuw8BicnIdj9XIu2LBXQ
-	 wY/LGzdnku60voojGmKMkMDG9HzrSDoYjNYrZoS6ZvBrO4BpYD61c1UHQ8AgBhh0i5
-	 R45XVSHRVE9KZNEtMBjFb/DI4PcNpFlUEXX/zl8U=
+	b=GqsCAimiREccOKEIFfI4U/vp3iTNAr/xzYVeV9Rx7RnT/c+c1qYKnEXZTezu0hMEx
+	 Np4lRpsc+XwWpKf21HYtzJZxwxZ+dhv9aNNW3isoclDblmTIb58Hdrp+LYNwDiZNF2
+	 YHAbN8Td1RuGYOzUzUKBglxw1jmc8wfAcG8jzD6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389783AbfKHTSR (ORCPT
+        id S2390809AbfKHTSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:18:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:18:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732926AbfKHTAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:30 -0500
+        id S2389726AbfKHTA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 682CA2087E;
-        Fri,  8 Nov 2019 19:00:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF9AE2067B;
+        Fri,  8 Nov 2019 19:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239630;
-        bh=u4om3tbxfcn5qsLyuRNyA7htMtOOVZY1cPZ9PRVQ2xc=;
+        s=default; t=1573239627;
+        bh=x6BT/75/qDFn1tPMF/cgo7AAEbpLurxXlLVLSynDj74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=txWtUZsCeGF8UuRp71ygjrf5dty46mx4x+0MqhwdV1dHth2jcUFxBeGEhOHM7jQL9
-         gMAULwPkrdF0tiykVgqB/is4YvYRL6EufpsMSXaKnOit1OZRaLC8m+Ivd1Gt8m8hQE
-         MKKt/bQIxANMyrMR6uQn1qVekSTI/thzOStNScBs=
+        b=wNGLR9pRqHaR41iuE6EulmaMbnaSEH93ltgscUvEoPcwrSSpfyu7E/05WQEXNBlZS
+         GOV9LD51k1wHJIZ6YnkylGqoIw8TrD0V+v2d7Ei13ZEiS+aIn29vQqrO8pctAQsJWn
+         cx1FsgArLlDeCKO1uVBBhNIUnixVpeWJNVtAbIKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yongji Xie <elohimes@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH 4.14 51/62] sched/wake_q: Fix wakeup ordering for wake_q
-Date:   Fri,  8 Nov 2019 19:50:39 +0100
-Message-Id: <20191108174754.515925895@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sandipan Das <sandipan@linux.ibm.com>
+Subject: [PATCH 4.14 60/62] powerpc/mm: Fixup tlbie vs mtpidr/mtlpidr ordering issue on POWER9
+Date:   Fri,  8 Nov 2019 19:50:48 +0100
+Message-Id: <20191108174802.477881646@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -66,93 +61,284 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-commit 4c4e3731564c8945ac5ac90fc2a1e1f21cb79c92 upstream.
+commit 047e6575aec71d75b765c22111820c4776cd1c43 upstream.
 
-Notable cmpxchg() does not provide ordering when it fails, however
-wake_q_add() requires ordering in this specific case too. Without this
-it would be possible for the concurrent wakeup to not observe our
-prior state.
+On POWER9, under some circumstances, a broadcast TLB invalidation will
+fail to invalidate the ERAT cache on some threads when there are
+parallel mtpidr/mtlpidr happening on other threads of the same core.
+This can cause stores to continue to go to a page after it's unmapped.
 
-Andrea Parri provided:
+The workaround is to force an ERAT flush using PID=0 or LPID=0 tlbie
+flush. This additional TLB flush will cause the ERAT cache
+invalidation. Since we are using PID=0 or LPID=0, we don't get
+filtered out by the TLB snoop filtering logic.
 
-  C wake_up_q-wake_q_add
+We need to still follow this up with another tlbie to take care of
+store vs tlbie ordering issue explained in commit:
+a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on
+POWER9"). The presence of ERAT cache implies we can still get new
+stores and they may miss store queue marking flush.
 
-  {
-	int next = 0;
-	int y = 0;
-  }
-
-  P0(int *next, int *y)
-  {
-	int r0;
-
-	/* in wake_up_q() */
-
-	WRITE_ONCE(*next, 1);   /* node->next = NULL */
-	smp_mb();               /* implied by wake_up_process() */
-	r0 = READ_ONCE(*y);
-  }
-
-  P1(int *next, int *y)
-  {
-	int r1;
-
-	/* in wake_q_add() */
-
-	WRITE_ONCE(*y, 1);      /* wake_cond = true */
-	smp_mb__before_atomic();
-	r1 = cmpxchg_relaxed(next, 1, 2);
-  }
-
-  exists (0:r0=0 /\ 1:r1=0)
-
-  This "exists" clause cannot be satisfied according to the LKMM:
-
-  Test wake_up_q-wake_q_add Allowed
-  States 3
-  0:r0=0; 1:r1=1;
-  0:r0=1; 1:r1=0;
-  0:r0=1; 1:r1=1;
-  No
-  Witnesses
-  Positive: 0 Negative: 3
-  Condition exists (0:r0=0 /\ 1:r1=0)
-  Observation wake_up_q-wake_q_add Never 0 3
-
-Reported-by: Yongji Xie <elohimes@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: stable@vger.kernel.org # v4.14
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190924035254.24612-3-aneesh.kumar@linux.ibm.com
+[sandipan: Backported to v4.14]
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/sched/core.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/cputable.h |    3 +
+ arch/powerpc/kernel/dt_cpu_ftrs.c   |    2 +
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c |   42 +++++++++++++++++------
+ arch/powerpc/mm/hash_native_64.c    |   28 +++++++++++++--
+ arch/powerpc/mm/tlb-radix.c         |   65 ++++++++++++++++++++++++++++++------
+ 5 files changed, 116 insertions(+), 24 deletions(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -432,10 +432,11 @@ void wake_q_add(struct wake_q_head *head
- 	 * its already queued (either by us or someone else) and will get the
- 	 * wakeup due to that.
- 	 *
--	 * This cmpxchg() implies a full barrier, which pairs with the write
--	 * barrier implied by the wakeup in wake_up_q().
-+	 * In order to ensure that a pending wakeup will observe our pending
-+	 * state, even in the failed case, an explicit smp_mb() must be used.
- 	 */
--	if (cmpxchg(&node->next, NULL, WAKE_Q_TAIL))
-+	smp_mb__before_atomic();
-+	if (cmpxchg_relaxed(&node->next, NULL, WAKE_Q_TAIL))
- 		return;
+--- a/arch/powerpc/include/asm/cputable.h
++++ b/arch/powerpc/include/asm/cputable.h
+@@ -217,6 +217,7 @@ enum {
+ #define CPU_FTR_PMAO_BUG		LONG_ASM_CONST(0x1000000000000000)
+ #define CPU_FTR_P9_TLBIE_STQ_BUG	LONG_ASM_CONST(0x0000400000000000)
+ #define CPU_FTR_POWER9_DD1		LONG_ASM_CONST(0x4000000000000000)
++#define CPU_FTR_P9_TLBIE_ERAT_BUG	LONG_ASM_CONST(0x0001000000000000)
  
- 	get_task_struct(task);
+ #ifndef __ASSEMBLY__
+ 
+@@ -477,7 +478,7 @@ enum {
+ 	    CPU_FTR_CFAR | CPU_FTR_HVMODE | CPU_FTR_VMX_COPY | \
+ 	    CPU_FTR_DBELL | CPU_FTR_HAS_PPR | CPU_FTR_DAWR | \
+ 	    CPU_FTR_ARCH_207S | CPU_FTR_TM_COMP | CPU_FTR_ARCH_300 | \
+-	    CPU_FTR_P9_TLBIE_STQ_BUG)
++	    CPU_FTR_P9_TLBIE_STQ_BUG | CPU_FTR_P9_TLBIE_ERAT_BUG)
+ #define CPU_FTRS_POWER9_DD1 ((CPU_FTRS_POWER9 | CPU_FTR_POWER9_DD1) & \
+ 			     (~CPU_FTR_SAO))
+ #define CPU_FTRS_CELL	(CPU_FTR_USE_TB | CPU_FTR_LWSYNC | \
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -756,6 +756,8 @@ static __init void update_tlbie_feature_
+ 			WARN_ONCE(1, "Unknown PVR");
+ 			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
+ 		}
++
++		cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_ERAT_BUG;
+ 	}
+ }
+ 
+--- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
++++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+@@ -429,6 +429,37 @@ static inline int try_lock_tlbie(unsigne
+ 	return old == 0;
+ }
+ 
++static inline void fixup_tlbie_lpid(unsigned long rb_value, unsigned long lpid)
++{
++
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_ERAT_BUG)) {
++		/* Radix flush for a hash guest */
++
++		unsigned long rb,rs,prs,r,ric;
++
++		rb = PPC_BIT(52); /* IS = 2 */
++		rs = 0;  /* lpid = 0 */
++		prs = 0; /* partition scoped */
++		r = 1;   /* radix format */
++		ric = 0; /* RIC_FLSUH_TLB */
++
++		/*
++		 * Need the extra ptesync to make sure we don't
++		 * re-order the tlbie
++		 */
++		asm volatile("ptesync": : :"memory");
++		asm volatile(PPC_TLBIE_5(%0, %4, %3, %2, %1)
++			     : : "r"(rb), "i"(r), "i"(prs),
++			       "i"(ric), "r"(rs) : "memory");
++	}
++
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
++		asm volatile("ptesync": : :"memory");
++		asm volatile(PPC_TLBIE_5(%0,%1,0,0,0) : :
++			     "r" (rb_value), "r" (lpid));
++	}
++}
++
+ static void do_tlbies(struct kvm *kvm, unsigned long *rbvalues,
+ 		      long npages, int global, bool need_sync)
+ {
+@@ -449,16 +480,7 @@ static void do_tlbies(struct kvm *kvm, u
+ 				     "r" (rbvalues[i]), "r" (kvm->arch.lpid));
+ 		}
+ 
+-		if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+-			/*
+-			 * Need the extra ptesync to make sure we don't
+-			 * re-order the tlbie
+-			 */
+-			asm volatile("ptesync": : :"memory");
+-			asm volatile(PPC_TLBIE_5(%0,%1,0,0,0) : :
+-				     "r" (rbvalues[0]), "r" (kvm->arch.lpid));
+-		}
+-
++		fixup_tlbie_lpid(rbvalues[i - 1], kvm->arch.lpid);
+ 		asm volatile("eieio; tlbsync; ptesync" : : : "memory");
+ 		kvm->arch.tlbie_lock = 0;
+ 	} else {
+--- a/arch/powerpc/mm/hash_native_64.c
++++ b/arch/powerpc/mm/hash_native_64.c
+@@ -104,8 +104,30 @@ static inline unsigned long  ___tlbie(un
+ 	return va;
+ }
+ 
+-static inline void fixup_tlbie(unsigned long vpn, int psize, int apsize, int ssize)
++static inline void fixup_tlbie_vpn(unsigned long vpn, int psize,
++				   int apsize, int ssize)
+ {
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_ERAT_BUG)) {
++		/* Radix flush for a hash guest */
++
++		unsigned long rb,rs,prs,r,ric;
++
++		rb = PPC_BIT(52); /* IS = 2 */
++		rs = 0;  /* lpid = 0 */
++		prs = 0; /* partition scoped */
++		r = 1;   /* radix format */
++		ric = 0; /* RIC_FLSUH_TLB */
++
++		/*
++		 * Need the extra ptesync to make sure we don't
++		 * re-order the tlbie
++		 */
++		asm volatile("ptesync": : :"memory");
++		asm volatile(PPC_TLBIE_5(%0, %4, %3, %2, %1)
++			     : : "r"(rb), "i"(r), "i"(prs),
++			       "i"(ric), "r"(rs) : "memory");
++	}
++
+ 	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 		/* Need the extra ptesync to ensure we don't reorder tlbie*/
+ 		asm volatile("ptesync": : :"memory");
+@@ -190,7 +212,7 @@ static inline void tlbie(unsigned long v
+ 		asm volatile("ptesync": : :"memory");
+ 	} else {
+ 		__tlbie(vpn, psize, apsize, ssize);
+-		fixup_tlbie(vpn, psize, apsize, ssize);
++		fixup_tlbie_vpn(vpn, psize, apsize, ssize);
+ 		asm volatile("eieio; tlbsync; ptesync": : :"memory");
+ 	}
+ 	if (lock_tlbie && !use_local)
+@@ -759,7 +781,7 @@ static void native_flush_hash_range(unsi
+ 		/*
+ 		 * Just do one more with the last used values.
+ 		 */
+-		fixup_tlbie(vpn, psize, psize, ssize);
++		fixup_tlbie_vpn(vpn, psize, psize, ssize);
+ 		asm volatile("eieio; tlbsync; ptesync":::"memory");
+ 
+ 		if (lock_tlbie)
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -39,14 +39,18 @@ static inline void __tlbie_va(unsigned l
+ 	trace_tlbie(0, 0, rb, rs, ric, prs, r);
+ }
+ 
+-static inline void fixup_tlbie(void)
++
++static inline void fixup_tlbie_va(unsigned long va, unsigned long pid,
++				  unsigned long ap)
+ {
+-	unsigned long pid = 0;
+-	unsigned long va = ((1UL << 52) - 1);
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_ERAT_BUG)) {
++		asm volatile("ptesync": : :"memory");
++		__tlbie_va(va, 0, ap, RIC_FLUSH_TLB);
++	}
+ 
+ 	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 		asm volatile("ptesync": : :"memory");
+-		__tlbie_va(va, pid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
++		__tlbie_va(va, pid, ap, RIC_FLUSH_TLB);
+ 	}
+ }
+ 
+@@ -95,23 +99,64 @@ static inline void _tlbiel_pid(unsigned
+ 	asm volatile(PPC_INVALIDATE_ERAT "; isync" : : :"memory");
+ }
+ 
+-static inline void _tlbie_pid(unsigned long pid, unsigned long ric)
++static inline void __tlbie_pid(unsigned long pid, unsigned long ric)
+ {
+ 	unsigned long rb,rs,prs,r;
+ 
+ 	rb = PPC_BIT(53); /* IS = 1 */
+ 	rs = pid << PPC_BITLSHIFT(31);
+ 	prs = 1; /* process scoped */
+-	r = 1;   /* raidx format */
++	r = 1;   /* radix format */
+ 
+-	asm volatile("ptesync": : :"memory");
+ 	asm volatile(PPC_TLBIE_5(%0, %4, %3, %2, %1)
+ 		     : : "r"(rb), "i"(r), "i"(prs), "i"(ric), "r"(rs) : "memory");
+-	fixup_tlbie();
+-	asm volatile("eieio; tlbsync; ptesync": : :"memory");
+ 	trace_tlbie(0, 0, rb, rs, ric, prs, r);
+ }
+ 
++static inline void fixup_tlbie_pid(unsigned long pid)
++{
++	/*
++	 * We can use any address for the invalidation, pick one which is
++	 * probably unused as an optimisation.
++	 */
++	unsigned long va = ((1UL << 52) - 1);
++
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_ERAT_BUG)) {
++		asm volatile("ptesync": : :"memory");
++		__tlbie_pid(0, RIC_FLUSH_TLB);
++	}
++
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
++		asm volatile("ptesync": : :"memory");
++		__tlbie_va(va, pid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
++	}
++}
++
++static inline void _tlbie_pid(unsigned long pid, unsigned long ric)
++{
++	asm volatile("ptesync": : :"memory");
++
++	/*
++	 * Workaround the fact that the "ric" argument to __tlbie_pid
++	 * must be a compile-time contraint to match the "i" constraint
++	 * in the asm statement.
++	 */
++	switch (ric) {
++	case RIC_FLUSH_TLB:
++		__tlbie_pid(pid, RIC_FLUSH_TLB);
++		fixup_tlbie_pid(pid);
++		break;
++	case RIC_FLUSH_PWC:
++		__tlbie_pid(pid, RIC_FLUSH_PWC);
++		break;
++	case RIC_FLUSH_ALL:
++	default:
++		__tlbie_pid(pid, RIC_FLUSH_ALL);
++		fixup_tlbie_pid(pid);
++	}
++	asm volatile("eieio; tlbsync; ptesync": : :"memory");
++}
++
+ static inline void _tlbiel_va(unsigned long va, unsigned long pid,
+ 			      unsigned long ap, unsigned long ric)
+ {
+@@ -135,7 +180,7 @@ static inline void _tlbie_va(unsigned lo
+ {
+ 	asm volatile("ptesync": : :"memory");
+ 	__tlbie_va(va, pid, ap, ric);
+-	fixup_tlbie();
++	fixup_tlbie_va(va, pid, ap);
+ 	asm volatile("eieio; tlbsync; ptesync": : :"memory");
+ }
+ 
 
 
