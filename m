@@ -2,459 +2,191 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9953CFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2848FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6534821924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B205721924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:17:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="bZ9/hNFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbfKHOQl (ORCPT
+        id S1729922AbfKHORU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:16:41 -0500
-Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:38630 "EHLO
-        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfKHOQk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:16:40 -0500
-Received: from smtp6.infomaniak.ch (smtp6.infomaniak.ch [83.166.132.19])
-        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id xA8E8Fbe004806
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 15:08:15 +0100
-Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp6.infomaniak.ch (8.14.5/8.14.5) with ESMTP id xA8E8APJ037551
-        (version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO);
-        Fri, 8 Nov 2019 15:08:10 +0100
-Subject: Re: [PATCH bpf-next v13 4/7] landlock: Add ptrace LSM hooks
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
-References: <20191104172146.30797-1-mic@digikod.net>
- <20191104172146.30797-5-mic@digikod.net>
- <20191105171824.dfve44gjiftpnvy7@ast-mbp.dhcp.thefacebook.com>
- <23acf523-dbc4-855b-ca49-2bbfa5e7117e@digikod.net>
- <20191105193446.s4pswwwhrmgk6hcx@ast-mbp.dhcp.thefacebook.com>
- <20191106100655.GA18815@chromium.org>
- <813cedde-8ed7-2d3b-883d-909efa978d41@digikod.net>
- <20191106214526.GA22244@chromium.org>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+        Fri, 8 Nov 2019 09:17:20 -0500
+Received: from mout01.posteo.de ([185.67.36.65]:58093 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbfKHORU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 09:17:20 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 2718E160063
+        for <linux-kernel@vger.kernel.org>; Fri,  8 Nov 2019 15:17:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1573222637; bh=Q4mzjj5Z/rcQR+vYaP01YYUkn2U90IzxT0AsO5HUSl8=;
+        h=Subject:To:Cc:From:Openpgp:Autocrypt:Date:From;
+        b=bZ9/hNFB9tMtHWUtPsbFoPxvkLzSa6FWkscYsnc+ESid7qtsdm+PPB0EXgip0pDpo
+         50jejqL5xxmpNsU8lZYWzBxEMo4JbqO2MNkZ71qDU1Jl/GjhGPlCvampKqZkltytjb
+         mZZM+G/VMIm0ZsxW44V5n8qhITiF6anWNGk1IYe/ItzTYpuEfncdVNkKcDdLngBsLz
+         je11LUuaIpQKABTbiQ/goSeHDLIjGq3+OEEw9Bb32EEszfGKbdKuDXkcRZL0APbBNc
+         /5g0xFnHE5y9IUR3t5b7e5NcB9fE8NUtD8uOsVmlgymh8HfLTnBY1JN9QaA0LDvsZS
+         36zsSCXqXUt1w==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 478j5P2c9Jz6tm5;
+        Fri,  8 Nov 2019 15:17:13 +0100 (CET)
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Carlo Caione <ccaione@baylibre.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+ <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
+ <20191030080727.7pcvhd4466dproy4@fsr-ub1664-175>
+ <523f92bd-7e89-b48a-afd0-0a9a8bca8344@posteo.de>
+ <20191104103525.qjkxh2zhhgaaectk@fsr-ub1664-175>
+ <433f3f03-f780-c327-f1e8-fbf046a8374c@posteo.de>
+ <VI1PR04MB70231EA80BB20C9A84B1B799EE790@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <c3519156-9769-980b-d9e7-af372ced8797@posteo.de>
+ <20191108115002.cqzvpxydzwos64vp@fsr-ub1664-175>
+From:   Martin Kepplinger <martink@posteo.de>
 Openpgp: preference=signencrypt
-Message-ID: <3e208632-e7ab-3405-5196-ab1d770e20c3@digikod.net>
-Date:   Fri, 8 Nov 2019 15:08:12 +0100
-User-Agent: 
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <26d3834d-6fba-be48-5b3c-5abf86d121a7@posteo.de>
+Date:   Fri, 8 Nov 2019 15:17:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191106214526.GA22244@chromium.org>
+In-Reply-To: <20191108115002.cqzvpxydzwos64vp@fsr-ub1664-175>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 06/11/2019 22:45, KP Singh wrote:
-> On 06-Nov 17:55, Mickaël Salaün wrote:
+On 08.11.19 12:50, Abel Vesa wrote:
+> On 19-11-08 12:21:21, Martin Kepplinger wrote:
+> 
+>> Hi Leonard, hi Abel,
 >>
->> On 06/11/2019 11:06, KP Singh wrote:
->>> On 05-Nov 11:34, Alexei Starovoitov wrote:
->>>> On Tue, Nov 05, 2019 at 07:01:41PM +0100, Mickaël Salaün wrote:
->>>>> On 05/11/2019 18:18, Alexei Starovoitov wrote:
+>> Thanks for having a look! To sum up this problem and not to get confused:
 >>
->> [...]
+>> We have the workaround that changes irq-imx-gpcv2 from this very email
+>> thread, to be used with mainline ATF. when applying Abel's recent diff,
+>> Linux 5.4 boots but I still don't have a cpuidle driver.
 >>
->>>>>> I think the only way bpf-based LSM can land is both landlock and KRSI
->>>>>> developers work together on a design that solves all use cases.
->>>>>
->>>>> As I said in a previous cover letter [1], that would be great. I think
->>>>> that the current Landlock bases (almost everything from this series
->>>>> except the seccomp interface) should meet both needs, but I would like
->>>>> to have the point of view of the KRSI developers.
->>>>>
->>>>> [1] https://lore.kernel.org/lkml/20191029171505.6650-1-mic@digikod.net/
->>>>>
->>>>>> BPF is capable
->>>>>> to be a superset of all existing LSMs whereas landlock and KRSI propsals today
->>>>>> are custom solutions to specific security concerns. BPF subsystem was extended
->>>>>> with custom things in the past. In networking we have lwt, skb, tc, xdp, sk
->>>>>> program types with a lot of overlapping functionality. We couldn't figure out
->>>>>> how to generalize them into single 'networking' program. Now we can and we
->>>>>> should. Accepting two partially overlapping bpf-based LSMs would be repeating
->>>>>> the same mistake again.
->>>>>
->>>>> I'll let the LSM maintainers comment on whether BPF could be a superset
->>>>> of all LSM, but given the complexity of an access-control system, I have
->>>>> some doubts though. Anyway, we need to start somewhere and then iterate.
->>>>> This patch series is a first step.
->>>>
->>>> I would like KRSI folks to speak up. So far I don't see any sharing happening
->>>> between landlock and KRSI. You're claiming this set is a first step. They're
->>>> claiming the same about their patches. I'd like to set a patchset that was
->>>> jointly developed.
->>>
->>> We are willing to collaborate with the Landlock developers and come up
->>> with a common approach that would work for Landlock and KRSI. I want
->>> to mention that this collaboration and the current Landlock approach
->>> of using an eBPF based LSM for unprivileged sandboxing only makes sense
->>> if unprivileged usage of eBPF is going to be ever allowed.
+>> When I enable CONFIG_ARM_PSCI_CPUIDLE, the kernel hangs during boot
+>> (after probing mmc, but that doesn't tell much)
 >>
->> The ability to *potentially* do unprivileged sandboxing is definitely
->> not tied nor a blocker to the unprivileged usage of eBPF. As explained
->> in the documentation [1] (cf. Guiding principles / Unprivileged use),
->> Landlock is designed to be as safe as possible (from a security point of
->> view). The impact is more complex and important than just using
->> unprivileged eBPF, which may not be required. Unprivileged use of eBPF
->> would be nice, but I think the current direction is to extend the Linux
->> capabilities with one or multiple dedicated to eBPF [2] (e.g. CAP_BPF +
->> something else), which may be even better (and a huge difference with
->> CAP_SYS_ADMIN, a.k.a. privileged mode or root). Landlock is designed to
->> deal with unprivileged (i.e. non-root) use cases, but of course, if the
->> Landlock architecture may enable to do unprivileged stuff, it definitely
->> can do privileged stuff too. However, having an architecture designed
->> with safe unprivileged use in mind can't be achieve afterwards.
->>
->> [1] https://lore.kernel.org/lkml/20191104172146.30797-8-mic@digikod.net/
->> [2] https://lore.kernel.org/bpf/20190827205213.456318-1-ast@kernel.org/
->>
->>
->>>
->>> Purely from a technical standpoint, both the current designs for
->>> Landlock and KRSI target separate use cases and it would not be
->>> possible to build "one on top of the other". We've tried to identify
->>> the lowest denominator ("eBPF+LSM") requirements for both Landlock
->>> (unprivileged sandboxing / Discretionary Access Control) and KRSI
->>> (flexibility and unification of privileged MAC and Audit) and
->>> prototyped an implementation based on the newly added / upcoming
->>> features in BPF.
->>
->> This is not as binary as that. Sandboxing can be seen as DAC but also as
->> MAC, depending on the subject which apply the security policy and the
->> subjects which are enforced by this policy. If the sandboxing is applied
->> system-wide, it is what we usually call MAC. DAC, in the Linux world,
->> enables any user to restrict access to their files to other users.
->>
->> With Landlock it is not the same because a process can restrict itself
->> but also enforce these restrictions on all its future children (which
->> may be malicious, whatever their UID/GID). The threat and the definition
->> of the attacker are not the same in both cases. With the Linux DAC the
->> potentially malicious subjects are the other users, whereas with
->> Landlock the potentially malicious subjects are (for now) the current
->> process and all its children. Another way to explain it, and how
->> Landlock is designed, is that a specific enforcement (i.e. a set of BPF
->> programs) is tied to a domain, in which a set of subject are. From this
->> perspective, this approach (subjects/tasks in a domain) is orthogonal to
->> the DAC system (subjects/users). This design may apply to a system-wide
->> MAC system by putting all the system tasks in one domain, and managing
->> restrictions (by subject) with other means (e.g. task's UID,
->> command-line strings, environment variables). In short, Landlock (in
->> this patch series) is closer to a (potentially scoped) MAC system. But
->> thanks to eBPF, Landlock is firstly a programmatic access-control, which
->> means that the one who write the programs and tie them to a set of
->> tasks, can implement their own access-control system (e.g. RBAC,
->> time-based…), or something else (e.g. an audit system).
->>
->> The audit part can simply be achieve with dedicated helpers and programs
->> that always allow accesses.
->>
->> Landlock evolved over multiple iterations and is now designed to be very
->> flexible. The current way to enforce a security policy is to go through
->> the seccomp syscall (which makes sense for multiple reasons explained
->> and accepted before). But Landlock is designed to enable similar
->> enforcements (or audit) with other ways to define a domain (e.g. cgroups
->> [3], or system-wide securityfs as done in KRSI). Indeed, the only part
->> tied to this scoped enforcement is in the domain_syscall.c file. A new
->> file domain_fs.c could be added to implement a securityfs for a
->> system-wide enforcement (and have other features as KRSI does).
+>> What do I miss?
 >>
 > 
-> Given the current way landlock exposes LSM hooks, I don't think it's
-> possible to build system-wide detections.
-
-Why ?
-
-
-> But let’s try to come to a
-> consensus on the semantics of the how the LSM hooks are exposed to
-> BPF. At the moment I think we should:
+> OK, please fetch the branches called "imx8mq-err11171" from both following github repos and give it a try:
 > 
+> https://github.com/abelvesa/linux.git
 > 
-> * Bring the core interface exposed to eBPF closer to the LSM surface in
->   a way that supports both use cases. One way Landlock can still provide
->   a more abstract interface is by providing some BPF helper libraries
->   that build on top of the core framework.
-
-I still don't get why you think it is the only way or the better. I gave
-a lot of arguments and I explained why Landlock is designed the way it
-is, especially in the documentation (Guiding principles). Is there
-something similar for KRSI?
-
-
+> and
 > 
-> * Use a single BPF program type; this is necessary for a key requirement
->   of KRSI, i.e. runtime instrumentation. The upcoming prototype should
->   illustrate how this works for KRSI - note that it’s possible to vary
->   the context types exposed by different hooks.
-
-Why a single BPF program type? Do you mean *attach* types? Landlock only
-use one program type, but will use multiple attach types.
-
-Why do you think it is necessary for KRSI or for runtime instrumentation?
-
-If it is justified, it could be a dedicated program attach type (e.g.
-BPF_LANDLOCK_INTROSPECTION).
-
-What is the advantage to have the possibility to vary the context types
-over dedicated *typed* contexts? I don't see any advantages, but at
-least one main drawback: to require runtime checks (when helpers use
-this generic context) instead of load time checks (thanks to static type
-checking of the context).
-
-
-> It would be nice to get the BPF maintainers’ opinion on these points.
+> https://github.com/abelvesa/arm-trusted-firmware.git
 > 
+> I just tested it. Works with defconfig.
 > 
->> [3] https://lore.kernel.org/lkml/20160914072415.26021-17-mic@digikod.net/
->>
->> One possible important difference between Landlock and KRSI right now is
->> the BPF program management. Both manage a list of programs per hook.
->> However KRSI needs to be able to replace a program in these lists. This
->> is not implemented in this Landlock patch series, first because it is
->> not the main use-case and it is safer to have an append-only way to add
->> restrictions (cf. seccomp-bpf model), and second because it is simpler
->> to deal with immutable lists. However, it is worth considering extending
->> the Landlock domain management with the ability to update the program
->> lists. One challenge may be to identify which program should be replaced
->> (which KRSI does with the program name). I think it would be wiser to
->> implement this in a second step though, maybe not for the syscall
->> interface (thanks to a new seccomp operation), but first with the
->> securityfs one.
->>
->>
->>>
->>> We've been successfully able to prototype the use cases for KRSI
->>> (privileged MAC and Audit) using this "eBPF+LSM" and shared our
->>> approach at the Linux Security Summit [1]:
->>>
->>> * Use the new in-kernel BTF (CO-RE eBPF programs) [2] and the ability
->>>   of the BPF verifier to use the BTF information for access validation
->>>   to provide a more generic way to attach to the various LSM hooks.
->>>   This potentially saves a lot of redundant work:
->>>
->>>    - Creation of new program types.
->>>    - Multiple types of contexts (or a single context with Unions).
->>>    - Changes to the verifier and creation of new BPF argument types 
->>>      (eg. PTR_TO_TASK)
->>
->> As I understood from the LSS talk, KRSI's approach is to use the same
->> hooks as LSM (cf. the securityfs). As said Alexei [4] "It must not make
->> LSM hooks into stable ABI".  Moveover, the LSM hooks may change
->> according to internal kernel evolution, and their semantic may not make
-> 
-> I think you misunderstand Alexei here. I will let him elaborate.
-> 
->> sense from a user space point of view. This is one reason for which
->> Lanlock abstract those hooks into something that is simpler and designed
->> to fit well with eBPF (program contexts and their attached types, as
->> explained in the documentation).
->>
->> [4]
->> https://lore.kernel.org/lkml/20191105215453.szhdkrvuekwfz6le@ast-mbp.dhcp.thefacebook.com/
->>
->> How does KRSI plan to deal with one LSM hook being split in two hooks in
->> a next version of the kernel (cf. [5])?
-> 
-> How often has that happened in the past? And even if it does happen,
-> it can still be handled as a part of the base framework we are trying
-> to implement.
 
-I guess the security maintainers should have an opinion on this.
+thanks for the reminder. I was missing IMX_SCU_PD appearently.
 
-I don't clearly see the properties of this base framework. Could this be
-elaborated?
+thanks for the effort, I hope this is useful for others too.
 
+                         martin
 
->> [5] https://lore.kernel.org/lkml/20190910115527.5235-6-kpsingh@chromium.org/
->>
->>
->> Another reason to have multiple different attach types/contexts (cf.
->> landlock_domain->programs[]) is to limit useless BPF program
->> interpretation (in addition to the non-system-wide scoped of programs).
->>  It also enables to handle and verify strict context use (which is also
->> explain in the Guiding principles). It would be a huge wast of time to
->> run every BPF programs for all LSM hooks. KRSI does the same but instead
->> of relying on the program type it rely on the list tied to the
->> securityfs file.
->>
->> BTF is great, but as far as I know, it's goal is to easily deal with the
->> moving kernel ABI (e.g. task_struct layout, config/constant variables),
->> and it is definitely useful to programs using bpf_probe_read() and
->> similar accessors. However, I don't see how KRSI would avoid BPF types
->> thanks to BTF.
->>
-> 
-> This should become clearer once we post our updated patch-set. Do note
-> that I am currently traveling and will be away for the next couple of
-> weeks.
-> 
->> There is only one program type for Landlock (i.e.
->> BPF_PROG_TYPE_LANDLOCK_HOOK), and I don't see why adding new program
->> *attach* types (e.g. BPF_LANDLOCK_PTRACE) may be an issue. The kernel
->> will still need to be modified to implement new hooks and the new BPF
->> helpers anyway, BTF will not change that, except maybe if the internal
->> LSM API is exposed in a way or another to BPF (thanks to BTF), which
->> does not seem acceptable. Am I missing something?
->>
->>
->> The current KRSI approach is to allow a common set of helpers to be
->> called by all programs (because there is no way to differentiate them
->> with their type).
->> How KRSI would deal with kernel objects other than the current task
->> (e.g. a ptrace hook with a tracer and a tracee, a file open/read) with
->> the struct krsi_ctx unions [6]?
->>
->> [6] https://lore.kernel.org/lkml/20190910115527.5235-7-kpsingh@chromium.org/
->>
-> 
-> The best part of BTF is that it can provide a common way to pass
-> different contexts to the various attachments points and the verifier
-> can use the BTF information to validate accesses which essentially
-> allows us to change the helpers from:
-> 
->        is_running_executable(magical_krsi_ctx)
-> 
->           to
-> 
->        is_running_executable(inode)
-> 
-> 
-> which can work on any inode (ARG_PTR_TO_BTF_ID = btf_id(struct inode))
-> 
-> This makes the helpers much more useful and generic. All this is
-> better explained in our upcoming patch-set.
-
-I get the usefulness of BTF for future helper evolution and for moving
-kernel API, but again, I don't see advantages over static typing check
-of (well abstract/generic) kernel object handles in the context.
-
-For instance, how BTF would replace the current BPF_LANDLOCK_PTRACE
-context and the associated helper?
-
-Does this mean that the KRSI v1 design is outdated and superseded by the
-(future) v2 because of the more important use of BTF?
-
-
->> How does KRSI plan to deal with security blobs?
-> 
-> The new prototype uses security blobs but does not expose them to
-> user-space. These blobs are then used in various helpers like
-> “is_running_executable” which uses blobs on the inode and the
-> task_struct. This should become clearer when the next patchset is
-> posted.
-> 
-> I don’t think it’s currently possible to allow the blobs to be set
-> using eBPF programs with the main reason being that the blob will only
-> be set after the program is loaded. The answer to
-> “is_running_executable” becomes dependent on whether the file was
-> executed before the blob setting eBPF program was loaded.
-> 
-> Blob management with eBPF is not possible unless we can load eBPF
-> programs that can set blobs at boot-time.
-> In short, the next KRSI version will not give eBPF
-> programs access to arbitrarily write security blobs.
-
-A previous version of Landlock enabled programs to tag inodes (cf.
-FS_GET): https://lore.kernel.org/lkml/20180227004121.3633-8-mic@digikod.net/
-
-
->>>
->>> * These new BPF features also alleviate the original concerns that we
->>>   raised when initially proposing KRSI and designing for precise BPF
->>>   helpers. We have some patches coming up which incorporate these new
->>>   changes and will be sharing something on the mailing list after some
->>>   cleanup.
->>>
->>> We can use the common "eBPF+LSM" for both privileged MAC and Audit and
->>> unprivileged sandboxing i.e. Discretionary Access Control.
->>> Here's what it could look like:
->>>
->>> * Common infrastructure allows attachment to all hooks which works well
->>>   for privileged MAC and Audit. This could be extended to provide
->>>   another attachment type for unprivileged DAC, which can restrict the
->>>   hooks that can be attached to, and also the information that is
->>>   exposed to the eBPF programs which is something that Landlock could
->>>   build.
->>
->> I agree that the "privileged-only" hooks should be a superset of the
->> "security-safe-and-potentially-unprivileged" hooks. :)
->> However, as said previously, I'm convinced it is a requirement to have
->> abstract hooks (and associated program attach types) as defined by Landlock.
-> 
-> I would like to hear the BPF maintainers’ perspective on this. I am
-> not sure they agree with you here.
-> 
-> - KP Singh
-> 
->>
->> I'm not sure what you mean by "the information that is exposed to the
->> eBPF program". Is it the current Landlock implementation of specific
->> contexts and attach types?
-
-…or does BTF could magically solve this?
-
-
->>
->>>
->>> * This attachment could use the proposed landlock domains and attach to
->>>   the task_struct providing the discretionary access control semantics.
->>
->> Not task_struct but creds, yes. This is a characteristic of sandboxing,
->> which may not be useful for the KRSI use case. It makes sense for KRSI
->> to attach program sets (or Landlock domains) to the whole system, then
->> using the creds does not make sense here. This difference is small and a
->> previous version of Landlock already validated this use case with
->> cgroups [3] (which is postponed to simplify the patch series).
->>
->> [3] https://lore.kernel.org/lkml/20160914072415.26021-17-mic@digikod.net/
->>
->>
->>>
->>> [1] https://static.sched.com/hosted_files/lsseu2019/a2/Kernel%20Runtime%20Security%20Instrumentation.pdf
->>> [2] http://vger.kernel.org/bpfconf2019_talks/bpf-core.pdf
->>>
->>> - KP Singh
->>
->> I think it should be OK to first land something close to this Landlock
->> patch series and then we could extend the domain management features and
->> add the securityfs support that KRSI needs. The main concern seems to be
->> about hook definitions.
->>
->> Another approach would be to land Landlock and KRSI as distinct LSM
->> while trying as much as possible to mutualize code/helpers.
-> 
