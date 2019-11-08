@@ -2,52 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096E4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA981FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38762178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F48214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239162;
-	bh=owHE3ZeIOv3rXmhivjkG2BGzQ+rYjTJYyoFrtT9JlVk=;
+	s=default; t=1573239166;
+	bh=81n0pooKY1Xkc0ogZGHwYM9jhBtueGj6wMJOZ08ZO5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sYLus6hXBMdcIe0GdHsC/v5RNH3e87lSYLSbS8kAMZ573AwAwbkOgtsaIDEbCd/Lx
-	 fzYW6vUjmYJ+np2wDbfn5HSgeL2qSbNiCwq4Dd1dZkZygMxFKv2ipgssPNWJGxJ5BH
-	 BmmZ7Z5eNgOeYLJEsFzcmIAN9zItH745s18IHMPY=
+	b=kdt+EMmjL1TFkwOCwr3DicPnu2vRPy1Jg3ADJfMTDwg1xkjwspcXcPKc6p03FC4Zy
+	 UZNmMUcYqRyw2kVeoaKl8gvsZm/dowb9TLpWMAuOwk5JZvvvG2cKRRNtvlYgkwh7BD
+	 6Q0RO+9njXaqNieLXuNNEQR/VhbSNuL35Ai9aYh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731669AbfKHSwl (ORCPT
+        id S1731760AbfKHSwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:52:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48992 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:52:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731605AbfKHSwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:52:39 -0500
+        id S1731605AbfKHSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:52:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE63214DB;
-        Fri,  8 Nov 2019 18:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69D16214DB;
+        Fri,  8 Nov 2019 18:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239158;
-        bh=owHE3ZeIOv3rXmhivjkG2BGzQ+rYjTJYyoFrtT9JlVk=;
+        s=default; t=1573239161;
+        bh=81n0pooKY1Xkc0ogZGHwYM9jhBtueGj6wMJOZ08ZO5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOr730Svp1dqJerTrM/GbvBthL/jzPFMLyHwVLJVuUJCx9wBG9uB/gobknYOqKf/m
-         ZDVmGt+2urcne9MCrGCMpRfaxsNKhaNZHStOnKuWNmb5MSzqBu22j6iX6ldbhkugxG
-         7VASS3uoRl7tHqUnBcG0U7iFKRzW1y7cFzoUqA8Q=
+        b=iJVe7qMCEscVnZHGb3vHqNtY0iUyBfKUfnrrzRWgFZrihgmPLb9QGIXtm3qBrnv25
+         p9eSb5QKlyoaQf66cn15Va6AUkn3irq1GcgJW12SSj3VohBS8hv40IJ+PqwYGGcYhz
+         fXCj4UDyvoZmT7HYAaIgdOTbu3Ow8uicSrnVH5hE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 02/75] regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
-Date:   Fri,  8 Nov 2019 19:49:19 +0100
-Message-Id: <20191108174709.534712459@linuxfoundation.org>
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 20/75] net/mlx4_core: Dynamically set guaranteed amount of counters per VF
+Date:   Fri,  8 Nov 2019 19:49:37 +0100
+Message-Id: <20191108174726.898574485@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -60,79 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-[ Upstream commit f64db548799e0330897c3203680c2ee795ade518 ]
+[ Upstream commit e19868efea0c103f23b4b7e986fd0a703822111f ]
 
-ti_abb_wait_txdone() may return -ETIMEDOUT when ti_abb_check_txdone()
-returns true in the latest iteration of the while loop because the timeout
-value is abb->settling_time + 1. Similarly, ti_abb_clear_all_txdone() may
-return -ETIMEDOUT when ti_abb_check_txdone() returns false in the latest
-iteration of the while loop. Fix it.
+Prior to this patch, the amount of counters guaranteed per VF in the
+resource tracker was MLX4_VF_COUNTERS_PER_PORT * MLX4_MAX_PORTS. It was
+set regardless if the VF was single or dual port.
+This caused several VFs to have no guaranteed counters although the
+system could satisfy their request.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Nishanth Menon <nm@ti.com>
-Link: https://lore.kernel.org/r/20190929095848.21960-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The fix is to dynamically guarantee counters, based on each VF
+specification.
+
+Fixes: 9de92c60beaa ("net/mlx4_core: Adjust counter grant policy in the resource tracker")
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/regulator/ti-abb-regulator.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |   42 +++++++++++-------
+ 1 file changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
-index d2f9942987535..6d17357b3a248 100644
---- a/drivers/regulator/ti-abb-regulator.c
-+++ b/drivers/regulator/ti-abb-regulator.c
-@@ -173,19 +173,14 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
- 	while (timeout++ <= abb->settling_time) {
- 		status = ti_abb_check_txdone(abb);
- 		if (status)
--			break;
-+			return 0;
- 
- 		udelay(1);
- 	}
- 
--	if (timeout > abb->settling_time) {
--		dev_warn_ratelimited(dev,
--				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
--				     __func__, timeout, readl(abb->int_base));
--		return -ETIMEDOUT;
--	}
--
--	return 0;
-+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
-+			     __func__, timeout, readl(abb->int_base));
-+	return -ETIMEDOUT;
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -463,12 +463,31 @@ void mlx4_init_quotas(struct mlx4_dev *d
+ 		priv->mfunc.master.res_tracker.res_alloc[RES_MPT].quota[pf];
  }
  
- /**
-@@ -205,19 +200,14 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
- 
- 		status = ti_abb_check_txdone(abb);
- 		if (!status)
--			break;
-+			return 0;
- 
- 		udelay(1);
- 	}
- 
--	if (timeout > abb->settling_time) {
--		dev_warn_ratelimited(dev,
--				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
--				     __func__, timeout, readl(abb->int_base));
--		return -ETIMEDOUT;
--	}
--
--	return 0;
-+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
-+			     __func__, timeout, readl(abb->int_base));
-+	return -ETIMEDOUT;
+-static int get_max_gauranteed_vfs_counter(struct mlx4_dev *dev)
++static int
++mlx4_calc_res_counter_guaranteed(struct mlx4_dev *dev,
++				 struct resource_allocator *res_alloc,
++				 int vf)
+ {
+-	/* reduce the sink counter */
+-	return (dev->caps.max_counters - 1 -
+-		(MLX4_PF_COUNTERS_PER_PORT * MLX4_MAX_PORTS))
+-		/ MLX4_MAX_PORTS;
++	struct mlx4_active_ports actv_ports;
++	int ports, counters_guaranteed;
++
++	/* For master, only allocate according to the number of phys ports */
++	if (vf == mlx4_master_func_num(dev))
++		return MLX4_PF_COUNTERS_PER_PORT * dev->caps.num_ports;
++
++	/* calculate real number of ports for the VF */
++	actv_ports = mlx4_get_active_ports(dev, vf);
++	ports = bitmap_weight(actv_ports.ports, dev->caps.num_ports);
++	counters_guaranteed = ports * MLX4_VF_COUNTERS_PER_PORT;
++
++	/* If we do not have enough counters for this VF, do not
++	 * allocate any for it. '-1' to reduce the sink counter.
++	 */
++	if ((res_alloc->res_reserved + counters_guaranteed) >
++	    (dev->caps.max_counters - 1))
++		return 0;
++
++	return counters_guaranteed;
  }
  
- /**
--- 
-2.20.1
-
+ int mlx4_init_resource_tracker(struct mlx4_dev *dev)
+@@ -476,7 +495,6 @@ int mlx4_init_resource_tracker(struct ml
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	int i, j;
+ 	int t;
+-	int max_vfs_guarantee_counter = get_max_gauranteed_vfs_counter(dev);
+ 
+ 	priv->mfunc.master.res_tracker.slave_list =
+ 		kzalloc(dev->num_slaves * sizeof(struct slave_list),
+@@ -593,16 +611,8 @@ int mlx4_init_resource_tracker(struct ml
+ 				break;
+ 			case RES_COUNTER:
+ 				res_alloc->quota[t] = dev->caps.max_counters;
+-				if (t == mlx4_master_func_num(dev))
+-					res_alloc->guaranteed[t] =
+-						MLX4_PF_COUNTERS_PER_PORT *
+-						MLX4_MAX_PORTS;
+-				else if (t <= max_vfs_guarantee_counter)
+-					res_alloc->guaranteed[t] =
+-						MLX4_VF_COUNTERS_PER_PORT *
+-						MLX4_MAX_PORTS;
+-				else
+-					res_alloc->guaranteed[t] = 0;
++				res_alloc->guaranteed[t] =
++					mlx4_calc_res_counter_guaranteed(dev, res_alloc, t);
+ 				res_alloc->res_free -= res_alloc->guaranteed[t];
+ 				break;
+ 			default:
 
 
