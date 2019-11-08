@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D51C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9091C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A57D21848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2F521D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215046;
-	bh=JT53lHzlxTCvHdD2h1AKBQEq+cdCUIcoomU7kVIRX94=;
+	s=default; t=1573215051;
+	bh=9+wXAdScMRLLd2ki2eKbU2z5dqGISXkxKwkNjAfpYFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a41m7VHSannOLLb5pF4pokX/qN/BypfvP5qDiRKmz9AwgveVy8hUx3+vfJCmTzSTE
-	 NglDuuOhNZmp8eGM3o/LB0+hx0LcBnA1q1Vmei8bQE3i9QN/tECASDXsf7dmQY2E2I
-	 Ljv7rTXvWwLwA13gYwiU+xT0qKE8VW4jlQE7WlsI=
+	b=LWRJG14qzfKQoKNiFGdrCZoorDoJdUw4o16b0IkOPVfNcEZodSkKrK/ip58QoGoE8
+	 2GBj9gvbgzuXLdl2d/eawrT80NxH2srtHLEua0sR1VYsDeIHqf6rk7WGGguNWzEySA
+	 ecaVOjdT2RTPIzPU87Pauol5PwXxU500enOuVYlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733308AbfKHLjZ (ORCPT
+        id S1733239AbfKHLjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:39:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52044 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:39:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733053AbfKHLjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:07 -0500
+        id S1732968AbfKHLi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A0120869;
-        Fri,  8 Nov 2019 11:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4E721D7B;
+        Fri,  8 Nov 2019 11:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213146;
-        bh=JT53lHzlxTCvHdD2h1AKBQEq+cdCUIcoomU7kVIRX94=;
+        s=default; t=1573213136;
+        bh=9+wXAdScMRLLd2ki2eKbU2z5dqGISXkxKwkNjAfpYFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zS1NjXeAYrql3FpZs96bc4c3cGC8PZYln240rco/nnyShsfrDv2Q+afNO5LDiYDyw
-         9r+D3X0ALz4M86v+6gl8RY6LqvpwIGDQDKUBv+YML1HCQ/YZWk159WGZDcmVuYNzdA
-         5ZN/g7wIoIzrHN9pbFzDYTmZSnfjm8D+SnHXLYUg=
+        b=Mb5HqADSRdIBKuobVMDovx8oaseO7lu1woWs52Hg8x1oSrU3z/rXUkiSFey9TLtxp
+         Z2GkRnJF48ofUW+mufqcLBk9RvV0JnGbDKW1rVWLuGBI5C3IR0B+5bA6wgIqzIQHIL
+         8AWl381tey6DW7qKOXgfkZaYSrHrE+W42hnJOyWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 057/205] iwlwifi: don't WARN on trying to dump dead firmware
-Date:   Fri,  8 Nov 2019 06:35:24 -0500
-Message-Id: <20191108113752.12502-57-sashal@kernel.org>
+Cc:     Vijay Immanuel <vijayi@attalasystems.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 054/205] IB/rxe: avoid back-to-back retries
+Date:   Fri,  8 Nov 2019 06:35:21 -0500
+Message-Id: <20191108113752.12502-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,49 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Vijay Immanuel <vijayi@attalasystems.com>
 
-[ Upstream commit 84f260251ed8153e84c64eb2c5278ab18d3ddef6 ]
+[ Upstream commit 4e4c53df567714b3d08b2b5d8ccb1d175fc9be01 ]
 
-There's no point in warning here, the user will just get an
-error back to the debugfs file write, and warning just makes
-it seem like there's an internal consistency problem when in
-reality the user just happened to hit this at a bad time.
-Remove the warning.
+Error retries can occur due to timeouts, NAKs or receiving
+packets beyond the current read request. Avoid back-to-back
+retries due to packet processing, by only retrying the initial
+attempt immediately. Subsequent retries must be due to timeouts.
 
-Fixes: f45f979dc208 ("iwlwifi: mvm: disable dbg data collect when fw isn't alive")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Continue to process completion packets after scheduling a retry.
+
+Signed-off-by: Vijay Immanuel <vijayi@attalasystems.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_comp.c  | 18 +++++++++++++++++-
+ drivers/infiniband/sw/rxe/rxe_verbs.h |  1 +
+ 2 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index a31a42e673c46..8070b2d4c46fe 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -1016,7 +1016,7 @@ int iwl_fw_dbg_collect_desc(struct iwl_fw_runtime *fwrt,
- 	 * If the loading of the FW completed successfully, the next step is to
- 	 * get the SMEM config data. Thus, if fwrt->smem_cfg.num_lmacs is non
- 	 * zero, the FW was already loaded successully. If the state is "NO_FW"
--	 * in such a case - WARN and exit, since FW may be dead. Otherwise, we
-+	 * in such a case - exit, since FW may be dead. Otherwise, we
- 	 * can try to collect the data, since FW might just not be fully
- 	 * loaded (no "ALIVE" yet), and the debug data is accessible.
- 	 *
-@@ -1024,9 +1024,8 @@ int iwl_fw_dbg_collect_desc(struct iwl_fw_runtime *fwrt,
- 	 *	config. In such a case, due to HW access problems, we might
- 	 *	collect garbage.
- 	 */
--	if (WARN((fwrt->trans->state == IWL_TRANS_NO_FW) &&
--		 fwrt->smem_cfg.num_lmacs,
--		 "Can't collect dbg data when FW isn't alive\n"))
-+	if (fwrt->trans->state == IWL_TRANS_NO_FW &&
-+	    fwrt->smem_cfg.num_lmacs)
- 		return -EIO;
+diff --git a/drivers/infiniband/sw/rxe/rxe_comp.c b/drivers/infiniband/sw/rxe/rxe_comp.c
+index 83311dd07019b..ed96441595d81 100644
+--- a/drivers/infiniband/sw/rxe/rxe_comp.c
++++ b/drivers/infiniband/sw/rxe/rxe_comp.c
+@@ -191,6 +191,7 @@ static inline void reset_retry_counters(struct rxe_qp *qp)
+ {
+ 	qp->comp.retry_cnt = qp->attr.retry_cnt;
+ 	qp->comp.rnr_retry = qp->attr.rnr_retry;
++	qp->comp.started_retry = 0;
+ }
  
- 	if (test_and_set_bit(IWL_FWRT_STATUS_DUMPING, &fwrt->status))
+ static inline enum comp_state check_psn(struct rxe_qp *qp,
+@@ -676,6 +677,20 @@ int rxe_completer(void *arg)
+ 				goto exit;
+ 			}
+ 
++			/* if we've started a retry, don't start another
++			 * retry sequence, unless this is a timeout.
++			 */
++			if (qp->comp.started_retry &&
++			    !qp->comp.timeout_retry) {
++				if (pkt) {
++					rxe_drop_ref(pkt->qp);
++					kfree_skb(skb);
++					skb = NULL;
++				}
++
++				goto done;
++			}
++
+ 			if (qp->comp.retry_cnt > 0) {
+ 				if (qp->comp.retry_cnt != 7)
+ 					qp->comp.retry_cnt--;
+@@ -692,6 +707,7 @@ int rxe_completer(void *arg)
+ 					rxe_counter_inc(rxe,
+ 							RXE_CNT_COMP_RETRY);
+ 					qp->req.need_retry = 1;
++					qp->comp.started_retry = 1;
+ 					rxe_run_task(&qp->req.task, 1);
+ 				}
+ 
+@@ -701,7 +717,7 @@ int rxe_completer(void *arg)
+ 					skb = NULL;
+ 				}
+ 
+-				goto exit;
++				goto done;
+ 
+ 			} else {
+ 				rxe_counter_inc(rxe, RXE_CNT_RETRY_EXCEEDED);
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index 3b731c7682e5b..a0ec28d2b71a4 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -158,6 +158,7 @@ struct rxe_comp_info {
+ 	int			opcode;
+ 	int			timeout;
+ 	int			timeout_retry;
++	int			started_retry;
+ 	u32			retry_cnt;
+ 	u32			rnr_retry;
+ 	struct rxe_task		task;
 -- 
 2.20.1
 
