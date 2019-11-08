@@ -2,105 +2,100 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A8FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BD9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64227207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cgRYI/7o"
+	by mail.kernel.org (Postfix) with ESMTP id 03238215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573214307;
+	bh=CxjtkCJ5cvAF6I3EU4aSmKk9PXTOLpIbmiFxjIgh9/Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Blipyqz/sVmCyRMRr3bH2lTwmD77aPMn6+KmHIl8LXOX948ll/eEQiW+iEc+Qfj/A
+	 zsva5/v2P+vYsl0RTx7B/xPpCgIXKi5L4b8O4fuLU8NdUdm3sddtBd08l4xbe/qH6T
+	 QUGu/V+LOSnVqVRI1MvE0GKDTYI/zo3nCMC5UsvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391377AbfKHL6U (ORCPT
+        id S2391366AbfKHL60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:58:20 -0500
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:37204 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390905AbfKHL6S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:58:18 -0500
-Received: by mail-wr1-f47.google.com with SMTP id t1so6769292wrv.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 03:58:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gBB8RdG6cgVejm1+1f0yeucdoAW2HER5z2jtyPd3g1s=;
-        b=cgRYI/7ou22BR4kVltlnBBqDlFDI8Gp8MkNZ/DQMG60IrDnEcssQ3nKLDVfFqDttj4
-         Veqi2doC2GQqFzsAJMytjBUnMLqlPKqiI4KE12zjihv09FAQw+23SOeSnUUuZrrBcuMH
-         FlamaHpcJHV3y+uvmM/7AmG/2vEmJD8o7QAeZmEEUlkMVe0Df6MxppiAIYqf61xuKw/G
-         18Rte3s+bcF08katymvpVw7qh1aYJpze6r2dNVvvJFDlFxYsFjHbXUSioSaKpSOV6Svi
-         +8TwHoz1/ZazR9+a+K/Gn94RBWUqI3x3Yxc4RG7nr1N4qlkFGBL1y486ENh+V6VGO/DD
-         0J8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gBB8RdG6cgVejm1+1f0yeucdoAW2HER5z2jtyPd3g1s=;
-        b=CjyTw6DJENNEqdAxI/PYBa/0N+IbsasJl43HbgQ3ENRBZQ0tO5rv1y+QIOqqPfvXEd
-         IeuRW2TBFtxpdSSXs9k8o8eG+dMv2cYldoOnWADha+SkIcE/jMj36fZQ47NHBYWOXCsv
-         5509b7cCiKXPsMo/5/2RD/XsixqfR8RpUwEvA68sD45iY/iUq4q+s2V9Buz7Mjr1Wval
-         NywaM9vxfPOcjE24RzdIBm1YVJztKnQLLbevYrtvitiEzkOldjBpY9T7zBLglvHLkt0l
-         AsdytwDWpRoWILOwe6fCr57m7WjoaLV9A2O8zZFqauMu6XmkUfE9NMZkcUaad7LOCMyX
-         /0vA==
-X-Gm-Message-State: APjAAAVPn30jd5d3qvvFC3yofyBEVVU8kx0UXFw9OCfngoth9BtZ15S6
-        qGavw9K3jppg9ziN5vcJitCuDQ==
-X-Google-Smtp-Source: APXvYqyC9pw8OUJYHk/j0p9Odwzfg/Zr0rBxQNKGI7+vHgVIkdRqX8ubKPLeTAt2u6DNzu6GVvtCrw==
-X-Received: by 2002:a05:6000:350:: with SMTP id e16mr8631754wre.276.1573214295884;
-        Fri, 08 Nov 2019 03:58:15 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id v8sm8734669wra.79.2019.11.08.03.58.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 03:58:13 -0800 (PST)
-Date:   Fri, 8 Nov 2019 11:58:10 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        linux-kernel@vger.kernel.org, aaron.lwe@gmail.com,
-        mingo@kernel.org, pauld@redhat.com, jdesfossez@digitalocean.com,
-        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        kernel-team@android.com, john.stultz@linaro.org
-Subject: Re: NULL pointer dereference in pick_next_task_fair
-Message-ID: <20191108115810.GA83597@google.com>
-References: <33643a5b-1b83-8605-2347-acd1aea04f93@virtuozzo.com>
- <20191106165437.GX4114@hirez.programming.kicks-ass.net>
- <20191106172737.GM5671@hirez.programming.kicks-ass.net>
- <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
- <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
- <20191107153848.GA31774@google.com>
- <20191107184356.GF4114@hirez.programming.kicks-ass.net>
- <20191107192907.GA30258@worktop.programming.kicks-ass.net>
- <20191108110212.GA204618@google.com>
- <07d30588-22e6-e098-b591-29c7cd3c8054@arm.com>
+        Fri, 8 Nov 2019 06:58:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390878AbfKHLor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:47 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6FF52245B;
+        Fri,  8 Nov 2019 11:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573213486;
+        bh=CxjtkCJ5cvAF6I3EU4aSmKk9PXTOLpIbmiFxjIgh9/Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pLpBe3jmYWKd7UZGlwQYsv3Sy55AykyicBhmtCsRY0Ms+RiqX0lxRktEkO+L+R9Ci
+         3gp8zChrwYrZ+346/qpWGprqO9Go7F4geouDvf3eiS/vy9BWHBcNEU1pofsxT2CsC0
+         HDdEOJt4Sa8d/32lmaZnjMZjJj7SaCJJgTGFfz5E=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 066/103] signal: Properly deliver SIGSEGV from x86 uprobes
+Date:   Fri,  8 Nov 2019 06:42:31 -0500
+Message-Id: <20191108114310.14363-66-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
+References: <20191108114310.14363-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07d30588-22e6-e098-b591-29c7cd3c8054@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 08 Nov 2019 at 11:47:44 (+0000), Valentin Schneider wrote:
-> I think we can ignore RETRY_TASK because this happens before the picking loop,
-> so we'll observe any new DL/RT task that got enqueued while newidle released
-> the lock. This also means we can safely break the balance loop in
-> pick_next_task() when we get RETRY_TASK, because we've got something to pick
-> (some new RT/DL task).
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Ah right, the second loop always iterates from DL, so that works.
+[ Upstream commit 4a63c1ffd384ebdce40aac9c997dab68379137be ]
 
-> This wants a comment though, methinks.
+For userspace to tell the difference between an random signal
+and an exception, the exception must include siginfo information.
 
-+1 :)
+Using SEND_SIG_FORCED for SIGSEGV is thus wrong, and it will result in
+userspace seeing si_code == SI_USER (like a random signal) instead of
+si_code == SI_KERNEL or a more specific si_code as all exceptions
+deliver.
 
-Thanks,
-Quentin
+Therefore replace force_sig_info(SIGSEGV, SEND_SIG_FORCE, current)
+with force_sig(SIG_SEGV, current) which gets this right and is shorter
+and easier to type.
+
+Fixes: 791eca10107f ("uretprobes/x86: Hijack return address")
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 7a87ef1f5b5e6..73391c1bd2a9a 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -987,7 +987,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
+ 		pr_err("uprobe: return address clobbered: pid=%d, %%sp=%#lx, "
+ 			"%%ip=%#lx\n", current->pid, regs->sp, regs->ip);
+ 
+-		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
++		force_sig(SIGSEGV, current);
+ 	}
+ 
+ 	return -1;
+-- 
+2.20.1
+
