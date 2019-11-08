@@ -2,328 +2,99 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA90C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3D3FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4FF21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="QWtZEAWa"
+	by mail.kernel.org (Postfix) with ESMTP id EFB3821D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfKHQQK (ORCPT
+        id S1726651AbfKHQRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:16:10 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:32843 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKHQQJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:16:09 -0500
-Received: by mail-io1-f66.google.com with SMTP id j13so6985855ioe.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 08:16:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l2UYFEGLZmGQ7i41acAR9R0I3eSg77guyFjPWJWzrxs=;
-        b=QWtZEAWaspw9OXu+FdJCQiHaUA9XGmXFN1ipdRUqfNCsmai8FbLuy1zibNwebgd1pj
-         zl8ULIA0tLBbt9SoUJnNvG7cexMTOazJymra3Mxn8oep59n/CmI9GKgtGsEqBUjfzrH3
-         iaGSFJUnCtNPTjatQ24fvZS1+Q6bZFjtVjLcw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l2UYFEGLZmGQ7i41acAR9R0I3eSg77guyFjPWJWzrxs=;
-        b=VW4t94rxNPbeeu6a4Gk6jvlZv83xjftWDr9vYdItZ7XnTcC18p9iU3kdhH/+YI7wKq
-         VwbphEmf+GGch8w4Ru4FdL6QbNINOlH815k6MkcN/0z2gvCRTm4udBSfN74EcBx7L0s8
-         PROvyPAx49618LZ7KVPNOFToivoeEOe+Illk+XzD/HB0wKj0iqfgqcoi9nT4t8/fpe/c
-         1r3gIsm/OhI//7k5IkpMOVnhrdr3HzD05C/B2voOb/O1czxJCpOKZNJktSCOmpfZ4sjH
-         aVG7e38p0/8Ovexpp6pxUPOVvHhFzkYuNQ83uDl4SNeLd23tvxLHVAfSasWSHLjvUODq
-         JnRA==
-X-Gm-Message-State: APjAAAU9/ZJMe8t4lENtNk48QLg4rIXz39Cjb1j+qbub0FLLWuhzaCo8
-        V7Hk/TpTzEwMjnxyo8M9voaNPE4dB8hiRFN0/EM=
-X-Google-Smtp-Source: APXvYqw2TfirhTgas7/mfZxPe/h79SVO1NE+6f86D+suAhQFGlL9VEDUpWu94DgajYk+0nghZgE5EhbE5ftWwJIbs4A=
-X-Received: by 2002:a05:6638:9:: with SMTP id z9mr11581662jao.35.1573229768364;
- Fri, 08 Nov 2019 08:16:08 -0800 (PST)
+        Fri, 8 Nov 2019 11:17:49 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2077 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725941AbfKHQRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:17:48 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2D181470A7A6746D7EF5;
+        Fri,  8 Nov 2019 16:17:47 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 8 Nov 2019 16:17:46 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 8 Nov 2019
+ 16:17:46 +0000
+Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
+ explicitly non-modular"
+To:     Will Deacon <will@kernel.org>, <iommu@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Saravana Kannan" <saravanak@google.com>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20191108151608.20932-1-will@kernel.org>
+ <20191108151608.20932-7-will@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
+Date:   Fri, 8 Nov 2019 16:17:45 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <1571111349-5041-1-git-send-email-teawater@gmail.com> <1571111349-5041-2-git-send-email-teawater@gmail.com>
-In-Reply-To: <1571111349-5041-2-git-send-email-teawater@gmail.com>
-From:   Dan Streetman <ddstreet@ieee.org>
-Date:   Fri, 8 Nov 2019 11:15:31 -0500
-Message-ID: <CALZtONA9Y9tvOJcHUyac770fSQhCoGMb7kDL1R5N9Bueqd+7_g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm, zswap: Support THP
-To:     Hui Zhu <teawater@gmail.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Hui Zhu <teawaterz@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191108151608.20932-7-will@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 11:49 PM Hui Zhu <teawater@gmail.com> wrote:
->
-> This commit let zswap treats THP as continuous normal pages
-> in zswap_frontswap_store.
-> It will store them to a lot of "zswap_entry".  These "zswap_entry"
-> will be inserted to "zswap_tree" together.
+On 08/11/2019 15:16, Will Deacon wrote:
+> +MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
 
-why does zswap need to carry the added complexity of converting THP
-into separate normal sized pages?  That should be done higher up in
-the swap layer.
+Hi Will,
 
->
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
-> ---
->  mm/zswap.c | 170 +++++++++++++++++++++++++++++++++++++++----------------------
->  1 file changed, 109 insertions(+), 61 deletions(-)
->
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 46a3223..36aa10d 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -316,11 +316,7 @@ static void zswap_rb_erase(struct rb_root *root, struct zswap_entry *entry)
->         }
->  }
->
-> -/*
-> - * Carries out the common pattern of freeing and entry's zpool allocation,
-> - * freeing the entry itself, and decrementing the number of stored pages.
-> - */
-> -static void zswap_free_entry(struct zswap_entry *entry)
-> +static void zswap_free_entry_1(struct zswap_entry *entry)
->  {
->         if (!entry->length)
->                 atomic_dec(&zswap_same_filled_pages);
-> @@ -329,6 +325,15 @@ static void zswap_free_entry(struct zswap_entry *entry)
->                 zswap_pool_put(entry->pool);
->         }
->         zswap_entry_cache_free(entry);
-> +}
+>   
+>   static struct platform_driver arm_smmu_driver = {
+>   	.driver	= {
+>   		.name		= "arm-smmu-v3",
+>   		.of_match_table	= of_match_ptr(arm_smmu_of_match),
+> -		.suppress_bind_attrs = true,
+
+Does this mean that we can now manually unbind this driver from the SMMU 
+device?
+
+Seems dangerous. Here's what happens for me:
+
+root@ubuntu:/sys# cd ./bus/platform/drivers/arm-smmu-v3
+ind @ubuntu:/sys/bus/platform/drivers/arm-smmu-v3# echo 
+arm-smmu-v3.0.auto > unbind
+[   77.580351] hisi_sas_v2_hw HISI0162:01: CQE_AXI_W_ERR (0x800) found!
+ho [   78.635473] platform arm-smmu-v3.0.auto: CMD_SYNC timeout at 
+0x00000146 [hwprod 0x00000146, hwcons 0x00000000]
+
+>   	},
+>   	.probe	= arm_smmu_device_probe,
+> +	.remove	= arm_smmu_device_remove,
+>   	.shutdown = arm_smmu_device_shutdown,
+>   };
+> -builtin_platform_driver(arm_smmu_driver);
+> +module_platform_driver(arm_smmu_driver);
 > +
-> +/*
-> + * Carries out the common pattern of freeing and entry's zpool allocation,
-> + * freeing the entry itself, and decrementing the number of stored pages.
-> + */
-> +static void zswap_free_entry(struct zswap_entry *entry)
-> +{
-> +       zswap_free_entry_1(entry);
->         atomic_dec(&zswap_stored_pages);
->         zswap_update_total_size();
->  }
-> @@ -980,15 +985,11 @@ static void zswap_fill_page(void *ptr, unsigned long value)
->         memset_l(page, value, PAGE_SIZE / sizeof(unsigned long));
->  }
->
-> -/*********************************
-> -* frontswap hooks
-> -**********************************/
-> -/* attempts to compress and store an single page */
-> -static int zswap_frontswap_store(unsigned type, pgoff_t offset,
-> -                               struct page *page)
-> +static int zswap_frontswap_store_1(unsigned type, pgoff_t offset,
-> +                               struct page *page,
-> +                               struct zswap_entry **entry_pointer)
->  {
-> -       struct zswap_tree *tree = zswap_trees[type];
-> -       struct zswap_entry *entry, *dupentry;
-> +       struct zswap_entry *entry;
->         struct crypto_comp *tfm;
->         int ret;
->         unsigned int hlen, dlen = PAGE_SIZE;
-> @@ -998,36 +999,6 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->         struct zswap_header zhdr = { .swpentry = swp_entry(type, offset) };
->         gfp_t gfp;
->
-> -       /* THP isn't supported */
-> -       if (PageTransHuge(page)) {
-> -               ret = -EINVAL;
-> -               goto reject;
-> -       }
-> -
-> -       if (!zswap_enabled || !tree) {
-> -               ret = -ENODEV;
-> -               goto reject;
-> -       }
-> -
-> -       /* reclaim space if needed */
-> -       if (zswap_is_full()) {
-> -               zswap_pool_limit_hit++;
-> -               if (zswap_shrink()) {
-> -                       zswap_reject_reclaim_fail++;
-> -                       ret = -ENOMEM;
-> -                       goto reject;
-> -               }
-> -
-> -               /* A second zswap_is_full() check after
-> -                * zswap_shrink() to make sure it's now
-> -                * under the max_pool_percent
-> -                */
-> -               if (zswap_is_full()) {
-> -                       ret = -ENOMEM;
-> -                       goto reject;
-> -               }
-> -       }
-> -
->         /* allocate entry */
->         entry = zswap_entry_cache_alloc(GFP_KERNEL);
->         if (!entry) {
-> @@ -1035,6 +1006,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->                 ret = -ENOMEM;
->                 goto reject;
->         }
-> +       *entry_pointer = entry;
->
->         if (zswap_same_filled_pages_enabled) {
->                 src = kmap_atomic(page);
-> @@ -1044,7 +1016,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->                         entry->length = 0;
->                         entry->value = value;
->                         atomic_inc(&zswap_same_filled_pages);
-> -                       goto insert_entry;
-> +                       goto out;
->                 }
->                 kunmap_atomic(src);
->         }
-> @@ -1093,31 +1065,105 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->         entry->handle = handle;
->         entry->length = dlen;
->
-> -insert_entry:
-> +out:
-> +       return 0;
-> +
-> +put_dstmem:
-> +       put_cpu_var(zswap_dstmem);
-> +       zswap_pool_put(entry->pool);
-> +freepage:
-> +       zswap_entry_cache_free(entry);
-> +reject:
-> +       return ret;
-> +}
-> +
-> +/*********************************
-> +* frontswap hooks
-> +**********************************/
-> +/* attempts to compress and store an single page */
-> +static int zswap_frontswap_store(unsigned type, pgoff_t offset,
-> +                               struct page *page)
-> +{
-> +       struct zswap_tree *tree = zswap_trees[type];
-> +       struct zswap_entry **entries = NULL, *dupentry;
-> +       struct zswap_entry *single_entry[1];
-> +       int ret;
-> +       int i, nr;
-> +
-> +       if (!zswap_enabled || !tree) {
-> +               ret = -ENODEV;
-> +               goto reject;
-> +       }
-> +
-> +       /* reclaim space if needed */
-> +       if (zswap_is_full()) {
-> +               zswap_pool_limit_hit++;
-> +               if (zswap_shrink()) {
-> +                       zswap_reject_reclaim_fail++;
-> +                       ret = -ENOMEM;
-> +                       goto reject;
-> +               }
-> +
-> +               /* A second zswap_is_full() check after
-> +                * zswap_shrink() to make sure it's now
-> +                * under the max_pool_percent
-> +                */
-> +               if (zswap_is_full()) {
-> +                       ret = -ENOMEM;
-> +                       goto reject;
-> +               }
-> +       }
-> +
-> +       nr = hpage_nr_pages(page);
-> +
-> +       if (unlikely(nr > 1)) {
-> +               entries = kvmalloc(sizeof(struct zswap_entry *) * nr,
-> +                               GFP_KERNEL);
-> +               if (!entries) {
-> +                       ret = -ENOMEM;
-> +                       goto reject;
-> +               }
-> +       } else
-> +               entries = single_entry;
-> +
-> +       for (i = 0; i < nr; i++) {
-> +               ret = zswap_frontswap_store_1(type, offset + i, page + i,
-> +                                       &entries[i]);
-> +               if (ret)
-> +                       goto freepage;
-> +       }
-> +
->         /* map */
->         spin_lock(&tree->lock);
-> -       do {
-> -               ret = zswap_rb_insert(&tree->rbroot, entry, &dupentry);
-> -               if (ret == -EEXIST) {
-> -                       zswap_duplicate_entry++;
-> -                       /* remove from rbtree */
-> -                       zswap_rb_erase(&tree->rbroot, dupentry);
-> -                       zswap_entry_put(tree, dupentry);
-> -               }
-> -       } while (ret == -EEXIST);
-> +       for (i = 0; i < nr; i++) {
-> +               do {
-> +                       ret = zswap_rb_insert(&tree->rbroot, entries[i],
-> +                                       &dupentry);
-> +                       if (ret == -EEXIST) {
-> +                               zswap_duplicate_entry++;
-> +                               /* remove from rbtree */
-> +                               zswap_rb_erase(&tree->rbroot, dupentry);
-> +                               zswap_entry_put(tree, dupentry);
-> +                       }
-> +               } while (ret == -EEXIST);
-> +       }
->         spin_unlock(&tree->lock);
->
->         /* update stats */
-> -       atomic_inc(&zswap_stored_pages);
-> +       atomic_add(nr, &zswap_stored_pages);
->         zswap_update_total_size();
->
-> -       return 0;
-> -
-> -put_dstmem:
-> -       put_cpu_var(zswap_dstmem);
-> -       zswap_pool_put(entry->pool);
-> +       ret = 0;
->  freepage:
-> -       zswap_entry_cache_free(entry);
-> +       if (unlikely(nr > 1)) {
-> +               if (ret) {
-> +                       int j;
-> +
-> +                       for (j = 0; j < i; j++)
-> +                               zswap_free_entry_1(entries[j]);
-> +               }
-> +               kvfree(entries);
-> +       }
->  reject:
->         return ret;
->  }
-> @@ -1136,6 +1182,8 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
->         unsigned int dlen;
->         int ret;
->
-> +       BUG_ON(PageTransHuge(page));
-> +
->         /* find */
->         spin_lock(&tree->lock);
->         entry = zswap_entry_find_get(&tree->rbroot, offset);
-> --
-> 2.7.4
->
+
+
+Thanks,
+John
