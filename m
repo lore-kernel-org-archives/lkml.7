@@ -2,153 +2,105 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C40FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCEF6206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573195331;
-	bh=cl6ZS58VdbvS4YiW96ap38rwmt3DLpIvcS0JMa4AI60=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=q5PNa88b6eKE4nP91NY6TAOJ6YFN7xTYXPYkazIOuZs8lESm8J9IUGhVxvSN0kSew
-	 VE+YFHRwX4m8NjhPb/4xAQShKveiW3NJtSypWNMwpD9oyariiY0oX5tuN1mq8ANbSA
-	 Dm+NmdXLsvfi5kqD4cMsOY2aHyfogbE5iu06rS5M=
+	by mail.kernel.org (Postfix) with ESMTP id CC67E21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:42:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YfKvIUfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbfKHGmK (ORCPT
+        id S1729816AbfKHGm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:42:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfKHGmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 01:42:09 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 Nov 2019 01:42:58 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45935 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725372AbfKHGm6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 01:42:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573195377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G8x+s0gT+EQcwDzJx0Qq2QbxI7ZiAY//ltXx+x3jOGg=;
+        b=YfKvIUfigST8CpCJS05fHbD+3QW6w92HiZ8hOgrqaf9GC8+b7w+D3tMh8uF7EXzoQtk6/w
+        qXB1mDhI4dgqkd+GOeP/FNc+64Cv1av0BfPtIGLnE87uMgOz3HbswZXaznVFwOfYhttamf
+        z9WfEM+r6W4ibzrV1Y8qwZVXKZweeKk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-VLRlQoNXNQOdqlAzq2_FZA-1; Fri, 08 Nov 2019 01:42:56 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E978C21D7E;
-        Fri,  8 Nov 2019 06:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573195328;
-        bh=cl6ZS58VdbvS4YiW96ap38rwmt3DLpIvcS0JMa4AI60=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=oegjtXRVFGMs9ibbPbFM5x4nAuh1XClhQc1/gMTciwe4ATeIEATj/Rz2liR3wiZSO
-         vIQplbI2ZykzuY5OX+T2D2ltcwkm1c5xSAkpC5ZqM7uI2DkZJZ3LA1lyO3NWDSHbzS
-         4gEDzmnUHXA/YxoysqU9thWqWwCkyFUCT/GhjUiM=
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67DF6477;
+        Fri,  8 Nov 2019 06:42:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8307A10016DA;
+        Fri,  8 Nov 2019 06:42:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com>
+References: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com> <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk> <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk> <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com> <6964.1573152517@warthog.procyon.org.uk>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 04/14] pipe: Add O_NOTIFICATION_PIPE [ver #2]
 MIME-Version: 1.0
+Content-ID: <7771.1573195370.1@warthog.procyon.org.uk>
+Date:   Fri, 08 Nov 2019 06:42:50 +0000
+Message-ID: <7772.1573195370@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: VLRlQoNXNQOdqlAzq2_FZA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <7f3697ae-2e12-f306-b288-4dec19544275@codeaurora.org>
-References: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org> <1569959842-8399-1-git-send-email-jhugo@codeaurora.org> <20191107215506.8FBFA2084D@mail.kernel.org> <7f3697ae-2e12-f306-b288-4dec19544275@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, mturquette@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] dt-bindings: clock: Add support for the MSM8998 mmcc
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 22:42:07 -0800
-Message-Id: <20191108064207.E978C21D7E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-11-07 14:35:21)
-> On 11/7/2019 2:55 PM, Stephen Boyd wrote:
-> > Quoting Jeffrey Hugo (2019-10-01 12:57:22)
-> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/D=
-ocumentation/devicetree/bindings/clock/qcom,mmcc.txt
-> >> index 8b0f7841af8d..a92f3cbc9736 100644
-> >> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-> >> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-> >=20
-> >>  =20
-> >>   - reg : shall contain base register location and length
-> >>   - #clock-cells : shall contain 1
-> >>   - #reset-cells : shall contain 1
-> >>  =20
-> >> +For MSM8998 only:
-> >> +       - clocks: a list of phandles and clock-specifier pairs,
-> >> +                 one for each entry in clock-names.
-> >> +       - clock-names: "xo" for the xo clock.
-> >> +                      "gpll0" for the global pll 0 clock.
-> >> +                      "dsi0dsi" for the dsi0 pll dsi clock (required =
-if dsi is
-> >> +                               enabled, optional otherwise).
-> >> +                      "dsi0byte" for the dsi0 pll byte clock (require=
-d if dsi
-> >> +                               is enabled, optional otherwise).
-> >> +                      "dsi1dsi" for the dsi1 pll dsi clock (required =
-if dsi is
-> >> +                               enabled, optional otherwise).
-> >> +                      "dsi1byte" for the dsi1 pll byte clock (require=
-d if dsi
-> >> +                               is enabled, optional otherwise).
-> >> +                      "hdmipll" for the hdmi pll clock (required if h=
-dmi is
-> >> +                               enabled, optional otherwise).
-> >> +                      "dpvco" for the displayport pll vco clock (requ=
-ired if
-> >> +                               dp is enabled, optional otherwise).
-> >> +                      "dplink" for the displayport pll link clock (re=
-quired if
-> >> +                               dp is enabled, optional otherwise).
-> >=20
-> > I'm not sure why it's optional. The hardware is "fixed" in the sense
-> > that the dp phy is always there and connected to this hardware block.
-> >  From a driver perspective I agree it's optional to be used, but from a
-> > DT perspective it's always there so it should be required.
-> >=20
->=20
-> Sure, the DP phy is technically always there, but does a particular=20
-> platform have an actual DP output connected to the phy?  If not, why=20
-> bother describing something that isn't even used?
+Andy Lutomirski <luto@kernel.org> wrote:
 
-If the DP phy isn't connected then having it be marked as status =3D
-"disabled" is the typical approach to the problem. I agree it may not be
-used on some particular board using the SoC, but this is an SoC that is
-made once so we should be able to describe it regardless of how it's
-used by some board.
+> I can open a normal pipe from userspace (with pipe() or pipe2()), and
+> I can have two threads.  One thread writes to the pipe with write().
+> The other thread writes with splice().  Everything works fine.
 
->=20
->  From a more practical sense its undefined how to actually get the DP=20
-> clocks - the DP binding is implicitly a clock provider since it has=20
-> #clock-cells, but it doesn't specify how to actually get the clocks.=20
-> The DSI binding tells you which index is the dsi clock, and which is the =
+Yes.  Every operation you do on a pipe from userspace is serialised with th=
+e
+pipe mutex - and both ends share the same pipe.
 
-> byte clock.
->=20
-> The HDMI binding is not a clock provider at all.  Needs to be revised,=20
-> which didn't appear trivial when I took a quick look while working on mmc=
-c.
->=20
-> I want to do the right thing here by specifying all the external clocks=20
-> up front, and not have to worry about backwards compatibility with=20
-> pre-existing DTs later on, but I also would like to focus on one problem =
+> What's special about notifications?
 
-> at a time, and not go dig into all the problems with DP/HDMI before=20
-> landing this, particularly as those components also rely on the mmcc.
->=20
-> Is that justification enough for you?  If not, how would you like to=20
-> proceed?  Make them required in the binding, and just have an invalid=20
-> (per the binding) DT until all the problems get sorted out?
->=20
+The post_notification() cannot take the pipe mutex.  It has to be callable
+from softirq context.  Linus's idea is that when you're actually altering t=
+he
+ring pointers you should hold the wake-queue spinlock, and post_notificatio=
+n()
+holds the wake queue spinlock for the duration of the operation.
 
-If we can make the clks 'required' and not cause the DTS checker system
-to blow up then I'll be happy.
+This means that post_notification() can be writing to the pipe whilst a
+userspace-invoked operation is holding the pipe mutex and is also doing
+something to the ring.
 
-I hope we can have a property like:
-=09
-	clocks =3D <&gcc KNOWN_CLK>, <0>, <0>, <&dp_phy 1>;
-
-where <0> means "I don't know right now", and that will be enough to
-please the checker and can be filled in later on when we sort out the
-HDMI and DP bindings. If this doesn't work then I guess I'll just have
-to get over it and complain to Rob Herring.
+David
 
