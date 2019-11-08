@@ -7,85 +7,88 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA63C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC2AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C0C20869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB9E206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573232543;
-	bh=kdg5QZNVtGmqpcPFrk+cGsHAsdNydU+gcPhVjqrCepY=;
+	s=default; t=1573232550;
+	bh=QmHkYOpw1KGgzE2tChTjH11DwvScC47O6EYYkdjmNZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uMcBLsaEugC6xsPjy3N/OVYw3UDjY6tcq9HvdOJEQSlGal1nyWfbDaRRoRru0+4QI
-	 wDkaoT4vRAeUxC0v++iXIsbtAbJvrqErE0+kzFxPSzzOayCS//ZYLT3Fgm51vMSsUZ
-	 WQVQ0FuIc866NASi9R24lFnufgrHIFspgQA3UFNE=
+	b=ZWncPrVcEQ1qsuwbn1pfCfpEelbrS/m8dHVkUqMeMiquA3CsP6EuDXdGCkidOl1Zn
+	 3s/MXMZBlWg4/Jpgtni0Vum35f9nZYe4iPrN0EXqJSEC+IS5OeM5g8rM7zQKv8r7Ac
+	 gEqR2RcIAK4Tx5Tn46txkmEt6PO/tgPpKg54tix8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbfKHRCD (ORCPT
+        id S1731558AbfKHRC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:02:03 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:59424 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726232AbfKHRB6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:01:58 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iT7aQ-0002sR-4h; Fri, 08 Nov 2019 17:58:14 +0100
-From:   Marc Zyngier <maz@kernel.org>
+        Fri, 8 Nov 2019 12:02:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730696AbfKHRBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:01:50 -0500
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89DF1206BA;
+        Fri,  8 Nov 2019 17:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573232509;
+        bh=QmHkYOpw1KGgzE2tChTjH11DwvScC47O6EYYkdjmNZY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oiUzlVfUY9/EMo4arLdR3YvvgWtVrcBioNWxyo4tDqVikPDfd/hMfuNPavpmeFf5b
+         fiotcwLuwgXiNdGNjLCGDs4cH4YGNrU4D2GdrgLklRE5kQEyEWDKv6ShvlqifQtJp8
+         C/qEBtT80YOw5LyKOpZZ03WsFbgZ4XIOvxTT9/+E=
+From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, lorenzo.pieralisi@arm.com,
-        Andrew.Murray@arm.com, yuzenghui@huawei.com,
-        Heyi Guo <guoheyi@huawei.com>
-Subject: [PATCH v2 10/11] irqchip/irq-gic-v3-its: Lock VLPI map array before translating it
-Date:   Fri,  8 Nov 2019 16:58:04 +0000
-Message-Id: <20191108165805.3071-11-maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Yunjae Lee <lyj7694@gmail.com>,
+        SeongJae Park <sj38.park@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Boqun Feng <boqun.feng@gmail.com>, linux-alpha@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH 06/13] READ_ONCE: Remove smp_read_barrier_depends() invocation
+Date:   Fri,  8 Nov 2019 17:01:13 +0000
+Message-Id: <20191108170120.22331-7-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108165805.3071-1-maz@kernel.org>
-References: <20191108165805.3071-1-maz@kernel.org>
+In-Reply-To: <20191108170120.22331-1-will@kernel.org>
+References: <20191108170120.22331-1-will@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com, guoheyi@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Obtaining the mapping ivformation for a VLPI should always be
-done with the vlpi_lock for this device held. Otherwise, we
-expose ourselves to races against a concurrent unmap.
+Alpha overrides '__read_once_size_n()' directly, so there's no need to
+use 'smp_read_barrier_depends()' in the core code.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/asm-generic/rwonce.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index a83828e983ff..ae4acd13f97a 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1489,12 +1489,14 @@ static int its_vlpi_map(struct irq_data *d, struct its_cmd_info *info)
- static int its_vlpi_get(struct irq_data *d, struct its_cmd_info *info)
- {
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
--	struct its_vlpi_map *map = get_vlpi_map(d);
-+	struct its_vlpi_map *map;
- 	int ret = 0;
- 
- 	mutex_lock(&its_dev->event_map.vlpi_lock);
- 
--	if (!its_dev->event_map.vm || !map->vm) {
-+	map = get_vlpi_map(d);
-+
-+	if (!its_dev->event_map.vm || !map) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+diff --git a/include/asm-generic/rwonce.h b/include/asm-generic/rwonce.h
+index 2c2ac0948c94..2e3289268a89 100644
+--- a/include/asm-generic/rwonce.h
++++ b/include/asm-generic/rwonce.h
+@@ -102,7 +102,6 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
+ 		__read_once_size(&(x), __u.__c, sizeof(x));		\
+ 	else								\
+ 		__read_once_size_nocheck(&(x), __u.__c, sizeof(x));	\
+-	smp_read_barrier_depends(); /* Enforce dependency ordering from x */ \
+ 	__u.__val;							\
+ })
+ #define READ_ONCE(x) __READ_ONCE(x, 1)
 -- 
-2.20.1
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
