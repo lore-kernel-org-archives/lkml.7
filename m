@@ -2,143 +2,119 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CD7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC6EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91A0821848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB9821848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfKHFtj (ORCPT
+        id S1727047AbfKHFuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:49:39 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27014 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725877AbfKHFti (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:49:38 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA85kkNT071812
-        for <linux-kernel@vger.kernel.org>; Fri, 8 Nov 2019 00:49:37 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w5122a28a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 00:49:37 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Fri, 8 Nov 2019 05:49:34 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Nov 2019 05:49:30 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA85ms8x28180780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 05:48:54 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 646A311C04A;
-        Fri,  8 Nov 2019 05:49:29 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4DA311C04C;
-        Fri,  8 Nov 2019 05:49:25 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.80.217.215])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  8 Nov 2019 05:49:25 +0000 (GMT)
-Date:   Thu, 7 Nov 2019 21:49:22 -0800
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
-        david@gibson.dropbear.id.au, paulus@ozlabs.org,
-        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
- <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
- <1572902923-8096-3-git-send-email-linuxram@us.ibm.com>
- <87k18c56ej.fsf@mpe.ellerman.id.au>
+        Fri, 8 Nov 2019 00:50:16 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46454 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725877AbfKHFuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 00:50:15 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4D05130B7E651556B2F6;
+        Fri,  8 Nov 2019 13:50:13 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 8 Nov 2019
+ 13:50:06 +0800
+Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
+To:     Andrew Morton <akpm@linux-foundation.org>
+References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191107194942.734bc867e1c9578d07cf1712@linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
+        "Mike Rapoport" <rppt@linux.ibm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        "Michal Hocko" <mhocko@suse.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Anshuman Khandual" <anshuman.khandual@arm.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <ebc1b33d-ee59-a662-89ae-ae5a7e340d56@hisilicon.com>
+Date:   Fri, 8 Nov 2019 13:50:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k18c56ej.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19110805-0016-0000-0000-000002C1CC24
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110805-0017-0000-0000-0000332351B9
-Message-Id: <20191108054922.GH5201@oc0525413822.ibm.com>
-Subject: RE: [RFC v1 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for Secure VMs
- aswell.
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=937 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080057
+In-Reply-To: <20191107194942.734bc867e1c9578d07cf1712@linux-foundation.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 09:26:28PM +1100, Michael Ellerman wrote:
-> Ram Pai <linuxram@us.ibm.com> writes:
-> > This enables IOMMU support for pseries Secure VMs.
-> 
-> Can you give us some more explanation please?
+Hi Andrew,
 
-Yes. Will do. 
-
-The simple explanation is -- it was a mistake. We should 
-not have disabled IOMMU ops for secure guests. Though it enabled
-us to use virtio devices, with the help of some additional patches to
-the virtio subsystem; in hindsight, we should not have disabled IOMMU
-ops for secure VMs  :-(. 
-
-RP
-
-
-
+On 2019/11/8 11:49, Andrew Morton wrote:
+> On Thu, 7 Nov 2019 09:44:08 +0800 Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
 > 
-> This is basically a revert of commit:
->   edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests")
+>> In the multi-processors and NUMA system, I/O driver will find cpu cores
+>> that which shall be bound IRQ. When cpu cores in the local numa have
+>> been used, it is better to find the node closest to the local numa node,
+>> instead of choosing any online cpu immediately.
+>>
+>> On Huawei Kunpeng 920 server, there are 4 NUMA node(0 -3) in the 2-cpu
+>> system(0 - 1). We perform PS (parameter server) business test, the
+>> behavior of the service is that the client initiates a request through
+>> the network card, the server responds to the request after calculation. 
+>> When two PS processes run on node2 and node3 separately and the
+>> network card is located on 'node2' which is in cpu1, the performance
+>> of node2 (26W QPS) and node3 (22W QPS) was different.
+>> It is better that the NIC queues are bound to the cpu1 cores in turn,
+>> then XPS will also be properly initialized, while cpumask_local_spread
+>> only considers the local node. When the number of NIC queues exceeds
+>> the number of cores in the local node, it returns to the online core
+>> directly. So when PS runs on node3 sending a calculated request,
+>> the performance is not as good as the node2. It is considered that
+>> the NIC and other I/O devices shall initialize the interrupt binding,
+>> if the cores of the local node are used up, it is reasonable to return
+>> the node closest to it.
+>>
+>> Let's optimize it and find the nearest node through NUMA distance for the
+>> non-local NUMA nodes. The performance will be better if it return the
+>> nearest node than the random node.
+>>
+>> After this patch, the performance of the node3 is the same as node2
+>> that is 26W QPS when the network card is still in 'node2'. Since it will
+>> return the closest non-local NUMA code rather than random node, it is no
+>> harm to others at least.
 > 
-> But neglects to remove the now unnecessary include of svm.h.
+> This is a little nicer:
 > 
-> > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> > index 07f0847..189717b 100644
-> > --- a/arch/powerpc/platforms/pseries/iommu.c
-> > +++ b/arch/powerpc/platforms/pseries/iommu.c
-> > @@ -1333,15 +1333,7 @@ void iommu_init_early_pSeries(void)
-> >  	of_reconfig_notifier_register(&iommu_reconfig_nb);
-> >  	register_memory_notifier(&iommu_mem_nb);
-> >  
-> > -	/*
-> > -	 * Secure guest memory is inacessible to devices so regular DMA isn't
-> > -	 * possible.
-> > -	 *
-> > -	 * In that case keep devices' dma_map_ops as NULL so that the generic
-> > -	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
-> 
-> Please explain what has changed to make this no longer necessary.
-> 
-> cheers
-> 
-> > -	 */
-> > -	if (!is_secure_guest())
-> > -		set_pci_dma_ops(&dma_iommu_ops);
-> > +	set_pci_dma_ops(&dma_iommu_ops);
-> >  }
-> >  
-> >  static int __init disable_multitce(char *str)
-> > -- 
-> > 1.8.3.1
+> --- a/lib/cpumask.c~lib-optimize-cpumask_local_spread-v3-fix
+> +++ a/lib/cpumask.c
+> @@ -254,7 +254,6 @@ static unsigned int __cpumask_local_spre
+>  	BUG();
+>  }
+>  
+> -static DEFINE_SPINLOCK(spread_lock);
+>  /**
+>   * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+>   * @i: index number
+> @@ -270,6 +269,7 @@ unsigned int cpumask_local_spread(unsign
+>  {
+>  	static int node_dist[MAX_NUMNODES];
+>  	static bool used[MAX_NUMNODES];
+> +	static DEFINE_SPINLOCK(spread_lock);
 
--- 
-Ram Pai
+Good catch, thanks for fixing it.
+
+Shaokun.
+
+>  	unsigned long flags;
+>  	int cpu, j, id;
+>  
+> _
+> 
+> 
+> .
+> 
 
