@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A548C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97756FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538A620650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0262067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240634;
-	bh=qXGTM2oCfxyP+vBtLzKiCjtARCt/2w0XbTT/leTHjvc=;
+	s=default; t=1573240639;
+	bh=3zR5LJ09aUw6Xp7NTfJ2jsB8JLyk4o3y5+Lz4rXqc+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qa87K5V5d7edUY9EyoxH9NKequ47RuEJmHcUnryqwpX3r9ILSW2s4OIQdO9cKC4eR
-	 /MEX8+y5s7qWH7Hz4YFL6o7Ynn73ML/1AxbYOzBDf3GE1u9+4yS+kQRYNq98moPiJt
-	 oOjlqtdtRyvbVu+iGc+OCrWyK92ZBBzvNgXxAq/U=
+	b=hPCtJ3+7VDYhmWnHmlJzE/eEeMMahvK4FA4eFDmPsp7SfrIua3I+Yif6OI2i2n1JP
+	 oEY2jnccLpIToy/kT64vx6QpyI7IMl1o7ROXWUaRYZF/ghhIod4m7XDvNqH6z0CyjZ
+	 j1eKf3/MAcPgcViCq9G/hPacmbAwmRdFMFlm1hwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390204AbfKHTB3 (ORCPT
+        id S2390462AbfKHTRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:01:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58790 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:17:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732352AbfKHTB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:26 -0500
+        id S2390163AbfKHTBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:01:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0575921D7B;
-        Fri,  8 Nov 2019 19:01:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FF721D7F;
+        Fri,  8 Nov 2019 19:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239685;
-        bh=qXGTM2oCfxyP+vBtLzKiCjtARCt/2w0XbTT/leTHjvc=;
+        s=default; t=1573239682;
+        bh=3zR5LJ09aUw6Xp7NTfJ2jsB8JLyk4o3y5+Lz4rXqc+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AAyg6mzAF3NbPfmoK/y8NkXChhUuSROVKue6UZh00PtUeWEETXwQsXxr2Obbu8/Qt
-         7160oEcadWUmEDmrHTZ3BVaVIKpMBCDPc9Qh0VTRmCf1iJANWrPgpA8t2ron68FJsX
-         J6643IaFKUfjNp7mq6KmneGa6gL0ju661A6cDWzk=
+        b=mQWbDgAa7czG2wha/yXZ/CKjjBhEiJe0yYtUO4ZgXNQybT8+3KQ1UiAd+Bt2t1koI
+         2iqUoHqyifDT3w/l0Obtm+8LTyKM7WTbPBnZOLSUQb0iYUurJB0oV1PDQmd0w11aqY
+         YXu/Fj+VfJ25VbnXiNiGyTZSoKRhaagRCzmUQKbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/79] tracing: Fix "gfp_t" format for synthetic events
-Date:   Fri,  8 Nov 2019 19:50:06 +0100
-Message-Id: <20191108174800.826778305@linuxfoundation.org>
+Subject: [PATCH 4.19 25/79] scsi: target: core: Do not overwrite CDB byte 1
+Date:   Fri,  8 Nov 2019 19:50:05 +0100
+Message-Id: <20191108174759.866798759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -61,56 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit 9fa8c9c647be624e91b09ecffa7cd97ee0600b40 ]
+[ Upstream commit 27e84243cb63601a10e366afe3e2d05bb03c1cb5 ]
 
-In the format of synthetic events, the "gfp_t" is shown as "signed:1",
-but in fact the "gfp_t" is "unsigned", should be shown as "signed:0".
+passthrough_parse_cdb() - used by TCMU and PSCSI - attepts to reset the LUN
+field of SCSI-2 CDBs (bits 5,6,7 of byte 1).  The current code is wrong as
+for newer commands not having the LUN field it overwrites relevant command
+bits (e.g. for SECURITY PROTOCOL IN / OUT). We think this code was
+unnecessary from the beginning or at least it is no longer useful. So we
+remove it entirely.
 
-The issue can be reproduced by the following commands:
-
-echo 'memlatency u64 lat; unsigned int order; gfp_t gfp_flags; int migratetype' > /sys/kernel/debug/tracing/synthetic_events
-cat  /sys/kernel/debug/tracing/events/synthetic/memlatency/format
-
-name: memlatency
-ID: 2233
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
-
-        field:u64 lat;  offset:8;       size:8; signed:0;
-        field:unsigned int order;       offset:16;      size:4; signed:0;
-        field:gfp_t gfp_flags;  offset:24;      size:4; signed:1;
-        field:int migratetype;  offset:32;      size:4; signed:1;
-
-print fmt: "lat=%llu, order=%u, gfp_flags=%x, migratetype=%d", REC->lat, REC->order, REC->gfp_flags, REC->migratetype
-
-Link: http://lkml.kernel.org/r/20191018012034.6404-1-zhengjun.xing@linux.intel.com
-
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/12498eab-76fd-eaad-1316-c2827badb76a@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/target/target_core_device.c | 21 ---------------------
+ 1 file changed, 21 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index bdf104596d122..dac518977e7d0 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -448,6 +448,8 @@ static bool synth_field_signed(char *type)
- {
- 	if (strncmp(type, "u", 1) == 0)
- 		return false;
-+	if (strcmp(type, "gfp_t") == 0)
-+		return false;
+diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+index 47b5ef153135c..e9ff2a7c0c0e6 100644
+--- a/drivers/target/target_core_device.c
++++ b/drivers/target/target_core_device.c
+@@ -1128,27 +1128,6 @@ passthrough_parse_cdb(struct se_cmd *cmd,
+ 	struct se_device *dev = cmd->se_dev;
+ 	unsigned int size;
  
- 	return true;
- }
+-	/*
+-	 * Clear a lun set in the cdb if the initiator talking to use spoke
+-	 * and old standards version, as we can't assume the underlying device
+-	 * won't choke up on it.
+-	 */
+-	switch (cdb[0]) {
+-	case READ_10: /* SBC - RDProtect */
+-	case READ_12: /* SBC - RDProtect */
+-	case READ_16: /* SBC - RDProtect */
+-	case SEND_DIAGNOSTIC: /* SPC - SELF-TEST Code */
+-	case VERIFY: /* SBC - VRProtect */
+-	case VERIFY_16: /* SBC - VRProtect */
+-	case WRITE_VERIFY: /* SBC - VRProtect */
+-	case WRITE_VERIFY_12: /* SBC - VRProtect */
+-	case MAINTENANCE_IN: /* SPC - Parameter Data Format for SA RTPG */
+-		break;
+-	default:
+-		cdb[1] &= 0x1f; /* clear logical unit number */
+-		break;
+-	}
+-
+ 	/*
+ 	 * For REPORT LUNS we always need to emulate the response, for everything
+ 	 * else, pass it up.
 -- 
 2.20.1
 
