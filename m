@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B63FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E554EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF44222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACCC207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213901;
-	bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
+	s=default; t=1573213909;
+	bh=uzUz+CrFI7pvV8ks0f+j4NUBeLRuSb5YZL/KBMxG/yE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Y2aulfrrhg7ci9IIoMLwXWnmGDI94DsCc7YcVxcKCOEs32sLe0OX2NpyrUwfH3kG
-	 vTpzkhbQRGi0QFefeHFbEhfpg3gXkdg45QLrmhJzb/rTu3EUFJAGrWkO2kC4mmOR3C
-	 2xhboQjF2cO6LQlK7RM5i649QoxcsTwGK4AlgzDg=
+	b=n4QrMUTOii7UEUOFRDuAwxzyEvjVlMvKD2vL7Y0ydY1GsAFKBJrUDuWjgtQZDaK/U
+	 pEcQbF3kAwdLrgBYeYPSUU5nuvPLt3NZNgpjg3w1hAHce+DnESR5F3W9heIrWOyKzR
+	 itul49RNB98jdeetmpiig/72WPM9HFQvvW8J+fyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391272AbfKHLvk (ORCPT
+        id S2403864AbfKHLvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:51:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35968 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:51:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389733AbfKHLr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:27 -0500
+        id S2391530AbfKHLrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A289206A3;
-        Fri,  8 Nov 2019 11:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F349E222C5;
+        Fri,  8 Nov 2019 11:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213646;
-        bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
+        s=default; t=1573213637;
+        bh=uzUz+CrFI7pvV8ks0f+j4NUBeLRuSb5YZL/KBMxG/yE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ovMOaV2YqGZaEkDz35DToX47M8DsTfc9m40NBunOt3a2yoMIBv118XlD2RDo0xbYK
-         TukcMApjTsYUi1CoQbVAqc2Eoxw4YV/d08oCW2xbvFhp7PXb0nNxJSYLZrrHzHQAyT
-         2MpnXjQ7qFSFB4urB8sYKgQ2eKXcjlHOFjDaiQ3E=
+        b=spwA57CWZ3A+Pnf6lBApE6LdHxbDHGFMVjbZ+6tXb6fYkMB6bWF/l1yunlKiVXXl1
+         vbAQDz8M/EmH9GPj457A44cN1+QHqFuJMLvwQPCjADBx/qwhwKwC4rfcnAv7eBamtL
+         aXD2uMLBsbSAHqxzfuIsEN6FHpB2iEgUTpcA08/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jay Foster <jayfoster@ieee.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 03/44] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
-Date:   Fri,  8 Nov 2019 06:46:39 -0500
-Message-Id: <20191108114721.15944-3-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 64/64] ath9k: Fix a locking bug in ath9k_add_interface()
+Date:   Fri,  8 Nov 2019 06:45:45 -0500
+Message-Id: <20191108114545.15351-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
-References: <20191108114721.15944-1-sashal@kernel.org>
+In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
+References: <20191108114545.15351-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,33 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jay Foster <jayfoster@ieee.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
+[ Upstream commit 461cf036057477805a8a391e5fd0f5264a5e56a8 ]
 
-Fix a typo. No functional change made by this patch.
+We tried to revert commit d9c52fd17cb4 ("ath9k: fix tx99 with monitor
+mode interface") but accidentally missed part of the locking change.
 
-Signed-off-by: Jay Foster <jayfoster@ieee.org>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+The lock has to be held earlier so that we're holding it when we do
+"sc->tx99_vif = vif;" and also there in the current code there is a
+stray unlock before we have taken the lock.
+
+Fixes: 6df0580be8bc ("ath9k: add back support for using active monitor interfaces for tx99")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index af8b708ac312a..53a5a0e311e9d 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -546,7 +546,7 @@
- 					};
- 				};
+diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
+index f6151a00041d6..abc997427bae5 100644
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1249,6 +1249,7 @@ static int ath9k_add_interface(struct ieee80211_hw *hw,
+ 	struct ath_vif *avp = (void *)vif->drv_priv;
+ 	struct ath_node *an = &avp->mcast_node;
  
--				uart1 {
-+				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
- 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB4 periph A with pullup */
++	mutex_lock(&sc->mutex);
+ 	if (IS_ENABLED(CONFIG_ATH9K_TX99)) {
+ 		if (sc->cur_chan->nvifs >= 1) {
+ 			mutex_unlock(&sc->mutex);
+@@ -1257,8 +1258,6 @@ static int ath9k_add_interface(struct ieee80211_hw *hw,
+ 		sc->tx99_vif = vif;
+ 	}
+ 
+-	mutex_lock(&sc->mutex);
+-
+ 	ath_dbg(common, CONFIG, "Attach a VIF of type: %d\n", vif->type);
+ 	sc->cur_chan->nvifs++;
+ 
 -- 
 2.20.1
 
