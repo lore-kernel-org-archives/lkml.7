@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E052C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA53EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F63222CF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EDD222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213565;
-	bh=cz9yANBsZW2qAh4Evu4ZWcIfTP6aODRHbacB8e9E0Ik=;
+	s=default; t=1573213568;
+	bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4Bgr2ha9FAss8FmOGtavt3Vo9cysLIGr3Eu7ANIx/wnYPAZrl9T6JmEWKEybLhkt
-	 tjGMuBXMwAKTUsONCbhbw9w+QeJOx2Myo7XKvgDhkMzjPlJ3Mg7b9lekkYgkXW0DjA
-	 ewtfFxFEp+BJjUZBB40pB/3D8REZWSKrzVKMF6Wo=
+	b=UiQ4DsJepqDU0Gvjh27H8nFp8adTazBYocyj23//yupMdpsE3Z+cL8IleuOdyUXUI
+	 x1GFROKU/4JcoyoL10eiXRVuklh8iksrqLr2AvmA9tGecu9UX+tmV0Vaocfgc1lpnf
+	 1YPLw70osGyf56xNWd/LY88Pk2bitTqNAKpLDMHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390070AbfKHLqD (ORCPT
+        id S2391259AbfKHLqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391232AbfKHLqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:01 -0500
+        id S2391244AbfKHLqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E883421D82;
-        Fri,  8 Nov 2019 11:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D844721D82;
+        Fri,  8 Nov 2019 11:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213560;
-        bh=cz9yANBsZW2qAh4Evu4ZWcIfTP6aODRHbacB8e9E0Ik=;
+        s=default; t=1573213562;
+        bh=WvA7ooE23+rMcSXpkAwDLVyHFb12QEhAyN/XFwoVHjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVgoqAxFSMx/Ho8UuRl1xXwWsL4kve4/altEbMrdOx244sFA7nRlSX3iZWSA9LsBy
-         ggcP1beO14bhfLAmypifMvQ3OSmsDIaAqCt9OMHFJ1PqS/wdnlIozd/XASrHD3deNZ
-         EQrl7rMpKSBTLs5ygJZqBQ6kdjTHG6ikoWqzxiqQ=
+        b=xWgsfV2zikTa8FAxNqZBZ4o6niF58kOj42cUrafpYD127xs+uy1U86gMru5ee0Xt6
+         OiuYrJbowUFJraqF3bBw3p4WIIV4mXJW9Atavhw1+y8N9AFlLwR1woJmBlnsL8Nwo+
+         63qxxVSENvLKHMcdAa78ikKJIkp+gXs+Cc+UWmBk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.9 09/64] gfs2: Don't set GFS2_RDF_UPTODATE when the lvb is updated
-Date:   Fri,  8 Nov 2019 06:44:50 -0500
-Message-Id: <20191108114545.15351-9-sashal@kernel.org>
+Cc:     Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Burton <paul.burton@mips.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        linux-mips@linux-mips.org, Sasha Levin <sashal@kernel.org>,
+        linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/64] MIPS: BCM47XX: Enable USB power on Netgear WNDR3400v3
+Date:   Fri,  8 Nov 2019 06:44:52 -0500
+Message-Id: <20191108114545.15351-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,60 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit 4f36cb36c9d14340bb200d2ad9117b03ce992cfe ]
+[ Upstream commit feef7918667b84f9d5653c501542dd8d84ae32af ]
 
-The GFS2_RDF_UPTODATE flag in the rgrp is used to determine when
-a rgrp buffer is valid. It's cleared when the glock is invalidated,
-signifying that the buffer data is now invalid. But before this
-patch, function update_rgrp_lvb was setting the flag when it
-determined it had a valid lvb. But that's an invalid assumption:
-just because you have a valid lvb doesn't mean you have valid
-buffers. After all, another node may have made the lvb valid,
-and this node just fetched it from the glock via dlm.
+Setting GPIO 21 high seems to be required to enable power to USB ports
+on the WNDR3400v3. As there is already similar code for WNR3500L,
+make the existing USB power GPIO code generic and use that.
 
-Consider this scenario:
-1. The file system is mounted with RGRPLVB option.
-2. In gfs2_inplace_reserve it locks the rgrp glock EX, but thanks
-   to GL_SKIP, it skips the gfs2_rgrp_bh_get.
-3. Since loops == 0 and the allocation target (ap->target) is
-   bigger than the largest known chunk of blocks in the rgrp
-   (rs->rs_rbm.rgd->rd_extfail_pt) it skips that rgrp and bypasses
-   the call to gfs2_rgrp_bh_get there as well.
-4. update_rgrp_lvb sees the lvb MAGIC number is valid, so bypasses
-   gfs2_rgrp_bh_get, but it still sets sets GFS2_RDF_UPTODATE due
-   to this invalid assumption.
-5. The next time update_rgrp_lvb is called, it sees the bit is set
-   and just returns 0, assuming both the lvb and rgrp are both
-   uptodate. But since this is a smaller allocation, or space has
-   been freed by another node, thus adjusting the lvb values,
-   it decides to use the rgrp for allocations, with invalid rd_free
-   due to the fact it was never updated.
-
-This patch changes update_rgrp_lvb so it doesn't set the UPTODATE
-flag anymore. That way, it has no choice but to fetch the latest
-values.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20259/
+Cc: Rafał Miłecki <zajec5@gmail.com>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/rgrp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/bcm47xx/workarounds.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
-index 0731267072706..f77a38755aea6 100644
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -1211,7 +1211,7 @@ static int update_rgrp_lvb(struct gfs2_rgrpd *rgd)
- 	rl_flags = be32_to_cpu(rgd->rd_rgl->rl_flags);
- 	rl_flags &= ~GFS2_RDF_MASK;
- 	rgd->rd_flags &= GFS2_RDF_MASK;
--	rgd->rd_flags |= (rl_flags | GFS2_RDF_UPTODATE | GFS2_RDF_CHECK);
-+	rgd->rd_flags |= (rl_flags | GFS2_RDF_CHECK);
- 	if (rgd->rd_rgl->rl_unlinked == 0)
- 		rgd->rd_flags &= ~GFS2_RDF_CHECK;
- 	rgd->rd_free = be32_to_cpu(rgd->rd_rgl->rl_free);
+diff --git a/arch/mips/bcm47xx/workarounds.c b/arch/mips/bcm47xx/workarounds.c
+index e81ce4623070e..06fb94370c7c9 100644
+--- a/arch/mips/bcm47xx/workarounds.c
++++ b/arch/mips/bcm47xx/workarounds.c
+@@ -4,9 +4,8 @@
+ #include <bcm47xx_board.h>
+ #include <bcm47xx.h>
+ 
+-static void __init bcm47xx_workarounds_netgear_wnr3500l(void)
++static void __init bcm47xx_workarounds_enable_usb_power(int usb_power)
+ {
+-	const int usb_power = 12;
+ 	int err;
+ 
+ 	err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
+@@ -22,7 +21,10 @@ void __init bcm47xx_workarounds(void)
+ 
+ 	switch (board) {
+ 	case BCM47XX_BOARD_NETGEAR_WNR3500L:
+-		bcm47xx_workarounds_netgear_wnr3500l();
++		bcm47xx_workarounds_enable_usb_power(12);
++		break;
++	case BCM47XX_BOARD_NETGEAR_WNDR3400_V3:
++		bcm47xx_workarounds_enable_usb_power(21);
+ 		break;
+ 	default:
+ 		/* No workaround(s) needed */
 -- 
 2.20.1
 
