@@ -4,230 +4,181 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A151C5DF61
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A015BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E4021D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB312084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfKHAfJ (ORCPT
+        id S1727428AbfKHAha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:35:09 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49881 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKHAfJ (ORCPT
+        Thu, 7 Nov 2019 19:37:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33436 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725930AbfKHAh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:35:09 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 7b14bd24d1bbac4d; Fri, 8 Nov 2019 01:35:04 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thu, 7 Nov 2019 19:37:29 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA80YUF5034511
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 19:37:28 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w4tumnj6x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 19:37:27 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Fri, 8 Nov 2019 00:37:25 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Nov 2019 00:37:17 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA80bGhr40173716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 00:37:16 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C106F52050;
+        Fri,  8 Nov 2019 00:37:16 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2601B5204E;
+        Fri,  8 Nov 2019 00:37:16 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C87D3A01E3;
+        Fri,  8 Nov 2019 11:37:13 +1100 (AEDT)
+Subject: Re: [PATCH 10/10] ocxl: Conditionally bind SCM devices to the
+ generic OCXL driver
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to differentiate errors
-Date:   Fri, 08 Nov 2019 01:35:04 +0100
-Message-ID: <6671524.6K7l14UQst@kreacher>
-In-Reply-To: <CAGETcx-X938BxBeqYD8m8Wrx-hRaXk6EEeR4szh34CS5Sv7EgA@mail.gmail.com>
-References: <20191028220027.251605-1-saravanak@google.com> <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com> <CAGETcx-X938BxBeqYD8m8Wrx-hRaXk6EEeR4szh34CS5Sv7EgA@mail.gmail.com>
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Fri, 08 Nov 2019 11:37:14 +1100
+In-Reply-To: <b70644d6-2c71-cd71-5d00-e25d99beea91@linux.ibm.com>
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+         <20191025044721.16617-11-alastair@au1.ibm.com>
+         <b70644d6-2c71-cd71-5d00-e25d99beea91@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110800-0020-0000-0000-0000038390E2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110800-0021-0000-0000-000021D9C758
+Message-Id: <46d72d7b2f91900c4499db127e365baade38e18c.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, November 6, 2019 1:00:18 AM CET Saravana Kannan wrote:
-> On Tue, Nov 5, 2019 at 3:07 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Tue, Nov 5, 2019 at 11:52 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > Thanks for the review.
-> > >
-> > > On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > >
-> > > > On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
-> > > > > When add_links() still has suppliers that it needs to link to in the
-> > > > > future, this patch allows it to differentiate between suppliers that are
-> > > > > needed for probing vs suppliers that are needed for sync_state()
-> > > > > correctness.
-> > > >
-> > > > I guess you mean that it will return different error codes in the different
-> > > > cases.
-> > >
-> > > Yes.
-> > >
-> > > >
-> > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > > ---
-> > > > >  drivers/base/core.c    | 12 ++++++++----
-> > > > >  include/linux/fwnode.h | 13 +++++++++----
-> > > > >  2 files changed, 17 insertions(+), 8 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > > index 48cd43a91ce6..e6d3e6d485da 100644
-> > > > > --- a/drivers/base/core.c
-> > > > > +++ b/drivers/base/core.c
-> > > > > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
-> > > > >       struct device *parent;
-> > > > >       struct kobject *kobj;
-> > > > >       struct class_interface *class_intf;
-> > > > > -     int error = -EINVAL;
-> > > > > +     int error = -EINVAL, fw_ret;
-> > > > >       struct kobject *glue_dir = NULL;
-> > > > >
-> > > > >       dev = get_device(dev);
-> > > > > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
-> > > > >        */
-> > > > >       device_link_add_missing_supplier_links();
-> > > > >
-> > > > > -     if (fwnode_has_op(dev->fwnode, add_links)
-> > > > > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > > > > -             device_link_wait_for_mandatory_supplier(dev, true);
-> > > > > +     if (fwnode_has_op(dev->fwnode, add_links)) {
-> > > >
-> > > > fw_ret can be defined here and I'd just call it "ret".
-> > >
-> > > I thought that style of variable declaration is frowned up in the
-> > > kernel coding style.
-> >
-> > Well, I'm not aware of that. :-)
+On Thu, 2019-11-07 at 19:08 +0100, Frederic Barrat wrote:
 > 
-> I've definitely seen such comments before. So I'll leave fw_ret as is.
-> If you and Greg both want to change it to the way you mentioned, I'm
-> happy to do it.
-
-If this has been committed the way it is, there's not so much of a difference,
-but I generally like variables to not be seen out of the scope in which they
-are used, as that allows bugs to be caught at compile time sometimes.
-
-> > > >
-> > > > > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > > > > +             if (fw_ret == -ENODEV)
-> > > > > +                     device_link_wait_for_mandatory_supplier(dev);
-> > > > > +             else if (fw_ret)
-> > > > > +                     device_link_wait_for_optional_supplier(dev);
-> > > > > +     }
-> > > > >
-> > > > >       bus_probe_device(dev);
-> > > > >       if (parent)
-> > > > > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > > > > index 25bb81f8ded8..a19134eae5a5 100644
-> > > > > --- a/include/linux/fwnode.h
-> > > > > +++ b/include/linux/fwnode.h
-> > > > > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
-> > > > >   *           available suppliers.
-> > > > >   *
-> > > > >   *           Return 0 if device links have been successfully created to all
-> > > > > - *           the suppliers of this device or if the supplier information is
-> > > > > - *           not known. Return an error if and only if the supplier
-> > > > > - *           information is known but some of the suppliers are not yet
-> > > > > - *           available to create device links to.
-> > > > > + *           the suppliers this device needs to create device links to or if
-> > > > > + *           the supplier information is not known.
-> > > >
-> > > > "the known suppliers of this device or if the supplier information is not known."
-> > >
-> > > "suppliers it needs to create device links to" is a subset of known
-> > > suppliers. There's no requirement that fw needs to create links to ALL
-> > > known suppliers. Just a minor distinction.
-> >
-> > That depends on what exactly you mean by "known suppliers".  The
-> > suppliers that are not listed by the firmware are not known at this
-> > point.
+> Le 25/10/2019 à 06:47, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch allows the user to bind OpenCAPI SCM devices to the
+> > generic OCXL
+> > driver.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
 > 
-> Ok, I'll rephrase my comment:
-> "suppliers it needs to create device links to" is a subset of listed
-> suppliers. There's no requirement that fw needs to create links to ALL
-> listed suppliers. For example, I can't think of any reason for
-> sync_state() to be necessary for an interrupt controller driver.
-
-A sync_state() may not be, but it may be a good idea to create device links
-to the controller device from all devices that rely on it, so as to ensure
-the right system suspend/resume ordering if nothing else.
-
-> So, fw doesn't need to create device links from consumer to interrupt
-> supplier. So I'm being more explicit and saying "the suppliers this
-> device needs to create device links to" instead of "the listed
-> suppliers of this device".
-
-This gives me the feeling of splitting hairs to be honest. :-)
-
-In fact, the FW indicates to the OS that there are some dependencies (either
-hard or soft) between devices and adding device links is a way to act on that
-information.
-
-The "device link" notion is not actually defined at the FW level.  What it
-knows about is a "probe dependency" or an "ordering constraint" which then
-is represented by a device link at the OS level.
-
-> Long story short, I wrote the comment this way intentionally and
-> changing it to what you suggest makes it inaccurate IMHO. But I'm open
-> to other wording suggestions to improve the clarity of this comment.
-
-My point basically is that the way you phrased it may lead to some confusion
-(regardless of whether or not it is intentional).
-
-> >
-> > > > > + *
-> > > > > + *           Return -ENODEV if and only if the suppliers needed for probing
-> > > > > + *           the device are not yet available to create device links to.
-> > > >
-> > > > It would be more precise to say something like this:
-> > > >
-> > > > "Return -ENODEV if an attempt to create a device link to one of the device's
-> > > > suppliers needed for probing it fails."
-> > >
-> > > "attempt to create a device link to one of the device's suppliers
-> > > needed for probing it fails" to me means device_link_add() fails.
-> > > But I'm trying to say that it should return an error if the struct
-> > > device isn't even there yet.
-> >
-> > OK, so it should be something like "if the supplier device has not
-> > been registered yet".
-> >
-> > My point is that "not yet available" is kind of ambiguous.
+> I'm wondering if we should upstream this. Is it of any use outside
+> of 
+> some serious debug session for a developer?
+> Also we would now have 2 drivers picking up the same device ID,
+> since 
+> the SCM driver is always registering for that ID, irrespective of 
+> CONFIG_OCXL_SCM_GENERIC
 > 
-> Agree, the latest suggestion sounds better.
+>    Fred
 > 
-> > > > > + *
-> > > > > + *           Return -EAGAIN if there are suppliers that need to be linked to
-> > > > > + *           that are not yet available but none of those suppliers are
-> > > > > + *           necessary for probing this device.
-> > > >
-> > > > "Return -EAGAIN if attempts to create device links to some of the device's
-> > > > suppliers have failed, but those suppliers are not necessary for probing the
-> > > > device."
-> > >
-> > > Same comment as before. The distinction I'm making here is that
-> > > -EAGAIN is needed when the struct device itself isn't there.
-> > >
-> > > Btw, Greg already pulled these into driver-core-next. Let me know if
-> > > you want me to send a delta patch to fix any of these comments.
-> >
-> > Well, it's a Greg's call if he has taken the patches, but it also
-> > depends on you (if you agree with the comments, it would be prudent to
-> > send updates).
+
+I think I'll drop this patch. It's easy enough to maintain out-of-tree
+for our in-house SCM hardware engineers.
+
 > 
-> I don't mind sending updates at all. Just trying to make sure I follow
-> the maintainers' preference in case they don't want trivial (because
-> my current ones aren't terrible :)) comment update patches.
-
-If it can be improved, then improve it.  Worst case you can hear from the
-maintainers that they don't agree with the proposed changes.
-
-
+> >   drivers/misc/ocxl/Kconfig | 7 +++++++
+> >   drivers/misc/ocxl/pci.c   | 3 +++
+> >   2 files changed, 10 insertions(+)
+> > 
+> > diff --git a/drivers/misc/ocxl/Kconfig b/drivers/misc/ocxl/Kconfig
+> > index 1916fa65f2f2..8a683715c97c 100644
+> > --- a/drivers/misc/ocxl/Kconfig
+> > +++ b/drivers/misc/ocxl/Kconfig
+> > @@ -29,3 +29,10 @@ config OCXL
+> >   	  dedicated OpenCAPI link, and don't follow the same protocol.
+> >   
+> >   	  If unsure, say N.
+> > +
+> > +config OCXL_SCM_GENERIC
+> > +	bool "Treat OpenCAPI Storage Class Memory as a generic OpenCAPI
+> > device"
+> > +	default n
+> > +	help
+> > +	  Select this option to treat OpenCAPI Storage Class Memory
+> > +	  devices an generic OpenCAPI devices.
+> > diff --git a/drivers/misc/ocxl/pci.c b/drivers/misc/ocxl/pci.c
+> > index cb920aa88d3a..7137055c1883 100644
+> > --- a/drivers/misc/ocxl/pci.c
+> > +++ b/drivers/misc/ocxl/pci.c
+> > @@ -10,6 +10,9 @@
+> >    */
+> >   static const struct pci_device_id ocxl_pci_tbl[] = {
+> >   	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x062B), },
+> > +#ifdef CONFIG_OCXL_SCM_GENERIC
+> > +	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
+> > +#endif
+> >   	{ }
+> >   };
+> >   MODULE_DEVICE_TABLE(pci, ocxl_pci_tbl);
+> > 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
