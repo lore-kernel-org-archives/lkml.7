@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BECFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428B4FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC04215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A37D215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214167;
-	bh=d999pwMigJEppsr13vUh55zksJ5+AulgB9PyRUebJXw=;
+	s=default; t=1573214171;
+	bh=3PqxP/RmrmKWRP42n9bA3cQ5bxkt2HDhwqRdGD6EXjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lEf98odtQo3ojeoi+pW5KE5VoMItTdJ83C/mjwSPguK2te9DRf3b8Fv6tAQ+RfYni
-	 mutUNnL5bP5wlppc7IDCiJdkEiOiv+O1nOB0sNqoI8mlz4izQrVXjgaGDNyQY0MQR7
-	 Rri53tq9uojAIjGF+iOc+fNnEmCdUfplZNKwUBbA=
+	b=0otpxRn8Ux0u0BIwFzCnz14wKJdxT3nscyrO8J+r7jOkobtelsj7ZClApj61FozWf
+	 QJxEhAc3Rampoe+j+07vHdIv5q98+OBYyXybXcgYkEZf0y5REcyPeJhavQ9JGFyGmC
+	 BV0IyA9huTdjgM05m1RihR6UKzAxUojJBlt+OW2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391457AbfKHL4G (ORCPT
+        id S2391028AbfKHL4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:56:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32966 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:56:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391161AbfKHLpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:40 -0500
+        id S2391155AbfKHLpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1C720656;
-        Fri,  8 Nov 2019 11:45:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C1222480;
+        Fri,  8 Nov 2019 11:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213539;
-        bh=d999pwMigJEppsr13vUh55zksJ5+AulgB9PyRUebJXw=;
+        s=default; t=1573213537;
+        bh=3PqxP/RmrmKWRP42n9bA3cQ5bxkt2HDhwqRdGD6EXjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oBtak9kyEZJXGaSfrZkWpHhB8f3GDozMFWRo/say8G+YD12LvkPZTAfelX19epIdo
-         nqZOU0cyjzaH481qaeGkN7Uw9X/zchYa8hZihZZR/CaTS8qvcSxV/Jh8a9EONd4yl8
-         3VJMOE9tncJHmXHbDRQsEXFgDH3f56VsxkV0pE9E=
+        b=OGO4Dr/lewC9U1n0M3LIcoOEWlA2OOhqzeGixWrfwBLDZSRW3C31CKPzlwAQE6r1I
+         wc85gzAt3h+1g/iLueJuyMHkcj1tFO+h+wncCI6Bxm+1aNOvvzNh40Fa/n0DN0BR8j
+         AP4mo4Kzj5bFuXH6apXAoPdBg7MmA8DBcG5q6+uU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 102/103] ACPI / LPSS: Exclude I2C busses shared with PUNIT from pmc_atom_d3_mask
-Date:   Fri,  8 Nov 2019 06:43:07 -0500
-Message-Id: <20191108114310.14363-102-sashal@kernel.org>
+Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        Jiri Benc <jbenc@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 100/103] ip_gre: fix parsing gre header in ipgre_err
+Date:   Fri,  8 Nov 2019 06:43:05 -0500
+Message-Id: <20191108114310.14363-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -60,87 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-[ Upstream commit 86b62e5cd8965d3056f9e9ccdec51631c37add81 ]
+[ Upstream commit b0350d51f001e6edc13ee4f253b98b50b05dd401 ]
 
-lpss_iosf_enter_d3_state() checks if all hw-blocks using the DMA
-controllers are in d3 before powering down the DMA controllers.
+gre_parse_header stops parsing when csum_err is encountered, which means
+tpi->key is undefined and ip_tunnel_lookup will return NULL improperly.
 
-But on devices, where the I2C bus connected to the PMIC is shared by
-the PUNIT, the controller for that bus will never reach d3 since it has
-an effectively empty _PS3 method. Instead it appears to automatically
-power-down during S0i3 and we never see it as being in d3.
+This patch introduce a NULL pointer as csum_err parameter. Even when
+csum_err is encountered, it won't return error and continue parsing gre
+header as expected.
 
-This causes the DMA controllers to never be powered-down on these devices,
-causing them to never reach S0i3. This commit uses the ACPI _SEM method
-to detect if an I2C bus is shared with the PUNIT and if it is, it removes
-it from the mask of devices which lpss_iosf_enter_d3_state() checks for.
-
-This fixes these devices never reaching any S0ix states.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 9f57c67c379d ("gre: Remove support for sharing GRE protocol hook.")
+Reported-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_lpss.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ net/ipv4/gre_demux.c | 7 ++++---
+ net/ipv4/ip_gre.c    | 9 +++------
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 51592dd45b066..1ab8d7223b252 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -98,6 +98,9 @@ struct lpss_private_data {
- 	u32 prv_reg_ctx[LPSS_PRV_REG_COUNT];
- };
+diff --git a/net/ipv4/gre_demux.c b/net/ipv4/gre_demux.c
+index b798862b6be5d..7efe740c06ebf 100644
+--- a/net/ipv4/gre_demux.c
++++ b/net/ipv4/gre_demux.c
+@@ -86,13 +86,14 @@ int gre_parse_header(struct sk_buff *skb, struct tnl_ptk_info *tpi,
  
-+/* Devices which need to be in D3 before lpss_iosf_enter_d3_state() proceeds */
-+static u32 pmc_atom_d3_mask = 0xfe000ffe;
-+
- /* LPSS run time quirks */
- static unsigned int lpss_quirks;
+ 	options = (__be32 *)(greh + 1);
+ 	if (greh->flags & GRE_CSUM) {
+-		if (skb_checksum_simple_validate(skb)) {
++		if (!skb_checksum_simple_validate(skb)) {
++			skb_checksum_try_convert(skb, IPPROTO_GRE, 0,
++						 null_compute_pseudo);
++		} else if (csum_err) {
+ 			*csum_err = true;
+ 			return -EINVAL;
+ 		}
  
-@@ -174,6 +177,21 @@ static void byt_pwm_setup(struct lpss_private_data *pdata)
+-		skb_checksum_try_convert(skb, IPPROTO_GRE, 0,
+-					 null_compute_pseudo);
+ 		options++;
+ 	}
  
- static void byt_i2c_setup(struct lpss_private_data *pdata)
- {
-+	const char *uid_str = acpi_device_uid(pdata->adev);
-+	acpi_handle handle = pdata->adev->handle;
-+	unsigned long long shared_host = 0;
-+	acpi_status status;
-+	long uid = 0;
-+
-+	/* Expected to always be true, but better safe then sorry */
-+	if (uid_str)
-+		uid = simple_strtol(uid_str, NULL, 10);
-+
-+	/* Detect I2C bus shared with PUNIT and ignore its d3 status */
-+	status = acpi_evaluate_integer(handle, "_SEM", NULL, &shared_host);
-+	if (ACPI_SUCCESS(status) && shared_host && uid)
-+		pmc_atom_d3_mask &= ~(BIT_LPSS2_F1_I2C1 << (uid - 1));
-+
- 	lpss_deassert_reset(pdata);
+diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
+index 347be2ea78d4a..f8d3a7ddf62af 100644
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -230,13 +230,10 @@ static void gre_err(struct sk_buff *skb, u32 info)
+ 	const int type = icmp_hdr(skb)->type;
+ 	const int code = icmp_hdr(skb)->code;
+ 	struct tnl_ptk_info tpi;
+-	bool csum_err = false;
  
- 	if (readl(pdata->mmio_base + pdata->dev_desc->prv_offset))
-@@ -789,7 +807,7 @@ static void lpss_iosf_enter_d3_state(void)
- 	 * Here we read the values related to LPSS power island, i.e. LPSS
- 	 * devices, excluding both LPSS DMA controllers, along with SCC domain.
- 	 */
--	u32 func_dis, d3_sts_0, pmc_status, pmc_mask = 0xfe000ffe;
-+	u32 func_dis, d3_sts_0, pmc_status;
- 	int ret;
+-	if (gre_parse_header(skb, &tpi, &csum_err, htons(ETH_P_IP),
+-			     iph->ihl * 4) < 0) {
+-		if (!csum_err)		/* ignore csum errors. */
+-			return;
+-	}
++	if (gre_parse_header(skb, &tpi, NULL, htons(ETH_P_IP),
++			     iph->ihl * 4) < 0)
++		return;
  
- 	ret = pmc_atom_read(PMC_FUNC_DIS, &func_dis);
-@@ -807,7 +825,7 @@ static void lpss_iosf_enter_d3_state(void)
- 	 * Shutdown both LPSS DMA controllers if and only if all other devices
- 	 * are already in D3hot.
- 	 */
--	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_mask;
-+	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_atom_d3_mask;
- 	if (pmc_status)
- 		goto exit;
- 
+ 	if (type == ICMP_DEST_UNREACH && code == ICMP_FRAG_NEEDED) {
+ 		ipv4_update_pmtu(skb, dev_net(skb->dev), info,
 -- 
 2.20.1
 
