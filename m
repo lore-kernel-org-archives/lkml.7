@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBC2FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9577FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0015721D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8A521D82
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239240;
-	bh=eMcGqo1LcTNEAmlZhdP4JWX+bzC9XqvUhAIPdPkJq0M=;
+	s=default; t=1573239243;
+	bh=wkk8pGge50XJBuzD/0iSsk4OSACMvJqI80NMrAUAeOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lf3LivBiWqn+bN0MKFK1dK3evIjJcBlg7GU9SJvI4USVHoAKBB2VlbWAw3ZMTb8QY
-	 jgKzhIMr+FOtB9V5I/Fsv8HhAlQJ7ElpKacQDQsoCMBLBx14bZx9oGIvqCAdG7WMeF
-	 7qKVGIBdoCT7kem+e0Fg+Wm2ZLtnyHsI+Re4dXCg=
+	b=Z5ivE5HGHu08ieAY+fnqVjFGEawRLQjO28sQR583pCHwLEEOCM9My4izbgH1S7iSS
+	 St3p9nQLc13L/goS3XoJ+a2Zde2Mq0sFvG9DdZfjqgAzFe5u/MUmtAw4iqSfgYjXc4
+	 LmkImOYftygXOE8fmBlr3C7G9tq6ek6QSgJL7UGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732718AbfKHSx7 (ORCPT
+        id S1732739AbfKHSyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:53:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50776 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:54:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732699AbfKHSxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:53:55 -0500
+        id S1730159AbfKHSyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:54:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0063B222CD;
-        Fri,  8 Nov 2019 18:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEE38214DB;
+        Fri,  8 Nov 2019 18:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239234;
-        bh=eMcGqo1LcTNEAmlZhdP4JWX+bzC9XqvUhAIPdPkJq0M=;
+        s=default; t=1573239240;
+        bh=wkk8pGge50XJBuzD/0iSsk4OSACMvJqI80NMrAUAeOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qkZm9i+sYsxBs6Ye8pXpyBVCDF2djBerlnozoWKSlPmS6biNGoUIDADfCaAUDWI3r
-         SbZlyXzaSS/5dy5dRsYS0EkW6KkywiIJEQU7ZUr7TgxZpnBaHnJILSgVHJkaPBCLU9
-         ihZNlYRiUgqcTtFCALKARWd+mI3gwAWSaVgAaE8w=
+        b=shvJnH23GQmiNzP4KZPX5QHgHG3ZM0Ev2zmU+cPBLfEbNMrncd57vh/ckodbJKmLL
+         H4vaWvIWVwVUFHoeR73+CRdpq+sCgJE3BPJ1YdKdFD0ACIwFC84DbekXxKDHl5dKZx
+         J/BQBYB8gxYfLdSwcSHD3ZwBmP3fZlvmuvmDvrBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
         <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
         Tony Lindgren <tony@atomide.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         "David A. Long" <dave.long@linaro.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 46/75] ARM: spectre-v2: add Cortex A8 and A15 validation of the IBE bit
-Date:   Fri,  8 Nov 2019 19:50:03 +0100
-Message-Id: <20191108174751.327174589@linuxfoundation.org>
+Subject: [PATCH 4.4 48/75] ARM: spectre-v2: add firmware based hardening
+Date:   Fri,  8 Nov 2019 19:50:05 +0100
+Message-Id: <20191108174752.717793084@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -65,98 +65,152 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Commit e388b80288aade31135aca23d32eee93dd106795 upstream.
+Commit 10115105cb3aa17b5da1cb726ae8dd5f6854bd93 upstream.
 
-When the branch predictor hardening is enabled, firmware must have set
-the IBE bit in the auxiliary control register.  If this bit has not
-been set, the Spectre workarounds will not be functional.
-
-Add validation that this bit is set, and print a warning at alert level
-if this is not the case.
+Add firmware based hardening for cores that require more complex
+handling in firmware.
 
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Boot-tested-by: Tony Lindgren <tony@atomide.com>
 Reviewed-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: David A. Long <dave.long@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mm/Makefile       |    2 +-
- arch/arm/mm/proc-v7-bugs.c |   36 ++++++++++++++++++++++++++++++++++++
- arch/arm/mm/proc-v7.S      |    4 ++--
- 3 files changed, 39 insertions(+), 3 deletions(-)
+ arch/arm/mm/proc-v7-bugs.c |   60 +++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/mm/proc-v7.S      |   21 +++++++++++++++
+ 2 files changed, 81 insertions(+)
 
---- a/arch/arm/mm/Makefile
-+++ b/arch/arm/mm/Makefile
-@@ -92,7 +92,7 @@ obj-$(CONFIG_CPU_MOHAWK)	+= proc-mohawk.
- obj-$(CONFIG_CPU_FEROCEON)	+= proc-feroceon.o
- obj-$(CONFIG_CPU_V6)		+= proc-v6.o
- obj-$(CONFIG_CPU_V6K)		+= proc-v6.o
--obj-$(CONFIG_CPU_V7)		+= proc-v7.o
-+obj-$(CONFIG_CPU_V7)		+= proc-v7.o proc-v7-bugs.o
- obj-$(CONFIG_CPU_V7M)		+= proc-v7m.o
- 
- AFLAGS_proc-v6.o	:=-Wa,-march=armv6
---- /dev/null
+--- a/arch/arm/mm/proc-v7-bugs.c
 +++ b/arch/arm/mm/proc-v7-bugs.c
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/smp.h>
+@@ -1,14 +1,20 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <linux/arm-smccc.h>
+ #include <linux/kernel.h>
++#include <linux/psci.h>
+ #include <linux/smp.h>
+ 
+ #include <asm/cp15.h>
+ #include <asm/cputype.h>
++#include <asm/proc-fns.h>
+ #include <asm/system_misc.h>
+ 
+ #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
+ DEFINE_PER_CPU(harden_branch_predictor_fn_t, harden_branch_predictor_fn);
+ 
++extern void cpu_v7_smc_switch_mm(phys_addr_t pgd_phys, struct mm_struct *mm);
++extern void cpu_v7_hvc_switch_mm(phys_addr_t pgd_phys, struct mm_struct *mm);
 +
-+static __maybe_unused void cpu_v7_check_auxcr_set(bool *warned,
-+						  u32 mask, const char *msg)
+ static void harden_branch_predictor_bpiall(void)
+ {
+ 	write_sysreg(0, BPIALL);
+@@ -19,6 +25,16 @@ static void harden_branch_predictor_icia
+ 	write_sysreg(0, ICIALLU);
+ }
+ 
++static void __maybe_unused call_smc_arch_workaround_1(void)
 +{
-+	u32 aux_cr;
++	arm_smccc_1_1_smc(ARM_SMCCC_ARCH_WORKAROUND_1, NULL);
++}
 +
-+	asm("mrc p15, 0, %0, c1, c0, 1" : "=r" (aux_cr));
++static void __maybe_unused call_hvc_arch_workaround_1(void)
++{
++	arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_WORKAROUND_1, NULL);
++}
 +
-+	if ((aux_cr & mask) != mask) {
-+		if (!*warned)
-+			pr_err("CPU%u: %s", smp_processor_id(), msg);
-+		*warned = true;
+ static void cpu_v7_spectre_init(void)
+ {
+ 	const char *spectre_v2_method = NULL;
+@@ -45,7 +61,51 @@ static void cpu_v7_spectre_init(void)
+ 			harden_branch_predictor_iciallu;
+ 		spectre_v2_method = "ICIALLU";
+ 		break;
++
++#ifdef CONFIG_ARM_PSCI
++	default:
++		/* Other ARM CPUs require no workaround */
++		if (read_cpuid_implementor() == ARM_CPU_IMP_ARM)
++			break;
++		/* fallthrough */
++		/* Cortex A57/A72 require firmware workaround */
++	case ARM_CPU_PART_CORTEX_A57:
++	case ARM_CPU_PART_CORTEX_A72: {
++		struct arm_smccc_res res;
++
++		if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
++			break;
++
++		switch (psci_ops.conduit) {
++		case PSCI_CONDUIT_HVC:
++			arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
++					  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
++			if ((int)res.a0 != 0)
++				break;
++			per_cpu(harden_branch_predictor_fn, cpu) =
++				call_hvc_arch_workaround_1;
++			processor.switch_mm = cpu_v7_hvc_switch_mm;
++			spectre_v2_method = "hypervisor";
++			break;
++
++		case PSCI_CONDUIT_SMC:
++			arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
++					  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
++			if ((int)res.a0 != 0)
++				break;
++			per_cpu(harden_branch_predictor_fn, cpu) =
++				call_smc_arch_workaround_1;
++			processor.switch_mm = cpu_v7_smc_switch_mm;
++			spectre_v2_method = "firmware";
++			break;
++
++		default:
++			break;
++		}
+ 	}
++#endif
 +	}
-+}
 +
-+static DEFINE_PER_CPU(bool, spectre_warned);
-+
-+static void check_spectre_auxcr(bool *warned, u32 bit)
-+{
-+	if (IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR) &&
-+		cpu_v7_check_auxcr_set(warned, bit,
-+				       "Spectre v2: firmware did not set auxiliary control register IBE bit, system vulnerable\n");
-+}
-+
-+void cpu_v7_ca8_ibe(void)
-+{
-+	check_spectre_auxcr(this_cpu_ptr(&spectre_warned), BIT(6));
-+}
-+
-+void cpu_v7_ca15_ibe(void)
-+{
-+	check_spectre_auxcr(this_cpu_ptr(&spectre_warned), BIT(0));
-+}
+ 	if (spectre_v2_method)
+ 		pr_info("CPU%u: Spectre v2: using %s workaround\n",
+ 			smp_processor_id(), spectre_v2_method);
 --- a/arch/arm/mm/proc-v7.S
 +++ b/arch/arm/mm/proc-v7.S
-@@ -511,7 +511,7 @@ __v7_setup_stack:
- 	globl_equ	cpu_ca8_do_suspend,	cpu_v7_do_suspend
- 	globl_equ	cpu_ca8_do_resume,	cpu_v7_do_resume
- #endif
--	define_processor_functions ca8, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
-+	define_processor_functions ca8, dabort=v7_early_abort, pabort=v7_pabort, suspend=1, bugs=cpu_v7_ca8_ibe
+@@ -9,6 +9,7 @@
+  *
+  *  This is the "shell" of the ARMv7 processor support.
+  */
++#include <linux/arm-smccc.h>
+ #include <linux/init.h>
+ #include <linux/linkage.h>
+ #include <asm/assembler.h>
+@@ -87,6 +88,26 @@ ENTRY(cpu_v7_dcache_clean_area)
+ 	ret	lr
+ ENDPROC(cpu_v7_dcache_clean_area)
  
- 	@ Cortex-A9 - needs more registers preserved across suspend/resume
- 	@ and bpiall switch_mm for hardening
-@@ -544,7 +544,7 @@ __v7_setup_stack:
- 	globl_equ	cpu_ca15_suspend_size,	cpu_v7_suspend_size
- 	globl_equ	cpu_ca15_do_suspend,	cpu_v7_do_suspend
- 	globl_equ	cpu_ca15_do_resume,	cpu_v7_do_resume
--	define_processor_functions ca15, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
-+	define_processor_functions ca15, dabort=v7_early_abort, pabort=v7_pabort, suspend=1, bugs=cpu_v7_ca15_ibe
- #ifdef CONFIG_CPU_PJ4B
- 	define_processor_functions pj4b, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
- #endif
++#ifdef CONFIG_ARM_PSCI
++	.arch_extension sec
++ENTRY(cpu_v7_smc_switch_mm)
++	stmfd	sp!, {r0 - r3}
++	movw	r0, #:lower16:ARM_SMCCC_ARCH_WORKAROUND_1
++	movt	r0, #:upper16:ARM_SMCCC_ARCH_WORKAROUND_1
++	smc	#0
++	ldmfd	sp!, {r0 - r3}
++	b	cpu_v7_switch_mm
++ENDPROC(cpu_v7_smc_switch_mm)
++	.arch_extension virt
++ENTRY(cpu_v7_hvc_switch_mm)
++	stmfd	sp!, {r0 - r3}
++	movw	r0, #:lower16:ARM_SMCCC_ARCH_WORKAROUND_1
++	movt	r0, #:upper16:ARM_SMCCC_ARCH_WORKAROUND_1
++	hvc	#0
++	ldmfd	sp!, {r0 - r3}
++	b	cpu_v7_switch_mm
++ENDPROC(cpu_v7_hvc_switch_mm)
++#endif
+ ENTRY(cpu_v7_iciallu_switch_mm)
+ 	mov	r3, #0
+ 	mcr	p15, 0, r3, c7, c5, 0		@ ICIALLU
 
 
