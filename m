@@ -2,53 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708EAFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C35DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E37C21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF66214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239386;
-	bh=QQnacO8XTYFkVvC98SZyoS78neMj+cLplwvBEkW6pO8=;
+	s=default; t=1573239390;
+	bh=vPdcgQl2FVoysS8v6u1QJuZFO1O4rWnKghnVvBWOf9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZDgKGuGmMUu+fCNswONptyi1xe7z6+NZqWxsBUdrT8CNuvPoJ7ULxRiXhPHe9LU3
-	 KHcS2LqFKJ5VBaPL5pWSnjf0sEGR5L0Uc1P4tgzNmO1BJ8W2LipmD6rCELt2Tereyj
-	 4u3WyPh7ilmQOnzxHfYtOYukmmmVMV7MVQLZJCoc=
+	b=bfYlqvi3BOtLoD3ORWurOffITqnR8Tz+Vvha59fNK7DKNvbjD4SfjOpsdzkGadzVI
+	 qPV8CH6SHnnl+0zpfcGVrMSFXvxfuWqhZSmspYZB+iA4PoXkm56mDCMKUp4k/vQWEZ
+	 8OxPYpdo/XtZST3h7T3HJ0nwf0HcrlxMPOLQm9KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388229AbfKHS4Z (ORCPT
+        id S2388299AbfKHS43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:56:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:56:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388064AbfKHS4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:12 -0500
+        id S1731884AbfKHS4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92CF21D7B;
-        Fri,  8 Nov 2019 18:56:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D47D520865;
+        Fri,  8 Nov 2019 18:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239371;
-        bh=QQnacO8XTYFkVvC98SZyoS78neMj+cLplwvBEkW6pO8=;
+        s=default; t=1573239377;
+        bh=vPdcgQl2FVoysS8v6u1QJuZFO1O4rWnKghnVvBWOf9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gi7KSYmZ92TAw6kcdDMPq793qvS7059jFB7gNZb26oCYzaNY5YqBXULCzPho5c2io
-         v4Fg1yRBJpw8+1CwL4yFMbFi2jC+u8UdIw5JIB/KlRw75qxPQ/OQO5TrAJgcT8RL4R
-         o2nOB+NGORws0Mq+z89Y40hpqz6a2HlOzJ+rbV+o=
+        b=BTHAMrXFLdTBJk0LEUgrbvkL81wDo+5f4DkiYwSRSBm5yxW3ep/3dSC04EyUgEEGy
+         lGIeJlLhjbE3pX/qrnlXJoWKarzGyDPIJtODjb8aLZMS5qbmHUIuTsIpE/WS+yuYpz
+         s1XCaiRh0N8CIf93rKUk54eSsMhDhVKzNRsobeEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/34] cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
-Date:   Fri,  8 Nov 2019 19:50:24 +0100
-Message-Id: <20191108174637.779336809@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 19/34] net: fix sk_page_frag() recursion from memory reclaim
+Date:   Fri,  8 Nov 2019 19:50:26 +0100
+Message-Id: <20191108174639.734430340@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
 References: <20191108174618.266472504@linuxfoundation.org>
@@ -61,180 +61,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit d46b0da7a33dd8c99d969834f682267a45444ab3 ]
+[ Upstream commit 20eb4f29b60286e0d6dc01d9c260b4bd383c58fb ]
 
-There's a deadlock that is possible and can easily be seen with
-a test where multiple readers open/read/close of the same file
-and a disruption occurs causing reconnect.  The deadlock is due
-a reader thread inside cifs_strict_readv calling down_read and
-obtaining lock_sem, and then after reconnect inside
-cifs_reopen_file calling down_read a second time.  If in
-between the two down_read calls, a down_write comes from
-another process, deadlock occurs.
+sk_page_frag() optimizes skb_frag allocations by using per-task
+skb_frag cache when it knows it's the only user.  The condition is
+determined by seeing whether the socket allocation mask allows
+blocking - if the allocation may block, it obviously owns the task's
+context and ergo exclusively owns current->task_frag.
 
-        CPU0                    CPU1
-        ----                    ----
-cifs_strict_readv()
- down_read(&cifsi->lock_sem);
-                               _cifsFileInfo_put
-                                  OR
-                               cifs_new_fileinfo
-                                down_write(&cifsi->lock_sem);
-cifs_reopen_file()
- down_read(&cifsi->lock_sem);
+Unfortunately, this misses recursion through memory reclaim path.
+Please take a look at the following backtrace.
 
-Fix the above by changing all down_write(lock_sem) calls to
-down_write_trylock(lock_sem)/msleep() loop, which in turn
-makes the second down_read call benign since it will never
-block behind the writer while holding lock_sem.
+ [2] RIP: 0010:tcp_sendmsg_locked+0xccf/0xe10
+     ...
+     tcp_sendmsg+0x27/0x40
+     sock_sendmsg+0x30/0x40
+     sock_xmit.isra.24+0xa1/0x170 [nbd]
+     nbd_send_cmd+0x1d2/0x690 [nbd]
+     nbd_queue_rq+0x1b5/0x3b0 [nbd]
+     __blk_mq_try_issue_directly+0x108/0x1b0
+     blk_mq_request_issue_directly+0xbd/0xe0
+     blk_mq_try_issue_list_directly+0x41/0xb0
+     blk_mq_sched_insert_requests+0xa2/0xe0
+     blk_mq_flush_plug_list+0x205/0x2a0
+     blk_flush_plug_list+0xc3/0xf0
+ [1] blk_finish_plug+0x21/0x2e
+     _xfs_buf_ioapply+0x313/0x460
+     __xfs_buf_submit+0x67/0x220
+     xfs_buf_read_map+0x113/0x1a0
+     xfs_trans_read_buf_map+0xbf/0x330
+     xfs_btree_read_buf_block.constprop.42+0x95/0xd0
+     xfs_btree_lookup_get_block+0x95/0x170
+     xfs_btree_lookup+0xcc/0x470
+     xfs_bmap_del_extent_real+0x254/0x9a0
+     __xfs_bunmapi+0x45c/0xab0
+     xfs_bunmapi+0x15/0x30
+     xfs_itruncate_extents_flags+0xca/0x250
+     xfs_free_eofblocks+0x181/0x1e0
+     xfs_fs_destroy_inode+0xa8/0x1b0
+     destroy_inode+0x38/0x70
+     dispose_list+0x35/0x50
+     prune_icache_sb+0x52/0x70
+     super_cache_scan+0x120/0x1a0
+     do_shrink_slab+0x120/0x290
+     shrink_slab+0x216/0x2b0
+     shrink_node+0x1b6/0x4a0
+     do_try_to_free_pages+0xc6/0x370
+     try_to_free_mem_cgroup_pages+0xe3/0x1e0
+     try_charge+0x29e/0x790
+     mem_cgroup_charge_skmem+0x6a/0x100
+     __sk_mem_raise_allocated+0x18e/0x390
+     __sk_mem_schedule+0x2a/0x40
+ [0] tcp_sendmsg_locked+0x8eb/0xe10
+     tcp_sendmsg+0x27/0x40
+     sock_sendmsg+0x30/0x40
+     ___sys_sendmsg+0x26d/0x2b0
+     __sys_sendmsg+0x57/0xa0
+     do_syscall_64+0x42/0x100
+     entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Suggested-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed--by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In [0], tcp_send_msg_locked() was using current->page_frag when it
+called sk_wmem_schedule().  It already calculated how many bytes can
+be fit into current->page_frag.  Due to memory pressure,
+sk_wmem_schedule() called into memory reclaim path which called into
+xfs and then IO issue path.  Because the filesystem in question is
+backed by nbd, the control goes back into the tcp layer - back into
+tcp_sendmsg_locked().
+
+nbd sets sk_allocation to (GFP_NOIO | __GFP_MEMALLOC) which makes
+sense - it's in the process of freeing memory and wants to be able to,
+e.g., drop clean pages to make forward progress.  However, this
+confused sk_page_frag() called from [2].  Because it only tests
+whether the allocation allows blocking which it does, it now thinks
+current->page_frag can be used again although it already was being
+used in [0].
+
+After [2] used current->page_frag, the offset would be increased by
+the used amount.  When the control returns to [0],
+current->page_frag's offset is increased and the previously calculated
+number of bytes now may overrun the end of allocated memory leading to
+silent memory corruptions.
+
+Fix it by adding gfpflags_normal_context() which tests sleepable &&
+!reclaim and use it to determine whether to use current->task_frag.
+
+v2: Eric didn't like gfp flags being tested twice.  Introduce a new
+    helper gfpflags_normal_context() and combine the two tests.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/cifs/cifsglob.h  |  5 +++++
- fs/cifs/cifsproto.h |  1 +
- fs/cifs/file.c      | 23 +++++++++++++++--------
- fs/cifs/smb2file.c  |  2 +-
- 4 files changed, 22 insertions(+), 9 deletions(-)
+ include/linux/gfp.h |   23 +++++++++++++++++++++++
+ include/net/sock.h  |   11 ++++++++---
+ 2 files changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 5367b684c1f74..7ae21ad420fbf 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1178,6 +1178,11 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
- struct cifsInodeInfo {
- 	bool can_cache_brlcks;
- 	struct list_head llist;	/* locks helb by this inode */
-+	/*
-+	 * NOTE: Some code paths call down_read(lock_sem) twice, so
-+	 * we must always use use cifs_down_write() instead of down_write()
-+	 * for this semaphore to avoid deadlocks.
-+	 */
- 	struct rw_semaphore lock_sem;	/* protect the fields above */
- 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
- 	struct list_head openFileList;
-diff --git a/fs/cifs/cifsproto.h b/fs/cifs/cifsproto.h
-index cd8025a249bba..cdf244df91c25 100644
---- a/fs/cifs/cifsproto.h
-+++ b/fs/cifs/cifsproto.h
-@@ -138,6 +138,7 @@ extern int cifs_unlock_range(struct cifsFileInfo *cfile,
- 			     struct file_lock *flock, const unsigned int xid);
- extern int cifs_push_mandatory_locks(struct cifsFileInfo *cfile);
- 
-+extern void cifs_down_write(struct rw_semaphore *sem);
- extern struct cifsFileInfo *cifs_new_fileinfo(struct cifs_fid *fid,
- 					      struct file *file,
- 					      struct tcon_link *tlink,
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 3504ef015493b..1c3f262d9c4d4 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -280,6 +280,13 @@ cifs_has_mand_locks(struct cifsInodeInfo *cinode)
- 	return has_locks;
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -284,6 +284,29 @@ static inline bool gfpflags_allow_blocki
+ 	return !!(gfp_flags & __GFP_DIRECT_RECLAIM);
  }
  
-+void
-+cifs_down_write(struct rw_semaphore *sem)
++/**
++ * gfpflags_normal_context - is gfp_flags a normal sleepable context?
++ * @gfp_flags: gfp_flags to test
++ *
++ * Test whether @gfp_flags indicates that the allocation is from the
++ * %current context and allowed to sleep.
++ *
++ * An allocation being allowed to block doesn't mean it owns the %current
++ * context.  When direct reclaim path tries to allocate memory, the
++ * allocation context is nested inside whatever %current was doing at the
++ * time of the original allocation.  The nested allocation may be allowed
++ * to block but modifying anything %current owns can corrupt the outer
++ * context's expectations.
++ *
++ * %true result from this function indicates that the allocation context
++ * can sleep and use anything that's associated with %current.
++ */
++static inline bool gfpflags_normal_context(const gfp_t gfp_flags)
 +{
-+	while (!down_write_trylock(sem))
-+		msleep(10);
++	return (gfp_flags & (__GFP_DIRECT_RECLAIM | __GFP_MEMALLOC)) ==
++		__GFP_DIRECT_RECLAIM;
 +}
 +
- struct cifsFileInfo *
- cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 		  struct tcon_link *tlink, __u32 oplock)
-@@ -305,7 +312,7 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 	INIT_LIST_HEAD(&fdlocks->locks);
- 	fdlocks->cfile = cfile;
- 	cfile->llist = fdlocks;
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_add(&fdlocks->llist, &cinode->llist);
- 	up_write(&cinode->lock_sem);
- 
-@@ -457,7 +464,7 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
- 	 * Delete any outstanding lock records. We'll lose them when the file
- 	 * is closed anyway.
- 	 */
--	down_write(&cifsi->lock_sem);
-+	cifs_down_write(&cifsi->lock_sem);
- 	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
- 		list_del(&li->llist);
- 		cifs_del_lock_waiters(li);
-@@ -1011,7 +1018,7 @@ static void
- cifs_lock_add(struct cifsFileInfo *cfile, struct cifsLockInfo *lock)
+ #ifdef CONFIG_HIGHMEM
+ #define OPT_ZONE_HIGHMEM ZONE_HIGHMEM
+ #else
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2045,12 +2045,17 @@ struct sk_buff *sk_stream_alloc_skb(stru
+  * sk_page_frag - return an appropriate page_frag
+  * @sk: socket
+  *
+- * If socket allocation mode allows current thread to sleep, it means its
+- * safe to use the per task page_frag instead of the per socket one.
++ * Use the per task page_frag instead of the per socket one for
++ * optimization when we know that we're in the normal context and owns
++ * everything that's associated with %current.
++ *
++ * gfpflags_allow_blocking() isn't enough here as direct reclaim may nest
++ * inside other socket operations and end up recursing into sk_page_frag()
++ * while it's already in use.
+  */
+ static inline struct page_frag *sk_page_frag(struct sock *sk)
  {
- 	struct cifsInodeInfo *cinode = CIFS_I(d_inode(cfile->dentry));
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_add_tail(&lock->llist, &cfile->llist->locks);
- 	up_write(&cinode->lock_sem);
- }
-@@ -1033,7 +1040,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
+-	if (gfpflags_allow_blocking(sk->sk_allocation))
++	if (gfpflags_normal_context(sk->sk_allocation))
+ 		return &current->task_frag;
  
- try_again:
- 	exist = false;
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 
- 	exist = cifs_find_lock_conflict(cfile, lock->offset, lock->length,
- 					lock->type, &conf_lock, CIFS_LOCK_OP);
-@@ -1055,7 +1062,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
- 					(lock->blist.next == &lock->blist));
- 		if (!rc)
- 			goto try_again;
--		down_write(&cinode->lock_sem);
-+		cifs_down_write(&cinode->lock_sem);
- 		list_del_init(&lock->blist);
- 	}
- 
-@@ -1108,7 +1115,7 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
- 		return rc;
- 
- try_again:
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	if (!cinode->can_cache_brlcks) {
- 		up_write(&cinode->lock_sem);
- 		return rc;
-@@ -1312,7 +1319,7 @@ cifs_push_locks(struct cifsFileInfo *cfile)
- 	int rc = 0;
- 
- 	/* we are going to update can_cache_brlcks here - need a write access */
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	if (!cinode->can_cache_brlcks) {
- 		up_write(&cinode->lock_sem);
- 		return rc;
-@@ -1501,7 +1508,7 @@ cifs_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
- 	if (!buf)
- 		return -ENOMEM;
- 
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	for (i = 0; i < 2; i++) {
- 		cur = buf;
- 		num = 0;
-diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
-index dee5250701deb..41f1a5dd33a53 100644
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -138,7 +138,7 @@ smb2_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
- 
- 	cur = buf;
- 
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_for_each_entry_safe(li, tmp, &cfile->llist->locks, llist) {
- 		if (flock->fl_start > li->offset ||
- 		    (flock->fl_start + length) <
--- 
-2.20.1
-
+ 	return &sk->sk_frag;
 
 
