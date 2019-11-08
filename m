@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A927FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A3DFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073B6218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B5321D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213076;
-	bh=fUrFUQ0VcsIJkVEdn4DWVyWlVpEN5y6KkxK0GRYbpqI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=s47h4R1nyWH6Lujwzc3epdOeO+NVDHXM/gMLzo+61itak/ieZp/fml93mJ05vv8nW
-	 rsF3a64xhzetisuQIrHrZmZHXzD+R/CmZa5svEWuJip4BOOq2W55pQAWanYLjQCR3Q
-	 XMHgDxLArTFYphhXpgBa4Fs1K0EkFXSu0zCA260o=
+	s=default; t=1573213077;
+	bh=3pZtjJxg82RJ4bLROtW2plxaPpzpKc7U4x+pscgL8z4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SC+/3JL2A+tLa9uwbkZFL9w7e9ue1D64nR6KwHcq0Z7QjZF5u8LAb+s+dh1xy/jHe
+	 3Kh5f+OlnjBbamubKLNgOOm+rPTvNlfnkcNcCXVNz7oHKVZU5XzbzBRXxysBdFkFF7
+	 LcOG48TqZyVVE78PFPZuGcXtRKvDgYvBomT52PHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731922AbfKHLhz (ORCPT
+        id S1732015AbfKHLh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:37:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:37:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731463AbfKHLhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:37:54 -0500
+        id S1731463AbfKHLhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:37:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AB0820869;
-        Fri,  8 Nov 2019 11:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D48121D6C;
+        Fri,  8 Nov 2019 11:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213074;
-        bh=fUrFUQ0VcsIJkVEdn4DWVyWlVpEN5y6KkxK0GRYbpqI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CtH520QXPkwXtxcOilnL8TiNOtkC1GRuQDZ7QAku0eiPFjooHMr7QjSTbznFl5Nfy
-         47aPFezSZiawBV01lEiN3oAqUomTX4AG+bhRd/s90RIsbAIlhhMhI99YN70UYLTErT
-         s+vVbr9uxAof/ELWJLpYEGgNjJoapO3RgDxsmtoE=
+        s=default; t=1573213075;
+        bh=3pZtjJxg82RJ4bLROtW2plxaPpzpKc7U4x+pscgL8z4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZnQiv5nfxu7+ZF4kftqjg4OmVCLgGvlMhvLf+Vdu1augql35S6KSkAblA0gTkNFp7
+         eqLi+2FFhLf3iF2cz0sbWsazrNNESUKvR+pXqVLbviwObnJHhODlQNtTkGJ07zdi32
+         KaVqrnaFdhkzSzuYAm5ThMLo8R7iksPSxvmGLt18=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan@agner.ch>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 001/205] iio: adc: max9611: explicitly cast gain_selectors
-Date:   Fri,  8 Nov 2019 06:34:28 -0500
-Message-Id: <20191108113752.12502-1-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 002/205] tee: optee: take DT status property into account
+Date:   Fri,  8 Nov 2019 06:34:29 -0500
+Message-Id: <20191108113752.12502-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
+References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,40 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit b1ec0802503820ccbc894aadfd2a44da20232f5e ]
+[ Upstream commit db878f76b9ff7487da9bb0f686153f81829f1230 ]
 
-After finding a reasonable gain, the function converts the configured
-gain to a gain configuration option selector enum max9611_csa_gain.
-Make the conversion clearly visible by using an explicit cast. This
-also avoids a warning seen with clang:
-  drivers/iio/adc/max9611.c:292:16: warning: implicit conversion from
-      enumeration type 'enum max9611_conf_ids' to different enumeration
-      type 'enum max9611_csa_gain' [-Wenum-conversion]
-                        *csa_gain = gain_selectors[i];
-                                  ~ ^~~~~~~~~~~~~~~~~
+DT nodes may have a 'status' property which, if set to anything other
+than 'ok' or 'okay', indicates to the OS that the DT node should be
+treated as if it was not present. So add that missing logic to the
+OP-TEE driver.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max9611.c | 2 +-
+ drivers/tee/optee/core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-index 49c1956e6a674..0884435eec68d 100644
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -289,7 +289,7 @@ static int max9611_read_csa_voltage(struct max9611_dev *max9611,
- 			return ret;
+diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+index e1aafe842d660..34dce850067b9 100644
+--- a/drivers/tee/optee/core.c
++++ b/drivers/tee/optee/core.c
+@@ -696,7 +696,7 @@ static int __init optee_driver_init(void)
+ 		return -ENODEV;
  
- 		if (*adc_raw > 0) {
--			*csa_gain = gain_selectors[i];
-+			*csa_gain = (enum max9611_csa_gain)gain_selectors[i];
- 			return 0;
- 		}
- 	}
+ 	np = of_find_matching_node(fw_np, optee_match);
+-	if (!np)
++	if (!np || !of_device_is_available(np))
+ 		return -ENODEV;
+ 
+ 	optee = optee_probe(np);
 -- 
 2.20.1
 
