@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F41FFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB26FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1764218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B392067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239702;
-	bh=E/66I8gVAHeHm9drdzDI89rAtaP9NZE3+thIh4jkC9U=;
+	s=default; t=1573239708;
+	bh=tF0E1giTSXxJHmVP2hupSm5VRPNu7THTyO2tRFdVq+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bYVCvuDwxSpBTBtdJooWeHkyXV8+B4uay6tBeoNb0vqq5B9gciIkjjB96UXBluYAn
-	 s33rwtDM3MP8t6dm8xrQK3yrSS4eHRFYFtiNjYJXvDz85gAjaQcZz0EZQDuJSovnNE
-	 krl7x73fe+N/z8raYqx4roQQMqKhwV5Dz35IMJfQ=
+	b=riCUAAiGhQh9vWxQ/ySFWEFFDxGi71dnUmjzwjZlH2fZOJ8KVft5XtArxbheEWED3
+	 UvlCNWYNofxSZDd4KOAVAmD2M/rRqbJ19Wm9q3+nW+6M0b94Ll8L+ILTTrI+K/eBLc
+	 ZWZFTyUYjIMpkbAzwDejEe4zxS9XJJoRiMuz73OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390270AbfKHTBl (ORCPT
+        id S2390335AbfKHTBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:01:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59008 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:01:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733266AbfKHTBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:39 -0500
+        id S2390258AbfKHTBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:01:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4BC3218AE;
-        Fri,  8 Nov 2019 19:01:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BF8221D7E;
+        Fri,  8 Nov 2019 19:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239697;
-        bh=E/66I8gVAHeHm9drdzDI89rAtaP9NZE3+thIh4jkC9U=;
+        s=default; t=1573239699;
+        bh=tF0E1giTSXxJHmVP2hupSm5VRPNu7THTyO2tRFdVq+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yA5QgI1Z+cnnayhvJpFnlrd5UVqEetO75deN8ZH2DtFc5SsMCLc5edOjRY7KvJ0z7
-         5S/u7QwZAClJLSjBnZH0pDx60HoVx+/JvpLXWv+pIMcQU7J9zGt/N09NUoC1namYNJ
-         ihB7s+zC/JZKA9+8G597CPSrbAqxGb2H//VnRuxs=
+        b=ZKDoaKp2/Ql18zSbWuYeB7sBhi5vIRykWDf3EYuQg5BN3S6halnxW5XymIgjtDENE
+         91fJkJ0DlwYRA2mwRXmzRS6NV99Zh483tYHvANJQkvyvzoobDhvppBrAJvz6iuc4V/
+         khCmN+yTrK08ejck8yMHTIo0fI3uSsMBwChyynyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/79] ASoC: wm8994: Do not register inapplicable controls for WM1811
-Date:   Fri,  8 Nov 2019 19:49:43 +0100
-Message-Id: <20191108174746.904621393@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 30/79] irqchip/gic-v3-its: Use the exact ITSList for VMOVP
+Date:   Fri,  8 Nov 2019 19:50:10 +0100
+Message-Id: <20191108174802.507057166@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -63,146 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit ca2347190adb5e4eece73a2b16e96e651c46246b ]
+[ Upstream commit 8424312516e5d9baeeb0a95d0e4523579b7aa395 ]
 
-In case of WM1811 device there are currently being registered controls
-referring to registers not existing on that device.
-It has been noticed when getting values of "AIF1ADC2 Volume", "AIF1DAC2
-Volume" controls was failing during ALSA state restoring at boot time:
- "amixer: Mixer hw:0 load error: Device or resource busy"
+On a system without Single VMOVP support (say GITS_TYPER.VMOVP == 0),
+we will map vPEs only on ITSs that will actually control interrupts
+for the given VM.  And when moving a vPE, the VMOVP command will be
+issued only for those ITSs.
 
-Reading some registers through I2C was failing with EBUSY error and
-indeed these registers were not available according to the datasheet.
+But when issuing VMOVPs we seemed fail to present the exact ITSList
+to ITSs who are actually included in the synchronization operation.
+The its_list_map we're currently using includes all ITSs in the system,
+even though some of them don't have the corresponding vPE mapping at all.
 
-To fix this controls not available on WM1811 are moved to a separate
-array and registered only for WM8994 and WM8958.
+Introduce get_its_list() to get the per-VM its_list_map, to indicate
+which ITSs have vPE mappings for the given VM, and use this map as
+the expected ITSList when building VMOVP. This is hopefully a performance
+gain not to do some synchronization with those unsuspecting ITSs.
+And initialize the whole command descriptor to zero at beginning, since
+the seq_num and its_list should be RES0 when GITS_TYPER.VMOVP == 1.
 
-There are some further differences between WM8994 and WM1811,
-e.g. registers 603h, 604h, 605h, which are not covered in this patch.
-
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Link: https://lore.kernel.org/r/20190920130218.32690-2-s.nawrocki@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/1571802386-2680-1-git-send-email-yuzenghui@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8994.c | 43 +++++++++++++++++++++++----------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index 14f1b0c0d286a..01acb8da2f48e 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -537,13 +537,10 @@ static SOC_ENUM_SINGLE_DECL(dac_osr,
- static SOC_ENUM_SINGLE_DECL(adc_osr,
- 			    WM8994_OVERSAMPLING, 1, osr_text);
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index e7549a2b1482b..050d6e040128d 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -182,6 +182,22 @@ static DEFINE_IDA(its_vpeid_ida);
+ #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
+ #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
  
--static const struct snd_kcontrol_new wm8994_snd_controls[] = {
-+static const struct snd_kcontrol_new wm8994_common_snd_controls[] = {
- SOC_DOUBLE_R_TLV("AIF1ADC1 Volume", WM8994_AIF1_ADC1_LEFT_VOLUME,
- 		 WM8994_AIF1_ADC1_RIGHT_VOLUME,
- 		 1, 119, 0, digital_tlv),
--SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
--		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
--		 1, 119, 0, digital_tlv),
- SOC_DOUBLE_R_TLV("AIF2ADC Volume", WM8994_AIF2_ADC_LEFT_VOLUME,
- 		 WM8994_AIF2_ADC_RIGHT_VOLUME,
- 		 1, 119, 0, digital_tlv),
-@@ -560,8 +557,6 @@ SOC_ENUM("AIF2DACR Source", aif2dacr_src),
- 
- SOC_DOUBLE_R_TLV("AIF1DAC1 Volume", WM8994_AIF1_DAC1_LEFT_VOLUME,
- 		 WM8994_AIF1_DAC1_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
--SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
--		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
- SOC_DOUBLE_R_TLV("AIF2DAC Volume", WM8994_AIF2_DAC_LEFT_VOLUME,
- 		 WM8994_AIF2_DAC_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
- 
-@@ -569,17 +564,12 @@ SOC_SINGLE_TLV("AIF1 Boost Volume", WM8994_AIF1_CONTROL_2, 10, 3, 0, aif_tlv),
- SOC_SINGLE_TLV("AIF2 Boost Volume", WM8994_AIF2_CONTROL_2, 10, 3, 0, aif_tlv),
- 
- SOC_SINGLE("AIF1DAC1 EQ Switch", WM8994_AIF1_DAC1_EQ_GAINS_1, 0, 1, 0),
--SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
- SOC_SINGLE("AIF2 EQ Switch", WM8994_AIF2_EQ_GAINS_1, 0, 1, 0),
- 
- WM8994_DRC_SWITCH("AIF1DAC1 DRC Switch", WM8994_AIF1_DRC1_1, 2),
- WM8994_DRC_SWITCH("AIF1ADC1L DRC Switch", WM8994_AIF1_DRC1_1, 1),
- WM8994_DRC_SWITCH("AIF1ADC1R DRC Switch", WM8994_AIF1_DRC1_1, 0),
- 
--WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
--WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
--WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
--
- WM8994_DRC_SWITCH("AIF2DAC DRC Switch", WM8994_AIF2_DRC_1, 2),
- WM8994_DRC_SWITCH("AIF2ADCL DRC Switch", WM8994_AIF2_DRC_1, 1),
- WM8994_DRC_SWITCH("AIF2ADCR DRC Switch", WM8994_AIF2_DRC_1, 0),
-@@ -598,9 +588,6 @@ SOC_SINGLE("Sidetone HPF Switch", WM8994_SIDETONE, 6, 1, 0),
- SOC_ENUM("AIF1ADC1 HPF Mode", aif1adc1_hpf),
- SOC_DOUBLE("AIF1ADC1 HPF Switch", WM8994_AIF1_ADC1_FILTERS, 12, 11, 1, 0),
- 
--SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
--SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
--
- SOC_ENUM("AIF2ADC HPF Mode", aif2adc_hpf),
- SOC_DOUBLE("AIF2ADC HPF Switch", WM8994_AIF2_ADC_FILTERS, 12, 11, 1, 0),
- 
-@@ -641,6 +628,24 @@ SOC_SINGLE("AIF2DAC 3D Stereo Switch", WM8994_AIF2_DAC_FILTERS_2,
- 	   8, 1, 0),
- };
- 
-+/* Controls not available on WM1811 */
-+static const struct snd_kcontrol_new wm8994_snd_controls[] = {
-+SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
-+		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
-+		 1, 119, 0, digital_tlv),
-+SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
-+		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
++static u16 get_its_list(struct its_vm *vm)
++{
++	struct its_node *its;
++	unsigned long its_list = 0;
 +
-+SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
++	list_for_each_entry(its, &its_nodes, entry) {
++		if (!its->is_v4)
++			continue;
 +
-+WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
-+WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
-+WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
++		if (vm->vlpi_count[its->list_nr])
++			__set_bit(its->list_nr, &its_list);
++	}
 +
-+SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
-+SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
-+};
++	return (u16)its_list;
++}
 +
- static const struct snd_kcontrol_new wm8994_eq_controls[] = {
- SOC_SINGLE_TLV("AIF1DAC1 EQ1 Volume", WM8994_AIF1_DAC1_EQ_GAINS_1, 11, 31, 0,
- 	       eq_tlv),
-@@ -4262,13 +4267,15 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 	wm8994_handle_pdata(wm8994);
+ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
+ 					       u32 event)
+ {
+@@ -983,17 +999,15 @@ static void its_send_vmapp(struct its_node *its,
  
- 	wm_hubs_add_analogue_controls(component);
--	snd_soc_add_component_controls(component, wm8994_snd_controls,
--			     ARRAY_SIZE(wm8994_snd_controls));
-+	snd_soc_add_component_controls(component, wm8994_common_snd_controls,
-+				       ARRAY_SIZE(wm8994_common_snd_controls));
- 	snd_soc_dapm_new_controls(dapm, wm8994_dapm_widgets,
- 				  ARRAY_SIZE(wm8994_dapm_widgets));
+ static void its_send_vmovp(struct its_vpe *vpe)
+ {
+-	struct its_cmd_desc desc;
++	struct its_cmd_desc desc = {};
+ 	struct its_node *its;
+ 	unsigned long flags;
+ 	int col_id = vpe->col_idx;
  
- 	switch (control->type) {
- 	case WM8994:
-+		snd_soc_add_component_controls(component, wm8994_snd_controls,
-+					       ARRAY_SIZE(wm8994_snd_controls));
- 		snd_soc_dapm_new_controls(dapm, wm8994_specific_dapm_widgets,
- 					  ARRAY_SIZE(wm8994_specific_dapm_widgets));
- 		if (control->revision < 4) {
-@@ -4288,8 +4295,10 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 		}
- 		break;
- 	case WM8958:
-+		snd_soc_add_component_controls(component, wm8994_snd_controls,
-+					       ARRAY_SIZE(wm8994_snd_controls));
- 		snd_soc_add_component_controls(component, wm8958_snd_controls,
--				     ARRAY_SIZE(wm8958_snd_controls));
-+					       ARRAY_SIZE(wm8958_snd_controls));
- 		snd_soc_dapm_new_controls(dapm, wm8958_dapm_widgets,
- 					  ARRAY_SIZE(wm8958_dapm_widgets));
- 		if (control->revision < 1) {
+ 	desc.its_vmovp_cmd.vpe = vpe;
+-	desc.its_vmovp_cmd.its_list = (u16)its_list_map;
+ 
+ 	if (!its_list_map) {
+ 		its = list_first_entry(&its_nodes, struct its_node, entry);
+-		desc.its_vmovp_cmd.seq_num = 0;
+ 		desc.its_vmovp_cmd.col = &its->collections[col_id];
+ 		its_send_single_vcommand(its, its_build_vmovp_cmd, &desc);
+ 		return;
+@@ -1010,6 +1024,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
+ 	raw_spin_lock_irqsave(&vmovp_lock, flags);
+ 
+ 	desc.its_vmovp_cmd.seq_num = vmovp_seq_num++;
++	desc.its_vmovp_cmd.its_list = get_its_list(vpe->its_vm);
+ 
+ 	/* Emit VMOVPs */
+ 	list_for_each_entry(its, &its_nodes, entry) {
 -- 
 2.20.1
 
