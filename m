@@ -2,237 +2,101 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF31FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE12EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 426F321D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OW0h2Sc8"
+	by mail.kernel.org (Postfix) with ESMTP id B97012178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573187401;
+	bh=tqpTzta+Se1TB7bsp9vwIxnbM/32x+fpr6Gz4NiCsUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BdViqMmmsoBbMO5rSa2bopXw15tDetZs6nGJMY/qE5z6cyvpLsCOR7+BKqWXnLkkN
+	 y2rqDTmiJLiK3H9HPSYynrquExlGAj+s9E+HjyJvw3Pahmm07AbgcEJhLGMdglxGRA
+	 /9TIv2SY8uBMHUfxqiR8Gbrq5LRsOu4w904P++Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbfKHEWy (ORCPT
+        id S1728621AbfKHE3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 23:22:54 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42506 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbfKHEWe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 23:22:34 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j12so3162820plt.9;
-        Thu, 07 Nov 2019 20:22:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9yY1ilCQrcIHxsUtMS2U9uQS4obcy3+hHr81/tVLigE=;
-        b=OW0h2Sc8T1/OqZl9vKn6J0rG0llI6pSnjYdfDfXVjDkdvoHCjRRUHuwYhAenlYzw6Q
-         H0trYBnjxOdbnfsTFr5u8Vema3YMZOQQd3gDU3eKCL7bVhdvMrmFtKP4IGTuRRTUFkNP
-         GXydufAafgDZX0GAbHBdWGehOWrS8e8GtWxZHg11eGybw+ZHZ7NvKz1VcWRIbmzQZ5En
-         4J8Khdq5mF2eJgb+KoLdoVMPzculeT5R/cb2lP89WTZoWkf+p3aBj5laVnX+X+Wx5h+Q
-         u4j26D9vAJwlZWgVNnzuEvM/oKd3x2AN+IFjxSSOhlitKeT7rV1l6h2CWQY91SSoeOGA
-         SUTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9yY1ilCQrcIHxsUtMS2U9uQS4obcy3+hHr81/tVLigE=;
-        b=KY6k+67TwyrvTVDqxsj4GtdUxUASomKO5stdY+b7v1Q5gjE6aLUdMHXMt8bnhfGxj7
-         6tKxqlLdVWo2r1KBPmSdgn8I7vzmCNJOMhYfudrAssSbgQa1JYYUsqBPjzu8voYPIS3L
-         I9fmAD03LGhsWjyt05zKwuJ1QBnAj17i04hJjwJVTkDSQtfrMjP0sJsuX5pOGcppm5FG
-         aemWdJ77ijVbuljiwVCJuj+QTIXkmMs/7hZpCprInVK/af9XacaYkvGaYQaH8wV6tS/h
-         uLebVl2+maINWy5nGIYXG6AUJ/qB33EaTWtUtMhMzNaScl+ILuPoDAhkL4vCH6MBXS2M
-         Zo6Q==
-X-Gm-Message-State: APjAAAVu4mYFYhiDJis+Ig0mwhCFKvKyLM1Oaq3hsH1S+m1cwEzud0oa
-        Z3KkmkiN1hnOLpfLSgVRqzk=
-X-Google-Smtp-Source: APXvYqzOOjtZ+nD42gEULjb2GrTQoJ919yybAAMjf126D4hIXJ+rN1QkdHsPReFQ8HBmkUiGe8aXmw==
-X-Received: by 2002:a17:90a:22a6:: with SMTP id s35mr10169084pjc.3.1573186953675;
-        Thu, 07 Nov 2019 20:22:33 -0800 (PST)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 71sm5004106pfx.107.2019.11.07.20.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 20:22:33 -0800 (PST)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v8 4/6] platform/x86: intel_cht_int33fe: use inline reference properties
-Date:   Thu,  7 Nov 2019 20:22:23 -0800
-Message-Id: <20191108042225.45391-5-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
-References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+        Thu, 7 Nov 2019 23:29:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfKHE3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 23:29:45 -0500
+Received: from localhost (unknown [106.200.194.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC6EA2178F;
+        Fri,  8 Nov 2019 04:29:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573187384;
+        bh=tqpTzta+Se1TB7bsp9vwIxnbM/32x+fpr6Gz4NiCsUo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mUmLjVWFgPkKpVnapidjks07A8JjQPo+B7cRJRcWJQA+U2UqTnSIPDI0awYh5TP3f
+         UsyPIyx6v2OuKZkavu3mnXWCLUbKsTEkB0pNgXvMWMuJcpujNfWlE1H9q/D7AdouHC
+         0Z2h/h4D4IBXVXPI824hWB0qDQJDtmWs/pQkh6Co=
+Date:   Fri, 8 Nov 2019 09:59:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [PATCH 1/4] soundwire: sdw_slave: add new fields to
+ track probe status
+Message-ID: <20191108042940.GW952516@vkoul-mobl>
+References: <20191023210657.32440-1-pierre-louis.bossart@linux.intel.com>
+ <20191023210657.32440-2-pierre-louis.bossart@linux.intel.com>
+ <20191103045604.GE2695@vkoul-mobl.Dlink>
+ <f53b28bb-1ec7-a400-54ed-51fd55819ecd@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f53b28bb-1ec7-a400-54ed-51fd55819ecd@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that static device properties allow defining reference properties
-together with all other types of properties, instead of managing them
-separately, let's adjust the driver.
+On 04-11-19, 08:32, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 11/2/19 11:56 PM, Vinod Koul wrote:
+> > On 23-10-19, 16:06, Pierre-Louis Bossart wrote:
+> > > Changes to the sdw_slave structure needed to solve race conditions on
+> > > driver probe.
+> > 
+> > Can you please explain the race you have observed, it would be a very
+> > useful to document it as well
+> 
+> the races are explained in the [PATCH 00/18] soundwire: code hardening and
+> suspend-resume support series.
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- .../platform/x86/intel_cht_int33fe_typec.c    | 81 ++++++++++---------
- 1 file changed, 41 insertions(+), 40 deletions(-)
+It would make sense to explain it here as well to give details to
+reviewers, there is nothing wrong with too much detail!
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
-index 2d097fc2dd465..04138215956bf 100644
---- a/drivers/platform/x86/intel_cht_int33fe_typec.c
-+++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
-@@ -36,30 +36,6 @@ enum {
- 	INT33FE_NODE_MAX,
- };
- 
--static const struct software_node nodes[];
--
--static const struct software_node_ref_args pi3usb30532_ref = {
--	&nodes[INT33FE_NODE_PI3USB30532]
--};
--
--static const struct software_node_ref_args dp_ref = {
--	&nodes[INT33FE_NODE_DISPLAYPORT]
--};
--
--static struct software_node_ref_args mux_ref;
--
--static const struct software_node_reference usb_connector_refs[] = {
--	{ "orientation-switch", 1, &pi3usb30532_ref},
--	{ "mode-switch", 1, &pi3usb30532_ref},
--	{ "displayport", 1, &dp_ref},
--	{ }
--};
--
--static const struct software_node_reference fusb302_refs[] = {
--	{ "usb-role-switch", 1, &mux_ref},
--	{ }
--};
--
- /*
-  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
-  * the max17047 both through the INT33FE ACPI device (it is right there
-@@ -95,8 +71,18 @@ static const struct property_entry max17047_props[] = {
- 	{ }
- };
- 
-+/*
-+ * We are not using inline property here because those are constant,
-+ * and we need to adjust this one at runtime to point to real
-+ * software node.
-+ */
-+static struct software_node_ref_args fusb302_mux_refs[] = {
-+	{ .node = NULL },
-+};
-+
- static const struct property_entry fusb302_props[] = {
- 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
-+	PROPERTY_ENTRY_REF_ARRAY("usb-role-switch", fusb302_mux_refs),
- 	{ }
- };
- 
-@@ -112,6 +98,8 @@ static const u32 snk_pdo[] = {
- 	PDO_VAR(5000, 12000, 3000),
- };
- 
-+static const struct software_node nodes[];
-+
- static const struct property_entry usb_connector_props[] = {
- 	PROPERTY_ENTRY_STRING("data-role", "dual"),
- 	PROPERTY_ENTRY_STRING("power-role", "dual"),
-@@ -119,15 +107,21 @@ static const struct property_entry usb_connector_props[] = {
- 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
- 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
- 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
-+	PROPERTY_ENTRY_REF("orientation-switch",
-+			   &nodes[INT33FE_NODE_PI3USB30532]),
-+	PROPERTY_ENTRY_REF("mode-switch",
-+			   &nodes[INT33FE_NODE_PI3USB30532]),
-+	PROPERTY_ENTRY_REF("displayport",
-+			   &nodes[INT33FE_NODE_DISPLAYPORT]),
- 	{ }
- };
- 
- static const struct software_node nodes[] = {
--	{ "fusb302", NULL, fusb302_props, fusb302_refs },
-+	{ "fusb302", NULL, fusb302_props },
- 	{ "max17047", NULL, max17047_props },
- 	{ "pi3usb30532" },
- 	{ "displayport" },
--	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
-+	{ "connector", &nodes[0], usb_connector_props },
- 	{ }
- };
- 
-@@ -163,9 +157,10 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
- {
- 	software_node_unregister_nodes(nodes);
- 
--	if (mux_ref.node) {
--		fwnode_handle_put(software_node_fwnode(mux_ref.node));
--		mux_ref.node = NULL;
-+	if (fusb302_mux_refs[0].node) {
-+		fwnode_handle_put(
-+			software_node_fwnode(fusb302_mux_refs[0].node));
-+		fusb302_mux_refs[0].node = NULL;
- 	}
- 
- 	if (data->dp) {
-@@ -177,25 +172,31 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
- 
- static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
- {
-+	const struct software_node *mux_ref_node;
- 	int ret;
- 
--	ret = software_node_register_nodes(nodes);
--	if (ret)
--		return ret;
--
--	/* The devices that are not created in this driver need extra steps. */
--
- 	/*
- 	 * There is no ACPI device node for the USB role mux, so we need to wait
- 	 * until the mux driver has created software node for the mux device.
- 	 * It means we depend on the mux driver. This function will return
- 	 * -EPROBE_DEFER until the mux device is registered.
- 	 */
--	mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
--	if (!mux_ref.node) {
--		ret = -EPROBE_DEFER;
--		goto err_remove_nodes;
--	}
-+	mux_ref_node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
-+	if (!mux_ref_node)
-+		return -EPROBE_DEFER;
-+
-+	/*
-+	 * Update node used in "usb-role-switch" property. Note that we
-+	 * rely on software_node_register_nodes() to use the original
-+	 * instance of properties instead of copying them.
-+	 */
-+	fusb302_mux_refs[0].node = mux_ref_node;
-+
-+	ret = software_node_register_nodes(nodes);
-+	if (ret)
-+		return ret;
-+
-+	/* The devices that are not created in this driver need extra steps. */
- 
- 	/*
- 	 * The DP connector does have ACPI device node. In this case we can just
+> > > 
+> > > The functionality is added in the next patch.
+> > 
+> > which one..?
+> 
+> [PATCH 00/18] soundwire: code hardening and suspend-resume support
+
+Yeah great! let me play detective with 18 patch series. I asked for a
+patch and got a series!
+
+Again, please help the maintainer to help you. We would love to see this
+merged as well, but please step up and give more details in cover
+letter and changelogs. I shouldn't need to do guesswork and scan through the
+inbox to find the context!
+
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
-
+~Vinod
