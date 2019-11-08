@@ -2,80 +2,131 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F944C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B5DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3636D207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA9A2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="sG5lBWVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfKHI3p (ORCPT
+        id S1730478AbfKHIbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:29:45 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59616 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbfKHI3o (ORCPT
+        Fri, 8 Nov 2019 03:31:02 -0500
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:44260 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726072AbfKHIbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:29:44 -0500
-Received: from [185.81.138.22] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iSzeG-0008J7-SS; Fri, 08 Nov 2019 08:29:41 +0000
-Date:   Fri, 8 Nov 2019 09:29:39 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: add tests for clone3()
-Message-ID: <20191108082937.ypc5t2fcr2ffmlmm@wittgenstein>
-References: <20191104131846.1076814-1-areber@redhat.com>
- <20191106155914.hzolyolz2w4hcn7w@wittgenstein>
- <20191108064416.GA153851@dcbz.redhat.com>
+        Fri, 8 Nov 2019 03:31:02 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 53DBF2E14A2;
+        Fri,  8 Nov 2019 11:30:58 +0300 (MSK)
+Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id rxIew9xOSF-UvMSX8ne;
+        Fri, 08 Nov 2019 11:30:58 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1573201858; bh=Hp4ev14l2Lhx6iEHLcG1z7KhXz+b83W67JPYeP/4FDw=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=sG5lBWVzvm6JiVDH6m8flzUp/gHVxPkazSVwFHZfeNhrICYDxZ6aQr+o4vh+At1ek
+         0RoB71VfYbbtZSlNX2nygKdkdyIGJ9uJY5xiJZKOKSzbs7Kx4V4vMGvgL0EntDfRZ4
+         J9oqWO96TQLG5yf6UI0ENF0vepeGhHzglZ4EJEPg=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8554:53c0:3d75:2e8a])
+        by vla5-2bf13a090f43.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Nq2nXa0706-UvVa8ZLj;
+        Fri, 08 Nov 2019 11:30:57 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] ext4: deaccount delayed allocations at freeing inode in
+ ext4_evict_inode()
+To:     Ritesh Harjani <riteshh@linux.ibm.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-kernel@vger.kernel.org
+Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Eric Whitney <enwlinux@gmail.com>
+References: <157233344808.4027.17162642259754563372.stgit@buzz>
+ <20191108020827.15D1EAE056@d06av26.portsmouth.uk.ibm.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <d00c572b-66ae-42dc-746a-e2c365c9895a@yandex-team.ru>
+Date:   Fri, 8 Nov 2019 11:30:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191108064416.GA153851@dcbz.redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191108020827.15D1EAE056@d06av26.portsmouth.uk.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 07:44:16AM +0100, Adrian Reber wrote:
-> On Wed, Nov 06, 2019 at 04:59:15PM +0100, Christian Brauner wrote:
-> > On Mon, Nov 04, 2019 at 02:18:46PM +0100, Adrian Reber wrote:
+On 08/11/2019 05.08, Ritesh Harjani wrote:
+> 
+> 
+> On 10/29/19 12:47 PM, Konstantin Khlebnikov wrote:
+>> If inode->i_blocks is zero then ext4_evict_inode() skips ext4_truncate().
+>> Delayed allocation extents are freed later in ext4_clear_inode() but this
+>> happens when quota reference is already dropped. This leads to leak of
+>> reserved space in quota block, which disappears after umount-mount.
+>>
+>> This seems broken for a long time but worked somehow until recent changes
+>> in delayed allocation.
+> 
+> Sorry, I may have missed it, but could you please help understand
+> what recent changes in delayed allocation make this break or worse?
 
-> Not sure myself. It was just to make sure clone3() does not something
-> unexpected when given wrong and unexpected input. It is the opposite to
-> setting everything to zero. Not sure how much sense it makes, but as it
-> already exists I would say to just keep it.
+I don't see problem for 4.19. Haven't bisected yet.
+Most likely this is around 'reserved cluster accounting'.
 
-If it serves no real purpose then please remove it. It's not clear from
-thist test _why_ it it expected to fail. Is it because of invalid stack
-and stack_size or invalid tls etc.
+I suspect before these changes something always triggered da before unlink and
+space usage committed and then truncated at eviction.
 
 > 
-> > > +		args.flags = 1;
-> > > +		args.pidfd = 1;
-> > > +		args.child_tid = 1;
-> > > +		args.parent_tid = 1;
-> > > +		args.exit_signal = 1;
-> > > +		args.stack = 1;
-> > > +		args.stack_size = 1;
-> > > +		args.tls = 1;
-> > > +		break;
-> > > +	case CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG:
-> [...]
 > 
-> Let me know if you think that the CLONE3_ARGS_ALL_1 should really be
-> removed. I will fix the other two things you mentioned and resend a new
-> version.
+> A silly query, since I couldn't figure it out. Maybe the code has been
+> there ever since like this:-
 
-Yes, please.
+> So why can't we just move drop_dquot later after the ext4_es_remove_extent() (in function ext4_clear_inode)? Any known
+> problems around that?
 
-	Christian
+Clear_inode is called also when inode evicts from cache while it has nlinks
+and stays at disk. I'm not sure how this must interact with reserves.
+
+> 
+> -ritesh
+> 
+> 
+>>
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> ---
+>>   fs/ext4/inode.c |    9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+>> index 516faa280ced..580898145e8f 100644
+>> --- a/fs/ext4/inode.c
+>> +++ b/fs/ext4/inode.c
+>> @@ -293,6 +293,15 @@ void ext4_evict_inode(struct inode *inode)
+>>                      inode->i_ino, err);
+>>               goto stop_handle;
+>>           }
+>> +    } else if (EXT4_I(inode)->i_reserved_data_blocks) {
+>> +        /* Deaccount reserve if inode has only delayed allocations. */
+>> +        err = ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
+>> +        if (err) {
+>> +            ext4_warning(inode->i_sb,
+>> +                     "couldn't remove extents %lu (err %d)",
+>> +                     inode->i_ino, err);
+>> +            goto stop_handle;
+>> +        }
+>>       }
+>>
+>>       /* Remove xattr references. */
+>>
+> 
