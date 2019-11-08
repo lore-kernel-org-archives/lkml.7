@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF3CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6241DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B412087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FC3222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240185;
-	bh=f4/C8FYZEaey0z2GGEk3DtDShdAB6VYvCKi89Fn4O30=;
+	s=default; t=1573240189;
+	bh=vKql6JUiWmAi+TSOjs1wfIulR/tIVLIp34fI11fbSJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HPc5xsstPtQWLotlXf4WgsOd6eHIPCIbOAAi7Qb4ORESmMDGjlmLxmo1lA6tO7Ujp
-	 U4S6iSEwRVq9nbm37pPJj8EvO5yiun5V2xcvh2zW2mYGyY/3c7+LKd4CQmomjKv5Tf
-	 S4ZOo15GU1cL7+JoKgelCjZRVssMX18s4SAg13QI=
+	b=lpaxfqZaG2UkwQ13fJZG7it1QqpiflKvV0Hg1GgzZAOJiopkqbD5CgfTV6w6d0jOJ
+	 PxABpP2Ju59vc/zqCRfrFxO0GC0r1b2rNT2sgiwqsKZ5mZB0BG4bnEcPzGv+cFZ82H
+	 ws0kcsEsMEW0H30LGxUFyvxGBQyGODO2cjCfogwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387843AbfKHTJo (ORCPT
+        id S2389446AbfKHTJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41532 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390768AbfKHTJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:41 -0500
+        id S2391386AbfKHTJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CE2D21D7B;
-        Fri,  8 Nov 2019 19:09:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F7120673;
+        Fri,  8 Nov 2019 19:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240180;
-        bh=f4/C8FYZEaey0z2GGEk3DtDShdAB6VYvCKi89Fn4O30=;
+        s=default; t=1573240183;
+        bh=vKql6JUiWmAi+TSOjs1wfIulR/tIVLIp34fI11fbSJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTlpJgbjtOsFnn3/uMUxkpoIGeIWp/bccNjii+008L2nK9I5HN11SjZyiuFxvlRSu
-         GjyfSDDeC1tjp6bwW4hvIUOEgEOF75BFbeB/dtU6pORjirmWqwVN088t9wqOUV2OcK
-         cX6YsjFIO7Fk5cZ/sxfiubWulM8mvkvgY39jaU6k=
+        b=09apCWw/C7Dh6+QA5L6i1XigV5jisZz9097xuFIoXqBwK5OlVDJL7SPSgrfX8P/oU
+         E6pWRDolPkwg/PYT0kcQiAXbJil0N+KCeLWDmmcvIb2pShYO5ECeJm8HD4K6hNidQg
+         fkWVoLkncaAhHlPd1sGIAn5VCn8VAQh2AoFiJQzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alain Volmat <alain.volmat@st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 074/140] i2c: stm32f7: remove warning when compiling with W=1
-Date:   Fri,  8 Nov 2019 19:50:02 +0100
-Message-Id: <20191108174909.789503405@linuxfoundation.org>
+Subject: [PATCH 5.3 075/140] cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
+Date:   Fri,  8 Nov 2019 19:50:03 +0100
+Message-Id: <20191108174909.848986828@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,41 +61,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Volmat <alain.volmat@st.com>
+From: Dave Wysochanski <dwysocha@redhat.com>
 
-[ Upstream commit 348e46fbb4cdb2aead79aee1fd8bb25ec5fd25db ]
+[ Upstream commit d46b0da7a33dd8c99d969834f682267a45444ab3 ]
 
-Remove the following warning:
+There's a deadlock that is possible and can easily be seen with
+a test where multiple readers open/read/close of the same file
+and a disruption occurs causing reconnect.  The deadlock is due
+a reader thread inside cifs_strict_readv calling down_read and
+obtaining lock_sem, and then after reconnect inside
+cifs_reopen_file calling down_read a second time.  If in
+between the two down_read calls, a down_write comes from
+another process, deadlock occurs.
 
-drivers/i2c/busses/i2c-stm32f7.c:315:
-warning: cannot understand function prototype:
-'struct stm32f7_i2c_spec i2c_specs[] =
+        CPU0                    CPU1
+        ----                    ----
+cifs_strict_readv()
+ down_read(&cifsi->lock_sem);
+                               _cifsFileInfo_put
+                                  OR
+                               cifs_new_fileinfo
+                                down_write(&cifsi->lock_sem);
+cifs_reopen_file()
+ down_read(&cifsi->lock_sem);
 
-Replace a comment starting with /** by simply /* to avoid having
-it interpreted as a kernel-doc comment.
+Fix the above by changing all down_write(lock_sem) calls to
+down_write_trylock(lock_sem)/msleep() loop, which in turn
+makes the second down_read call benign since it will never
+block behind the writer while holding lock_sem.
 
-Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Suggested-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed--by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-stm32f7.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/cifsglob.h  |  5 +++++
+ fs/cifs/cifsproto.h |  1 +
+ fs/cifs/file.c      | 23 +++++++++++++++--------
+ fs/cifs/smb2file.c  |  2 +-
+ 4 files changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 82705deef7bff..1fac7344ae9c2 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -305,7 +305,7 @@ struct stm32f7_i2c_dev {
- 	struct regmap *regmap;
- };
+diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+index 5ef5a16c01d26..7289d443bfb33 100644
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1379,6 +1379,11 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
+ struct cifsInodeInfo {
+ 	bool can_cache_brlcks;
+ 	struct list_head llist;	/* locks helb by this inode */
++	/*
++	 * NOTE: Some code paths call down_read(lock_sem) twice, so
++	 * we must always use use cifs_down_write() instead of down_write()
++	 * for this semaphore to avoid deadlocks.
++	 */
+ 	struct rw_semaphore lock_sem;	/* protect the fields above */
+ 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
+ 	struct list_head openFileList;
+diff --git a/fs/cifs/cifsproto.h b/fs/cifs/cifsproto.h
+index 592a6cea2b79f..65b07f92bc71d 100644
+--- a/fs/cifs/cifsproto.h
++++ b/fs/cifs/cifsproto.h
+@@ -166,6 +166,7 @@ extern int cifs_unlock_range(struct cifsFileInfo *cfile,
+ 			     struct file_lock *flock, const unsigned int xid);
+ extern int cifs_push_mandatory_locks(struct cifsFileInfo *cfile);
  
--/**
-+/*
-  * All these values are coming from I2C Specification, Version 6.0, 4th of
-  * April 2014.
-  *
++extern void cifs_down_write(struct rw_semaphore *sem);
+ extern struct cifsFileInfo *cifs_new_fileinfo(struct cifs_fid *fid,
+ 					      struct file *file,
+ 					      struct tcon_link *tlink,
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 53dbb6e0d390d..facb52d37d19c 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -281,6 +281,13 @@ cifs_has_mand_locks(struct cifsInodeInfo *cinode)
+ 	return has_locks;
+ }
+ 
++void
++cifs_down_write(struct rw_semaphore *sem)
++{
++	while (!down_write_trylock(sem))
++		msleep(10);
++}
++
+ struct cifsFileInfo *
+ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
+ 		  struct tcon_link *tlink, __u32 oplock)
+@@ -306,7 +313,7 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
+ 	INIT_LIST_HEAD(&fdlocks->locks);
+ 	fdlocks->cfile = cfile;
+ 	cfile->llist = fdlocks;
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	list_add(&fdlocks->llist, &cinode->llist);
+ 	up_write(&cinode->lock_sem);
+ 
+@@ -464,7 +471,7 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
+ 	 * Delete any outstanding lock records. We'll lose them when the file
+ 	 * is closed anyway.
+ 	 */
+-	down_write(&cifsi->lock_sem);
++	cifs_down_write(&cifsi->lock_sem);
+ 	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
+ 		list_del(&li->llist);
+ 		cifs_del_lock_waiters(li);
+@@ -1027,7 +1034,7 @@ static void
+ cifs_lock_add(struct cifsFileInfo *cfile, struct cifsLockInfo *lock)
+ {
+ 	struct cifsInodeInfo *cinode = CIFS_I(d_inode(cfile->dentry));
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	list_add_tail(&lock->llist, &cfile->llist->locks);
+ 	up_write(&cinode->lock_sem);
+ }
+@@ -1049,7 +1056,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
+ 
+ try_again:
+ 	exist = false;
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 
+ 	exist = cifs_find_lock_conflict(cfile, lock->offset, lock->length,
+ 					lock->type, lock->flags, &conf_lock,
+@@ -1072,7 +1079,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
+ 					(lock->blist.next == &lock->blist));
+ 		if (!rc)
+ 			goto try_again;
+-		down_write(&cinode->lock_sem);
++		cifs_down_write(&cinode->lock_sem);
+ 		list_del_init(&lock->blist);
+ 	}
+ 
+@@ -1125,7 +1132,7 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
+ 		return rc;
+ 
+ try_again:
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	if (!cinode->can_cache_brlcks) {
+ 		up_write(&cinode->lock_sem);
+ 		return rc;
+@@ -1331,7 +1338,7 @@ cifs_push_locks(struct cifsFileInfo *cfile)
+ 	int rc = 0;
+ 
+ 	/* we are going to update can_cache_brlcks here - need a write access */
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	if (!cinode->can_cache_brlcks) {
+ 		up_write(&cinode->lock_sem);
+ 		return rc;
+@@ -1522,7 +1529,7 @@ cifs_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	for (i = 0; i < 2; i++) {
+ 		cur = buf;
+ 		num = 0;
+diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
+index e6a1fc72018fd..8b0b512c57920 100644
+--- a/fs/cifs/smb2file.c
++++ b/fs/cifs/smb2file.c
+@@ -145,7 +145,7 @@ smb2_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
+ 
+ 	cur = buf;
+ 
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	list_for_each_entry_safe(li, tmp, &cfile->llist->locks, llist) {
+ 		if (flock->fl_start > li->offset ||
+ 		    (flock->fl_start + length) <
 -- 
 2.20.1
 
