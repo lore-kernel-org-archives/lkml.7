@@ -2,101 +2,124 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D12C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBCCFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DC6214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QDUbybhV"
+	by mail.kernel.org (Postfix) with ESMTP id 8706B214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKHOd4 (ORCPT
+        id S1727166AbfKHOfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:33:56 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46052 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfKHOdz (ORCPT
+        Fri, 8 Nov 2019 09:35:06 -0500
+Received: from www62.your-server.de ([213.133.104.62]:40894 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKHOfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:33:55 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z10so1978883wrs.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:33:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7BaDAqye/MZOMNF6OpF3ycCkb/as2uNIb3zQDCiqUjc=;
-        b=QDUbybhVv+/bCsU20a1eVquTZ1THt+bnBgZp0dAcfILCl5ZihWETCLOhgHVaP66/1S
-         lVTH90Lp9U2khi+RuOelT6cY+SEVlaJ6E1DID/RUjzP0cHilCn9XOicHkZTgsQQlv+dZ
-         fqL6/p4fNOj0icjrjB82CW4fyEauM1c5BBLs8MRK9Qoj0nmelpAtMWQnlDsA9lIiwYB5
-         D2Pm4oYspSFkzP61huuKqHVhlpih/J6m0MNdez1lq/MDK/QMxihKG3WKUBGcBhOA/szP
-         jOcCSPMoDxHXGWQ7pNekb4bJmvFn6EpDAliQwDRbGxhuLP9KhFpf71qipeFKMZo88U2s
-         ou2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7BaDAqye/MZOMNF6OpF3ycCkb/as2uNIb3zQDCiqUjc=;
-        b=tSj2rSz2hirfPcqeUUIWSPWd4IWAiWMsdLk1j09ULc6dz9gpVnv0R6ovZ0oBw9Dswv
-         4vPRcwkv25/9h4z3V43e2we+9bKGhqJBzpcrH8lN4XZAbZ0Dk617rOb/S+hzLY0kQDqd
-         e30ETsuTPNaaxPUaTZPbilJrwNZJCpK73DHfti8hEYFH96J22PCz5tFn/pxQydE9sCK1
-         N2cbD3ezmqUREKP96SRo8bZ4aWndD/4H4yEctMA9dcUZOSk8GLAb5xazxkamx8jm5fGx
-         +WxsVKxEkdpDAj37mWpXRFbQgS4mX6n4TXI7y6jj2jrPria26VxEsIProbLlz2M6aUax
-         e0pw==
-X-Gm-Message-State: APjAAAVAtFXiiXDUe/w9h6oB2mqLcDrp9YM0y9JjhycMIUYeYTqbLD6+
-        8QLoz6WMCkDYSk0WTWtSuUyuJA==
-X-Google-Smtp-Source: APXvYqz1fLoYAlz2ISDepKyhQE5mLc3+UnCCd/xSITQwQkniF7m4o8VM/9Mu0VxBhIJwcv3IhkCsNQ==
-X-Received: by 2002:a5d:660b:: with SMTP id n11mr9089701wru.146.1573223632112;
-        Fri, 08 Nov 2019 06:33:52 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id x205sm9432142wmb.5.2019.11.08.06.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 06:33:51 -0800 (PST)
-Date:   Fri, 8 Nov 2019 14:33:48 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, valentin.schneider@arm.com,
-        qais.yousef@arm.com, ktkhai@virtuozzo.com
-Subject: Re: [PATCH 4/7] sched: Optimize pick_next_task()
-Message-ID: <20191108143348.GB123156@google.com>
-References: <20191108131553.027892369@infradead.org>
- <20191108131909.603037345@infradead.org>
+        Fri, 8 Nov 2019 09:35:06 -0500
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iT5Lo-0001VR-E6; Fri, 08 Nov 2019 15:35:00 +0100
+Received: from [2a02:1205:507e:bf80:bef8:7f66:49c8:72e5] (helo=pc-11.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iT5Ln-000Uz8-JS; Fri, 08 Nov 2019 15:34:59 +0100
+Subject: Re: [PATCH bpf-next v13 4/7] landlock: Add ptrace LSM hooks
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        KP Singh <kpsingh@chromium.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Drysdale <drysdale@google.com>,
+        Florent Revest <revest@chromium.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+References: <20191104172146.30797-1-mic@digikod.net>
+ <20191104172146.30797-5-mic@digikod.net>
+ <20191105171824.dfve44gjiftpnvy7@ast-mbp.dhcp.thefacebook.com>
+ <23acf523-dbc4-855b-ca49-2bbfa5e7117e@digikod.net>
+ <20191105193446.s4pswwwhrmgk6hcx@ast-mbp.dhcp.thefacebook.com>
+ <20191106100655.GA18815@chromium.org>
+ <813cedde-8ed7-2d3b-883d-909efa978d41@digikod.net>
+ <20191106214526.GA22244@chromium.org>
+ <3e208632-e7ab-3405-5196-ab1d770e20c3@digikod.net>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <5d0f1dc5-5a99-bd6a-4acc-0cdcd062a0c9@iogearbox.net>
+Date:   Fri, 8 Nov 2019 15:34:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108131909.603037345@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3e208632-e7ab-3405-5196-ab1d770e20c3@digikod.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25627/Fri Nov  8 11:02:39 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 08 Nov 2019 at 14:15:57 (+0100), Peter Zijlstra wrote:
-> Ever since we moved the sched_class defenitions into their own files,
-
-s/defenitions/definitions
-
-> the constant expression {fair,idle}_sched_class.pick_next_task() is
-> not in fact a compile time constant anymore and results in an indirect
-> call (barring LTO).
+On 11/8/19 3:08 PM, Mickaël Salaün wrote:
+> On 06/11/2019 22:45, KP Singh wrote:
+>> On 06-Nov 17:55, Mickaël Salaün wrote:
+>>> On 06/11/2019 11:06, KP Singh wrote:
+>>>> On 05-Nov 11:34, Alexei Starovoitov wrote:
+>>>>> On Tue, Nov 05, 2019 at 07:01:41PM +0100, Mickaël Salaün wrote:
+>>>>>> On 05/11/2019 18:18, Alexei Starovoitov wrote:
+[...]
+>> * Use a single BPF program type; this is necessary for a key requirement
+>>    of KRSI, i.e. runtime instrumentation. The upcoming prototype should
+>>    illustrate how this works for KRSI - note that it’s possible to vary
+>>    the context types exposed by different hooks.
 > 
-> Fix that by exposing pick_next_task_{fair,idle}() directly, this gets
-> rid of the indirect call (and RETPOLINE) on the fast path.
+> Why a single BPF program type? Do you mean *attach* types? Landlock only
+> use one program type, but will use multiple attach types.
 > 
-> Also remove the unlikely() from the idle case, it is in fact /the/ way
-> we select idle -- and that is a very common thing to do.
+> Why do you think it is necessary for KRSI or for runtime instrumentation?
+> 
+> If it is justified, it could be a dedicated program attach type (e.g.
+> BPF_LANDLOCK_INTROSPECTION).
+> 
+> What is the advantage to have the possibility to vary the context types
+> over dedicated *typed* contexts? I don't see any advantages, but at
+> least one main drawback: to require runtime checks (when helpers use
+> this generic context) instead of load time checks (thanks to static type
+> checking of the context).
 
-I assumed this was to optimize the case where we did find a cfs task to
-run. That is, we can afford to hit the unlikely case when there is no
-work to do after, but when there is, we shouldn't spend time checking
-the idle case. Makes sense ?
+Lets take security_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
+as one specific example here: the running kernel has its own internal
+btf_vmlinux and therefore a complete description of itself. From verifier
+side we can retrieve & introspect the security_sock_rcv_skb signatue and
+thus know that the given BPF attachment point has struct sock and struct
+sk_buff as input arguments which can then be accessed generically by the
+prog in order to allow sk_filter_trim_cap() to pass or to drop the skb.
+The same generic approach can be done for many of the other lsm hooks, so
+single program type would be enough there and context is derived automatically,
+no dedicated extra context per attach type would be needed and no runtime
+checks as you mentioned above since its still all asserted at verification
+time.
 
 Thanks,
-Quentin
+Daniel
