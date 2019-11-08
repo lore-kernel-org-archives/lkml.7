@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B82C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282CBFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA592196F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006E52196F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240140;
-	bh=xSa/hwMVsM73j49hYwT1spOyveND1ca0/9kugYY/DlY=;
+	s=default; t=1573240144;
+	bh=sKHY9Dd94AFbprDlS8ebwtCQSa7E7TSTpXFGfINHDFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4ZfuFd16gAKwDyuArzecsf/rFxgyuTydE1Vukn66C1YucoaDBnkkTv7ZhS3WmH4Z
-	 bn5/D0nTfm4EfVW2bC2XewzMkCHpn8mZuqizkUSjnbw5ESBym4hb5NMp8aMvzjW/ju
-	 bykQGnWWEXpOGivN4HEnjtKbKoJBltl6fso4x6O8=
+	b=qX79Up51f0ynkjoPm8n6Nl6W+1FfnA9Nupzjtg5Hlj/E7Xn1sd5w5VCwSkUFkSage
+	 ujxQKOJFOSnayKNw/OT5anOZopchXxjAYEWMRRh4x5ylWZ+e+JcvEBCMNntk098fB4
+	 SHLh0fst3I9LXVgyIHRdOLmSU0778N0qRrtL98+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391722AbfKHTI7 (ORCPT
+        id S2391736AbfKHTJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40276 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390974AbfKHTI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:57 -0500
+        id S2390974AbfKHTJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0AEE206A3;
-        Fri,  8 Nov 2019 19:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E9312087E;
+        Fri,  8 Nov 2019 19:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240136;
-        bh=xSa/hwMVsM73j49hYwT1spOyveND1ca0/9kugYY/DlY=;
+        s=default; t=1573240139;
+        bh=sKHY9Dd94AFbprDlS8ebwtCQSa7E7TSTpXFGfINHDFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2Qk42if/AxB9FzTguh+LETD9rqBkouEw5dYJmGHThTbPGK5xJ9zXCI6b+JEDrbFn
-         R2d+UsEF5Rx3Y67X+qnT6RCeIpwXPQVLuFcg1adyk/T7VVvPwID9AG7H2JtMH/sXbB
-         u0tDbX1438O5SGh6WgTHgTLaX+Hs+gwqIbNqMHRs=
+        b=WxVHc8JlgYh6akklhVwi0zSKVGvyup0Z1HbsV8p1AUWOxbseSxf+r+HTjUES8gLss
+         csowlyYXJvFhq0riT75dT8S67SwyVjklcXMBExN6f44tXk0h6/3ik5M7QoSf8OTwXq
+         Lf297L6Zj357ISN5ereVgi5p295p4u0IPd1Z4k24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 100/140] net: use skb_queue_empty_lockless() in poll() handlers
-Date:   Fri,  8 Nov 2019 19:50:28 +0100
-Message-Id: <20191108174911.287858028@linuxfoundation.org>
+Subject: [PATCH 5.3 101/140] net: use skb_queue_empty_lockless() in busy poll contexts
+Date:   Fri,  8 Nov 2019 19:50:29 +0100
+Message-Id: <20191108174911.338812481@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,246 +61,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3ef7cf57c72f32f61e97f8fa401bc39ea1f1a5d4 ]
+[ Upstream commit 3f926af3f4d688e2e11e7f8ed04e277a14d4d4a4 ]
 
-Many poll() handlers are lockless. Using skb_queue_empty_lockless()
-instead of skb_queue_empty() is more appropriate.
+Busy polling usually runs without locks.
+Let's use skb_queue_empty_lockless() instead of skb_queue_empty()
+
+Also uses READ_ONCE() in __skb_try_recv_datagram() to address
+a similar potential problem.
 
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/isdn/capi/capi.c     |    2 +-
- net/atm/common.c             |    2 +-
- net/bluetooth/af_bluetooth.c |    4 ++--
- net/caif/caif_socket.c       |    2 +-
- net/core/datagram.c          |    4 ++--
- net/decnet/af_decnet.c       |    2 +-
- net/ipv4/tcp.c               |    2 +-
- net/ipv4/udp.c               |    2 +-
- net/nfc/llcp_sock.c          |    4 ++--
- net/phonet/socket.c          |    4 ++--
- net/sctp/socket.c            |    4 ++--
- net/tipc/socket.c            |    4 ++--
- net/unix/af_unix.c           |    6 +++---
- net/vmw_vsock/af_vsock.c     |    2 +-
- 14 files changed, 22 insertions(+), 22 deletions(-)
+ drivers/crypto/chelsio/chtls/chtls_io.c |    2 +-
+ net/core/datagram.c                     |    2 +-
+ net/core/sock.c                         |    2 +-
+ net/ipv4/tcp.c                          |    2 +-
+ net/sctp/socket.c                       |    2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/isdn/capi/capi.c
-+++ b/drivers/isdn/capi/capi.c
-@@ -744,7 +744,7 @@ capi_poll(struct file *file, poll_table
+--- a/drivers/crypto/chelsio/chtls/chtls_io.c
++++ b/drivers/crypto/chelsio/chtls/chtls_io.c
+@@ -1701,7 +1701,7 @@ int chtls_recvmsg(struct sock *sk, struc
+ 		return peekmsg(sk, msg, len, nonblock, flags);
  
- 	poll_wait(file, &(cdev->recvwait), wait);
- 	mask = EPOLLOUT | EPOLLWRNORM;
--	if (!skb_queue_empty(&cdev->recvqueue))
-+	if (!skb_queue_empty_lockless(&cdev->recvqueue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 	return mask;
- }
---- a/net/atm/common.c
-+++ b/net/atm/common.c
-@@ -668,7 +668,7 @@ __poll_t vcc_poll(struct file *file, str
- 		mask |= EPOLLHUP;
- 
- 	/* readable? */
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	/* writable? */
---- a/net/bluetooth/af_bluetooth.c
-+++ b/net/bluetooth/af_bluetooth.c
-@@ -460,7 +460,7 @@ __poll_t bt_sock_poll(struct file *file,
- 	if (sk->sk_state == BT_LISTEN)
- 		return bt_accept_poll(sk);
- 
--	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
-+	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
- 		mask |= EPOLLERR |
- 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
- 
-@@ -470,7 +470,7 @@ __poll_t bt_sock_poll(struct file *file,
- 	if (sk->sk_shutdown == SHUTDOWN_MASK)
- 		mask |= EPOLLHUP;
- 
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	if (sk->sk_state == BT_CLOSED)
---- a/net/caif/caif_socket.c
-+++ b/net/caif/caif_socket.c
-@@ -953,7 +953,7 @@ static __poll_t caif_poll(struct file *f
- 		mask |= EPOLLRDHUP;
- 
- 	/* readable? */
--	if (!skb_queue_empty(&sk->sk_receive_queue) ||
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
- 		(sk->sk_shutdown & RCV_SHUTDOWN))
- 		mask |= EPOLLIN | EPOLLRDNORM;
+ 	if (sk_can_busy_loop(sk) &&
+-	    skb_queue_empty(&sk->sk_receive_queue) &&
++	    skb_queue_empty_lockless(&sk->sk_receive_queue) &&
+ 	    sk->sk_state == TCP_ESTABLISHED)
+ 		sk_busy_loop(sk, nonblock);
  
 --- a/net/core/datagram.c
 +++ b/net/core/datagram.c
-@@ -767,7 +767,7 @@ __poll_t datagram_poll(struct file *file
- 	mask = 0;
+@@ -278,7 +278,7 @@ struct sk_buff *__skb_try_recv_datagram(
+ 			break;
  
- 	/* exceptional events? */
--	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
-+	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
- 		mask |= EPOLLERR |
- 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
+ 		sk_busy_loop(sk, flags & MSG_DONTWAIT);
+-	} while (sk->sk_receive_queue.prev != *last);
++	} while (READ_ONCE(sk->sk_receive_queue.prev) != *last);
  
-@@ -777,7 +777,7 @@ __poll_t datagram_poll(struct file *file
- 		mask |= EPOLLHUP;
+ 	error = -EAGAIN;
  
- 	/* readable? */
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3593,7 +3593,7 @@ bool sk_busy_loop_end(void *p, unsigned
+ {
+ 	struct sock *sk = p;
  
- 	/* Connection-based need to check for termination and startup */
---- a/net/decnet/af_decnet.c
-+++ b/net/decnet/af_decnet.c
-@@ -1205,7 +1205,7 @@ static __poll_t dn_poll(struct file *fil
- 	struct dn_scp *scp = DN_SK(sk);
- 	__poll_t mask = datagram_poll(file, sock, wait);
- 
--	if (!skb_queue_empty(&scp->other_receive_queue))
-+	if (!skb_queue_empty_lockless(&scp->other_receive_queue))
- 		mask |= EPOLLRDBAND;
- 
- 	return mask;
+-	return !skb_queue_empty(&sk->sk_receive_queue) ||
++	return !skb_queue_empty_lockless(&sk->sk_receive_queue) ||
+ 	       sk_busy_loop_timeout(sk, start_time);
+ }
+ EXPORT_SYMBOL(sk_busy_loop_end);
 --- a/net/ipv4/tcp.c
 +++ b/net/ipv4/tcp.c
-@@ -584,7 +584,7 @@ __poll_t tcp_poll(struct file *file, str
- 	}
- 	/* This barrier is coupled with smp_wmb() in tcp_reset() */
- 	smp_rmb();
--	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
-+	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
- 		mask |= EPOLLERR;
+@@ -1961,7 +1961,7 @@ int tcp_recvmsg(struct sock *sk, struct
+ 	if (unlikely(flags & MSG_ERRQUEUE))
+ 		return inet_recv_error(sk, msg, len, addr_len);
  
- 	return mask;
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -2723,7 +2723,7 @@ __poll_t udp_poll(struct file *file, str
- 	__poll_t mask = datagram_poll(file, sock, wait);
- 	struct sock *sk = sock->sk;
+-	if (sk_can_busy_loop(sk) && skb_queue_empty(&sk->sk_receive_queue) &&
++	if (sk_can_busy_loop(sk) && skb_queue_empty_lockless(&sk->sk_receive_queue) &&
+ 	    (sk->sk_state == TCP_ESTABLISHED))
+ 		sk_busy_loop(sk, nonblock);
  
--	if (!skb_queue_empty(&udp_sk(sk)->reader_queue))
-+	if (!skb_queue_empty_lockless(&udp_sk(sk)->reader_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	/* Check for false positives due to checksum errors */
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -554,11 +554,11 @@ static __poll_t llcp_sock_poll(struct fi
- 	if (sk->sk_state == LLCP_LISTEN)
- 		return llcp_accept_poll(sk);
- 
--	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
-+	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
- 		mask |= EPOLLERR |
- 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
- 
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	if (sk->sk_state == LLCP_CLOSED)
---- a/net/phonet/socket.c
-+++ b/net/phonet/socket.c
-@@ -338,9 +338,9 @@ static __poll_t pn_socket_poll(struct fi
- 
- 	if (sk->sk_state == TCP_CLOSE)
- 		return EPOLLERR;
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
--	if (!skb_queue_empty(&pn->ctrlreq_queue))
-+	if (!skb_queue_empty_lockless(&pn->ctrlreq_queue))
- 		mask |= EPOLLPRI;
- 	if (!mask && sk->sk_state == TCP_CLOSE_WAIT)
- 		return EPOLLHUP;
 --- a/net/sctp/socket.c
 +++ b/net/sctp/socket.c
-@@ -8329,7 +8329,7 @@ __poll_t sctp_poll(struct file *file, st
- 	mask = 0;
+@@ -8724,7 +8724,7 @@ struct sk_buff *sctp_skb_recv_datagram(s
+ 		if (sk_can_busy_loop(sk)) {
+ 			sk_busy_loop(sk, noblock);
  
- 	/* Is there any exceptional events?  */
--	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
-+	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
- 		mask |= EPOLLERR |
- 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
- 	if (sk->sk_shutdown & RCV_SHUTDOWN)
-@@ -8338,7 +8338,7 @@ __poll_t sctp_poll(struct file *file, st
- 		mask |= EPOLLHUP;
- 
- 	/* Is it readable?  Reconsider this code with TCP-style support.  */
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	/* The association is either gone or not ready.  */
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -740,7 +740,7 @@ static __poll_t tipc_poll(struct file *f
- 		/* fall through */
- 	case TIPC_LISTEN:
- 	case TIPC_CONNECTING:
--		if (!skb_queue_empty(&sk->sk_receive_queue))
-+		if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 			revents |= EPOLLIN | EPOLLRDNORM;
- 		break;
- 	case TIPC_OPEN:
-@@ -748,7 +748,7 @@ static __poll_t tipc_poll(struct file *f
- 			revents |= EPOLLOUT;
- 		if (!tipc_sk_type_connectionless(sk))
- 			break;
--		if (skb_queue_empty(&sk->sk_receive_queue))
-+		if (skb_queue_empty_lockless(&sk->sk_receive_queue))
- 			break;
- 		revents |= EPOLLIN | EPOLLRDNORM;
- 		break;
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -2599,7 +2599,7 @@ static __poll_t unix_poll(struct file *f
- 		mask |= EPOLLRDHUP | EPOLLIN | EPOLLRDNORM;
- 
- 	/* readable? */
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	/* Connection-based need to check for termination and startup */
-@@ -2628,7 +2628,7 @@ static __poll_t unix_dgram_poll(struct f
- 	mask = 0;
- 
- 	/* exceptional events? */
--	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
-+	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
- 		mask |= EPOLLERR |
- 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
- 
-@@ -2638,7 +2638,7 @@ static __poll_t unix_dgram_poll(struct f
- 		mask |= EPOLLHUP;
- 
- 	/* readable? */
--	if (!skb_queue_empty(&sk->sk_receive_queue))
-+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	/* Connection-based need to check for termination and startup */
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -870,7 +870,7 @@ static __poll_t vsock_poll(struct file *
- 		 * the queue and write as long as the socket isn't shutdown for
- 		 * sending.
- 		 */
--		if (!skb_queue_empty(&sk->sk_receive_queue) ||
-+		if (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
- 		    (sk->sk_shutdown & RCV_SHUTDOWN)) {
- 			mask |= EPOLLIN | EPOLLRDNORM;
+-			if (!skb_queue_empty(&sk->sk_receive_queue))
++			if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 				continue;
  		}
+ 
 
 
