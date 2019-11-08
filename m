@@ -2,110 +2,170 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98070C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36938C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9B621882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:34:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rg+96yAC"
+	by mail.kernel.org (Postfix) with ESMTP id 0B0C1222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573227300;
+	bh=zN3rpR9wQehYQ/IBV1VV1sl0YioG8ZqhL8nEdmNUJzI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=URVCSbtPCfZmEfwFvrC6qKazYzEMvhG8KXxir9YIhBsIiqZATgkJmdno/GHvT83wr
+	 aMaKP7qodOC21F99Q89CKH6DRXtSPvfwmoHdXUxbVBT0oIl3nYE9g/4E0Ied2UtNvM
+	 g+VIRyKheWAQC6mFm2cnsbBb3rWD4KyfJZg6KQuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKHPeP (ORCPT
+        id S1726608AbfKHPe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:34:15 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45211 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfKHPeP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:34:15 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z4so4773721pfn.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 07:34:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qj+fxcw/f/zBWkhx1n1H3p7wLqAe4gVBZqI/aXNQxWk=;
-        b=rg+96yACuf0WNFAbNBolENWXNfzTsgllhU9Lu/cKxAhsm9fNVQMjn0iHib5iXLrIKy
-         4ht2PRAcyGbqzSaBjjbBD2EOEsb07PYkPuF9ikvH43uGaUPfIbtJk8lFDkPCLI1XR8hS
-         2AVs+/sUSn4eOTnMkIjAK0XPcmykZsVhmQTIg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qj+fxcw/f/zBWkhx1n1H3p7wLqAe4gVBZqI/aXNQxWk=;
-        b=N870y9NT0iconw4PZtAIyC/ShYWQiZZN0vf/X+uDf90Gya4TGTmd2CWBanAETyQrWC
-         50QCfht6EcHYhlyIk03YOH+sQ6xvxOSbnlmqvs0Ftb7gKK76Nf9aSf6g+2DJUEFfP+53
-         vTsTrpnbN+25c84LM++MBF3m9eWNoMFcfeWES1cVTXZou9hlMeR5VArngsF3qYYVO+t5
-         9SZgoJ5MA28zhKYJRYdVk1wDWYguXlnvlOx0IsjjShbR7/zrS3M4+XI/IVe0qWYCzZfB
-         ktoy/OQUmQczadfybA0wmTwilgbBfvr/tR4KvA6jN+XvGqRiPZYjUrdj03VG27bl108E
-         O0zw==
-X-Gm-Message-State: APjAAAXu6L/RPqmHW0rMwaB3HQrIpggadWlrZS6EnzY6UELS0JtTWxx1
-        AV9WiLgWp9g975+DNduVFa1qEA==
-X-Google-Smtp-Source: APXvYqwSoI3TF80yU99qYDKkeTfcy4sTEJwGlf6rpu9XXhNevu4ndPDIEfa5bbnolSMgHzBhXQTIQw==
-X-Received: by 2002:a17:90a:6583:: with SMTP id k3mr14324030pjj.50.1573227252739;
-        Fri, 08 Nov 2019 07:34:12 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id b128sm2331777pfg.65.2019.11.08.07.34.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 07:34:12 -0800 (PST)
-Date:   Fri, 8 Nov 2019 10:34:10 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Nicolas Geoffray <ngeoffray@google.com>,
-        kernel-team@android.com, Hugh Dickins <hughd@google.com>,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH 1/2] memfd: Fix COW issue on MAP_PRIVATE and
- F_SEAL_FUTURE_WRITE mappings
-Message-ID: <20191108153410.GB99567@google.com>
-References: <20191107195355.80608-1-joel@joelfernandes.org>
- <20191107170023.0695732bb67eb80acd4caee5@linux-foundation.org>
- <20191108020614.GA99567@google.com>
- <20191108063715.GA513315@kroah.com>
+        Fri, 8 Nov 2019 10:34:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbfKHPe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 10:34:58 -0500
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D3C21882;
+        Fri,  8 Nov 2019 15:34:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573227297;
+        bh=zN3rpR9wQehYQ/IBV1VV1sl0YioG8ZqhL8nEdmNUJzI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j31GgUY6npbSns0Lp5k0+nk597AYvETm92OAnsVM80BmSDDq/Wis/5qT56ttURWDV
+         1uXWbY7AUUQKTXQYiHq3rvZoOL7Qo8tQ7jBLqVlB6evQhOapgA9k8bc3fiwmIi9/rv
+         yFpZdui1H7yv5rkhsYAUron/xLU0NWjVjqUogFDk=
+From:   Will Deacon <will@kernel.org>
+To:     amd-gfx@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel@daenzer.net>,
+        Nicolas Waisman <nico@semmle.com>
+Subject: [PATCH v2] drm/radeon: Handle workqueue allocation failure
+Date:   Fri,  8 Nov 2019 15:34:46 +0000
+Message-Id: <20191108153446.21244-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108063715.GA513315@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 07:37:15AM +0100, Greg KH wrote:
-> On Thu, Nov 07, 2019 at 09:06:14PM -0500, Joel Fernandes wrote:
-> > On Thu, Nov 07, 2019 at 05:00:23PM -0800, Andrew Morton wrote:
-> > > On Thu,  7 Nov 2019 14:53:54 -0500 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> > > 
-> > > > F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
-> > > > A private mapping created after the memfd file that gets sealed with
-> > > > F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
-> > > > children and parent share the same memory, even though the mapping is
-> > > > private.
-> > > 
-> > > That sounds fairly serious.  Should this be backported into -stable kernels?
-> > 
-> > Yes, it should be. The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so
-> > v5.3.x stable kernels would need a backport. I can submit a backport tomorrow
-> > unless we are Ok with stable automatically picking it up (I believe the
-> > stable folks "auto select" fixes which should detect this is a fix since I
-> > have said it is a fix in the subject line).
-> 
-> Never rely on "auto select" to pick up a patch for stable if you already
-> know it should go to stable.  Just mark it as such, or tell stable@vger
-> after the fact.
+In the highly unlikely event that we fail to allocate the "radeon-crtc"
+workqueue, we should bail cleanly rather than blindly marching on with a
+NULL pointer installed for the 'flip_queue' field of the 'radeon_crtc'
+structure.
 
-Sure, agreed.
+This was reported previously by Nicolas, but I don't think his fix was
+correct.
 
-Thanks Andrew for adding the tags!
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Michel Dänzer <michel@daenzer.net>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Link: https://lore.kernel.org/lkml/CADJ_3a8WFrs5NouXNqS5WYe7rebFP+_A5CheeqAyD_p7DFJJcg@mail.gmail.com/
+Signed-off-by: Will Deacon <will@kernel.org>
+---
 
-thanks,
+v2: Add failure path to radeon_modeset_init(). Compile-tested only.
 
- - Joel
+ drivers/gpu/drm/radeon/radeon_display.c | 29 +++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index e81b01f8db90..177acee06620 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -668,21 +668,29 @@ static const struct drm_crtc_funcs radeon_crtc_funcs = {
+ 	.page_flip_target = radeon_crtc_page_flip_target,
+ };
+ 
+-static void radeon_crtc_init(struct drm_device *dev, int index)
++static int radeon_crtc_init(struct drm_device *dev, int index)
+ {
+ 	struct radeon_device *rdev = dev->dev_private;
+ 	struct radeon_crtc *radeon_crtc;
++	struct workqueue_struct *wq;
+ 	int i;
+ 
+ 	radeon_crtc = kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CONN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
+ 	if (radeon_crtc == NULL)
+-		return;
++		return -ENOMEM;
++
++	wq = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
++	if (unlikely(!wq)) {
++		kfree(radeon_crtc);
++		return - ENOMEM;
++	}
+ 
+ 	drm_crtc_init(dev, &radeon_crtc->base, &radeon_crtc_funcs);
+ 
+ 	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
+ 	radeon_crtc->crtc_id = index;
+-	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
++	radeon_crtc->flip_queue = wq;
++
+ 	rdev->mode_info.crtcs[index] = radeon_crtc;
+ 
+ 	if (rdev->family >= CHIP_BONAIRE) {
+@@ -711,6 +719,8 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
+ 		radeon_atombios_init_crtc(dev, radeon_crtc);
+ 	else
+ 		radeon_legacy_init_crtc(dev, radeon_crtc);
++
++	return 0;
+ }
+ 
+ static const char *encoder_names[38] = {
+@@ -1602,9 +1612,8 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 	rdev->ddev->mode_config.fb_base = rdev->mc.aper_base;
+ 
+ 	ret = radeon_modeset_create_props(rdev);
+-	if (ret) {
+-		return ret;
+-	}
++	if (ret)
++		goto err_drm_mode_config_cleanup;
+ 
+ 	/* init i2c buses */
+ 	radeon_i2c_init(rdev);
+@@ -1617,7 +1626,9 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 
+ 	/* allocate crtcs */
+ 	for (i = 0; i < rdev->num_crtc; i++) {
+-		radeon_crtc_init(rdev->ddev, i);
++		ret = radeon_crtc_init(rdev->ddev, i);
++		if (ret)
++			goto err_drm_mode_config_cleanup;
+ 	}
+ 
+ 	/* okay we should have all the bios connectors */
+@@ -1645,6 +1656,10 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 	ret = radeon_pm_late_init(rdev);
+ 
+ 	return 0;
++
++err_drm_mode_config_cleanup:
++	drm_mode_config_cleanup(rdev->ddev);
++	return ret;
+ }
+ 
+ void radeon_modeset_fini(struct radeon_device *rdev)
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
