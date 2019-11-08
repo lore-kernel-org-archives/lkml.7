@@ -2,137 +2,123 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7672C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4C0FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E2D2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3ABD21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573238455;
-	bh=DV9Qe4nXXIWFVcx17wXeja01w4d5CbFbfNPKSF3fpmE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W/oDQG8MyxI/DJYQkEoaLluHnOyQBL7xia1RyEGREm+knSYJwwf2/l0Tg5jGwgx0l
-	 KpneGV2yUevy4o1xKx+TBTRQ0Aci4FeJfqh3FHnOU0AsreH7vNkfZC0Rkcxj4DqLNp
-	 ayQdCZdcuwtBJKGPB3yVCX3J6Inq+wgf/zmBQTxE=
+	s=default; t=1573238530;
+	bh=hOLr4d1sakZO1oqZEpnz48GO69KF6YcTrmFsD9e7yRg=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=pQ3ZnOAd1hpo9xvta6mEhGPrHDe+HXrO9ehevZXR6Sv982qufaOxjstJvP0H+A/E+
+	 ruy/XF3IZSh8wTVLQTdirZZUGQixzmwR/iHkOuUXTEESWl4JHG5ALDRniYQnqL41+3
+	 8xW6Zj2pAkj3VszLFT6eD2q4wRXrbl+EsmbsLqGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbfKHSky (ORCPT
+        id S1730047AbfKHSmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:40:54 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46226 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHSkx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:40:53 -0500
-Received: by mail-lf1-f68.google.com with SMTP id o65so1529613lff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:40:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nK0Zw7DLkFj9Fi972X4waBUlozfHM/3V2eGjeSiAYSA=;
-        b=NHeFmexs7Yz1xxa1LiwHuBGwXB+UPoBzyW8Ms19u2B7AJ+X1/cPn7PIRLnUcjY65zc
-         I1BM+BlXfL0H3tx4/zcFNIsihVYs0aG27mlRkRGJ6/azjW5Y6ie2SRZYkeLY9kmCSSKE
-         r/TQA/vggkYBJM0F9kfKGYF9kggQPVl/LeW+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nK0Zw7DLkFj9Fi972X4waBUlozfHM/3V2eGjeSiAYSA=;
-        b=QUy6/eaLdJFyPSYdaXH8N+ZBb8yH5HiTR6Vd87cXiAZUnDTo9G6nN+ZOByEXY+7WXk
-         iIx5JvvDnY8TDtlx4iyPxgOQx25nXgbHknZDU40o08kuTYvRQQ/eMqTlVPvc+zVlKFbh
-         6VRjTNHTnQXoTdicAWidOyL7HfkI8vIdODpEBc1vK2aVIVCXK1MSDgFnl6VeHTTrA+eV
-         G8O8Of5VdCBy/BIs3uJ9AwmDl4ORZIiR0TtrUe53aWLwcymk3ixCb/BjT6A+WTsgw3TK
-         HBzI4xHbkOU2krYiPusfFMFYy/nQkflKXhEH6Zy4Vul5IpGjKG84bd82JEbGSY3H8/Tn
-         PldQ==
-X-Gm-Message-State: APjAAAV9WXAE444JgF2AAl4tf7Olgi2PsSHkd6ajB8SrCIhtOayKrWWI
-        mCMn/YdopchmiTbpxMhRUtmzhntGsdo=
-X-Google-Smtp-Source: APXvYqxB53eqyfJQyu6smeJ5NzpY3Frmi72I8FchDiJgAZpvT93KMt3CrnZqiarQv/kH1uFZXmfLEQ==
-X-Received: by 2002:ac2:51dd:: with SMTP id u29mr7715343lfm.135.1573238451671;
-        Fri, 08 Nov 2019 10:40:51 -0800 (PST)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id r9sm3517856ljm.7.2019.11.08.10.40.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 10:40:48 -0800 (PST)
-Received: by mail-lj1-f172.google.com with SMTP id e9so7219265ljp.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:40:48 -0800 (PST)
-X-Received: by 2002:a05:651c:331:: with SMTP id b17mr7922518ljp.133.1573238447956;
- Fri, 08 Nov 2019 10:40:47 -0800 (PST)
+        Fri, 8 Nov 2019 13:42:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbfKHSmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:42:08 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 334DD21848;
+        Fri,  8 Nov 2019 18:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573238527;
+        bh=hOLr4d1sakZO1oqZEpnz48GO69KF6YcTrmFsD9e7yRg=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=DAJGUlWDjjqC8cVK6Eg38iIC5Cfte0U2YqYLYmhMeSX8xX2TPdI8KnT8b1zIwDIr4
+         s1zXJd3yv3wJz86WWWGRqBsdUyB75lkVYI7Qz4NE7hIlZyjZF2q7hFH1pANxeKJczw
+         mZKNA9rYKYK0gjQirJEYtw+YTPkR58G26ESxjVSI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <000000000000c422a80596d595ee@google.com> <6bddae34-93df-6820-0390-ac18dcbf0927@gmail.com>
- <CAHk-=whh5bcxCecEL5Fy4XvQjgBTJ9uqvyp7dW=CLU6VNxS9iA@mail.gmail.com>
- <CANn89iK9mTJ4BN-X3MeSx5LGXGYafXkhZyaUpdXDjVivTwA6Jg@mail.gmail.com>
- <CAHk-=whNBL63qmO176qOQpkY16xvomog5ocvM=9K55hUgAgOPA@mail.gmail.com>
- <CANn89iJJiB6avNtZ1qQNTeJwyjW32Pxk_2CwvEJxgQ==kgY0fA@mail.gmail.com>
- <CAHk-=wiZdSoweA-W_8iwLy6KLsd-DaZM0gN9_+f-aT4KL64U0g@mail.gmail.com> <CANpmjNOuRp0gdekQeodXm8O_yiXm7mA8WZsXZNmFfJYMs93x8w@mail.gmail.com>
-In-Reply-To: <CANpmjNOuRp0gdekQeodXm8O_yiXm7mA8WZsXZNmFfJYMs93x8w@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 8 Nov 2019 10:40:32 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjodfXqd9=iW=ziFrfY7xqopgO3Ko_HrAUp-kUQHHyyqg@mail.gmail.com>
-Message-ID: <CAHk-=wjodfXqd9=iW=ziFrfY7xqopgO3Ko_HrAUp-kUQHHyyqg@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Marco Elver <elver@google.com>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJs_Fx5trp2B7uOMTFZNUsYoKrO1-MWsNECKp-hz+1qCOCeU8A@mail.gmail.com>
+References: <20191014102308.27441-1-tdas@codeaurora.org> <20191014102308.27441-6-tdas@codeaurora.org> <20191029175941.GA27773@google.com> <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org> <20191031174149.GD27773@google.com> <20191107210606.E536F21D79@mail.kernel.org> <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com> <20191108063543.0262921882@mail.kernel.org> <CAJs_Fx5trp2B7uOMTFZNUsYoKrO1-MWsNECKp-hz+1qCOCeU8A@mail.gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 10:42:06 -0800
+Message-Id: <20191108184207.334DD21848@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 10:16 AM Marco Elver <elver@google.com> wrote:
->
-> KCSAN does not use volatile to distinguish accesses. Right now
-> READ_ONCE, WRITE_ONCE, atomic bitops, atomic_t (+ some arch specific
-> primitives) are treated as marked atomic operations.
+Quoting Rob Clark (2019-11-08 08:54:23)
+> On Thu, Nov 7, 2019 at 10:35 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Rob Clark (2019-11-07 18:06:19)
+> > > On Thu, Nov 7, 2019 at 1:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > >
+> > > >
+> > > > NULL is a valid clk pointer returned by clk_get(). What is the disp=
+lay
+> > > > driver doing that makes it consider NULL an error?
+> > > >
+> > >
+> > > do we not have an iface clk?  I think the driver assumes we should
+> > > have one, rather than it being an optional thing.. we could ofc change
+> > > that
+> >
+> > I think some sort of AHB clk is always enabled so the plan is to just
+> > hand back NULL to the caller when they call clk_get() on it and nobody
+> > should be the wiser when calling clk APIs with a NULL iface clk. The
+> > common clk APIs typically just return 0 and move along. Of course, we'll
+> > also turn the clk on in the clk driver so that hardware can function
+> > properly, but we don't need to expose it as a clk object and all that
+> > stuff if we're literally just slamming a bit somewhere and never looking
+> > back.
+> >
+> > But it sounds like we can't return NULL for this clk for some reason? I
+> > haven't tried to track it down yet but I think Matthias has found it
+> > causes some sort of problem in the display driver.
+> >
+>=20
+> ok, I guess we can change the dpu code to allow NULL..  but what would
+> the return be, for example on a different SoC where we do have an
+> iface clk, but the clk driver isn't enabled?  Would that also return
+> NULL?  I guess it would be nice to differentiate between those cases..
+>=20
 
-Ok, so we'd have to do this in terms of ATOMIC_WRITE().
+So the scenario is DT describes the clk
 
-One alternative might be KCSAN enhancement, where you notice the
-following pattern:
+ dpu_node {
+     clocks =3D <&cc AHB_CLK>;
+     clock-names =3D "iface";
+ }
 
- - a field is initialized before the data structure gets exposed (I
-presume KCSAN already must understand about this issue -
-initializations are different and not atomic)
+but the &cc node has a driver that doesn't probe?
 
- - while the field is live, there are operations that write the same
-(let's call it "idempotent") value to the field under certain
-circumstances
+I believe in this scenario we return -EPROBE_DEFER because we assume we
+should wait for the clk driver to probe and provide the iface clk. See
+of_clk_get_hw_from_clkspec() and how it looks through a list of clk
+providers and tries to match the &cc phandle to some provider.
 
- - at release time, after all the reference counts are gone, the field
-is read for whether that situation happened. I'm assuming KCSAN
-already understands about this case too?
+Once the driver probes, the match will happen and we'll be able to look
+up the clk in the provider with __of_clk_get_hw_from_provider(). If
+the clk provider decides that there isn't a clk object, it will return
+NULL and then eventually clk_hw_create_clk() will turn the NULL return
+value into a NULL pointer to return from clk_get().
 
-So it would only be the "idempotent writes" thing that would be
-something KCSAN would have to realize do not involve a race - because
-it simply doesn't matter if two writes of the same value race against
-each other.
-
-But I guess we could also just do
-
-   #define WRITE_IDEMPOTENT(x,y) WRITE_ONCE(x,y)
-
-and use that in the kernel to annotate these things. And if we have
-that kind of annotation, we could then possibly change it to
-
-  #define WRITE_IDEMPOTENT(x,y) \
-       if READ_ONCE(x)!=y WRITE_ONCE(x,y)
-
-if we have numbers that that actually helps (that macro written to be
-intentionally invalid C - it obviously needs statement protection and
-protection against evaluating the arguments multiple times etc).
-
-                Linus
