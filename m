@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D46FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E94C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2265A222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCAC20869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213158;
-	bh=J01Tua1xHqm84z2bULbDOEq1M7xNvcNCSEryKQmdtZc=;
+	s=default; t=1573213164;
+	bh=NCAdMNxyj859YBMfZ8bSItS2RDiymUu+jeyc3ixm0ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AycTabwEdlpEmTlAjRQoMH38WPwjGlQroHGTaBr9+Rpc5+MKJnBvMmwSo+AqhZzQP
-	 VcmixSnQlEX6jACaNWRa4q5hR0VA4XRypaVV/Xn2fYxhhgDHnHxpjrXmlu0RsMpyUr
-	 1WXkpjvqLuv8jM407YgTcql6+OhUQSxgsU/Obr4E=
+	b=yX4Gkix1Xuacx0KL9Dcl7hzeBywlZbTjWA1Xw+nUIfmsABFxYiwbv5NAn2V7U07Xp
+	 O2CbANo7x+m8YKXRLaZQfFQG4CEsAqHHnfT4TyU6HSMzhyA4Px/acrC3fWNNN6Kkau
+	 rMmeEoUItMWRE/ynNoXYsdGuLi1heUgbCye5s+zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733200AbfKHLjQ (ORCPT
+        id S1733265AbfKHLjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:39:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51926 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:39:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732937AbfKHLi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:56 -0500
+        id S1732788AbfKHLi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15EB21D6C;
-        Fri,  8 Nov 2019 11:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E34020869;
+        Fri,  8 Nov 2019 11:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213135;
-        bh=J01Tua1xHqm84z2bULbDOEq1M7xNvcNCSEryKQmdtZc=;
+        s=default; t=1573213137;
+        bh=NCAdMNxyj859YBMfZ8bSItS2RDiymUu+jeyc3ixm0ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BIAt3tmY76Pkt8HVm4TsOjCQwms2oxVAacypeAQSYhMfK4Ok0IvmpfYVYEyrMzP7Z
-         5Nk81kmObrmk4yqRBFF8jj9Ay8w/RVJBbr78xroA+HTLoweoTMvXKWGBGaaKZosktI
-         +FeP8bIib4RtKyxn6JCoOXjShziMsRIeEeIMSilg=
+        b=wE/7MjwAOx2nu7goYVEumTxkwPFAlz/EXSJqi5lJsLuJMvANqpwRnX3ZGz6OAi3Bt
+         jwIySyFBGXlUkRrlCP6NNOPedoHPtXS/nyzOut9qwxr4T72Gf4GdN+ZXxlL2faVwAi
+         AuB6vxS4tQXD4q5U9i/ZtHz32JPkM1wHE28O3hcE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 053/205] i40e: Prevent deleting MAC address from VF when set by PF
-Date:   Fri,  8 Nov 2019 06:35:20 -0500
-Message-Id: <20191108113752.12502-53-sashal@kernel.org>
+Cc:     Vijay Immanuel <vijayi@attalasystems.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 055/205] IB/rxe: fixes for rdma read retry
+Date:   Fri,  8 Nov 2019 06:35:22 -0500
+Message-Id: <20191108113752.12502-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,43 +59,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patryk Małek <patryk.malek@intel.com>
+From: Vijay Immanuel <vijayi@attalasystems.com>
 
-[ Upstream commit 5907cf6c5bbe78be2ed18b875b316c6028b20634 ]
+[ Upstream commit 030e46e495af855a13964a0aab9753ea82a96edc ]
 
-To prevent VF from deleting MAC address that was assigned by the
-PF we need to check for that scenario when we try to delete a MAC
-address from a VF.
+When a read request is retried for the remaining partial
+data, the response may restart from read response first
+or read response only. So support those cases.
 
-Signed-off-by: Patryk Małek <patryk.malek@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Do not advance the comp psn beyond the current wqe's last_psn
+as that could skip over an entire read wqe and will cause the
+req_retry() logic to set an incorrect req psn.
+An example sequence is as follows:
+Write        PSN 40 -- this is the current WQE.
+Read request PSN 41
+Write        PSN 42
+Receive ACK  PSN 42 -- this will complete the current WQE
+for PSN 40, and set the comp psn to 42 which is a problem
+because the read request at PSN 41 has been skipped over.
+So when req_retry() tries to retransmit the read request,
+it sets the req psn to 42 which is incorrect.
+
+When retrying a read request, calculate the number of psns
+completed based on the dma resid instead of the wqe first_psn.
+The wqe first_psn could have moved if the read request was
+retried multiple times.
+
+Set the reth length to the dma resid to handle read retries for
+the remaining partial data.
+
+Signed-off-by: Vijay Immanuel <vijayi@attalasystems.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/infiniband/sw/rxe/rxe_comp.c | 21 ++++++++++++++++-----
+ drivers/infiniband/sw/rxe/rxe_req.c  | 15 +++++++++------
+ 2 files changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index d86f3fa7aa6a4..46a71d289bca2 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -2571,6 +2571,16 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
- 			ret = I40E_ERR_INVALID_MAC_ADDR;
- 			goto error_param;
- 		}
+diff --git a/drivers/infiniband/sw/rxe/rxe_comp.c b/drivers/infiniband/sw/rxe/rxe_comp.c
+index ed96441595d81..ea089cb091ade 100644
+--- a/drivers/infiniband/sw/rxe/rxe_comp.c
++++ b/drivers/infiniband/sw/rxe/rxe_comp.c
+@@ -254,6 +254,17 @@ static inline enum comp_state check_ack(struct rxe_qp *qp,
+ 	case IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE:
+ 		if (pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE &&
+ 		    pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_LAST) {
++			/* read retries of partial data may restart from
++			 * read response first or response only.
++			 */
++			if ((pkt->psn == wqe->first_psn &&
++			     pkt->opcode ==
++			     IB_OPCODE_RC_RDMA_READ_RESPONSE_FIRST) ||
++			    (wqe->first_psn == wqe->last_psn &&
++			     pkt->opcode ==
++			     IB_OPCODE_RC_RDMA_READ_RESPONSE_ONLY))
++				break;
 +
-+		if (vf->pf_set_mac &&
-+		    ether_addr_equal(al->list[i].addr,
-+				     vf->default_lan_addr.addr)) {
-+			dev_err(&pf->pdev->dev,
-+				"MAC addr %pM has been set by PF, cannot delete it for VF %d, reset VF to change MAC addr\n",
-+				vf->default_lan_addr.addr, vf->vf_id);
-+			ret = I40E_ERR_PARAM;
-+			goto error_param;
+ 			return COMPST_ERROR;
+ 		}
+ 		break;
+@@ -500,11 +511,11 @@ static inline enum comp_state complete_wqe(struct rxe_qp *qp,
+ 					   struct rxe_pkt_info *pkt,
+ 					   struct rxe_send_wqe *wqe)
+ {
+-	qp->comp.opcode = -1;
+-
+-	if (pkt) {
+-		if (psn_compare(pkt->psn, qp->comp.psn) >= 0)
+-			qp->comp.psn = (pkt->psn + 1) & BTH_PSN_MASK;
++	if (pkt && wqe->state == wqe_state_pending) {
++		if (psn_compare(wqe->last_psn, qp->comp.psn) >= 0) {
++			qp->comp.psn = (wqe->last_psn + 1) & BTH_PSN_MASK;
++			qp->comp.opcode = -1;
 +		}
- 	}
- 	vsi = pf->vsi[vf->lan_vsi_idx];
  
+ 		if (qp->req.wait_psn) {
+ 			qp->req.wait_psn = 0;
+diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+index fa98a52796470..f7dd8de799415 100644
+--- a/drivers/infiniband/sw/rxe/rxe_req.c
++++ b/drivers/infiniband/sw/rxe/rxe_req.c
+@@ -73,9 +73,6 @@ static void req_retry(struct rxe_qp *qp)
+ 	int npsn;
+ 	int first = 1;
+ 
+-	wqe = queue_head(qp->sq.queue);
+-	npsn = (qp->comp.psn - wqe->first_psn) & BTH_PSN_MASK;
+-
+ 	qp->req.wqe_index	= consumer_index(qp->sq.queue);
+ 	qp->req.psn		= qp->comp.psn;
+ 	qp->req.opcode		= -1;
+@@ -107,11 +104,17 @@ static void req_retry(struct rxe_qp *qp)
+ 		if (first) {
+ 			first = 0;
+ 
+-			if (mask & WR_WRITE_OR_SEND_MASK)
++			if (mask & WR_WRITE_OR_SEND_MASK) {
++				npsn = (qp->comp.psn - wqe->first_psn) &
++					BTH_PSN_MASK;
+ 				retry_first_write_send(qp, wqe, mask, npsn);
++			}
+ 
+-			if (mask & WR_READ_MASK)
++			if (mask & WR_READ_MASK) {
++				npsn = (wqe->dma.length - wqe->dma.resid) /
++					qp->mtu;
+ 				wqe->iova += npsn * qp->mtu;
++			}
+ 		}
+ 
+ 		wqe->state = wqe_state_posted;
+@@ -435,7 +438,7 @@ static struct sk_buff *init_req_packet(struct rxe_qp *qp,
+ 	if (pkt->mask & RXE_RETH_MASK) {
+ 		reth_set_rkey(pkt, ibwr->wr.rdma.rkey);
+ 		reth_set_va(pkt, wqe->iova);
+-		reth_set_len(pkt, wqe->dma.length);
++		reth_set_len(pkt, wqe->dma.resid);
+ 	}
+ 
+ 	if (pkt->mask & RXE_IMMDT_MASK)
 -- 
 2.20.1
 
