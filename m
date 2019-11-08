@@ -2,155 +2,89 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9207FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1923C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A917221882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7830E21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573194945;
-	bh=WtlyHdXzYR6zFb9CyoGvL3jaNaSQ59dn8PybAwn/UWk=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=k+JBbMuanMp/XQEe5JGMwarTjaI1C619EUsqVdXPmExE19/qt8V6hnse6MmIwpuR2
-	 BzqzVUh4mTPJae+XeVmiM5fBck4iOvouctXGaAhL78pSD6+OQjkbIafCXBQEnnXpOe
-	 mvhYrLOhzUA0bmnQ3Ewo208zHK/mK0gsOH7Zre3o=
+	s=default; t=1573195040;
+	bh=sXe/lKnHWXWz0aIej4oPyDwjQIRvSAnRd4dPdmDpkII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cnhssLsYKKLOcTrZoOxBHdIriV06Ql1fAUMGMRtBlQosEHnptk01BFXKa+GdtXb54
+	 dEumQBmXh0/B6ijGO7NbjdAAAfsyA+IOAq9MehqV0PrckpeWx9gZ0Ikuze3XdL4biH
+	 ZwCgm+fSeZDn5BwfZm88AJ/MfKsTt4acAF6yl7go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfKHGfo (ORCPT
+        id S1729829AbfKHGhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:35:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 01:37:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfKHGfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 01:35:44 -0500
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1725372AbfKHGhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 01:37:19 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0262921882;
-        Fri,  8 Nov 2019 06:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6CA421882;
+        Fri,  8 Nov 2019 06:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573194943;
-        bh=WtlyHdXzYR6zFb9CyoGvL3jaNaSQ59dn8PybAwn/UWk=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=C8RPxjnRf/hUxQQB3nIelAjN8AOWykVxtOvebXxVnI5p07Zuxo5v/ONyFiTk5YXNG
-         4lWRDtXRbzTaXbh9BvuFkk5NDeUMfupG5f8Afd8K8t5yLtRoB7c3LJOACpRIK4BmiF
-         b7YZkHZhv9917xZyQUZ9VHTJMha+Z/awAExilEqw=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1573195038;
+        bh=sXe/lKnHWXWz0aIej4oPyDwjQIRvSAnRd4dPdmDpkII=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LlvNmAWEIFV3DOIrxKnv8p/Io0xVltpUHrWIziebLbV98yw0fcsZwyxSmE25Af5V8
+         lCAriWwM88CjnNik4h37rJD5I1XjJYSR0YIZdq/vgelAa8ihvdPvFW8FOf3VIdZNCg
+         QIjP4MEv3UaTX2KWtlJdvJUdrv5bRc0tOXixTUxM=
+Date:   Fri, 8 Nov 2019 07:37:15 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Nicolas Geoffray <ngeoffray@google.com>,
+        kernel-team@android.com, Hugh Dickins <hughd@google.com>,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 1/2] memfd: Fix COW issue on MAP_PRIVATE and
+ F_SEAL_FUTURE_WRITE mappings
+Message-ID: <20191108063715.GA513315@kroah.com>
+References: <20191107195355.80608-1-joel@joelfernandes.org>
+ <20191107170023.0695732bb67eb80acd4caee5@linux-foundation.org>
+ <20191108020614.GA99567@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com>
-References: <20191014102308.27441-1-tdas@codeaurora.org> <20191014102308.27441-6-tdas@codeaurora.org> <20191029175941.GA27773@google.com> <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org> <20191031174149.GD27773@google.com> <20191107210606.E536F21D79@mail.kernel.org> <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 22:35:42 -0800
-Message-Id: <20191108063543.0262921882@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108020614.GA99567@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Clark (2019-11-07 18:06:19)
-> On Thu, Nov 7, 2019 at 1:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Matthias Kaehlcke (2019-10-31 10:41:49)
-> > > Hi Taniya,
-> > >
-> > > On Thu, Oct 31, 2019 at 04:59:26PM +0530, Taniya Das wrote:
-> > > > Hi Matthias,
-> > > >
-> > > > Thanks for your comments.
-> > > >
-> > > > On 10/29/2019 11:29 PM, Matthias Kaehlcke wrote:
-> > > > > Hi Taniya,
-> > > > >
-> > > > > On Mon, Oct 14, 2019 at 03:53:08PM +0530, Taniya Das wrote:
-> > > > > > Add support for the global clock controller found on SC7180
-> > > > > > based devices. This should allow most non-multimedia device
-> > > > > > drivers to probe and control their clocks.
-> > > > > >
-> > > > > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > > >
-> > > > >
-> > > > > v3 also had
-> > > > >
-> > > > > +   [GCC_DISP_AHB_CLK] =3D &gcc_disp_ahb_clk.clkr,
-> > > > >
-> > > > > Removing it makes the dpu_mdss driver unhappy:
-> > > > >
-> > > > > [    2.999855] dpu_mdss_enable+0x2c/0x58->msm_dss_enable_clk: 'if=
-ace' is not available
-> > > > >
-> > > > > because:
-> > > > >
-> > > > >          mdss: mdss@ae00000 {
-> > > > >                     ...
-> > > > >
-> > > > >   =3D>             clocks =3D <&gcc GCC_DISP_AHB_CLK>,
-> > > > >                           <&gcc GCC_DISP_HF_AXI_CLK>,
-> > > > >                           <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> > > > >                  clock-names =3D "iface", "gcc_bus", "core";
-> > > > >     };
-> > > > >
-> > > >
-> > > > The basic idea as you mentioned below was to move the CRITICAL cloc=
-ks to
-> > > > probe. The clock provider to return NULL in case the clocks are not
-> > > > registered.
-> > > > This was discussed with Stephen on v3. Thus I submitted the below p=
-atch.
-> > > > clk: qcom: common: Return NULL from clk_hw OF provider.
-> > >
-> > > I see. My assumption was that the entire clock hierarchy should be re=
-gistered,
-> > > but Stephen almost certainly knows better :)
-> > >
-> > > > Yes it would throw these warnings, but no functional issue is obser=
-ved from
-> > > > display. I have tested it on the cheza board.
-> > >
-> > > The driver considers it an error (uses DEV_ERR to log the message) an=
-d doesn't
-> > > handle other clocks when one is found missing. I'm not really familil=
-ar with
-> > > the dpu_mdss driver, but I imagine this can have some side effects. A=
-dded some
-> > > of the authors/contributors to cc.
-> >
-> > NULL is a valid clk pointer returned by clk_get(). What is the display
-> > driver doing that makes it consider NULL an error?
-> >
->=20
-> do we not have an iface clk?  I think the driver assumes we should
-> have one, rather than it being an optional thing.. we could ofc change
-> that
+On Thu, Nov 07, 2019 at 09:06:14PM -0500, Joel Fernandes wrote:
+> On Thu, Nov 07, 2019 at 05:00:23PM -0800, Andrew Morton wrote:
+> > On Thu,  7 Nov 2019 14:53:54 -0500 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> > 
+> > > F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
+> > > A private mapping created after the memfd file that gets sealed with
+> > > F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
+> > > children and parent share the same memory, even though the mapping is
+> > > private.
+> > 
+> > That sounds fairly serious.  Should this be backported into -stable kernels?
+> 
+> Yes, it should be. The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so
+> v5.3.x stable kernels would need a backport. I can submit a backport tomorrow
+> unless we are Ok with stable automatically picking it up (I believe the
+> stable folks "auto select" fixes which should detect this is a fix since I
+> have said it is a fix in the subject line).
 
-I think some sort of AHB clk is always enabled so the plan is to just
-hand back NULL to the caller when they call clk_get() on it and nobody
-should be the wiser when calling clk APIs with a NULL iface clk. The
-common clk APIs typically just return 0 and move along. Of course, we'll
-also turn the clk on in the clk driver so that hardware can function
-properly, but we don't need to expose it as a clk object and all that
-stuff if we're literally just slamming a bit somewhere and never looking
-back.
+Never rely on "auto select" to pick up a patch for stable if you already
+know it should go to stable.  Just mark it as such, or tell stable@vger
+after the fact.
 
-But it sounds like we can't return NULL for this clk for some reason? I
-haven't tried to track it down yet but I think Matthias has found it
-causes some sort of problem in the display driver.
+thanks,
 
+greg k-h
