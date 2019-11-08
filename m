@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0373CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0D8C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA546215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53590215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214197;
-	bh=XTKduqN7mHhES6KQ6cLQz/6SZSC+gMKdX1Jkj9OtVMY=;
+	s=default; t=1573214203;
+	bh=MlEi67HFMVyFzgS1oppUJqq2l7UIJn14A0fj12AmSUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i/aLJw5egfaEa3ZdxckSDLWf6tQ/zKD+63IccCW1c7+da32VcA1/VtyAfbWPvbu2+
-	 yMtaSnWvwGQBk59NU4dcbi9KJzLXwpyudMTiA7uyTi4AI7ILM+Ggu8qWHWq8g+GUun
-	 FhsEZxmEhFZqQt3iJVdUqAi+cM8FwwSxeMSNA61E=
+	b=sINuSUdDt3gn9o93/HttpxYB96biPaagKuG+zcjgbkxW1AsnCj4Ay2mJgMgiwAYxw
+	 pUXAHOfrPYuuePxS2GcjgoV2CMqAI7NoSktlfxq0YTlVwfb6Vo/VRrc35dAtJKr7/w
+	 yBJ+NX1F5tUJXC98YKmOjNc9XnIgkahbNwCi2mh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389673AbfKHL4g (ORCPT
+        id S2391112AbfKHL4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:56:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:56:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391118AbfKHLpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:31 -0500
+        id S2391107AbfKHLp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3336420656;
-        Fri,  8 Nov 2019 11:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0902D222C2;
+        Fri,  8 Nov 2019 11:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213529;
-        bh=XTKduqN7mHhES6KQ6cLQz/6SZSC+gMKdX1Jkj9OtVMY=;
+        s=default; t=1573213527;
+        bh=MlEi67HFMVyFzgS1oppUJqq2l7UIJn14A0fj12AmSUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fONEfXwEV0k/vgGBCkT4buTUB6s0TKz/IfaZI+hQvY//esZH4rWs2ebJxD6ABUDQp
-         KRPpu7YhEvYy2i/jbfZNbuNMYIN/Ss8wlq6/cBJ0lrX8f0uSHgCaiHTLqkvGcSMENk
-         J7ASqj/PE8ef5ax51uy3+TQmQI3q6LHJvTHoELLM=
+        b=iwKgGOEemQu648HN+q0GdVG75pa6F53HKP63slZIv8YpoRDcUx8LNPUaWZvf8Hp/F
+         sbWlkb33wS/3sYIV4aJa/m7mxLBOhoK2ckpCZtnPTqOZsCY25z5w56im9/xjH18A4y
+         K2tYud3OTO7G/yKclShcusjYjotw0Hj4aJaGRtB0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 093/103] blok, bfq: do not plug I/O if all queues are weight-raised
-Date:   Fri,  8 Nov 2019 06:42:58 -0500
-Message-Id: <20191108114310.14363-93-sashal@kernel.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 091/103] pinctrl: at91: don't use the same irqchip with multiple gpiochips
+Date:   Fri,  8 Nov 2019 06:42:56 -0500
+Message-Id: <20191108114310.14363-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,68 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-[ Upstream commit c8765de0adfcaaf4ffb2d951e07444f00ffa9453 ]
+[ Upstream commit 0c3dfa176912b5f87732545598200fb55e9c1978 ]
 
-To reduce latency for interactive and soft real-time applications, bfq
-privileges the bfq_queues containing the I/O of these
-applications. These privileged queues, referred-to as weight-raised
-queues, get a much higher share of the device throughput
-w.r.t. non-privileged queues. To preserve this higher share, the I/O
-of any non-weight-raised queue must be plugged whenever a sync
-weight-raised queue, while being served, remains temporarily empty. To
-attain this goal, bfq simply plugs any I/O (from any queue), if a sync
-weight-raised queue remains empty while in service.
+Sharing the same irqchip with multiple gpiochips is not a good
+practice. For instance, when installing hooks, we change the state
+of the irqchip. The initial state of the irqchip for the second
+gpiochip to register is then disrupted.
 
-Unfortunately, this plugging typically lowers throughput with random
-I/O, on devices with internal queueing (because it reduces the filling
-level of the internal queues of the device).
-
-This commit addresses this issue by restricting the cases where
-plugging is performed: if a sync weight-raised queue remains empty
-while in service, then I/O plugging is performed only if some of the
-active bfq_queues are *not* weight-raised (which is actually the only
-circumstance where plugging is needed to preserve the higher share of
-the throughput of weight-raised queues). This restriction proved able
-to boost throughput in really many use cases needing only maximum
-throughput.
-
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index e65b0da1007b4..93863c6173e66 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -3314,7 +3314,12 @@ static bool bfq_bfqq_may_idle(struct bfq_queue *bfqq)
- 	 * whether bfqq is being weight-raised, because
- 	 * bfq_symmetric_scenario() does not take into account also
- 	 * weight-raised queues (see comments on
--	 * bfq_weights_tree_add()).
-+	 * bfq_weights_tree_add()). In particular, if bfqq is being
-+	 * weight-raised, it is important to idle only if there are
-+	 * other, non-weight-raised queues that may steal throughput
-+	 * to bfqq. Actually, we should be even more precise, and
-+	 * differentiate between interactive weight raising and
-+	 * soft real-time weight raising.
- 	 *
- 	 * As a side note, it is worth considering that the above
- 	 * device-idling countermeasures may however fail in the
-@@ -3326,7 +3331,8 @@ static bool bfq_bfqq_may_idle(struct bfq_queue *bfqq)
- 	 * to let requests be served in the desired order until all
- 	 * the requests already queued in the device have been served.
- 	 */
--	asymmetric_scenario = bfqq->wr_coeff > 1 ||
-+	asymmetric_scenario = (bfqq->wr_coeff > 1 &&
-+			       bfqd->wr_busy_queues < bfqd->busy_queues) ||
- 		!bfq_symmetric_scenario(bfqd);
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 569bc28cb9097..404711f0985aa 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1566,16 +1566,6 @@ void at91_pinctrl_gpio_resume(void)
+ #define gpio_irq_set_wake	NULL
+ #endif /* CONFIG_PM */
  
- 	/*
+-static struct irq_chip gpio_irqchip = {
+-	.name		= "GPIO",
+-	.irq_ack	= gpio_irq_ack,
+-	.irq_disable	= gpio_irq_mask,
+-	.irq_mask	= gpio_irq_mask,
+-	.irq_unmask	= gpio_irq_unmask,
+-	/* .irq_set_type is set dynamically */
+-	.irq_set_wake	= gpio_irq_set_wake,
+-};
+-
+ static void gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+@@ -1616,12 +1606,22 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	struct gpio_chip	*gpiochip_prev = NULL;
+ 	struct at91_gpio_chip   *prev = NULL;
+ 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
++	struct irq_chip		*gpio_irqchip;
+ 	int ret, i;
+ 
++	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
++	if (!gpio_irqchip)
++		return -ENOMEM;
++
+ 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
+ 
+-	/* Setup proper .irq_set_type function */
+-	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
++	gpio_irqchip->name = "GPIO";
++	gpio_irqchip->irq_ack = gpio_irq_ack;
++	gpio_irqchip->irq_disable = gpio_irq_mask;
++	gpio_irqchip->irq_mask = gpio_irq_mask;
++	gpio_irqchip->irq_unmask = gpio_irq_unmask;
++	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
++	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
+ 
+ 	/* Disable irqs of this PIO controller */
+ 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
+@@ -1632,7 +1632,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	 * interrupt.
+ 	 */
+ 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
+-				   &gpio_irqchip,
++				   gpio_irqchip,
+ 				   0,
+ 				   handle_edge_irq,
+ 				   IRQ_TYPE_NONE);
+@@ -1650,7 +1650,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	if (!gpiochip_prev) {
+ 		/* Then register the chain on the parent IRQ */
+ 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
+-					     &gpio_irqchip,
++					     gpio_irqchip,
+ 					     at91_gpio->pioc_virq,
+ 					     gpio_irq_handler);
+ 		return 0;
 -- 
 2.20.1
 
