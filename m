@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1329FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71576FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF9B22459
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F3A21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213284;
-	bh=PqZZ0bxqXQ0wT7uuBrDv+Tbx5Fn5EsJo8lr5iAdkK4U=;
+	s=default; t=1573213287;
+	bh=BsYITncQjbDdzgjbZ7L3lXwyTDl12qrWP9tYAragwzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1VNXJ1pBTPz9/Q2YJzD0wbc65cWActvcTGqN/1rhZ9QpB32ZNNEDs4Zjwo1kVMgNh
-	 OpBES/EzlsXe/Vlk/NhI7DnQuii3AB3+w+0gFZCjSpU6Ya+HGidYpnBgOUfc8wVU5M
-	 isCxzWRS95iElkhMVXYvSnuytTkLbNQjo3iumXrs=
+	b=GG0pkIjAWgO3gF/KXYkOA+eFQw3EzZbcc8kKHO4y4wQXT/b1Xe4t3UM7HpJYJhdOs
+	 JGpHMmaImty0KInXkIbBQ9d2pZqCcmKsgTqZfxUvrugpR7E3zzERxl3ILXCZ803RCr
+	 zLJF6F/lP78wL+kstXuVWAfT7rqp/bZQ/CPzz7+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389415AbfKHLlX (ORCPT
+        id S2389448AbfKHLl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54416 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389215AbfKHLlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:12 -0500
+        id S1732718AbfKHLlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC041222C2;
-        Fri,  8 Nov 2019 11:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EC322473;
+        Fri,  8 Nov 2019 11:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213271;
-        bh=PqZZ0bxqXQ0wT7uuBrDv+Tbx5Fn5EsJo8lr5iAdkK4U=;
+        s=default; t=1573213278;
+        bh=BsYITncQjbDdzgjbZ7L3lXwyTDl12qrWP9tYAragwzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZfvzCv6QyGSxjpUjSSkFJevqo4AaZzlC8UtyU8yrUsrYg7m2WZ45Cr14trGjiran
-         /rfBtQ84LVFuXgcZWxOebcnUHOykxicCXVDC3qf3aFtDsbpSCG/ESMv7MC66Y4k8CI
-         p4f3fpyUy9ddvCw2sy6Yi2jlQVmhJPIHtyqu5w2A=
+        b=rFYAvhRgntCDCwJ64gEI4rtGeINnZbIHXjxvsajh3EhbECgT1y2dzUh4jMXpQ4gEn
+         XgqmJUBnoLB4RAHLqxmowh6yUSnIrz45U55fMKGgod8FgEVkvesrt8BlSpepPKBtuE
+         Fx2ZrqawqduLbcUPLhLLdZRbvsduoyII+qPt/NaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 133/205] signal: Properly deliver SIGSEGV from x86 uprobes
-Date:   Fri,  8 Nov 2019 06:36:40 -0500
-Message-Id: <20191108113752.12502-133-sashal@kernel.org>
+Cc:     Quinn Tran <quinn.tran@cavium.com>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 139/205] scsi: qla2xxx: Defer chip reset until target mode is enabled
+Date:   Fri,  8 Nov 2019 06:36:46 -0500
+Message-Id: <20191108113752.12502-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,43 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Quinn Tran <quinn.tran@cavium.com>
 
-[ Upstream commit 4a63c1ffd384ebdce40aac9c997dab68379137be ]
+[ Upstream commit 93eca6135183f7a71e36acd47655a085ed11bcdc ]
 
-For userspace to tell the difference between an random signal
-and an exception, the exception must include siginfo information.
+For target mode, any chip reset triggered before target mode is enabled will
+be held off until user is ready to enable.  This prevents the chip from
+starting or running before it is intended.
 
-Using SEND_SIG_FORCED for SIGSEGV is thus wrong, and it will result in
-userspace seeing si_code == SI_USER (like a random signal) instead of
-si_code == SI_KERNEL or a more specific si_code as all exceptions
-deliver.
-
-Therefore replace force_sig_info(SIGSEGV, SEND_SIG_FORCE, current)
-with force_sig(SIG_SEGV, current) which gets this right and is shorter
-and easier to type.
-
-Fixes: 791eca10107f ("uretprobes/x86: Hijack return address")
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
+Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 9119859ba7871..420aa7d3a2e6b 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1089,7 +1089,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
- 		pr_err("return address clobbered: pid=%d, %%sp=%#lx, %%ip=%#lx\n",
- 		       current->pid, regs->sp, regs->ip);
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 60b6019a2fcae..bfbdec61b3c6e 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -6051,12 +6051,27 @@ qla2x00_do_dpc(void *data)
+ 		if (test_and_clear_bit
+ 		    (ISP_ABORT_NEEDED, &base_vha->dpc_flags) &&
+ 		    !test_bit(UNLOADING, &base_vha->dpc_flags)) {
++			bool do_reset = true;
++
++			switch (ql2x_ini_mode) {
++			case QLA2XXX_INI_MODE_ENABLED:
++				break;
++			case QLA2XXX_INI_MODE_DISABLED:
++				if (!qla_tgt_mode_enabled(base_vha))
++					do_reset = false;
++				break;
++			case QLA2XXX_INI_MODE_DUAL:
++				if (!qla_dual_mode_enabled(base_vha))
++					do_reset = false;
++				break;
++			default:
++				break;
++			}
  
--		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
-+		force_sig(SIGSEGV, current);
- 	}
+-			ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
+-			    "ISP abort scheduled.\n");
+-			if (!(test_and_set_bit(ABORT_ISP_ACTIVE,
++			if (do_reset && !(test_and_set_bit(ABORT_ISP_ACTIVE,
+ 			    &base_vha->dpc_flags))) {
+-
++				ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
++				    "ISP abort scheduled.\n");
+ 				if (ha->isp_ops->abort_isp(base_vha)) {
+ 					/* failed. retry later */
+ 					set_bit(ISP_ABORT_NEEDED,
+@@ -6064,10 +6079,9 @@ qla2x00_do_dpc(void *data)
+ 				}
+ 				clear_bit(ABORT_ISP_ACTIVE,
+ 						&base_vha->dpc_flags);
++				ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
++				    "ISP abort end.\n");
+ 			}
+-
+-			ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
+-			    "ISP abort end.\n");
+ 		}
  
- 	return -1;
+ 		if (test_and_clear_bit(FCPORT_UPDATE_NEEDED,
 -- 
 2.20.1
 
