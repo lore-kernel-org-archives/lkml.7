@@ -2,139 +2,356 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76028C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CFAFC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF432067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239411;
-	bh=WZb83f7ajjCS4RolwHUHtussqsT1ehPfqHysGCEZhVo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbUQ4HSivVZ9p3s7KQn4M4E4DJcJH4MoLvIojt913Wke1q+WNF5gmG7CV++e6Lks1
-	 yImF3PfDAcd6RlcsfTUtI9qhd84/8Ala0r/mGhrh1R5O0XWdFhLQCFY8VINlGWo8v8
-	 UFYXuLYrvQu+K+bnqrjg6AzFJUv5KC4TupPl+H1U=
+	by mail.kernel.org (Postfix) with ESMTP id 7649C218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ReAVFiJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbfKHS4p (ORCPT
+        id S2388450AbfKHS4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:56:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732525AbfKHS4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:38 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 Nov 2019 13:56:54 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40103 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732612AbfKHS4m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573239401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CXeheEvNkBpf+BJwcDdKt8DoNtaIV9EI+XPEuMx45wQ=;
+        b=ReAVFiJJEeX7guDFSru1FRAzzL5FFnpa2x8QGXaQyDoe4n9SrLxF+sFD2a0H+2tbRXs0h8
+        tm78DwQwPTTgQvRQBdZ0BAwPhRIaGixt+MJwTRHQQjHHph+l/YwEpx+DbrK+PbSQy0ny7E
+        DvunUOK/H1a/yQEckT1bw8EB2qFB5lM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-PS6RtgLeMnWfCwbohRiSPA-1; Fri, 08 Nov 2019 13:56:38 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D918E214DB;
-        Fri,  8 Nov 2019 18:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239397;
-        bh=WZb83f7ajjCS4RolwHUHtussqsT1ehPfqHysGCEZhVo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twGQ03GMDI4xpbs4BOlCd2exdbMKXvVxM6U4k3DW36/dCZ7MYxSvxkMUmIAZxUeTf
-         HXDnJMNUJc5Cz1TC9IK1OZRqR2Lmy+twbk0OksgtryBQ1XIj2ZWS/8jaWIKed4Wpsx
-         ZKeNDgceAgDUhR2tI4H70q1W84LdYjw8aKe93dmY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 08/34] scsi: scsi_dh_alua: handle RTPG sense code correctly during state transitions
-Date:   Fri,  8 Nov 2019 19:50:15 +0100
-Message-Id: <20191108174629.145691706@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
-References: <20191108174618.266472504@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 122A6477;
+        Fri,  8 Nov 2019 18:56:37 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-182.ams2.redhat.com [10.36.116.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 388471001B35;
+        Fri,  8 Nov 2019 18:56:35 +0000 (UTC)
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Adrian Reber <areber@redhat.com>
+Subject: [PATCH v3] selftests: add tests for clone3()
+Date:   Fri,  8 Nov 2019 19:56:29 +0100
+Message-Id: <20191108185629.309414-1-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: PS6RtgLeMnWfCwbohRiSPA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+This adds tests for clone3() with different values and sizes
+of struct clone_args.
 
-[ Upstream commit b6ce6fb121a655aefe41dccc077141c102145a37 ]
+This selftest was initially part of of the clone3() with PID selftest.
+After that patch was almost merged Eugene sent out a couple of patches
+to fix problems with these test.
 
-Some arrays are not capable of returning RTPG data during state
-transitioning, but rather return an 'LUN not accessible, asymmetric access
-state transition' sense code. In these cases we can set the state to
-'transitioning' directly and don't need to evaluate the RTPG data (which we
-won't have anyway).
+This commit now only contains the clone3() selftest after the LPC
+decision to rework clone3() with PID to allow setting the PID in
+multiple PID namespaces including all of Eugene's patches.
 
-Link: https://lore.kernel.org/r/20191007135701.32389-1-hare@suse.de
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+Signed-off-by: Adrian Reber <areber@redhat.com>
 ---
- drivers/scsi/device_handler/scsi_dh_alua.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+v2:
+ - Applied Christian's suggestions
+ - Skip root-only tests when running as non-root
+v3:
+ - Removed unnecessary test case (everything set to 1)
+ - Correctly handle children without SIGCHLD
+---
+ MAINTAINERS                               |   1 +
+ tools/testing/selftests/Makefile          |   1 +
+ tools/testing/selftests/clone3/.gitignore |   1 +
+ tools/testing/selftests/clone3/Makefile   |   7 +
+ tools/testing/selftests/clone3/clone3.c   | 203 ++++++++++++++++++++++
+ 5 files changed, 213 insertions(+)
+ create mode 100644 tools/testing/selftests/clone3/.gitignore
+ create mode 100644 tools/testing/selftests/clone3/Makefile
+ create mode 100644 tools/testing/selftests/clone3/clone3.c
 
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
-index 98787588247bf..60c288526355a 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -527,6 +527,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 	unsigned int tpg_desc_tbl_off;
- 	unsigned char orig_transition_tmo;
- 	unsigned long flags;
-+	bool transitioning_sense = false;
- 
- 	if (!pg->expiry) {
- 		unsigned long transition_tmo = ALUA_FAILOVER_TIMEOUT * HZ;
-@@ -571,13 +572,19 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 			goto retry;
- 		}
- 		/*
--		 * Retry on ALUA state transition or if any
--		 * UNIT ATTENTION occurred.
-+		 * If the array returns with 'ALUA state transition'
-+		 * sense code here it cannot return RTPG data during
-+		 * transition. So set the state to 'transitioning' directly.
- 		 */
- 		if (sense_hdr.sense_key == NOT_READY &&
--		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
--			err = SCSI_DH_RETRY;
--		else if (sense_hdr.sense_key == UNIT_ATTENTION)
-+		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a) {
-+			transitioning_sense = true;
-+			goto skip_rtpg;
-+		}
-+		/*
-+		 * Retry on any other UNIT ATTENTION occurred.
-+		 */
-+		if (sense_hdr.sense_key == UNIT_ATTENTION)
- 			err = SCSI_DH_RETRY;
- 		if (err == SCSI_DH_RETRY &&
- 		    pg->expiry != 0 && time_before(jiffies, pg->expiry)) {
-@@ -665,7 +672,11 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 		off = 8 + (desc[7] * 4);
- 	}
- 
-+ skip_rtpg:
- 	spin_lock_irqsave(&pg->lock, flags);
-+	if (transitioning_sense)
-+		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cba1095547fd..0040b7a6410b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12829,6 +12829,7 @@ S:=09Maintained
+ T:=09git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
+ F:=09samples/pidfd/
+ F:=09tools/testing/selftests/pidfd/
++F:=09tools/testing/selftests/clone3/
+ K:=09(?i)pidfd
+ K:=09(?i)clone3
+ K:=09\b(clone_args|kernel_clone_args)\b
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Mak=
+efile
+index 4cdbae6f4e61..ad442364218a 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -4,6 +4,7 @@ TARGETS +=3D bpf
+ TARGETS +=3D breakpoints
+ TARGETS +=3D capabilities
+ TARGETS +=3D cgroup
++TARGETS +=3D clone3
+ TARGETS +=3D cpufreq
+ TARGETS +=3D cpu-hotplug
+ TARGETS +=3D drivers/dma-buf
+diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/self=
+tests/clone3/.gitignore
+new file mode 100644
+index 000000000000..85d9d3ba2524
+--- /dev/null
++++ b/tools/testing/selftests/clone3/.gitignore
+@@ -0,0 +1 @@
++clone3
+diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selfte=
+sts/clone3/Makefile
+new file mode 100644
+index 000000000000..ea922c014ae4
+--- /dev/null
++++ b/tools/testing/selftests/clone3/Makefile
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0
 +
- 	sdev_printk(KERN_INFO, sdev,
- 		    "%s: port group %02x state %c %s supports %c%c%c%c%c%c%c\n",
- 		    ALUA_DH_NAME, pg->group_id, print_alua_state(pg->state),
--- 
-2.20.1
-
-
++CFLAGS +=3D -I../../../../usr/include/
++
++TEST_GEN_PROGS :=3D clone3
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selfte=
+sts/clone3/clone3.c
+new file mode 100644
+index 000000000000..ca9ac31abbe6
+--- /dev/null
++++ b/tools/testing/selftests/clone3/clone3.c
+@@ -0,0 +1,203 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Based on Christian Brauner's clone3() example */
++
++#define _GNU_SOURCE
++#include <errno.h>
++#include <inttypes.h>
++#include <linux/types.h>
++#include <linux/sched.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++#include <sys/un.h>
++#include <sys/wait.h>
++#include <unistd.h>
++#include <sched.h>
++
++#include "../kselftest.h"
++
++/*
++ * Different sizes of struct clone_args
++ */
++#ifndef CLONE3_ARGS_SIZE_V0
++#define CLONE3_ARGS_SIZE_V0 64
++#endif
++
++enum test_mode {
++=09CLONE3_ARGS_NO_TEST,
++=09CLONE3_ARGS_ALL_0,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
++};
++
++static pid_t raw_clone(struct clone_args *args, size_t size)
++{
++=09return syscall(__NR_clone3, args, size);
++}
++
++static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mo=
+de)
++{
++=09struct clone_args args =3D {
++=09=09.flags =3D flags,
++=09=09.exit_signal =3D SIGCHLD,
++=09};
++
++=09struct clone_args_extended {
++=09=09struct clone_args args;
++=09=09__aligned_u64 excess_space[2];
++=09} args_ext;
++
++=09pid_t pid =3D -1;
++=09int status;
++
++=09memset(&args_ext, 0, sizeof(args_ext));
++=09if (size > sizeof(struct clone_args))
++=09=09args_ext.excess_space[1] =3D 1;
++
++=09if (size =3D=3D 0)
++=09=09size =3D sizeof(struct clone_args);
++
++=09switch (test_mode) {
++=09case CLONE3_ARGS_ALL_0:
++=09=09args.flags =3D 0;
++=09=09args.exit_signal =3D 0;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG:
++=09=09args.exit_signal =3D 0xbadc0ded00000000ULL;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG:
++=09=09args.exit_signal =3D 0x0000000080000000ULL;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG:
++=09=09args.exit_signal =3D 0x0000000000000100ULL;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG:
++=09=09args.exit_signal =3D 0x00000000000000f0ULL;
++=09=09break;
++=09}
++
++=09memcpy(&args_ext.args, &args, sizeof(struct clone_args));
++
++=09pid =3D raw_clone((struct clone_args *)&args_ext, size);
++=09if (pid < 0) {
++=09=09ksft_print_msg("%s - Failed to create new process\n",
++=09=09=09=09strerror(errno));
++=09=09return -errno;
++=09}
++
++=09if (pid =3D=3D 0) {
++=09=09ksft_print_msg("I am the child, my PID is %d\n", getpid());
++=09=09_exit(EXIT_SUCCESS);
++=09}
++
++=09ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
++=09=09=09getpid(), pid);
++
++=09if (waitpid(-1, &status, __WALL) < 0) {
++=09=09ksft_print_msg("Child returned %s\n", strerror(errno));
++=09=09return -errno;
++=09}
++=09if (WEXITSTATUS(status))
++=09=09return WEXITSTATUS(status);
++
++=09return 0;
++}
++
++static void test_clone3(uint64_t flags, size_t size, int expected,
++=09=09       enum test_mode test_mode)
++{
++=09int ret;
++
++=09ksft_print_msg(
++=09=09"[%d] Trying clone3() with flags %#" PRIx64 " (size %zu)\n",
++=09=09getpid(), flags, size);
++=09ret =3D call_clone3(flags, size, test_mode);
++=09ksft_print_msg("[%d] clone3() with flags says: %d expected %d\n",
++=09=09=09getpid(), ret, expected);
++=09if (ret !=3D expected)
++=09=09ksft_test_result_fail(
++=09=09=09"[%d] Result (%d) is different than expected (%d)\n",
++=09=09=09getpid(), ret, expected);
++=09else
++=09=09ksft_test_result_pass(
++=09=09=09"[%d] Result (%d) matches expectation (%d)\n",
++=09=09=09getpid(), ret, expected);
++}
++int main(int argc, char *argv[])
++{
++=09pid_t pid;
++
++=09uid_t uid =3D getuid();
++
++=09ksft_print_header();
++=09ksft_set_plan(15);
++
++=09/* Just a simple clone3() should return 0.*/
++=09test_clone3(0, 0, 0, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() in a new PID NS.*/
++=09if (uid =3D=3D 0)
++=09=09test_clone3(CLONE_NEWPID, 0, 0, CLONE3_ARGS_NO_TEST);
++=09else
++=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0. */
++=09test_clone3(0, CLONE3_ARGS_SIZE_V0, 0, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 */
++=09test_clone3(0, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with sizeof(struct clone_args) + 8 */
++=09test_clone3(0, sizeof(struct clone_args) + 8, 0, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with exit_signal having highest 32 bits non-zero */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG);
++
++=09/* Do a clone3() with negative 32-bit exit_signal */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG);
++
++=09/* Do a clone3() with exit_signal not fitting into CSIGNAL mask */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG);
++
++=09/* Do a clone3() with NSIG < exit_signal < CSIG */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG);
++
++=09/*
++=09 * Do a clone3() with sizeof(struct clone_args) + 8
++=09 * and all members set to 0. This resets exit_signal and wait()
++=09 * will not get a result.
++=09 */
++=09test_clone3(0, sizeof(struct clone_args) + 8, 0, CLONE3_ARGS_ALL_0);
++
++=09/* Do a clone3() with > page size */
++=09test_clone3(0, getpagesize() + 8, -E2BIG, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 in a new PID NS. */
++=09if (uid =3D=3D 0)
++=09=09test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0, 0,
++=09=09=09=09CLONE3_ARGS_NO_TEST);
++=09else
++=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 in a new PID NS */
++=09test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL,
++=09=09=09CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with sizeof(struct clone_args) + 8 in a new PID NS */
++=09if (uid =3D=3D 0)
++=09=09test_clone3(CLONE_NEWPID, sizeof(struct clone_args) + 8, 0,
++=09=09=09=09CLONE3_ARGS_NO_TEST);
++=09else
++=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
++
++=09/* Do a clone3() with > page size in a new PID NS */
++=09test_clone3(CLONE_NEWPID, getpagesize() + 8, -E2BIG,
++=09=09=09CLONE3_ARGS_NO_TEST);
++
++=09return !ksft_get_fail_cnt() ? ksft_exit_pass() : ksft_exit_fail();
++}
+--=20
+2.23.0
 
