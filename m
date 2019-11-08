@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302BDC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF4DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0886121D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D98B222C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213082;
-	bh=Fg5pM85VZ8gc9IacEwwS48xCug5JBY0OJ95DuXzajTs=;
+	s=default; t=1573213085;
+	bh=nL257+5kU0ZhATbuvvRos00sxXWABvhtjW0o5lB36dE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8CHMbPZjQQvTrIXOCUKQB2fnY/OycUaxWCWRF2ObQ/bKGxb2xz1DCAhzJ1BwBix2
-	 BgiHYJxRVBQgrKOHZIzLbPChSw6vw63zPDzWWbWGzbu7hCnScpRMrOMsOEJwcj+SyR
-	 A8xEMondQBPw1f26/ReO1M7DIQQSVsTnTWwVhsFw=
+	b=Jnl5OI463LudVZN8Phz4NPw2Psy0UWw0O+pTmLij1q5jSAkRnidZEOtzxr8TAKxIl
+	 AqCaB9+rC2OOrWDcxFrXDNbW/mss8+pFwnjIocYYVjXrowVqJmi9zM92sKMvxgDL+y
+	 cZ+88oco/TQrlkBbzugfzCfTx8tbb1DIXCEcrQGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbfKHLiB (ORCPT
+        id S1732167AbfKHLiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50716 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:38:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731981AbfKHLh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:37:57 -0500
+        id S1732106AbfKHLiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79FAC21D7E;
-        Fri,  8 Nov 2019 11:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D11721D7E;
+        Fri,  8 Nov 2019 11:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213076;
-        bh=Fg5pM85VZ8gc9IacEwwS48xCug5JBY0OJ95DuXzajTs=;
+        s=default; t=1573213080;
+        bh=nL257+5kU0ZhATbuvvRos00sxXWABvhtjW0o5lB36dE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x5O88K7Pd2bwa14FpvcXui/gGDcwavr8FSr5g3pfkRbqKXUqV2hkX1DVfKHURot0g
-         RrktS9RR0edwgsUYe/kAfTau6O5+7deSBpgTQlN/xwK72brfvDy155+u6LHuC3JQak
-         dM4w5zPo0h4/pSFlpOnkfxjtxvnmM2ashd3uDfmE=
+        b=eQeEzUOg2hjpVmYJIe0L7xn5enHs8f/BvXj+FV0sNENbEY1rFK+QbpxDsMXBu0gbW
+         SJg/a4tG1ENK1shWjj56RGaRulIRKlVLxMmQou2iDYsk+wDTaHd2PftzQQo17aT2WG
+         jDFobEfyIlpfsptRwqV9zaAxSularrAkJqSZ2sG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tamizh chelvam <tamizhr@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 003/205] ath10k: fix kernel panic by moving pci flush after napi_disable
-Date:   Fri,  8 Nov 2019 06:34:30 -0500
-Message-Id: <20191108113752.12502-3-sashal@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 007/205] soundwire: intel: Fix uninitialized adev deref
+Date:   Fri,  8 Nov 2019 06:34:34 -0500
+Message-Id: <20191108113752.12502-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,87 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tamizh chelvam <tamizhr@codeaurora.org>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit bd1d395070cca4f42a93e520b0597274789274a4 ]
+[ Upstream commit e1c815f4b24a305e5bc9eceb541674bf4d02b709 ]
 
-When continuously running wifi up/down sequence, the napi poll
-can be scheduled after the CE buffers being freed by ath10k_pci_flush
+In case of error, we can dereference uninitialized 'adev'
 
-Steps:
-  In a certain condition, during wifi down below scenario might occur.
+drivers/soundwire/intel_init.c:154 sdw_intel_acpi_cb()
+error: uninitialized symbol 'adev'.
 
-ath10k_stop->ath10k_hif_stop->napi_schedule->ath10k_pci_flush->napi_poll(napi_synchronize).
+Fix that by not using adev for warn print and make it pr_err.
 
-In the above scenario, CE buffer entries will be freed up and become NULL in
-ath10k_pci_flush. And the napi_poll has been invoked after the flush process
-and it will try to get the skb from the CE buffer entry and perform some action on that.
-Since the CE buffer already cleaned by pci flush this action will create NULL
-pointer dereference and trigger below kernel panic.
-
-Unable to handle kernel NULL pointer dereference at virtual address 0000005c
-PC is at ath10k_pci_htt_rx_cb+0x64/0x3ec [ath10k_pci]
-ath10k_pci_htt_rx_cb [ath10k_pci]
-ath10k_ce_per_engine_service+0x74/0xc4 [ath10k_pci]
-ath10k_ce_per_engine_service [ath10k_pci]
-ath10k_ce_per_engine_service_any+0x74/0x80 [ath10k_pci]
-ath10k_ce_per_engine_service_any [ath10k_pci]
-ath10k_pci_napi_poll+0x48/0xec [ath10k_pci]
-ath10k_pci_napi_poll [ath10k_pci]
-net_rx_action+0xac/0x160
-net_rx_action
-__do_softirq+0xdc/0x208
-__do_softirq
-irq_exit+0x84/0xe0
-irq_exit
-__handle_domain_irq+0x80/0xa0
-__handle_domain_irq
-gic_handle_irq+0x38/0x5c
-gic_handle_irq
-__irq_usr+0x44/0x60
-
-Tested on QCA4019 and firmware version 10.4.3.2.1.1-00010
-
-Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/ahb.c | 4 ++--
- drivers/net/wireless/ath/ath10k/pci.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/soundwire/intel_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/ahb.c b/drivers/net/wireless/ath/ath10k/ahb.c
-index c9bd0e2b5db7e..be90c9e9e5bc1 100644
---- a/drivers/net/wireless/ath/ath10k/ahb.c
-+++ b/drivers/net/wireless/ath/ath10k/ahb.c
-@@ -655,10 +655,10 @@ static void ath10k_ahb_hif_stop(struct ath10k *ar)
- 	ath10k_ahb_irq_disable(ar);
- 	synchronize_irq(ar_ahb->irq);
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index d1ea6b4d0ad30..5c8a20d998786 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -151,7 +151,7 @@ static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
+ 	struct acpi_device *adev;
  
--	ath10k_pci_flush(ar);
--
- 	napi_synchronize(&ar->napi);
- 	napi_disable(&ar->napi);
-+
-+	ath10k_pci_flush(ar);
- }
+ 	if (acpi_bus_get_device(handle, &adev)) {
+-		dev_err(&adev->dev, "Couldn't find ACPI handle\n");
++		pr_err("%s: Couldn't find ACPI handle\n", __func__);
+ 		return AE_NOT_FOUND;
+ 	}
  
- static int ath10k_ahb_hif_power_up(struct ath10k *ar)
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index af2cf55c4c1e6..97fa5c74f2fe7 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -2068,9 +2068,9 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 
- 	ath10k_pci_irq_disable(ar);
- 	ath10k_pci_irq_sync(ar);
--	ath10k_pci_flush(ar);
- 	napi_synchronize(&ar->napi);
- 	napi_disable(&ar->napi);
-+	ath10k_pci_flush(ar);
- 
- 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
- 	WARN_ON(ar_pci->ps_wake_refcount > 0);
 -- 
 2.20.1
 
