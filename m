@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C602C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79396FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90862196F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE602196F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240131;
-	bh=YvjnO8mm8LxPOaeaGVZWVW45loXXHdJad6136bEEwvM=;
+	s=default; t=1573240134;
+	bh=FpFbVomZCovbpRvXwJCpXLz9MvCarkSRUlBibpRzgH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmk+eHkSOIdKSFRw1SQJltM7tmnbS6328e1XPsn8X8AeD9ipzXCvjqotmpxeHRpH+
-	 v355rcOmFwxaow4eAApPM8aqSMM52Wu3ktJeSYStjt+Pw4Z3bMH/HYY1Lc8SJPTkDA
-	 8Ki27IZrzikFh+N2tOQaodpAz0+Axn4VCTqIqmoY=
+	b=lJCsXFrucCeWpC+g43mTPT6WIhPH2PKTxIoL5sDiOm+0Yl8rTyXO0we6hPEdLCUCy
+	 GKrUYdoNbQV8tUvzOg+BGLdpDcFlSoKfjOaD0WFUMm7vQD695P/z80MYxQOPS0f7M4
+	 kvU3MjoUW3jikZ7q9ZvapXh8eyMR4YEyzO6NxHAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403774AbfKHTIu (ORCPT
+        id S2391687AbfKHTIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40022 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:08:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733278AbfKHTIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:48 -0500
+        id S2391167AbfKHTIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:08:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B6562087E;
-        Fri,  8 Nov 2019 19:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0946206A3;
+        Fri,  8 Nov 2019 19:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240128;
-        bh=YvjnO8mm8LxPOaeaGVZWVW45loXXHdJad6136bEEwvM=;
+        s=default; t=1573240122;
+        bh=FpFbVomZCovbpRvXwJCpXLz9MvCarkSRUlBibpRzgH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HButf7zpbKiN6TGiNCXOy0Wk2FMV0pKa93g9a887NKJpku0acLS+BAEmwzo9Ckjvu
-         HjLYaYFjGJNOa7UEqm4wbHk3TW++MMlCU6F586yJ2O4vBjIpKd6nPC1a9N7PxR1hCf
-         O/zZyNv4jBYE7rL00BdgwsSq1BICM1vjFp5Ymdpw=
+        b=vECszgWg9sBL6IgWFFwun5QZBpyJm4pMJKzk+jZM1mew7zW34JSNPjcmZvJE0lUjD
+         VSDsl0npdw+dO1TC24bubtoftocXO7W6Y/TmnTAPPTnWESWa4IIwXxHBXdoAs/PPR+
+         r6IoBiPRx0lyUJgiOfQca0/lWA3b76YWDAHT2Ncw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Paolo Abeni <pabeni@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 098/140] net: add skb_queue_empty_lockless()
-Date:   Fri,  8 Nov 2019 19:50:26 +0100
-Message-Id: <20191108174911.184234366@linuxfoundation.org>
+Subject: [PATCH 5.3 096/140] udp: fix data-race in udp_set_dev_scratch()
+Date:   Fri,  8 Nov 2019 19:50:24 +0100
+Message-Id: <20191108174911.082386093@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,91 +63,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit d7d16a89350ab263484c0aa2b523dd3a234e4a80 ]
+[ Upstream commit a793183caa9afae907a0d7ddd2ffd57329369bf5 ]
 
-Some paths call skb_queue_empty() without holding
-the queue lock. We must use a barrier in order
-to not let the compiler do strange things, and avoid
-KCSAN splats.
+KCSAN reported a data-race in udp_set_dev_scratch() [1]
 
-Adding a barrier in skb_queue_empty() might be overkill,
-I prefer adding a new helper to clearly identify
-points where the callers might be lockless. This might
-help us finding real bugs.
+The issue here is that we must not write over skb fields
+if skb is shared. A similar issue has been fixed in commit
+89c22d8c3b27 ("net: Fix skb csum races when peeking")
 
-The corresponding WRITE_ONCE() should add zero cost
-for current compilers.
+While we are at it, use a helper only dealing with
+udp_skb_scratch(skb)->csum_unnecessary, as this allows
+udp_set_dev_scratch() to be called once and thus inlined.
 
+[1]
+BUG: KCSAN: data-race in udp_set_dev_scratch / udpv6_recvmsg
+
+write to 0xffff888120278317 of 1 bytes by task 10411 on cpu 1:
+ udp_set_dev_scratch+0xea/0x200 net/ipv4/udp.c:1308
+ __first_packet_length+0x147/0x420 net/ipv4/udp.c:1556
+ first_packet_length+0x68/0x2a0 net/ipv4/udp.c:1579
+ udp_poll+0xea/0x110 net/ipv4/udp.c:2720
+ sock_poll+0xed/0x250 net/socket.c:1256
+ vfs_poll include/linux/poll.h:90 [inline]
+ do_select+0x7d0/0x1020 fs/select.c:534
+ core_sys_select+0x381/0x550 fs/select.c:677
+ do_pselect.constprop.0+0x11d/0x160 fs/select.c:759
+ __do_sys_pselect6 fs/select.c:784 [inline]
+ __se_sys_pselect6 fs/select.c:769 [inline]
+ __x64_sys_pselect6+0x12e/0x170 fs/select.c:769
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffff888120278317 of 1 bytes by task 10413 on cpu 0:
+ udp_skb_csum_unnecessary include/net/udp.h:358 [inline]
+ udpv6_recvmsg+0x43e/0xe90 net/ipv6/udp.c:310
+ inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
+ sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
+ ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
+ do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
+ __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
+ __do_sys_recvmmsg net/socket.c:2703 [inline]
+ __se_sys_recvmmsg net/socket.c:2696 [inline]
+ __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 10413 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 2276f58ac589 ("udp: use a separate rx queue for packet reception")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/skbuff.h |   33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ net/ipv4/udp.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -1501,6 +1501,19 @@ static inline int skb_queue_empty(const
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1316,6 +1316,20 @@ static void udp_set_dev_scratch(struct s
+ 		scratch->_tsize_state |= UDP_SKB_IS_STATELESS;
  }
  
- /**
-+ *	skb_queue_empty_lockless - check if a queue is empty
-+ *	@list: queue head
-+ *
-+ *	Returns true if the queue is empty, false otherwise.
-+ *	This variant can be used in lockless contexts.
-+ */
-+static inline bool skb_queue_empty_lockless(const struct sk_buff_head *list)
++static void udp_skb_csum_unnecessary_set(struct sk_buff *skb)
 +{
-+	return READ_ONCE(list->next) == (const struct sk_buff *) list;
++	/* We come here after udp_lib_checksum_complete() returned 0.
++	 * This means that __skb_checksum_complete() might have
++	 * set skb->csum_valid to 1.
++	 * On 64bit platforms, we can set csum_unnecessary
++	 * to true, but only if the skb is not shared.
++	 */
++#if BITS_PER_LONG == 64
++	if (!skb_shared(skb))
++		udp_skb_scratch(skb)->csum_unnecessary = true;
++#endif
 +}
 +
-+
-+/**
-  *	skb_queue_is_last - check if skb is the last entry in the queue
-  *	@list: queue head
-  *	@skb: buffer
-@@ -1853,9 +1866,11 @@ static inline void __skb_insert(struct s
- 				struct sk_buff *prev, struct sk_buff *next,
- 				struct sk_buff_head *list)
+ static int udp_skb_truesize(struct sk_buff *skb)
  {
--	newsk->next = next;
--	newsk->prev = prev;
--	next->prev  = prev->next = newsk;
-+	/* see skb_queue_empty_lockless() for the opposite READ_ONCE() */
-+	WRITE_ONCE(newsk->next, next);
-+	WRITE_ONCE(newsk->prev, prev);
-+	WRITE_ONCE(next->prev, newsk);
-+	WRITE_ONCE(prev->next, newsk);
- 	list->qlen++;
- }
- 
-@@ -1866,11 +1881,11 @@ static inline void __skb_queue_splice(co
- 	struct sk_buff *first = list->next;
- 	struct sk_buff *last = list->prev;
- 
--	first->prev = prev;
--	prev->next = first;
-+	WRITE_ONCE(first->prev, prev);
-+	WRITE_ONCE(prev->next, first);
- 
--	last->next = next;
--	next->prev = last;
-+	WRITE_ONCE(last->next, next);
-+	WRITE_ONCE(next->prev, last);
- }
- 
- /**
-@@ -2011,8 +2026,8 @@ static inline void __skb_unlink(struct s
- 	next	   = skb->next;
- 	prev	   = skb->prev;
- 	skb->next  = skb->prev = NULL;
--	next->prev = prev;
--	prev->next = next;
-+	WRITE_ONCE(next->prev, prev);
-+	WRITE_ONCE(prev->next, next);
- }
- 
- /**
+ 	return udp_skb_scratch(skb)->_tsize_state & ~UDP_SKB_IS_STATELESS;
+@@ -1550,10 +1564,7 @@ static struct sk_buff *__first_packet_le
+ 			*total += skb->truesize;
+ 			kfree_skb(skb);
+ 		} else {
+-			/* the csum related bits could be changed, refresh
+-			 * the scratch area
+-			 */
+-			udp_set_dev_scratch(skb);
++			udp_skb_csum_unnecessary_set(skb);
+ 			break;
+ 		}
+ 	}
 
 
