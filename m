@@ -2,188 +2,217 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D975BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC712085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnI9Jz/Z"
+	by mail.kernel.org (Postfix) with ESMTP id EFB8A2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732191AbfKHUFR (ORCPT
+        id S1732223AbfKHUHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:05:17 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:39742 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729683AbfKHUFR (ORCPT
+        Fri, 8 Nov 2019 15:07:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52534 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729075AbfKHUHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:05:17 -0500
-Received: by mail-yb1-f193.google.com with SMTP id q18so3310848ybq.6;
-        Fri, 08 Nov 2019 12:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3HNLscIvkJVm9LDzzKj9NN0fxD/hsQkK7CgwB2NvQEo=;
-        b=rnI9Jz/ZrlT1PUiypYH638nYMjA7b+QdhfTNnvDinBcud7rk8/0eK/bTPcu1ZyQHKs
-         PqIQtMK2+jQwPbbketix320JR2hkKCCIQL4s5U3nNc7/MZgyEmsiTqB27FhpkGJ7/Wvu
-         QEKH/Fg3huxiW8+ZBWyxgBBQMaD5Ka9e129VAJfAu213JGnRka3cBM+44F1gKZkz3Hee
-         4cUi3swJzu/AvNs86CqOKRlsL3mX2yggbpv2CZFL+WxaPL4VoWooYqJVGnviIPOMrB/j
-         AQ0A/m7pBYVOysj2Qq4O0ayKum3XAPtjOEqTczDKDOMznbDg7drVRm3fy8y9yxMgQcR5
-         T5cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3HNLscIvkJVm9LDzzKj9NN0fxD/hsQkK7CgwB2NvQEo=;
-        b=FmwaKt0+f9ME7zEP2Oi+wAIsA1OkvOb2NJUzcn+jNowfi4GNkIatEt/OvZb5e/F97s
-         3tH2xZipJFz6EkmOoR5YiPFOoPosVOMfnI+pTVCjkEpXzupdmNqoaAG16vQrzDMpNE8e
-         JBlh9SuuIVhnZvPfqpqNEFjdh7MdZjDJ1IC+KXouAflyahFiAFC/Ed/NQTg9i//fVCI4
-         +pPIuekpOYxDQzSdxxd1pVcHQVfRtPbo2njnds6TkMGoJSQY47FcygxRGDZhsfxNMCeR
-         X19SrHCBisVH/Vb2wOZu36JGF2q5+cSOpseMymIV72ZGy0ECmHy3EurUMvOy5f57SvT6
-         IPWA==
-X-Gm-Message-State: APjAAAWtsU1OFhReOkeIQsuJPnkbHrC9/pWuP8mcWbNjG+GuvBjWGR+6
-        D5f9PFDb5KwYQHKWdyywnt+mixuECt3kTA==
-X-Google-Smtp-Source: APXvYqx1L5kUsNfzEx/ahu7XGykB+oN23QVD5KIGZ9SJXiWWi5Tbxkuh1whlQE3I8RCG69F4WEq5Cw==
-X-Received: by 2002:a25:60c5:: with SMTP id u188mr11044401ybb.237.1573243515241;
-        Fri, 08 Nov 2019 12:05:15 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id s18sm4109576ywk.33.2019.11.08.12.05.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 12:05:14 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     hns@goldelico.com, adam.ford@logicpd.com,
-        Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: ti-soc-thermal:  Enable addition power management
-Date:   Fri,  8 Nov 2019 14:05:01 -0600
-Message-Id: <20191108200501.29864-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 8 Nov 2019 15:07:13 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iTAX5-0002Bl-8G; Fri, 08 Nov 2019 21:06:59 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B13771C0105;
+        Fri,  8 Nov 2019 21:06:58 +0100 (CET)
+Date:   Fri, 08 Nov 2019 20:06:58 -0000
+From:   "tip-bot2 for Zhang Xiaoxu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mtrr] x86/mtrr: Restrict MTRR ranges dumping and ioctl()
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tyler Hicks <tyhicks@canonical.com>, "x86-ml" <x86@kernel.org>,
+        zhangxiaoxu@huawei.com, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191105071714.27376-1-zhangxiaoxu5@huawei.com>
+References: <20191105071714.27376-1-zhangxiaoxu5@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <157324361834.29376.5328593346754751963.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bandgap sensor can be idled when the processor is too, but it
-isn't currently being done, so the power consumption of OMAP3
-boards can elevated if the bangap sensor is enabled.
+The following commit has been merged into the x86/mtrr branch of tip:
 
-This patch attempts to use some additional power management
-to idle the clock to the bandgap when not needed.
+Commit-ID:     d5a8b06841082ead88493eb918dd646a12c19d8e
+Gitweb:        https://git.kernel.org/tip/d5a8b06841082ead88493eb918dd646a12c19d8e
+Author:        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+AuthorDate:    Tue, 05 Nov 2019 15:17:14 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 08 Nov 2019 20:59:40 +01:00
 
-Suggested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Adam Ford <aford173@gmail.com>
+x86/mtrr: Restrict MTRR ranges dumping and ioctl()
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-index 2fa78f738568..7a221f71bc9f 100644
---- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-@@ -26,10 +26,18 @@
- #include <linux/of_irq.h>
- #include <linux/of_gpio.h>
- #include <linux/io.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include "ti-bandgap.h"
- 
- static int ti_bandgap_force_single_read(struct ti_bandgap *bgp, int id);
-+static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-+				  unsigned long cmd, void *v);
- 
- /***   Helper functions to access registers and their bitfields   ***/
- 
-@@ -1025,6 +1033,9 @@ int ti_bandgap_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	bgp->nb.notifier_call = bandgap_omap_cpu_notifier;
-+	cpu_pm_register_notifier(&bgp->nb);
-+
- 	return 0;
- 
- remove_last_cooling:
-@@ -1174,6 +1185,38 @@ static int ti_bandgap_suspend(struct device *dev)
- 	return err;
+/proc/mtrr dumps the physical memory ranges of the variable range MTRRs
+along with their respective sizes and caching attributes. Since that
+file is world-readable, it presents a small information leak about the
+physical address ranges of a system which should be blocked.
+
+Make that file root-only.
+
+Make the ioctl root-only as well because the $NAME read ioctl also
+allows access. Replace the checks in the write ioctls with a single one
+on entry.
+
+ [ bp: rewrite commit message. ]
+
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: x86-ml <x86@kernel.org>
+Cc: zhangxiaoxu@huawei.com
+Link: https://lkml.kernel.org/r/20191105071714.27376-1-zhangxiaoxu5@huawei.com
+---
+ arch/x86/kernel/cpu/mtrr/if.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mtrr/if.c b/arch/x86/kernel/cpu/mtrr/if.c
+index 4d36dcc..8e0cee8 100644
+--- a/arch/x86/kernel/cpu/mtrr/if.c
++++ b/arch/x86/kernel/cpu/mtrr/if.c
+@@ -84,6 +84,15 @@ mtrr_file_del(unsigned long base, unsigned long size,
+ 	return reg;
  }
  
-+static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-+				  unsigned long cmd, void *v)
++static ssize_t
++mtrr_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
 +{
-+	struct ti_bandgap *bgp;
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
 +
-+	bgp = container_of(nb, struct ti_bandgap, nb);
-+
-+	spin_lock(&bgp->lock);
-+	switch (cmd) {
-+	case CPU_CLUSTER_PM_ENTER:
-+		if (bgp->is_suspended)
-+			break;
-+		ti_bandgap_save_ctxt(bgp);
-+		ti_bandgap_power(bgp, false);
-+		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-+			clk_disable_unprepare(bgp->fclock);
-+		break;
-+	case CPU_CLUSTER_PM_ENTER_FAILED:
-+	case CPU_CLUSTER_PM_EXIT:
-+		if (bgp->is_suspended)
-+			break;
-+		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-+			clk_prepare_enable(bgp->fclock);
-+		ti_bandgap_power(bgp, true);
-+		ti_bandgap_restore_ctxt(bgp);
-+		break;
-+	}
-+	spin_unlock(&bgp->lock);
-+
-+	return NOTIFY_OK;
++	return seq_read(file, buf, size, ppos);
 +}
 +
- static int ti_bandgap_resume(struct device *dev)
- {
- 	struct ti_bandgap *bgp = dev_get_drvdata(dev);
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-index bb9b0f7faf99..a21d07a1a23a 100644
---- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-@@ -12,6 +12,10 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/err.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm.h>
+ /*
+  * seq_file can seek but we ignore it.
+  *
+@@ -165,6 +174,9 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
+ 	struct mtrr_gentry gentry;
+ 	void __user *arg = (void __user *) __arg;
  
- /**
-  * DOC: bandgap driver data structure
-@@ -201,6 +205,8 @@ struct ti_bandgap {
- 	int				irq;
- 	int				tshut_gpio;
- 	u32				clk_rate;
-+	struct notifier_block		nb;
-+	unsigned int is_suspended:1;
- };
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
+ 	memset(&gentry, 0, sizeof(gentry));
  
- /**
--- 
-2.20.1
-
+ 	switch (cmd) {
+@@ -226,8 +238,6 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_ADD_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err =
+ 		    mtrr_file_add(sentry.base, sentry.size, sentry.type, true,
+ 				  file, 0);
+@@ -236,24 +246,18 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_SET_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err = mtrr_add(sentry.base, sentry.size, sentry.type, false);
+ 		break;
+ 	case MTRRIOC_DEL_ENTRY:
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_DEL_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err = mtrr_file_del(sentry.base, sentry.size, file, 0);
+ 		break;
+ 	case MTRRIOC_KILL_ENTRY:
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_KILL_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err = mtrr_del(-1, sentry.base, sentry.size);
+ 		break;
+ 	case MTRRIOC_GET_ENTRY:
+@@ -279,8 +283,6 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_ADD_PAGE_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err =
+ 		    mtrr_file_add(sentry.base, sentry.size, sentry.type, true,
+ 				  file, 1);
+@@ -289,8 +291,6 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_SET_PAGE_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err =
+ 		    mtrr_add_page(sentry.base, sentry.size, sentry.type, false);
+ 		break;
+@@ -298,16 +298,12 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_DEL_PAGE_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err = mtrr_file_del(sentry.base, sentry.size, file, 1);
+ 		break;
+ 	case MTRRIOC_KILL_PAGE_ENTRY:
+ #ifdef CONFIG_COMPAT
+ 	case MTRRIOC32_KILL_PAGE_ENTRY:
+ #endif
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		err = mtrr_del_page(-1, sentry.base, sentry.size);
+ 		break;
+ 	case MTRRIOC_GET_PAGE_ENTRY:
+@@ -387,7 +383,7 @@ static int mtrr_open(struct inode *inode, struct file *file)
+ static const struct file_operations mtrr_fops = {
+ 	.owner			= THIS_MODULE,
+ 	.open			= mtrr_open,
+-	.read			= seq_read,
++	.read			= mtrr_read,
+ 	.llseek			= seq_lseek,
+ 	.write			= mtrr_write,
+ 	.unlocked_ioctl		= mtrr_ioctl,
+@@ -436,7 +432,7 @@ static int __init mtrr_if_init(void)
+ 	    (!cpu_has(c, X86_FEATURE_CENTAUR_MCR)))
+ 		return -ENODEV;
+ 
+-	proc_create("mtrr", S_IWUSR | S_IRUGO, NULL, &mtrr_fops);
++	proc_create("mtrr", 0600, NULL, &mtrr_fops);
+ 	return 0;
+ }
+ arch_initcall(mtrr_if_init);
