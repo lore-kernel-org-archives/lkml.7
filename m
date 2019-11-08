@@ -2,77 +2,366 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE3DFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B91C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E916221882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573183329;
-	bh=TtcIWVFvH8sO1mq2610KXVS5GHlyLmK8WHMed4U9AGE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dZEd1BZ65c7BEqXVfLtC9WuUitVqbcm9QMbbYYz/ejgjmDCvQKY3DcYRKAF6CFc+I
-	 U4JZa8P3u6b0OwgYu/WScWKwYICJ0yKEzWYQE9KXykijiu7HSvsMdRqThHQCmlBz4m
-	 21EH6AeTVhma+fcBdhvCIKOKOEGq3safxezz8L7U=
+	by mail.kernel.org (Postfix) with ESMTP id 9D7762087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfKHDWH (ORCPT
+        id S1729437AbfKHDXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:22:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfKHDWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:22:07 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5786D2084D;
-        Fri,  8 Nov 2019 03:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573183325;
-        bh=TtcIWVFvH8sO1mq2610KXVS5GHlyLmK8WHMed4U9AGE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=goM3px9yVWQf4lLKGGqGOlhfcK257j/88y22lMvV/faxJTGgCRbxIR8rGfQ5CGTIi
-         TIA7RiicdBJaz8LkMEIljlJGPwo9VhlEl2Wt45XF5wMI7vFupjlApXz/vFhXW1ujnA
-         7tioyhL0YMkILin71mygpOcnIGD90V0T2nbXh7zs=
-Date:   Thu, 7 Nov 2019 19:22:02 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
-Message-Id: <20191107192202.8869589f225132480d77a33b@linux-foundation.org>
-In-Reply-To: <20191108020456.sulyjskhq3s5zcaa@linux-p48b>
-References: <20191107190628.22667-1-longman@redhat.com>
-        <20191107195441.GF11823@bombadil.infradead.org>
-        <ed46ef09-7766-eb80-a4ad-4c72d8dba188@oracle.com>
-        <20191108020456.sulyjskhq3s5zcaa@linux-p48b>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Nov 2019 22:23:00 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45002 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726094AbfKHDXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 22:23:00 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A1959A2D2644ECEF363D;
+        Fri,  8 Nov 2019 11:22:57 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 8 Nov 2019
+ 11:22:51 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>
+CC:     <linux-kernel@vger.kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <xiang@kernel.org>, Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH] erofs: drop all vle annotations for runtime names
+Date:   Fri, 8 Nov 2019 11:25:26 +0800
+Message-ID: <20191108032526.40762-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 18:04:56 -0800 Davidlohr Bueso <dave@stgolabs.net> wrote:
+vle was an old informal name of fixed-sized output
+compression from released ATC'19 paper [1].
 
-> On Thu, 07 Nov 2019, Mike Kravetz wrote:
-> 
-> >Note that huge_pmd_share now increments the page count with the semaphore
-> >held just in read mode.  It is OK to do increments in parallel without
-> >synchronization.  However, we don't want anyone else changing the count
-> >while that check in huge_pmd_unshare is happening.  Hence, the need for
-> >taking the semaphore in write mode.
-> 
-> This would be a nice addition to the changelog methinks.
+Drop those annotations since erofs can handle all
+encoded clusters in block-aligned basis, which is
+wider than fixed-sized output compression after
+larger clustersize feature is fully implemented.
 
-Done.
+Unaligned encoded won't be considered in EROFS
+since it's not friendly to inplace I/O and
+decompression inplace.
+
+a) Fixed-sized output compression with 16-byte pcluster:
+  ___________________________________
+ |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|
+ |___ 0___|___ 1___|___ 2___|___ 3___| physical blocks
+
+b) Block-aligned fixed-sized input compression with
+   16-byte pcluster:
+  ___________________________________
+ |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxx00000|
+ |___ 0___|___ 1___|___ 2___|___ 3___| physical blocks
+
+c) Block-unaligned fixed-sized input compression with
+   16-byte pcluster:
+  ____________________________________________
+ |..xxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|x.......|
+ |___ 0___|___ 1___|___ 2___|___ 3___|___ 4___| physical blocks
+
+Refine better names for those as well.
+
+[1] https://www.usenix.org/conference/atc19/presentation/gao
+
+Cc: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ fs/erofs/internal.h |  4 +--
+ fs/erofs/zdata.c    | 62 +++++++++++++++++++++------------------------
+ fs/erofs/zmap.c     | 28 ++++++++++----------
+ 3 files changed, 44 insertions(+), 50 deletions(-)
+
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 96d97eab88e3..437020b0de2c 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -279,9 +279,7 @@ static inline unsigned int erofs_inode_datalayout(unsigned int value)
+ extern const struct super_operations erofs_sops;
+ 
+ extern const struct address_space_operations erofs_raw_access_aops;
+-#ifdef CONFIG_EROFS_FS_ZIP
+-extern const struct address_space_operations z_erofs_vle_normalaccess_aops;
+-#endif
++extern const struct address_space_operations z_erofs_aops;
+ 
+ /*
+  * Logical to physical block mapping, used by erofs_map_blocks()
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index be3c79421dba..b0ea1cd5baad 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -711,7 +711,7 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
+ 		queue_work(z_erofs_workqueue, &io->u.work);
+ }
+ 
+-static void z_erofs_vle_read_endio(struct bio *bio)
++static void z_erofs_decompressqueue_endio(struct bio *bio)
+ {
+ 	tagptr1_t t = tagptr_init(tagptr1_t, bio->bi_private);
+ 	struct z_erofs_decompressqueue *q = tagptr_unfold_ptr(t);
+@@ -939,8 +939,8 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 	return err;
+ }
+ 
+-static void z_erofs_vle_unzip_all(const struct z_erofs_decompressqueue *io,
+-				  struct list_head *pagepool)
++static void z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
++				     struct list_head *pagepool)
+ {
+ 	z_erofs_next_pcluster_t owned = io->head;
+ 
+@@ -960,14 +960,14 @@ static void z_erofs_vle_unzip_all(const struct z_erofs_decompressqueue *io,
+ 	}
+ }
+ 
+-static void z_erofs_vle_unzip_wq(struct work_struct *work)
++static void z_erofs_decompressqueue_work(struct work_struct *work)
+ {
+ 	struct z_erofs_decompressqueue *bgq =
+ 		container_of(work, struct z_erofs_decompressqueue, u.work);
+ 	LIST_HEAD(pagepool);
+ 
+ 	DBG_BUGON(bgq->head == Z_EROFS_PCLUSTER_TAIL_CLOSED);
+-	z_erofs_vle_unzip_all(bgq, &pagepool);
++	z_erofs_decompress_all(bgq, &pagepool);
+ 
+ 	put_pages_list(&pagepool);
+ 	kvfree(bgq);
+@@ -1091,7 +1091,7 @@ jobqueue_init(struct super_block *sb,
+ 			*fg = true;
+ 			goto fg_out;
+ 		}
+-		INIT_WORK(&q->u.work, z_erofs_vle_unzip_wq);
++		INIT_WORK(&q->u.work, z_erofs_decompressqueue_work);
+ 	} else {
+ fg_out:
+ 		q = fgq;
+@@ -1157,11 +1157,11 @@ static bool postsubmit_is_all_bypassed(struct z_erofs_decompressqueue *q[],
+ 	return true;
+ }
+ 
+-static bool z_erofs_vle_submit_all(struct super_block *sb,
+-				   z_erofs_next_pcluster_t owned_head,
+-				   struct list_head *pagepool,
+-				   struct z_erofs_decompressqueue *fgq,
+-				   bool *force_fg)
++static bool z_erofs_submit_queue(struct super_block *sb,
++				 z_erofs_next_pcluster_t owned_head,
++				 struct list_head *pagepool,
++				 struct z_erofs_decompressqueue *fgq,
++				 bool *force_fg)
+ {
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+ 	z_erofs_next_pcluster_t qtail[NR_JOBQUEUES];
+@@ -1228,7 +1228,7 @@ static bool z_erofs_vle_submit_all(struct super_block *sb,
+ 		if (!bio) {
+ 			bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
+ 
+-			bio->bi_end_io = z_erofs_vle_read_endio;
++			bio->bi_end_io = z_erofs_decompressqueue_endio;
+ 			bio_set_dev(bio, sb->s_bdev);
+ 			bio->bi_iter.bi_sector = (sector_t)(first_index + i) <<
+ 				LOG_SECTORS_PER_BLOCK;
+@@ -1264,19 +1264,18 @@ static bool z_erofs_vle_submit_all(struct super_block *sb,
+ 	return true;
+ }
+ 
+-static void z_erofs_submit_and_unzip(struct super_block *sb,
+-				     struct z_erofs_collector *clt,
+-				     struct list_head *pagepool,
+-				     bool force_fg)
++static void z_erofs_runqueue(struct super_block *sb,
++			     struct z_erofs_collector *clt,
++			     struct list_head *pagepool, bool force_fg)
+ {
+ 	struct z_erofs_decompressqueue io[NR_JOBQUEUES];
+ 
+-	if (!z_erofs_vle_submit_all(sb, clt->owned_head,
+-				    pagepool, io, &force_fg))
++	if (!z_erofs_submit_queue(sb, clt->owned_head,
++				  pagepool, io, &force_fg))
+ 		return;
+ 
+-	/* decompress no I/O pclusters immediately */
+-	z_erofs_vle_unzip_all(&io[JQ_BYPASS], pagepool);
++	/* handle bypass queue (no i/o pclusters) immediately */
++	z_erofs_decompress_queue(&io[JQ_BYPASS], pagepool);
+ 
+ 	if (!force_fg)
+ 		return;
+@@ -1285,12 +1284,11 @@ static void z_erofs_submit_and_unzip(struct super_block *sb,
+ 	io_wait_event(io[JQ_SUBMIT].u.wait,
+ 		      !atomic_read(&io[JQ_SUBMIT].pending_bios));
+ 
+-	/* let's synchronous decompression */
+-	z_erofs_vle_unzip_all(&io[JQ_SUBMIT], pagepool);
++	/* handle synchronous decompress queue in the caller context */
++	z_erofs_decompress_queue(&io[JQ_SUBMIT], pagepool);
+ }
+ 
+-static int z_erofs_vle_normalaccess_readpage(struct file *file,
+-					     struct page *page)
++static int z_erofs_readpage(struct file *file, struct page *page)
+ {
+ 	struct inode *const inode = page->mapping->host;
+ 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
+@@ -1305,7 +1303,7 @@ static int z_erofs_vle_normalaccess_readpage(struct file *file,
+ 	(void)z_erofs_collector_end(&f.clt);
+ 
+ 	/* if some compressed cluster ready, need submit them anyway */
+-	z_erofs_submit_and_unzip(inode->i_sb, &f.clt, &pagepool, true);
++	z_erofs_runqueue(inode->i_sb, &f.clt, &pagepool, true);
+ 
+ 	if (err)
+ 		erofs_err(inode->i_sb, "failed to read, err [%d]", err);
+@@ -1324,10 +1322,8 @@ static bool should_decompress_synchronously(struct erofs_sb_info *sbi,
+ 	return nr <= sbi->max_sync_decompress_pages;
+ }
+ 
+-static int z_erofs_vle_normalaccess_readpages(struct file *filp,
+-					      struct address_space *mapping,
+-					      struct list_head *pages,
+-					      unsigned int nr_pages)
++static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
++			     struct list_head *pages, unsigned int nr_pages)
+ {
+ 	struct inode *const inode = mapping->host;
+ 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+@@ -1382,7 +1378,7 @@ static int z_erofs_vle_normalaccess_readpages(struct file *filp,
+ 
+ 	(void)z_erofs_collector_end(&f.clt);
+ 
+-	z_erofs_submit_and_unzip(inode->i_sb, &f.clt, &pagepool, sync);
++	z_erofs_runqueue(inode->i_sb, &f.clt, &pagepool, sync);
+ 
+ 	if (f.map.mpage)
+ 		put_page(f.map.mpage);
+@@ -1392,8 +1388,8 @@ static int z_erofs_vle_normalaccess_readpages(struct file *filp,
+ 	return 0;
+ }
+ 
+-const struct address_space_operations z_erofs_vle_normalaccess_aops = {
+-	.readpage = z_erofs_vle_normalaccess_readpage,
+-	.readpages = z_erofs_vle_normalaccess_readpages,
++const struct address_space_operations z_erofs_aops = {
++	.readpage = z_erofs_readpage,
++	.readpages = z_erofs_readpages,
+ };
+ 
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 6a26c293ae2d..736db3a4cdef 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -22,11 +22,11 @@ int z_erofs_fill_inode(struct inode *inode)
+ 		set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
+ 	}
+ 
+-	inode->i_mapping->a_ops = &z_erofs_vle_normalaccess_aops;
++	inode->i_mapping->a_ops = &z_erofs_aops;
+ 	return 0;
+ }
+ 
+-static int fill_inode_lazy(struct inode *inode)
++static int z_erofs_fill_inode_lazy(struct inode *inode)
+ {
+ 	struct erofs_inode *const vi = EROFS_I(inode);
+ 	struct super_block *const sb = inode->i_sb;
+@@ -138,8 +138,8 @@ static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
+ 	return 0;
+ }
+ 
+-static int vle_legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+-					     unsigned long lcn)
++static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
++					 unsigned long lcn)
+ {
+ 	struct inode *const inode = m->inode;
+ 	struct erofs_inode *const vi = EROFS_I(inode);
+@@ -311,13 +311,13 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos));
+ }
+ 
+-static int vle_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+-				      unsigned int lcn)
++static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
++					  unsigned int lcn)
+ {
+ 	const unsigned int datamode = EROFS_I(m->inode)->datalayout;
+ 
+ 	if (datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY)
+-		return vle_legacy_load_cluster_from_disk(m, lcn);
++		return legacy_load_cluster_from_disk(m, lcn);
+ 
+ 	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
+ 		return compacted_load_cluster_from_disk(m, lcn);
+@@ -325,8 +325,8 @@ static int vle_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 	return -EINVAL;
+ }
+ 
+-static int vle_extent_lookback(struct z_erofs_maprecorder *m,
+-			       unsigned int lookback_distance)
++static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
++				   unsigned int lookback_distance)
+ {
+ 	struct erofs_inode *const vi = EROFS_I(m->inode);
+ 	struct erofs_map_blocks *const map = m->map;
+@@ -343,7 +343,7 @@ static int vle_extent_lookback(struct z_erofs_maprecorder *m,
+ 
+ 	/* load extent head logical cluster if needed */
+ 	lcn -= lookback_distance;
+-	err = vle_load_cluster_from_disk(m, lcn);
++	err = z_erofs_load_cluster_from_disk(m, lcn);
+ 	if (err)
+ 		return err;
+ 
+@@ -356,7 +356,7 @@ static int vle_extent_lookback(struct z_erofs_maprecorder *m,
+ 			DBG_BUGON(1);
+ 			return -EFSCORRUPTED;
+ 		}
+-		return vle_extent_lookback(m, m->delta[0]);
++		return z_erofs_extent_lookback(m, m->delta[0]);
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+ 		map->m_flags &= ~EROFS_MAP_ZIPPED;
+ 		/* fallthrough */
+@@ -396,7 +396,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 		goto out;
+ 	}
+ 
+-	err = fill_inode_lazy(inode);
++	err = z_erofs_fill_inode_lazy(inode);
+ 	if (err)
+ 		goto out;
+ 
+@@ -405,7 +405,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 	m.lcn = ofs >> lclusterbits;
+ 	endoff = ofs & ((1 << lclusterbits) - 1);
+ 
+-	err = vle_load_cluster_from_disk(&m, m.lcn);
++	err = z_erofs_load_cluster_from_disk(&m, m.lcn);
+ 	if (err)
+ 		goto unmap_out;
+ 
+@@ -436,7 +436,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 		/* fallthrough */
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
+ 		/* get the correspoinding first chunk */
+-		err = vle_extent_lookback(&m, m.delta[0]);
++		err = z_erofs_extent_lookback(&m, m.delta[0]);
+ 		if (err)
+ 			goto unmap_out;
+ 		break;
+-- 
+2.17.1
+
