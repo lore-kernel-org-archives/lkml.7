@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853FBFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57CFC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C60F2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4F72085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214700;
-	bh=lOcuIgcRIm7GuYDO3o9yyq1tvpvKmJ4QikQP3ew0eyc=;
+	s=default; t=1573214703;
+	bh=0tFSaKQyGEqGezkRj4bPM4JS9i+QDuEA8486jI4EfWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4WDKJD6ef+KX9cEgfJQacvey0ZeU3AXmyniVejb142PqTBqM4OuOb6iN9WjeV5vK
-	 P2sJgleutGek9yLwFv5tQY+aMoenTRDeFIdQiOJGeZzcNaz2GLVTaq/DCLRRSIC4jn
-	 00j35ZCNFARKlLBYHWT4G+TnSiaM6AImk8dTKWjc=
+	b=SivLraXR0HO52bwHOqfhcihHpzkeJhh0g9uAR7OEOSJKTsqMo9rojivis0y07qX9O
+	 EYrtDsAklmCW+YewIac2WgpV3G5d0FGwSvwbIA8wEqt3erJSAErBlmcVz6DcXXeJwN
+	 3FRSq0klw7EzAWg9NoZ1KfgQdU4w2Vz3c4DEbGiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391823AbfKHME6 (ORCPT
+        id S2391790AbfKHMEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:04:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55508 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:04:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389703AbfKHLl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:56 -0500
+        id S2389723AbfKHLl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69F8120656;
-        Fri,  8 Nov 2019 11:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D9B1222C4;
+        Fri,  8 Nov 2019 11:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213316;
-        bh=lOcuIgcRIm7GuYDO3o9yyq1tvpvKmJ4QikQP3ew0eyc=;
+        s=default; t=1573213318;
+        bh=0tFSaKQyGEqGezkRj4bPM4JS9i+QDuEA8486jI4EfWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=az7hzMrB3H3+miH+EJmVYKOD9J0S/n9T89RoM1AdJd+ROhHRIyohqd45UuE/2vCt4
-         hxGHYlFi98n8yzqI9uLonOWsIauNc5fiU/wClgCKl4ySKRxkTZPugNA8w4KyEIkDdX
-         689sofICA9X81KI+iEmHXXUGgR6EUEQk+Q7ddolQ=
+        b=XGe9tFSJ0LVyj5tfjMsXXMWdK2jpL+t+zy56ijqnfzwv65caZwm0IEQqT+lu1K0Vb
+         hVbI12t3afhhsnJD71PCJVWd7Cba70Nbgdh8LVHlkKujpXAxhcFp4Z/0q5dS+8GBPR
+         F+ZugGTcsDnlzkGIXESMdIBERwx8OC+v+Dd4Qz+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lao Wei <zrlw@qq.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 160/205] media: fix: media: pci: meye: validate offset to avoid arbitrary access
-Date:   Fri,  8 Nov 2019 06:37:07 -0500
-Message-Id: <20191108113752.12502-160-sashal@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 162/205] net: bcmgenet: Fix speed selection for reverse MII
+Date:   Fri,  8 Nov 2019 06:37:09 -0500
+Message-Id: <20191108113752.12502-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,35 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lao Wei <zrlw@qq.com>
+From: Andrew Lunn <andrew@lunn.ch>
 
-[ Upstream commit eac7230fdb4672c2cb56f6a01a1744f562c01f80 ]
+[ Upstream commit 00eb2243b933a496958f4ce1bcf59840fea8be16 ]
 
-Motion eye video4linux driver for Sony Vaio PictureBook desn't validate user-controlled parameter
-'vma->vm_pgoff', a malicious process might access all of kernel memory from user space by trying
-pass different arbitrary address.
-Discussion: http://www.openwall.com/lists/oss-security/2018/07/06/1
+The phy supported speed is being used to determine if the MAC should
+be configured to 100 or 1G. The masking logic is broken. Instead, look
+at 1G supported speeds to enable 1G MAC support.
 
-Signed-off-by: Lao Wei <zrlw@qq.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/meye/meye.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
-index 8001d3e9134e4..db2a7ad1e5231 100644
---- a/drivers/media/pci/meye/meye.c
-+++ b/drivers/media/pci/meye/meye.c
-@@ -1460,7 +1460,7 @@ static int meye_mmap(struct file *file, struct vm_area_struct *vma)
- 	unsigned long page, pos;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 0d527fa5de610..b0592fd4135b3 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -226,11 +226,10 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ 		 * capabilities, use that knowledge to also configure the
+ 		 * Reverse MII interface correctly.
+ 		 */
+-		if ((dev->phydev->supported & PHY_BASIC_FEATURES) ==
+-				PHY_BASIC_FEATURES)
+-			port_ctrl = PORT_MODE_EXT_RVMII_25;
+-		else
++		if (dev->phydev->supported & PHY_1000BT_FEATURES)
+ 			port_ctrl = PORT_MODE_EXT_RVMII_50;
++		else
++			port_ctrl = PORT_MODE_EXT_RVMII_25;
+ 		bcmgenet_sys_writel(priv, port_ctrl, SYS_PORT_CTRL);
+ 		break;
  
- 	mutex_lock(&meye.lock);
--	if (size > gbuffers * gbufsize) {
-+	if (size > gbuffers * gbufsize || offset > gbuffers * gbufsize - size) {
- 		mutex_unlock(&meye.lock);
- 		return -EINVAL;
- 	}
 -- 
 2.20.1
 
