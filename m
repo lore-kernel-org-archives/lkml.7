@@ -2,140 +2,79 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE2FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9484BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEF621D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6977921D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYSP9Ere"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lynymReQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbfKHJxp (ORCPT
+        id S1731066AbfKHJza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:53:45 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39594 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730573AbfKHJxo (ORCPT
+        Fri, 8 Nov 2019 04:55:30 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57566 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbfKHJz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:53:44 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a11so6287662wra.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 01:53:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bD5Fn3LbdHLtW6P7NmPGZyBXGmZSnfzZNFhZsK1WN44=;
-        b=VYSP9ErePUf1fZPl2fba/NoBG6HT0c/TEOOghm1e708BJfxvweThIA6IXmqIh93ohm
-         meQBbRVDnk2HICKb7IgI5de0aghls0v4jihkkFYXPgnz+EdX6Zu2hcM9S98C3b5M16qN
-         WOH4ImgF3469jUkRTue49eAg1/gMIN+jJudUklK6xseemTt0QmbArcaQJmwlqvOHleNP
-         ScUlj3TM8bHPT0KJkdZWVGTnVufHUVM9xMXeqlod0eIDHxWflMaj/C+XqP2L4xu+NsQE
-         t+JPWIw5fWQJ93QkFCByJCDwpI2JIs8uL5vtOBEoMaXaeulNyQ2MaJnJR8REz0cQFtxS
-         shTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bD5Fn3LbdHLtW6P7NmPGZyBXGmZSnfzZNFhZsK1WN44=;
-        b=ml0+CPrt8MVuUDynetTIzSd1TxmZMV6gKRAzD2ii6gHYyh3V0L6ycn0muOqwTO6Kta
-         bzaPbEd6Ibf/YYL8ozxRorbTWmQolJXDJ4CDgnoSobWMmgcNxa0j3f3C0HgM68OOgrPE
-         iXtnGHaKV4Z6SlRM6QT5a5Ef7UcSRzFGWEOHutfqTs751wI0CbbREh7zDHBrT/HW7Fp1
-         Fvkg0zJNXtV6cIbV6ErSC/xXbWFsjfT82x8BdvDWib35GUyph0Q4ldlLzJKkwRZ48lLI
-         9oyRe9gqj7I6Uewz1CvSQrx/iAm4zABqMYswGFHtb/krUjdsNBlMKRHU+DPTehvGv8JY
-         mdAA==
-X-Gm-Message-State: APjAAAWfm/rsWiKZXtaexFDu1zBxQeyM2if6uf6o+YDB2akqr6enmjGe
-        Xlv5C7/+GZWPYllCPRoNiQ0M7b5TS73ean1fZSE=
-X-Google-Smtp-Source: APXvYqzr5LGLxlCBHsxSVIvntfRuYo9GZ5mB+/AEGG7H1x9L6yzHCoU0dK9ixojjv9ZHAb5GssOD5bpzctkISDIVwOU=
-X-Received: by 2002:adf:e2cc:: with SMTP id d12mr7061916wrj.168.1573206822653;
- Fri, 08 Nov 2019 01:53:42 -0800 (PST)
+        Fri, 8 Nov 2019 04:55:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WTPpFRwPMuBGMswcnZzjehjGbeLjrVVn4GW+ZOg77Q0=; b=lynymReQ4Pwr3nOT8Nttvv4eH
+        Q158yVa54IXgLtDzqYYiuzQcDomkT01c12rNtYy5kNwci0Wz56XirFQlHKwqcWOZXTdrMK4eRpqEs
+        V7lYB3YqL+UzEsTGsz40beXVhNtpDsjAFY7KLQ1A1ERtIjH4R4B78+YIq1CKpFrztcPkNJ3VWRf+C
+        kIXreuPofejmE+jWyAWl/ZIccDPE6X0qzJRCdchfHleziHcZChnPNu8o6x6iMxxom14t5lGK3XI+e
+        bigAOAVAu8Me3gCpbZAHwzENKHmeIQQD5dQeXQ9ff+x8iZrWdDD/RODChDwsbFlmtFDoMPi3o9c2A
+        iQh/vhg8w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iT0zC-0005oW-7h; Fri, 08 Nov 2019 09:55:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 74E6730038D;
+        Fri,  8 Nov 2019 10:54:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5CDA72022B9E1; Fri,  8 Nov 2019 10:55:20 +0100 (CET)
+Date:   Fri, 8 Nov 2019 10:55:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     shile.zhang@linux.alibaba.com
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/3] scripts: Add sortorctable to sort ORC unwind
+ tables
+Message-ID: <20191108095520.GK4114@hirez.programming.kicks-ass.net>
+References: <20191108071108.72132-1-shile.zhang@linux.alibaba.com>
+ <20191108071108.72132-2-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191108082244.GA29418@shao2-debian>
-In-Reply-To: <20191108082244.GA29418@shao2-debian>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Fri, 8 Nov 2019 17:53:31 +0800
-Message-ID: <CACVXFVMGR175kksqB6ux+=xRuVokA2bXOLidoT0=-AmCEgbk2Q@mail.gmail.com>
-Subject: Re: [block] fa53228721: WARNING:at_block/blk-merge.c:#blk_rq_map_sg
-To:     kernel test robot <lkp@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@fb.com>,
-        lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108071108.72132-2-shile.zhang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 4:23 PM kernel test robot <lkp@intel.com> wrote:
->
-> FYI, we noticed the following commit (built with gcc-7):
->
-> commit: fa53228721876515adabc7bc74368490bd97aa3b ("block: avoid blk_bio_segment_split for small I/O operations")
-> https://git.kernel.org/cgit/linux/kernel/git/axboe/linux-block.git for-5.5/block
->
-> in testcase: xfstests
-> with following parameters:
->
->         disk: 4HDD
->         fs: xfs
->         test: xfs-group16
->
-> test-description: xfstests is a regression test suite for xfs and other files ystems.
-> test-url: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
->
->
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
->
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->
->
-> +---------------------------------------------+------------+------------+
-> |                                             | d2c9be89f8 | fa53228721 |
-> +---------------------------------------------+------------+------------+
-> | boot_successes                              | 12         | 0          |
-> | boot_failures                               | 0          | 16         |
-> | WARNING:at_block/blk-merge.c:#blk_rq_map_sg | 0          | 16         |
-> | RIP:blk_rq_map_sg                           | 0          | 16         |
-> | kernel_BUG_at_drivers/scsi/scsi_lib.c       | 0          | 16         |
-> | invalid_opcode:#[##]                        | 0          | 16         |
-> | RIP:scsi_init_io                            | 0          | 16         |
-> | Kernel_panic-not_syncing:Fatal_exception    | 0          | 16         |
-> +---------------------------------------------+------------+------------+
->
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <lkp@intel.com>
->
->
-> [  203.892883] WARNING: CPU: 0 PID: 443 at block/blk-merge.c:559 blk_rq_map_sg+0x649/0x700
+On Fri, Nov 08, 2019 at 03:11:06PM +0800, shile.zhang@linux.alibaba.com wrote:
+> From: Shile Zhang <shile.zhang@linux.alibaba.com>
+> 
+> Sort orc_unwind and orc_unwind_ip tables at build time instead of runtime
+> in boot pharse can save more boot time.
 
-If the bvec crosses page boundary, and meantime its length is
-<=PAGE_SIZE, this issue may be triggered, given
-some device has PAGE_SIZE segment boundary limit.
+I still object to adding a copy of sortextable instead of making one
+tool for all sorts.
 
-The following patch should fix this issue:
-
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index f22cb6251d06..367d3358de2a 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -319,7 +319,8 @@ void __blk_queue_split(struct request_queue *q,
-struct bio **bio,
-                 */
-                if (!q->limits.chunk_sectors &&
-                    (*bio)->bi_vcnt == 1 &&
--                   (*bio)->bi_io_vec[0].bv_len <= PAGE_SIZE) {
-+                   ((*bio)->bi_io_vec[0].bv_len +
-+                    (*bio)->bi_io_vec[0].bv_offset) <= PAGE_SIZE) {
-                        *nr_segs = 1;
-                        break;
-                }
-
-However, in case of 64K PAGE_SIZE, I guess this way is still not safe enough.
-
-thanks,
-Ming
