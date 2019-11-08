@@ -2,196 +2,203 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC92FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389E0C5DF61
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC1121D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E257A206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfKHAQF convert rfc822-to-8bit (ORCPT
+        id S1728140AbfKHARJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:16:05 -0500
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:43152 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfKHAQE (ORCPT
+        Thu, 7 Nov 2019 19:17:09 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:40270 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfKHARJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:16:04 -0500
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id xA80Fj5Y001311
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 8 Nov 2019 09:15:45 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xA80FjKP001121;
-        Fri, 8 Nov 2019 09:15:45 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xA80Etp6014126;
-        Fri, 8 Nov 2019 09:15:45 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-10172977; Fri, 8 Nov 2019 09:08:14 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Fri, 8
- Nov 2019 09:08:14 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Subject: [PATCH 3/3] mm: make pfn walker support ZONE_DEVICE
-Thread-Topic: [PATCH 3/3] mm: make pfn walker support ZONE_DEVICE
-Thread-Index: AQHVlcicrT2ngYobmkioLRJ7DsejPw==
-Date:   Fri, 8 Nov 2019 00:08:13 +0000
-Message-ID: <20191108000855.25209-4-t-fukasawa@vx.jp.nec.com>
-References: <20191108000855.25209-1-t-fukasawa@vx.jp.nec.com>
-In-Reply-To: <20191108000855.25209-1-t-fukasawa@vx.jp.nec.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
+        Thu, 7 Nov 2019 19:17:09 -0500
+Received: from [10.20.41.27] (unknown [10.20.41.27])
+        by mail (Coremail) with SMTP id QMiowPAxScj8s8RdYo4AAA--.116S3;
+        Fri, 08 Nov 2019 08:17:00 +0800 (CST)
+Subject: Re: [PATCH REPLY] MIPS: Scan the DMI system information
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20191107112801.7037-1-jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yangyinglu@loongson.cn, jdelvare@suse.de,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <acd64ec9-e471-6fee-6505-ae3286a2972e@loongson.cn>
+Date:   Fri, 8 Nov 2019 08:16:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+In-Reply-To: <20191107112801.7037-1-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: QMiowPAxScj8s8RdYo4AAA--.116S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuryrurW3Aw43ur4fGF4rXwb_yoWrtrWrpa
+        9xA3Zayr48GF17G34fA34fuF1Yqws3WF90kFyj9r1xZas8Zw17Jrs3Krs2kryDZrWkKay0
+        gF1SgF15CrZFkaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VCY1x0262k0Y48FwI0_Jr0_Gr1lYx0Ex4A2jsIE14v26r
+        4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I
+        648v4I1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
+        nIWIevJa73UjIFyTuYvjfU5eHqUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows pfn walker to read pages on ZONE_DEVICE.
-There are the following notes:
+On 11/07/2019 07:28 PM, Jiaxun Yang wrote:
+> Hi Tiezhu and Jean,
+>
+> What about do like this?
+> We shouldn't follow x86's Kconfig as most of MIPS devices
+> don't support DMI.
+>
+> And, we can reuse map/unmap from io.h to reduce
+> maintinance overhead.
 
-	a) The reserved pages indicated by vmem_altmap->reserve
-	   are uninitialized, so it must be skipped to read.
-	b) To get vmem_altmap, we need to use get_dev_pagemap(),
-	   but doing it for all pfns is too slow.
+Hi Jiaxun,
 
-This patch solves both of them. Since vmem_altmap could reserve
-only first few pages, we can reduce the number of checks by
-counting sequential valid pages.
+Thanks for your modification, it looks better, let me verify and test it,
+and then I will send a v2 patch.
 
-Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
----
- fs/proc/page.c           | 22 ++++++++++++++++++----
- include/linux/memremap.h |  6 ++++++
- mm/memremap.c            | 29 +++++++++++++++++++++++++++++
- 3 files changed, 53 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index a49b638..b6241ea 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -33,6 +33,7 @@ static ssize_t kpage_common_read(struct file *file, char __user *buf,
- 	struct page *ppage;
- 	unsigned long src = *ppos;
- 	unsigned long pfn;
-+	unsigned long valid_pages = 0;
- 	ssize_t ret = 0;
- 
- 	pfn = src / KPMSIZE;
-@@ -41,11 +42,24 @@ static ssize_t kpage_common_read(struct file *file, char __user *buf,
- 		return -EINVAL;
- 
- 	while (count > 0) {
--		/*
--		 * TODO: ZONE_DEVICE support requires to identify
--		 * memmaps that were actually initialized.
--		 */
- 		ppage = pfn_to_online_page(pfn);
-+		if (!ppage && pfn_zone_device(pfn)) {
-+			/*
-+			 * Skip to read first few uninitialized pages on
-+			 * ZONE_DEVICE. And count valid pages starting
-+			 * with the pfn so that minimize the number of
-+			 * calls to nr_valid_pages_zone_device().
-+			 */
-+			if (!valid_pages)
-+				valid_pages = nr_valid_pages_zone_device(pfn);
-+			if (valid_pages) {
-+				ppage = pfn_to_page(pfn);
-+				valid_pages--;
-+			}
-+		} else if (valid_pages) {
-+			/* ZONE_DEVICE has been hot removed */
-+			valid_pages = 0;
-+		}
- 
- 		if (put_user(read_fn(ppage), out)) {
- 			ret = -EFAULT;
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index 6fefb09..d111ae3 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -123,6 +123,7 @@ static inline struct vmem_altmap *pgmap_altmap(struct dev_pagemap *pgmap)
- }
- 
- #ifdef CONFIG_ZONE_DEVICE
-+unsigned long nr_valid_pages_zone_device(unsigned long pfn);
- void *memremap_pages(struct dev_pagemap *pgmap, int nid);
- void memunmap_pages(struct dev_pagemap *pgmap);
- void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap);
-@@ -133,6 +134,11 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pfn,
- unsigned long vmem_altmap_offset(struct vmem_altmap *altmap);
- void vmem_altmap_free(struct vmem_altmap *altmap, unsigned long nr_pfns);
- #else
-+static inline unsigned long nr_valid_pages_zone_device(unsigned long pfn)
-+{
-+	return 0;
-+}
-+
- static inline void *devm_memremap_pages(struct device *dev,
- 		struct dev_pagemap *pgmap)
- {
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 8a97fd4..307c73e 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -73,6 +73,35 @@ static unsigned long pfn_next(unsigned long pfn)
- 	return pfn + 1;
- }
- 
-+/*
-+ * This returns the number of sequential valid pages starting from @pfn
-+ * on ZONE_DEVICE. The invalid pages reserved by driver is first few
-+ * pages on ZONE_DEVICE.
-+ */
-+unsigned long nr_valid_pages_zone_device(unsigned long pfn)
-+{
-+	struct dev_pagemap *pgmap;
-+	struct vmem_altmap *altmap;
-+	unsigned long pages;
-+
-+	pgmap = get_dev_pagemap(pfn, NULL);
-+	if (!pgmap)
-+		return 0;
-+	altmap = pgmap_altmap(pgmap);
-+	if (altmap && pfn < (altmap->base_pfn + altmap->reserve))
-+		pages = 0;
-+	else
-+		/*
-+		 * PHYS_PFN(pgmap->res.end) is end pfn on pgmap
-+		 * (not start pfn on next mapping).
-+		 */
-+		pages = PHYS_PFN(pgmap->res.end) - pfn + 1;
-+
-+	put_dev_pagemap(pgmap);
-+
-+	return pages;
-+}
-+
- #define for_each_device_pfn(pfn, map) \
- 	for (pfn = pfn_first(map); pfn < pfn_end(map); pfn = pfn_next(pfn))
- 
--- 
-1.8.3.1
+Tiezhu Yang
+
+>
+> Thanks
+>
+> Jiaxun
+>
+>> 8------------------------------------------------------8<
+> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
+> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
+> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
+> driver can easily match various of mainboards.
+>
+> In the SMBIOS reference specification, the table anchor string "_SM_" is
+> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+> but there exists a special case for loongson platform, when call function
+> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
+> it is reserved for SMBIOS and can be normally access in the BIOS.
+>
+> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
+> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>   arch/mips/Kconfig           |  9 +++++++++
+>   arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
+>   arch/mips/kernel/setup.c    |  2 ++
+>   drivers/firmware/dmi_scan.c |  6 +++++-
+>   4 files changed, 36 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/mips/include/asm/dmi.h
+>
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index c3a022ca3345..414f3a0ea397 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -2759,6 +2759,15 @@ config HW_PERF_EVENTS
+>   	  Enable hardware performance counter support for perf events. If
+>   	  disabled, perf events will use software events only.
+>   
+> +config DMI
+> +	default y if MACH_LOONGSON64
+> +	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+> +	bool "Enable DMI scanning"
+> +	help
+> +	  Enabled scanning of DMI to identify machine quirks. Say Y
+> +	  here unless you have verified that your setup is not
+> +	  affected by entries in the DMI blacklist.
+> +
+>   config SMP
+>   	bool "Multi-Processing support"
+>   	depends on SYS_SUPPORTS_SMP
+> diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
+> new file mode 100644
+> index 000000000000..5153ef6fe8a2
+> --- /dev/null
+> +++ b/arch/mips/include/asm/dmi.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_MIPS_DMI_H
+> +#define _ASM_MIPS_DMI_H
+> +
+> +#include <linux/io.h>
+> +#include <linux/memblock.h>
+> +
+> +#define dmi_early_remap(x, l)		ioremap_cache(x, l)
+> +#define dmi_early_unmap(x, l)		iounmap(x)
+> +#define dmi_remap(x, l)		ioremap_cache(x, l)
+> +#define dmi_unmap(x)			iounmap(x)
+> +
+> +/* MIPS initialize DMI scan before SLAB is ready, so we use memblock here */
+> +#define dmi_alloc(l)			memblock_alloc_low(l, PAGE_SIZE)
+> +
+> +#if defined(CONFIG_MACH_LOONGSON64)
+> +#define SMBIOS_ENTRY_POINT_SCAN_START	0xfffe000
+> +#endif
+> +
+> +#endif /* _ASM_MIPS_DMI_H */
+> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> index c3d4212b5f1d..da7d312e20eb 100644
+> --- a/arch/mips/kernel/setup.c
+> +++ b/arch/mips/kernel/setup.c
+> @@ -28,6 +28,7 @@
+>   #include <linux/decompress/generic.h>
+>   #include <linux/of_fdt.h>
+>   #include <linux/of_reserved_mem.h>
+> +#include <linux/dmi.h>
+>   
+>   #include <asm/addrspace.h>
+>   #include <asm/bootinfo.h>
+> @@ -802,6 +803,7 @@ void __init setup_arch(char **cmdline_p)
+>   #endif
+>   
+>   	arch_mem_init(cmdline_p);
+> +	dmi_setup();
+>   
+>   	resource_init();
+>   	plat_smp_setup();
+> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+> index 35ed56b9c34f..ee2dbebf2063 100644
+> --- a/drivers/firmware/dmi_scan.c
+> +++ b/drivers/firmware/dmi_scan.c
+> @@ -11,6 +11,10 @@
+>   #include <asm/dmi.h>
+>   #include <asm/unaligned.h>
+>   
+> +#ifndef SMBIOS_ENTRY_POINT_SCAN_START
+> +#define SMBIOS_ENTRY_POINT_SCAN_START 0xf0000
+> +#endif
+> +
+>   struct kobject *dmi_kobj;
+>   EXPORT_SYMBOL_GPL(dmi_kobj);
+>   
+> @@ -661,7 +665,7 @@ static void __init dmi_scan_machine(void)
+>   			return;
+>   		}
+>   	} else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
+> -		p = dmi_early_remap(0xF0000, 0x10000);
+> +		p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
+>   		if (p == NULL)
+>   			goto error;
+>   
+
 
