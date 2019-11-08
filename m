@@ -2,139 +2,86 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9962FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31F4FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF65E2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239954;
-	bh=Qfqa6yRrhyTXSFO5ETjDNoD+V/lIzLAXs4pkg67v5dg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOd220O0ZToa8nSRrliT7DA49FKYUFY7Yv6VmUI3YXKL9hJugKLZEeWEl+/HIgRM+
-	 1+a+JBVZi4kmFeV96NdeF/8v8Sy9WmHStv+cU6F2se5lHs9RvfEZaTzRrGrNq20CVd
-	 1Hcp3/1STyiI7oSfVQ2x+uZ/T7fTu3dJO/Kv1PrM=
+	by mail.kernel.org (Postfix) with ESMTP id 8D01D2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HRTONkgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390586AbfKHTFx (ORCPT
+        id S2391186AbfKHTF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731327AbfKHTFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:45 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFB6D21D7E;
-        Fri,  8 Nov 2019 19:05:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239944;
-        bh=Qfqa6yRrhyTXSFO5ETjDNoD+V/lIzLAXs4pkg67v5dg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPxvfFtlXVkDwosMAGlXFUB7Eb1Cx61DLYREaodwoUo24CFRZaIjBzuqxSh6TcFxH
-         DGzcqhMOQxPv+bQogPRpnbu+qisGMENprn+T2JlhQEmVKH6YsOuGqpsf6zgnGMPxac
-         BmkPjOPXdGZ1ww+zWURGZrN7jeau2bfix+tUhiuY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 036/140] scsi: scsi_dh_alua: handle RTPG sense code correctly during state transitions
-Date:   Fri,  8 Nov 2019 19:49:24 +0100
-Message-Id: <20191108174907.153596857@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
-References: <20191108174900.189064908@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 Nov 2019 14:05:58 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39692 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391154AbfKHTFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:54 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x28so5229250pfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:05:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=CfxKEEZdYJDv+VwQMOnbdgS+o53AJxYEZMeJRl17oUY=;
+        b=HRTONkgN2o1mfAw6Hd2hOJcORiFNbzX1IfUNiHyPBaQLBNgyFywtEECrakzInNnsEJ
+         w/S14UjT2rKf1jH/m1+HPScmwLK39XdK6/ZwD3cvPs+G7wYQcIBx21toa5Kw4HRD1Ty/
+         ZjR2GUIfXAJOPCBRYAS5VQXZ5oZCv514M1ltE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=CfxKEEZdYJDv+VwQMOnbdgS+o53AJxYEZMeJRl17oUY=;
+        b=EKiP4IS/WIjm+oRbw9UzKhu6M7K8+c5VorR5Uhc5+DV8pKl5oueK9gSvPmlQBbCLZ7
+         X8ayqmE/kll4VfiuwtS9REQtEV/R8YDyddejdAkjbyXj3eJvC9hUrL9IJaWh79PCOt5A
+         ET7xs2rwCOt1AmEHHxU5ZWrI2afNJCL9J4PTf0reWbB3qkUXRz8+ptlghsDKDMQ0Qepi
+         xZgV3OekJNOFrANHN6KRZ7XC2/m7ouSposimEA5n6dcEwC+j01nAj5vCQpMmMxB6GxZA
+         Sk1FI7A7xltgQqmh1xGc53R5uDUk5XliHCvB7uyMe2P0AGlO7t01Pq72aCNyFud7bEfZ
+         EgVA==
+X-Gm-Message-State: APjAAAUSQ/V6qkjKHH75svdVFbCYqVyMFHKicHH727VLDey95oGj1kwg
+        5H2BXTwY1tlnlm+WeToj+oNyoQ==
+X-Google-Smtp-Source: APXvYqx0+sp5wxq5arm4pH8fols7oNVG7M0CO0z5dS7yC/rfQPExsY8YMHVLfzaj1WlNNQ6pKAFebw==
+X-Received: by 2002:a63:ec42:: with SMTP id r2mr13646860pgj.162.1573239952931;
+        Fri, 08 Nov 2019 11:05:52 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id i102sm6684441pje.17.2019.11.08.11.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 11:05:52 -0800 (PST)
+Message-ID: <5dc5bc90.1c69fb81.90c1.10cb@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108092824.9773-3-rnayak@codeaurora.org>
+References: <20191108092824.9773-1-rnayak@codeaurora.org> <20191108092824.9773-3-rnayak@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v5 02/13] arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 11:05:51 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+Quoting Rajendra Nayak (2019-11-08 01:28:13)
+> Add skeletal sc7180 SoC dtsi and idp board dts files.
+>=20
+> Co-developed-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
 
-[ Upstream commit b6ce6fb121a655aefe41dccc077141c102145a37 ]
-
-Some arrays are not capable of returning RTPG data during state
-transitioning, but rather return an 'LUN not accessible, asymmetric access
-state transition' sense code. In these cases we can set the state to
-'transitioning' directly and don't need to evaluate the RTPG data (which we
-won't have anyway).
-
-Link: https://lore.kernel.org/r/20191007135701.32389-1-hare@suse.de
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/device_handler/scsi_dh_alua.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
-index 4971104b1817b..f32da0ca529e0 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -512,6 +512,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 	unsigned int tpg_desc_tbl_off;
- 	unsigned char orig_transition_tmo;
- 	unsigned long flags;
-+	bool transitioning_sense = false;
- 
- 	if (!pg->expiry) {
- 		unsigned long transition_tmo = ALUA_FAILOVER_TIMEOUT * HZ;
-@@ -572,13 +573,19 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 			goto retry;
- 		}
- 		/*
--		 * Retry on ALUA state transition or if any
--		 * UNIT ATTENTION occurred.
-+		 * If the array returns with 'ALUA state transition'
-+		 * sense code here it cannot return RTPG data during
-+		 * transition. So set the state to 'transitioning' directly.
- 		 */
- 		if (sense_hdr.sense_key == NOT_READY &&
--		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
--			err = SCSI_DH_RETRY;
--		else if (sense_hdr.sense_key == UNIT_ATTENTION)
-+		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a) {
-+			transitioning_sense = true;
-+			goto skip_rtpg;
-+		}
-+		/*
-+		 * Retry on any other UNIT ATTENTION occurred.
-+		 */
-+		if (sense_hdr.sense_key == UNIT_ATTENTION)
- 			err = SCSI_DH_RETRY;
- 		if (err == SCSI_DH_RETRY &&
- 		    pg->expiry != 0 && time_before(jiffies, pg->expiry)) {
-@@ -666,7 +673,11 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 		off = 8 + (desc[7] * 4);
- 	}
- 
-+ skip_rtpg:
- 	spin_lock_irqsave(&pg->lock, flags);
-+	if (transitioning_sense)
-+		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
-+
- 	sdev_printk(KERN_INFO, sdev,
- 		    "%s: port group %02x state %c %s supports %c%c%c%c%c%c%c\n",
- 		    ALUA_DH_NAME, pg->group_id, print_alua_state(pg->state),
--- 
-2.20.1
-
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
