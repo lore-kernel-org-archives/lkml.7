@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719B7FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEA1FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B7F218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2861520865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239291;
-	bh=0tRlxh1q0Gt/y03vJ6IG2f7o1/4C/6UXXWZi5nlA6a8=;
+	s=default; t=1573239293;
+	bh=jGNPFgY3BP2+kzPhYnANC70HiwPf6Eo8P8wdIOPL58Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+dXXMB4Hn9kAPUmxaHaDVieg1ackgGdSLE+tCZJRubVGVdIIgxc2OUC/SrX8uLaO
-	 S+ysrSA30pUclPmpVtW2bDpijMTflAQP/5R/l7igViJgqlfIufcccinEQHdwZwmMLE
-	 vnepjfhGc+9OMNBTZWvAXzXJE8tHaSRtgqhlUYW8=
+	b=jHxDkizZ9wZqbEJfm2Lyo+ApY9WtNesQHM/pdWNDJwhuDIua/bNScaSdXNN2EnuWq
+	 FeY9SVDmhdUCViiTHmPht3oCcu5MkdjPEtU0UBceftEqE+70+M3G5oiManP5jQvXvL
+	 wPtZfAyN0h5dAAFD1IS6pInxYjNBePHje/6mhFFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbfKHSyu (ORCPT
+        id S1733122AbfKHSyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:54:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51834 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:54:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733061AbfKHSyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:54:44 -0500
+        id S1733119AbfKHSyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:54:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A628E20865;
-        Fri,  8 Nov 2019 18:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D7C62178F;
+        Fri,  8 Nov 2019 18:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239284;
-        bh=0tRlxh1q0Gt/y03vJ6IG2f7o1/4C/6UXXWZi5nlA6a8=;
+        s=default; t=1573239289;
+        bh=jGNPFgY3BP2+kzPhYnANC70HiwPf6Eo8P8wdIOPL58Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2A449Y3E8cTohTuDmh4xNkU/auX0YeX4P+BC/IS/IOmLmzbN4sr5TQJTZ0L9WtdWb
-         nPqaM1Yblzoj9T3jGrbpMuwztsw5zEf81ZUDQw98ePERIheuMLm5EBQ/Tdp/hkKuCc
-         zUapr0wE6la88GxbLUjTHo+bTShtjlLHEAaiaLIs=
+        b=FygAbKYWkawnMFZtsZUEE2lVJ8vnG3A5rlgTMhaU6ZBn6hUz6eFwJ0YqGBwJYl/IR
+         ZdfKK+6ISwtFlE4getpiEYayIyH6j+f+c99mCTKnrSlSu25vKqgDtPoDQ0hTBJfkU6
+         6H6CvPHupJDwf2DLKWBUCx/xDxUlys1/0tPRpzbU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "David A. Long" <dave.long@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 62/75] ARM: 8793/1: signal: replace __put_user_error with __put_user
-Date:   Fri,  8 Nov 2019 19:50:19 +0100
-Message-Id: <20191108174803.303185859@linuxfoundation.org>
+Subject: [PATCH 4.4 64/75] ARM: 8795/1: spectre-v1.1: use put_user() for __put_user()
+Date:   Fri,  8 Nov 2019 19:50:21 +0100
+Message-Id: <20191108174805.004326669@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -64,10 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julien Thierry <julien.thierry@arm.com>
 
-Commit 18ea66bd6e7a95bdc598223d72757190916af28b upstream.
+Commit e3aa6243434fd9a82e84bb79ab1abd14f2d9a5a7 upstream.
 
-With Spectre-v1.1 mitigations, __put_user_error is pointless. In an attempt
-to remove it, replace its references in frame setups with __put_user.
+When Spectre mitigation is required, __put_user() needs to include
+check_uaccess. This is already the case for put_user(), so just make
+__put_user() an alias of put_user().
 
 Signed-off-by: Julien Thierry <julien.thierry@arm.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
@@ -77,39 +78,46 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/kernel/signal.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/include/asm/uaccess.h |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/arch/arm/kernel/signal.c
-+++ b/arch/arm/kernel/signal.c
-@@ -302,7 +302,7 @@ setup_sigframe(struct sigframe __user *s
- 	if (err == 0)
- 		err |= preserve_vfp_context(&aux->vfp);
- #endif
--	__put_user_error(0, &aux->end_magic, err);
-+	err |= __put_user(0, &aux->end_magic);
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -408,6 +408,14 @@ do {									\
+ 	__pu_err;							\
+ })
  
- 	return err;
- }
-@@ -434,7 +434,7 @@ setup_frame(struct ksignal *ksig, sigset
- 	/*
- 	 * Set uc.uc_flags to a value which sc.trap_no would never have.
- 	 */
--	__put_user_error(0x5ac3c35a, &frame->uc.uc_flags, err);
-+	err = __put_user(0x5ac3c35a, &frame->uc.uc_flags);
++#ifdef CONFIG_CPU_SPECTRE
++/*
++ * When mitigating Spectre variant 1.1, all accessors need to include
++ * verification of the address space.
++ */
++#define __put_user(x, ptr) put_user(x, ptr)
++
++#else
+ #define __put_user(x, ptr)						\
+ ({									\
+ 	long __pu_err = 0;						\
+@@ -415,12 +423,6 @@ do {									\
+ 	__pu_err;							\
+ })
  
- 	err |= setup_sigframe(frame, regs, set);
- 	if (err == 0)
-@@ -454,8 +454,8 @@ setup_rt_frame(struct ksignal *ksig, sig
+-#define __put_user_error(x, ptr, err)					\
+-({									\
+-	__put_user_switch((x), (ptr), (err), __put_user_nocheck);	\
+-	(void) 0;							\
+-})
+-
+ #define __put_user_nocheck(x, __pu_ptr, __err, __size)			\
+ 	do {								\
+ 		unsigned long __pu_addr = (unsigned long)__pu_ptr;	\
+@@ -500,6 +502,7 @@ do {									\
+ 	: "r" (x), "i" (-EFAULT)				\
+ 	: "cc")
  
- 	err |= copy_siginfo_to_user(&frame->info, &ksig->info);
++#endif /* !CONFIG_CPU_SPECTRE */
  
--	__put_user_error(0, &frame->sig.uc.uc_flags, err);
--	__put_user_error(NULL, &frame->sig.uc.uc_link, err);
-+	err |= __put_user(0, &frame->sig.uc.uc_flags);
-+	err |= __put_user(NULL, &frame->sig.uc.uc_link);
- 
- 	err |= __save_altstack(&frame->sig.uc.uc_stack, regs->ARM_sp);
- 	err |= setup_sigframe(&frame->sig, regs, set);
+ #ifdef CONFIG_MMU
+ extern unsigned long __must_check
 
 
