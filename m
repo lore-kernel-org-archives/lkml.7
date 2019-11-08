@@ -2,87 +2,123 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7088DFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3689E214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573185211;
-	bh=slR4qIidQmC7We2wOTVqSVRCCiFEmzZiKJg8hXTu6+c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aaKxzrzYAg+sSgAkfsEoBx8DIF6/u9jGB2EmIBFQRYvTHciV3cJsI/ybJue6kAVsd
-	 gK2VhdTeh/fPW5k7pMJ7EOW8k4d6bS47azpQTAfMeA8fV5udu0/gxqSWB6zxC06s9Z
-	 z9YORCx/wrWFogB4mjLZkGewusPRSOt1iCk+0Ar0=
+	by mail.kernel.org (Postfix) with ESMTP id E6727214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfKHDxa (ORCPT
+        id S1729913AbfKHDyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:53:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfKHDxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:53:30 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C19B20869;
-        Fri,  8 Nov 2019 03:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573185209;
-        bh=slR4qIidQmC7We2wOTVqSVRCCiFEmzZiKJg8hXTu6+c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fz48zrPsaivstCfk3Bajpbs66Pr9WE+lxf22D/Z2W9p3Jnc+V88OWfLd95xOP0jDA
-         DXDwYq0jgcWD48TWMeKktHUK9iqUbBCXOB/M/drzvzAjgt/rIqD7+vepaMiPm4HgoF
-         BRUbRHYJATIvI86WEfgk3bT30Sft/JCKAFycLvIs=
-Date:   Thu, 7 Nov 2019 19:53:28 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <matthew.wilcox@oracle.com>, <kernel-team@fb.com>,
-        <william.kucharski@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH v5 1/2] mm,thp: recheck each page before collapsing file
- THP
-Message-Id: <20191107195328.600f302bbde69cf9c1089500@linux-foundation.org>
-In-Reply-To: <20191106060930.2571389-2-songliubraving@fb.com>
-References: <20191106060930.2571389-1-songliubraving@fb.com>
-        <20191106060930.2571389-2-songliubraving@fb.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Nov 2019 22:54:09 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:35940 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfKHDyJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 22:54:09 -0500
+Received: by mail-il1-f199.google.com with SMTP id y7so5234958ilb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 19:54:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=W83r1/lZ6zESLRM4Fopc0wEMOk3/4fzAB2DwiCCyggc=;
+        b=AoZKc665IPxxc/c4sakCGMvoz2yUUiecXtztJkN7/wjDHOhZGTw35AV1W9m1gLiQK6
+         uz65kT5FNzDlGljvnReznHx6bKJ+G3rqgq3RzUgbhoHbv2hFAMuJvVfXWDOU44Mkjr3Q
+         ywgvtTUB05VFgUHMAciPB9ZB9Naiv+5he+QGto1W9HcsFPIVhsa+hsduJ03U1tN/hiTn
+         z2574+Bas7lNdfw2++ZvVoA5PKmu8JxcEse71Zo9ebTPuLjcJptwJHpkUEcKGIQLPUcF
+         OXI7f4iFx+t/QrAKlRFVljR99fplYGfl/IiRKsxUhPMJZ7i/8RTCQyfV4rkA28mlPw14
+         gmkg==
+X-Gm-Message-State: APjAAAV/yFNLSlie0EIgUCsN/WM9BlHoOn9LwogjjzbCJX9qz2swlW5c
+        764wtB3n+BTT5NsaJkAtAKAwbhXK2irFJQrEysk1KTBif/61
+X-Google-Smtp-Source: APXvYqxTWgZVvHNue8/pTOr8dUdvs47O4ecJE22Cfy+F/KCKlFB7lkiFhD9g2lAAZfYTRWVa/tQX4NTO34z2yWCvodIxKyXlUpaz
+MIME-Version: 1.0
+X-Received: by 2002:a02:7829:: with SMTP id p41mr8608601jac.73.1573185248455;
+ Thu, 07 Nov 2019 19:54:08 -0800 (PST)
+Date:   Thu, 07 Nov 2019 19:54:08 -0800
+In-Reply-To: <000000000000ec7273058b877e1f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e676b00596cdbbde@google.com>
+Subject: Re: BUG: MAX_LOCKDEP_ENTRIES too low!
+From:   syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dev@openvswitch.org, jack@suse.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 22:09:29 -0800 Song Liu <songliubraving@fb.com> wrote:
+syzbot has found a reproducer for the following crash on:
 
-> In collapse_file(), for !is_shmem case, current check cannot guarantee
-> the locked page is up-to-date.  Specifically, xas_unlock_irq() should
-> not be called before lock_page() and get_page(); and it is necessary to
-> recheck PageUptodate() after locking the page.
-> 
-> With this bug and CONFIG_READ_ONLY_THP_FOR_FS=y, madvise(HUGE)'ed .text
-> may contain corrupted data.  This is because khugepaged mistakenly
-> collapses some not up-to-date sub pages into a huge page, and assumes
-> the huge page is up-to-date.  This will NOT corrupt data in the disk,
-> because the page is read-only and never written back.  Fix this by
-> properly checking PageUptodate() after locking the page.  This check
-> replaces "VM_BUG_ON_PAGE(!PageUptodate(page), page);".
-> 
-> Also, move PageDirty() check after locking the page.  Current
-> khugepaged should not try to collapse dirty file THP, because it is
-> limited to read-only .text. The only case we hit a dirty page here is
-> when the page hasn't been written since write. Bail out and retry when
-> this happens.
+HEAD commit:    99a8efbb NFC: st21nfca: fix double free
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=15ed70d8e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cbbed3e8d4eb64bf
+dashboard link: https://syzkaller.appspot.com/bug?extid=cd0ec5211ac07c18c049
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13cf5594e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1036c762e00000
 
-Incorrect data is pretty serious.  Should we backport this into -stable
-kernels?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com
 
-(I suspect I already asked this in response to earier versions, sorry ;))
+device 5580n entered promiscuous mode
+BUG: MAX_LOCKDEP_ENTRIES too low!
+turning off the locking correctness validator.
+CPU: 0 PID: 14197 Comm: syz-executor527 Not tainted 5.4.0-rc5+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  alloc_list_entry.cold+0x11/0x18 kernel/locking/lockdep.c:1292
+  add_lock_to_list kernel/locking/lockdep.c:1313 [inline]
+  check_prev_add kernel/locking/lockdep.c:2528 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+  validate_chain kernel/locking/lockdep.c:2971 [inline]
+  __lock_acquire+0x2a15/0x4a00 kernel/locking/lockdep.c:3955
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  netif_addr_lock_bh include/linux/netdevice.h:4055 [inline]
+  dev_set_rx_mode+0x20/0x40 net/core/dev.c:7808
+  dev_set_promiscuity+0xbf/0xe0 net/core/dev.c:7716
+  internal_dev_create+0x387/0x550 net/openvswitch/vport-internal_dev.c:196
+  ovs_vport_add+0x150/0x500 net/openvswitch/vport.c:199
+  new_vport+0x1b/0x1d0 net/openvswitch/datapath.c:194
+  ovs_dp_cmd_new+0x5e5/0xe30 net/openvswitch/datapath.c:1644
+  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
+  genl_rcv_msg+0xca/0x170 net/netlink/genetlink.c:654
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg net/socket.c:2363 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441779
+Code: e8 9c ad 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 1b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffea7e5fcc8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441779
+RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
+RBP: 0000000000058f66 R08: 00007ffe00000025 R09: 00007ffe00000025
+R10: 0000000000000004 R11: 0000000000000246 R12: 00000000006cdbc0
+R13: 0000000000000013 R14: 0000000000000000 R15: 0000000000000000
+
