@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C16C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C89C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F241721D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07AB222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239963;
-	bh=0d7wWg+diZb9HX31JDSpnY3FkUIPa/l/rQ1DGrZ1Jiw=;
+	s=default; t=1573239965;
+	bh=ZL7L3CJKFf0IOsXrpyWRVtrO6wviIOigpKJ61ZGvbtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTkEZ6dK+N/Gr3NfI+Rp3wqSQ00vrNLFbGUUnieB1nmML8dEeWLLi4vjdBvLnjN8Q
-	 iO6OOKj80zalh8s3xTukMyXUhq5yohgfSgFuaM8Qz09++zwjbxwLLotLAmOOK3wfjx
-	 ZY52jk2mqnU5ejToPrqdfRuapqPDOb5ZhEqeMx3A=
+	b=kRywg3HVKuqLxJq2V8R3G0GdDCnbGYNUyeuVwteGKQZ0Kxc/AZGvTffPhxj8C6H4m
+	 76fv89NIEoruV6OZlF3opCnWHx0aaUJQmHsmu9H23pxoJtjzg1G3pphXbo57FhS58V
+	 H3b7mi0K+2ySIE01tz3RXHtGlHIX+zgAIzgXm/3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391192AbfKHTGB (ORCPT
+        id S2391196AbfKHTGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:06:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:06:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390605AbfKHTF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:56 -0500
+        id S2389306AbfKHTGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:06:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1AB02087E;
-        Fri,  8 Nov 2019 19:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41D132087E;
+        Fri,  8 Nov 2019 19:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239956;
-        bh=0d7wWg+diZb9HX31JDSpnY3FkUIPa/l/rQ1DGrZ1Jiw=;
+        s=default; t=1573239961;
+        bh=ZL7L3CJKFf0IOsXrpyWRVtrO6wviIOigpKJ61ZGvbtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uPVSJSOoXgrQYneV3f+Gc5/iz08x/E82zfTsCPWvH2XNiwyQawuiO/tK1aqQ4kVwz
-         9QWzuSHQez1nmKo1uYIUf1Vm5yALCCv26uH/Th8ypP1cHS7gm4RnnkKyizrS3O4vob
-         7Mq4ealcuflvg1pQ3DgoU0VqSc/tmtx94k1FOvh4=
+        b=SneTrQXvQqMDlOOLhpYvhqRLKiAz9jhZK6d3aHAO8dIunr/oHGJiefGGFXkcRKAwZ
+         ruTcNpZRne4cL7kEKXCLohHzCE1Xgy70Yt5mlKfrUuwCCvaSd8xT8nT8LbPS3wqoW2
+         ri6buzSvbmRgGudKPOPMHb28/XwzLNwZbA9soOFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Vivek Unune <npcomplete13@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 040/140] ARM: 8914/1: NOMMU: Fix exc_ret for XIP
-Date:   Fri,  8 Nov 2019 19:49:28 +0100
-Message-Id: <20191108174907.991877554@linuxfoundation.org>
+Subject: [PATCH 5.3 042/140] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
+Date:   Fri,  8 Nov 2019 19:49:30 +0100
+Message-Id: <20191108174908.116909413@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,82 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Vivek Unune <npcomplete13@gmail.com>
 
-[ Upstream commit 4c0742f65b4ee466546fd24b71b56516cacd4613 ]
+[ Upstream commit 389206e806d892d36de0df6e7b07721432957801 ]
 
-It was reported that 72cd4064fcca "NOMMU: Toggle only bits in
-EXC_RETURN we are really care of" breaks NOMMU+XIP combination.
-It happens because saved EXC_RETURN gets overwritten when data
-section is relocated.
+Fix usb-c on X99 TV Box. Tested with armbian w/ kernel 5.3
 
-The fix is to propagate EXC_RETURN via register and let relocation
-code to commit that value into memory.
-
-Fixes: 72cd4064fcca ("ARM: 8830/1: NOMMU: Toggle only bits in EXC_RETURN we are really care of")
-Reported-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Tested-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+Link: https://lore.kernel.org/r/20190929032230.24628-1-npcomplete13@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/head-common.S | 5 +++--
- arch/arm/kernel/head-nommu.S  | 2 ++
- arch/arm/mm/proc-v7m.S        | 5 ++---
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/head-common.S b/arch/arm/kernel/head-common.S
-index a7810be07da1c..4a3982812a401 100644
---- a/arch/arm/kernel/head-common.S
-+++ b/arch/arm/kernel/head-common.S
-@@ -68,7 +68,7 @@ ENDPROC(__vet_atags)
-  * The following fragment of code is executed with the MMU on in MMU mode,
-  * and uses absolute addresses; this is not position independent.
-  *
-- *  r0  = cp#15 control register
-+ *  r0  = cp#15 control register (exc_ret for M-class)
-  *  r1  = machine ID
-  *  r2  = atags/dtb pointer
-  *  r9  = processor ID
-@@ -137,7 +137,8 @@ __mmap_switched_data:
- #ifdef CONFIG_CPU_CP15
- 	.long	cr_alignment			@ r3
- #else
--	.long	0				@ r3
-+M_CLASS(.long	exc_ret)			@ r3
-+AR_CLASS(.long	0)				@ r3
- #endif
- 	.size	__mmap_switched_data, . - __mmap_switched_data
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+index 0d1f5f9a0de95..c133e8d64b2a3 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+@@ -644,7 +644,7 @@
+ 	status = "okay";
  
-diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
-index afa350f44dea3..0fc814bbc34b1 100644
---- a/arch/arm/kernel/head-nommu.S
-+++ b/arch/arm/kernel/head-nommu.S
-@@ -201,6 +201,8 @@ M_CLASS(streq	r3, [r12, #PMSAv8_MAIR1])
- 	bic	r0, r0, #V7M_SCB_CCR_IC
- #endif
- 	str	r0, [r12, V7M_SCB_CCR]
-+	/* Pass exc_ret to __mmap_switched */
-+	mov	r0, r10
- #endif /* CONFIG_CPU_CP15 elif CONFIG_CPU_V7M */
- 	ret	lr
- ENDPROC(__after_proc_init)
-diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
-index 1448f144e7fb9..efebf4120a0c4 100644
---- a/arch/arm/mm/proc-v7m.S
-+++ b/arch/arm/mm/proc-v7m.S
-@@ -136,9 +136,8 @@ __v7m_setup_cont:
- 	cpsie	i
- 	svc	#0
- 1:	cpsid	i
--	ldr	r0, =exc_ret
--	orr	lr, lr, #EXC_RET_THREADMODE_PROCESSSTACK
--	str	lr, [r0]
-+	/* Calculate exc_ret */
-+	orr	r10, lr, #EXC_RET_THREADMODE_PROCESSSTACK
- 	ldmia	sp, {r0-r3, r12}
- 	str	r5, [r12, #11 * 4]	@ restore the original SVC vector entry
- 	mov	lr, r6			@ restore LR
+ 	u2phy0_host: host-port {
+-		phy-supply = <&vcc5v0_host>;
++		phy-supply = <&vcc5v0_typec>;
+ 		status = "okay";
+ 	};
+ 
+@@ -712,7 +712,7 @@
+ 
+ &usbdrd_dwc3_0 {
+ 	status = "okay";
+-	dr_mode = "otg";
++	dr_mode = "host";
+ };
+ 
+ &usbdrd3_1 {
 -- 
 2.20.1
 
