@@ -2,129 +2,68 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84596C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FE3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565772178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGQ+a/83"
+	by mail.kernel.org (Postfix) with ESMTP id 4EB9F214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573187659;
+	bh=4B2SnwZXzTaWLQOUtTDx9eWlfS8vkBMKoHWOE/PahJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iBH8yYqLtQOYXK6W3DPmfn4n+++BbVS2xvcO6EMh+YizTXgsg/KiBky7YvGY5gM92
+	 zJJx1Qln1/I5c3dVrJOlKvXfsMz24BgYccUlam+mA9GklJVn3iZndJ0SwqVEJQ5OWO
+	 DHsLQMjXtrMTBy4cQkBKbJPBfCNbWSzWBrhnfPWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfKHEaS (ORCPT
+        id S1729271AbfKHEeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 23:30:18 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43531 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfKHEaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 23:30:17 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a18so3172225plm.10;
-        Thu, 07 Nov 2019 20:30:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=GEvPrgPPegoWDjxGYmMInikn90DDnMAOw8xBaDl5kZA=;
-        b=pGQ+a/83A9/0Nc2QLG/lrr1EYbt/bjvX3SE4LpTBgZGf0KilWjqO6VeOG6Jwcb1D23
-         fj+jvlUeTjjSw255ZQykSDw3AJVbte/f/cE1oLe8M6sGNMwYNJK9ALY+tjxZheqDchxu
-         uAZMm1A8J8KM9d9f92xRrv1AInfaJSQbOM4UjupIdxR+V8PDnlIAOjTNsXdQqC1CSA9i
-         7NDAIlAd9wtaEkQI0UHHeMwVQpIhz75MXzB4PVA2lnJTqpyORABxoTq5C4z7RED5Jagj
-         p7JTWMZQtDHju/NCEn/n/ZU5jW56e2cp+KSQRvmhV5kQrLQKAhFZLEAm61D2fgLPindm
-         WN9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=GEvPrgPPegoWDjxGYmMInikn90DDnMAOw8xBaDl5kZA=;
-        b=tuipSY0u4RhqvvkwDy0cwvmhRVcjvh+aQSr53DZb/k2NrrGWveLbI0K5lFbGcwN6KP
-         LvspFGfsbhiEFh5psRAFvB7wwQn8u4lgV0a2XghZInRu2pLRHFwCRs4SsqAKWI8Vl8ab
-         0UJpce4o6nszZtY1kV2IPe4V4ckefDb3CfWJ1vT+/A+9Bl46wSO5eoUxQ8LBbewtuguF
-         6RGRaZ+UbS2x6wU7usIxDa8qEJSzAtZ3XamDdxHuHEj/rqN1fMM7sU72KvhflFZr0Mxt
-         r9NgcYhNE3LuPCkdQbIwtcGGgoyOIR5mnYmWKqQ8gtNO0g3BAfWGG8eADkq922w5Ei9Z
-         C8EA==
-X-Gm-Message-State: APjAAAV/F37t/1R3Q+DhXR3oy8DGn8q+uEFNhTyDaQCDLjtPUN9vS2xB
-        mo6J6fqeW3/4B+K5koODcR38SMpmXkA=
-X-Google-Smtp-Source: APXvYqwQ686n7vNnzVLImLtqcTfZ3PQU/gu1LdOpnaXjAFca86+mHnqZ1aY/PwV9eAq6yZBUTvdpJw==
-X-Received: by 2002:a17:90a:bf04:: with SMTP id c4mr10812587pjs.5.1573187416969;
-        Thu, 07 Nov 2019 20:30:16 -0800 (PST)
-Received: from [192.168.1.101] (122-58-182-39-adsl.sparkbb.co.nz. [122.58.182.39])
-        by smtp.gmail.com with ESMTPSA id x70sm4621756pfd.132.2019.11.07.20.30.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Nov 2019 20:30:16 -0800 (PST)
-Subject: Re: [PATCH v3 05/13] m68k: mm: use pgtable-nopXd instead of
- 4level-fixup
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mike Rapoport <rppt@kernel.org>
-References: <1572850587-20314-1-git-send-email-rppt@kernel.org>
- <1572850587-20314-6-git-send-email-rppt@kernel.org>
- <CAMuHMdUG3V7uxzhbetw75vVeobeP0-bQySb3r=0V5XujUF123g@mail.gmail.com>
- <20191104094748.GB23288@rapoport-lnx>
- <CAMuHMdVHsNyLxhaxZcVdLvQ1PUnb=2_+ECPWVD0234V+qu+kOw@mail.gmail.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-um@lists.infradead.org,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <3d908bbf-0469-c53b-dd86-87df98f40ee7@gmail.com>
-Date:   Fri, 8 Nov 2019 17:29:58 +1300
-User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
- Icedove/45.4.0
+        Thu, 7 Nov 2019 23:34:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfKHEeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 23:34:17 -0500
+Received: from localhost (unknown [106.200.194.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5A4B214DB;
+        Fri,  8 Nov 2019 04:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573187656;
+        bh=4B2SnwZXzTaWLQOUtTDx9eWlfS8vkBMKoHWOE/PahJ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wSIakb2/1ko+CiiCkHi1ttysGhal65v5mgjLDtF9qU/ob4jB5gfxU6Z3lagM+vR/v
+         Wwbg0HkIM/OuUwRNPSboaV4e2SJPuu4yUPd3JQMINlHJCvuRn5MKA1XMNhgnLpVaXE
+         robUyeeS3cARWcg6F3Q4oV3sDBuvz8/E7Y+nYGdw=
+Date:   Fri, 8 Nov 2019 10:04:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH] clk: qcom: rpmh: Reuse sdm845 clks for sm8150
+Message-ID: <20191108043412.GX952516@vkoul-mobl>
+References: <20191107214018.184105-1-sboyd@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVHsNyLxhaxZcVdLvQ1PUnb=2_+ECPWVD0234V+qu+kOw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107214018.184105-1-sboyd@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On 07-11-19, 13:40, Stephen Boyd wrote:
+> The SM8150 list of clks is almost the same as the list for SDM845,
+> except there isn't an IPA clk. Just point to the SDM845 clks from the
+> SM8150 list for now so we can reduce the amount of struct bloat in this
+> driver.
 
-Am 04.11.2019 um 22:53 schrieb Geert Uytterhoeven:
->>> This indeed boots fine on ARAnyM, which emulates on 68040.
->>> It would be good to have some boot testing on '020/030, too.
->>
->> To be honest, I have no idea how to to that :)
->
-> Sure. This was more a request for the fellow m68k users.
-> But don't worry too much about it.  If it breaks '020/'030, we can fix
-> that later.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Boots fine on 030, too.
-
-Cheers,
-
-	Michael
-
+-- 
+~Vinod
