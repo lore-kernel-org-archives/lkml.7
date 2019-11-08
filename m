@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA03FFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF35FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3B12178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008CE2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239281;
-	bh=sBgZbgR6C/Lf8SuiqL44jF3+gojir72YaIXEd0Ba2uU=;
+	s=default; t=1573239285;
+	bh=G5koLnlXtw0DchERfXqkmtwlK3URehPO7qNSCWz7f2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I8Jj+Vcw343f88Jickz5Fjc0pjVb6HBx+NjHw7jslOWcyGGbeIHvrqIVZYy0xATlf
-	 jED9gJfz4uSxkcEPh/8JTwOpuXGcf0YPh7r3qXoK61U7ULBg1qJ/69mWyT8pKuVCvH
-	 JjYP9/pEO+xzNtuOZac/WVDkR19TgGfZBMOsviDU=
+	b=DUYT66/yU9rtyKNMg2x3g9gsF/Um9lIrIvmOYQKFsK7mt2p9vfmGuAOC3Vk6LoESv
+	 OxeNd5NSF0zXpizJsJBgpKpIOXsn/RRMeJlZu1/yJrTlw4QNkOqmBjLOoynuCyQwBF
+	 JlRTQ63J8MfZefbD3ZlBetg/tMcz/bfJI30KYHVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733039AbfKHSyk (ORCPT
+        id S1733057AbfKHSyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:54:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51620 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:54:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732994AbfKHSyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:54:36 -0500
+        id S1733026AbfKHSyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:54:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9478214DB;
-        Fri,  8 Nov 2019 18:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1C6D218AE;
+        Fri,  8 Nov 2019 18:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239275;
-        bh=sBgZbgR6C/Lf8SuiqL44jF3+gojir72YaIXEd0Ba2uU=;
+        s=default; t=1573239278;
+        bh=G5koLnlXtw0DchERfXqkmtwlK3URehPO7qNSCWz7f2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ys0COiLmKbdomai9L8XRlt0EFmX6nJyx9JdtV3ojvMRbATdVBT0J4bVSmCHjGaAUk
-         OCpl+TM7Rn0IypNnPj1f6fLHYnuBWO81vU++5o36zy2GkETaqhVV2BSwCsCrRLTbnF
-         r8PIwhQ1poZ+IM0J8u0EBN4kioeRoePsufW8ftRM=
+        b=Upe3FpEO2ObH55RLpJlqzkn1SBFiG1rxjAmQs7iWZkFI4WgNNtgR6CeuEnahLs8D5
+         MVEQ889FDElVLBORv+/g9yMpgfCM958O+m4w9wtuSbH71pZ46YRvXfdIGgpa0qcOue
+         UP8LTPfn1QAX5YzfuhCjrbFGPlkS/whwkDO/yc1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "David A. Long" <dave.long@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 59/75] ARM: 8789/1: signal: copy registers using __copy_to_user()
-Date:   Fri,  8 Nov 2019 19:50:16 +0100
-Message-Id: <20191108174800.827466181@linuxfoundation.org>
+Subject: [PATCH 4.4 60/75] ARM: 8791/1: vfp: use __copy_to_user() when saving VFP state
+Date:   Fri,  8 Nov 2019 19:50:17 +0100
+Message-Id: <20191108174801.038118689@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julien Thierry <julien.thierry@arm.com>
 
-Commit 5ca451cf6ed04443774bbb7ee45332dafa42e99f upstream.
+Commit 3aa2df6ec2ca6bc143a65351cca4266d03a8bc41 upstream.
 
-When saving the ARM integer registers, use __copy_to_user() to
-copy them into user signal frame, rather than __put_user_error().
-This has the benefit of disabling/enabling PAN once for the whole copy
+Use __copy_to_user() rather than __put_user_error() for individual
+members when saving VFP state.
+This has the benefit of disabling/enabling PAN once per copied struct
 intead of once per write.
 
 Signed-off-by: Julien Thierry <julien.thierry@arm.com>
@@ -79,67 +79,96 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/kernel/signal.c |   47 ++++++++++++++++++++++++++---------------------
- 1 file changed, 26 insertions(+), 21 deletions(-)
+ arch/arm/include/asm/thread_info.h |    4 ++--
+ arch/arm/kernel/signal.c           |   13 +++++++------
+ arch/arm/vfp/vfpmodule.c           |   20 ++++++++------------
+ 3 files changed, 17 insertions(+), 20 deletions(-)
 
+--- a/arch/arm/include/asm/thread_info.h
++++ b/arch/arm/include/asm/thread_info.h
+@@ -124,8 +124,8 @@ extern void vfp_flush_hwstate(struct thr
+ struct user_vfp;
+ struct user_vfp_exc;
+ 
+-extern int vfp_preserve_user_clear_hwstate(struct user_vfp __user *,
+-					   struct user_vfp_exc __user *);
++extern int vfp_preserve_user_clear_hwstate(struct user_vfp *,
++					   struct user_vfp_exc *);
+ extern int vfp_restore_user_hwstate(struct user_vfp *,
+ 				    struct user_vfp_exc *);
+ #endif
 --- a/arch/arm/kernel/signal.c
 +++ b/arch/arm/kernel/signal.c
-@@ -256,30 +256,35 @@ static int
- setup_sigframe(struct sigframe __user *sf, struct pt_regs *regs, sigset_t *set)
+@@ -94,17 +94,18 @@ static int restore_iwmmxt_context(struct
+ 
+ static int preserve_vfp_context(struct vfp_sigframe __user *frame)
  {
- 	struct aux_sigframe __user *aux;
-+	struct sigcontext context;
+-	const unsigned long magic = VFP_MAGIC;
+-	const unsigned long size = VFP_STORAGE_SIZE;
++	struct vfp_sigframe kframe;
  	int err = 0;
  
--	__put_user_error(regs->ARM_r0, &sf->uc.uc_mcontext.arm_r0, err);
--	__put_user_error(regs->ARM_r1, &sf->uc.uc_mcontext.arm_r1, err);
--	__put_user_error(regs->ARM_r2, &sf->uc.uc_mcontext.arm_r2, err);
--	__put_user_error(regs->ARM_r3, &sf->uc.uc_mcontext.arm_r3, err);
--	__put_user_error(regs->ARM_r4, &sf->uc.uc_mcontext.arm_r4, err);
--	__put_user_error(regs->ARM_r5, &sf->uc.uc_mcontext.arm_r5, err);
--	__put_user_error(regs->ARM_r6, &sf->uc.uc_mcontext.arm_r6, err);
--	__put_user_error(regs->ARM_r7, &sf->uc.uc_mcontext.arm_r7, err);
--	__put_user_error(regs->ARM_r8, &sf->uc.uc_mcontext.arm_r8, err);
--	__put_user_error(regs->ARM_r9, &sf->uc.uc_mcontext.arm_r9, err);
--	__put_user_error(regs->ARM_r10, &sf->uc.uc_mcontext.arm_r10, err);
--	__put_user_error(regs->ARM_fp, &sf->uc.uc_mcontext.arm_fp, err);
--	__put_user_error(regs->ARM_ip, &sf->uc.uc_mcontext.arm_ip, err);
--	__put_user_error(regs->ARM_sp, &sf->uc.uc_mcontext.arm_sp, err);
--	__put_user_error(regs->ARM_lr, &sf->uc.uc_mcontext.arm_lr, err);
--	__put_user_error(regs->ARM_pc, &sf->uc.uc_mcontext.arm_pc, err);
--	__put_user_error(regs->ARM_cpsr, &sf->uc.uc_mcontext.arm_cpsr, err);
-+	context = (struct sigcontext) {
-+		.arm_r0        = regs->ARM_r0,
-+		.arm_r1        = regs->ARM_r1,
-+		.arm_r2        = regs->ARM_r2,
-+		.arm_r3        = regs->ARM_r3,
-+		.arm_r4        = regs->ARM_r4,
-+		.arm_r5        = regs->ARM_r5,
-+		.arm_r6        = regs->ARM_r6,
-+		.arm_r7        = regs->ARM_r7,
-+		.arm_r8        = regs->ARM_r8,
-+		.arm_r9        = regs->ARM_r9,
-+		.arm_r10       = regs->ARM_r10,
-+		.arm_fp        = regs->ARM_fp,
-+		.arm_ip        = regs->ARM_ip,
-+		.arm_sp        = regs->ARM_sp,
-+		.arm_lr        = regs->ARM_lr,
-+		.arm_pc        = regs->ARM_pc,
-+		.arm_cpsr      = regs->ARM_cpsr,
+-	__put_user_error(magic, &frame->magic, err);
+-	__put_user_error(size, &frame->size, err);
++	memset(&kframe, 0, sizeof(kframe));
++	kframe.magic = VFP_MAGIC;
++	kframe.size = VFP_STORAGE_SIZE;
  
--	__put_user_error(current->thread.trap_no, &sf->uc.uc_mcontext.trap_no, err);
--	__put_user_error(current->thread.error_code, &sf->uc.uc_mcontext.error_code, err);
--	__put_user_error(current->thread.address, &sf->uc.uc_mcontext.fault_address, err);
--	__put_user_error(set->sig[0], &sf->uc.uc_mcontext.oldmask, err);
-+		.trap_no       = current->thread.trap_no,
-+		.error_code    = current->thread.error_code,
-+		.fault_address = current->thread.address,
-+		.oldmask       = set->sig[0],
-+	};
++	err = vfp_preserve_user_clear_hwstate(&kframe.ufp, &kframe.ufp_exc);
+ 	if (err)
+-		return -EFAULT;
++		return err;
+ 
+-	return vfp_preserve_user_clear_hwstate(&frame->ufp, &frame->ufp_exc);
++	return __copy_to_user(frame, &kframe, sizeof(kframe));
+ }
+ 
+ static int restore_vfp_context(struct vfp_sigframe __user *auxp)
+--- a/arch/arm/vfp/vfpmodule.c
++++ b/arch/arm/vfp/vfpmodule.c
+@@ -558,12 +558,11 @@ void vfp_flush_hwstate(struct thread_inf
+  * Save the current VFP state into the provided structures and prepare
+  * for entry into a new function (signal handler).
+  */
+-int vfp_preserve_user_clear_hwstate(struct user_vfp __user *ufp,
+-				    struct user_vfp_exc __user *ufp_exc)
++int vfp_preserve_user_clear_hwstate(struct user_vfp *ufp,
++				    struct user_vfp_exc *ufp_exc)
+ {
+ 	struct thread_info *thread = current_thread_info();
+ 	struct vfp_hard_struct *hwstate = &thread->vfpstate.hard;
+-	int err = 0;
+ 
+ 	/* Ensure that the saved hwstate is up-to-date. */
+ 	vfp_sync_hwstate(thread);
+@@ -572,22 +571,19 @@ int vfp_preserve_user_clear_hwstate(stru
+ 	 * Copy the floating point registers. There can be unused
+ 	 * registers see asm/hwcap.h for details.
+ 	 */
+-	err |= __copy_to_user(&ufp->fpregs, &hwstate->fpregs,
+-			      sizeof(hwstate->fpregs));
++	memcpy(&ufp->fpregs, &hwstate->fpregs, sizeof(hwstate->fpregs));
 +
-+	err |= __copy_to_user(&sf->uc.uc_mcontext, &context, sizeof(context));
+ 	/*
+ 	 * Copy the status and control register.
+ 	 */
+-	__put_user_error(hwstate->fpscr, &ufp->fpscr, err);
++	ufp->fpscr = hwstate->fpscr;
  
- 	err |= __copy_to_user(&sf->uc.uc_sigmask, set, sizeof(*set));
+ 	/*
+ 	 * Copy the exception registers.
+ 	 */
+-	__put_user_error(hwstate->fpexc, &ufp_exc->fpexc, err);
+-	__put_user_error(hwstate->fpinst, &ufp_exc->fpinst, err);
+-	__put_user_error(hwstate->fpinst2, &ufp_exc->fpinst2, err);
+-
+-	if (err)
+-		return -EFAULT;
++	ufp_exc->fpexc = hwstate->fpexc;
++	ufp_exc->fpinst = hwstate->fpinst;
++	ufp_exc->fpinst2 = ufp_exc->fpinst2;
  
+ 	/* Ensure that VFP is disabled. */
+ 	vfp_flush_hwstate(thread);
 
 
