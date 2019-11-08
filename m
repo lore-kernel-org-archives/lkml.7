@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90418C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079442087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED39222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240162;
-	bh=tpuQoNJVpjn0kU/NMgrkC7yxYZd56hAMheU7OpqGfzE=;
+	s=default; t=1573240163;
+	bh=eyHWixG3v3PK5DC0NDn5uLPn+AVkLw4bBj/jynhUuSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+PHAw2aLrhwyIALRU7ruallSazWhb4sbLiIdd8vdXgv+qQFDxYsWjCF/3BJBVgOt
-	 viQLqQXR8z+rjsRU4KX7qMa63Ny6kzhVjRjRXZsBnxfxZEYdMsbJ8qfU6A4ue3LD6A
-	 LLKzWV+uc1m1aoUYu+SXeew69suKK/mrAEoozfmY=
+	b=x2gx1k9KP3BjJGt4ZDKafg5YftBa6sq0x8+80cj1kwpmDis3KA8DOI+C/kFQIKFmA
+	 ZAl+GUXsUUZdYIVUTRgfFsSKcvuKHVXJf1sAY5kaG7QPTcZLBISyJ/VyyIllxadhjg
+	 jwczdIuyf+qAy++ualAmR7Dujc93fCH21pnV8BoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391300AbfKHTJU (ORCPT
+        id S2391310AbfKHTJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387556AbfKHTJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:17 -0500
+        id S2391773AbfKHTJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A38920673;
-        Fri,  8 Nov 2019 19:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50DA12087E;
+        Fri,  8 Nov 2019 19:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240157;
-        bh=tpuQoNJVpjn0kU/NMgrkC7yxYZd56hAMheU7OpqGfzE=;
+        s=default; t=1573240159;
+        bh=eyHWixG3v3PK5DC0NDn5uLPn+AVkLw4bBj/jynhUuSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A296bmKCNz3iok/HFy2UaJPYYx7kiG6K3IUWRcgKiMIdhnzC/FS5u/Ywmp8r64W/A
-         I43bGycwq+6t2EO9C7sS2ebER7+IJ/EZFJSimpLn1W0X8qPpi6qaAPPF44d2Ih/ARg
-         Ow1hIx88cWdqCItl6WbdkMk9TKMNTtCTDJvBb/yw=
+        b=bnAp1qdEKui1eQlONLtgIsLtbpDCdFa7ORs142D8X70iIXRqxv+ReSUnvGjiayBWp
+         Pg1yDdYlF1CRHVVh/L0+HHAWmfnw41iQZ/uTT/6M163hhcb6ABeQdOtNpLbEMPge/u
+         /ZuH+d57GV2Fk0Bi3/OcqhU7uqbJUIbTQV4u5Xsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takeshi Misawa <jeliantsurux@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+3b3296d032353c33184b@syzkaller.appspotmail.com
-Subject: [PATCH 5.3 107/140] keys: Fix memory leak in copy_net_ns
-Date:   Fri,  8 Nov 2019 19:50:35 +0100
-Message-Id: <20191108174911.646944128@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 108/140] net: phylink: Fix phylink_dbg() macro
+Date:   Fri,  8 Nov 2019 19:50:36 +0100
+Message-Id: <20191108174911.698389253@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,59 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takeshi Misawa <jeliantsurux@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 82ecff655e7968151b0047f1b5de03b249e5c1c4 ]
+[ Upstream commit 9d68db5092c5fac99fccfdeab3f04df0b27d1762 ]
 
-If copy_net_ns() failed after net_alloc(), net->key_domain is leaked.
-Fix this, by freeing key_domain in error path.
+The phylink_dbg() macro does not follow dynamic debug or defined(DEBUG)
+and as a result, it spams the kernel log since a PR_DEBUG level is
+currently used. Fix it to be defined appropriately whether
+CONFIG_DYNAMIC_DEBUG or defined(DEBUG) are set.
 
-syzbot report:
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-  comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.400s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000a83ed741>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-    [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-    [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-    [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-    [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-    [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-    [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0 kernel/nsproxy.c:103
-    [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100 kernel/nsproxy.c:202
-    [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-    [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-    [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-    [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-    [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
-    [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-syzbot also reported other leak in copy_net_ns -> setup_net.
-This problem is already fixed by cf47a0b882a4e5f6b34c7949d7b293e9287f1972.
-
-Fixes: 9b242610514f ("keys: Network namespace domain tag")
-Reported-and-tested-by: syzbot+3b3296d032353c33184b@syzkaller.appspotmail.com
-Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
+Fixes: 17091180b152 ("net: phylink: Add phylink_{printk, err, warn, info, dbg} macros")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/net_namespace.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/phylink.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -478,6 +478,7 @@ struct net *copy_net_ns(unsigned long fl
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -87,8 +87,24 @@ struct phylink {
+ 	phylink_printk(KERN_WARNING, pl, fmt, ##__VA_ARGS__)
+ #define phylink_info(pl, fmt, ...) \
+ 	phylink_printk(KERN_INFO, pl, fmt, ##__VA_ARGS__)
++#if defined(CONFIG_DYNAMIC_DEBUG)
+ #define phylink_dbg(pl, fmt, ...) \
++do {									\
++	if ((pl)->config->type == PHYLINK_NETDEV)			\
++		netdev_dbg((pl)->netdev, fmt, ##__VA_ARGS__);		\
++	else if ((pl)->config->type == PHYLINK_DEV)			\
++		dev_dbg((pl)->dev, fmt, ##__VA_ARGS__);			\
++} while (0)
++#elif defined(DEBUG)
++#define phylink_dbg(pl, fmt, ...)					\
+ 	phylink_printk(KERN_DEBUG, pl, fmt, ##__VA_ARGS__)
++#else
++#define phylink_dbg(pl, fmt, ...)					\
++({									\
++	if (0)								\
++		phylink_printk(KERN_DEBUG, pl, fmt, ##__VA_ARGS__);	\
++})
++#endif
  
- 	if (rv < 0) {
- put_userns:
-+		key_remove_domain(net->key_domain);
- 		put_user_ns(user_ns);
- 		net_drop_ns(net);
- dec_ucounts:
+ /**
+  * phylink_set_port_modes() - set the port type modes in the ethtool mask
 
 
