@@ -2,322 +2,109 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8733CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A63EFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FA9214DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACD9214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731228AbfKHJll (ORCPT
+        id S1731284AbfKHJmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:41:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10558 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728513AbfKHJlk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:41:40 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA89c9VA025221
-        for <linux-kernel@vger.kernel.org>; Fri, 8 Nov 2019 04:41:38 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w55pxrmbs-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 04:41:38 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Fri, 8 Nov 2019 09:41:36 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Nov 2019 09:41:33 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA89evcM37945760
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 09:40:57 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8933C11C052;
-        Fri,  8 Nov 2019 09:41:32 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB3C611C054;
-        Fri,  8 Nov 2019 09:41:30 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.52.75])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Nov 2019 09:41:30 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     acme@kernel.org, jolsa@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH v2] perf tool: Provide an option to print perf_event_open args and return value
-Date:   Fri,  8 Nov 2019 15:11:28 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191108093024.27077-1-ravi.bangoria@linux.ibm.com>
-References: <20191108093024.27077-1-ravi.bangoria@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110809-4275-0000-0000-0000037BEB60
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110809-4276-0000-0000-0000388F3F57
-Message-Id: <20191108094128.28769-1-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080094
+        Fri, 8 Nov 2019 04:42:31 -0500
+Received: from mga09.intel.com ([134.134.136.24]:44316 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728513AbfKHJmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:42:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 01:42:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
+   d="scan'208";a="213213601"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Nov 2019 01:42:27 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v5 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Fri,  8 Nov 2019 17:42:21 +0800
+Message-Id: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Perf record with verbose=2 already prints this information along with
-whole lot of other traces which requires lot of scrolling. Introduce
-an option to print only perf_event_open() arguments and return value.
+Hi,
 
-Sample o/p:
-  $ ./perf --debug perf-event-open=1 record -- ls > /dev/null
-  ------------------------------------------------------------
-  perf_event_attr:
-    size                             112
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|PERIOD
-    read_format                      ID
-    disabled                         1
-    inherit                          1
-    exclude_kernel                   1
-    mmap                             1
-    comm                             1
-    freq                             1
-    enable_on_exec                   1
-    task                             1
-    precise_ip                       3
-    sample_id_all                    1
-    exclude_guest                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 4308  cpu 0  group_fd -1  flags 0x8 = 4
-  sys_perf_event_open: pid 4308  cpu 1  group_fd -1  flags 0x8 = 5
-  sys_perf_event_open: pid 4308  cpu 2  group_fd -1  flags 0x8 = 6
-  sys_perf_event_open: pid 4308  cpu 3  group_fd -1  flags 0x8 = 8
-  sys_perf_event_open: pid 4308  cpu 4  group_fd -1  flags 0x8 = 9
-  sys_perf_event_open: pid 4308  cpu 5  group_fd -1  flags 0x8 = 10
-  sys_perf_event_open: pid 4308  cpu 6  group_fd -1  flags 0x8 = 11
-  sys_perf_event_open: pid 4308  cpu 7  group_fd -1  flags 0x8 = 12
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1
-    size                             112
-    config                           0x9
-    watermark                        1
-    sample_id_all                    1
-    bpf_event                        1
-    { wakeup_events, wakeup_watermark } 1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
-  sys_perf_event_open failed, error -13
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.002 MB perf.data (9 samples) ]
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
-v1->v2:
- - man page updates.
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 
- tools/perf/Documentation/perf.txt |  2 ++
- tools/perf/util/debug.c           |  2 ++
- tools/perf/util/debug.h           |  9 ++++++++
- tools/perf/util/evsel.c           | 36 +++++++++++++++----------------
- 4 files changed, 31 insertions(+), 18 deletions(-)
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
 
-diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-index 401f0ed67439..3f37ded13f8c 100644
---- a/tools/perf/Documentation/perf.txt
-+++ b/tools/perf/Documentation/perf.txt
-@@ -24,6 +24,8 @@ OPTIONS
- 	  data-convert     - data convert command debug messages
- 	  stderr           - write debug output (option -v) to stderr
- 	                     in browser mode
-+	  perf-event-open  - Print perf_event_open() arguments and
-+			     return value
- 
- --buildid-dir::
- 	Setup buildid cache directory. It has higher priority than
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index e55114f0336f..adb656745ecc 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -24,6 +24,7 @@
- #include <linux/ctype.h>
- 
- int verbose;
-+int debug_peo_args;
- bool dump_trace = false, quiet = false;
- int debug_ordered_events;
- static int redirect_to_stderr;
-@@ -180,6 +181,7 @@ static struct debug_variable {
- 	{ .name = "ordered-events",	.ptr = &debug_ordered_events},
- 	{ .name = "stderr",		.ptr = &redirect_to_stderr},
- 	{ .name = "data-convert",	.ptr = &debug_data_convert },
-+	{ .name = "perf-event-open",	.ptr = &debug_peo_args },
- 	{ .name = NULL, }
- };
- 
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index d25ae1c4cee9..f1734abd98dd 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -8,6 +8,7 @@
- #include <linux/compiler.h>
- 
- extern int verbose;
-+extern int debug_peo_args;
- extern bool quiet, dump_trace;
- extern int debug_ordered_events;
- extern int debug_data_convert;
-@@ -30,6 +31,14 @@ extern int debug_data_convert;
- #define pr_debug3(fmt, ...) pr_debugN(3, pr_fmt(fmt), ##__VA_ARGS__)
- #define pr_debug4(fmt, ...) pr_debugN(4, pr_fmt(fmt), ##__VA_ARGS__)
- 
-+/* Special macro to print perf_event_open arguments/return value. */
-+#define pr_debug2_peo(fmt, ...) {				\
-+	if (debug_peo_args)						\
-+		pr_debugN(0, pr_fmt(fmt), ##__VA_ARGS__);	\
-+	else							\
-+		pr_debugN(2, pr_fmt(fmt), ##__VA_ARGS__);	\
-+}
-+
- #define pr_time_N(n, var, t, fmt, ...) \
- 	eprintf_time(n, var, t, fmt, ##__VA_ARGS__)
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d4451846af93..1bf60f325608 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1524,7 +1524,7 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
- 
- static void display_attr(struct perf_event_attr *attr)
- {
--	if (verbose >= 2) {
-+	if (verbose >= 2 || debug_peo_args) {
- 		fprintf(stderr, "%.60s\n", graph_dotted_line);
- 		fprintf(stderr, "perf_event_attr:\n");
- 		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
-@@ -1540,7 +1540,7 @@ static int perf_event_open(struct evsel *evsel,
- 	int fd;
- 
- 	while (1) {
--		pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
-+		pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
- 			  pid, cpu, group_fd, flags);
- 
- 		fd = sys_perf_event_open(&evsel->core.attr, pid, cpu, group_fd, flags);
-@@ -1560,9 +1560,9 @@ static int perf_event_open(struct evsel *evsel,
- 			break;
- 		}
- 
--		pr_debug2("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
-+		pr_debug2_peo("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
- 		evsel->core.attr.precise_ip--;
--		pr_debug2("decreasing precise_ip by one (%d)\n", evsel->core.attr.precise_ip);
-+		pr_debug2_peo("decreasing precise_ip by one (%d)\n", evsel->core.attr.precise_ip);
- 		display_attr(&evsel->core.attr);
- 	}
- 
-@@ -1681,12 +1681,12 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 					continue;
- 				}
- 
--				pr_debug2("\nsys_perf_event_open failed, error %d\n",
-+				pr_debug2_peo("\nsys_perf_event_open failed, error %d\n",
- 					  err);
- 				goto try_fallback;
- 			}
- 
--			pr_debug2(" = %d\n", fd);
-+			pr_debug2_peo(" = %d\n", fd);
- 
- 			if (evsel->bpf_fd >= 0) {
- 				int evt_fd = fd;
-@@ -1754,58 +1754,58 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	 */
- 	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
- 		perf_missing_features.aux_output = true;
--		pr_debug2("Kernel has no attr.aux_output support, bailing out\n");
-+		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
- 		goto out_close;
- 	} else if (!perf_missing_features.bpf && evsel->core.attr.bpf_event) {
- 		perf_missing_features.bpf = true;
--		pr_debug2("switching off bpf_event\n");
-+		pr_debug2_peo("switching off bpf_event\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.ksymbol && evsel->core.attr.ksymbol) {
- 		perf_missing_features.ksymbol = true;
--		pr_debug2("switching off ksymbol\n");
-+		pr_debug2_peo("switching off ksymbol\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.write_backward && evsel->core.attr.write_backward) {
- 		perf_missing_features.write_backward = true;
--		pr_debug2("switching off write_backward\n");
-+		pr_debug2_peo("switching off write_backward\n");
- 		goto out_close;
- 	} else if (!perf_missing_features.clockid_wrong && evsel->core.attr.use_clockid) {
- 		perf_missing_features.clockid_wrong = true;
--		pr_debug2("switching off clockid\n");
-+		pr_debug2_peo("switching off clockid\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.clockid && evsel->core.attr.use_clockid) {
- 		perf_missing_features.clockid = true;
--		pr_debug2("switching off use_clockid\n");
-+		pr_debug2_peo("switching off use_clockid\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.cloexec && (flags & PERF_FLAG_FD_CLOEXEC)) {
- 		perf_missing_features.cloexec = true;
--		pr_debug2("switching off cloexec flag\n");
-+		pr_debug2_peo("switching off cloexec flag\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.mmap2 && evsel->core.attr.mmap2) {
- 		perf_missing_features.mmap2 = true;
--		pr_debug2("switching off mmap2\n");
-+		pr_debug2_peo("switching off mmap2\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.exclude_guest &&
- 		   (evsel->core.attr.exclude_guest || evsel->core.attr.exclude_host)) {
- 		perf_missing_features.exclude_guest = true;
--		pr_debug2("switching off exclude_guest, exclude_host\n");
-+		pr_debug2_peo("switching off exclude_guest, exclude_host\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.sample_id_all) {
- 		perf_missing_features.sample_id_all = true;
--		pr_debug2("switching off sample_id_all\n");
-+		pr_debug2_peo("switching off sample_id_all\n");
- 		goto retry_sample_id;
- 	} else if (!perf_missing_features.lbr_flags &&
- 			(evsel->core.attr.branch_sample_type &
- 			 (PERF_SAMPLE_BRANCH_NO_CYCLES |
- 			  PERF_SAMPLE_BRANCH_NO_FLAGS))) {
- 		perf_missing_features.lbr_flags = true;
--		pr_debug2("switching off branch sample type no (cycles/flags)\n");
-+		pr_debug2_peo("switching off branch sample type no (cycles/flags)\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.group_read &&
- 		    evsel->core.attr.inherit &&
- 		   (evsel->core.attr.read_format & PERF_FORMAT_GROUP) &&
- 		   perf_evsel__is_group_leader(evsel)) {
- 		perf_missing_features.group_read = true;
--		pr_debug2("switching off group read\n");
-+		pr_debug2_peo("switching off group read\n");
- 		goto fallback_missing_features;
- 	}
- out_close:
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 104 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 962 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 +++
+ 5 files changed, 1229 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
 -- 
-2.21.0
+2.11.0
 
