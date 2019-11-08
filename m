@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69796FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8B8C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED5B222D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449CE20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215232;
-	bh=1ncexue4n6XrwQ4mQKCgUMZp6wvmhDDwaJNENcy7V0k=;
+	s=default; t=1573215248;
+	bh=OqJpgqnNucTIjc1sie5sJ+o2au5E86wgHQZUsNmr+LU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4mXLXLEiqElHjpRDZghaxEW/4BHuQfooXUReaWHLneuaqIWLXHGXfwF83FIso1Ue
-	 +xMy8s0fv/Nsx+AozofuuCCE+dmV/cdS/PMXDVGfpOBnyq8s18V52SadcKJkX26fMF
-	 V7x8u2afydnon6PAkZgUdnzVO+XKlauccOEbFR1A=
+	b=aI+mSbIXg6GvfeqAZfH3ZE3tdeVAPz9QhnQ/TbI3h+h8jbyMACU6JH76nGtdhebNm
+	 RPZW6G4LLkA+SoIZ5zp4JcsQr3BmFchyrEqUzvESUu2rW/qWfzLX8GWANVuYXt7dtV
+	 tjLgW6LtvfYRARBYiZJleq5xNI/cOnVMYtn2L/WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391862AbfKHMNu (ORCPT
+        id S2390968AbfKHMOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:13:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:14:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732457AbfKHLiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:21 -0500
+        id S1732332AbfKHLiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C15A21D7E;
-        Fri,  8 Nov 2019 11:38:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9E1D20869;
+        Fri,  8 Nov 2019 11:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213100;
-        bh=1ncexue4n6XrwQ4mQKCgUMZp6wvmhDDwaJNENcy7V0k=;
+        s=default; t=1573213094;
+        bh=OqJpgqnNucTIjc1sie5sJ+o2au5E86wgHQZUsNmr+LU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUi2+qTTJG0Lf9ViWxxrpPgR8aIAu39KPtfqG7+aqKc0tsEY6HLdkBlavjBZOnbQG
-         aftkaKaVuWqPA5AWIFTth1IgC8AGNzQ1zbWBPSvd7JC4Tk4dpMLEMXjYwv9sopRXW7
-         xdNrZ3UI6q1H3IO0x4vHeBqCDo3Dbhnn/E4IwzSE=
+        b=xPaEt1KmPrV/x/pY3wv3nG5u7lpcf9qyrWgvM1uRk+nWN/LJk+5IoVOVTedpOFqsH
+         loHMPloEmm4s148EJHToNj4mIgcE0CSVQhqHSRcpX3wRK9FSZgJxWiktdhlCc1EhJ1
+         Upz4SuBxIN6f2idjurMBZjL5XIMLHrlK+Kg0Cua8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>, Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Suman Anna <s-anna@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/205] ath9k: fix tx99 with monitor mode interface
-Date:   Fri,  8 Nov 2019 06:34:51 -0500
-Message-Id: <20191108113752.12502-24-sashal@kernel.org>
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 019/205] remoteproc/davinci: Use %zx for formating size_t
+Date:   Fri,  8 Nov 2019 06:34:46 -0500
+Message-Id: <20191108113752.12502-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,114 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit d9c52fd17cb483bd8a470398afcb79f86c1b77c8 ]
+[ Upstream commit 1e28dbbeced6152b9ea7c417ff8cef3f7dcf0f19 ]
 
-Tx99 is typically configured via a monitor mode interface, which does
-not get added to the driver as a vif. Since the code currently expects
-a configured virtual interface for tx99, enabling tx99 via debugfs fails.
-Since the vif is not needed anyway, remove all checks for it.
+da8xx_rproc_mem size is of type size_t, so use %zx to format the debug
+print of it to avoid a compile warning.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-[kvalo@codeaurora.org: s/CPTCFG/CONFIG/]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Acked-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/ath9k.h |  1 -
- drivers/net/wireless/ath/ath9k/main.c  | 12 +++---------
- drivers/net/wireless/ath/ath9k/tx99.c  |  9 ---------
- drivers/net/wireless/ath/ath9k/xmit.c  |  2 +-
- 4 files changed, 4 insertions(+), 20 deletions(-)
+ drivers/remoteproc/da8xx_remoteproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
-index 0fca44e91a712..50206a6d8a850 100644
---- a/drivers/net/wireless/ath/ath9k/ath9k.h
-+++ b/drivers/net/wireless/ath/ath9k/ath9k.h
-@@ -1074,7 +1074,6 @@ struct ath_softc {
+diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+index e230bef71be1c..d200334577f68 100644
+--- a/drivers/remoteproc/da8xx_remoteproc.c
++++ b/drivers/remoteproc/da8xx_remoteproc.c
+@@ -226,7 +226,7 @@ static int da8xx_rproc_get_internal_memories(struct platform_device *pdev,
+ 				res->start & DA8XX_RPROC_LOCAL_ADDRESS_MASK;
+ 		drproc->mem[i].size = resource_size(res);
  
- 	struct ath_spec_scan_priv spec_priv;
- 
--	struct ieee80211_vif *tx99_vif;
- 	struct sk_buff *tx99_skb;
- 	bool tx99_state;
- 	s16 tx99_power;
-diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
-index 1049773378f27..6ce4b9f1dcb44 100644
---- a/drivers/net/wireless/ath/ath9k/main.c
-+++ b/drivers/net/wireless/ath/ath9k/main.c
-@@ -1251,15 +1251,10 @@ static int ath9k_add_interface(struct ieee80211_hw *hw,
- 	struct ath_vif *avp = (void *)vif->drv_priv;
- 	struct ath_node *an = &avp->mcast_node;
- 
--	mutex_lock(&sc->mutex);
-+	if (IS_ENABLED(CONFIG_ATH9K_TX99))
-+		return -EOPNOTSUPP;
- 
--	if (IS_ENABLED(CONFIG_ATH9K_TX99)) {
--		if (sc->cur_chan->nvifs >= 1) {
--			mutex_unlock(&sc->mutex);
--			return -EOPNOTSUPP;
--		}
--		sc->tx99_vif = vif;
--	}
-+	mutex_lock(&sc->mutex);
- 
- 	ath_dbg(common, CONFIG, "Attach a VIF of type: %d\n", vif->type);
- 	sc->cur_chan->nvifs++;
-@@ -1342,7 +1337,6 @@ static void ath9k_remove_interface(struct ieee80211_hw *hw,
- 	ath9k_p2p_remove_vif(sc, vif);
- 
- 	sc->cur_chan->nvifs--;
--	sc->tx99_vif = NULL;
- 	if (!ath9k_is_chanctx_enabled())
- 		list_del(&avp->list);
- 
-diff --git a/drivers/net/wireless/ath/ath9k/tx99.c b/drivers/net/wireless/ath/ath9k/tx99.c
-index ce50d8f5835e0..9b05ffb68c34a 100644
---- a/drivers/net/wireless/ath/ath9k/tx99.c
-+++ b/drivers/net/wireless/ath/ath9k/tx99.c
-@@ -54,12 +54,6 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
- 	struct ieee80211_hdr *hdr;
- 	struct ieee80211_tx_info *tx_info;
- 	struct sk_buff *skb;
--	struct ath_vif *avp;
--
--	if (!sc->tx99_vif)
--		return NULL;
--
--	avp = (struct ath_vif *)sc->tx99_vif->drv_priv;
- 
- 	skb = alloc_skb(len, GFP_KERNEL);
- 	if (!skb)
-@@ -77,14 +71,11 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
- 	memcpy(hdr->addr2, hw->wiphy->perm_addr, ETH_ALEN);
- 	memcpy(hdr->addr3, hw->wiphy->perm_addr, ETH_ALEN);
- 
--	hdr->seq_ctrl |= cpu_to_le16(avp->seq_no);
--
- 	tx_info = IEEE80211_SKB_CB(skb);
- 	memset(tx_info, 0, sizeof(*tx_info));
- 	rate = &tx_info->control.rates[0];
- 	tx_info->band = sc->cur_chan->chandef.chan->band;
- 	tx_info->flags = IEEE80211_TX_CTL_NO_ACK;
--	tx_info->control.vif = sc->tx99_vif;
- 	rate->count = 1;
- 	if (ah->curchan && IS_CHAN_HT(ah->curchan)) {
- 		rate->flags |= IEEE80211_TX_RC_MCS;
-diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
-index 4b7a7fc2a0fe0..3ae8d0585b6f3 100644
---- a/drivers/net/wireless/ath/ath9k/xmit.c
-+++ b/drivers/net/wireless/ath/ath9k/xmit.c
-@@ -2974,7 +2974,7 @@ int ath9k_tx99_send(struct ath_softc *sc, struct sk_buff *skb,
- 		return -EINVAL;
- 	}
- 
--	ath_set_rates(sc->tx99_vif, NULL, bf);
-+	ath_set_rates(NULL, NULL, bf);
- 
- 	ath9k_hw_set_desc_link(sc->sc_ah, bf->bf_desc, bf->bf_daddr);
- 	ath9k_hw_tx99_start(sc->sc_ah, txctl->txq->axq_qnum);
+-		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
++		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%zx va %p da 0x%x\n",
+ 			mem_names[i], &drproc->mem[i].bus_addr,
+ 			drproc->mem[i].size, drproc->mem[i].cpu_addr,
+ 			drproc->mem[i].dev_addr);
 -- 
 2.20.1
 
