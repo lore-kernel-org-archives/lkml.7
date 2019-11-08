@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C56C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80ADFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACA121D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C5E21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240275;
-	bh=5U2KoR/x+eZQqF9wvUyyyqcjxdn5SHVLosdDW4FvFbY=;
+	s=default; t=1573240277;
+	bh=09BxqHp169q6fr0ZCElDEycFydF5NK0HyBEQ4yC+1cA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jf4FLyzwtBsjJLibUnlQURPTSyD9mWOCUW5Ce6MioBsbwqa0yCtLotXcmNzXM13qp
-	 /WlV/2yjY2rpGwvbTix3DhRRUq/Aj5efdpFUFXKieoPQcHZIAkazJ5rdCVpeky3Y5e
-	 v3XKhSErSffkOjW0lIm7yunBtwjqTwM8tl3QC0Ws=
+	b=1+3TS03l6s2ydXxXlVZkyv6Rgtqr8/a0+xJayECD2qq2fcPldqyKPn5Ll2Y6E1T/X
+	 t/Y7CT4MCYtOJOYCyAbliwLDCP9rd335jiKNxC2Cg3/dQF2PeP1jWoXfsafRTL+v/Y
+	 r0jK7PCdY2JcVYuz5H53entqAoeGP5ssKuqT492k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391728AbfKHTLN (ORCPT
+        id S2389306AbfKHTLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:11:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43570 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:11:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391983AbfKHTLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:11:10 -0500
+        id S2391997AbfKHTLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:11:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAA84206A3;
-        Fri,  8 Nov 2019 19:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2925A206A3;
+        Fri,  8 Nov 2019 19:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240270;
-        bh=5U2KoR/x+eZQqF9wvUyyyqcjxdn5SHVLosdDW4FvFbY=;
+        s=default; t=1573240273;
+        bh=09BxqHp169q6fr0ZCElDEycFydF5NK0HyBEQ4yC+1cA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dy312iFB/fa6jc9z1YmCokJJnjmFZnHwHmoCxwsBgyM16X+Z2SdzUV7mC95U01pm0
-         zUI3w++fBxlegjRIo6HZx/o5GN8hzL68eOj8480oyC2Ac4wrGe6qUSSYRFefEZjTnJ
-         p3E8LonyJc7ckZiENd2NVUg40G9hYv7sYa+dZyro=
+        b=ErSpFERoDImty+s2xpanS1JWjMEQjc3bgd5KWoeU2jSb9MF+T5QNQdH6Lm4S1rN76
+         BYeQABMDhm+Jx7XGrrDGvwk+uCmnf32PG921T9AcFukphBwqPt+xcOI5xb17LK7Sa1
+         uAOIitk31w9upTZokremqawnk9sa+hzjS53sK0K8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+4c063e6dea39e4b79f29@syzkaller.appspotmail.com,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 123/140] net: dsa: fix switch tree list
-Date:   Fri,  8 Nov 2019 19:50:51 +0100
-Message-Id: <20191108174912.478465365@linuxfoundation.org>
+Subject: [PATCH 5.3 114/140] net/smc: fix refcounting for non-blocking connect()
+Date:   Fri,  8 Nov 2019 19:50:42 +0100
+Message-Id: <20191108174912.010960142@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,32 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivien Didelot <vivien.didelot@gmail.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit 50c7d2ba9de20f60a2d527ad6928209ef67e4cdd ]
+[ Upstream commit 301428ea3708188dc4a243e6e6b46c03b46a0fbc ]
 
-If there are multiple switch trees on the device, only the last one
-will be listed, because the arguments of list_add_tail are swapped.
+If a nonblocking socket is immediately closed after connect(),
+the connect worker may not have started. This results in a refcount
+problem, since sock_hold() is called from the connect worker.
+This patch moves the sock_hold in front of the connect worker
+scheduling.
 
-Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
-Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reported-by: syzbot+4c063e6dea39e4b79f29@syzkaller.appspotmail.com
+Fixes: 50717a37db03 ("net/smc: nonblocking connect rework")
+Reviewed-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/dsa2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/smc/af_smc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -46,7 +46,7 @@ static struct dsa_switch_tree *dsa_tree_
- 	dst->index = index;
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -707,8 +707,6 @@ static int __smc_connect(struct smc_sock
+ 	int smc_type;
+ 	int rc = 0;
  
- 	INIT_LIST_HEAD(&dst->list);
--	list_add_tail(&dsa_tree_list, &dst->list);
-+	list_add_tail(&dst->list, &dsa_tree_list);
+-	sock_hold(&smc->sk); /* sock put in passive closing */
+-
+ 	if (smc->use_fallback)
+ 		return smc_connect_fallback(smc, smc->fallback_rsn);
  
- 	kref_init(&dst->refcount);
- 
+@@ -853,6 +851,8 @@ static int smc_connect(struct socket *so
+ 	rc = kernel_connect(smc->clcsock, addr, alen, flags);
+ 	if (rc && rc != -EINPROGRESS)
+ 		goto out;
++
++	sock_hold(&smc->sk); /* sock put in passive closing */
+ 	if (flags & O_NONBLOCK) {
+ 		if (schedule_work(&smc->connect_work))
+ 			smc->connect_nonblock = 1;
 
 
