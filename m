@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A552BFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C8CFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A3321D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9CE21924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215008;
-	bh=l5eDrJZdYwLniJsJUyQLApbmXinBmUoHA75bjz8sMss=;
+	s=default; t=1573215011;
+	bh=2ohfrYlI9AQLpAqTbHVEr+dyZe0wqqGRf+hlTW7OljU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TNgd4YnlM4yN7+05JxKwmcgcO2xkXeNiyux5aYNTkbgiE69fWP2hDQbzi4sVrYlFo
-	 C4+OoKKDp6dzO7bLW1YpznMcsDPHIBsnw2NMBwd/YsC5F9rvUqD6fcafGOG3irf28E
-	 UT74uLGdzjPwZzocUXfEW5jHbXxspm8torlkr8S0=
+	b=OJz6Trfp8WyYdnkGa0GfI20dCnze0pMU2JV/Xwyo7n3Ay1BM67KmPHELpach+pto/
+	 jJijqGtmxeQoU5Ms8HKrHw3vBgNCNI0MCORm8ystBX2cq1tBjuWFnyiQ3IiC1F4sjG
+	 uPkh7AQ9z4QDaSERvTBPTqiLRG7ifWlXqHz/8wJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391951AbfKHMKG (ORCPT
+        id S2391959AbfKHMKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:10:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388018AbfKHLjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:47 -0500
+        id S2387980AbfKHLjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44AFE20869;
-        Fri,  8 Nov 2019 11:39:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39D0E222C6;
+        Fri,  8 Nov 2019 11:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213186;
-        bh=l5eDrJZdYwLniJsJUyQLApbmXinBmUoHA75bjz8sMss=;
+        s=default; t=1573213185;
+        bh=2ohfrYlI9AQLpAqTbHVEr+dyZe0wqqGRf+hlTW7OljU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pzuwNRBuMu4j7/NXv5X5JD7CXC54o9kaNHsVXQppmyB/EZ1K7Xxj8IdERzxjBSf+T
-         vToWfXkRYiSPlkP3oKxY1beoG9nJd7JjafP4eOreSa0KGiy9ah/2Pu+8a94QEpjFa/
-         w2qi3/zyWIM9I/C5FsQcVeYgy/kcR17KvSEfP1Ks=
+        b=yhVQN5A2tAyJuE42z4NRHEcgUpy7akAdlktL9jRSjdWc15qqWVQMGoZ08FLv6zWzh
+         4aW7XxUh/mOx9IVNHuBADJkkFuOdSAdkkHr7i2x49UbLMlMLQ2BAgwoQUi3Nu0zFIt
+         dVAQxDqBS6xhizbJbgn66GwB5i2yxEGUPUZONsNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Quentin Schulz <quentin.schulz@bootlin.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 077/205] net: phy: mscc: read 'vsc8531, edge-slowdown' as an u32
-Date:   Fri,  8 Nov 2019 06:35:44 -0500
-Message-Id: <20191108113752.12502-77-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 076/205] net: phy: mscc: read 'vsc8531,vddmac' as an u32
+Date:   Fri,  8 Nov 2019 06:35:43 -0500
+Message-Id: <20191108113752.12502-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,52 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-[ Upstream commit 36c53cf0f46526b898390659b125155939f67892 ]
+[ Upstream commit a993e0f583c7925adaa7721226ccd7a41e7e63d1 ]
 
-In the DT binding, it is specified nowhere that 'vsc8531,edge-slowdown'
-is an u8, even though it's read as an u8 in the driver.
+In the DT binding, it is specified nowhere that 'vsc8531,vddmac' is an
+u16, even though it's read as an u16 in the driver.
 
 Let's update the driver to take into consideration that the
-'vsc8531,edge-slowdown' property is of the default type u32.
+'vsc8531,vddmac' property is of the default type u32.
 
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mscc.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/phy/mscc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index 53d63a71a03e2..36647b70b9a36 100644
+index 84ca9ff40ae0b..53d63a71a03e2 100644
 --- a/drivers/net/phy/mscc.c
 +++ b/drivers/net/phy/mscc.c
-@@ -112,7 +112,7 @@ struct vsc8531_private {
+@@ -111,7 +111,7 @@ struct vsc8531_private {
+ 
  #ifdef CONFIG_OF_MDIO
  struct vsc8531_edge_rate_table {
- 	u32 vddmac;
--	u8 slowdown[8];
-+	u32 slowdown[8];
+-	u16 vddmac;
++	u32 vddmac;
+ 	u8 slowdown[8];
  };
  
- static const struct vsc8531_edge_rate_table edge_table[] = {
-@@ -375,8 +375,7 @@ out_unlock:
- #ifdef CONFIG_OF_MDIO
+@@ -376,7 +376,7 @@ out_unlock:
  static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
  {
--	u8 sd;
--	u32 vdd;
-+	u32 vdd, sd;
+ 	u8 sd;
+-	u16 vdd;
++	u32 vdd;
  	int rc, i, j;
  	struct device *dev = &phydev->mdio.dev;
  	struct device_node *of_node = dev->of_node;
-@@ -389,7 +388,7 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+@@ -385,7 +385,7 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	if (!of_node)
+ 		return -ENODEV;
+ 
+-	rc = of_property_read_u16(of_node, "vsc8531,vddmac", &vdd);
++	rc = of_property_read_u32(of_node, "vsc8531,vddmac", &vdd);
  	if (rc != 0)
  		vdd = MSCC_VDDMAC_3300;
- 
--	rc = of_property_read_u8(of_node, "vsc8531,edge-slowdown", &sd);
-+	rc = of_property_read_u32(of_node, "vsc8531,edge-slowdown", &sd);
- 	if (rc != 0)
- 		sd = 0;
  
 -- 
 2.20.1
