@@ -2,119 +2,205 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DEDC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E926FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FD92067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9C32085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwXJA5P7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M/VKpoLA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cmd8pXp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbfKHTvW (ORCPT
+        id S2388018AbfKHT4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:51:22 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39586 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732622AbfKHTvW (ORCPT
+        Fri, 8 Nov 2019 14:56:15 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:34392 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387487AbfKHT4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:51:22 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a11so8376728wra.6;
-        Fri, 08 Nov 2019 11:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RIq7Ju31y/qMWpSLAwnBA7KnxR+phPe2Cxa8JB0kXdE=;
-        b=KwXJA5P7vuIzRxu2jjoRh/RDwr9CvefzLKufUIBy+/ArIjgYsZd4SOztW2aLo3ig/S
-         MLYwMZNXH5MoCYkzktFQ1lU0TQSaKfn7uaSOtbnQmqBXCA4uiaBhno4JEjy1Rea4gPlO
-         YQaUGMrLSoDYx1Rh3KMnv1RUaW9JEl8LoKDOUX+vksbtJIy/gDCNH/E3b3MaObNBJvt2
-         dpofsgAQDk4R0HBXoJa0yI80pt8uwLszkShHFIUSYTR7H+jlxTPoNTq/0nXTg4sTvdFA
-         vkXbK2ke8dbFrHE6fMNoMGgK19/jYh/g5+m1jUANdQOvyxB7B8NCzc5ng8xoeGgRNULw
-         QLEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RIq7Ju31y/qMWpSLAwnBA7KnxR+phPe2Cxa8JB0kXdE=;
-        b=S1FuaRSu9lCfmJev3uvf+wFXFLCPusv/8raIZGNpMFm8ESuhAqRr8NS5eVkJg4AjhI
-         RkRsaNUTK7RovMeTe+AqavrYjKPM04pJpNn/8V8DfdvtkriBauulNklzyKLJbgbpMQGe
-         dh4wxatcLjir9MmcKMOr6j7tJ6doWol7jWUU/UkxzkxJPdh6hGGFOVRu34QLEzHBTTrF
-         PbTwwVZ4CY2R/p0cZMqy+2qTRHDQ5UtF5oR41ipFkPgkDRdgDUfPjE1mbsWjkJk5f+bm
-         3B9Q03ekFoN13cJPQe0/DFjHeRAQMBoMf6hUgfle8apiDRpBbRQJzUWHJrUJoT8LpEUo
-         olZg==
-X-Gm-Message-State: APjAAAWW8faOjTYK+F4gTjtwqXo0nC/y61ZewNMaNOAhCRP9EAKkqCYK
-        rHB186RqZqbbsWarrr6K1j0=
-X-Google-Smtp-Source: APXvYqw4vLiqza4NZ7wOlgPRWebELPp1Mzj0ZrBg571uG2KBbqDJPJMpWqicJsa/NF3xW95g3Fde/w==
-X-Received: by 2002:a5d:4a50:: with SMTP id v16mr9651286wrs.85.1573242680471;
-        Fri, 08 Nov 2019 11:51:20 -0800 (PST)
-Received: from arch-vook.lan ([77.125.77.116])
-        by smtp.googlemail.com with ESMTPSA id g5sm8629926wmf.37.2019.11.08.11.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 11:51:19 -0800 (PST)
-From:   Omer Shalev <omerdeshalev@gmail.com>
-Cc:     omerdeshalev@gmail.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media:usb:cpia2: Properly check framebuffer mmap offsets
-Date:   Fri,  8 Nov 2019 21:50:36 +0000
-Message-Id: <20191108215038.59170-1-omerdeshalev@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 8 Nov 2019 14:56:14 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 056DB60909; Fri,  8 Nov 2019 19:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573242862;
+        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M/VKpoLAh4IuqvpTb4l6Ncc/ysc3Z3wdcQpAum90P8DyPhePEqjDGjQvfAj9XIVOV
+         uIfYpr7taPThwDehSXhnkIKyfwHbI7tnY2qzVvJIFzlSBCMHoxU6HLy9y5Um6Wp+D+
+         xtNLXBlttgX/obSW1G3HuPG6EKj7nUQHakOv+3Eg=
+Received: from [10.226.59.103] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rkumbako@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6C7A60909;
+        Fri,  8 Nov 2019 19:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573242857;
+        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cmd8pXp8cny6HvbtoRaaeL+v89GwX7T+3TJVCplfb1vn9gbzYgVYosD99CiYGQKXC
+         eOBVJzkyqodeqqXyvXMe0JZSfwO+jG07B+tXm8tSTIDAH1B9gdO3d2wadMGakTdcfv
+         d7i6VVRqw5o7Zex0DDfCo+lXF2+N8xfp1uOLdk9U=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6C7A60909
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rkumbako@codeaurora.org
+Subject: Re: [PATCH 4/4] thermal: step_wise: Extend thermal step-wise governor
+ to monitor falling temperature.
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org>
+ <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
+From:   Ram Chandrasekar <rkumbako@codeaurora.org>
+Message-ID: <7dbe01d9-6687-f4f8-0739-6b4ff6d4e59b@codeaurora.org>
+Date:   Fri, 8 Nov 2019 12:54:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpai2 driver's mmap implementation wasn't properly check for all
-possible offset values. Given a huge offset value , the calculation
-start_offset + size can wrap around to a low value and pass the check
 
-Signed-off-by: Omer Shalev <omerdeshalev@gmail.com>
----
- drivers/media/usb/cpia2/cpia2_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/cpia2/cpia2_core.c b/drivers/media/usb/cpia2/cpia2_core.c
-index 20c50c2d042e..9d621cfb2d74 100644
---- a/drivers/media/usb/cpia2/cpia2_core.c
-+++ b/drivers/media/usb/cpia2/cpia2_core.c
-@@ -2390,18 +2390,22 @@ int cpia2_remap_buffer(struct camera_data *cam, struct vm_area_struct *vma)
- {
- 	const char *adr = (const char *)vma->vm_start;
- 	unsigned long size = vma->vm_end-vma->vm_start;
--	unsigned long start_offset = vma->vm_pgoff << PAGE_SHIFT;
- 	unsigned long start = (unsigned long) adr;
-+	unsigned long start_offset;
- 	unsigned long page, pos;
- 
- 	DBG("mmap offset:%ld size:%ld\n", start_offset, size);
- 
- 	if (!video_is_registered(&cam->vdev))
- 		return -ENODEV;
-+
-+	if (vma->vm_pgoff > (~0UL >> PAGE_SHIFT))
-+		return -EINVAL;
- 
-+	start_offset = vma->vm_pgoff << PAGE_SHIFT;
- 	if (size > cam->frame_size*cam->num_frames  ||
- 	    (start_offset % cam->frame_size) != 0 ||
--	    (start_offset+size > cam->frame_size*cam->num_frames))
-+	    (start_offset > cam->frame_size*cam->num_frames - size))
- 		return -EINVAL;
- 
- 	pos = ((unsigned long) (cam->frame_buffer)) + start_offset;
--- 
-2.23.0
-
+On 9/18/2019 8:18 PM, Thara Gopinath wrote:
+>>From the step wise governor point of view, the policy decisions
+> that has to taken on a thermal trip point that is defined to be monitored
+> for falling temprature is the mirror opposite of the decisions it has
+> to take on a trip point that is monitored for rising temperature.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>   drivers/thermal/step_wise.c | 59 +++++++++++++++++++++++++++++++++------------
+>   1 file changed, 44 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
+> index 6e051cb..aa8e0a0 100644
+> --- a/drivers/thermal/step_wise.c
+> +++ b/drivers/thermal/step_wise.c
+> @@ -35,7 +35,8 @@
+>    *       deactivate the thermal instance
+>    */
+>   static unsigned long get_target_state(struct thermal_instance *instance,
+> -				enum thermal_trend trend, bool throttle)
+> +				enum thermal_trend trend, bool throttle,
+> +				enum thermal_trip_monitor_type type)
+>   {
+>   	struct thermal_cooling_device *cdev = instance->cdev;
+>   	unsigned long cur_state;
+> @@ -65,11 +66,21 @@ static unsigned long get_target_state(struct thermal_instance *instance,
+>   
+>   	switch (trend) {
+>   	case THERMAL_TREND_RAISING:
+> -		if (throttle) {
+> -			next_target = cur_state < instance->upper ?
+> -				    (cur_state + 1) : instance->upper;
+> -			if (next_target < instance->lower)
+> -				next_target = instance->lower;
+> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
+> +			if (cur_state <= instance->lower) {
+> +				if (!throttle)
+> +					next_target = THERMAL_NO_TARGET;
+> +			} else {
+> +				if (!throttle)
+> +					next_target = cur_state - 1;
+> +			}
+> +		} else {
+> +			if (throttle) {
+> +				next_target = cur_state < instance->upper ?
+> +					    (cur_state + 1) : instance->upper;
+> +				if (next_target < instance->lower)
+> +					next_target = instance->lower;
+> +			}
+>   		}
+>   		break;
+>   	case THERMAL_TREND_RAISE_FULL:
+> @@ -77,14 +88,23 @@ static unsigned long get_target_state(struct thermal_instance *instance,
+>   			next_target = instance->upper;
+>   		break;
+>   	case THERMAL_TREND_DROPPING:
+> -		if (cur_state <= instance->lower) {
+> -			if (!throttle)
+> -				next_target = THERMAL_NO_TARGET;
+> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
+> +			if (throttle) {
+> +				next_target = cur_state < instance->upper ?
+> +					(cur_state + 1) : instance->upper;
+> +				if (next_target < instance->lower)
+> +					next_target = instance->lower;
+> +			}
+>   		} else {
+> -			if (!throttle) {
+> -				next_target = cur_state - 1;
+> -				if (next_target > instance->upper)
+> -					next_target = instance->upper;
+> +			if (cur_state <= instance->lower) {
+> +				if (!throttle)
+> +					next_target = THERMAL_NO_TARGET;
+> +			} else {
+> +				if (!throttle) {
+> +					next_target = cur_state - 1;
+> +					if (next_target > instance->upper)
+> +						next_target = instance->upper;
+> +				}
+>   			}
+>   		}
+>   		break;
+> @@ -117,6 +137,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>   {
+>   	int trip_temp;
+>   	enum thermal_trip_type trip_type;
+> +	enum thermal_trip_monitor_type monitor_type =
+> +					THERMAL_TRIP_MONITOR_RISING;
+>   	enum thermal_trend trend;
+>   	struct thermal_instance *instance;
+>   	bool throttle = false;
+> @@ -130,9 +152,15 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>   		tz->ops->get_trip_type(tz, trip, &trip_type);
+>   	}
+>   
+> +	if (tz->ops->get_trip_monitor_type)
+> +		tz->ops->get_trip_monitor_type(tz, trip, &monitor_type);
+> +
+>   	trend = get_tz_trend(tz, trip);
+>   
+> -	if (tz->temperature >= trip_temp) {
+> +	if (((monitor_type == THERMAL_TRIP_MONITOR_RISING) &&
+> +	      (tz->temperature >= trip_temp)) ||
+> +	      ((monitor_type == THERMAL_TRIP_MONITOR_FALLING) &&
+> +	      (tz->temperature <= trip_temp))) {
+Governors monitoring warming devices need to have support for 
+hysteresis. Assume a case where the device is in idle when the 
+temperature goes below threshold and we trigger a mitigation. Even a 
+minimal workload or even the processing of the threshold by the governor 
+could warm the device and put the temperature above the threshold and we 
+will have to remove any mitigation. To avoid this ping-pong, its best to 
+add a hysteresis support.
+>   		throttle = true;
+>   		trace_thermal_zone_trip(tz, trip, trip_type);
+>   	}
+> @@ -147,7 +175,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>   			continue;
+>   
+>   		old_target = instance->target;
+> -		instance->target = get_target_state(instance, trend, throttle);
+> +		instance->target = get_target_state(instance, trend, throttle,
+> +						    monitor_type);
+>   		dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
+>   					old_target, (int)instance->target);
+>   
+> 
