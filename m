@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183BEFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB627C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA5821D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830FC222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213375;
-	bh=djqdZXlQ3iLn+R5cPJY6lBtwWI+0PBuh+RGdpxjWQW0=;
+	s=default; t=1573213378;
+	bh=KIk9cKBAlYSu52MEBaNKdwuUofEr+nQ0flIVxSGQwz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSqwEMa/IysCP9pPP99Apd48KRsaShkgKEvlQuT8eryzoIv11fJevAurhTZ/wBTf6
-	 8VdOm7l0TI2tDMimYMFGnb9YHZxr+QkwA4TZ3Wdze01/l6lYhpAA63S9oT0mDKqvf9
-	 NS6T+MmzCShbYQXnlfteNgAW41FMnSJ5vblIlcj8=
+	b=JpcLNChjS28wX9fsJN+K+H295sNbahvduQqjbPPqFSFPH0m9uRBj+kSNtBJilwefp
+	 0sJ5aIRhchrH0wVM7IMjS03LUi5lO1lb8x+7xriF5RDFyBrnY45ap2KzUL5m+RBPPQ
+	 uhaTcZ2e9xCdQBzdwok4qEAUxcikFysu3b+H4M/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390226AbfKHLmx (ORCPT
+        id S2390248AbfKHLm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57002 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390178AbfKHLmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:49 -0500
+        id S2390178AbfKHLmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72726222C4;
-        Fri,  8 Nov 2019 11:42:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B8F222C4;
+        Fri,  8 Nov 2019 11:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213369;
-        bh=djqdZXlQ3iLn+R5cPJY6lBtwWI+0PBuh+RGdpxjWQW0=;
+        s=default; t=1573213374;
+        bh=KIk9cKBAlYSu52MEBaNKdwuUofEr+nQ0flIVxSGQwz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZIOEDyC6AJAwK3W543q3K597i97S+BES0FeHyC/ckl9wjEWW+KRKATtfBYQSLxZo
-         rUU1gh7p3bb8KrpQyp/W9mvOH3bOGXNLrYSXYhtjFs7EmaQIhDqlSjWJl7eGiIKpQG
-         JGMjPLlwhw+lFcl5S1lVwvl/I91rLdrserTGUKbg=
+        b=T4Yo9EjGn4W+TxaSEX8fnBqJujMnpP+4tdFAiesPf3JNG8v2zLTypLk196SzQ37p5
+         YM/8I+e32MwFUeUHTd3xJflmUMdw3pLMkI0FRYfG9I7eo9MRrgntrplVKsYhsSilXj
+         Hepm87tKaxBNX528iYWeXriV/QrjMhO+r8iontyE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Banajit Goswami <bgoswami@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 196/205] component: fix loop condition to call unbind() if bind() fails
-Date:   Fri,  8 Nov 2019 06:37:43 -0500
-Message-Id: <20191108113752.12502-196-sashal@kernel.org>
+Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 199/205] scsi: ufshcd: Fix NULL pointer dereference for in ufshcd_init
+Date:   Fri,  8 Nov 2019 06:37:46 -0500
+Message-Id: <20191108113752.12502-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,50 +63,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Banajit Goswami <bgoswami@codeaurora.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-[ Upstream commit bdae566d5d9733b6e32b378668b84eadf28a94d4 ]
+[ Upstream commit eebcc19646489b68399ce7b35d9c38eb9f4ec40f ]
 
-During component_bind_all(), if bind() fails for any
-particular component associated with a master, unbind()
-should be called for all previous components in that
-master's match array, whose bind() might have completed
-successfully. As per the current logic, if bind() fails
-for the component at position 'n' in the master's match
-array, it would start calling unbind() from component in
-'n'th position itself and work backwards, and will always
-skip calling unbind() for component in 0th position in the
-master's match array.
-Fix this by updating the loop condition, and the logic to
-refer to the components in master's match array, so that
-unbind() is called for all components starting from 'n-1'st
-position in the array, until (and including) component in
-0th position.
+Error paths in ufshcd_init() ufshcd_hba_exit() killed clk_scaling workqueue
+when the workqueue is actually created quite late in ufshcd_init().  So, we
+end up getting NULL pointer dereference in such error paths.  Fix this by
+moving clk_scaling initialization and kill codes to two separate methods, and
+call them at required places.
 
-Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 401f1e4490ee ("scsi: ufs: don't suspend clock scaling during clock
+gating")
+
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Subhash Jadavani <subhashj@codeaurora.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/component.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 53 +++++++++++++++++++++++++--------------
+ 1 file changed, 34 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 8946dfee4768e..e8d676fad0c95 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -536,9 +536,9 @@ int component_bind_all(struct device *master_dev, void *data)
- 		}
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 4aaba3e030554..8bce755e0f5bc 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1772,6 +1772,34 @@ out:
+ 	return count;
+ }
  
- 	if (ret != 0) {
--		for (; i--; )
--			if (!master->match->compare[i].duplicate) {
--				c = master->match->compare[i].component;
-+		for (; i > 0; i--)
-+			if (!master->match->compare[i - 1].duplicate) {
-+				c = master->match->compare[i - 1].component;
- 				component_unbind(c, master, data);
- 			}
++static void ufshcd_init_clk_scaling(struct ufs_hba *hba)
++{
++	char wq_name[sizeof("ufs_clkscaling_00")];
++
++	if (!ufshcd_is_clkscaling_supported(hba))
++		return;
++
++	INIT_WORK(&hba->clk_scaling.suspend_work,
++		  ufshcd_clk_scaling_suspend_work);
++	INIT_WORK(&hba->clk_scaling.resume_work,
++		  ufshcd_clk_scaling_resume_work);
++
++	snprintf(wq_name, sizeof(wq_name), "ufs_clkscaling_%d",
++		 hba->host->host_no);
++	hba->clk_scaling.workq = create_singlethread_workqueue(wq_name);
++
++	ufshcd_clkscaling_init_sysfs(hba);
++}
++
++static void ufshcd_exit_clk_scaling(struct ufs_hba *hba)
++{
++	if (!ufshcd_is_clkscaling_supported(hba))
++		return;
++
++	destroy_workqueue(hba->clk_scaling.workq);
++	ufshcd_devfreq_remove(hba);
++}
++
+ static void ufshcd_init_clk_gating(struct ufs_hba *hba)
+ {
+ 	char wq_name[sizeof("ufs_clk_gating_00")];
+@@ -6676,6 +6704,7 @@ out:
+ 	 */
+ 	if (ret && !ufshcd_eh_in_progress(hba) && !hba->pm_op_in_progress) {
+ 		pm_runtime_put_sync(hba->dev);
++		ufshcd_exit_clk_scaling(hba);
+ 		ufshcd_hba_exit(hba);
  	}
+ 
+@@ -7223,12 +7252,9 @@ static void ufshcd_hba_exit(struct ufs_hba *hba)
+ 		ufshcd_variant_hba_exit(hba);
+ 		ufshcd_setup_vreg(hba, false);
+ 		ufshcd_suspend_clkscaling(hba);
+-		if (ufshcd_is_clkscaling_supported(hba)) {
++		if (ufshcd_is_clkscaling_supported(hba))
+ 			if (hba->devfreq)
+ 				ufshcd_suspend_clkscaling(hba);
+-			destroy_workqueue(hba->clk_scaling.workq);
+-			ufshcd_devfreq_remove(hba);
+-		}
+ 		ufshcd_setup_clocks(hba, false);
+ 		ufshcd_setup_hba_vreg(hba, false);
+ 		hba->is_powered = false;
+@@ -7908,6 +7934,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+ 	ufshcd_disable_intr(hba, hba->intr_mask);
+ 	ufshcd_hba_stop(hba, true);
+ 
++	ufshcd_exit_clk_scaling(hba);
+ 	ufshcd_exit_clk_gating(hba);
+ 	if (ufshcd_is_clkscaling_supported(hba))
+ 		device_remove_file(hba->dev, &hba->clk_scaling.enable_attr);
+@@ -8079,6 +8106,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 
+ 	ufshcd_init_clk_gating(hba);
+ 
++	ufshcd_init_clk_scaling(hba);
++
+ 	/*
+ 	 * In order to avoid any spurious interrupt immediately after
+ 	 * registering UFS controller interrupt handler, clear any pending UFS
+@@ -8117,21 +8146,6 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 		goto out_remove_scsi_host;
+ 	}
+ 
+-	if (ufshcd_is_clkscaling_supported(hba)) {
+-		char wq_name[sizeof("ufs_clkscaling_00")];
+-
+-		INIT_WORK(&hba->clk_scaling.suspend_work,
+-			  ufshcd_clk_scaling_suspend_work);
+-		INIT_WORK(&hba->clk_scaling.resume_work,
+-			  ufshcd_clk_scaling_resume_work);
+-
+-		snprintf(wq_name, sizeof(wq_name), "ufs_clkscaling_%d",
+-			 host->host_no);
+-		hba->clk_scaling.workq = create_singlethread_workqueue(wq_name);
+-
+-		ufshcd_clkscaling_init_sysfs(hba);
+-	}
+-
+ 	/*
+ 	 * Set the default power management level for runtime and system PM.
+ 	 * Default power saving mode is to keep UFS link in Hibern8 state
+@@ -8169,6 +8183,7 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ out_remove_scsi_host:
+ 	scsi_remove_host(hba->host);
+ exit_gating:
++	ufshcd_exit_clk_scaling(hba);
+ 	ufshcd_exit_clk_gating(hba);
+ out_disable:
+ 	hba->is_irq_enabled = false;
 -- 
 2.20.1
 
