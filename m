@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C9EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067BFC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EF5214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D009E21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239764;
-	bh=6elECeKqNAc5dMrEOCSnn8CogZkyVM4opF6iM+8jqVU=;
+	s=default; t=1573239767;
+	bh=JfC5ACjjv/sRH4FE+9c9iErEP8aWc7Ccfy+gFOWKKKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5rM/SR0pf0LhCq83R5SrswOY7z20x44QW/IwOshF2mGF2SdFuuMsTsbCcWSaP2KG
-	 3d0OrMEr4cCSgsfESPk7ZUBbVUBOoctbjp2RBVlaDUmQI1CofvLAbR7mgkQnBY98VM
-	 IZ7PIHuvI4jSnydWcL41DcRC4HdN4OEAyQW8dhlM=
+	b=Qk+VfFcNoqaQ7olOzx+2eaVmsOcNbF2xzTYQ38JGfWMi6wNGqPWm+unvxfucLFDn6
+	 4MYflWaoYsnwXWMw/sfopIaXLF1Jy4RMiETFOGtP39+b6OJT5clrDmSpeXYW1JMTlJ
+	 D8o9ZnoPZJ7RfOgmwD3GnA/Y2JBnzSk/818OKhcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390614AbfKHTCm (ORCPT
+        id S1726446AbfKHTCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:02:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60362 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:02:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390588AbfKHTCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:02:40 -0500
+        id S2390636AbfKHTCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:02:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFCBC214DB;
-        Fri,  8 Nov 2019 19:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6BA2087E;
+        Fri,  8 Nov 2019 19:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239758;
-        bh=6elECeKqNAc5dMrEOCSnn8CogZkyVM4opF6iM+8jqVU=;
+        s=default; t=1573239764;
+        bh=JfC5ACjjv/sRH4FE+9c9iErEP8aWc7Ccfy+gFOWKKKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nTxQkmmbo0J427vR3f7fJIXp936ooeE51qEKGJxhLQO2PG1j5x9aLpZR9iU9GKOnf
-         HTss4H9OGHi726mLfylfySZRmGd2xVegA/J81YKmW4uv8TtOCJD88Job2UMkJyJcuW
-         kX2RQra5CDrFjBdB79jgT34h0T/XJBO+cQKiCack=
+        b=nNB704IxUTP4TNaXpqYu5ljw6HK/GxrkZVeW4bouGlq5QTXpuJlrzj+0LRCNUaE6g
+         VlQJfWyt1leBzeZM/Y891eEEAcRxfh1feNyupWh2r2y23GMKPrI2z8DTqRkcZ5q3fc
+         jty4cRdtGhaQ7HtrzjtFB/sNlyXLjzPkd99by12g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Wei Wang <weiwan@google.com>,
-        Craig Gallek <cgallek@google.com>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 51/79] selftests: net: reuseport_dualstack: fix uninitalized parameter
-Date:   Fri,  8 Nov 2019 19:50:31 +0100
-Message-Id: <20191108174815.058257840@linuxfoundation.org>
+Subject: [PATCH 4.19 53/79] vxlan: check tun_info options_len properly
+Date:   Fri,  8 Nov 2019 19:50:33 +0100
+Message-Id: <20191108174818.517131511@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -63,44 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <weiwan@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit d64479a3e3f9924074ca7b50bd72fa5211dca9c1 ]
+[ Upstream commit eadf52cf1852196a1363044dcda22fa5d7f296f7 ]
 
-This test reports EINVAL for getsockopt(SOL_SOCKET, SO_DOMAIN)
-occasionally due to the uninitialized length parameter.
-Initialize it to fix this, and also use int for "test_family" to comply
-with the API standard.
+This patch is to improve the tun_info options_len by dropping
+the skb when TUNNEL_VXLAN_OPT is set but options_len is less
+than vxlan_metadata. This can void a potential out-of-bounds
+access on ip_tun_info.
 
-Fixes: d6a61f80b871 ("soreuseport: test mixed v4/v6 sockets")
-Reported-by: Maciej Żenczykowski <maze@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Wei Wang <weiwan@google.com>
-Cc: Craig Gallek <cgallek@google.com>
+Fixes: ee122c79d422 ("vxlan: Flow based tunneling")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/reuseport_dualstack.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/vxlan.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/tools/testing/selftests/net/reuseport_dualstack.c
-+++ b/tools/testing/selftests/net/reuseport_dualstack.c
-@@ -129,7 +129,7 @@ static void test(int *rcv_fds, int count
- {
- 	struct epoll_event ev;
- 	int epfd, i, test_fd;
--	uint16_t test_family;
-+	int test_family;
- 	socklen_t len;
- 
- 	epfd = epoll_create(1);
-@@ -146,6 +146,7 @@ static void test(int *rcv_fds, int count
- 	send_from_v4(proto);
- 
- 	test_fd = receive_once(epfd, proto);
-+	len = sizeof(test_family);
- 	if (getsockopt(test_fd, SOL_SOCKET, SO_DOMAIN, &test_family, &len))
- 		error(1, errno, "failed to read socket domain");
- 	if (test_family != AF_INET)
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2174,9 +2174,11 @@ static void vxlan_xmit_one(struct sk_buf
+ 		vni = tunnel_id_to_key32(info->key.tun_id);
+ 		ifindex = 0;
+ 		dst_cache = &info->dst_cache;
+-		if (info->options_len &&
+-		    info->key.tun_flags & TUNNEL_VXLAN_OPT)
++		if (info->key.tun_flags & TUNNEL_VXLAN_OPT) {
++			if (info->options_len < sizeof(*md))
++				goto drop;
+ 			md = ip_tunnel_info_opts(info);
++		}
+ 		ttl = info->key.ttl;
+ 		tos = info->key.tos;
+ 		label = info->key.label;
 
 
