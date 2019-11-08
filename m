@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F20AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36745C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF9E206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F8820673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240155;
-	bh=bFVV/iIHpHr3hvUTYGoxW8Qv37Qz2Fo++BWXnU1I4B4=;
+	s=default; t=1573240158;
+	bh=fFmKlk09ajJ78pWQurmV9l9LYHsomVaDHUaR7UfZzGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JClNqQxY0m25lb9zpwTqfBFmwVhp6sv4gH+fbtrEDB/fm6rz7BGk3L1NkwEjCP4oK
-	 GPHx/WMpk1Zp3zq62XpHMNzx/DBppRVZYCNc5qJ62IRflyM5DUj3Mpbi4hJNOlu9PV
-	 x4lEEhry0+bbhychgwJzHmWZzyIlADPhiJ+TNdL4=
+	b=jhDMPSMc1dVCDBw+ia/e0hh/sdqVuzNkia0B4uCCTlDeqyHGg2+e5OHhDjElgE0I/
+	 85OBh3cbWIi2miSnMycGb2npuRpKDpyn2B5nQEC+Uxai577NC8D+h0gfjW1CDqQg1P
+	 az/i709IZbcncc/chM8nAIGA8Idu7YuP9qyYcavs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391759AbfKHTJN (ORCPT
+        id S2403794AbfKHTJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40702 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391265AbfKHTJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:12 -0500
+        id S2391265AbfKHTJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE28620673;
-        Fri,  8 Nov 2019 19:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 758BE20673;
+        Fri,  8 Nov 2019 19:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240151;
-        bh=bFVV/iIHpHr3hvUTYGoxW8Qv37Qz2Fo++BWXnU1I4B4=;
+        s=default; t=1573240154;
+        bh=fFmKlk09ajJ78pWQurmV9l9LYHsomVaDHUaR7UfZzGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uReeluiVI6mJtytiBbi+WcGBr+82VT2hD+23tKVb8IIrXabtnZB2oBZB1yoxhCw7E
-         NhSFomFuvKGLqsKfzJzPPUsoHsJ2697mDkRahVuNUrv4jnYyrkRDRHEXM3W3ZkTu/s
-         e6NEbG+KVludph1aCmPEkluU349CJqvi8ZNdRxDc=
+        b=l8sic+Eq9qsyJG0bxCfNQbRCTlLfUFA0UhvHt4Q3dVTPLyIzyfIh0ODqbbn4xB9Rk
+         p8iGLcH44Amdoq/tVCCs//VSB/kh8KGHOYKkryAy2NIm5EUDl5jktCwXMeoIdtxYwh
+         jlKL/rv+qqrEtU3Qu6gE6hYprNo1iJZPuGjSR1p4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ursula Braun <ubraun@linux.ibm.com>,
         Karsten Graul <kgraul@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 105/140] net/smc: fix closing of fallback SMC sockets
-Date:   Fri,  8 Nov 2019 19:50:33 +0100
-Message-Id: <20191108174911.545592682@linuxfoundation.org>
+Subject: [PATCH 5.3 106/140] net/smc: keep vlan_id for SMC-R in smc_listen_work()
+Date:   Fri,  8 Nov 2019 19:50:34 +0100
+Message-Id: <20191108174911.596119360@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -62,50 +62,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit f536dffc0b79738c3104af999318279dccbaa261 ]
+[ Upstream commit ca5f8d2dd5229ccacdd5cfde1ce4d32b0810e454 ]
 
-For SMC sockets forced to fallback to TCP, the file is propagated
-from the outer SMC to the internal TCP socket. When closing the SMC
-socket, the internal TCP socket file pointer must be restored to the
-original NULL value, otherwise memory leaks may show up (found with
-CONFIG_DEBUG_KMEMLEAK).
+Creating of an SMC-R connection with vlan-id fails, because
+smc_listen_work() determines the vlan_id of the connection,
+saves it in struct smc_init_info ini, but clears the ini area
+again if SMC-D is not applicable.
+This patch just resets the ISM device before investigating
+SMC-R availability.
 
-The internal TCP socket is released in smc_clcsock_release(), which
-calls __sock_release() function in net/socket.c. This calls the
-needed iput(SOCK_INODE(sock)) only, if the file pointer has been reset
-to the original NULL-value.
-
-Fixes: 07603b230895 ("net/smc: propagate file from SMC to TCP socket")
+Fixes: bc36d2fc93eb ("net/smc: consolidate function parameters")
 Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
 Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/smc/af_smc.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ net/smc/af_smc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/net/smc/af_smc.c
 +++ b/net/smc/af_smc.c
-@@ -123,6 +123,12 @@ struct proto smc_proto6 = {
- };
- EXPORT_SYMBOL_GPL(smc_proto6);
- 
-+static void smc_restore_fallback_changes(struct smc_sock *smc)
-+{
-+	smc->clcsock->file->private_data = smc->sk.sk_socket;
-+	smc->clcsock->file = NULL;
-+}
-+
- static int __smc_release(struct smc_sock *smc)
- {
- 	struct sock *sk = &smc->sk;
-@@ -141,6 +147,7 @@ static int __smc_release(struct smc_sock
- 		}
- 		sk->sk_state = SMC_CLOSED;
- 		sk->sk_state_change(sk);
-+		smc_restore_fallback_changes(smc);
- 	}
- 
- 	sk->sk_prot->unhash(sk);
+@@ -1298,8 +1298,8 @@ static void smc_listen_work(struct work_
+ 	/* check if RDMA is available */
+ 	if (!ism_supported) { /* SMC_TYPE_R or SMC_TYPE_B */
+ 		/* prepare RDMA check */
+-		memset(&ini, 0, sizeof(ini));
+ 		ini.is_smcd = false;
++		ini.ism_dev = NULL;
+ 		ini.ib_lcl = &pclc->lcl;
+ 		rc = smc_find_rdma_device(new_smc, &ini);
+ 		if (rc) {
 
 
