@@ -2,162 +2,140 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3D0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE2FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534BC2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573206592;
-	bh=5kpwDh1GiCrKm9Z75Z0Gq4hWVb7DrQiCr7y4dnMzD4I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mVBPfBzs6bUlC3HYbMtk/MeuCO4QQ6lqN4L4vJvX8KpGqsUXu/q20Rj0yZKwVsixi
-	 4wdUCxsEMEqf6bqGgs8HMqACRaWOzqvf1s2OIw9rfmhwW2I8D+P7VVuHyOap9QHSgH
-	 A1CZCn9rO49Hu/lhpA3O7DYhAl5j47C53OaTDsFI=
+	by mail.kernel.org (Postfix) with ESMTP id 5DEF621D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYSP9Ere"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731222AbfKHJtv (ORCPT
+        id S1731236AbfKHJxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:49:51 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33363 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbfKHJtu (ORCPT
+        Fri, 8 Nov 2019 04:53:45 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39594 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730573AbfKHJxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:49:50 -0500
-Received: by mail-ot1-f65.google.com with SMTP id u13so4709097ote.0;
-        Fri, 08 Nov 2019 01:49:50 -0800 (PST)
+        Fri, 8 Nov 2019 04:53:44 -0500
+Received: by mail-wr1-f68.google.com with SMTP id a11so6287662wra.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 01:53:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bD5Fn3LbdHLtW6P7NmPGZyBXGmZSnfzZNFhZsK1WN44=;
+        b=VYSP9ErePUf1fZPl2fba/NoBG6HT0c/TEOOghm1e708BJfxvweThIA6IXmqIh93ohm
+         meQBbRVDnk2HICKb7IgI5de0aghls0v4jihkkFYXPgnz+EdX6Zu2hcM9S98C3b5M16qN
+         WOH4ImgF3469jUkRTue49eAg1/gMIN+jJudUklK6xseemTt0QmbArcaQJmwlqvOHleNP
+         ScUlj3TM8bHPT0KJkdZWVGTnVufHUVM9xMXeqlod0eIDHxWflMaj/C+XqP2L4xu+NsQE
+         t+JPWIw5fWQJ93QkFCByJCDwpI2JIs8uL5vtOBEoMaXaeulNyQ2MaJnJR8REz0cQFtxS
+         shTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PXhk35FnSv3RYE2duWbbP8N7X18rhZ+eNW/MZeoOBgU=;
-        b=r/cW/KHO2PENnIlBy9OkqH0LVaHKDJNPKJkyj+P/t3dfspkPv0sXKqr46j17XPE9KN
-         7CFVLHuA9Wx1jcIpgGlUGx+BjkiL2z9ri+uT7z1yafMRzxcPouxzq/SdFJmGUgyWKm3V
-         dsUe2yo2CUkk28klnUOE2Ga9pnTXJgarEIbXN2tKy2HmuiWH8A5Vl+KaorKhbcLzXDB5
-         D5GnwQyeaohotBjSVIV0mQPx3bjDtiUS6StOQTytpXMNsOX3rN89hn5g55JxRkwjFzPX
-         u3sCWJimskleTBkiaUfSKkYId2kNIWfic+0F3tVIzh9Z53oEIjQlGJHR2EXA8sjLG83g
-         eZJQ==
-X-Gm-Message-State: APjAAAWzPGJc8ZljZ0xXlmgU9R/kz+vN3ZVqyYy4PjBnLl/OvSXEf/vz
-        PRZQ4jX2bTjayIBksNhZIrjLLZnmo+P8eoN+oDY=
-X-Google-Smtp-Source: APXvYqzH33iSMEk7XoGRawDI6yY8/C9YzXVKTLKUoEMi306vUDxotxdEUXKsTJYXJyw7+piUB6jQphkEqDEuWAZ6moI=
-X-Received: by 2002:a05:6830:232a:: with SMTP id q10mr7756723otg.262.1573206589736;
- Fri, 08 Nov 2019 01:49:49 -0800 (PST)
+        bh=bD5Fn3LbdHLtW6P7NmPGZyBXGmZSnfzZNFhZsK1WN44=;
+        b=ml0+CPrt8MVuUDynetTIzSd1TxmZMV6gKRAzD2ii6gHYyh3V0L6ycn0muOqwTO6Kta
+         bzaPbEd6Ibf/YYL8ozxRorbTWmQolJXDJ4CDgnoSobWMmgcNxa0j3f3C0HgM68OOgrPE
+         iXtnGHaKV4Z6SlRM6QT5a5Ef7UcSRzFGWEOHutfqTs751wI0CbbREh7zDHBrT/HW7Fp1
+         Fvkg0zJNXtV6cIbV6ErSC/xXbWFsjfT82x8BdvDWib35GUyph0Q4ldlLzJKkwRZ48lLI
+         9oyRe9gqj7I6Uewz1CvSQrx/iAm4zABqMYswGFHtb/krUjdsNBlMKRHU+DPTehvGv8JY
+         mdAA==
+X-Gm-Message-State: APjAAAWfm/rsWiKZXtaexFDu1zBxQeyM2if6uf6o+YDB2akqr6enmjGe
+        Xlv5C7/+GZWPYllCPRoNiQ0M7b5TS73ean1fZSE=
+X-Google-Smtp-Source: APXvYqzr5LGLxlCBHsxSVIvntfRuYo9GZ5mB+/AEGG7H1x9L6yzHCoU0dK9ixojjv9ZHAb5GssOD5bpzctkISDIVwOU=
+X-Received: by 2002:adf:e2cc:: with SMTP id d12mr7061916wrj.168.1573206822653;
+ Fri, 08 Nov 2019 01:53:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20191108042225.45391-1-dmitry.torokhov@gmail.com> <20191108042225.45391-2-dmitry.torokhov@gmail.com>
-In-Reply-To: <20191108042225.45391-2-dmitry.torokhov@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 8 Nov 2019 10:49:38 +0100
-Message-ID: <CAJZ5v0ghf58k_-dVZZGygQRBiVZuFfKUpFUsNK_0D15jvftRMw@mail.gmail.com>
-Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <20191108082244.GA29418@shao2-debian>
+In-Reply-To: <20191108082244.GA29418@shao2-debian>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Fri, 8 Nov 2019 17:53:31 +0800
+Message-ID: <CACVXFVMGR175kksqB6ux+=xRuVokA2bXOLidoT0=-AmCEgbk2Q@mail.gmail.com>
+Subject: Re: [block] fa53228721: WARNING:at_block/blk-merge.c:#blk_rq_map_sg
+To:     kernel test robot <lkp@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@fb.com>,
+        lkp@lists.01.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 5:22 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Fri, Nov 8, 2019 at 4:23 PM kernel test robot <lkp@intel.com> wrote:
 >
-> We do not need a special flag to know if we are dealing with an array,
-> as we can get that data from ratio between element length and the data
-> size, however we do need a flag to know whether the data is stored
-> directly inside property_entry or separately.
+> FYI, we noticed the following commit (built with gcc-7):
+>
+> commit: fa53228721876515adabc7bc74368490bd97aa3b ("block: avoid blk_bio_segment_split for small I/O operations")
+> https://git.kernel.org/cgit/linux/kernel/git/axboe/linux-block.git for-5.5/block
+>
+> in testcase: xfstests
+> with following parameters:
+>
+>         disk: 4HDD
+>         fs: xfs
+>         test: xfs-group16
+>
+> test-description: xfstests is a regression test suite for xfs and other files ystems.
+> test-url: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+>
+>
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+>
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>
+>
+> +---------------------------------------------+------------+------------+
+> |                                             | d2c9be89f8 | fa53228721 |
+> +---------------------------------------------+------------+------------+
+> | boot_successes                              | 12         | 0          |
+> | boot_failures                               | 0          | 16         |
+> | WARNING:at_block/blk-merge.c:#blk_rq_map_sg | 0          | 16         |
+> | RIP:blk_rq_map_sg                           | 0          | 16         |
+> | kernel_BUG_at_drivers/scsi/scsi_lib.c       | 0          | 16         |
+> | invalid_opcode:#[##]                        | 0          | 16         |
+> | RIP:scsi_init_io                            | 0          | 16         |
+> | Kernel_panic-not_syncing:Fatal_exception    | 0          | 16         |
+> +---------------------------------------------+------------+------------+
+>
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+>
+> [  203.892883] WARNING: CPU: 0 PID: 443 at block/blk-merge.c:559 blk_rq_map_sg+0x649/0x700
 
-So the subject is slightly misleading, because it is not a rename.  I
-would say "replace x with y" instead.
+If the bvec crosses page boundary, and meantime its length is
+<=PAGE_SIZE, this issue may be triggered, given
+some device has PAGE_SIZE segment boundary limit.
 
-[Arguably I can change that when applying the patch, but since we are
-going to wait for the dependencies to go in, it should not be a big
-deal to send an update of this patch alone?]
+The following patch should fix this issue:
 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/base/swnode.c    | 12 +++++-------
->  include/linux/property.h | 13 ++++++++-----
->  2 files changed, 13 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index d8d0dc0ca5acf..18a30fb3cc588 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -108,10 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
->         if (!prop->length)
->                 return NULL;
->
-> -       if (prop->is_array)
-> -               return prop->pointer;
-> -
-> -       return &prop->value;
-> +       return prop->is_inline ? &prop->value : prop->pointer;
->  }
->
->  static const void *property_entry_find(const struct property_entry *props,
-> @@ -205,7 +202,7 @@ static void property_entry_free_data(const struct property_entry *p)
->         const char * const *src_str;
->         size_t i, nval;
->
-> -       if (p->is_array) {
-> +       if (!p->is_inline) {
->                 if (p->type == DEV_PROP_STRING && p->pointer) {
->                         src_str = p->pointer;
->                         nval = p->length / sizeof(const char *);
-> @@ -250,7 +247,7 @@ static int property_entry_copy_data(struct property_entry *dst,
->         const void *pointer = property_get_pointer(src);
->         const void *new;
->
-> -       if (src->is_array) {
-> +       if (!src->is_inline) {
->                 if (!src->length)
->                         return -ENODATA;
->
-> @@ -264,15 +261,16 @@ static int property_entry_copy_data(struct property_entry *dst,
->                                 return -ENOMEM;
->                 }
->
-> -               dst->is_array = true;
->                 dst->pointer = new;
->         } else if (src->type == DEV_PROP_STRING) {
->                 new = kstrdup(src->value.str, GFP_KERNEL);
->                 if (!new && src->value.str)
->                         return -ENOMEM;
->
-> +               dst->is_inline = true;
->                 dst->value.str = new;
->         } else {
-> +               dst->is_inline = true;
->                 dst->value = src->value;
->         }
->
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 48335288c2a96..dad0ad11b55e2 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -227,15 +227,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
->   * struct property_entry - "Built-in" device property representation.
->   * @name: Name of the property.
->   * @length: Length of data making up the value.
-> - * @is_array: True when the property is an array.
-> + * @is_inline: True when the property value is embedded in
-> + *     &struct property_entry instance.
->   * @type: Type of the data in unions.
-> - * @pointer: Pointer to the property (an array of items of the given type).
-> - * @value: Value of the property (when it is a single item of the given type).
-> + * @pointer: Pointer to the property when it is stored separately from
-> + *     the &struct property_entry instance.
-> + * @value: Value of the property when it is stored inline.
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index f22cb6251d06..367d3358de2a 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -319,7 +319,8 @@ void __blk_queue_split(struct request_queue *q,
+struct bio **bio,
+                 */
+                if (!q->limits.chunk_sectors &&
+                    (*bio)->bi_vcnt == 1 &&
+-                   (*bio)->bi_io_vec[0].bv_len <= PAGE_SIZE) {
++                   ((*bio)->bi_io_vec[0].bv_len +
++                    (*bio)->bi_io_vec[0].bv_offset) <= PAGE_SIZE) {
+                        *nr_segs = 1;
+                        break;
+                }
 
-And while at it, can you please try to make the comments shorter so
-they each take one line?
+However, in case of 64K PAGE_SIZE, I guess this way is still not safe enough.
+
+thanks,
+Ming
