@@ -2,92 +2,198 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703E4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B597FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F752222CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573185956;
-	bh=Dj8emM86/tTjC9nxzViGKG+zu6tt69/S9bXVf+wafks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M2+cd9g7W4a+3fbLpKgt+T8RYgWke3nscUpv3eYqjRfaRqjDLLwWnoAwMNLmO1/pv
-	 1DBnTEOmawWmVRsJd77Q6RI+/RZqY6aXH+ZKsRLHlR8GW/1/Bv3Pj4lFx7MoRa3Exv
-	 NcnQA7FJ5qr2yjcSnKBV/7OcO5Rg5qLMkuI7AO9E=
+	by mail.kernel.org (Postfix) with ESMTP id 5A97620679
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:06:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TtzrCjYI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbfKHEFy (ORCPT
+        id S1729747AbfKHEGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 23:05:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfKHEFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 23:05:54 -0500
-Received: from localhost (unknown [106.200.194.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AEA720679;
-        Fri,  8 Nov 2019 04:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573185954;
-        bh=Dj8emM86/tTjC9nxzViGKG+zu6tt69/S9bXVf+wafks=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i5Jtz+oizAUYd8Xbrc2MlJpnEQMHErcQCdfDsbKO4HBsSkO5kfaE0BFoHB+NfzQ7V
-         zkCW0cltflX8DquLsUFU8xJykb68acgfwBMoI5GGbMOxKZkSgrrPzdZqFr0IHcl43b
-         zLDLreAjFYPH3R0YuWaG+2tMh+IjUBUIfqTz76do=
-Date:   Fri, 8 Nov 2019 09:35:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 10/14] soundwire: intel: add prepare support in sdw dai
- driver
-Message-ID: <20191108040550.GU952516@vkoul-mobl>
-References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
- <20191023212823.608-11-pierre-louis.bossart@linux.intel.com>
- <7a49fcce-5b36-81c1-6041-dda263ebb200@intel.com>
- <02ef59ba-66da-3ba9-1fe7-0b7e256e3ac1@linux.intel.com>
+        Thu, 7 Nov 2019 23:06:15 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37825 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfKHEGP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 23:06:15 -0500
+Received: by mail-qk1-f196.google.com with SMTP id e187so4127772qkf.4;
+        Thu, 07 Nov 2019 20:06:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=931ECh17bKARPx5mSW3Xy5DYB6gHmUTSxaJ0cO1t1L8=;
+        b=TtzrCjYIpR9sP/lnm9ytOl7kq1NU0eLidkTFn+1KyLicHBRVcvqxRMzyQI6qA/2Svs
+         l/1uRghL2zghPMJHk46DFyDK2gHm69ANfEM0/S8XXWf7Ir8aiw5P3hlNwBy/5ovFwGFM
+         G/th9Rv2IPhfFnhdE6B21sePuq3GFBDqr0o6iKbIgU/X0iT/clVGi8XpHfyyEe+ObO93
+         0zB39+OhsC+7QXuzy8/r+5oNXw9ylt895fPHhzgRqlipi02l4oLT3AfO7ee43nPthBra
+         bu8yWdiNWok0pM+oCNbxU9b+ihDz9BI7KM3jzorFrE8XbuIUqO7Rgrtm3CpqtvdaJ0Qr
+         RSKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=931ECh17bKARPx5mSW3Xy5DYB6gHmUTSxaJ0cO1t1L8=;
+        b=k3uOqUYohMJ02AbtfuPuPQx25WgLZ9LCsZDipeq98BK808SMKNEYNpVdVkmEik29DI
+         G10paw9CfELrTHLyVtw4SRgiMDCY9lRgdsFCzmklUL+gq1/ES/+sDh6z9+Hvchrj3b1Z
+         n24ma9KC39jYeN4qge/FLCWNvk5YSb55e+wy1YdEizDL2VlrhoBopybVBuH70eFP0X9b
+         EiQ9+qDSdNmcoK3vrnkQITb7NNT0o9KbuPsrnDubbcHF44veSYxUzeo1bOshGvxXR55l
+         HXrzeKEDZxeTkVpXsBzeVJDe0zk/ZhqcASwrDTLjRHwIz3g4bD/zKkUiAjngjPAthfGW
+         l9mA==
+X-Gm-Message-State: APjAAAVRom+v8doobsaTu88vxTQwxCts2KUAJ8/nwYrJRpm+C/TQeZRP
+        zInEhS+R6GQsAGF70LUJCXY=
+X-Google-Smtp-Source: APXvYqyBACBnxxwvohkR7HscGHmaY/uUCuqV0UH8jzprxfuKaoZptvweNPlK7uhOGhy69+1tYAB9ZA==
+X-Received: by 2002:a37:9d4b:: with SMTP id g72mr6779522qke.121.1573185973510;
+        Thu, 07 Nov 2019 20:06:13 -0800 (PST)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id k6sm2219884qkd.38.2019.11.07.20.06.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 20:06:12 -0800 (PST)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        rfontana@redhat.com, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, allison@lohutok.net
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb_dummy_fe: Fix ERROR: POINTER_LOCATION
+Date:   Fri,  8 Nov 2019 00:58:35 -0300
+Message-Id: <20191108035835.7607-1-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02ef59ba-66da-3ba9-1fe7-0b7e256e3ac1@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-11-19, 15:31, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 11/4/19 1:45 PM, Cezary Rojewski wrote:
-> > On 2019-10-23 23:28, Pierre-Louis Bossart wrote:
-> > > From: Rander Wang <rander.wang@linux.intel.com>
-> > > 
-> > > It gets sdw runtime information from dai to prepare stream.
-> > > 
-> > > Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-> > > Signed-off-by: Pierre-Louis Bossart
-> > > <pierre-louis.bossart@linux.intel.com>
-> > 
-> > While the patch looks good, the commit message is questionable. You may
-> > simply state why it is added only just now. Judging from the commit
-> > title, it has been added to make the sdw dai driver interface complete.
-> 
-> The commit message is not great but it's not wrong either...
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-And it doesn't harm to elaborate and explain things rather than have
-reviewer play detective!
+Change foo* bar to foo *bar to avoid ERROR: POINTER_LOCATION in checkpatch.pl
 
+Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+---
+ drivers/media/dvb-frontends/dvb_dummy_fe.c | 24 +++++++++++-----------
+ drivers/media/dvb-frontends/dvb_dummy_fe.h |  6 +++---
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+index 4db679cb70ad..8413038aa30b 100644
+--- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
++++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+@@ -31,25 +31,25 @@ static int dvb_dummy_fe_read_status(struct dvb_frontend *fe,
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_ber(struct dvb_frontend* fe, u32* ber)
++static int dvb_dummy_fe_read_ber(struct dvb_frontend *fe, u32 *ber)
+ {
+ 	*ber = 0;
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
++static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
+ {
+ 	*strength = 0;
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_snr(struct dvb_frontend* fe, u16* snr)
++static int dvb_dummy_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
+ {
+ 	*snr = 0;
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend* fe, u32* ucblocks)
++static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
+ {
+ 	*ucblocks = 0;
+ 	return 0;
+@@ -77,12 +77,12 @@ static int dvb_dummy_fe_set_frontend(struct dvb_frontend *fe)
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
++static int dvb_dummy_fe_sleep(struct dvb_frontend *fe)
+ {
+ 	return 0;
+ }
+ 
+-static int dvb_dummy_fe_init(struct dvb_frontend* fe)
++static int dvb_dummy_fe_init(struct dvb_frontend *fe)
+ {
+ 	return 0;
+ }
+@@ -99,17 +99,17 @@ static int dvb_dummy_fe_set_voltage(struct dvb_frontend *fe,
+ 	return 0;
+ }
+ 
+-static void dvb_dummy_fe_release(struct dvb_frontend* fe)
++static void dvb_dummy_fe_release(struct dvb_frontend *fe)
+ {
+-	struct dvb_dummy_fe_state* state = fe->demodulator_priv;
++	struct dvb_dummy_fe_state *state = fe->demodulator_priv;
+ 	kfree(state);
+ }
+ 
+ static const struct dvb_frontend_ops dvb_dummy_fe_ofdm_ops;
+ 
+-struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
++struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void)
+ {
+-	struct dvb_dummy_fe_state* state = NULL;
++	struct dvb_dummy_fe_state *state = NULL;
+ 
+ 	/* allocate memory for the internal state */
+ 	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+@@ -126,7 +126,7 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qpsk_ops;
+ 
+ struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
+ {
+-	struct dvb_dummy_fe_state* state = NULL;
++	struct dvb_dummy_fe_state *state = NULL;
+ 
+ 	/* allocate memory for the internal state */
+ 	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+@@ -143,7 +143,7 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qam_ops;
+ 
+ struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
+ {
+-	struct dvb_dummy_fe_state* state = NULL;
++	struct dvb_dummy_fe_state *state = NULL;
+ 
+ 	/* allocate memory for the internal state */
+ 	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.h b/drivers/media/dvb-frontends/dvb_dummy_fe.h
+index 526fabd7751f..35efe2ce1a88 100644
+--- a/drivers/media/dvb-frontends/dvb_dummy_fe.h
++++ b/drivers/media/dvb-frontends/dvb_dummy_fe.h
+@@ -12,9 +12,9 @@
+ #include <media/dvb_frontend.h>
+ 
+ #if IS_REACHABLE(CONFIG_DVB_DUMMY_FE)
+-extern struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void);
+-extern struct dvb_frontend* dvb_dummy_fe_qpsk_attach(void);
+-extern struct dvb_frontend* dvb_dummy_fe_qam_attach(void);
++extern struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void);
++extern struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void);
++extern struct dvb_frontend *dvb_dummy_fe_qam_attach(void);
+ #else
+ static inline struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void)
+ {
 -- 
-~Vinod
+2.24.0
+
