@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6871CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CD2FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3326321924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA0121924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214797;
-	bh=rLuchZSaVl6hL2AxWE69LD1xaNk+KTTrNRmLnVGEBPM=;
+	s=default; t=1573214801;
+	bh=YaAnZe6wyX9fxEM1lRGTju1octGXXJSXfSe4283HvmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AW1Y5jrJHdbac/b0gX/j4TPkFihkcVUojp1S0BsHeoxewegTYyvb1ot7YcnjMvOe3
-	 ePN2xi49EYV5SjO9LdJjrfP4OGJ5msMOYDrnomBS9wrkgGxiGVLrEaVhCMtqQCzwZ9
-	 2FXvEAevdtHqgzo0xq2v+XYZ9DjHaY5WWGJTPSC0=
+	b=M/tjXPOzIDaq23bUYKkxNsGQAM5kdReclaJ9mqViBTocyz+Z485YlkK7Sp4pEhwcR
+	 34m2L6XplTscM+vI6+hPvriEOzMfWyEByLvSug5+paSjXajLkITzGb8FzqE/X0CS58
+	 O+Bii7qJFcR1XVPW6YAuafNRyvuXaAIALCx01+pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391841AbfKHMGg (ORCPT
+        id S2389168AbfKHLlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:06:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54338 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732686AbfKHLlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:10 -0500
+        id S2389052AbfKHLk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C720D21D82;
-        Fri,  8 Nov 2019 11:41:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64FAF222C5;
+        Fri,  8 Nov 2019 11:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213269;
-        bh=rLuchZSaVl6hL2AxWE69LD1xaNk+KTTrNRmLnVGEBPM=;
+        s=default; t=1573213255;
+        bh=YaAnZe6wyX9fxEM1lRGTju1octGXXJSXfSe4283HvmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JFj2lXxav6F9ATeQslynt6WTbtmrfkDbjStAQTfUvm0qIAz9UNGpI5SKb9GRK/N0J
-         1Fc0unH/vnySnTzD90paemqOUHKNIEjyi1AmGmZiVnObuAI7fi7dExOoK6BxRuiVZn
-         JCcmLKbZTW3IHI/n+YAT9RczQQAu+crxQVR0vfb4=
+        b=CXPwREbCtbVYppQTaON/TDF3voKoDveYhuIhJwlX+y+vifr52iWyZmS+Xp0gFl+Fo
+         KMwQg+/B4YwYj9YIi73g3iVKIICONfr702vWqul8gb5IwJwSmISd/7n66miYqN2WPk
+         4+mmq41+z1pW+JAqZp32SM3/OLV65Vr7NCInDr44=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 132/205] signal: Properly deliver SIGILL from uprobes
-Date:   Fri,  8 Nov 2019 06:36:39 -0500
-Message-Id: <20191108113752.12502-132-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 120/205] usb: mtu3: disable vbus rise/fall interrupts of ltssm
+Date:   Fri,  8 Nov 2019 06:36:27 -0500
+Message-Id: <20191108113752.12502-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,53 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-[ Upstream commit 55a3235fc71bf34303e34a95eeee235b2d2a35dd ]
+[ Upstream commit 0eae49582b4dee1a0e96007e1dea5122db98371a ]
 
-For userspace to tell the difference between a random signal and an
-exception, the exception must include siginfo information.
+The vbus rise & fall interrupts are used to enable and disable
+U3 function of device automatically, this cause some issues when
+class driver is initialized as deactivated, and will skip over
+software-controlled connect by pullup(), but UDC wants to keep
+disconnect until usb_gadget_activate() is called which calls
+pullup() if needed. So we disable vbus rise & fall interrupts
+and just use pullup() to enable & disable U3 function, and reset
+mtu3 state when disconnect instead when vbus fall.
 
-Using SEND_SIG_FORCED for SIGILL is thus wrong, and it will result
-in userspace seeing si_code == SI_USER (like a random signal) instead
-of si_code == SI_KERNEL or a more specific si_code as all exceptions
-deliver.
-
-Therefore replace force_sig_info(SIGILL, SEND_SIG_FORCE, current)
-with force_sig(SIG_ILL, current) which gets this right and is
-shorter and easier to type.
-
-Fixes: 014940bad8e4 ("uprobes/x86: Send SIGILL if arch_uprobe_post_xol() fails")
-Fixes: 0b5256c7f173 ("uprobes: Send SIGILL if handle_trampoline() fails")
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/uprobes.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/mtu3/mtu3_core.c   |  4 ++--
+ drivers/usb/mtu3/mtu3_gadget.c | 22 ++++++++++++++--------
+ 2 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 578d4ac54484f..c173e4131df88 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1858,7 +1858,7 @@ static void handle_trampoline(struct pt_regs *regs)
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index 48d10a61e271c..8606935201326 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -185,8 +185,8 @@ static void mtu3_intr_enable(struct mtu3 *mtu)
  
-  sigill:
- 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
--	force_sig_info(SIGILL, SEND_SIG_FORCED, current);
-+	force_sig(SIGILL, current);
- 
- }
- 
-@@ -1974,7 +1974,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- 
- 	if (unlikely(err)) {
- 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
--		force_sig_info(SIGILL, SEND_SIG_FORCED, current);
-+		force_sig(SIGILL, current);
+ 	if (mtu->is_u3_ip) {
+ 		/* Enable U3 LTSSM interrupts */
+-		value = HOT_RST_INTR | WARM_RST_INTR | VBUS_RISE_INTR |
+-		    VBUS_FALL_INTR | ENTER_U3_INTR | EXIT_U3_INTR;
++		value = HOT_RST_INTR | WARM_RST_INTR |
++			ENTER_U3_INTR | EXIT_U3_INTR;
+ 		mtu3_writel(mbase, U3D_LTSSM_INTR_ENABLE, value);
  	}
+ 
+diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
+index 5c60a8c5a0b5c..bbcd3332471dc 100644
+--- a/drivers/usb/mtu3/mtu3_gadget.c
++++ b/drivers/usb/mtu3/mtu3_gadget.c
+@@ -585,6 +585,17 @@ static const struct usb_gadget_ops mtu3_gadget_ops = {
+ 	.udc_stop = mtu3_gadget_stop,
+ };
+ 
++static void mtu3_state_reset(struct mtu3 *mtu)
++{
++	mtu->address = 0;
++	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
++	mtu->may_wakeup = 0;
++	mtu->u1_enable = 0;
++	mtu->u2_enable = 0;
++	mtu->delayed_status = false;
++	mtu->test_mode = false;
++}
++
+ static void init_hw_ep(struct mtu3 *mtu, struct mtu3_ep *mep,
+ 		u32 epnum, u32 is_in)
+ {
+@@ -702,6 +713,7 @@ void mtu3_gadget_disconnect(struct mtu3 *mtu)
+ 		spin_lock(&mtu->lock);
+ 	}
+ 
++	mtu3_state_reset(mtu);
+ 	usb_gadget_set_state(&mtu->g, USB_STATE_NOTATTACHED);
  }
  
+@@ -712,12 +724,6 @@ void mtu3_gadget_reset(struct mtu3 *mtu)
+ 	/* report disconnect, if we didn't flush EP state */
+ 	if (mtu->g.speed != USB_SPEED_UNKNOWN)
+ 		mtu3_gadget_disconnect(mtu);
+-
+-	mtu->address = 0;
+-	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
+-	mtu->may_wakeup = 0;
+-	mtu->u1_enable = 0;
+-	mtu->u2_enable = 0;
+-	mtu->delayed_status = false;
+-	mtu->test_mode = false;
++	else
++		mtu3_state_reset(mtu);
+ }
 -- 
 2.20.1
 
