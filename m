@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D67FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444CCC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964792085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C06B20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573241006;
-	bh=wuf/8sbxeqrQDFNdCPZk/wONDsGgggqmt0P9phCsHPw=;
+	s=default; t=1573241010;
+	bh=zwYyAJLSObBEsF9dCOOxn6zbulyaGRBnJ+Jk5+Fl4hY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=od2aoLXKl4vX2EpNyB3d4M98aafg1AhLwVqIZcG9suTt1ZWTZXCmQHewRx4aCecnT
-	 cgjAW6c6hvNUQeMh1TgLen+8hs4Ck/znZGNPP14LvXKLR3CVpnFru9uWfT+Q/5z7QX
-	 +umspDVxkkRt+ww/Ldd6Eu7w9+l42IOA8RCQrtLM=
+	b=MuOJRw8xtNkLKsiCEueYJHCe/s2+AnzWg5xFihjEyN44J/NtTEoTWJPIhe5FhWH8y
+	 hsXuGg7Tu5fETwcWDemlm/q8qUVi1+aWLVk1HORloXj0Ba7+8xgUm5eyL0WOQG4FJb
+	 BWBohaAgTsREBmOnY9K30KELwQkw0RcvR++oNN4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfKHSyc (ORCPT
+        id S1732955AbfKHSy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:54:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51406 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:54:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfKHSyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:54:24 -0500
+        id S1732894AbfKHSy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:54:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C9521D7F;
-        Fri,  8 Nov 2019 18:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C2842178F;
+        Fri,  8 Nov 2019 18:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239263;
-        bh=wuf/8sbxeqrQDFNdCPZk/wONDsGgggqmt0P9phCsHPw=;
+        s=default; t=1573239266;
+        bh=zwYyAJLSObBEsF9dCOOxn6zbulyaGRBnJ+Jk5+Fl4hY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqDSjdToNN75Z3F7RHqMFbpj8vzvJn04Rtk5RFbvtL7OkfKaUjX7znVyMIHI2TRz+
-         jeqSlXFaHV6bZCIL77GdlC3/9ngkU2qJoEw9UXkNtoLvctIMtLhVVAZRUDFzKoJMMi
-         lP7k4f8lFrIr83s9em7RHdCqhgARc6yAebEiZlRI=
+        b=ynGhRzntsXVJ/YSyVQszQi1DLQBYEMNzCpRoTiFnlueXgjKRRACoex+N1wcHICTqq
+         VN9P5Xps5KkAjKVihU4LYGFu88GCMg0dHgc4gLnQmjUbDGaAreXH7FJnF0IZOqF9pC
+         KDDny+s0M0NB2eBA5t9R1TpWadW1kcrxknD7o8vY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
+        "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
+        <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David A. Long" <dave.long@linaro.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 38/75] arm/arm64: smccc-1.1: Make return values unsigned long
-Date:   Fri,  8 Nov 2019 19:49:55 +0100
-Message-Id: <20191108174746.463484664@linuxfoundation.org>
+Subject: [PATCH 4.4 56/75] ARM: use __inttype() in get_user()
+Date:   Fri,  8 Nov 2019 19:50:13 +0100
+Message-Id: <20191108174758.172101214@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -62,73 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 1d8f574708a3fb6f18c85486d0c5217df893c0cf ]
+Commit d09fbb327d670737ab40fd8bbb0765ae06b8b739 upstream.
 
-An unfortunate consequence of having a strong typing for the input
-values to the SMC call is that it also affects the type of the
-return values, limiting r0 to 32 bits and r{1,2,3} to whatever
-was passed as an input.
+Borrow the x86 implementation of __inttype() to use in get_user() to
+select an integer type suitable to temporarily hold the result value.
+This is necessary to avoid propagating the volatile nature of the
+result argument, which can cause the following warning:
 
-Let's turn everything into "unsigned long", which satisfies the
-requirements of both architectures, and allows for the full
-range of return values.
+lib/iov_iter.c:413:5: warning: optimization may eliminate reads and/or writes to register variables [-Wvolatile-register-var]
 
-Reported-by: Julien Grall <julien.grall@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David A. Long <dave.long@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/arm-smccc.h |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/include/asm/uaccess.h |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -167,31 +167,31 @@ asmlinkage void arm_smccc_hvc(unsigned l
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -123,6 +123,13 @@ static inline void set_fs(mm_segment_t f
+ 	flag; })
  
- #define __declare_arg_0(a0, res)					\
- 	struct arm_smccc_res   *___res = res;				\
--	register u32           r0 asm("r0") = a0;			\
-+	register unsigned long r0 asm("r0") = (u32)a0;			\
- 	register unsigned long r1 asm("r1");				\
- 	register unsigned long r2 asm("r2");				\
- 	register unsigned long r3 asm("r3")
- 
- #define __declare_arg_1(a0, a1, res)					\
- 	struct arm_smccc_res   *___res = res;				\
--	register u32           r0 asm("r0") = a0;			\
--	register typeof(a1)    r1 asm("r1") = a1;			\
-+	register unsigned long r0 asm("r0") = (u32)a0;			\
-+	register unsigned long r1 asm("r1") = a1;			\
- 	register unsigned long r2 asm("r2");				\
- 	register unsigned long r3 asm("r3")
- 
- #define __declare_arg_2(a0, a1, a2, res)				\
- 	struct arm_smccc_res   *___res = res;				\
--	register u32           r0 asm("r0") = a0;			\
--	register typeof(a1)    r1 asm("r1") = a1;			\
--	register typeof(a2)    r2 asm("r2") = a2;			\
-+	register unsigned long r0 asm("r0") = (u32)a0;			\
-+	register unsigned long r1 asm("r1") = a1;			\
-+	register unsigned long r2 asm("r2") = a2;			\
- 	register unsigned long r3 asm("r3")
- 
- #define __declare_arg_3(a0, a1, a2, a3, res)				\
- 	struct arm_smccc_res   *___res = res;				\
--	register u32           r0 asm("r0") = a0;			\
--	register typeof(a1)    r1 asm("r1") = a1;			\
--	register typeof(a2)    r2 asm("r2") = a2;			\
--	register typeof(a3)    r3 asm("r3") = a3
-+	register unsigned long r0 asm("r0") = (u32)a0;			\
-+	register unsigned long r1 asm("r1") = a1;			\
-+	register unsigned long r2 asm("r2") = a2;			\
-+	register unsigned long r3 asm("r3") = a3
- 
- #define __declare_arg_4(a0, a1, a2, a3, a4, res)			\
- 	__declare_arg_3(a0, a1, a2, a3, res);				\
+ /*
++ * This is a type: either unsigned long, if the argument fits into
++ * that type, or otherwise unsigned long long.
++ */
++#define __inttype(x) \
++	__typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
++
++/*
+  * Single-value transfer routines.  They automatically use the right
+  * size if we just have the right pointer type.  Note that the functions
+  * which read from user space (*get_*) need to take care not to leak
+@@ -191,7 +198,7 @@ extern int __get_user_64t_4(void *);
+ 	({								\
+ 		unsigned long __limit = current_thread_info()->addr_limit - 1; \
+ 		register const typeof(*(p)) __user *__p asm("r0") = (p);\
+-		register typeof(x) __r2 asm("r2");			\
++		register __inttype(x) __r2 asm("r2");			\
+ 		register unsigned long __l asm("r1") = __limit;		\
+ 		register int __e asm("r0");				\
+ 		unsigned int __ua_flags = uaccess_save_and_enable();	\
 
 
