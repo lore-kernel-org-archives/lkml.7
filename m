@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36782FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0E8FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE6B20656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5516620656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240916;
-	bh=XrldGzU/vehg9sYXQT4wwRSAys/T6+j97R70Fz5Jux4=;
+	s=default; t=1573240925;
+	bh=eMKc4goX+o0cF2TdTsJgEL11/tO3In23PaNzHZC6sI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CvIcOzpmnfMO9CsDaiqPgVzD/Z6DRE9d72QeS6iO0oYVXGY/V59094QqaUmBw4AZh
-	 PCeHxPuIhFx4k+HuJvSKmIx+bvM0THUw1kIDUZ0MNmYNSQiNneoYOaOcHYQRCd1SyF
-	 LHSPrNffp2De6qALzNcUeX5qrKquyEGDh2V2ZOqY=
+	b=E1dxjxUxI1Qz2VrZ4Jp4MaS4xmN97DuHkMKZ51GIR+op3zFgVslpbLoz6ilcn8Kw7
+	 8d0GYAkiEK2qrNNmygmrbHf8C+Xb3ksDWIYc7dvlSBTsuKuknPjbHvjjXszupD0+jc
+	 pwKXBiURgesQGAwnL04Oq6iaD0pRUZwS4+xWSGfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388537AbfKHS45 (ORCPT
+        id S2388421AbfKHS4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:56:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54472 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:56:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388399AbfKHS4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:47 -0500
+        id S1732563AbfKHS4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5B412067B;
-        Fri,  8 Nov 2019 18:56:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E745121924;
+        Fri,  8 Nov 2019 18:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239406;
-        bh=XrldGzU/vehg9sYXQT4wwRSAys/T6+j97R70Fz5Jux4=;
+        s=default; t=1573239400;
+        bh=eMKc4goX+o0cF2TdTsJgEL11/tO3In23PaNzHZC6sI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2aEUaOdi95wJsfN5a0AzYmoxXWZ9EOIWE9nmnYK0TMkQrZvv8vK0q2/XgQ2Q+oNV
-         Zv8GlKuC550CrviBKqh67RzlrDkfov0DnlVsIMIXndli/nctvzVmRgd1k/8HGN/jYZ
-         0JMa2/yNfGD0iCxH6NmRbB3hDTFV/LVs+W1f6HRw=
+        b=YHMqQ9yXVFEyKrdCUGRjzXq/bBBzMxQd4xJYXZZpr7BfZKkj7lkvZiZT2VBT3pKud
+         /5vMsTbSeVyzVo97vlPR2xX5446QxntWBzgiZUWtcyLAVSWn0/OelHP+WjRltakcZ/
+         ipTrEM6LsyT+e9H+RIZFT4/saevB11SxHJAEoR3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Thiemo Nagel <tnagel@google.com>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 28/34] inet: stop leaking jiffies on the wire
-Date:   Fri,  8 Nov 2019 19:50:35 +0100
-Message-Id: <20191108174651.026609810@linuxfoundation.org>
+Subject: [PATCH 4.9 26/34] vxlan: check tun_info options_len properly
+Date:   Fri,  8 Nov 2019 19:50:33 +0100
+Message-Id: <20191108174647.848379113@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
 References: <20191108174618.266472504@linuxfoundation.org>
@@ -60,94 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit a904a0693c189691eeee64f6c6b188bd7dc244e9 ]
+[ Upstream commit eadf52cf1852196a1363044dcda22fa5d7f296f7 ]
 
-Historically linux tried to stick to RFC 791, 1122, 2003
-for IPv4 ID field generation.
+This patch is to improve the tun_info options_len by dropping
+the skb when TUNNEL_VXLAN_OPT is set but options_len is less
+than vxlan_metadata. This can void a potential out-of-bounds
+access on ip_tun_info.
 
-RFC 6864 made clear that no matter how hard we try,
-we can not ensure unicity of IP ID within maximum
-lifetime for all datagrams with a given source
-address/destination address/protocol tuple.
-
-Linux uses a per socket inet generator (inet_id), initialized
-at connection startup with a XOR of 'jiffies' and other
-fields that appear clear on the wire.
-
-Thiemo Nagel pointed that this strategy is a privacy
-concern as this provides 16 bits of entropy to fingerprint
-devices.
-
-Let's switch to a random starting point, this is just as
-good as far as RFC 6864 is concerned and does not leak
-anything critical.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Thiemo Nagel <tnagel@google.com>
+Fixes: ee122c79d422 ("vxlan: Flow based tunneling")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dccp/ipv4.c     |    2 +-
- net/ipv4/datagram.c |    2 +-
- net/ipv4/tcp_ipv4.c |    4 ++--
- net/sctp/socket.c   |    2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/vxlan.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/dccp/ipv4.c
-+++ b/net/dccp/ipv4.c
-@@ -121,7 +121,7 @@ int dccp_v4_connect(struct sock *sk, str
- 						    inet->inet_daddr,
- 						    inet->inet_sport,
- 						    inet->inet_dport);
--	inet->inet_id = dp->dccps_iss ^ jiffies;
-+	inet->inet_id = prandom_u32();
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2049,8 +2049,11 @@ static void vxlan_xmit_one(struct sk_buf
+ 		label = info->key.label;
+ 		udp_sum = !!(info->key.tun_flags & TUNNEL_CSUM);
  
- 	err = dccp_connect(sk);
- 	rt = NULL;
---- a/net/ipv4/datagram.c
-+++ b/net/ipv4/datagram.c
-@@ -75,7 +75,7 @@ int __ip4_datagram_connect(struct sock *
- 	inet->inet_dport = usin->sin_port;
- 	sk->sk_state = TCP_ESTABLISHED;
- 	sk_set_txhash(sk);
--	inet->inet_id = jiffies;
-+	inet->inet_id = prandom_u32();
- 
- 	sk_dst_set(sk, &rt->dst);
- 	err = 0;
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -239,7 +239,7 @@ int tcp_v4_connect(struct sock *sk, stru
- 							   inet->inet_sport,
- 							   usin->sin_port);
- 
--	inet->inet_id = tp->write_seq ^ jiffies;
-+	inet->inet_id = prandom_u32();
- 
- 	err = tcp_connect(sk);
- 
-@@ -1307,7 +1307,7 @@ struct sock *tcp_v4_syn_recv_sock(const
- 	inet_csk(newsk)->icsk_ext_hdr_len = 0;
- 	if (inet_opt)
- 		inet_csk(newsk)->icsk_ext_hdr_len = inet_opt->opt.optlen;
--	newinet->inet_id = newtp->write_seq ^ jiffies;
-+	newinet->inet_id = prandom_u32();
- 
- 	if (!dst) {
- 		dst = inet_csk_route_child_sock(sk, newsk, req);
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -7734,7 +7734,7 @@ void sctp_copy_sock(struct sock *newsk,
- 	newinet->inet_rcv_saddr = inet->inet_rcv_saddr;
- 	newinet->inet_dport = htons(asoc->peer.port);
- 	newinet->pmtudisc = inet->pmtudisc;
--	newinet->inet_id = asoc->next_tsn ^ jiffies;
-+	newinet->inet_id = prandom_u32();
- 
- 	newinet->uc_ttl = inet->uc_ttl;
- 	newinet->mc_loop = 1;
+-		if (info->options_len)
++		if (info->options_len) {
++			if (info->options_len < sizeof(*md))
++				goto drop;
+ 			md = ip_tunnel_info_opts(info);
++		}
+ 	} else {
+ 		md->gbp = skb->mark;
+ 	}
 
 
