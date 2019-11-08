@@ -2,283 +2,122 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39594C17441
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59FCC17442
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0959320865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6D420673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:57:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="WUR2587O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfKHXvZ (ORCPT
+        id S1726843AbfKHX5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 18:51:25 -0500
-Received: from vps-vb.mhejs.net ([37.28.154.113]:59784 "EHLO vps-vb.mhejs.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfKHXvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 18:51:25 -0500
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1iTE25-0005W3-7R; Sat, 09 Nov 2019 00:51:13 +0100
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To:     Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>
-Cc:     Vitaly Wool <vitalywool@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] zswap: allow setting default status, compressor and allocator in Kconfig
-Date:   Sat,  9 Nov 2019 00:51:07 +0100
-Message-Id: <20191108235107.2837339-1-mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.23.0
+        Fri, 8 Nov 2019 18:57:54 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35089 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfKHX5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 18:57:53 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 8so7906137wmo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 15:57:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=8H3+XZQf7y0EzQqLefOV5zH9jSqy7tXDApOEueZQ9Xw=;
+        b=WUR2587OERk2LPUvokhL/JNyHu0O8xvF60agK21DIer1gev24q1RIuxfo6ktrHNgxf
+         EFln9l4XiEjX7DSMc4ORMDxFkKMSRITUpobwThCtFhfCvwQZ/WJhGi3oXiGW7YBUpfvI
+         ie5P3xlTbHd1kxnIkKlaQ4pyDeiLowJ1OPZ91keEmFWZhNPGZQSPPKyJH3Z4GJ0tW+1T
+         vKNWvgov0ena9kP5SLj+bWc2WKL81/W9lCCu+d+Yhbhg5plj2P1b5AMAJrykmhWtMGmK
+         lNxLvZYR/gTFX4d4Em3R48tHCvXmn6VhgA8DdHA/TtHOK5iUp1kukElinVr/++uSMRBI
+         OwpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=8H3+XZQf7y0EzQqLefOV5zH9jSqy7tXDApOEueZQ9Xw=;
+        b=QIfC7P2EpY77D2d63nJPvX2KPqWG/EXYu5M2W7MbjsdpPKQAZL83e6BAKp2b9KzJLJ
+         +7dUkOpszMwK7l/VMYN8sxa0bQW4SRtS3l8MX8noiuaIbNPtk776FsG4KThvRsBl8oLf
+         gXQ+41TD3W7zpZD5MgKuDOGs6KjXvkqiykRki7pYoVNl6ETwLIHW0J/m0W55uBOCmYEx
+         lBwED/HdT5/MRgbHZNefVt7LDthVy+QZiW4yIhcfIegGBtXM9Zl+PDZhDVjdUHS7WZWe
+         Aq5I4IAglQFbc+QYldy8ydRhQyzGveQBzUxAQ3pmJiTE+zuIH8D54B1zY0vrHa2QV4KI
+         SzOQ==
+X-Gm-Message-State: APjAAAWERWmRsJ58rGozKCVN5jM8IhRRFyniCvFBLyYrpNHChdhH6t2L
+        DT1t7yJnpx/R3od7F3iaPWqkStCpoQ+8og==
+X-Google-Smtp-Source: APXvYqw7BPZisKgcS2rzIeuzG0D8XKnJ9LC6hN9aZ9yYUrFHgYaO1QTETK+YJkMgWSr/RmcofNTc6g==
+X-Received: by 2002:a1c:2d4b:: with SMTP id t72mr11182468wmt.112.1573257471606;
+        Fri, 08 Nov 2019 15:57:51 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id u2sm6596358wrg.52.2019.11.08.15.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 15:57:51 -0800 (PST)
+Message-ID: <5dc600ff.1c69fb81.8f91b.fea1@mx.google.com>
+Date:   Fri, 08 Nov 2019 15:57:51 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: linux-4.19.y
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.19.82-80-gb56f5a59d51a
+In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
+References: <20191108174745.495640141@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 00/79] 4.19.83-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The compressed cache for swap pages (zswap) currently needs from 1 to 3
-extra kernel command line parameters in order to make it work: it has to be
-enabled by adding a "zswap.enabled=1" command line parameter and if one
-wants a different compressor or pool allocator than the default lzo / zbud
-combination then these choices also need to be specified on the kernel
-command line in additional parameters.
+stable-rc/linux-4.19.y boot: 116 boots: 0 failed, 109 passed with 7 offline=
+ (v4.19.82-80-gb56f5a59d51a)
 
-Using a different compressor and allocator for zswap is actually pretty
-common as guides often recommend using the lz4 / z3fold pair instead of
-the default one.
-In such case it is also necessary to remember to enable the appropriate
-compression algorithm and pool allocator in the kernel config manually.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.19.y/kernel/v4.19.82-80-gb56f5a59d51a/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.82-80-gb56f5a59d51a/
 
-Let's avoid the need for adding these kernel command line parameters and
-automatically pull in the dependencies for the selected compressor
-algorithm and pool allocator by adding an appropriate default switches to
-Kconfig.
+Tree: stable-rc
+Branch: linux-4.19.y
+Git Describe: v4.19.82-80-gb56f5a59d51a
+Git Commit: b56f5a59d51ac99b2c9af3df39a0a7a573053bcc
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 68 unique boards, 22 SoC families, 14 builds out of 206
 
-The default values for these options match what the code was using
-previously as its defaults.
+Offline Platforms:
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+arm:
+
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+    davinci_all_defconfig:
+        gcc-8
+            dm365evm,legacy: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+
 ---
-Changes from v1:
-Rename CONFIG_ZSWAP_DEFAULT_COMP_* to CONFIG_ZSWAP_COMPRESSOR_DEFAULT_*
-and CONFIG_ZSWAP_DEFAULT_ZPOOL_* to CONFIG_ZSWAP_ZPOOL_DEFAULT_* while
-dropping the "_NAME" suffix from the final string option in both cases.
-
-Changes from v2:
-Add zsmalloc as a pool allocator choice, add a link to a page with
-benchmarks of various compression algorithms to the compression
-algorithm prompt option.
-
- mm/Kconfig | 116 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- mm/zswap.c |  26 +++++++-----
- 2 files changed, 130 insertions(+), 12 deletions(-)
-
-diff --git a/mm/Kconfig b/mm/Kconfig
-index a5dae9a7eb51..4a00d9ebf774 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -525,7 +525,6 @@ config MEM_SOFT_DIRTY
- config ZSWAP
- 	bool "Compressed cache for swap pages (EXPERIMENTAL)"
- 	depends on FRONTSWAP && CRYPTO=y
--	select CRYPTO_LZO
- 	select ZPOOL
- 	help
- 	  A lightweight compressed cache for swap pages.  It takes
-@@ -541,6 +540,121 @@ config ZSWAP
- 	  they have not be fully explored on the large set of potential
- 	  configurations and workloads that exist.
- 
-+choice
-+	prompt "Compressed cache for swap pages default compressor"
-+	depends on ZSWAP
-+	default ZSWAP_COMPRESSOR_DEFAULT_LZO
-+	help
-+	  Selects the default compression algorithm for the compressed cache
-+	  for swap pages.
-+
-+	  For an overview what kind of performance can be expected from
-+	  a particular compression algorithm please refer to the benchmarks
-+	  available at the following LWN page:
-+	  https://lwn.net/Articles/751795/
-+
-+	  If in doubt, select 'LZO'.
-+
-+	  The selection made here can be overridden by using the kernel
-+	  command line 'zswap.compressor=' option.
-+
-+config ZSWAP_COMPRESSOR_DEFAULT_DEFLATE
-+	bool "Deflate"
-+	select CRYPTO_DEFLATE
-+	help
-+	  Use the Deflate algorithm as the default compression algorithm.
-+
-+config ZSWAP_COMPRESSOR_DEFAULT_LZO
-+	bool "LZO"
-+	select CRYPTO_LZO
-+	help
-+	  Use the LZO algorithm as the default compression algorithm.
-+
-+config ZSWAP_COMPRESSOR_DEFAULT_842
-+	bool "842"
-+	select CRYPTO_842
-+	help
-+	  Use the 842 algorithm as the default compression algorithm.
-+
-+config ZSWAP_COMPRESSOR_DEFAULT_LZ4
-+	bool "LZ4"
-+	select CRYPTO_LZ4
-+	help
-+	  Use the LZ4 algorithm as the default compression algorithm.
-+
-+config ZSWAP_COMPRESSOR_DEFAULT_LZ4HC
-+	bool "LZ4HC"
-+	select CRYPTO_LZ4HC
-+	help
-+	  Use the LZ4HC algorithm as the default compression algorithm.
-+
-+config ZSWAP_COMPRESSOR_DEFAULT_ZSTD
-+	bool "zstd"
-+	select CRYPTO_ZSTD
-+	help
-+	  Use the zstd algorithm as the default compression algorithm.
-+endchoice
-+
-+config ZSWAP_COMPRESSOR_DEFAULT
-+       string
-+       default "deflate" if ZSWAP_COMPRESSOR_DEFAULT_DEFLATE
-+       default "lzo" if ZSWAP_COMPRESSOR_DEFAULT_LZO
-+       default "842" if ZSWAP_COMPRESSOR_DEFAULT_842
-+       default "lz4" if ZSWAP_COMPRESSOR_DEFAULT_LZ4
-+       default "lz4hc" if ZSWAP_COMPRESSOR_DEFAULT_LZ4HC
-+       default "zstd" if ZSWAP_COMPRESSOR_DEFAULT_ZSTD
-+       default ""
-+
-+choice
-+	prompt "Compressed cache for swap pages default allocator"
-+	depends on ZSWAP
-+	default ZSWAP_ZPOOL_DEFAULT_ZBUD
-+	help
-+	  Selects the default allocator for the compressed cache for
-+	  swap pages.
-+	  The default is 'zbud' for compatibility, however please do
-+	  read the description of each of the allocators below before
-+	  making a right choice.
-+
-+	  The selection made here can be overridden by using the kernel
-+	  command line 'zswap.zpool=' option.
-+
-+config ZSWAP_ZPOOL_DEFAULT_ZBUD
-+	bool "zbud"
-+	select ZBUD
-+	help
-+	  Use the zbud allocator as the default allocator.
-+
-+config ZSWAP_ZPOOL_DEFAULT_Z3FOLD
-+	bool "z3fold"
-+	select Z3FOLD
-+	help
-+	  Use the z3fold allocator as the default allocator.
-+
-+config ZSWAP_ZPOOL_DEFAULT_ZSMALLOC
-+	bool "zsmalloc"
-+	select ZSMALLOC
-+	help
-+	  Use the zsmalloc allocator as the default allocator.
-+endchoice
-+
-+config ZSWAP_ZPOOL_DEFAULT
-+       string
-+       default "zbud" if ZSWAP_ZPOOL_DEFAULT_ZBUD
-+       default "z3fold" if ZSWAP_ZPOOL_DEFAULT_Z3FOLD
-+       default "zsmalloc" if ZSWAP_ZPOOL_DEFAULT_ZSMALLOC
-+       default ""
-+
-+config ZSWAP_DEFAULT_ON
-+	bool "Enable the compressed cache for swap pages by default"
-+	depends on ZSWAP
-+	help
-+	  If selected, the compressed cache for swap pages will be enabled
-+	  at boot, otherwise it will be disabled.
-+
-+	  The selection made here can be overridden by using the kernel
-+	  command line 'zswap.enabled=' option.
-+
- config ZPOOL
- 	tristate "Common API for compressed memory storage"
- 	help
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 46a322316e52..71795b6f5b71 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -71,8 +71,12 @@ static u64 zswap_duplicate_entry;
- 
- #define ZSWAP_PARAM_UNSET ""
- 
--/* Enable/disable zswap (disabled by default) */
-+/* Enable/disable zswap */
-+#ifdef CONFIG_ZSWAP_DEFAULT_ON
-+static bool zswap_enabled = true;
-+#else
- static bool zswap_enabled;
-+#endif
- static int zswap_enabled_param_set(const char *,
- 				   const struct kernel_param *);
- static struct kernel_param_ops zswap_enabled_param_ops = {
-@@ -82,8 +86,7 @@ static struct kernel_param_ops zswap_enabled_param_ops = {
- module_param_cb(enabled, &zswap_enabled_param_ops, &zswap_enabled, 0644);
- 
- /* Crypto compressor to use */
--#define ZSWAP_COMPRESSOR_DEFAULT "lzo"
--static char *zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
-+static char *zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
- static int zswap_compressor_param_set(const char *,
- 				      const struct kernel_param *);
- static struct kernel_param_ops zswap_compressor_param_ops = {
-@@ -95,8 +98,7 @@ module_param_cb(compressor, &zswap_compressor_param_ops,
- 		&zswap_compressor, 0644);
- 
- /* Compressed storage zpool to use */
--#define ZSWAP_ZPOOL_DEFAULT "zbud"
--static char *zswap_zpool_type = ZSWAP_ZPOOL_DEFAULT;
-+static char *zswap_zpool_type = CONFIG_ZSWAP_ZPOOL_DEFAULT;
- static int zswap_zpool_param_set(const char *, const struct kernel_param *);
- static struct kernel_param_ops zswap_zpool_param_ops = {
- 	.set =		zswap_zpool_param_set,
-@@ -569,11 +571,12 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
- 	bool has_comp, has_zpool;
- 
- 	has_comp = crypto_has_comp(zswap_compressor, 0, 0);
--	if (!has_comp && strcmp(zswap_compressor, ZSWAP_COMPRESSOR_DEFAULT)) {
-+	if (!has_comp && strcmp(zswap_compressor,
-+				CONFIG_ZSWAP_COMPRESSOR_DEFAULT)) {
- 		pr_err("compressor %s not available, using default %s\n",
--		       zswap_compressor, ZSWAP_COMPRESSOR_DEFAULT);
-+		       zswap_compressor, CONFIG_ZSWAP_COMPRESSOR_DEFAULT);
- 		param_free_charp(&zswap_compressor);
--		zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
-+		zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
- 		has_comp = crypto_has_comp(zswap_compressor, 0, 0);
- 	}
- 	if (!has_comp) {
-@@ -584,11 +587,12 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
- 	}
- 
- 	has_zpool = zpool_has_pool(zswap_zpool_type);
--	if (!has_zpool && strcmp(zswap_zpool_type, ZSWAP_ZPOOL_DEFAULT)) {
-+	if (!has_zpool && strcmp(zswap_zpool_type,
-+				 CONFIG_ZSWAP_ZPOOL_DEFAULT)) {
- 		pr_err("zpool %s not available, using default %s\n",
--		       zswap_zpool_type, ZSWAP_ZPOOL_DEFAULT);
-+		       zswap_zpool_type, CONFIG_ZSWAP_ZPOOL_DEFAULT);
- 		param_free_charp(&zswap_zpool_type);
--		zswap_zpool_type = ZSWAP_ZPOOL_DEFAULT;
-+		zswap_zpool_type = CONFIG_ZSWAP_ZPOOL_DEFAULT;
- 		has_zpool = zpool_has_pool(zswap_zpool_type);
- 	}
- 	if (!has_zpool) {
+For more info write to <info@kernelci.org>
