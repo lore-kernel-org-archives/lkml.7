@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296BCFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AA2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85B0206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DE4206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="DHGXNL3F"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="DMLQ9nUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731950AbfKHNET (ORCPT
+        id S1731969AbfKHNEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:04:19 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42963 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728134AbfKHNBs (ORCPT
+        Fri, 8 Nov 2019 08:04:24 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:32858 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbfKHNBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:01:48 -0500
-Received: by mail-lf1-f68.google.com with SMTP id z12so4389589lfj.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:01:46 -0800 (PST)
+        Fri, 8 Nov 2019 08:01:43 -0500
+Received: by mail-lj1-f196.google.com with SMTP id t5so6155678ljk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:01:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jc+8R+PtxSGR+WKCXh82E6vFl/rmsOl6moV7TXDxFX4=;
-        b=DHGXNL3FwDnFN1h0TodDE2uyaNOuN9R8G3PKs/v6XWU5PQWHGA1bkRdiYmr8ZHmt7j
-         ypFz6rqutfze2tlaMFen1OEki3V4FVAfqY1YzaLd+eDPrm/UufAhhuyH7fKEVpd5p1Ua
-         dbn/6Y63qUxYYDUJMfVTTaxWCNBJ6gQwjghJU=
+        bh=td9IeMtAnKP3TNZfmfJvazvskLsY9wm2/Illqt7TzBU=;
+        b=DMLQ9nUi/AbgTBbJ3HQVt3S0hzf3vXc00jBHDaFBntgkl2BTiXVwIDJ/98hlURH5xi
+         Fs8QirI31MeGV4shgHaQ0WBywX4sGE+Pkg+PmRddhK4zvBzkMBVVR5DB3sKZ1o1xZ8k4
+         YkMCzlDg87IAVaAjLDSvANrSeF4AmSQ+EJgXM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jc+8R+PtxSGR+WKCXh82E6vFl/rmsOl6moV7TXDxFX4=;
-        b=eK9syvubitCpPm3woMoixVJKtLqHdY0RsJJI5l0cwP/+8uPPHZK1u6WJDHbBiXn/UU
-         gmIf6Xf2uft/1II56ehcHnjwTNmc4cMwflcKDdjzcdLoZxKs7Hc5uY/8PVoHNU8a85Ll
-         hPDwniBk/l1lPOU5wXrAPz3TZSEbEK6vWQyxuX71+DVVsbfqrByt6NWnc+k2DpibNDy9
-         dqql1nyEweRVB6HydWMFUpWkHDqBWZjdA1IZ7h93vMzA5KajUOzdzetSWpvbX4dpfVhN
-         URBcPO765t7yE1H+5fVXLkC1O274mG5ZKcoOfmYBFAZKeiGprNRXDLehFy9MDwuGSUhM
-         loFg==
-X-Gm-Message-State: APjAAAV6l80yrdpFuvP9ggYxDXEqpHmbObOgWWceNrT1QAT/RgLfGScc
-        c9qwRIvYIxp+JSoEfaeiek+hhg==
-X-Google-Smtp-Source: APXvYqwbDJNvRFgoz1Gh1V6nLMxZw08ojqlEbbksBCfcH0Aoo0v0AKrmQdBMsXhZdZeoPocQbV8PdA==
-X-Received: by 2002:a19:8c1c:: with SMTP id o28mr6599461lfd.105.1573218105404;
-        Fri, 08 Nov 2019 05:01:45 -0800 (PST)
+        bh=td9IeMtAnKP3TNZfmfJvazvskLsY9wm2/Illqt7TzBU=;
+        b=SPUchYyUUrtCVXKYsTQqtTIcNmhMHKOTRUV7NrJ86UobsqVMF9LHa7l0lDB46lkpIf
+         0fVhVAITzVEtYb1vYWwEj5OLkfAya9rTE8DJc8qygfTvR96K+Xa+eI8JRfse1GlNv2D1
+         q4DnfxD9CXRaXbevz2+PluwUyY6O4aFUx9L3HPl6LL1wMmG87yvPdvd6zn4BTV4gNbs6
+         uqgx8p7rag3tyaphtxc6ToXOQltDoE2b3wkOIWI5vPM5byZtLOHyhVxJZEY+kN/yUWcB
+         QKeyFYHc83KjA8vlLz7XqhAou5Bh7iT0+qPk6M3fBtdA6qq5sHXmgCNP4hKJW7pa/EGR
+         En4w==
+X-Gm-Message-State: APjAAAWlOZhi8Vm7wUieNXetdVIzMpf2LMFADQnAhPtKezrPF2ox1fQ6
+        WVBw4/nvPFD4j16OySaNzHXQ0w==
+X-Google-Smtp-Source: APXvYqyxlnBPq1NoCHx0PDNAwhYb5u9L3MYUqw3oNmiwy+4LPvN4tGWz6tWvL/Vb3qkNfPZOcqdSpw==
+X-Received: by 2002:a2e:9659:: with SMTP id z25mr6859818ljh.132.1573218099542;
+        Fri, 08 Nov 2019 05:01:39 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.44
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:01:44 -0800 (PST)
+        Fri, 08 Nov 2019 05:01:38 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v4 13/47] powerpc/83xx: remove mpc83xx_ipic_and_qe_init_IRQ
-Date:   Fri,  8 Nov 2019 14:00:49 +0100
-Message-Id: <20191108130123.6839-14-linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 09/47] soc: fsl: qe: drop assign-only high_active in qe_ic_init
+Date:   Fri,  8 Nov 2019 14:00:45 +0100
+Message-Id: <20191108130123.6839-10-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
@@ -73,119 +73,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is now exactly the same as mpc83xx_ipic_init_IRQ, so just use
-that directly.
+high_active is only assigned to but never used. Remove it.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- arch/powerpc/platforms/83xx/km83xx.c      | 2 +-
- arch/powerpc/platforms/83xx/misc.c        | 7 -------
- arch/powerpc/platforms/83xx/mpc832x_mds.c | 2 +-
- arch/powerpc/platforms/83xx/mpc832x_rdb.c | 2 +-
- arch/powerpc/platforms/83xx/mpc836x_mds.c | 2 +-
- arch/powerpc/platforms/83xx/mpc836x_rdk.c | 2 +-
- arch/powerpc/platforms/83xx/mpc83xx.h     | 5 -----
- 7 files changed, 5 insertions(+), 17 deletions(-)
+ drivers/soc/fsl/qe/qe_ic.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/platforms/83xx/km83xx.c b/arch/powerpc/platforms/83xx/km83xx.c
-index 5c6227f7bc37..3d89569e9e71 100644
---- a/arch/powerpc/platforms/83xx/km83xx.c
-+++ b/arch/powerpc/platforms/83xx/km83xx.c
-@@ -177,7 +177,7 @@ define_machine(mpc83xx_km) {
- 	.name		= "mpc83xx-km-platform",
- 	.probe		= mpc83xx_km_probe,
- 	.setup_arch	= mpc83xx_km_setup_arch,
--	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
-+	.init_IRQ	= mpc83xx_ipic_init_IRQ,
- 	.get_irq	= ipic_get_irq,
- 	.restart	= mpc83xx_restart,
- 	.time_init	= mpc83xx_time_init,
-diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-index 6935a5b9fbd1..1d8306eb2958 100644
---- a/arch/powerpc/platforms/83xx/misc.c
-+++ b/arch/powerpc/platforms/83xx/misc.c
-@@ -88,13 +88,6 @@ void __init mpc83xx_ipic_init_IRQ(void)
- 	ipic_set_default_priority();
- }
+diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
+index 8c874372416b..4b03060d8079 100644
+--- a/drivers/soc/fsl/qe/qe_ic.c
++++ b/drivers/soc/fsl/qe/qe_ic.c
+@@ -320,7 +320,7 @@ void __init qe_ic_init(struct device_node *node, unsigned int flags,
+ {
+ 	struct qe_ic *qe_ic;
+ 	struct resource res;
+-	u32 temp = 0, ret, high_active = 0;
++	u32 temp = 0, ret;
  
--#ifdef CONFIG_QUICC_ENGINE
--void __init mpc83xx_ipic_and_qe_init_IRQ(void)
--{
--	mpc83xx_ipic_init_IRQ();
--}
--#endif /* CONFIG_QUICC_ENGINE */
--
- static const struct of_device_id of_bus_ids[] __initconst = {
- 	{ .type = "soc", },
- 	{ .compatible = "soc", },
-diff --git a/arch/powerpc/platforms/83xx/mpc832x_mds.c b/arch/powerpc/platforms/83xx/mpc832x_mds.c
-index 1c73af104d19..6fa5402ebf20 100644
---- a/arch/powerpc/platforms/83xx/mpc832x_mds.c
-+++ b/arch/powerpc/platforms/83xx/mpc832x_mds.c
-@@ -101,7 +101,7 @@ define_machine(mpc832x_mds) {
- 	.name 		= "MPC832x MDS",
- 	.probe 		= mpc832x_sys_probe,
- 	.setup_arch 	= mpc832x_sys_setup_arch,
--	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
-+	.init_IRQ	= mpc83xx_ipic_init_IRQ,
- 	.get_irq 	= ipic_get_irq,
- 	.restart 	= mpc83xx_restart,
- 	.time_init 	= mpc83xx_time_init,
-diff --git a/arch/powerpc/platforms/83xx/mpc832x_rdb.c b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
-index 87f68ca06255..622c625d5ce4 100644
---- a/arch/powerpc/platforms/83xx/mpc832x_rdb.c
-+++ b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
-@@ -219,7 +219,7 @@ define_machine(mpc832x_rdb) {
- 	.name		= "MPC832x RDB",
- 	.probe		= mpc832x_rdb_probe,
- 	.setup_arch	= mpc832x_rdb_setup_arch,
--	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
-+	.init_IRQ	= mpc83xx_ipic_init_IRQ,
- 	.get_irq	= ipic_get_irq,
- 	.restart	= mpc83xx_restart,
- 	.time_init	= mpc83xx_time_init,
-diff --git a/arch/powerpc/platforms/83xx/mpc836x_mds.c b/arch/powerpc/platforms/83xx/mpc836x_mds.c
-index 5b484da9533e..219a83ab6c00 100644
---- a/arch/powerpc/platforms/83xx/mpc836x_mds.c
-+++ b/arch/powerpc/platforms/83xx/mpc836x_mds.c
-@@ -208,7 +208,7 @@ define_machine(mpc836x_mds) {
- 	.name		= "MPC836x MDS",
- 	.probe		= mpc836x_mds_probe,
- 	.setup_arch	= mpc836x_mds_setup_arch,
--	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
-+	.init_IRQ	= mpc83xx_ipic_init_IRQ,
- 	.get_irq	= ipic_get_irq,
- 	.restart	= mpc83xx_restart,
- 	.time_init	= mpc83xx_time_init,
-diff --git a/arch/powerpc/platforms/83xx/mpc836x_rdk.c b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
-index b7119e443920..b4aac2cde849 100644
---- a/arch/powerpc/platforms/83xx/mpc836x_rdk.c
-+++ b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
-@@ -41,7 +41,7 @@ define_machine(mpc836x_rdk) {
- 	.name		= "MPC836x RDK",
- 	.probe		= mpc836x_rdk_probe,
- 	.setup_arch	= mpc836x_rdk_setup_arch,
--	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
-+	.init_IRQ	= mpc83xx_ipic_init_IRQ,
- 	.get_irq	= ipic_get_irq,
- 	.restart	= mpc83xx_restart,
- 	.time_init	= mpc83xx_time_init,
-diff --git a/arch/powerpc/platforms/83xx/mpc83xx.h b/arch/powerpc/platforms/83xx/mpc83xx.h
-index d343f6ce2599..f37d04332fc7 100644
---- a/arch/powerpc/platforms/83xx/mpc83xx.h
-+++ b/arch/powerpc/platforms/83xx/mpc83xx.h
-@@ -72,11 +72,6 @@ extern int mpc837x_usb_cfg(void);
- extern int mpc834x_usb_cfg(void);
- extern int mpc831x_usb_cfg(void);
- extern void mpc83xx_ipic_init_IRQ(void);
--#ifdef CONFIG_QUICC_ENGINE
--extern void mpc83xx_ipic_and_qe_init_IRQ(void);
--#else
--#define mpc83xx_ipic_and_qe_init_IRQ mpc83xx_ipic_init_IRQ
--#endif /* CONFIG_QUICC_ENGINE */
+ 	ret = of_address_to_resource(node, 0, &res);
+ 	if (ret)
+@@ -366,10 +366,8 @@ void __init qe_ic_init(struct device_node *node, unsigned int flags,
+ 		temp |= CICR_GRTB;
  
- #ifdef CONFIG_PCI
- extern void mpc83xx_setup_pci(void);
+ 	/* choose destination signal for highest priority interrupt */
+-	if (flags & QE_IC_HIGH_SIGNAL) {
++	if (flags & QE_IC_HIGH_SIGNAL)
+ 		temp |= (SIGNAL_HIGH << CICR_HPIT_SHIFT);
+-		high_active = 1;
+-	}
+ 
+ 	qe_ic_write(qe_ic->regs, QEIC_CICR, temp);
+ 
 -- 
 2.23.0
 
