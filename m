@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E64C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C5BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745E721D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356AA21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213453;
-	bh=dEzwLHn/gns28QI/I6DAD2PkbwsGSScjoL8rw/ea1jA=;
+	s=default; t=1573213456;
+	bh=JMzbT0jpHdIV1pZ8eUDKVYmn7oMS7LIGuRRUm5UaNrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hy8SFupwBXqTTz2k8zWdCsFk0CYY1/IVBzJ6/CX/MiNAr1e6ndTCyutWnpNbo8SYV
-	 AEtbszgjXlP9vVxAUbcTZkvUOWbYPrnGYk5D/QdM5BpJLGLarnUP1XyaxkWTpi4NML
-	 ugy9KGj8xslsdBB8yRJN+Xk6nINtjh84NE55Fei0=
+	b=oxw+Y1Rjpcg1RY8yU0vHXUhQUq6gxtGC0L7d0V00p1x6XJTVoyVsItSQU1sd/m88I
+	 vE5aLdhJVfa/HBhtFC5zRP5tukTELekgEpfugGx2Iet6HdiEYeYs2Tkq1MNmLJId14
+	 7Wepiub7AycMPKKrG9YGtoQiUE7dSthPMcbKqob0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390701AbfKHLoM (ORCPT
+        id S2390714AbfKHLoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:44:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58818 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:44:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390658AbfKHLoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:05 -0500
+        id S2387894AbfKHLoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86A0222C2;
-        Fri,  8 Nov 2019 11:44:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF4922473;
+        Fri,  8 Nov 2019 11:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213444;
-        bh=dEzwLHn/gns28QI/I6DAD2PkbwsGSScjoL8rw/ea1jA=;
+        s=default; t=1573213449;
+        bh=JMzbT0jpHdIV1pZ8eUDKVYmn7oMS7LIGuRRUm5UaNrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXOcH+1QdlZQcZwtpZ99vzQoGwVYt7X2+fbqg6zshLjSBU54WWNdkg28KPRQ8+QD2
-         v28I+rKNS2ICde3hr1x7jmLwUaIH2sojt5wqUjiUIsIj9ZJ6eiRuUei0XicZhX69YH
-         Q8e7ObW+Uj+Qe//lkKwgTowlWMlxKUmG6Fkwq+e4=
+        b=kwYtaNXEVBBxkcYOa/M07883G/AvRLfvh4xCOW22rvtNydPzIKebDlZDZ6jpGXW9B
+         79BtdqaonsQ/YUS8eYGoErAKrM8nx/i5EhoNRK4beTa99ZWbZZWd6oOFkfT1vt6H79
+         C/xEiaZlvtv8+CXb4QDrs1fdYcCQPv8IOke4NyO8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 038/103] ARM: dts: meson8b: fix the clock controller register size
-Date:   Fri,  8 Nov 2019 06:42:03 -0500
-Message-Id: <20191108114310.14363-38-sashal@kernel.org>
+Cc:     Erik Stromdahl <erik.stromdahl@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 042/103] ath10k: wmi: disable softirq's while calling ieee80211_rx
+Date:   Fri,  8 Nov 2019 06:42:07 -0500
+Message-Id: <20191108114310.14363-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -61,42 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Erik Stromdahl <erik.stromdahl@gmail.com>
 
-[ Upstream commit f31094fe8c16fbd2ca47921acf93b744b045aace ]
+[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
 
-The clock controller registers are not 0x460 wide because the reset
-controller starts at CBUS 0x4404. This currently overlaps with the
-clock controller (which is at CBUS 0x4000).
+This is done in order not to trig the below warning in
+ieee80211_rx_napi:
 
-There is no public documentation available on the actual size of the
-clock controller's register area (also called "HHI"). However, in
-Amlogic's GPL kernel sources the last "HHI" register is
-HHI_HDMI_PHY_CNTL2 at CBUS + 0x43a8. 0x400 was chosen because that size
-doesn't seem unlikely.
+WARN_ON_ONCE(softirq_count() == 0);
 
-Fixes: 4a69fcd3a10803 ("ARM: meson: Add DTS for Odroid-C1 and Tronfy MXQ boards")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+ieee80211_rx_napi requires that softirq's are disabled during
+execution.
+
+The High latency bus drivers (SDIO and USB) sometimes call the wmi
+ep_rx_complete callback from non softirq context, resulting in a trigger
+of the above warning.
+
+Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
+softirq context) should be safe as the local_bh_disable and
+local_bh_enable functions (called from ieee80211_rx_ni) are fully
+reentrant.
+
+Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index bc278da7df0d9..0f76da280ee76 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -121,7 +121,7 @@
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		compatible = "amlogic,meson8b-clkc";
--		reg = <0x8000 0x4>, <0x4000 0x460>;
-+		reg = <0x8000 0x4>, <0x4000 0x400>;
- 	};
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index ab8eb9cdfda0f..4d6c2986c40dd 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -2414,7 +2414,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		   status->freq, status->band, status->signal,
+ 		   status->rate_idx);
  
- 	reset: reset-controller@4404 {
+-	ieee80211_rx(ar->hw, skb);
++	ieee80211_rx_ni(ar->hw, skb);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
