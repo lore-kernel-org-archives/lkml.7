@@ -2,78 +2,80 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0B6FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123D8FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE28218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35C6218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573210439;
+	bh=buqRYk91CqloV76evPL2h1lSIokb0ciicaCxu+V6YwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d0vsh38jycgK+jRzQaht2NVWF6Q3HVFOiZ36q0aeLixHj5URi2tdGBkaqNx9Kkk6r
+	 gawoo1spsSysVpTIijFCWyuFhhrNst2zkJ8mHmDqwI4FDy1kbvKdAkoQa+zSkz2WyJ
+	 7lChiHb4ZiX976CmMqGkj4algc0F217pOw+53aj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbfKHKxN (ORCPT
+        id S1731378AbfKHKx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:53:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:40442 "EHLO foss.arm.com"
+        Fri, 8 Nov 2019 05:53:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbfKHKxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:53:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72D307CD;
-        Fri,  8 Nov 2019 02:53:12 -0800 (PST)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87F2D3F719;
-        Fri,  8 Nov 2019 02:53:10 -0800 (PST)
-Subject: Re: [Patch v5 6/6] sched/fair: Enable tuning of decay period
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
-        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
- <1572979786-20361-7-git-send-email-thara.gopinath@linaro.org>
- <20191107104901.GA472@linaro.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <706278eb-1906-79f3-7a9f-6ab5080ecb63@arm.com>
-Date:   Fri, 8 Nov 2019 11:53:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726180AbfKHKx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:53:58 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A414218AE;
+        Fri,  8 Nov 2019 10:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573210438;
+        bh=buqRYk91CqloV76evPL2h1lSIokb0ciicaCxu+V6YwU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NVUpSeKMJL7hqL3XLCQCJdJCm3URp4Xc9BEKczdiaWfbatykKJURNZwQYqdDy6ZHb
+         8tgJQFYXj0Ro+REVyLpeOMxlmrstDqSTIKLP7TYUp9CEVt2o9LvLhrYFrTDTe1P1eW
+         1aO5l2+mP5Qa/BWr7BTyH1Zo1Tq4V/9Byz3adNe8=
+Date:   Fri, 8 Nov 2019 11:53:55 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL v2] interconnect changes for 5.5
+Message-ID: <20191108105355.GA683899@kroah.com>
+References: <dd4ff7e3-920d-979b-c29b-7535d84d360f@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191107104901.GA472@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd4ff7e3-920d-979b-c29b-7535d84d360f@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/11/2019 11:49, Vincent Guittot wrote:
-> Le Tuesday 05 Nov 2019 à 13:49:46 (-0500), Thara Gopinath a écrit :
-
-[...]
-
->>  /**
->> @@ -10444,8 +10465,8 @@ void update_thermal_pressure(int cpu, unsigned long capped_capacity)
->>  static void trigger_thermal_pressure_average(struct rq *rq)
->>  {
->>  #ifdef CONFIG_SMP
->> -	update_thermal_load_avg(rq_clock_task(rq), rq,
->> -				per_cpu(thermal_pressure, cpu_of(rq)));
->> +	update_thermal_load_avg(rq_clock_task(rq) >> sched_thermal_decay_shift,
->> +				rq, per_cpu(thermal_pressure, cpu_of(rq)));
+On Fri, Nov 08, 2019 at 10:59:11AM +0200, Georgi Djakov wrote:
+> Hi Greg,
 > 
-> Would be better to create
-> 
-> +static inline u64 rq_clock_thermal(struct rq *rq)
-> +{
-> +       lockdep_assert_held(&rq->lock);
-> +       assert_clock_updated(rq);
+> This is the updated pull request with interconnect patches for the 5.5 merge
+> window. The details are in the signed tag. Please pull into char-misc-next.
 
-IMHO, the asserts can be skipped here since they're already done in
-rq_clock_task().
+Ugh, ok, can we just go back to sending patches instead?
 
-> +       return rq_clock_task(rq) >> sched_thermal_decay_shift;
-> +}
+The first two patches have "Fixes:" tags for older kernels, yet no
+stable tags.  That's not ok.
+
+For patch 5, you are playing "chicken" with what module gets loaded
+first, and in the end you're not going to win, only delay the
+inevitable.  We now have the driver core framework to support
+dependencies like this, please use that instead.
+
+So, can you drop patch 5, fix up patches 1 and 2, and go back to sending
+patches instead of pull requests as if these were patches, I could have
+fixed up 1 and 2 myself.
+
+thanks,
+
+greg k-h
