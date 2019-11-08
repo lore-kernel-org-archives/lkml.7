@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7617FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9064FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E49A2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835C121D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240045;
-	bh=U6mQTsy5KRGATuoXfZpLNAFdrLh+vePMFSghfQV+rcs=;
+	s=default; t=1573240049;
+	bh=ht9JGwRvyPE1oQY2tPbaSAi9RSWCgC0V/DymEc6snjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G90ZGAfd9BgU2qQoIw7oMREOiO+ehLi8clTem0a97F1w8sSbNTW6uP6jWk4LuW0OG
-	 2bt38uuMTJctro0XnBsrbfRYwChR1+V3ya3g8SHwCePbj50LUklwZblFTsW/FYfxQP
-	 OucCHY6UMDenWWemg8u1zEA0liKc7JL3XCSG+zGA=
+	b=nh0Iucsv4Wwx+IewK9JfZ1Y+1XNdywVH3+4JzRVxKbJKKCY3sW/dIyPUO14j7oh4/
+	 I96dSfHTfOegCEZodbKoCLAl/GuGVOVX6va2HT+aEXg3a07H17pVwygZ+/zTflcNQK
+	 8GU6eMvvNStZ4clZoiBxXb4QL+v8N6RB5n5Q02ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391445AbfKHTHY (ORCPT
+        id S2391456AbfKHTH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:07:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38062 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:07:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391433AbfKHTHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:22 -0500
+        id S2391441AbfKHTHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:07:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C89A2196F;
-        Fri,  8 Nov 2019 19:07:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29F4D2087E;
+        Fri,  8 Nov 2019 19:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240041;
-        bh=U6mQTsy5KRGATuoXfZpLNAFdrLh+vePMFSghfQV+rcs=;
+        s=default; t=1573240043;
+        bh=ht9JGwRvyPE1oQY2tPbaSAi9RSWCgC0V/DymEc6snjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lILiIJ9SCe92q1npgz8CaNVbhXaW3KZG9wjojmurNiN1VjnUY6oZawquNOpEYnpZC
-         7aX8SzqnFGv1CQ53GPCS/lqPRNkpIv4mBu2OLLus//Weh621rqYawg2bdfnUOtPp4/
-         JlbAbN9n52C+hRVhdswWpiR3DPzpvR3a18pLv67o=
+        b=ELCo2DyELWLDC1Tw39q2GwiAB7M2EwB3rDegDSNvqiJA2uNeDHCnaYpcd8gy7z6+I
+         W017ZD7ObaeqYRi7qrlwrT7FPoP5yg03zwVqtxPf4XM16SXC9AHBn2CvOwaqcFcsOd
+         rYla0iSzKFYRRS4PpCXnaHyjD/EMTfyTIEXKdVFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 066/140] selftests: kvm: fix sync_regs_test with newer gccs
-Date:   Fri,  8 Nov 2019 19:49:54 +0100
-Message-Id: <20191108174909.367973493@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 067/140] ALSA: hda: Add Tigerlake/Jasperlake PCI ID
+Date:   Fri,  8 Nov 2019 19:49:55 +0100
+Message-Id: <20191108174909.430405131@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,70 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Pan Xiuli <xiuli.pan@linux.intel.com>
 
-[ Upstream commit ef4059809890f732c69cc1726d3a9a108a832a2f ]
+[ Upstream commit 4750c212174892d26645cdf5ad73fb0e9d594ed3 ]
 
-Commit 204c91eff798a ("KVM: selftests: do not blindly clobber registers in
- guest asm") was intended to make test more gcc-proof, however, the result
-is exactly the opposite: on newer gccs (e.g. 8.2.1) the test breaks with
+Add HD Audio Device PCI ID for the Intel Tigerlake and Jasperlake
+platform.
 
-==== Test Assertion Failure ====
-  x86_64/sync_regs_test.c:168: run->s.regs.regs.rbx == 0xBAD1DEA + 1
-  pid=14170 tid=14170 - Invalid argument
-     1	0x00000000004015b3: main at sync_regs_test.c:166 (discriminator 6)
-     2	0x00007f413fb66412: ?? ??:0
-     3	0x000000000040191d: _start at ??:?
-  rbx sync regs value incorrect 0x1.
-
-Apparently, compile is still free to play games with registers even
-when they have variables attached.
-
-Re-write guest code with 'asm volatile' by embedding ucall there and
-making sure rbx is preserved.
-
-Fixes: 204c91eff798a ("KVM: selftests: do not blindly clobber registers in guest asm")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Pan Xiuli <xiuli.pan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191022194402.23178-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/kvm/x86_64/sync_regs_test.c     | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ sound/pci/hda/hda_intel.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
-index 11c2a70a7b87a..5c82242562943 100644
---- a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
-@@ -22,18 +22,19 @@
- 
- #define VCPU_ID 5
- 
-+#define UCALL_PIO_PORT ((uint16_t)0x1000)
-+
-+/*
-+ * ucall is embedded here to protect against compiler reshuffling registers
-+ * before calling a function. In this test we only need to get KVM_EXIT_IO
-+ * vmexit and preserve RBX, no additional information is needed.
-+ */
- void guest_code(void)
- {
--	/*
--	 * use a callee-save register, otherwise the compiler
--	 * saves it around the call to GUEST_SYNC.
--	 */
--	register u32 stage asm("rbx");
--	for (;;) {
--		GUEST_SYNC(0);
--		stage++;
--		asm volatile ("" : : "r" (stage));
--	}
-+	asm volatile("1: in %[port], %%al\n"
-+		     "add $0x1, %%rbx\n"
-+		     "jmp 1b"
-+		     : : [port] "d" (UCALL_PIO_PORT) : "rax", "rbx");
- }
- 
- static void compare_regs(struct kvm_regs *left, struct kvm_regs *right)
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index b0de3e3b33e5c..e1791d01ccc01 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2431,6 +2431,12 @@ static const struct pci_device_id azx_ids[] = {
+ 	/* Icelake */
+ 	{ PCI_DEVICE(0x8086, 0x34c8),
+ 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
++	/* Jasperlake */
++	{ PCI_DEVICE(0x8086, 0x38c8),
++	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
++	/* Tigerlake */
++	{ PCI_DEVICE(0x8086, 0xa0c8),
++	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
+ 	/* Elkhart Lake */
+ 	{ PCI_DEVICE(0x8086, 0x4b55),
+ 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
 -- 
 2.20.1
 
