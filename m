@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5E5FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E03C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F5720656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9545D222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213314;
-	bh=3ES43x8ohLQmZDTu+juPnCitXAo/wPlqMTd883fgsjI=;
+	s=default; t=1573213316;
+	bh=tU1uL0kgHbeIfHi2VXruJE3ZdOm5oSbiBE7SyjAQ0hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJRxuRKW5EF2vUqLVjcvW1BJE4G7kxRzyhXoWgrKhPr7jL2mGagMfDnzXYkXH0EOX
-	 v73jQaRwjArrO6fmbDY+DnhZbfsQhj1wh0FA8UDAuy6SgkO93dUJODGi4zIiFFajie
-	 X0dWVkRyjnp/X4WG7QLgiXIoF0gMbrPGUplSpfzU=
+	b=urhCjIn21rGkcsWW1oNBOAKVRQyKPb4o+VKYA9EtaOVHZqCtQQH86Eqah65QWPd+L
+	 51Zxyzye1W3FiC6UxvBvMBUPC+wn9YhXg5l9JM7RQtoctvkxURLinIESQaYUL4ZErE
+	 ebG/mw57BENUmtnsgKIdfzzLJW3rDuIqmeuYkSig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733046AbfKHLlx (ORCPT
+        id S1726149AbfKHLlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389629AbfKHLlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732994AbfKHLlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 06:41:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E513222C4;
-        Fri,  8 Nov 2019 11:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0469222C6;
+        Fri,  8 Nov 2019 11:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213308;
-        bh=3ES43x8ohLQmZDTu+juPnCitXAo/wPlqMTd883fgsjI=;
+        s=default; t=1573213309;
+        bh=tU1uL0kgHbeIfHi2VXruJE3ZdOm5oSbiBE7SyjAQ0hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsAp50mYMpMlVQGLpRxyVOlBXQJMqOSY4E7LAAg5Uszu7zpGGx/AvvaJLbdw7/F8o
-         Ovx3GbMdMuat4RMMCFll2xlKKNmeeo/X4PiqQc8SyAAz47Kbeoi5t8fWctn2IkVirb
-         2UArmWNu6+439k87oRnRUDrUJicKUqwHwoZB0tG0=
+        b=KafMaqE9Zrdr+Z0NlbvDfdu7xOaQ+Ol19uBqyYv1XCbLsbuJm2/8j7tmZDYg1CMzL
+         97W1Bs8ZacO0P1iXNCNQt/XPYQclHf8Rq48P0e3SsL1k7PynmLzpjUsIqg0rruVVmU
+         tjy8o+dNdSg2DO7eP3+Mqt7xealX7i7vYYKQbr80=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 156/205] Drivers: hv: vmbus: Fix synic per-cpu context initialization
-Date:   Fri,  8 Nov 2019 06:37:03 -0500
-Message-Id: <20191108113752.12502-156-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 157/205] nvmem: core: return error code instead of NULL from nvmem_device_get
+Date:   Fri,  8 Nov 2019 06:37:04 -0500
+Message-Id: <20191108113752.12502-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,60 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit f25a7ece08bdb1f2b3c4bbeae942682fc3a99dde ]
+[ Upstream commit ca6ac25cecf0e740d7cc8e03e0ebbf8acbeca3df ]
 
-If hv_synic_alloc() errors out, the state of the per-cpu context
-for some CPUs is unknown since the zero'ing is done as each
-CPU is iterated over.  In such case, hv_synic_cleanup() may try to
-free memory based on uninitialized values.  Fix this by zero'ing
-the per-cpu context for all CPUs before doing any memory
-allocations that might fail.
+nvmem_device_get() should return ERR_PTR() on error or valid pointer
+on success, but one of the code path seems to return NULL, so fix it.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/nvmem/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 8e923e70e5945..12bc9fa211117 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -189,6 +189,17 @@ static void hv_init_clockevent_device(struct clock_event_device *dev, int cpu)
- int hv_synic_alloc(void)
- {
- 	int cpu;
-+	struct hv_per_cpu_context *hv_cpu;
-+
-+	/*
-+	 * First, zero all per-cpu memory areas so hv_synic_free() can
-+	 * detect what memory has been allocated and cleanup properly
-+	 * after any failures.
-+	 */
-+	for_each_present_cpu(cpu) {
-+		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
-+		memset(hv_cpu, 0, sizeof(*hv_cpu));
-+	}
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index d32eba11c000f..30c040786fde2 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -692,7 +692,7 @@ static struct nvmem_device *nvmem_find(const char *name)
+ 	d = bus_find_device_by_name(&nvmem_bus_type, NULL, name);
  
- 	hv_context.hv_numa_map = kcalloc(nr_node_ids, sizeof(struct cpumask),
- 					 GFP_KERNEL);
-@@ -198,10 +209,8 @@ int hv_synic_alloc(void)
- 	}
+ 	if (!d)
+-		return NULL;
++		return ERR_PTR(-ENOENT);
  
- 	for_each_present_cpu(cpu) {
--		struct hv_per_cpu_context *hv_cpu
--			= per_cpu_ptr(hv_context.cpu_context, cpu);
-+		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
- 
--		memset(hv_cpu, 0, sizeof(*hv_cpu));
- 		tasklet_init(&hv_cpu->msg_dpc,
- 			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
- 
+ 	return to_nvmem_device(d);
+ }
 -- 
 2.20.1
 
