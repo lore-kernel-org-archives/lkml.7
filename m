@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA897FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81535C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED17222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D6F222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213633;
-	bh=IKe3NgO/UtZdXa4rzM4MFaxevILnmTQeYY26tJYkwg0=;
+	s=default; t=1573213636;
+	bh=lxaBYjJ5B0CHoLiYBCq+c4Te2XzDh6prC0xrVXJ31bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2BeHEKuwlyEeETMS4vwYwW6ThlQGzjnIoe9vEBc8+Fjr5i4jiGO/m5gj6J4RiEyX
-	 mk+aW828gzw3mOgJFpnWfBaNrtVGG3hxom9uljtTb3mBUZWtTpTHq7tMH3GW3DKQ5e
-	 xQQElDhy/vCjI9LFuV2HqeDE1NNPn7M7/MxUxLnA=
+	b=zHbubLTA1FLaoa/mRy5EW/Z33RHV+5coA5zYZiz6q6WN4DkSqQ+09Ex3jLPPKO2Wi
+	 9qA3VTX+AGQfWpwfVrzOqnfzrLpQmIrY9cS1aElk4graP8D7k9nHIk3euR6/LFSC+P
+	 hmaYWCo1aakJYpaUsd992dx+cIYmo5OR1WTDVA7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391502AbfKHLrM (ORCPT
+        id S2391513AbfKHLrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391467AbfKHLq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:56 -0500
+        id S2391456AbfKHLrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9081B21D82;
-        Fri,  8 Nov 2019 11:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7416F222C2;
+        Fri,  8 Nov 2019 11:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213615;
-        bh=IKe3NgO/UtZdXa4rzM4MFaxevILnmTQeYY26tJYkwg0=;
+        s=default; t=1573213630;
+        bh=lxaBYjJ5B0CHoLiYBCq+c4Te2XzDh6prC0xrVXJ31bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rC/uEH4KPV1C+sSsD8aYlD7li/MzacoIG+xeVfvAbBA55Ta9Yvz3vIZ3muJ9Lu2Gy
-         HzC9H3OLMaLQ4kc6kGZAh0t/+Gm3BwjK8/zxpmNIFDu49ElLDhAgtC8w2ukVZY+bCw
-         9eo7GjEt5W51HEJYkobQr9I8rNhpIvkFrxPnZdZc=
+        b=V5gHJwS17Cy/EYOse9LSdSnvWlw1fmKNfq0v9j+6cNwLaKfPz0UmFamFVa0QhQ1e0
+         KL5WyHXoLna94JJCS8/N8RGaj/ZirlDjUVp8PqiuMzec3i2/ySuAlYCI0if/Wp+HQz
+         tEq/WqDz1J+0KWKnblXFrb6RXo5eMCYPCaC+rZQc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 49/64] ALSA: intel8x0m: Register irq handler after register initializations
-Date:   Fri,  8 Nov 2019 06:45:30 -0500
-Message-Id: <20191108114545.15351-49-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 57/64] power: supply: ab8500_fg: silence uninitialized variable warnings
+Date:   Fri,  8 Nov 2019 06:45:38 -0500
+Message-Id: <20191108114545.15351-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -57,64 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7064f376d4a10686f51c879401a569bb4babf9c6 ]
+[ Upstream commit 54baff8d4e5dce2cef61953b1dc22079cda1ddb1 ]
 
-The interrupt handler has to be acquired after the other resource
-initialization when allocated with IRQF_SHARED.  Otherwise it's
-triggered before the resource gets ready, and may lead to unpleasant
-behavior.
+If kstrtoul() fails then we print "charge_full" when it's uninitialized.
+The debug printk doesn't add anything so I deleted it and cleaned these
+two functions up a bit.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/intel8x0m.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/power/supply/ab8500_fg.c | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/sound/pci/intel8x0m.c b/sound/pci/intel8x0m.c
-index 1bc98c867133d..2286dfd72ff7e 100644
---- a/sound/pci/intel8x0m.c
-+++ b/sound/pci/intel8x0m.c
-@@ -1171,16 +1171,6 @@ static int snd_intel8x0m_create(struct snd_card *card,
- 	}
+diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
+index 2199f673118c0..ea8c26a108f00 100644
+--- a/drivers/power/supply/ab8500_fg.c
++++ b/drivers/power/supply/ab8500_fg.c
+@@ -2437,17 +2437,14 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
+ 				 size_t count)
+ {
+ 	unsigned long charge_full;
+-	ssize_t ret;
++	int ret;
  
-  port_inited:
--	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
--			KBUILD_MODNAME, chip)) {
--		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
--		snd_intel8x0m_free(chip);
--		return -EBUSY;
--	}
--	chip->irq = pci->irq;
--	pci_set_master(pci);
--	synchronize_irq(chip->irq);
+ 	ret = kstrtoul(buf, 10, &charge_full);
++	if (ret)
++		return ret;
+ 
+-	dev_dbg(di->dev, "Ret %zd charge_full %lu", ret, charge_full);
 -
- 	/* initialize offsets */
- 	chip->bdbars_count = 2;
- 	tbl = intel_regs;
-@@ -1224,11 +1214,21 @@ static int snd_intel8x0m_create(struct snd_card *card,
- 	chip->int_sta_reg = ICH_REG_GLOB_STA;
- 	chip->int_sta_mask = int_sta_masks;
+-	if (!ret) {
+-		di->bat_cap.max_mah = (int) charge_full;
+-		ret = count;
+-	}
+-	return ret;
++	di->bat_cap.max_mah = (int) charge_full;
++	return count;
+ }
  
-+	pci_set_master(pci);
-+
- 	if ((err = snd_intel8x0m_chip_init(chip, 1)) < 0) {
- 		snd_intel8x0m_free(chip);
- 		return err;
- 	}
+ static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
+@@ -2459,20 +2456,16 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
+ 				 size_t count)
+ {
+ 	unsigned long charge_now;
+-	ssize_t ret;
++	int ret;
  
-+	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
-+			KBUILD_MODNAME, chip)) {
-+		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
-+		snd_intel8x0m_free(chip);
-+		return -EBUSY;
-+	}
-+	chip->irq = pci->irq;
-+
- 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
- 		snd_intel8x0m_free(chip);
- 		return err;
+ 	ret = kstrtoul(buf, 10, &charge_now);
++	if (ret)
++		return ret;
+ 
+-	dev_dbg(di->dev, "Ret %zd charge_now %lu was %d",
+-		ret, charge_now, di->bat_cap.prev_mah);
+-
+-	if (!ret) {
+-		di->bat_cap.user_mah = (int) charge_now;
+-		di->flags.user_cap = true;
+-		ret = count;
+-		queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
+-	}
+-	return ret;
++	di->bat_cap.user_mah = (int) charge_now;
++	di->flags.user_cap = true;
++	queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
++	return count;
+ }
+ 
+ static struct ab8500_fg_sysfs_entry charge_full_attr =
 -- 
 2.20.1
 
