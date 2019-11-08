@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1465FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACC3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9622221D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3A921D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239948;
-	bh=+MKZtubzbvIj11RUNynTSSWXK2LQLv7HtWhYggHIKz8=;
+	s=default; t=1573239952;
+	bh=2Vr+SXCv9AoZpqoz/EsyAnbDpKGhCVDKiropSLh3uYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IpKlQTyg9Zu0KCgVW0yVB6lFNbU12gbEczIckcVKNulJ2kyX5aJgcz93rewzAVj4F
-	 4f2NTf0ERjlrk65n8JSRxfXE5h2w/Zv3JrWkO+SVnLc0MhxhMPNnhE+VquAFguGJCZ
-	 eMDUKB8Y9bSZw2N0ymbt4xeXs0Fdq9r0Wq0WnQJU=
+	b=gOqGNrrW4xEaJpDTNZoDW/ZIQvcmv4ylLDSKtluYMJ1Jbap8D3NjQkUMNti7dzOW5
+	 vfm8tDCv6MCX9YPWc+Jcv9EsxVzBv/WSRca25JwWko1Nb1uLxcH+xmWwI2KLUr9Wsx
+	 H47buL3Lz2MCfsScRppNRLqkFUlEkVUvw8MSYmd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391151AbfKHTFk (ORCPT
+        id S2389418AbfKHTFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:05:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732573AbfKHTFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:36 -0500
+        id S1730231AbfKHTFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EB092067B;
-        Fri,  8 Nov 2019 19:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1127921D7F;
+        Fri,  8 Nov 2019 19:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239935;
-        bh=+MKZtubzbvIj11RUNynTSSWXK2LQLv7HtWhYggHIKz8=;
+        s=default; t=1573239947;
+        bh=2Vr+SXCv9AoZpqoz/EsyAnbDpKGhCVDKiropSLh3uYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O5h/gaiq7B/GRXrPJUgmDFLk/IVDiIOzIJV8NW4Nzt0t2HTNHqTPYr8VqUg84zb5u
-         QpRBuYbPALg2p23qLAX3uiUTTyU5ST7JeKpy9oXRyof+0TwyWsSoosoRaVJPG5vQal
-         zBXFpxFtsw3+gL+olfRYyGi0s4VMlvzwKww0aUiU=
+        b=gyKFvaxetb/wmkyNDPnDj2l4y9jn1uwKftUXfUTJyGlWt0v2TC9+dnrYbmeuvGihL
+         jDPT2UqeC7jWzAVNTxxz5vKWflV60usw3cd7epIT8XYVeX+u4dGSbkI60qA0K6RYQc
+         CxAZ2qkPemvY75gn4iotkRXSxXnMxh990C1SG2pM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Soeren Moch <smoch@web.de>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 025/140] arm64: dts: rockchip: fix RockPro64 vdd-log regulator settings
-Date:   Fri,  8 Nov 2019 19:49:13 +0100
-Message-Id: <20191108174904.815119139@linuxfoundation.org>
+Subject: [PATCH 5.3 037/140] scsi: sni_53c710: fix compilation error
+Date:   Fri,  8 Nov 2019 19:49:25 +0100
+Message-Id: <20191108174907.419757625@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,42 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Soeren Moch <smoch@web.de>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit 0990c5e7573098117c69651821647c228483e31b ]
+[ Upstream commit 0ee6211408a8e939428f662833c7301394125b80 ]
 
-The RockPro64 schematic [1] page 18 states a min voltage of 0.8V and a
-max voltage of 1.4V for the VDD_LOG pwm regulator. However, there is an
-additional note that the pwm parameter needs to be modified.
->From the schematics a voltage range of 0.8V to 1.7V can be calculated.
-Additional voltage measurements on the board show that this fix indeed
-leads to the correct voltage, while without this fix the voltage was set
-too high.
+Drop out memory dev_printk() with wrong device pointer argument.
 
-[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+[mkp: typo]
 
-Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
-Signed-off-by: Soeren Moch <smoch@web.de>
-Link: https://lore.kernel.org/r/20191003215036.15023-1-smoch@web.de
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20191009151118.32350-1-tbogendoerfer@suse.de
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/sni_53c710.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index 5818b85255123..cad314f708300 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -166,7 +166,7 @@
- 		regulator-always-on;
- 		regulator-boot-on;
- 		regulator-min-microvolt = <800000>;
--		regulator-max-microvolt = <1400000>;
-+		regulator-max-microvolt = <1700000>;
- 		vin-supply = <&vcc5v0_sys>;
- 	};
- };
+diff --git a/drivers/scsi/sni_53c710.c b/drivers/scsi/sni_53c710.c
+index aef4881d8e215..a85d52b5dc320 100644
+--- a/drivers/scsi/sni_53c710.c
++++ b/drivers/scsi/sni_53c710.c
+@@ -66,10 +66,8 @@ static int snirm710_probe(struct platform_device *dev)
+ 
+ 	base = res->start;
+ 	hostdata = kzalloc(sizeof(*hostdata), GFP_KERNEL);
+-	if (!hostdata) {
+-		dev_printk(KERN_ERR, dev, "Failed to allocate host data\n");
++	if (!hostdata)
+ 		return -ENOMEM;
+-	}
+ 
+ 	hostdata->dev = &dev->dev;
+ 	dma_set_mask(&dev->dev, DMA_BIT_MASK(32));
 -- 
 2.20.1
 
