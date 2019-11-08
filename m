@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D7FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E1AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77A321D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53C1206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240266;
-	bh=gjoPCSILHwuU3y7q+K+akWUjlTpLkNP/LKI16h9REto=;
+	s=default; t=1573240269;
+	bh=bKoMmIiBMC4E++nd+QbmW9mGEaYvvFbCN54HCakwmvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TeIOzI4FqvbPuh3GXky/GkRDCke9x+fV9lhlwKLSEhx8BsqFZA/hWJHPCQWIvJYU0
-	 cQmujRucu4M4MmRNMZ8SrhjA5z5CcZ+A3Ah/GHNDIQ2TNzWFHVfO6kH3FnmfmHo1oG
-	 wD8MKyHsVN1wf9uXLoiKnlgmMIV4m8lvRGWS5XZ0=
+	b=oH9RAQl8ADVPok+HApVg/15Hh3ysifyTwdqhcgjkaTYwDvRGzzWeciLy6Cxu1qn25
+	 mKmMD5VN5oXUeyirjETAM4/Ky9KbsgFdy/9h4uvflGWLKX0N08kT5dcF0zK3v5LMnS
+	 vYTNbGfj/p7MqfGa9+WHl7/MNnSs4PMUqnx9epuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391969AbfKHTLF (ORCPT
+        id S2391978AbfKHTLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:11:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43394 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:11:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391965AbfKHTLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:11:02 -0500
+        id S2391962AbfKHTLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:11:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E6DE2196F;
-        Fri,  8 Nov 2019 19:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 145CB21D7E;
+        Fri,  8 Nov 2019 19:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240261;
-        bh=gjoPCSILHwuU3y7q+K+akWUjlTpLkNP/LKI16h9REto=;
+        s=default; t=1573240264;
+        bh=bKoMmIiBMC4E++nd+QbmW9mGEaYvvFbCN54HCakwmvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IfPH63CU1mH2eNKhCzfOyiSRApUnuawHapFDje8X9wiX6Laa7p52xWRo+dODTpn6r
-         wBpCecmfgfVsnmGNLg3XPyHXO2ZU13WgWWfJAZFwLM/MrunCMeiU+mfKi/py7taF2J
-         6WBoLeBn58LMKb1/FX2BIEOBHfAru4RsWoJSq7iA=
+        b=O+ZSKNjthMwdXC58tYptt2IXo0JT6XNO5NW/1lHAA+0E69eLxUeHhBaVkwn8njwwy
+         Ikznd1pVWrjmdzMfBsBf1Ejg1m4cY2eiYGZFQPsYmWVp/KZ1K5eVxzJD7aA3Z8Eh2h
+         0cqxvEE1NMElz6yKrgutsFEEu97LMm98sniuNeMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Patrick=20Sch=C3=B6nthaler?= <patrick@notvads.ovh>,
-        Eric Dumazet <edumazet@google.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 120/140] ipv4: fix IPSKB_FRAG_PMTU handling with fragmentation
-Date:   Fri,  8 Nov 2019 19:50:48 +0100
-Message-Id: <20191108174912.324185143@linuxfoundation.org>
+Subject: [PATCH 5.3 121/140] net: bcmgenet: dont set phydev->link from MAC
+Date:   Fri,  8 Nov 2019 19:50:49 +0100
+Message-Id: <20191108174912.376294261@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -63,105 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit e7a409c3f46cb0dbc7bfd4f6f9421d53e92614a5 ]
+[ Upstream commit 7de48402faa32298c3551ea32c76ccb4f9d3025d ]
 
-This patch removes the iph field from the state structure, which is not
-properly initialized. Instead, add a new field to make the "do we want
-to set DF" be the state bit and move the code to set the DF flag from
-ip_frag_next().
+When commit 28b2e0d2cd13 ("net: phy: remove parameter new_link from
+phy_mac_interrupt()") removed the new_link parameter it set the
+phydev->link state from the MAC before invoking phy_mac_interrupt().
 
-Joint work with Pablo and Linus.
+However, once commit 88d6272acaaa ("net: phy: avoid unneeded MDIO
+reads in genphy_read_status") was added this initialization prevents
+the proper determination of the connection parameters by the function
+genphy_read_status().
 
-Fixes: 19c3401a917b ("net: ipv4: place control buffer handling away from fragmentation iterators")
-Reported-by: Patrick Schönthaler <patrick@notvads.ovh>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This commit removes that initialization to restore the proper
+functionality.
+
+Fixes: 88d6272acaaa ("net: phy: avoid unneeded MDIO reads in genphy_read_status")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip.h                           |    4 ++--
- net/bridge/netfilter/nf_conntrack_bridge.c |    2 +-
- net/ipv4/ip_output.c                       |   11 ++++++-----
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -184,7 +184,7 @@ static inline struct sk_buff *ip_fraglis
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -2617,10 +2617,8 @@ static void bcmgenet_irq_task(struct wor
+ 	spin_unlock_irq(&priv->lock);
+ 
+ 	/* Link UP/DOWN event */
+-	if (status & UMAC_IRQ_LINK_EVENT) {
+-		priv->dev->phydev->link = !!(status & UMAC_IRQ_LINK_UP);
++	if (status & UMAC_IRQ_LINK_EVENT)
+ 		phy_mac_interrupt(priv->dev->phydev);
+-	}
  }
  
- struct ip_frag_state {
--	struct iphdr	*iph;
-+	bool		DF;
- 	unsigned int	hlen;
- 	unsigned int	ll_rs;
- 	unsigned int	mtu;
-@@ -195,7 +195,7 @@ struct ip_frag_state {
- };
- 
- void ip_frag_init(struct sk_buff *skb, unsigned int hlen, unsigned int ll_rs,
--		  unsigned int mtu, struct ip_frag_state *state);
-+		  unsigned int mtu, bool DF, struct ip_frag_state *state);
- struct sk_buff *ip_frag_next(struct sk_buff *skb,
- 			     struct ip_frag_state *state);
- 
---- a/net/bridge/netfilter/nf_conntrack_bridge.c
-+++ b/net/bridge/netfilter/nf_conntrack_bridge.c
-@@ -94,7 +94,7 @@ slow_path:
- 	 * This may also be a clone skbuff, we could preserve the geometry for
- 	 * the copies but probably not worth the effort.
- 	 */
--	ip_frag_init(skb, hlen, ll_rs, frag_max_size, &state);
-+	ip_frag_init(skb, hlen, ll_rs, frag_max_size, false, &state);
- 
- 	while (state.left > 0) {
- 		struct sk_buff *skb2;
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -645,11 +645,12 @@ void ip_fraglist_prepare(struct sk_buff
- EXPORT_SYMBOL(ip_fraglist_prepare);
- 
- void ip_frag_init(struct sk_buff *skb, unsigned int hlen,
--		  unsigned int ll_rs, unsigned int mtu,
-+		  unsigned int ll_rs, unsigned int mtu, bool DF,
- 		  struct ip_frag_state *state)
- {
- 	struct iphdr *iph = ip_hdr(skb);
- 
-+	state->DF = DF;
- 	state->hlen = hlen;
- 	state->ll_rs = ll_rs;
- 	state->mtu = mtu;
-@@ -668,9 +669,6 @@ static void ip_frag_ipcb(struct sk_buff
- 	/* Copy the flags to each fragment. */
- 	IPCB(to)->flags = IPCB(from)->flags;
- 
--	if (IPCB(from)->flags & IPSKB_FRAG_PMTU)
--		state->iph->frag_off |= htons(IP_DF);
--
- 	/* ANK: dirty, but effective trick. Upgrade options only if
- 	 * the segment to be fragmented was THE FIRST (otherwise,
- 	 * options are already fixed) and make it ONCE
-@@ -738,6 +736,8 @@ struct sk_buff *ip_frag_next(struct sk_b
- 	 */
- 	iph = ip_hdr(skb2);
- 	iph->frag_off = htons((state->offset >> 3));
-+	if (state->DF)
-+		iph->frag_off |= htons(IP_DF);
- 
- 	/*
- 	 *	Added AC : If we are fragmenting a fragment that's not the
-@@ -881,7 +881,8 @@ slow_path:
- 	 *	Fragment the datagram.
- 	 */
- 
--	ip_frag_init(skb, hlen, ll_rs, mtu, &state);
-+	ip_frag_init(skb, hlen, ll_rs, mtu, IPCB(skb)->flags & IPSKB_FRAG_PMTU,
-+		     &state);
- 
- 	/*
- 	 *	Keep copying data until we run out.
+ /* bcmgenet_isr1: handle Rx and Tx priority queues */
 
 
