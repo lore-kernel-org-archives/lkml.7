@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00886FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2CDFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E45222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1516F222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213729;
-	bh=gOF/g1JGF/2ta+CRXg0IuDDeSmSxHnfLjPshvyA+44c=;
+	s=default; t=1573213735;
+	bh=46tdXdSQHPeM2Uf2IhlUgJGdfheCHnVWs3MdbyS8Qd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ayOCCu3iD9KqW0/lg7TmZsh5V70Z1+00GjUX7WP8deMqt2MU96NpngMUV1jheVM+
-	 zSnQ6ZpD1pETbl72DHtH82jCeSGtWpQcG5ut6pCpX1tKBLI2x0Xo4CJgWgZ712lG/u
-	 J0xwJTE6NIOU5J/utdhL6UPyGIPGnyrlDOIDU7wk=
+	b=QyAiN75WnoPl7LetQN04i6kcklG22jKlSvRJq7D5ArcD6Gd6IZSrXrckKlszoPBv6
+	 4/2NZGpm7yJTlZcuuWUSiG+njmpT1X0KWADkQQrXiTwz+RYhngIxdTWJad5IYT96zf
+	 IpYAwnkP5/Un3DssHaTEcCrgYHfYQEIV2Z0/HZFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391089AbfKHLss (ORCPT
+        id S2391789AbfKHLsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:48:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:48:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbfKHLsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:48:20 -0500
+        id S2391755AbfKHLs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:48:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA6121924;
-        Fri,  8 Nov 2019 11:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22F5522459;
+        Fri,  8 Nov 2019 11:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213698;
-        bh=gOF/g1JGF/2ta+CRXg0IuDDeSmSxHnfLjPshvyA+44c=;
+        s=default; t=1573213707;
+        bh=46tdXdSQHPeM2Uf2IhlUgJGdfheCHnVWs3MdbyS8Qd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lH9Tz2mIkbR3vFrHMIAmDg4r7I+YzfnvBaGXzkmMXtWjbiqqr6auzldcpyI66UjBd
-         Fls/BeMCU83KBycBWUguvGZO6W0R0Rz9aWyGRZQnkU/jbedOfYfb9ZiywqAGIB7UxD
-         rZyedvBNjZz0cn6gBnHu7UV1r7LRfeDKsFNkd9uE=
+        b=H6rkPu73XEWgI56keZINGk0ltT23a0YQ80aMAk54ewiMQLSQGuW78xhyQ1PKiMAD4
+         HW+tfh23VYK0m8xurPDVJmKC2O/X+pRj1kzjeY0u0UaQHgxM1SG+87dt8PT6OBiQpZ
+         0Rdv0io8at0EKWC91Soz3UdCLEKLxMh9s5yylNRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Modra <amodra@gmail.com>, Reza Arbab <arbab@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 38/44] powerpc/vdso: Correct call frame information
-Date:   Fri,  8 Nov 2019 06:47:14 -0500
-Message-Id: <20191108114721.15944-38-sashal@kernel.org>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Tejun Heo <tj@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 44/44] kernfs: Fix range checks in kernfs_get_target_path
+Date:   Fri,  8 Nov 2019 06:47:20 -0500
+Message-Id: <20191108114721.15944-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -59,98 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Modra <amodra@gmail.com>
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-[ Upstream commit 56d20861c027498b5a1112b4f9f05b56d906fdda ]
+[ Upstream commit a75e78f21f9ad4b810868c89dbbabcc3931591ca ]
 
-Call Frame Information is used by gdb for back-traces and inserting
-breakpoints on function return for the "finish" command.  This failed
-when inside __kernel_clock_gettime.  More concerning than difficulty
-debugging is that CFI is also used by stack frame unwinding code to
-implement exceptions.  If you have an app that needs to handle
-asynchronous exceptions for some reason, and you are unlucky enough to
-get one inside the VDSO time functions, your app will crash.
+The terminating NUL byte is only there because the buffer is
+allocated with kzalloc(PAGE_SIZE, GFP_KERNEL), but since the
+range-check is off-by-one, and PAGE_SIZE==PATH_MAX, the
+returned string may not be zero-terminated if it is exactly
+PATH_MAX characters long.  Furthermore also the initial loop
+may theoretically exceed PATH_MAX and cause a fault.
 
-What's wrong:  There is control flow in __kernel_clock_gettime that
-reaches label 99 without saving lr in r12.  CFI info however is
-interpreted by the unwinder without reference to control flow: It's a
-simple matter of "Execute all the CFI opcodes up to the current
-address".  That means the unwinder thinks r12 contains the return
-address at label 99.  Disabuse it of that notion by resetting CFI for
-the return address at label 99.
-
-Note that the ".cfi_restore lr" could have gone anywhere from the
-"mtlr r12" a few instructions earlier to the instruction at label 99.
-I put the CFI as late as possible, because in general that's best
-practice (and if possible grouped with other CFI in order to reduce
-the number of CFI opcodes executed when unwinding).  Using r12 as the
-return address is perfectly fine after the "mtlr r12" since r12 on
-that code path still contains the return address.
-
-__get_datapage also has a CFI error.  That function temporarily saves
-lr in r0, and reflects that fact with ".cfi_register lr,r0".  A later
-use of r0 means the CFI at that point isn't correct, as r0 no longer
-contains the return address.  Fix that too.
-
-Signed-off-by: Alan Modra <amodra@gmail.com>
-Tested-by: Reza Arbab <arbab@linux.ibm.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso32/datapage.S     | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 1 +
- arch/powerpc/kernel/vdso64/datapage.S     | 1 +
- arch/powerpc/kernel/vdso64/gettimeofday.S | 1 +
- 4 files changed, 4 insertions(+)
+ fs/kernfs/symlink.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 59cf5f452879b..9d112e1b31b8b 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 6b2b69616e776..7b341b86216c2 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -139,6 +139,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
-index 7612eeb31da14..6832e41c372b0 100644
---- a/arch/powerpc/kernel/vdso64/datapage.S
-+++ b/arch/powerpc/kernel/vdso64/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index 3820213248836..09b2a49f6dd53 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -124,6 +124,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
+diff --git a/fs/kernfs/symlink.c b/fs/kernfs/symlink.c
+index b3b293e2c0990..0a379a86ff768 100644
+--- a/fs/kernfs/symlink.c
++++ b/fs/kernfs/symlink.c
+@@ -63,6 +63,9 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 		if (base == kn)
+ 			break;
+ 
++		if ((s - path) + 3 >= PATH_MAX)
++			return -ENAMETOOLONG;
++
+ 		strcpy(s, "../");
+ 		s += 3;
+ 		base = base->parent;
+@@ -79,7 +82,7 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 	if (len < 2)
+ 		return -EINVAL;
+ 	len--;
+-	if ((s - path) + len > PATH_MAX)
++	if ((s - path) + len >= PATH_MAX)
+ 		return -ENAMETOOLONG;
+ 
+ 	/* reverse fillup of target string from target to base */
 -- 
 2.20.1
 
