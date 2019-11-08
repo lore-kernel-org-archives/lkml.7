@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F18C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0373CFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD0E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA546215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214189;
-	bh=n2Kq4bKS+TGDHgmOJCQsdltB/pApKesDKfkqxEbgnqE=;
+	s=default; t=1573214197;
+	bh=XTKduqN7mHhES6KQ6cLQz/6SZSC+gMKdX1Jkj9OtVMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uW3eftlleJWbhvFlXacOWMPAS9bfK3Mq7bX1alPJJW4s76CztVjzGlkpS8LD0mt/5
-	 bzA+gjVHWb09G5bATpyJyOnZ+REDfNXxJq4fnd0fP9QslOIf/OikUJi1pkYb6TY1sM
-	 IPdv2WCLpMUZOeOpaV2iYkI0bjuUL3elJYSYNDXQ=
+	b=i/aLJw5egfaEa3ZdxckSDLWf6tQ/zKD+63IccCW1c7+da32VcA1/VtyAfbWPvbu2+
+	 yMtaSnWvwGQBk59NU4dcbi9KJzLXwpyudMTiA7uyTi4AI7ILM+Ggu8qWHWq8g+GUun
+	 FhsEZxmEhFZqQt3iJVdUqAi+cM8FwwSxeMSNA61E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391612AbfKHL42 (ORCPT
+        id S2389673AbfKHL4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:56:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:56:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391133AbfKHLpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:32 -0500
+        id S2391118AbfKHLpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FF1B20656;
-        Fri,  8 Nov 2019 11:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3336420656;
+        Fri,  8 Nov 2019 11:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213532;
-        bh=n2Kq4bKS+TGDHgmOJCQsdltB/pApKesDKfkqxEbgnqE=;
+        s=default; t=1573213529;
+        bh=XTKduqN7mHhES6KQ6cLQz/6SZSC+gMKdX1Jkj9OtVMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rxxqHEp7ZUIxlxoToDOUi70/v5byEwUKLuHcyRlD2Zij1VLGfIOYwMp/wpFXBKiGV
-         uJjd5xSvCDkBVV5B+kTL8an8zyydL+9ie5ZjhWnka3Px+H5VKuhud32LMIgDq8ZCc+
-         jlapWuqvUXV5iFS1CmYxxP8WZ0Iex5rB7CGWpfRM=
+        b=fONEfXwEV0k/vgGBCkT4buTUB6s0TKz/IfaZI+hQvY//esZH4rWs2ebJxD6ABUDQp
+         KRPpu7YhEvYy2i/jbfZNbuNMYIN/Ss8wlq6/cBJ0lrX8f0uSHgCaiHTLqkvGcSMENk
+         J7ASqj/PE8ef5ax51uy3+TQmQI3q6LHJvTHoELLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 095/103] power: supply: ab8500_fg: silence uninitialized variable warnings
-Date:   Fri,  8 Nov 2019 06:43:00 -0500
-Message-Id: <20191108114310.14363-95-sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 093/103] blok, bfq: do not plug I/O if all queues are weight-raised
+Date:   Fri,  8 Nov 2019 06:42:58 -0500
+Message-Id: <20191108114310.14363-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,76 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 54baff8d4e5dce2cef61953b1dc22079cda1ddb1 ]
+[ Upstream commit c8765de0adfcaaf4ffb2d951e07444f00ffa9453 ]
 
-If kstrtoul() fails then we print "charge_full" when it's uninitialized.
-The debug printk doesn't add anything so I deleted it and cleaned these
-two functions up a bit.
+To reduce latency for interactive and soft real-time applications, bfq
+privileges the bfq_queues containing the I/O of these
+applications. These privileged queues, referred-to as weight-raised
+queues, get a much higher share of the device throughput
+w.r.t. non-privileged queues. To preserve this higher share, the I/O
+of any non-weight-raised queue must be plugged whenever a sync
+weight-raised queue, while being served, remains temporarily empty. To
+attain this goal, bfq simply plugs any I/O (from any queue), if a sync
+weight-raised queue remains empty while in service.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Unfortunately, this plugging typically lowers throughput with random
+I/O, on devices with internal queueing (because it reduces the filling
+level of the internal queues of the device).
+
+This commit addresses this issue by restricting the cases where
+plugging is performed: if a sync weight-raised queue remains empty
+while in service, then I/O plugging is performed only if some of the
+active bfq_queues are *not* weight-raised (which is actually the only
+circumstance where plugging is needed to preserve the higher share of
+the throughput of weight-raised queues). This restriction proved able
+to boost throughput in really many use cases needing only maximum
+throughput.
+
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/ab8500_fg.c | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+ block/bfq-iosched.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
-index c569f82a00718..b87768238b702 100644
---- a/drivers/power/supply/ab8500_fg.c
-+++ b/drivers/power/supply/ab8500_fg.c
-@@ -2437,17 +2437,14 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
- {
- 	unsigned long charge_full;
--	ssize_t ret;
-+	int ret;
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index e65b0da1007b4..93863c6173e66 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -3314,7 +3314,12 @@ static bool bfq_bfqq_may_idle(struct bfq_queue *bfqq)
+ 	 * whether bfqq is being weight-raised, because
+ 	 * bfq_symmetric_scenario() does not take into account also
+ 	 * weight-raised queues (see comments on
+-	 * bfq_weights_tree_add()).
++	 * bfq_weights_tree_add()). In particular, if bfqq is being
++	 * weight-raised, it is important to idle only if there are
++	 * other, non-weight-raised queues that may steal throughput
++	 * to bfqq. Actually, we should be even more precise, and
++	 * differentiate between interactive weight raising and
++	 * soft real-time weight raising.
+ 	 *
+ 	 * As a side note, it is worth considering that the above
+ 	 * device-idling countermeasures may however fail in the
+@@ -3326,7 +3331,8 @@ static bool bfq_bfqq_may_idle(struct bfq_queue *bfqq)
+ 	 * to let requests be served in the desired order until all
+ 	 * the requests already queued in the device have been served.
+ 	 */
+-	asymmetric_scenario = bfqq->wr_coeff > 1 ||
++	asymmetric_scenario = (bfqq->wr_coeff > 1 &&
++			       bfqd->wr_busy_queues < bfqd->busy_queues) ||
+ 		!bfq_symmetric_scenario(bfqd);
  
- 	ret = kstrtoul(buf, 10, &charge_full);
-+	if (ret)
-+		return ret;
- 
--	dev_dbg(di->dev, "Ret %zd charge_full %lu", ret, charge_full);
--
--	if (!ret) {
--		di->bat_cap.max_mah = (int) charge_full;
--		ret = count;
--	}
--	return ret;
-+	di->bat_cap.max_mah = (int) charge_full;
-+	return count;
- }
- 
- static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
-@@ -2459,20 +2456,16 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
- {
- 	unsigned long charge_now;
--	ssize_t ret;
-+	int ret;
- 
- 	ret = kstrtoul(buf, 10, &charge_now);
-+	if (ret)
-+		return ret;
- 
--	dev_dbg(di->dev, "Ret %zd charge_now %lu was %d",
--		ret, charge_now, di->bat_cap.prev_mah);
--
--	if (!ret) {
--		di->bat_cap.user_mah = (int) charge_now;
--		di->flags.user_cap = true;
--		ret = count;
--		queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
--	}
--	return ret;
-+	di->bat_cap.user_mah = (int) charge_now;
-+	di->flags.user_cap = true;
-+	queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
-+	return count;
- }
- 
- static struct ab8500_fg_sysfs_entry charge_full_attr =
+ 	/*
 -- 
 2.20.1
 
