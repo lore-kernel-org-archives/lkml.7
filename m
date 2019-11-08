@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B4FFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69689C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE6420869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D20A21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214339;
-	bh=58DcWEgiMpt5KINu8hnLn5zHlSd3cd0qg0KAyr6xWRY=;
+	s=default; t=1573214343;
+	bh=J3QJJyB1MLGclnznM8gAQWis/pWXjNNKzkTmxtMWMpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BC8XgTGc2VDYQiRW5dxKUeHpQQHf9ByPypeHNE8mG1UbLRIcsKkXoAkvuaefqU1g2
-	 QVthMGD+zyptmEV8nGwk0gzn3qgspW8V2wZln0PNEzlVKx9JlRdyOPZkv559Go8ApN
-	 prw+2LUtXAG7DHVrxgaf7cDwxxnoN8DL9nJeEZ6E=
+	b=Ht/kRdZDVijDDUNeYAJZuDEn91BSPMTiJb0Xdoo28eatoLZuKQdaWnJCSwOl++5Z5
+	 WuJ2o5nFnaQcx/B7IsguaOUT93qRfMtDKnYgc7qB0Vs03PFjwXRY+zX9NwZQ77FwHQ
+	 BCakZem7ZJpuI+pk4517fZiSAv/FAupu44fGln6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391355AbfKHL66 (ORCPT
+        id S2388575AbfKHLo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:58:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389243AbfKHLo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 06:44:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389139AbfKHLoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B010222D4;
-        Fri,  8 Nov 2019 11:44:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA39E22459;
+        Fri,  8 Nov 2019 11:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213467;
-        bh=58DcWEgiMpt5KINu8hnLn5zHlSd3cd0qg0KAyr6xWRY=;
+        s=default; t=1573213462;
+        bh=J3QJJyB1MLGclnznM8gAQWis/pWXjNNKzkTmxtMWMpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZHR/EABsRodsfEL/w03biedOU8/XpsbxuR0EzCFLAX4ZtJ30X+eDOurxVxnLJ4Iz
-         GFGRNzbg9uklVE0UFbvRrqerbHrp5EgiiCTmu/Xynm1qmU+Fv08SxFy8tVh5sgFTbx
-         R+JS7v+bj+KOLFk5MnmjwEhwt+TD0wxwq8GTw40w=
+        b=JwSmUZs9WVpwUuKSYlMRk6pB+0dVHY2N1BBXaXzBCj92wDdlaV7DH58BFpJHBeOkA
+         acEfvdQWYJBHd57QNFFx6O5num1O/4ysgJj6dS3ZQHx1fu724iLev+GZON+3hJd5Ji
+         guUiqEJItSxZiLMAwPpF6nqOrwqqGDGwS/YRj2pU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+Cc:     Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 053/103] ARM: dts: omap3-gta04: make NAND partitions compatible with recent U-Boot
-Date:   Fri,  8 Nov 2019 06:42:18 -0500
-Message-Id: <20191108114310.14363-53-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 048/103] of: make PowerMac cache node search conditional on CONFIG_PPC_PMAC
+Date:   Fri,  8 Nov 2019 06:42:13 -0500
+Message-Id: <20191108114310.14363-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -60,59 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit fa99c21ecb3cd4021a60d0e8bf880e78b5bd0729 ]
+[ Upstream commit f6707fd6241e483f6fea2caae82d876e422bb11a ]
 
-Vendor defined U-Boot has changed the partition scheme a while ago:
+Cache nodes under the cpu node(s) is PowerMac specific according to the
+comment above, so make the code enforce that.
 
-* kernel partition 6MB
-* file system partition uses the remainder up to end of the NAND
-* increased size of the environment partition (to get an OneNAND compatible base address)
-* shrink the U-Boot partition
-
-Let's be compatible (e.g. Debian kernel built from upstream).
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/of/base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 11daca2f19c32..7992489b953e8 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -608,22 +608,22 @@
- 
- 		bootloaders@80000 {
- 			label = "U-Boot";
--			reg = <0x80000 0x1e0000>;
-+			reg = <0x80000 0x1c0000>;
- 		};
- 
--		bootloaders_env@260000 {
-+		bootloaders_env@240000 {
- 			label = "U-Boot Env";
--			reg = <0x260000 0x20000>;
-+			reg = <0x240000 0x40000>;
- 		};
- 
- 		kernel@280000 {
- 			label = "Kernel";
--			reg = <0x280000 0x400000>;
-+			reg = <0x280000 0x600000>;
- 		};
- 
--		filesystem@680000 {
-+		filesystem@880000 {
- 			label = "File System";
--			reg = <0x680000 0xf980000>;
-+			reg = <0x880000 0>;	/* 0 = MTDPART_SIZ_FULL */
- 		};
- 	};
- };
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index ce8a6e0c9b6a9..41b254be02954 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1837,7 +1837,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ 	/* OF on pmac has nodes instead of properties named "l2-cache"
+ 	 * beneath CPU nodes.
+ 	 */
+-	if (!strcmp(np->type, "cpu"))
++	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
+ 		for_each_child_of_node(np, child)
+ 			if (!strcmp(child->type, "cache"))
+ 				return child;
 -- 
 2.20.1
 
