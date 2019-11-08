@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B90C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D1FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FA32087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70744215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239828;
-	bh=qHrXqXTGoipl8/RNConQPJh/ZF8X6C0g1hIwEtiH0vM=;
+	s=default; t=1573239833;
+	bh=CsIch1gAo/tWcJRlE6qxP82SHIsQlADVwp4CP87/08E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBgoUmwf9KT+I3gzQdjMF0xANPt1RCZL1BoAX9BUkPFJ5uKesGxzRavF0v0NZOdbn
-	 4p3+5HD6M38qogC10Tug4bejMFcl++4O64L7ESx77ZiNpI+X2hdER818SXNc/Q6txD
-	 g/67HgZL2o/8HXJjscm9hulbjCNX9jige3H8ruoA=
+	b=DBrMc6uUGA0de8bswVWv0vY6sBr7RpqdguooMDqqUcCHnozh5nE0/dKAMgPClL/Zt
+	 APnSOZskeI9rFNa1Hxm8dBzbCageAtfVwOO/63Ykqq3oWGCpUS6YiRDUU+pso+Yfxp
+	 Kl1zhPCbjwwCZ0TbYF0FF7qvZhU6p/UTpuiOLtCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390856AbfKHTDq (ORCPT
+        id S2390871AbfKHTDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:03:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33544 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:03:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732439AbfKHTDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:45 -0500
+        id S1732315AbfKHTDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:03:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAE9F2087E;
-        Fri,  8 Nov 2019 19:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DAFA20650;
+        Fri,  8 Nov 2019 19:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239825;
-        bh=qHrXqXTGoipl8/RNConQPJh/ZF8X6C0g1hIwEtiH0vM=;
+        s=default; t=1573239828;
+        bh=CsIch1gAo/tWcJRlE6qxP82SHIsQlADVwp4CP87/08E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mvipFJvwnEL/+soM8x1t7HSRQSPmU0Op0eLbNAA3vQLJIrSokJ2HKpjg7REM1XMR6
-         Lo7/r2J56BwdkxEA5JLCsu1052/B8plkhKWPKzCMZt0V0a3PmRik3tfH7kuAVgbV2G
-         XASRWPd5RmdpW3ngO4psfnHlpgvqoT9XZBjnV2+Q=
+        b=uNhl36aXUtuGON1wYwQu5hJPnRMi7DigEqEM+815VKpSzKdID5RlAfhYV4Lo02770
+         PUkDIlbIuJTNUXs48dfw9PCLR6mLoF/v24NMfNVxAvp+DTc3hzwGak7ZgyyhjUfPWK
+         UHH0wITPi4Ci0sLuwsGXWi5BCO4gtofwLewVjIpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maxtram95@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 72/79] wireless: Skip directory when generating certificates
-Date:   Fri,  8 Nov 2019 19:50:52 +0100
-Message-Id: <20191108174824.968628501@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 73/79] platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to critclk_systems DMI table
+Date:   Fri,  8 Nov 2019 19:50:53 +0100
+Message-Id: <20191108174825.268782719@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,37 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-[ Upstream commit 32b5a2c9950b9284000059d752f7afa164deb15e ]
+commit ad0d315b4d4e7138f43acf03308192ec00e9614d upstream.
 
-Commit 715a12334764 ("wireless: don't write C files on failures") drops
-the `test -f $$f` check. The list of targets contains the
-CONFIG_CFG80211_EXTRA_REGDB_KEYDIR directory itself, and this check used
-to filter it out. After the check was removed, the extra keydir option
-no longer works, failing with the following message:
+The SIMATIC IPC227E uses the PMC clock for on-board components and gets
+stuck during boot if the clock is disabled. Therefore, add this device
+to the critical systems list.
 
-od: 'standard input': read error: Is a directory
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This commit restores the check to make extra keydir work again.
-
-Fixes: 715a12334764 ("wireless: don't write C files on failures")
-Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/pmc_atom.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/wireless/Makefile
-+++ b/net/wireless/Makefile
-@@ -38,6 +38,7 @@ $(obj)/extra-certs.c: $(CONFIG_CFG80211_
- 	@(set -e; \
- 	  allf=""; \
- 	  for f in $^ ; do \
-+	      test -f $$f || continue;\
- 	      # similar to hexdump -v -e '1/1 "0x%.2x," "\n"' \
- 	      thisf=$$(od -An -v -tx1 < $$f | \
- 	                   sed -e 's/ /\n/g' | \
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -445,6 +445,13 @@ static const struct dmi_system_id critcl
+ 			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
+ 		},
+ 	},
++	{
++		.ident = "SIMATIC IPC227E",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
++		},
++	},
+ 	{ /*sentinel*/ }
+ };
+ 
 
 
