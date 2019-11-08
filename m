@@ -2,52 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00E8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B318FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E12214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3D120650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239840;
-	bh=26yenZUwaIRr6X613M2xzDB+jE59fnyLX4fWHHmWfnI=;
+	s=default; t=1573239844;
+	bh=tNf64DL/4DtEM2E0M34hHHFkgT7A8t4mmajD3IE6c3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCR+AliyWOL0Hn/sU7JWL/2iey5Io151w3GkTy60StYyrQCpB3YHJn1YUC5hhICQG
-	 D0Zc0+2x3kSeXoA/W01VJM+AFjCnwts4ue1d1Jp2A8V7m2xPJQai5zvtQY6CW4SUvY
-	 mRGlRw5l9UZ901rb1Ixf98btPHAcYfw4qCHzQfLk=
+	b=Oxn/b04GjQ/Hy6TDdefPZcWVaBrI0DxuoDAy2eEmQszU8hrdbjVafN+/spZv05b98
+	 WCGEzG43D/t+CD02APOXPsVpVTEqhRS8U3NEtBHM4Fs6tmacRjkDigAUS/W2hfbqXH
+	 1TmwQppL6jo1SgFcbJXC8fR5zQZwOnS+lDOEhlO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390902AbfKHTD7 (ORCPT
+        id S2390916AbfKHTED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:03:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:04:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389401AbfKHTD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:57 -0500
+        id S2389401AbfKHTEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:04:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ACB220650;
-        Fri,  8 Nov 2019 19:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A03820650;
+        Fri,  8 Nov 2019 19:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239837;
-        bh=26yenZUwaIRr6X613M2xzDB+jE59fnyLX4fWHHmWfnI=;
+        s=default; t=1573239839;
+        bh=tNf64DL/4DtEM2E0M34hHHFkgT7A8t4mmajD3IE6c3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QeOeAnzS8GPMibf/f9ooSSMUQhQ7ImvxaXtLsmj7G6boLNKWmxZkvHRpW3/iwFbN7
-         gxmB2TFOs4Q4m/7cSd0SyAWqIgla36HAODa3qF7g4hZNCq1j/Q49GWAuNWilgOKCk6
-         nhZ5oUDQDtfvhP+9XK6UzlV5azrDfW9ySMOiGuwY=
+        b=lYro4NtsOYdS2ewth7SyowpQkLYyE3QEQPtW2LT25VRput8sY0hd1Bdb2EMPs4jlt
+         knRBeskcf2Q2zMS1crp9jD70SW/zWWuFbzdg5XOsuK5zExAIC7NykbGVHC0QiBj74o
+         DOKKFOHPvUcGO4sL1rYnZZzVG9gjMw8on76APRIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/79] nbd: handle racing with errored out commands
-Date:   Fri,  8 Nov 2019 19:50:16 +0100
-Message-Id: <20191108174806.174452403@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shahjada Abul Husain <shahjada@chelsio.com>,
+        Vishal Kulkarni <vishal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 37/79] cxgb4: fix panic when attaching to ULD fail
+Date:   Fri,  8 Nov 2019 19:50:17 +0100
+Message-Id: <20191108174807.577466159@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,69 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Vishal Kulkarni <vishal@chelsio.com>
 
-[ Upstream commit 7ce23e8e0a9cd38338fc8316ac5772666b565ca9 ]
+[ Upstream commit fc89cc358fb64e2429aeae0f37906126636507ec ]
 
-We hit the following warning in production
+Release resources when attaching to ULD fail. Otherwise, data
+mismatch is seen between LLD and ULD later on, which lead to
+kernel panic when accessing resources that should not even
+exist in the first place.
 
-print_req_error: I/O error, dev nbd0, sector 7213934408 flags 80700
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 25 PID: 32407 at lib/refcount.c:190 refcount_sub_and_test_checked+0x53/0x60
-Workqueue: knbd-recv recv_work [nbd]
-RIP: 0010:refcount_sub_and_test_checked+0x53/0x60
-Call Trace:
- blk_mq_free_request+0xb7/0xf0
- blk_mq_complete_request+0x62/0xf0
- recv_work+0x29/0xa1 [nbd]
- process_one_work+0x1f5/0x3f0
- worker_thread+0x2d/0x3d0
- ? rescuer_thread+0x340/0x340
- kthread+0x111/0x130
- ? kthread_create_on_node+0x60/0x60
- ret_from_fork+0x1f/0x30
----[ end trace b079c3c67f98bb7c ]---
-
-This was preceded by us timing out everything and shutting down the
-sockets for the device.  The problem is we had a request in the queue at
-the same time, so we completed the request twice.  This can actually
-happen in a lot of cases, we fail to get a ref on our config, we only
-have one connection and just error out the command, etc.
-
-Fix this by checking cmd->status in nbd_read_stat.  We only change this
-under the cmd->lock, so we are safe to check this here and see if we've
-already error'ed this command out, which would indicate that we've
-completed it as well.
-
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 94cdb8bb993a ("cxgb4: Add support for dynamic allocation of resources for ULD")
+Signed-off-by: Shahjada Abul Husain <shahjada@chelsio.com>
+Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/nbd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c |   29 ++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index da6a36d14f4cf..867841c56a6da 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -663,6 +663,12 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 		ret = -ENOENT;
- 		goto out;
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
+@@ -673,10 +673,10 @@ static void uld_init(struct adapter *ada
+ 	lld->write_cmpl_support = adap->params.write_cmpl_support;
+ }
+ 
+-static void uld_attach(struct adapter *adap, unsigned int uld)
++static int uld_attach(struct adapter *adap, unsigned int uld)
+ {
+-	void *handle;
+ 	struct cxgb4_lld_info lli;
++	void *handle;
+ 
+ 	uld_init(adap, &lli);
+ 	uld_queue_init(adap, uld, &lli);
+@@ -686,7 +686,7 @@ static void uld_attach(struct adapter *a
+ 		dev_warn(adap->pdev_dev,
+ 			 "could not attach to the %s driver, error %ld\n",
+ 			 adap->uld[uld].name, PTR_ERR(handle));
+-		return;
++		return PTR_ERR(handle);
  	}
-+	if (cmd->status != BLK_STS_OK) {
-+		dev_err(disk_to_dev(nbd->disk), "Command already handled %p\n",
-+			req);
-+		ret = -ENOENT;
-+		goto out;
-+	}
- 	if (test_bit(NBD_CMD_REQUEUED, &cmd->flags)) {
- 		dev_err(disk_to_dev(nbd->disk), "Raced with timeout on req %p\n",
- 			req);
--- 
-2.20.1
-
+ 
+ 	adap->uld[uld].handle = handle;
+@@ -694,23 +694,24 @@ static void uld_attach(struct adapter *a
+ 
+ 	if (adap->flags & FULL_INIT_DONE)
+ 		adap->uld[uld].state_change(handle, CXGB4_STATE_UP);
++
++	return 0;
+ }
+ 
+-/**
+- *	cxgb4_register_uld - register an upper-layer driver
+- *	@type: the ULD type
+- *	@p: the ULD methods
++/* cxgb4_register_uld - register an upper-layer driver
++ * @type: the ULD type
++ * @p: the ULD methods
+  *
+- *	Registers an upper-layer driver with this driver and notifies the ULD
+- *	about any presently available devices that support its type.  Returns
+- *	%-EBUSY if a ULD of the same type is already registered.
++ * Registers an upper-layer driver with this driver and notifies the ULD
++ * about any presently available devices that support its type.  Returns
++ * %-EBUSY if a ULD of the same type is already registered.
+  */
+ int cxgb4_register_uld(enum cxgb4_uld type,
+ 		       const struct cxgb4_uld_info *p)
+ {
+-	int ret = 0;
+ 	unsigned int adap_idx = 0;
+ 	struct adapter *adap;
++	int ret = 0;
+ 
+ 	if (type >= CXGB4_ULD_MAX)
+ 		return -EINVAL;
+@@ -744,12 +745,16 @@ int cxgb4_register_uld(enum cxgb4_uld ty
+ 		if (ret)
+ 			goto free_irq;
+ 		adap->uld[type] = *p;
+-		uld_attach(adap, type);
++		ret = uld_attach(adap, type);
++		if (ret)
++			goto free_txq;
+ 		adap_idx++;
+ 	}
+ 	mutex_unlock(&uld_mutex);
+ 	return 0;
+ 
++free_txq:
++	release_sge_txq_uld(adap, type);
+ free_irq:
+ 	if (adap->flags & FULL_INIT_DONE)
+ 		quiesce_rx_uld(adap, type);
 
 
