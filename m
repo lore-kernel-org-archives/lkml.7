@@ -2,123 +2,102 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4C0FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A373FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3ABD21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573238530;
-	bh=hOLr4d1sakZO1oqZEpnz48GO69KF6YcTrmFsD9e7yRg=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=pQ3ZnOAd1hpo9xvta6mEhGPrHDe+HXrO9ehevZXR6Sv982qufaOxjstJvP0H+A/E+
-	 ruy/XF3IZSh8wTVLQTdirZZUGQixzmwR/iHkOuUXTEESWl4JHG5ALDRniYQnqL41+3
-	 8xW6Zj2pAkj3VszLFT6eD2q4wRXrbl+EsmbsLqGY=
+	by mail.kernel.org (Postfix) with ESMTP id 75D7721848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:44:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gKnbjs0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbfKHSmJ (ORCPT
+        id S1730134AbfKHSoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:42:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfKHSmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:42:08 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 Nov 2019 13:44:37 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53362 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726670AbfKHSoh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:44:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573238675;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=54brm5rGO/mYSNJW+nP1TupX0Iz3rREdtgTrvEffbAQ=;
+        b=gKnbjs0lQvO0s+ic/t+TdtYL+khDntP3tpZcSIaN9Uuk9azcEDV9sP8mWHI39hniqlMHGc
+        89wEkgBfXShAYAfm67/NJ+OOqi3qbha56qA7uNDPYRScfu+kxw6JFwmAXRK82zfIEkREIR
+        z6L18hGhg6PsLC4221AAgYXt1tVT1m8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-I9VUoG5xOYmly9AOkUWPiw-1; Fri, 08 Nov 2019 13:44:34 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 334DD21848;
-        Fri,  8 Nov 2019 18:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573238527;
-        bh=hOLr4d1sakZO1oqZEpnz48GO69KF6YcTrmFsD9e7yRg=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=DAJGUlWDjjqC8cVK6Eg38iIC5Cfte0U2YqYLYmhMeSX8xX2TPdI8KnT8b1zIwDIr4
-         s1zXJd3yv3wJz86WWWGRqBsdUyB75lkVYI7Qz4NE7hIlZyjZF2q7hFH1pANxeKJczw
-         mZKNA9rYKYK0gjQirJEYtw+YTPkR58G26ESxjVSI=
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C0E4477;
+        Fri,  8 Nov 2019 18:44:33 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 42962600C9;
+        Fri,  8 Nov 2019 18:44:32 +0000 (UTC)
+Subject: Re: [PATCH v2] hugetlbfs: Take read_lock on i_mmap for PMD sharing
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20191107211809.9539-1-longman@redhat.com>
+ <20191108020337.pyf3ry3zsioh2ghz@linux-p48b>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <9c114cb4-cd93-41b5-f123-13815871d659@redhat.com>
+Date:   Fri, 8 Nov 2019 13:44:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20191108020337.pyf3ry3zsioh2ghz@linux-p48b>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: I9VUoG5xOYmly9AOkUWPiw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJs_Fx5trp2B7uOMTFZNUsYoKrO1-MWsNECKp-hz+1qCOCeU8A@mail.gmail.com>
-References: <20191014102308.27441-1-tdas@codeaurora.org> <20191014102308.27441-6-tdas@codeaurora.org> <20191029175941.GA27773@google.com> <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org> <20191031174149.GD27773@google.com> <20191107210606.E536F21D79@mail.kernel.org> <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com> <20191108063543.0262921882@mail.kernel.org> <CAJs_Fx5trp2B7uOMTFZNUsYoKrO1-MWsNECKp-hz+1qCOCeU8A@mail.gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 10:42:06 -0800
-Message-Id: <20191108184207.334DD21848@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Clark (2019-11-08 08:54:23)
-> On Thu, Nov 7, 2019 at 10:35 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Rob Clark (2019-11-07 18:06:19)
-> > > On Thu, Nov 7, 2019 at 1:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > >
-> > > >
-> > > > NULL is a valid clk pointer returned by clk_get(). What is the disp=
-lay
-> > > > driver doing that makes it consider NULL an error?
-> > > >
-> > >
-> > > do we not have an iface clk?  I think the driver assumes we should
-> > > have one, rather than it being an optional thing.. we could ofc change
-> > > that
-> >
-> > I think some sort of AHB clk is always enabled so the plan is to just
-> > hand back NULL to the caller when they call clk_get() on it and nobody
-> > should be the wiser when calling clk APIs with a NULL iface clk. The
-> > common clk APIs typically just return 0 and move along. Of course, we'll
-> > also turn the clk on in the clk driver so that hardware can function
-> > properly, but we don't need to expose it as a clk object and all that
-> > stuff if we're literally just slamming a bit somewhere and never looking
-> > back.
-> >
-> > But it sounds like we can't return NULL for this clk for some reason? I
-> > haven't tried to track it down yet but I think Matthias has found it
-> > causes some sort of problem in the display driver.
-> >
->=20
-> ok, I guess we can change the dpu code to allow NULL..  but what would
-> the return be, for example on a different SoC where we do have an
-> iface clk, but the clk driver isn't enabled?  Would that also return
-> NULL?  I guess it would be nice to differentiate between those cases..
->=20
+On 11/7/19 9:03 PM, Davidlohr Bueso wrote:
+> On Thu, 07 Nov 2019, Waiman Long wrote:
+>> With this patch applied, the customer is seeing significant performance
+>> improvement over the unpatched kernel.
+>
+> Could you give more details here?=20
 
-So the scenario is DT describes the clk
+Red Hat has a customer that is running a transactional database
+workload. In this particular case, about ~500-1500GB of static hugepages
+are allocated.=C2=A0 The database then allocates a single large shared memo=
+ry
+segment in those hugepages to use primarily as a database buffer for 8kB
+blocks from disk (there are also other database structures in that
+shared memory, but it's mostly for buffer).=C2=A0 Then thousands of separat=
+e
+processes reference and load data into that buffer. They were seeing
+multi-second pauses when starting up the database.
 
- dpu_node {
-     clocks =3D <&cc AHB_CLK>;
-     clock-names =3D "iface";
- }
+I first gave them a patched kernel that disabled PMD sharing. That fixed
+their problem. After that, I gave them another test kernel that
+contained this patch. They said there were significant improved compared
+with the unpatched kernel. There is still some degradation compared to
+the kernel with huge shared pmd disabled entirely, but they're pretty
+close in performance.
 
-but the &cc node has a driver that doesn't probe?
+Cheer,
+Longman
 
-I believe in this scenario we return -EPROBE_DEFER because we assume we
-should wait for the clk driver to probe and provide the iface clk. See
-of_clk_get_hw_from_clkspec() and how it looks through a list of clk
-providers and tries to match the &cc phandle to some provider.
-
-Once the driver probes, the match will happen and we'll be able to look
-up the clk in the provider with __of_clk_get_hw_from_provider(). If
-the clk provider decides that there isn't a clk object, it will return
-NULL and then eventually clk_hw_create_clk() will turn the NULL return
-value into a NULL pointer to return from clk_get().
 
