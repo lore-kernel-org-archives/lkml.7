@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5E7FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEF9FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3EEB21D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25D9222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213334;
-	bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
+	s=default; t=1573213339;
+	bh=9fAtqds1VzPCxVoMPO2Bw4wJHGDRYIONBHw1nr1WOKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYsps5taL140pg4eFMfpiELBoH6bcQxiidfmv65XX1dgTn66xhBK/cYM/KZ2J6UHH
-	 jXAOf0fHxX1ruws+PMVZt9ZP0EsTzlSBd+fnGWajN+epUjZ7GiVMIP5YcsZHN37XUM
-	 1Kouh/x1fGjtjPEJ9T7S/Ch44AX3NZ2t8jqinA8A=
+	b=uwjjussD43W9CPaVNLCKJ5IG8t9dTA8YRX3v8ilh9fwOL0wWWCVmd9oDUsdaSZmuD
+	 ngbX4fnOylEyKG+q0hn0Za14D+s1hwdwa5EZJVj+VWc9AKOZfuhCMifGfyrgEId4WG
+	 OcXPAdnMAe4UdWMzoVN/ivUxbTPwmWw+L5jpNOJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389807AbfKHLmJ (ORCPT
+        id S2387398AbfKHLmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389769AbfKHLmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:05 -0500
+        id S1733210AbfKHLmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4752F21D82;
-        Fri,  8 Nov 2019 11:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDBF2222D4;
+        Fri,  8 Nov 2019 11:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213325;
-        bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
+        s=default; t=1573213328;
+        bh=9fAtqds1VzPCxVoMPO2Bw4wJHGDRYIONBHw1nr1WOKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzM/i+MRIwzcICvMcwgFRTgXnXpO2xsvxP4dSMXYynyzfszjb0JR3pkdhOQhTgyY9
-         7hO4Uo++sXZuoB9CpMu4cUZEqPbo+roeIcPI0Z8EQQ6Ba3UNWoD19R2NaZIVAFmzTr
-         TWB05034Rf9JEcNfPBygR6LRg4LVZuPKPNFdOpUM=
+        b=x11rAGNtCGzynWS8RquHYTqkOsjakeAU1mQ6GSELTZZg7+Y3RuyxGGh5/KRctVpC8
+         98pSZ1piwcQw4mgnWkzQVvyb/j5gbCCGdnlhzTCW5BBpSCL0zt9m+lx2o0gVYBRf0C
+         vS0yiQsfP83Cbvi7gS70HZrCu5SpBxqOhIcl82tY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Magnus Damm <damm+renesas@opensource.se>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 167/205] arm64: dts: renesas: r8a77965: Attach the SYS-DMAC to the IPMMU
-Date:   Fri,  8 Nov 2019 06:37:14 -0500
-Message-Id: <20191108113752.12502-167-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 170/205] pinctrl: at91-pio4: fix has_config check in atmel_pctl_dt_subnode_to_map()
+Date:   Fri,  8 Nov 2019 06:37:17 -0500
+Message-Id: <20191108113752.12502-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,70 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 4d76ad7d9de05506f1ee9a7b22416440468be090 ]
+[ Upstream commit b97760ae8e3dc8bb91881c13425a0bff55f2bd85 ]
 
-For R-Car M3-N hook up SYS-DMAC0, SYS-DMAC1 and SYS-DMAC2 to
-IPMMU-DS0 and IPMMU-DS1 in same way as for R-Car M3-W.
-This follows the R-Car Gen3 Rev.1.00 (April 2018) datasheet.
+Smatch complains about this condition:
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+	if (has_config && num_pins >= 1)
+
+The "has_config" variable is either uninitialized or true.  The
+"num_pins" variable is unsigned and we verified that it is non-zero on
+the lines before so we know "num_pines >= 1" is true.  Really, we could
+just check "num_configs" directly and remove the "has_config" variable.
+
+Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/pinctrl/pinctrl-at91-pio4.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index f60f08ba1a6f9..0da4841162610 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -634,6 +634,14 @@
- 			resets = <&cpg 219>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-+			iommus = <&ipmmu_ds0 0>, <&ipmmu_ds0 1>,
-+			       <&ipmmu_ds0 2>, <&ipmmu_ds0 3>,
-+			       <&ipmmu_ds0 4>, <&ipmmu_ds0 5>,
-+			       <&ipmmu_ds0 6>, <&ipmmu_ds0 7>,
-+			       <&ipmmu_ds0 8>, <&ipmmu_ds0 9>,
-+			       <&ipmmu_ds0 10>, <&ipmmu_ds0 11>,
-+			       <&ipmmu_ds0 12>, <&ipmmu_ds0 13>,
-+			       <&ipmmu_ds0 14>, <&ipmmu_ds0 15>;
- 		};
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index ef7ab208b951e..9e2f3738bf3ec 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -493,7 +493,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	unsigned num_pins, num_configs, reserve;
+ 	unsigned long *configs;
+ 	struct property	*pins;
+-	bool has_config;
+ 	u32 pinfunc;
+ 	int ret, i;
  
- 		dmac1: dma-controller@e7300000 {
-@@ -668,6 +676,14 @@
- 			resets = <&cpg 218>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-+			iommus = <&ipmmu_ds1 0>, <&ipmmu_ds1 1>,
-+			       <&ipmmu_ds1 2>, <&ipmmu_ds1 3>,
-+			       <&ipmmu_ds1 4>, <&ipmmu_ds1 5>,
-+			       <&ipmmu_ds1 6>, <&ipmmu_ds1 7>,
-+			       <&ipmmu_ds1 8>, <&ipmmu_ds1 9>,
-+			       <&ipmmu_ds1 10>, <&ipmmu_ds1 11>,
-+			       <&ipmmu_ds1 12>, <&ipmmu_ds1 13>,
-+			       <&ipmmu_ds1 14>, <&ipmmu_ds1 15>;
- 		};
+@@ -509,9 +508,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		return ret;
+ 	}
  
- 		dmac2: dma-controller@e7310000 {
-@@ -702,6 +718,14 @@
- 			resets = <&cpg 217>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-+			iommus = <&ipmmu_ds1 16>, <&ipmmu_ds1 17>,
-+			       <&ipmmu_ds1 18>, <&ipmmu_ds1 19>,
-+			       <&ipmmu_ds1 20>, <&ipmmu_ds1 21>,
-+			       <&ipmmu_ds1 22>, <&ipmmu_ds1 23>,
-+			       <&ipmmu_ds1 24>, <&ipmmu_ds1 25>,
-+			       <&ipmmu_ds1 26>, <&ipmmu_ds1 27>,
-+			       <&ipmmu_ds1 28>, <&ipmmu_ds1 29>,
-+			       <&ipmmu_ds1 30>, <&ipmmu_ds1 31>;
- 		};
+-	if (num_configs)
+-		has_config = true;
+-
+ 	num_pins = pins->length / sizeof(u32);
+ 	if (!num_pins) {
+ 		dev_err(pctldev->dev, "no pins found in node %pOF\n", np);
+@@ -524,7 +520,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	 * map for each pin.
+ 	 */
+ 	reserve = 1;
+-	if (has_config && num_pins >= 1)
++	if (num_configs)
+ 		reserve++;
+ 	reserve *= num_pins;
+ 	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps, num_maps,
+@@ -547,7 +543,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		pinctrl_utils_add_map_mux(pctldev, map, reserved_maps, num_maps,
+ 					  group, func);
  
- 		ipmmu_ds0: mmu@e6740000 {
+-		if (has_config) {
++		if (num_configs) {
+ 			ret = pinctrl_utils_add_map_configs(pctldev, map,
+ 					reserved_maps, num_maps, group,
+ 					configs, num_configs,
 -- 
 2.20.1
 
