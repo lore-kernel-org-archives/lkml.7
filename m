@@ -2,270 +2,124 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A285AFC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD35FC6199
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77415214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A174B214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E6RDJQz/";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O3u/QHiV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732830AbfKHVPQ (ORCPT
+        id S1732866AbfKHVPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:15:16 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:36111 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbfKHVPP (ORCPT
+        Fri, 8 Nov 2019 16:15:24 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:35274 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731743AbfKHVPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:15:15 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M2ON6-1iUpU10hYc-003rip; Fri, 08 Nov 2019 22:14:55 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 12/23] y2038: syscalls: change remaining timeval to __kernel_old_timeval
-Date:   Fri,  8 Nov 2019 22:12:11 +0100
-Message-Id: <20191108211323.1806194-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
-References: <20191108210236.1296047-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:L5MXbYk31wOXwoBz972x9kuLeZIEuu+iSFnMEMxFsvJUSyMZcA5
- KJDBtqG97dBLfawBhDt9kcwvJVvuwOQ596SiSyGadN0etYEY4mHIcslPBMvhPxUeiASTwtE
- 4HuvheJuT5lTmRZ2iJaCMwpj7E00u6pChQLfyfcNCai0JwzuRda/z3lx8uBV/SGvrx3+2hE
- v3L/VsxyHbSgyY9NiNRbA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vzi6yde6b/Y=:ccalfERfsUEw5gS+vbBk40
- 2pXxs9573zedbV97jmVac2Hd1aJR6bl5MYGgvW2fYC9hDjckcs4/aqqNfk4Mty8m6lYfGAHO6
- 5js6bYy+kzIpVkubVkF9YsvcO3ZZHee5W4p2c9Ysx8xD9jjQpDoqBDPEyJbcwiHVaomVoj4bE
- 0WD+6FuQCdvgxREISAkqwJlb7+QF/dBFT5Q6/ZyOfOqXzoH71fKgCQj7KwaSCEuuGd/A4h0aY
- 6Px9rTYGebyI6et4h4wCRgTVuMjRrFPuLUQVKDm7opN+aIJUKcMLqYzSwcycK6xPujokgupip
- UXhzNc46PDF4VGfT0TFv05d/rkqfwnz6IMvFI43cxdKN2jBDCPHqDYaF4IHjuLLfS8epEvDca
- dW+YWaydV+DP4dNGpCCUMQ69Gry4TGR1rdE9Hv2g3+tgymMpoiN+PFS7yccDBHBtFgWMhB7uD
- nRUGZXnkIc6ZlbhTmgTEDHv923hP6eoj461EDqMH6o17vOdPIUYLbRBEZdaWpppISWbfNJHFy
- o+CsXM9xLVJ41r2GUsD3OlN9wDF57IkUMTdSP1TPHpLTg8tQt1KSx0liPDIBCsBjmOS27/8Gy
- YgGivN27m6iSpVffP4eDtveIo4c6TU77s/QCmzH6pGzD8y/KWU0GmXMaOCWYHQLrZK4zuAMD2
- +MbnM1nHjqbdI/+v4TPx6KLmftPRa6CP/2wO63/IlA1+yYihaDygxL7/ut0w6qZP/pcCHnD+P
- 76rVbneRg0ADgYWIhuBGfGV4KDJJFcgrX/+bta7Ng8mQNlm2w5i0AvGMpldh8EN8mGS0OfNcU
- mEmUPpx/EDdJ828L7cfx83d8ZMGPIKWUYJgwb5MpOxSoVtQw/G3/nESpKWbxtGOyPejhCQcmE
- 1qC5qhTto/Pmq0rO3eWQ==
+        Fri, 8 Nov 2019 16:15:24 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B9D536146F; Fri,  8 Nov 2019 21:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573247723;
+        bh=NtCjd02v1Yds9AVIHvham7yjJZsxN1d2DMJTV0OeTJY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E6RDJQz/Iz2rXlNIER8tWf5prgdkcAg5XxJtBuLd7wO+3UL7MXgnTXh1zGvt9p4IA
+         /I5cTIioSMsf+QsXFUw2mwYski2nLn5nMm4eHsZVd0VDEnRiaRvOrfgpHFmQ3o3Fur
+         mcnpZxeYBb7jObWyjPTcQhQdbKte+q9U+NoAQA3w=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CC8661275;
+        Fri,  8 Nov 2019 21:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573247720;
+        bh=NtCjd02v1Yds9AVIHvham7yjJZsxN1d2DMJTV0OeTJY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O3u/QHiVtXN1/TRGGxZsCGWrvgJQ7Ex9JTHmriYpljoD1XxwgLF/+PlsHm2wWeV8g
+         egyJi7C/JIBtgNQTu/IlcRUg+w1qiEF4hIXH2ROsC8ItHjhuNSN+2Pk7/tEO2kOnZz
+         iEfkIbWuTzPF5Z/pTpUPRpI7YzTJLXdOhkwPDY50=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3CC8661275
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v7 6/6] arm64: dts: qcom: msm8998: Add mmcc node
+Date:   Fri,  8 Nov 2019 14:15:10 -0700
+Message-Id: <1573247710-21035-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
+References: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All of the remaining syscalls that pass a timeval (gettimeofday, utime,
-futimesat) can trivially be changed to pass a __kernel_old_timeval
-instead, which has a compatible layout, but avoids ambiguity with
-the timeval type in user space.
+Add MSM8998 Multimedia Clock Controller DT node.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- arch/powerpc/include/asm/asm-prototypes.h |  3 ++-
- arch/powerpc/kernel/syscalls.c            |  4 ++--
- fs/select.c                               | 10 +++++-----
- fs/utimes.c                               |  8 ++++----
- include/linux/syscalls.h                  | 10 +++++-----
- kernel/power/power.h                      |  2 +-
- kernel/time/time.c                        |  2 +-
- 7 files changed, 20 insertions(+), 19 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 28 +++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/asm-prototypes.h b/arch/powerpc/include/asm/asm-prototypes.h
-index 8561498e653c..2c25dc079cb9 100644
---- a/arch/powerpc/include/asm/asm-prototypes.h
-+++ b/arch/powerpc/include/asm/asm-prototypes.h
-@@ -92,7 +92,8 @@ long sys_swapcontext(struct ucontext __user *old_ctx,
- long sys_debug_setcontext(struct ucontext __user *ctx,
- 			  int ndbg, struct sig_dbg_op __user *dbg);
- int
--ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, struct timeval __user *tvp);
-+ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp,
-+	   struct __kernel_old_timeval __user *tvp);
- unsigned long __init early_init(unsigned long dt_ptr);
- void __init machine_init(u64 dt_ptr);
- #endif
-diff --git a/arch/powerpc/kernel/syscalls.c b/arch/powerpc/kernel/syscalls.c
-index 3bfb3888e897..078608ec2e92 100644
---- a/arch/powerpc/kernel/syscalls.c
-+++ b/arch/powerpc/kernel/syscalls.c
-@@ -79,7 +79,7 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, size_t, len,
-  * sys_select() with the appropriate args. -- Cort
-  */
- int
--ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, struct timeval __user *tvp)
-+ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, struct __kernel_old_timeval __user *tvp)
- {
- 	if ( (unsigned long)n >= 4096 )
- 	{
-@@ -89,7 +89,7 @@ ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, s
- 		    || __get_user(inp, ((fd_set __user * __user *)(buffer+1)))
- 		    || __get_user(outp, ((fd_set  __user * __user *)(buffer+2)))
- 		    || __get_user(exp, ((fd_set  __user * __user *)(buffer+3)))
--		    || __get_user(tvp, ((struct timeval  __user * __user *)(buffer+4))))
-+		    || __get_user(tvp, ((struct __kernel_old_timeval  __user * __user *)(buffer+4))))
- 			return -EFAULT;
- 	}
- 	return sys_select(n, inp, outp, exp, tvp);
-diff --git a/fs/select.c b/fs/select.c
-index 53a0c149f528..11d0285d46b7 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -321,7 +321,7 @@ static int poll_select_finish(struct timespec64 *end_time,
- 	switch (pt_type) {
- 	case PT_TIMEVAL:
- 		{
--			struct timeval rtv;
-+			struct __kernel_old_timeval rtv;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 2f0d4366724b..1d2e8357fb01 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -3,6 +3,7 @@
  
- 			if (sizeof(rtv) > sizeof(rtv.tv_sec) + sizeof(rtv.tv_usec))
- 				memset(&rtv, 0, sizeof(rtv));
-@@ -698,10 +698,10 @@ int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
- }
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8998.h>
++#include <dt-bindings/clock/qcom,mmcc-msm8998.h>
+ #include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/gpio/gpio.h>
+@@ -1758,6 +1759,33 @@
+ 			#size-cells = <0>;
+ 		};
  
- static int kern_select(int n, fd_set __user *inp, fd_set __user *outp,
--		       fd_set __user *exp, struct timeval __user *tvp)
-+		       fd_set __user *exp, struct __kernel_old_timeval __user *tvp)
- {
- 	struct timespec64 end_time, *to = NULL;
--	struct timeval tv;
-+	struct __kernel_old_timeval tv;
- 	int ret;
- 
- 	if (tvp) {
-@@ -720,7 +720,7 @@ static int kern_select(int n, fd_set __user *inp, fd_set __user *outp,
- }
- 
- SYSCALL_DEFINE5(select, int, n, fd_set __user *, inp, fd_set __user *, outp,
--		fd_set __user *, exp, struct timeval __user *, tvp)
-+		fd_set __user *, exp, struct __kernel_old_timeval __user *, tvp)
- {
- 	return kern_select(n, inp, outp, exp, tvp);
- }
-@@ -810,7 +810,7 @@ SYSCALL_DEFINE6(pselect6_time32, int, n, fd_set __user *, inp, fd_set __user *,
- struct sel_arg_struct {
- 	unsigned long n;
- 	fd_set __user *inp, *outp, *exp;
--	struct timeval __user *tvp;
-+	struct __kernel_old_timeval __user *tvp;
- };
- 
- SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
-diff --git a/fs/utimes.c b/fs/utimes.c
-index 1ba3f7883870..c952b6b3d8a0 100644
---- a/fs/utimes.c
-+++ b/fs/utimes.c
-@@ -161,9 +161,9 @@ SYSCALL_DEFINE4(utimensat, int, dfd, const char __user *, filename,
-  * utimensat() instead.
-  */
- static long do_futimesat(int dfd, const char __user *filename,
--			 struct timeval __user *utimes)
-+			 struct __kernel_old_timeval __user *utimes)
- {
--	struct timeval times[2];
-+	struct __kernel_old_timeval times[2];
- 	struct timespec64 tstimes[2];
- 
- 	if (utimes) {
-@@ -190,13 +190,13 @@ static long do_futimesat(int dfd, const char __user *filename,
- 
- 
- SYSCALL_DEFINE3(futimesat, int, dfd, const char __user *, filename,
--		struct timeval __user *, utimes)
-+		struct __kernel_old_timeval __user *, utimes)
- {
- 	return do_futimesat(dfd, filename, utimes);
- }
- 
- SYSCALL_DEFINE2(utimes, char __user *, filename,
--		struct timeval __user *, utimes)
-+		struct __kernel_old_timeval __user *, utimes)
- {
- 	return do_futimesat(AT_FDCWD, filename, utimes);
- }
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 2f27bc9d5ef0..e665920fa359 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -51,7 +51,7 @@ struct statx;
- struct __sysctl_args;
- struct sysinfo;
- struct timespec;
--struct timeval;
-+struct __kernel_old_timeval;
- struct __kernel_timex;
- struct timezone;
- struct tms;
-@@ -732,7 +732,7 @@ asmlinkage long sys_prctl(int option, unsigned long arg2, unsigned long arg3,
- asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, struct getcpu_cache __user *cache);
- 
- /* kernel/time.c */
--asmlinkage long sys_gettimeofday(struct timeval __user *tv,
-+asmlinkage long sys_gettimeofday(struct __kernel_old_timeval __user *tv,
- 				struct timezone __user *tz);
- asmlinkage long sys_settimeofday(struct timeval __user *tv,
- 				struct timezone __user *tz);
-@@ -1082,9 +1082,9 @@ asmlinkage long sys_time32(old_time32_t __user *tloc);
- asmlinkage long sys_utime(char __user *filename,
- 				struct utimbuf __user *times);
- asmlinkage long sys_utimes(char __user *filename,
--				struct timeval __user *utimes);
-+				struct __kernel_old_timeval __user *utimes);
- asmlinkage long sys_futimesat(int dfd, const char __user *filename,
--			      struct timeval __user *utimes);
-+			      struct __kernel_old_timeval __user *utimes);
- #endif
- asmlinkage long sys_futimesat_time32(unsigned int dfd,
- 				     const char __user *filename,
-@@ -1098,7 +1098,7 @@ asmlinkage long sys_getdents(unsigned int fd,
- 				struct linux_dirent __user *dirent,
- 				unsigned int count);
- asmlinkage long sys_select(int n, fd_set __user *inp, fd_set __user *outp,
--			fd_set __user *exp, struct timeval __user *tvp);
-+			fd_set __user *exp, struct __kernel_old_timeval __user *tvp);
- asmlinkage long sys_poll(struct pollfd __user *ufds, unsigned int nfds,
- 				int timeout);
- asmlinkage long sys_epoll_wait(int epfd, struct epoll_event __user *events,
-diff --git a/kernel/power/power.h b/kernel/power/power.h
-index 44bee462ff57..7cdc64dc2373 100644
---- a/kernel/power/power.h
-+++ b/kernel/power/power.h
-@@ -179,7 +179,7 @@ extern void swsusp_close(fmode_t);
- extern int swsusp_unmark(void);
- #endif
- 
--struct timeval;
-+struct __kernel_old_timeval;
- /* kernel/power/swsusp.c */
- extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
- 
-diff --git a/kernel/time/time.c b/kernel/time/time.c
-index 7eba7c9a7e3e..bc114f0be8f1 100644
---- a/kernel/time/time.c
-+++ b/kernel/time/time.c
-@@ -137,7 +137,7 @@ SYSCALL_DEFINE1(stime32, old_time32_t __user *, tptr)
- #endif /* __ARCH_WANT_SYS_TIME32 */
- #endif
- 
--SYSCALL_DEFINE2(gettimeofday, struct timeval __user *, tv,
-+SYSCALL_DEFINE2(gettimeofday, struct __kernel_old_timeval __user *, tv,
- 		struct timezone __user *, tz)
- {
- 	if (likely(tv != NULL)) {
++		mmcc: clock-controller@c8c0000 {
++			compatible = "qcom,mmcc-msm8998";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++			reg = <0x0c8c0000 0x40000>;
++
++			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
++				 <&gcc GPLL0_OUT_MAIN>,
++				 <0>,
++				 <0>,
++				 <0>,
++				 <0>,
++				 <0>,
++				 <0>,
++				 <0>;
++			clock-names = "xo",
++				      "gpll0",
++				      "dsi0dsi",
++				      "dsi0byte",
++				      "dsi1dsi",
++				      "dsi1byte",
++				      "hdmipll",
++				      "dpvco",
++				      "dplink";
++		};
++
+ 		apcs_glb: mailbox@17911000 {
+ 			compatible = "qcom,msm8998-apcs-hmss-global";
+ 			reg = <0x17911000 0x1000>;
 -- 
-2.20.0
+2.17.1
 
