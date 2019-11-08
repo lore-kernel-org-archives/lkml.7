@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63DBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502D0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC0D21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237F32178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7g2WJEp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fewmUdz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbfKHIpi (ORCPT
+        id S1731015AbfKHIpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:45:38 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53309 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730668AbfKHIpc (ORCPT
+        Fri, 8 Nov 2019 03:45:42 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33192 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730743AbfKHIpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:45:32 -0500
-Received: by mail-wm1-f67.google.com with SMTP id x4so5260729wmi.3;
-        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
+        Fri, 8 Nov 2019 03:45:34 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a17so6017714wmb.0;
+        Fri, 08 Nov 2019 00:45:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R2H2SvNfp2D1pWuVIAXfuUZmaanE3ag429BW1Qs5Xbw=;
-        b=l7g2WJEpz9iGWpW4GTr4NP4iWFjfeqIW/bvPcR3EzXT2ZRovXiQKEnOhFWbdCJXCxk
-         Iz2ZpqyTGYXS9YGss2IsRNMUjehpu59CVhlJ5oLvIHrCnAWn+z+hav9dakiqTp43ILcn
-         /8HOFk22TZhhXrZ0AY5tdwQvrF3pNUeVis/lWQzmJxGS9gbhAtpmq/RJIFEfNjeC+K3L
-         3PUpygxp1f49wq+iE/Ygu2Hv8TR5hQVWalsNamPIhh2ikiGMmYEOJ4g4JePT8KBF7n7q
-         8poH1me3sjiJpA62sJOTO/xoo4FuCUtcPWlQCHb2xPf65p3lVNY9C/egXNNNerIfJwWw
-         S3+A==
+        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
+        b=fewmUdz8Bc1voBvS9gkVz79gCkt7venyCUove7xWvuUQ7Y4j/5GuWd2AXvvgJu1Kfj
+         N0dQ5nNqgLQudUbMeirlTSoTROX+NXDVjv7tmF7iOf3rJrWmkKmh2vS/eJjIzlX3uqx4
+         STJgeC8x6DSUy9PENPKGwtPtmXM483oVZq4Tm20Sg9l4PF42SkfQzBy8FNi7A54AoFCP
+         k5F6YhLTTRPhmtsmFWLs8KjOql5qNPJDr74p2c7q4oNgfFgToC/aHzfjzHqwBIH5YJcz
+         u/9zV1l8RwIgs5Kml7dx0uYElJGbgKN5fExDkFmeNqi4iAmfvBOItS7w5LRN0zL+qcHs
+         ssbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R2H2SvNfp2D1pWuVIAXfuUZmaanE3ag429BW1Qs5Xbw=;
-        b=NEGDUu47Jn7FrTyb+NWu5MG6Goe8mTaWQpFQwHNxVNXKZq8OU47Kjvxu04qeylSGCq
-         ZbHznuCuoIMaWxN/hJo2uE8c0vT4VlZ/Yr5ihqU6foZzp08PKVsUPSQuNkok9N5vf9Dd
-         9ObnWkaF350RIB179t6YnkqzF2hPPlbtGOFnKBkPLMrtdRuquAcmArWXd8BAmjs187MM
-         Lbfmosb5ydySz7HPRRuA45SbibgK3t83NZfYMnBdgvnhDPKZp++1BZlm8+RA5eRyGbFt
-         kFJs7YzOkUX3jIL8x+4fJfLC7ekkfJ//08UiCGK1RhwJjU/Yggh8yxLPP9GC6UottJAm
-         DH0A==
-X-Gm-Message-State: APjAAAWrbmxzWW/kS9rPOqLlPLg5MdIXoVnsefpAK2tXOHr4LH6PtgET
-        9shXXXXMIGz3NoDpWEg/CkU=
-X-Google-Smtp-Source: APXvYqyXzyJC3Dq6/PPn4+ahFI8wCQAvazATqLEj08DnRqbjTFB1hb1Zf/mNsFjSrGyw/2NztoTOgA==
-X-Received: by 2002:a05:600c:210c:: with SMTP id u12mr4568420wml.49.1573202730371;
-        Fri, 08 Nov 2019 00:45:30 -0800 (PST)
+        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
+        b=rJg1cIZnjA1j/18+0GfLSqJG7FV3ZyFOozrzAgJX1OKGg5PBwbwldvO+Ft/6fg7swT
+         UqwfIOQ+8ccayn/7xEmLiwFyIWLUPxyvyQlWoiMBB7/5tOhm64KEt498nz/VtuOi/C1A
+         Xgn26Bf5h70ZwvEnjU20VOPktKNVCtN7+z0S0AYaw4egVa9dJeQIJY8udfeeHWsP6V/C
+         BCxbAOhUwcZUQE8aM4QqOCcUn4sQAdJBzpU/ONK/5qf7g6mh7uyrJcK/kQTpZfMYUZMW
+         6zdHTDfgP52FfiFYW2eEy6y2T1GWVQt3UPgXuO8zBLb0PAeCLs1sohxCsRcErqvM6K+i
+         cgoA==
+X-Gm-Message-State: APjAAAVmE3+dSPATC3w3YnyKwhpm4//U2H+IuChlE4Ad0gfzNKbxu313
+        WOcvSBJxwQXtA+m6lenBG/4=
+X-Google-Smtp-Source: APXvYqzDrSyXBmSgmOwIGNCEnIg0mdtNJewcjpzu3/9Z4+a5/R+2nI67UgxKiYB47MIydRckpkp04g==
+X-Received: by 2002:a1c:558a:: with SMTP id j132mr6983373wmb.21.1573202731677;
+        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.29
+        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 00:45:29 -0800 (PST)
+        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -68,11 +68,10 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 5/7] pwm: sun4i: Add support for H6 PWM
-Date:   Fri,  8 Nov 2019 09:45:15 +0100
-Message-Id: <20191108084517.21617-6-peron.clem@gmail.com>
+Subject: [PATCH v4 7/7] [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
+Date:   Fri,  8 Nov 2019 09:45:17 +0100
+Message-Id: <20191108084517.21617-8-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
 References: <20191108084517.21617-1-peron.clem@gmail.com>
@@ -84,49 +83,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-
-Now that sun4i PWM driver supports deasserting reset line and enabling
-bus clock, support for H6 PWM can be added.
-
-Note that while H6 PWM has two channels, only first one is wired to
-output pin. Second channel is used as a clock source to companion AC200
-chip which is bundled into same package.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-sun4i.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 9cc928ab47bc..a57637de41c9 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -367,6 +367,12 @@ static const struct sun4i_pwm_data sun4i_pwm_single_bypass = {
- 	.npwm = 1,
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 1d05d570142f..38aba7e5bbd9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -131,6 +131,10 @@
+ 	vcc-pg-supply = <&reg_aldo1>;
  };
  
-+static const struct sun4i_pwm_data sun50i_h6_pwm_data = {
-+	.has_prescaler_bypass = true,
-+	.has_direct_mod_clk_output = true,
-+	.npwm = 2,
++&pwm {
++	status = "okay";
 +};
 +
- static const struct of_device_id sun4i_pwm_dt_ids[] = {
- 	{
- 		.compatible = "allwinner,sun4i-a10-pwm",
-@@ -383,6 +389,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] = {
- 	}, {
- 		.compatible = "allwinner,sun8i-h3-pwm",
- 		.data = &sun4i_pwm_single_bypass,
-+	}, {
-+		.compatible = "allwinner,sun50i-h6-pwm",
-+		.data = &sun50i_h6_pwm_data,
- 	}, {
- 		/* sentinel */
- 	},
+ &r_i2c {
+ 	status = "okay";
+ 
 -- 
 2.20.1
 
