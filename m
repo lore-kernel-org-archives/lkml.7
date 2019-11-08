@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4ABFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FF9FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6227A21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD1E21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213091;
-	bh=di6FP3t2dGpX6xM3L7mS/22x0dtDKEQ8IHSmiLUVGBQ=;
+	s=default; t=1573213096;
+	bh=0ELM6zDJ08rmARJey1y7Zf1Nztqs6EAE8lZ79+tiF/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfAKK0oPKaha0lzKYvuyOuGKjMnGIEAQr8CkIiBi7U3GanYXxX8gzVqSyC4Le27AU
-	 GeZgWR9stsmiXbwJQvSBBa6zYRQjDy5SAZkG/pIYpCMoGh5zbYvcmr+t5H8IO9dmEP
-	 9Yxgj8hYCetLolC29yp/YX7XPrHAd/vxK9e0hHFw=
+	b=nsPrP12eyHdTBpn5A+1vKlFll+hdbvRGUBssu/8Qo2DLRH/ODHxryAaDcUqNHoYQ2
+	 rXD/EsXWhTcJkN9tYXZAVhxLyOCb2f4XyFTq3DoWMP1vd3SAjrWnPFIkWndcF+kty/
+	 oyOPx0td2hby9LRQigeMuITRGe2sNvLFAkhXQYyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732256AbfKHLiK (ORCPT
+        id S1732354AbfKHLiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:38:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732217AbfKHLiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:08 -0500
+        id S1732259AbfKHLiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E8C220869;
-        Fri,  8 Nov 2019 11:38:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFEBC2245A;
+        Fri,  8 Nov 2019 11:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213088;
-        bh=di6FP3t2dGpX6xM3L7mS/22x0dtDKEQ8IHSmiLUVGBQ=;
+        s=default; t=1573213091;
+        bh=0ELM6zDJ08rmARJey1y7Zf1Nztqs6EAE8lZ79+tiF/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6SCAxeeIh7IrIlo/noD7LkohzBwwByjk5OQtc0LjZKEOZG49WnsKdQnp6NQXmywy
-         XKImO9aUyuCahTzyctfp0ulm72ihoBnGjpL17FMgk97PdB7B5fGsz1psPjCb8eBCDh
-         ZXmcuvBCdd0zb3//9UtBsXYYWuO2c82K243zb1to=
+        b=kh9T7ePP7rcN/MTHyaO2VplcaJW5wP18wAy80ikG+jCga6NEI1c3uX0Pmz13QJIev
+         FKeUFtCfBc++EjsFgOcuYLYueYMOdCZQWXmryKV/e0cgYKms98hLPD4LLKdDYS6Ss5
+         A9K8Sog9C0IBOA42TsHJ3ORMUywQ3bP315aqlyjU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aapo Vienamo <avienamo@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/205] arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
-Date:   Fri,  8 Nov 2019 06:34:40 -0500
-Message-Id: <20191108113752.12502-13-sashal@kernel.org>
+Cc:     Jay Foster <jayfoster@ieee.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 016/205] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
+Date:   Fri,  8 Nov 2019 06:34:43 -0500
+Message-Id: <20191108113752.12502-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,32 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aapo Vienamo <avienamo@nvidia.com>
+From: Jay Foster <jayfoster@ieee.org>
 
-[ Upstream commit 6ff7705da8806de45ca1490194f0b4eb07725804 ]
+[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
 
-On p2180 sdmmc4 is powered from a fixed 1.8 V regulator.
+Fix a typo. No functional change made by this patch.
 
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Jay Foster <jayfoster@ieee.org>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-index 7398ae8856dc0..ccaa555180dc0 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -282,6 +282,7 @@
- 		status = "okay";
- 		bus-width = <8>;
- 		non-removable;
-+		vqmmc-supply = <&vdd_1v8>;
- 	};
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 1ee25a475be87..d16db1fa7e15c 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -570,7 +570,7 @@
+ 					};
+ 				};
  
- 	clocks {
+-				uart1 {
++				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+ 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
 -- 
 2.20.1
 
