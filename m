@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C0EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81838C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D263720865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FC5207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240987;
-	bh=1Etv9ePy6Sr1Bpx68YN+nF41DlpzSoObXTIf2hx/zfo=;
+	s=default; t=1573240993;
+	bh=gY/L2MAepOxsg87cErfdhKPZBxQzNz+ZaHqFOcO4FWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fsNvE3K2DV3QMGcUt6K36APfCn3oXPJLm8sToTV2B+0eaCccPZE3GW8BGrXPMm4cO
-	 wnVi2oJHlzPsq+bB1BR7hnr1yL69iIdGv3BtlKN2l1K76c1HPN3fRQ9TVlBavLwW8E
-	 V9rHkIOw3Ac2hlJgDxbxBLCyMymkSV1Go17kaJG8=
+	b=z4i8ROmjWx4wyvMDFI2EGI5hvley6q6Tz1fBFVEH/hjDpk0DT4zYiokpseONIs9kt
+	 y3ZtqTsbESYKDyt5zsSTKnWryuAQ5+TcR2cDSm2EYMJHD8rUuq4pryPLgJMZOJwAFk
+	 hFrh94KcYsKsbZhFd8lGoBqW5SHRwJ+ZuEJd90RA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390979AbfKHTXC (ORCPT
+        id S1730555AbfKHTXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:23:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52394 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:23:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731463AbfKHSzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:55:17 -0500
+        id S1731269AbfKHSzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:55:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E651214DB;
-        Fri,  8 Nov 2019 18:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB2720865;
+        Fri,  8 Nov 2019 18:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239310;
-        bh=1Etv9ePy6Sr1Bpx68YN+nF41DlpzSoObXTIf2hx/zfo=;
+        s=default; t=1573239307;
+        bh=gY/L2MAepOxsg87cErfdhKPZBxQzNz+ZaHqFOcO4FWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wF0x/lWWDtr4xqInCrYfGH8gXYVwkLKxWyFwF5YQzE8PnSilzav75v8IXyEFw9KdW
-         EQx9ahFAGkQy5lW+cOqEUHwS+Mhn1UbQ06hsI7Sg9ZX/nmkfadJAeplhCT9GmoHuhd
-         uiNDEfA9xSLNUV5YILUbtZFTtP9MWgK7bf9sZy2s=
+        b=zMo9uXqPHd28fP+uvwmgI3a0DJ+pNu4s8ImKISC+mFCYwVfD5zxHVIQWxcnAv0uDV
+         92goPHDOqJU4VtKNh0SgwLSWGtU8Go+NnC+fGhRb3ChyR0GeH1mc9Nr5S3ZMHa74tF
+         BGLTppwFTE2wa0iFhTBfanUb6wmF6FpiY60BtDc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "David A. Long" <dave.long@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 70/75] ARM: add PROC_VTABLE and PROC_TABLE macros
-Date:   Fri,  8 Nov 2019 19:50:27 +0100
-Message-Id: <20191108174811.038442025@linuxfoundation.org>
+Subject: [PATCH 4.4 69/75] ARM: clean up per-processor check_bugs method call
+Date:   Fri,  8 Nov 2019 19:50:26 +0100
+Message-Id: <20191108174810.309879161@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -65,16 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Commit e209950fdd065d2cc46e6338e47e52841b830cba upstream.
+Commit 945aceb1db8885d3a35790cf2e810f681db52756 upstream.
 
-Allow the way we access members of the processor vtable to be changed
-at compile time.  We will need to move to per-CPU vtables to fix the
-Spectre variant 2 issues on big.Little systems.
-
-However, we have a couple of calls that do not need the vtable
-treatment, and indeed cause a kernel warning due to the (later) use
-of smp_processor_id(), so also introduce the PROC_TABLE macro for
-these which always use CPU 0's function pointers.
+Call the per-processor type check_bugs() method in the same way as we
+do other per-processor functions - move the "processor." detail into
+proc-fns.h.
 
 Reviewed-by: Julien Thierry <julien.thierry@arm.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
@@ -84,87 +79,32 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/include/asm/proc-fns.h |   39 ++++++++++++++++++++++++++-------------
- arch/arm/kernel/setup.c         |    4 +---
- 2 files changed, 27 insertions(+), 16 deletions(-)
+ arch/arm/include/asm/proc-fns.h |    1 +
+ arch/arm/kernel/bugs.c          |    4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 --- a/arch/arm/include/asm/proc-fns.h
 +++ b/arch/arm/include/asm/proc-fns.h
-@@ -23,7 +23,7 @@ struct mm_struct;
- /*
-  * Don't change this structure - ASM code relies on it.
-  */
--extern struct processor {
-+struct processor {
- 	/* MISC
- 	 * get data abort address/flags
- 	 */
-@@ -79,9 +79,13 @@ extern struct processor {
- 	unsigned int suspend_size;
- 	void (*do_suspend)(void *);
- 	void (*do_resume)(void *);
--} processor;
-+};
- 
- #ifndef MULTI_CPU
-+static inline void init_proc_vtable(const struct processor *p)
-+{
-+}
-+
- extern void cpu_proc_init(void);
- extern void cpu_proc_fin(void);
- extern int cpu_do_idle(void);
-@@ -98,18 +102,27 @@ extern void cpu_reset(unsigned long addr
- extern void cpu_do_suspend(void *);
+@@ -99,6 +99,7 @@ extern void cpu_do_suspend(void *);
  extern void cpu_do_resume(void *);
  #else
--#define cpu_proc_init			processor._proc_init
--#define cpu_check_bugs			processor.check_bugs
--#define cpu_proc_fin			processor._proc_fin
--#define cpu_reset			processor.reset
--#define cpu_do_idle			processor._do_idle
--#define cpu_dcache_clean_area		processor.dcache_clean_area
--#define cpu_set_pte_ext			processor.set_pte_ext
--#define cpu_do_switch_mm		processor.switch_mm
- 
--/* These three are private to arch/arm/kernel/suspend.c */
--#define cpu_do_suspend			processor.do_suspend
--#define cpu_do_resume			processor.do_resume
-+extern struct processor processor;
-+#define PROC_VTABLE(f)			processor.f
-+#define PROC_TABLE(f)			processor.f
-+static inline void init_proc_vtable(const struct processor *p)
-+{
-+	processor = *p;
-+}
-+
-+#define cpu_proc_init			PROC_VTABLE(_proc_init)
-+#define cpu_check_bugs			PROC_VTABLE(check_bugs)
-+#define cpu_proc_fin			PROC_VTABLE(_proc_fin)
-+#define cpu_reset			PROC_VTABLE(reset)
-+#define cpu_do_idle			PROC_VTABLE(_do_idle)
-+#define cpu_dcache_clean_area		PROC_TABLE(dcache_clean_area)
-+#define cpu_set_pte_ext			PROC_TABLE(set_pte_ext)
-+#define cpu_do_switch_mm		PROC_VTABLE(switch_mm)
-+
-+/* These two are private to arch/arm/kernel/suspend.c */
-+#define cpu_do_suspend			PROC_VTABLE(do_suspend)
-+#define cpu_do_resume			PROC_VTABLE(do_resume)
+ #define cpu_proc_init			processor._proc_init
++#define cpu_check_bugs			processor.check_bugs
+ #define cpu_proc_fin			processor._proc_fin
+ #define cpu_reset			processor.reset
+ #define cpu_do_idle			processor._do_idle
+--- a/arch/arm/kernel/bugs.c
++++ b/arch/arm/kernel/bugs.c
+@@ -6,8 +6,8 @@
+ void check_other_bugs(void)
+ {
+ #ifdef MULTI_CPU
+-	if (processor.check_bugs)
+-		processor.check_bugs();
++	if (cpu_check_bugs)
++		cpu_check_bugs();
  #endif
+ }
  
- extern void cpu_resume(void);
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -625,9 +625,7 @@ static void __init setup_processor(void)
- 	cpu_name = list->cpu_name;
- 	__cpu_architecture = __get_cpu_architecture();
- 
--#ifdef MULTI_CPU
--	processor = *list->proc;
--#endif
-+	init_proc_vtable(list->proc);
- #ifdef MULTI_TLB
- 	cpu_tlb = *list->tlb;
- #endif
 
 
