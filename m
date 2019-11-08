@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E9BFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2DBC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0083E2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D0C2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214893;
-	bh=gCbS15XtXj4oIuSuRwt5i3q+8lCfPki4Urq31VaAOrw=;
+	s=default; t=1573214897;
+	bh=Y/lSeFUj09NRedzoVHJVECoGjBONRK90FvfRc4l06y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4ef9/3bYSnEi1jHoduX+aLzdis2gsOYsR/qWHTaxapu/2OEW2TqvDZ/312RdXd00
-	 Xx/0ot4w+BY5l8Y0ornid0JqxMzuEB3rzZi7+w+E+XsQeu1w2SPNmdZ2RfEOOFPNoh
-	 DjuPozKjywbgggrCKR7BQLvmzGepARULh6jE7bCo=
+	b=dF9Z7VbWYlkVPGu8Zm5I1+eN2Zr/jqD5F4L+qItFadlfN60u4Y6Ya3EHYTKbrfak2
+	 z4XyZxX7WmRTRdoXXXa6TJ5G+jFq0UhytVlOpdXmJbIBa4hrpqTKfaqy//mWVVUJ8L
+	 9cJORkCMjEfScLPH32mXH3+XgG/VBvmhd0H82DIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388831AbfKHLkh (ORCPT
+        id S2391328AbfKHMIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53492 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:08:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388743AbfKHLkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:35 -0500
+        id S2388802AbfKHLkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B512C21D7B;
-        Fri,  8 Nov 2019 11:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C56FC21D7B;
+        Fri,  8 Nov 2019 11:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213234;
-        bh=gCbS15XtXj4oIuSuRwt5i3q+8lCfPki4Urq31VaAOrw=;
+        s=default; t=1573213236;
+        bh=Y/lSeFUj09NRedzoVHJVECoGjBONRK90FvfRc4l06y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkWm/IXwu+x/P7QCP4DAkt8FMR56ebrOLyNZWzlM9nvGS1vQY+imPo79CAsUQRaHb
-         /G9+LNxlGwNxKlCoifP3apOt4Al7WvqojpDVTCQk+azXee/IPv8jfMjxKoSmuh9MO6
-         WV0uMdpH1bSwC4soE+rLsvqOwFUpWEppdUW+4psc=
+        b=YaOF1cCVt2DmfoMdaZWWv/fx/bTDQ83EztKWA8Ag+wwwbJAezMJBBrKrAqUXNcYBZ
+         6HWWgfGqDuzrsHn/2hORTUTUcoAOrYv9ZN7mw22A+83QAjELr1IBvHY3VzLAuTQuHZ
+         7ajhAgGkFbbjtELgYGwlZEPeA3kI9ypV/5HreiHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suman Tripathi <stripathi@amperecomputing.com>,
-        Rameshwar Prasad Sahu <rameshwar.sahu@amperecomputing.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 104/205] ata: Disable AHCI ALPM feature for Ampere Computing eMAG SATA
-Date:   Fri,  8 Nov 2019 06:36:11 -0500
-Message-Id: <20191108113752.12502-104-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 106/205] ARM: dts: omap3-gta04: give spi_lcd node a label so that we can overwrite in other DTS files
+Date:   Fri,  8 Nov 2019 06:36:13 -0500
+Message-Id: <20191108113752.12502-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,69 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Tripathi <stripathi@amperecomputing.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 20bdc376b427cb420836f39ee8f281ea85dbaeef ]
+[ Upstream commit fa0d7dc355c890725b6178dab0cc11b194203afa ]
 
-Due to hardware errata, Ampere Computing eMAG SATA can't support
-AHCI ALPM feature. This patch disables the AHCI ALPM feature for
-eMAG SATA.
+needed for device variants based on GTA04 board but with
+different display panel (driver).
 
-Signed-off-by: Suman Trpathi <stripathi@amperecomputing.com>
-Signed-off-by: Rameshwar Prasad Sahu <rameshwar.sahu@amperecomputing.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/ahci_platform.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index 46f0bd75eff79..cf1e0e18a7a98 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -33,6 +33,13 @@ static const struct ata_port_info ahci_port_info = {
- 	.port_ops	= &ahci_platform_ops,
- };
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index ac830b9177763..ae33e0e0f1d2c 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -78,7 +78,7 @@
+ 		#sound-dai-cells = <0>;
+ 	};
  
-+static const struct ata_port_info ahci_port_info_nolpm = {
-+	.flags		= AHCI_FLAG_COMMON | ATA_FLAG_NO_LPM,
-+	.pio_mask	= ATA_PIO4,
-+	.udma_mask	= ATA_UDMA6,
-+	.port_ops	= &ahci_platform_ops,
-+};
-+
- static struct scsi_host_template ahci_platform_sht = {
- 	AHCI_SHT(DRV_NAME),
- };
-@@ -41,6 +48,7 @@ static int ahci_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct ahci_host_priv *hpriv;
-+	const struct ata_port_info *port;
- 	int rc;
- 
- 	hpriv = ahci_platform_get_resources(pdev,
-@@ -58,7 +66,11 @@ static int ahci_probe(struct platform_device *pdev)
- 	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
- 		hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
- 
--	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info,
-+	port = acpi_device_get_match_data(dev);
-+	if (!port)
-+		port = &ahci_port_info;
-+
-+	rc = ahci_platform_init_host(pdev, hpriv, port,
- 				     &ahci_platform_sht);
- 	if (rc)
- 		goto disable_resources;
-@@ -85,6 +97,7 @@ static const struct of_device_id ahci_of_match[] = {
- MODULE_DEVICE_TABLE(of, ahci_of_match);
- 
- static const struct acpi_device_id ahci_acpi_match[] = {
-+	{ "APMC0D33", (unsigned long)&ahci_port_info_nolpm },
- 	{ ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
- 	{},
- };
+-	spi_lcd {
++	spi_lcd: spi_lcd {
+ 		compatible = "spi-gpio";
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x0>;
 -- 
 2.20.1
 
