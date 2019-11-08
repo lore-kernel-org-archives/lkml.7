@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AE9FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1342AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98AA620650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E68206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240387;
-	bh=HTq6KVJ/5OavnK58ViHY12OFjKUHoT4kRFrwPXoEKmE=;
+	s=default; t=1573240394;
+	bh=gaaJ8b3ZfHjytfh+NG/YwqsMU1/VL4hgRLftpVuGPLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UFXJsVCUHfhszk+NxRTAbFm4majrfnC89O5DW8eRO9DT+2nc2SzlPA0DJKB7CaAkm
-	 8GZvgx/TD0ViJL6ngxgj1XNkiHTWut0fZ0Lx6Ix1QIXhbOYynF/UxXwhN8l/MdPFbl
-	 FxTZ5Kcal76zb2oEedT6/r6cZ8BO8+i72zbBZ3eU=
+	b=kkjSYRq6qiq7rlfcRoFGPVsiZ2ddc0FmEz3RJJDB0VEjLLfDXYA8j8kenzK8ucn1F
+	 diQ4I1jsdySMhXSCplMWl57zYL6Xmwygp8tU6J7xWfuPoA5WhSiOpxMAnoieW+HhDb
+	 hJH2a+E7FSxogN5etWMjioLFMbDiag4xeOU+oQmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391578AbfKHTIP (ORCPT
+        id S2391521AbfKHTH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:07:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391565AbfKHTIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:10 -0500
+        id S2391510AbfKHTHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:07:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 652A921D7B;
-        Fri,  8 Nov 2019 19:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9A7B222C4;
+        Fri,  8 Nov 2019 19:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240089;
-        bh=HTq6KVJ/5OavnK58ViHY12OFjKUHoT4kRFrwPXoEKmE=;
+        s=default; t=1573240072;
+        bh=gaaJ8b3ZfHjytfh+NG/YwqsMU1/VL4hgRLftpVuGPLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MT3n28oXRTVIVRoO/wclPrF+pBuXWzsVlvQItie3iqw70wCpQO3ROApoeZtFspAMC
-         VU1d3iUCNGW8k2sBk4WXAfi9UghrCR6C4mJ7onUUaCViVL9Wr/fuzcDveeeNxGO/6D
-         OnFix/z9WlkYVh5Mvm82B0AfzVEtB3zIzjBzYyKc=
+        b=1zhIbAI4300oUfAiC5wyIci7+wzI4JyRvLJvt6n83rQKdSgsZpQiD9NRTY1Vg7A5R
+         5SRA1KQ97W3kvrD33Kzu7cpS0Ddj/S6iH6V1Z8pD3qEyRrp3Gxhk0kb1MhFcOF4NvI
+         33azqJqJ2lyan7ZqgP0qVynInfxnDERO1SZv1xSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Raju Rangoju <rajur@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 086/140] net: dsa: bcm_sf2: Fix IMP setup for port different than 8
-Date:   Fri,  8 Nov 2019 19:50:14 +0100
-Message-Id: <20191108174910.521599403@linuxfoundation.org>
+Subject: [PATCH 5.3 080/140] cxgb4: request the TX CIDX updates to status page
+Date:   Fri,  8 Nov 2019 19:50:08 +0100
+Message-Id: <20191108174910.158668196@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -59,80 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Raju Rangoju <rajur@chelsio.com>
 
-[ Upstream commit 5fc0f21246e50afdf318b5a3a941f7f4f57b8947 ]
+[ Upstream commit 7c3bebc3d8688b84795c11848c314a2fbfe045e0 ]
 
-Since it became possible for the DSA core to use a CPU port different
-than 8, our bcm_sf2_imp_setup() function was broken because it assumes
-that registers are applicable to port 8. In particular, the port's MAC
-is going to stay disabled, so make sure we clear the RX_DIS and TX_DIS
-bits if we are not configured for port 8.
+For adapters which support the SGE Doorbell Queue Timer facility,
+we configured the Ethernet TX Queues to send CIDX Updates to the
+Associated Ethernet RX Response Queue with CPL_SGE_EGR_UPDATE
+messages to allow us to respond more quickly to the CIDX Updates.
+But, this was adding load to PCIe Link RX bandwidth and,
+potentially, resulting in higher CPU Interrupt load.
 
-Fixes: 9f91484f6fcc ("net: dsa: make "label" property optional for dsa2")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+This patch requests the HW to deliver the CIDX updates to the TX
+queue status page rather than generating an ingress queue message
+(as an interrupt). With this patch, the load on RX bandwidth is
+reduced and a substantial improvement in BW is noticed at lower
+IO sizes.
+
+Fixes: d429005fdf2c ("cxgb4/cxgb4vf: Add support for SGE doorbell queue timer")
+Signed-off-by: Raju Rangoju <rajur@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/bcm_sf2.c |   36 +++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -37,22 +37,11 @@ static void bcm_sf2_imp_setup(struct dsa
- 	unsigned int i;
- 	u32 reg, offset;
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -3791,15 +3791,11 @@ int t4_sge_alloc_eth_txq(struct adapter
+ 	 * write the CIDX Updates into the Status Page at the end of the
+ 	 * TX Queue.
+ 	 */
+-	c.autoequiqe_to_viid = htonl((dbqt
+-				      ? FW_EQ_ETH_CMD_AUTOEQUIQE_F
+-				      : FW_EQ_ETH_CMD_AUTOEQUEQE_F) |
++	c.autoequiqe_to_viid = htonl(FW_EQ_ETH_CMD_AUTOEQUEQE_F |
+ 				     FW_EQ_ETH_CMD_VIID_V(pi->viid));
  
--	if (priv->type == BCM7445_DEVICE_ID)
--		offset = CORE_STS_OVERRIDE_IMP;
--	else
--		offset = CORE_STS_OVERRIDE_IMP2;
--
- 	/* Enable the port memories */
- 	reg = core_readl(priv, CORE_MEM_PSM_VDD_CTRL);
- 	reg &= ~P_TXQ_PSM_VDD(port);
- 	core_writel(priv, reg, CORE_MEM_PSM_VDD_CTRL);
+ 	c.fetchszm_to_iqid =
+-		htonl(FW_EQ_ETH_CMD_HOSTFCMODE_V(dbqt
+-						 ? HOSTFCMODE_INGRESS_QUEUE_X
+-						 : HOSTFCMODE_STATUS_PAGE_X) |
++		htonl(FW_EQ_ETH_CMD_HOSTFCMODE_V(HOSTFCMODE_STATUS_PAGE_X) |
+ 		      FW_EQ_ETH_CMD_PCIECHN_V(pi->tx_chan) |
+ 		      FW_EQ_ETH_CMD_FETCHRO_F | FW_EQ_ETH_CMD_IQID_V(iqid));
  
--	/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
--	reg = core_readl(priv, CORE_IMP_CTL);
--	reg |= (RX_BCST_EN | RX_MCST_EN | RX_UCST_EN);
--	reg &= ~(RX_DIS | TX_DIS);
--	core_writel(priv, reg, CORE_IMP_CTL);
--
- 	/* Enable forwarding */
- 	core_writel(priv, SW_FWDG_EN, CORE_SWMODE);
- 
-@@ -71,10 +60,27 @@ static void bcm_sf2_imp_setup(struct dsa
- 
- 	b53_brcm_hdr_setup(ds, port);
- 
--	/* Force link status for IMP port */
--	reg = core_readl(priv, offset);
--	reg |= (MII_SW_OR | LINK_STS);
--	core_writel(priv, reg, offset);
-+	if (port == 8) {
-+		if (priv->type == BCM7445_DEVICE_ID)
-+			offset = CORE_STS_OVERRIDE_IMP;
-+		else
-+			offset = CORE_STS_OVERRIDE_IMP2;
-+
-+		/* Force link status for IMP port */
-+		reg = core_readl(priv, offset);
-+		reg |= (MII_SW_OR | LINK_STS);
-+		core_writel(priv, reg, offset);
-+
-+		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
-+		reg = core_readl(priv, CORE_IMP_CTL);
-+		reg |= (RX_BCST_EN | RX_MCST_EN | RX_UCST_EN);
-+		reg &= ~(RX_DIS | TX_DIS);
-+		core_writel(priv, reg, CORE_IMP_CTL);
-+	} else {
-+		reg = core_readl(priv, CORE_G_PCTL_PORT(port));
-+		reg &= ~(RX_DIS | TX_DIS);
-+		core_writel(priv, reg, CORE_G_PCTL_PORT(port));
-+	}
- }
- 
- static void bcm_sf2_gphy_enable_set(struct dsa_switch *ds, bool enable)
 
 
