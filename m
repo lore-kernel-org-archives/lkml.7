@@ -2,95 +2,98 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB06FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9197FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18024214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D90721D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SlnJ0kzD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s4ZzLVYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfKHNys (ORCPT
+        id S1728158AbfKHNze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:54:48 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39255 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfKHNys (ORCPT
+        Fri, 8 Nov 2019 08:55:34 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36003 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfKHNze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:54:48 -0500
-Received: by mail-io1-f68.google.com with SMTP id k1so6437301ioj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:54:46 -0800 (PST)
+        Fri, 8 Nov 2019 08:55:34 -0500
+Received: by mail-qt1-f194.google.com with SMTP id y10so6578069qto.3;
+        Fri, 08 Nov 2019 05:55:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qhj0pYG/xfb9ZXayAFQZBmgKNwxw6I0CpoVt3iCpB1E=;
-        b=SlnJ0kzDnF+zUVdem+qMS9wPqFOmE4StE78W5pCkwNeQbv3pcDv/6wbvF9Wzsyej6a
-         mVp7dDiaYBiGAGozWrA6DxU2eqJdpfSno8KXt6N44vL8mUfNvXdzzYobLagSEhGYPhrs
-         mzyYec6kzQhLmNdjY3HpzPswzummUVIV45W7ewSXze6ksqYRjkIb1DF+8/l6g8hTmj2v
-         fIX6tTXrTKWoCMPy1kBumphFKsg9wM5PQsZUGEbNAeOy7ZCati+IAS6/F2UO+ZcMlhPY
-         PGiFXKKj/j2YC08ktmwhITccWfmu87EX9XndOE3MVtY2nXzWQpsFSPja6+o5cvtUHFrd
-         VSzQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=1ikag6bSZ0eCN7wwCHRChu0lBnRPoED7I4M1hqoKUdY=;
+        b=s4ZzLVYOMJCoTlwZHpe25JMCQ2NRQND8JzH25vfMDoIdZBdPiHD61LpltjVedeN4fW
+         j5EUfP6vyPWBQffboP+AIj18SzxULI9kBIMRxhjDCKS8kXHRGynMIT8By6sSiiz2zxaG
+         5vHTW9gnC1WJU0305YNyiHbwtqLzi3f36V8U5/C5uJZItGyWPc+NwKtqB7K5w6vl0P72
+         we8fB+y7WbZFfx0BEjAEs5Vd6gqQYtQbums4g9r96tuH2MdjRspqcMMSFVbq3lbxaUQ6
+         XiVxeNhy1CdABBfXaMje0kkXkf4UerFmN+C4eTA6gAkfAiGP6LxyFd1sSKgcugwFWsbv
+         tTYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qhj0pYG/xfb9ZXayAFQZBmgKNwxw6I0CpoVt3iCpB1E=;
-        b=qqXJ1KTXg38W/19QqP2b2dYPt4FAcp/KG8NFzK81hilWDygFaa+un0yk9h9+IL6Hg4
-         ILeWDdWd+nMk1TRhprpYuZubX/B/jOovPsvnthJ7iInsfZYoI1lSNwyJKwQEv85OeQgS
-         XSl7AunWa7ONdfzBqke5Rs8bpomitPlJjBCWJWm9vh0V9Nvsnob398bNZJdH70UC8D0S
-         yKxq3zCh88gk665TF4HJbWAKRwyua/YkKfyurxCMt4Yl+ZIkO2RXkZpvJmLEThd+sCuq
-         1gUR42CC7PfUQ0qUnF8hjPukqLFOhcH7+tqEb6Gx1VVlEXG8XCQ7mD4y5zGKDDMYLgBJ
-         TYcQ==
-X-Gm-Message-State: APjAAAW7Rw077YO/YNSfbEnGBBuyFLVOC11V//LhzogbuqPd+HMChRzb
-        diIx4CAqMgCzZOV3LELWvFuHJw==
-X-Google-Smtp-Source: APXvYqxT7wKu6Rb3KLuV8PJsLUA7DGTaBKo+K+FqKHR5/THatlVz8nZOFOdzmcrdjerSlYdgOa+70A==
-X-Received: by 2002:a05:6602:198:: with SMTP id m24mr9909819ioo.34.1573221285861;
-        Fri, 08 Nov 2019 05:54:45 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id p19sm776620ili.56.2019.11.08.05.54.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Nov 2019 05:54:45 -0800 (PST)
-Subject: Re: [PATCH] block: drbd: remove a stay unlock in
- __drbd_send_protocol()
-To:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20191107074847.GA11695@mwanda> <6906816.cRlsrm7Sor@fat-tyre>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <17fea9d1-39f8-1d91-5509-5f520009b9c9@kernel.dk>
-Date:   Fri, 8 Nov 2019 06:54:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=1ikag6bSZ0eCN7wwCHRChu0lBnRPoED7I4M1hqoKUdY=;
+        b=iqyBY8hYXq8nNASv+T7zsoJurm4AZbJ8xIyLp5HHPJTOv7/iZmj5TcZYYrt2JsUHDJ
+         zcMvIVkpfyZk/D3fDvsOpUBjEF+yyFgrakmawF/YlyyPDqtk64/ocuuKW4bppoZKorV3
+         S7WQrN60WiuRofrEKFzIlSs2pa1q7lYgg0w4XMH5GpnjvvPOhDXaOoUT0QhAi/PerIoD
+         sqT8L75SZQuvROZ29kb8k4EDZXIVbZw0OI0TgM7IDxhjl6dANb3fqL7LeNsdmaa8HJQu
+         ry7e5Bqt3nY8aut0A3kIlT27il0ey/sb4dbiFGyhgTPVcmjUrbSliyVb5VOpv21to/27
+         IAzw==
+X-Gm-Message-State: APjAAAWHIhKXP7fTiCBshVqCLca1kcNpAfguen1V0/l+wqQh6MiZIBP+
+        SXEtuaRkN2zNFVjYxwFQ44Q=
+X-Google-Smtp-Source: APXvYqw/GH6PiCQFOfz/yT3uVIv0OGRs4v0gq7Kk0f61TESAAuUMLjQnqAFQEEqTTh4MPX0folAOQA==
+X-Received: by 2002:ac8:6f57:: with SMTP id n23mr10539690qtv.46.1573221333396;
+        Fri, 08 Nov 2019 05:55:33 -0800 (PST)
+Received: from smtp.gmail.com ([2804:d43:422:3955:b4df:7a81:96e1:236e])
+        by smtp.gmail.com with ESMTPSA id f39sm3047208qtb.26.2019.11.08.05.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 05:55:33 -0800 (PST)
+Date:   Fri, 8 Nov 2019 10:55:27 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     jic23@kernel.org, robh@kernel.org
+Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH v4 0/2] iio: adc: Add support for AD7292
+Message-ID: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <6906816.cRlsrm7Sor@fat-tyre>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/8/19 3:46 AM, Philipp Reisner wrote:
-> Hi Dan,
-> 
-> yes, your patch it obviously correct. The comment you are
-> referring to is badly worded. We will remove it.
-> 
-> Jens,
-> 
-> are you taking this patch as it is?
+This patchset adds a basic driver for the AD7292 ADC/DAC system along
+with devicetree binding documentation.
 
-Yep, I'll queue it up.
+Changelog V4:
+- dt-binding: updated SPDX identifier to GPL-2.0-only
+- dt-binding: changed maxitems constraint on channel property
+- ad7292: added brackets to shield macro parameters
+
+Marcelo Schmitt (2):
+  dt-bindings: iio: adc: Add dt-schema for AD7292
+  iio: adc: Add driver support for AD7292
+
+ .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++
+ MAINTAINERS                                   |   8 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/ad7292.c                      | 350 ++++++++++++++++++
+ 5 files changed, 473 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+ create mode 100644 drivers/iio/adc/ad7292.c
 
 -- 
-Jens Axboe
+2.23.0
 
