@@ -2,100 +2,95 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D88FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9036CFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E8A20869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666A920869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:53:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhuzaXhw"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IIRBDa5U";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="btg+ahCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbfKHDwT (ORCPT
+        id S1729871AbfKHDxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:52:19 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36739 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfKHDwS (ORCPT
+        Thu, 7 Nov 2019 22:53:10 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:48018 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfKHDxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:52:18 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so4070365oto.3;
-        Thu, 07 Nov 2019 19:52:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aivP/GpZ1KGYpMt8cndt6JZJWRBCraXZuvgFzKajp8o=;
-        b=UhuzaXhwh4V4OtCNmi00QRY7QIuJNsZY7XkdW++ynVvUV5ipDE+Txo4OVE1lAYeXVp
-         HFYurymY/b4axShJS4pi96a4cDFg4XsaEAZuzSDazYZ+xkUuSVfOz7gDMMS5FuNx1I52
-         4pYCYZIKgFb3PDPoZZoQCegxROP3vtLnD5FWU6EWJ4Ay3Fb9bzqhklkrt9EDA4BgpJSL
-         c3X+TIxl0VX21P7JcSN9qfbQ/2nYxRjh79ikAkYQdFlM/5vRUJdU+SDSV4Ga1sN6DW1w
-         InJb+twr0pq9RiCBWOzBp65fPHyJ4wySAymr2YrkSBU1ZtY0cqzuqo6sAfLmA3aY/keC
-         89EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aivP/GpZ1KGYpMt8cndt6JZJWRBCraXZuvgFzKajp8o=;
-        b=nAaV0g10CaQfo9GeVc1AFHv63etf3orQFykrwanD+UuJQkkc/hmi3/yV0Eto8nIevk
-         em6OSxsxvJ/0p5xc9sTIMYSW5cZmDy4WR16SpINoFAe9bmkdZgaRVfNcW+cJ7PN8uYNI
-         MeOcNK776GUGeRe/gODmI97gkTakGZp7PnhQFyayW7d1dEZ+EYqpeYotT4keuScQesZE
-         Kjh4Nlgg2NTDfn8vK+m4xoBdZhgRV9mAtB4o2LtOhx4c8zE/RPjefDDN2f0xg0PkM3F1
-         N9734Cw89jQ1itrCvQn1WF563f1wtfTTC865IpJHYLHT5wxFhDPpmOm3hzwk81We3ba2
-         voUw==
-X-Gm-Message-State: APjAAAVetQz8ybsqOZnSyaw96pH0aoLQkwGUNMmEg8ZSE/udFY10fVPg
-        jSg40GlLgNp3Ql8gDvJ5XFjhs6RZ2iwCtrpZc20=
-X-Google-Smtp-Source: APXvYqy5Nze/GU5XzkqvIJ38bkcAHVp1VfCQNvotnh9iz5Pbk2Lxb4Ftks1yabXMhPm4deuUl636X1OlG99R3qAShFU=
-X-Received: by 2002:a9d:39c8:: with SMTP id y66mr6154192otb.181.1573185138031;
- Thu, 07 Nov 2019 19:52:18 -0800 (PST)
+        Thu, 7 Nov 2019 22:53:10 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0FD4860E0E; Fri,  8 Nov 2019 03:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573185189;
+        bh=Kchj0au/N2roxI5cPK5t9RsVMPtXp9zZPGu9Gafq45o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IIRBDa5URaP8XCJNl3qyTl/IBfFFqJ4hCefbJfb3CkhP24xbRNFip7SJWTMhj6b7z
+         XzC5e3skCKKjhiLpWD534Dn0CgeuteXKdQiAfDUkZ1OPhFh+4oU0x45XrkjpXhOHsY
+         H/op+ocYwOKWqYuo1ZWdKSuX9P0JOKqlednODtMQ=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B714F60F2F;
+        Fri,  8 Nov 2019 03:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573185172;
+        bh=Kchj0au/N2roxI5cPK5t9RsVMPtXp9zZPGu9Gafq45o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=btg+ahCv6zPYAoJbB3LJ89efoKL35mqMuestY4jQyRaRkAehfIt9qMjWhQLly8iV4
+         D/Kb0W+Kvj+aFnBHPwN6vUreWvk3fE9yLflTz8tPIpmoYyWrDfPFyrqpbNHMvomugE
+         bh/lSm/vo/FOEMrCnf9dEswmcdI586SXcnYFWqag=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B714F60F2F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v4 14/14] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Roja Rani Yarubandi <rojay@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org>
+ <20191106065017.22144-15-rnayak@codeaurora.org>
+ <5dc46805.1c69fb81.7b5fa.1eea@mx.google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <d868998f-8b4d-bf9e-2539-a0915b1442fa@codeaurora.org>
+Date:   Fri, 8 Nov 2019 09:22:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191106140748.13100-1-gch981213@gmail.com> <20191106140748.13100-2-gch981213@gmail.com>
-In-Reply-To: <20191106140748.13100-2-gch981213@gmail.com>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Fri, 8 Nov 2019 11:52:06 +0800
-Message-ID: <CAJsYDVK7E-LMyA2eH5VhFu9EQWur_BLRNRg0-YTsOiJ+GyEF4g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mtd: mtk-quadspi: add support for memory-mapped flash reading
-To:     linux-mtd@lists.infradead.org,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5dc46805.1c69fb81.7b5fa.1eea@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all!
 
-On Wed, Nov 6, 2019 at 10:08 PM Chuanhong Guo <gch981213@gmail.com> wrote:
->
-> PIO reading mode on this controller is ridiculously inefficient
-> (one cmd+addr+dummy sequence reads only one byte)
-> This patch adds support for reading from memory-mapped flash area
-> which increases reading speed from 1MB/s to 5.6MB/s
->
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> ---
->  drivers/mtd/spi-nor/mtk-quadspi.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
 
-I'll abandon this patchset and implement DMA reading instead.
+On 11/8/2019 12:22 AM, Stephen Boyd wrote:
+> Quoting Rajendra Nayak (2019-11-05 22:50:17)
+>> From: Roja Rani Yarubandi <rojay@codeaurora.org>
+>>
+>> Add QUP SE instances configuration for sc7180.
+>>
+>> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+> 
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> 
+> It has the weird qup numbering too, but I guess it's correct somehow.
 
-Regards,
-Chuanhong Guo
+I responded to PATCH 2/14 as to why its weird.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
