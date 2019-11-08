@@ -2,126 +2,110 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C437FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98070C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D783221882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9B621882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:34:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oXvp/OSE"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rg+96yAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKHPcO (ORCPT
+        id S1726952AbfKHPeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:32:14 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59148 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbfKHPcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:32:14 -0500
-Received: from zn.tnic (p200300EC2F0D3700C146D27A9F02E8E8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:3700:c146:d27a:9f02:e8e8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEC711EC0D03;
-        Fri,  8 Nov 2019 16:32:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573227128;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Wy2nApVSv0Jbeun95X8bJdRkeSPWfkwqp16W5VjvXSQ=;
-        b=oXvp/OSEVBnqkFXh3X/bJm8gHHcJmwurn9LAgHETk+DvQI2DU/yKp04mOAoXwTlZLhXml3
-        xZL3iV6jYVCunLJB4cfTXT5MrVlGTADTagu7TIPIZyJwsIokQHoP7NMt4aQg0JYXNNMMNW
-        jZbHiNve4Z2jYsOE/PLgU63y6pX6tio=
-Date:   Fri, 8 Nov 2019 16:32:03 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] EDAC, ghes: Fix locking and memory barrier issues
-Message-ID: <20191108153203.GE4503@zn.tnic>
-References: <20191105200732.3053-1-rrichter@marvell.com>
- <20191105201115.v2pe6k6g2brx5itv@rric.localdomain>
+        Fri, 8 Nov 2019 10:34:15 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45211 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfKHPeP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 10:34:15 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z4so4773721pfn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 07:34:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qj+fxcw/f/zBWkhx1n1H3p7wLqAe4gVBZqI/aXNQxWk=;
+        b=rg+96yACuf0WNFAbNBolENWXNfzTsgllhU9Lu/cKxAhsm9fNVQMjn0iHib5iXLrIKy
+         4ht2PRAcyGbqzSaBjjbBD2EOEsb07PYkPuF9ikvH43uGaUPfIbtJk8lFDkPCLI1XR8hS
+         2AVs+/sUSn4eOTnMkIjAK0XPcmykZsVhmQTIg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qj+fxcw/f/zBWkhx1n1H3p7wLqAe4gVBZqI/aXNQxWk=;
+        b=N870y9NT0iconw4PZtAIyC/ShYWQiZZN0vf/X+uDf90Gya4TGTmd2CWBanAETyQrWC
+         50QCfht6EcHYhlyIk03YOH+sQ6xvxOSbnlmqvs0Ftb7gKK76Nf9aSf6g+2DJUEFfP+53
+         vTsTrpnbN+25c84LM++MBF3m9eWNoMFcfeWES1cVTXZou9hlMeR5VArngsF3qYYVO+t5
+         9SZgoJ5MA28zhKYJRYdVk1wDWYguXlnvlOx0IsjjShbR7/zrS3M4+XI/IVe0qWYCzZfB
+         ktoy/OQUmQczadfybA0wmTwilgbBfvr/tR4KvA6jN+XvGqRiPZYjUrdj03VG27bl108E
+         O0zw==
+X-Gm-Message-State: APjAAAXu6L/RPqmHW0rMwaB3HQrIpggadWlrZS6EnzY6UELS0JtTWxx1
+        AV9WiLgWp9g975+DNduVFa1qEA==
+X-Google-Smtp-Source: APXvYqwSoI3TF80yU99qYDKkeTfcy4sTEJwGlf6rpu9XXhNevu4ndPDIEfa5bbnolSMgHzBhXQTIQw==
+X-Received: by 2002:a17:90a:6583:: with SMTP id k3mr14324030pjj.50.1573227252739;
+        Fri, 08 Nov 2019 07:34:12 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id b128sm2331777pfg.65.2019.11.08.07.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 07:34:12 -0800 (PST)
+Date:   Fri, 8 Nov 2019 10:34:10 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Nicolas Geoffray <ngeoffray@google.com>,
+        kernel-team@android.com, Hugh Dickins <hughd@google.com>,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 1/2] memfd: Fix COW issue on MAP_PRIVATE and
+ F_SEAL_FUTURE_WRITE mappings
+Message-ID: <20191108153410.GB99567@google.com>
+References: <20191107195355.80608-1-joel@joelfernandes.org>
+ <20191107170023.0695732bb67eb80acd4caee5@linux-foundation.org>
+ <20191108020614.GA99567@google.com>
+ <20191108063715.GA513315@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105201115.v2pe6k6g2brx5itv@rric.localdomain>
+In-Reply-To: <20191108063715.GA513315@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:11:22PM +0000, Robert Richter wrote:
-> On 05.11.19 20:07:51, Robert Richter wrote:
-> > The ghes registration and refcount is broken in several ways:
+On Fri, Nov 08, 2019 at 07:37:15AM +0100, Greg KH wrote:
+> On Thu, Nov 07, 2019 at 09:06:14PM -0500, Joel Fernandes wrote:
+> > On Thu, Nov 07, 2019 at 05:00:23PM -0800, Andrew Morton wrote:
+> > > On Thu,  7 Nov 2019 14:53:54 -0500 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> > > 
+> > > > F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
+> > > > A private mapping created after the memfd file that gets sealed with
+> > > > F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
+> > > > children and parent share the same memory, even though the mapping is
+> > > > private.
+> > > 
+> > > That sounds fairly serious.  Should this be backported into -stable kernels?
 > > 
-> >  * ghes_edac_register() returns with success for a 2nd instance even
-> >    if a first instance is still running. This is not correct as the
-> >    first instance may fail later. A subsequent registration may not
-> >    finish before the first. Parallel registrations must be avoided.
-> > 
-> >  * The refcount was increased even if a registration failed. This
-> >    leads to stale counters preventing the device from being released.
-> > 
-> >  * The ghes refcount may not be decremented properly on
-> >    unregistration. Always decrement the refcount once
-> >    ghes_edac_unregister() is called to keep the refcount sane.
-> > 
-> >  * The ghes_pvt pointer is handed to the irq handler before
-> >    registration finished.
-> > 
-> >  * The mci structure could be freed while the irq handler is running.
-> > 
-> > Fix this by adding a mutex to ghes_edac_register(). This mutex
-> > serializes instances to register and unregister. The refcount is only
-> > increased if the registration succeeded. This makes sure the refcount
-> > is in a consistent state after registering or unregistering a device.
-> > Note: A spinlock cannot be used here as the code section may sleep.
-> > 
-> > The ghes_pvt is protected by ghes_lock now. This ensures the pointer
-> > is not updated before registration was finished or while the irq
-> > handler is running. It is unset before unregistering the device
-> > including necessary (implicit) memory barriers making the changes
-> > visible to other cpus. Thus, the device can not be used anymore by an
-> > interrupt.
-> > 
-> > Also, rename ghes_init to ghes_refcount for better readability and
-> > switch to refcount API.
-> > 
-> > A refcount is needed. There can be multiple GHES structures being
-> > defined (see ACPI 6.3 specification, 18.3.2.7 Generic Hardware Error
-> > Source, "Some platforms may describe multiple Generic Hardware Error
-> > Source structures with different notification types, ...").
-> > 
-> > Another approach to use the mci's device refcount (get_device()) and
-> > have a release function does not work here. A release function will be
-> > called only for device_release() with the last put_device() call. The
-> > device must be deleted *before* that with device_del(). This is only
-> > possible by maintaining an own refcount.
-> > 
-> > Fixes: 0fe5f281f749 ("EDAC, ghes: Model a single, logical memory controller")
-> > Fixes: 1e72e673b9d1 ("EDAC/ghes: Fix Use after free in ghes_edac remove path")
-> > Co-developed-by: James Morse <james.morse@arm.com>
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > Co-developed-by: Borislav Petkov <bp@suse.de>
-> > Signed-off-by: Borislav Petkov <bp@suse.de>
-> > Signed-off-by: Robert Richter <rrichter@marvell.com>
+> > Yes, it should be. The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so
+> > v5.3.x stable kernels would need a backport. I can submit a backport tomorrow
+> > unless we are Ok with stable automatically picking it up (I believe the
+> > stable folks "auto select" fixes which should detect this is a fix since I
+> > have said it is a fix in the subject line).
 > 
-> I hope this SOB chain is correct now.
+> Never rely on "auto select" to pick up a patch for stable if you already
+> know it should go to stable.  Just mark it as such, or tell stable@vger
+> after the fact.
 
-Yeah.
+Sure, agreed.
 
-Applied, thanks.
+Thanks Andrew for adding the tags!
 
--- 
-Regards/Gruss,
-    Boris.
+thanks,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+ - Joel
+
