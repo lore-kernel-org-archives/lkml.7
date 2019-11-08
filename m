@@ -2,160 +2,112 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F764C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106BAFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48469214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9748214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hAh4eFkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfKHFYK (ORCPT
+        id S1726148AbfKHF3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:24:10 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:54355 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfKHFYJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:24:09 -0500
-Received: by mail-il1-f198.google.com with SMTP id t67so5456386ill.21
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 21:24:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=dPhSKITN+qpJ1kAaYh56DgS6ASSjVpyseG4MPHwRhso=;
-        b=lCCNYPlmRIXLT6zywTmeXFtZsMOmCGXohGWv4Ub7+k3O0WpBxhPIhbSqdf8f8CTBIx
-         Y0yNc3Q8jgeFZTf+RZOTta9gUfBYmKEjPod0TNM7Slt7eINsQlA1S1MxNLIHBXyDWPu3
-         DgqUKhCAjbItJdRFxUbZOpT/S4j+ycuffPSnO05dgGyRSpXW9lMEq6NUHc0/RB4oGeH7
-         xTW2FqGIzZaZepiH4ICeVU7+btwxBPXi3aqxq/mcdI2R2zkyxOPeQghpSE2n8tRzBvXu
-         4V8meUHKTMF7pdrXlFMebGcXx/D8n8v6eNgguxfp1esAUFN4Z/0dKpfVgoMmZwljIwil
-         FInA==
-X-Gm-Message-State: APjAAAVCmcjoPz6wiwor43mYsG7oKfKLVGc2habWJf73sgL/Xx61cGCQ
-        ObpJtyNAZy6b/PaUh8ZBH2LlCYuKqT8qduESvajVzZPheHMq
-X-Google-Smtp-Source: APXvYqz0LzmOlXVfOt4rWMXnb/qk08cBCKYjjqXds33Af0lESdOJUL+rE3S61CR8bQu9PakMDnVv3O0g0CG3dIYGRp3g8qoCIBWQ
+        Fri, 8 Nov 2019 00:29:33 -0500
+Received: from ozlabs.org ([203.11.71.1]:43249 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfKHF3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 00:29:33 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 478TNV5zS5z9sP3;
+        Fri,  8 Nov 2019 16:29:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573190970;
+        bh=1Uh2ku2+k8gcUt6gizq9uCnrRG90WIZEX5lLPwU50N8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hAh4eFkW3IUb1l71xysOePGCFZkL90RLtsRMoYFqQFTOwCM3d3q0UbpnVfIB1VbY7
+         YPlJbARFY8mLWmhEbJvmeyXzg2EBuNaftfRz9Uwiz6xJsvsIdPEzAUKD8tKzEprlhB
+         XIx5/FX4niX71UOvi2h0nuKDfOKYY2cXSTjjN+4aBcAtLBXVT9sXqI5lx1NMB6xBmO
+         H3tY03bOexKGyG6qZO9a67xH3cmk6b+bO1Kl3WVxaQHJN3nY5oCKuE81Ke0DOhDYh3
+         frtWz5Z6ct7GcJ6I0XPlulhz+w45IZxuVXSrMnguUftxO+SixIBTCWPia8DLYg/Mn0
+         zDSJ+4bLXjS9g==
+Date:   Fri, 8 Nov 2019 16:29:29 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the rtc tree
+Message-ID: <20191108162929.2aeb6f5d@canb.auug.org.au>
+In-Reply-To: <20191030154105.16a2797f@canb.auug.org.au>
+References: <20191030154105.16a2797f@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a92:1612:: with SMTP id r18mr9374104ill.60.1573190648598;
- Thu, 07 Nov 2019 21:24:08 -0800 (PST)
-Date:   Thu, 07 Nov 2019 21:24:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c620080596cefdf0@google.com>
-Subject: BUG: Dentry still in use [unmount of hugetlbfs hugetlbfs] (2)
-From:   syzbot <syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@kernel.org,
-        mike.kravetz@oracle.com, p.sarna@tlen.pl, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="Sig_/ro3pjyR_8Us4=bHzXNMr+Jl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/ro3pjyR_8Us4=bHzXNMr+Jl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+Hi all,
 
-HEAD commit:    c68c5373 Add linux-next specific files for 20191107
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f62294e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
-dashboard link: https://syzkaller.appspot.com/bug?extid=136d2439a4e6561ea00c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ed5264e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fe2a64e00000
+On Wed, 30 Oct 2019 15:41:05 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
+> produced this warning:
+>=20
+> WARNING: unmet direct dependencies detected for FSL_RCPM
+>   Depends on [n]: PM_SLEEP [=3Dy] && (ARM || ARM64)
+>   Selected by [m]:
+>   - RTC_DRV_FSL_FTM_ALARM [=3Dm] && RTC_CLASS [=3Dy] && (ARCH_LAYERSCAPE =
+|| SOC_LS1021A || COMPILE_TEST [=3Dy])
+>=20
+> WARNING: unmet direct dependencies detected for FSL_RCPM
+>   Depends on [n]: PM_SLEEP [=3Dy] && (ARM || ARM64)
+>   Selected by [m]:
+>   - RTC_DRV_FSL_FTM_ALARM [=3Dm] && RTC_CLASS [=3Dy] && (ARCH_LAYERSCAPE =
+|| SOC_LS1021A || COMPILE_TEST [=3Dy])
+>=20
+> WARNING: unmet direct dependencies detected for FSL_RCPM
+>   Depends on [n]: PM_SLEEP [=3Dy] && (ARM || ARM64)
+>   Selected by [m]:
+>   - RTC_DRV_FSL_FTM_ALARM [=3Dm] && RTC_CLASS [=3Dy] && (ARCH_LAYERSCAPE =
+|| SOC_LS1021A || COMPILE_TEST [=3Dy])
+>=20
+> Introduced by commit
+>=20
+>   e1c2feb1efa2 ("rtc: fsl-ftm-alarm: allow COMPILE_TEST")
 
-The bug was bisected to:
+I am still getting these warnings.
 
-commit efe323d5cfecd2ad9dd4aa485e05312f0fa7617a
-Author: Piotr Sarna <p.sarna@tlen.pl>
-Date:   Wed Nov 6 05:06:34 2019 +0000
+--=20
+Cheers,
+Stephen Rothwell
 
-     hugetlbfs: add O_TMPFILE support
+--Sig_/ro3pjyR_8Us4=bHzXNMr+Jl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ac944ae00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16ac944ae00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12ac944ae00000
+-----BEGIN PGP SIGNATURE-----
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com
-Fixes: efe323d5cfec ("hugetlbfs: add O_TMPFILE support")
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3E/TkACgkQAVBC80lX
+0GzZjQf7BJLsmDAO7lh+UDRKbSXPu5n2hUQLbhXCUqON+WDG+2kqEiHeGnL1mgpc
+Vi2Q5QuEUpyT5o7jdO8fmWvpZCU0y++SZIBRbuf9hU53BvquwG+JEM0eMrtLxKQr
+Ln94TKG9HdOjHCTmc4kUXd7z3nCQ9zg8EjXsUwcsdqCfrLe9dzDn/V+A59OGxJ4V
+Ieo1H5dbUREV36vRymMOMj5O2SE1LMKbOPcbAwSOC85ZbWrqZSaPFg1olSVnwYwz
+EZE/hLs+sjqmhT/iZW43m6ey1C1YQFtvIWn/sOksyJtNfTnnDmQhH9jHQlofs1NZ
+bPoxW3mapyqAMT6hxVNyWWAEmc90CQ==
+=bCmC
+-----END PGP SIGNATURE-----
 
-BUG: Dentry 00000000c225b886{i=685d,n=#26717}  still in use (1) [unmount of  
-hugetlbfs hugetlbfs]
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 8874 at fs/dcache.c:1595 umount_check fs/dcache.c:1586  
-[inline]
-WARNING: CPU: 1 PID: 8874 at fs/dcache.c:1595 umount_check.cold+0xe9/0x10a  
-fs/dcache.c:1576
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8874 Comm: syz-executor027 Not tainted 5.4.0-rc6-next-20191107  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x35 kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:umount_check fs/dcache.c:1595 [inline]
-RIP: 0010:umount_check.cold+0xe9/0x10a fs/dcache.c:1576
-Code: 89 ff e8 70 8f ef ff 48 81 c3 88 06 00 00 45 89 e8 4c 89 e1 53 4d 8b  
-0f 4c 89 f2 4c 89 e6 48 c7 c7 20 d9 b6 87 e8 b1 f4 9c ff <0f> 0b 58 e9 7d  
-1b ff ff e8 40 8f ef ff e9 29 ff ff ff 45 31 f6 e9
-RSP: 0018:ffff888095c0fbc8 EFLAGS: 00010282
-RAX: 0000000000000060 RBX: ffff888098736688 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815d0b86 RDI: ffffed1012b81f6b
-RBP: ffff888095c0fbf8 R08: 0000000000000060 R09: ffffed1015d26161
-R10: ffffed1015d26160 R11: ffff8880ae930b07 R12: ffff888090c7b300
-R13: 0000000000000001 R14: 000000000000685d R15: ffffffff8910a5e0
-  d_walk+0x27e/0x930 fs/dcache.c:1305
-  do_one_tree+0x28/0x40 fs/dcache.c:1602
-  shrink_dcache_for_umount+0x72/0x170 fs/dcache.c:1618
-  generic_shutdown_super+0x6d/0x370 fs/super.c:447
-  kill_anon_super+0x3e/0x60 fs/super.c:1106
-  kill_litter_super+0x50/0x60 fs/super.c:1115
-  deactivate_locked_super+0x95/0x100 fs/super.c:335
-  deactivate_super fs/super.c:366 [inline]
-  deactivate_super+0x1b2/0x1d0 fs/super.c:362
-  cleanup_mnt+0x351/0x4c0 fs/namespace.c:1102
-  __cleanup_mnt+0x16/0x20 fs/namespace.c:1109
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x449707
-Code: 44 00 00 b8 08 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 ed dc fb ff c3  
-66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 a6 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cd dc fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe00511778 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
-RAX: 0000000000000000 RBX: 00000000000108a6 RCX: 0000000000449707
-RDX: 0000000000400df0 RSI: 0000000000000002 RDI: 00007ffe00511820
-RBP: 00000000000022cb R08: 0000000000000000 R09: 0000000000000009
-R10: 0000000000000005 R11: 0000000000000202 R12: 00007ffe005128d0
-R13: 0000000002133880 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--Sig_/ro3pjyR_8Us4=bHzXNMr+Jl--
