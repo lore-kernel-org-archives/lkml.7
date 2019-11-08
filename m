@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C611FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96C0FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04FBF222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C377420650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239730;
-	bh=ajrQFUpHfoZrFxmZ57IP0Y32djqaiWekFynq+8+EYS8=;
+	s=default; t=1573239731;
+	bh=Yryrw8btORmLzFL2hJEnT0zESURDGptQcMl5Pp9dUxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e/W1SHSKkPBYhzAqfi2d2TV77/rI5lqGrx5I2Ol3ovDNx7B9MPUvh8CQ7fyuKwTYy
-	 vLtoro+xg4ib/eodw9mM9d+ChASZLWA3kTfccheBBBJVgwMxvwMgP9A5Tr/Xi9QpE0
-	 pcPctJdSQhmAv1gAPDTqVldwgJF0Wj6ZhSoc23FI=
+	b=o8kSCubdP59D8+03AmVV1LHcAhSNaqgEf/i8Xl+z4cMj45CdTPXrDyo0Lt5O0UFw/
+	 zEaPaW9AKr4bD2KrVUZkLN0wvhrNhpGRo4S3UB2ymp4WcU0Gss6bKQrYgPUIUEY+n+
+	 wiKl3QGYv9AOfy34bHMgQxebEzeVqM3lS4UQV49Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390447AbfKHTCJ (ORCPT
+        id S2390461AbfKHTCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:02:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:02:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390411AbfKHTCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:02:04 -0500
+        id S2390378AbfKHTB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:01:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB6120650;
-        Fri,  8 Nov 2019 19:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB4720650;
+        Fri,  8 Nov 2019 19:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239723;
-        bh=ajrQFUpHfoZrFxmZ57IP0Y32djqaiWekFynq+8+EYS8=;
+        s=default; t=1573239708;
+        bh=Yryrw8btORmLzFL2hJEnT0zESURDGptQcMl5Pp9dUxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AAspifYtxlsZgfCgMUlWFvo6UdBg/AdC2ScSk2vbxxuOYbGwLXeiO3BW+mlNZa8HS
-         taEeDHlOw5aGXEbTtKo2lCtyQqy/8uKmrqLkM0bEooYv+4iINVBqt00Sn+L+FycMeN
-         lYbcCThZlcO+2bXj3Eb+S4BG6FtFKG3BdQLnrqrA=
+        b=Xp8nXSAZd5L56ooUI2bKGfytwSwtemt/Tztb7M2TMZp0wDGxGrp2UitjrmJC+Acp3
+         UUnNuCmqsUpOyeWahD1mrXvxNHOnh9OfCfbcd3b38dD7ClsW0WM6CPLHE5CKnedKyc
+         sFT/wFs6S9VBZz6MSbfVwVMOVz1j/LALqG6jlEsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/79] i2c: stm32f7: fix a race in slave mode with arbitration loss irq
-Date:   Fri,  8 Nov 2019 19:50:12 +0100
-Message-Id: <20191108174803.425199865@linuxfoundation.org>
+Subject: [PATCH 4.19 06/79] arm64: dts: Fix gpio to pinmux mapping
+Date:   Fri,  8 Nov 2019 19:49:46 +0100
+Message-Id: <20191108174748.426994807@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -61,72 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit 6d6b0d0d5afc8c4c84b08261260ba11dfa5206f2 ]
+[ Upstream commit 965f6603e3335a953f4f876792074cb36bf65f7f ]
 
-When in slave mode, an arbitration loss (ARLO) may be detected before the
-slave had a chance to detect the stop condition (STOPF in ISR).
-This is seen when two master + slave adapters switch their roles. It
-provokes the i2c bus to be stuck, busy as SCL line is stretched.
-- the I2C_SLAVE_STOP event is never generated due to STOPF flag is set but
-  don't generate an irq (race with ARLO irq, STOPIE is masked). STOPF flag
-  remains set until next master xfer (e.g. when STOPIE irq get unmasked).
-  In this case, completion is generated too early: immediately upon new
-  transfer request (then it doesn't send all data).
-- Some data get stuck in TXDR register. As a consequence, the controller
-  stretches the SCL line: the bus gets busy until a future master transfer
-  triggers the bus busy / recovery mechanism (this can take time... and
-  may never happen at all)
+There are total of 151 non-secure gpio (0-150) and four
+pins of pinmux (91, 92, 93 and 94) are not mapped to any
+gpio pin, hence update same in DT.
 
-So choice is to let the STOPF being detected by the slave isr handler,
-to properly handle this stop condition. E.g. don't mask IRQs in error
-handler, when the slave is running.
-
-Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-stm32f7.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi | 5 +++--
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi         | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 48521bc8a4d23..362b23505f214 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1488,7 +1488,7 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
- 	void __iomem *base = i2c_dev->base;
- 	struct device *dev = i2c_dev->dev;
- 	struct stm32_i2c_dma *dma = i2c_dev->dma;
--	u32 mask, status;
-+	u32 status;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+index 8a3a770e8f2ce..56789ccf94545 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+@@ -42,13 +42,14 @@
  
- 	status = readl_relaxed(i2c_dev->base + STM32F7_I2C_ISR);
+ 		pinmux: pinmux@14029c {
+ 			compatible = "pinctrl-single";
+-			reg = <0x0014029c 0x250>;
++			reg = <0x0014029c 0x26c>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			pinctrl-single,register-width = <32>;
+ 			pinctrl-single,function-mask = <0xf>;
+ 			pinctrl-single,gpio-range = <
+-				&range 0 154 MODE_GPIO
++				&range 0  91 MODE_GPIO
++				&range 95 60 MODE_GPIO
+ 				>;
+ 			range: gpio-range {
+ 				#pinctrl-single,gpio-range-cells = <3>;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index e283480bfc7e5..84101ea1fd2cb 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -463,8 +463,7 @@
+ 					<&pinmux 108 16 27>,
+ 					<&pinmux 135 77 6>,
+ 					<&pinmux 141 67 4>,
+-					<&pinmux 145 149 6>,
+-					<&pinmux 151 91 4>;
++					<&pinmux 145 149 6>;
+ 		};
  
-@@ -1513,12 +1513,15 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
- 		f7_msg->result = -EINVAL;
- 	}
- 
--	/* Disable interrupts */
--	if (stm32f7_i2c_is_slave_registered(i2c_dev))
--		mask = STM32F7_I2C_XFER_IRQ_MASK;
--	else
--		mask = STM32F7_I2C_ALL_IRQ_MASK;
--	stm32f7_i2c_disable_irq(i2c_dev, mask);
-+	if (!i2c_dev->slave_running) {
-+		u32 mask;
-+		/* Disable interrupts */
-+		if (stm32f7_i2c_is_slave_registered(i2c_dev))
-+			mask = STM32F7_I2C_XFER_IRQ_MASK;
-+		else
-+			mask = STM32F7_I2C_ALL_IRQ_MASK;
-+		stm32f7_i2c_disable_irq(i2c_dev, mask);
-+	}
- 
- 	/* Disable dma */
- 	if (i2c_dev->use_dma) {
+ 		i2c1: i2c@e0000 {
 -- 
 2.20.1
 
