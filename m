@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07906C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B830BFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF8B2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8619C207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214254;
-	bh=hVTmL0FORV+KWz1VpzuweX8Ats/8839pboW72CRooBI=;
+	s=default; t=1573214264;
+	bh=+tsNtYF+z2Lyp9tPCd2Dr0PqAGfSfurgQujhAXNneP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YoQReUMlzHqLCDjBiw1D2pk96tCcIM8PRKLHsdXiuXVZI0eQgwOSWozQ1BpvOwiXq
-	 Mv9DLpGgja0pbaNv6D5k42yWy/M+1GsVjydETO8poJ0U8ll4BBUL806Bv2mCevbfV4
-	 VWYySXqi0NHOLe2krIubyYWKSoMudL9ROwD4CTA0=
+	b=fyAv2WL0h9tn9vNn77W8LBPYRDeNXfJWjD9ZulQ0F6af6E4Ver3HlgbtBoCASEacl
+	 xkayb4r6OQq62pG91sy566mvGmiTeo0RCRqkHRLB1wSLjMn3rjYlGSF/FlrcYid6Kq
+	 snfoHcucUIeVUW4w6KSoIhoeklobatJsRxa8rKsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391295AbfKHL5d (ORCPT
+        id S2390687AbfKHL5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:57:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60210 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:57:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391008AbfKHLpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:04 -0500
+        id S2390999AbfKHLpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CB3A222C5;
-        Fri,  8 Nov 2019 11:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0224A222C5;
+        Fri,  8 Nov 2019 11:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213504;
-        bh=hVTmL0FORV+KWz1VpzuweX8Ats/8839pboW72CRooBI=;
+        s=default; t=1573213501;
+        bh=+tsNtYF+z2Lyp9tPCd2Dr0PqAGfSfurgQujhAXNneP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tP31o3ouEF+FOpOXxu185ZZWS2t0Z9KhXST77iBY8vT43vJsAQ+N+y9P6UHYqyhLD
-         P9yL6RKUxUPymPW8Td/Y4f8kOAfbqBT3zgHLTZKRTksGK246PFqKPptU3yo/6uO9AP
-         2sdgpwbNw+H8fC6NQasTySGSqP1nWObaY3egzpqI=
+        b=kjA6NXjQrSqtmXs+4lsRmkylE8AytpjGmK30728qeFnRuRJCIe5grggi00wM99rS/
+         gLbnzEGh9MyAB1s3vB1pCK03LPteAF/7LL/JtZ0ONj7QlAKD1OGDJdkjOvWuY0CtFN
+         5D79t2v7hme0T/73hBLNWcLTAbKk+DrqdOGilN2A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 079/103] media: dt-bindings: adv748x: Fix decimal unit addresses
-Date:   Fri,  8 Nov 2019 06:42:44 -0500
-Message-Id: <20191108114310.14363-79-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 078/103] nvmem: core: return error code instead of NULL from nvmem_device_get
+Date:   Fri,  8 Nov 2019 06:42:43 -0500
+Message-Id: <20191108114310.14363-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -62,51 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 27582f0ea97fe3e4a38beb98ab36cce4b6f029d5 ]
+[ Upstream commit ca6ac25cecf0e740d7cc8e03e0ebbf8acbeca3df ]
 
-With recent dtc and W=1:
+nvmem_device_get() should return ERR_PTR() on error or valid pointer
+on success, but one of the code path seems to return NULL, so fix it.
 
-    Warning (graph_port): video-receiver@70/port@10: graph node unit address error, expected "a"
-    Warning (graph_port): video-receiver@70/port@11: graph node unit address error, expected "b"
-
-Unit addresses are always hexadecimal (without prefix), while the bases
-of reg property values depend on their prefixes.
-
-Fixes: e69595170b1cad85 ("media: adv748x: Add adv7481, adv7482 bindings")
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvmem/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 21ffb5ed81830..54d1d3bc18694 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -73,7 +73,7 @@ Example:
- 			};
- 		};
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index b414d9d207d45..08b171731664e 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -617,7 +617,7 @@ static struct nvmem_device *nvmem_find(const char *name)
+ 	d = bus_find_device(&nvmem_bus_type, NULL, (void *)name, nvmem_match);
  
--		port@10 {
-+		port@a {
- 			reg = <10>;
+ 	if (!d)
+-		return NULL;
++		return ERR_PTR(-ENOENT);
  
- 			adv7482_txa: endpoint {
-@@ -83,7 +83,7 @@ Example:
- 			};
- 		};
- 
--		port@11 {
-+		port@b {
- 			reg = <11>;
- 
- 			adv7482_txb: endpoint {
+ 	return to_nvmem_device(d);
+ }
 -- 
 2.20.1
 
