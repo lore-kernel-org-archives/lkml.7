@@ -7,78 +7,125 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CCEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E78BFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9542178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D502178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqEeTImD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEwVAnBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfKHQKV (ORCPT
+        id S1727422AbfKHQMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:10:21 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39547 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfKHQKV (ORCPT
+        Fri, 8 Nov 2019 11:12:02 -0500
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:45991 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfKHQMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:10:21 -0500
-Received: by mail-lj1-f193.google.com with SMTP id p18so6793528ljc.6;
-        Fri, 08 Nov 2019 08:10:20 -0800 (PST)
+        Fri, 8 Nov 2019 11:12:02 -0500
+Received: by mail-wr1-f52.google.com with SMTP id z10so2357774wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 08:12:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=maXB2VDh1iEy51lmhzDifsWOuishbsw0vRYJa/MLM1w=;
-        b=oqEeTImD7QhX3gkeREMKMpoh6gS7ja6krWrEBEGoDyizlyai8REIiCv1/BxQyLI4uA
-         LHYz7L3UOWpgQ+YqGYdHYSYpivIwNhuAWdWcg8xjG//usBZGCPNiSItSfhlS+OJAutpl
-         4kwzjjBALkVR4MRmv71DRBq8Wd60vv3HtVSAd2iNXY4xfccE0VW3D+YvajqnIft6Gumr
-         v8zo2W+s7LYAHnH+y6yARrBe1Kxzl9deza0+5KXDS8ZW5+yio6cd7XeFOnSHghTjS1hI
-         N9lVML9v4lzNS9GND4WqwlkvBRmAy1yfjB1EzI0RXaFBf8UK7mo/xukpMfW+F1we4bI/
-         4pwA==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=vfSMyonLNWSStTVXi/+0MEYGDG3O7Vuvm5dH7uvXqwo=;
+        b=AEwVAnBgU2jNScqOseydoEaBBJJxBCXU6NmVBre0HQW5nxkf4unTDsavaxNM/0Ci4D
+         m8RvulI0QkCcVuO3KcSk18U+XtA8zF134kNhGG8XGiu1y1PN9zInpUfT02kMTfDeGPev
+         WWqBVavLqPsIXACZCyCnoYALJCB9+sL4u9yaa4gnL6ljldJqbe/QcOjJ+OBlgmkSOySR
+         Xy5jGfqGi4qll2w6cpzzO6VxWc+9Ging6gM9XMCMstSbTYOhSO21a1t01yIFmoHx5pZh
+         8TUjWYLpXfWXgx19ENEeTxK9lTZKE2jrq+jN4mURIjeHOruPQJbJDmzxmTOhkIf6Onx8
+         ROgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=maXB2VDh1iEy51lmhzDifsWOuishbsw0vRYJa/MLM1w=;
-        b=gSLmzpglszqRwqPWkeMrmzHSp3reYlBnJR6OhJgpgxWgMNuhcU+ccsXvWUkeQxEWw0
-         if91eVyzpD3PFboWgxzAfqZS5XBR+2avpvVKVfdEBxmCO9uGh1lqnuOlNcfkVADUd1f8
-         tchYZNFCjhe6Wh3y/iPf0zSGp9OGlQHytIbFwMVJVOXcGuK2yPKyO7y6nMiOLtDYdZlY
-         X0anEreR7YZJ6IzPqBaZwA4XrT9dOZotd4Gv+hApGUDgggfgv4IQ0oQ5v0OZJn9SkqGk
-         C/7jc/tVNSfWOHXsKDYCDkDHSqNTYKbo9wtQ72KTETmqDIkMLuRISYYL2Z7jtpotkHUq
-         VxGQ==
-X-Gm-Message-State: APjAAAXjqj6ps6RnwWSyfO/TX2nRSIsAjtcWspzsHZrvHCMwMNPtFpYm
-        zQB4AMNtZCSExh4xSXuLc/lWqIOvXmg=
-X-Google-Smtp-Source: APXvYqwn3ELRFg5N3AOkRRVlah39osyzUX5pW8Z9h3bihHb95B6qSv+AnQnWL7P/KcKzeMcjatiYGw==
-X-Received: by 2002:a2e:884c:: with SMTP id z12mr7242088ljj.41.1573229419486;
-        Fri, 08 Nov 2019 08:10:19 -0800 (PST)
-Received: from [10.0.0.92] ([91.237.107.85])
-        by smtp.gmail.com with ESMTPSA id 30sm2260478lju.52.2019.11.08.08.10.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 08:10:18 -0800 (PST)
-Subject: Re: [PATCH v3 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen
- CPUs
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
-        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com
-References: <20191107230105.30574-1-leonmaxx@gmail.com>
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-Message-ID: <3b0d8afb-142d-94fb-d53e-597348b9fc7f@gmail.com>
-Date:   Fri, 8 Nov 2019 18:10:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vfSMyonLNWSStTVXi/+0MEYGDG3O7Vuvm5dH7uvXqwo=;
+        b=dOzVkkrnIMr1FtUChS1plC+tEsk+gKQLdCwz+bUHl4M3akF87d4qP2lt4t10Mw1pH1
+         IPcWkTpzNQv1a3lVxCbuS9/QMEe/mZSvSguffAFDHADJs6nINiW1UE2+DF3vcvUGKbcE
+         OKG8JfBEjpceD1R3pF4XFdEzLqTHdXVhosibaAlI5ByRnGpisRTupTeTAeKcBmtGa3ha
+         YiEQ1p++FcAeJwcYCgguZ7Wen00ZfijFym22FMUsa921TpKZitboP/1Yq0HFxu/RmmxF
+         dSPoTgCmEce59CBguJ6DeFdZHBU3HSiNW/ltqTJR5/RPor4XfYOPzhQKQkCOFVP1P5H2
+         VPZQ==
+X-Gm-Message-State: APjAAAUDGvJbOlcV8TsMs6LBI1lbsScDODjw1QXJxvW6Fjce8eXWpLNl
+        0g/sl+GXbVoxqY+NDhQfPkrPqcnY
+X-Google-Smtp-Source: APXvYqwdr6usJ4bGyyp0FTiNoGOK4B/8DRuo7APPq8qVeKpq+g8dDL9o6RV8LWA64mmz7H//6YXfdg==
+X-Received: by 2002:adf:e903:: with SMTP id f3mr9637350wrm.121.1573229520107;
+        Fri, 08 Nov 2019 08:12:00 -0800 (PST)
+Received: from debian ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id d13sm6226385wrq.51.2019.11.08.08.11.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Nov 2019 08:11:59 -0800 (PST)
+Date:   Fri, 8 Nov 2019 16:11:57 +0000
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Subject: libtraceevent installing in wrong folder
+Message-ID: <20191108161157.g5aadocnfvragqb2@debian>
 MIME-Version: 1.0
-In-Reply-To: <20191107230105.30574-1-leonmaxx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ignore this patch set, I'm working on v4 right now.
+Hi Steve,
 
+I tried to install libtraceevent. and I used the command:
+"make DESTDIR=/home/sudip/test prefix=/usr install" from tool/lib/traceevent
+
+And this is what I get:
+sudip@debian:~/test$ pwd
+/home/sudip/test
+
+sudip@debian:~/test$ find .
+.
+./usr
+./usr/local
+./usr/local/lib
+./usr/local/lib/x86_64-linux-gnu
+./usr/local/lib/x86_64-linux-gnu/pkgconfig
+./usr/local/lib/x86_64-linux-gnu/pkgconfig/libtraceevent.pc
+./usr/lib64
+./usr/lib64/traceevent
+./usr/lib64/traceevent/plugins
+./usr/lib64/traceevent/plugins/plugin_hrtimer.so
+./usr/lib64/traceevent/plugins/plugin_sched_switch.so
+./usr/lib64/traceevent/plugins/plugin_jbd2.so
+./usr/lib64/traceevent/plugins/plugin_kvm.so
+./usr/lib64/traceevent/plugins/plugin_cfg80211.so
+./usr/lib64/traceevent/plugins/plugin_kmem.so
+./usr/lib64/traceevent/plugins/plugin_scsi.so
+./usr/lib64/traceevent/plugins/plugin_mac80211.so
+./usr/lib64/traceevent/plugins/plugin_function.so
+./usr/lib64/traceevent/plugins/plugin_xen.so
+./usr/lib64/libtraceevent.so
+./usr/lib64/libtraceevent.so.1.1.0
+./usr/lib64/libtraceevent.a
+./usr/lib64/libtraceevent.so.1
+./home
+./home/sudip
+./home/sudip/test
+./home/sudip/test/usr
+./home/sudip/test/usr/include
+./home/sudip/test/usr/include/traceevent
+./home/sudip/test/usr/include/traceevent/event-parse.h
+./home/sudip/test/usr/include/traceevent/trace-seq.h
+./home/sudip/test/usr/include/traceevent/kbuffer.h
+./home/sudip/test/usr/include/traceevent/event-utils.h
+
+I am seeing two problems:
+1) It created another home/sudip/test folder inside /home/sudip/test and
+the header files are installed in /home/sudip/test/home/sudip/test/usr/include folder.
+They should have been in /home/sudip/test/usr/include.
+
+2) I used prefix=/usr but the 'pkgconfig' still went to /usr/local
+
+Did I do something wrong?
+
+
+-- 
+Regards
+Sudip
