@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B164CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D19C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDB8206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01ED8206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240006;
-	bh=gv1fTVcMYT3t+RNSRTZEKgmTRhHvkmvmvq7qtcg5k6w=;
+	s=default; t=1573240010;
+	bh=RoOwuTEoleM5cqE4Jh826MjpsBVUMzm5KeiWX26H0Vo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYqANN/XzoO8SYgEw0AV2SdgvXXC3TLDaaz7lsYtz9S1jGgT/U4jsewwb+oKVTRkk
-	 9TLnrdsgcH7UzdBJHIk2NWVK8FKxxoQjsfuUE0UmUzXT15M/y92DBxUjgDtDoGRZMu
-	 5oeardvOEMQDIWwGqqrhdi9WbITP0vmJEDG1by1A=
+	b=1Sj0gF7pSpAwC0SBamhYFlE3JYuSXJP1pPQxsg95dYOuSrOMEbNwCMY7VXhq5xOBj
+	 ASFxiXwqd0HiqLFru8FTk5wLm5yH7pZRZl/geu7UV9fTheewBKb1rFjqgr1AESY4jV
+	 0gMpTkBMKCB1eUgtd7D5klzRjsVgO70cPZi8QAHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391332AbfKHTGp (ORCPT
+        id S2391346AbfKHTGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:06:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37282 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:06:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391316AbfKHTGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:06:43 -0500
+        id S1733176AbfKHTGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:06:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21A61222C9;
-        Fri,  8 Nov 2019 19:06:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30FA320673;
+        Fri,  8 Nov 2019 19:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240002;
-        bh=gv1fTVcMYT3t+RNSRTZEKgmTRhHvkmvmvq7qtcg5k6w=;
+        s=default; t=1573240005;
+        bh=RoOwuTEoleM5cqE4Jh826MjpsBVUMzm5KeiWX26H0Vo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lo0QsQmyxOxYILrW0Cbnj4uON+S9wnwve5LScCHrjpW0NYSqLW9P8uUYbWLXNT84B
-         7lucS7aSTlwUNRR2YuytLIxx1jpuO9qmWyLrkdWx0NUAvcCfuuy2v06fex3J8k1Zi1
-         9WE391hXEUIuLd3lvSwWimrIRVUUo+Nelf/p/IFY=
+        b=t7p25BBWs3WMN27yLIpsy3CTSCoTxFZ8nm7Oli/555NlK81vmvi6ZnMMmaucuxmGu
+         6MAkRyGORsUEES0nNKr75DxHNhee8KUMAsk+FHJJoIk8SyD520IPBcxBAsADpFJsoo
+         Xg5fPs1ZR1+IOjvKPAlpTEDjGzNSlwxXdNv2plG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 054/140] drm/amdgpu: fix potential VM faults
-Date:   Fri,  8 Nov 2019 19:49:42 +0100
-Message-Id: <20191108174908.738007647@linuxfoundation.org>
+Subject: [PATCH 5.3 055/140] drm/amdgpu: fix error handling in amdgpu_bo_list_create
+Date:   Fri,  8 Nov 2019 19:49:43 +0100
+Message-Id: <20191108174908.790526222@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -63,33 +64,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 3122051edc7c27cc08534be730f4c7c180919b8a ]
+[ Upstream commit de51a5019ff32960218da8fd899fa3f361b031e9 ]
 
-When we allocate new page tables under memory
-pressure we should not evict old ones.
+We need to drop normal and userptr BOs separately.
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Acked-by: Huang Rui <ray.huang@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-index bea6f298dfdc5..0ff786dec8c4a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-@@ -421,7 +421,8 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
- 		.interruptible = (bp->type != ttm_bo_type_kernel),
- 		.no_wait_gpu = false,
- 		.resv = bp->resv,
--		.flags = TTM_OPT_FLAG_ALLOW_RES_EVICT
-+		.flags = bp->type != ttm_bo_type_kernel ?
-+			TTM_OPT_FLAG_ALLOW_RES_EVICT : 0
- 	};
- 	struct amdgpu_bo *bo;
- 	unsigned long page_align, size = bp->size;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+index 61e38e43ad1d5..85b0515c0fdcf 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+@@ -140,7 +140,12 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
+ 	return 0;
+ 
+ error_free:
+-	while (i--) {
++	for (i = 0; i < last_entry; ++i) {
++		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(array[i].tv.bo);
++
++		amdgpu_bo_unref(&bo);
++	}
++	for (i = first_userptr; i < num_entries; ++i) {
+ 		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(array[i].tv.bo);
+ 
+ 		amdgpu_bo_unref(&bo);
 -- 
 2.20.1
 
