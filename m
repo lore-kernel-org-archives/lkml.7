@@ -2,53 +2,52 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77644FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC81FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C9120673
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A262087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240178;
-	bh=OXmoZ/TWD6LZqVx1L4vvIYRknEyGU+4n20yrJlDuKC4=;
+	s=default; t=1573240183;
+	bh=GYcWA11AodRg7allrpKKPq/XjN8pRSeHNKS8rUMFDeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LfXv3+PB/rgWADbIE49ENc4MOxIr/IxD1SRk5mOxu55jCijgaiWoR7ts7tuWECvNf
-	 BlCTPsYpzN6Vr9jeYasnZIxb38oszGhZjHYeMDdt8nW4fNWRuLC8dlOqxrloTKzXKd
-	 Zb7rY9va+pim6RMjS+elN+jezZdIuPdRA9Ti/ADE=
+	b=g1wj0l9nfQXMhfdLyua4lfrrpOuG3YRjV1FQFFf8wNHa9wvnfyP0N4E+C8k49Ye5O
+	 +ls0nT/ON23o5IJz717h4pVcb4nyh9QzrxIuA1tqDA+4iIwD0yxEroaX6MUc7CrGcN
+	 8Kusx1deEnQoff7jaLdg2pSb45yVDMsWH42QqiSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390895AbfKHTJh (ORCPT
+        id S2390965AbfKHTJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387473AbfKHTJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:32 -0500
+        id S2387473AbfKHTJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165C920673;
-        Fri,  8 Nov 2019 19:09:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBCDB21D7B;
+        Fri,  8 Nov 2019 19:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240171;
-        bh=OXmoZ/TWD6LZqVx1L4vvIYRknEyGU+4n20yrJlDuKC4=;
+        s=default; t=1573240177;
+        bh=GYcWA11AodRg7allrpKKPq/XjN8pRSeHNKS8rUMFDeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x6kVIkRXDonK1t93AxZxW1XbHfcUBjbx7inn28Bh+N99FgPARB8VjyUgtcijV4glW
-         ts2DTyBJLe6I+3LOIjL6vtKnM4YMWkGfilyPVNjmswbHLx7JV+rXzOBKilQHxgrVo9
-         5Qb1qStqU/Ubvr3MfQfqlK/o1fP/tHDf5LI/wP6U=
+        b=c7zcLlooazoicRlB+ulPNEsBX53AECLyXPK14WcvTnsEssy9qhamvMiBJ+ScVlWWn
+         iWWNuU05XaD8luQiXubCRzx9/IhyP3+pFxBdxHJ3cj3r2UPqgoeplyMhpvfWS1v/J4
+         1IGoUeqcoQjclFiXqg8yC+TYx8EsboNveO07X9y0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Jianbo Liu <jianbol@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
+        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
+        Mark Bloch <markb@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.3 111/140] net/mlx5e: Remove incorrect match criteria assignment line
-Date:   Fri,  8 Nov 2019 19:50:39 +0100
-Message-Id: <20191108174911.851934326@linuxfoundation.org>
+Subject: [PATCH 5.3 113/140] net/mlx5: Fix flow counter list auto bits struct
+Date:   Fri,  8 Nov 2019 19:50:41 +0100
+Message-Id: <20191108174911.959486499@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,33 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 752d3dc06d6936d5a357a18b6b51d91c7e134e88 ]
+[ Upstream commit 6dfef396ea13873ae9066ee2e0ad6ee364031fe2 ]
 
-Driver have function, which enable match criteria for misc parameters
-in dependence of eswitch capabilities.
+The union should contain the extended dest and counter list.
+Remove the resevered 0x40 bits which is redundant.
+This change doesn't break any functionally.
+Everything works today because the code in fs_cmd.c is using
+the correct structs if extended dest or the basic dest.
 
-Fixes: 4f5d1beadc10 ("Merge branch 'mlx5-next' of git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Reviewed-by: Jianbo Liu <jianbol@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 1b115498598f ("net/mlx5: Introduce extended destination fields")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Mark Bloch <markb@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c |    1 -
- 1 file changed, 1 deletion(-)
+ include/linux/mlx5/mlx5_ifc.h |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -285,7 +285,6 @@ mlx5_eswitch_add_fwd_rule(struct mlx5_es
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -1437,9 +1437,8 @@ struct mlx5_ifc_extended_dest_format_bit
+ };
  
- 	mlx5_eswitch_set_rule_source_port(esw, spec, attr);
+ union mlx5_ifc_dest_format_struct_flow_counter_list_auto_bits {
+-	struct mlx5_ifc_dest_format_struct_bits dest_format_struct;
++	struct mlx5_ifc_extended_dest_format_bits extended_dest_format;
+ 	struct mlx5_ifc_flow_counter_list_bits flow_counter_list;
+-	u8         reserved_at_0[0x40];
+ };
  
--	spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS;
- 	if (attr->outer_match_level != MLX5_MATCH_NONE)
- 		spec->match_criteria_enable |= MLX5_MATCH_OUTER_HEADERS;
- 
+ struct mlx5_ifc_fte_match_param_bits {
 
 
