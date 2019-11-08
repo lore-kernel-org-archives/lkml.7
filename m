@@ -2,114 +2,146 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E3BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50294C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F12214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF9A214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PSXZrH1v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jKxk19Vd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbfKHBN7 (ORCPT
+        id S1728512AbfKHBR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 20:13:59 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:48289 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfKHBN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 20:13:58 -0500
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id xA81C9Rt1394965
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 7 Nov 2019 17:12:09 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com xA81C9Rt1394965
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019091901; t=1573175531;
-        bh=43nSIPM3zepQghDp/jhr28I5z95qZarMcNvR5GrYr0E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PSXZrH1vpjXgx1nKOpIBf/AJG3lZ8XnIMPAVA6TNg+11B7KTtMSJJ3gHZfbB64e38
-         l0NTHtqU1zg3zMAZkooW1JuCkasknsC3QjyljFeBiTZMJu2EUcQkpExYNFXQTEGPWX
-         TranzDOhqSY/Fp3wZXTZAgCe3tVRobLdInFT13/pYsTBAKHm34a2yiAOe+z8RSRTaW
-         sKOwH1/PvUZ1cc18wbxbCToSOx72ToKS9AheiviBIS14NqN7qPU6nOeGj5xmr7Qz84
-         qjzApv/2ljeRWThyHhnC81l1/CqBtoU35Mguexde4jGEBglHYAz0QSPpqG9aiFDTR8
-         T0ddcrK6+BqNQ==
-Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
- further
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Brian Gerst <brgerst@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20191106193459.581614484@linutronix.de>
- <20191106202806.241007755@linutronix.de>
- <CAMzpN2juuUyLuQ-tiV7hKZvG4agsHKP=rRAt_V4sZhpZW7cv9g@mail.gmail.com>
- <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
- <CAMzpN2gt4qM41=96GpNHL-kbgBsjD-zphq+5oK0BXqoCFN4F4Q@mail.gmail.com>
- <CAHk-=wjocTzo+8OMwyKPX0MCVV=N4wtU8ifwSZ_qJJnDBgKJ8Q@mail.gmail.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <6cac6943-2f6c-d48a-658e-08b3bf87921a@zytor.com>
-Date:   Thu, 7 Nov 2019 17:12:04 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjocTzo+8OMwyKPX0MCVV=N4wtU8ifwSZ_qJJnDBgKJ8Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Nov 2019 20:17:28 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33041 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbfKHBR2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 20:17:28 -0500
+Received: by mail-pl1-f194.google.com with SMTP id ay6so2896150plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 17:17:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=kZcD6GKA7XbCzd3zg1eCgX8HZHAD6+MLe8xQYM7PmDE=;
+        b=jKxk19VdnovnbeBuwPQoZftMD3I3oHzDoPitrIzZx8fcjOoT8jMhScOyC5c0iVp7cT
+         WD+e9SPcrFuUxCDI1jIGQGJbkOLpxhvr2J+MI4rW/Qyx9JWb3tfJW9iifr/XHEqwUIlG
+         P5FpxncR5UUH9ZbW274W8pwlZ45Y46ua8nM7jrHal0jfGsmTsU8mYnpFzTtyrzlVSKgb
+         GrEci+r/HGDFmdHP0zvlNfHFCMRYxShpCqTg03pQoWRiOqDNYzlDLpgUHZkXnm5651Zu
+         Qcp4kM1EWv2uZm2I13rKP0dfth8Rx4/TiIYyZXieqU6Ow3N1Uo2OqKQz2TokvTR2hMfN
+         ixgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kZcD6GKA7XbCzd3zg1eCgX8HZHAD6+MLe8xQYM7PmDE=;
+        b=iIY06onnlrCWWxESbSrLxSlkJyGkGfiZ6eRolgf5Rzbky6dM5qc8DBiGBdvakd1mq0
+         HsGd3uCjwsB9DecFI7JjIZNenKqQjOJWFxw8rLP+kH2qqIH+z2gX98zPm4zhRKYxyFhH
+         b/Vw81mo3okjg0iXqmi6p+w6usAu39/5kOKBPMb29tnV9U2g6c3G9WUNOoxG9nRZavxr
+         1zPwZ8yh8s4TJ8OFHRniYKnM5HxOYAifHOr6kvVuhxvyYtjqXkhkAkugz0r+l0v4Qh/j
+         mRXSigbdv6FBGb+ixRJ4NMCsoY2SXTH4YhaeAmxazkooYAM0Qnw2jAJfMdH0KH/xFFaO
+         awVw==
+X-Gm-Message-State: APjAAAXcS3ZrCgxswEpEsn4ioZxoTdCXhHosReibiOsNUWUgZd7aN8mc
+        k23VAS70SLRVIAzwkom/3E2Bos/Ll4g=
+X-Google-Smtp-Source: APXvYqyB6Q21widSmq8YSXUuNBlkXc+2TtWS9jvD0cuWjYjPPfDOAWNebW12rxcoc0nCFsHsptmgXA==
+X-Received: by 2002:a17:90a:268c:: with SMTP id m12mr9306601pje.69.1573175847075;
+        Thu, 07 Nov 2019 17:17:27 -0800 (PST)
+Received: from localhost.localdomain (c-67-170-172-113.hsd1.or.comcast.net. [67.170.172.113])
+        by smtp.gmail.com with ESMTPSA id s23sm3801627pgh.21.2019.11.07.17.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 17:17:26 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v5 0/3] dwc3 prereqs for HiKey960 USB support
+Date:   Fri,  8 Nov 2019 01:17:20 +0000
+Message-Id: <20191108011723.32390-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-07 13:44, Linus Torvalds wrote:
-> On Thu, Nov 7, 2019 at 1:00 PM Brian Gerst <brgerst@gmail.com> wrote:
->>
->> There wouldn't have to be a flush on every task switch.
-> 
-> No. But we'd have to flush on any switch that currently does that memcpy.
-> 
-> And my point is that a tlb flush (even the single-page case) is likely
-> more expensive than the memcpy.
-> 
->> Going a step further, we could track which task is mapped to the
->> current cpu like proposed above, and only flush when a different task
->> needs the IO bitmap, or when the bitmap is being freed on task exit.
-> 
-> Well, that's exactly my "track the last task" optimization for copying
-> the thing.
-> 
-> IOW, it's the same optimization as avoiding the memcpy.
-> 
-> Which I think is likely very effective, but also makes it fairly
-> pointless to then try to be clever..
-> 
-> So the basic issue remains that playing VM games has almost
-> universally been slower and more complex than simply not playing VM
-> games. TLB flushes - even invlpg - tends to be pretty slow.
-> 
-> Of course, we probably end up invalidating the TLB's anyway, so maybe
-> in this case we don't care. The ioperm bitmap is _technically_
-> per-thread, though, so it should be flushed even if the VM isn't
-> flushed...
-> 
+Just another round here trying to push forward a patch series
+submitted previously by Yu Chen to get HiKey960 dev-board's USB
+functionality working.
 
-One option, probably a lot saner (if we care at all, after all, copying 8K
-really isn't that much, but it might have some impact on real-time processes,
-which is one of the rather few use cases for direct I/O) would be to keep the
-bitmask in a pre-formatted TSS (ioperm being per thread, so no concerns about
-the TSS being in use on another processor), and copy the TSS fields (88 bytes)
-over if and only if the thread has been migrated to a different CPU, then
-switch the TSS rather than switching  For the common case (no ioperms) we use
-the standard per-cpu TSS.
+This set is even more narrowly focused on just the role-switch
+support and adding the role-switch-default-mode option (as the
+core extension/glue bindings bits are still in discussion).
 
-That being said, I don't actually know that copying 88 bytes + LTR is any
-cheaper than copying 8K.
+While Felipe had quite a bit of feedback on the last round, and
+I'm not completely sure how to address all of it yet, I wanted
+to send out this set which tries to address *some* of his
+concerns, so I could get further feedback and make sure I'm on
+the right track.
 
-	-hpa
+The current version of the full patchset to enable USB on
+HiKey960 can be found here:
+  https://git.linaro.org/people/john.stultz/android-dev.git/log/?id=d40d8c803c5a79b70e2a6b363fe03442480df7d9
+
+I'd greatly appreciate any feedback or thoughts!
+
+thanks
+-john
+
+New in v5:
+* Just sending out role-switch and role-swith-default-mode
+  changes
+* Reworked role-switch code to not select CONFIG_USB_ROLE_SWITCH
+  and to ifdef out the dependent code if its not enabled, as
+  suggested by Felipe
+* Changed to a string based role-switch-default-mode binding
+  as suggested by Felipe
+
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+CC: ShuFan Lee <shufan_lee@richtek.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+
+John Stultz (2):
+  dt-bindings: usb: generic: Add role-switch-default-mode binding
+  usb: dwc3: Add support for role-switch-default-mode binding
+
+Yu Chen (1):
+  usb: dwc3: Registering a role switch in the DRD code.
+
+ .../devicetree/bindings/usb/generic.txt       |  6 ++
+ drivers/usb/dwc3/core.h                       |  6 ++
+ drivers/usb/dwc3/drd.c                        | 96 ++++++++++++++++++-
+ 3 files changed, 107 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
+
