@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2100FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4601C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC6C207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A63207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214006;
-	bh=NNy9gPCO4JUqhtpquihz7LUYZZvWXZ2gaAYc6Wye+qw=;
+	s=default; t=1573214010;
+	bh=t1Z6oANTD0sjrIAyHNoQs/W7em2+BiiEHXb/QECHPfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwJvUZCTMqOFu3jndYthRCRc1dKgSSkeYnHIRfo8JmQwvQakg9RCYACdgF/TQsH2A
-	 Gdmj2LeTV9npknAf1TdXQpi0CLb57LgDJwPDdwRb8JOE34vAzcRGB28cWF4BGAdU1G
-	 hsFowk5lp4XpJs9jSqD4ENJdYlYnPhtQczQynWyI=
+	b=xancmtKwr/7nC3sZN2WsUI03IhDAHn1pttFch61qtwwYkquZz6DxEpp3w1JayjxsK
+	 XBaR5i7zl3E9OkdkVlPIAVFTcrYQgrUxaJ9a5M5kgKHVRV27a4easX4kfu6gaFtK2m
+	 H9rbwk/iEh3dmKQm/BVBfU9ISxNQatI7c8eixOmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391422AbfKHLqp (ORCPT
+        id S2388048AbfKHLx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:53:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391334AbfKHLqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:24 -0500
+        id S2391418AbfKHLqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2052222CB;
-        Fri,  8 Nov 2019 11:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF2DC21D82;
+        Fri,  8 Nov 2019 11:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213584;
-        bh=NNy9gPCO4JUqhtpquihz7LUYZZvWXZ2gaAYc6Wye+qw=;
+        s=default; t=1573213604;
+        bh=t1Z6oANTD0sjrIAyHNoQs/W7em2+BiiEHXb/QECHPfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y79nU3jObrm01O/9OvNNS7CX/9nCYaZ68jo7/b8NIcZaDEcZEaNnPSWOjICQ/hvno
-         4C2n3nV8fAH/D1AezPgn2HpWPgBC0jQs1c7BlZt1Y94/z1EcvaHFEfqqRR7pJTeMf5
-         mMQmblKcShwH0g3cmQzhPoEotbxOLhEa+2eDmBDk=
+        b=P4tNmVRIW/SnsbfChuz8KtS+b11vu45FRYueBhqkRqHQf215ml+u6gNTjlyXnix5c
+         +VQ5q5gEmNkyYVzg8ztMiMRnn6WH0piza5FxMp9/S5PVN/anqPD6BNilM/F+IKsDXH
+         zCslpIgKSUt1xgUyaBidVPmaBrI+zoHkfqSNhfV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 27/64] of: make PowerMac cache node search conditional on CONFIG_PPC_PMAC
-Date:   Fri,  8 Nov 2019 06:45:08 -0500
-Message-Id: <20191108114545.15351-27-sashal@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 42/64] ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff" is set
+Date:   Fri,  8 Nov 2019 06:45:23 -0500
+Message-Id: <20191108114545.15351-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -58,32 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit f6707fd6241e483f6fea2caae82d876e422bb11a ]
+[ Upstream commit 8148d2136002da2e2887caf6a07bbd9c033f14f3 ]
 
-Cache nodes under the cpu node(s) is PowerMac specific according to the
-comment above, so make the code enforce that.
+One of the Freescale recommended sequences for power off with external
+PMIC is the following:
+...
+3.  SoC is programming PMIC for power off when standby is asserted.
+4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+See:
+http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
+page 5083
+
+This patch implements step 4. of this sequence.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f366af135d5b7..c66cdc4307fd7 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2281,7 +2281,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
- 	/* OF on pmac has nodes instead of properties named "l2-cache"
- 	 * beneath CPU nodes.
- 	 */
--	if (!strcmp(np->type, "cpu"))
-+	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
- 		for_each_child_of_node(np, child)
- 			if (!strcmp(child->type, "cache"))
- 				return child;
+diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
+index 1515e498d348c..dd9eb3f14f45c 100644
+--- a/arch/arm/mach-imx/pm-imx6.c
++++ b/arch/arm/mach-imx/pm-imx6.c
+@@ -602,6 +602,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
+ 				   IMX6Q_GPR1_GINT);
+ }
+ 
++static void imx6_pm_stby_poweroff(void)
++{
++	imx6_set_lpm(STOP_POWER_OFF);
++	imx6q_suspend_finish(0);
++
++	mdelay(1000);
++
++	pr_emerg("Unable to poweroff system\n");
++}
++
++static int imx6_pm_stby_poweroff_probe(void)
++{
++	if (pm_power_off) {
++		pr_warn("%s: pm_power_off already claimed  %p %pf!\n",
++			__func__, pm_power_off, pm_power_off);
++		return -EBUSY;
++	}
++
++	pm_power_off = imx6_pm_stby_poweroff;
++	return 0;
++}
++
+ void __init imx6_pm_ccm_init(const char *ccm_compat)
+ {
+ 	struct device_node *np;
+@@ -618,6 +640,9 @@ void __init imx6_pm_ccm_init(const char *ccm_compat)
+ 	val = readl_relaxed(ccm_base + CLPCR);
+ 	val &= ~BM_CLPCR_LPM;
+ 	writel_relaxed(val, ccm_base + CLPCR);
++
++	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
++		imx6_pm_stby_poweroff_probe();
+ }
+ 
+ void __init imx6q_pm_init(void)
 -- 
 2.20.1
 
