@@ -2,1613 +2,870 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD20C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ED6FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDDE21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573193810;
-	bh=hEwzNqHV9iX6kk8rMJng04CmvHw23091nhUTIx4jlsg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=GfqEwxDCYo4bCGI8ZY7G3ZTABnWZ/bWQiJrTU8Yc5IV84z9sEERIDRCKblpykD5jP
-	 8BWMBY1sA+58DeiY9hdBnVkSE3gXV/1XXS4ng2fPUZD3pGrkH/NIPWrHCTjv60joQH
-	 lMJ8rNhxw1vSQBgazWfbYga78xHu1BIDyXiHViLc=
+	by mail.kernel.org (Postfix) with ESMTP id C1B5F222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="azA3llwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfKHGQs (ORCPT
+        id S1727167AbfKHG0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:16:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 01:26:34 -0500
+Received: from ozlabs.org ([203.11.71.1]:53115 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfKHGQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 01:16:48 -0500
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725802AbfKHG0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 01:26:34 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C3AD2087E;
-        Fri,  8 Nov 2019 06:16:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573193806;
-        bh=hEwzNqHV9iX6kk8rMJng04CmvHw23091nhUTIx4jlsg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=wovGkvC0scH48qvcBkA5PINR9EQ2Z+8Vq7zNJyM208Ca1jmKzW7pzgqhw9x+uBS3E
-         hWbW/8IKqWywzdKk7P6ECFjjs977HePXPoN3R5aoFOeZx+Ezyos975LpQvEmHFzd8b
-         lXJJCTakQTYc8lCQIUQ/KC+BOtCQLiWIeAbmH8TY=
-Subject: Re: [PATCH] mtd: rawnand: driver for Mediatek MT7621 SoC NAND flash
- controller
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, neil@brown.name
-References: <20191107073521.11413-1-gerg@kernel.org>
- <20191107111506.GO10409@kadam>
-From:   Greg Ungerer <gerg@kernel.org>
-Message-ID: <18fbe5ea-b3e3-db3d-1755-0a7728173b8c@kernel.org>
-Date:   Fri, 8 Nov 2019 16:16:41 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 478VfB3lV5z9sPK;
+        Fri,  8 Nov 2019 17:26:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573194386;
+        bh=gMSecG1cxsbMlnjdXUkIwGNuDqqp8L1yNP1lls3OKPA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=azA3llwN13vsEv4AJC6Tl3VrfnEA9TB1SaMxCpLaAUxc75pb8OWN55HzmaO66NA8l
+         Me5l5ngHAp6RJopqdl0fn9BGRDNQASm4mmcqK6FqbgXOYrc7GCeFJOWWiwHBg8SjBk
+         L00VbdhMv7R6vUFuc5QmN+gMGgWiATHsJuetgyvPVra8MYC3u5rM4MMrA8Jv/93IRx
+         rft/favzBuRhd/JX1QG3VkIveYLP2NXm7nUU++xt9xdXg7D0ZEhP+qCN+dmXxuRhP1
+         qqxqwxwLVWcESEWZhvGZ3IDQCwYaIMVWOu/RQyuC1IHQ80VhBAtGXv8YCokMxDc/XC
+         OZKn5VVoVJjxw==
+Date:   Fri, 8 Nov 2019 17:26:26 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Nov 8
+Message-ID: <20191108172626.44fde68b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191107111506.GO10409@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/.TqOR3vkK02drSakYbAzq0C";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+--Sig_/.TqOR3vkK02drSakYbAzq0C
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/11/19 9:15 pm, Dan Carpenter wrote:
-> This driver seems like it could be fixed up and go directly into
-> drivers/nand/ instead of staging.  Other comments below.
+Hi all,
 
-Thanks for the feedback, much appreciated.
-I'll work through it and send out a v2.
+Changes since 20191107:
 
-Regards
-Greg
+New tree: generic-ioremap
 
+The arm64 tree gained a conflict against the dma-mapping tree.
 
-> On Thu, Nov 07, 2019 at 05:35:21PM +1000, gerg@kernel.org wrote:
->> +static int check_bch_error(struct mtd_info *mtd, u8 *buf, u32 sector, u32 page)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	struct host *host = nand_get_controller_data(chip);
->> +	u16 sectormask = 1 << sector;
->> +	u32 errdebug, i, errnum;
->> +	u32 timeout = 0xffff;
->> +	u32 byte, bitoffset, bit1, bit2;
->> +	u32 bit[6];
->> +	int corrected = 0;
->> +
->> +	/* Wait for Decode Done */
->> +	while ((sectormask & ecc_read16(ECC_DECDONE_REG16)) == 0) {
->> +		timeout--;
->> +		if (timeout == 0)
->> +			return -EIO;
-> 
-> Could we do these on one line like:
-> 
-> 		if (--timeout == 0)
-> 			return -EIO;
-> 
-> Later instead of counting down we count up.  Let's do it consistently
-> throughout.  I really wish timeout were an int instead of a u32.  There
-> are too many u32s in this code for no reason.  Making things unsigned
-> doesn't make it safer.  Generally things like iterators and small
-> counters like this should just be int.
-> 
->> +	}
->> +
->> +	/*
->> +	 * We will manually correct the error bits in the last sector,
->> +	 * not all the sectors of the page!
->> +	 */
->> +	memset(bit, 0, sizeof(bit));
->> +	errdebug = ecc_read32(ECC_DECENUM_REG32);
->> +	errnum = ecc_read32(ECC_DECENUM_REG32) >> (sector << 2);
->> +	errnum &= 0xf;
->> +
->> +	if (errnum == 0)
->> +		return 0;
->> +
->> +	if (errnum == 0xf) {
->> +		/*
->> +		 * Increment the last read's failed counter only. The
->> +		 * caller supposed to check if it is a blank page with
->                          ^^^
-> Missing *is*.
-> 
-> 
->> +		 * bit-flips, or a real ECC error. If the latter, it
->> +		 * should increment the failed counter with this last
->> +		 * read's failed counter
->> +		 */
->> +		host->last_failed++;
->> +		corrected = -EBADMSG;
-> 
-> 
-> If the next ecc_read16(ECC_DECFER_REG16) fails then we set "corrected"
-> to -EIO.  Should we just return -EBADMSG here?
-> 
->> +	} else {
->> +		corrected = errnum;
->> +
->> +		for (i = 0; i < ((errnum + 1) >> 1); ++i) {
->> +			bit[i] = ecc_read32(ECC_DECEL0_REG32 + i);
->> +			bit1 = bit[i] & 0x1FFF;
->> +			/*
->> +			 * Check if bitflip is in data block (< 0x1000)
->> +			 * or OOB. Fix it only in data block.
->> +			 */
->> +			if (bit1 < 0x1000) {
->> +				byte = bit1 / 8;
->> +				bitoffset = bit1 % 8;
->> +				buf[byte] = buf[byte] ^ (1 << bitoffset);
->> +			}
->> +
->> +			mtd->ecc_stats.corrected++;
->> +
->> +			bit2 = (bit[i] >> 16) & 0x1FFF;
->> +			if (bit2 != 0) {
->> +				/*
->> +				 * Check if bitflip is in data block
->> +				 * (< 0x1000) or OOB. Fix it only in
->> +				 * data block.
->> +				 */
->> +				if (bit2 < 0x1000) {
->> +					byte = bit2 / 8;
->> +					bitoffset = bit2 % 8;
->> +					buf[byte] = buf[byte] ^
->> +						    (1 << bitoffset);
->> +				}
->> +
->> +				mtd->ecc_stats.corrected++;
->> +			}
->> +		}
->> +	}
->> +	if ((ecc_read16(ECC_DECFER_REG16) & (1 << sector)) == 0)
->> +		corrected = -EIO;
->> +
->> +	return corrected;
->> +}
->> +
->> +static bool RFIFOValidSize(u16 size)
->> +{
->> +	u32 timeout = 0xffff;
->> +
->> +	while (FIFO_RD_REMAIN(regread16(NFI_FIFOSTA_REG16)) < size) {
->> +		timeout--;
->> +		if (timeout == 0)
->> +			return false;
-> 
-> 	if (--timeout == 0)
-> 		return false;
-> 
->> +	}
->> +	return true;
->> +}
->> +
->> +static bool WFIFOValidSize(u16 size)
->> +{
->> +	u32 timeout = 0xffff;
->> +
->> +	while (FIFO_WR_REMAIN(regread16(NFI_FIFOSTA_REG16)) > size) {
->> +		timeout--;
->> +		if (timeout == 0)
->> +			return false;
-> 
-> 	if (--timeout == 0)
-> 		return false;
-> 
-> 
->> +	}
->> +	return true;
->> +}
->> +
->> +static bool status_ready(u32 status)
->> +{
->> +	u32 timeout = 0xffff;
->> +
->> +	while ((regread32(NFI_STA_REG32) & status) != 0) {
->> +		timeout--;
->> +		if (timeout == 0)
->> +			return false;
-> 
-> 	if (--timeout == 0)
-> 		return false;
-> 
-> 
->> +	}
->> +	return true;
->> +}
->> +
->> +static bool reset(void)
->> +{
->> +	int timeout = 0xffff;
->> +
->> +	if (regread16(NFI_MASTERSTA_REG16)) {
->> +		regwrite16(NFI_CON_REG16, CON_FIFO_FLUSH | CON_NFI_RST);
->> +		while (regread16(NFI_MASTERSTA_REG16)) {
->> +			timeout--;
->> +			if (!timeout)
->> +				pr_err("mt7621-nand: %s timeout\n", __func__);
-> 
-> 	if (--timeout == 0)
-> 		pr_err("mt7621-nand: %s timeout\n", __func__);
-> 
-> We may as well return after a timeout instead of looping forever.  The
-> system is hosed, but maybe it will be limping enough to collect some
-> debug information.
-> 
-> 
->> +		}
->> +	}
->> +
->> +	/* issue reset operation */
->> +	regwrite16(NFI_CON_REG16, CON_FIFO_FLUSH | CON_NFI_RST);
->> +
->> +	return status_ready(STA_NFI_FSM_MASK | STA_NAND_BUSY) &&
->> +			    RFIFOValidSize(0) &&
->> +			    WFIFOValidSize(0);
->> +}
->> +
->> +static void set_mode(u16 mode)
->> +{
->> +	u16 v = regread16(NFI_CNFG_REG16);
->> +
->> +	v &= ~CNFG_OP_MODE_MASK;
->> +	v |= mode;
->> +	regwrite16(NFI_CNFG_REG16, v);
->> +}
->> +
->> +static void set_autoformat(bool enable)
->> +{
->> +	if (enable)
->> +		regset16(NFI_CNFG_REG16, CNFG_AUTO_FMT_EN);
->> +	else
->> +		regclr16(NFI_CNFG_REG16, CNFG_AUTO_FMT_EN);
->> +}
->> +
->> +static void configure_fdm(u16 size)
->> +{
->> +	regclr16(NFI_PAGEFMT_REG16, PAGEFMT_FDM_MASK | PAGEFMT_FDM_ECC_MASK);
->> +	regset16(NFI_PAGEFMT_REG16, size << PAGEFMT_FDM_SHIFT);
->> +	regset16(NFI_PAGEFMT_REG16, size << PAGEFMT_FDM_ECC_SHIFT);
->> +}
->> +
->> +static void configure_lock(void)
->> +{
->> +	const u32 write_col = 2;
->> +	const u32 write_row = 3;
->> +	const u32 erase_col = 0;
->> +	const u32 erase_row = 3;
->> +
->> +	regwrite16(NFI_LOCKANOB_REG16,
->> +		   (write_col << PROG_CADD_NOB_SHIFT) |
->> +		   (write_row << PROG_RADD_NOB_SHIFT) |
->> +		   (erase_col << ERASE_CADD_NOB_SHIFT) |
->> +		   (erase_row << ERASE_RADD_NOB_SHIFT));
->> +}
->> +
->> +static bool pio_ready(void)
->> +{
->> +	int count = 0;
->> +
->> +	while (!(regread16(NFI_PIO_DIRDY_REG16) & 1)) {
->> +		count++;
->> +		if (count > 0xffff) {
->> +			pr_err("mt7621-nand: %s timeout\n", __func__);
->> +			return false;
->> +		}
-> 
-> 	if (--timeout == 0)
-> 
->> +	}
->> +	return true;
->> +}
->> +
->> +static bool set_command(u16 command)
->> +{
->> +	regwrite16(NFI_CMD_REG16, command);
->> +	return status_ready(STA_CMD_STATE);
->> +}
->> +
->> +static bool set_address(u32 column, u32 row, u16 colnob, u16 rownob)
->> +{
->> +	regwrite32(NFI_COLADDR_REG32, column);
->> +	regwrite32(NFI_ROWADDR_REG32, row);
->> +	regwrite16(NFI_ADDRNOB_REG16, colnob | (rownob << ADDR_ROW_NOB_SHIFT));
->> +	return status_ready(STA_ADDR_STATE);
->> +}
->> +
->> +static void mt7621_cmd_ctrl(struct nand_chip *chip, int dat, unsigned int ctrl)
->> +{
->> +	if (ctrl & NAND_ALE) {
->> +		set_address(dat, 0, 1, 0);
->> +	} else if (ctrl & NAND_CLE) {
->> +		reset();
->> +		set_mode(0x6000);
->> +		set_command(dat);
->> +	}
->> +}
->> +
->> +static bool check_RW_count(u16 writesize)
->> +{
->> +	u32 timeout = 0xffff;
->> +	u16 sec = writesize >> 9;
->> +
->> +	while (ADDRCNTR_CNTR(regread16(NFI_ADDRCNTR_REG16)) < sec) {
->> +		timeout--;
->> +		if (timeout == 0) {
->> +			pr_warn("mt7621-nand: %s timeout\n", __func__);
->> +			return false;
->> +		}
-> 
-> 		if (--timeout == 0) {
-> 
->> +	}
->> +	return true;
->> +}
->> +
->> +/*
->> + * Reset NFI HW internal state machine and flush NFI in/out FIFO
->> + */
->> +static bool ready_for_read(struct nand_chip *chip, u32 row,
->> +			   u32 column, bool full, u8 *buf)
->> +{
->> +	u16 sec = 1 << (chip->page_shift - 9);
->> +	u32 colnob = 2, rownob = host->addr_cycles - 2;
->> +	bool ret = false;
->> +
->> +	if (chip->options & NAND_BUSWIDTH_16)
->> +		column /= 2;
->> +
->> +	if (!reset())
->> +		goto cleanup;
-> 
-> There is no cleanup.  Misleading label name.  Just say "return false;
-> 
->> +
->> +	regset16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +	set_mode(CNFG_OP_READ);
->> +	regset16(NFI_CNFG_REG16, CNFG_READ_EN);
->> +	regwrite16(NFI_CON_REG16, sec << CON_NFI_SEC_SHIFT);
->> +
->> +	if (full) {
->> +		regclr16(NFI_CNFG_REG16, CNFG_AHB);
->> +		regset16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +	} else {
->> +		regclr16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +		regclr16(NFI_CNFG_REG16, CNFG_AHB);
->> +	}
->> +
->> +	set_autoformat(full);
->> +	if (full)
->> +		ecc_decode_start();
->> +	if (!set_command(NAND_CMD_READ0))
->> +		goto cleanup;
->> +	if (!set_address(column, row, colnob, rownob))
->> +		goto cleanup;
->> +	if (!set_command(NAND_CMD_READSTART))
->> +		goto cleanup;
->> +	if (!status_ready(STA_NAND_BUSY))
->> +		goto cleanup;
->> +
->> +	ret = true;
->> +
->> +cleanup:
->> +	return ret;
->> +}
->> +
->> +static bool ready_for_write(struct nand_chip *chip, u32 row,
->> +			    u32 column, bool full, u8 *buf)
->> +{
->> +	u32 sec = 1 << (chip->page_shift - 9);
->> +	u32 colnob = 2, rownob = host->addr_cycles - 2;
->> +	bool ret = false;
->> +
->> +	if (chip->options & NAND_BUSWIDTH_16)
->> +		column /= 2;
->> +
->> +	/* Reset NFI HW internal state machine and flush NFI in/out FIFO */
->> +	if (!reset())
->> +		return false;
->> +
->> +	set_mode(CNFG_OP_PRGM);
->> +
->> +	regclr16(NFI_CNFG_REG16, CNFG_READ_EN);
->> +
->> +	regwrite16(NFI_CON_REG16, sec << CON_NFI_SEC_SHIFT);
->> +
->> +	if (full) {
->> +		regclr16(NFI_CNFG_REG16, CNFG_AHB);
->> +		regset16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +	} else {
->> +		regclr16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +		regclr16(NFI_CNFG_REG16, CNFG_AHB);
->> +	}
->> +
->> +	set_autoformat(full);
->> +
->> +	if (full)
->> +		ecc_encode_start();
->> +
->> +	if (!set_command(NAND_CMD_SEQIN))
->> +		goto cleanup;
-> 
-> There isn't any cleanup.
-> 
->> +	/* FIX ME: For Any Kind of AddrCycle */
->> +	if (!set_address(column, row, colnob, rownob))
->> +		goto cleanup;
->> +
->> +	if (!status_ready(STA_NAND_BUSY))
->> +		goto cleanup;
->> +
->> +	ret = true;
->> +
->> +cleanup:
->> +	return ret;
->> +}
->> +
->> +static bool check_dececc_done(u32 sec)
->> +{
->> +	u32 timeout, dec_mask;
->> +
->> +	timeout = 0xffff;
-> 
-> Move this to the declaration like before.
-> 
->> +	dec_mask = (1 << sec) - 1;
->> +	while ((dec_mask != ecc_read16(ECC_DECDONE_REG16)) && timeout > 0)
->> +		timeout--;
-> 
-> 		if (--timeout == 0) {
-> 			pr_err("mt7621-nand: ECC_DECDONE: timeout\n");
-> 			return false;
-> 		}
-> 
-> 
->> +	if (timeout == 0) {
->> +		pr_err("mt7621-nand: ECC_DECDONE: timeout\n");
->> +		return false;
->> +	}
->> +	return true;
->> +}
->> +
->> +static bool mcu_read_data(u8 *buf, u32 length)
->> +{
->> +	int timeout = 0xffff;
->> +	u32 *buf32 = (u32 *)buf;
->> +	u32 i;
->> +
->> +	if ((u32)buf % 4 || length % 4)
->               ^^^^^^^
-> I'm so surprised that this cast doesn't generate a "cast from pointer to
-> integer of different size" compile warning...  Did you want to cast to
-> unsigned long?
-> 
->> +		regset16(NFI_CNFG_REG16, CNFG_BYTE_RW);
->> +	else
->> +		regclr16(NFI_CNFG_REG16, CNFG_BYTE_RW);
->> +
->> +	/* regwrite32(NFI_STRADDR_REG32, 0); */
->> +	regset16(NFI_CON_REG16, CON_NFI_BRD);
->> +
->> +	if ((u32)buf % 4 || length % 4) {
->              ^^^^^^^^^^^^
-> 
->> +		for (i = 0; (i < (length)) && (timeout > 0);) {
->> +			if (regread16(NFI_PIO_DIRDY_REG16) & 1) {
->> +				*buf++ = (u8)regread32(NFI_DATAR_REG32);
->> +				i++;
->> +			} else {
->> +				timeout--;
->> +			}
->> +			if (timeout == 0) {
->> +				pr_warn("mt7621-nand: %s timeout\n", __func__);
->> +				return false;
->> +			}
-> 
-> 
-> 		i = 0;
-> 		while (i < length) {
-> 			if (regread16(NFI_PIO_DIRDY_REG16) & 1) {
-> 				*buf++ = (u8)regread32(NFI_DATAR_REG32);
-> 				i++;
-> 			} else {
-> 				if (--timeout == 0) {
-> 					pr_warn("mt7621-nand: %s timeout\n", __func__);
-> 					return false;
-> 				}
-> 			}
-> 		}
-> 
-> 
-> Except looking a bit lower, I think you only want to do that for the
-> first mod four bits, then you can start doing 4 byte reads.  Probably
-> it's a little faster.
-> 
-> 
->> +		}
->> +	} else {
->> +		for (i = 0; (i < (length >> 2)) && (timeout > 0);) {
-> 
-> Use (length / sizeof(u32)) instead of the shift.
-> 
->> +			if (regread16(NFI_PIO_DIRDY_REG16) & 1) {
->> +				*buf32++ = regread32(NFI_DATAR_REG32);
->> +				i++;
->> +			} else {
->> +				timeout--;
->> +			}
->> +			if (timeout == 0) {
->> +				pr_warn("mt7621-nand: %s timeout\n", __func__);
->> +				return false;
->> +			}
->> +		}
->> +	}
->> +
->> +	return true;
->> +}
->> +
->> +static bool mcu_write_data(struct mtd_info *mtd, const u8 *buf, u32 length)
->> +{
->> +	u32 timeout = 0xffff;
->> +	u32 *buf32;
->> +	u32 i;
->> +
->> +	regclr16(NFI_CNFG_REG16, CNFG_BYTE_RW);
->> +	regset16(NFI_CON_REG16, CON_NFI_BWR);
->> +	buf32 = (u32 *)buf;
->> +
->> +	if ((u32)buf % 4 || length % 4)
->> +		regset16(NFI_CNFG_REG16, CNFG_BYTE_RW);
->> +	else
->> +		regclr16(NFI_CNFG_REG16, CNFG_BYTE_RW);
->> +
->> +	if ((u32)buf % 4 || length % 4) {
->> +		for (i = 0; (i < (length)) && (timeout > 0);) {
->> +			if (regread16(NFI_PIO_DIRDY_REG16) & 1) {
->> +				regwrite32(NFI_DATAW_REG32, *buf++);
->> +				i++;
->> +			} else {
->> +				timeout--;
->> +			}
->> +			if (timeout == 0) {
->> +				pr_warn("mt7621-nand: %s timeout\n", __func__);
->> +				return false;
->> +			}
->> +		}
->> +	} else {
->> +		for (i = 0; (i < (length >> 2)) && (timeout > 0);) {
->> +			if (regread16(NFI_PIO_DIRDY_REG16) & 1) {
->> +				regwrite32(NFI_DATAW_REG32, *buf32++);
->> +				i++;
->> +			} else {
->> +				timeout--;
->> +			}
->> +			if (timeout == 0) {
->> +				pr_warn("mt7621-nand: %s timeout\n", __func__);
->> +				return false;
->> +			}
->> +		}
->> +	}
-> 
-> Same stuff.
-> 
->> +
->> +	return true;
->> +}
->> +
->> +static void read_fdm_data(u8 *buf, u32 sec)
->> +{
->> +	u32 *buf32 = (u32 *)buf;
->> +	u32 i;
->> +
->> +	if (buf32) {
-> 
-> Can this really be NULL?  It doesn't appear to be checked consistently
-> at first glance.
-> 
->> +		for (i = 0; i < sec; ++i) {
->> +			*buf32++ = regread32(NFI_FDM0L_REG32 + (i << 3));
->> +			*buf32++ = regread32(NFI_FDM0M_REG32 + (i << 3));
->> +		}
->> +	}
->> +}
->> +
->> +static u8 fdm_buf[64];
-> 
-> Why is this static and why is outside the scope of the function?  It
-> raises concerns about race conditions.  It's not large, so it could
-> be declared on the stack, no?
-> 
->> +
->> +static void write_fdm_data(struct nand_chip *chip, u8 *buf, u32 sec)
->> +{
->> +	struct nand_oobfree *free_entry;
->> +	bool empty = true;
->> +	u8 checksum = 0;
->> +	u32 *buf32;
->> +	u32 i, j;
->> +
->> +	memcpy(fdm_buf, buf, sec * 8);
->> +
->> +	free_entry = layout->oobfree;
->> +	for (i = 0; i < MTD_MAX_OOBFREE_ENTRIES && free_entry[i].length; i++) {
->> +		for (j = 0; j < free_entry[i].length; j++) {
->> +			if (buf[free_entry[i].offset + j] != 0xff)
->> +				empty = false;
->> +			checksum ^= buf[free_entry[i].offset + j];
->> +		}
->> +	}
->> +
->> +	if (!empty)
->> +		fdm_buf[free_entry[i - 1].offset + free_entry[i - 1].length] =
->> +			checksum;
->> +
->> +	buf32 = (u32 *)fdm_buf;
->> +	for (i = 0; i < sec; ++i) {
->> +		regwrite32(NFI_FDM0L_REG32 + (i << 3), *buf32++);
->> +		regwrite32(NFI_FDM0M_REG32 + (i << 3), *buf32++);
->> +	}
->> +}
->> +
->> +static void stop_read(void)
->> +{
->> +	regclr16(NFI_CON_REG16, CON_NFI_BRD);
->> +	reset();
->> +	ecc_decode_end();
->> +	regwrite16(NFI_INTR_EN_REG16, 0);
->> +}
->> +
->> +static void stop_write(void)
->> +{
->> +	regclr16(NFI_CON_REG16, CON_NFI_BWR);
->> +	ecc_encode_end();
->> +	regwrite16(NFI_INTR_EN_REG16, 0);
->> +}
->> +
->> +/*
->> + * This is a copy of the nand_check_erased_buf() function from nand_base.c, to
->> + * keep the nand_base.c clean
->> + */
->> +static int check_erased_buf(void *buf, int len, int bitflips_threshold)
->> +{
->> +	const unsigned char *bitmap = buf;
->> +	int bitflips = 0;
->> +	int weight;
->> +
->> +	for (; len && ((uintptr_t)bitmap) % sizeof(long);
->> +	     len--, bitmap++) {
->> +		weight = hweight8(*bitmap);
->> +		bitflips += BITS_PER_BYTE - weight;
->> +		if (unlikely(bitflips > bitflips_threshold))
->> +			return -EBADMSG;
->> +	}
->> +
->> +	for (; len >= sizeof(long);
->> +	     len -= sizeof(long), bitmap += sizeof(long)) {
->> +		unsigned long d = *((unsigned long *)bitmap);
->> +
->> +		if (d == ~0UL)
->> +			continue;
->> +		weight = hweight_long(d);
->> +		bitflips += BITS_PER_LONG - weight;
->> +		if (unlikely(bitflips > bitflips_threshold))
->> +			return -EBADMSG;
->> +	}
->> +
->> +	for (; len > 0; len--, bitmap++) {
->> +		weight = hweight8(*bitmap);
->> +		bitflips += BITS_PER_BYTE - weight;
->> +		if (unlikely(bitflips > bitflips_threshold))
->> +			return -EBADMSG;
->> +	}
->> +
->> +	return bitflips;
->> +}
->> +
->> +/*
->> + * This is the modified version of the nand_check_erased_ecc_chunk() in
->> + * nand_base.c. This driver cannot use the generic function, as the ECC layout
->> + * is slightly different (the 2k(data)+64(OOB) page is split up in to 4
->> + * (512-byte data + 16-byte OOB) pages. Each of these sectors have 4-bit ECC,
->> + * so we check them separately, and allow 4 bitflips / sector.
->> + * We'll fix up the page to all-0xff only if all sectors in the page appears to
->> + * be blank
->> + */
->> +static int check_erased_ecc_chunk(void *data, int datalen, void *oob,
->> +				  int ooblen, int bitflips_threshold)
->> +{
->> +	int data_bitflips = 0, oob_bitflips = 0;
-> 
-> These initializers can be deleted.
-> 
->> +
->> +	data_bitflips = check_erased_buf(data, datalen, bitflips_threshold);
->> +	if (data_bitflips < 0)
->> +		return data_bitflips;
->> +
->> +	bitflips_threshold -= data_bitflips;
->> +
->> +	oob_bitflips = check_erased_buf(oob, ooblen, bitflips_threshold);
->> +	if (oob_bitflips < 0)
->> +		return oob_bitflips;
->> +
->> +	bitflips_threshold -= oob_bitflips;
-> 
-> No need for this.  It's a no-op.
-> 
->> +	return data_bitflips + oob_bitflips;
->> +}
->> +
->> +static int read_oob_raw(struct mtd_info *mtd, u8 *buf, int page, int len)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	int sec_num = 1 << (chip->page_shift - 9);
->> +	int spare_per_sector = mtd->oobsize / sec_num;
->> +	u32 column = 0;
->> +	u32 sector = 0;
->> +	int res = 0;
->> +	int read_len = 0;
->> +
->> +	if (len > NAND_MAX_OOBSIZE || len % OOB_AVAI_PER_SECTOR || !buf) {
->> +		pr_warn("mt7621-nand: invalid parameter, len: %d, buf: %p\n",
->> +			len, buf);
->> +		return -EINVAL;
->> +	}
->> +
->> +	while (len > 0) {
->> +		read_len = min(len, spare_per_sector);
->> +		column = NAND_SECTOR_SIZE +
->> +			 sector * (NAND_SECTOR_SIZE + spare_per_sector);
->> +		if (!ready_for_read(chip, page, column, false, NULL)) {
->> +			pr_warn("mt7621-nand: ready_for_read() failed\n");
->> +			res = -EIO;
->> +			goto error;
->> +		}
->> +		if (!mcu_read_data(buf + spare_per_sector * sector, read_len)) {
->> +			pr_warn("mt7621-nand: mcu_read_data() failed\n");
->> +			res = -EIO;
->> +			goto error;
->> +		}
->> +		check_RW_count(read_len);
->> +		stop_read();
->> +		sector++;
->> +		len -= read_len;
->> +	}
->> +
->> +error:
->> +	regclr16(NFI_CON_REG16, CON_NFI_BRD);
->> +	return res;
->> +}
->> +
->> +static int write_oob_raw(struct mtd_info *mtd, const u8 *buf, int page, int len)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	int sec_num = 1 << (chip->page_shift - 9);
->> +	int spare_per_sector = mtd->oobsize / sec_num;
->> +	u32 column = 0;
->> +	u32 sector = 0;
->> +	int write_len = 0;
->> +	int status;
->> +
->> +	if (len > NAND_MAX_OOBSIZE || len % OOB_AVAI_PER_SECTOR || !buf) {
->> +		pr_warn("mt7621-nand: invalid parameter, len: %d, buf: %p\n",
->> +			len, buf);
->> +		return -EINVAL;
->> +	}
->> +
->> +	while (len > 0) {
->> +		write_len = min(len, spare_per_sector);
->> +		column = sector * (NAND_SECTOR_SIZE + spare_per_sector) +
->> +			 NAND_SECTOR_SIZE;
->> +		if (!ready_for_write(chip, page, column, false, NULL))
->> +			return -EIO;
->> +		if (!mcu_write_data(mtd, buf + sector * spare_per_sector,
->> +				    write_len))
->> +			return -EIO;
->> +		check_RW_count(write_len);
->> +		regclr16(NFI_CON_REG16, CON_NFI_BWR);
->> +		set_command(NAND_CMD_PAGEPROG);
->> +		while (regread32(NFI_STA_REG32) & STA_NAND_BUSY)
->> +			;
->> +		status = chip->legacy.waitfunc(chip);
->> +		if (status & NAND_STATUS_FAIL) {
->> +			pr_warn("mt7621-nand: failed status: %d\n", status);
->> +			return -EIO;
->> +		}
->> +		len -= write_len;
->> +		sector++;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int exec_read_page(struct mtd_info *mtd, u32 row, u32 page_size,
->> +			  u8 *buf, u8 *fdmbuf)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	struct host *host = nand_get_controller_data(chip);
->> +	u32 sec = page_size >> 9;
->> +	int corrected = 0;
->> +
->> +	host->last_failed = 0;
->> +
->> +	if (ready_for_read(chip, row, 0, true, buf)) {
-> 
-> Flip this around:
-> 
-> 	if (!ready_for_read(chip, row, 0, true, buf))
-> 		return -EIO;
-> 
-> 
->> +		int j;
->> +
->> +		for (j = 0; j < sec; j++) {
->> +			int ret;
->> +
->> +			if (!mcu_read_data(buf + j * 512, 512)) {
->> +				corrected = -EIO;
->> +				break;
->> +			}
->> +			if (!check_dececc_done(j + 1)) {
->> +				corrected = -EIO;
->> +				break;
->> +			}
->> +			ret = check_bch_error(mtd, buf + j * 512, j, row);
->> +			if (ret < 0) {
->> +				corrected = ret;
->> +				if (ret != -EBADMSG)
->> +					break;
->> +			} else if (corrected >= 0) {
->> +				corrected = max_t(int, corrected, ret);
->> +			}
->> +		}
->> +		if (!status_ready(STA_NAND_BUSY))
->> +			corrected = -EIO;
->> +
->> +		read_fdm_data(fdmbuf, sec);
->> +		stop_read();
->> +	} else {
->> +		corrected = -EIO;
->> +	}
->> +
->> +	if (corrected == -EBADMSG) {
->> +		u32 local_oob_aligned[NAND_MAX_OOBSIZE / sizeof(u32)];
->> +		u8 *local_oob = (u8 *)local_oob_aligned;
->> +		int ret;
->> +
->> +		/*
->> +		 * If there was an uncorrectable ECC error, check if it is a
->> +		 * blank page with bit-flips. For this, we check the number of
->> +		 * 0s in each sector (including the OOB), which should not
->> +		 * exceed the ECC strength. Until the number of 0s is lower or
->> +		 * equal, we consider it as a blank page
->> +		 */
->> +		ret = read_oob_raw(mtd, local_oob, row, mtd->oobsize);
->> +		if (ret == 0) {
-> 
-> Flip this around and do a direct return.
-> 
-> 		if (ret) {
-> 			mtd->ecc_stats.failed += host->last_failed;
-> 			pr_warn("mt7621-nand: %s failed to read oob after ECC error\n",
-> 				__func__);
-> 			return -EBADMSG;
-> 		}
-> 
-> 
-> 
->> +			int spare_per_sector = mtd->oobsize / sec;
->> +			int sector_size = page_size / sec;
->> +			int max_bitflips = 0;
->> +			u32 corrected = 0;
-> 
-> This "corrected" shadows the earlier "corrected" variable and it's
-> confusing to have two variables in the same function with the same name.
-> 
->> +			int i;
->> +
->> +			for (i = 0; i < sec; i++) {
->> +				ret = check_erased_ecc_chunk(
->> +					&buf[i * sector_size], sector_size,
->> +					&local_oob[i * spare_per_sector],
->> +					spare_per_sector, chip->ecc.strength);
->> +				if (ret < 0)
->> +					break;
-> 
-> Change this break to a return.
-> 
-> 			if (ret < 0) {
-> 				mtd->ecc_stats.failed += host->last_failed;
-> 				pr_err("mt7621-nand: uncorrectable ECC errors at page=%d\n",
-> 				       row);
-> 				return -EBADMSG;
-> 			}
-> 
-> 
-> 
->> +
->> +				max_bitflips = max_t(int, max_bitflips, ret);
->> +				corrected += ret;
->> +			}
->> +
->> +			if (ret >= 0) {
->> +				mtd->ecc_stats.corrected += corrected;
->> +
->> +				memset(buf, 0xff, page_size);
->> +				memset(fdmbuf, 0xff, sizeof(u32) * 2 * sec);
->> +
->> +				corrected = max_bitflips;
-> 
-> This looks like a bug caused by the two "corrected" variables.  Just do
-> 
-> 			return max_bitflips;
-> 
-> 
->> +			} else {
->> +				mtd->ecc_stats.failed += host->last_failed;
->> +				pr_err("mt7621-nand: uncorrectable ECC errors at page=%d\n",
->> +				       row);
->> +			}
->> +		} else {
->> +			mtd->ecc_stats.failed += host->last_failed;
->> +			pr_warn("mt7621-nand: %s failed to read oob after ECC error\n",
->> +				__func__);
->> +			/* Keep return value as -EBADMSG */
->> +		}
->> +	}
->> +
->> +	return corrected;
->> +}
->> +
->> +static int exec_write_page(struct mtd_info *mtd, u32 row,
->> +			   u32 page_size, u8 *buf, u8 *fdmbuf)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	u32 sec = page_size >> 9;
->> +	u8 status;
->> +
->> +	if (ready_for_write(chip, row, 0, true, buf)) {
-> 
-> Shouldn't we return -EIO if we're not ready?
-> 
->> +		write_fdm_data(chip, fdmbuf, sec);
->> +		mcu_write_data(mtd, buf, page_size);
->> +		check_RW_count(page_size);
->> +		stop_write();
->> +		set_command(NAND_CMD_PAGEPROG);
->> +		while (regread32(NFI_STA_REG32) & STA_NAND_BUSY)
->> +			;
->> +	}
->> +
->> +	status = chip->legacy.waitfunc(chip);
->> +	if (status & NAND_STATUS_FAIL)
->> +		return -EIO;
->> +	return 0;
->> +}
->> +
->> +static void command_bp(struct nand_chip *chip, unsigned int command,
->> +		       int column, int page)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +
->> +	switch (command) {
->> +	case NAND_CMD_SEQIN:
->> +		memset(host->OOB, 0xff, sizeof(host->OOB));
->> +		host->data_buf = NULL;
->> +		host->row = page;
->> +		host->column = column;
->> +		break;
->> +
->> +	case NAND_CMD_PAGEPROG:
->> +		if (host->data_buf || (host->OOB[0] != 0xff)) {
->> +			u8 *buf = host->data_buf ? host->data_buf
->> +						 : chip->data_buf;
->> +
->> +			exec_write_page(mtd, host->row, mtd->writesize,
->> +					buf, host->OOB);
->> +			host->row = (u32)-1;
->> +			host->OOBrow = (u32)-1;
->> +		}
->> +		break;
->> +
->> +	case NAND_CMD_READOOB:
->> +		host->row = page;
->> +		host->column = column + mtd->writesize;
->> +		break;
->> +
->> +	case NAND_CMD_READ0:
->> +		host->row = page;
->> +		host->column = column;
->> +		break;
->> +
->> +	case NAND_CMD_ERASE1:
->> +		reset();
->> +		set_mode(CNFG_OP_ERASE);
->> +		set_command(NAND_CMD_ERASE1);
->> +		set_address(0, page, 0, host->addr_cycles - 2);
->> +		break;
->> +
->> +	case NAND_CMD_ERASE2:
->> +		set_command(NAND_CMD_ERASE2);
->> +		while (regread32(NFI_STA_REG32) & STA_NAND_BUSY)
->> +			;
->> +		break;
->> +
->> +	case NAND_CMD_STATUS:
->> +		reset();
->> +		regclr16(NFI_CNFG_REG16, CNFG_BYTE_RW);
->> +		set_mode(CNFG_OP_SRD);
->> +		set_mode(CNFG_READ_EN);
->> +		regclr16(NFI_CNFG_REG16, CNFG_AHB);
->> +		regclr16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +		set_command(NAND_CMD_STATUS);
->> +		regclr16(NFI_CON_REG16, CON_NFI_NOB_MASK);
->> +		regwrite16(NFI_CON_REG16,
->> +			   CON_NFI_SRD | (1 << CON_NFI_NOB_SHIFT));
->> +		host->cmdstatus = true;
->> +		break;
->> +
->> +	case NAND_CMD_RESET:
->> +		reset();
->> +		regwrite16(NFI_INTR_EN_REG16, INTR_RST_DONE_EN);
->> +		set_command(NAND_CMD_RESET);
->> +		regwrite16(NFI_CNRNB_REG16, 0xf1);
->> +		while (!(regread16(NFI_INTR_REG16) & INTR_RST_DONE_EN))
->> +			;
->> +		break;
->> +
->> +	case NAND_CMD_READID:
->> +		reset();
->> +		/* Disable HW ECC */
->> +		regclr16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +		regclr16(NFI_CNFG_REG16, CNFG_AHB);
->> +		regset16(NFI_CNFG_REG16, CNFG_READ_EN | CNFG_BYTE_RW);
->> +		reset();
->> +		set_mode(CNFG_OP_SRD);
->> +		set_command(NAND_CMD_READID);
->> +		set_address(0, 0, 1, 0);
->> +		regwrite16(NFI_CON_REG16, CON_NFI_SRD);
->> +		while (regread32(NFI_STA_REG32) & STA_DATAR_STATE)
->> +			;
->> +		break;
->> +
->> +	default:
->> +		pr_err("mt7621-nand: unknown NAND command, 0x%x\n", command);
->> +		break;
->> +	}
->> +}
->> +
->> +static void set_ecc_mode(struct mtd_info *mtd)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	u32 spare_per_sector = mtd->oobsize / (mtd->writesize / 512);
->> +	u32 spare_bit = PAGEFMT_SPARE_16;
->> +	u32 ecc_bit = 4;
->> +
->> +	if (spare_per_sector >= 28) {
->> +		spare_bit = PAGEFMT_SPARE_28;
->> +		ecc_bit = 12;
->> +		spare_per_sector = 28;
->> +	} else if (spare_per_sector >= 27) {
->> +		spare_bit = PAGEFMT_SPARE_27;
->> +		ecc_bit = 8;
->> +		spare_per_sector = 27;
->> +	} else if (spare_per_sector >= 26) {
->> +		spare_bit = PAGEFMT_SPARE_26;
->> +		ecc_bit = 8;
->> +		spare_per_sector = 26;
->> +	} else if (spare_per_sector >= 16) {
->> +		spare_bit = PAGEFMT_SPARE_16;
->> +		ecc_bit = 4;
->> +		spare_per_sector = 16;
->> +	} else {
->> +		pr_warn("mt7621-nand: NFI not support oobsize: %x\n",
->> +			spare_per_sector);
->> +	}
->> +	chip->ecc.strength = ecc_bit;
->> +	mtd->oobsize = spare_per_sector * (mtd->writesize / 512);
->> +	pr_info("mt7621-nand: ecc bit: %d, spare_per_sector: %d\n",
->> +		ecc_bit, spare_per_sector);
->> +
->> +	/* Setup PageFormat */
->> +	if (mtd->writesize == 4096) {
->> +		regset16(NFI_PAGEFMT_REG16,
->> +			 (spare_bit << PAGEFMT_SPARE_SHIFT) | PAGEFMT_4K);
->> +		chip->legacy.cmdfunc = command_bp;
->> +	} else if (mtd->writesize == 2048) {
->> +		regset16(NFI_PAGEFMT_REG16,
->> +			 (spare_bit << PAGEFMT_SPARE_SHIFT) | PAGEFMT_2K);
->> +		chip->legacy.cmdfunc = command_bp;
->> +	}
->> +	ecc_config(ecc_bit);
->> +}
->> +
->> +static void select_chip(struct nand_chip *chip, int nr)
->> +{
->> +	switch (nr) {
->> +	case -1:
->> +		break;
->> +	case 0:
->> +	case 1:
->> +		/* Jun Shen, 2011.04.13 */
-> 
-> These sorts of dates comments aren't useful.
-> 
->> +		/* Note: MT6577 EVB NAND is mounted on CS0, but FPGA is CS1 */
->> +		regwrite16(NFI_CSEL_REG16, nr);
->> +		/* Jun Shen, 2011.04.13 */
-> 
-> Delete.
-> 
->> +		break;
->> +	}
->> +}
->> +
->> +static u8 read_byte(struct nand_chip *chip)
->> +{
->> +	u8 retval = 0;
-> 
-> Delete initializer.  This is just turning off GCC's check for
-> uninitialized variables.  It also turns on an unused assignment warning.
-> We haven't enabled it but we'd like to.  I haven't commented on every
-> bogus initializer that I saw, but I probably should have... :/
-> 
->> +
->> +	if (!pio_ready()) {
->> +		pr_err("mt7621-nand: pio ready timeout\n");
->> +		retval = false;
-> 
-> Return here?  Unused assignment.  This bug would have been caught if
-> we could turn on that GCC warning I was just mentioning.  :P
-> 
-> False is sort of weird here because this function returns a u8 instead
-> of a bool.
-> 
->> +	}
->> +
->> +	if (host->cmdstatus) {
-> 
-> Flip this around:
-> 
-> 	if (!host->cmdstatus)
-> 		return regread8(NFI_DATAR_REG32);
-> 
->> +		retval = regread8(NFI_DATAR_REG32);
->> +		regclr16(NFI_CON_REG16, CON_NFI_NOB_MASK);
->> +		reset();
->> +		regset16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +		host->cmdstatus = false;
->> +	} else {
->> +		retval = regread8(NFI_DATAR_REG32);
->> +	}
->> +
->> +	return retval;
->> +}
->> +
->> +static void read_buf(struct nand_chip *chip, u8 *buf, int len)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	u32 page_size = mtd->writesize;
->> +	u32 column = host->column;
->> +
->> +	if (column < page_size) {
->> +		if ((column == 0) && (len >= page_size)) {
->> +			exec_read_page(mtd, host->row, page_size, buf,
->> +				       host->OOB);
->> +			if (len > page_size) {
->> +				u32 size;
->> +
->> +				size = min(len - page_size, sizeof(host->OOB));
->> +				memcpy(buf + page_size, host->OOB, size);
->> +			}
->> +		} else {
->> +			exec_read_page(mtd, host->row, page_size,
->> +				       chip->data_buf, host->OOB);
->> +			memcpy(buf, chip->data_buf + column, len);
->> +		}
->> +		host->OOBrow = host->row;
->> +	} else {
->> +		u32 offset = column - page_size;
->> +		u32 size = min(len - offset, sizeof(host->OOB));
->> +
->> +		if (host->OOBrow != host->row) {
->> +			exec_read_page(mtd, host->row, page_size,
->> +				       chip->data_buf, host->OOB);
->> +			host->OOBrow = host->row;
->> +		}
->> +		memcpy(buf, host->OOB + offset, size);
->> +	}
->> +	host->column += len;
->> +}
->> +
->> +static void write_buf(struct nand_chip *chip, const u8 *buf, int len)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	u32 page_size = mtd->writesize;
->> +	u32 column = host->column;
->> +	int size, i;
->> +
->> +	if (column >= page_size) {
->> +		u32 offset = column - page_size;
->> +		u8 *OOB = host->OOB + offset;
->> +
->> +		size = min(len, (int)(sizeof(host->OOB) - offset));
->> +		for (i = 0; i < size; i++)
->> +			OOB[i] &= buf[i];
->> +	} else {
->> +		host->data_buf = (u8 *)buf;
->> +	}
->> +
->> +	host->column += len;
->> +}
->> +
->> +static int write_page_hwecc(struct nand_chip *chip, const u8 *buf,
->> +			    int oob_required, int page)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +
->> +	nand_prog_page_begin_op(chip, page, 0, buf, mtd->writesize);
->> +	write_buf(chip, chip->oob_poi, mtd->oobsize);
->> +	return nand_prog_page_end_op(chip);
->> +}
->> +
->> +static int read_page_hwecc(struct nand_chip *chip, u8 *buf,
->> +			   int oob_required, int page)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	int corrected;
->> +
->> +	corrected = exec_read_page(mtd, page, mtd->writesize,
->> +				   buf, chip->oob_poi);
->> +
->> +	return (corrected == -EBADMSG) ? 0 : corrected;
->> +}
->> +
->> +static int write_oob_hw(struct nand_chip *chip, int page)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	int sec_num = 1 << (chip->page_shift - 9);
->> +	int spare_per_sector = mtd->oobsize / sec_num;
->> +	int i, iter;
->> +
->> +	memcpy(local_oob_buf, chip->oob_poi, mtd->oobsize);
-> 
-> The concern with this buffer would be locking again.  But I haven't
-> looked at it.
-> 
->> +
->> +	/* copy ecc data */
->> +	for (i = 0; i < layout->eccbytes; i++) {
->> +		iter = (i / (spare_per_sector - OOB_AVAI_PER_SECTOR)) *
->> +		       spare_per_sector +
->> +		       OOB_AVAI_PER_SECTOR +
->> +		       i % (spare_per_sector - OOB_AVAI_PER_SECTOR);
->> +		local_oob_buf[iter] = chip->oob_poi[layout->eccpos[i]];
->> +	}
->> +
->> +	/* copy FDM data */
->> +	for (i = 0; i < sec_num; i++)
->> +		memcpy(&local_oob_buf[i * spare_per_sector],
->> +		       &chip->oob_poi[i * OOB_AVAI_PER_SECTOR],
->> +		       OOB_AVAI_PER_SECTOR);
->> +
->> +	return write_oob_raw(mtd, local_oob_buf, page, mtd->oobsize);
->> +}
->> +
->> +static int write_oob(struct nand_chip *chip, int page)
->> +{
->> +	int page_per_block = 1 << (chip->phys_erase_shift - chip->page_shift);
->> +	int block = page / page_per_block;
->> +	int page_in_block = page % page_per_block;
->> +
->> +	if (write_oob_hw(chip, page_in_block + block * page_per_block)) {
->> +		pr_warn("mt7621-nand: write oob fail at block: 0x%x, page: 0x%x\n",
->> +			block, page_in_block);
->> +		return NAND_STATUS_FAIL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int read_oob_hw(struct nand_chip *chip, int page)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	int sec_num = 1 << (chip->page_shift - 9);
->> +	int spare_per_sector = mtd->oobsize / sec_num;
->> +	int i;
->> +	u8 iter = 0;
->> +
->> +	if (read_oob_raw(mtd, chip->oob_poi, page, mtd->oobsize)) {
->> +		pr_err("mt7621-nand: read_oob_raw() return failed\n");
->> +		return -EIO;
->> +	}
->> +
->> +	/* adjust to ecc physical layout to memory layout */
->> +	/*********************************************************/
->> +	/* FDM0 | ECC0 | FDM1 | ECC1 | FDM2 | ECC2 | FDM3 | ECC3 */
->> +	/*  8B  |  8B  |  8B  |  8B  |  8B  |  8B  |  8B  |  8B  */
->> +	/*********************************************************/
->> +
->> +	memcpy(local_oob_buf, chip->oob_poi, mtd->oobsize);
->> +
->> +	/* copy ecc data */
->> +	for (i = 0; i < layout->eccbytes; i++) {
->> +		iter = (i / (spare_per_sector - OOB_AVAI_PER_SECTOR)) *
->> +		       spare_per_sector +
->> +		       OOB_AVAI_PER_SECTOR +
->> +		       i % (spare_per_sector - OOB_AVAI_PER_SECTOR);
->> +		chip->oob_poi[layout->eccpos[i]] = local_oob_buf[iter];
->> +	}
->> +
->> +	/* copy FDM data */
->> +	for (i = 0; i < sec_num; i++)
->> +		memcpy(&chip->oob_poi[i * OOB_AVAI_PER_SECTOR],
->> +		       &local_oob_buf[i * spare_per_sector],
->> +		       OOB_AVAI_PER_SECTOR);
->> +
->> +	return 0;
->> +}
->> +
->> +static int read_oob(struct nand_chip *chip, int page)
->> +{
->> +	int page_per_block = 1 << (chip->phys_erase_shift - chip->page_shift);
->> +	int block = page / page_per_block;
->> +	int page_in_block = page % page_per_block;
->> +
->> +	if (read_oob_hw(chip, page_in_block + block * page_per_block) != 0)
->> +		return -1;
-> 
-> It would be better to preserve the error code from read_oob_hw()
-> 
->> +	return 0;
->> +}
->> +
->> +static int block_bad_hw(struct nand_chip *chip, loff_t ofs)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	int page = (int)(ofs >> chip->page_shift);
->> +	unsigned int page_per_block;
->> +	u8 oob_buf[8];
->> +
->> +	page_per_block = 1 << (chip->phys_erase_shift - chip->page_shift);
->> +	page &= ~(page_per_block - 1);
->> +	if (read_oob_raw(mtd, oob_buf, page, sizeof(oob_buf))) {
->> +		pr_warn("mt7621-nand: read_oob_raw() failed\n");
->> +		return 1;
->> +	}
->> +
->> +	if (oob_buf[0] != 0xff) {
->> +		pr_warn("mt7621-nand: bad block detected at page=%d\n", page);
->> +		return 1;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int block_bad(struct nand_chip *chip, loff_t ofs)
->> +{
->> +	int block = (int)ofs >> chip->phys_erase_shift;
->> +
->> +	return block_bad_hw(chip, block << chip->phys_erase_shift);
->> +}
->> +
->> +static void init_hw(struct host *host)
->> +{
->> +	host->OOBrow = (u32)-1;
->> +
->> +	/* Set default NFI access timing control */
->> +	regwrite32(NFI_ACCCON_REG32, host->access_timing);
->> +	regwrite16(NFI_CNFG_REG16, 0);
->> +	regwrite16(NFI_PAGEFMT_REG16, 0);
->> +
->> +	/* Reset the state machine and data FIFO, because flushing FIFO */
->> +	reset();
->> +
->> +	/* Set the ECC engine */
->> +	if (host->nand_chip.ecc.mode == NAND_ECC_HW) {
->> +		regset16(NFI_CNFG_REG16, CNFG_HW_ECC_EN);
->> +		ecc_config(4);
->> +		configure_fdm(8);
->> +		configure_lock();
->> +	}
->> +
->> +	regset16(NFI_IOCON_REG16, 0x47);
->> +}
->> +
->> +static int dev_ready(struct nand_chip *chip)
->> +{
->> +	return !(regread32(NFI_STA_REG32) & STA_NAND_BUSY);
->> +}
->> +
->> +static int oob_mt7621_ooblayout_ecc(struct mtd_info *mtd, int section,
->> +				    struct mtd_oob_region *oobregion)
->> +{
->> +	oobregion->length = 8;
->> +	oobregion->offset = layout->eccpos[section * 8];
->> +	return 0;
->> +}
->> +
->> +static int oob_mt7621_ooblayout_free(struct mtd_info *mtd, int section,
->> +				     struct mtd_oob_region *oobregion)
->> +{
->> +	if (section >= (layout->eccbytes / 8))
->> +		return -ERANGE;
->> +	oobregion->offset = layout->oobfree[section].offset;
->> +	oobregion->length = layout->oobfree[section].length;
->> +	return 0;
->> +}
->> +
->> +/*
->> + * Code to support the legacy mediatek nand flash bad block table.
->> + * The default for this driver is to use the standard Linux bad block
->> + * table format. However you need a new boot loader that supports that.
->> + * The old (and most often used) medaitek boot loaders use their own
->> + * BBT format, and this code implements that. There is a devicetree
->> + * binding that enables use of this.
->> + */
->> +#define BBT_BLOCK_NUM_DEFAULT	32
->> +#define BBT_OOB_SIGNATURE	1
->> +#define BBT_SIGNATURE_LEN	7
->> +
->> +static const u8 oob_signature[] = "mtknand";
->> +static u32 bbt_size;
->> +
->> +static int read_legacy_bbt_page(struct mtd_info *mtd, unsigned int page)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +
->> +	if (read_oob_hw(chip, page) == 0) {
-> 
-> Flip this around.  Preserve the error code.
-> 
->> +		int corrected;
->> +
->> +		if (chip->oob_poi[0] != 0xff) {
->> +			pr_info("mt7621-nand: Bad Block on page=%d\n", page);
->> +			return -ENODEV;
->> +		}
->> +		if (memcmp(&chip->oob_poi[BBT_OOB_SIGNATURE], oob_signature,
->> +			   BBT_SIGNATURE_LEN) != 0) {
->> +			pr_info("mt7621-nand: no BBT signature, page=%d\n",
->> +				page);
->> +			return -EINVAL;
->> +		}
->> +		corrected = exec_read_page(mtd, page, mtd->writesize,
->> +					   chip->data_buf, chip->oob_poi);
->> +		if (corrected >= 0) {
-> 
-> Flip this.  Always to error handling instead of success handling.  The
-> error path should be indented two tabs and the success path one tab.
-> 
-> 		if (corrected < 0)
-> 			return -EIO;
-> 
-> 
-> 
-> 
->> +			int bbt_bytes = (bbt_size <= mtd->writesize)
->> +					? bbt_size
->> +					: mtd->writesize;
->> +
->> +			pr_info("mt7621-nand: BBT signature match, page=%d\n",
->> +				page);
->> +			memcpy(chip->bbt, chip->data_buf, bbt_bytes);
->> +			return 0;
->> +		}
->> +	}
->> +
->> +	pr_err("mt7621-nand: legacy BBT read failed at page %d\n", page);
->> +	return -EIO;
->> +}
->> +
->> +static int load_legacy_bbt(struct mtd_info *mtd)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +	struct host *host = nand_get_controller_data(chip);
->> +	u32 blocks;
->> +	int i;
->> +
->> +	blocks = 0x1 << (chip->chip_shift - chip->phys_erase_shift);
->> +	bbt_size = blocks >> 2;
-> 
-> Why are we dividing by four here?  I would have thought that this was
-> supposed to be a multply by sizeof(u32) or something.
-> 
-> Normal divide and multiply are more readable than shifts.
-> 
-> I hate these globals.  It should be saved as chip->bbt_size = size;
-> 
->> +
->> +	if (!chip->bbt) {
->> +		chip->bbt = kzalloc(bbt_size, GFP_KERNEL);
->> +		if (!chip->bbt)
->> +			return -ENOMEM;
->> +	}
->> +
->> +	for (i = blocks - 1; i >= (blocks - host->legacybbt_block_num); i--) {
->> +		int page = i << (chip->phys_erase_shift - chip->page_shift);
->> +
->> +		if (read_legacy_bbt_page(mtd, page) == 0) {
-> 
-> It's weird that this only has to succeed once instead of every time but
-> I don't know this code well.
-> 
->> +			pr_info("mt7621-nand: loading BBT success (%d)\n",
->> +				page);
->> +			return 0;
->> +		}
->> +	}
->> +
->> +	pr_err("mt7621-nand: loading Bad Block Table failed\n");
->> +	return -ENODEV;
->> +}
->> +
->> +static int mt7621_nand_attach(struct nand_chip *chip)
->> +{
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	int i;
->> +
->> +	set_ecc_mode(mtd);
->> +
->> +	if (nanddev_target_size(&chip->base) < (256 * 1024 * 1024))
->> +		host->addr_cycles = 4;
->> +
->> +	/* allocate buffers or call select_chip here or a bit earlier*/
->> +	chip->data_buf = kzalloc(mtd->writesize + mtd->oobsize, GFP_KERNEL);
->> +	chip->ecc.calc_buf = kzalloc(mtd->oobsize, GFP_KERNEL);
->> +	chip->ecc.code_buf = kzalloc(mtd->oobsize, GFP_KERNEL);
->> +	if (!chip->data_buf || !chip->ecc.calc_buf || !chip->ecc.code_buf)
->> +		return -ENOMEM;
-> 
-> This seems leaky.  Do it like this?
-> 
-> 	chip->data_buf = kzalloc(mtd->writesize + mtd->oobsize, GFP_KERNEL);
-> 	if (!chip->data_buf)
-> 		return -ENOMEM;
-> 
-> 	hip->ecc.calc_buf = kzalloc(mtd->oobsize, GFP_KERNEL);
-> 	if (!hip->ecc.calc_buf) {
-> 		ret = -ENOMEM;
-> 		goto free_data_buf;
-> 	}
-> 
-> 	chip->ecc.code_buf = kzalloc(mtd->oobsize, GFP_KERNEL);
-> 	if (!chip->ecc.code_buf) {
-> 		ret = -ENOMEM;
-> 		goto free_calc_buf;
-> 	}
-> 
-> 	.... // <-- other code
-> 
-> 	return 0;
-> 
-> free_calc_buf:
-> 	kfree(chip->ecc.calc_buf);
-> free_data_buf:
-> 	kfree(chip->data_buf);
-> 
-> 	return ret;
-> 
-> Is there no detach function?
-> 
-> void mt7621_nand_dettach()
-> {
-> 	kfree(chip->ecc.code_buf);
-> 	kfree(chip->ecc.calc_buf);
-> 	kfree(chip->data_buf);
-> }
-> 
-> regards,
-> dan carpenter
-> 
+The amdgpu tree lost its build failure.  But gained another for which
+I applied a patch.
+
+The gpio-brgl tree gained a conflict against the gpio tree.
+
+Non-merge commits (relative to Linus' tree): 9102
+ 8242 files changed, 356293 insertions(+), 152350 deletions(-)
+
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf. After
+the final fixups (if any), I do an x86_64 modules_install followed by
+builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+and sparc64 defconfig. And finally, a simple boot test of the powerpc
+pseries_le_defconfig kernel in qemu (with and without kvm enabled).
+
+Below is a summary of the state of the merge.
+
+I am currently merging 312 trees (counting Linus' and 78 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+$ git checkout master
+$ git reset --hard stable
+Merging origin/master (847120f859cc Merge branch 'for-linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/hid/hid)
+Merging fixes/master (54ecb8f7028c Linux 5.4-rc1)
+Merging kbuild-current/fixes (d6d5df1db6e9 Linux 5.4-rc5)
+Merging arc-current/for-curr (5effc09c4907 ARC: perf: Accommodate big-endia=
+n CPU)
+Merging arm-current/fixes (39f4d4410484 Merge branch 'misc' into fixes)
+Merging arm-soc-fixes/arm/fixes (002d3c65ee81 MAINTAINERS: update Cavium Th=
+underX2 maintainers)
+Merging arm64-fixes/for-next/fixes (6767df245f47 arm64: Do not mask out PTE=
+_RDONLY in pte_same())
+Merging m68k-current/for-linus (0f1979b402df m68k: Remove ioremap_fullcache=
+())
+Merging powerpc-fixes/fixes (7d6475051fb3 powerpc/powernv: Fix CPU idle to =
+be called with IRQs disabled)
+Merging s390-fixes/fixes (a99d8080aaf3 Linux 5.4-rc6)
+Merging sparc/master (038029c03e21 sparc: remove unneeded uapi/asm/statfs.h)
+Merging fscrypt-current/for-stable (ae64f9bd1d36 Linux 4.15-rc2)
+Merging net/master (99a8efbb6e30 NFC: st21nfca: fix double free)
+Merging bpf/master (d0fbb51dfaa6 bpf, offload: Unlock on error in bpf_offlo=
+ad_dev_create())
+Merging ipsec/master (99a8efbb6e30 NFC: st21nfca: fix double free)
+Merging netfilter/master (99a8efbb6e30 NFC: st21nfca: fix double free)
+Merging ipvs/master (c24b75e0f923 ipvs: move old_secure_tcp into struct net=
+ns_ipvs)
+Merging wireless-drivers/master (3d206e6899a0 iwlwifi: fw api: support new =
+API for scan config cmd)
+Merging mac80211/master (1fab1b89e2e8 nl80211: fix validation of mesh path =
+nexthop)
+Merging rdma-fixes/for-rc (411c1e6774e2 RDMA/hns: Correct the value of srq_=
+desc_size)
+Merging sound-current/for-linus (df37d941c4b5 Merge tag 'asoc-fix-v5.4-rc6'=
+ of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-=
+linus)
+Merging sound-asoc-fixes/for-linus (94722c146092 Merge branch 'asoc-5.4' in=
+to asoc-linus)
+Merging regmap-fixes/for-linus (da0c9ea146cb Linux 5.4-rc2)
+Merging regulator-fixes/for-linus (07b4ceca96a9 Merge branch 'regulator-5.4=
+' into regulator-linus)
+Merging spi-fixes/for-linus (138df415d671 Merge branch 'spi-5.4' into spi-l=
+inus)
+Merging pci-current/for-linus (54ecb8f7028c Linux 5.4-rc1)
+Merging driver-core.current/driver-core-linus (d6d5df1db6e9 Linux 5.4-rc5)
+Merging tty.current/tty-linus (d6d5df1db6e9 Linux 5.4-rc5)
+Merging usb.current/usb-linus (a99d8080aaf3 Linux 5.4-rc6)
+Merging usb-gadget-fixes/fixes (f3fb802efaef usb: cdns3: gadget: Don't mana=
+ge pullups)
+Merging usb-serial-fixes/usb-linus (bc25770f00d3 USB: serial: ti_usb_3410_5=
+052: clean up serial data access)
+Merging usb-chipidea-fixes/ci-for-usb-stable (16009db47c51 usb: chipidea: u=
+dc: workaround for endpoint conflict issue)
+Merging phy/fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging staging.current/staging-linus (e39fcaef7ed9 staging: Fix error retu=
+rn code in vboxsf_fill_super())
+Merging char-misc.current/char-misc-linus (9d55499d8da4 intel_th: pci: Add =
+Jasper Lake PCH support)
+Merging soundwire-fixes/fixes (7b47ad3322d1 soundwire: slave: fix scanf for=
+mat)
+Merging thunderbolt-fixes/fixes (747125db6dcd thunderbolt: Drop unnecessary=
+ read when writing LC command in Ice Lake)
+Merging input-current/for-linus (310ca2a61c41 Input: synaptics-rmi4 - remov=
+e unused result_bits mask)
+Merging crypto-current/master (f703964fc668 crypto: arm/aes-ce - add depend=
+ency on AES library)
+Merging ide/master (baf6722aa0cb ide: Use dev_get_drvdata where possible)
+Merging vfio-fixes/for-linus (95f89e090618 vfio/type1: Initialize resv_msi_=
+base)
+Merging kselftest-fixes/fixes (303e6218ecec selftests: Fix O=3D and KBUILD_=
+OUTPUT handling for relative paths)
+Merging modules-fixes/modules-linus (57baec7b1b04 scripts/nsdeps: make sure=
+ to pass all module source files to spatch)
+Merging slave-dma-fixes/fixes (bacdcb6675e1 dmaengine: cppi41: Fix cppi41_d=
+ma_prep_slave_sg() when idle)
+Merging backlight-fixes/for-backlight-fixes (e93c9c99a629 Linux 5.1)
+Merging mtd-fixes/mtd/fixes (df8fed831cbc mtd: rawnand: au1550nd: Fix au_re=
+ad_buf16() prototype)
+Merging mfd-fixes/for-mfd-fixes (603d9299da32 mfd: mt6397: Fix probe after =
+changing mt6397-core)
+Merging v4l-dvb-fixes/fixes (3e84a18a259e media: meson/ao-cec: move cec_not=
+ifier_cec_adap_register after hw setup)
+Merging reset-fixes/reset/fixes (0258c29feddf reset: brcmstb: Remove resour=
+ce checks)
+Merging mips-fixes/mips-fixes (f6929c92e283 MAINTAINERS: Remove Kevin as ma=
+intainer of BMIPS generic platforms)
+Merging at91-fixes/at91-fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging omap-fixes/fixes (6aed5a0e0f56 Merge branch 'watchdog-fix' into fix=
+es)
+Merging kvm-fixes/master (671ddc700fd0 KVM: nVMX: Don't leak L1 MMIO region=
+s to L2)
+Merging kvms390-fixes/master (53936b5bf35e KVM: s390: Do not leak kernel st=
+ack data in the KVM_S390_INTERRUPT ioctl)
+Merging hwmon-fixes/hwmon (92b39ad44096 hwmon: (pmbus/ibm-cffps) Fix LED bl=
+ink behavior)
+Merging nvdimm-fixes/libnvdimm-fixes (6370740e5f8e fs/dax: Fix pmd vs pte c=
+onflict detection)
+Merging btrfs-fixes/next-fixes (bfbbf8cb43a7 Merge branch 'misc-5.4' into n=
+ext-fixes)
+Merging vfs-fixes/fixes (03ad0d703df7 autofs: fix a leak in autofs_expire_i=
+ndirect())
+Merging dma-mapping-fixes/for-linus (9c24eaf81cc4 iommu/vt-d: Return the co=
+rrect dma mask when we are bypassing the IOMMU)
+Merging i3c-fixes/master (6fbc7275c7a9 Linux 5.2-rc7)
+Merging drivers-x86-fixes/fixes (7d194c2100ad Linux 5.4-rc4)
+Merging samsung-krzk-fixes/fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging pinctrl-samsung-fixes/pinctrl-fixes (5f9e832c1370 Linus 5.3-rc1)
+Merging devicetree-fixes/dt/linus (5dba51754b04 of: reserved_mem: add missi=
+ng of_node_put() for proper ref-counting)
+Merging scsi-fixes/fixes (9393c8de628c scsi: core: Handle drivers which set=
+ sg_tablesize to zero)
+Merging drm-fixes/drm-fixes (a99d8080aaf3 Linux 5.4-rc6)
+Merging amdgpu-fixes/drm-fixes (2c409ba81be2 drm/radeon: fix si_enable_smc_=
+cac() failed issue)
+Merging drm-intel-fixes/for-linux-next-fixes (ee2c5ef8a9d6 drm/i915/dp: Do =
+not switch aux to TBT mode for non-TC ports)
+Merging mmc-fixes/fixes (a99d8080aaf3 Linux 5.4-rc6)
+Merging rtc-fixes/rtc-fixes (5f9e832c1370 Linus 5.3-rc1)
+Merging gnss-fixes/gnss-linus (54ecb8f7028c Linux 5.4-rc1)
+Merging hyperv-fixes/hyperv-fixes (590c28b9199c Drivers: hv: vmbus: Fix har=
+mless building warnings without CONFIG_PM_SLEEP)
+Merging soc-fsl-fixes/fix (5674a92ca4b7 soc/fsl/qe: Fix an error code in qe=
+_pin_request())
+Merging risc-v-fixes/fixes (1d9b0b66c3ef MAINTAINERS: Change to my personal=
+ email address)
+Merging pidfd-fixes/fixes (913fe0eb39c6 clone3: validate stack arguments)
+Merging fpga-fixes/fixes (dec43da46f63 fpga: altera-ps-spi: Fix getting of =
+optional confd gpio)
+Merging spdx/spdx-linus (02dc96ef6c25 Merge git://git.kernel.org/pub/scm/li=
+nux/kernel/git/netdev/net)
+Merging gpio-intel-fixes/fixes (7d194c2100ad Linux 5.4-rc4)
+Merging pinctrl-intel-fixes/fixes (67d33aecd030 pinctrl: cherryview: Alloca=
+te IRQ chip dynamic)
+Merging erofs-fixes/fixes (da0c9ea146cb Linux 5.4-rc2)
+Merging drm-misc-fixes/for-linux-next-fixes (105401b659b7 drm/shmem: Add do=
+cbook comments for drm_gem_shmem_object madvise fields)
+Merging kspp-gustavo/for-next/kspp (da0c9ea146cb Linux 5.4-rc2)
+Merging kbuild/for-next (65f2cb290155 kbuild: rename any-prereq to newer-pr=
+ereqs)
+Merging compiler-attributes/compiler-attributes (54ecb8f7028c Linux 5.4-rc1)
+Merging leaks/leaks-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging dma-mapping/for-next (7edc4bdd0de8 x86/PCI: sta2x11: use default DM=
+A address translation)
+Merging asm-generic/master (9b87647c665d asm-generic: add unlikely to defau=
+lt BUG_ON(x))
+Merging arc/for-next (2f4ecf68a048 ARC: mm: tlb flush optim: elide redundan=
+t uTLB invalidates for MMUv3)
+Merging arm/for-next (cb73737ea1d2 ARM: 8928/1: ARM_ERRATA_775420: Spelling=
+ s/date/data/)
+Merging arm64/for-next/core (f6481b545950 Merge branches 'for-next/elf-hwca=
+p-docs', 'for-next/smccc-conduit-cleanup', 'for-next/zone-dma', 'for-next/r=
+elax-icc_pmr_el1-sync', 'for-next/double-page-fault' and 'for-next/misc' in=
+to for-next/core)
+CONFLICT (content): Merge conflict in include/linux/dma-direct.h
+Merging arm-perf/for-next/perf (8703317ae576 drivers/perf: hisi: update the=
+ sccl_id/ccl_id for certain HiSilicon platform)
+Merging arm-soc/for-next (ed75c5095bf3 ARM: Document merges)
+Merging amlogic/for-next (320a07ac6201 Merge branch 'v5.5/drivers' into tmp=
+/aml-rebuild)
+Merging aspeed/for-next (3eca037f2dfc ARM: dts: aspeed-g6: Add timer descri=
+ption)
+Merging at91/at91-next (00fd3ec203e5 Merge branches 'at91-drivers', 'at91-s=
+oc', 'at91-dt' and 'at91-defconfig' into at91-next)
+Merging bcm2835/for-next (f14234184671 Merge branch 'bcm2835-maintainers-ne=
+xt' into for-next)
+Merging imx-mxs/for-next (71918b15d58f Merge branch 'imx/defconfig' into fo=
+r-next)
+Merging keystone/next (2af8e1f26c65 Merge branch 'for_5.5/driver-soc' into =
+next)
+Merging mediatek/for-next (4ae1ce88e9a0 Merge branch 'v5.3-next/soc' into f=
+or-next)
+Merging mvebu/for-next (3aa22be2d6b1 Merge branch 'mvebu/dt64' into mvebu/f=
+or-next)
+Merging omap/for-next (0adbc8292201 Merge branch 'omap-for-v5.5/prm' into f=
+or-next)
+Merging qcom/for-next (358b2c9ef5af Merge tag 'qcom-arm64-defconfig-for-5.5=
+' into final-for-5.5)
+CONFLICT (content): Merge conflict in arch/arm64/configs/defconfig
+Merging realtek/for-next (6a41c7019bca Merge branch 'v5.5/dt64' into next)
+Merging renesas/next (9c45f53abb97 Merge branches 'renesas-arm-defconfig-fo=
+r-v5.5', 'renesas-arm64-defconfig-for-v5.5', 'renesas-arm64-dt-for-v5.5', '=
+renesas-drivers-for-v5.5' and 'renesas-dt-bindings-for-v5.5' into renesas-n=
+ext)
+Merging reset/reset/next (b3f1d036f26d reset: npcm: add NPCM reset controll=
+er driver)
+Merging rockchip/for-next (049ed30771be Merge branch 'v5.5-clk/next' into f=
+or-next)
+Merging samsung-krzk/for-next (a4276bb320c4 Merge branch 'next/drivers' int=
+o for-next)
+Merging scmi/for-linux-next (a99d8080aaf3 Linux 5.4-rc6)
+Merging sunxi/sunxi/for-next (2ddd531f8c80 Merge branches 'sunxi/clk-for-5.=
+5' and 'sunxi/dt-for-5.5' into sunxi/for-next)
+Merging tegra/for-next (6c7c92944894 Merge branch for-5.5/cpufreq into for-=
+next)
+Merging clk/clk-next (7d6758cfe364 Merge branch 'clk-renesas' into clk-next)
+CONFLICT (content): Merge conflict in drivers/clk/imx/clk-imx8mn.c
+Merging clk-samsung/for-next (45f10dabb56b clk: samsung: exynos5420: Add SE=
+T_RATE_PARENT flag to clocks on G3D path)
+Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
+Merging csky/linux-next (044cf5e15357 csky: Initial stack protector support)
+Merging h8300/h8300-next (a5de8865cb3e h8300: move definition of __kernel_s=
+ize_t etc. to posix_types.h)
+Merging ia64/next (0d3d343560ba genirq: remove the is_affinity_mask_valid h=
+ook)
+Merging m68k/for-next (7cf78b6b12fd m68k: q40: Fix info-leak in rtc_ioctl)
+Merging m68knommu/for-next (dd13a0f1d3f8 m68k/coldfire: Use CONFIG_PREEMPTI=
+ON)
+Merging microblaze/next (22648c989cb8 microblaze: Increase max dtb size to =
+64K from 32K)
+Merging mips/mips-next (dece3c2a320b MIPS: Loongson: Fix return value of lo=
+ongson_hwmon_init)
+CONFLICT (content): Merge conflict in arch/mips/sgi-ip27/ip27-init.c
+Merging nds32/next (932296120543 nds32: add new emulations for floating poi=
+nt instruction)
+Merging nios2/for-next (91d99a724e9c nios2: force the string buffer NULL-te=
+rminated)
+Merging openrisc/for-next (f3b17320db25 openrisc: map as uncached in iorema=
+p)
+Merging parisc-hd/for-next (e9c837c6ab07 parisc: Avoid spurious inequivalen=
+t alias kernel error messages)
+Merging powerpc/next (e44ff9ea8f4c powerpc/tools: Don't quote $objdump in s=
+cripts)
+Merging fsl/next (8a35879a60be powerpc/fsl_booke/32: Document KASLR impleme=
+ntation)
+Merging soc-fsl/next (36f6cf9dc2f5 soc: fsl: add RCPM driver)
+Merging risc-v/for-next (a4531f3dba5f Merge branch 'next/tlb-opt' into dev/=
+riscv/for-v5.5-rc1)
+Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging s390/features (c2f2093e149d s390/unwind: drop unnecessary code arou=
+nd calling ftrace_graph_ret_addr())
+Merging sh/sh-next (baf58858e8b6 sh: prefer __section from compiler_attribu=
+tes.h)
+CONFLICT (modify/delete): arch/sh/include/uapi/asm/types.h deleted in sh/sh=
+-next and modified in HEAD. Version HEAD of arch/sh/include/uapi/asm/types.=
+h left in tree.
+CONFLICT (modify/delete): arch/sh/include/uapi/asm/setup.h deleted in sh/sh=
+-next and modified in HEAD. Version HEAD of arch/sh/include/uapi/asm/setup.=
+h left in tree.
+$ git rm -f arch/sh/include/uapi/asm/setup.h arch/sh/include/uapi/asm/types=
+.h
+Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
+Merging uml/linux-next (73625ed66389 um: irq: Fix LAST_IRQ usage in init_IR=
+Q())
+Merging xtensa/xtensa-for-next (c61b02fb6c43 Merge branch 'xtensa-5.5-asm-m=
+emopt' into xtensa-for-next)
+Merging fscrypt/master (0eee17e33226 f2fs: add support for IV_INO_LBLK_64 e=
+ncryption policies)
+Merging afs/afs-next (a0753c29004f afs: Support RCU pathwalk)
+Merging btrfs/for-next (6eb305c9273a Merge branch 'for-next-next-v5.4-20191=
+104' into for-next-20191104)
+Merging ceph/master (ff29fde84d1f ceph: return -EINVAL if given fsc mount o=
+ption on kernel w/o support)
+Merging cifs/for-next (cf9f4dded01a cifs: update internal module version nu=
+mber)
+Merging configfs/for-next (e2f238f7d5a1 configfs: calculate the depth of pa=
+rent item)
+Merging ecryptfs/next (b4a81b87a4cf ecryptfs: fix a memory leak bug in ecry=
+ptfs_init_messaging())
+Merging erofs/dev (0602fc8bb4f2 erofs: support superblock checksum)
+Merging ext3/for_next (18bc9f55c654 Pull ext2 allocation cleanup patches.)
+Merging ext4/dev (8d0d47ea1640 Merge branch 'mb/dio' into master)
+Merging f2fs/dev (7c15ed5f37a3 f2fs: avoid kernel panic on corruption test)
+Merging fsverity/fsverity (95ae251fe828 f2fs: add fs-verity support)
+Merging fuse/for-next (091d1a726772 fuse: redundant get_fuse_inode() calls =
+in fuse_writepages_fill())
+Merging jfs/jfs-next (a5fdd713d256 jfs: fix bogus variable self-initializat=
+ion)
+Merging nfs/linux-next (a99d8080aaf3 Linux 5.4-rc6)
+Merging nfs-anna/linux-next (79cc55422ce9 NFS: Fix an RCU lock leak in nfs4=
+_refresh_delegation_stateid())
+Merging nfsd/nfsd-next (5fcaf6982d11 sunrpc: fix crash when cache_head beco=
+me valid before update)
+Merging orangefs/for-next (e6b998ab62be orangefs: remove redundant assignme=
+nt to err)
+Merging overlayfs/overlayfs-next (5c2e9f346b81 ovl: filter of trusted xattr=
+ results in audit)
+Merging ubifs/linux-next (6a379f67454a jffs2: Fix memory leak in jffs2_scan=
+_eraseblock() error path)
+Merging v9fs/9p-next (aafee43b7286 9p/vfs_super.c: Remove unused parameter =
+data in v9fs_fill_super)
+Merging xfs/for-next (9842b56cd406 xfs: make the assertion message function=
+s take a mount parameter)
+Merging iomap/iomap-for-next (add66fcbd3fb iomap: Fix overflow in iomap_pag=
+e_mkwrite)
+Merging djw-vfs/vfs-for-next (7118dd2d41af splice: only read in as much inf=
+ormation as there is pipe buffer space)
+Merging file-locks/locks-next (b41dae061bbd Merge tag 'xfs-5.4-merge-7' of =
+git://git.kernel.org/pub/scm/fs/xfs/xfs-linux)
+Merging vfs/for-next (3e501af8dd7b Merge branches 'work.misc', 'work.mount3=
+', 'work.namei', 'work.dcache' and 'work.autofs' into for-next)
+Merging printk/for-next (7653416fedb5 Merge branch 'for-5.5' into for-next)
+Merging pci/next (f388acdcc7cf Merge branch 'pci/trivial')
+CONFLICT (content): Merge conflict in arch/arm64/boot/dts/freescale/fsl-ls1=
+028a.dtsi
+CONFLICT (content): Merge conflict in arch/arm64/boot/dts/amlogic/meson-sm1=
+.dtsi
+CONFLICT (content): Merge conflict in arch/arm64/boot/dts/amlogic/meson-g12=
+-common.dtsi
+Merging pstore/for-next/pstore (8d82cee2f8aa pstore: Make pstore_choose_com=
+pression() static)
+Merging hid/for-next (87d4af34a2ec Merge branch 'for-5.4/upstream-fixes' in=
+to for-next)
+Merging i2c/i2c/for-next (70d0b04517cd Merge branch 'i2c/for-current-fixed'=
+ into i2c/for-next)
+Merging i3c/i3c/next (469191c7fcd0 MAINTAINERS: Mark linux-i3c mailing list=
+ moderated)
+Merging dmi/master (9a85ac3936ad firmware: dmi: Add dmi_memdev_handle)
+Merging hwmon-staging/hwmon-next (61412ef12a84 docs: hwmon: Document bel-pf=
+e pmbus driver)
+Merging jc_docs/docs-next (88288ed050ad docs: printk-formats: add ptrdiff_t=
+ type to printk-formats)
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/pensando/ionic.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/ixgbevf.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/ixgbe.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/igbvf.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/igb.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/ice.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/iavf.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/i40e.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/fm10k.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/e1000e.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/e1000.rst
+CONFLICT (content): Merge conflict in Documentation/networking/device_drive=
+rs/intel/e100.rst
+CONFLICT (content): Merge conflict in Documentation/admin-guide/perf/imx-dd=
+r.rst
+Merging v4l-dvb/master (d065070e009b media: hi556: Add support for Hi-556 s=
+ensor)
+Merging v4l-dvb-next/master (d45331b00ddb Linux 5.3-rc4)
+Merging fbdev/fbdev-for-next (732146a3f1dc video: fbdev: imxfb: fix a typo =
+in imxfb_probe())
+Merging pm/linux-next (d0bc4de07f35 Merge branches 'pm-cpufreq' and 'pm-cpu=
+idle' into linux-next)
+CONFLICT (content): Merge conflict in lib/test_printf.c
+Merging cpufreq-arm/cpufreq/arm/linux-next (c23734487fb4 cpufreq: sun50i: F=
+ix CPU speed bin detection)
+Merging cpupower/cpupower (4611a4fb0cce cpupower: ToDo: Update ToDo with id=
+eas for per_cpu_schedule handling)
+Merging opp/opp/linux-next (c44bb5034aec PM / OPP: Support adjusting OPP vo=
+ltages at runtime)
+Merging thermal/thermal/linux-next (a4e893e802e6 thermal: cpu_cooling: Migr=
+ate to using the EM framework)
+Merging thermal-rzhang/next (54ecb8f7028c Linux 5.4-rc1)
+Merging thermal-soc/next (6c375eccded4 thermal: db8500: Rewrite to be a pur=
+e OF sensor)
+Merging ieee1394/for-next (4d856f72c10e Linux 5.3)
+Merging dlm/next (a48f9721e6db dlm: no need to check return value of debugf=
+s_create functions)
+Merging swiotlb/linux-next (4cdfb27ba80d xen/swiotlb: remember having calle=
+d xen_create_contiguous_region())
+Merging rdma/for-next (b4bc76609722 RDMA/qedr: Add iWARP doorbell recovery =
+support)
+CONFLICT (content): Merge conflict in drivers/infiniband/hw/mlx5/mr.c
+Merging net-next/master (1c8dd9cb4697 net_sched: gen_estimator: extend pack=
+et counter to 64bit)
+CONFLICT (content): Merge conflict in samples/bpf/Makefile
+CONFLICT (content): Merge conflict in drivers/staging/Makefile
+CONFLICT (content): Merge conflict in drivers/staging/Kconfig
+Merging bpf-next/master (ed5941af3f67 bpf: Add cb access in kfree_skb test)
+Merging ipsec-next/master (fd1ac07f3f17 xfrm: ifdef setsockopt(UDP_ENCAP_ES=
+PINUDP/UDP_ENCAP_ESPINUDP_NON_IKE))
+Merging mlx5-next/mlx5-next (9ea7f01f470a net/mlx5: fix spelling mistake "m=
+etdata" -> "metadata")
+Merging netfilter-next/master (1574cf83c7a0 Merge tag 'mlx5-updates-2019-11=
+-01' of git://git.kernel.org/pub/scm/linux/kernel/git/saeed/linux)
+Merging nfc-next/master (1f008cfec5d5 NFC: fdp: Fix unused variable warning=
+s)
+CONFLICT (content): Merge conflict in drivers/nfc/st21nfca/se.c
+Merging ipvs-next/master (d54725cd11a5 netfilter: nf_tables: support for mu=
+ltiple devices per netdev hook)
+Merging wireless-drivers-next/master (f530c1961af2 rtw88: fix potential NUL=
+L pointer access for firmware)
+Merging bluetooth/master (53121a7cc33b Bluetooth: btmtksdio: add MODULE_DEV=
+ICE_TABLE())
+Merging mac80211-next/master (3f2aef10ffad mac80211: fix a typo of "functio=
+n")
+Merging gfs2/for-next (6f6d5195f72f gfs2: Remove active journal side effect=
+ from gfs2_write_log_header)
+Merging mtd/mtd/next (267c1d772380 MAINTAINERS: ubi/ubifs: Update the Git r=
+epository)
+Merging nand/nand/next (777260a5c992 mtd: rawnand: remove unecessary checki=
+ng if dmac is NULL)
+Merging spi-nor/spi-nor/next (b24eaf5f2375 mtd: spi-nor: Print debug messag=
+e when the read back test fails)
+Merging crypto/master (298b4c604008 crypto: amcc - restore CRYPTO_AES depen=
+dency)
+CONFLICT (content): Merge conflict in arch/arm/crypto/Kconfig
+Merging drm/drm-next (cea35f5ad5ff drm/i915: Don't select BROKEN)
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/i915_drv.h
+CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/amdgpu/amdgpu_vce=
+.h
+CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/amdgpu/amdgpu_vce=
+.c
+Applying: cec: fix up for "cec: add cec_adapter to cec_notifier_cec_adap_un=
+register()"
+Applying: drm/v3d: Fix double free in v3d_submit_cl_ioctl()
+Merging amdgpu/drm-next (ed6745a17ea0 drm/amdgpu/powerplay: fix AVFS handli=
+ng with custom powerplay table)
+Merging drm-intel/for-linux-next (d9dace943894 drm/i915/selftests: Add inte=
+l_gt_suspend_prepare)
+Merging drm-tegra/drm/tegra/for-next (84db889e6d82 drm/tegra: Unconditional=
+ly select IOMMU_IOVA)
+Merging drm-misc/for-linux-next (b149cbfeecaa drm/mst: Fix up u64 division)
+Merging drm-msm/msm-next (e20c9284c8f2 drm/msm/adreno: Add support for Adre=
+no 510 GPU)
+Merging mali-dp/for-upstream/mali-dp (f634c6a80287 dt/bindings: display: Ad=
+d optional property node define for Mali DP500)
+Merging imx-drm/imx-drm/next (4d24376370fb gpu: ipu-v3: image-convert: only=
+ sample into the next tile if necessary)
+Merging etnaviv/etnaviv/next (22567d017c2c dt-bindings: etnaviv: Add #cooli=
+ng-cells)
+Merging regmap/for-next (da0c9ea146cb Linux 5.4-rc2)
+Merging sound/for-next (66a8966aac12 Merge branch 'for-linus' into for-next)
+Merging sound-asoc/for-next (1824cd1ea587 Merge branch 'asoc-5.5' into asoc=
+-next)
+Merging modules/modules-next (e2854a1054ab moduleparam: fix parameter descr=
+iption mismatch)
+Merging input/next (d843304b22e8 Input: synaptics-rmi4 - simplify data read=
+ in rmi_f54_work)
+Merging block/for-next (945f42a7e5c8 Merge branch 'for-5.5/io_uring' into f=
+or-next)
+Merging device-mapper/for-next (35ad035b8398 dm raid: Remove unnecessary ne=
+gation of a shift in raid10_format_to_md_layout)
+Merging mmc/next (3a07e0b48c98 mmc: renesas_sdhi_internal_dmac: Add r8a774b=
+1 support)
+Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
+er)
+Merging mfd/for-mfd-next (1f98ed315b06 mfd: mfd-core: Move pdev->mfd_cell c=
+reation back into mfd_add_device())
+CONFLICT (content): Merge conflict in drivers/mfd/mt6397-core.c
+Merging backlight/for-backlight-next (53e492915061 backlight: Kconfig: jorn=
+ada720: Use CONFIG_PREEMPTION)
+Merging battery/for-next (9480029fe5c2 power: supply: bd70528: Add MODULE_A=
+LIAS to allow module auto loading)
+Merging regulator/for-next (471c04919bc6 Merge branch 'regulator-5.5' into =
+regulator-next)
+Merging security/next-testing (45893a0abee6 kexec: Fix file verification on=
+ S390)
+Merging apparmor/apparmor-next (136db994852a apparmor: increase left match =
+history buffer size)
+Merging integrity/next-integrity (2a7f0e53daf2 ima: ima_api: Use struct_siz=
+e() in kzalloc())
+Merging keys/keys-next (48274e1e5d24 Merge branch 'notifications-core' into=
+ keys-next)
+Merging selinux/next (42345b68c2e3 selinux: default_range glblub implementa=
+tion)
+Merging smack/for-next (92604e825304 smack: use GFP_NOFS while holding inod=
+e_smack::smk_lock)
+Merging tomoyo/master (79c8ca578dbf Revert "printk: Monitor change of conso=
+le loglevel.")
+Merging tpmdd/next (36d075acb2a1 KEYS: trusted: Remove set but not used var=
+iable 'keyhndl')
+Merging watchdog/master (81363f248aec watchdog: bd70528: Add MODULE_ALIAS t=
+o allow module auto loading)
+Merging iommu/next (50f07c7db715 Merge branches 'iommu/fixes', 'arm/qcom', =
+'arm/renesas', 'arm/rockchip', 'arm/mediatek', 'arm/tegra', 'x86/amd', 'x86=
+/vt-d', 'virtio' and 'core' into next)
+Merging vfio/next (026948f01eac vfio/type1: remove hugepage checks in is_in=
+valid_reserved_pfn())
+Merging audit/next (c34c78dfc1fc audit: remove redundant condition check in=
+ kauditd_thread())
+Merging devicetree/for-next (067c650c456e dtc: Use pkg-config to locate lib=
+yaml)
+CONFLICT (content): Merge conflict in Documentation/devicetree/bindings/usb=
+/generic-ehci.yaml
+Merging mailbox/mailbox-for-next (556a0964e28c mailbox: qcom-apcs: fix max_=
+register value)
+Merging spi/for-next (d8b9fb702769 Merge remote-tracking branch 'spi/topic/=
+ptp' into spi-next)
+Merging tip/auto-latest (dcf848d387fa Merge branch 'core/urgent')
+CONFLICT (content): Merge conflict in samples/bpf/Makefile
+CONFLICT (content): Merge conflict in include/linux/security.h
+CONFLICT (content): Merge conflict in fs/jbd2/transaction.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/gem/i915_gem_shr=
+inker.c
+Applying: drm/i915: update for mutex_release API change
+Merging clockevents/timers/drivers/next (6e001f6a4cc7 clocksource/drivers/a=
+sm9260: Add a check for of_clk_get)
+Merging edac/edac-for-next (582f94b5900a EDAC/amd64: Check for memory befor=
+e fully initializing an instance)
+Merging irqchip/irq/irqchip-next (41860cc44704 irqchip/sifive-plic: Skip co=
+ntexts except supervisor in plic_init())
+Merging ftrace/for-next (8ed4889eb831 selftests/ftrace: Fix same probe erro=
+r test)
+Merging rcu/rcu/next (8dcdfb7096a3 Merge branches 'doc.2019.10.29a', 'fixes=
+.2019.10.30a', 'nohz.2019.10.28a', 'replace.2019.10.30a', 'torture.2019.10.=
+05a' and 'lkmm.2019.10.05a' into HEAD)
+Merging kvm/linux-next (20baa8e515a5 Merge tag 'kvm-ppc-fixes-5.4-1' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/paulus/powerpc into HEAD)
+Merging kvm-arm/next (e0d1c3bfeab1 Merge remote-tracking branch 'kvmarm/mis=
+c-5.5' into kvmarm/next)
+Merging kvm-ppc/kvm-ppc-next (55d7004299eb KVM: PPC: Book3S HV: Reject mfla=
+gs=3D2 (LPCR[AIL]=3D2) ADDR_TRANS_MODE mode)
+CONFLICT (content): Merge conflict in include/uapi/linux/kvm.h
+Merging kvms390/next (c7b7de631246 KVM: s390: Do not yield when target is a=
+lready running)
+Merging xen-tip/linux-next (fa6614d8ef13 xen/gntdev: Use select for DMA_SHA=
+RED_BUFFER)
+Merging percpu/for-next (825dbc6ff7a3 percpu: add __percpu to SHIFT_PERCPU_=
+PTR)
+Merging workqueues/for-next (30ae2fc0a75e workqueue: Minor follow-ups to th=
+e rescuer destruction change)
+Merging drivers-x86/for-next (3caa6f39e059 Add touchscreen platform data fo=
+r the Schneider SCT101CTM tablet)
+Merging chrome-platform/for-next (6d2a736e2b65 platform/chrome: wilco_ec: A=
+dd keyboard backlight LED support)
+Merging hsi/for-next (c1030cd45619 HSI: Remove dev_err() usage after platfo=
+rm_get_irq())
+Merging leds/for-next (448d6fcb7a52 leds: pca953x: Use of_device_get_match_=
+data())
+Merging ipmi/for-next (0d8633bf5311 drivers: ipmi: Support for both IPMB Re=
+q and Resp)
+Merging driver-core/driver-core-next (cc4c831811c2 gpio: tegra186: use devm=
+_platform_ioremap_resource_byname())
+CONFLICT (content): Merge conflict in Documentation/filesystems/debugfs.txt
+Merging usb/usb-next (74ce3e412748 usb: typec: ucsi: Optimise ucsi_unregist=
+er())
+Merging usb-gadget/next (726b4fba94be usb: dwc3: of-simple: add a shutdown)
+Merging usb-serial/usb-next (957c31ea082e USB: serial: option: add support =
+for DW5821e with eSIM support)
+Merging usb-chipidea-next/ci-for-usb-next (196c90220a85 usb: chipidea: imx:=
+ pinctrl for HSIC is optional)
+Merging phy-next/next (4569e64ab6a5 phy: phy-rockchip-inno-usb2: add phy de=
+scription for px30)
+Merging tty/tty-next (487ee861de17 tty: serial: fsl_lpuart: use the sg coun=
+t from dma_map_sg)
+Merging char-misc/char-misc-next (755864feb729 nvmem: add Rockchip OTP driv=
+er)
+CONFLICT (content): Merge conflict in samples/Makefile
+CONFLICT (content): Merge conflict in samples/Kconfig
+Merging extcon/extcon-next (ddd1bbbae486 extcon: sm5502: remove redundant a=
+ssignment to variable cable_type)
+Merging soundwire/next (3ccb8551f52e soundwire: cadence_master: make clock =
+stop exit configurable on init)
+Merging thunderbolt/next (354a7a7716ed thunderbolt: Do not start firmware u=
+nless asked by the user)
+Merging staging/staging-next (6647e4e84501 staging: exfat: Ensure we unlock=
+ upon error in ffsReadFile)
+CONFLICT (content): Merge conflict in drivers/staging/Makefile
+CONFLICT (content): Merge conflict in drivers/staging/Kconfig
+Merging mux/for-next (05fb8284a417 Merge branch 'i2c-mux/for-next' into for=
+-next)
+Merging icc/icc-next (83561a721dc2 interconnect: Move interconnect drivers =
+to core_initcall)
+Merging slave-dma/next (31f4b28f6c41 dmaengine: ti: edma: Add support for h=
+andling reserved channels)
+Merging cgroup/for-next (dab1e3e4b955 Merge branch 'for-5.5' into for-next)
+Merging scsi/for-next (a2498d943c40 Merge branch 'fixes' into for-next)
+CONFLICT (content): Merge conflict in drivers/scsi/scsi_sysfs.c
+Merging scsi-mkp/for-next (c8510d240306 scsi: dt-bindings: ufs: Add sm8150 =
+compatible string)
+Merging vhost/linux-next (8766aecd61f7 vhost: last descriptor must have NEX=
+T clear)
+Merging rpmsg/for-next (1587a11907d8 Merge branches 'hwspinlock-next', 'rpm=
+sg-next' and 'rproc-next' into for-next)
+Merging gpio/for-next (39f4fc38d180 Merge branch 'devel' into for-next)
+CONFLICT (content): Merge conflict in drivers/gpio/gpio-tegra186.c
+Merging gpio-brgl/gpio/for-next (e7fffd11e8f7 gpio: add new SET_CONFIG ioct=
+l() to gpio chardev)
+CONFLICT (content): Merge conflict in include/uapi/linux/gpio.h
+CONFLICT (content): Merge conflict in drivers/gpio/gpiolib.c
+Merging gpio-intel/for-next (d6d5df1db6e9 Linux 5.4-rc5)
+Merging pinctrl/for-next (bf74543583fa Merge branch 'devel' into for-next)
+Merging pinctrl-intel/for-next (8ae93b5ed9be pinctrl: cherryview: Missed ty=
+pe change to unsigned int)
+Merging pinctrl-samsung/for-next (a322b3377f4b pinctrl: samsung: Fix device=
+ node refcount leaks in init code)
+Merging pwm/for-next (9e1b4999a169 pwm: stm32: Pass breakinput instead of i=
+ts values)
+Merging userns/for-next (318759b4737c signal/x86: Move tsk inside of CONFIG=
+_MEMORY_FAILURE in do_sigbus)
+Merging ktest/for-next (aecea57f84b0 ktest: Fix some typos in config-bisect=
+.pl)
+Merging random/dev (58be0106c530 random: fix soft lockup when trying to rea=
+d from an uninitialized blocking pool)
+Merging kselftest/next (54ecb8f7028c Linux 5.4-rc1)
+Merging y2038/y2038 (0682b746099a Merge tag 'compat-ioctl-5.5' of git://git=
+.kernel.org/pub/scm/linux/kernel/git/arnd/playground into y2038)
+CONFLICT (content): Merge conflict in fs/compat_ioctl.c
+CONFLICT (content): Merge conflict in drivers/scsi/sg.c
+Applying: fix up for "compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c"
+Merging livepatching/for-next (7f436b3066e3 Merge branch 'for-5.5/core' int=
+o for-next)
+Merging coresight/next (372697412e92 coresight: replicator: Fix missing spi=
+n_lock_init())
+Merging rtc/rtc-next (0011bfa2a03a rtc: bd70528: Add MODULE ALIAS to autolo=
+ad module)
+Merging nvdimm/libnvdimm-for-next (4c806b897d60 libnvdimm/region: Enable MA=
+P_SYNC for volatile regions)
+Merging at24/at24/for-next (285be87c79e1 eeprom: at24: Improve confusing lo=
+g message)
+Merging ntb/ntb-next (54ecb8f7028c Linux 5.4-rc1)
+Merging kspp/for-next/kspp (ec2f877856e0 treewide: Use sizeof_member() macr=
+o)
+CONFLICT (content): Merge conflict in arch/x86/kernel/fpu/xstate.c
+Merging cisco/for-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging gnss/gnss-next (54ecb8f7028c Linux 5.4-rc1)
+Merging fsi/next (ca9902e3140e fsi: core: Fix small accesses and unaligned =
+offsets via sysfs)
+Merging slimbus/for-next (54ecb8f7028c Linux 5.4-rc1)
+Merging nvmem/for-next (6bd17868c992 nvmem: add Rockchip OTP driver)
+Merging xarray/xarray (8c59ceb1e375 XArray: Fix xas_pause at ULONG_MAX)
+Merging hyperv/hyperv-next (94f90545a08f Drivers: hv: balloon: Remove depen=
+dencies on guest page size)
+Merging auxdisplay/auxdisplay (54ecb8f7028c Linux 5.4-rc1)
+Merging kgdb/kgdb/for-next (c58ff643763c kdb: Tweak escape handling for vi =
+users)
+Merging pidfd/for-next (1282387e9dca Merge branch 'pidfd' into for-next)
+Merging devfreq/devfreq-next (fee22854c027 PM / devfreq: tegra30: Tune up M=
+CCPU boost-down coefficient)
+Merging hmm/hmm (a0204c0f9bd1 mm/hmm: remove hmm_mirror and related)
+CONFLICT (content): Merge conflict in drivers/infiniband/hw/mlx5/odp.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
+Merging fpga/for-next (fddc9fcbe69a fpga: dfl: fme: add power management su=
+pport)
+Merging kunit/test (ea2dd7c0875e lib/list-test: add a test for the 'list' d=
+oubly linked list)
+Merging cel/cel-next (a99d8080aaf3 Linux 5.4-rc6)
+Merging kasan-bitops/topic/kasan-bitops (5bece3d66153 powerpc: support KASA=
+N instrumentation of bitops)
+Merging generic-ioremap/for-next (4948599a21f8 nds32: use generic ioremap)
+Applying: drm/sched: struct completion requires linux/completion.h inclusion
+Merging akpm-current/current (8b4f8867eb94 ipc/msg.c: consolidate all xxxct=
+l_down() functions)
+CONFLICT (content): Merge conflict in lib/ubsan.c
+$ git checkout -b akpm remotes/origin/akpm/master
+Applying: drivers/block/null_blk_main.c: fix layout
+Applying: drivers/block/null_blk_main.c: fix uninitialized var warnings
+Applying: pinctrl: fix pxa2xx.c build warnings
+Applying: lib/genalloc.c: export symbol addr_in_gen_pool
+Applying: lib/genalloc.c: rename addr_in_gen_pool to gen_pool_has_addr
+Applying: Documentation: rename addr_in_gen_pool to gen_pool_has_addr
+Applying: kernel-hacking: group sysrq/kgdb/ubsan into 'Generic Kernel Debug=
+ging Instruments'
+Applying: kernel-hacking: create submenu for arch special debugging options
+Applying: kernel-hacking: group kernel data structures debugging together
+Applying: kernel-hacking: move kernel testing and coverage options to same =
+submenu
+Applying: kernel-hacking: move Oops into 'Lockups and Hangs'
+Applying: kernel-hacking: move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
+Applying: kernel-hacking: create a submenu for scheduler debugging options
+Applying: kernel-hacking: move DEBUG_BUGVERBOSE to 'printk and dmesg option=
+s'
+Applying: kernel-hacking: move DEBUG_FS to 'Generic Kernel Debugging Instru=
+ments'
+Applying: bitops: introduce the for_each_set_clump8 macro
+Applying: linux/bitmap.h: fix potential sign-extension overflow
+Applying: bitops-introduce-the-for_each_set_clump8-macro-fix-fix
+Applying: linux/bitopts.h: Add for_each_set_clump8 documentation
+Applying: lib/test_bitmap.c: add for_each_set_clump8 test cases
+Applying: gpio: 104-dio-48e: utilize for_each_set_clump8 macro
+Applying: gpio: 104-idi-48: utilize for_each_set_clump8 macro
+Applying: gpio: gpio-mm: utilize for_each_set_clump8 macro
+Applying: gpio: ws16c48: utilize for_each_set_clump8 macro
+Applying: gpio: pci-idio-16: utilize for_each_set_clump8 macro
+Applying: gpio: pcie-idio-24: utilize for_each_set_clump8 macro
+Applying: gpio: uniphier: utilize for_each_set_clump8 macro
+Applying: gpio: 74x164: utilize the for_each_set_clump8 macro
+Applying: thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 m=
+acro
+Applying: gpio: pisosr: utilize the for_each_set_clump8 macro
+Applying: gpio: max3191x: utilize the for_each_set_clump8 macro
+Applying: gpio: pca953x: utilize the for_each_set_clump8 macro
+Applying: lib/test_bitmap: force argument of bitmap_parselist_user() to pro=
+per address space
+Applying: lib/test_bitmap: undefine macros after use
+Applying: lib/test_bitmap: name EXP_BYTES properly
+Applying: lib/test_bitmap: rename exp to exp1 to avoid ambiguous name
+Applying: lib/test_bitmap: move exp1 and exp2 upper for others to use
+Applying: lib/test_bitmap: fix comment about this file
+Applying: lib/bitmap: introduce bitmap_replace() helper
+Applying: gpio: pca953x: remove redundant variable and check in IRQ handler
+Applying: gpio: pca953x: use input from regs structure in pca953x_irq_pendi=
+ng()
+Applying: gpio: pca953x: convert to use bitmap API
+Applying: gpio: pca953x: reduce stack usage in couple of functions
+Applying: gpio: pca953x: tighten up indentation
+Applying: mm: add generic p?d_leaf() macros
+Applying: arc: mm: add p?d_leaf() definitions
+Applying: arm: mm: add p?d_leaf() definitions
+Applying: arm64: mm: add p?d_leaf() definitions
+Applying: mips: mm: add p?d_leaf() definitions
+Applying: powerpc: mm: add p?d_leaf() definitions
+Applying: riscv: mm: add p?d_leaf() definitions
+Applying: s390: mm: add p?d_leaf() definitions
+Applying: sparc: mm: add p?d_leaf() definitions
+Applying: x86: mm: add p?d_leaf() definitions
+Applying: mm: pagewalk: add p4d_entry() and pgd_entry()
+Applying: mm: pagewalk: allow walking without vma
+Applying: mm-pagewalk-allow-walking-without-vma-v15
+Applying: mm-pagewalk-allow-walking-without-vma-fix
+Applying: mm: pagewalk: add test_p?d callbacks
+Applying: mm: pagewalk: add 'depth' parameter to pte_hole
+Applying: x86: mm: point to struct seq_file from struct pg_state
+Applying: x86: mm+efi: convert ptdump_walk_pgd_level() to take a mm_struct
+Applying: x86: mm: convert ptdump_walk_pgd_level_debugfs() to take an mm_st=
+ruct
+Applying: x86: mm: convert ptdump_walk_pgd_level_core() to take an mm_struct
+Applying: mm: add generic ptdump
+Applying: mm-add-generic-ptdump-v15
+Applying: mm/ptdump: fix a -Wold-style-declaration warning
+Applying: x86: mm: convert dump_pagetables to use walk_page_range
+Applying: arm64: mm: convert mm/dump.c to use walk_page_range()
+Applying: arm64: mm: display non-present entries in ptdump
+Applying: mm: ptdump: reduce level numbers by 1 in note_page()
+Applying: alpha: use pgtable-nopud instead of 4level-fixup
+Applying: arm: nommu: use pgtable-nopud instead of 4level-fixup
+Applying: c6x: use pgtable-nopud instead of 4level-fixup
+Applying: m68k: nommu: use pgtable-nopud instead of 4level-fixup
+Applying: m68k: mm: use pgtable-nopXd instead of 4level-fixup
+Applying: microblaze: use pgtable-nopmd instead of 4level-fixup
+Applying: nds32: use pgtable-nopmd instead of 4level-fixup
+Applying: parisc: use pgtable-nopXd instead of 4level-fixup
+Applying: parisc/hugetlb: use pgtable-nopXd instead of 4level-fixup
+Applying: sparc32: use pgtable-nopud instead of 4level-fixup
+Applying: um: remove unused pxx_offset_proc() and addr_pte() functions
+Applying: um: add support for folded p4d page tables
+Applying: mm: remove __ARCH_HAS_4LEVEL_HACK and include/asm-generic/4level-=
+fixup.h
+Applying: drivers/tty/serial/sh-sci.c: suppress warning
+Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
+rflow
+Merging akpm/master (08e8cfe3dbba drivers/media/platform/sti/delta/delta-ip=
+c.c: fix read buffer overflow)
+
+--Sig_/.TqOR3vkK02drSakYbAzq0C
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3FCpIACgkQAVBC80lX
+0Gw/0QgAoZMtf4ndMhmRGb2D/FYW7kkpkUv9a1BQ91DK5UFWF5BEIz1bsNrUy1ec
+ROlOYkkgJOpoyFg0cOQhMjBerQMvCEoulIODFLNifbXO+iHB6k0lu0Z+TsQxpwRi
+JQ7pyb5swOErlRevlgEaH255s1JbHACb0w180phKP84mHQIFIGe7BtaY6OSo44Fv
+6g8ohq7O4EAK7X6rSaO9JsRNQhd6CIA3WSozYZOEKloFfgxr09cEEv2ZU7slKHng
+6BudJxJz4Zo6PvkJzYEY/zwabCtgHfa6yPy3pU0HRaoWrSTys+JhoKjpyaK2Iwjx
+/BcWaZB7kIFQZCEWY0xlQjgg2W2HJA==
+=QGqC
+-----END PGP SIGNATURE-----
+
+--Sig_/.TqOR3vkK02drSakYbAzq0C--
