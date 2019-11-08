@@ -2,52 +2,55 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89C8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76028C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903F921D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF432067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239402;
-	bh=qUcFqg4z4RqZDCWvaRajjLuuMCMBmoZryKmlMQxGVYg=;
+	s=default; t=1573239411;
+	bh=WZb83f7ajjCS4RolwHUHtussqsT1ehPfqHysGCEZhVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cu9vVIT5I2Xk//UoE8klakMY3TLFw1cWp5SJCWUXLDq5G2sTlaJ20oYCN5QkZYi6s
-	 o1oJFqtF0RVtUYTaLb5nY7BV9txM8BJ++DHZwiHkm+i+io6uKd+DvNw2k9oazknbq7
-	 kQUkDZw+uaQO+AQjufOAd2ge5EMyMTzDsOfU4KRg=
+	b=sbUQ4HSivVZ9p3s7KQn4M4E4DJcJH4MoLvIojt913Wke1q+WNF5gmG7CV++e6Lks1
+	 yImF3PfDAcd6RlcsfTUtI9qhd84/8Ala0r/mGhrh1R5O0XWdFhLQCFY8VINlGWo8v8
+	 UFYXuLYrvQu+K+bnqrjg6AzFJUv5KC4TupPl+H1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732592AbfKHS4k (ORCPT
+        id S1731684AbfKHS4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:56:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:56:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732476AbfKHS4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:35 -0500
+        id S1732525AbfKHS4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 422462178F;
-        Fri,  8 Nov 2019 18:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D918E214DB;
+        Fri,  8 Nov 2019 18:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239394;
-        bh=qUcFqg4z4RqZDCWvaRajjLuuMCMBmoZryKmlMQxGVYg=;
+        s=default; t=1573239397;
+        bh=WZb83f7ajjCS4RolwHUHtussqsT1ehPfqHysGCEZhVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZtHZqRfaKFY3y8tP6xku1VTcCQq4Nq0lk+iBZP3BDJNBbm5fPdcMcXxKBXfUVpGU5
-         ktm7LmGvQq8zF1itfOz6kmy0X63rKsDS4GMC03ZIHcU8Lj8Z36uDXw04gj2LQqK5Gt
-         OksjGEv3xDIlwb90Cbdosz3pW3m9WAO3avHlPz4Y=
+        b=twGQ03GMDI4xpbs4BOlCd2exdbMKXvVxM6U4k3DW36/dCZ7MYxSvxkMUmIAZxUeTf
+         HXDnJMNUJc5Cz1TC9IK1OZRqR2Lmy+twbk0OksgtryBQ1XIj2ZWS/8jaWIKed4Wpsx
+         ZKeNDgceAgDUhR2tI4H70q1W84LdYjw8aKe93dmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 25/34] net: bcmgenet: reset 40nm EPHY on energy detect
-Date:   Fri,  8 Nov 2019 19:50:32 +0100
-Message-Id: <20191108174645.891678120@linuxfoundation.org>
+        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 08/34] scsi: scsi_dh_alua: handle RTPG sense code correctly during state transitions
+Date:   Fri,  8 Nov 2019 19:50:15 +0100
+Message-Id: <20191108174629.145691706@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
 References: <20191108174618.266472504@linuxfoundation.org>
@@ -60,62 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Hannes Reinecke <hare@suse.com>
 
-[ Upstream commit 25382b991d252aed961cd434176240f9de6bb15f ]
+[ Upstream commit b6ce6fb121a655aefe41dccc077141c102145a37 ]
 
-The EPHY integrated into the 40nm Set-Top Box devices can falsely
-detect energy when connected to a disabled peer interface. When the
-peer interface is enabled the EPHY will detect and report the link
-as active, but on occasion may get into a state where it is not
-able to exchange data with the connected GENET MAC. This issue has
-not been observed when the link parameters are auto-negotiated;
-however, it has been observed with a manually configured link.
+Some arrays are not capable of returning RTPG data during state
+transitioning, but rather return an 'LUN not accessible, asymmetric access
+state transition' sense code. In these cases we can set the state to
+'transitioning' directly and don't need to evaluate the RTPG data (which we
+won't have anyway).
 
-It has been empirically determined that issuing a soft reset to the
-EPHY when energy is detected prevents it from getting into this bad
-state.
-
-Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191007135701.32389-1-hare@suse.de
+Reviewed-by: Laurence Oberman <loberman@redhat.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/scsi/device_handler/scsi_dh_alua.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1914,6 +1914,8 @@ static void bcmgenet_link_intr_enable(st
- 	 */
- 	if (priv->internal_phy) {
- 		int0_enable |= UMAC_IRQ_LINK_EVENT;
-+		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-+			int0_enable |= UMAC_IRQ_PHY_DET_R;
- 	} else if (priv->ext_phy) {
- 		int0_enable |= UMAC_IRQ_LINK_EVENT;
- 	} else if (priv->phy_interface == PHY_INTERFACE_MODE_MOCA) {
-@@ -2531,6 +2533,10 @@ static void bcmgenet_irq_task(struct wor
- 		bcmgenet_power_up(priv, GENET_POWER_WOL_MAGIC);
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
+index 98787588247bf..60c288526355a 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -527,6 +527,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
+ 	unsigned int tpg_desc_tbl_off;
+ 	unsigned char orig_transition_tmo;
+ 	unsigned long flags;
++	bool transitioning_sense = false;
+ 
+ 	if (!pg->expiry) {
+ 		unsigned long transition_tmo = ALUA_FAILOVER_TIMEOUT * HZ;
+@@ -571,13 +572,19 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
+ 			goto retry;
+ 		}
+ 		/*
+-		 * Retry on ALUA state transition or if any
+-		 * UNIT ATTENTION occurred.
++		 * If the array returns with 'ALUA state transition'
++		 * sense code here it cannot return RTPG data during
++		 * transition. So set the state to 'transitioning' directly.
+ 		 */
+ 		if (sense_hdr.sense_key == NOT_READY &&
+-		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
+-			err = SCSI_DH_RETRY;
+-		else if (sense_hdr.sense_key == UNIT_ATTENTION)
++		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a) {
++			transitioning_sense = true;
++			goto skip_rtpg;
++		}
++		/*
++		 * Retry on any other UNIT ATTENTION occurred.
++		 */
++		if (sense_hdr.sense_key == UNIT_ATTENTION)
+ 			err = SCSI_DH_RETRY;
+ 		if (err == SCSI_DH_RETRY &&
+ 		    pg->expiry != 0 && time_before(jiffies, pg->expiry)) {
+@@ -665,7 +672,11 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
+ 		off = 8 + (desc[7] * 4);
  	}
  
-+	if (status & UMAC_IRQ_PHY_DET_R &&
-+	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
-+		phy_init_hw(priv->dev->phydev);
++ skip_rtpg:
+ 	spin_lock_irqsave(&pg->lock, flags);
++	if (transitioning_sense)
++		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
 +
- 	/* Link UP/DOWN event */
- 	if (status & UMAC_IRQ_LINK_EVENT)
- 		phy_mac_interrupt(priv->phydev,
-@@ -2627,8 +2633,7 @@ static irqreturn_t bcmgenet_isr0(int irq
- 	}
- 
- 	/* all other interested interrupts handled in bottom half */
--	status &= (UMAC_IRQ_LINK_EVENT |
--		   UMAC_IRQ_MPD_R);
-+	status &= (UMAC_IRQ_LINK_EVENT | UMAC_IRQ_MPD_R | UMAC_IRQ_PHY_DET_R);
- 	if (status) {
- 		/* Save irq status for bottom-half processing. */
- 		spin_lock_irqsave(&priv->lock, flags);
+ 	sdev_printk(KERN_INFO, sdev,
+ 		    "%s: port group %02x state %c %s supports %c%c%c%c%c%c%c\n",
+ 		    ALUA_DH_NAME, pg->group_id, print_alua_state(pg->state),
+-- 
+2.20.1
+
 
 
