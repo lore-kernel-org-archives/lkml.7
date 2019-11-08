@@ -2,151 +2,177 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0261FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB6EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C9121924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:50:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wrVBw3pP"
+	by mail.kernel.org (Postfix) with ESMTP id 2413D21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573228303;
+	bh=Dmc3raHEC6cgdRs92vkFmegQKOK5+LnLOWpWlbCVho4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GsDWDmujU856x6ytt2xuo7ufZKC7ZmDhEeoQH0Y5HfUvV6LvMsUIy987k2PZxHaa4
+	 unkziMJGeMCnuSG+HzDA95TZ/2rl14usQyzahT9p71vI934ak7XVQfRYezotYJ2oRb
+	 UkuRg/pVAfYSgx++0sQW0TB+njzmluU1/W/wPd+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfKHPun (ORCPT
+        id S1727059AbfKHPvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:50:43 -0500
-Received: from mail-eopbgr760053.outbound.protection.outlook.com ([40.107.76.53]:8586
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726095AbfKHPun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:50:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z/99OX5QMA+tUSE8oCBPsNyeBeOoYAmcCSagkefIW+RWKyATNmCr0cLXm+ZVr2mWGKLGsjGpEIxU1ezDGpkvpmldULRs6+MSlWwQERsGvIt+IUv44EqXDLbbANvmzcRvQlrTJ2yye7rh5VlsioLRXswBxDqLbKNa7DUwVw7mEqBkDib31kNLyZU116Pz2R51PoymG906/57wxfhNCKNwvxiLUJoBZZxIRd1cPmvx+zeA0ny19LUIsOWe6eqzFMoMnfMMYQjbAIcTpLjWgOK/xAfqnayCzk29jRFmZbIGxICj/hTXE/EI+FfjV2FThNCVgvsfgu6AupQ65qkSSXcfvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rIWqK4JXflbiBXOKlWsKgRZxngJg9J++XMM/0977nLM=;
- b=ZDxHmz04ceSSeU6YX46091CnpSq2bRZYOM2vW0p27sDKYJlfxj92zH62RHXKj77gAj5hhRiQ/2uMhX1xb1vmBLt/lHAs6MhixXJb2FPdS6zmR0J1U+eYiSRXdd6Z8cYGhjluKKGY1re3oTOTwgZZX9P+FbDqUuz+ikFQelF8qmUsQ2MyXWM765xl/yoDyxFu6uboTjAJELuH2YIqXHl0K/wq+mRNwW/M3vBJayLjJJNEAcYJ+SN8rP/huvViIePYU/La/El+pidQLVei4tYgicqlzRo39838KQCGSHKdBbMCnPi/9BlVyOEILeHPSRFxX8LeEhHIXJayaYezQ30R0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rIWqK4JXflbiBXOKlWsKgRZxngJg9J++XMM/0977nLM=;
- b=wrVBw3pPNhzeTHY6AHCvIcUvCd+yy6vp8i4p10T0ysXVeDJ31EQAd4sk/2cx50P+KB7Baz8sQi8s/ar+vfDtLdyeUChTCud6ZIDkB7qerCxoYhogPNv7lYMmk8FzkgoE2mOpfS0QgbJzpB+fPGnYC02T1Pju2qT/PUeExgaRYDo=
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com (10.172.55.22) by
- MWHPR12MB1534.namprd12.prod.outlook.com (10.172.56.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Fri, 8 Nov 2019 15:50:37 +0000
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::3963:88a3:88f1:4a1d]) by MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::3963:88a3:88f1:4a1d%4]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
- 15:50:37 +0000
-From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alex Deucher <alexdeucher@gmail.com>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Subject: Re: linux-next: build failure after merge of the amdgpu tree
-Thread-Topic: linux-next: build failure after merge of the amdgpu tree
-Thread-Index: AQHVlfXAInPE90oR2UqQph97gidoRaeBbJaA
-Date:   Fri, 8 Nov 2019 15:50:37 +0000
-Message-ID: <62aed2f6-1775-ae0e-f67c-2ba3f47310db@amd.com>
-References: <20191108163110.32c19752@canb.auug.org.au>
-In-Reply-To: <20191108163110.32c19752@canb.auug.org.au>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTXPR0101CA0045.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:1::22) To MWHPR12MB1453.namprd12.prod.outlook.com
- (2603:10b6:301:e::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 465e414b-6beb-4773-36b4-08d7646365e3
-x-ms-traffictypediagnostic: MWHPR12MB1534:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR12MB1534F80BE1AEA0DF3B8F1095EA7B0@MWHPR12MB1534.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:287;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(376002)(136003)(39860400002)(189003)(199004)(53754006)(86362001)(11346002)(446003)(476003)(229853002)(256004)(66066001)(31686004)(6436002)(8676002)(6486002)(486006)(14454004)(8936002)(2906002)(54906003)(81156014)(81166006)(36756003)(6512007)(66446008)(4326008)(6506007)(26005)(5660300002)(53546011)(386003)(99286004)(66946007)(66556008)(64756008)(2616005)(110136005)(52116002)(186003)(316002)(102836004)(71200400001)(6116002)(3846002)(305945005)(478600001)(25786009)(66476007)(71190400001)(31696002)(6246003)(76176011)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1534;H:MWHPR12MB1453.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jr0OhhMXfzsurgjZSnQPoqiSsTeyDyA3VoQwKOeBq1bS2OQ3Ie9oUg/0xNs4ySd6Ls13hL0usO4W9NZY4FBejSyeuHd76DLrDCtTi35udWFvDSPGzxLLLA79kJNPXibAHml60xtuDntzek/N1r6B7QwT1gj3ZQ6lUgDJOn06CfpHj29VaU+TKezMxdQtUlnRD9tOEbs1q+TD3s4rHmvKrI7WxR30cB40HUfpWzGoHbKR9fICqPSYc0kLWHjGvP4F9M1Mbzk2+cQPWZEKYNpTrQ8zwY4um2diwSPGfBJgrWhau2DQqR5548rKDaB+ejuJBz/A8BI42uIhSLHtDxSSfiqjW9nB+uWirn4zRcHFyNVz+/euK2tEKv6DBjDsR69LkGdIg5GyGAOqLtdR6tvN2pw7qd841uyx8kbL5dvjlsMMfeLLcuLmuxZoMu/mZiMD
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <7ADB5CBC48BC784C9AEE383366D93C10@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 8 Nov 2019 10:51:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfKHPvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 10:51:42 -0500
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4B2E215EA;
+        Fri,  8 Nov 2019 15:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573228300;
+        bh=Dmc3raHEC6cgdRs92vkFmegQKOK5+LnLOWpWlbCVho4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V7VOVP2u7mgbXI1SOTke0LsvrH8M+ukQtEymw3GGZZCDiAKGyj49i2LHaWhIPHra+
+         z8WZJN4CPJ+TtHnTQnW6QK9IBQHYH6zhaYWAjjj4WSw4Dc9bk9BAZex5bfNNDXGS2z
+         rwDWaVQdvolGGMid7EDjp6r1B39DgowTcxcF00n0=
+From:   Will Deacon <will@kernel.org>
+To:     linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andreyknvl@google.com,
+        gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        Will Deacon <will@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
+Subject: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due to malformed USB descriptors
+Date:   Fri,  8 Nov 2019 15:48:38 +0000
+Message-Id: <20191108154838.21487-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 465e414b-6beb-4773-36b4-08d7646365e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 15:50:37.3222
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kwrjJFmA6Y2fpKbQN8F9R2GUmgGGs+ScUMzcD3pEhR3x6z455noBpgZeuQN1xJqg2BZ8liMpMjlbFhdGYzOKjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1534
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for taking care of this. Oddly, i don't get compile error on this.
+Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
+up the following WARNING from the UVC chain scanning code:
 
-Andrey
+  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
+  | next=ffff880067d22298.
+  | ------------[ cut here ]------------
+  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
+  | Modules linked in:
+  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
+  | 4.14.0-rc2-42613-g1488251d1a98 #238
+  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+  | Workqueue: usb_hub_wq hub_event
+  | task: ffff88006b01ca40 task.stack: ffff880064358000
+  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
+  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
+  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
+  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
+  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
+  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
+  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
+  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
+  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
+  | Call Trace:
+  |  __list_add ./include/linux/list.h:59
+  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
+  |  uvc_scan_chain_forward.isra.8+0x373/0x416
+  | drivers/media/usb/uvc/uvc_driver.c:1471
+  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
+  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
+  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
 
-On 11/8/19 12:31 AM, Stephen Rothwell wrote:
-> Hi all,
->
-> After merging the amdgpu tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->
-> In file included from <command-line>:
-> include/drm/gpu_scheduler.h:98:21: error: field 'entity_idle' has incompl=
-ete type
->     98 |  struct completion  entity_idle;
->        |                     ^~~~~~~~~~~
->
-> followed by lots of similar errors.
->
-> Caused by commit
->
->    83a7772ba223 ("drm/sched: Use completion to wait for sched->thread idl=
-e v2.")
->
-> I added the following patch for today.
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Fri, 8 Nov 2019 16:21:32 +1100
-> Subject: [PATCH] drm/sched: struct completion requires linux/completion.h
->   inclusion
->
-> Fixes: 83a7772ba223 ("drm/sched: Use completion to wait for sched->thread=
- idle v2.")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->   include/drm/gpu_scheduler.h | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> index 6619d2ac6fa3..684692a8ed76 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -26,6 +26,7 @@
->  =20
->   #include <drm/spsc_queue.h>
->   #include <linux/dma-fence.h>
-> +#include <linux/completion.h>
->  =20
->   #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
->  =20
+Looking into the output from usbmon, the interesting part is the
+following data packet:
+
+  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
+  00090403 00000e01 00000924 03000103 7c003328 010204db
+
+If we drop the lead configuration and interface descriptors, we're left
+with an output terminal descriptor describing a generic display:
+
+  /* Output terminal descriptor */
+  buf[0]	09
+  buf[1]	24
+  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
+  buf[3]	00	/* ID */
+  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
+  buf[5]	03
+  buf[6]	7c
+  buf[7]	00	/* source ID refers to self! */
+  buf[8]	33
+
+The problem with this descriptor is that it is self-referential: the
+source ID of 0 matches itself! This causes the 'struct uvc_entity'
+representing the display to be added to its chain list twice during
+'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
+processed directly from the 'dev->entities' list and then again
+immediately afterwards when trying to follow the source ID in
+'uvc_scan_chain_forward()'
+
+Add a check before adding an entity to a chain list to ensure that the
+entity is not already part of a chain.
+
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Kostya Serebryany <kcc@google.com>
+Cc: <stable@vger.kernel.org>
+Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+Reported-by: Andrey Konovalov <andreyknvl@google.com>
+Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+
+That's right, it's the same patch again! No changes since either of:
+
+  http://lkml.kernel.org/r/20191002112753.21630-1-will@kernel.org
+  https://lore.kernel.org/lkml/20191016195800.22099-1-will@kernel.org
+
+Please consider merging.
+
+ drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 66ee168ddc7e..e24420b1750a 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct uvc_video_chain *chain,
+ 			break;
+ 		if (forward == prev)
+ 			continue;
++		if (forward->chain.next || forward->chain.prev) {
++			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++				"entity %d already in chain.\n", forward->id);
++			return -EINVAL;
++		}
+ 
+ 		switch (UVC_ENTITY_TYPE(forward)) {
+ 		case UVC_VC_EXTENSION_UNIT:
+@@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struct uvc_video_chain *chain,
+ 				return -1;
+ 			}
+ 
++			if (term->chain.next || term->chain.prev) {
++				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++					"entity %d already in chain.\n",
++					term->id);
++				return -EINVAL;
++			}
++
+ 			if (uvc_trace_param & UVC_TRACE_PROBE)
+ 				printk(KERN_CONT " %d", term->id);
+ 
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
+
