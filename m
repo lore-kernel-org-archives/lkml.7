@@ -2,103 +2,166 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C894AFC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7C3FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D63420650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573249008;
-	bh=aiHMdEMJOgAa6jrM3jbVr8IRnFbQkF1HPb45tscKBaQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MqPsbBB0N+pbixDenTUB8Xj39nv7W7NsBC3WmkquJifcllL6X9mUnQtk064lFllcr
-	 K5m97ExANhSP9TeDQ93XmAITXU/5s/hm5s+emMhUrESd6gZ+aM0qzqRaqOdYsxOZ0A
-	 i1bCyOK64t4Saf4bSlZQVBhHMCU4ruG+GVYWEHzw=
+	by mail.kernel.org (Postfix) with ESMTP id 627E020673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733278AbfKHVgr (ORCPT
+        id S2388081AbfKHVhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:36:47 -0500
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:44882 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731097AbfKHVgq (ORCPT
+        Fri, 8 Nov 2019 16:37:01 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:51629 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731097AbfKHVhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:36:46 -0500
-Received: by mail-lj1-f174.google.com with SMTP id g3so7673981ljl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 13:36:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qGYbfXBmYeGO7pa06B9v9RYZuC6G4mksi25tARbE4oY=;
-        b=D2lIv3jCmGx6XX86kRru64oEZZHnbWw2knlo1We7LolVbJbNK9HgSHPqCuNFkLo8ad
-         GU8k1DTmDoi/kms3XxcfX7lhY59TGnHP8CiCPpdo/DYtNT8a4RPLc9sR5QaxINzKAI91
-         MruliR/YTKfAHzSlhF17f4O8c+PUKsS3yl0wk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qGYbfXBmYeGO7pa06B9v9RYZuC6G4mksi25tARbE4oY=;
-        b=WI6Y7uVCwAKkwrfLAyFTUOrvsMRaOiB98on3FHtsXvanYNcvTn+74q92c+dSGJiWH9
-         ojIbMwd1rhGL5MuJWI+9/1LASGJM3FOXzSTLjlwA5KoZv5uEzp6gf7Tcm62xY1EmcX9u
-         kGrBFO8HugH6EvolYCvlK6LygkedvvdcYF+qcUccJfIOUUaYNJYDWnwOR6e/i9IR2rCV
-         K8mqIofjAd7iJVLgQNhSlvJuzYfyAKSS+iWsPH/eIu528/rA8+CxD5XdSJqvIk6rL4di
-         n/O0hyWH/vwptq9GGpimd+ug1x22Im8lVmM9SfPRUWsk172R/ZWOcr+H8DeqXDC+srQ9
-         sW5Q==
-X-Gm-Message-State: APjAAAXcSCUESbk9S8jypCrhhuoOOhAaSXQWO6SmsiUbbhHJqbn1VVs7
-        xtv/5GORBO0YRDK/VZGX65UkhdQTWs0=
-X-Google-Smtp-Source: APXvYqygv9/W81QLQVq7URdIVh0eGNZuhtMPyuLcktDoYh4oyp6fYbweY6Pz+r7cyrxPWv/5JGeV3g==
-X-Received: by 2002:a2e:b4e1:: with SMTP id s1mr8195248ljm.5.1573249002438;
-        Fri, 08 Nov 2019 13:36:42 -0800 (PST)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id n1sm2817702ljg.44.2019.11.08.13.36.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 13:36:41 -0800 (PST)
-Received: by mail-lj1-f179.google.com with SMTP id n21so7676307ljg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 13:36:40 -0800 (PST)
-X-Received: by 2002:a05:651c:331:: with SMTP id b17mr8336920ljp.133.1573249000556;
- Fri, 08 Nov 2019 13:36:40 -0800 (PST)
+        Fri, 8 Nov 2019 16:37:00 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MXXdn-1iQ6Au3bOp-00YveV; Fri, 08 Nov 2019 22:36:51 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-um@lists.infradead.org
+Subject: [PATCH 12/16] hostfs: pass 64-bit timestamps to/from user space
+Date:   Fri,  8 Nov 2019 22:32:50 +0100
+Message-Id: <20191108213257.3097633-13-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
+References: <20191108213257.3097633-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <000000000000c422a80596d595ee@google.com> <6bddae34-93df-6820-0390-ac18dcbf0927@gmail.com>
- <CAHk-=whh5bcxCecEL5Fy4XvQjgBTJ9uqvyp7dW=CLU6VNxS9iA@mail.gmail.com>
- <CANn89iK9mTJ4BN-X3MeSx5LGXGYafXkhZyaUpdXDjVivTwA6Jg@mail.gmail.com>
- <CAHk-=whNBL63qmO176qOQpkY16xvomog5ocvM=9K55hUgAgOPA@mail.gmail.com>
- <CANn89iJJiB6avNtZ1qQNTeJwyjW32Pxk_2CwvEJxgQ==kgY0fA@mail.gmail.com>
- <CANn89i+RrngUr11_iOYDuqDvAZnPfG3ieJR025M78uhiwEPuvQ@mail.gmail.com>
- <CAHk-=wi-aTQx5-gD51QC6UWJYxQv1p1CnrPpfbn4X1S4AC7G-g@mail.gmail.com> <CANn89iJh-WcvZYQEfdK=RGswQX8e1rp=CR27a6kWQkgK996P7g@mail.gmail.com>
-In-Reply-To: <CANn89iJh-WcvZYQEfdK=RGswQX8e1rp=CR27a6kWQkgK996P7g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 8 Nov 2019 13:36:23 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh_-1pj0vsAHiHf_FVardKkN7AZGX73QwGpViMyF7_mvQ@mail.gmail.com>
-Message-ID: <CAHk-=wh_-1pj0vsAHiHf_FVardKkN7AZGX73QwGpViMyF7_mvQ@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Yjh6blzut3U2WoiDT+9caZknQkgK1SpL5j185/SocENaX6KahaJ
+ kOL/KPbr4pFe9IK4tNAPuqUZYc9vyuuRJlXa5Jyi5HeOeb/Mqnh0xCaFpV2rdvsfH7y4Wit
+ 8UNwCPfTSY925fxcJvFdawPFZqCjcSfTBZkeg5nRD1wJtObhSfUCv5bW5Ua7XjmkI40iyLD
+ p8Q5pHUIIqdkvM0JmOt5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:s6RMSOV+IEU=:WJyWxBiIq8IQCJo/f/EKGK
+ nqQ7zcAZIxMF8ulFyWM0BfYcrcDNkXlwNqouT+zyA+QDs28rWHJWnLUgU3IGZV6s4hn9NIDl0
+ og/Zgd7ooGGaFdG1Ixujt9uatHRtM/p2mXFQ3y9d+X6bDq2a10m3jJu5E/gleN/fStRntxfjt
+ TMgfnaYURyOib+S2OXeg09KikTVqMiBXxamINr30VR6p4wxwrLGOLRpnoCi7B7FF/g2u7bENY
+ Jc70Fs4f3erfgcfvzu5NszIBybVltfX5SoCJkff1nM1/30ycy0Ty1kUWdhDwaX3wzPcOSEaGv
+ ieVmmTHqFpL+2pwStqHjQfThVawdeEKIp2qKX6AgWIPei04i26CNLIaPNE8OnWYR8xg5st6Ui
+ DL9HNF09gu87sO0m45Ffair4klP3nAr52XsUhiOhuyw2orclqBQ7BZaiwqX8h4kCpBuG/RKvB
+ 45a5ySGCzIdLNbrBSLXjQp3OEVCbz1MQI5Ge8KRvURLrxLta7mN3uzS/bZN/yTvYRrmKOQmrs
+ T7IOnOzlgOFPYQFeQgjzjW/4QvQzTi89y/sUvSbuKgej0slGgyvW/kxi1XgEOIaW7Hxjimqua
+ n1ioK5aaHnQ4KXmIrXS7zqnikJzS9Dh39KvWoghF0JfkXVGb48p3ZzlnoXOVb88BLqSHuiZsS
+ cEoyEbpdO0HCKFTUMxuOFghzD6KBj0kA2D+PA7I79q7eI5gu5nQ5sL1Rp8XM8GWxbN45szYrL
+ PLEQ5gOAnsfDyg0iatYRqpwrvGpSOPxHB64nYdAItsP6HnAa2pE0jWVQ1rWrOS5O6lgvy+XtC
+ GdFBv5ySckoxO0DoPYjQrhQZRgsWnmu035Pl8oaOzX2VHdSJzmoxST9WIZnKK+GvPp4XwIF55
+ 4PGIiv/0CL4yDVP7LC1w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 12:53 PM Eric Dumazet <edumazet@google.com> wrote:
->
-> per cpu SNMP counters mostly, with no IRQ safety requirements.
->
-> Note that this could be implemented using local{64}_add() on arches like x86_64,
-> while others might have to fallback to WRITE_ONCE(variable, variable + add)
+The use of 'struct timespec' is deprecated in the kernel, so we
+want to avoid the conversions from/to the proper timespec64
+structure.
 
-raw_cpu_add()?
+On the user space side, we have a 'struct timespec' that is defined
+by the C library and that will be incompatible with the kernel's
+view on 32-bit architectures once they move to a 64-bit time_t,
+breaking the shared binary layout of hostfs_iattr and hostfs_stat.
 
-We already use those for vm_counters where we intentionally accept races.
+This changes the two structures to use a new hostfs_timespec structure
+with fixed 64-bit seconds/nanoseconds for passing the timestamps
+between hostfs_kern.c and hostfs_user.c. With a new enough user
+space side, this will allow timestamps beyond year 2038.
 
-              Linus
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/hostfs/hostfs.h      | 22 +++++++++++++---------
+ fs/hostfs/hostfs_kern.c | 15 +++++++++------
+ 2 files changed, 22 insertions(+), 15 deletions(-)
+
+diff --git a/fs/hostfs/hostfs.h b/fs/hostfs/hostfs.h
+index f4295aa19350..69cb796f6270 100644
+--- a/fs/hostfs/hostfs.h
++++ b/fs/hostfs/hostfs.h
+@@ -37,16 +37,20 @@
+  * is on, and remove the appropriate bits from attr->ia_mode (attr is a
+  * "struct iattr *"). -BlaisorBlade
+  */
++struct hostfs_timespec {
++	long long tv_sec;
++	long long tv_nsec;
++};
+ 
+ struct hostfs_iattr {
+-	unsigned int	ia_valid;
+-	unsigned short	ia_mode;
+-	uid_t		ia_uid;
+-	gid_t		ia_gid;
+-	loff_t		ia_size;
+-	struct timespec	ia_atime;
+-	struct timespec	ia_mtime;
+-	struct timespec	ia_ctime;
++	unsigned int		ia_valid;
++	unsigned short		ia_mode;
++	uid_t			ia_uid;
++	gid_t			ia_gid;
++	loff_t			ia_size;
++	struct hostfs_timespec	ia_atime;
++	struct hostfs_timespec	ia_mtime;
++	struct hostfs_timespec	ia_ctime;
+ };
+ 
+ struct hostfs_stat {
+@@ -56,7 +60,7 @@ struct hostfs_stat {
+ 	unsigned int uid;
+ 	unsigned int gid;
+ 	unsigned long long size;
+-	struct timespec atime, mtime, ctime;
++	struct hostfs_timespec atime, mtime, ctime;
+ 	unsigned int blksize;
+ 	unsigned long long blocks;
+ 	unsigned int maj;
+diff --git a/fs/hostfs/hostfs_kern.c b/fs/hostfs/hostfs_kern.c
+index 5a7eb0c79839..e6b8c49076bb 100644
+--- a/fs/hostfs/hostfs_kern.c
++++ b/fs/hostfs/hostfs_kern.c
+@@ -549,9 +549,9 @@ static int read_name(struct inode *ino, char *name)
+ 	set_nlink(ino, st.nlink);
+ 	i_uid_write(ino, st.uid);
+ 	i_gid_write(ino, st.gid);
+-	ino->i_atime = timespec_to_timespec64(st.atime);
+-	ino->i_mtime = timespec_to_timespec64(st.mtime);
+-	ino->i_ctime = timespec_to_timespec64(st.ctime);
++	ino->i_atime = (struct timespec64){ st.atime.tv_sec, st.atime.tv_nsec };
++	ino->i_mtime = (struct timespec64){ st.mtime.tv_sec, st.mtime.tv_nsec };
++	ino->i_ctime = (struct timespec64){ st.ctime.tv_sec, st.ctime.tv_nsec };
+ 	ino->i_size = st.size;
+ 	ino->i_blocks = st.blocks;
+ 	return 0;
+@@ -820,15 +820,18 @@ static int hostfs_setattr(struct dentry *dentry, struct iattr *attr)
+ 	}
+ 	if (attr->ia_valid & ATTR_ATIME) {
+ 		attrs.ia_valid |= HOSTFS_ATTR_ATIME;
+-		attrs.ia_atime = timespec64_to_timespec(attr->ia_atime);
++		attrs.ia_atime = (struct hostfs_timespec)
++			{ attr->ia_atime.tv_sec, attr->ia_atime.tv_nsec };
+ 	}
+ 	if (attr->ia_valid & ATTR_MTIME) {
+ 		attrs.ia_valid |= HOSTFS_ATTR_MTIME;
+-		attrs.ia_mtime = timespec64_to_timespec(attr->ia_mtime);
++		attrs.ia_mtime = (struct hostfs_timespec)
++			{ attr->ia_mtime.tv_sec, attr->ia_mtime.tv_nsec };
+ 	}
+ 	if (attr->ia_valid & ATTR_CTIME) {
+ 		attrs.ia_valid |= HOSTFS_ATTR_CTIME;
+-		attrs.ia_ctime = timespec64_to_timespec(attr->ia_ctime);
++		attrs.ia_ctime = (struct hostfs_timespec)
++			{ attr->ia_ctime.tv_sec, attr->ia_ctime.tv_nsec };
+ 	}
+ 	if (attr->ia_valid & ATTR_ATIME_SET) {
+ 		attrs.ia_valid |= HOSTFS_ATTR_ATIME_SET;
+-- 
+2.20.0
+
