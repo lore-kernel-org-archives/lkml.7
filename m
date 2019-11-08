@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F53C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6F1FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5948E20656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813C120656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215254;
-	bh=VKcieq0ARls4eteR5hLrrJ5YCzzxNlWyVtNRCKYMwmA=;
+	s=default; t=1573215257;
+	bh=OVrIbVCAkUxIXhK+atxs9e/hAi56a9ksTK9A2USy0Vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JMogeIOda31QfOegqtY+gRVdBo2l/+JzciS7NvcAP8zU6FUOlcAsBuJd/xBgaBeOa
-	 azsiZuFePPzjbQU2qrfojxEkIU+rA1BgyqmNrq9rhrG8yvBboBQve18Yu176CLfB9y
-	 lRpO0paM2BSJHq/q3wlM+fOlbLHdnwyFIZ9fJF1M=
+	b=oDdoRTnlZTy1/MEsg6IdqjGMNIOX7f1qpdFEvgBIlDhw+l6PQs4H/aQI3MT2wclZ3
+	 U2GdydYoiet0nt5kgM+499jAfCXfJenwevrB/1fiWP88eIMlJ8ppmlq+/S+Jusm1lX
+	 tepTX6kZ4vRgWuFiUM9AksOawq0keP+2lShl3RIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732299AbfKHLiN (ORCPT
+        id S2391008AbfKHMOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:14:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732127AbfKHLiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:10 -0500
+        id S1731980AbfKHLiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9E6421D7E;
-        Fri,  8 Nov 2019 11:38:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CACC021D7F;
+        Fri,  8 Nov 2019 11:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213089;
-        bh=VKcieq0ARls4eteR5hLrrJ5YCzzxNlWyVtNRCKYMwmA=;
+        s=default; t=1573213093;
+        bh=OVrIbVCAkUxIXhK+atxs9e/hAi56a9ksTK9A2USy0Vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnIXmJ8D92HwCOi0oov+xwxdefXtZE4FfHpsImyNQoX77K6ejf04sWj+ouS52ieti
-         oL6rDSy2VX7yFryTX4sp4XtfmKpdaA4fKYRVNNfx4leIHlo2J4QK9RuMbcDB9fhEAe
-         l3DoblNiuMD4FFYCPNIOVxWslzUuyRgW0KRwkjCA=
+        b=sALhzTJQ1hqYKvxLEoacg5QWDtM0M5sMYau2AiyzEJBwJ7LhTPg4LXFhQoNG8x+1s
+         2bfI5pv0FkYMrnqw8uO6B/965+kHf2P8OGydfXiZ/P8XiI2BfcZyqqAVMmE7DmSK/c
+         YGXUjoroY9KDuhuYptEn3Mb8z3XXFS8C81e7PlNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 014/205] y2038: make do_gettimeofday() and get_seconds() inline
-Date:   Fri,  8 Nov 2019 06:34:41 -0500
-Message-Id: <20191108113752.12502-14-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, rtc-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 018/205] rtc: rv8803: fix the rv8803 id in the OF table
+Date:   Fri,  8 Nov 2019 06:34:45 -0500
+Message-Id: <20191108113752.12502-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -57,127 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 33e26418193f58d1895f2f968e1953b1caf8deb7 ]
+[ Upstream commit c856618d20662695fcdb47bf4d560dc457662aec ]
 
-get_seconds() and do_gettimeofday() are only used by a few modules now any
-more (waiting for the respective patches to get accepted), and they are
-among the last holdouts of code that is not y2038 safe in the core kernel.
+The ID for RV8803 must be rv_8803
 
-Move the implementation into the timekeeping32.h header to clean up
-the core kernel and isolate the old interfaces further.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/timekeeping32.h | 15 +++++++++++++--
- kernel/time/time.c            | 15 +++++++++------
- kernel/time/timekeeping.c     | 24 ------------------------
- 3 files changed, 22 insertions(+), 32 deletions(-)
+ drivers/rtc/rtc-rv8803.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/timekeeping32.h b/include/linux/timekeeping32.h
-index 8762c2f45f8bf..479da36be8c82 100644
---- a/include/linux/timekeeping32.h
-+++ b/include/linux/timekeeping32.h
-@@ -6,8 +6,19 @@
-  * over time so we can remove the file here.
-  */
- 
--extern void do_gettimeofday(struct timeval *tv);
--unsigned long get_seconds(void);
-+static inline void do_gettimeofday(struct timeval *tv)
-+{
-+	struct timespec64 now;
-+
-+	ktime_get_real_ts64(&now);
-+	tv->tv_sec = now.tv_sec;
-+	tv->tv_usec = now.tv_nsec/1000;
-+}
-+
-+static inline unsigned long get_seconds(void)
-+{
-+	return ktime_get_real_seconds();
-+}
- 
- static inline struct timespec current_kernel_time(void)
- {
-diff --git a/kernel/time/time.c b/kernel/time/time.c
-index be057d6579f13..f7d4fa5ddb9e2 100644
---- a/kernel/time/time.c
-+++ b/kernel/time/time.c
-@@ -144,9 +144,11 @@ SYSCALL_DEFINE2(gettimeofday, struct timeval __user *, tv,
- 		struct timezone __user *, tz)
- {
- 	if (likely(tv != NULL)) {
--		struct timeval ktv;
--		do_gettimeofday(&ktv);
--		if (copy_to_user(tv, &ktv, sizeof(ktv)))
-+		struct timespec64 ts;
-+
-+		ktime_get_real_ts64(&ts);
-+		if (put_user(ts.tv_sec, &tv->tv_sec) ||
-+		    put_user(ts.tv_nsec / 1000, &tv->tv_usec))
- 			return -EFAULT;
- 	}
- 	if (unlikely(tz != NULL)) {
-@@ -227,10 +229,11 @@ COMPAT_SYSCALL_DEFINE2(gettimeofday, struct compat_timeval __user *, tv,
- 		       struct timezone __user *, tz)
- {
- 	if (tv) {
--		struct timeval ktv;
-+		struct timespec64 ts;
- 
--		do_gettimeofday(&ktv);
--		if (compat_put_timeval(&ktv, tv))
-+		ktime_get_real_ts64(&ts);
-+		if (put_user(ts.tv_sec, &tv->tv_sec) ||
-+		    put_user(ts.tv_nsec / 1000, &tv->tv_usec))
- 			return -EFAULT;
- 	}
- 	if (tz) {
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index c2708e1f0c69f..81ee5b83c9200 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1214,22 +1214,6 @@ int get_device_system_crosststamp(int (*get_time_fn)
- }
- EXPORT_SYMBOL_GPL(get_device_system_crosststamp);
- 
--/**
-- * do_gettimeofday - Returns the time of day in a timeval
-- * @tv:		pointer to the timeval to be set
-- *
-- * NOTE: Users should be converted to using getnstimeofday()
-- */
--void do_gettimeofday(struct timeval *tv)
--{
--	struct timespec64 now;
--
--	getnstimeofday64(&now);
--	tv->tv_sec = now.tv_sec;
--	tv->tv_usec = now.tv_nsec/1000;
--}
--EXPORT_SYMBOL(do_gettimeofday);
--
- /**
-  * do_settimeofday64 - Sets the time of day.
-  * @ts:     pointer to the timespec64 variable containing the new time
-@@ -2177,14 +2161,6 @@ void getboottime64(struct timespec64 *ts)
- }
- EXPORT_SYMBOL_GPL(getboottime64);
- 
--unsigned long get_seconds(void)
--{
--	struct timekeeper *tk = &tk_core.timekeeper;
--
--	return tk->xtime_sec;
--}
--EXPORT_SYMBOL(get_seconds);
--
- void ktime_get_coarse_real_ts64(struct timespec64 *ts)
- {
- 	struct timekeeper *tk = &tk_core.timekeeper;
+diff --git a/drivers/rtc/rtc-rv8803.c b/drivers/rtc/rtc-rv8803.c
+index 29fc3d2103923..17ccef5d5db1a 100644
+--- a/drivers/rtc/rtc-rv8803.c
++++ b/drivers/rtc/rtc-rv8803.c
+@@ -623,7 +623,7 @@ MODULE_DEVICE_TABLE(i2c, rv8803_id);
+ static const struct of_device_id rv8803_of_match[] = {
+ 	{
+ 		.compatible = "microcrystal,rv8803",
+-		.data = (void *)rx_8900
++		.data = (void *)rv_8803
+ 	},
+ 	{
+ 		.compatible = "epson,rx8900",
 -- 
 2.20.1
 
