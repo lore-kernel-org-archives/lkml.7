@@ -2,126 +2,170 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8710CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971A7FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6A920650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="FLuAbmTs";
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="FLuAbmTs"
+	by mail.kernel.org (Postfix) with ESMTP id 6301C206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573240498;
+	bh=bvGk2PFPjcyhGJhlCfWTtMGwXqeLi/+EaaoNSMmvMW0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O8cpu7OWSXtc5aRYkzxi+qyHbOm8tRnGxxKoJeZRDKRDfLeoL2RiA/lZmxhN5rjx6
+	 k3GOQqXA+C4FfJTTCpwH5/AyjtwymZTnuCo2B2Qp6TeC/S8raZfUD7op2TlOtJvYVV
+	 MUNT2DZuVGxGusyNbQ5b4+uszbw1UlHHjq8VB1H8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391061AbfKHTOs (ORCPT
+        id S2389305AbfKHTF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:14:48 -0500
-Received: from fallback22.m.smailru.net ([94.100.176.132]:45572 "EHLO
-        fallback22.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391190AbfKHTGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:06:03 -0500
-X-Greylist: delayed 3008 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 14:06:01 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=Message-Id:Date:Subject:Cc:To:From; bh=eVwQbQPhdwy7bQtJufPpgCY/bGitZ6xSTtkn/R+C0pI=;
-        b=FLuAbmTsHARi0aMtX/iAXiFNzVW9Tww3ezgnAEWcCXwz6g/x/3X5+uVFUaQ6C168U4APmNC6Q+JFsOiGN6eHlZfEJyQ401X1JIq/brJS7omlCd+J2wBuqKqUw1dL6Be6NPEGstQ7WIJW5EH3BqCzHkXcxrVD7aW9THA4Gg5oE0o=;
-Received: from [10.161.17.67] (port=50050 helo=smtpng2.m.smailru.net)
-        by fallback22.m.smailru.net with esmtp (envelope-from <andreykosh000@mail.ru>)
-        id 1iT8nY-0007WW-3e; Fri, 08 Nov 2019 21:15:52 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=Message-Id:Date:Subject:Cc:To:From; bh=eVwQbQPhdwy7bQtJufPpgCY/bGitZ6xSTtkn/R+C0pI=;
-        b=FLuAbmTsHARi0aMtX/iAXiFNzVW9Tww3ezgnAEWcCXwz6g/x/3X5+uVFUaQ6C168U4APmNC6Q+JFsOiGN6eHlZfEJyQ401X1JIq/brJS7omlCd+J2wBuqKqUw1dL6Be6NPEGstQ7WIJW5EH3BqCzHkXcxrVD7aW9THA4Gg5oE0o=;
-Received: by smtpng2.m.smailru.net with esmtpa (envelope-from <andreykosh000@mail.ru>)
-        id 1iT8nP-00041N-E5; Fri, 08 Nov 2019 21:15:43 +0300
-From:   Andrei Koshkosh <andreykosh000@mail.ru>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Andrei Koshkosh <andreykosh000@mail.ru>,
-        linux-media@vger.kernel.org, Sean Young <sean@mess.org>,
-        Jan Pieter van Woerkom <jp@jpvw.nl>,
-        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] media: dvbsky: use a single mutex and state buffers for all R/W ops
-Date:   Fri,  8 Nov 2019 21:15:13 +0300
-Message-Id: <1573236913-16642-1-git-send-email-andreykosh000@mail.ru>
-X-Mailer: git-send-email 2.7.4
-X-77F55803: CF41D5CA8C6D3C0C7F9F52485CB584D786C548EC7EDDB260F093E95F051D11E37CDA602523BB6F4D38BDFEA0C676413E08D917D6130B1AFB
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE798E404AA3BF6E4FFEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006374D30FA0D294D462C8638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FC47619D9DDD2B63C41B20B3E278204B7A121142EC61A434AA389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C05A64D9A1E9CA65708941B15DA834481FCF19DD082D7633A0E7DDDDC251EA7DABA471835C12D1D977725E5C173C3A84C390BCC82C2C62A6D1117882F4460429728AD0CFFFB425014E40A5AABA2AD3711975ECD9A6C639B01B78DA827A17800CE744971CCE4A759E5C2C5B0C437DA3444775ECD9A6C639B01B4E70A05D1297E1BBC6867C52282FAC85D9B7C4F32B44FF5797B92FCB1594A39500306258E7E6ABB4E4A6367B16DE6309
-X-Mailru-Sender: 689FA8AB762F739303AC06854B751545F093E95F051D11E3BEC964DB2BAD3B40EC1B5849042ADB87648B0B2FE8089527E13B0FA3D5E9F256A7B6C1515A0AD0BE5FEEDEB644C299C0ED14614B50AE0675
-X-Mras: OK
-X-77F55803: 669901E4625912A97F9F52485CB584D7271FD7DF62800FDC9EBF4251B8251AB5037D61E8B975851AEF78FD4E7E9BB93A80C55F9DC28FFF7C
-X-7FA49CB5: 0D63561A33F958A501053DC613B33ECE54F1936EDCEA807FA0944BDD01A490B08941B15DA834481FA18204E546F3947C78444BBB7636F62AF6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8B55D5BE2F85BDEC5FA471835C12D1D977C4224003CC836476C0CAF46E325F83A50BF2EBBBDD9D6B0F93F060FBA3C93C613B503F486389A921A5CC5B56E945C8DA
-X-Mailru-Sender: A5480F10D64C9005CE454BE6AEE84EA2B7F4AB15CC51E313037D61E8B975851A1E1E156D000DABDB9CF37106FBEB56E73DDE9B364B0DF28929FC7850ADD9CF1E225EC17F3711B6CFAE208404248635DF
-X-Mras: OK
+        Fri, 8 Nov 2019 14:05:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731327AbfKHTFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA33A21D7B;
+        Fri,  8 Nov 2019 19:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573239953;
+        bh=bvGk2PFPjcyhGJhlCfWTtMGwXqeLi/+EaaoNSMmvMW0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KqCuyFAupjauEVWPoh0hCSk5JAlnSwT9aYN6fc7wAiXjuIkbiQ5XAOLzPaXCVgPlX
+         dl62WAGR8QcR1habuSIP5Tb1OJN0Uf62VSGxtSF+tO1+AkrwaByr28BNo8Aj+dRpj3
+         s1USxJWm9LzH8uoL0hX1UNGMRvnj5XyabaCcPtGk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 039/140] ARM: 8908/1: add __always_inline to functions called from __get_user_check()
+Date:   Fri,  8 Nov 2019 19:49:27 +0100
+Message-Id: <20191108174907.870917431@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
+References: <20191108174900.189064908@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Andrei Koshkosh <andreykosh000@mail.ru>
----
- drivers/media/usb/dvb-usb-v2/dvbsky.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-index c41e10b..7d36f5f 100644
---- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
-+++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-@@ -22,7 +22,6 @@ MODULE_PARM_DESC(disable_rc, "Disable inbuilt IR receiver.");
- DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
+[ Upstream commit 851140ab0d083c78e5723a8b1cbd258f567a7aff ]
+
+KernelCI reports that bcm2835_defconfig is no longer booting since
+commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") (https://lkml.org/lkml/2019/9/26/825).
+
+I also received a regression report from Nicolas Saenz Julienne
+(https://lkml.org/lkml/2019/9/27/263).
+
+This problem has cropped up on bcm2835_defconfig because it enables
+CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends to prefer not inlining
+functions with -Os. I was able to reproduce it with other boards and
+defconfig files by manually enabling CONFIG_CC_OPTIMIZE_FOR_SIZE.
+
+The __get_user_check() specifically uses r0, r1, r2 registers.
+So, uaccess_save_and_enable() and uaccess_restore() must be inlined.
+Otherwise, those register assignments would be entirely dropped,
+according to my analysis of the disassembly.
+
+Prior to commit 9012d011660e ("compiler: allow all arches to enable
+CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
+inlining functions, except on x86.
+
+Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
+So, __always_inline is now the only guaranteed way of forcible inlining.
+
+I added __always_inline to 4 functions in the call-graph from the
+__get_user_check() macro.
+
+Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/include/asm/domain.h  | 8 ++++----
+ arch/arm/include/asm/uaccess.h | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/include/asm/domain.h b/arch/arm/include/asm/domain.h
+index 567dbede4785c..f1d0a7807cd0e 100644
+--- a/arch/arm/include/asm/domain.h
++++ b/arch/arm/include/asm/domain.h
+@@ -82,7 +82,7 @@
+ #ifndef __ASSEMBLY__
  
- struct dvbsky_state {
--	struct mutex stream_mutex;
- 	u8 ibuf[DVBSKY_BUF_LEN];
- 	u8 obuf[DVBSKY_BUF_LEN];
- 	u8 last_lock;
-@@ -61,16 +60,18 @@ static int dvbsky_stream_ctrl(struct dvb_usb_device *d, u8 onoff)
+ #ifdef CONFIG_CPU_CP15_MMU
+-static inline unsigned int get_domain(void)
++static __always_inline unsigned int get_domain(void)
  {
- 	struct dvbsky_state *state = d_to_priv(d);
- 	int ret;
--	u8 obuf_pre[3] = { 0x37, 0, 0 };
--	u8 obuf_post[3] = { 0x36, 3, 0 };
-+	static u8 obuf_pre[3] = { 0x37, 0, 0 };
-+	static u8 obuf_post[3] = { 0x36, 3, 0 };
+ 	unsigned int domain;
  
--	mutex_lock(&state->stream_mutex);
--	ret = dvbsky_usb_generic_rw(d, obuf_pre, 3, NULL, 0);
-+	mutex_lock(&d->usb_mutex);
-+	memcpy(state->obuf, obuf_pre, 3);
-+	ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
- 	if (!ret && onoff) {
- 		msleep(20);
--		ret = dvbsky_usb_generic_rw(d, obuf_post, 3, NULL, 0);
-+		memcpy(state->obuf, obuf_post, 3);
-+		ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
- 	}
--	mutex_unlock(&state->stream_mutex);
-+	mutex_unlock(&d->usb_mutex);
- 	return ret;
+@@ -94,7 +94,7 @@ static inline unsigned int get_domain(void)
+ 	return domain;
  }
  
-@@ -592,15 +593,7 @@ static int dvbsky_identify_state(struct dvb_usb_device *d, const char **name)
- static int dvbsky_init(struct dvb_usb_device *d)
+-static inline void set_domain(unsigned val)
++static __always_inline void set_domain(unsigned int val)
  {
- 	struct dvbsky_state *state = d_to_priv(d);
--
--	/* use default interface */
--	/*
--	ret = usb_set_interface(d->udev, 0, 0);
--	if (ret)
--		return ret;
--	*/
--	mutex_init(&state->stream_mutex);
--
-+	
- 	state->last_lock = 0;
- 
+ 	asm volatile(
+ 	"mcr	p15, 0, %0, c3, c0	@ set domain"
+@@ -102,12 +102,12 @@ static inline void set_domain(unsigned val)
+ 	isb();
+ }
+ #else
+-static inline unsigned int get_domain(void)
++static __always_inline unsigned int get_domain(void)
+ {
  	return 0;
+ }
+ 
+-static inline void set_domain(unsigned val)
++static __always_inline void set_domain(unsigned int val)
+ {
+ }
+ #endif
+diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
+index 303248e5b990f..98c6b91be4a8a 100644
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -22,7 +22,7 @@
+  * perform such accesses (eg, via list poison values) which could then
+  * be exploited for priviledge escalation.
+  */
+-static inline unsigned int uaccess_save_and_enable(void)
++static __always_inline unsigned int uaccess_save_and_enable(void)
+ {
+ #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+ 	unsigned int old_domain = get_domain();
+@@ -37,7 +37,7 @@ static inline unsigned int uaccess_save_and_enable(void)
+ #endif
+ }
+ 
+-static inline void uaccess_restore(unsigned int flags)
++static __always_inline void uaccess_restore(unsigned int flags)
+ {
+ #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+ 	/* Restore the user access mask */
 -- 
-2.7.4
+2.20.1
+
+
 
