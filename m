@@ -2,120 +2,78 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189DAFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2808FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8F420674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963F72085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:47:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VmuVY36n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfKHUph (ORCPT
+        id S1728589AbfKHUrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:45:37 -0500
-Received: from muru.com ([72.249.23.125]:41162 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfKHUpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:45:36 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id B9A1380D4;
-        Fri,  8 Nov 2019 20:46:10 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 12:45:31 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-omap@vger.kernel.org, hns@goldelico.com,
-        adam.ford@logicpd.com, Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thermal: ti-soc-thermal:  Enable addition power
- management
-Message-ID: <20191108204531.GN5610@atomide.com>
-References: <20191108200501.29864-1-aford173@gmail.com>
+        Fri, 8 Nov 2019 15:47:00 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57724 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfKHUq7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 15:46:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kag+V5gPxSXe0dtQ6AhFcnziP3Uqpz6ZhAyPk3Lh2Tg=; b=VmuVY36nxRsV7S+i4WuIQdQ+M
+        ryvrNG19Xg78p6srVO59JyAT7OlL86OibA2CwnRh7Vs43jxVweLdh689xCSah6gn5Q9K3bf31Ymjz
+        dmWkyNcdCT4/GyC5UOHTiYmDg+alKc6QU4L//VwOi83uyFTIhpWWZa0YPUlUVxeGPvOQ1lTqI2d9z
+        /stTypoZaDmHYq35tsv6H9C1ckEY6UUwJ6Ej3e0kFUadsBYOS0TBCW134IzbhhnGGrulAsX2NmwZQ
+        IL5BMTY0i7pJEvDWf4te74zbjcoSGtbh0Fc2kIukxHmAsmt332qKAWBj15Al/Ug36sT2zE3IQJu0c
+        2FCfHxBgA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iTB9Y-0007Bb-FI; Fri, 08 Nov 2019 20:46:44 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4BFB6980E2D; Fri,  8 Nov 2019 21:46:42 +0100 (CET)
+Date:   Fri, 8 Nov 2019 21:46:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     mingo@kernel.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, valentin.schneider@arm.com,
+        qais.yousef@arm.com, ktkhai@virtuozzo.com
+Subject: Re: [PATCH 4/7] sched: Optimize pick_next_task()
+Message-ID: <20191108204642.GK3079@worktop.programming.kicks-ass.net>
+References: <20191108131553.027892369@infradead.org>
+ <20191108131909.603037345@infradead.org>
+ <20191108143348.GB123156@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108200501.29864-1-aford173@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191108143348.GB123156@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [191108 20:05]:
-> The bandgap sensor can be idled when the processor is too, but it
-> isn't currently being done, so the power consumption of OMAP3
-> boards can elevated if the bangap sensor is enabled.
+On Fri, Nov 08, 2019 at 02:33:48PM +0000, Quentin Perret wrote:
+> On Friday 08 Nov 2019 at 14:15:57 (+0100), Peter Zijlstra wrote:
 
-Great, thanks for doing this!
+> > Also remove the unlikely() from the idle case, it is in fact /the/ way
+> > we select idle -- and that is a very common thing to do.
+> 
+> I assumed this was to optimize the case where we did find a cfs task to
+> run. That is, we can afford to hit the unlikely case when there is no
+> work to do after, but when there is, we shouldn't spend time checking
+> the idle case. Makes sense ?
 
-> This patch attempts to use some additional power management
-> to idle the clock to the bandgap when not needed.
+There is that, but it is also the way we pick idle when nr_running drops
+to 0.
 
-Maybe add also something like this to the patch description:
-
-As otherwise the bandgap clock blocks deeper idle states
-the SoC. To must idle bandgap with cpu_notifier instead of
-runtime PM to avoid tagging it with pm_runtime_irq_safe()
-that we want to stop using for drivers in general.
-
-> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-...
-> +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-> +				  unsigned long cmd, void *v)
-> +{
-> +	struct ti_bandgap *bgp;
-> +
-> +	bgp = container_of(nb, struct ti_bandgap, nb);
-> +
-> +	spin_lock(&bgp->lock);
-> +	switch (cmd) {
-> +	case CPU_CLUSTER_PM_ENTER:
-> +		if (bgp->is_suspended)
-> +			break;
-> +		ti_bandgap_save_ctxt(bgp);
-> +		ti_bandgap_power(bgp, false);
-> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-> +			clk_disable_unprepare(bgp->fclock);
-> +		break;
-> +	case CPU_CLUSTER_PM_ENTER_FAILED:
-> +	case CPU_CLUSTER_PM_EXIT:
-> +		if (bgp->is_suspended)
-> +			break;
-> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-> +			clk_prepare_enable(bgp->fclock);
-> +		ti_bandgap_power(bgp, true);
-> +		ti_bandgap_restore_ctxt(bgp);
-> +		break;
-> +	}
-> +	spin_unlock(&bgp->lock);
-> +
-> +	return NOTIFY_OK;
-> +}
-
-You need to use clk_disable() and clk_enable() instead
-of the prepare and unprepare variants here because
-the prepare and unprepare variants are helpers for
-non-atomic context and won't necessarily work for the
-cpu_notifier. See the comments in include/linux/clk.h
-for clock_prepare_enable().
-
-I tested this briefly with CONFIG_OMAP3_THERMAL=y and
-after idling the UARTs on torpedo, and it still hits
-off mode during idle consuming 5 - 7 mW for the
-main_battery_som line as measured with the shunt :)
-So this means we can finally then enable also
-CONFIG_OMAP3_THERMAL=y in the defconfigs.
-
-Also, you may want to check if the driver needs to
-save and restore it's context in the notifier as that
-might get lost during the off mode depending what
-domain it's at.
-
-Regards,
-
-Tony
+I just couldn't make up my mind if the unlikely made sense or not.
