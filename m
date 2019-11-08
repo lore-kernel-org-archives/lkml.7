@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81535C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766BFFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D6F222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4013A222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213636;
-	bh=lxaBYjJ5B0CHoLiYBCq+c4Te2XzDh6prC0xrVXJ31bc=;
+	s=default; t=1573213639;
+	bh=dBhYL/8fBTCGaEmqO7RyJD8piCm0z71coejeJpx+Kp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zHbubLTA1FLaoa/mRy5EW/Z33RHV+5coA5zYZiz6q6WN4DkSqQ+09Ex3jLPPKO2Wi
-	 9qA3VTX+AGQfWpwfVrzOqnfzrLpQmIrY9cS1aElk4graP8D7k9nHIk3euR6/LFSC+P
-	 hmaYWCo1aakJYpaUsd992dx+cIYmo5OR1WTDVA7o=
+	b=PsFL6OnPjbffbyCjzXPKraXKdJoI9kVu/hcWVvOfUpSR54o5/1XaEhFU+qXGE/2mN
+	 fwmGLi6UbDsXRKz4KnxBZsxw81jJt55oIJXKg0IkBJ00xSQy6oGzDzyOF8xLDZASTy
+	 9HbgSphzg26pNR39qYOCz+WruvDPirvW4IQ2+RSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391513AbfKHLrP (ORCPT
+        id S2391529AbfKHLrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35452 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391456AbfKHLrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:11 -0500
+        id S2391512AbfKHLrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7416F222C2;
-        Fri,  8 Nov 2019 11:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78F32245A;
+        Fri,  8 Nov 2019 11:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213630;
-        bh=lxaBYjJ5B0CHoLiYBCq+c4Te2XzDh6prC0xrVXJ31bc=;
+        s=default; t=1573213634;
+        bh=dBhYL/8fBTCGaEmqO7RyJD8piCm0z71coejeJpx+Kp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5gHJwS17Cy/EYOse9LSdSnvWlw1fmKNfq0v9j+6cNwLaKfPz0UmFamFVa0QhQ1e0
-         KL5WyHXoLna94JJCS8/N8RGaj/ZirlDjUVp8PqiuMzec3i2/ySuAlYCI0if/Wp+HQz
-         tEq/WqDz1J+0KWKnblXFrb6RXo5eMCYPCaC+rZQc=
+        b=PGhI5DcKIVqKZBJrHuER7PTTfuTSmgFd9mrMGYyxk/+C9jRYxkme3nP1QwQjYl2Y5
+         iKGqkGxv4eyb2en9eq5LwcGWxaJ6aTuXE3U/8ZE1C448jc40RY0rZrcXUkTqINiWQ0
+         lRpJoak3A/YO9z00YOEsYwO58vD+DSGBA+tIYzmA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 57/64] power: supply: ab8500_fg: silence uninitialized variable warnings
-Date:   Fri,  8 Nov 2019 06:45:38 -0500
-Message-Id: <20191108114545.15351-57-sashal@kernel.org>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Tejun Heo <tj@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 61/64] kernfs: Fix range checks in kernfs_get_target_path
+Date:   Fri,  8 Nov 2019 06:45:42 -0500
+Message-Id: <20191108114545.15351-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,76 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-[ Upstream commit 54baff8d4e5dce2cef61953b1dc22079cda1ddb1 ]
+[ Upstream commit a75e78f21f9ad4b810868c89dbbabcc3931591ca ]
 
-If kstrtoul() fails then we print "charge_full" when it's uninitialized.
-The debug printk doesn't add anything so I deleted it and cleaned these
-two functions up a bit.
+The terminating NUL byte is only there because the buffer is
+allocated with kzalloc(PAGE_SIZE, GFP_KERNEL), but since the
+range-check is off-by-one, and PAGE_SIZE==PATH_MAX, the
+returned string may not be zero-terminated if it is exactly
+PATH_MAX characters long.  Furthermore also the initial loop
+may theoretically exceed PATH_MAX and cause a fault.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/ab8500_fg.c | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+ fs/kernfs/symlink.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
-index 2199f673118c0..ea8c26a108f00 100644
---- a/drivers/power/supply/ab8500_fg.c
-+++ b/drivers/power/supply/ab8500_fg.c
-@@ -2437,17 +2437,14 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
- {
- 	unsigned long charge_full;
--	ssize_t ret;
-+	int ret;
+diff --git a/fs/kernfs/symlink.c b/fs/kernfs/symlink.c
+index 80317b04c84a2..e431a850f2f2b 100644
+--- a/fs/kernfs/symlink.c
++++ b/fs/kernfs/symlink.c
+@@ -63,6 +63,9 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 		if (base == kn)
+ 			break;
  
- 	ret = kstrtoul(buf, 10, &charge_full);
-+	if (ret)
-+		return ret;
++		if ((s - path) + 3 >= PATH_MAX)
++			return -ENAMETOOLONG;
++
+ 		strcpy(s, "../");
+ 		s += 3;
+ 		base = base->parent;
+@@ -79,7 +82,7 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 	if (len < 2)
+ 		return -EINVAL;
+ 	len--;
+-	if ((s - path) + len > PATH_MAX)
++	if ((s - path) + len >= PATH_MAX)
+ 		return -ENAMETOOLONG;
  
--	dev_dbg(di->dev, "Ret %zd charge_full %lu", ret, charge_full);
--
--	if (!ret) {
--		di->bat_cap.max_mah = (int) charge_full;
--		ret = count;
--	}
--	return ret;
-+	di->bat_cap.max_mah = (int) charge_full;
-+	return count;
- }
- 
- static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
-@@ -2459,20 +2456,16 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
- {
- 	unsigned long charge_now;
--	ssize_t ret;
-+	int ret;
- 
- 	ret = kstrtoul(buf, 10, &charge_now);
-+	if (ret)
-+		return ret;
- 
--	dev_dbg(di->dev, "Ret %zd charge_now %lu was %d",
--		ret, charge_now, di->bat_cap.prev_mah);
--
--	if (!ret) {
--		di->bat_cap.user_mah = (int) charge_now;
--		di->flags.user_cap = true;
--		ret = count;
--		queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
--	}
--	return ret;
-+	di->bat_cap.user_mah = (int) charge_now;
-+	di->flags.user_cap = true;
-+	queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
-+	return count;
- }
- 
- static struct ab8500_fg_sysfs_entry charge_full_attr =
+ 	/* reverse fillup of target string from target to base */
 -- 
 2.20.1
 
