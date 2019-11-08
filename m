@@ -2,125 +2,95 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39793FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED687C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A23C207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB106207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573213929;
+	bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EwPsYC/b8rezMCqgRtPo/nLZv4LyfAPh9wt8wg7K38KwNIs/AcpRT2tcuJD0pUOl5
+	 0Izw5AKc9U4WpWEUa4Ssw3sJbA97Vr9P/qPMBBOBofJyPkY4alKulHZdo1ubpNG/E4
+	 jT9bPpbqToi/YH8S272pdfDwMLxv0NP/ozDxG188=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387670AbfKHLwD (ORCPT
+        id S2391448AbfKHLwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:52:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50990 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390287AbfKHLwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:52:00 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iT2ny-0008Jb-Dv; Fri, 08 Nov 2019 12:51:55 +0100
-Date:   Fri, 8 Nov 2019 12:51:53 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Florian Weimer <fweimer@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Darren Hart <darren@dvhart.com>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Yang Tao <yang.tao172@zte.com.cn>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Carlos O'Donell <carlos@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [patch 00/12] futex: Cure robust/PI futex exit races
-In-Reply-To: <alpine.DEB.2.21.1911081136450.26566@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1911081223110.26566@nanos.tec.linutronix.de>
-References: <20191106215534.241796846@linutronix.de> <87zhh78gnf.fsf@oldenburg2.str.redhat.com> <87v9rv8g44.fsf@oldenburg2.str.redhat.com> <87o8xm95rt.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911080912520.27903@nanos.tec.linutronix.de>
- <87o8xm65ar.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911081136450.26566@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 8 Nov 2019 06:52:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390602AbfKHLrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:13 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E22122459;
+        Fri,  8 Nov 2019 11:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573213632;
+        bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=te5IITurAzf8GtURJ/0I7XPK+97Ei7HpQzqiDalJA2wyILQms1kT5VyzlF+8wKiKb
+         4Hz5nRNzR7YTfZ+sdWR6fUQdrqzEjHMVwGtMziORmYtxg1kkTGW7LQ+QPl/uhpmRFF
+         fGES2hvdlfUxlXTIER3LOZez1l7KSCTAakm61ZPU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 59/64] power: supply: max8998-charger: Fix platform data retrieval
+Date:   Fri,  8 Nov 2019 06:45:40 -0500
+Message-Id: <20191108114545.15351-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
+References: <20191108114545.15351-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Thomas Gleixner wrote:
-> On Fri, 8 Nov 2019, Florian Weimer wrote:
-> > > On Fri, 8 Nov 2019, Florian Weimer wrote:
-> > > Unpatched 5.4-rc6:
-> > >
-> > > FAIL: nptl/tst-thread-affinity-pthread
-> > > original exit status 1
-> > > info: Detected CPU set size (in bits): 225
-> > > info: Maximum test CPU: 255
-> > > error: pthread_create for thread 253 failed: Resource temporarily unavailable
-> > 
-> > Huh.  Reverting your patches (at commit 26bc672134241a080a83b2ab9aa8abede8d30e1c)
-> > fixes the test for me.
-> > 
-> > > TBH, the futex changes have absolutely nothing to do with that resource
-> > > fail.
-> > 
-> > I suspect that there are some changes to task exit latency, which
-> > triggers the latent resource management bug.
-> 
-> Right, and depending on which hardware you run, this changes. On the big
-> testbox I use the failure is also bouncing around between thread 252 and
-> 254.
+From: Tomasz Figa <tomasz.figa@gmail.com>
 
-Which was just an assumption and is completely wrong.
+[ Upstream commit cb90a2c6f77fe9b43d1e3f759bb2f13fe7fa1811 ]
 
-The fail is expected and the failure output of that test is totally
-bonkers:
+Since the max8998 MFD driver supports instantiation by DT, platform data
+retrieval is handled in MFD probe and cell drivers should get use
+the pdata field of max8998_dev struct to obtain them.
 
-Tracing shows that clone is not failing at all:
+Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/power/supply/max8998_charger.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-   ld-linux.so.2-26694 [060] ....  6477.924785: sys_enter: NR 120 (3d0f00, f7cda424, f7cdaba8, ff819790, f7cdaba8, f7edd000)
-   ld-linux.so.2-26694 [060] ....  6477.924867: sys_exit: NR 120 = 26695
-
-...
-
-   ld-linux.so.2-26694 [191] ....  6477.985139: sys_enter: NR 120 (3d0f00, fef27424, fef27ba8, ff819790, fef27ba8, f7edd000)
-   ld-linux.so.2-26694 [191] ....  6477.985220: sys_exit: NR 120 = 27203
-
-That's a total of 509 threads created. And then right after that:
-
-   ld-linux.so.2-26694 [191] ....  6477.985221: sys_enter: NR 192 (0, 801000, 0, 20022, ffffffff, 0)
-   ld-linux.so.2-26694 [191] ....  6477.985222: sys_exit: NR 192 = -12
-
-mmap2 fails with ENOMEM which is not really surprising. The map length is
-0x801000 which means that the already started threads have already consumed
-
-   509 * 0x801000 == 4073.99 MB == 3.9785 GB
-
-The next mmap2 fails for a 32bit process for pretty obvious reasons and
-rightfully so.
-
-pthread_create() returns EAGAIN while the underlying problem is ENOMEM
-which causes this bonkers output:
-
-  error: pthread_create for thread 253 failed: Resource temporarily unavailable
-
-There is nothing temporarily. The process has its address space exhausted.
-
-That test's output is anyway strange:
-
- info: Detected CPU set size (in bits): 225
- info: Maximum test CPU: 255
-
-Interesting how it fits 256 CPUs into a cpuset with a size of 225 bits.
-
-/me goes back to stare into iopl().
-
-Thanks,
-
-	tglx
-
-
+diff --git a/drivers/power/supply/max8998_charger.c b/drivers/power/supply/max8998_charger.c
+index b64cf0f141425..66438029bdd0c 100644
+--- a/drivers/power/supply/max8998_charger.c
++++ b/drivers/power/supply/max8998_charger.c
+@@ -85,7 +85,7 @@ static const struct power_supply_desc max8998_battery_desc = {
+ static int max8998_battery_probe(struct platform_device *pdev)
+ {
+ 	struct max8998_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+-	struct max8998_platform_data *pdata = dev_get_platdata(iodev->dev);
++	struct max8998_platform_data *pdata = iodev->pdata;
+ 	struct power_supply_config psy_cfg = {};
+ 	struct max8998_battery_data *max8998;
+ 	struct i2c_client *i2c;
+-- 
+2.20.1
 
