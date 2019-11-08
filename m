@@ -2,95 +2,90 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7960FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096F3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3E9207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD2F20865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573241961;
-	bh=ZAG84ge+L09XKgou0cB1i9iO9e81rb3QTPdTqxlkr0M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dX1wnueS/JImA5YKF8/C5/eQrZvq8vpPg2PKwvYxHzfurcqzyM+9uCmG6cjm88bXX
-	 XzrYo+hZ1XhCsE4yMkrMbqbv7ltafmsoWlOI3uEUSmnWaow4c0HiNGqg240eomPggw
-	 itSz5RZaPoTlVWW/ADAb2iPd6zSG0NZhyER4yS5M=
+	s=default; t=1573242002;
+	bh=4fvcXoQrLQoe/vprz0nZ+KmDe8Yp2GAbg+rTjWJa0aI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yvHz9uAzQlISOIGz1tFa3Q9XnjJyPYyr00i7lbNFUOlRg6k7VHOl/3UwxabY3N7il
+	 rSF3IMusyn21nv9yQhnOD1lWd877aQB6XBuZPN19nVa2Awa/CK3ewDysTtbkn+aP5Q
+	 KXszlFprzPc2vsIL7T+EO1T4bk+MVhn4zOznuZAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388750AbfKHTjU (ORCPT
+        id S2388839AbfKHTkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:39:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:40:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbfKHTjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:39:20 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S2387400AbfKHTkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:40:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D217D206A3;
-        Fri,  8 Nov 2019 19:39:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C789206A3;
+        Fri,  8 Nov 2019 19:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573241958;
-        bh=ZAG84ge+L09XKgou0cB1i9iO9e81rb3QTPdTqxlkr0M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oOxy4Wdb4vPsF8JbCZye3J9lKbP/LMOZJElWEhVMQVaYL7+6B1J0BGc9MF2bWwzIe
-         hJQ4mkhDTLCWz1YMTNy3sdABtaukOID5braecKND/vaunUuII+0rvnF1cM4tNsnIHJ
-         g/+gXCN4sGzLG0kAmdQW86n+ifO0YSktrgbS0Gu8=
-Date:   Fri, 8 Nov 2019 11:39:17 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-mm@kvack.org, Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v4 05/13] m68k: mm: use pgtable-nopXd instead of
- 4level-fixup
-Message-Id: <20191108113917.a9c6ebb8373cc95fd684b734@linux-foundation.org>
-In-Reply-To: <1572938135-31886-6-git-send-email-rppt@kernel.org>
-References: <1572938135-31886-1-git-send-email-rppt@kernel.org>
-        <1572938135-31886-6-git-send-email-rppt@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1573242001;
+        bh=4fvcXoQrLQoe/vprz0nZ+KmDe8Yp2GAbg+rTjWJa0aI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NhBIZm/6BG/c5T1CLVBHAKCtUg/vuja0uU0itTuGOvs1Yz9dTz6O/jC7PjO9G3b2Y
+         huKuAnTQ34FWmUsIifIsdISkRYEpjDSkuPT14s/KYG1HrHkSIonQ+6nJQIC6W1dClG
+         zVblPJbwpmXT2kDMsW5t9bsmC8jbHqeqw30DV748=
+Date:   Fri, 8 Nov 2019 20:39:58 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Elliot Berman <eberman@codeaurora.org>
+Cc:     sre@kernel.org, tkjos@google.com, tsoni@codeaurora.org,
+        rananta@codeaurora.org, bjorn.andersson@linaro.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] reboot: Export reboot_mode
+Message-ID: <20191108193958.GA1273544@kroah.com>
+References: <1573241532-21554-1-git-send-email-eberman@codeaurora.org>
+ <1573241532-21554-2-git-send-email-eberman@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573241532-21554-2-git-send-email-eberman@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 Nov 2019 09:15:27 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+On Fri, Nov 08, 2019 at 11:32:11AM -0800, Elliot Berman wrote:
+> Export reboot_mode to support DLKMs wishing to modify reboot_mode.
 
-> m68k has two or three levels of page tables and can use appropriate
-> pgtable-nopXd and folding of the upper layers.
+"DLKMs"?  What's that?
+
+A kernel module?
+
 > 
-> Replace usage of include/asm-generic/4level-fixup.h and explicit
-> definitions of __PAGETABLE_PxD_FOLDED in m68k with
-> include/asm-generic/pgtable-nopmd.h for two-level configurations and with
-> include/asm-generic/pgtable-nopud.h for three-lelve configurations and
-> adjust page table manipulation macros and functions accordingly.
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+> ---
+>  kernel/reboot.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/reboot.c b/kernel/reboot.c
+> index c4d472b..6518370 100644
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -32,7 +32,9 @@ EXPORT_SYMBOL(cad_pid);
+>  #define DEFAULT_REBOOT_MODE
+>  #endif
+>  enum reboot_mode reboot_mode DEFAULT_REBOOT_MODE;
+> +EXPORT_SYMBOL(reboot_mode);
+>  enum reboot_mode panic_reboot_mode = REBOOT_UNDEFINED;
+> +EXPORT_SYMBOL(panic_reboot_mode);
 
-This one was messed up by linux-next changes in arch/m68k/mm/kmap.c. 
-Can you please take a look?
+EXPORT_SYMBOL_GPL() perhaps?
+
+thanks,
+
+greg k-h
