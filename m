@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80ADFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75492C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C5E21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D712196F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240277;
-	bh=09BxqHp169q6fr0ZCElDEycFydF5NK0HyBEQ4yC+1cA=;
+	s=default; t=1573240289;
+	bh=EaCQpflTUZSUJ+NfNeJT/l/Xy4jwsgfkrS/58WizykM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1+3TS03l6s2ydXxXlVZkyv6Rgtqr8/a0+xJayECD2qq2fcPldqyKPn5Ll2Y6E1T/X
-	 t/Y7CT4MCYtOJOYCyAbliwLDCP9rd335jiKNxC2Cg3/dQF2PeP1jWoXfsafRTL+v/Y
-	 r0jK7PCdY2JcVYuz5H53entqAoeGP5ssKuqT492k=
+	b=dLTuJow7Q63PxS78ZDHRoOv084uwtYrEpcDRx2xasy44g/nox1LGnBGRpZ14aXwmT
+	 mhvxHyOh1q5wKL0j75rG073Qemh7RwxDzzgiyj5dsRAt/ns/gQ94PAG3wJ+MZ5U33b
+	 yonH1dadtCi2DIrMX7IutXkcyaluoJ71ZVIJWfto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389306AbfKHTLQ (ORCPT
+        id S2391275AbfKHTL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:11:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:11:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391997AbfKHTLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:11:14 -0500
+        id S1732476AbfKHTK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:10:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2925A206A3;
-        Fri,  8 Nov 2019 19:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A30B5222CB;
+        Fri,  8 Nov 2019 19:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240273;
-        bh=09BxqHp169q6fr0ZCElDEycFydF5NK0HyBEQ4yC+1cA=;
+        s=default; t=1573240256;
+        bh=EaCQpflTUZSUJ+NfNeJT/l/Xy4jwsgfkrS/58WizykM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ErSpFERoDImty+s2xpanS1JWjMEQjc3bgd5KWoeU2jSb9MF+T5QNQdH6Lm4S1rN76
-         BYeQABMDhm+Jx7XGrrDGvwk+uCmnf32PG921T9AcFukphBwqPt+xcOI5xb17LK7Sa1
-         uAOIitk31w9upTZokremqawnk9sa+hzjS53sK0K8=
+        b=V+/zxxZb9yUp/iHQ/s5R/UvxdEC2H8QAOHsxn8UGTpsm+ltS5/Cl9Uph5c8fC7Ggl
+         1bfpezt2p46EGEWjG7iNF/Dq5ZAwnAf76FYtlT0CiF1KHCv+n4m6cRJ15MMt8vTuKL
+         xlUU46EiEiegR1sy1wdmiOoZzcRadANcposdAbDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4c063e6dea39e4b79f29@syzkaller.appspotmail.com,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 114/140] net/smc: fix refcounting for non-blocking connect()
-Date:   Fri,  8 Nov 2019 19:50:42 +0100
-Message-Id: <20191108174912.010960142@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 118/140] net/mlx5e: Fix ethtool self test: link speed
+Date:   Fri,  8 Nov 2019 19:50:46 +0100
+Message-Id: <20191108174912.221253874@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -62,45 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 301428ea3708188dc4a243e6e6b46c03b46a0fbc ]
+[ Upstream commit 534e7366f41b0c689b01af4375aefcd1462adedf ]
 
-If a nonblocking socket is immediately closed after connect(),
-the connect worker may not have started. This results in a refcount
-problem, since sock_hold() is called from the connect worker.
-This patch moves the sock_hold in front of the connect worker
-scheduling.
+Ethtool self test contains a test for link speed. This test reads the
+PTYS register and determines whether the current speed is valid or not.
+Change current implementation to use the function mlx5e_port_linkspeed()
+that does the same check and fails when speed is invalid. This code
+redundancy lead to a bug when mlx5e_port_linkspeed() was updated with
+expended speeds and the self test was not.
 
-Reported-by: syzbot+4c063e6dea39e4b79f29@syzkaller.appspotmail.com
-Fixes: 50717a37db03 ("net/smc: nonblocking connect rework")
-Reviewed-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2c81bfd5ae56 ("net/mlx5e: Move port speed code from en_ethtool.c to en/port.c")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/smc/af_smc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c |   15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -707,8 +707,6 @@ static int __smc_connect(struct smc_sock
- 	int smc_type;
- 	int rc = 0;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
+@@ -35,6 +35,7 @@
+ #include <linux/udp.h>
+ #include <net/udp.h>
+ #include "en.h"
++#include "en/port.h"
  
--	sock_hold(&smc->sk); /* sock put in passive closing */
+ enum {
+ 	MLX5E_ST_LINK_STATE,
+@@ -80,22 +81,12 @@ static int mlx5e_test_link_state(struct
+ 
+ static int mlx5e_test_link_speed(struct mlx5e_priv *priv)
+ {
+-	u32 out[MLX5_ST_SZ_DW(ptys_reg)];
+-	u32 eth_proto_oper;
+-	int i;
++	u32 speed;
+ 
+ 	if (!netif_carrier_ok(priv->netdev))
+ 		return 1;
+ 
+-	if (mlx5_query_port_ptys(priv->mdev, out, sizeof(out), MLX5_PTYS_EN, 1))
+-		return 1;
 -
- 	if (smc->use_fallback)
- 		return smc_connect_fallback(smc, smc->fallback_rsn);
+-	eth_proto_oper = MLX5_GET(ptys_reg, out, eth_proto_oper);
+-	for (i = 0; i < MLX5E_LINK_MODES_NUMBER; i++) {
+-		if (eth_proto_oper & MLX5E_PROT_MASK(i))
+-			return 0;
+-	}
+-	return 1;
++	return mlx5e_port_linkspeed(priv->mdev, &speed);
+ }
  
-@@ -853,6 +851,8 @@ static int smc_connect(struct socket *so
- 	rc = kernel_connect(smc->clcsock, addr, alen, flags);
- 	if (rc && rc != -EINPROGRESS)
- 		goto out;
-+
-+	sock_hold(&smc->sk); /* sock put in passive closing */
- 	if (flags & O_NONBLOCK) {
- 		if (schedule_work(&smc->connect_work))
- 			smc->connect_nonblock = 1;
+ struct mlx5ehdr {
 
 
