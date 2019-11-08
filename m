@@ -2,230 +2,97 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280D9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BB5FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62082084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B60721882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 02:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IgoQ4CLe"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="uUZbZSTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfKHCDf (ORCPT
+        id S1728567AbfKHCGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 21:03:35 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41543 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfKHCDf (ORCPT
+        Thu, 7 Nov 2019 21:06:19 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33706 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfKHCGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 21:03:35 -0500
-Received: by mail-il1-f196.google.com with SMTP id z10so3709210ilo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 18:03:34 -0800 (PST)
+        Thu, 7 Nov 2019 21:06:18 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay6so2980524plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 18:06:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rb7E4G3AfRv3BBvojQNjoB9UPjH1AyXc4p/SxsSL9W4=;
-        b=IgoQ4CLeR5KSemdl8EH4Mv7SW5YfL/GAg/l1KhpuG8A/axs8uQnarKuxoDx6hd6iQG
-         FsKC8qZR8md/Xc/sMEb0TgU7cYRUSq3Kg1zNXn2/d9L4Nn8slVxXisf0nqJOJxShSe27
-         9t2/w72HYCsTpM0ziXzT+tLqJOigzV/O34KlU=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JaGTE9xsOVFxxMt/cA2eBRyj5tRBj9D9pcr4/X/7/Hc=;
+        b=uUZbZSTpPy0TgAGNv3jrIWK3JHr+zC+3C75cT059FtvmZCjpz8HRuuy0u2yKf8LKP4
+         8p5F+h1RuamrezvEcl2taulHvc02s7OMp7cVqQ3JpPexXj/+tsMAdHV//CFh52TEhMZl
+         yDXV+8hT+AMYciNbo8EQHAQG/1zj7/1e6P5+U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rb7E4G3AfRv3BBvojQNjoB9UPjH1AyXc4p/SxsSL9W4=;
-        b=IUUINaedEMiD7avHvuSUdHJrnOm5Q50LDcEjDZn9Sd+5Rpr4QzmKivBLfTvWevsnlY
-         iv5sYd5pf68e4tUFHPqfEkiqO/Aq/pYIdgvoyYABXwLy6w1HJpAJlwPOALdBD9c+T1Z/
-         cH1sNzUt2PqXV5xkP8C89TCFhBDQgH+/pjqO4zDdqQ6MdituGJCjgj8vszkQd3xMKSIz
-         3hR8fTLU8bxktD4dfuWLa0oWt4jp4BAcwg+hYsSOmnQS7yVL/AXyEuxWoACo+0fXQXFj
-         IIPE3dsZ7YkXhwEA+Hg/YbqmXve1IiI0C/Q6B+SFstBq16Y4ukMmPW1NVXgXgiUnlsMg
-         uqeQ==
-X-Gm-Message-State: APjAAAWElW0UnbPjOY3wA3VRAgQEtSQI6vtKitZ4/gdLynOptu0K6luS
-        aWpmrAfc4PPla4sRN9GsGpXBK6pZTOeI3TmvsVm8ZQ==
-X-Google-Smtp-Source: APXvYqwfvE0lbSsmo3rLw5QoJ6zVMyT9Wrt/mQAmklzCszTTgckYnb+UZs7Y5ORM7LCKGmCVLHGnxLClJWkwQGTwBOI=
-X-Received: by 2002:a92:c9c3:: with SMTP id k3mr9000230ilq.299.1573178614360;
- Thu, 07 Nov 2019 18:03:34 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JaGTE9xsOVFxxMt/cA2eBRyj5tRBj9D9pcr4/X/7/Hc=;
+        b=LTLSc71SEOUidXrWJ1PonFY0GynUorq6bK/zhgMUZC6h5ljiWE7tdEMYQlKpmC6v33
+         SAZ/eJot2QUxsuGqEa5lw7ev2jDdk3zaV8G1Z/dF94rYLXx2+sDWqGdGkTdwRdViylnx
+         3JmY16l/QsGuK0h5aAOjuucw+2fljZ6FqYwgicfTKZp5nMqLjhw9+ySPtBUxGoDJAl9g
+         umsY7Svyi5bVHsjrDiD2O+cKjSbagtB80qyRDKCTf6Grjj1vyxbgghRhII8x7aABEd6X
+         IuYdNSg5nALRZSM4iQTuQZRgo/4yE9bqsdSMBwNaurdAah/5dS02LIVHs5Ns9X5KHcb3
+         U+Pg==
+X-Gm-Message-State: APjAAAX4BeJTiITo9iOf0bqF93DzlMHglyc2Lb20f8qrrpsvguQZjTzk
+        l4Uk8nOBnciYn7r0Ph1uutRyUw==
+X-Google-Smtp-Source: APXvYqzkaUADYo9WHWLx3wLlN7f1AHNdmQF1IptwXglLCWu+FofvB9G8cJhnDv0ifrd1RUFPPxwZZA==
+X-Received: by 2002:a17:90a:3281:: with SMTP id l1mr9999852pjb.43.1573178776398;
+        Thu, 07 Nov 2019 18:06:16 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id p3sm4846913pfb.163.2019.11.07.18.06.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 18:06:15 -0800 (PST)
+Date:   Thu, 7 Nov 2019 21:06:14 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Nicolas Geoffray <ngeoffray@google.com>,
+        kernel-team@android.com, Hugh Dickins <hughd@google.com>,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 1/2] memfd: Fix COW issue on MAP_PRIVATE and
+ F_SEAL_FUTURE_WRITE mappings
+Message-ID: <20191108020614.GA99567@google.com>
+References: <20191107195355.80608-1-joel@joelfernandes.org>
+ <20191107170023.0695732bb67eb80acd4caee5@linux-foundation.org>
 MIME-Version: 1.0
-References: <20191105000129.GA6536@onstation.org> <CAF6AEGv3gs+LFOP3AGthXd4niFb_XYOuwLfEa2G9eb27b1wMMA@mail.gmail.com>
- <20191105100804.GA9492@onstation.org> <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
- <20191106091335.GA16729@onstation.org> <CAF6AEGuEO1jg6KhOFWEMUjq4ZQy5w61dWJk6uLWRzHnMZYZv=g@mail.gmail.com>
- <CAOCk7NomH2MsZ+FvPFAMWeabOFpyOwODCb_Ro07v+2k2v_C4NA@mail.gmail.com>
- <CAF6AEGsZkJJTNZ8SzHsSioEnkpekr1Texu5_EeBW1hP-bsOyjQ@mail.gmail.com>
- <20191107111019.GA24028@onstation.org> <CAF6AEGtbP=X2+DELajQq9zMZYGgmhyUhe62ncvHvyFnyZexTXg@mail.gmail.com>
- <CAOCk7NrPdGqc4vo70NmTuyszkPaPe41-e89ym2vAYBY+GTt9BA@mail.gmail.com>
-In-Reply-To: <CAOCk7NrPdGqc4vo70NmTuyszkPaPe41-e89ym2vAYBY+GTt9BA@mail.gmail.com>
-From:   Rob Clark <robdclark@chromium.org>
-Date:   Thu, 7 Nov 2019 18:03:24 -0800
-Message-ID: <CAJs_Fx4UJYd-k3_3AAGJo-8udThhvf6t-J=OZi3jappWjTNnFQ@mail.gmail.com>
-Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async commit changes
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        Brian Masney <masneyb@onstation.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107170023.0695732bb67eb80acd4caee5@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 9:40 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> On Thu, Nov 7, 2019 at 9:17 AM Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > On Thu, Nov 7, 2019 at 3:10 AM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > On Wed, Nov 06, 2019 at 08:58:59AM -0800, Rob Clark wrote:
-> > > > On Wed, Nov 6, 2019 at 8:47 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> > > > >
-> > > > > On Wed, Nov 6, 2019 at 9:30 AM Rob Clark <robdclark@gmail.com> wrote:
-> > > > > >
-> > > > > > On Wed, Nov 6, 2019 at 1:13 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > > > >
-> > > > > > > On Tue, Nov 05, 2019 at 08:23:27AM -0800, Rob Clark wrote:
-> > > > > > > > On Tue, Nov 5, 2019 at 2:08 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > > > > > > The 'pp done time out' errors go away if I revert the following three
-> > > > > > > > > commits:
-> > > > > > > > >
-> > > > > > > > > cd6d923167b1 ("drm/msm/dpu: async commit support")
-> > > > > > > > > d934a712c5e6 ("drm/msm: add atomic traces")
-> > > > > > > > > 2d99ced787e3 ("drm/msm: async commit support")
-> > > > > > > > >
-> > > > > > > > > I reverted the first one to fix a compiler error, and the second one so
-> > > > > > > > > that the last patch can be reverted without any merge conflicts.
-> > > > > > > > >
-> > > > > > > > > I see that crtc_flush() calls mdp5_ctl_commit(). I tried to use
-> > > > > > > > > crtc_flush_all() in mdp5_flush_commit() and the contents of the frame
-> > > > > > > > > buffer dance around the screen like its out of sync. I renamed
-> > > > > > > > > crtc_flush_all() to mdp5_crtc_flush_all() and removed the static
-> > > > > > > > > declaration. Here's the relevant part of what I tried:
-> > > > > > > > >
-> > > > > > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > > > > > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > > > > > > > > @@ -171,7 +171,15 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
-> > > > > > > > >
-> > > > > > > > >  static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
-> > > > > > > > >  {
-> > > > > > > > > -       /* TODO */
-> > > > > > > > > +       struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
-> > > > > > > > > +       struct drm_crtc *crtc;
-> > > > > > > > > +
-> > > > > > > > > +       for_each_crtc_mask(mdp5_kms->dev, crtc, crtc_mask) {
-> > > > > > > > > +               if (!crtc->state->active)
-> > > > > > > > > +                       continue;
-> > > > > > > > > +
-> > > > > > > > > +               mdp5_crtc_flush_all(crtc);
-> > > > > > > > > +       }
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > > > Any tips would be appreciated.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > I think this is along the lines of what we need to enable async commit
-> > > > > > > > for mdp5 (but also removing the flush from the atomic-commit path)..
-> > > > > > > > the principle behind the async commit is to do all the atomic state
-> > > > > > > > commit normally, but defer writing the flush bits.  This way, if you
-> > > > > > > > get another async update before the next vblank, you just apply it
-> > > > > > > > immediately instead of waiting for vblank.
-> > > > > > > >
-> > > > > > > > But I guess you are on a command mode panel, if I remember?  Which is
-> > > > > > > > a case I didn't have a way to test.  And I'm not entirely about how
-> > > > > > > > kms_funcs->vsync_time() should be implemented for cmd mode panels.
-> > > > > > >
-> > > > > > > Yes, this is a command-mode panel and there's no hardware frame counter
-> > > > > > > available. The key to getting the display working on this phone was this
-> > > > > > > patch:
-> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2bab52af6fe68c43b327a57e5ce5fc10eefdfadf
-> > > > > > >
-> > > > > > > > That all said, I think we should first fix what is broken, before
-> > > > > > > > worrying about extending async commit support to mdp5.. which
-> > > > > > > > shouldn't hit the async==true path, due to not implementing
-> > > > > > > > kms_funcs->vsync_time().
-> > > > > > > >
-> > > > > > > > What I think is going on is that, in the cmd mode case,
-> > > > > > > > mdp5_wait_flush() (indirectly) calls mdp5_crtc_wait_for_pp_done(),
-> > > > > > > > which waits for a pp-done irq regardless of whether there is a flush
-> > > > > > > > in progress.  Since there is no flush pending, the irq never comes.
-> > > > > > > > But the expectation is that kms_funcs->wait_flush() returns
-> > > > > > > > immediately if there is nothing to wait for.
-> > > > > > >
-> > > > > > > I don't think that's happening in this case. I added some pr_info()
-> > > > > > > statements to request_pp_done_pending() and mdp5_crtc_pp_done_irq().
-> > > > > > > Here's the first two sets of messages that appear in dmesg:
-> > > > > > >
-> > > > > > > [   14.018907] msm fd900000.mdss: pp done time out, lm=0
-> > > > > > > [   14.018993] request_pp_done_pending: HERE
-> > > > > > > [   14.074208] mdp5_crtc_pp_done_irq: HERE
-> > > > > > > [   14.074368] Console: switching to colour frame buffer device 135x120
-> > > > > > > [   14.138938] msm fd900000.mdss: pp done time out, lm=0
-> > > > > > > [   14.139021] request_pp_done_pending: HERE
-> > > > > > > [   14.158097] mdp5_crtc_pp_done_irq: HERE
-> > > > > > >
-> > > > > > > The messages go on like this with the same pattern.
-> > > > > > >
-> > > > > > > I tried two different changes:
-> > > > > > >
-> > > > > > > 1) I moved the request_pp_done_pending() and corresponding if statement
-> > > > > > >    from mdp5_crtc_atomic_flush() and into mdp5_crtc_atomic_begin().
-> > > > > > >
-> > > > > > > 2) I increased the timeout in wait_for_completion_timeout() by several
-> > > > > > >    increments; all the way to 5 seconds.
-> > > > > >
-> > > > > > increasing the timeout won't help, because the pp-done irq has already
-> > > > > > come at the point where we wait for it..
-> > > > > >
-> > > > > > maybe the easy thing is just add mdp5_crtc->needs_pp, set to true
-> > > > > > before requesting, and false when we get the irq.. and then
-> > > > > > mdp5_crtc_wait_for_pp_done() just returns if needs_pp==false..
-> > > > >
-> > > > > On the otherhand, what about trying to make command mode panels
-> > > > > resemble video mode panels slightly?  Video mode panels have a vsync
-> > > > > counter in hardware, which is missing from command mode - however it
-> > > > > seems like the driver/drm framework would prefer such a counter.
-> > > > > Would it be a reasonable idea to make a software counter, and just
-> > > > > increment it every time the pp_done irq is triggered?
-> > > > >
-> > > > > I'm just thinking that we'll avoid issues long term by trying to make
-> > > > > the code common, rather than diverging it for the two modes.
-> > > > >
-> > > >
-> > > > *possibly*, but I think we want to account somehow periods where
-> > > > display is not updated.
-> > > >
-> > > > fwiw, it isn't that uncommon for userspace to use vblanks to "keep
-> > > > time" (drive animations for desktop switch, window
-> > > > maximize/unmaximize, etc).. it could be a surprise when "vblank" is
-> > > > not periodic.
-> > >
-> > > What do you think about using some variation of the current value of
-> > > jiffies in the kernel + the number of pp_done IRQs as the software
-> > > counter for command-mode panels?
-> > >
-> >
-> > jiffies is probably too coarse.. but we could use monotonic clock, I guess.
-> >
-> > But I suppose even a cmd mode panel has a "vblank", it is just
-> > internal the panel.  Do we get the TE interrupt at regular intervals?
-> > AFAIU this would be tied to the panel's internal vblank.
->
-> The TE interrupt was first implemented in MDP 1.7.0 (msm8996).  8974
-> predates that.
-> You can get it from the WR_PTR interrupt, but you have to understand
-> details about your panel to configure that correctly.
+On Thu, Nov 07, 2019 at 05:00:23PM -0800, Andrew Morton wrote:
+> On Thu,  7 Nov 2019 14:53:54 -0500 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> 
+> > F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
+> > A private mapping created after the memfd file that gets sealed with
+> > F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
+> > children and parent share the same memory, even though the mapping is
+> > private.
+> 
+> That sounds fairly serious.  Should this be backported into -stable kernels?
 
-oh, sad.. I kinda assumed it was a pretty common DSI irq since
-forever.. I guess the hw is just managing the flow control to prevent
-tearing?
+Yes, it should be. The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so
+v5.3.x stable kernels would need a backport. I can submit a backport tomorrow
+unless we are Ok with stable automatically picking it up (I believe the
+stable folks "auto select" fixes which should detect this is a fix since I
+have said it is a fix in the subject line).
 
-Well, anyways, I guess we could just use a free-running timer based on
-refresh rate of the panel?
+thanks,
 
-BR,
--R
+ - Joel
+
