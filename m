@@ -2,164 +2,160 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FDAC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F764C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061F2214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxjdFP0W"
+	by mail.kernel.org (Postfix) with ESMTP id 48469214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfKHFVD (ORCPT
+        id S1726181AbfKHFYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:21:03 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34791 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfKHFVB (ORCPT
+        Fri, 8 Nov 2019 00:24:10 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:54355 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfKHFYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:21:01 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n13so3911965pff.1;
-        Thu, 07 Nov 2019 21:20:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pGFx+amGu93F2A50py9iOALjdTJpw7/ItloLfCzH0sg=;
-        b=FxjdFP0WXWrfIrLD+8gcWy/umEQbWOunx9yjkSz/LLLs4K/VyjyX0EgEYa5CMm5F6w
-         SAUoch3awY5CzsHatHgtVRC9h1rmotllGqaN7eQVFoLIwA4Q7Zfr1e8Z2B18dGZ8xAu8
-         QoYbA/t5omu9u3U2icdTWcCYwlPbKzMHqD+IgJulOgosUZgxH5W3MHmYQI71tuBjOFFx
-         BR8e64XCMSY5iGEB4Z+DLlWTaRinUpFPqPcq4EDdv7x59vVinY1VwRfkEjmIHzX0rDCi
-         +62w0PF625kC9XHstmRDdqFR5vEHmEAF85ioDHVJZVjWR+jFhBb7oYGuTP7cAbiCvHCX
-         TScg==
+        Fri, 8 Nov 2019 00:24:09 -0500
+Received: by mail-il1-f198.google.com with SMTP id t67so5456386ill.21
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 21:24:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=pGFx+amGu93F2A50py9iOALjdTJpw7/ItloLfCzH0sg=;
-        b=EdKyxzsWvPDMvN8XpZcmpbIcdgYO6f6rCRytxfyQWlAIeBjNpa4VvfHLvj8exCWAHI
-         3FyGZRKYrDIJOZGsL7XrfriftSDcXBVLOkCdkvtb6HW3aeHNHD4C0LmYfJ9DCQvzERvg
-         3Ex7zamrQv1XjxQh6NYU4cV9Dde+EMC8L9/Y7JwKnLS680vM0uFyxypKDi1Mh8Zm1Mbc
-         stK2pR8HV7zC50ADaG+T2rV85yGxeEfHQ3HThHuWzg8AuaTbzN56kPBElSe1a3bWciXk
-         2LYZv1zvgapvmfsX7XcEu9r2Cw3tm9u3hx7v8s2N/ELjunUl73mPyR4itUWnlYfma6lN
-         5f6Q==
-X-Gm-Message-State: APjAAAUeEIjlls39I0r/5S5tj9x7QP6VN6mvN3BPmW/wu5a9FsXmbV9v
-        ZbqylMuNPRIKnP1wYckKMKs=
-X-Google-Smtp-Source: APXvYqxciNZfaCcNzGy2TBZD43B3E6OOWrVWrEa5IIAHVWjFI1D487hSYs23XimTIBVclBiUU770SA==
-X-Received: by 2002:a63:234c:: with SMTP id u12mr9244517pgm.384.1573190458914;
-        Thu, 07 Nov 2019 21:20:58 -0800 (PST)
-Received: from voyager.ibm.com ([36.255.48.244])
-        by smtp.gmail.com with ESMTPSA id v19sm3798443pjr.14.2019.11.07.21.20.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 21:20:58 -0800 (PST)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsi@lists.ozlabs.org
-Subject: [PATCH v2 11/11] fsi: aspeed: Fix OPB0 byte order register values
-Date:   Fri,  8 Nov 2019 15:49:45 +1030
-Message-Id: <20191108051945.7109-12-joel@jms.id.au>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191108051945.7109-1-joel@jms.id.au>
-References: <20191108051945.7109-1-joel@jms.id.au>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dPhSKITN+qpJ1kAaYh56DgS6ASSjVpyseG4MPHwRhso=;
+        b=lCCNYPlmRIXLT6zywTmeXFtZsMOmCGXohGWv4Ub7+k3O0WpBxhPIhbSqdf8f8CTBIx
+         Y0yNc3Q8jgeFZTf+RZOTta9gUfBYmKEjPod0TNM7Slt7eINsQlA1S1MxNLIHBXyDWPu3
+         DgqUKhCAjbItJdRFxUbZOpT/S4j+ycuffPSnO05dgGyRSpXW9lMEq6NUHc0/RB4oGeH7
+         xTW2FqGIzZaZepiH4ICeVU7+btwxBPXi3aqxq/mcdI2R2zkyxOPeQghpSE2n8tRzBvXu
+         4V8meUHKTMF7pdrXlFMebGcXx/D8n8v6eNgguxfp1esAUFN4Z/0dKpfVgoMmZwljIwil
+         FInA==
+X-Gm-Message-State: APjAAAVCmcjoPz6wiwor43mYsG7oKfKLVGc2habWJf73sgL/Xx61cGCQ
+        ObpJtyNAZy6b/PaUh8ZBH2LlCYuKqT8qduESvajVzZPheHMq
+X-Google-Smtp-Source: APXvYqz0LzmOlXVfOt4rWMXnb/qk08cBCKYjjqXds33Af0lESdOJUL+rE3S61CR8bQu9PakMDnVv3O0g0CG3dIYGRp3g8qoCIBWQ
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:1612:: with SMTP id r18mr9374104ill.60.1573190648598;
+ Thu, 07 Nov 2019 21:24:08 -0800 (PST)
+Date:   Thu, 07 Nov 2019 21:24:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c620080596cefdf0@google.com>
+Subject: BUG: Dentry still in use [unmount of hugetlbfs hugetlbfs] (2)
+From:   syzbot <syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@kernel.org,
+        mike.kravetz@oracle.com, p.sarna@tlen.pl, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+Hello,
 
-The data byte order selection registers in the APB2OPB primarily expose some
-internal plumbing necessary to get correct write accesses onto the OPB.
-OPB write cycles require "data mirroring" across the 32-bit data bus to
-support variable data width slaves that don't implement "byte enables".
-For slaves that do implement byte enables the master can signal which
-bytes on the data bus the slave should consider valid.
+syzbot found the following crash on:
 
-The data mirroring behaviour is specified by the following table:
+HEAD commit:    c68c5373 Add linux-next specific files for 20191107
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f62294e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
+dashboard link: https://syzkaller.appspot.com/bug?extid=136d2439a4e6561ea00c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ed5264e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fe2a64e00000
 
-    +-----------------+----------+-----------------------------------+
-    |                 |          |          32-bit Data Bus          |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |         |       |          |         |         |       |       |
-    |   ABus  | Mn_BE |  Request |   Dbus  |   Dbus  |  Dbus |  Dbus |
-    | (30:31) | (0:3) | Transfer |   0:7   |   8:15  | 16:23 | 24:31 |
-    |         |       |   Size   |  byte0  |  byte1  | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1111 | fullword |  byte0  |  byte1  | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1110 | halfword |  byte0  |  byte1  | byte2 |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    01   |  0111 |   byte   | _byte1_ |  byte1  | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1100 | halfword |  byte0  |  byte1  |       |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    01   |  0110 |   byte   | _byte1_ |  byte1  | byte2 |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    10   |  0011 | halfword | _byte2_ | _byte3_ | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1000 |   byte   |  byte0  |         |       |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    01   |  0100 |   byte   | _byte1_ |  byte1  |       |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    10   |  0010 |   byte   | _byte2_ |         | byte2 |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    11   |  0001 |   byte   | _byte3_ | _byte3_ |       | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
+The bug was bisected to:
 
-Mirrored data values are highlighted by underscores in the Dbus columns.
-The values in the ABus and Request Transfer Size columns correspond to
-values in the field names listed in the write data order select register
-descriptions.
+commit efe323d5cfecd2ad9dd4aa485e05312f0fa7617a
+Author: Piotr Sarna <p.sarna@tlen.pl>
+Date:   Wed Nov 6 05:06:34 2019 +0000
 
-Similar configuration registers are exposed for reads which enables the
-secondary purpose of configuring hardware endian conversions. It appears the
-data bus byte order is switched around in hardware so set the registers such
-that we can access the correct values for all widths. The values were
-determined by experimentation on hardware against fixed CFAM register
-values to configure the read data order, then in combination with the
-table above and the register layout documentation in the AST2600
-datasheet performing write/read cycles to configure the write data order
-registers.
+     hugetlbfs: add O_TMPFILE support
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ac944ae00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16ac944ae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ac944ae00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com
+Fixes: efe323d5cfec ("hugetlbfs: add O_TMPFILE support")
+
+BUG: Dentry 00000000c225b886{i=685d,n=#26717}  still in use (1) [unmount of  
+hugetlbfs hugetlbfs]
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 8874 at fs/dcache.c:1595 umount_check fs/dcache.c:1586  
+[inline]
+WARNING: CPU: 1 PID: 8874 at fs/dcache.c:1595 umount_check.cold+0xe9/0x10a  
+fs/dcache.c:1576
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8874 Comm: syz-executor027 Not tainted 5.4.0-rc6-next-20191107  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x35 kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:umount_check fs/dcache.c:1595 [inline]
+RIP: 0010:umount_check.cold+0xe9/0x10a fs/dcache.c:1576
+Code: 89 ff e8 70 8f ef ff 48 81 c3 88 06 00 00 45 89 e8 4c 89 e1 53 4d 8b  
+0f 4c 89 f2 4c 89 e6 48 c7 c7 20 d9 b6 87 e8 b1 f4 9c ff <0f> 0b 58 e9 7d  
+1b ff ff e8 40 8f ef ff e9 29 ff ff ff 45 31 f6 e9
+RSP: 0018:ffff888095c0fbc8 EFLAGS: 00010282
+RAX: 0000000000000060 RBX: ffff888098736688 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815d0b86 RDI: ffffed1012b81f6b
+RBP: ffff888095c0fbf8 R08: 0000000000000060 R09: ffffed1015d26161
+R10: ffffed1015d26160 R11: ffff8880ae930b07 R12: ffff888090c7b300
+R13: 0000000000000001 R14: 000000000000685d R15: ffffffff8910a5e0
+  d_walk+0x27e/0x930 fs/dcache.c:1305
+  do_one_tree+0x28/0x40 fs/dcache.c:1602
+  shrink_dcache_for_umount+0x72/0x170 fs/dcache.c:1618
+  generic_shutdown_super+0x6d/0x370 fs/super.c:447
+  kill_anon_super+0x3e/0x60 fs/super.c:1106
+  kill_litter_super+0x50/0x60 fs/super.c:1115
+  deactivate_locked_super+0x95/0x100 fs/super.c:335
+  deactivate_super fs/super.c:366 [inline]
+  deactivate_super+0x1b2/0x1d0 fs/super.c:362
+  cleanup_mnt+0x351/0x4c0 fs/namespace.c:1102
+  __cleanup_mnt+0x16/0x20 fs/namespace.c:1109
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x449707
+Code: 44 00 00 b8 08 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 ed dc fb ff c3  
+66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 a6 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cd dc fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe00511778 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 00000000000108a6 RCX: 0000000000449707
+RDX: 0000000000400df0 RSI: 0000000000000002 RDI: 00007ffe00511820
+RBP: 00000000000022cb R08: 0000000000000000 R09: 0000000000000009
+R10: 0000000000000005 R11: 0000000000000202 R12: 00007ffe005128d0
+R13: 0000000002133880 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
- drivers/fsi/fsi-master-aspeed.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
-index 95e226ac78b9..f49742b310c2 100644
---- a/drivers/fsi/fsi-master-aspeed.c
-+++ b/drivers/fsi/fsi-master-aspeed.c
-@@ -459,11 +459,11 @@ static int fsi_master_aspeed_probe(struct platform_device *pdev)
- 	writel(fsi_base, aspeed->base + OPB_FSI_BASE);
- 
- 	/* Set read data order */
--	writel(0x0011bb1b, aspeed->base + OPB0_READ_ORDER1);
-+	writel(0x00030b1b, aspeed->base + OPB0_READ_ORDER1);
- 
- 	/* Set write data order */
--	writel(0x0011bb1b, aspeed->base + OPB0_WRITE_ORDER1);
--	writel(0xffaa5500, aspeed->base + OPB0_WRITE_ORDER2);
-+	writel(0x0011101b, aspeed->base + OPB0_WRITE_ORDER1);
-+	writel(0x0c330f3f, aspeed->base + OPB0_WRITE_ORDER2);
- 
- 	/*
- 	 * Select OPB0 for all operations.
--- 
-2.24.0.rc1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
