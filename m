@@ -6,55 +6,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC0EFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11CDFC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80F5215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C19F215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732685AbfKHVdk (ORCPT
+        id S1732788AbfKHVdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:33:40 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:42255 "EHLO
+        Fri, 8 Nov 2019 16:33:52 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:52815 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731601AbfKHVdk (ORCPT
+        with ESMTP id S1731765AbfKHVdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:33:40 -0500
+        Fri, 8 Nov 2019 16:33:52 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MOzCW-1iGzco0Bwa-00PKzo; Fri, 08 Nov 2019 22:33:26 +0100
+ 1MSswA-1iLzYt2E18-00UGxO; Fri, 08 Nov 2019 22:33:37 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     y2038@lists.linaro.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        devel@driverdev.osuosl.org
-Subject: [PATCH 01/16] staging: exfat: use prandom_u32() for i_generation
-Date:   Fri,  8 Nov 2019 22:32:39 +0100
-Message-Id: <20191108213257.3097633-2-arnd@arndb.de>
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Carmeli Tamir <carmeli.tamir@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Subject: [PATCH 02/16] fat: use prandom_u32() for i_generation
+Date:   Fri,  8 Nov 2019 22:32:40 +0100
+Message-Id: <20191108213257.3097633-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
 References: <20191108213257.3097633-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:0MSwPuOaQAzghrJEDyZlqv05bI/+SpkvfIU+MJ9BeKiWSPaHd0p
- 392UEHTrotwvsLO4OcIt/xO0Z3OGprQKX5WHtFKLoQAQpDv6I2mmSdje+gQQz74ZSiHGY0F
- KijxNkEpHfi8XdJMia3y2N6RpdjFbm5OKxME6GlH17dMSMZEG8jO22jb9ol3SgxZaSltt/b
- vN8t1LsHzkSgZ06ObIKEA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oLz/LL5df3I=:aBRiyUF0lSDKUtt5Gjjqhy
- xYbnz9RoFaI1jbfsYk63+qmbpstnTAeqese/D2MfJDQTwJLcosbmet6dHm2Y2Gpctt6tZyasb
- Bhr6nFPe9HkBTxappYvULm/0UpzYIgfIoxW8ckQ0I8aL51oGwTCkvNucbRoZnj/wswSgOlSbQ
- GjWfMQFQGusbttCDtzK3ZwhozndLBxXca8ZY1usyNDycBG52rvqlCrG2526j3lriF4AXeJ9Gh
- vzHmF49hdGwXkqao+mG8gcyhP43N/2pSgNFuMmpyyASRYkELYohIOdIfXTcS6xcsQNyXhnDJi
- qEedgfwOXmQvuwLS24iB23AmHuSU3KcvqCssypdHni1Zfxp4MXrjn7emneRwS94DhYebw9q3K
- sdOJCZI6NOvHYQiTFYmrdMnuZeRrVu36nhH8O+xrGq0yNwk/UfIXyWGEg92hka5tIAdymYD9u
- du0CGF/HkHtQbpdyOxGNqxvLQHON4K1S0gcux63cdOENL+nMJmiKHxXfvZxloRvt6dLeo5XLQ
- lJ+cy+eklRnJhQXpPs0w1MsZY0FQYbExvxDgxEgW1rJuScpZA8450rwmGSfuIR0kKfPkm3Co/
- rXk+z59Y9aHOu96JhZEI2At6n83c5rlB821oHQSjI1U045WyyPsyDd4H46clT5qMYOSpatAql
- ihzR2AzCw0jsMQYX7hTqKEjTAGTqM+caI5lMwkcIfnJckOsEWyRorU98zrLQmtBGGJ2WV2o+s
- PYevsMCDYkCC0XIRPm9KGB54XUFkkjLT4Xtt+n5P8G65pFRs9SjJ6F2j//N/I3WvejnHSRpPA
- kh2fSiEEPVK6jq0xaEBm5MOd58/oEayTLsEJme3KiY+oaRMngbP8kPsf2NJ1tf5MHOVVyw91I
- tMBd12T9KRLgVow+HOSg==
+X-Provags-ID: V03:K1:xyMkheBDOQ2yaVVntEHgn9uUv1eZLDi2PHuV/3eFCHO8p5lovZV
+ RSePDEWBDJbgngLzGRALBZfJl5JOc/Jtxuyr7QiT/iBCBbjdZJGTSgC2IvsTsu/G8Wrk8Qp
+ GiN6kRR+nPbTe/wfuUTgyPddaHuqJCxUZ4XE1/4ITyS+2pjP8u0UFcA4cFLt8YYwP57kCQJ
+ fk91hJAfaQeU9TGvmYShw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DJ2s+pQ7k9s=:/y5VLXzDEQnWFAeSQ6xOT6
+ CQnsEi8h6oR3+uq3G21bQgEahitqAHnJmT2KNTIAE8E657mVB3N+hZQ9MTvbAybhVKnqHNHNR
+ idT/3YENYmr7+Njvqjjc5RlZUQ7KJ/Xv+472f1SMhcd4wTbzZ9Q+ZvYWq2DeXrpC93sVDUloQ
+ I32eSBkZX/7ZdDfCUxAp0B+IIwql1HylbLmE5hP6xhaB/uFKE2x5CE9Ua89bKlPpuSBg0HWki
+ zHAbhuWTY2ZKkVv/X0MMYPM6aKf2kNzBxAAltGfZ+eRS3mu2lwNR9W3LZZEiUUfBB7+iSfVzW
+ /jxxhOSksfm3m7CthVRll/a6vzheR2WY6N5z2p2DsAmenRm83oq8O6BEfhrAjxj0gXmpAzR5w
+ kraqdJ2wHUtKHYL4l5I/PgR4ZwVw6/3tEyql+pwkXSEbvxGyGWxSdpEluEBbekv2jL394ePX+
+ uMs9A3kzqjXQRDuahnIHfvYhfryebO84fKl/Cf6TpkqZwxIpYkK1ivI8m6E8GXYxLB8d5YhKR
+ MAYuH+Ji89DIFPRilXJPMotaHackTxXkzFWYwbl5fO1Rr0yxPGxDzQq/DS98nCPNLFyKvhFxK
+ HlJSfzSdE58tDYScQrsLPnu7A/z5bKPzaq3SCdjqAFtYaHj0HNAe0dOSSVfXjulvXmrGEpsMX
+ cinqux25sQ19OjeTolQIXEge/FzmqODBKtBdAXBzhY64ukP5DvhJxTWMjNcYsylJhppWeRbmY
+ +qRFjY/JlKmmqmFeFZGMG/qAbOSmXB16SupBJmoVWfFYh5zRUzZUrPMStqqrRK95Z0H5qj/qB
+ g7stPBh+VKB1WFBmPVWW/pvdNqHEn/Zqhh14UaYRUD/jI6qp9qeqL+r6hhd+ITpG67/O+Hsas
+ q+8rrmNsLbzj3POPuP2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,30 +72,29 @@ prandom_u32() is the replacement used in other file systems.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/staging/exfat/exfat_super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/fat/inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 3b2b0ceb7297..da76c607f589 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -26,7 +26,7 @@
- #include <linux/sched.h>
- #include <linux/fs_struct.h>
- #include <linux/namei.h>
--
+diff --git a/fs/fat/inode.c b/fs/fat/inode.c
+index 5f04c5c810fb..594b05ae16c9 100644
+--- a/fs/fat/inode.c
++++ b/fs/fat/inode.c
+@@ -21,6 +21,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/backing-dev.h>
+ #include <asm/unaligned.h>
 +#include <linux/random.h>
- #include <linux/string.h>
- #include <linux/nls.h>
- #include <linux/mutex.h>
-@@ -3314,7 +3314,7 @@ static int exfat_fill_inode(struct inode *inode, struct file_id_t *fid)
+ #include <linux/iversion.h>
+ #include "fat.h"
+ 
+@@ -521,7 +522,7 @@ int fat_fill_inode(struct inode *inode, struct msdos_dir_entry *de)
  	inode->i_uid = sbi->options.fs_uid;
  	inode->i_gid = sbi->options.fs_gid;
- 	INC_IVERSION(inode);
+ 	inode_inc_iversion(inode);
 -	inode->i_generation = get_seconds();
 +	inode->i_generation = prandom_u32();
  
- 	if (info.Attr & ATTR_SUBDIR) { /* directory */
+ 	if ((de->attr & ATTR_DIR) && !IS_FREE(de->name)) {
  		inode->i_generation &= ~1;
 -- 
 2.20.0
