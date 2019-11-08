@@ -2,557 +2,214 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371BBFC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B64FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03301214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CD3215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732428AbfKHVf0 (ORCPT
+        id S2387678AbfKHVfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:35:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732901AbfKHVew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:34:52 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31FC0222CD;
-        Fri,  8 Nov 2019 21:34:51 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iTBu6-0007wb-4q; Fri, 08 Nov 2019 16:34:50 -0500
-Message-Id: <20191108213450.032003836@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Fri, 08 Nov 2019 16:28:37 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 03/10] ftrace: Add register_ftrace_direct()
-References: <20191108212834.594904349@goodmis.org>
+        Fri, 8 Nov 2019 16:35:48 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:42431 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731657AbfKHVfs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:35:48 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M6UqP-1iZUMu0OVt-006yfN; Fri, 08 Nov 2019 22:35:17 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        Daniel Walter <dwalter@google.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Erel Geron <erelx.geron@intel.com>,
+        linux-um@lists.infradead.org
+Subject: [PATCH 06/16] um: ubd: use 64-bit time_t where possible
+Date:   Fri,  8 Nov 2019 22:32:44 +0100
+Message-Id: <20191108213257.3097633-7-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
+References: <20191108213257.3097633-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Kz5NxHHOvfJYq5W0loqpTgWDD5GLAn6p6huhGseqlIGjUxpqs56
+ erxGZ8PolN8DzkmutO7TPQe5q3wxkEU3RCNiYlW5wJtalQYwR6PmaPVhf1HaCzY5o0fj+nD
+ YoXhDXSOKPWecRlA79QqQVTFWO+XadBooMOiOn3QBBxIVKz90NsdAavZscpPxBdSeVVG/NL
+ PmCoJjOEvbJg5j0AalAvQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gH4cxcsvPPE=:hhkpbE/jGdEEZKP4uMAozT
+ ejzlw1RW5qktKjWGSMModOSILhU75yjNTk80hR/hGjz8RbthKD8/CDonT45r+z6whSMIhMi25
+ VXwWGbHyZpJwpSKs1TSIaeGWZ3L2jFNdlI3cg51W0eCXBHbt6w8nqvVFunZPHPrDE55wWQGLS
+ GLL/Jp/UAJrt/PI05CL/daHMETqQ//nkvq5OBqYNldxrgPW4ANogae9aU1MhHmawMZAsBiydc
+ Wb5mPvc1WIPL6ERpQzHCA6FLyGV1wif+59yICf9sLQxUFo/J04MSQf0bYBPRAARf4h6ggpcyt
+ H0PBILdXHVPB4TFzrHjEu8ExdPG/kBHdOjWrTuwWlbM2/CljE0dWZvoraRqwW43j0nY6zcl1g
+ /labk9EUo1NRB3lEF62GsdZBEhOSnj7+NksyMBYMay3DsVbKNhhMW9dvv9VPjvWAguIjY6crl
+ rD3raJk1+aALmjq94cII3T3fBh5uXqj1GcwEQfPmy7hXQbmgcI2dqo8+Z1yWlCbEb3a/ntuaI
+ +oyF0A52DEmCjquGivmTJDbekX0hLNajdLoCFHrvJ2lv8CQUdiYXNBZqV+NFFSh52uNXliuHW
+ Oa3mh/DErS/6lxfND6HRzNdDGAGH+5ohSwlcVG4zt+9ebvJOtm8/lmPFISdzUgPm9QrJJzO+B
+ uxebqZrmBaKZp4mAgWCPOerw6NhBf6iCE3ZSrt0O0zkgwObq0ywe3eZuZwjsXBbcTW9X/CrGh
+ 5fF8/5SV+apzzPN3K2XgDkMLQ78KhJEEishwJBbpGV7mDetMJFF94lwJmwowih6zOSv+Hab6h
+ bBvJe/uuZjIcyclTDAawK98ZHCmgTkTe1gnvGrcOP4XopQFQ6/hxQLDUFrnTkPm+esK0lR9At
+ Dhn1NqhVQnn099gvMTDA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+The ubd code suffers from a possible y2038 overflow on 32-bit
+architectures, both for the cow header and the os_file_modtime()
+function.
 
-Add the start of the functionality to allow other trampolines to use the
-ftrace mcount/fentry/nop location. This adds two new functions:
+Replace time_t with time64_t to extend the ubd_kern side as much
+as possible.
 
- register_ftrace_direct() and unregister_ftrace_direct()
+Whether this makes a difference for the user side depends on
+the host libc implementation that may use either 32-bit or 64-bit
+time_t.
 
-Both take two parameters: the first is the instruction address of where the
-mcount/fentry/nop exists, and the second is the trampoline to have that
-location called.
+For the cow file format, the header contains an unsigned 32-bit
+timestamp, which is good until y2106, passing this through a
+'long long' gives us a consistent interpretation between 32-bit
+and 64-bit um kernels.
 
-This will handle cases where ftrace is already used on that same location,
-and will make it still work, where the registered direct called trampoline
-will get called after all the registered ftrace callers are handled.
-
-Currently, it will not allow for IP_MODIFY functions to be called at the
-same locations, which include some kprobes and live kernel patching.
-
-At this point, no architecture supports this. This is only the start of
-implementing the framework.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/ftrace.h |  36 +++++-
- kernel/trace/Kconfig   |   8 ++
- kernel/trace/ftrace.c  | 272 ++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 309 insertions(+), 7 deletions(-)
+ arch/um/drivers/cow.h       |  2 +-
+ arch/um/drivers/cow_user.c  |  7 ++++---
+ arch/um/drivers/ubd_kern.c  | 10 +++++-----
+ arch/um/include/shared/os.h |  2 +-
+ arch/um/os-Linux/file.c     |  2 +-
+ 5 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 8385cafe4f9f..efe3e521aff4 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -144,6 +144,8 @@ ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops);
-  * TRACE_ARRAY - The ops->private points to a trace_array descriptor.
-  * PERMANENT - Set when the ops is permanent and should not be affected by
-  *             ftrace_enabled.
-+ * DIRECT - Used by the direct ftrace_ops helper for direct functions
-+ *            (internal ftrace only, should not be used by others)
-  */
- enum {
- 	FTRACE_OPS_FL_ENABLED			= 1 << 0,
-@@ -163,6 +165,7 @@ enum {
- 	FTRACE_OPS_FL_RCU			= 1 << 14,
- 	FTRACE_OPS_FL_TRACE_ARRAY		= 1 << 15,
- 	FTRACE_OPS_FL_PERMANENT                 = 1 << 16,
-+	FTRACE_OPS_FL_DIRECT			= 1 << 17,
- };
+diff --git a/arch/um/drivers/cow.h b/arch/um/drivers/cow.h
+index 760c507dd5b6..103adac691ed 100644
+--- a/arch/um/drivers/cow.h
++++ b/arch/um/drivers/cow.h
+@@ -11,7 +11,7 @@ extern int init_cow_file(int fd, char *cow_file, char *backing_file,
+ extern int file_reader(__u64 offset, char *buf, int len, void *arg);
+ extern int read_cow_header(int (*reader)(__u64, char *, int, void *),
+ 			   void *arg, __u32 *version_out,
+-			   char **backing_file_out, time_t *mtime_out,
++			   char **backing_file_out, long long *mtime_out,
+ 			   unsigned long long *size_out, int *sectorsize_out,
+ 			   __u32 *align_out, int *bitmap_offset_out);
  
- #ifdef CONFIG_DYNAMIC_FTRACE
-@@ -242,6 +245,32 @@ static inline void ftrace_free_init_mem(void) { }
- static inline void ftrace_free_mem(struct module *mod, void *start, void *end) { }
- #endif /* CONFIG_FUNCTION_TRACER */
+diff --git a/arch/um/drivers/cow_user.c b/arch/um/drivers/cow_user.c
+index 74b0c2686c95..29b46581ddd1 100644
+--- a/arch/um/drivers/cow_user.c
++++ b/arch/um/drivers/cow_user.c
+@@ -17,6 +17,7 @@
  
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+int register_ftrace_direct(unsigned long ip, unsigned long addr);
-+int unregister_ftrace_direct(unsigned long ip, unsigned long addr);
-+#else
-+static inline int register_ftrace_direct(unsigned long ip, unsigned long addr)
-+{
-+	return -ENODEV;
-+}
-+static inline int unregister_ftrace_direct(unsigned long ip, unsigned long addr)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-+
-+#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+/*
-+ * This must be implemented by the architecture.
-+ * It is the way the ftrace direct_ops helper, when called
-+ * via ftrace (because there's other callbacks besides the
-+ * direct call), can inform the architecture's trampoline that this
-+ * routine has a direct caller, and what the caller is.
-+ */
-+static inline void arch_ftrace_set_direct_caller(struct pt_regs *regs,
-+						 unsigned long addr) { }
-+#endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-+
- #ifdef CONFIG_STACK_TRACER
+ #define PATH_LEN_V1 256
  
- extern int stack_tracer_enabled;
-@@ -333,6 +362,7 @@ bool is_ftrace_trampoline(unsigned long addr);
-  *  REGS_EN - the function is set up to save regs.
-  *  IPMODIFY - the record allows for the IP address to be changed.
-  *  DISABLED - the record is not ready to be touched yet
-+ *  DIRECT   - there is a direct function to call
-  *
-  * When a new ftrace_ops is registered and wants a function to save
-  * pt_regs, the rec->flag REGS is set. When the function has been
-@@ -348,10 +378,12 @@ enum {
- 	FTRACE_FL_TRAMP_EN	= (1UL << 27),
- 	FTRACE_FL_IPMODIFY	= (1UL << 26),
- 	FTRACE_FL_DISABLED	= (1UL << 25),
-+	FTRACE_FL_DIRECT	= (1UL << 24),
-+	FTRACE_FL_DIRECT_EN	= (1UL << 23),
- };
++/* unsigned time_t works until year 2106 */
+ typedef __u32 time32_t;
  
--#define FTRACE_REF_MAX_SHIFT	25
--#define FTRACE_FL_BITS		7
-+#define FTRACE_REF_MAX_SHIFT	23
-+#define FTRACE_FL_BITS		9
- #define FTRACE_FL_MASKED_BITS	((1UL << FTRACE_FL_BITS) - 1)
- #define FTRACE_FL_MASK		(FTRACE_FL_MASKED_BITS << FTRACE_REF_MAX_SHIFT)
- #define FTRACE_REF_MAX		((1UL << FTRACE_REF_MAX_SHIFT) - 1)
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index e08527f50d2a..624a05e99b0b 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -33,6 +33,9 @@ config HAVE_DYNAMIC_FTRACE
- config HAVE_DYNAMIC_FTRACE_WITH_REGS
- 	bool
+ struct cow_header_v1 {
+@@ -197,7 +198,7 @@ int write_cow_header(char *cow_file, int fd, char *backing_file,
+ 		     int sectorsize, int alignment, unsigned long long *size)
+ {
+ 	struct cow_header_v3 *header;
+-	unsigned long modtime;
++	long long modtime;
+ 	int err;
  
-+config HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+	bool
-+
- config HAVE_FTRACE_MCOUNT_RECORD
- 	bool
- 	help
-@@ -557,6 +560,11 @@ config DYNAMIC_FTRACE_WITH_REGS
- 	depends on DYNAMIC_FTRACE
- 	depends on HAVE_DYNAMIC_FTRACE_WITH_REGS
+ 	err = cow_seek_file(fd, 0);
+@@ -276,7 +277,7 @@ int file_reader(__u64 offset, char *buf, int len, void *arg)
  
-+config DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+	def_bool y
-+	depends on DYNAMIC_FTRACE
-+	depends on HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+
- config FUNCTION_PROFILER
- 	bool "Kernel function profiler"
- 	depends on FUNCTION_TRACER
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index b0e7f03919de..a06671f3a281 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1023,6 +1023,7 @@ static bool update_all_ops;
- struct ftrace_func_entry {
- 	struct hlist_node hlist;
- 	unsigned long ip;
-+	unsigned long direct; /* for direct lookup only */
- };
- 
- struct ftrace_func_probe {
-@@ -1730,6 +1731,9 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
- 			if (FTRACE_WARN_ON(ftrace_rec_count(rec) == FTRACE_REF_MAX))
- 				return false;
- 
-+			if (ops->flags & FTRACE_OPS_FL_DIRECT)
-+				rec->flags |= FTRACE_FL_DIRECT;
-+
- 			/*
- 			 * If there's only a single callback registered to a
- 			 * function, and the ops has a trampoline registered
-@@ -1757,6 +1761,18 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
- 				return false;
- 			rec->flags--;
- 
-+			if (ops->flags & FTRACE_OPS_FL_DIRECT)
-+				rec->flags &= ~FTRACE_FL_DIRECT;
-+
-+			/*
-+			 * Only the internal direct_ops should have the
-+			 * DIRECT flag set. Thus, if it is removing a
-+			 * function, then that function should no longer
-+			 * be direct.
-+			 */
-+			if (ops->flags & FTRACE_OPS_FL_DIRECT)
-+				rec->flags &= ~FTRACE_FL_DIRECT;
-+
- 			/*
- 			 * If the rec had REGS enabled and the ops that is
- 			 * being removed had REGS set, then see if there is
-@@ -2092,15 +2108,34 @@ static int ftrace_check_record(struct dyn_ftrace *rec, bool enable, bool update)
- 	 * If enabling and the REGS flag does not match the REGS_EN, or
- 	 * the TRAMP flag doesn't match the TRAMP_EN, then do not ignore
- 	 * this record. Set flags to fail the compare against ENABLED.
-+	 * Same for direct calls.
- 	 */
- 	if (flag) {
--		if (!(rec->flags & FTRACE_FL_REGS) != 
-+		if (!(rec->flags & FTRACE_FL_REGS) !=
- 		    !(rec->flags & FTRACE_FL_REGS_EN))
- 			flag |= FTRACE_FL_REGS;
- 
--		if (!(rec->flags & FTRACE_FL_TRAMP) != 
-+		if (!(rec->flags & FTRACE_FL_TRAMP) !=
- 		    !(rec->flags & FTRACE_FL_TRAMP_EN))
- 			flag |= FTRACE_FL_TRAMP;
-+
-+		/*
-+		 * Direct calls are special, as count matters.
-+		 * We must test the record for direct, if the
-+		 * DIRECT and DIRECT_EN do not match, but only
-+		 * if the count is 1. That's because, if the
-+		 * count is something other than one, we do not
-+		 * want the direct enabled (it will be done via the
-+		 * direct helper). But if DIRECT_EN is set, and
-+		 * the count is not one, we need to clear it.
-+		 */
-+		if (ftrace_rec_count(rec) == 1) {
-+			if (!(rec->flags & FTRACE_FL_DIRECT) !=
-+			    !(rec->flags & FTRACE_FL_DIRECT_EN))
-+				flag |= FTRACE_FL_DIRECT;
-+		} else if (rec->flags & FTRACE_FL_DIRECT_EN) {
-+			flag |= FTRACE_FL_DIRECT;
-+		}
- 	}
- 
- 	/* If the state of this record hasn't changed, then do nothing */
-@@ -2125,6 +2160,25 @@ static int ftrace_check_record(struct dyn_ftrace *rec, bool enable, bool update)
- 				else
- 					rec->flags &= ~FTRACE_FL_TRAMP_EN;
- 			}
-+			if (flag & FTRACE_FL_DIRECT) {
-+				/*
-+				 * If there's only one user (direct_ops helper)
-+				 * then we can call the direct function
-+				 * directly (no ftrace trampoline).
-+				 */
-+				if (ftrace_rec_count(rec) == 1) {
-+					if (rec->flags & FTRACE_FL_DIRECT)
-+						rec->flags |= FTRACE_FL_DIRECT_EN;
-+					else
-+						rec->flags &= ~FTRACE_FL_DIRECT_EN;
-+				} else {
-+					/*
-+					 * Can only call directly if there's
-+					 * only one callback to the function.
-+					 */
-+					rec->flags &= ~FTRACE_FL_DIRECT_EN;
-+				}
-+			}
- 		}
+ int read_cow_header(int (*reader)(__u64, char *, int, void *), void *arg,
+ 		    __u32 *version_out, char **backing_file_out,
+-		    time_t *mtime_out, unsigned long long *size_out,
++		    long long *mtime_out, unsigned long long *size_out,
+ 		    int *sectorsize_out, __u32 *align_out,
+ 		    int *bitmap_offset_out)
+ {
+@@ -363,7 +364,7 @@ int read_cow_header(int (*reader)(__u64, char *, int, void *), void *arg,
  
  		/*
-@@ -2154,7 +2208,7 @@ static int ftrace_check_record(struct dyn_ftrace *rec, bool enable, bool update)
- 			 * and REGS states. The _EN flags must be disabled though.
- 			 */
- 			rec->flags &= ~(FTRACE_FL_ENABLED | FTRACE_FL_TRAMP_EN |
--					FTRACE_FL_REGS_EN);
-+					FTRACE_FL_REGS_EN | FTRACE_FL_DIRECT_EN);
+ 		 * this was used until Dec2005 - 64bits are needed to represent
+-		 * 2038+. I.e. we can safely do this truncating cast.
++		 * 2106+. I.e. we can safely do this truncating cast.
+ 		 *
+ 		 * Additionally, we must use be32toh() instead of be64toh(), since
+ 		 * the program used to use the former (tested - I got mtime
+diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+index 6627d7c30f37..dcabb463e011 100644
+--- a/arch/um/drivers/ubd_kern.c
++++ b/arch/um/drivers/ubd_kern.c
+@@ -561,7 +561,7 @@ static inline int ubd_file_size(struct ubd *ubd_dev, __u64 *size_out)
+ 	__u32 version;
+ 	__u32 align;
+ 	char *backing_file;
+-	time_t mtime;
++	time64_t mtime;
+ 	unsigned long long size;
+ 	int sector_size;
+ 	int bitmap_offset;
+@@ -600,9 +600,9 @@ static int read_cow_bitmap(int fd, void *buf, int offset, int len)
+ 	return 0;
+ }
+ 
+-static int backing_file_mismatch(char *file, __u64 size, time_t mtime)
++static int backing_file_mismatch(char *file, __u64 size, time64_t mtime)
+ {
+-	unsigned long modtime;
++	time64_t modtime;
+ 	unsigned long long actual;
+ 	int err;
+ 
+@@ -628,7 +628,7 @@ static int backing_file_mismatch(char *file, __u64 size, time_t mtime)
+ 		return -EINVAL;
  	}
- 
- 	ftrace_bug_type = FTRACE_BUG_NOP;
-@@ -2309,6 +2363,51 @@ ftrace_find_tramp_ops_new(struct dyn_ftrace *rec)
- 	return NULL;
+ 	if (modtime != mtime) {
+-		printk(KERN_ERR "mtime mismatch (%ld vs %ld) of COW header vs "
++		printk(KERN_ERR "mtime mismatch (%lld vs %lld) of COW header vs "
+ 		       "backing file\n", mtime, modtime);
+ 		return -EINVAL;
+ 	}
+@@ -671,7 +671,7 @@ static int open_ubd_file(char *file, struct openflags *openflags, int shared,
+ 		  unsigned long *bitmap_len_out, int *data_offset_out,
+ 		  int *create_cow_out)
+ {
+-	time_t mtime;
++	time64_t mtime;
+ 	unsigned long long size;
+ 	__u32 version, align;
+ 	char *backing_file;
+diff --git a/arch/um/include/shared/os.h b/arch/um/include/shared/os.h
+index 506bcd1bca68..0f30204b6afa 100644
+--- a/arch/um/include/shared/os.h
++++ b/arch/um/include/shared/os.h
+@@ -150,7 +150,7 @@ extern int os_sync_file(int fd);
+ extern int os_file_size(const char *file, unsigned long long *size_out);
+ extern int os_pread_file(int fd, void *buf, int len, unsigned long long offset);
+ extern int os_pwrite_file(int fd, const void *buf, int count, unsigned long long offset);
+-extern int os_file_modtime(const char *file, unsigned long *modtime);
++extern int os_file_modtime(const char *file, long long *modtime);
+ extern int os_pipe(int *fd, int stream, int close_on_exec);
+ extern int os_set_fd_async(int fd);
+ extern int os_clear_fd_async(int fd);
+diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
+index 5133e3afb96f..fbda10535dab 100644
+--- a/arch/um/os-Linux/file.c
++++ b/arch/um/os-Linux/file.c
+@@ -341,7 +341,7 @@ int os_file_size(const char *file, unsigned long long *size_out)
+ 	return 0;
  }
  
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+/* Protected by rcu_tasks for reading, and direct_mutex for writing */
-+static struct ftrace_hash *direct_functions = EMPTY_HASH;
-+static DEFINE_MUTEX(direct_mutex);
-+
-+/*
-+ * Search the direct_functions hash to see if the given instruction pointer
-+ * has a direct caller attached to it.
-+ */
-+static unsigned long find_rec_direct(unsigned long ip)
-+{
-+	struct ftrace_func_entry *entry;
-+
-+	entry = __ftrace_lookup_ip(direct_functions, ip);
-+	if (!entry)
-+		return 0;
-+
-+	return entry->direct;
-+}
-+
-+static void call_direct_funcs(unsigned long ip, unsigned long pip,
-+			      struct ftrace_ops *ops, struct pt_regs *regs)
-+{
-+	unsigned long addr;
-+
-+	addr = find_rec_direct(ip);
-+	if (!addr)
-+		return;
-+
-+	arch_ftrace_set_direct_caller(regs, addr);
-+}
-+
-+struct ftrace_ops direct_ops = {
-+	.func		= call_direct_funcs,
-+	.flags		= FTRACE_OPS_FL_IPMODIFY | FTRACE_OPS_FL_RECURSION_SAFE
-+			  | FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS
-+			  | FTRACE_OPS_FL_PERMANENT,
-+};
-+#else
-+static inline unsigned long find_rec_direct(unsigned long ip)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-+
- /**
-  * ftrace_get_addr_new - Get the call address to set to
-  * @rec:  The ftrace record descriptor
-@@ -2322,6 +2421,15 @@ ftrace_find_tramp_ops_new(struct dyn_ftrace *rec)
- unsigned long ftrace_get_addr_new(struct dyn_ftrace *rec)
+-int os_file_modtime(const char *file, unsigned long *modtime)
++int os_file_modtime(const char *file, long long *modtime)
  {
- 	struct ftrace_ops *ops;
-+	unsigned long addr;
-+
-+	if ((rec->flags & FTRACE_FL_DIRECT) &&
-+	    (ftrace_rec_count(rec) == 1)) {
-+		addr = find_rec_direct(rec->ip);
-+		if (addr)
-+			return addr;
-+		WARN_ON_ONCE(1);
-+	}
- 
- 	/* Trampolines take precedence over regs */
- 	if (rec->flags & FTRACE_FL_TRAMP) {
-@@ -2354,6 +2462,15 @@ unsigned long ftrace_get_addr_new(struct dyn_ftrace *rec)
- unsigned long ftrace_get_addr_curr(struct dyn_ftrace *rec)
- {
- 	struct ftrace_ops *ops;
-+	unsigned long addr;
-+
-+	/* Direct calls take precedence over trampolines */
-+	if (rec->flags & FTRACE_FL_DIRECT_EN) {
-+		addr = find_rec_direct(rec->ip);
-+		if (addr)
-+			return addr;
-+		WARN_ON_ONCE(1);
-+	}
- 
- 	/* Trampolines take precedence over regs */
- 	if (rec->flags & FTRACE_FL_TRAMP_EN) {
-@@ -3465,10 +3582,11 @@ static int t_show(struct seq_file *m, void *v)
- 	if (iter->flags & FTRACE_ITER_ENABLED) {
- 		struct ftrace_ops *ops;
- 
--		seq_printf(m, " (%ld)%s%s",
-+		seq_printf(m, " (%ld)%s%s%s",
- 			   ftrace_rec_count(rec),
- 			   rec->flags & FTRACE_FL_REGS ? " R" : "  ",
--			   rec->flags & FTRACE_FL_IPMODIFY ? " I" : "  ");
-+			   rec->flags & FTRACE_FL_IPMODIFY ? " I" : "  ",
-+			   rec->flags & FTRACE_FL_DIRECT ? " D" : "  ");
- 		if (rec->flags & FTRACE_FL_TRAMP_EN) {
- 			ops = ftrace_find_tramp_ops_any(rec);
- 			if (ops) {
-@@ -3484,6 +3602,13 @@ static int t_show(struct seq_file *m, void *v)
- 		} else {
- 			add_trampoline_func(m, NULL, rec);
- 		}
-+		if (rec->flags & FTRACE_FL_DIRECT) {
-+			unsigned long direct;
-+
-+			direct = find_rec_direct(rec->ip);
-+			if (direct)
-+				seq_printf(m, "\n\tdirect-->%pS", (void *)direct);
-+		}
- 	}	
- 
- 	seq_putc(m, '\n');
-@@ -4815,6 +4940,143 @@ ftrace_set_addr(struct ftrace_ops *ops, unsigned long ip, int remove,
- 	return ftrace_set_hash(ops, NULL, 0, ip, remove, reset, enable);
- }
- 
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+/**
-+ * register_ftrace_direct - Call a custom trampoline directly
-+ * @ip: The address of the nop at the beginning of a function
-+ * @addr: The address of the trampoline to call at @ip
-+ *
-+ * This is used to connect a direct call from the nop location (@ip)
-+ * at the start of ftrace traced functions. The location that it calls
-+ * (@addr) must be able to handle a direct call, and save the parameters
-+ * of the function being traced, and restore them (or inject new ones
-+ * if needed), before returning.
-+ *
-+ * Returns:
-+ *  0 on success
-+ *  -EBUSY - Another direct function is already attached (there can be only one)
-+ *  -ENODEV - @ip does not point to a ftrace nop location (or not supported)
-+ *  -ENOMEM - There was an allocation failure.
-+ */
-+int register_ftrace_direct(unsigned long ip, unsigned long addr)
-+{
-+	struct ftrace_func_entry *entry;
-+	struct ftrace_hash *free_hash = NULL;
-+	struct dyn_ftrace *rec;
-+	int ret = -EBUSY;
-+
-+	mutex_lock(&direct_mutex);
-+
-+	/* See if there's a direct function at @ip already */
-+	if (find_rec_direct(ip))
-+		goto out_unlock;
-+
-+	ret = -ENODEV;
-+	rec = lookup_rec(ip, ip);
-+	if (!rec)
-+		goto out_unlock;
-+
-+	/*
-+	 * Check if the rec says it has a direct call but we didn't
-+	 * find one earlier?
-+	 */
-+	if (WARN_ON(rec->flags & FTRACE_FL_DIRECT))
-+		goto out_unlock;
-+
-+	/* Make sure the ip points to the exact record */
-+	ip = rec->ip;
-+
-+	ret = -ENOMEM;
-+	if (ftrace_hash_empty(direct_functions) ||
-+	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
-+		struct ftrace_hash *new_hash;
-+		int size = ftrace_hash_empty(direct_functions) ? 0 :
-+			direct_functions->count + 1;
-+
-+		if (size < 32)
-+			size = 32;
-+
-+		new_hash = dup_hash(direct_functions, size);
-+		if (!new_hash)
-+			goto out_unlock;
-+
-+		free_hash = direct_functions;
-+		direct_functions = new_hash;
-+	}
-+
-+	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
-+	if (!entry)
-+		goto out_unlock;
-+
-+	entry->ip = ip;
-+	entry->direct = addr;
-+	__add_hash_entry(direct_functions, entry);
-+
-+	ret = ftrace_set_filter_ip(&direct_ops, ip, 0, 0);
-+	if (ret)
-+		remove_hash_entry(direct_functions, entry);
-+
-+	if (!ret && !(direct_ops.flags & FTRACE_OPS_FL_ENABLED)) {
-+		ret = register_ftrace_function(&direct_ops);
-+		if (ret)
-+			ftrace_set_filter_ip(&direct_ops, ip, 1, 0);
-+	}
-+
-+	if (ret)
-+		kfree(entry);
-+ out_unlock:
-+	mutex_unlock(&direct_mutex);
-+
-+	if (free_hash) {
-+		synchronize_rcu_tasks();
-+		free_ftrace_hash(free_hash);
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(register_ftrace_direct);
-+
-+int unregister_ftrace_direct(unsigned long ip, unsigned long addr)
-+{
-+	struct ftrace_func_entry *entry;
-+	struct dyn_ftrace *rec;
-+	int ret = -ENODEV;
-+
-+	mutex_lock(&direct_mutex);
-+
-+	entry = __ftrace_lookup_ip(direct_functions, ip);
-+	if (!entry) {
-+		/* OK if it is off by a little */
-+		rec = lookup_rec(ip, ip);
-+		if (!rec || rec->ip == ip)
-+			goto out_unlock;
-+
-+		entry = __ftrace_lookup_ip(direct_functions, rec->ip);
-+		if (!entry) {
-+			WARN_ON(rec->flags & FTRACE_FL_DIRECT);
-+			goto out_unlock;
-+		}
-+
-+		WARN_ON(!(rec->flags & FTRACE_FL_DIRECT));
-+	}
-+
-+	if (direct_functions->count == 1)
-+		unregister_ftrace_function(&direct_ops);
-+
-+	ret = ftrace_set_filter_ip(&direct_ops, ip, 1, 0);
-+
-+	WARN_ON(ret);
-+
-+	remove_hash_entry(direct_functions, entry);
-+
-+ out_unlock:
-+	mutex_unlock(&direct_mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(unregister_ftrace_direct);
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-+
- /**
-  * ftrace_set_filter_ip - set a function to filter on in ftrace by address
-  * @ops - the ops to set the filter with
+ 	struct uml_stat buf;
+ 	int err;
 -- 
-2.23.0
-
+2.20.0
 
