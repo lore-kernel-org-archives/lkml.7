@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD976C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E08FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F6321D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6D321D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213264;
-	bh=m5SAiEhmgoM419e11DWoaWJ3r5SwTf19vYa1RbB7u0k=;
+	s=default; t=1573213269;
+	bh=Ze+zPj9F92/cxye0P++w2Oo8cvHRn+ZLD1meN+16LYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dB/Ww8aA2Nn4JPLZIArYRBY5S3te3AvulHlap1xdId9UomROnjfoCxBO82vqRJ0k4
-	 2BhPDImB/0eVrcPlF56bx5SAxvxVW1XODodZd3GEj3FhkSvokd1Jq/dR+OjV/81hDt
-	 z9PEp8GWvjWtkGmqkM+NsG8nRug3mbEQeCiXL4bA=
+	b=K0edgOoHkkysr+LQS70OCLmAsWAW5UGYT4TWoLCLXNJ1lNUX2R8cilXLT38EIrOdJ
+	 hkfXqHSJ0meIiK6haGwNfR5LS+LJIi8UvFC4AEiAWjxJb2CqNVZKAoZ87Fbjiw5b+D
+	 LVbltYCtNzNZ+goYJ/vOoqrp3EyYDpkra07gEYTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389127AbfKHLlC (ORCPT
+        id S2389192AbfKHLlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389045AbfKHLky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:54 -0500
+        id S2389067AbfKHLk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55D97222C2;
-        Fri,  8 Nov 2019 11:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF7621D7F;
+        Fri,  8 Nov 2019 11:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213254;
-        bh=m5SAiEhmgoM419e11DWoaWJ3r5SwTf19vYa1RbB7u0k=;
+        s=default; t=1573213256;
+        bh=Ze+zPj9F92/cxye0P++w2Oo8cvHRn+ZLD1meN+16LYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hunAVwixqEkhUuRx8cnWEXRtsvvXezyXw8s2tdPwxwk58S6pVouQN3xUijEqbsXzk
-         m0J8LbZiQyH9O2RuKaNPbdhbnT1LBVDybj7WLCjYwqWMkmgyS3xUPdn5nzu2F0td0M
-         4i2/ZYCshFWsOxsTsMACKf4glRWUjg3DGNkFG4u8=
+        b=Z+ySufRCxQT76o86mKikddIfB73kqEZSUZ8HZ1oo93TtkjS94J7hHvWclWGlLQMXg
+         IosjEwBEG/QmM0ZcB514u+TlqHBM7lKrfhllLfr8MO76t5oUKC11YsIxoZSRRIiJeg
+         lxHIk3eAHAt8+qJomHyKKbDgWZxYl1X7ZFalr05w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 119/205] ARM: dts: exynos: Disable pull control for PMIC IRQ line on Artik5 board
-Date:   Fri,  8 Nov 2019 06:36:26 -0500
-Message-Id: <20191108113752.12502-119-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 121/205] dmaengine: dma-jz4780: Don't depend on MACH_JZ4780
+Date:   Fri,  8 Nov 2019 06:36:28 -0500
+Message-Id: <20191108113752.12502-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,47 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 62623718fd31d08b26ebea6c8b40f24924153ab7 ]
+[ Upstream commit c558ecd21c852c97ff98dc6c61f715ba420ec251 ]
 
-S2MPS14 PMIC interrupt line on Exynos3250-based Artik5 evaluation board
-has external pull-up resistors, so disable any pull control for it in
-controller node. This fixes support for S2MPS14 PMIC interrupts and
-enables operation of wakeup from S2MPS14 RTC alarm.
+If we make this driver depend on MACH_JZ4780, that means it can be
+enabled only if we're building a kernel specially crafted for a
+JZ4780-based board, while most GNU/Linux distributions will want one
+generic MIPS kernel that works on multiple boards.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos3250-artik5.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
-index 620b50c19ead9..7c22cbf6f3d41 100644
---- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
-+++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
-@@ -69,6 +69,8 @@
- 		compatible = "samsung,s2mps14-pmic";
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <5 IRQ_TYPE_NONE>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&s2mps14_irq>;
- 		reg = <0x66>;
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index dacf3f42426de..a4f95574eb9ad 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -143,7 +143,7 @@ config DMA_JZ4740
  
- 		s2mps14_osc: clocks {
-@@ -350,6 +352,11 @@
- 		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV3>;
- 		samsung,pin-val = <1>;
- 	};
-+
-+	s2mps14_irq: s2mps14-irq {
-+		samsung,pins = "gpx3-5";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
- };
- 
- &rtc {
+ config DMA_JZ4780
+ 	tristate "JZ4780 DMA support"
+-	depends on MACH_JZ4780 || COMPILE_TEST
++	depends on MIPS || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
 -- 
 2.20.1
 
