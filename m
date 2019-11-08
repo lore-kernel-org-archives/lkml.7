@@ -2,189 +2,108 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D6CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714DAFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DCB21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNtq9XYb"
+	by mail.kernel.org (Postfix) with ESMTP id 4F004206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbfKHIpz (ORCPT
+        id S1730668AbfKHIrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:45:55 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42699 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfKHIpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:45:31 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a15so6014444wrf.9;
-        Fri, 08 Nov 2019 00:45:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q1SErrR/PV8Tu23yQ+QPofy4bJ7Dz3186/De70+A1IY=;
-        b=aNtq9XYb7Gu//QxS2dCLqucgCUuU8TBnf5eyiZhT71GJbpm0UqL9w82WhhkQHRVCUq
-         NzeDeGxap26Im/l8wl6SakWrh5xds93z+g9ASE1k2qSh8genXmeldFSsKfndoe6J0GLa
-         9YX4X1xMRj/oaVMEfFAuDLzD8bzOwtoNnTsSVHN0jLWX761Q9LV/ALME+UskSZQsJR2p
-         av7GDVFzwQscc4CFe0oK/T1l1/hG5YUkxmYj+yv/EDylNkzBUM6fn8sIOmcFrFMyMb94
-         sP0eRWAcpjkTAhD9xcFBL5MFAolAt0OojTyKlABS9QK5PNQJOd2kUK74iRb3bNNw+ZiW
-         TGoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q1SErrR/PV8Tu23yQ+QPofy4bJ7Dz3186/De70+A1IY=;
-        b=SWqSBm4oXlgK4mwxBzlLeXNjucgeezMds58eOmZQq2xrXdnxgrSiPJvi/jaQFE10C4
-         tKwBpoBGs4xTNCgvgQeu5Kj/5ux/cZpxXHkBvWKCorlSSYu7J0C8ZqhXgVdpBnxlUQwg
-         fB4JTSauvCL/Fq2VBmMC4sedFBGM64bfY43amsvxjikvEB3VlU62Vw+bRJ4YOW76QRgb
-         Ryo78kgI3W9hbf3fLbQJSCYVcERiUbBMnF/7K1vzVXKnb8JwmQ3oFelWcbkC818E2v6t
-         VmEM+Ku84R047o40QO1uIo/kj8FKQb9/Mn4cO1HsC48KUv774l3Y0962L6IIc13BY7Nt
-         OYBw==
-X-Gm-Message-State: APjAAAWI+6haNUTWrZVEaHuSRPyP947rF+G8b29mR9F2bCB5nbZmAQI+
-        NyQyHPl8Z7K4DlAwMnyptmBooDWPcis=
-X-Google-Smtp-Source: APXvYqxd0/kwcmVD9KXQBezV2WMCtP44Hqqg6T96a3Zyb0CObgdqvf/lotqgnPAwLqFub2sJvDK8aw==
-X-Received: by 2002:adf:9506:: with SMTP id 6mr7599277wrs.274.1573202728901;
-        Fri, 08 Nov 2019 00:45:28 -0800 (PST)
-Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 00:45:28 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 3/7] pwm: sun4i: Add an optional probe for bus clock
-Date:   Fri,  8 Nov 2019 09:45:13 +0100
-Message-Id: <20191108084517.21617-4-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
-References: <20191108084517.21617-1-peron.clem@gmail.com>
+        Fri, 8 Nov 2019 03:47:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37096 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725975AbfKHIrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 03:47:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C7F52B209;
+        Fri,  8 Nov 2019 08:47:08 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 09:47:07 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Ioannis Ilkos <ilkos@google.com>,
+        minchan@google.com, primiano@google.com, fmayer@google.com,
+        hjd@google.com, joaodias@google.com, lalitm@google.com,
+        rslawik@google.com, sspatil@google.com, timmurray@google.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] rss_stat: Add support to detect RSS updates of external
+ mm
+Message-ID: <20191108084707.fwy6junacy4b4fld@pathway.suse.cz>
+References: <20191106024452.81923-1-joel@joelfernandes.org>
+ <20191106085959.ae2dgvmny3njnk7n@pathway.suse.cz>
+ <20191107180751.GA3846@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107180751.GA3846@google.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Thu 2019-11-07 13:07:51, Joel Fernandes wrote:
+> On Wed, Nov 06, 2019 at 09:59:59AM +0100, Petr Mladek wrote:
+> > On Tue 2019-11-05 21:44:51, Joel Fernandes (Google) wrote:
+> > > Also vsprintf.c is refactored a bit to allow reuse of hashing code.
+> > 
+> > I agree with Sergey that it would make sense to move this outside
+> > vsprintf.c.
+> 
+> I am of the opinion that its Ok to have it this way and I am not sure if
+> another translation unit is worth it just for this. If we have more users,
+> then yes we can consider splitting into its own translation unit at that
+> time.
 
-H6 PWM core needs bus clock to be enabled in order to work.
+Fair enough. I still think that it would make sense to move the code
+but I do not want to block this patch because of this.
 
-Add an optional probe for it and a fallback for previous
-bindings without name on module clock.
+My view is that vsprintf.c is huge and the hashing-related code
+is lost there. It consists of more pieces, early_param, static key,
+workqueue work.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+> If Andrew Morton objects, then I'll do it since the intention was for this
+> patch to go through his tree and I believe he is Ok with it this way.
+> 
+> > > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > > index dee8fc467fcf..401baaac1813 100644
+> > > --- a/lib/vsprintf.c
+> > > +++ b/lib/vsprintf.c
+> > > @@ -761,11 +761,34 @@ static int __init initialize_ptr_random(void)
+> > >  early_initcall(initialize_ptr_random);
+> > >  
+> > >  /* Maps a pointer to a 32 bit unique identifier. */
+> > > +int ptr_to_hashval(const void *ptr, unsigned long *hashval_out)
+> > > +{
+> > > +	const char *str = sizeof(ptr) == 8 ? "(____ptrval____)" : "(ptrval)";
+> > 
+> > str is unused.
+> 
+> I believe Andrew has already fixed this in his tree.
+> 
+> linux-next has local variable removed now:
+> 7422993b4f8e ("rss_stat-add-support-to-detect-rss-updates-of-external-mm-fix")
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 2b9a2a78591f..a10022d6c0fd 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -78,6 +78,7 @@ struct sun4i_pwm_data {
- 
- struct sun4i_pwm_chip {
- 	struct pwm_chip chip;
-+	struct clk *bus_clk;
- 	struct clk *clk;
- 	struct reset_control *rst;
- 	void __iomem *base;
-@@ -363,9 +364,38 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwm->base))
- 		return PTR_ERR(pwm->base);
- 
--	pwm->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(pwm->clk))
-+	/* Get all clocks and reset line */
-+	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-+	if (IS_ERR(pwm->clk)) {
-+		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "get clock failed %pe\n",
-+				pwm->clk);
- 		return PTR_ERR(pwm->clk);
-+	}
-+
-+	/*
-+	 * Fallback for old dtbs with a single clock and no name.
-+	 * If a parent has a clock-name called "mod" whereas the
-+	 * current node is unnamed the clock reference will be
-+	 * incorrectly obtained and will not go into this fallback.
-+	 */
-+	if (!pwm->clk) {
-+		pwm->clk = devm_clk_get(&pdev->dev, NULL);
-+		if (IS_ERR(pwm->clk)) {
-+			if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+				dev_err(&pdev->dev, "get clock failed %pe\n",
-+					pwm->clk);
-+			return PTR_ERR(pwm->clk);
-+		}
-+	}
-+
-+	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
-+	if (IS_ERR(pwm->bus_clk)) {
-+		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "get bus_clock failed %pe\n",
-+				pwm->bus_clk);
-+		return PTR_ERR(pwm->bus_clk);
-+	}
- 
- 	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
- 	if (IS_ERR(pwm->rst)) {
-@@ -382,6 +412,17 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/*
-+	 * We're keeping the bus clock on for the sake of simplicity.
-+	 * Actually it only needs to be on for hardware register
-+	 * accesses.
-+	 */
-+	ret = clk_prepare_enable(pwm->bus_clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n");
-+		goto err_bus;
-+	}
-+
- 	pwm->chip.dev = &pdev->dev;
- 	pwm->chip.ops = &sun4i_pwm_ops;
- 	pwm->chip.base = -1;
-@@ -402,6 +443,8 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_pwm_add:
-+	clk_disable_unprepare(pwm->bus_clk);
-+err_bus:
- 	reset_control_assert(pwm->rst);
- 
- 	return ret;
-@@ -416,6 +459,7 @@ static int sun4i_pwm_remove(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	clk_disable_unprepare(pwm->bus_clk);
- 	reset_control_assert(pwm->rst);
- 
- 	return 0;
--- 
-2.20.1
+I see. With this fix, feel free to add:
 
+Acked-by: Petr Mladek <pmladek@suse.com> # lib/vsprintf.c
+
+The clean up could be done by a followup patches.
+
+Best Regards,
+Petr
