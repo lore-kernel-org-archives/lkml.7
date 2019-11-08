@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE69FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0A0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771A8215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05BB21924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214903;
-	bh=SbUMUnJim/VLR30Kb/P0spszcZpvqXA7aR6Fp6ri25M=;
+	s=default; t=1573214906;
+	bh=ZQk8HUJVVWdkb6PKw7UQGNwXF9TB19ZXHOw1EDZu7as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dHL4ImGiogOmYSGXMn1LCYeVnwlAMz7aIrdHJ2PAt4pY8Mxn83KValvOIhBfpTlsi
-	 WhgExW1YWt+TLtHnGXZzZdXaImQ2yGONqm5ZJJbPqDf7y0GMJQ6nz0K+SxTod0DPgo
-	 CNsfXCjbFO9weeYPiC4jLmqlUXMESe45bRaWjO/4=
+	b=SjUo2JsizzNhaxZN/JTJyHBOFIO8ogIJgfjLQbfBBvZerTi5GMZgSHbJaRKDFByQ1
+	 C0Iq59zL+CpH2jK4Wbd+xrF1+m0wTzHje11TVcMyEr3bEJy9blSjnLXH6jC7XnhIOc
+	 vAJNiRWbloeWobYaN94iwth1YC0WweVSrJ9O5iYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388700AbfKHLkc (ORCPT
+        id S2391895AbfKHMIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53306 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:08:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732112AbfKHLkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:21 -0500
+        id S2388712AbfKHLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F27221D7F;
-        Fri,  8 Nov 2019 11:40:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 865E021D7E;
+        Fri,  8 Nov 2019 11:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213220;
-        bh=SbUMUnJim/VLR30Kb/P0spszcZpvqXA7aR6Fp6ri25M=;
+        s=default; t=1573213233;
+        bh=ZQk8HUJVVWdkb6PKw7UQGNwXF9TB19ZXHOw1EDZu7as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x1lIGmfqshZUnBzpx1fQl6v/7QFqCftNA0hGDgev0l5afRjWjU3rlTBoVWTrbQ3pg
-         fA8WGWM+sk/FR+lz5yqnJ3OfJHCQB5Mki5a1lrOKrxVfoc5ziLJu5cadSDxxNiIBcH
-         sPAvoDQszeZJoVSYSfYw9xPCdzcrysBr7t6MqMOg=
+        b=K+57rJxBPYuSY5pplj8VlUPB2IcBScUdppmgJz3uB52Fsn/YPMsJq3l3HAI0DGScI
+         n5Dkl+MXnlZfbpfs4L+BUbkYGRJecUfYFjGhvYyOl2npzuw85lM+1feqUZ/n3oQWD6
+         eb8axDipyZx8OUJKG5V2WwwNW9OsxM5LZyYNI+R0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Muhammad Sammar <muhammads@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 097/205] IB/ipoib: Ensure that MTU isn't less than minimum permitted
-Date:   Fri,  8 Nov 2019 06:36:04 -0500
-Message-Id: <20191108113752.12502-97-sashal@kernel.org>
+Cc:     Yong Zhi <yong.zhi@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 103/205] ASoC: Intel: hdac_hdmi: Limit sampling rates at dai creation
+Date:   Fri,  8 Nov 2019 06:36:10 -0500
+Message-Id: <20191108113752.12502-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,39 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muhammad Sammar <muhammads@mellanox.com>
+From: Yong Zhi <yong.zhi@intel.com>
 
-[ Upstream commit 142a9c287613560edf5a03c8d142c8b6ebc1995b ]
+[ Upstream commit 3b857472f34faa7d11001afa5e158833812c98d7 ]
 
-It is illegal to change MTU to a value lower than the minimum MTU
-stated in ethernet spec. In addition to that we need to add 4 bytes
-for encapsulation header (IPOIB_ENCAP_LEN).
+Playback of 44.1Khz contents with HDMI plugged returns
+"Invalid pipe config" because HDMI paths in the FW
+topology are configured to operate at 48Khz.
 
-Before "ifconfig ib0 mtu 0" command, succeeds while it obviously shouldn't.
+This patch filters out sampling rates not supported
+at hdac_hdmi_create_dais() to let user space SRC
+to do the converting.
 
-Signed-off-by: Muhammad Sammar <muhammads@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Yong Zhi <yong.zhi@intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 78dd36daac00e..d8cb5bbe6eb58 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -243,7 +243,8 @@ static int ipoib_change_mtu(struct net_device *dev, int new_mtu)
- 		return 0;
- 	}
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index 098196610542a..be2473166bfaf 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1410,6 +1410,12 @@ static int hdac_hdmi_create_dais(struct hdac_device *hdev,
+ 		if (ret)
+ 			return ret;
  
--	if (new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
-+	if (new_mtu < (ETH_MIN_MTU + IPOIB_ENCAP_LEN) ||
-+	    new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
- 		return -EINVAL;
- 
- 	priv->admin_mtu = new_mtu;
++		/* Filter out 44.1, 88.2 and 176.4Khz */
++		rates &= ~(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_88200 |
++			   SNDRV_PCM_RATE_176400);
++		if (!rates)
++			return -EINVAL;
++
+ 		sprintf(dai_name, "intel-hdmi-hifi%d", i+1);
+ 		hdmi_dais[i].name = devm_kstrdup(&hdev->dev,
+ 					dai_name, GFP_KERNEL);
 -- 
 2.20.1
 
