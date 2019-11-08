@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747E7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD0FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FD221D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF89121D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213796;
-	bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
+	s=default; t=1573213803;
+	bh=iy1DT5bUu1OBLH5vlxDMPqVN+I2GP5m989sEYk4zcWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RPALgMcYI7zttIDwbs48X8OId0EniytkqsgYzNyVBokYJek8x+O4GmcsqdIjaNbob
-	 /nk8q6m8rXzyt3IJBqc7Dnly8I1BOmVDOxeuTz3wAGRlXSUeWymIbKuUoBNbBOJUkW
-	 oEFrJTX7BI6lAIwUq5hLkVMRLTgj3tchpF5OOOko=
+	b=u8tmjT26njKVEs14K9MV7hHSYx1iZFqVPhv55KpkcEgdD0b00joJkNoJ+SiReRG0C
+	 UI+t00fMidoW5s2ie8wVWXQaXqTwyfxaMvlvhpbTcU2lJCuZy+1arXfpEmGAt0fWes
+	 oi2Ms/gUqe+IxKyLv16l09Xwdd1FD/C+Y92M+K0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389700AbfKHLtz (ORCPT
+        id S2390427AbfKHLuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:49:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36814 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:50:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387417AbfKHLr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:59 -0500
+        id S2391692AbfKHLry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8FC422459;
-        Fri,  8 Nov 2019 11:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8AB521924;
+        Fri,  8 Nov 2019 11:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213678;
-        bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
+        s=default; t=1573213674;
+        bh=iy1DT5bUu1OBLH5vlxDMPqVN+I2GP5m989sEYk4zcWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xKPCLvRAg5Wnkfe0+eEsLHruh+n1jR+kdPBiNyaq4iICIacjJvoPVE0xoK4f6zzz+
-         W1yp7YuejDOJ0wpo0urt4uVcuaLHPxzD9Kuu6ibPaIoNVwtyjdF/wlyWi5gAX39ok+
-         DDLz1eutQyIRVIB26OzIpvh1r7an8Tf5Yue0paf4=
+        b=JktKvbldXm4wtg7rYtWKvrr3Cj42pfXAaGcT4/rnPdQgF7YHUwLXepPUvZiaie2t/
+         tN8SU85vATpTqfIs/MOiMpie9lueDHhaNP0taTnpTPM1QiXbOIi1ECMUUOJCp2zQoi
+         jyH2adoodWKIihEgTSJ7/w98R6/Wu95gmoHL4wQI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     George Kennedy <george.kennedy@oracle.com>,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Mark Kanda <mark.kanda@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 28/44] scsi: sym53c8xx: fix NULL pointer dereference panic in sym_int_sir()
-Date:   Fri,  8 Nov 2019 06:47:04 -0500
-Message-Id: <20191108114721.15944-28-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 25/44] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
+Date:   Fri,  8 Nov 2019 06:47:01 -0500
+Message-Id: <20191108114721.15944-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -61,77 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Kennedy <george.kennedy@oracle.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit 288315e95264b6355e26609e9dec5dc4563d4ab0 ]
+[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
 
-sym_int_sir() in sym_hipd.c does not check the command pointer for NULL before
-using it in debug message prints.
+If the first process started (aka /sbin/init) receives a SIGKILL it
+will panic the system if it is delivered.  Making the system unusable
+and undebugable.  It isn't much better if the first process started
+receives SIGSTOP.
 
-Suggested-by: Matthew Wilcox <matthew.wilcox@oracle.com>
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
-Acked-by: Matthew Wilcox <matthew.wilcox@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So always ignore SIGSTOP and SIGKILL sent to init.
+
+This is done in a separate clause in sig_task_ignored as force_sig_info
+can clear SIG_UNKILLABLE and this protection should work even then.
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sym53c8xx_2/sym_hipd.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ kernel/signal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/sym53c8xx_2/sym_hipd.c b/drivers/scsi/sym53c8xx_2/sym_hipd.c
-index c6425e3df5a04..f1c7714377524 100644
---- a/drivers/scsi/sym53c8xx_2/sym_hipd.c
-+++ b/drivers/scsi/sym53c8xx_2/sym_hipd.c
-@@ -4371,6 +4371,13 @@ static void sym_nego_rejected(struct sym_hcb *np, struct sym_tcb *tp, struct sym
- 	OUTB(np, HS_PRT, HS_BUSY);
- }
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 072fd152ab01e..3095b2309876d 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -71,6 +71,10 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
  
-+#define sym_printk(lvl, tp, cp, fmt, v...) do { \
-+	if (cp)							\
-+		scmd_printk(lvl, cp->cmd, fmt, ##v);		\
-+	else							\
-+		starget_printk(lvl, tp->starget, fmt, ##v);	\
-+} while (0)
+ 	handler = sig_handler(t, sig);
+ 
++	/* SIGKILL and SIGSTOP may not be sent to the global init */
++	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
++		return true;
 +
- /*
-  *  chip exception handler for programmed interrupts.
-  */
-@@ -4416,7 +4423,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  been selected with ATN.  We do not want to handle that.
- 	 */
- 	case SIR_SEL_ATN_NO_MSG_OUT:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No MSG OUT phase after selection with ATN\n");
- 		goto out_stuck;
- 	/*
-@@ -4424,7 +4431,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  having reselected the initiator.
- 	 */
- 	case SIR_RESEL_NO_MSG_IN:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No MSG IN phase after reselection\n");
- 		goto out_stuck;
- 	/*
-@@ -4432,7 +4439,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  an IDENTIFY.
- 	 */
- 	case SIR_RESEL_NO_IDENTIFY:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No IDENTIFY after reselection\n");
- 		goto out_stuck;
- 	/*
-@@ -4461,7 +4468,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	case SIR_RESEL_ABORTED:
- 		np->lastmsg = np->msgout[0];
- 		np->msgout[0] = M_NOOP;
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 			"message %x sent on bad reselection\n", np->lastmsg);
- 		goto out;
- 	/*
+ 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
+ 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
+ 		return 1;
 -- 
 2.20.1
 
