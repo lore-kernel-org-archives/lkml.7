@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB75FFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBBDC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91738215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20EE2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213970;
-	bh=KR/XtuCzIOL4dCalrzh143CV+F7Iu36qeYgshnJDqtE=;
+	s=default; t=1573213973;
+	bh=MS9vzgBV7doMrucn8+8vEnLYd4jnbrbZQAPY4YZ0r2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvn/Tzjq10AHm8k5dlKxy608ygtaQoNlK44RdDwkkdFBJIXai8EEijoTgShRNYppY
-	 +GOWx0mfJoIueBuAKwnPurB9D7v409p3muOiew9TRgtYhCbiqMrT98kDSgTJhPLEjk
-	 jnK13O6uESlSrnWwcmyfxZArnJqfwDKiIBhf5Zls=
+	b=nDT5Rx1E8yuNG5ywiFvXRzPIfX37hyJX9mD7F22gFu9kN0xcJK9bGYs6VpT67cudk
+	 GwDekdcMprWFJUJQrTX+C8f01Z4/yRgATl4j5/lKJZbOd7EB/QgCRQoufnfwejRFxW
+	 tZ415xZtHF8BjSa0IDvQElQXFyt805uc3t2TwgoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403807AbfKHLrD (ORCPT
+        id S2391591AbfKHLww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:52:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391424AbfKHLqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:46 -0500
+        id S2391404AbfKHLrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C05F222473;
-        Fri,  8 Nov 2019 11:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1003321D82;
+        Fri,  8 Nov 2019 11:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213605;
-        bh=KR/XtuCzIOL4dCalrzh143CV+F7Iu36qeYgshnJDqtE=;
+        s=default; t=1573213619;
+        bh=MS9vzgBV7doMrucn8+8vEnLYd4jnbrbZQAPY4YZ0r2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FQi8OF/vdkY0ezYNifYSZ8ZVsuFAIfsm/Rz4+5EbfJznVPEr1AuyrTi4GPX37KT0J
-         OVBrp2E99b1swg74i+kdkQuBaoUt3yUVMoeZXp9ITAxcc5TaFS3OPW7QAWpVnVG9nc
-         fjKZ1TtJactybk0yZmF/SgVJwq6aqxPVd/AkwzGE=
+        b=UUiMUjZiwg7OFz03tuMI/2X8cN9HqV0Ao9s4lnghHgTy3OcgfQTMjl/367K+Mb0jX
+         6unN37uCDAVNyWzGbTAxtUcbLAY4ZOtBpY8sGTvgH9VUfOTKapP6hT6v/eMwPYKoWc
+         SZUJPOmH5RgKJEfOBRXbofR80uPq+tOqKKAYQlIE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        Jack Wang <jinpu.wang@profitbricks.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 43/64] scsi: pm80xx: Corrected dma_unmap_sg() parameter
-Date:   Fri,  8 Nov 2019 06:45:24 -0500
-Message-Id: <20191108114545.15351-43-sashal@kernel.org>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 52/64] ARM: dts: qcom: ipq4019: fix cpu0's qcom,saw2 reg value
+Date:   Fri,  8 Nov 2019 06:45:33 -0500
+Message-Id: <20191108114545.15351-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -61,35 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepak Ukey <deepak.ukey@microchip.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit 76cb25b058034d37244be6aca97a2ad52a5fbcad ]
+[ Upstream commit bd73a3dd257fb838bd456a18eeee0ef0224b7a40 ]
 
-For the function dma_unmap_sg(), the <nents> parameter should be number of
-elements in the scatter list prior to the mapping, not after the mapping.
+while compiling an ipq4019 target, dtc will complain:
+regulator@b089000 unit address format error, expected "2089000"
 
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
-Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The saw0 regulator reg value seems to be
+copied and pasted from qcom-ipq8064.dtsi.
+
+This patch fixes the reg value to match that of the
+unit address which in turn silences the warning.
+(There is no driver for qcom,saw2 right now.
+So this went unnoticed)
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/pm8001/pm8001_sas.c | 2 +-
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-index ce584c31d36e5..d1fcd21f7f7dd 100644
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -466,7 +466,7 @@ static int pm8001_task_exec(struct sas_task *task,
- 	dev_printk(KERN_ERR, pm8001_ha->dev, "pm8001 exec failed[%d]!\n", rc);
- 	if (!sas_protocol_ata(t->task_proto))
- 		if (n_elem)
--			dma_unmap_sg(pm8001_ha->dev, t->scatter, n_elem,
-+			dma_unmap_sg(pm8001_ha->dev, t->scatter, t->num_scatter,
- 				t->data_dir);
- out_done:
- 	spin_unlock_irqrestore(&pm8001_ha->lock, flags);
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 4b7d97275c621..5ee84e3cb3e97 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -211,7 +211,7 @@
+ 
+                 saw0: regulator@b089000 {
+                         compatible = "qcom,saw2";
+-                        reg = <0x02089000 0x1000>, <0x0b009000 0x1000>;
++			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
+                         regulator;
+                 };
+ 
 -- 
 2.20.1
 
