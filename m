@@ -2,91 +2,93 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28A5FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D485FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC02822475
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213690;
-	bh=FLrZUAJxqE66ntrcwZrEwlMUK/iTsrqp5/weqZpUvMM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YXIcZ1cyEXQjju1sg10R/PXEOLeU+lzkBZVHeUDzvRpS0N9lSjfunOSuwF7/dvuob
-	 fNTiXjOC8IBYywee+nVUMYwfN5Zojdgy4OAW5vGArzVkG8lvndh9gsnMMpZ6u7CLGN
-	 gYnj5Prdn88UWayKJwFyGg72/eMVZRt6Py1Zidd8=
+	by mail.kernel.org (Postfix) with ESMTP id 74CFB222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391714AbfKHLsI (ORCPT
+        id S2391725AbfKHLsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:48:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:48:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:41468 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390773AbfKHLrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:48 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3AD222C5;
-        Fri,  8 Nov 2019 11:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213667;
-        bh=FLrZUAJxqE66ntrcwZrEwlMUK/iTsrqp5/weqZpUvMM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3yZUHxHqKO/1O28CBaW6HPZddICAk0T0Eb3ViqGnPgQ0j4DhZ/zDCFgFr8wFxSB4
-         XhXOplI4mVzpo/NrBPDioMFeBSANEl2GXUMY96YpJZLkuITcy1RcDiGXFKS5mV6lxb
-         QRKv16D1A2K5m4re/g2iznPFqd1dq0n31zfzt/iw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 20/44] ARM: dts: omap3-gta04: give spi_lcd node a label so that we can overwrite in other DTS files
-Date:   Fri,  8 Nov 2019 06:46:56 -0500
-Message-Id: <20191108114721.15944-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
-References: <20191108114721.15944-1-sashal@kernel.org>
+        id S2389983AbfKHLry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00B0531B;
+        Fri,  8 Nov 2019 03:47:54 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 604333F719;
+        Fri,  8 Nov 2019 03:47:51 -0800 (PST)
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+To:     Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, linux-kernel@vger.kernel.org,
+        aaron.lwe@gmail.com, mingo@kernel.org, pauld@redhat.com,
+        jdesfossez@digitalocean.com, naravamudan@digitalocean.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        juri.lelli@redhat.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, kernel-team@android.com, john.stultz@linaro.org
+References: <20191028174603.GA246917@google.com>
+ <20191106120525.GX4131@hirez.programming.kicks-ass.net>
+ <33643a5b-1b83-8605-2347-acd1aea04f93@virtuozzo.com>
+ <20191106165437.GX4114@hirez.programming.kicks-ass.net>
+ <20191106172737.GM5671@hirez.programming.kicks-ass.net>
+ <831c2cd4-40a4-31b2-c0aa-b5f579e770d6@virtuozzo.com>
+ <20191107132628.GZ4114@hirez.programming.kicks-ass.net>
+ <20191107153848.GA31774@google.com>
+ <20191107184356.GF4114@hirez.programming.kicks-ass.net>
+ <20191107192907.GA30258@worktop.programming.kicks-ass.net>
+ <20191108110212.GA204618@google.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <07d30588-22e6-e098-b591-29c7cd3c8054@arm.com>
+Date:   Fri, 8 Nov 2019 11:47:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191108110212.GA204618@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+On 08/11/2019 11:02, Quentin Perret wrote:
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index a14487462b6c..6b983214e00f 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6746,10 +6746,18 @@ done: __maybe_unused;
+>>  	return NULL;
+>>  }
+>>
+>> +static int balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>> +{
+>> +	if (rq->cfs.nr_running)
+>> +		return 1;
+>> +
+>> +	return newidle_balance(rq, rf) != 0;
+> 
+> And you can ignore the RETRY_TASK case here under the assumption that
+> we must have tried to pull from RT/DL before ending up here ?
+> 
 
-[ Upstream commit fa0d7dc355c890725b6178dab0cc11b194203afa ]
+I think we can ignore RETRY_TASK because this happens before the picking loop,
+so we'll observe any new DL/RT task that got enqueued while newidle released
+the lock. This also means we can safely break the balance loop in
+pick_next_task() when we get RETRY_TASK, because we've got something to pick
+(some new RT/DL task). This wants a comment though, methinks.
 
-needed for device variants based on GTA04 board but with
-different display panel (driver).
+Other than that I agree with Quentin, it's a much cleaner approach and I quite
+like it.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index e14d15e5abc89..9b9510e057f3f 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -70,7 +70,7 @@
- 		#sound-dai-cells = <0>;
- 	};
- 
--	spi_lcd {
-+	spi_lcd: spi_lcd {
- 		compatible = "spi-gpio";
- 		#address-cells = <0x1>;
- 		#size-cells = <0x0>;
--- 
-2.20.1
-
+> Thanks,
+> Quentin
+> 
