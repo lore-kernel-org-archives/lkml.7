@@ -2,81 +2,117 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC057C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EF5FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C8E21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="eWdBon85"
+	by mail.kernel.org (Postfix) with ESMTP id 7239E21848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731953AbfKHLVt (ORCPT
+        id S1731976AbfKHLW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:21:49 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:47032 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730221AbfKHLVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:21:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=References:In-Reply-To:Message-Id:Date:Subject:
-        To:From:Sender:Reply-To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SIrt/+/LCIwEh90Db6qKgifrp4JSn7gM4O+rBnCLRss=; b=eWdBon85LO8YYa8P5RgG5Mn7u
-        d2rJEQXNjBN2flPjMvxjkmft1kWzNQZx5RxMR8yl0mclMgARvx0098oV8nifQY0leDbyRVIK4k6K7
-        lplvEvZHTWdv7wu826VV44u8OG9tSkFNgO+8DW+iudkV6ue0ydt6U4UF1+ATWscJTnV0Q=;
-Received: from [2a02:790:ff:919:7ee9:d3ff:fe1f:a246] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iT2Kj-0000bi-OH; Fri, 08 Nov 2019 12:21:42 +0100
-Received: from andi by localhost with local (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iT2IL-0004rN-CB; Fri, 08 Nov 2019 12:19:13 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, andrew.smirnov@gmail.com,
-        manivannan.sadhasivam@linaro.org, andreas@kemnade.info,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
-        letux-kernel@openphoenux.org
-Subject: [PATCH 1/2] dt-bindings: arm: fsl: add compatible string for Tolino Shine 3
-Date:   Fri,  8 Nov 2019 12:18:33 +0100
-Message-Id: <20191108111834.18610-2-andreas@kemnade.info>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191108111834.18610-1-andreas@kemnade.info>
-References: <20191108111834.18610-1-andreas@kemnade.info>
+        Fri, 8 Nov 2019 06:22:28 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:47120 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfKHLW2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:22:28 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 7b93b3f4ee9f5846; Fri, 8 Nov 2019 12:22:26 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     linux-pm@vger.kernel.org, "Pavel Machek )" <pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH RESEND] cpuidle: undelaying cpuidle in dpm_{suspend|resume}()
+Date:   Fri, 08 Nov 2019 12:22:25 +0100
+Message-ID: <2576101.gjqMWB6DaV@kreacher>
+In-Reply-To: <20191030022105.223213-1-ikjn@chromium.org>
+References: <20191030022105.223213-1-ikjn@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a compatible string for the Tolino Shine 3 eBook reader.
+On Wednesday, October 30, 2019 3:21:05 AM CET Ikjoon Jang wrote:
+> cpuidle is paused only during dpm_suspend_noirq() ~ dpm_resume_noirq().
+> But some device drivers need random sized IOs in dpm_{suspend|resume}()
+> stage (e.g. re-downloading firmware in resume).
+> And with such a device, cpuidle's latencies could be critical to
+> response time of system suspend/resume.
+> 
+> To minimize those latencies, we could apply pm_qos to such device drivers,
+> but simply undelaying cpuidle from dpm_suspend_noirq() to dpm suspend()
+> seems no harm.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+While the patch is generally acceptable, the changelog is not.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 4a8ce4a56e0b..663964134604 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -142,6 +142,7 @@ properties:
-         items:
-           - enum:
-               - fsl,imx6sl-evk            # i.MX6 SoloLite EVK Board
-+              - kobo,tolino-shine3
-           - const: fsl,imx6sl
- 
-       - description: i.MX6SLL based Boards
--- 
-2.11.0
+First, what does "undelying" mean?
+
+Second, you seem to be talking about the cases in which exit latencies of
+idle states are not small relative to the system suspend/resume time, so
+without any specific examples this is not really convincing.
+
+Also, potentially, there is another reason to make this change, which is
+that on some systems i2c (or similar) controllers may be requisite for
+idle state entry and exit, so it may make sense in general to prevent
+cpuidle from being used over the entire suspend and resume of the
+system.  However, without any example of a system in which that matters
+it still is not convincing enough IMO.
+
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> ---
+>  drivers/base/power/main.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index 134a8af51511..5928dd2139e8 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -773,8 +773,6 @@ void dpm_resume_noirq(pm_message_t state)
+>  
+>  	resume_device_irqs();
+>  	device_wakeup_disarm_wake_irqs();
+> -
+> -	cpuidle_resume();
+>  }
+>  
+>  static pm_callback_t dpm_subsys_resume_early_cb(struct device *dev,
+> @@ -1069,6 +1067,7 @@ void dpm_resume(pm_message_t state)
+>  
+>  	cpufreq_resume();
+>  	devfreq_resume();
+> +	cpuidle_resume();
+>  	trace_suspend_resume(TPS("dpm_resume"), state.event, false);
+>  }
+>  
+> @@ -1411,8 +1410,6 @@ int dpm_suspend_noirq(pm_message_t state)
+>  {
+>  	int ret;
+>  
+> -	cpuidle_pause();
+> -
+>  	device_wakeup_arm_wake_irqs();
+>  	suspend_device_irqs();
+>  
+> @@ -1830,6 +1827,7 @@ int dpm_suspend(pm_message_t state)
+>  	trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
+>  	might_sleep();
+>  
+> +	cpuidle_pause();
+>  	devfreq_suspend();
+>  	cpufreq_suspend();
+>  
+> 
+
+
+
 
