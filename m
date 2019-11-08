@@ -2,143 +2,132 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DC8FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6878AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A417214DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDA8214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="mownslAc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yGtIZ68c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbfKHI7J (ORCPT
+        id S1730937AbfKHI7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:59:09 -0500
-Received: from mail-eopbgr790092.outbound.protection.outlook.com ([40.107.79.92]:27392
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730258AbfKHI7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:59:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jnIiw+bO66YeotkXTpkaOFzJ+AMXcf7Etn4WhT5zmoYrABEl2nYTsM0Ju3urlWS+Qp1XdqMqrkmDwur/qr2+3OW3BKvoOqwvPZMuajz60DCkEMs4uehqs8ArJNX7kQnysJ94LFHMNyzQQhqp5e8IpnQu/33/vFdO1gdNAyj49gsFmLxYIBLtjqbSWpp9Sj+xpHgR4H6DjPpwAdrM5ZjyliOUKkacL4LefHDmLu5h5dS3Tx74bW7yhBXutaXzE950DfM+fV1i49g+TpvcyKm68J5XYGO2RHe2Us+zXLDFyiKj1qbXphfgoOaQztdXibxKr0ZdB15yVPhY8JfTy414wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sFjHGx+Kbi4l1RRILG6GNPCOWVs6nm9FnVIb1i+4AlI=;
- b=ku5Vh00EsLRBB95AD2XNDLXt3dpUOr6Aia7YRCXghLZnpHKyQ3BIASu+exGA6OsKjCBED2du/MgaBCZJo/1y3SPvGoPuy/g1dJ7J17tZZxWce2YMf9HP6Myt5AOmw/6KZf244aEbF9c0OGhivv75CReaijTa7CW0/+sNqNBvhw/Ez5/NALbMBo8zNYhTocGv1w0f++UKzwAns2sSrLdGUtzCcGHOhRpgKsA3hJpHLELJYcLyRs/RgEh0w+EztrzHCKHyhFx0tv8k5E91s0beHz5fFFplw1kJsn47ar/+8zJb0bRfx6vGQVoEHF7hhQYGomkiteNes7R/vifA0vRy0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+        Fri, 8 Nov 2019 03:59:16 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37892 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730758AbfKHI7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 03:59:16 -0500
+Received: by mail-ed1-f65.google.com with SMTP id s10so4408455edi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 00:59:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sFjHGx+Kbi4l1RRILG6GNPCOWVs6nm9FnVIb1i+4AlI=;
- b=mownslAcagLZSPAOYdRrYbvytNbTIY5XbAR5GTqIutPw1Bedj8COCetGrouMXlvpYq3iou+5VbqJKO6cNkyPC9uGXFSGUpxlHIGlPRg1AnfbvFyZs8nuq0wQzf03wfYLml1bwTZvIW/d/aRTDNi7mJ7Ja8F2WEfOwPLlZE1aLbA=
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
- SN6PR04MB4942.namprd04.prod.outlook.com (52.135.114.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Fri, 8 Nov 2019 08:58:33 +0000
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::859:2d31:1f00:fa16]) by SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::859:2d31:1f00:fa16%5]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
- 08:58:33 +0000
-From:   Xin Ji <xji@analogixsemi.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v3 0/2] Add initial support for slimport anx7625
-Thread-Topic: [PATCH v3 0/2] Add initial support for slimport anx7625
-Thread-Index: AQHVlhKyDegwd7ihkkKNeWETzvlDsQ==
-Date:   Fri, 8 Nov 2019 08:58:32 +0000
-Message-ID: <cover.1573203022.git.xji@analogixsemi.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR02CA0136.apcprd02.prod.outlook.com
- (2603:1096:202:16::20) To SN6PR04MB4543.namprd04.prod.outlook.com
- (2603:10b6:805:a8::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [114.247.245.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4b7fcd43-e3f5-4cde-c833-08d76429d506
-x-ms-traffictypediagnostic: SN6PR04MB4942:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB49422FF7DB19E00A42F8834AC77B0@SN6PR04MB4942.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(376002)(136003)(39840400004)(346002)(189003)(199004)(53754006)(71200400001)(256004)(2501003)(486006)(8676002)(54906003)(2906002)(6486002)(107886003)(6512007)(14444005)(6436002)(2616005)(4326008)(476003)(25786009)(102836004)(66066001)(8936002)(26005)(7416002)(52116002)(7736002)(66446008)(66476007)(66556008)(66946007)(99286004)(316002)(5660300002)(86362001)(71190400001)(186003)(36756003)(305945005)(386003)(81166006)(110136005)(81156014)(3846002)(6506007)(14454004)(4744005)(6116002)(64756008)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4942;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yC6yXjseGYJDvZwI/86y2n+L8lhMNukUdLUNKL6zW2/dWOjVg9g5+tli/ecbTEinvx5QE0k3pSjwI35zII0zuHbL/IRrk+nAhIWhi/yqFTTp8Z3dzAnj5A6T3dW0KGhPceu5Ej/1qtECcu4Y/Nr6mXwxWpIZKb7XeHtBhHxDDjhCrJIsTUABEvO4mjCez7GiHm0/giqX8fV3RBlpLc3wVTgGg6qeLZnkwROefnKV1BHYlr6rS3O6VWpAXWqxiEZSatDMuuZJVuzSe4WvBFoIImN9XkZKgpO0quguSoa0alh1+30Z1lbGaYjLNOe3eke1KNW00+FCT8vqpZLqN8/608QKqH996bnKC/TSYTs/PySlO3oRdQoVgtUkkWFoEcXCONrwxe7KZRt/0152bz9xs8AZ5RTufHO5jrMEQbeyhVdVx1SITgTKZsp/2F57PnUv
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A34ACF29C0458440A376E7E65BEB7237@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=to:cc:from:subject:openpgp:message-id:date:mime-version
+         :content-language:content-transfer-encoding;
+        bh=e1hgerGf785CLDmFjdBmSkwZ7CYxAA5GHC3QoDaUv84=;
+        b=yGtIZ68cDcCfzbYOtkcHgJAya3CqiJFju+o1ghD8pby+dS1efblKTsKu92GXH0Zu5R
+         OfKynjHDE73q9d10OA+l+CaPITcqZQXymqfGcl7pVM6CR1OfwJCC6eYQjTesDIuK69xP
+         mD8zMocye5Ootfmit1RSGVa6Ilp6r4sE0Dcy/N9pM7W4IFcxdv2BK2yf1YeTeHu1nIMV
+         iW27Si4KsXfga1v1oj4+eF+7QUx6lgswW9F+Boo9VU5KRHJIE9mg5H49t4tWMKp7OfVq
+         SiuSOO6yoh91Fr2LGc+iTSKhPsy5Jdu7W4gFzvR6I2KJhxJolUoLYh9YQPueGnoPQpZH
+         ltqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:openpgp:message-id:date
+         :mime-version:content-language:content-transfer-encoding;
+        bh=e1hgerGf785CLDmFjdBmSkwZ7CYxAA5GHC3QoDaUv84=;
+        b=fVX0JFL80R0hLXMuxDCF0kr5llN+UC0TXspRWUWCgfbnYu2nYnV0hTjDVJaVEzRxqi
+         U1qZSu0wJr+LTUFUjUbZVU9ICZRsk75h5F8AoYCqFdYbi+5hPL+4jYLqRX8+I1rYJuML
+         i5fJMcJQcqGgFDSB7CpRpmdpCNf3qfxIqoj9QK4G01Usmgx6ozRmXja4BZQfG/mBv5Dm
+         akU+0yRVVJLH+LwuriOe93ArmgTRorvM6mv1xf79wOWhjtH/gPaQzVopS8LwKTbqavjk
+         g3jFC0hVqzIubOjjwP8tQtdMcSy+l8CpAo9TV2YB5GriyzAVAxe6PC1d6EENHl9Py9dy
+         ExEQ==
+X-Gm-Message-State: APjAAAWcf7tjCH1Yl5J28HJEPT25oqAZKdR2uzcPpmHQLbpuAluq2kL6
+        GHsXwiKGR09qMLcJAlbq3D4hWaMNZ4k=
+X-Google-Smtp-Source: APXvYqzE6Zz+fYojrXFq8RAXFWKAJbJFcH/HLgEMz3Ox2gSDMcChzTjhr+Dm0LuQ+RCv9/HqjyTQGw==
+X-Received: by 2002:a17:906:d72:: with SMTP id s18mr7603343ejh.29.1573203553940;
+        Fri, 08 Nov 2019 00:59:13 -0800 (PST)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id v3sm120036edq.62.2019.11.08.00.59.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Nov 2019 00:59:13 -0800 (PST)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [GIT PULL v2] interconnect changes for 5.5
+Openpgp: preference=signencrypt
+Message-ID: <dd4ff7e3-920d-979b-c29b-7535d84d360f@linaro.org>
+Date:   Fri, 8 Nov 2019 10:59:11 +0200
 MIME-Version: 1.0
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b7fcd43-e3f5-4cde-c833-08d76429d506
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 08:58:33.5727
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bldGUqKQtciGaVAl7woIAebFJbKso2XUttYXaumBVa4h7hBYBYimQO1ftF5EiCs1WdHHFbY9fcDaLD9fX/VYcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4942
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hi Greg,
 
-The following series add initial support for the Slimport ANX7625 transmitt=
-er, a
-ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable dev=
-ice.
-
-This is the initial version, any mistakes, please let me know, I will fix i=
-t in
-the next series.
+This is the updated pull request with interconnect patches for the 5.5 merge
+window. The details are in the signed tag. Please pull into char-misc-next.
 
 Thanks,
-Xin
+Georgi
 
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
 
-Xin Ji (2):
-  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
-  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
 
- .../bindings/display/bridge/anx7625.yaml           |   91 +
- drivers/gpu/drm/bridge/Makefile                    |    2 +-
- drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
- drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
- drivers/gpu/drm/bridge/analogix/anx7625.c          | 2042 ++++++++++++++++=
-++++
- drivers/gpu/drm/bridge/analogix/anx7625.h          |  406 ++++
- 6 files changed, 2547 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
-5.yaml
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+are available in the Git repository at:
 
---=20
-2.7.4
+  https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.5-rc1
 
+for you to fetch changes up to 83561a721dc23330d36e0ce499e716cd65f436fe:
+
+  interconnect: Move interconnect drivers to core_initcall (2019-11-07 19:26:19
++0200)
+
+----------------------------------------------------------------
+interconnect patches for 5.5
+
+Here are the interconnect updates for the 5.5-rc1 merge window.
+
+- New interconnect driver for msm8974 platforms.
+- Change the initcall level of a driver, so it is available earlier to
+other dependent drivers.
+
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+
+----------------------------------------------------------------
+Brian Masney (2):
+      dt-bindings: interconnect: qcom: add msm8974 bindings
+      interconnect: qcom: add msm8974 driver
+
+Georgi Djakov (1):
+      interconnect: Add locking in icc_set_tag()
+
+Jordan Crouse (1):
+      interconnect: Move interconnect drivers to core_initcall
+
+Leonard Crestez (1):
+      interconnect: qcom: Fix icc_onecell_data allocation
+
+ Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml |  62 +
+ drivers/interconnect/core.c                                      |   4 +
+ drivers/interconnect/qcom/Kconfig                                |   9 +
+ drivers/interconnect/qcom/Makefile                               |   2 +
+ drivers/interconnect/qcom/msm8974.c                              | 796 ++++++++
+ drivers/interconnect/qcom/qcs404.c                               |  17 +-
+ drivers/interconnect/qcom/sdm845.c                               |  16 +-
+ include/dt-bindings/interconnect/qcom,msm8974.h                  | 146 ++
+ 8 files changed, 1048 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+ create mode 100644 drivers/interconnect/qcom/msm8974.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
