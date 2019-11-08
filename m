@@ -2,249 +2,392 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24A1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2760C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8EE32087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC81215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:25:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdFPSdwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbfKHSTn (ORCPT
+        id S1727889AbfKHSZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:19:43 -0500
-Received: from mga01.intel.com ([192.55.52.88]:43693 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfKHSTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:19:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 10:19:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,282,1569308400"; 
-   d="scan'208";a="193240621"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by orsmga007.jf.intel.com with ESMTP; 08 Nov 2019 10:19:40 -0800
-Message-ID: <530c46a1f4be6477ad75803401cfd4ce18abbd95.camel@intel.com>
-Subject: Re: [PATCH v8 27/27] x86/cet/shstk: Add Shadow Stack instructions
- to opcode map
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Fri, 8 Nov 2019 13:25:27 -0500
+Received: from mail-qv1-f51.google.com ([209.85.219.51]:43512 "EHLO
+        mail-qv1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfKHSZ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:25:27 -0500
+Received: by mail-qv1-f51.google.com with SMTP id cg2so2571544qvb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:25:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/zawH8E5Iik4irQZDcFHkIRBzKfbWIDzeKd69/F1648=;
+        b=BdFPSdwW7t5amNGEVuky7/CRuPhg1TznulxBRrddP8YarMCBi/57ueFiGj1pwWT4Y0
+         q8REHzCSIbkFRS7WdJlNxGDg/0yR+06fKpZqsGY2cDW7i+rD57AUn0p9PMjmVXQOqJ/+
+         4/De6t/KeKwhjY1sRpPS6FEHJYsVCu8JJJAIhEG5J8rO//RBTzFu+jBnAjcXQTIsKh6i
+         2FH8AkLKbEqoMnsriTSH073LfHMBGDhXO04kUFMV2KVvSyrtw/xk+M0NF8eE5iJobiBf
+         ZQEU6JiUY+JXmwBpbJzYVGLeaOuIod02JZ4rguwfWhNaQOSuDIaTbLyaVrQ28b0bha7D
+         uHsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/zawH8E5Iik4irQZDcFHkIRBzKfbWIDzeKd69/F1648=;
+        b=nxUVyiESCTBDy6DKtaMGl13WrFtbWA8zvwATAnxSn0Lb0sCkpe69bVk4rJG0dRcgqg
+         sZQueGOJ25ZVXf+4fJ15prktE6b4EZzcg2PFswnbBR/irPzd8+OtK5EZzea81c884+bS
+         DWkxnrcHwXnHJTu1VK0SXThHtQiL1ZsFEyxuBgg9FH1h1qqWirT9QmdE3GDZytjvAHZf
+         ju4et6MZidDAk51ugy4yJCbxrk+jGeBdGhKkHrf/+84jMrtZOlmhbfZhyQNmxbQxHavs
+         JRdMIeX9+3mzfkpcSzMMSM5HkYDm4Wm1pVmsYg3+zUCZEjYCWFYgHGynJSZSlMiMxNMk
+         1HTw==
+X-Gm-Message-State: APjAAAXz+2w2+Y6alwhIR4f3y59bmkHN7RCkyMxZkXLUJk2vGPFRtB3Q
+        lmjZQmlQdqFbLq5FtcPeTzS60KxSzek=
+X-Google-Smtp-Source: APXvYqxZqP7yJSp+YhTBZ34nfqNUCdr5djzoQ+2T/iPXohjOUyuYdI25gw+GNM3TYsB91H3cTwVPdA==
+X-Received: by 2002:a0c:fe11:: with SMTP id x17mr11099180qvr.162.1573237525848;
+        Fri, 08 Nov 2019 10:25:25 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([177.195.211.140])
+        by smtp.gmail.com with ESMTPSA id o3sm4183057qta.3.2019.11.08.10.25.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 10:25:25 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 046D1411B3; Fri,  8 Nov 2019 15:25:21 -0300 (-03)
+Date:   Fri, 8 Nov 2019 15:25:21 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Fri, 08 Nov 2019 10:09:17 -0800
-In-Reply-To: <15568c48-b950-484d-d176-0f0e38a94bf7@intel.com>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
-         <20190813205225.12032-28-yu-cheng.yu@intel.com>
-         <15568c48-b950-484d-d176-0f0e38a94bf7@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf tools: report initial event parsing error
+Message-ID: <20191108182521.GA28896@kernel.org>
+References: <20191107222315.GA7261@kernel.org>
+ <20191108181533.222053-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108181533.222053-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-08 at 15:27 +0200, Adrian Hunter wrote:
-> On 13/08/19 11:52 PM, Yu-cheng Yu wrote:
-> > Add the following shadow stack management instructions.
-> > 
-> > INCSSP:
-> >     Increment shadow stack pointer by the steps specified.
-> > 
-> > RDSSP:
-> >     Read SSP register into a GPR.
-> > 
-> > SAVEPREVSSP:
-> >     Use "prev ssp" token at top of current shadow stack to
-> >     create a "restore token" on previous shadow stack.
-> > 
-> > RSTORSSP:
-> >     Restore from a "restore token" pointed by a GPR to SSP.
-> > 
-> > WRSS:
-> >     Write to kernel-mode shadow stack (kernel-mode instruction).
-> > 
-> > WRUSS:
-> >     Write to user-mode shadow stack (kernel-mode instruction).
-> > 
-> > SETSSBSY:
-> >     Verify the "supervisor token" pointed by IA32_PL0_SSP MSR,
-> >     if valid, set the token to busy, and set SSP to the value
-> >     of IA32_PL0_SSP MSR.
-> > 
-> > CLRSSBSY:
-> >     Verify the "supervisor token" pointed by a GPR, if valid,
-> >     clear the busy bit from the token.
-> > 
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> > ---
-> >  arch/x86/lib/x86-opcode-map.txt               | 26 +++++++++++++------
-> >  tools/objtool/arch/x86/lib/x86-opcode-map.txt | 26 +++++++++++++------
-> >  2 files changed, 36 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-> > index e0b85930dd77..c5e825d44766 100644
-> > --- a/arch/x86/lib/x86-opcode-map.txt
-> > +++ b/arch/x86/lib/x86-opcode-map.txt
-> > @@ -366,7 +366,7 @@ AVXcode: 1
-> >  1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
-> >  1c:
-> >  1d:
-> > -1e: f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By
-> > (F3),(v) | SHRX Gy,Ey,By (F2),(v)> >  EndTable> >  > > -Table: 3-byte opcode
-> > 2 (0x0f 0x3a)> > +Table: 3-byte opcode 3 (0x0f 0x3a)> >  Referrer: 3-byte
-> > escape 2> >  AVXcode: 3> >  # 0x0f 0x3a 0x00-0xff> > @@ -948,7 +958,7 @@
-> > GrpTable: Grp7> >  2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) |
-> > VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B)> >  3: LIDT Ms> > 
-> > 4: SMSW Mw/Rv> > -5: rdpkru (110),(11B) | wrpkru (111),(11B)> > +5: rdpkru
-> > (110),(11B) | wrpkru (111),(11B) | RSTORSSP Mq (F3)> >  6: LMSW Ew> >  7:
-> > INVLPG Mb | SWAPGS (o64),(000),(11B) | RDTSCP (001),(11B)> >  EndTable> > @@
-> > -1019,8 +1029,8 @@ GrpTable: Grp15> >  2: vldmxcsr Md (v1) | WRFSBASE Ry
-> > (F3),(11B)> >  3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)> >  4: XSAVE |
-> > ptwrite Ey (F3),(11B)> > -5: XRSTOR | lfence (11B)> > -6: XSAVEOPT | clwb
-> > (66) | mfence (11B)> > +5: XRSTOR | lfence (11B) | INCSSP Rd (F3),REX.W> >
-> > +6: XSAVEOPT | clwb (66) | mfence (11B) | CLRSSBSY Mq (F3)> >  7: clflush |
-> > clflushopt (66) | sfence (11B)> >  EndTable> >  > > 
-> > > 
-> > > 
-> > +1e: RDSSP Rd (F3),REX.W
-> >  1f: NOP Ev
-> >  # 0x0f 0x20-0x2f
-> >  20: MOV Rd,Cd
-> > @@ -610,7 +610,17 @@ fe: paddd Pq,Qq | vpaddd Vx,Hx,Wx (66),(v1)
-> >  ff: UD0
-> >  EndTable
-> >  
-> > -Table: 3-byte opcode 1 (0x0f 0x38)
-> > +Table: 3-byte opcode 1 (0x0f 0x01)
-> > +Referrer:
-> > +AVXcode:
-> > +# Skip 0x00-0xe7
-> > +e8: SETSSBSY (f3)
-> > +e9:
-> > +ea: SAVEPREVSSP (f3)
-> > +# Skip 0xeb-0xff
-> > +EndTable
-> > +
-> > +Table: 3-byte opcode 2 (0x0f 0x38)
-> >  Referrer: 3-byte escape 1
-> >  AVXcode: 2
-> >  # 0x0f 0x38 0x00-0x0f
-> > @@ -789,12 +799,12 @@ f0: MOVBE Gy,My | MOVBE Gw,Mw (66) | CRC32 Gd,Eb (F2) | CRC32 Gd,Eb (66&F2)
-> >  f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
-> >  f2: ANDN Gy,By,Ey (v)
-> >  f3: Grp17 (1A)
-> > -f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
-> > -f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
-> > +f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v) | WRUSS Pq,Qq (66),REX.W
-> > +f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSS Pq,Qq (66),REX.W
-> >  f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
-> >  EndTable
-> >  
-> > -Table: 3-byte opcode 2 (0x0f 0x3a)
-> > +Table: 3-byte opcode 3 (0x0f 0x3a)
-> >  Referrer: 3-byte escape 2
-> >  AVXcode: 3
-> >  # 0x0f 0x3a 0x00-0xff
-> > @@ -948,7 +958,7 @@ GrpTable: Grp7
-> >  2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B)
-> >  3: LIDT Ms
-> >  4: SMSW Mw/Rv
-> > -5: rdpkru (110),(11B) | wrpkru (111),(11B)
-> > +5: rdpkru (110),(11B) | wrpkru (111),(11B) | RSTORSSP Mq (F3)
-> >  6: LMSW Ew
-> >  7: INVLPG Mb | SWAPGS (o64),(000),(11B) | RDTSCP (001),(11B)
-> >  EndTable
-> > @@ -1019,8 +1029,8 @@ GrpTable: Grp15
-> >  2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
-> >  3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
-> >  4: XSAVE | ptwrite Ey (F3),(11B)
-> > -5: XRSTOR | lfence (11B)
-> > -6: XSAVEOPT | clwb (66) | mfence (11B)
-> > +5: XRSTOR | lfence (11B) | INCSSP Rd (F3),REX.W
-> > +6: XSAVEOPT | clwb (66) | mfence (11B) | CLRSSBSY Mq (F3)
-> >  7: clflush | clflushopt (66) | sfence (11B)
-> >  EndTable
-> >  
-> > diff --git a/tools/objtool/arch/x86/lib/x86-opcode-map.txt b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
-> > index e0b85930dd77..c5e825d44766 100644
-> > --- a/tools/objtool/arch/x86/lib/x86-opcode-map.txt
-> > +++ b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
-> > @@ -366,7 +366,7 @@ AVXcode: 1
-> >  1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
-> >  1c:
-> >  1d:
-> > -1e:
-> > +1e: RDSSP Rd (F3),REX.W
+Em Fri, Nov 08, 2019 at 10:15:33AM -0800, Ian Rogers escreveu:
+> Record the first event parsing error and report. Implementing feedback
+> from Jiri Olsa:
+> https://lkml.org/lkml/2019/10/28/680
 > 
-> RDSSP is in a Grp with ENDBR32 and ENDBR64
+> An example error is:
 > 
-> >  1f: NOP Ev
-> >  # 0x0f 0x20-0x2f
-> >  20: MOV Rd,Cd
-> > @@ -610,7 +610,17 @@ fe: paddd Pq,Qq | vpaddd Vx,Hx,Wx (66),(v1)
-> >  ff: UD0
-> >  EndTable
-> >  
-> > -Table: 3-byte opcode 1 (0x0f 0x38)
-> > +Table: 3-byte opcode 1 (0x0f 0x01)
-> > +Referrer:
-> > +AVXcode:
-> > +# Skip 0x00-0xe7
-> > +e8: SETSSBSY (f3)
-> > +e9:
-> > +ea: SAVEPREVSSP (f3)
+> $ tools/perf/perf stat -e c/c/
+> WARNING: multiple event parsing errors
+> event syntax error: 'c/c/'
+>                        \___ unknown term
 > 
-> SETSSBSY and SAVEPREVSSP should be in Grp7
+> valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
 > 
-> > +# Skip 0xeb-0xff
-> > +EndTable
-> > +
-> > +Table: 3-byte opcode 2 (0x0f 0x38)
-> >  Referrer: 3-byte escape 1
-> >  AVXcode: 2
-> >  # 0x0f 0x38 0x00-0x0f
-> > @@ -789,12 +799,12 @@ f0: MOVBE Gy,My | MOVBE Gw,Mw (66) | CRC32 Gd,Eb (F2) | CRC32 Gd,Eb (66&F2)
-> >  f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
-> >  f2: ANDN Gy,By,Ey (v)
-> >  f3: Grp17 (1A)
-> > -f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
-> > -f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
-> > +f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v) | WRUSS Pq,Qq (66),REX.W
-> > +f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSS Pq,Qq (66),REX.W
+> Initial error:
+> event syntax error: 'c/c/'
+>                     \___ Cannot find PMU `c'. Missing kernel support?
+> Run 'perf list' for a list of valid events
 > 
-> I know already commented on this, but WRSS does not have (66) prefix
+>  Usage: perf stat [<options>] [<command>]
 > 
-> Also no other instructions have been annotated with REX.W so maybe omit that
+>     -e, --event <event>   event selector. use 'perf list' to list available events
 
-Thanks!  I will look into that.
+Jiri, I couldn't find your Acked-by for this one, have you provided it?
 
-Yu-cheng
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/arch/powerpc/util/kvm-stat.c |  9 ++-
+>  tools/perf/builtin-stat.c               |  2 +
+>  tools/perf/builtin-trace.c              | 16 ++++--
+>  tools/perf/tests/parse-events.c         |  3 +-
+>  tools/perf/util/metricgroup.c           |  2 +-
+>  tools/perf/util/parse-events.c          | 76 ++++++++++++++++++-------
+>  tools/perf/util/parse-events.h          |  4 ++
+>  7 files changed, 84 insertions(+), 28 deletions(-)
+> 
+> diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+> index 9cc1c4a9dec4..30f5310373ca 100644
+> --- a/tools/perf/arch/powerpc/util/kvm-stat.c
+> +++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+> @@ -113,10 +113,15 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
+>  	struct parse_events_error err;
+>  	int ret;
+>  
+> -	err.str = NULL;
+> +	bzero(&err, sizeof(err));
+>  	ret = parse_events(evlist, str, &err);
+> -	if (err.str)
+> +	if (err.str) {
+>  		pr_err("%s : %s\n", str, err.str);
+> +		free(&err->str);
+> +		free(&err->help);
+> +		free(&err->first_str);
+> +		free(&err->first_help);
+> +	}
+>  	return ret;
+>  }
+>  
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 5964e808d73d..0a15253b438c 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1307,6 +1307,7 @@ static int add_default_attributes(void)
+>  	if (stat_config.null_run)
+>  		return 0;
+>  
+> +	bzero(&errinfo, sizeof(errinfo));
+>  	if (transaction_run) {
+>  		/* Handle -T as -M transaction. Once platform specific metrics
+>  		 * support has been added to the json files, all archictures
+> @@ -1364,6 +1365,7 @@ static int add_default_attributes(void)
+>  			return -1;
+>  		}
+>  		if (err) {
+> +			parse_events_print_error(&errinfo, smi_cost_attrs);
+>  			fprintf(stderr, "Cannot set up SMI cost events\n");
+>  			return -1;
+>  		}
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 43c05eae1768..46a72ecac427 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
+>  {
+>  	bool found = false;
+>  	struct evsel *evsel, *tmp;
+> -	struct parse_events_error err = { .idx = 0, };
+> -	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
+> +	struct parse_events_error err;
+> +	int ret;
+>  
+> -	if (ret)
+> +	bzero(&err, sizeof(err));
+> +	ret = parse_events(evlist, "probe:vfs_getname*", &err);
+> +	if (ret) {
+> +		free(err.str);
+> +		free(err.help);
+> +		free(err.first_str);
+> +		free(err.first_help);
+>  		return false;
+> +	}
+>  
+>  	evlist__for_each_entry_safe(evlist, evsel, tmp) {
+>  		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
+> @@ -4832,8 +4839,9 @@ int cmd_trace(int argc, const char **argv)
+>  	 * wrong in more detail.
+>  	 */
+>  	if (trace.perfconfig_events != NULL) {
+> -		struct parse_events_error parse_err = { .idx = 0, };
+> +		struct parse_events_error parse_err;
+>  
+> +		bzero(&parse_err, sizeof(parse_err));
+>  		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
+>  		if (err) {
+>  			parse_events_print_error(&parse_err, trace.perfconfig_events);
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index 25e0ed2eedfc..091c3aeccc27 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -1768,10 +1768,11 @@ static struct terms_test test__terms[] = {
+>  
+>  static int test_event(struct evlist_test *e)
+>  {
+> -	struct parse_events_error err = { .idx = 0, };
+> +	struct parse_events_error err;
+>  	struct evlist *evlist;
+>  	int ret;
+>  
+> +	bzero(&err, sizeof(err));
+>  	if (e->valid && !e->valid()) {
+>  		pr_debug("... SKIP");
+>  		return 0;
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index a7c0424dbda3..6a4d350d5cdb 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -523,7 +523,7 @@ int metricgroup__parse_groups(const struct option *opt,
+>  	if (ret)
+>  		return ret;
+>  	pr_debug("adding %s\n", extra_events.buf);
+> -	memset(&parse_error, 0, sizeof(struct parse_events_error));
+> +	bzero(&parse_error, sizeof(parse_error));
+>  	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
+>  	if (ret) {
+>  		parse_events_print_error(&parse_error, extra_events.buf);
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 6d18ff9bce49..a369bbc289b2 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -189,12 +189,29 @@ void parse_events__handle_error(struct parse_events_error *err, int idx,
+>  		free(help);
+>  		return;
+>  	}
+> -	WARN_ONCE(err->str, "WARNING: multiple event parsing errors\n");
+> -	err->idx = idx;
+> -	free(err->str);
+> -	err->str = str;
+> -	free(err->help);
+> -	err->help = help;
+> +	switch (err->num_errors) {
+> +	case 0:
+> +		err->idx = idx;
+> +		err->str = str;
+> +		err->help = help;
+> +		break;
+> +	case 1:
+> +		err->first_idx = err->idx;
+> +		err->idx = idx;
+> +		err->first_str = err->str;
+> +		err->str = str;
+> +		err->first_help = err->help;
+> +		err->help = help;
+> +		break;
+> +	default:
+> +		WARN_ONCE(1, "WARNING: multiple event parsing errors\n");
+> +		free(err->str);
+> +		err->str = str;
+> +		free(err->help);
+> +		err->help = help;
+> +		break;
+> +	}
+> +	err->num_errors++;
+>  }
+>  
+>  struct tracepoint_path *tracepoint_id_to_path(u64 config)
+> @@ -2007,15 +2024,14 @@ static int get_term_width(void)
+>  	return ws.ws_col > MAX_WIDTH ? MAX_WIDTH : ws.ws_col;
+>  }
+>  
+> -void parse_events_print_error(struct parse_events_error *err,
+> -			      const char *event)
+> +static void __parse_events_print_error(int err_idx, const char *err_str,
+> +				const char *err_help, const char *event)
+>  {
+>  	const char *str = "invalid or unsupported event: ";
+>  	char _buf[MAX_WIDTH];
+>  	char *buf = (char *) event;
+>  	int idx = 0;
+> -
+> -	if (err->str) {
+> +	if (err_str) {
+>  		/* -2 for extra '' in the final fprintf */
+>  		int width       = get_term_width() - 2;
+>  		int len_event   = strlen(event);
+> @@ -2038,8 +2054,8 @@ void parse_events_print_error(struct parse_events_error *err,
+>  		buf = _buf;
+>  
+>  		/* We're cutting from the beginning. */
+> -		if (err->idx > max_err_idx)
+> -			cut = err->idx - max_err_idx;
+> +		if (err_idx > max_err_idx)
+> +			cut = err_idx - max_err_idx;
+>  
+>  		strncpy(buf, event + cut, max_len);
+>  
+> @@ -2052,16 +2068,33 @@ void parse_events_print_error(struct parse_events_error *err,
+>  			buf[max_len] = 0;
+>  		}
+>  
+> -		idx = len_str + err->idx - cut;
+> +		idx = len_str + err_idx - cut;
+>  	}
+>  
+>  	fprintf(stderr, "%s'%s'\n", str, buf);
+>  	if (idx) {
+> -		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err->str);
+> -		if (err->help)
+> -			fprintf(stderr, "\n%s\n", err->help);
+> -		zfree(&err->str);
+> -		zfree(&err->help);
+> +		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err_str);
+> +		if (err_help)
+> +			fprintf(stderr, "\n%s\n", err_help);
+> +	}
+> +}
+> +
+> +void parse_events_print_error(struct parse_events_error *err,
+> +			      const char *event)
+> +{
+> +	if (!err->num_errors)
+> +		return;
+> +
+> +	__parse_events_print_error(err->idx, err->str, err->help, event);
+> +	zfree(&err->str);
+> +	zfree(&err->help);
+> +
+> +	if (err->num_errors > 1) {
+> +		fputs("\nInitial error:\n", stderr);
+> +		__parse_events_print_error(err->first_idx, err->first_str,
+> +					err->first_help, event);
+> +		zfree(&err->first_str);
+> +		zfree(&err->first_help);
+>  	}
+>  }
+>  
+> @@ -2071,8 +2104,11 @@ int parse_events_option(const struct option *opt, const char *str,
+>  			int unset __maybe_unused)
+>  {
+>  	struct evlist *evlist = *(struct evlist **)opt->value;
+> -	struct parse_events_error err = { .idx = 0, };
+> -	int ret = parse_events(evlist, str, &err);
+> +	struct parse_events_error err;
+> +	int ret;
+> +
+> +	bzero(&err, sizeof(err));
+> +	ret = parse_events(evlist, str, &err);
+>  
+>  	if (ret) {
+>  		parse_events_print_error(&err, str);
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 5ee8ac93840c..ff367f248fe8 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -110,9 +110,13 @@ struct parse_events_term {
+>  };
+>  
+>  struct parse_events_error {
+> +	int   num_errors;       /* number of errors encountered */
+>  	int   idx;	/* index in the parsed string */
+>  	char *str;      /* string to display at the index */
+>  	char *help;	/* optional help string */
+> +	int   first_idx;/* as above, but for the first encountered error */
+> +	char *first_str;
+> +	char *first_help;
+>  };
+>  
+>  struct parse_events_state {
+> -- 
+> 2.24.0.432.g9d3f5f5b63-goog
 
+-- 
+
+- Arnaldo
