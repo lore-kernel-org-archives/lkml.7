@@ -2,81 +2,104 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9C5C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CF5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814EB21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5714D21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:13:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gaNzLAbH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Aipj1ePs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbfKHINh (ORCPT
+        id S1730256AbfKHINw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:13:37 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:62012 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726072AbfKHINh (ORCPT
+        Fri, 8 Nov 2019 03:13:52 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57874 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726072AbfKHINv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:13:37 -0500
-X-UUID: 167b119e3f294fcbaa365433fb373abf-20191108
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xBlkyXC6QXDUVtiAo1Ep4CtUp9rzUNb55vuuwtwgRxQ=;
-        b=gaNzLAbHUbPc8cHrLJOCkW0kG80ufIGtRF9iUaqDaRtsVQh8ow/lZUTpXlzHkhwouwrhoa21FFfCtS57v/v6pwjhTJvW4jAuON/iUmw/aSuFcmWC7kIVENw0Wf65Tk2ZBpSHD7KJxJVMtyTRWB33G0p+Oa/7YKSqEFo251Z65m0=;
-X-UUID: 167b119e3f294fcbaa365433fb373abf-20191108
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <mark-mc.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 72878197; Fri, 08 Nov 2019 16:13:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 8 Nov 2019 16:13:26 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 8 Nov 2019 16:13:26 +0800
-Message-ID: <1573200809.10348.9.camel@mtksdccf07>
-Subject: Re: [PATCH net] net: ethernet: mediatek: rework GDM setup flow
-From:   mtk15127 <Mark-MC.Lee@mediatek.com>
-To:     David Miller <davem@davemloft.net>
-CC:     <sean.wang@mediatek.com>, <john@phrozen.org>,
-        <matthias.bgg@gmail.com>, <andrew@lunn.ch>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <opensource@vdorst.com>,
-        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <jakub.kicinski@netronome.com>,
-        <Mark-MC.Lee@mediatek.com>
-Date:   Fri, 8 Nov 2019 16:13:29 +0800
-In-Reply-To: <20191107.154922.1123372183066604716.davem@davemloft.net>
-References: <20191107105135.1403-1-Mark-MC.Lee@mediatek.com>
-         <20191107.154922.1123372183066604716.davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 8 Nov 2019 03:13:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573200830;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m9gPHJr4lKqA/qy4lU+Ot6ytQsbEtzegqOGni3evgQo=;
+        b=Aipj1ePsaJiRpRRe7/I6nOAv7bKp19/eptFVd32sJENOLi0sAdNYT2Rr+RK0pDYYspP2vM
+        5PWuqSE0bUU41y2BSqdIJPxrRply7HJ20zicwK5S80xbITFwo2Hfpwx2gWflKnQe23o4zG
+        y8KNauG34c4W26YHJmVp5AKbllArpIc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-vk3zzKaIP4mSdaOIoPy9DA-1; Fri, 08 Nov 2019 03:13:46 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B32AD8017DE;
+        Fri,  8 Nov 2019 08:13:45 +0000 (UTC)
+Received: from ovpn-116-229.phx2.redhat.com (ovpn-116-229.phx2.redhat.com [10.3.116.229])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FEB960CCC;
+        Fri,  8 Nov 2019 08:13:45 +0000 (UTC)
+Message-ID: <b56f988176fca4f13c310b9dc866baf5408eeadd.camel@redhat.com>
+Subject: Re: [PATCH] timers/nohz: Update nohz load even if tick already
+ stopped
+From:   Scott Wood <swood@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 08 Nov 2019 02:13:44 -0600
+In-Reply-To: <20191105124351.GN4131@hirez.programming.kicks-ass.net>
+References: <20191028150716.22890-1-frederic@kernel.org>
+         <20191029100506.GJ4114@hirez.programming.kicks-ass.net>
+         <52d963553deda810113accd8d69b6dffdb37144f.camel@redhat.com>
+         <20191030133130.GY4097@hirez.programming.kicks-ass.net>
+         <813ed21938aa47b15f35f8834ffd98ad4dd27771.camel@redhat.com>
+         <alpine.DEB.2.21.1911042315390.17054@nanos.tec.linutronix.de>
+         <alpine.DEB.2.21.1911050042250.17054@nanos.tec.linutronix.de>
+         <7b782bc880a29eb7d37f2c2aff73c43e7f7d032f.camel@redhat.com>
+         <20191105124351.GN4131@hirez.programming.kicks-ass.net>
+Organization: Red Hat
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: vk3zzKaIP4mSdaOIoPy9DA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTExLTA3IGF0IDE1OjQ5IC0wODAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
-IEZyb206IE1hcmtMZWUgPE1hcmstTUMuTGVlQG1lZGlhdGVrLmNvbT4NCj4gRGF0ZTogVGh1LCA3
-IE5vdiAyMDE5IDE4OjUxOjM1ICswODAwDQo+IA0KPiA+ICsJZm9yIChpID0gMDsgaSA8IDI7IGkr
-Kykgew0KPiANCj4gVGhpcyBpcyBhIHJlZ3Jlc3Npb24sIGJlY2F1c2UgaW4gdGhlIGV4aXN0aW5n
-IGNvZGUuLi4NCj4gDQo+ID4gLQlmb3IgKGkgPSAwOyBpIDwgTVRLX01BQ19DT1VOVDsgaSsrKSB7
-DQo+IA0KPiB0aGUgcHJvcGVyIG1hY3JvIGlzIHVzZWQgaW5zdGVhZCBvZiBhIG1hZ2ljIGNvbnN0
-YW50Lg0KIFllcywgeW91IGFyZSByaWdodCwgSSBtYWtlIGEgbWlzdGFrZSBoZXJlLCB3aWxsIGNv
-cnJlY3QgaXQgaW4gdGhlIG5leHQNCnBhdGNoDQo+IA0KPiBZb3UncmUgZG9pbmcgc28gbWFueSB0
-aGluZ3MgaW4gb25lIGNoYW5nZSwgaXQncyBoYXJkIHRvIHJldmlldw0KPiBhbmQgYXVkaXQuDQo+
-IA0KPiBJZiB5b3UncmUgZ29pbmcgdG8gY29uc29saWRhdGUgY29kZSwgZG8gdGhhdCBvbmx5IGlu
-IG9uZSBjaGFuZ2UuDQo+IA0KPiBUaGVuIG1ha2Ugb3RoZXIgZnVuY3Rpb25hbCBjaGFuZ2VzIHN1
-Y2ggYXMgcHV0dGluZyB0aGUgY2hpcCBpbnRvDQo+IEdETUFfRFJPUF9BTEwgbW9kZSBkdXJpbmcg
-dGhlIHN0b3Agb3BlcmF0aW9uIGV0Yy4NClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLCBJIHdp
-bGwgc2VwYXJhdGUgdGhlc2UgY2hhbmdlcyBpbnRvDQphIHBhdGNoIHNlcmllcyB0byBtYWtlIGV2
-ZXJ5IGNoYW5nZSB0byBiZSBtb3JlIGNsZWFyIGZvciBpdHMgDQpwdXJwb3NlLg0KDQoNCg==
+On Tue, 2019-11-05 at 13:43 +0100, Peter Zijlstra wrote:
+> On Tue, Nov 05, 2019 at 01:30:58AM -0600, Scott Wood wrote:
+> > As for the warning in sched_tick_remote(), it seems like a test for tim=
+e
+> > since the last tick on this cpu (remote or otherwise) would be better
+> > than
+> > relying on curr->se.exec_start, in order to detect things like this.
+>=20
+> I don't think we have a timestamp that is shared between the remote and
+> local tick.=20
+
+Why wouldn't rq_clock_task() work on the local tick?  It's what
+->task_tick() itself uses.
+
+> Also, there is a reason this warning uses the task time
+> accounting, there used to be (as in, I can't find it in a hurry) code
+> that could not deal with >u32 (~4s) clock updates.
+
+Detecting a 3 second interval between ticks for a given cpu should assert i=
+n
+a superset of the situations the current check asserts in -- it just avoids
+the false negative of exec_runtime getting updated by something other than
+the tick.
+
+-Scott
+
 
