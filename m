@@ -4,84 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065B6FC6198
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE8C17440
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C927D215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B14214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbfKHWjK (ORCPT
+        id S1731020AbfKHWlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:39:10 -0500
-Received: from mga07.intel.com ([134.134.136.100]:9337 "EHLO mga07.intel.com"
+        Fri, 8 Nov 2019 17:41:03 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:51798 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731203AbfKHWjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:39:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 14:39:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
-   d="scan'208";a="206137930"
-Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by orsmga003.jf.intel.com with ESMTP; 08 Nov 2019 14:39:03 -0800
-From:   thor.thayer@linux.intel.com
-To:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     richard.gong@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [PATCH 2/2] arm64: dts: agilex: Add SysMgr to Ethernet nodes
-Date:   Fri,  8 Nov 2019 16:40:54 -0600
-Message-Id: <1573252854-25801-3-git-send-email-thor.thayer@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
+        id S1727798AbfKHWlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 17:41:02 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 436B91A03DF;
+        Fri,  8 Nov 2019 23:41:01 +0100 (CET)
+Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A32A1A03CA;
+        Fri,  8 Nov 2019 23:41:01 +0100 (CET)
+Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.70])
+        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id 2D4F140CB6;
+        Fri,  8 Nov 2019 15:41:00 -0700 (MST)
+From:   Li Yang <leoyang.li@nxp.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>, Biwen Li <biwen.li@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>
+Subject: [PATCH] rtc: fsl-ftm-alarm: remove select FSL_RCPM and default y from Kconfig
+Date:   Fri,  8 Nov 2019 16:40:56 -0600
+Message-Id: <1573252856-11759-1-git-send-email-leoyang.li@nxp.com>
+X-Mailer: git-send-email 1.9.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+The Flextimer alarm is primarily used as a wakeup source for system
+power management.  But it shouldn't select the power management driver
+as they don't really have dependency of each other.
 
-Ethernet needs the System Manager to setup the low-level
-interface and PHY.
+Also remove the default y as it is not a critical feature for the
+systems.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 ---
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/rtc/Kconfig | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index 7e8dc85fcebc..d8caa3f609b5 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -150,6 +150,7 @@
- 			iommus = <&smmu 1>;
- 			clocks = <&clkmgr AGILEX_EMAC0_CLK>;
- 			clock-names = "stmmaceth";
-+			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
- 			status = "disabled";
- 		};
- 
-@@ -167,6 +168,7 @@
- 			iommus = <&smmu 2>;
- 			clocks = <&clkmgr AGILEX_EMAC1_CLK>;
- 			clock-names = "stmmaceth";
-+			altr,sysmgr-syscon = <&sysmgr 0x48 8>;
- 			status = "disabled";
- 		};
- 
-@@ -184,6 +186,7 @@
- 			iommus = <&smmu 3>;
- 			clocks = <&clkmgr AGILEX_EMAC2_CLK>;
- 			clock-names = "stmmaceth";
-+			altr,sysmgr-syscon = <&sysmgr 0x4c 16>;
- 			status = "disabled";
- 		};
- 
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 1adf9f815652..b33b80243143 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1337,8 +1337,6 @@ config RTC_DRV_IMXDI
+ config RTC_DRV_FSL_FTM_ALARM
+ 	tristate "Freescale FlexTimer alarm timer"
+ 	depends on ARCH_LAYERSCAPE || SOC_LS1021A
+-	select FSL_RCPM
+-	default y
+ 	help
+ 	   For the FlexTimer in LS1012A, LS1021A, LS1028A, LS1043A, LS1046A,
+ 	   LS1088A, LS208xA, we can use FTM as the wakeup source.
 -- 
-2.7.4
+2.17.1
 
