@@ -2,90 +2,109 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DFEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14F0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C501D21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573210996;
-	bh=J/Gsm5N/mj+ik5tmWzF15ve/593DRKXBLK4N9zKCikI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oa5w4zCicV2OgE2bdl6n+8aSVCzDrXbvqe57H8szaftSxT9fyYO+T37aO1iBbs0G1
-	 FBNrRln2s41P0Z0lK5lSjG/yEUOgY+F57EHVVnQjUBxkjwPJKMQXM6LRHBY7bCzXIW
-	 GmwQyp6PZlVToPA7OxGmaDLRWuodfx/2d7CEKC1o=
+	by mail.kernel.org (Postfix) with ESMTP id A39EC206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:04:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A8NLIWCi";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GfWqVwQo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbfKHLDP (ORCPT
+        id S1731756AbfKHLEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:03:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfKHLDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:03:15 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 Nov 2019 06:04:13 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:41226 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfKHLEN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:04:13 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2887460913; Fri,  8 Nov 2019 11:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573211052;
+        bh=d85PiEzTKZnD4rW8ooec1lt7MpOUj9J4ixcs+n0zX9I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A8NLIWCigNLq8rWL3fhGp8qYpPpfNAQsUDH6Hvor1IKXBZPHwGOhrOidC9+NaUj3Y
+         wm8NMY5+5Doi+ApMxd+ZACQjGn4gi08HpKJL/PHWzLWQmPyIbomje1uYeUcuB94hX/
+         ESnVYf4t9g/3qAMHPly5aFHlg6d2cAQitpaGXSRE=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C72EF206BA;
-        Fri,  8 Nov 2019 11:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573210994;
-        bh=J/Gsm5N/mj+ik5tmWzF15ve/593DRKXBLK4N9zKCikI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GPUpB2qieVF3EyX+Obw28FlE6xo23nwE/xykonNN3EZtnaxcpvEFeX+8ufsaXb5th
-         +ksXQteLE30PzN2sUWXuJdcrvuV/YqSRLbHtKk9h1qsPcUG586CeeZJJMYvyQclJah
-         tyoRDGyrsSCcnNRNjplrIRLCVouz6GYQbwN+T1LQ=
-Date:   Fri, 8 Nov 2019 11:03:10 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 5/7] iommu/arm-smmu-v3: Allow building as a module
-Message-ID: <20191108110310.GC19153@willie-the-truck>
-References: <20191030145112.19738-1-will@kernel.org>
- <20191030145112.19738-6-will@kernel.org>
- <20191030193148.GA8432@8bytes.org>
- <20191031154247.GB28061@willie-the-truck>
- <20191105121508.GA3479@8bytes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105121508.GA3479@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5021A602BD;
+        Fri,  8 Nov 2019 11:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573211050;
+        bh=d85PiEzTKZnD4rW8ooec1lt7MpOUj9J4ixcs+n0zX9I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GfWqVwQoV9Amr3ZDWp0foiRawDLhM6EebifTzZYdkktLhfYQGun36efBNw3/s58BF
+         Y2X2HnRxr7fjM1Yh+rax2UK3bW0Q09eAZPIQ56QOCTlWR9dm5RmZVfnOYeZUin5WYt
+         Dm7rjxmKbcgR36Ig1Tg597wOO7kCvFKb7Vt6idyk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5021A602BD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: Fix deadlock under storage almost full/dirty condition
+Date:   Fri,  8 Nov 2019 16:33:47 +0530
+Message-Id: <1573211027-30785-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+There could be a potential deadlock when the storage capacity
+is almost full and theren't enough free segments available, due
+to which FG_GC is needed in the atomic commit ioctl as shown in
+the below callstack -
 
-On Tue, Nov 05, 2019 at 01:15:08PM +0100, Joerg Roedel wrote:
-> On Thu, Oct 31, 2019 at 03:42:47PM +0000, Will Deacon wrote:
-> > Generally, I think unloading the IOMMU driver module while there are
-> > active users is a pretty bad idea, much like unbinding the driver via
-> > /sys in the same situation would also be fairly daft. However, I *think*
-> > the code in __device_release_driver() tries to deal with this by
-> > iterating over the active consumers and ->remove()ing them first.
-> > 
-> > I'm without hardware access at the moment, so I haven't been able to
-> > test this myself. We could nobble the module_exit() hook, but there's
-> > still the "force unload" option depending on the .config.
-> 
-> Okay, but besides the force-unload case, can we prevent accidential
-> unloading by taking a reference to the module in add_device() and release
-> it in remove_device()?
+schedule_timeout
+io_schedule_timeout
+congestion_wait
+f2fs_drop_inmem_pages_all
+f2fs_gc
+f2fs_balance_fs
+__write_node_page
+f2fs_fsync_node_pages
+f2fs_do_sync_file
+f2fs_ioctl
 
-That's probably a sensible starting point, yes. In conjunction with the
-patch from Jean-Philippe to introduce bus_unset_iommu(), we might have
-a fighting chance of getting this to work.
+If this inode doesn't have i_gc_failures[GC_FAILURE_ATOMIC] set,
+then it waits forever in f2fs_drop_inmem_pages_all(), for this
+atomic inode to be dropped. And the rest of the system is stuck
+waiting for sbi->gc_mutex lock, which is acquired by f2fs_balance_fs()
+in the stack above.
 
-I'll spin a v2.
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+ fs/f2fs/segment.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks!
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index da830fc..335ec09 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -300,7 +300,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
+ 
+ 	if (inode) {
+ 		if (gc_failure) {
+-			if (fi->i_gc_failures[GC_FAILURE_ATOMIC])
++			if (fi->i_gc_failures[GC_FAILURE_ATOMIC] ||
++				F2FS_I(inode)->inmem_task == current)
+ 				goto drop;
+ 			goto skip;
+ 		}
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-Will
