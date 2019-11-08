@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6EFFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64516FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39ED2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323042085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214945;
-	bh=0mGVJ9uX0ARCdCw/vdbCln6Nb+99wd6SXVvf6W+1R9I=;
+	s=default; t=1573214951;
+	bh=e6m2D9GsLTb/2SC3kjO+2tBWWWAaE8pBWyaHznMx5kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/3bC3EY45vooG93+H9aR+OFp51b+f0hYM5a922Ry18+AZVRK3SVrfQ5LfjuK9nYx
-	 mx/elvkDJ8FQ20L1LIXd5fTJfup6kmRzQlzaeGu7cDvFD+3odRhl6DsBq8I5+Offby
-	 8QLCKpE8HX62OnEvSIsmYxmOZ1hEZ0tpiMMTUDO0=
+	b=c5WXjk08Qlov1k4FWUyUpL4jRQG0nv/zebcX2fmcCL72Wq19zAIXpLpEkIyaxJrOn
+	 TCwF+4isjhbobSWronai7vbvo6KFV1PWoz5pnvZjWcp/Eq7ynHy8R9qL/g8cmUs7mt
+	 FIFekiFWARR7HMGU2lvZ2kuqLJKnW6b8xrHDWOts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391920AbfKHMJE (ORCPT
+        id S2389928AbfKHMJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:09:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:09:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732002AbfKHLkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:17 -0500
+        id S2388519AbfKHLkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B32AE21D6C;
-        Fri,  8 Nov 2019 11:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B91D321D7F;
+        Fri,  8 Nov 2019 11:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213216;
-        bh=0mGVJ9uX0ARCdCw/vdbCln6Nb+99wd6SXVvf6W+1R9I=;
+        s=default; t=1573213211;
+        bh=e6m2D9GsLTb/2SC3kjO+2tBWWWAaE8pBWyaHznMx5kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GTC0Nu/qdXdlBTkwZMo8WNPLwzFTvh6uI5VIiMmUo9wmcAp3GAIpZf0bQLrNAoqTo
-         6Kq6JlP9iCcYbvySj2sEcohVpeLpkJxfPqCD9aK0x7vdAK089rA7vpavmNH5xx50X+
-         itgAYc9/oiQWU2hGD6/casGcKECprTGycFsdo7Jk=
+        b=HNVFxTDeFTQayrAGyXVaoWCYBium5U7HCQaNG9QUvvKhicK0+QWXlAKTiSFLI/P/d
+         0R571ACA0kFLRVltjBe2eoys3XCZ2CgAQiZRnHhNJeZJM97K9oNEBH52R3V775sutb
+         sPfWCiy9aG+iB/sdEVEs+PWsB6+Mxwlz2eFtLU4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jun Gao <jun.gao@mediatek.com>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 095/205] i2c: mediatek: Use DMA safe buffers for i2c transactions
-Date:   Fri,  8 Nov 2019 06:36:02 -0500
-Message-Id: <20191108113752.12502-95-sashal@kernel.org>
+Cc:     "K.T.VIJAYAKUMAAR" <vijay.bvb@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 092/205] ath10k: avoid possible memory access violation
+Date:   Fri,  8 Nov 2019 06:35:59 -0500
+Message-Id: <20191108113752.12502-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -58,140 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
+From: "K.T.VIJAYAKUMAAR" <vijay.bvb@samsung.com>
 
-[ Upstream commit fc66b39fe36acfd06f716e338de7cd8f9550fad2 ]
+[ Upstream commit 97c69a70dc2cecb2c3b96a66529e0082dabc2d2c ]
 
-DMA mode will always be used in i2c transactions, try to allocate
-a DMA safe buffer if the buf of struct i2c_msg used is not DMA safe.
+array "ctl_power_table" access index "pream" is initialized with -1 and
+is raised as a static analysis tool issue.
+[drivers\net\wireless\ath\ath10k\wmi.c:4719] ->
+[drivers\net\wireless\ath\ath10k\wmi.c:4730]: (error) Array index -1 is
+out of bounds.
 
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Since the "pream" index for accessing ctl_power_table array is initialized
+with -1, there is a chance of memory access violation for the cases below.
+1) wmi_pdev_tpc_final_table_event change frequency is between 2483 and 5180
+2) pream_idx is out of the enumeration ranges of wmi_tpc_pream_2ghz,
+wmi_tpc_pream_5ghz
+
+Signed-off-by: K.T.VIJAYAKUMAAR <vijay.bvb@samsung.com>
+[kvalo@codeaurora.org: clean up the warning message]
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-mt65xx.c | 62 +++++++++++++++++++++++++++++----
- 1 file changed, 55 insertions(+), 7 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 1e57f58fcb001..a74ef76705e0c 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -441,6 +441,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	u16 control_reg;
- 	u16 restart_flag = 0;
- 	u32 reg_4g_mode;
-+	u8 *dma_rd_buf = NULL;
-+	u8 *dma_wr_buf = NULL;
- 	dma_addr_t rpaddr = 0;
- 	dma_addr_t wpaddr = 0;
- 	int ret;
-@@ -500,10 +502,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	if (i2c->op == I2C_MASTER_RD) {
- 		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
--		rpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_rd_buf)
-+			return -ENOMEM;
-+
-+		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
- 					msgs->len, DMA_FROM_DEVICE);
--		if (dma_mapping_error(i2c->dev, rpaddr))
-+		if (dma_mapping_error(i2c->dev, rpaddr)) {
-+			i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, false);
-+
- 			return -ENOMEM;
-+		}
- 
- 		if (i2c->dev_comp->support_33bits) {
- 			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
-@@ -515,10 +525,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	} else if (i2c->op == I2C_MASTER_WR) {
- 		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
--		wpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_wr_buf)
-+			return -ENOMEM;
-+
-+		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
- 					msgs->len, DMA_TO_DEVICE);
--		if (dma_mapping_error(i2c->dev, wpaddr))
-+		if (dma_mapping_error(i2c->dev, wpaddr)) {
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+
- 			return -ENOMEM;
-+		}
- 
- 		if (i2c->dev_comp->support_33bits) {
- 			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
-@@ -530,16 +548,39 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	} else {
- 		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
--		wpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_wr_buf)
-+			return -ENOMEM;
-+
-+		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
- 					msgs->len, DMA_TO_DEVICE);
--		if (dma_mapping_error(i2c->dev, wpaddr))
-+		if (dma_mapping_error(i2c->dev, wpaddr)) {
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+
- 			return -ENOMEM;
--		rpaddr = dma_map_single(i2c->dev, (msgs + 1)->buf,
-+		}
-+
-+		dma_rd_buf = i2c_get_dma_safe_msg_buf((msgs + 1), 0);
-+		if (!dma_rd_buf) {
-+			dma_unmap_single(i2c->dev, wpaddr,
-+					 msgs->len, DMA_TO_DEVICE);
-+
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+
-+			return -ENOMEM;
-+		}
-+
-+		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
- 					(msgs + 1)->len,
- 					DMA_FROM_DEVICE);
- 		if (dma_mapping_error(i2c->dev, rpaddr)) {
- 			dma_unmap_single(i2c->dev, wpaddr,
- 					 msgs->len, DMA_TO_DEVICE);
-+
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+			i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), false);
-+
- 			return -ENOMEM;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 9f31b9a108507..583147f00fa4e 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -4785,6 +4785,13 @@ ath10k_wmi_tpc_final_get_rate(struct ath10k *ar,
  		}
- 
-@@ -578,14 +619,21 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	if (i2c->op == I2C_MASTER_WR) {
- 		dma_unmap_single(i2c->dev, wpaddr,
- 				 msgs->len, DMA_TO_DEVICE);
-+
-+		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
- 	} else if (i2c->op == I2C_MASTER_RD) {
- 		dma_unmap_single(i2c->dev, rpaddr,
- 				 msgs->len, DMA_FROM_DEVICE);
-+
-+		i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, true);
- 	} else {
- 		dma_unmap_single(i2c->dev, wpaddr, msgs->len,
- 				 DMA_TO_DEVICE);
- 		dma_unmap_single(i2c->dev, rpaddr, (msgs + 1)->len,
- 				 DMA_FROM_DEVICE);
-+
-+		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
-+		i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), true);
  	}
  
- 	if (ret == 0) {
++	if (pream == -1) {
++		ath10k_warn(ar, "unknown wmi tpc final index and frequency: %u, %u\n",
++			    pream_idx, __le32_to_cpu(ev->chan_freq));
++		tpc = 0;
++		goto out;
++	}
++
+ 	if (pream == 4)
+ 		tpc = min_t(u8, ev->rates_array[rate_idx],
+ 			    ev->max_reg_allow_pow[ch]);
 -- 
 2.20.1
 
