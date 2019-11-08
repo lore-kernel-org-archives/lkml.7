@@ -2,114 +2,117 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD720C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B95FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE7E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:22:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CEfiZj/b"
+	by mail.kernel.org (Postfix) with ESMTP id EFFC92084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbfKHRWy (ORCPT
+        id S1727010AbfKHRZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:22:54 -0500
-Received: from mail-il1-f175.google.com ([209.85.166.175]:34929 "EHLO
-        mail-il1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKHRWy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:22:54 -0500
-Received: by mail-il1-f175.google.com with SMTP id z12so5812828ilp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 09:22:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kCFuBzX0ssMEDdf5FEm7iYvhAqHfXgR1VUvfj9lOe/w=;
-        b=CEfiZj/bsHwWAjk9E2+anUgIMAxbVSUOX+XJF2bZ0OcF0BZenHgQ0u67RQKxsSJVvO
-         cg6auRE4K1Dd46AV9IDjw+fBDqbhIOvgtZ+xWLJSCCu7ESdlYcccDwf50l/5fKpJ98SU
-         qu2KR81c1yXgqEMCFodWqnFqZnWA1GSDihhSmrcE97ct41ooi829D6bwXP4yixBHxOPR
-         82Q1s9H/qJ44YK+ZDn1u9LMEaIEj2yNDLFqsg5PTSK9is2D2nmxrN7ZlqJUqvN89jCDH
-         Z6dtGmWJoisrj5v4yiRnDtrVjKHAtkPbjKMzgkdxrde76DY/9Tx2bxjqD4hsArlMj+q+
-         6A3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kCFuBzX0ssMEDdf5FEm7iYvhAqHfXgR1VUvfj9lOe/w=;
-        b=AkPvyJfdoyrzeZF0a//SM5/n2DDGIwFUFD+fEewbSV/cP6cQIuREX1Hrf6w24zNt+g
-         tmFneTHsq7+kXlekFUVPrs+v3CFpft60PIQO1QJGa891TVBAsi6AzC5vQ/Ko2P87uQzw
-         syml8P/WQQMSsugXjRkwPeS7PnNgxn23FF7izDTjh9tONi+6lw1AcNTj0Blx1OSdCfF2
-         iktSS2DoAH9Tvb02tPFFiGwxDm4C9vHu/vtzAejh79QIQ2pR16TLD0j7AaeHkVRYOfM+
-         2qFcUWx7hdJsnbexLgzqtNtuST91m05tAjD4z2bwcUsxR1s2L7ToJCcjPiAo8ox4Dmol
-         bFUA==
-X-Gm-Message-State: APjAAAWqSLFVI+PagyUVd0eLbQqCwzNnRzN6JTD3OZzV/HdCDdbCAnPs
-        kd1JuMxuBpRTRMrVr7oIp/5mtl1du9vjtYPPOfyqtw==
-X-Google-Smtp-Source: APXvYqzUhTWVQWwZl8pu4w3UpG3z5Kvyp3soCrK0nJh9KxmLxN13e63bMlw9t1jl9c/rHz3FMSCFcELVM2qH6Nh1RWI=
-X-Received: by 2002:a92:7e0d:: with SMTP id z13mr14651612ilc.168.1573233772737;
- Fri, 08 Nov 2019 09:22:52 -0800 (PST)
+        Fri, 8 Nov 2019 12:25:13 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2079 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726101AbfKHRZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:25:12 -0500
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 1CCADF52432EBF2D3D08;
+        Fri,  8 Nov 2019 17:25:11 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 8 Nov 2019 17:25:10 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 8 Nov 2019
+ 17:25:10 +0000
+Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
+ explicitly non-modular"
+To:     Will Deacon <will@kernel.org>
+CC:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191108151608.20932-1-will@kernel.org>
+ <20191108151608.20932-7-will@kernel.org>
+ <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
+ <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
+ <20191108164728.GB20866@willie-the-truck>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <c4cb13d3-3786-2e45-ba57-9965cead9a49@huawei.com>
+Date:   Fri, 8 Nov 2019 17:25:09 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <000000000000c422a80596d595ee@google.com> <6bddae34-93df-6820-0390-ac18dcbf0927@gmail.com>
- <CAHk-=whh5bcxCecEL5Fy4XvQjgBTJ9uqvyp7dW=CLU6VNxS9iA@mail.gmail.com>
-In-Reply-To: <CAHk-=whh5bcxCecEL5Fy4XvQjgBTJ9uqvyp7dW=CLU6VNxS9iA@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Fri, 8 Nov 2019 09:22:41 -0800
-Message-ID: <CANn89iK9mTJ4BN-X3MeSx5LGXGYafXkhZyaUpdXDjVivTwA6Jg@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191108164728.GB20866@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 9:01 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Nov 8, 2019 at 5:28 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> >
-> > Linus, what do you think of the following fix ?
->
-> I think it's incredibly ugly.
->
-> I realize that avoiding the cacheline dirtying might be worth it, but
-> I'd like to see some indication that it actually matters and helps
-> from a performance angle. We've already dirtied memory fairly close,
-> even if it might not share a cacheline (that structure is randomized,
-> we've touched - or will touch - 'cred->usage') too.
->
-> Honestly, I don't think get_cred() is even in a hotpath. Most cred use
-> just use the current cred that doesn't need the 'get'. So the
-> optimization looks somewhat questionable - for all we know it just
-> makes things worse.
->
-> I also don't like using a "WRITE_ONCE()" without a reason for it. In
-> this case, the only "reason" is that KCSAN special-cases that thing.
-> I'd much rather have some other way to mark it.
->
-> So it just looks hacky to me.
->
-> I like that people are looking at KCSAN, but I get a very strong
-> feeling that right now the workarounds for KCSAN false-positives are
-> incredibly ugly, and not always appropriate.
->
-> There is absolutely zero need for a WRITE_ONCE() in this case. The
-> code would work fine if the compiler did the zero write fifty times,
-> and re-ordered it wildly. We have a flag that starts out set, and we
-> clear it.  There's really no "write-once" about it.
->
+On 08/11/2019 16:47, Will Deacon wrote:
+> On Fri, Nov 08, 2019 at 04:44:25PM +0000, John Garry wrote:
+>> On 08/11/2019 16:17, John Garry wrote:
+>>> On 08/11/2019 15:16, Will Deacon wrote:
+>>>> +MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+>>>
+>>> Hi Will,
+>>>
+>>>>    static struct platform_driver arm_smmu_driver = {
+>>>>        .driver    = {
+>>>>            .name        = "arm-smmu-v3",
+>>>>            .of_match_table    = of_match_ptr(arm_smmu_of_match),
+>>>> -        .suppress_bind_attrs = true,
+>>>
+>>> Does this mean that we can now manually unbind this driver from the SMMU
+>>> device?
+>>>
+>>> Seems dangerous. Here's what happens for me:
+>>>
+>>> root@ubuntu:/sys# cd ./bus/platform/drivers/arm-smmu-v3
+>>> ind @ubuntu:/sys/bus/platform/drivers/arm-smmu-v3# echo
+>>> arm-smmu-v3.0.auto > unbind
+>>> [   77.580351] hisi_sas_v2_hw HISI0162:01: CQE_AXI_W_ERR (0x800) found!
+>>> ho [   78.635473] platform arm-smmu-v3.0.auto: CMD_SYNC timeout at
+>>> 0x00000146 [hwprod 0x00000146, hwcons 0x00000000]
+>>>
+>>>>        },
+>>>>        .probe    = arm_smmu_device_probe,
+>>>> +    .remove    = arm_smmu_device_remove,
+>>>>        .shutdown = arm_smmu_device_shutdown,
+>>>>    };
+>>>> -builtin_platform_driver(arm_smmu_driver);
+>>>> +module_platform_driver(arm_smmu_driver);
+>>>> +
+>>
+>> BTW, it now looks like it was your v1 series I was testing there, on your
+>> branch iommu/module. It would be helpful to update for ease of testing.
+> 
 
-Ok, so what do you suggest next ?
+Hi Will,
 
-Declare KCSAN useless because too many false positives ?
+> Yes, sorry about that. I'll update it now (although I'm not sure it will
+> help with this -- I was going to see what happens with other devices such
+> as the intel-iommu or storage controllers)
+
+So I tried your v2 series for this - it has the same issue, as I 
+anticipated.
+
+It seems that some iommu drivers do call iommu_device_register(), so 
+maybe a decent reference. Or simply stop the driver being unbound.
+
+Cheers,
+John
+
