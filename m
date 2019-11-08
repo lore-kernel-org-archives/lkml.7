@@ -2,139 +2,111 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470C2FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888DEFC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2183A20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6557620674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731802AbfKHUfZ (ORCPT
+        id S1731911AbfKHUfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:35:25 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:51245 "EHLO
+        Fri, 8 Nov 2019 15:35:34 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:46863 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbfKHUfY (ORCPT
+        with ESMTP id S1726843AbfKHUfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:35:24 -0500
+        Fri, 8 Nov 2019 15:35:34 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N33V5-1hlqNF3sD7-013KFA; Fri, 08 Nov 2019 21:34:45 +0100
+ 1M890H-1iXpoO1zD1-005LFy; Fri, 08 Nov 2019 21:35:23 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org
+To:     y2038@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Corey Minyard <minyard@acm.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Stephen Boyd <sboyd@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linuxppc-dev@lists.ozlabs.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-input@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        sparclinux@vger.kernel.org
-Subject: [PATCH 0/8] y2038: bug fixes from y2038 work
-Date:   Fri,  8 Nov 2019 21:34:23 +0100
-Message-Id: <20191108203435.112759-1-arnd@arndb.de>
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Subject: [PATCH 2/8] timekeeping: optimize ns_to_timespec64
+Date:   Fri,  8 Nov 2019 21:34:25 +0100
+Message-Id: <20191108203435.112759-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191108203435.112759-1-arnd@arndb.de>
+References: <20191108203435.112759-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:onYIVYfp5Mx1RrUFk0F9wq5iI+dqorjM5aBE72U93aTSbPGsiEH
- OgqmaTzcj80pu1s1hMBgp49QlgyJ7rNubi4HQ+SNtLKHlNHw7UDpadkGCFY+GcDVw41DVye
- FrU7tCGHXGj1wcbqKgqiBp/hv63ZhOmHxE5v1qZQbLWrHUnVlooIDiEJVfnnnRlsetqKDMj
- 6/PfgmoNhjrn6CYi3P+AA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V3pT7w4OZMM=:zYEUjZknHOmFruRY3Tk/pl
- wRrkB9EkTxkg3VX6P5V+Sz7Mzw/U9rqfhCLPbV5K7bnCIOm6PPWp9uwvkvJPRNr/xaYhNNVDL
- HBhOO1RU2ihx43VfyjSymHoIRA4e8J6kXO0n+ff3+SvsuXV67dHzWdiJgJdF5fcHeuULLdOGM
- wEkUwrKPcDyYR2IP5FsRgltiX/Lq+Bh0rqiRA3p94HrILlG/sn6iSj9ZvDGEfMeJ1paYNCGl7
- K1GkrVql1wtqYBsrKBx9hibZ6cZ759vK8OskStBQQf1G8iFUeRCEmpVMUAPZ9sgkGKd4ETeFV
- xUJ//Vddt0O+5XMv4EBvpHgRBuqY/HuHqky1CIPHSbRCEVNsobz4XM9t1mJvfH1c/MD7a+azu
- h3okZcNpYLzCLyuML9cb16m1MQqIcXaN8ql7W7+jhj6tRhSNNWwRN3dvgapg9McTZLBmzu+KF
- 7POpxVXIIIVfC3tCBYedhED2kopxojiTYfI2bZs6Gx9NaLdGQTabvZX5bYqIL3/SOPdU1gH6U
- TWAYwU83i4p7DEqD90Lubci9HhuB08X+QOBaBt0IAJEEDtwNU5XLD+lSkHcnluCAUiO9Ltu3E
- QgtdeFAFmvb6TgiVKr69oZrPobspdM0HrD76sFjegnfjPXFgCXF2exI+am2mash87OEVn3aB0
- KQrqKLUiNdfqa64AJ9txSQpXu/7YXUnedz76RMpQ/YZ+iaZ5okFTc3k170y2RvKY1VL8oWeM4
- T0FHUMaj1O35XhR0Cp6Rg6yqR9Top24p39TPTuI3jSJjBXQo/xRwKeAUKp7cOUUulMnWmij4c
- iyZ7TQZCCMQhwMHmv0ImigrqmoaXKuUYkolCj7pl5gSE30zlpfyPWeHE+jdOO8CqVztGI6UO/
- ibGTxu1AjHd9Ore1WJPg==
+X-Provags-ID: V03:K1:p1S8Vm5S9mOTgTtbXxcpOxF1EXzFZzdK9j2/O1Ee3fyzg6An3tR
+ lBZ66pgI6iZBdXJ54mOxMj2nung87BghhEiWfxdG2ow0YQZe3LBxlQHQnjDZSxBjyPP6tsx
+ bfA1fPNf8Y/POpr6MTYVPhxSUZOUYGbIQoes/LWQ9akDbcZ0iPTgN3lULhrc1E8aUwlXJcD
+ AIBfjtmvDO9y5gP5/i1Cw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JDO+ITcPMoo=:KOb3c4dgHZm81zl2vb18eF
+ pWebkyKHxGEifiJWZ54rdWO4EDw6xCHtWkieKB+x9+7D8OmHsVfjvpETrYQo2wUdAaE0h1h4+
+ T3+uLnkIkn8wzgp1MBhgy3BtZeAZevrpFrOLa9ymq7Z3Y99Lw1q5dW0OHip+eQCXlsnsBeFlH
+ yTyW9a1FcIopKY5/zJ7SLS6l1CGA/1Y998Zt8dwvZcZYml2lX4lbi5dxrUiAOo6u2u9e82MEg
+ tjY2bZRJuW5F1nGc4q42bxLjo8cJvir56AzHSTuHq1XlPERNu7iaQ4tdBSNx4J4SIkwryAgpU
+ 2cwHhCGxgVwwUfFRwi3XnVA9PSaz8xSEGT7NV6rdZF8+ljVrwb6zwis5Q74WN3EcPbqpyFfH5
+ QafBvgDWytSz/Yz0kNvhi2zOb32YQul2P4/tvNRxuWvYPwHg0QFaxPjmCVV66ZEJQPjlFN3w7
+ 9TjH0JFkW1xK6IJ3jo9ceK5oPk30o8Rlww+3GNPmAVWKrnsJmGOcwbquhV4hsl8PSG75KwGL2
+ cZ9sAynyBuBuxxylD0UoPCZYtwDPWgpvNT0xyh2SSWYimErGmmou0gB405flo+sxy3r8b0F+C
+ 3ebXI8xwQRI85xU7NzPN0kVqiKIoYJG5HG7AD3lsRJ5LFRLJ3lScJZlQee69Fd40hBZYariIS
+ ufxBamy4nk5xIjnf3Xx4iuHQDoTcYpcFM5LYYRmgk9Cc3F9T+FMfetnIf5EBA/llIjoJSx2mn
+ wKx4qlGfFdKr7qy/zBQ+x/mLHhPmupOBOEcaZqCiaq0SBvr8YVTjaBYpjxAFQARuNRyGF4DRk
+ NkKFlRRjatiBtoBOQsS1ta16lpSGOxoTm+AFIERp8O+8nHI6DSSACAYjUWZzy3lhltKMIVVWv
+ +Ff45mQWVHAVLgeUCWOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've gone through the remaining uses of time_t etc and come up with a
-set of 90 patches of varying complexity and importance, to the point
-of being able to remove the old time_t/timeval/timespec from the kernel
-headers completely.
+I noticed that ns_to_timespec64() calls div_s64_rem(), which is
+a rather slow function on 32-bit architectures, as it cannot take
+advantage of the do_div() optimizations for constant arguments.
 
-This set includes the eight patches that I think should be merged
-right away and backported into stable kernels if possible.
+This open-codes the div_s64_rem() function here, so we can pass
+a constant divider into the optimized div_u64_rem() function.
 
-Please apply individual patches to the respective maintainer trees
-for either v5.4 or v5.5 as appropriate.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ kernel/time/time.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-For reference, the full series of 90 patches can be found at
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=y2038-endgame
-
-      Arnd
-
-Arnd Bergmann (8):
-  y2038: timex: remove incorrect time_t truncation
-  timekeeping: optimize ns_to_timespec64
-  powerpc: fix vdso32 for ppc64le
-  ipmi: kill off 'timespec' usage again
-  netfilter: xt_time: use time64_t
-  lp: fix sparc64 LPSETTIMEOUT ioctl
-  ppdev: fix PPGETTIME/PPSETTIME ioctls
-  Input: input_event: fix struct padding on sparc64
-
- arch/powerpc/kernel/vdso32/gettimeofday.S |  2 +-
- drivers/char/ipmi/ipmi_si_intf.c          | 40 ++++++++---------------
- drivers/char/lp.c                         |  4 +++
- drivers/char/ppdev.c                      | 16 ++++++---
- drivers/input/evdev.c                     |  3 ++
- drivers/input/misc/uinput.c               |  3 ++
- include/uapi/linux/input.h                |  1 +
- kernel/time/ntp.c                         |  2 +-
- kernel/time/time.c                        | 21 +++++++-----
- net/netfilter/xt_time.c                   | 19 ++++++-----
- 10 files changed, 61 insertions(+), 50 deletions(-)
-
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Corey Minyard <minyard@acm.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Cc: openipmi-developer@lists.sourceforge.net
-Cc: linux-input@vger.kernel.org
-Cc: netfilter-devel@vger.kernel.org
-Cc: coreteam@netfilter.org
-Cc: netdev@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index 5c54ca632d08..45a358953f09 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -550,18 +550,21 @@ EXPORT_SYMBOL(set_normalized_timespec64);
+  */
+ struct timespec64 ns_to_timespec64(const s64 nsec)
+ {
+-	struct timespec64 ts;
++	struct timespec64 ts = { 0, 0 };
+ 	s32 rem;
+ 
+-	if (!nsec)
+-		return (struct timespec64) {0, 0};
+-
+-	ts.tv_sec = div_s64_rem(nsec, NSEC_PER_SEC, &rem);
+-	if (unlikely(rem < 0)) {
+-		ts.tv_sec--;
+-		rem += NSEC_PER_SEC;
++	if (likely(nsec > 0)) {
++		ts.tv_sec = div_u64_rem(nsec, NSEC_PER_SEC, &rem);
++		ts.tv_nsec = rem;
++	} else if (nsec < 0) {
++		/*
++		 * With negative times, tv_sec points to the earlier
++		 * second, and tv_nsec counts the nanoseconds since
++		 * then, so tv_nsec is always a positive number.
++		 */
++		ts.tv_sec = -div_u64_rem(-nsec - 1, NSEC_PER_SEC, &rem) - 1;
++		ts.tv_nsec = NSEC_PER_SEC - rem - 1;
+ 	}
+-	ts.tv_nsec = rem;
+ 
+ 	return ts;
+ }
 -- 
 2.20.0
 
