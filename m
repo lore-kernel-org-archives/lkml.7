@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9995C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5304AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BD720656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CD920656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240837;
-	bh=ubGUgah5mMIQ73ShyXq6+5OZZSGl5pRlyLuwd1JfvTI=;
+	s=default; t=1573240840;
+	bh=iKwre2xSx1YiH/5+fhpFyPARnJ3tWS/KJ2o5COKmVjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sf9K++euoEOa/2XH0F+fZnSk/SpTi1aFXfXvK27fBq0ZBUzfUuf0nN9yNyRAbmPL6
-	 NARK0qUuWqzlGJ1qYfFxR9jMoFtF+LD//fIsumeb+u+WL2JdoJhDYhegXwf0YUl7PO
-	 mPb5XA3txSYjx2P39SAd/+XHqGcbAeZG0cG7gZ04=
+	b=KxVcT+eVrkK2oF/XMLMQeHcwmDuKqYQ3nNIG3dq6TesqlNovPGVX9cA5gkMq1/3Ak
+	 04zVjzTSWa1WxJBUumKW1gwEjrb2s8c/X7x/AC2Z2Q9k9NjBxgNxqqCg63LKgQpWhb
+	 ddYhzGCU/l1+cu49YyUpAu606Z9JckbDMxAfPzmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391367AbfKHTUg (ORCPT
+        id S2387839AbfKHTUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:20:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57246 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:20:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389417AbfKHTAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389421AbfKHTAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 14:00:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF49224D4;
-        Fri,  8 Nov 2019 18:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95DAD2248D;
+        Fri,  8 Nov 2019 18:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239536;
-        bh=ubGUgah5mMIQ73ShyXq6+5OZZSGl5pRlyLuwd1JfvTI=;
+        s=default; t=1573239505;
+        bh=iKwre2xSx1YiH/5+fhpFyPARnJ3tWS/KJ2o5COKmVjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFW94plB2QiKAM3ZYFx8GNQ54risF67QfVAbv4oS5izF5uJa+V5bWAoTNz1axfoZd
-         GG6o6VHKEH19RXSUhQWuOleBHdiInoRSQM0ikC+bHDXp7Mn/uVIB1kKoSY0Z8xGK6B
-         5vittDpnPCMIMtqZHre/Wk+NsRTRte+CNkVRGjg8=
+        b=GfSToNTVmntnmdevLRSNRd7SqQUiYnzpDMIXrztZShZ+SQZwJimUIOv8TiSLjzp2R
+         0y5LREF4IPzp6+9N6/Jpgz2q//e/+M3KJiBXGoq4HF6UdTIBEBAt0Fn9Y1qN1HEI88
+         zFRqz6aHB64tl1YB2thM+tPZFxHZBuPG+aSUizbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hubert Feurstein <h.feurstein@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 37/62] net: dsa: b53: Do not clear existing mirrored port mask
-Date:   Fri,  8 Nov 2019 19:50:25 +0100
-Message-Id: <20191108174746.893265974@linuxfoundation.org>
+Subject: [PATCH 4.14 27/62] net: dsa: bcm_sf2: Fix IMP setup for port different than 8
+Date:   Fri,  8 Nov 2019 19:50:15 +0100
+Message-Id: <20191108174741.364762939@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -63,31 +61,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit c763ac436b668d7417f0979430ec0312ede4093d ]
+[ Upstream commit 5fc0f21246e50afdf318b5a3a941f7f4f57b8947 ]
 
-Clearing the existing bitmask of mirrored ports essentially prevents us
-from capturing more than one port at any given time. This is clearly
-wrong, do not clear the bitmask prior to setting up the new port.
+Since it became possible for the DSA core to use a CPU port different
+than 8, our bcm_sf2_imp_setup() function was broken because it assumes
+that registers are applicable to port 8. In particular, the port's MAC
+is going to stay disabled, so make sure we clear the RX_DIS and TX_DIS
+bits if we are not configured for port 8.
 
-Reported-by: Hubert Feurstein <h.feurstein@gmail.com>
-Fixes: ed3af5fd08eb ("net: dsa: b53: Add support for port mirroring")
+Fixes: 9f91484f6fcc ("net: dsa: make "label" property optional for dsa2")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/b53/b53_common.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c |   36 +++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1431,7 +1431,6 @@ int b53_mirror_add(struct dsa_switch *ds
- 		loc = B53_EG_MIR_CTL;
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -106,22 +106,11 @@ static void bcm_sf2_imp_setup(struct dsa
+ 	unsigned int i;
+ 	u32 reg, offset;
  
- 	b53_read16(dev, B53_MGMT_PAGE, loc, &reg);
--	reg &= ~MIRROR_MASK;
- 	reg |= BIT(port);
- 	b53_write16(dev, B53_MGMT_PAGE, loc, reg);
+-	if (priv->type == BCM7445_DEVICE_ID)
+-		offset = CORE_STS_OVERRIDE_IMP;
+-	else
+-		offset = CORE_STS_OVERRIDE_IMP2;
+-
+ 	/* Enable the port memories */
+ 	reg = core_readl(priv, CORE_MEM_PSM_VDD_CTRL);
+ 	reg &= ~P_TXQ_PSM_VDD(port);
+ 	core_writel(priv, reg, CORE_MEM_PSM_VDD_CTRL);
  
+-	/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+-	reg = core_readl(priv, CORE_IMP_CTL);
+-	reg |= (RX_BCST_EN | RX_MCST_EN | RX_UCST_EN);
+-	reg &= ~(RX_DIS | TX_DIS);
+-	core_writel(priv, reg, CORE_IMP_CTL);
+-
+ 	/* Enable forwarding */
+ 	core_writel(priv, SW_FWDG_EN, CORE_SWMODE);
+ 
+@@ -140,10 +129,27 @@ static void bcm_sf2_imp_setup(struct dsa
+ 
+ 	bcm_sf2_brcm_hdr_setup(priv, port);
+ 
+-	/* Force link status for IMP port */
+-	reg = core_readl(priv, offset);
+-	reg |= (MII_SW_OR | LINK_STS);
+-	core_writel(priv, reg, offset);
++	if (port == 8) {
++		if (priv->type == BCM7445_DEVICE_ID)
++			offset = CORE_STS_OVERRIDE_IMP;
++		else
++			offset = CORE_STS_OVERRIDE_IMP2;
++
++		/* Force link status for IMP port */
++		reg = core_readl(priv, offset);
++		reg |= (MII_SW_OR | LINK_STS);
++		core_writel(priv, reg, offset);
++
++		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
++		reg = core_readl(priv, CORE_IMP_CTL);
++		reg |= (RX_BCST_EN | RX_MCST_EN | RX_UCST_EN);
++		reg &= ~(RX_DIS | TX_DIS);
++		core_writel(priv, reg, CORE_IMP_CTL);
++	} else {
++		reg = core_readl(priv, CORE_G_PCTL_PORT(port));
++		reg &= ~(RX_DIS | TX_DIS);
++		core_writel(priv, reg, CORE_G_PCTL_PORT(port));
++	}
+ }
+ 
+ static void bcm_sf2_eee_enable_set(struct dsa_switch *ds, int port, bool enable)
 
 
