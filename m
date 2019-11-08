@@ -2,105 +2,271 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C40FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A85AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC67E21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F4621882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YfKvIUfi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KVBcqMpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbfKHGm6 (ORCPT
+        id S1727953AbfKHGoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:42:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45935 "EHLO
+        Fri, 8 Nov 2019 01:44:30 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47348 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725372AbfKHGm6 (ORCPT
+        with ESMTP id S1725372AbfKHGo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 01:42:58 -0500
+        Fri, 8 Nov 2019 01:44:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573195377;
+        s=mimecast20190719; t=1573195468;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=G8x+s0gT+EQcwDzJx0Qq2QbxI7ZiAY//ltXx+x3jOGg=;
-        b=YfKvIUfigST8CpCJS05fHbD+3QW6w92HiZ8hOgrqaf9GC8+b7w+D3tMh8uF7EXzoQtk6/w
-        qXB1mDhI4dgqkd+GOeP/FNc+64Cv1av0BfPtIGLnE87uMgOz3HbswZXaznVFwOfYhttamf
-        z9WfEM+r6W4ibzrV1Y8qwZVXKZweeKk=
+        bh=8lM40lFP4drHIgc2WtqtIvW6FTL4t/S6w7ABeeLcRLo=;
+        b=KVBcqMpAx/JNS9NFGmjUTa76QzQvjzu2J8+HvsQA0IM5BGWOFFVNPXtAA5QP4oITlTWXxh
+        Ek/FUarWbcTxAZj7wOPNibkzsm709+q6z6xFeObtXDAXqPHN1DE2Bp9I+RLJmHPLbnoE5A
+        gHwCdc0+u30e8qRM9Ixk0A8/UN/okA8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-VLRlQoNXNQOdqlAzq2_FZA-1; Fri, 08 Nov 2019 01:42:56 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-165-KZfxqVJeNZywUsP5u8dF_A-1; Fri, 08 Nov 2019 01:44:24 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67DF6477;
-        Fri,  8 Nov 2019 06:42:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8307A10016DA;
-        Fri,  8 Nov 2019 06:42:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com>
-References: <CALCETrWeN9CGJHz0dzG1uH5Qjbr+xG3OKZuEd33eBY_rAzVkqQ@mail.gmail.com> <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk> <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk> <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com> <6964.1573152517@warthog.procyon.org.uk>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 04/14] pipe: Add O_NOTIFICATION_PIPE [ver #2]
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5211A800C72;
+        Fri,  8 Nov 2019 06:44:23 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-182.ams2.redhat.com [10.36.116.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CC606084E;
+        Fri,  8 Nov 2019 06:44:19 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 07:44:16 +0100
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests: add tests for clone3()
+Message-ID: <20191108064416.GA153851@dcbz.redhat.com>
+References: <20191104131846.1076814-1-areber@redhat.com>
+ <20191106155914.hzolyolz2w4hcn7w@wittgenstein>
 MIME-Version: 1.0
-Content-ID: <7771.1573195370.1@warthog.procyon.org.uk>
-Date:   Fri, 08 Nov 2019 06:42:50 +0000
-Message-ID: <7772.1573195370@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: VLRlQoNXNQOdqlAzq2_FZA-1
+In-Reply-To: <20191106155914.hzolyolz2w4hcn7w@wittgenstein>
+X-Operating-System: Linux (5.3.8-300.fc31.x86_64)
+X-Load-Average: 0.69 0.92 0.93
+X-Unexpected: The Spanish Inquisition
+X-GnuPG-Key: gpg --recv-keys D3C4906A
+Organization: Red Hat
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: KZfxqVJeNZywUsP5u8dF_A-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> wrote:
+On Wed, Nov 06, 2019 at 04:59:15PM +0100, Christian Brauner wrote:
+> On Mon, Nov 04, 2019 at 02:18:46PM +0100, Adrian Reber wrote:
+> > This adds tests for clone3() with different values and sizes
+> > of struct clone_args.
+> >=20
+> > This selftest was initially part of of the clone3() with PID selftest.
+> > After that patch was almost merged Eugene sent out a couple of patches
+> > to fix problems with these test.
+> >=20
+> > This commit now only contains the clone3() selftest after the LPC
+> > decision to rework clone3() with PID to allow setting the PID in
+> > multiple PID namespaces including all of Eugene's patches.
+> >=20
+> > Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> > Signed-off-by: Adrian Reber <areber@redhat.com>
+>=20
+> Resending, since mutt messed-up the quoting due to a new configuration I
+> was testing.
+>=20
+> A few more comments below.
+>=20
+> Also, would you be open to adding tests here for the newly added .stack
+> and .stack_size API (cf. [1])?
+>=20
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/c=
+ommit/?id=3Dfa729c4df558936b4a1a7b3e2234011f44ede28b
 
-> I can open a normal pipe from userspace (with pipe() or pipe2()), and
-> I can have two threads.  One thread writes to the pipe with write().
-> The other thread writes with splice().  Everything works fine.
+As mentioned in your follow-up email. Let's do that in a later patch.
 
-Yes.  Every operation you do on a pipe from userspace is serialised with th=
-e
-pipe mutex - and both ends share the same pipe.
+> > ---
+> > v2:
+> >  - Applied Christian's suggestions
+> >  - Skip root-only tests when running as non-root
+> > ---
+> >  MAINTAINERS                               |   1 +
+> >  tools/testing/selftests/Makefile          |   1 +
+> >  tools/testing/selftests/clone3/.gitignore |   1 +
+> >  tools/testing/selftests/clone3/Makefile   |   7 +
+> >  tools/testing/selftests/clone3/clone3.c   | 225 ++++++++++++++++++++++
+> >  5 files changed, 235 insertions(+)
+> >  create mode 100644 tools/testing/selftests/clone3/.gitignore
+> >  create mode 100644 tools/testing/selftests/clone3/Makefile
+> >  create mode 100644 tools/testing/selftests/clone3/clone3.c
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index cba1095547fd..0040b7a6410b 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12829,6 +12829,7 @@ S:=09Maintained
+> >  T:=09git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.g=
+it
+> >  F:=09samples/pidfd/
+> >  F:=09tools/testing/selftests/pidfd/
+> > +F:=09tools/testing/selftests/clone3/
+> >  K:=09(?i)pidfd
+> >  K:=09(?i)clone3
+> >  K:=09\b(clone_args|kernel_clone_args)\b
+> > diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests=
+/Makefile
+> > index 4cdbae6f4e61..ad442364218a 100644
+> > --- a/tools/testing/selftests/Makefile
+> > +++ b/tools/testing/selftests/Makefile
+> > @@ -4,6 +4,7 @@ TARGETS +=3D bpf
+> >  TARGETS +=3D breakpoints
+> >  TARGETS +=3D capabilities
+> >  TARGETS +=3D cgroup
+> > +TARGETS +=3D clone3
+> >  TARGETS +=3D cpufreq
+> >  TARGETS +=3D cpu-hotplug
+> >  TARGETS +=3D drivers/dma-buf
+> > diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/=
+selftests/clone3/.gitignore
+> > new file mode 100644
+> > index 000000000000..85d9d3ba2524
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/clone3/.gitignore
+> > @@ -0,0 +1 @@
+> > +clone3
+> > diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/se=
+lftests/clone3/Makefile
+> > new file mode 100644
+> > index 000000000000..ea922c014ae4
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/clone3/Makefile
+> > @@ -0,0 +1,7 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +CFLAGS +=3D -I../../../../usr/include/
+> > +
+> > +TEST_GEN_PROGS :=3D clone3
+> > +
+> > +include ../lib.mk
+> > diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/se=
+lftests/clone3/clone3.c
+> > new file mode 100644
+> > index 000000000000..a982d95189bf
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/clone3/clone3.c
+> > @@ -0,0 +1,225 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/* Based on Christian Brauner's clone3() example */
+> > +
+> > +#define _GNU_SOURCE
+> > +#include <errno.h>
+> > +#include <inttypes.h>
+> > +#include <linux/types.h>
+> > +#include <linux/sched.h>
+> > +#include <stdint.h>
+> > +#include <stdio.h>
+> > +#include <stdlib.h>
+> > +#include <sys/syscall.h>
+> > +#include <sys/types.h>
+> > +#include <sys/un.h>
+> > +#include <sys/wait.h>
+> > +#include <unistd.h>
+> > +#include <sched.h>
+> > +
+> > +#include "../kselftest.h"
+> > +
+> > +/*
+> > + * Different sizes of struct clone_args
+> > + */
+> > +#ifndef CLONE3_ARGS_SIZE_V0
+> > +#define CLONE3_ARGS_SIZE_V0 64
+> > +#endif
+> > +
+> > +enum test_mode {
+> > +=09CLONE3_ARGS_NO_TEST,
+> > +=09CLONE3_ARGS_ALL_0,
+> > +=09CLONE3_ARGS_ALL_1,
+> > +=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG,
+> > +=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG,
+> > +=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG,
+> > +=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
+> > +};
+> > +
+> > +static pid_t raw_clone(struct clone_args *args, size_t size)
+> > +{
+> > +=09return syscall(__NR_clone3, args, size);
+> > +}
+> > +
+> > +static int call_clone3(uint64_t flags, size_t size, enum test_mode tes=
+t_mode)
+> > +{
+> > +=09struct clone_args args =3D {
+> > +=09=09.flags =3D flags,
+> > +=09=09.exit_signal =3D SIGCHLD,
+> > +=09};
+> > +
+> > +=09struct clone_args_extended {
+> > +=09=09struct clone_args args;
+> > +=09=09__aligned_u64 excess_space[2];
+> > +=09} args_ext;
+> > +
+> > +=09pid_t pid =3D -1;
+> > +=09int status;
+> > +
+> > +=09memset(&args_ext, 0, sizeof(args_ext));
+> > +=09if (size > sizeof(struct clone_args))
+> > +=09=09args_ext.excess_space[1] =3D 1;
+> > +
+> > +=09if (size =3D=3D 0)
+> > +=09=09size =3D sizeof(struct clone_args);
+> > +
+> > +=09switch (test_mode) {
+> > +=09case CLONE3_ARGS_ALL_0:
+> > +=09=09args.flags =3D 0;
+> > +=09=09args.exit_signal =3D 0;
+> > +=09=09break;
+> > +=09case CLONE3_ARGS_ALL_1:
+>=20
+> I don't fully understand this test case. What is this for exactly?
 
-> What's special about notifications?
+Not sure myself. It was just to make sure clone3() does not something
+unexpected when given wrong and unexpected input. It is the opposite to
+setting everything to zero. Not sure how much sense it makes, but as it
+already exists I would say to just keep it.
 
-The post_notification() cannot take the pipe mutex.  It has to be callable
-from softirq context.  Linus's idea is that when you're actually altering t=
-he
-ring pointers you should hold the wake-queue spinlock, and post_notificatio=
-n()
-holds the wake queue spinlock for the duration of the operation.
+> > +=09=09args.flags =3D 1;
+> > +=09=09args.pidfd =3D 1;
+> > +=09=09args.child_tid =3D 1;
+> > +=09=09args.parent_tid =3D 1;
+> > +=09=09args.exit_signal =3D 1;
+> > +=09=09args.stack =3D 1;
+> > +=09=09args.stack_size =3D 1;
+> > +=09=09args.tls =3D 1;
+> > +=09=09break;
+> > +=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG:
+[...]
 
-This means that post_notification() can be writing to the pipe whilst a
-userspace-invoked operation is holding the pipe mutex and is also doing
-something to the ring.
+Let me know if you think that the CLONE3_ARGS_ALL_1 should really be
+removed. I will fix the other two things you mentioned and resend a new
+version.
 
-David
+=09=09Adrian
 
