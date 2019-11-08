@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02272FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD976C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB29821D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F6321D82
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213260;
-	bh=a8iXu8RnT4u8d3wUf+Xu8tDfl5Vhe4ENrPCED6Q5Btk=;
+	s=default; t=1573213264;
+	bh=m5SAiEhmgoM419e11DWoaWJ3r5SwTf19vYa1RbB7u0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBRKIVOEYJqPvO+/7ov+XLVIbOSyBCb89bnRz2ECBTKS4M86Dy6wsD4WQjl1keKay
-	 R5KJ5Xlhc5Dx4lAlBaqdqTolyc8OCImqGpyF02d50e7Yd5xzj+pnGqfkx0P4waEXFa
-	 bE5ucUIzqq1oLAiI2D/N9yf7hzH4lTu++mJspbPI=
+	b=dB/Ww8aA2Nn4JPLZIArYRBY5S3te3AvulHlap1xdId9UomROnjfoCxBO82vqRJ0k4
+	 2BhPDImB/0eVrcPlF56bx5SAxvxVW1XODodZd3GEj3FhkSvokd1Jq/dR+OjV/81hDt
+	 z9PEp8GWvjWtkGmqkM+NsG8nRug3mbEQeCiXL4bA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389100AbfKHLk7 (ORCPT
+        id S2389127AbfKHLlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389015AbfKHLkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:52 -0500
+        id S2389045AbfKHLky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7DC5222CD;
-        Fri,  8 Nov 2019 11:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55D97222C2;
+        Fri,  8 Nov 2019 11:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213251;
-        bh=a8iXu8RnT4u8d3wUf+Xu8tDfl5Vhe4ENrPCED6Q5Btk=;
+        s=default; t=1573213254;
+        bh=m5SAiEhmgoM419e11DWoaWJ3r5SwTf19vYa1RbB7u0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8+43vhvCSyTkqgzyBHReF05H+Ezkcwl4m4l5SG/PJ9sdi/WDDfcavTJTNJrYunYW
-         1tXyH5Brrru/jMgg11VkZjN/xyqv+ZMeZJiphrtcP/Zv7dCs7sVTIRgnDtRAoBPvIQ
-         c+gQstsel3rz4j9xRvJy5ZcW7Sux9Wgg4GhIyms8=
+        b=hunAVwixqEkhUuRx8cnWEXRtsvvXezyXw8s2tdPwxwk58S6pVouQN3xUijEqbsXzk
+         m0J8LbZiQyH9O2RuKaNPbdhbnT1LBVDybj7WLCjYwqWMkmgyS3xUPdn5nzu2F0td0M
+         4i2/ZYCshFWsOxsTsMACKf4glRWUjg3DGNkFG4u8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 117/205] arm64: dts: rockchip: Fix VCC5V0_HOST_EN on rk3399-sapphire
-Date:   Fri,  8 Nov 2019 06:36:24 -0500
-Message-Id: <20191108113752.12502-117-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 119/205] ARM: dts: exynos: Disable pull control for PMIC IRQ line on Artik5 board
+Date:   Fri,  8 Nov 2019 06:36:26 -0500
+Message-Id: <20191108113752.12502-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,32 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vicente Bergas <vicencb@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit bcdb578a5f5b4aea79441606ab7f0a2e076b4474 ]
+[ Upstream commit 62623718fd31d08b26ebea6c8b40f24924153ab7 ]
 
-The pin is GPIO4-D1 not GPIO1-D1, see schematic, page 15 for reference.
+S2MPS14 PMIC interrupt line on Exynos3250-based Artik5 evaluation board
+has external pull-up resistors, so disable any pull control for it in
+controller node. This fixes support for S2MPS14 PMIC interrupts and
+enables operation of wakeup from S2MPS14 RTC alarm.
 
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos3250-artik5.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-index 36b60791c156d..8b33ef3306820 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-@@ -116,7 +116,7 @@
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio1 RK_PD1 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
- 		regulator-name = "vcc5v0_host";
+diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+index 620b50c19ead9..7c22cbf6f3d41 100644
+--- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
++++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+@@ -69,6 +69,8 @@
+ 		compatible = "samsung,s2mps14-pmic";
+ 		interrupt-parent = <&gpx3>;
+ 		interrupts = <5 IRQ_TYPE_NONE>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&s2mps14_irq>;
+ 		reg = <0x66>;
+ 
+ 		s2mps14_osc: clocks {
+@@ -350,6 +352,11 @@
+ 		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV3>;
+ 		samsung,pin-val = <1>;
+ 	};
++
++	s2mps14_irq: s2mps14-irq {
++		samsung,pins = "gpx3-5";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
+ };
+ 
+ &rtc {
 -- 
 2.20.1
 
