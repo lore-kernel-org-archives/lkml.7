@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74446FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769F2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF27206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5C9214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240542;
-	bh=qBIHlVIiMD+DatNMRp0koo/R95x0y31dpttHdv2ls+4=;
+	s=default; t=1573240550;
+	bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+35w/qjnXlwJr/stZVFTXgcxAO4T1vkZ6I4Zsg/WTmLEZmhoj+1d2JlINNN6fRA5
-	 TuSVCQ+nuBRIkZeSE4XN09rLBbMI1rKdhYVhwcu5uGZVP+Iq8RF7X2wHRSS7nca5iV
-	 sW2t7rFysyY5htrXnGjXXsFRNwr8V1W2veoB96C8=
+	b=CPi3hiqdhbny/LA1q2WT2xvLgaLu0YzkYaxT99OxWXegUUQPrUNQJPSaO5hTTQaHU
+	 rGx2QQrUW5cj1S6R+WKu7Q9n4BZ42qOdz4m0eK54emNgF1Hk4cFstbOy6DH6jQnrxC
+	 1ZN/lcCTWNuknqBjFDIt+nwR9hg+pJNNN6P0HMuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390787AbfKHTPl (ORCPT
+        id S2390956AbfKHTPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:15:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:15:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391068AbfKHTEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:04:46 -0500
+        id S2389751AbfKHTE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:04:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0AE220650;
-        Fri,  8 Nov 2019 19:04:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48BFC2087E;
+        Fri,  8 Nov 2019 19:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239886;
-        bh=qBIHlVIiMD+DatNMRp0koo/R95x0y31dpttHdv2ls+4=;
+        s=default; t=1573239868;
+        bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jtjwdrni8vEOA5pmQCiOBlL07552AC7wTe0cuQjoDKzEM7lzX0BEHWRbiFpU4lQjT
-         U2y2vTh8xDF9KW8QKEYr0OAC3/2bYG1kSlBWvOJp7QyPLzksM1RY4xu1qNAxIrL8oY
-         GBw+K300kFSAIXUz7y15/45KF2srcAQKmtMUSVZQ=
+        b=nFhC77ZbyXDqxFPQ1e952FjbLxW2HTPVA6JLQAWZpNeoda9m0Spg7Wkw4TV+BydEP
+         lPwizK61ag6TaW1EzJnTI0RFROIK9qKF6Zwb6/mQMdrBK3oS+mGH9iyoHzhpD4a8Mf
+         SBe3OthQVEFkiyexese/UP+o0MkmP5DUG1aNmnLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 016/140] ASoC: SOF: Intel: hda: Disable DMI L1 entry during capture
-Date:   Fri,  8 Nov 2019 19:49:04 +0100
-Message-Id: <20191108174903.236003016@linuxfoundation.org>
+Subject: [PATCH 5.3 010/140] regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
+Date:   Fri,  8 Nov 2019 19:48:58 +0100
+Message-Id: <20191108174901.797776449@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -62,174 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 43b2ab9009b13bfff47fcc1893de9244b39bdd54 ]
+[ Upstream commit f64db548799e0330897c3203680c2ee795ade518 ]
 
-There is a known issue on some Intel platforms which causes
-pause/release to run into xrun's during capture usecases.
-The suggested workaround to address the issue is to
-disable the entry of lower power L1 state in the physical
-DMI link when there is a capture stream open.
+ti_abb_wait_txdone() may return -ETIMEDOUT when ti_abb_check_txdone()
+returns true in the latest iteration of the while loop because the timeout
+value is abb->settling_time + 1. Similarly, ti_abb_clear_all_txdone() may
+return -ETIMEDOUT when ti_abb_check_txdone() returns false in the latest
+iteration of the while loop. Fix it.
 
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190927200538.660-14-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Nishanth Menon <nm@ti.com>
+Link: https://lore.kernel.org/r/20190929095848.21960-1-axel.lin@ingics.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/intel/Kconfig      | 10 +++++++
- sound/soc/sof/intel/hda-ctrl.c   | 12 +++------
- sound/soc/sof/intel/hda-stream.c | 45 +++++++++++++++++++++++++++-----
- sound/soc/sof/intel/hda.h        |  5 +++-
- 4 files changed, 56 insertions(+), 16 deletions(-)
+ drivers/regulator/ti-abb-regulator.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
-diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
-index dd14ce92fe102..a5fd356776ee9 100644
---- a/sound/soc/sof/intel/Kconfig
-+++ b/sound/soc/sof/intel/Kconfig
-@@ -241,6 +241,16 @@ config SND_SOC_SOF_HDA_AUDIO_CODEC
- 	  Say Y if you want to enable HDAudio codecs with SOF.
- 	  If unsure select "N".
+diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
+index cced1ffb896c1..89b9314d64c9d 100644
+--- a/drivers/regulator/ti-abb-regulator.c
++++ b/drivers/regulator/ti-abb-regulator.c
+@@ -173,19 +173,14 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
+ 	while (timeout++ <= abb->settling_time) {
+ 		status = ti_abb_check_txdone(abb);
+ 		if (status)
+-			break;
++			return 0;
  
-+config SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1
-+	bool "SOF enable DMI Link L1"
-+	help
-+	  This option enables DMI L1 for both playback and capture
-+	  and disables known workarounds for specific HDaudio platforms.
-+	  Only use to look into power optimizations on platforms not
-+	  affected by DMI L1 issues. This option is not recommended.
-+	  Say Y if you want to enable DMI Link L1
-+	  If unsure, select "N".
-+
- endif ## SND_SOC_SOF_HDA_COMMON
- 
- config SND_SOC_SOF_HDA_LINK_BASELINE
-diff --git a/sound/soc/sof/intel/hda-ctrl.c b/sound/soc/sof/intel/hda-ctrl.c
-index ea63f83a509bb..760094d49f18f 100644
---- a/sound/soc/sof/intel/hda-ctrl.c
-+++ b/sound/soc/sof/intel/hda-ctrl.c
-@@ -139,20 +139,16 @@ void hda_dsp_ctrl_misc_clock_gating(struct snd_sof_dev *sdev, bool enable)
-  */
- int hda_dsp_ctrl_clock_power_gating(struct snd_sof_dev *sdev, bool enable)
- {
--#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
--	struct hdac_bus *bus = sof_to_bus(sdev);
--#endif
- 	u32 val;
- 
- 	/* enable/disable audio dsp clock gating */
- 	val = enable ? PCI_CGCTL_ADSPDCGE : 0;
- 	snd_sof_pci_update_bits(sdev, PCI_CGCTL, PCI_CGCTL_ADSPDCGE, val);
- 
--#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
--	/* enable/disable L1 support */
--	val = enable ? SOF_HDA_VS_EM2_L1SEN : 0;
--	snd_hdac_chip_updatel(bus, VS_EM2, SOF_HDA_VS_EM2_L1SEN, val);
--#endif
-+	/* enable/disable DMI Link L1 support */
-+	val = enable ? HDA_VS_INTEL_EM2_L1SEN : 0;
-+	snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR, HDA_VS_INTEL_EM2,
-+				HDA_VS_INTEL_EM2_L1SEN, val);
- 
- 	/* enable/disable audio dsp power gating */
- 	val = enable ? 0 : PCI_PGCTL_ADSPPGD;
-diff --git a/sound/soc/sof/intel/hda-stream.c b/sound/soc/sof/intel/hda-stream.c
-index ad8d41f22e92d..2c74471884025 100644
---- a/sound/soc/sof/intel/hda-stream.c
-+++ b/sound/soc/sof/intel/hda-stream.c
-@@ -185,6 +185,17 @@ hda_dsp_stream_get(struct snd_sof_dev *sdev, int direction)
- 			direction == SNDRV_PCM_STREAM_PLAYBACK ?
- 			"playback" : "capture");
- 
-+	/*
-+	 * Disable DMI Link L1 entry when capture stream is opened.
-+	 * Workaround to address a known issue with host DMA that results
-+	 * in xruns during pause/release in capture scenarios.
-+	 */
-+	if (!IS_ENABLED(SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1))
-+		if (stream && direction == SNDRV_PCM_STREAM_CAPTURE)
-+			snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
-+						HDA_VS_INTEL_EM2,
-+						HDA_VS_INTEL_EM2_L1SEN, 0);
-+
- 	return stream;
- }
- 
-@@ -193,23 +204,43 @@ int hda_dsp_stream_put(struct snd_sof_dev *sdev, int direction, int stream_tag)
- {
- 	struct hdac_bus *bus = sof_to_bus(sdev);
- 	struct hdac_stream *s;
-+	bool active_capture_stream = false;
-+	bool found = false;
- 
- 	spin_lock_irq(&bus->reg_lock);
- 
--	/* find used stream */
-+	/*
-+	 * close stream matching the stream tag
-+	 * and check if there are any open capture streams.
-+	 */
- 	list_for_each_entry(s, &bus->stream_list, list) {
--		if (s->direction == direction &&
--		    s->opened && s->stream_tag == stream_tag) {
-+		if (!s->opened)
-+			continue;
-+
-+		if (s->direction == direction && s->stream_tag == stream_tag) {
- 			s->opened = false;
--			spin_unlock_irq(&bus->reg_lock);
--			return 0;
-+			found = true;
-+		} else if (s->direction == SNDRV_PCM_STREAM_CAPTURE) {
-+			active_capture_stream = true;
- 		}
+ 		udelay(1);
  	}
  
- 	spin_unlock_irq(&bus->reg_lock);
- 
--	dev_dbg(sdev->dev, "stream_tag %d not opened!\n", stream_tag);
--	return -ENODEV;
-+	/* Enable DMI L1 entry if there are no capture streams open */
-+	if (!IS_ENABLED(SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1))
-+		if (!active_capture_stream)
-+			snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
-+						HDA_VS_INTEL_EM2,
-+						HDA_VS_INTEL_EM2_L1SEN,
-+						HDA_VS_INTEL_EM2_L1SEN);
-+
-+	if (!found) {
-+		dev_dbg(sdev->dev, "stream_tag %d not opened!\n", stream_tag);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
  }
  
- int hda_dsp_stream_trigger(struct snd_sof_dev *sdev,
-diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
-index d9c17146200b3..2cc789f0e83c4 100644
---- a/sound/soc/sof/intel/hda.h
-+++ b/sound/soc/sof/intel/hda.h
-@@ -39,7 +39,6 @@
- #define SOF_HDA_WAKESTS			0x0E
- #define SOF_HDA_WAKESTS_INT_MASK	((1 << 8) - 1)
- #define SOF_HDA_RIRBSTS			0x5d
--#define SOF_HDA_VS_EM2_L1SEN            BIT(13)
+ /**
+@@ -205,19 +200,14 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
  
- /* SOF_HDA_GCTL register bist */
- #define SOF_HDA_GCTL_RESET		BIT(0)
-@@ -228,6 +227,10 @@
- #define HDA_DSP_REG_HIPCIE		(HDA_DSP_IPC_BASE + 0x0C)
- #define HDA_DSP_REG_HIPCCTL		(HDA_DSP_IPC_BASE + 0x10)
+ 		status = ti_abb_check_txdone(abb);
+ 		if (!status)
+-			break;
++			return 0;
  
-+/* Intel Vendor Specific Registers */
-+#define HDA_VS_INTEL_EM2		0x1030
-+#define HDA_VS_INTEL_EM2_L1SEN		BIT(13)
-+
- /*  HIPCI */
- #define HDA_DSP_REG_HIPCI_BUSY		BIT(31)
- #define HDA_DSP_REG_HIPCI_MSG_MASK	0x7FFFFFFF
+ 		udelay(1);
+ 	}
+ 
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
+ }
+ 
+ /**
 -- 
 2.20.1
 
