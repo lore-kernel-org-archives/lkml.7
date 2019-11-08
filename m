@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6600AFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02288C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30195222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43B2222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213522;
-	bh=7XFWGjzpQtz6PRzn1lFFoviMx4ObyncTWJNx3KXmWYI=;
+	s=default; t=1573213524;
+	bh=UJIkCko1T/uvwuZdVtUds6NrBGotpYuWsGiGTTT/KO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRB43Ay9N4SWtY8I57yKWLaSCcl99aSDta0Ku6czEgyd99a8qhqzK7oq3qkY3aw0H
-	 VdYBnIo5Ldkczz8NtXDuWoBHq07n5Mx7U/YNVIVjAUg8IamB6ZQigsZsCo1PmzqWEc
-	 DdvoG3hqJQpdtuu5IkBOAkhE1wp+v/YBPxr9ulJc=
+	b=hYcm9nDxWdoq4aDB3rvAl+TMXO98e49wD52XE68gehrT0kEnLzKe4jSjoGmARAmUG
+	 DjPeKdIO6WJ+YKt1wmEYeKVj5TaYb44OHO6v1rmE1a9/rw0Y71LyHV87BHrhvkQ8Wq
+	 xW+QH6xn8zaC3C/phXCNaQ/KHSHN1+OhRi14Bg7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391095AbfKHLpV (ORCPT
+        id S1732022AbfKHLpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391064AbfKHLpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:16 -0500
+        id S2391087AbfKHLpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75E3F20656;
-        Fri,  8 Nov 2019 11:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4211C222C5;
+        Fri,  8 Nov 2019 11:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213515;
-        bh=7XFWGjzpQtz6PRzn1lFFoviMx4ObyncTWJNx3KXmWYI=;
+        s=default; t=1573213519;
+        bh=UJIkCko1T/uvwuZdVtUds6NrBGotpYuWsGiGTTT/KO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jE2ihDClaEycB46JyAnbXCyd4+25iej9ZhxatXf4HiVQhEhzQDoggAAI/y2JrsgdX
-         0/3gPta+K9lz3HqQhnwzTIO5zfw4VcrkhTOqCC84+JAclHAiIsqhNFCmBYTR851I2I
-         cHUQeal/PkVlpIS59nFzTQdXrYdu4VhDEFBwADiA=
+        b=fwVN+FXGr7rTZeoHO7PtocShsTlWj5tgijID86FXsjZmVhbJ6w33P7AI2QxIG+zoA
+         K2SOSofT0YF3GpwpPP6YcadGUmhvaS31ahnTh0GbXnMqcE8KL2UkgT1ewNvixv4Va4
+         /Kancl42HDg4mcM1jarLJLzppPozGgauxim+MCRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Burton <paul.burton@mips.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 085/103] MIPS: lantiq: Do not enable IRQs in dma open
-Date:   Fri,  8 Nov 2019 06:42:50 -0500
-Message-Id: <20191108114310.14363-85-sashal@kernel.org>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 087/103] ARM: dts: qcom: ipq4019: fix cpu0's qcom,saw2 reg value
+Date:   Fri,  8 Nov 2019 06:42:52 -0500
+Message-Id: <20191108114310.14363-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -61,48 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hauke Mehrtens <hauke@hauke-m.de>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit cc973aecf0b0541918c5ecabe6c90d1f709b5f89 ]
+[ Upstream commit bd73a3dd257fb838bd456a18eeee0ef0224b7a40 ]
 
-When a DMA channel is opened the IRQ should not get activated
-automatically, this allows it to pull data out manually without the help
-of interrupts. This is needed for a workaround in the vrx200 Ethernet
-driver.
+while compiling an ipq4019 target, dtc will complain:
+regulator@b089000 unit address format error, expected "2089000"
 
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Acked-by: Paul Burton <paul.burton@mips.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The saw0 regulator reg value seems to be
+copied and pasted from qcom-ipq8064.dtsi.
+
+This patch fixes the reg value to match that of the
+unit address which in turn silences the warning.
+(There is no driver for qcom,saw2 right now.
+So this went unnoticed)
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/lantiq/xway/dma.c        | 1 -
- drivers/net/ethernet/lantiq_etop.c | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/lantiq/xway/dma.c b/arch/mips/lantiq/xway/dma.c
-index 805b3a6ab2d60..dcc16d8de8c37 100644
---- a/arch/mips/lantiq/xway/dma.c
-+++ b/arch/mips/lantiq/xway/dma.c
-@@ -106,7 +106,6 @@ ltq_dma_open(struct ltq_dma_channel *ch)
- 	spin_lock_irqsave(&ltq_dma_lock, flag);
- 	ltq_dma_w32(ch->nr, LTQ_DMA_CS);
- 	ltq_dma_w32_mask(0, DMA_CHAN_ON, LTQ_DMA_CCTRL);
--	ltq_dma_w32_mask(0, 1 << ch->nr, LTQ_DMA_IRNEN);
- 	spin_unlock_irqrestore(&ltq_dma_lock, flag);
- }
- EXPORT_SYMBOL_GPL(ltq_dma_open);
-diff --git a/drivers/net/ethernet/lantiq_etop.c b/drivers/net/ethernet/lantiq_etop.c
-index afc8100694405..c978a857a25c2 100644
---- a/drivers/net/ethernet/lantiq_etop.c
-+++ b/drivers/net/ethernet/lantiq_etop.c
-@@ -438,6 +438,7 @@ ltq_etop_open(struct net_device *dev)
- 		if (!IS_TX(i) && (!IS_RX(i)))
- 			continue;
- 		ltq_dma_open(&ch->dma);
-+		ltq_dma_enable_irq(&ch->dma);
- 		napi_enable(&ch->napi);
- 	}
- 	phy_start(dev->phydev);
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 10d112a4078ec..19156cbb60034 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -234,7 +234,7 @@
+ 
+                 saw0: regulator@b089000 {
+                         compatible = "qcom,saw2";
+-                        reg = <0x02089000 0x1000>, <0x0b009000 0x1000>;
++			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
+                         regulator;
+                 };
+ 
 -- 
 2.20.1
 
