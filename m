@@ -2,133 +2,249 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BF5C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002A9FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6A0207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C17E920656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240953;
-	bh=52b2NPQwj3xM9cq/tc1U2aDYddp76xptCa/1BAeQLrw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19ngeKs6egI53Axi8JWMQMTB3+AbD21yS/uCjMxxdNDwDgmXy7mgjQ0GTtzMn0hlC
-	 itGJ+uTI1YYCbHbXBLBfY2J4f5XDn6CszKnjXGPuOuiYJS6rBAOEU8+j2HGq90qHu3
-	 q8U/aGXUEtKgkwBhvkaOUSpdNSv/Be0ppd71wL2M=
+	s=default; t=1573240958;
+	bh=0jAsKdiJdwPpdCjhGpdl16rAFrkPufAApEspDAtLZDU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=X7Y9XcIS/SL1FS7aw8ls0bbxFd3XoeHaVTaizfrIgV6cNEt06YoalAZz/Vc3XZour
+	 PXRIUdyyMTBZi0z/JGgHBD8CYSqrA3MzfjvhRrmoTzfWEdrUQCPPlKSAVdW3iUjJZa
+	 dLzHRtLC051gfiOb5SA0VnGvZENBrUl6kBVmiV70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389909AbfKHTWc (ORCPT
+        id S2388071AbfKHS4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:22:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53936 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:56:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388187AbfKHS4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:20 -0500
+        id S1732164AbfKHS4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B96020865;
-        Fri,  8 Nov 2019 18:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E70632178F;
+        Fri,  8 Nov 2019 18:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239380;
-        bh=52b2NPQwj3xM9cq/tc1U2aDYddp76xptCa/1BAeQLrw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BC4xyYMgGQCbjrJAOhn7XJKof/4r/NTYoR7zepgER5Z5HMubpgrJ9wss5Z36ZjLID
-         uiMTKKKxaAWQ6qF45cDY1r02994SRUd3JN6TTFJQFw02szmw6C2rXdrU52XrBEuDWj
-         K/5XVdjriQrvhHGcKgh6nxnjtSuwQCzbWE2+5QHA=
+        s=default; t=1573239362;
+        bh=0jAsKdiJdwPpdCjhGpdl16rAFrkPufAApEspDAtLZDU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X8gQgSVRT+sDrbPtCeIflnf+GN/a1FV6mV+o3SeC57B/Qx5zwnScGhXCOaL1drqT+
+         +tUy/rxJsjRaB51kAaqUw2Zy/53/0Vhm6bgnMMTMiPjjmuBN+lL9htnSEfixI8Z4WR
+         w4xVJ6SqcTYqLY5L1phqbgi5eZwaGNIoj3OdUeaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 20/34] net: hisilicon: Fix ping latency when deal with high throughput
-Date:   Fri,  8 Nov 2019 19:50:27 +0100
-Message-Id: <20191108174641.312776033@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/34] 4.9.200-stable review
+Date:   Fri,  8 Nov 2019 19:50:07 +0100
+Message-Id: <20191108174618.266472504@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
-References: <20191108174618.266472504@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.200-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.200-rc1
+X-KernelTest-Deadline: 2019-11-10T17:46+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+This is the start of the stable review cycle for the 4.9.200 release.
+There are 34 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit e56bd641ca61beb92b135298d5046905f920b734 ]
+Responses should be made by Sun 10 Nov 2019 05:42:11 PM UTC.
+Anything received after that time might be too late.
 
-This is due to error in over budget processing.
-When dealing with high throughput, the used buffers
-that exceeds the budget is not cleaned up. In addition,
-it takes a lot of cycles to clean up the used buffer,
-and then the buffer where the valid data is located can take effect.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.200-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/hisilicon/hip04_eth.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+thanks,
 
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -174,6 +174,7 @@ struct hip04_priv {
- 	dma_addr_t rx_phys[RX_DESC_NUM];
- 	unsigned int rx_head;
- 	unsigned int rx_buf_size;
-+	unsigned int rx_cnt_remaining;
- 
- 	struct device_node *phy_node;
- 	struct phy_device *phy;
-@@ -487,7 +488,6 @@ static int hip04_rx_poll(struct napi_str
- 	struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
- 	struct net_device *ndev = priv->ndev;
- 	struct net_device_stats *stats = &ndev->stats;
--	unsigned int cnt = hip04_recv_cnt(priv);
- 	struct rx_desc *desc;
- 	struct sk_buff *skb;
- 	unsigned char *buf;
-@@ -500,8 +500,8 @@ static int hip04_rx_poll(struct napi_str
- 
- 	/* clean up tx descriptors */
- 	tx_remaining = hip04_tx_reclaim(ndev, false);
--
--	while (cnt && !last) {
-+	priv->rx_cnt_remaining += hip04_recv_cnt(priv);
-+	while (priv->rx_cnt_remaining && !last) {
- 		buf = priv->rx_buf[priv->rx_head];
- 		skb = build_skb(buf, priv->rx_buf_size);
- 		if (unlikely(!skb)) {
-@@ -547,11 +547,13 @@ refill:
- 		hip04_set_recv_desc(priv, phys);
- 
- 		priv->rx_head = RX_NEXT(priv->rx_head);
--		if (rx >= budget)
-+		if (rx >= budget) {
-+			--priv->rx_cnt_remaining;
- 			goto done;
-+		}
- 
--		if (--cnt == 0)
--			cnt = hip04_recv_cnt(priv);
-+		if (--priv->rx_cnt_remaining == 0)
-+			priv->rx_cnt_remaining += hip04_recv_cnt(priv);
- 	}
- 
- 	if (!(priv->reg_inten & RCV_INT)) {
-@@ -636,6 +638,7 @@ static int hip04_mac_open(struct net_dev
- 	int i;
- 
- 	priv->rx_head = 0;
-+	priv->rx_cnt_remaining = 0;
- 	priv->tx_head = 0;
- 	priv->tx_tail = 0;
- 	hip04_reset_ppe(priv);
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.200-rc1
+
+Petr Vorel <pvorel@suse.cz>
+    alarmtimer: Change remaining ENOTSUPP to EOPNOTSUPP
+
+Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+    dmaengine: qcom: bam_dma: Fix resource leak
+
+Eric Dumazet <edumazet@google.com>
+    net/flow_dissector: switch to siphash
+
+Seth Forshee <seth.forshee@canonical.com>
+    kbuild: add -fcf-protection=none when using retpoline flags
+
+Masahiro Yamada <yamada.masahiro@socionext.com>
+    kbuild: use -fmacro-prefix-map to make __FILE__ a relative path
+
+Kees Cook <keescook@chromium.org>
+    Kbuild: make designated_init attribute fatal
+
+Eric Dumazet <edumazet@google.com>
+    inet: stop leaking jiffies on the wire
+
+Eran Ben Elisha <eranbe@mellanox.com>
+    net/mlx4_core: Dynamically set guaranteed amount of counters per VF
+
+Xin Long <lucien.xin@gmail.com>
+    vxlan: check tun_info options_len properly
+
+Doug Berger <opendmb@gmail.com>
+    net: bcmgenet: reset 40nm EPHY on energy detect
+
+Vivien Didelot <vivien.didelot@gmail.com>
+    net: dsa: fix switch tree list
+
+Eric Dumazet <edumazet@google.com>
+    net: add READ_ONCE() annotation in __skb_wait_for_more_packets()
+
+Wei Wang <weiwan@google.com>
+    selftests: net: reuseport_dualstack: fix uninitalized parameter
+
+zhanglin <zhang.lin16@zte.com.cn>
+    net: Zeroing the structure ethtool_wolinfo in ethtool_get_wol()
+
+Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+    net: hisilicon: Fix ping latency when deal with high throughput
+
+Tejun Heo <tj@kernel.org>
+    net: fix sk_page_frag() recursion from memory reclaim
+
+Eric Dumazet <edumazet@google.com>
+    dccp: do not leak jiffies on the wire
+
+Dave Wysochanski <dwysocha@redhat.com>
+    cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    MIPS: bmips: mark exception vectors as char arrays
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    of: unittest: fix memory leak in unittest_data_add
+
+Bodo Stroesser <bstroesser@ts.fujitsu.com>
+    scsi: target: core: Do not overwrite CDB byte 1
+
+Peter Ujfalusi <peter.ujfalusi@ti.com>
+    ARM: davinci: dm365: Fix McBSP dma_slave_map entry
+
+Yunfeng Ye <yeyunfeng@huawei.com>
+    perf kmem: Fix memory leak in compact_gfp_flags()
+
+Anson Huang <Anson.Huang@nxp.com>
+    ARM: dts: imx7s: Correct GPT's ipg clock source
+
+Thomas Bogendoerfer <tbogendoerfer@suse.de>
+    scsi: fix kconfig dependency warning related to 53C700_LE_ON_BE
+
+Thomas Bogendoerfer <tbogendoerfer@suse.de>
+    scsi: sni_53c710: fix compilation error
+
+Hannes Reinecke <hare@suse.com>
+    scsi: scsi_dh_alua: handle RTPG sense code correctly during state transitions
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    ARM: mm: fix alignment handler faults under memory pressure
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    pinctrl: ns2: Fix off by one bugs in ns2_pinmux_enable()
+
+Adam Ford <aford173@gmail.com>
+    ARM: dts: logicpd-torpedo-som: Remove twl_keypad
+
+Robin Murphy <robin.murphy@arm.com>
+    ASoc: rockchip: i2s: Fix RPM imbalance
+
+Stuart Henderson <stuarth@opensource.cirrus.com>
+    ASoC: wm_adsp: Don't generate kcontrols without READ flags
+
+Yizhuo <yzhai003@ucr.edu>
+    regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
+
+Axel Lin <axel.lin@ingics.com>
+    regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           | 16 +++++++-
+ arch/arm/boot/dts/imx7s.dtsi                       |  8 ++--
+ arch/arm/boot/dts/logicpd-torpedo-som.dtsi         |  4 ++
+ arch/arm/mach-davinci/dm365.c                      |  4 +-
+ arch/arm/mm/alignment.c                            | 44 ++++++++++++++++----
+ arch/mips/bcm63xx/prom.c                           |  2 +-
+ arch/mips/include/asm/bmips.h                      | 10 ++---
+ arch/mips/kernel/smp-bmips.c                       |  8 ++--
+ drivers/dma/qcom/bam_dma.c                         | 14 +++++++
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  9 +++-
+ drivers/net/ethernet/hisilicon/hip04_eth.c         | 15 ++++---
+ .../net/ethernet/mellanox/mlx4/resource_tracker.c  | 42 +++++++++++--------
+ drivers/net/vxlan.c                                |  5 ++-
+ drivers/of/unittest.c                              |  1 +
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c              |  4 +-
+ drivers/regulator/pfuze100-regulator.c             |  8 +++-
+ drivers/regulator/ti-abb-regulator.c               | 26 ++++--------
+ drivers/scsi/Kconfig                               |  2 +-
+ drivers/scsi/device_handler/scsi_dh_alua.c         | 21 +++++++---
+ drivers/scsi/sni_53c710.c                          |  4 +-
+ drivers/target/target_core_device.c                | 21 ----------
+ fs/cifs/cifsglob.h                                 |  5 +++
+ fs/cifs/cifsproto.h                                |  1 +
+ fs/cifs/file.c                                     | 23 +++++++----
+ fs/cifs/smb2file.c                                 |  2 +-
+ include/linux/gfp.h                                | 23 +++++++++++
+ include/linux/skbuff.h                             |  3 +-
+ include/net/flow_dissector.h                       |  3 +-
+ include/net/fq.h                                   |  2 +-
+ include/net/fq_impl.h                              |  4 +-
+ include/net/sock.h                                 | 11 +++--
+ kernel/time/alarmtimer.c                           |  4 +-
+ net/core/datagram.c                                |  2 +-
+ net/core/ethtool.c                                 |  4 +-
+ net/core/flow_dissector.c                          | 48 +++++++++-------------
+ net/dccp/ipv4.c                                    |  4 +-
+ net/dsa/dsa2.c                                     |  2 +-
+ net/ipv4/datagram.c                                |  2 +-
+ net/ipv4/tcp_ipv4.c                                |  4 +-
+ net/sched/sch_fq_codel.c                           |  6 +--
+ net/sched/sch_hhf.c                                |  8 ++--
+ net/sched/sch_sfb.c                                | 13 +++---
+ net/sched/sch_sfq.c                                | 14 ++++---
+ net/sctp/socket.c                                  |  2 +-
+ sound/soc/codecs/wm_adsp.c                         |  3 +-
+ sound/soc/rockchip/rockchip_i2s.c                  |  2 +-
+ tools/perf/builtin-kmem.c                          |  1 +
+ tools/testing/selftests/net/reuseport_dualstack.c  |  3 +-
+ 48 files changed, 286 insertions(+), 181 deletions(-)
 
 
