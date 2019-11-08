@@ -2,139 +2,103 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C4FC17440
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FB3C17441
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9E7215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:57:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FATIMyIM"
+	by mail.kernel.org (Postfix) with ESMTP id BCBB620865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfKHW5V (ORCPT
+        id S1727768AbfKHXAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:57:21 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42533 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHW5U (ORCPT
+        Fri, 8 Nov 2019 18:00:51 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39402 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726121AbfKHXAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:57:20 -0500
-Received: by mail-il1-f193.google.com with SMTP id n18so6544225ilt.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:57:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=15aP2JIo2un+I+5s0CvWGMu22FT6huOg3Ifbcx3TkJg=;
-        b=FATIMyIMWI2cM5vk5yduPwEeoizGoSfyKtyHYbMALU237IVsQGNU05IOJKkdabxCbO
-         0m/DzALGw2i4wZ8zesh0KudOZ6vdFHsEHdC0u2B5kESkwOFnxSiA+yHfjNhCb/zwnfN0
-         YJxBlA5TLrD+LTxSdgzigyE+mVolF54tuLjCQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=15aP2JIo2un+I+5s0CvWGMu22FT6huOg3Ifbcx3TkJg=;
-        b=MNEe7VPKyIKZ7eZ0kjczdXkZh3MbOXn2sSvGhXb2do45pp0o+wFonMtNIl6orJpJeT
-         rr0G+wOMCVhSySnr4Q0s0buh+rt/OuJUCiyOBE0UEBrLfzkQYJ5nUMS+/hneufu07hLt
-         f/2l4fjDYXkV5x6LLA00N0tjakXzuVLAkDrn08zXN2VuSa1n6Dyz2rJq29ATnPRmXr97
-         5WBNBx8ZpB/Ed8hGppqYgI3PLCOQOxmx4ANmO5pHrvSC5XIUJVrJh5U+azC1hNQpQwVr
-         F0ScUFCHva0Ux9GD/jXzemhYZi0xFNSNeGsw6Wri6oEtVRtjEsyUcrEVxHCG/zv53gGK
-         r3tw==
-X-Gm-Message-State: APjAAAVWhS01u8d0aiSLRuHJuawCj5NhGMXQHld7RGe3JcHoD2B4X1Kn
-        TNCnWXddd4cBFQz/1OGaRyk1hyYmXyQ=
-X-Google-Smtp-Source: APXvYqyVQetn+FkKTv5djy9XYwtzc4ED5vJp0MjNn4hPpdcTL9MJiQS8QAL7aR1GrrU+Mp2n7lDHsQ==
-X-Received: by 2002:a92:d7c2:: with SMTP id g2mr5821365ilq.81.1573253839599;
-        Fri, 08 Nov 2019 14:57:19 -0800 (PST)
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
-        by smtp.gmail.com with ESMTPSA id c10sm186415ilq.37.2019.11.08.14.57.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 14:57:18 -0800 (PST)
-Received: by mail-io1-f53.google.com with SMTP id j20so7833513ioo.11
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:57:18 -0800 (PST)
-X-Received: by 2002:a5e:8e02:: with SMTP id a2mr13245256ion.269.1573253837987;
- Fri, 08 Nov 2019 14:57:17 -0800 (PST)
-MIME-Version: 1.0
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
- <1568411962-1022-5-git-send-email-ilina@codeaurora.org> <CAD=FV=WOVHQyk0y3t0eki6cBfBedduQw3T-JZW2dERuCk9tRtA@mail.gmail.com>
- <20191108215424.GG16900@codeaurora.org> <20191108221636.GH16900@codeaurora.org>
-In-Reply-To: <20191108221636.GH16900@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 8 Nov 2019 14:57:05 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=V_hieLP-qqU23=shM0PdeXpu=Spe3O6a-WHur7w+AnAQ@mail.gmail.com>
-Message-ID: <CAD=FV=V_hieLP-qqU23=shM0PdeXpu=Spe3O6a-WHur7w+AnAQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 04/14] drivers: irqchip: add PDC irqdomain for
- wakeup capable GPIOs
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>, maz@kernel.org,
-        LinusW <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 8 Nov 2019 18:00:51 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8MvEnh060123
+        for <linux-kernel@vger.kernel.org>; Fri, 8 Nov 2019 18:00:50 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w5heb09qh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 18:00:49 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Fri, 8 Nov 2019 23:00:47 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Nov 2019 23:00:43 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8N0hGA9240610
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 23:00:43 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3AD3AE057;
+        Fri,  8 Nov 2019 23:00:42 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E075AE05F;
+        Fri,  8 Nov 2019 23:00:39 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.217.215])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 23:00:39 +0000 (GMT)
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
+        hch@lst.de, linuxram@us.ibm.com, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
+        aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: [RFC v2 0/2] Enable IOMMU support for pseries Secure VMs
+Date:   Fri,  8 Nov 2019 15:00:09 -0800
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19110823-0008-0000-0000-0000032CDBBA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110823-0009-0000-0000-00004A4BE5E7
+Message-Id: <1573254011-1604-1-git-send-email-linuxram@us.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=427 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch series enables IOMMU support for pseries Secure VMs.
 
-On Fri, Nov 8, 2019 at 2:16 PM Lina Iyer <ilina@codeaurora.org> wrote:
->
-> On Fri, Nov 08 2019 at 14:54 -0700, Lina Iyer wrote:
-> >On Fri, Nov 08 2019 at 14:22 -0700, Doug Anderson wrote:
-> >>Hi,
-> >>
-> >>On Fri, Sep 13, 2019 at 3:00 PM Lina Iyer <ilina@codeaurora.org> wrote:
-> >>>
-> >>>diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
-> >>>new file mode 100644
-> >>>index 0000000..85ac4b6
-> >>>--- /dev/null
-> >>>+++ b/include/linux/soc/qcom/irq.h
-> >>>@@ -0,0 +1,19 @@
-> >>>+/* SPDX-License-Identifier: GPL-2.0-only */
-> >>>+
-> >>>+#ifndef __QCOM_IRQ_H
-> >>>+#define __QCOM_IRQ_H
-> >>>+
-> >>
-> >>I happened to be looking at a pile of patches and one of them added:
-> >>
-> >>+#include <linux/irqdomain.h>
-> >>
-> >>...right here.  If/when you spin your patch, maybe you should too?  At
-> >>the moment the patch I was looking at is at:
-> >>
-> >>https://android.googlesource.com/kernel/common/+log/refs/heads/android-mainline-tracking
-> >>
-> >>Specifically:
-> >>
-> >>https://android.googlesource.com/kernel/common/+/448e2302f82a70f52475b6fc32bbe30301052e6b
-> >>
-> >>
-> >Sure, will take care of it in the next spin.
-> >
-> Checking for this, it seems like it would not be needed by this header.
-> There is nothing in this file that would need that header. It was
-> probably a older version that pulled into that tree.
->
-> Is there a reason now that you see this need?
+Tested using QEMU command line option:
 
-From the note in the commit I found I'd assume that Maulik Shah (who
-is CCed here) has history?
+ "-device virtio-scsi-pci,id=scsi0,bus=pci.0,addr=0x4,
+ 	iommu_platform=on,disable-modern=off,disable-legacy=on"
+ and 
 
-...but looking at it, I see that your header file refers to
-"IRQ_DOMAIN_FLAG_NONCORE" which is defined in "linux/irqdomain.h".
-That means it's good hygiene for you to include the header, right?
-Otherwise all your users need to know that they should include the
-header themselves, which is a bit ugly.
+ "-device virtio-blk-pci,scsi=off,bus=pci.0,
+ 	addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,
+ 	iommu_platform=on,disable-modern=off,disable-legacy=on"
 
--Doug
+changelog:
+	v2: added comments describing the changes.
+		requested by Alexey and Michael Ellermen.
+
+Ram Pai (2):
+  powerpc/pseries/iommu: Share the per-cpu TCE page with the hypervisor.
+  powerpc/pseries/iommu: Use dma_iommu_ops for Secure VMs aswell.
+
+ arch/powerpc/platforms/pseries/iommu.c | 34 +++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
+
+-- 
+1.8.3.1
+
