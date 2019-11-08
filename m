@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A23FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD06FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656E12085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EF42085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214978;
-	bh=S4hGAQcWq3BmNUikVDjThFlx+Q15Rqc902O6gvM3WAA=;
+	s=default; t=1573214983;
+	bh=HYdL5GQ3OQvT0aFNudvAPyRyi+SuJmdXbbSLSZAqU6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9wQe0v1lPcEAsOY71muBaWdaOY5qjCcrvnz3h3UcxekMku3nzZKrZrEBk0/n+fur
-	 wcAOXT/9VD5EAi9wcbivdym3wxNL6bzYDNpuE4bpH6RWr5d0IC6ojfllmsOWwWRDmi
-	 pEVH/z+35l3o/jL7Dy5H/LP+Eg2Q/Msxdu9FIPjA=
+	b=F5Rx5RwV2qEYRtH2PYHGivfANaMmQbGAbt8xn5g7M0aG+SoGVpLouMMXpiTctMgHC
+	 y5WJpGUK3oQeDzIjThuaf1ZOJT04VLnnmSpYnZW6QRptv4JSz0m3TztNppMBkx+T/Z
+	 zZ7Ah7HIR7hnMXnhtlYuCTgOP/G4XYbFZT0CM4pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390695AbfKHMJg (ORCPT
+        id S2388301AbfKHLkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:09:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388327AbfKHLkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:04 -0500
+        id S1732191AbfKHLkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D08220869;
-        Fri,  8 Nov 2019 11:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9DDF21D7F;
+        Fri,  8 Nov 2019 11:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213203;
-        bh=S4hGAQcWq3BmNUikVDjThFlx+Q15Rqc902O6gvM3WAA=;
+        s=default; t=1573213199;
+        bh=HYdL5GQ3OQvT0aFNudvAPyRyi+SuJmdXbbSLSZAqU6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qq88hRicGKqQOitO6zQ/IJuQ/JIEtFMuzR9gVvlhgZWD5dbCPxJXjuQDnxprADI11
-         ncdFnuUeeoziRrmoQacQxClKZGuI3eWCfxYP1oCM/9lGu7dNBbhQveEP5bPOJVcurM
-         kZtIH+VmiTTs3RNkBVkXlo4qT8XYQsVDnci3WYhk=
+        b=WvTe288PSPznFlLA3mWEsffPt+x81Lu38kGyycD5lRZnMGBp7Yx0CFjlejmtfu/zU
+         K2HzCFdqL+gYDyUprHqAvC04hkoJ5oqVhcZepurjWnXBEea/lHH9aVnsD4Psf0deT+
+         21l4UMKg5i2EHgu/w17Lts1yfupC0yMZStthGFV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Naftali Goldstein <naftali.goldstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 086/205] mac80211: fix saving a few HE values
-Date:   Fri,  8 Nov 2019 06:35:53 -0500
-Message-Id: <20191108113752.12502-86-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 083/205] mtd: rawnand: qcom: don't include dma-direct.h
+Date:   Fri,  8 Nov 2019 06:35:50 -0500
+Message-Id: <20191108113752.12502-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,55 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naftali Goldstein <naftali.goldstein@intel.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 77cbbc35a49b75969d98edce9400beb21720aa39 ]
+[ Upstream commit ab0fb17c7d46406e1aac2dda265874751946626d ]
 
-After masking the he_oper_params, to get the requested values as
-integers one must rshift and not lshift.  Fix that by using the
-le32_get_bits() macro.
+A recent commit removed the incorrect use of phys_to_dma from this
+driver, but failed to remove the dma-direct.h include, so do that
+now.
 
-Fixes: 41cbb0f5a295 ("mac80211: add support for HE")
-Signed-off-by: Naftali Goldstein <naftali.goldstein@intel.com>
-[converted to use le32_get_bits()]
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/mtd/nand/raw/qcom_nandc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index 5c9dcafbc3424..b0667467337d4 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -3255,19 +3255,16 @@ static bool ieee80211_assoc_success(struct ieee80211_sub_if_data *sdata,
- 	}
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index 880e75f63a19b..07d8750313fd6 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -23,7 +23,6 @@
+ #include <linux/of_device.h>
+ #include <linux/delay.h>
+ #include <linux/dma/qcom_bam_dma.h>
+-#include <linux/dma-direct.h> /* XXX: drivers shall never use this directly! */
  
- 	if (bss_conf->he_support) {
--		u32 he_oper_params =
--			le32_to_cpu(elems.he_operation->he_oper_params);
-+		bss_conf->bss_color =
-+			le32_get_bits(elems.he_operation->he_oper_params,
-+				      IEEE80211_HE_OPERATION_BSS_COLOR_MASK);
- 
--		bss_conf->bss_color = he_oper_params &
--				      IEEE80211_HE_OPERATION_BSS_COLOR_MASK;
- 		bss_conf->htc_trig_based_pkt_ext =
--			(he_oper_params &
--			 IEEE80211_HE_OPERATION_DFLT_PE_DURATION_MASK) <<
--			IEEE80211_HE_OPERATION_DFLT_PE_DURATION_OFFSET;
-+			le32_get_bits(elems.he_operation->he_oper_params,
-+			      IEEE80211_HE_OPERATION_DFLT_PE_DURATION_MASK);
- 		bss_conf->frame_time_rts_th =
--			(he_oper_params &
--			 IEEE80211_HE_OPERATION_RTS_THRESHOLD_MASK) <<
--			IEEE80211_HE_OPERATION_RTS_THRESHOLD_OFFSET;
-+			le32_get_bits(elems.he_operation->he_oper_params,
-+			      IEEE80211_HE_OPERATION_RTS_THRESHOLD_MASK);
- 
- 		bss_conf->multi_sta_back_32bit =
- 			sta->sta.he_cap.he_cap_elem.mac_cap_info[2] &
+ /* NANDc reg offsets */
+ #define	NAND_FLASH_CMD			0x00
 -- 
 2.20.1
 
