@@ -2,84 +2,60 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DACDC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9716FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D626C222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA47021882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfKHPU6 (ORCPT
+        id S1727528AbfKHPVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:20:58 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44871 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfKHPU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:20:58 -0500
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 123871BF211;
-        Fri,  8 Nov 2019 15:20:55 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 16:20:55 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the rtc tree
-Message-ID: <20191108152055.GC216543@piout.net>
-References: <20191030154105.16a2797f@canb.auug.org.au>
- <20191108162929.2aeb6f5d@canb.auug.org.au>
+        Fri, 8 Nov 2019 10:21:12 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:58038 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbfKHPVM (ORCPT <rfc822;linux-kernel@vger.kernel.orG>);
+        Fri, 8 Nov 2019 10:21:12 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iT64S-0007Jg-Oj; Fri, 08 Nov 2019 23:21:08 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iT64R-0007AC-Fk; Fri, 08 Nov 2019 23:21:07 +0800
+Date:   Fri, 8 Nov 2019 23:21:07 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: inside-secure - Add missed clk_disable_unprepare
+Message-ID: <20191108152107.sw7zs7xidhap2afx@gondor.apana.org.au>
+References: <20191101143715.17708-1-hslester96@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108162929.2aeb6f5d@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191101143715.17708-1-hslester96@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 08/11/2019 16:29:29+1100, Stephen Rothwell wrote:
-> Hi all,
+On Fri, Nov 01, 2019 at 10:37:15PM +0800, Chuhong Yuan wrote:
+> safexcel_remove misses disabling priv->reg_clk like what is done when
+> probe fails.
+> Add the missed call to fix it.
 > 
-> On Wed, 30 Oct 2019 15:41:05 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > 
-> > After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
-> > produced this warning:
-> > 
-> > WARNING: unmet direct dependencies detected for FSL_RCPM
-> >   Depends on [n]: PM_SLEEP [=y] && (ARM || ARM64)
-> >   Selected by [m]:
-> >   - RTC_DRV_FSL_FTM_ALARM [=m] && RTC_CLASS [=y] && (ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST [=y])
-> > 
-> > WARNING: unmet direct dependencies detected for FSL_RCPM
-> >   Depends on [n]: PM_SLEEP [=y] && (ARM || ARM64)
-> >   Selected by [m]:
-> >   - RTC_DRV_FSL_FTM_ALARM [=m] && RTC_CLASS [=y] && (ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST [=y])
-> > 
-> > WARNING: unmet direct dependencies detected for FSL_RCPM
-> >   Depends on [n]: PM_SLEEP [=y] && (ARM || ARM64)
-> >   Selected by [m]:
-> >   - RTC_DRV_FSL_FTM_ALARM [=m] && RTC_CLASS [=y] && (ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST [=y])
-> > 
-> > Introduced by commit
-> > 
-> >   e1c2feb1efa2 ("rtc: fsl-ftm-alarm: allow COMPILE_TEST")
-> 
-> I am still getting these warnings.
-> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/crypto/inside-secure/safexcel.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-I've dropped the patch for now, sorry about that.
-
-
+Patch applied.  Thanks.
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
