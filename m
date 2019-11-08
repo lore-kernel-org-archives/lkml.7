@@ -2,188 +2,374 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373DDFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332F7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052D9215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573236773;
-	bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=VX3NHDhAObfgacEUNUYljry7N/s2j+4JZgXhqDewHUpAzqnsxRsY9aSZlw6edfC8j
-	 abyYRlvNARLBaouGo7BNafcLNWcq1PrfEqTt2LS4j1SgAUgt4oZ7YiSxMJrSeef5mO
-	 RsIN8nRwtU6446IPrkyZ+OlDQbYCnAkVuS80uz2c=
+	by mail.kernel.org (Postfix) with ESMTP id EFA462087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:15:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jbNUAC8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbfKHSMw (ORCPT
+        id S1727927AbfKHSPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:12:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbfKHSMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:12:51 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E284E214DB;
-        Fri,  8 Nov 2019 18:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573236770;
-        bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=bOSP1g9YSgcPhvpPAlL+a9JRxoTij3qU1HwCLePyjL/IOXi+sJLpbHKsEH1gLuhqO
-         AhekoDy5jkd3MDdy7HhsZZoxylHaNfro54qAvKiCVLal478ISREwfbOcvq5jWDC4W2
-         2RYU+3Bt4uPMUGJxhiOjNEqvgvwJuki6MI+L4owo=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191108101116.GA2583136@ulmo>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo> <20191107191933.0B18021D6C@mail.kernel.org> <20191108101116.GA2583136@ulmo>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        jason@lakedaemon.net, jonathanh@nvidia.com,
-        linus.walleij@linaro.org, marc.zyngier@arm.com,
-        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 10:12:49 -0800
-Message-Id: <20191108181249.E284E214DB@mail.kernel.org>
+        Fri, 8 Nov 2019 13:15:46 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:45148 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfKHSPq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:15:46 -0500
+Received: by mail-pf1-f202.google.com with SMTP id a14so5588820pfr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:15:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=WYNgukJg3TMdsYIiVMekOZqim/EMcDZIsIJ6xrJU8Lk=;
+        b=jbNUAC8++Dd9yCAjCl30jxFB14mro/T8/8c6Pwq0crbEl0zju8dgbssZvam/NSwsrZ
+         zur15JSXQlAw5bu4+UEPgNljlTHGv/NX6MPpGWK7PjrBd+/popeg0EVZ5zjmDbmLm0VG
+         07AysfBnJMMa+hu+Dt3ikVRW/SDCiIwzIpuoVbOOI7/9nqPZ1QI7BqMUgDI5qCckNQHG
+         kQQm2L1dtjMQ3SLrO4N8DFHyTZ78o1j289minqJjb1IiJocrTx+Q+2fWsbM2ldieaFN5
+         3AyIfhx3TAnKB1f+8OZIr1Vlti6o3NhypPCQ25X5DFSm9SCoIPF8g0DIVGZBZ1MVnyW5
+         G6Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=WYNgukJg3TMdsYIiVMekOZqim/EMcDZIsIJ6xrJU8Lk=;
+        b=bz58wdFY7dv6FnEGyJXa1Scw6eVJIyp4MLbgniRK6vW590ftc6qXAq4pwSnSBWqWqy
+         Bgww6TScluUEm1lPpzd3WbVRUJAcYsOWZxcR+TDAmt785iEDgXhkjuT+xbntycBVwudd
+         I0CbCN6Iish7ldkdPqc6/zlTOLB7WipQVZSew9Oj6I0UNmrYG1IjbaOj43GOoGqRa/1L
+         vNs+qo36bWZF4EWF6A6sU7c2LNyTxxbIkDS80Q4QstcUt9MMJn5xrqlYi6oS8CzPgK5n
+         xlFEvhYtJUoeZYeZnbWwxwBpId1qL/KHqnn+Fcxnp3wxYwb5ws8sz+35KX68j7V+NlZO
+         7Ckw==
+X-Gm-Message-State: APjAAAVwKjpUVh6P20uL1j344l6/oiYbd7XLxom6tmEhNBRwpYGsgHew
+        sNiWSy/vy+PpVfiNTqvB3cRqp2VfDv4L
+X-Google-Smtp-Source: APXvYqw46Dn4IrFhkUndvuMOOve2KCLyPW5PU43vzXbhiBccQbmPuNg75QYUTXS1dOoq/d4jEcna2pQ5udrZ
+X-Received: by 2002:a63:5d12:: with SMTP id r18mr13672833pgb.149.1573236943620;
+ Fri, 08 Nov 2019 10:15:43 -0800 (PST)
+Date:   Fri,  8 Nov 2019 10:15:33 -0800
+In-Reply-To: <20191107222315.GA7261@kernel.org>
+Message-Id: <20191108181533.222053-1-irogers@google.com>
+Mime-Version: 1.0
+References: <20191107222315.GA7261@kernel.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH] perf tools: report initial event parsing error
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Thierry Reding (2019-11-08 02:11:16)
-> On Thu, Nov 07, 2019 at 11:19:32AM -0800, Stephen Boyd wrote:
-> > Quoting Thierry Reding (2019-11-07 07:21:15)
-> > > On Thu, Nov 07, 2019 at 03:54:03AM +0300, Dmitry Osipenko wrote:
-> > > > 07.11.2019 02:10, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > > > > Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
-> > > > >> This patch adds an API clk_hw_get_parent_index to get index of t=
-he
-> > > > >> clock parent to use during the clock restore operations on system
-> > > > >> resume.
-> > > > > =20
-> > > > > Is there a reason we can't save the clk hw index at suspend time =
-by
-> > > > > reading the hardware to understand the current parent? The parent=
- index
-> > > > > typically doesn't matter unless we're trying to communicate somet=
-hing
-> > > > > from the framework to the provider driver. Put another way, I wou=
-ld
-> > > > > think the provider driver can figure out the index itself without=
- having
-> > > > > to go through the framework to do so.
-> > > >=20
-> > > > Isn't it a bit wasteful to duplicate information about the parent w=
-ithin
-> > > > a provider if framework already has that info? The whole point of t=
-his
-> > > > new API is to allow providers to avoid that unnecessary duplication.
-> > > >=20
-> > > > Please note that clk_hw_get_parent_index is getting used only at the
-> > > > resume time and not at suspend.
-> > >=20
-> > > I agree with this. All of the information that we need is already cac=
-hed
-> > > in the framework. Doing this in the driver would mean essentially add=
-ing
-> > > a "saved parent" field along with code to read the value at suspend t=
-ime
-> > > to the three types of clocks that currently use this core helper.
-> >=20
-> > Don't we already have a "saved parent" field by storing the pointer to
-> > the clk_hw?
-> >=20
-> > >=20
-> > > That's certainly something that we *can* do, but it doesn't sound lik=
-e a
-> > > better option than simply querying the framework for the value that we
-> > > need.
-> > >=20
-> >=20
-> > Let me say this another way. Why does this driver want to know the index
-> > that the framework uses for some clk_hw pointer? Perhaps it happens to
-> > align with the same value that hardware uses, but I still don't
-> > understand why the driver wants to know what the framework has decided
-> > is the index for some clk_hw pointer.
-> >=20
-> > Or is this something like "give me the index for the parent that the
-> > framework thinks I currently have but in reality don't have anymore
-> > because the register contents were wiped and we need to reparent it"?
->=20
-> Yeah, that's exactly what this is being used for. It's used to restore
-> the parent/child relationship during resume after the registers have
-> been wiped during supend.
+Record the first event parsing error and report. Implementing feedback
+from Jiri Olsa:
+https://lkml.org/lkml/2019/10/28/680
 
-Ok cool. Our whole suspend/resume and save/restore story hasn't really
-been well thought out so we may want to pull all this logic into the
-core one day. For now it's OK to do the heavy lifting from provider
-drivers until someone gets a better grasp on how this should all work.
+An example error is:
 
->=20
-> > A generic API to get any index for this question is overkill and we sho=
-uld
-> > consider adding some sort of API like clk_hw_get_current_parent_index(),
-> > or a framework flag that tells the framework this parent is incorrect
-> > and we need to call the .set_parent() op again to reconfigure it.
->=20
-> Okay, I think I see what you're saying. The current implementation does
-> carry a bit of a risk because users could be calling this function with
-> any arbitrary pair of struct clk_hw *, even completely unrelated ones.
->=20
-> How about we turn it into this instead:
->=20
->         /**
->          * clk_hw_get_parent_index - return the index of the parent clock
->          * @hw: clk_hw associated with the clk being consumed
->          *
->          * Fetches and returns the index of parent clock. Returns -EINVAL=
- if the given
->          * clock does not have a current parent.
->          */
->         int clk_hw_get_parent_index(struct clk_hw *hw)
->         {
->                 struct clk_hw *parent =3D clk_hw_get_parent(hw);
->=20
->                 if (!parent)
->                         return -EINVAL;
->=20
->                 return clk_fetch_parent_index(hw->core, parent->core);
->         }
->         EXPORT_SYMBOL_GPL(clk_hw_get_parent_index);
->=20
-> I think that has the advantage that we can't pass it a parent that's not
-> really a parent. There's still the slightly weird case where the clock
-> doesn't have a current parent, but hopefully that's something we are not
-> going to encounter much. After all this only makes sense to be called on
-> mux clocks and they always do have a parent by definition.
+$ tools/perf/perf stat -e c/c/
+WARNING: multiple event parsing errors
+event syntax error: 'c/c/'
+                       \___ unknown term
 
-Right.
+valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
 
->=20
-> Perhaps we should be more explicit and wrap that !parent conditional in
-> a WARN_ON()? In my local patches I do that at the call sites because
-> they are all functions returning void, so we'd be silently ignoring the
-> cases, but I think it may make sense to have it in the core.
->=20
+Initial error:
+event syntax error: 'c/c/'
+                    \___ Cannot find PMU `c'. Missing kernel support?
+Run 'perf list' for a list of valid events
 
-Sure a WARN_ON() sounds fair. That will not take the whole task down
-and makes sure that drivers aren't doing something incorrect. Otherwise,
-this looks good and we can optimize by caching the parent index later if
-we really need to.
+ Usage: perf stat [<options>] [<command>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/powerpc/util/kvm-stat.c |  9 ++-
+ tools/perf/builtin-stat.c               |  2 +
+ tools/perf/builtin-trace.c              | 16 ++++--
+ tools/perf/tests/parse-events.c         |  3 +-
+ tools/perf/util/metricgroup.c           |  2 +-
+ tools/perf/util/parse-events.c          | 76 ++++++++++++++++++-------
+ tools/perf/util/parse-events.h          |  4 ++
+ 7 files changed, 84 insertions(+), 28 deletions(-)
+
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index 9cc1c4a9dec4..30f5310373ca 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -113,10 +113,15 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
+ 	struct parse_events_error err;
+ 	int ret;
+ 
+-	err.str = NULL;
++	bzero(&err, sizeof(err));
+ 	ret = parse_events(evlist, str, &err);
+-	if (err.str)
++	if (err.str) {
+ 		pr_err("%s : %s\n", str, err.str);
++		free(&err->str);
++		free(&err->help);
++		free(&err->first_str);
++		free(&err->first_help);
++	}
+ 	return ret;
+ }
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5964e808d73d..0a15253b438c 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1307,6 +1307,7 @@ static int add_default_attributes(void)
+ 	if (stat_config.null_run)
+ 		return 0;
+ 
++	bzero(&errinfo, sizeof(errinfo));
+ 	if (transaction_run) {
+ 		/* Handle -T as -M transaction. Once platform specific metrics
+ 		 * support has been added to the json files, all archictures
+@@ -1364,6 +1365,7 @@ static int add_default_attributes(void)
+ 			return -1;
+ 		}
+ 		if (err) {
++			parse_events_print_error(&errinfo, smi_cost_attrs);
+ 			fprintf(stderr, "Cannot set up SMI cost events\n");
+ 			return -1;
+ 		}
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 43c05eae1768..46a72ecac427 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
+ {
+ 	bool found = false;
+ 	struct evsel *evsel, *tmp;
+-	struct parse_events_error err = { .idx = 0, };
+-	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
++	struct parse_events_error err;
++	int ret;
+ 
+-	if (ret)
++	bzero(&err, sizeof(err));
++	ret = parse_events(evlist, "probe:vfs_getname*", &err);
++	if (ret) {
++		free(err.str);
++		free(err.help);
++		free(err.first_str);
++		free(err.first_help);
+ 		return false;
++	}
+ 
+ 	evlist__for_each_entry_safe(evlist, evsel, tmp) {
+ 		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
+@@ -4832,8 +4839,9 @@ int cmd_trace(int argc, const char **argv)
+ 	 * wrong in more detail.
+ 	 */
+ 	if (trace.perfconfig_events != NULL) {
+-		struct parse_events_error parse_err = { .idx = 0, };
++		struct parse_events_error parse_err;
+ 
++		bzero(&parse_err, sizeof(parse_err));
+ 		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
+ 		if (err) {
+ 			parse_events_print_error(&parse_err, trace.perfconfig_events);
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 25e0ed2eedfc..091c3aeccc27 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1768,10 +1768,11 @@ static struct terms_test test__terms[] = {
+ 
+ static int test_event(struct evlist_test *e)
+ {
+-	struct parse_events_error err = { .idx = 0, };
++	struct parse_events_error err;
+ 	struct evlist *evlist;
+ 	int ret;
+ 
++	bzero(&err, sizeof(err));
+ 	if (e->valid && !e->valid()) {
+ 		pr_debug("... SKIP");
+ 		return 0;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index a7c0424dbda3..6a4d350d5cdb 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -523,7 +523,7 @@ int metricgroup__parse_groups(const struct option *opt,
+ 	if (ret)
+ 		return ret;
+ 	pr_debug("adding %s\n", extra_events.buf);
+-	memset(&parse_error, 0, sizeof(struct parse_events_error));
++	bzero(&parse_error, sizeof(parse_error));
+ 	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
+ 	if (ret) {
+ 		parse_events_print_error(&parse_error, extra_events.buf);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 6d18ff9bce49..a369bbc289b2 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -189,12 +189,29 @@ void parse_events__handle_error(struct parse_events_error *err, int idx,
+ 		free(help);
+ 		return;
+ 	}
+-	WARN_ONCE(err->str, "WARNING: multiple event parsing errors\n");
+-	err->idx = idx;
+-	free(err->str);
+-	err->str = str;
+-	free(err->help);
+-	err->help = help;
++	switch (err->num_errors) {
++	case 0:
++		err->idx = idx;
++		err->str = str;
++		err->help = help;
++		break;
++	case 1:
++		err->first_idx = err->idx;
++		err->idx = idx;
++		err->first_str = err->str;
++		err->str = str;
++		err->first_help = err->help;
++		err->help = help;
++		break;
++	default:
++		WARN_ONCE(1, "WARNING: multiple event parsing errors\n");
++		free(err->str);
++		err->str = str;
++		free(err->help);
++		err->help = help;
++		break;
++	}
++	err->num_errors++;
+ }
+ 
+ struct tracepoint_path *tracepoint_id_to_path(u64 config)
+@@ -2007,15 +2024,14 @@ static int get_term_width(void)
+ 	return ws.ws_col > MAX_WIDTH ? MAX_WIDTH : ws.ws_col;
+ }
+ 
+-void parse_events_print_error(struct parse_events_error *err,
+-			      const char *event)
++static void __parse_events_print_error(int err_idx, const char *err_str,
++				const char *err_help, const char *event)
+ {
+ 	const char *str = "invalid or unsupported event: ";
+ 	char _buf[MAX_WIDTH];
+ 	char *buf = (char *) event;
+ 	int idx = 0;
+-
+-	if (err->str) {
++	if (err_str) {
+ 		/* -2 for extra '' in the final fprintf */
+ 		int width       = get_term_width() - 2;
+ 		int len_event   = strlen(event);
+@@ -2038,8 +2054,8 @@ void parse_events_print_error(struct parse_events_error *err,
+ 		buf = _buf;
+ 
+ 		/* We're cutting from the beginning. */
+-		if (err->idx > max_err_idx)
+-			cut = err->idx - max_err_idx;
++		if (err_idx > max_err_idx)
++			cut = err_idx - max_err_idx;
+ 
+ 		strncpy(buf, event + cut, max_len);
+ 
+@@ -2052,16 +2068,33 @@ void parse_events_print_error(struct parse_events_error *err,
+ 			buf[max_len] = 0;
+ 		}
+ 
+-		idx = len_str + err->idx - cut;
++		idx = len_str + err_idx - cut;
+ 	}
+ 
+ 	fprintf(stderr, "%s'%s'\n", str, buf);
+ 	if (idx) {
+-		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err->str);
+-		if (err->help)
+-			fprintf(stderr, "\n%s\n", err->help);
+-		zfree(&err->str);
+-		zfree(&err->help);
++		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err_str);
++		if (err_help)
++			fprintf(stderr, "\n%s\n", err_help);
++	}
++}
++
++void parse_events_print_error(struct parse_events_error *err,
++			      const char *event)
++{
++	if (!err->num_errors)
++		return;
++
++	__parse_events_print_error(err->idx, err->str, err->help, event);
++	zfree(&err->str);
++	zfree(&err->help);
++
++	if (err->num_errors > 1) {
++		fputs("\nInitial error:\n", stderr);
++		__parse_events_print_error(err->first_idx, err->first_str,
++					err->first_help, event);
++		zfree(&err->first_str);
++		zfree(&err->first_help);
+ 	}
+ }
+ 
+@@ -2071,8 +2104,11 @@ int parse_events_option(const struct option *opt, const char *str,
+ 			int unset __maybe_unused)
+ {
+ 	struct evlist *evlist = *(struct evlist **)opt->value;
+-	struct parse_events_error err = { .idx = 0, };
+-	int ret = parse_events(evlist, str, &err);
++	struct parse_events_error err;
++	int ret;
++
++	bzero(&err, sizeof(err));
++	ret = parse_events(evlist, str, &err);
+ 
+ 	if (ret) {
+ 		parse_events_print_error(&err, str);
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 5ee8ac93840c..ff367f248fe8 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -110,9 +110,13 @@ struct parse_events_term {
+ };
+ 
+ struct parse_events_error {
++	int   num_errors;       /* number of errors encountered */
+ 	int   idx;	/* index in the parsed string */
+ 	char *str;      /* string to display at the index */
+ 	char *help;	/* optional help string */
++	int   first_idx;/* as above, but for the first encountered error */
++	char *first_str;
++	char *first_help;
+ };
+ 
+ struct parse_events_state {
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
