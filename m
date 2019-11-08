@@ -2,193 +2,232 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBFFFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEE0FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A95215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nl5KFeNv"
+	by mail.kernel.org (Postfix) with ESMTP id D690A21848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573246821;
+	bh=YdoZzimebFdQV6O7Wb5LCogyJVEvxDbTFEtZFm0YoJw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xcpmCfPDZu5PJ2jnZrk2CefNxcdkIwBSUgQmutOnhHP85LYwSSk9ryQRFdIyyXWIz
+	 1G5PmyS0crGnHcSBdC8YWOmHcxrtu2kNW9EzPuOlng22KIEZsMBnCstmcBL2NYS5oY
+	 WMyH8iSTJIk9r2tubHXHFwGUiC14lJR7aF3tAk5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbfKHVAK (ORCPT
+        id S1730968AbfKHVAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:00:10 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:39210 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfKHVAJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:00:09 -0500
-Received: by mail-yw1-f65.google.com with SMTP id d80so2271324ywa.6;
-        Fri, 08 Nov 2019 13:00:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jYXLOtx/N7KVWM/YwJPGjpftc7a7FsHLnMCGgtte7zk=;
-        b=Nl5KFeNvPu+lBDSmEGC40fcqoMtBjKsOjBpHdzeaCr3VYgbt4XHTn11ELnLAeNWORa
-         mrIWXtoxS4J+jGTOmZFl3RlxKTvPHB8tNlbx7tJQani/rZEvR2xnDXNZ49bOp+p7snVn
-         7+mRZEgdx4/9bovxzqBmob9QHnOAmO9zFeFZROA6S4QFyju4nFMYbMv3mQ1GNnO5jZ7p
-         AkwrQ/v2YOW7GsYV2B8YmXO1Laydemt3u61X4MTmZ26/4Vww5Nlq4TbrpNA2v8nqhL6V
-         ugnPDiQ9WJfMd38Ir461mtjxnW7nBOGilesjoz1GiWyRKXvwbwmxOK7+iijF4VvOyD4r
-         9Vxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jYXLOtx/N7KVWM/YwJPGjpftc7a7FsHLnMCGgtte7zk=;
-        b=eE605WOngIjaBgtPDK1CttiYUDF6zJYtJbCQUJGzc6+QNR2HHHzU3HL9RlYuOWGd63
-         B6XemYCUZp7mAL7Nn07pjFY1MS0YOCCEa9Dmr5BHqpIrJuBf6r0+/DS4ipVahlSFY63N
-         cpaVv+2F13mEaJtrLqpoYuw/4OQwjikwmEgZYqI/oImtbAjpua2wfvOV1cDV+76nr1bv
-         WhssomJ79t9xwN3FSfYBDZsQkzx/BR4Uc+Y5wlNKBfzZPVu2+M+GJcU7/WoYCAnjWEo2
-         cMy0Hb5PBuBuKlJmDefgIMw2XZ/yYB4EDo8Lw/S+MBO7PNCGQBHUJ/ZZmsWJzdP5XYQP
-         adUA==
-X-Gm-Message-State: APjAAAXAA6FG1nSwgGuQvZk+ai9M1ZzHuJp4y4QkS4a7RTDPNEOWRR4l
-        uuS60HJ7alSExZB5wvUc3xjZIf2jp5bnqg==
-X-Google-Smtp-Source: APXvYqzT3/qJydQ1euKwNFrGWdgCUlH9bfLCucc02oAC/qUSvpWwX7ufIzrUnWW7WJabswUHWxw7oA==
-X-Received: by 2002:a81:9bcf:: with SMTP id s198mr8208710ywg.450.1573246807805;
-        Fri, 08 Nov 2019 13:00:07 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id d18sm2785043ywh.51.2019.11.08.13.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 13:00:05 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     hns@goldelico.com, adam.ford@logicpd.com,
-        Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: ti-soc-thermal:  Enable addition power management
-Date:   Fri,  8 Nov 2019 14:59:54 -0600
-Message-Id: <20191108205954.20136-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 8 Nov 2019 16:00:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfKHVAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:00:19 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EECF214DB;
+        Fri,  8 Nov 2019 21:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573246818;
+        bh=YdoZzimebFdQV6O7Wb5LCogyJVEvxDbTFEtZFm0YoJw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BDm7OoLZQoFXeZFGioW90fJ5lk6UvxKXvNJcW02TE6ixkVJGNNmaIKxvncUklmY0l
+         dhKA9J8H01YNa8KBUc4U2zzFIdxe1TP2kSrVoywIVopxa72SUzWscau//ILU10IAF/
+         QtZXjgUYH7v9Mgh7/ZAQ0uZlbRAGjsCU+kUbaCCs=
+Date:   Fri, 8 Nov 2019 13:00:17 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-mm <linux-mm@kvack.org>,
+        fsdev <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [RFC v2] writeback: add elastic bdi in cgwb bdp
+Message-Id: <20191108130017.335cd353dd603dbba80b63dd@linux-foundation.org>
+In-Reply-To: <20191026104656.15176-1-hdanton@sina.com>
+References: <20191026104656.15176-1-hdanton@sina.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bandgap sensor can be idled when the processor is, but it
-isn't currently being done. The power consumption of OMAP3
-boards can elevated if the bangap sensor is enabled, because
-the bandgap clock blocks deeper idle states the SoC.
+On Sat, 26 Oct 2019 18:46:56 +0800 Hillf Danton <hdanton@sina.com> wrote:
 
-We should idle bandgap with cpu_notifier instead of
-runtime PM to avoid tagging it with pm_runtime_irq_safe()
-that we want to stop using for drivers in general.
+> 
+> The elastic bdi is the mirror bdi of spinning disks, SSD, USB and
+> other storage devices/instruments on market. The performance of
+> ebdi goes up and down as the pattern of IO dispatched changes, as
+> approximately estimated as below.
+> 
+> 	P = j(..., IO pattern);
+> 
+> In ebdi's view, the bandwidth currently measured in balancing dirty
+> pages has close relation to its performance because the former is a
+> part of the latter.
+> 
+> 	B = y(P);
+> 
+> The functions above suggest there may be a layer violation if it
+> could be better measured somewhere below fs.
+> 
+> It is measured however to the extent that makes every judge happy,
+> and is playing a role in dispatching IO with the IO pattern entirely
+> ignored that is volatile in nature.
+> 
+> And it helps to throttle the dirty speed, with the figure ignored
+> that DRAM in general is x10 faster than ebdi. If B is half of P for
+> instance, then it is near 5% of dirty speed, just 2 points from the
+> figure in the snippet below.
+> 
+> /*
+>  * If ratelimit_pages is too high then we can get into dirty-data overload
+>  * if a large number of processes all perform writes at the same time.
+>  * If it is too low then SMP machines will call the (expensive)
+>  * get_writeback_state too often.
+>  *
+>  * Here we set ratelimit_pages to a level which ensures that when all CPUs are
+>  * dirtying in parallel, we cannot go more than 3% (1/32) over the dirty memory
+>  * thresholds.
+>  */
+> 
+> To prevent dirty speed from running away from laundry speed, ebdi
+> suggests the walk-dog method to put in bdp as a leash seems to
+> churn less in IO pattern.
 
-This patch uses additional power management to idle the clock
-of the bandgap when it is not needed.
+I'm finding both the changelog and the patch rather hard to understand.
+The absence of code comments doesn't help.  But the test robot
+performance results look nice.
 
-Suggested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Presumably you did your own performance testing.  Please share the
+results of that in the changelog.
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-index 2fa78f738568..d203ec041c39 100644
---- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-@@ -26,10 +26,18 @@
- #include <linux/of_irq.h>
- #include <linux/of_gpio.h>
- #include <linux/io.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include "ti-bandgap.h"
- 
- static int ti_bandgap_force_single_read(struct ti_bandgap *bgp, int id);
-+static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-+				  unsigned long cmd, void *v);
- 
- /***   Helper functions to access registers and their bitfields   ***/
- 
-@@ -1025,6 +1033,9 @@ int ti_bandgap_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	bgp->nb.notifier_call = bandgap_omap_cpu_notifier;
-+	cpu_pm_register_notifier(&bgp->nb);
-+
- 	return 0;
- 
- remove_last_cooling:
-@@ -1174,6 +1185,38 @@ static int ti_bandgap_suspend(struct device *dev)
- 	return err;
- }
- 
-+static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-+				  unsigned long cmd, void *v)
-+{
-+	struct ti_bandgap *bgp;
-+
-+	bgp = container_of(nb, struct ti_bandgap, nb);
-+
-+	spin_lock(&bgp->lock);
-+	switch (cmd) {
-+	case CPU_CLUSTER_PM_ENTER:
-+		if (bgp->is_suspended)
-+			break;
-+		ti_bandgap_save_ctxt(bgp);
-+		ti_bandgap_power(bgp, false);
-+		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-+			clk_disable(bgp->fclock);
-+		break;
-+	case CPU_CLUSTER_PM_ENTER_FAILED:
-+	case CPU_CLUSTER_PM_EXIT:
-+		if (bgp->is_suspended)
-+			break;
-+		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-+			clk_enable(bgp->fclock);
-+		ti_bandgap_power(bgp, true);
-+		ti_bandgap_restore_ctxt(bgp);
-+		break;
-+	}
-+	spin_unlock(&bgp->lock);
-+
-+	return NOTIFY_OK;
-+}
-+
- static int ti_bandgap_resume(struct device *dev)
- {
- 	struct ti_bandgap *bgp = dev_get_drvdata(dev);
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-index bb9b0f7faf99..a21d07a1a23a 100644
---- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-@@ -12,6 +12,10 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/err.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm.h>
- 
- /**
-  * DOC: bandgap driver data structure
-@@ -201,6 +205,8 @@ struct ti_bandgap {
- 	int				irq;
- 	int				tshut_gpio;
- 	u32				clk_rate;
-+	struct notifier_block		nb;
-+	unsigned int is_suspended:1;
- };
- 
- /**
--- 
-2.20.1
+> 
+> --- a/include/linux/backing-dev-defs.h
+> +++ b/include/linux/backing-dev-defs.h
+> @@ -170,6 +170,8 @@ struct bdi_writeback {
+>  
+>  	struct list_head bdi_node;	/* anchored at bdi->wb_list */
+>  
+> +	struct wait_queue_head bdp_waitq;
+
+Please add comments which help the reader find out what "bdp" stands
+for.
+
+
+>  #ifdef CONFIG_CGROUP_WRITEBACK
+>  	struct percpu_ref refcnt;	/* used only for !root wb's */
+>  	struct fprop_local_percpu memcg_completions;
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+> @@ -324,6 +324,8 @@ static int wb_init(struct bdi_writeback
+>  			goto out_destroy_stat;
+>  	}
+>  
+> +	init_waitqueue_head(&wb->bdp_waitq);
+> +
+>  	return 0;
+>  
+>  out_destroy_stat:
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -1551,6 +1551,39 @@ static inline void wb_dirty_limits(struc
+>  	}
+>  }
+>
+> +static bool cgwb_bdp_should_throttle(struct bdi_writeback *wb)
+
+Please document this function.  Describe the "why" not the "what".
+
+Comment should help readers understand what "cgwb" means.
+
+> +{
+> +	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
+> +
+> +	if (fatal_signal_pending(current))
+> +		return false;
+> +
+> +	gdtc.avail = global_dirtyable_memory();
+> +
+> +	domain_dirty_limits(&gdtc);
+> +
+> +	gdtc.dirty = global_node_page_state(NR_FILE_DIRTY) +
+> +			global_node_page_state(NR_UNSTABLE_NFS) +
+> +			global_node_page_state(NR_WRITEBACK);
+> +
+> +	if (gdtc.dirty < gdtc.bg_thresh)
+> +		return false;
+> +
+> +	if (!writeback_in_progress(wb))
+> +		wb_start_background_writeback(wb);
+
+Add a comment explaining what's going on here and why we're doing this.
+
+> +	return gdtc.dirty > gdtc.thresh &&
+> +		wb_stat(wb, WB_DIRTIED) >
+> +		wb_stat(wb, WB_WRITTEN) +
+> +		wb_stat_error();
+
+Why?
+
+> +}
+> +
+> +static inline void cgwb_bdp(struct bdi_writeback *wb)
+> +{
+> +	wait_event_interruptible_timeout(wb->bdp_waitq,
+> +			!cgwb_bdp_should_throttle(wb), HZ);
+> +}
+> +
+>  /*
+>   * balance_dirty_pages() must be called by processes which are generating dirty
+>   * data.  It looks at the number of dirty pages in the machine and will force
+> @@ -1910,7 +1943,7 @@ void balance_dirty_pages_ratelimited(str
+>  	preempt_enable();
+>  
+>  	if (unlikely(current->nr_dirtied >= ratelimit))
+> -		balance_dirty_pages(wb, current->nr_dirtied);
+> +		cgwb_bdp(wb);
+>  
+>  	wb_put(wb);
+>  }
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -811,6 +811,8 @@ static long wb_split_bdi_pages(struct bd
+>  	if (nr_pages == LONG_MAX)
+>  		return LONG_MAX;
+>  
+> +	return nr_pages;
+> +
+>  	/*
+>  	 * This may be called on clean wb's and proportional distribution
+>  	 * may not make sense, just use the original @nr_pages in those
+> @@ -1604,6 +1606,7 @@ static long writeback_chunk_size(struct
+>  		pages = min(pages, work->nr_pages);
+>  		pages = round_down(pages + MIN_WRITEBACK_PAGES,
+>  				   MIN_WRITEBACK_PAGES);
+> +		pages = work->nr_pages;
+>  	}
+>  
+>  	return pages;
+> @@ -2092,6 +2095,9 @@ void wb_workfn(struct work_struct *work)
+>  		wb_wakeup_delayed(wb);
+>  
+>  	current->flags &= ~PF_SWAPWRITE;
+> +
+> +	if (waitqueue_active(&wb->bdp_waitq))
+> +		wake_up_all(&wb->bdp_waitq);
+>  }
+
+Does this patch affect both cgroup writeback and global writeback? 
+Were both tested?  Performance results of both?
 
