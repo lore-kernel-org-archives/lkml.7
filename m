@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2998EFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563C8C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D45206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2E1206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240336;
-	bh=Eo4M+CcVoL5z+LaKljF9jKB5DJ888zaDFmwooiIRzxU=;
+	s=default; t=1573240342;
+	bh=lVfUzs0XaUfMA1SqTd9PMM/LNeM6DjQ5596yGRW+XvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1TckGvPeaZ0+n577taIujlUHUa6L2Os1WYfQm6Rgxt7TPDxmd0T4wqf/YDzcJdwuP
-	 N/OEz0W6Qpxso152J5pRpL4C7en/JfSyWK02rEpQJSkUhJlEsWSXO4sF/JG3c0rtKN
-	 Q8xsKgWktc+r4p94jYpmGyKNyRqaHy8YAjzhXRiE=
+	b=yXhO3zREj/EuKoz3AR0VRZPbfd0DkyhpT298MzFxoAosS906CQ+q9O6qynHIUryi+
+	 EoZBNsOi5TwBu365Lwe0S1FLaE3jRFFBTizvrGGZruE04M4JHEY/9Z5a3f04RWkTSu
+	 vQPVw97RdvRm8vhPg6SNanm1ogpGIcQmLCq716UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391078AbfKHTMO (ORCPT
+        id S2391288AbfKHTMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:12:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41392 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:12:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730154AbfKHTJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:35 -0500
+        id S2390051AbfKHTJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 328272087E;
-        Fri,  8 Nov 2019 19:09:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F66B2087E;
+        Fri,  8 Nov 2019 19:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240174;
-        bh=Eo4M+CcVoL5z+LaKljF9jKB5DJ888zaDFmwooiIRzxU=;
+        s=default; t=1573240168;
+        bh=lVfUzs0XaUfMA1SqTd9PMM/LNeM6DjQ5596yGRW+XvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQA8enWiMIOpgYYeG6qN8TSjRT901Bpc44W6nHYA3BEdKyy72VmcuHxpoVzL8OZfg
-         bnUZ7f/ylv46fuqclpkzCwBeNkXcr+7PHJceRZNdWWPUx1MgPpY2tliHeLknSaCIcI
-         V3U8L1lgPwQH4YDQj5FwI/bP8nY/FqqyoZqlaUB0=
+        b=ZIOz8m66vZlBtDJmpCP3YkmKPWQ5evsYhfInVvIq4uh+ogGH3oB25yuSsoavcy3T9
+         hWcoq9MpMFTNV+xCuaHzE0QXkw8tkYFvZjmYPuj50oYnh6tHB1VZ5lp2g6Rw6L8sxw
+         uTk9spj9Nb7OEmNv+oxTVaZ46JcmxLFOPOU+9qig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
+        Jianbo Liu <jianbol@mellanox.com>,
+        Oz Shlomo <ozsh@mellanox.com>, Roi Dayan <roid@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.3 112/140] net/mlx5e: Initialize on stack link modes bitmap
-Date:   Fri,  8 Nov 2019 19:50:40 +0100
-Message-Id: <20191108174911.905416820@linuxfoundation.org>
+Subject: [PATCH 5.3 110/140] net/mlx5e: Determine source port properly for vlan push action
+Date:   Fri,  8 Nov 2019 19:50:38 +0100
+Message-Id: <20191108174911.801053479@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -59,31 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Dmytro Linkin <dmitrolin@mellanox.com>
 
-[ Upstream commit 926b37f76fb0a22fe93c8873c819fd167180e85c ]
+[ Upstream commit d5dbcc4e87bc8444bd2f1ca4b8f787e1e5677ec2 ]
 
-Initialize link modes bitmap on stack before using it, otherwise the
-outcome of ethtool set link ksettings might have unexpected values.
+Termination tables are used for vlan push actions on uplink ports.
+To support RoCE dual port the source port value was placed in a register.
+Fix the code to use an API method returning the source port according to
+the FW capabilities.
 
-Fixes: 4b95840a6ced ("net/mlx5e: Fix matching of speed to PRM link modes")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
+Fixes: 10caabdaad5a ("net/mlx5e: Use termination table for VLAN push actions")
+Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
+Reviewed-by: Jianbo Liu <jianbol@mellanox.com>
+Reviewed-by: Oz Shlomo <ozsh@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c |   22 +++++++---
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1021,7 +1021,7 @@ static bool ext_link_mode_requested(cons
- {
- #define MLX5E_MIN_PTYS_EXT_LINK_MODE_BIT ETHTOOL_LINK_MODE_50000baseKR_Full_BIT
- 	int size = __ETHTOOL_LINK_MODE_MASK_NBITS - MLX5E_MIN_PTYS_EXT_LINK_MODE_BIT;
--	__ETHTOOL_DECLARE_LINK_MODE_MASK(modes);
-+	__ETHTOOL_DECLARE_LINK_MODE_MASK(modes) = {0,};
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
+@@ -177,22 +177,32 @@ mlx5_eswitch_termtbl_actions_move(struct
+ 	memset(&src->vlan[1], 0, sizeof(src->vlan[1]));
+ }
  
- 	bitmap_set(modes, MLX5E_MIN_PTYS_EXT_LINK_MODE_BIT, size);
- 	return bitmap_intersects(modes, adver, __ETHTOOL_LINK_MODE_MASK_NBITS);
++static bool mlx5_eswitch_offload_is_uplink_port(const struct mlx5_eswitch *esw,
++						const struct mlx5_flow_spec *spec)
++{
++	u32 port_mask, port_value;
++
++	if (MLX5_CAP_ESW_FLOWTABLE(esw->dev, flow_source))
++		return spec->flow_context.flow_source == MLX5_VPORT_UPLINK;
++
++	port_mask = MLX5_GET(fte_match_param, spec->match_criteria,
++			     misc_parameters.source_port);
++	port_value = MLX5_GET(fte_match_param, spec->match_value,
++			      misc_parameters.source_port);
++	return (port_mask & port_value & 0xffff) == MLX5_VPORT_UPLINK;
++}
++
+ bool
+ mlx5_eswitch_termtbl_required(struct mlx5_eswitch *esw,
+ 			      struct mlx5_flow_act *flow_act,
+ 			      struct mlx5_flow_spec *spec)
+ {
+-	u32 port_mask = MLX5_GET(fte_match_param, spec->match_criteria,
+-				 misc_parameters.source_port);
+-	u32 port_value = MLX5_GET(fte_match_param, spec->match_value,
+-				  misc_parameters.source_port);
+-
+ 	if (!MLX5_CAP_ESW_FLOWTABLE_FDB(esw->dev, termination_table))
+ 		return false;
+ 
+ 	/* push vlan on RX */
+ 	return (flow_act->action & MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH) &&
+-		((port_mask & port_value) == MLX5_VPORT_UPLINK);
++		mlx5_eswitch_offload_is_uplink_port(esw, spec);
+ }
+ 
+ struct mlx5_flow_handle *
 
 
