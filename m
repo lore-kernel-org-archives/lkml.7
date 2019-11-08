@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8014DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390CAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E830222C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001D821D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213342;
-	bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
+	s=default; t=1573213347;
+	bh=fTe/6jv6vp2P2ZrGxFtNky6NeEAfIueFoy7sJP/UR2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ho6YZlo8IAs72Nd6R2lI/FaF+8Q6sGKjLrri2N36dN9L4q/pGXpLSn72i8g1cENo+
-	 S3O3Zk4CCdVkulICxGNYzupTSmKr1+G52Xg0MSJlTzuyw1dEEJCurwgKbab4k49HVL
-	 mju65BqIKwKel3qA4a4WfYvvU+fejtrP96kcI7Zw=
+	b=z13D0KLeVBGkpKiDaSbD/FqQJ/cJbJcrY5Jz4oub6tE/1dN+EXZIvMknavZGS4wM2
+	 9JOEhbyY66ChuDUBR4U+or6aEpL/onI5GbPbcTuqPXOJnf6bvtbUupQwhUD29XERbq
+	 Q6r6qpVeEbRe+8QL/OZAWVXr1AvTBTIpM08Vueb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbfKHLmU (ORCPT
+        id S2389944AbfKHLmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389841AbfKHLmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:15 -0500
+        id S2389903AbfKHLmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55B021D6C;
-        Fri,  8 Nov 2019 11:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6707B21D6C;
+        Fri,  8 Nov 2019 11:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213334;
-        bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
+        s=default; t=1573213339;
+        bh=fTe/6jv6vp2P2ZrGxFtNky6NeEAfIueFoy7sJP/UR2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2sgV1b0RERik4NvzP8ic+6j7ZymM4QulxjM1P+2yzUA1xHTn0totqPmZNa98ClY+w
-         b4JwlMfdGwkyUABjpYCiuXVsCBZx/JsC55FbKwomtZceStunegPbNTcPaSSl3pNWaS
-         S6m5QivXJbCp/lZSdjW7EBHDAqT3lvVHOO/flEjQ=
+        b=RU+WiYFUhi7UOyIS8iO3dGbs9Pm8dsuZkGxbCdQdmAg4D+29pMwp8bqVycVjoT1Gf
+         b1JaAAijy4FVThgFzhq1LwcH2dTT8ogt4Fy5Q5CJps0v3lKQcM1BXy0zAhdCjAIAoD
+         ff7u9ZPcViGjETKgcgNlNVs9xHNZwzSJrWS5Ycn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 172/205] llc: avoid blocking in llc_sap_close()
-Date:   Fri,  8 Nov 2019 06:37:19 -0500
-Message-Id: <20191108113752.12502-172-sashal@kernel.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 176/205] soc: qcom: wcnss_ctrl: Avoid string overflow
+Date:   Fri,  8 Nov 2019 06:37:23 -0500
+Message-Id: <20191108113752.12502-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,52 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
 
-[ Upstream commit 9708d2b5b7c648e8e0a40d11e8cea12f6277f33c ]
+[ Upstream commit 4c96ed170d658d8826d94edec8ac93ee777981a2 ]
 
-llc_sap_close() is called by llc_sap_put() which
-could be called in BH context in llc_rcv(). We can't
-block in BH.
+'chinfo.name' is used as a NUL-terminated string, but using strncpy() with
+the length equal to the buffer size may result in lack of the termination:
 
-There is no reason to block it here, kfree_rcu() should
-be sufficient.
+drivers//soc/qcom/wcnss_ctrl.c: In function 'qcom_wcnss_open_channel':
+drivers//soc/qcom/wcnss_ctrl.c:284:2: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  strncpy(chinfo.name, name, sizeof(chinfo.name));
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This changes it to use the safer strscpy() instead.
+
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/llc.h  | 1 +
- net/llc/llc_core.c | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/soc/qcom/wcnss_ctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/llc.h b/include/net/llc.h
-index 890a87318014d..df282d9b40170 100644
---- a/include/net/llc.h
-+++ b/include/net/llc.h
-@@ -66,6 +66,7 @@ struct llc_sap {
- 	int sk_count;
- 	struct hlist_nulls_head sk_laddr_hash[LLC_SK_LADDR_HASH_ENTRIES];
- 	struct hlist_head sk_dev_hash[LLC_SK_DEV_HASH_ENTRIES];
-+	struct rcu_head rcu;
- };
+diff --git a/drivers/soc/qcom/wcnss_ctrl.c b/drivers/soc/qcom/wcnss_ctrl.c
+index df3ccb30bc2dd..373400dd816d6 100644
+--- a/drivers/soc/qcom/wcnss_ctrl.c
++++ b/drivers/soc/qcom/wcnss_ctrl.c
+@@ -281,7 +281,7 @@ struct rpmsg_endpoint *qcom_wcnss_open_channel(void *wcnss, const char *name, rp
+ 	struct rpmsg_channel_info chinfo;
+ 	struct wcnss_ctrl *_wcnss = wcnss;
  
- static inline
-diff --git a/net/llc/llc_core.c b/net/llc/llc_core.c
-index 260b3dc1b4a2a..64d4bef04e730 100644
---- a/net/llc/llc_core.c
-+++ b/net/llc/llc_core.c
-@@ -127,9 +127,7 @@ void llc_sap_close(struct llc_sap *sap)
- 	list_del_rcu(&sap->node);
- 	spin_unlock_bh(&llc_sap_list_lock);
+-	strncpy(chinfo.name, name, sizeof(chinfo.name));
++	strscpy(chinfo.name, name, sizeof(chinfo.name));
+ 	chinfo.src = RPMSG_ADDR_ANY;
+ 	chinfo.dst = RPMSG_ADDR_ANY;
  
--	synchronize_rcu();
--
--	kfree(sap);
-+	kfree_rcu(sap, rcu);
- }
- 
- static struct packet_type llc_packet_type __read_mostly = {
 -- 
 2.20.1
 
