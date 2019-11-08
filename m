@@ -6,96 +6,183 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11CDFC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2598AFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C19F215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6D9214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732788AbfKHVdw (ORCPT
+        id S1732852AbfKHVen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:33:52 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:52815 "EHLO
+        Fri, 8 Nov 2019 16:34:43 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:45051 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731765AbfKHVdw (ORCPT
+        with ESMTP id S1726900AbfKHVem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:33:52 -0500
+        Fri, 8 Nov 2019 16:34:42 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MSswA-1iLzYt2E18-00UGxO; Fri, 08 Nov 2019 22:33:37 +0100
+ 1MaInF-1iNMKJ1SOz-00WBZ3; Fri, 08 Nov 2019 22:34:22 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     y2038@lists.linaro.org, "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Carmeli Tamir <carmeli.tamir@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Subject: [PATCH 02/16] fat: use prandom_u32() for i_generation
-Date:   Fri,  8 Nov 2019 22:32:40 +0100
-Message-Id: <20191108213257.3097633-3-arnd@arndb.de>
+        Willem de Bruijn <willemb@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        John Hurley <john.hurley@netronome.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Pedro Tammela <pctammela@gmail.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>, netdev@vger.kernel.org
+Subject: [PATCH 03/16] net: sock: use __kernel_old_timespec instead of timespec
+Date:   Fri,  8 Nov 2019 22:32:41 +0100
+Message-Id: <20191108213257.3097633-4-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
 References: <20191108213257.3097633-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xyMkheBDOQ2yaVVntEHgn9uUv1eZLDi2PHuV/3eFCHO8p5lovZV
- RSePDEWBDJbgngLzGRALBZfJl5JOc/Jtxuyr7QiT/iBCBbjdZJGTSgC2IvsTsu/G8Wrk8Qp
- GiN6kRR+nPbTe/wfuUTgyPddaHuqJCxUZ4XE1/4ITyS+2pjP8u0UFcA4cFLt8YYwP57kCQJ
- fk91hJAfaQeU9TGvmYShw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DJ2s+pQ7k9s=:/y5VLXzDEQnWFAeSQ6xOT6
- CQnsEi8h6oR3+uq3G21bQgEahitqAHnJmT2KNTIAE8E657mVB3N+hZQ9MTvbAybhVKnqHNHNR
- idT/3YENYmr7+Njvqjjc5RlZUQ7KJ/Xv+472f1SMhcd4wTbzZ9Q+ZvYWq2DeXrpC93sVDUloQ
- I32eSBkZX/7ZdDfCUxAp0B+IIwql1HylbLmE5hP6xhaB/uFKE2x5CE9Ua89bKlPpuSBg0HWki
- zHAbhuWTY2ZKkVv/X0MMYPM6aKf2kNzBxAAltGfZ+eRS3mu2lwNR9W3LZZEiUUfBB7+iSfVzW
- /jxxhOSksfm3m7CthVRll/a6vzheR2WY6N5z2p2DsAmenRm83oq8O6BEfhrAjxj0gXmpAzR5w
- kraqdJ2wHUtKHYL4l5I/PgR4ZwVw6/3tEyql+pwkXSEbvxGyGWxSdpEluEBbekv2jL394ePX+
- uMs9A3kzqjXQRDuahnIHfvYhfryebO84fKl/Cf6TpkqZwxIpYkK1ivI8m6E8GXYxLB8d5YhKR
- MAYuH+Ji89DIFPRilXJPMotaHackTxXkzFWYwbl5fO1Rr0yxPGxDzQq/DS98nCPNLFyKvhFxK
- HlJSfzSdE58tDYScQrsLPnu7A/z5bKPzaq3SCdjqAFtYaHj0HNAe0dOSSVfXjulvXmrGEpsMX
- cinqux25sQ19OjeTolQIXEge/FzmqODBKtBdAXBzhY64ukP5DvhJxTWMjNcYsylJhppWeRbmY
- +qRFjY/JlKmmqmFeFZGMG/qAbOSmXB16SupBJmoVWfFYh5zRUzZUrPMStqqrRK95Z0H5qj/qB
- g7stPBh+VKB1WFBmPVWW/pvdNqHEn/Zqhh14UaYRUD/jI6qp9qeqL+r6hhd+ITpG67/O+Hsas
- q+8rrmNsLbzj3POPuP2w==
+X-Provags-ID: V03:K1:dHZS9u9EEGjfoUU8DwFFYZFr9GRmH/0v+mphqJL+9zdWkvhrYSd
+ IjhFW4adgcjrYBzyCFla32nOecMkZ7WtqrNYDuLPjbbUaVAqfFEUwnnJdPdZosywpQApddx
+ CwBRz8KhG0DgQk5LRHYpA2Nyccpus4ewZHGyFhMU6ZTzGs+97OmoSj5Z66HJmrU0H+BUrgG
+ OpGJIgPhmUJk6jsa0uQfg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:scDJt0L2i3s=:/0ToOLlNJ3SE+J0uqz1CcQ
+ uqEaJAU2iU3qiFECJgMLAlSwHpUxqfWHl02EDRRsh5ILvCVS30o3bBobHpBzxB3WHHjeDATwY
+ KC20Mf2kGiq2fmh2PVXjh3pwFqhFtDQwdZNkE87fzAFSKAAg8rRKrzsCfYfF+9LpbbFPt2FPY
+ XmjLvY1wXiiqG0N2Yx3ovraqgjppqtFLHu4bkphwguR9+5Mh6Q7Q9WrbrJPYM80FrBfAZEW5m
+ MJRgVhl2CC5VINqjv4YVJcPCKtBUg/l/0lfzv5Y392YNn2aSRJjLKJSmPinDNWkOBV+ICpr3B
+ HjcTRFKg4FBajsYoI5meWzTOjEZ6PLAhH8JlF7hxyrncy7o+S8+8/Q6A236Bj//JMkyKayfBN
+ dY6DO1elP4J+3Jcxby68osNl9L684vZ6/SFe+gk8OmRi/RBIp3e3wf0BiX3UredWF6sIV/BSA
+ ++MBVFOnz5l/hAuilO3ZXvS0Vc3hQ/sBV715NUChQfZMISyyYbSRWEQDtrjJceDVKcUULxSr0
+ yygz4xrcSoXt4f9ozxETUCEmETv8uqpHzIjjlooiwccrcRCeo7WxXvP0oOJSMrOG14q2Migpj
+ /OiRKhid1N1yzlEvZ8m16fZIQbaNGZ14FL+vgE4HkSWQ3whA3bdAoyr9fg7y3ifzPPfutzfGp
+ IRnUup2M6/MNdzbUmck7/LNvIqj1qJgDCYGuZdiAZK+7303FU7NxtW87QH7/4A9kexC8r6dG/
+ 7xXIHeMU/5xg6auy0lJUGwT3PsC0Wbh8iwaobHQ6NTTNdPGTohAezNV/KYtoShc66EZgheh9M
+ s/BE56MbGfcOAwQ9/8cpN8J6dd37nFr1VHH0z8CLFhrfBnXLnW+KZGY9p80g8cfDY6p4b5bFR
+ RPbhyrd4d4f3hzy7WbqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to commit 46c9a946d766 ("shmem: use monotonic time for i_generation")
-we should not use the deprecated get_seconds() interface for i_generation.
+The 'timespec' type definition and helpers like ktime_to_timespec()
+or timespec64_to_timespec() should no longer be used in the kernel so
+we can remove them and avoid introducing y2038 issues in new code.
 
-prandom_u32() is the replacement used in other file systems.
+Change the socket code that needs to pass a timespec to user space for
+backward compatibility to use __kernel_old_timespec instead.  This type
+has the same layout but with a clearer defined name.
+
+Slightly reformat tcp_recv_timestamp() for consistency after the removal
+of timespec64_to_timespec().
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/fat/inode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/skbuff.h |  7 +++++--
+ net/compat.c           |  2 +-
+ net/ipv4/tcp.c         | 28 ++++++++++++++++------------
+ net/socket.c           |  2 +-
+ 4 files changed, 23 insertions(+), 16 deletions(-)
 
-diff --git a/fs/fat/inode.c b/fs/fat/inode.c
-index 5f04c5c810fb..594b05ae16c9 100644
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -21,6 +21,7 @@
- #include <linux/blkdev.h>
- #include <linux/backing-dev.h>
- #include <asm/unaligned.h>
-+#include <linux/random.h>
- #include <linux/iversion.h>
- #include "fat.h"
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 64a395c7f689..6d64ffe92867 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -3656,9 +3656,12 @@ static inline void skb_get_new_timestamp(const struct sk_buff *skb,
+ }
  
-@@ -521,7 +522,7 @@ int fat_fill_inode(struct inode *inode, struct msdos_dir_entry *de)
- 	inode->i_uid = sbi->options.fs_uid;
- 	inode->i_gid = sbi->options.fs_gid;
- 	inode_inc_iversion(inode);
--	inode->i_generation = get_seconds();
-+	inode->i_generation = prandom_u32();
+ static inline void skb_get_timestampns(const struct sk_buff *skb,
+-				       struct timespec *stamp)
++				       struct __kernel_old_timespec *stamp)
+ {
+-	*stamp = ktime_to_timespec(skb->tstamp);
++	struct timespec64 ts = ktime_to_timespec64(skb->tstamp);
++
++	stamp->tv_sec = ts.tv_sec;
++	stamp->tv_nsec = ts.tv_nsec;
+ }
  
- 	if ((de->attr & ATTR_DIR) && !IS_FREE(de->name)) {
- 		inode->i_generation &= ~1;
+ static inline void skb_get_new_timestampns(const struct sk_buff *skb,
+diff --git a/net/compat.c b/net/compat.c
+index 0f7ded26059e..47d99c784947 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -232,7 +232,7 @@ int put_cmsg_compat(struct msghdr *kmsg, int level, int type, int len, void *dat
+ 		    (type == SO_TIMESTAMPNS_OLD || type == SO_TIMESTAMPING_OLD)) {
+ 			int count = type == SO_TIMESTAMPNS_OLD ? 1 : 3;
+ 			int i;
+-			struct timespec *ts = (struct timespec *)data;
++			struct __kernel_old_timespec *ts = data;
+ 			for (i = 0; i < count; i++) {
+ 				cts[i].tv_sec = ts[i].tv_sec;
+ 				cts[i].tv_nsec = ts[i].tv_nsec;
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index d8876f0e9672..013f635db19c 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1864,29 +1864,33 @@ static void tcp_recv_timestamp(struct msghdr *msg, const struct sock *sk,
+ 		if (sock_flag(sk, SOCK_RCVTSTAMP)) {
+ 			if (sock_flag(sk, SOCK_RCVTSTAMPNS)) {
+ 				if (new_tstamp) {
+-					struct __kernel_timespec kts = {tss->ts[0].tv_sec, tss->ts[0].tv_nsec};
+-
++					struct __kernel_timespec kts = {
++						.tv_sec = tss->ts[0].tv_sec,
++						.tv_nsec = tss->ts[0].tv_nsec,
++					};
+ 					put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMPNS_NEW,
+ 						 sizeof(kts), &kts);
+ 				} else {
+-					struct timespec ts_old = timespec64_to_timespec(tss->ts[0]);
+-
++					struct __kernel_old_timespec ts_old = {
++						.tv_sec = tss->ts[0].tv_sec,
++						.tv_nsec = tss->ts[0].tv_nsec,
++					};
+ 					put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMPNS_OLD,
+ 						 sizeof(ts_old), &ts_old);
+ 				}
+ 			} else {
+ 				if (new_tstamp) {
+-					struct __kernel_sock_timeval stv;
+-
+-					stv.tv_sec = tss->ts[0].tv_sec;
+-					stv.tv_usec = tss->ts[0].tv_nsec / 1000;
++					struct __kernel_sock_timeval stv = {
++						.tv_sec = tss->ts[0].tv_sec,
++						.tv_usec = tss->ts[0].tv_nsec / 1000,
++					};
+ 					put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMP_NEW,
+ 						 sizeof(stv), &stv);
+ 				} else {
+-					struct __kernel_old_timeval tv;
+-
+-					tv.tv_sec = tss->ts[0].tv_sec;
+-					tv.tv_usec = tss->ts[0].tv_nsec / 1000;
++					struct __kernel_old_timeval tv = {
++						.tv_sec = tss->ts[0].tv_sec,
++						.tv_usec = tss->ts[0].tv_nsec / 1000,
++					};
+ 					put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMP_OLD,
+ 						 sizeof(tv), &tv);
+ 				}
+diff --git a/net/socket.c b/net/socket.c
+index 98f6544b0096..9ab00a080760 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -793,7 +793,7 @@ void __sock_recv_timestamp(struct msghdr *msg, struct sock *sk,
+ 				put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMPNS_NEW,
+ 					 sizeof(ts), &ts);
+ 			} else {
+-				struct timespec ts;
++				struct __kernel_old_timespec ts;
+ 
+ 				skb_get_timestampns(skb, &ts);
+ 				put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMPNS_OLD,
 -- 
 2.20.0
 
