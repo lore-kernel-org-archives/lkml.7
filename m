@@ -2,392 +2,250 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2760C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641CFC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC81215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D22215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdFPSdwW"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="y1K0awVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfKHSZ1 (ORCPT
+        id S1728914AbfKHS0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:25:27 -0500
-Received: from mail-qv1-f51.google.com ([209.85.219.51]:43512 "EHLO
-        mail-qv1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfKHSZ1 (ORCPT
+        Fri, 8 Nov 2019 13:26:33 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36045 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfKHS0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:25:27 -0500
-Received: by mail-qv1-f51.google.com with SMTP id cg2so2571544qvb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:25:26 -0800 (PST)
+        Fri, 8 Nov 2019 13:26:32 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k15so7238769lja.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:26:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/zawH8E5Iik4irQZDcFHkIRBzKfbWIDzeKd69/F1648=;
-        b=BdFPSdwW7t5amNGEVuky7/CRuPhg1TznulxBRrddP8YarMCBi/57ueFiGj1pwWT4Y0
-         q8REHzCSIbkFRS7WdJlNxGDg/0yR+06fKpZqsGY2cDW7i+rD57AUn0p9PMjmVXQOqJ/+
-         4/De6t/KeKwhjY1sRpPS6FEHJYsVCu8JJJAIhEG5J8rO//RBTzFu+jBnAjcXQTIsKh6i
-         2FH8AkLKbEqoMnsriTSH073LfHMBGDhXO04kUFMV2KVvSyrtw/xk+M0NF8eE5iJobiBf
-         ZQEU6JiUY+JXmwBpbJzYVGLeaOuIod02JZ4rguwfWhNaQOSuDIaTbLyaVrQ28b0bha7D
-         uHsQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yfrqk4oAZSRdxNXU7NWHV3s/qknksusoqMId/97+bh8=;
+        b=y1K0awVaPkO46sJakcQS8uKieCdS/hCTRRGdp7q5Dcku0FUI40wj7F+zld2UORzEbf
+         t8YG8QSWNop4/suFu+5p6OBsjDlLmTswYjH/3bLUmv9AcOoVfZDeOxZjGeOYnoTXA6HQ
+         J8aMPm2axVmOGDf5xSwuijEvUOv5sKpFh9JUyrH0Kqx/t6feWNf2IUF+xYaJPauhde4n
+         IuGvkCufzn9sVUy4WXyW1gLblbgYB8D+aexe4RpGSB9pg3OV5iGRR2py7xDoNKIYBlIc
+         PZTrGRMZIlhMNrWif9jD4E8iCrXApMODQRFEsPi4vx5MLLJacWWpJdjOsLxXzD9bVAd1
+         r26w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/zawH8E5Iik4irQZDcFHkIRBzKfbWIDzeKd69/F1648=;
-        b=nxUVyiESCTBDy6DKtaMGl13WrFtbWA8zvwATAnxSn0Lb0sCkpe69bVk4rJG0dRcgqg
-         sZQueGOJ25ZVXf+4fJ15prktE6b4EZzcg2PFswnbBR/irPzd8+OtK5EZzea81c884+bS
-         DWkxnrcHwXnHJTu1VK0SXThHtQiL1ZsFEyxuBgg9FH1h1qqWirT9QmdE3GDZytjvAHZf
-         ju4et6MZidDAk51ugy4yJCbxrk+jGeBdGhKkHrf/+84jMrtZOlmhbfZhyQNmxbQxHavs
-         JRdMIeX9+3mzfkpcSzMMSM5HkYDm4Wm1pVmsYg3+zUCZEjYCWFYgHGynJSZSlMiMxNMk
-         1HTw==
-X-Gm-Message-State: APjAAAXz+2w2+Y6alwhIR4f3y59bmkHN7RCkyMxZkXLUJk2vGPFRtB3Q
-        lmjZQmlQdqFbLq5FtcPeTzS60KxSzek=
-X-Google-Smtp-Source: APXvYqxZqP7yJSp+YhTBZ34nfqNUCdr5djzoQ+2T/iPXohjOUyuYdI25gw+GNM3TYsB91H3cTwVPdA==
-X-Received: by 2002:a0c:fe11:: with SMTP id x17mr11099180qvr.162.1573237525848;
-        Fri, 08 Nov 2019 10:25:25 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([177.195.211.140])
-        by smtp.gmail.com with ESMTPSA id o3sm4183057qta.3.2019.11.08.10.25.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 10:25:25 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 046D1411B3; Fri,  8 Nov 2019 15:25:21 -0300 (-03)
-Date:   Fri, 8 Nov 2019 15:25:21 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf tools: report initial event parsing error
-Message-ID: <20191108182521.GA28896@kernel.org>
-References: <20191107222315.GA7261@kernel.org>
- <20191108181533.222053-1-irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yfrqk4oAZSRdxNXU7NWHV3s/qknksusoqMId/97+bh8=;
+        b=CcOc0Auex5iJ3yRThKYTIWKWGgWaixF52Em6yCdWJYueHfupzIng5PxmjW6HnTq9rG
+         mkVVDWLMDOESoiVxCtrmebl9V60LGQWv+JhKJw8Ob30IUlSgZjOHYG9Py6S/x9WuGWMO
+         Ah97iqIZ2qvf/sqW2xJiypiIyDct9aBTbvEKQ/ttF7dgismKahdWWfDVTjvvpmCSS6RF
+         IV/DSWp3pZF6Y6ahh1kme333ujwg7bsbK9l0hK89kDaDh4EoHbJEbba/JqPO5ooCT81o
+         SoGQB9fXypna3pmQR2YY9eprBNV7a1yZ4Zl+YK0kQDdI5vvsxkJe/2yUwfTBagr2hMr5
+         fdUw==
+X-Gm-Message-State: APjAAAXspR6HfVf2UujGKycM76Sordi0grT2dTUXqHORCnsZ2deSmjIa
+        kjya5TCyMVWqN0kKoT0xQ3snsFiDUNySiRWNyBkpcUg=
+X-Google-Smtp-Source: APXvYqw1CojLXlLXhi44VGUdhNOsRF4p9i8B7yLeQIjTFUXYF7RTFSwfHA6RC+gtdGcnk7X56NGlBF0xrTDt5/lxnqc=
+X-Received: by 2002:a2e:85d5:: with SMTP id h21mr7824291ljj.243.1573237589836;
+ Fri, 08 Nov 2019 10:26:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108181533.222053-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <cover.1568834524.git.rgb@redhat.com> <6fb4e270bfafef3d0477a06b0365fdcc5a5305b5.1568834524.git.rgb@redhat.com>
+ <CAHC9VhS2111YTQ_rbHKe6+n9coPNbcTJqf5wnBx9LYHSf69THA@mail.gmail.com> <20191025210004.jzkenjg6jrka22ak@madcap2.tricolour.ca>
+In-Reply-To: <20191025210004.jzkenjg6jrka22ak@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 8 Nov 2019 13:26:18 -0500
+Message-ID: <CAHC9VhRMJkeC7HkAMr1TwymtT7eHOB_B=_28R6zVfQQk-gW-DA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V7 04/21] audit: convert to contid list to check
+ for orch/engine ownership
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Nov 08, 2019 at 10:15:33AM -0800, Ian Rogers escreveu:
-> Record the first event parsing error and report. Implementing feedback
-> from Jiri Olsa:
-> https://lkml.org/lkml/2019/10/28/680
-> 
-> An example error is:
-> 
-> $ tools/perf/perf stat -e c/c/
-> WARNING: multiple event parsing errors
-> event syntax error: 'c/c/'
->                        \___ unknown term
-> 
-> valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
-> 
-> Initial error:
-> event syntax error: 'c/c/'
->                     \___ Cannot find PMU `c'. Missing kernel support?
-> Run 'perf list' for a list of valid events
-> 
->  Usage: perf stat [<options>] [<command>]
-> 
->     -e, --event <event>   event selector. use 'perf list' to list available events
+On Fri, Oct 25, 2019 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-10-10 20:38, Paul Moore wrote:
+> > On Wed, Sep 18, 2019 at 9:24 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > Store the audit container identifier in a refcounted kernel object that
+> > > is added to the master list of audit container identifiers.  This will
+> > > allow multiple container orchestrators/engines to work on the same
+> > > machine without danger of inadvertantly re-using an existing identifier.
+> > > It will also allow an orchestrator to inject a process into an existing
+> > > container by checking if the original container owner is the one
+> > > injecting the task.  A hash table list is used to optimize searches.
+> > >
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > >  include/linux/audit.h | 26 ++++++++++++++--
+> > >  kernel/audit.c        | 86 ++++++++++++++++++++++++++++++++++++++++++++++++---
+> > >  kernel/audit.h        |  8 +++++
+> > >  3 files changed, 112 insertions(+), 8 deletions(-)
+> >
+> > One general comment before we go off into the weeds on this ... I can
+> > understand why you wanted to keep this patch separate from the earlier
+> > patches, but as we get closer to having mergeable code this should get
+> > folded into the previous patches.  For example, there shouldn't be a
+> > change in audit_task_info where you change the contid field from a u64
+> > to struct pointer, it should be a struct pointer from the start.
+>
+> I should have marked this patchset as RFC even though it was v7 due to a
+> lot of new ideas/code that was added with uncertainties needing comment
+> and direction.
+>
+> > It's also disappointing that idr appears to only be for 32-bit ID
+> > values, if we had a 64-bit idr I think we could simplify this greatly.
+>
+> Perhaps.  I do still see value in letting the orchestrator choose the
+> value.
 
-Jiri, I couldn't find your Acked-by for this one, have you provided it?
+Agreed.  I was just thinking out loud that it seems like much of what
+we need could be a generic library mechanism similar to, but not quite
+like, the existing idr code.
 
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/powerpc/util/kvm-stat.c |  9 ++-
->  tools/perf/builtin-stat.c               |  2 +
->  tools/perf/builtin-trace.c              | 16 ++++--
->  tools/perf/tests/parse-events.c         |  3 +-
->  tools/perf/util/metricgroup.c           |  2 +-
->  tools/perf/util/parse-events.c          | 76 ++++++++++++++++++-------
->  tools/perf/util/parse-events.h          |  4 ++
->  7 files changed, 84 insertions(+), 28 deletions(-)
-> 
-> diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
-> index 9cc1c4a9dec4..30f5310373ca 100644
-> --- a/tools/perf/arch/powerpc/util/kvm-stat.c
-> +++ b/tools/perf/arch/powerpc/util/kvm-stat.c
-> @@ -113,10 +113,15 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
->  	struct parse_events_error err;
->  	int ret;
->  
-> -	err.str = NULL;
-> +	bzero(&err, sizeof(err));
->  	ret = parse_events(evlist, str, &err);
-> -	if (err.str)
-> +	if (err.str) {
->  		pr_err("%s : %s\n", str, err.str);
-> +		free(&err->str);
-> +		free(&err->help);
-> +		free(&err->first_str);
-> +		free(&err->first_help);
-> +	}
->  	return ret;
->  }
->  
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 5964e808d73d..0a15253b438c 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1307,6 +1307,7 @@ static int add_default_attributes(void)
->  	if (stat_config.null_run)
->  		return 0;
->  
-> +	bzero(&errinfo, sizeof(errinfo));
->  	if (transaction_run) {
->  		/* Handle -T as -M transaction. Once platform specific metrics
->  		 * support has been added to the json files, all archictures
-> @@ -1364,6 +1365,7 @@ static int add_default_attributes(void)
->  			return -1;
->  		}
->  		if (err) {
-> +			parse_events_print_error(&errinfo, smi_cost_attrs);
->  			fprintf(stderr, "Cannot set up SMI cost events\n");
->  			return -1;
->  		}
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 43c05eae1768..46a72ecac427 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
->  {
->  	bool found = false;
->  	struct evsel *evsel, *tmp;
-> -	struct parse_events_error err = { .idx = 0, };
-> -	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
-> +	struct parse_events_error err;
-> +	int ret;
->  
-> -	if (ret)
-> +	bzero(&err, sizeof(err));
-> +	ret = parse_events(evlist, "probe:vfs_getname*", &err);
-> +	if (ret) {
-> +		free(err.str);
-> +		free(err.help);
-> +		free(err.first_str);
-> +		free(err.first_help);
->  		return false;
-> +	}
->  
->  	evlist__for_each_entry_safe(evlist, evsel, tmp) {
->  		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
-> @@ -4832,8 +4839,9 @@ int cmd_trace(int argc, const char **argv)
->  	 * wrong in more detail.
->  	 */
->  	if (trace.perfconfig_events != NULL) {
-> -		struct parse_events_error parse_err = { .idx = 0, };
-> +		struct parse_events_error parse_err;
->  
-> +		bzero(&parse_err, sizeof(parse_err));
->  		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
->  		if (err) {
->  			parse_events_print_error(&parse_err, trace.perfconfig_events);
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 25e0ed2eedfc..091c3aeccc27 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -1768,10 +1768,11 @@ static struct terms_test test__terms[] = {
->  
->  static int test_event(struct evlist_test *e)
->  {
-> -	struct parse_events_error err = { .idx = 0, };
-> +	struct parse_events_error err;
->  	struct evlist *evlist;
->  	int ret;
->  
-> +	bzero(&err, sizeof(err));
->  	if (e->valid && !e->valid()) {
->  		pr_debug("... SKIP");
->  		return 0;
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index a7c0424dbda3..6a4d350d5cdb 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -523,7 +523,7 @@ int metricgroup__parse_groups(const struct option *opt,
->  	if (ret)
->  		return ret;
->  	pr_debug("adding %s\n", extra_events.buf);
-> -	memset(&parse_error, 0, sizeof(struct parse_events_error));
-> +	bzero(&parse_error, sizeof(parse_error));
->  	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
->  	if (ret) {
->  		parse_events_print_error(&parse_error, extra_events.buf);
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 6d18ff9bce49..a369bbc289b2 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -189,12 +189,29 @@ void parse_events__handle_error(struct parse_events_error *err, int idx,
->  		free(help);
->  		return;
->  	}
-> -	WARN_ONCE(err->str, "WARNING: multiple event parsing errors\n");
-> -	err->idx = idx;
-> -	free(err->str);
-> -	err->str = str;
-> -	free(err->help);
-> -	err->help = help;
-> +	switch (err->num_errors) {
-> +	case 0:
-> +		err->idx = idx;
-> +		err->str = str;
-> +		err->help = help;
-> +		break;
-> +	case 1:
-> +		err->first_idx = err->idx;
-> +		err->idx = idx;
-> +		err->first_str = err->str;
-> +		err->str = str;
-> +		err->first_help = err->help;
-> +		err->help = help;
-> +		break;
-> +	default:
-> +		WARN_ONCE(1, "WARNING: multiple event parsing errors\n");
-> +		free(err->str);
-> +		err->str = str;
-> +		free(err->help);
-> +		err->help = help;
-> +		break;
-> +	}
-> +	err->num_errors++;
->  }
->  
->  struct tracepoint_path *tracepoint_id_to_path(u64 config)
-> @@ -2007,15 +2024,14 @@ static int get_term_width(void)
->  	return ws.ws_col > MAX_WIDTH ? MAX_WIDTH : ws.ws_col;
->  }
->  
-> -void parse_events_print_error(struct parse_events_error *err,
-> -			      const char *event)
-> +static void __parse_events_print_error(int err_idx, const char *err_str,
-> +				const char *err_help, const char *event)
->  {
->  	const char *str = "invalid or unsupported event: ";
->  	char _buf[MAX_WIDTH];
->  	char *buf = (char *) event;
->  	int idx = 0;
-> -
-> -	if (err->str) {
-> +	if (err_str) {
->  		/* -2 for extra '' in the final fprintf */
->  		int width       = get_term_width() - 2;
->  		int len_event   = strlen(event);
-> @@ -2038,8 +2054,8 @@ void parse_events_print_error(struct parse_events_error *err,
->  		buf = _buf;
->  
->  		/* We're cutting from the beginning. */
-> -		if (err->idx > max_err_idx)
-> -			cut = err->idx - max_err_idx;
-> +		if (err_idx > max_err_idx)
-> +			cut = err_idx - max_err_idx;
->  
->  		strncpy(buf, event + cut, max_len);
->  
-> @@ -2052,16 +2068,33 @@ void parse_events_print_error(struct parse_events_error *err,
->  			buf[max_len] = 0;
->  		}
->  
-> -		idx = len_str + err->idx - cut;
-> +		idx = len_str + err_idx - cut;
->  	}
->  
->  	fprintf(stderr, "%s'%s'\n", str, buf);
->  	if (idx) {
-> -		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err->str);
-> -		if (err->help)
-> -			fprintf(stderr, "\n%s\n", err->help);
-> -		zfree(&err->str);
-> -		zfree(&err->help);
-> +		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err_str);
-> +		if (err_help)
-> +			fprintf(stderr, "\n%s\n", err_help);
-> +	}
-> +}
-> +
-> +void parse_events_print_error(struct parse_events_error *err,
-> +			      const char *event)
-> +{
-> +	if (!err->num_errors)
-> +		return;
-> +
-> +	__parse_events_print_error(err->idx, err->str, err->help, event);
-> +	zfree(&err->str);
-> +	zfree(&err->help);
-> +
-> +	if (err->num_errors > 1) {
-> +		fputs("\nInitial error:\n", stderr);
-> +		__parse_events_print_error(err->first_idx, err->first_str,
-> +					err->first_help, event);
-> +		zfree(&err->first_str);
-> +		zfree(&err->first_help);
->  	}
->  }
->  
-> @@ -2071,8 +2104,11 @@ int parse_events_option(const struct option *opt, const char *str,
->  			int unset __maybe_unused)
->  {
->  	struct evlist *evlist = *(struct evlist **)opt->value;
-> -	struct parse_events_error err = { .idx = 0, };
-> -	int ret = parse_events(evlist, str, &err);
-> +	struct parse_events_error err;
-> +	int ret;
-> +
-> +	bzero(&err, sizeof(err));
-> +	ret = parse_events(evlist, str, &err);
->  
->  	if (ret) {
->  		parse_events_print_error(&err, str);
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index 5ee8ac93840c..ff367f248fe8 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -110,9 +110,13 @@ struct parse_events_term {
->  };
->  
->  struct parse_events_error {
-> +	int   num_errors;       /* number of errors encountered */
->  	int   idx;	/* index in the parsed string */
->  	char *str;      /* string to display at the index */
->  	char *help;	/* optional help string */
-> +	int   first_idx;/* as above, but for the first encountered error */
-> +	char *first_str;
-> +	char *first_help;
->  };
->  
->  struct parse_events_state {
-> -- 
-> 2.24.0.432.g9d3f5f5b63-goog
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index f2e3b81f2942..e317807cdd3e 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -95,10 +95,18 @@ struct audit_ntp_data {
+> > >  struct audit_ntp_data {};
+> > >  #endif
+> > >
+> > > +struct audit_cont {
+> > > +       struct list_head        list;
+> > > +       u64                     id;
+> > > +       struct task_struct      *owner;
+> > > +       refcount_t              refcount;
+> > > +       struct rcu_head         rcu;
+> > > +};
+> >
+> > It seems as though in most of the code you are using "contid", any
+> > reason why didn't stick with that naming scheme here, e.g. "struct
+> > audit_contid"?
+>
+> I was using contid to refer to the value itself and cont to refer to the
+> refcounted object.  I find cont a bit too terse, so I'm still thinking
+> of changing it.  Perhaps contobj?
+
+Yes, just "cont" is a bit too ambiguous considering we have both
+integer values and structures being passed around.  Whatever you
+decide on, a common base with separate suffixes seems like a good
+idea.
+
+FWIW, I still think the "audit container ID" : "ACID" thing is kinda funny ;)
+
+> > > @@ -203,11 +211,15 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
+> > >
+> > >  static inline u64 audit_get_contid(struct task_struct *tsk)
+> > >  {
+> > > -       if (!tsk->audit)
+> > > +       if (!tsk->audit || !tsk->audit->cont)
+> > >                 return AUDIT_CID_UNSET;
+> > > -       return tsk->audit->contid;
+> > > +       return tsk->audit->cont->id;
+> > >  }
+> >
+> > Assuming for a moment that we implement an audit_contid_get() (see
+> > Neil's comment as well as mine below), we probably need to name this
+> > something different so we don't all lose our minds when we read this
+> > code.  On the plus side we can probably preface it with an underscore
+> > since it is a static, in which case _audit_contid_get() might be okay,
+> > but I'm open to suggestions.
+>
+> I'm fine with the "_" prefix, can you point to precedent or convention?
+
+Generally kernel functions which are "special"/private/unsafe/etc.
+have a one, or two, underscore prefix.  If you don't want to add the
+prefix, that's fine, but please change the name as mentioned
+previously.
+
+> > > @@ -231,7 +235,9 @@ int audit_alloc(struct task_struct *tsk)
+> > >         }
+> > >         info->loginuid = audit_get_loginuid(current);
+> > >         info->sessionid = audit_get_sessionid(current);
+> > > -       info->contid = audit_get_contid(current);
+> > > +       info->cont = audit_cont(current);
+> > > +       if (info->cont)
+> > > +               refcount_inc(&info->cont->refcount);
+> >
+> > See the other comments about a "get" function, but I think we need a
+> > RCU read lock around the above, no?
+>
+> The rcu read lock is to protect the list rather than the cont object
+> itself, the latter of which is protected by its refcount.
+
+What protects you from info->cont going away between when you fetch
+the pointer via audit_cont() to when you dereference it in
+refcount_inc()?
+
+> > > @@ -2397,8 +2438,43 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+> > >         else if (audit_contid_set(task))
+> > >                 rc = -ECHILD;
+> > >         read_unlock(&tasklist_lock);
+> > > -       if (!rc)
+> > > -               task->audit->contid = contid;
+> > > +       if (!rc) {
+> > > +               struct audit_cont *oldcont = audit_cont(task);
+> >
+> > Previously we held the tasklist_lock to protect the audit container ID
+> > associated with the struct, should we still be holding it here?
+>
+> We held the tasklist_lock to protect access to the target task's
+> child/parent/thread relationships.
+
+What protects us in the case of simultaneous calls to audit_set_contid()?
+
+> > Regardless, I worry that the lock dependencies between the
+> > tasklist_lock and the audit_contid_list_lock are going to be tricky.
+> > It might be nice to document the relationship in a comment up near
+> > where you declare audit_contid_list_lock.
+>
+> I don't think there should be a conflict between the two.
+>
+> The contid_list_lock doesn't care if the cont object is associated to a
+> particular task.
+
+Please document the relationship between the two, I worry we could
+easily run into lockdep problems without a clearly defined ordering.
+
+> > > +               struct audit_cont *cont = NULL;
+> > > +               struct audit_cont *newcont = NULL;
+> > > +               int h = audit_hash_contid(contid);
+> > > +
+> > > +               spin_lock(&audit_contid_list_lock);
+> > > +               list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
+> > > +                       if (cont->id == contid) {
+> > > +                               /* task injection to existing container */
+> > > +                               if (current == cont->owner) {
+> >
+> > I understand the desire to limit a given audit container ID to the
+> > orchestrator that created it, but are we certain that we can track
+> > audit container ID "ownership" via a single instance of a task_struct?
+>
+> Are you suggesting that a task_struct representing a task may be
+> replaced for a specific task?  I don't believe that will ever happen.
+>
+> >  What happens when the orchestrator stops/restarts/crashes?  Do we
+> > even care?
+>
+> Reap all of its containers?
+
+These were genuine questions, I'm not suggesting anything in
+particular, I'm just curious about how we handle an orchestrator that
+isn't continuously running ... is this possible?  Do we care?
 
 -- 
-
-- Arnaldo
+paul moore
+www.paul-moore.com
