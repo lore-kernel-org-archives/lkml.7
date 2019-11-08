@@ -6,105 +6,122 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C83FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EB1FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D2F2178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81351214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387962AbfKHVgA (ORCPT
+        id S1733257AbfKHVgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:36:00 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:48263 "EHLO
+        Fri, 8 Nov 2019 16:36:32 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:40285 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387700AbfKHVf5 (ORCPT
+        with ESMTP id S1731657AbfKHVgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:35:57 -0500
+        Fri, 8 Nov 2019 16:36:32 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MRC7g-1iEnnH00M0-00N98i; Fri, 08 Nov 2019 22:35:51 +0100
+ 1MHXSD-1ig8Ef1y1B-00DYFh; Fri, 08 Nov 2019 22:36:12 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org
+To:     y2038@lists.linaro.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ander Juaristi <a@juaristi.eus>, wenxu <wenxu@ucloud.cn>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Subject: [PATCH 08/16] tsacct: add 64-bit btime field
-Date:   Fri,  8 Nov 2019 22:32:46 +0100
-Message-Id: <20191108213257.3097633-9-arnd@arndb.de>
+        Phil Sutter <phil@nwl.cc>, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org
+Subject: [PATCH 09/16] netfilter: nft_meta: use 64-bit time arithmetic
+Date:   Fri,  8 Nov 2019 22:32:47 +0100
+Message-Id: <20191108213257.3097633-10-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
 References: <20191108213257.3097633-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3+J3uRariZxxM90pMCKHnHOIPfnwPSLhxD7qOTYUVh3SZ+JnOFK
- VgE/W8pe5KqQiWz/onPIr5xkbYNXoU05ZXKz9Ur1T4KKbn55mDc736fX98L1y4kNR1sVl+E
- eJ+aGZ5iEbt0dGFkbfWunoEWg1qg93cxn7nXS0JHShvtXBZXfISyaiCUKqXP/DJmACan0V/
- DQ8ayfOjgUjuzE1dRVSKg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:taJmWacjwUo=:jr/dEAhQn68wzbMKnfMDqL
- 6Trhqpo0PcSePSySdrLaqoFD3YsWRrcfJGFidUMcseJjIG02n2xadFKWP4tqT5sJM0ORXGjiy
- HknMtrs50T4QateXUoDx6LDSZGEvxMhEui+Y7ekbhuFh+QgnMOTCJRWlC2PYczvC+nF+nNeLO
- L+Zg7VrudI22dMCln1JQEMge9JtAoHqhRMGYbWfjSMm3ACsdZ4doRuvJbT8vsRPdVfc6/7xel
- wGjByAa+2Wq5UKwOtUor7w+1FDBvKmF+rf6Toc0LE+azWpsTt+GTavipZ2txqUFfr8I/3uY8p
- enDWDzEB0bdiplvgNb6YELjHC7e1z5RpNFSf4ewQyz91wzSXxKAPp0KDwBiPbhM6qnMsHi8su
- bpd3g/IdgHYUl3p4tLVH9m3ZtfWNe3MKeOpLtu0NNrl4Tur6WTUbUQvwmj9MXi4KS3uKlruUx
- UlF429FjvvlKF/iT8yINQWWRg3HRtlfi7RoSIyQCdH2d1W/cpSl4zI0uApgJUfQIj2l8eSdHa
- FXJNfMEvrUtpbbrllLeIfg+5bztFXiFTZiUUzdNvXQTemvBJlztoiHFSy/CQ1iqOU4dTL7yG+
- eYkgZCO6isfij0b/H+F9cVuMhlsjW+1VU12AwwUySvGLW80M7VFbs/x1o0opar/YLu8nabZEg
- ooKs4URxFevO8UZkM3Jp3lLIJM4qM5XlsT5GWbX4Lf5P8JVoeX4BVQCjGKSfGxoM6epaLDQpe
- sVrjaI5uOgJ1lw8xAbc5OL3ugCWf8h3e8McYj1/TSbkAepgwAIjSEQrNXqQL1fQlh3RVsi7LI
- H3n1Cr+8v8LyNBUqjKLQDAEOQBu2S6v4+MKzrLg16vKj8P9se47KDiLNqFChBTy8W2XDRR0rd
- U6GSJyTjWManXM6BSsCw==
+X-Provags-ID: V03:K1:8e4BtkTZhkDHnhj4em5WE6DJ2Vkq2Wh8mzdxKAtzODBb4B8f/ed
+ 1DGYs7ESWLEtqmT/CcVkHt+/jTl1TdrlCbYVhmDWsfDO6ZSQ/WOUgNlu6NcnJYc1TIxaznY
+ ICGDL51il9EAV1ONkEj2C3NvH/5CeXp/Ah0RZdx3J8g4pFdkn0H2eqIASfMU4ZCCfw4FYqq
+ mIeUVaqKsjByJJ274lYZw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BXMIyk7bYig=:/XFifkUlnyQ21O7sbEHUKu
+ Nd04r+p1qEyeBSJA6OQQIt0C0EEJhrJu5ULg7ArJrDLL6Sc+zGcRT2eBCMuyKOVu2pbT3y/KO
+ Qjz3kLq+YSfMw05N8pByhJ5Sgk6lAhl+XHfMQJ47ws5al9fl6GCjo6LjmhfQj6KLsM+hiIxBk
+ 7MdHAuoWEcT39E81h/0I9+oL89nPaFCLqPnZwTmSF/FWjpqM8nOSRaiwqQ3i4wCeLjz5qpSK/
+ Xlz8ivOmvP6eDQybCUGKiusaZob3Qu5J1HT+iCkdwbkCW7VezbiowHMrx6+YAaoWZ7oGqMCjI
+ WNzx2cn+FrVgdxhuePz8qk4yxVoexAwMSYFO8tqcSk2NNCPR+l98/Typ+IDnPBTB6/aYvvFTc
+ FLnYlQSfhTbqhm7CRlSAD/Jn2cZr4mJFwenXeyx9jqGvK0epNm3bI4T1s8AXxUdDpZOtAmxsN
+ ytctvQbk+kMS6sen/4zxK+MYwgkH4dA1S1tCPAcGk6OnxFcf5hVGCU5G3Oa8gD1SlOelgFWuh
+ 3k44ZAjp5/YcrPu3k0aytdVAsWbsZGtej2QVB3mX67/nuj7nS+U6fsqXFr2WEiIFCw2B7cThx
+ ZEYPdBFwbvKL8mL9h+2pzE2OpEcIW6u5gIxgnJCyNPHK5LD4DWbgvmyq65jrxITTE7ZKx3e43
+ G4moguidGfoX3WGwk4MIoD2sLEVWdV0CW5uafFnB/gUYt9Glob0OWX1xCp8kE4ecBHLbTw1be
+ QRiyX7UFJf7QgjYwIpVuhdzqNhLTUyjg8kL8LUDxKbM9tKn/s6AOmtXzmJCtRnnPNXq/G3bxT
+ 4DDfDS0cJZl/SuY3dszyqTxUmYYoADpxh/WaDiqwS6tX5SK+eGIVmXzM1p/bDz9QrQ3o4OdXn
+ +8OEInWfu8d0Wk8i3ssw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As there is only a 32-bit ac_btime field in taskstat and
-we should handle dates after the overflow, add a new field
-with the same information but 64-bit width that can hold
-a full time64_t.
+On 32-bit architectures, get_seconds() returns an unsigned 32-bit
+time value, which also matches the type used in the nft_meta
+code. This will not overflow in year 2038 as a time_t would, but
+it still suffers from the overflow problem later on in year 2106.
 
+Change this instance to use the time64_t type consistently
+and avoid the deprecated get_seconds().
+
+The nft_meta_weekday() calculation potentially gets a little slower
+on 32-bit architectures, but now it has the same behavior as on
+64-bit architectures and does not overflow.
+
+Fixes: 63d10e12b00d ("netfilter: nft_meta: support for time matching")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/uapi/linux/taskstats.h | 5 ++++-
- kernel/tsacct.c                | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ net/netfilter/nft_meta.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/uapi/linux/taskstats.h b/include/uapi/linux/taskstats.h
-index 7d3ea366e93b..ccbd08709321 100644
---- a/include/uapi/linux/taskstats.h
-+++ b/include/uapi/linux/taskstats.h
-@@ -34,7 +34,7 @@
-  */
+diff --git a/net/netfilter/nft_meta.c b/net/netfilter/nft_meta.c
+index 317e3a9e8c5b..dda1e55d5801 100644
+--- a/net/netfilter/nft_meta.c
++++ b/net/netfilter/nft_meta.c
+@@ -33,19 +33,19 @@
  
+ static DEFINE_PER_CPU(struct rnd_state, nft_prandom_state);
  
--#define TASKSTATS_VERSION	9
-+#define TASKSTATS_VERSION	10
- #define TS_COMM_LEN		32	/* should be >= TASK_COMM_LEN
- 					 * in linux/sched.h */
+-static u8 nft_meta_weekday(unsigned long secs)
++static u8 nft_meta_weekday(time64_t secs)
+ {
+ 	unsigned int dse;
+ 	u8 wday;
  
-@@ -169,6 +169,9 @@ struct taskstats {
- 	/* Delay waiting for thrashing page */
- 	__u64	thrashing_count;
- 	__u64	thrashing_delay_total;
-+
-+	/* v10: 64-bit btime to avoid overflow */
-+	__u64	ac_btime64;		/* 64-bit begin time */
- };
+ 	secs -= NFT_META_SECS_PER_MINUTE * sys_tz.tz_minuteswest;
+-	dse = secs / NFT_META_SECS_PER_DAY;
++	dse = div_u64(secs, NFT_META_SECS_PER_DAY);
+ 	wday = (4 + dse) % NFT_META_DAYS_PER_WEEK;
  
+ 	return wday;
+ }
  
-diff --git a/kernel/tsacct.c b/kernel/tsacct.c
-index ab12616ee6fb..257ffb993ea2 100644
---- a/kernel/tsacct.c
-+++ b/kernel/tsacct.c
-@@ -36,6 +36,7 @@ void bacct_add_tsk(struct user_namespace *user_ns,
- 	/* Convert to seconds for btime (note y2106 limit) */
- 	btime = ktime_get_real_seconds() - div_u64(delta, USEC_PER_SEC);
- 	stats->ac_btime = clamp_t(time64_t, btime, 0, U32_MAX);
-+	stats->ac_btime64 = btime;
+-static u32 nft_meta_hour(unsigned long secs)
++static u32 nft_meta_hour(time64_t secs)
+ {
+ 	struct tm tm;
  
- 	if (thread_group_leader(tsk)) {
- 		stats->ac_exitcode = tsk->exit_code;
+@@ -250,10 +250,10 @@ void nft_meta_get_eval(const struct nft_expr *expr,
+ 		nft_reg_store64(dest, ktime_get_real_ns());
+ 		break;
+ 	case NFT_META_TIME_DAY:
+-		nft_reg_store8(dest, nft_meta_weekday(get_seconds()));
++		nft_reg_store8(dest, nft_meta_weekday(ktime_get_real_seconds()));
+ 		break;
+ 	case NFT_META_TIME_HOUR:
+-		*dest = nft_meta_hour(get_seconds());
++		*dest = nft_meta_hour(ktime_get_real_seconds());
+ 		break;
+ 	default:
+ 		WARN_ON(1);
 -- 
 2.20.0
 
