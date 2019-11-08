@@ -2,86 +2,143 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31F4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C16C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D01D2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HRTONkgN"
+	by mail.kernel.org (Postfix) with ESMTP id F241721D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573239963;
+	bh=0d7wWg+diZb9HX31JDSpnY3FkUIPa/l/rQ1DGrZ1Jiw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JTkEZ6dK+N/Gr3NfI+Rp3wqSQ00vrNLFbGUUnieB1nmML8dEeWLLi4vjdBvLnjN8Q
+	 iO6OOKj80zalh8s3xTukMyXUhq5yohgfSgFuaM8Qz09++zwjbxwLLotLAmOOK3wfjx
+	 ZY52jk2mqnU5ejToPrqdfRuapqPDOb5ZhEqeMx3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391186AbfKHTF6 (ORCPT
+        id S2391192AbfKHTGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:58 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39692 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391154AbfKHTFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:54 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x28so5229250pfo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:05:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=CfxKEEZdYJDv+VwQMOnbdgS+o53AJxYEZMeJRl17oUY=;
-        b=HRTONkgN2o1mfAw6Hd2hOJcORiFNbzX1IfUNiHyPBaQLBNgyFywtEECrakzInNnsEJ
-         w/S14UjT2rKf1jH/m1+HPScmwLK39XdK6/ZwD3cvPs+G7wYQcIBx21toa5Kw4HRD1Ty/
-         ZjR2GUIfXAJOPCBRYAS5VQXZ5oZCv514M1ltE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=CfxKEEZdYJDv+VwQMOnbdgS+o53AJxYEZMeJRl17oUY=;
-        b=EKiP4IS/WIjm+oRbw9UzKhu6M7K8+c5VorR5Uhc5+DV8pKl5oueK9gSvPmlQBbCLZ7
-         X8ayqmE/kll4VfiuwtS9REQtEV/R8YDyddejdAkjbyXj3eJvC9hUrL9IJaWh79PCOt5A
-         ET7xs2rwCOt1AmEHHxU5ZWrI2afNJCL9J4PTf0reWbB3qkUXRz8+ptlghsDKDMQ0Qepi
-         xZgV3OekJNOFrANHN6KRZ7XC2/m7ouSposimEA5n6dcEwC+j01nAj5vCQpMmMxB6GxZA
-         Sk1FI7A7xltgQqmh1xGc53R5uDUk5XliHCvB7uyMe2P0AGlO7t01Pq72aCNyFud7bEfZ
-         EgVA==
-X-Gm-Message-State: APjAAAUSQ/V6qkjKHH75svdVFbCYqVyMFHKicHH727VLDey95oGj1kwg
-        5H2BXTwY1tlnlm+WeToj+oNyoQ==
-X-Google-Smtp-Source: APXvYqx0+sp5wxq5arm4pH8fols7oNVG7M0CO0z5dS7yC/rfQPExsY8YMHVLfzaj1WlNNQ6pKAFebw==
-X-Received: by 2002:a63:ec42:: with SMTP id r2mr13646860pgj.162.1573239952931;
-        Fri, 08 Nov 2019 11:05:52 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i102sm6684441pje.17.2019.11.08.11.05.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 11:05:52 -0800 (PST)
-Message-ID: <5dc5bc90.1c69fb81.90c1.10cb@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 8 Nov 2019 14:06:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390605AbfKHTF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:56 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1AB02087E;
+        Fri,  8 Nov 2019 19:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573239956;
+        bh=0d7wWg+diZb9HX31JDSpnY3FkUIPa/l/rQ1DGrZ1Jiw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uPVSJSOoXgrQYneV3f+Gc5/iz08x/E82zfTsCPWvH2XNiwyQawuiO/tK1aqQ4kVwz
+         9QWzuSHQez1nmKo1uYIUf1Vm5yALCCv26uH/Th8ypP1cHS7gm4RnnkKyizrS3O4vob
+         7Mq4ealcuflvg1pQ3DgoU0VqSc/tmtx94k1FOvh4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 040/140] ARM: 8914/1: NOMMU: Fix exc_ret for XIP
+Date:   Fri,  8 Nov 2019 19:49:28 +0100
+Message-Id: <20191108174907.991877554@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
+References: <20191108174900.189064908@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191108092824.9773-3-rnayak@codeaurora.org>
-References: <20191108092824.9773-1-rnayak@codeaurora.org> <20191108092824.9773-3-rnayak@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v5 02/13] arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 11:05:51 -0800
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-08 01:28:13)
-> Add skeletal sc7180 SoC dtsi and idp board dts files.
->=20
-> Co-developed-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+[ Upstream commit 4c0742f65b4ee466546fd24b71b56516cacd4613 ]
+
+It was reported that 72cd4064fcca "NOMMU: Toggle only bits in
+EXC_RETURN we are really care of" breaks NOMMU+XIP combination.
+It happens because saved EXC_RETURN gets overwritten when data
+section is relocated.
+
+The fix is to propagate EXC_RETURN via register and let relocation
+code to commit that value into memory.
+
+Fixes: 72cd4064fcca ("ARM: 8830/1: NOMMU: Toggle only bits in EXC_RETURN we are really care of")
+Reported-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Tested-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/kernel/head-common.S | 5 +++--
+ arch/arm/kernel/head-nommu.S  | 2 ++
+ arch/arm/mm/proc-v7m.S        | 5 ++---
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/kernel/head-common.S b/arch/arm/kernel/head-common.S
+index a7810be07da1c..4a3982812a401 100644
+--- a/arch/arm/kernel/head-common.S
++++ b/arch/arm/kernel/head-common.S
+@@ -68,7 +68,7 @@ ENDPROC(__vet_atags)
+  * The following fragment of code is executed with the MMU on in MMU mode,
+  * and uses absolute addresses; this is not position independent.
+  *
+- *  r0  = cp#15 control register
++ *  r0  = cp#15 control register (exc_ret for M-class)
+  *  r1  = machine ID
+  *  r2  = atags/dtb pointer
+  *  r9  = processor ID
+@@ -137,7 +137,8 @@ __mmap_switched_data:
+ #ifdef CONFIG_CPU_CP15
+ 	.long	cr_alignment			@ r3
+ #else
+-	.long	0				@ r3
++M_CLASS(.long	exc_ret)			@ r3
++AR_CLASS(.long	0)				@ r3
+ #endif
+ 	.size	__mmap_switched_data, . - __mmap_switched_data
+ 
+diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
+index afa350f44dea3..0fc814bbc34b1 100644
+--- a/arch/arm/kernel/head-nommu.S
++++ b/arch/arm/kernel/head-nommu.S
+@@ -201,6 +201,8 @@ M_CLASS(streq	r3, [r12, #PMSAv8_MAIR1])
+ 	bic	r0, r0, #V7M_SCB_CCR_IC
+ #endif
+ 	str	r0, [r12, V7M_SCB_CCR]
++	/* Pass exc_ret to __mmap_switched */
++	mov	r0, r10
+ #endif /* CONFIG_CPU_CP15 elif CONFIG_CPU_V7M */
+ 	ret	lr
+ ENDPROC(__after_proc_init)
+diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
+index 1448f144e7fb9..efebf4120a0c4 100644
+--- a/arch/arm/mm/proc-v7m.S
++++ b/arch/arm/mm/proc-v7m.S
+@@ -136,9 +136,8 @@ __v7m_setup_cont:
+ 	cpsie	i
+ 	svc	#0
+ 1:	cpsid	i
+-	ldr	r0, =exc_ret
+-	orr	lr, lr, #EXC_RET_THREADMODE_PROCESSSTACK
+-	str	lr, [r0]
++	/* Calculate exc_ret */
++	orr	r10, lr, #EXC_RET_THREADMODE_PROCESSSTACK
+ 	ldmia	sp, {r0-r3, r12}
+ 	str	r5, [r12, #11 * 4]	@ restore the original SVC vector entry
+ 	mov	lr, r6			@ restore LR
+-- 
+2.20.1
+
+
 
