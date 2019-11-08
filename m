@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51449FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ADCFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3272B222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76D7215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbfKHVfP (ORCPT
+        id S1733262AbfKHVfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:35:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34800 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 16:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732905AbfKHVew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732944AbfKHVew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 16:34:52 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7312421D7F;
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FA3222C4;
         Fri,  8 Nov 2019 21:34:51 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iTBu6-0007xZ-EJ; Fri, 08 Nov 2019 16:34:50 -0500
-Message-Id: <20191108213450.319164080@goodmis.org>
+        id 1iTBu6-0007z1-S9; Fri, 08 Nov 2019 16:34:50 -0500
+Message-Id: <20191108213450.748178236@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 08 Nov 2019 16:28:39 -0500
+Date:   Fri, 08 Nov 2019 16:28:42 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -43,7 +43,8 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 05/10] ftrace: Add sample module that uses register_ftrace_direct()
+Subject: [PATCH 08/10] ftrace/selftests: Update the direct call selftests to test two direct
+ calls
 References: <20191108212834.594904349@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -54,109 +55,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Add a sample module that shows a simple use case for
-regsiter_ftrace_direct(), and how to use it.
+The register_ftrace_direct() takes a different path if there's already a
+direct call registered, but this was not tested in the self tests. Now that
+there's a second direct caller test module, we can use this to test not only
+one direct caller, but two.
 
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- samples/Kconfig                |  7 ++++++
- samples/Makefile               |  1 +
- samples/ftrace/Makefile        |  3 +++
- samples/ftrace/ftrace-direct.c | 45 ++++++++++++++++++++++++++++++++++
- 4 files changed, 56 insertions(+)
- create mode 100644 samples/ftrace/Makefile
- create mode 100644 samples/ftrace/ftrace-direct.c
+ .../ftrace/test.d/direct/ftrace-direct.tc     | 16 +++++
+ .../ftrace/test.d/direct/kprobe-direct.tc     | 59 +++++++++++--------
+ 2 files changed, 52 insertions(+), 23 deletions(-)
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index c8dacb4dda80..6481b1f7705d 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -19,6 +19,13 @@ config SAMPLE_TRACE_PRINTK
- 	 This builds a module that calls trace_printk() and can be used to
- 	 test various trace_printk() calls from a module.
+diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+index 8b8ed3cad51b..cbc7a30c2e0f 100644
+--- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
++++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+@@ -51,3 +51,19 @@ done
  
-+config SAMPLE_FTRACE_DIRECT
-+	tristate "Build register_ftrace_direct() example"
-+	depends on DYNAMIC_FTRACE_WITH_DIRECT_CALLS && m
-+	help
-+	  This builds an ftrace direct function example
-+	  that hooks to wake_up_process and prints the parameters.
+ echo nop > current_tracer
+ rmmod ftrace-direct ||:
 +
- config SAMPLE_KOBJECT
- 	tristate "Build kobject examples"
- 	help
-diff --git a/samples/Makefile b/samples/Makefile
-index 7d6e4ca28d69..cd496d633370 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
- subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
- obj-$(CONFIG_SAMPLE_TRACE_EVENTS)	+= trace_events/
- obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
-+obj-$(CONFIG_SAMPLE_FTRACE_DIRECT)	+= ftrace/
- obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
- obj-y					+= vfio-mdev/
- subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
-diff --git a/samples/ftrace/Makefile b/samples/ftrace/Makefile
-new file mode 100644
-index 000000000000..3718ab39eba3
---- /dev/null
-+++ b/samples/ftrace/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++# Now do the same thing with another direct function registered
++echo "Running with another ftrace direct function"
 +
-+obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct.o
-diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-new file mode 100644
-index 000000000000..1483f067b000
---- /dev/null
-+++ b/samples/ftrace/ftrace-direct.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/module.h>
++rmmod ftrace-direct-too ||:
++modprobe ftrace-direct-too
 +
-+#include <linux/sched.h> /* for wake_up_process() */
-+#include <linux/ftrace.h>
++for t in `cat available_tracers`; do
++	if [ "$t" != "nop" ]; then
++		test_tracer $t
++	fi
++done
 +
-+void my_direct_func(struct task_struct *p)
-+{
-+	trace_printk("wakeing up %s-%d\n", p->comm, p->pid);
++echo nop > current_tracer
++rmmod ftrace-direct ||:
++rmmod ftrace-direct-too ||:
+diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+index 1561106765e4..d901416cb014 100644
+--- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
++++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+@@ -44,28 +44,41 @@ disable_probe() {
+ 	echo 0 > events/kprobes/kwake/enable
+ }
+ 
+-# probe -> direct -> no direct > no probe
+-enable_probe
+-start_direct
+-stop_direct
+-disable_probe
+-
+-# probe -> direct -> no probe > no direct
+-enable_probe
+-start_direct
+-disable_probe
+-stop_direct
+-
+-# direct -> probe -> no probe > no direct
+-start_direct
+-enable_probe
+-disable_probe
+-stop_direct
+-
+-# direct -> probe -> no direct > no noprobe
+-start_direct
+-enable_probe
+-stop_direct
+-disable_probe
++test_kprobes() {
++	# probe -> direct -> no direct > no probe
++	enable_probe
++	start_direct
++	stop_direct
++	disable_probe
++
++	# probe -> direct -> no probe > no direct
++	enable_probe
++	start_direct
++	disable_probe
++	stop_direct
++
++	# direct -> probe -> no probe > no direct
++	start_direct
++	enable_probe
++	disable_probe
++	stop_direct
++
++	# direct -> probe -> no direct > no noprobe
++	start_direct
++	enable_probe
++	stop_direct
++	disable_probe
 +}
 +
-+extern void my_tramp(void *);
++test_kprobes
 +
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"   my_tramp:"
-+"	pushq %rbp\n"
-+"	movq %rsp, %rbp\n"
-+"	pushq %rdi\n"
-+"	call my_direct_func\n"
-+"	popq %rdi\n"
-+"	leave\n"
-+"	ret\n"
-+"	.popsection\n"
-+);
++# Now do this with a second registered direct function
++echo "Running with another ftrace direct function"
 +
++modprobe ftrace-direct-too
 +
-+static int __init ftrace_direct_init(void)
-+{
-+	return register_ftrace_direct((unsigned long)wake_up_process,
-+				     (unsigned long)my_tramp);
-+}
++test_kprobes
 +
-+static void __exit ftrace_direct_exit(void)
-+{
-+	unregister_ftrace_direct((unsigned long)wake_up_process,
-+				 (unsigned long)my_tramp);
-+}
-+
-+module_init(ftrace_direct_init);
-+module_exit(ftrace_direct_exit);
-+
-+MODULE_AUTHOR("Steven Rostedt");
-+MODULE_DESCRIPTION("Example use case of using register_ftrace_direct()");
-+MODULE_LICENSE("GPL");
++rmmod ftrace-direct-too
+ 
+ echo > kprobe_events
 -- 
 2.23.0
 
