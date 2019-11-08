@@ -2,106 +2,99 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90418C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EECFC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED39222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240163;
-	bh=eyHWixG3v3PK5DC0NDn5uLPn+AVkLw4bBj/jynhUuSU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x2gx1k9KP3BjJGt4ZDKafg5YftBa6sq0x8+80cj1kwpmDis3KA8DOI+C/kFQIKFmA
-	 ZAl+GUXsUUZdYIVUTRgfFsSKcvuKHVXJf1sAY5kaG7QPTcZLBISyJ/VyyIllxadhjg
-	 jwczdIuyf+qAy++ualAmR7Dujc93fCH21pnV8BoQ=
+	by mail.kernel.org (Postfix) with ESMTP id BDF2421D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D61jjhVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391310AbfKHTJV (ORCPT
+        id S2403814AbfKHTJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391773AbfKHTJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:20 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50DA12087E;
-        Fri,  8 Nov 2019 19:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240159;
-        bh=eyHWixG3v3PK5DC0NDn5uLPn+AVkLw4bBj/jynhUuSU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnAp1qdEKui1eQlONLtgIsLtbpDCdFa7ORs142D8X70iIXRqxv+ReSUnvGjiayBWp
-         Pg1yDdYlF1CRHVVh/L0+HHAWmfnw41iQZ/uTT/6M163hhcb6ABeQdOtNpLbEMPge/u
-         /ZuH+d57GV2Fk0Bi3/OcqhU7uqbJUIbTQV4u5Xsc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 108/140] net: phylink: Fix phylink_dbg() macro
-Date:   Fri,  8 Nov 2019 19:50:36 +0100
-Message-Id: <20191108174911.698389253@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
-References: <20191108174900.189064908@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 Nov 2019 14:09:25 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37310 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391772AbfKHTJX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:23 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p24so5254203pfn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=rJ1urZ8T7mCJHoBlOuQT5kf7O0+8075YXJJdXtDtH7U=;
+        b=D61jjhVfWDWSMveOGbAsO21SqjPj0dRPXQmK22xQFY1GOYifueuPRNL45P6whbv76d
+         +koe7VPSRs9Hh0QYnbedzWgk8x0eJhqNXE50FDnKgoM8VYb8R3vRcxEYY962NbGNzyAH
+         ZozKEI0ik3vBEAuReccVPRkzTxDkUVmi0rZRk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=rJ1urZ8T7mCJHoBlOuQT5kf7O0+8075YXJJdXtDtH7U=;
+        b=rF5nI/h6OlBsauw0/BiWwTgrCEWY75ypvkvJWTj5cat1b9DtBsaHubUwxSqdAZC7rp
+         YUZj2qd6YRiV7vA1nS0Nbz4EEs3bTdG/HijRzm+v7ZZFGgl3D8p5ZzQprjjS9o59cduM
+         k+/De+5Fl3mAFb69b6dhr8bGNCWsAgbzvA58Kfh9fAiLgPQ2YlaSzZIaUhMGzucbFKTF
+         x0MJP0d/7Sr/4gpWDUqc1EK08gqLF3S0WnL+7R+QJpMIM9KUqFTSUbs5gGnpPvnVcSFS
+         R45e2LXuwAzTRcMkmwk5RARNkNXNAQ2cgCjw72mrZlMoQHh5R8Iqc1WBEx5F2ndrxvBY
+         dnWg==
+X-Gm-Message-State: APjAAAVNjcZwZmRADm5A9NoIRgZqjhNokEBgXjN4PhMlsmv23qB84ZRy
+        BideRM4zmk549xXvkOyp66bh7Q==
+X-Google-Smtp-Source: APXvYqwF6BcI+PSkqcZ1hzG3Fq8z2hINUeBNu1KSX2QSnhuU5EyKjQGpElD+ZP55Yu2cmAcXBJIhOg==
+X-Received: by 2002:a62:174d:: with SMTP id 74mr13732051pfx.145.1573240163193;
+        Fri, 08 Nov 2019 11:09:23 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id l72sm6138763pjb.18.2019.11.08.11.09.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 11:09:22 -0800 (PST)
+Message-ID: <5dc5bd62.1c69fb81.682a4.0fa6@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5790f59f-951a-f1b4-bb31-f9cefec0c642@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-3-rnayak@codeaurora.org> <5dc4588e.1c69fb81.5f75c.83ad@mx.google.com> <5790f59f-951a-f1b4-bb31-f9cefec0c642@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v4 02/14] arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 11:09:21 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Quoting Rajendra Nayak (2019-11-07 19:48:57)
+>=20
+> On 11/7/2019 11:16 PM, Stephen Boyd wrote:
+> > Quoting Rajendra Nayak (2019-11-05 22:50:05)
+> >> +                       qup_uart8_default: qup-uart8-default {
+> >> +                               pinmux {
+> >> +                                       pins =3D "gpio44", "gpio45";
+> >> +                                       function =3D "qup12";
+> >=20
+> > That looks weird to have qup12 function on uart8. It's right?
+>=20
+> So we have 2 qup instances each with 6 SEs on sc7180.
+> So the i2c/uart/spi SE instances are numbered from 0 to 5 in the first qup
+> and 6 to 11 in the next.
+> The pinctrl functions however have it named qup0 to 5 for first and
+> qup10 to 15 for the next which is weird. Now all data in the pinctrl
+> driver is autogenerated using hw description so its coming from that.
+>=20
+> Just for comparison, on sdm845 we had 2 qup instances with 8 SE's
+> and the function names were qup0 to 8 for first and 9 to 15 for the
+> second.
+>=20
 
-[ Upstream commit 9d68db5092c5fac99fccfdeab3f04df0b27d1762 ]
-
-The phylink_dbg() macro does not follow dynamic debug or defined(DEBUG)
-and as a result, it spams the kernel log since a PR_DEBUG level is
-currently used. Fix it to be defined appropriately whether
-CONFIG_DYNAMIC_DEBUG or defined(DEBUG) are set.
-
-Fixes: 17091180b152 ("net: phylink: Add phylink_{printk, err, warn, info, dbg} macros")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/phylink.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -87,8 +87,24 @@ struct phylink {
- 	phylink_printk(KERN_WARNING, pl, fmt, ##__VA_ARGS__)
- #define phylink_info(pl, fmt, ...) \
- 	phylink_printk(KERN_INFO, pl, fmt, ##__VA_ARGS__)
-+#if defined(CONFIG_DYNAMIC_DEBUG)
- #define phylink_dbg(pl, fmt, ...) \
-+do {									\
-+	if ((pl)->config->type == PHYLINK_NETDEV)			\
-+		netdev_dbg((pl)->netdev, fmt, ##__VA_ARGS__);		\
-+	else if ((pl)->config->type == PHYLINK_DEV)			\
-+		dev_dbg((pl)->dev, fmt, ##__VA_ARGS__);			\
-+} while (0)
-+#elif defined(DEBUG)
-+#define phylink_dbg(pl, fmt, ...)					\
- 	phylink_printk(KERN_DEBUG, pl, fmt, ##__VA_ARGS__)
-+#else
-+#define phylink_dbg(pl, fmt, ...)					\
-+({									\
-+	if (0)								\
-+		phylink_printk(KERN_DEBUG, pl, fmt, ##__VA_ARGS__);	\
-+})
-+#endif
- 
- /**
-  * phylink_set_port_modes() - set the port type modes in the ethtool mask
-
+Alright. Good to know the hardware description is all messed up.
 
