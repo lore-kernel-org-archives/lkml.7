@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5DFFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925C5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF8C215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6962E2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239978;
-	bh=NiLmu7S3WOmZnESuvykKVnjTskYiKGz3RvrEO3masJE=;
+	s=default; t=1573239981;
+	bh=8XL0N7+8Yry6975/n+5Oi9lcE2269yYZhshaCS8uCWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BB3PQipYyA75lWfcM0/IW3mva/+8D8AGGR3fqXzWzzRradXgqrr4zHs/Ol4yTp317
-	 Sz5aubLrCdoBV6176YBxyVNTziMQW1Bog58WPPZ4pI/e75v9qPTArJzm8iyAgwL+CI
-	 n9+XuZfkhl/zZxJNTaygqebg7FxkPn40etyAmv7o=
+	b=2L37Tf4rcnqNrcDXvi4xIa3hhChZznh6NSyJM9zF49jm2rWSfTlOqUyyWelTGRYda
+	 Z9mtiIIRq4hmQM8zsbSpzBIokIMxU1ja7lbjgIxSDSkuzDX8pGH7snZfQfnbt94lno
+	 dmPpXCHhVNsPkoPKEa2w3OZp3OMRQ8xTkkPCvZv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390393AbfKHTGQ (ORCPT
+        id S2391242AbfKHTGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:06:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36506 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:06:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387765AbfKHTGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:06:11 -0500
+        id S1730645AbfKHTGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:06:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51FEE21D7B;
-        Fri,  8 Nov 2019 19:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 253E52087E;
+        Fri,  8 Nov 2019 19:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239970;
-        bh=NiLmu7S3WOmZnESuvykKVnjTskYiKGz3RvrEO3masJE=;
+        s=default; t=1573239976;
+        bh=8XL0N7+8Yry6975/n+5Oi9lcE2269yYZhshaCS8uCWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ey17sOtKQV54GRojbs/RDOM0Plq2ffDAKHTP18R6PGylMmlooXH7Fu0nRdqIByXLH
-         4VMzC1QLaLa+LYdCIHn4LCZ3ExBwThiCxxBydJDPXliubQls5H1ugT/dkaMah/PCBh
-         6GV2MbIF9wxRoiqrWjtwhKILaF389v4OSycQfyE8=
+        b=qMlGhY2cIAubmFVqBKAhN4Z4DZVGPl5s2zG2R7yS3NrcphiGm0RI6olwD/wqMx7kM
+         Fd0AgSzk918aaa33wEiVPMDIDItovcFuVNaFpbyepMBj0wDQi/KYuABUtFRwwgVlV5
+         Nbkj1VfnjH9hFeJOPHVgawYFULjBl680PI6HSqGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 044/140] ARM: dts: imx6q-logicpd: Re-Enable SNVS power key
-Date:   Fri,  8 Nov 2019 19:49:32 +0100
-Message-Id: <20191108174908.222123326@linuxfoundation.org>
+Subject: [PATCH 5.3 046/140] ARM: dts: imx7s: Correct GPTs ipg clock source
+Date:   Fri,  8 Nov 2019 19:49:34 +0100
+Message-Id: <20191108174908.325914305@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,37 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 52f4d4043d1edc4e9e66ec79cae3e32cfe0e44d6 ]
+[ Upstream commit 252b9e21bcf46b0d16f733f2e42b21fdc60addee ]
 
-A previous patch disabled the SNVS power key by default which
-breaks the ability for the imx6q-logicpd board to wake from sleep.
-This patch re-enables this feature for this board.
+i.MX7S/D's GPT ipg clock should be from GPT clock root and
+controlled by CCM's GPT CCGR, using correct clock source for
+GPT ipg clock instead of IMX7D_CLK_DUMMY.
 
-Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6-logicpd-som.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6-logicpd-som.dtsi b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-index 7ceae35732486..547fb141ec0c9 100644
---- a/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-+++ b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-@@ -207,6 +207,10 @@
- 	vin-supply = <&sw1c_reg>;
- };
- 
-+&snvs_poweroff {
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hog>;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index c1a4fff5ceda9..6323a9462afa9 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -448,7 +448,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302d0000 0x10000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT1_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 			};
+@@ -457,7 +457,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302e0000 0x10000>;
+ 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT2_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -467,7 +467,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302f0000 0x10000>;
+ 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT3_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -477,7 +477,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x30300000 0x10000>;
+ 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT4_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
 -- 
 2.20.1
 
