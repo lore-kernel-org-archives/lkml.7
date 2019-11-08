@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4ABC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D43FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 018EC21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AAA12178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239149;
-	bh=qCt1NNWch3XO1pNjWJmByOp3OUmOAfvnuwXklgOBQks=;
+	s=default; t=1573239151;
+	bh=JxFXf/iL0Po+TwuDxjWfrvI5nmMzUx20GCYDtuU1Ewg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QplxhmLPsulNWRJhdzCdMBikcWoxJB7sLNO+u8nnzL79WXwD9wnZrfMDbj4pCKxKZ
-	 UWWnBXM5i3Jelt6lHtP3o5qX2nwpEVPTg+SS7GmvivkNSWOGaclq7Sq0A5tv4Vu4it
-	 LRgjdPuQeln3plSyP+57FClPIYA9WoUMy6UmN0gc=
+	b=Qfmvbs/VDWt2TKHWwkemA9K8DAZfazkZ+4g7OpPcJZoaR7zOmaaPegaaZg1Zzn/fW
+	 2zglIoANAvz8SvtOqm+vSQWVqnB4qPq1jGI54jaRlVayoNuReDbxPULBH7bfewK8y/
+	 r10TWeaguOyq/fMX6iURsD6JHEFQbOoVK6nmjUMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbfKHSw2 (ORCPT
+        id S1731323AbfKHSw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:52:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48684 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730268AbfKHSw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:52:26 -0500
+        id S1731195AbfKHSw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:52:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1147C21D7E;
-        Fri,  8 Nov 2019 18:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB35F214DB;
+        Fri,  8 Nov 2019 18:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239144;
-        bh=qCt1NNWch3XO1pNjWJmByOp3OUmOAfvnuwXklgOBQks=;
+        s=default; t=1573239147;
+        bh=JxFXf/iL0Po+TwuDxjWfrvI5nmMzUx20GCYDtuU1Ewg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQmMh3jPokBaSaHsu0bF8pSXxq9IWwTFAYoaYsGEYljHgnIXMKQHU0WF2qLVJAhG4
-         0R1GmRtpZgeweH9irragyWm9uYyr/l5qDkasISDhICmZC0v142SDjgx/SVR75wv08y
-         ukHV/91STxMLMqM3P/f9hYjl3PCOHAr0z4Ht12zQ=
+        b=xWnhhc+vxGKayDWoF7piaKVwzAn+YpvjdPalyK9pLWaEVS2HwnJqgz9oNYgHoVxr/
+         1fxXe95aCK2MPxAHlbIYRAc62rcCBjuzWYMXH9pngz1ZH9PXWocPjqFY11/UBYycKT
+         kJOafg+h9Ko+fjXADOcQHFfJ5rtSA+2D/saECvWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 15/75] net: fix sk_page_frag() recursion from memory reclaim
-Date:   Fri,  8 Nov 2019 19:49:32 +0100
-Message-Id: <20191108174722.021907258@linuxfoundation.org>
+Subject: [PATCH 4.4 16/75] net: hisilicon: Fix ping latency when deal with high throughput
+Date:   Fri,  8 Nov 2019 19:49:33 +0100
+Message-Id: <20191108174723.638254470@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -61,160 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 20eb4f29b60286e0d6dc01d9c260b4bd383c58fb ]
+[ Upstream commit e56bd641ca61beb92b135298d5046905f920b734 ]
 
-sk_page_frag() optimizes skb_frag allocations by using per-task
-skb_frag cache when it knows it's the only user.  The condition is
-determined by seeing whether the socket allocation mask allows
-blocking - if the allocation may block, it obviously owns the task's
-context and ergo exclusively owns current->task_frag.
+This is due to error in over budget processing.
+When dealing with high throughput, the used buffers
+that exceeds the budget is not cleaned up. In addition,
+it takes a lot of cycles to clean up the used buffer,
+and then the buffer where the valid data is located can take effect.
 
-Unfortunately, this misses recursion through memory reclaim path.
-Please take a look at the following backtrace.
-
- [2] RIP: 0010:tcp_sendmsg_locked+0xccf/0xe10
-     ...
-     tcp_sendmsg+0x27/0x40
-     sock_sendmsg+0x30/0x40
-     sock_xmit.isra.24+0xa1/0x170 [nbd]
-     nbd_send_cmd+0x1d2/0x690 [nbd]
-     nbd_queue_rq+0x1b5/0x3b0 [nbd]
-     __blk_mq_try_issue_directly+0x108/0x1b0
-     blk_mq_request_issue_directly+0xbd/0xe0
-     blk_mq_try_issue_list_directly+0x41/0xb0
-     blk_mq_sched_insert_requests+0xa2/0xe0
-     blk_mq_flush_plug_list+0x205/0x2a0
-     blk_flush_plug_list+0xc3/0xf0
- [1] blk_finish_plug+0x21/0x2e
-     _xfs_buf_ioapply+0x313/0x460
-     __xfs_buf_submit+0x67/0x220
-     xfs_buf_read_map+0x113/0x1a0
-     xfs_trans_read_buf_map+0xbf/0x330
-     xfs_btree_read_buf_block.constprop.42+0x95/0xd0
-     xfs_btree_lookup_get_block+0x95/0x170
-     xfs_btree_lookup+0xcc/0x470
-     xfs_bmap_del_extent_real+0x254/0x9a0
-     __xfs_bunmapi+0x45c/0xab0
-     xfs_bunmapi+0x15/0x30
-     xfs_itruncate_extents_flags+0xca/0x250
-     xfs_free_eofblocks+0x181/0x1e0
-     xfs_fs_destroy_inode+0xa8/0x1b0
-     destroy_inode+0x38/0x70
-     dispose_list+0x35/0x50
-     prune_icache_sb+0x52/0x70
-     super_cache_scan+0x120/0x1a0
-     do_shrink_slab+0x120/0x290
-     shrink_slab+0x216/0x2b0
-     shrink_node+0x1b6/0x4a0
-     do_try_to_free_pages+0xc6/0x370
-     try_to_free_mem_cgroup_pages+0xe3/0x1e0
-     try_charge+0x29e/0x790
-     mem_cgroup_charge_skmem+0x6a/0x100
-     __sk_mem_raise_allocated+0x18e/0x390
-     __sk_mem_schedule+0x2a/0x40
- [0] tcp_sendmsg_locked+0x8eb/0xe10
-     tcp_sendmsg+0x27/0x40
-     sock_sendmsg+0x30/0x40
-     ___sys_sendmsg+0x26d/0x2b0
-     __sys_sendmsg+0x57/0xa0
-     do_syscall_64+0x42/0x100
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-In [0], tcp_send_msg_locked() was using current->page_frag when it
-called sk_wmem_schedule().  It already calculated how many bytes can
-be fit into current->page_frag.  Due to memory pressure,
-sk_wmem_schedule() called into memory reclaim path which called into
-xfs and then IO issue path.  Because the filesystem in question is
-backed by nbd, the control goes back into the tcp layer - back into
-tcp_sendmsg_locked().
-
-nbd sets sk_allocation to (GFP_NOIO | __GFP_MEMALLOC) which makes
-sense - it's in the process of freeing memory and wants to be able to,
-e.g., drop clean pages to make forward progress.  However, this
-confused sk_page_frag() called from [2].  Because it only tests
-whether the allocation allows blocking which it does, it now thinks
-current->page_frag can be used again although it already was being
-used in [0].
-
-After [2] used current->page_frag, the offset would be increased by
-the used amount.  When the control returns to [0],
-current->page_frag's offset is increased and the previously calculated
-number of bytes now may overrun the end of allocated memory leading to
-silent memory corruptions.
-
-Fix it by adding gfpflags_normal_context() which tests sleepable &&
-!reclaim and use it to determine whether to use current->task_frag.
-
-v2: Eric didn't like gfp flags being tested twice.  Introduce a new
-    helper gfpflags_normal_context() and combine the two tests.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/gfp.h |   23 +++++++++++++++++++++++
- include/net/sock.h  |   11 ++++++++---
- 2 files changed, 31 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -274,6 +274,29 @@ static inline bool gfpflags_allow_blocki
- 	return (bool __force)(gfp_flags & __GFP_DIRECT_RECLAIM);
- }
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -174,6 +174,7 @@ struct hip04_priv {
+ 	dma_addr_t rx_phys[RX_DESC_NUM];
+ 	unsigned int rx_head;
+ 	unsigned int rx_buf_size;
++	unsigned int rx_cnt_remaining;
  
-+/**
-+ * gfpflags_normal_context - is gfp_flags a normal sleepable context?
-+ * @gfp_flags: gfp_flags to test
-+ *
-+ * Test whether @gfp_flags indicates that the allocation is from the
-+ * %current context and allowed to sleep.
-+ *
-+ * An allocation being allowed to block doesn't mean it owns the %current
-+ * context.  When direct reclaim path tries to allocate memory, the
-+ * allocation context is nested inside whatever %current was doing at the
-+ * time of the original allocation.  The nested allocation may be allowed
-+ * to block but modifying anything %current owns can corrupt the outer
-+ * context's expectations.
-+ *
-+ * %true result from this function indicates that the allocation context
-+ * can sleep and use anything that's associated with %current.
-+ */
-+static inline bool gfpflags_normal_context(const gfp_t gfp_flags)
-+{
-+	return (gfp_flags & (__GFP_DIRECT_RECLAIM | __GFP_MEMALLOC)) ==
-+		__GFP_DIRECT_RECLAIM;
-+}
-+
- #ifdef CONFIG_HIGHMEM
- #define OPT_ZONE_HIGHMEM ZONE_HIGHMEM
- #else
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2077,12 +2077,17 @@ struct sk_buff *sk_stream_alloc_skb(stru
-  * sk_page_frag - return an appropriate page_frag
-  * @sk: socket
-  *
-- * If socket allocation mode allows current thread to sleep, it means its
-- * safe to use the per task page_frag instead of the per socket one.
-+ * Use the per task page_frag instead of the per socket one for
-+ * optimization when we know that we're in the normal context and owns
-+ * everything that's associated with %current.
-+ *
-+ * gfpflags_allow_blocking() isn't enough here as direct reclaim may nest
-+ * inside other socket operations and end up recursing into sk_page_frag()
-+ * while it's already in use.
-  */
- static inline struct page_frag *sk_page_frag(struct sock *sk)
- {
--	if (gfpflags_allow_blocking(sk->sk_allocation))
-+	if (gfpflags_normal_context(sk->sk_allocation))
- 		return &current->task_frag;
+ 	struct device_node *phy_node;
+ 	struct phy_device *phy;
+@@ -487,7 +488,6 @@ static int hip04_rx_poll(struct napi_str
+ 	struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
+ 	struct net_device *ndev = priv->ndev;
+ 	struct net_device_stats *stats = &ndev->stats;
+-	unsigned int cnt = hip04_recv_cnt(priv);
+ 	struct rx_desc *desc;
+ 	struct sk_buff *skb;
+ 	unsigned char *buf;
+@@ -500,8 +500,8 @@ static int hip04_rx_poll(struct napi_str
  
- 	return &sk->sk_frag;
+ 	/* clean up tx descriptors */
+ 	tx_remaining = hip04_tx_reclaim(ndev, false);
+-
+-	while (cnt && !last) {
++	priv->rx_cnt_remaining += hip04_recv_cnt(priv);
++	while (priv->rx_cnt_remaining && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+ 		if (unlikely(!skb))
+@@ -544,11 +544,13 @@ static int hip04_rx_poll(struct napi_str
+ 		hip04_set_recv_desc(priv, phys);
+ 
+ 		priv->rx_head = RX_NEXT(priv->rx_head);
+-		if (rx >= budget)
++		if (rx >= budget) {
++			--priv->rx_cnt_remaining;
+ 			goto done;
++		}
+ 
+-		if (--cnt == 0)
+-			cnt = hip04_recv_cnt(priv);
++		if (--priv->rx_cnt_remaining == 0)
++			priv->rx_cnt_remaining += hip04_recv_cnt(priv);
+ 	}
+ 
+ 	if (!(priv->reg_inten & RCV_INT)) {
+@@ -633,6 +635,7 @@ static int hip04_mac_open(struct net_dev
+ 	int i;
+ 
+ 	priv->rx_head = 0;
++	priv->rx_cnt_remaining = 0;
+ 	priv->tx_head = 0;
+ 	priv->tx_tail = 0;
+ 	hip04_reset_ppe(priv);
 
 
