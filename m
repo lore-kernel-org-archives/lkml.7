@@ -2,100 +2,136 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFEDC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6AEFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6213222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:27:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="iqwILVQY"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA12222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfKHO1C (ORCPT
+        id S1727083AbfKHO2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:27:02 -0500
-Received: from mail-io1-f41.google.com ([209.85.166.41]:34754 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfKHO1C (ORCPT
+        Fri, 8 Nov 2019 09:28:12 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:56677 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfKHO2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:27:02 -0500
-Received: by mail-io1-f41.google.com with SMTP id q83so6567603iod.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:27:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U+gZ1iZyMycMyu4RO24BAjLSYNHz9sOObk4L5rAMf7c=;
-        b=iqwILVQYZSgmH9OUII6SqeT4Drvw0j1zpDG2nt3rLVuYNmHI7uc2IUg7rI+JESGb7J
-         VPdhKPgxjTYrje0kLVpESYLZeMPp32BZE9qQW3kRPV4A2Ov04mesqZ7YGidApVohuRQ/
-         s1C0A+EmO3dMNP+YvKu0SHgwE9+YqcymXT1jRkDqwT8LaDVCEAmgQOau+ojwU/TOJyYv
-         FbZ94VSTvKvxoN68eEF3O3bSY5UvDEhKkshv3g7CDh9e3NkSC6+y92JYNZfCRTv7UEh5
-         OXRNey3HvzswzpyTOhU3rakgDLkDbiXKQQS/kgpE9zIr1d955aRiaB8CIeiks5cn7mXa
-         +j+g==
+        Fri, 8 Nov 2019 09:28:12 -0500
+Received: by mail-il1-f199.google.com with SMTP id e5so6973393ile.23
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:28:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U+gZ1iZyMycMyu4RO24BAjLSYNHz9sOObk4L5rAMf7c=;
-        b=CPASnPaQfPO7LRBJ1sdjpxHCb685r5y26z6IBRUKP1HbhgBCApnIrtFrWQuzdO8Rqp
-         IwoTUdLipWb2jZxagvnOFSDoe7m70p62rSQpzfWEsA4zTZ1xrd2JXOMv79M0MypCgJBp
-         zNHNJK9w1mYu2ytLKvYqkxwPQmHKTzY3S+QAJVYYRRu3k0DckO8VoWOh03S/xOdnnC4V
-         9SO0EAIv3J52p51CF5zmxpRG8R7WjS2grw6q2EouR4VR4FrkEiXthz8eB/s3+GrLlWcD
-         18Txn83QWNC6V2jY80Mh7Z9ULfwYp9bEiuh1p7SniSFEqAVBeeGJL6sztecd8zqqAPOO
-         QwhQ==
-X-Gm-Message-State: APjAAAU+j5gCTYhc6RKvOpZ3EEQhMhnCASh658fZ+q209oM0sQYeUG0i
-        O2+9XWoEjVcNR1KBv43My0zwTQvpw08=
-X-Google-Smtp-Source: APXvYqzwYZ+WipkYapK99X3KqatJkMZI+Jw2MzH942P7q0uMgKJc79YO5XDMV6HvnRPVP9zk3ee6lA==
-X-Received: by 2002:a6b:f914:: with SMTP id j20mr11044257iog.223.1573223219271;
-        Fri, 08 Nov 2019 06:26:59 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u9sm452653ior.46.2019.11.08.06.26.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Nov 2019 06:26:58 -0800 (PST)
-Subject: Re: [PATCH][V2] ata: pata_artop: make arrays static const, makes
- object smaller
-To:     Colin King <colin.king@canonical.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-ide@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191006142956.23360-1-colin.king@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5dae76cc-e71d-d295-7947-b7005a7f1af3@kernel.dk>
-Date:   Fri, 8 Nov 2019 07:26:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Fc1AeehNUTfKl/ssy9FjKjLKkl1fuRqIqy43NB+5sHo=;
+        b=pMG2izoyE+1DoW/YrWagjkc7BjUnhLaGe99cgsb/iVzGDnHr+YsARwmqQGB/DE2fqV
+         c7lv0hQ4AuOLmZfrJmFOpfIm98evs+3feSPdHC8P8wG9f1KQxv94IKNLPyD+1VAQqHKl
+         SOl3gE0jXOwhidPhvipsLbg9kSy8sXbCzrq1LWFPvlx1PFEtd2dr8sKlbGqc41Pl4kxt
+         4dbDugyJbmBrhNNV0KKjsinc4ubvcrU91xvZNtIL3zT9cgOZqXzk5tpwryXdFBX+QXG1
+         pqTgdiQORSzOWGFMbC5DNRJuLje8GqA2ZhmuTsSTFQ60IYBinL0DHB9sihiWpnqdd4ll
+         Kj8A==
+X-Gm-Message-State: APjAAAX+pR+TCS+F5tYeJniQLTJ5Ly3yHxI/oj67qITZeGPhAUiYTkB7
+        B3oacaOa20YupRckvhFKXqgyF6idi72iIuTVMugJfQVg6goK
+X-Google-Smtp-Source: APXvYqz+GUs/qSBf9Rk2PflrXCYjo2fZBhJeXHTaoeYr9Pwgzk5CdLXlg5K4ytx+w1iK/Rh4YNNi2GUdwdnyaeumKqxb4jvNtCt6
 MIME-Version: 1.0
-In-Reply-To: <20191006142956.23360-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:1223:: with SMTP id z3mr319283iot.92.1573223290084;
+ Fri, 08 Nov 2019 06:28:10 -0800 (PST)
+Date:   Fri, 08 Nov 2019 06:28:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005ba74a0596d697be@google.com>
+Subject: KCSAN: data-race in batadv_tt_local_add / batadv_tt_local_add
+From:   syzbot <syzbot+1d5dadec56d9e87f0aac@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, elver@google.com,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/6/19 8:29 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate the const arrays on the stack but instead make them
-> static. Makes the object code smaller by 292 bytes.
-> 
-> Before:
->     text	   data	    bss	    dec	    hex	filename
->     6988	   3132	    128	  10248	   2808	drivers/ata/pata_artop.o
-> 
-> After:
->     text	   data	    bss	    dec	    hex	filename
->     6536	   3292	    128	   9956	   26e4	drivers/ata/pata_artop.o
-> 
-> (gcc version 9.2.1, amd64)
+Hello,
 
-Applied, thanks.
+syzbot found the following crash on:
 
--- 
-Jens Axboe
+HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=1195a0d4e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=1d5dadec56d9e87f0aac
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1d5dadec56d9e87f0aac@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in batadv_tt_local_add / batadv_tt_local_add
+
+write to 0xffff8880a8e19698 of 2 bytes by task 10064 on cpu 0:
+  batadv_tt_local_add+0x21b/0x1020 net/batman-adv/translation-table.c:799
+  batadv_interface_tx+0x398/0xae0 net/batman-adv/soft-interface.c:249
+  __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+  netdev_start_xmit include/linux/netdevice.h:4434 [inline]
+  xmit_one net/core/dev.c:3280 [inline]
+  dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
+  __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
+  dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
+  __bpf_tx_skb net/core/filter.c:2060 [inline]
+  __bpf_redirect_common net/core/filter.c:2099 [inline]
+  __bpf_redirect+0x4b4/0x710 net/core/filter.c:2106
+  ____bpf_clone_redirect net/core/filter.c:2139 [inline]
+  bpf_clone_redirect+0x1a5/0x1f0 net/core/filter.c:2111
+  bpf_prog_bb15b996d00816f9+0x71c/0x1000
+  bpf_test_run+0x1c3/0x490 net/bpf/test_run.c:44
+  bpf_prog_test_run_skb+0x4da/0x840 net/bpf/test_run.c:310
+  bpf_prog_test_run kernel/bpf/syscall.c:2108 [inline]
+  __do_sys_bpf+0x1664/0x2b90 kernel/bpf/syscall.c:2884
+  __se_sys_bpf kernel/bpf/syscall.c:2825 [inline]
+  __x64_sys_bpf+0x4c/0x60 kernel/bpf/syscall.c:2825
+  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffff8880a8e19698 of 2 bytes by task 9969 on cpu 1:
+  batadv_tt_local_add+0x3d1/0x1020 net/batman-adv/translation-table.c:801
+  batadv_interface_tx+0x398/0xae0 net/batman-adv/soft-interface.c:249
+  __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+  netdev_start_xmit include/linux/netdevice.h:4434 [inline]
+  xmit_one net/core/dev.c:3280 [inline]
+  dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
+  __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
+  dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
+  __bpf_tx_skb net/core/filter.c:2060 [inline]
+  __bpf_redirect_common net/core/filter.c:2099 [inline]
+  __bpf_redirect+0x4b4/0x710 net/core/filter.c:2106
+  ____bpf_clone_redirect net/core/filter.c:2139 [inline]
+  bpf_clone_redirect+0x1a5/0x1f0 net/core/filter.c:2111
+  bpf_prog_bb15b996d00816f9+0x312/0x1000
+  bpf_test_run+0x1c3/0x490 net/bpf/test_run.c:44
+  bpf_prog_test_run_skb+0x4da/0x840 net/bpf/test_run.c:310
+  bpf_prog_test_run kernel/bpf/syscall.c:2108 [inline]
+  __do_sys_bpf+0x1664/0x2b90 kernel/bpf/syscall.c:2884
+  __se_sys_bpf kernel/bpf/syscall.c:2825 [inline]
+  __x64_sys_bpf+0x4c/0x60 kernel/bpf/syscall.c:2825
+  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 9969 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
