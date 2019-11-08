@@ -2,205 +2,214 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E926FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB202FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9C32085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B397C2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M/VKpoLA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cmd8pXp8"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="i/e7gDaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388018AbfKHT4P (ORCPT
+        id S2388596AbfKHT4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:56:15 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:34392 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387487AbfKHT4O (ORCPT
+        Fri, 8 Nov 2019 14:56:38 -0500
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:3950 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387487AbfKHT4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:56:14 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 056DB60909; Fri,  8 Nov 2019 19:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573242862;
-        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=M/VKpoLAh4IuqvpTb4l6Ncc/ysc3Z3wdcQpAum90P8DyPhePEqjDGjQvfAj9XIVOV
-         uIfYpr7taPThwDehSXhnkIKyfwHbI7tnY2qzVvJIFzlSBCMHoxU6HLy9y5Um6Wp+D+
-         xtNLXBlttgX/obSW1G3HuPG6EKj7nUQHakOv+3Eg=
-Received: from [10.226.59.103] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rkumbako@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6C7A60909;
-        Fri,  8 Nov 2019 19:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573242857;
-        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cmd8pXp8cny6HvbtoRaaeL+v89GwX7T+3TJVCplfb1vn9gbzYgVYosD99CiYGQKXC
-         eOBVJzkyqodeqqXyvXMe0JZSfwO+jG07B+tXm8tSTIDAH1B9gdO3d2wadMGakTdcfv
-         d7i6VVRqw5o7Zex0DDfCo+lXF2+N8xfp1uOLdk9U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6C7A60909
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rkumbako@codeaurora.org
-Subject: Re: [PATCH 4/4] thermal: step_wise: Extend thermal step-wise governor
- to monitor falling temperature.
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org>
- <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
-From:   Ram Chandrasekar <rkumbako@codeaurora.org>
-Message-ID: <7dbe01d9-6687-f4f8-0739-6b4ff6d4e59b@codeaurora.org>
-Date:   Fri, 8 Nov 2019 12:54:15 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 8 Nov 2019 14:56:38 -0500
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8JlL7S002767;
+        Fri, 8 Nov 2019 19:55:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=jan2016.eng;
+ bh=a4L7v4SXG9vAmTn7DbzVCdQNrIZnAZKSnnudNXDiGcc=;
+ b=i/e7gDaRA4CI4jolhPJ26aaf0Wr6lurJKCkyF7DbF+b2JWWJShtMBgWB2T0L2wy+qDh4
+ 5qhMllcPu1ZSxJAxkZ7tEqO1QOZR1qY4Mp5bIs4Wj75+JkWTAfW5aPe8ApWZuxxc3cj0
+ 66l3eynKx55bb3WlwZ1qfduo6E+4W8Z+XA2p+W9FCvT0Mfy1Cjpijgup3HUxDc/QPjly
+ 1PydcgYGOsLb8oOXNSb2JgNhkEGI8qH7k1NsKDR5DzB+tQpEiB6B9pr3Nd0NEBVEszyi
+ A71bE1kUMc3a35dWfT0mjLNTO8KGMRD36jsGqB6xLp7L7Ix6LI/YsfWRjhRMEPusx9B3 mg== 
+Received: from prod-mail-ppoint3 (prod-mail-ppoint3.akamai.com [96.6.114.86] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 2w41v53rfh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 19:55:17 +0000
+Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
+        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id xA8Jm6Kc008078;
+        Fri, 8 Nov 2019 14:55:16 -0500
+Received: from email.msg.corp.akamai.com ([172.27.165.112])
+        by prod-mail-ppoint3.akamai.com with ESMTP id 2w420xa1qp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 14:55:16 -0500
+Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com (172.27.165.123) by
+ ustx2ex-dag1mb2.msg.corp.akamai.com (172.27.165.120) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Fri, 8 Nov 2019 13:55:15 -0600
+Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com ([172.27.165.123]) by
+ ustx2ex-dag1mb5.msg.corp.akamai.com ([172.27.165.123]) with mapi id
+ 15.00.1473.005; Fri, 8 Nov 2019 13:55:15 -0600
+From:   "Lubashev, Igor" <ilubashe@akamai.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/3] perf kvm: Allow running without stdin
+Thread-Topic: [PATCH 2/3] perf kvm: Allow running without stdin
+Thread-Index: AQHViUT4jEXDkFlf70GojsikrAjFJadoXn2AgBlmKCA=
+Date:   Fri, 8 Nov 2019 19:55:14 +0000
+Message-ID: <1cf0b4cbb0d04ef2a323faa0dfca0668@ustx2ex-dag1mb5.msg.corp.akamai.com>
+References: <1571795693-23558-1-git-send-email-ilubashe@akamai.com>
+ <1571795693-23558-3-git-send-email-ilubashe@akamai.com>
+ <20191023104245.GL22919@krava>
+In-Reply-To: <20191023104245.GL22919@krava>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [172.19.38.21]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911080192
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-08_07:2019-11-08,2019-11-08 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911080192
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sorry, Jiri!  I replied previously to one comment and totally missed anothe=
+r comment above.  Mea culpa.  Not intentional.  Comments inline.
+
+Arnaldo, were you waiting for this comment to take this and the previous pa=
+tch in the series?  (I only see that PATCH 3/3 made it to your tree.)
 
 
-On 9/18/2019 8:18 PM, Thara Gopinath wrote:
->>From the step wise governor point of view, the policy decisions
-> that has to taken on a thermal trip point that is defined to be monitored
-> for falling temprature is the mirror opposite of the decisions it has
-> to take on a trip point that is monitored for rising temperature.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->   drivers/thermal/step_wise.c | 59 +++++++++++++++++++++++++++++++++------------
->   1 file changed, 44 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
-> index 6e051cb..aa8e0a0 100644
-> --- a/drivers/thermal/step_wise.c
-> +++ b/drivers/thermal/step_wise.c
-> @@ -35,7 +35,8 @@
->    *       deactivate the thermal instance
->    */
->   static unsigned long get_target_state(struct thermal_instance *instance,
-> -				enum thermal_trend trend, bool throttle)
-> +				enum thermal_trend trend, bool throttle,
-> +				enum thermal_trip_monitor_type type)
->   {
->   	struct thermal_cooling_device *cdev = instance->cdev;
->   	unsigned long cur_state;
-> @@ -65,11 +66,21 @@ static unsigned long get_target_state(struct thermal_instance *instance,
->   
->   	switch (trend) {
->   	case THERMAL_TREND_RAISING:
-> -		if (throttle) {
-> -			next_target = cur_state < instance->upper ?
-> -				    (cur_state + 1) : instance->upper;
-> -			if (next_target < instance->lower)
-> -				next_target = instance->lower;
-> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
-> +			if (cur_state <= instance->lower) {
-> +				if (!throttle)
-> +					next_target = THERMAL_NO_TARGET;
-> +			} else {
-> +				if (!throttle)
-> +					next_target = cur_state - 1;
-> +			}
-> +		} else {
-> +			if (throttle) {
-> +				next_target = cur_state < instance->upper ?
-> +					    (cur_state + 1) : instance->upper;
-> +				if (next_target < instance->lower)
-> +					next_target = instance->lower;
-> +			}
->   		}
->   		break;
->   	case THERMAL_TREND_RAISE_FULL:
-> @@ -77,14 +88,23 @@ static unsigned long get_target_state(struct thermal_instance *instance,
->   			next_target = instance->upper;
->   		break;
->   	case THERMAL_TREND_DROPPING:
-> -		if (cur_state <= instance->lower) {
-> -			if (!throttle)
-> -				next_target = THERMAL_NO_TARGET;
-> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
-> +			if (throttle) {
-> +				next_target = cur_state < instance->upper ?
-> +					(cur_state + 1) : instance->upper;
-> +				if (next_target < instance->lower)
-> +					next_target = instance->lower;
-> +			}
->   		} else {
-> -			if (!throttle) {
-> -				next_target = cur_state - 1;
-> -				if (next_target > instance->upper)
-> -					next_target = instance->upper;
-> +			if (cur_state <= instance->lower) {
-> +				if (!throttle)
-> +					next_target = THERMAL_NO_TARGET;
-> +			} else {
-> +				if (!throttle) {
-> +					next_target = cur_state - 1;
-> +					if (next_target > instance->upper)
-> +						next_target = instance->upper;
-> +				}
->   			}
->   		}
->   		break;
-> @@ -117,6 +137,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->   {
->   	int trip_temp;
->   	enum thermal_trip_type trip_type;
-> +	enum thermal_trip_monitor_type monitor_type =
-> +					THERMAL_TRIP_MONITOR_RISING;
->   	enum thermal_trend trend;
->   	struct thermal_instance *instance;
->   	bool throttle = false;
-> @@ -130,9 +152,15 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->   		tz->ops->get_trip_type(tz, trip, &trip_type);
->   	}
->   
-> +	if (tz->ops->get_trip_monitor_type)
-> +		tz->ops->get_trip_monitor_type(tz, trip, &monitor_type);
-> +
->   	trend = get_tz_trend(tz, trip);
->   
-> -	if (tz->temperature >= trip_temp) {
-> +	if (((monitor_type == THERMAL_TRIP_MONITOR_RISING) &&
-> +	      (tz->temperature >= trip_temp)) ||
-> +	      ((monitor_type == THERMAL_TRIP_MONITOR_FALLING) &&
-> +	      (tz->temperature <= trip_temp))) {
-Governors monitoring warming devices need to have support for 
-hysteresis. Assume a case where the device is in idle when the 
-temperature goes below threshold and we trigger a mitigation. Even a 
-minimal workload or even the processing of the threshold by the governor 
-could warm the device and put the temperature above the threshold and we 
-will have to remove any mitigation. To avoid this ping-pong, its best to 
-add a hysteresis support.
->   		throttle = true;
->   		trace_thermal_zone_trip(tz, trip, trip_type);
->   	}
-> @@ -147,7 +175,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->   			continue;
->   
->   		old_target = instance->target;
-> -		instance->target = get_target_state(instance, trend, throttle);
-> +		instance->target = get_target_state(instance, trend, throttle,
-> +						    monitor_type);
->   		dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
->   					old_target, (int)instance->target);
->   
-> 
+> On Wed, Oct 23, 2019 at 6:43 AM, Jiri Olsa <jolsa@redhat.com> wrote:
+>=20
+> On Tue, Oct 22, 2019 at 09:54:52PM -0400, Igor Lubashev wrote:
+> > Allow perf kvm --stdio to run without access to stdin.
+> > This lets perf kvm to run in a batch mode until interrupted.
+> >
+> > The following now works as expected:
+> >
+> >   $ perf kvm top --stdio < /dev/null
+> >
+> > Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+> > ---
+> >  tools/perf/builtin-kvm.c | 33 ++++++++++++++++++++-------------
+> >  1 file changed, 20 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c index
+> > 858da896b518..5217aa3596c7 100644
+> > --- a/tools/perf/builtin-kvm.c
+> > +++ b/tools/perf/builtin-kvm.c
+> > @@ -930,18 +930,20 @@ static int fd_set_nonblock(int fd)
+> >
+> >  static int perf_kvm__handle_stdin(void)  {
+> > -	int c;
+> > -
+> > -	c =3D getc(stdin);
+> > -	if (c =3D=3D 'q')
+> > +	switch (getc(stdin)) {
+> > +	case 'q':
+> > +		done =3D 1;
+> >  		return 1;
+> > -
+> > -	return 0;
+> > +	case EOF:
+> > +		return 0;
+> > +	default:
+> > +		return 1;
+> > +	}
+> >  }
+> >
+> >  static int kvm_events_live_report(struct perf_kvm_stat *kvm)  {
+> > -	int nr_stdin, ret, err =3D -EINVAL;
+> > +	int nr_stdin =3D -1, ret, err =3D -EINVAL;
+> >  	struct termios save;
+> >
+> >  	/* live flag must be set first */
+> > @@ -972,13 +974,16 @@ static int kvm_events_live_report(struct
+> perf_kvm_stat *kvm)
+> >  	if (evlist__add_pollfd(kvm->evlist, kvm->timerfd) < 0)
+> >  		goto out;
+> >
+> > -	nr_stdin =3D evlist__add_pollfd(kvm->evlist, fileno(stdin));
+> > -	if (nr_stdin < 0)
+> > -		goto out;
+> > -
+> >  	if (fd_set_nonblock(fileno(stdin)) !=3D 0)
+> >  		goto out;
+> >
+> > +	/* add stdin, if it is connected */
+> > +	if (getc(stdin) !=3D EOF) {
+> > +		nr_stdin =3D evlist__add_pollfd(kvm->evlist, fileno(stdin));
+> > +		if (nr_stdin < 0)
+> > +			goto out;
+> > +	}
+> > +
+> >  	/* everything is good - enable the events and process */
+> >  	evlist__enable(kvm->evlist);
+> >
+> > @@ -994,8 +999,10 @@ static int kvm_events_live_report(struct
+> perf_kvm_stat *kvm)
+> >  		if (err)
+> >  			goto out;
+> >
+> > -		if (fda->entries[nr_stdin].revents & POLLIN)
+> > -			done =3D perf_kvm__handle_stdin();
+> > +		if (nr_stdin >=3D 0 && fda->entries[nr_stdin].revents & POLLIN) {
+> > +			if (!perf_kvm__handle_stdin())
+>=20
+> can this return 0 ? if stdin is EOF then nr_stdin stays -1
+
+The purpose of this check is to catch a case when stdin does not start out =
+closed but gets closed later.
+Something like:
+
+	sleep 5 | perf kvm ......
+
+Arguably I could had handled both cases in a single uniform way (just this =
+code without the initial check).  The effect of this would be one unexpecte=
+d cycle of output at the very beginning in the common case (stdin is closed=
+ from the start).  So I wanted to make the common case behave well.
+
+
+> > +				fda->entries[nr_stdin].events =3D 0;
+>=20
+> why do you need to set events to 0 in here?
+
+As I mentioned before, this is to ensure that no more wakeups are going to =
+happen due to stdin getting closed during the perf run.  W/o this, stdin fd=
+ would always stay "ready for POLLIN", and perf would never sleep.  (The cl=
+eanest way would be to remove stdin fd from the kvm->evlist, but there is n=
+o such interface for evlist.  Writing that interface just for this case see=
+med imprudent, when events=3D0 would do, and we already access revents abov=
+e.)
+
+> thanks,
+> jirka
+
+Best,
+
+- Igor
