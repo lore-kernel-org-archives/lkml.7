@@ -2,158 +2,100 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65340C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE21C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C58421924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E22B221924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ms0ZZbhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKHPlM (ORCPT
+        id S1726957AbfKHPmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:41:12 -0500
-Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:36977 "EHLO
-        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfKHPlL (ORCPT
+        Fri, 8 Nov 2019 10:42:22 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42666 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKHPmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:41:11 -0500
-Received: from smtp7.infomaniak.ch (smtp7.infomaniak.ch [83.166.132.30])
-        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id xA8Fe0wD187815
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 16:40:00 +0100
-Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp7.infomaniak.ch (8.14.5/8.14.5) with ESMTP id xA8FduEU195949
-        (version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO);
-        Fri, 8 Nov 2019 16:39:56 +0100
-Subject: Re: [PATCH bpf-next v13 4/7] landlock: Add ptrace LSM hooks
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
-References: <20191104172146.30797-1-mic@digikod.net>
- <20191104172146.30797-5-mic@digikod.net>
- <20191105171824.dfve44gjiftpnvy7@ast-mbp.dhcp.thefacebook.com>
- <23acf523-dbc4-855b-ca49-2bbfa5e7117e@digikod.net>
- <20191105193446.s4pswwwhrmgk6hcx@ast-mbp.dhcp.thefacebook.com>
- <20191106100655.GA18815@chromium.org>
- <813cedde-8ed7-2d3b-883d-909efa978d41@digikod.net>
- <20191106214526.GA22244@chromium.org>
- <3e208632-e7ab-3405-5196-ab1d770e20c3@digikod.net>
- <5d0f1dc5-5a99-bd6a-4acc-0cdcd062a0c9@iogearbox.net>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Openpgp: preference=signencrypt
-Message-ID: <78b75ea3-3a7c-103c-ee00-a9c6c41bcd9c@digikod.net>
-Date:   Fri, 8 Nov 2019 16:39:55 +0100
-User-Agent: 
-MIME-Version: 1.0
-In-Reply-To: <5d0f1dc5-5a99-bd6a-4acc-0cdcd062a0c9@iogearbox.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+        Fri, 8 Nov 2019 10:42:21 -0500
+Received: by mail-wr1-f68.google.com with SMTP id a15so7528847wrf.9
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 07:42:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=jKPwU4G5ZX4lcKZD1A5yKqJfsxOjsfGHCxHwZ6UfGno=;
+        b=ms0ZZbhABfwMbyFEPzoqrZW+YW98SUb4ndQoyJeWjteLp/6YGXV8Ca2KwaEzdToEEy
+         Vk3x6HKHsbp1kydx+WpVsSMO2LEWT0hXrSC3FC5aWPWymSLdefXnz2fd+ifW9DFU3jU6
+         eXMLogwp9e5WfN/sRjYPxeWnEOE9GWZk3lo51X0ZrZRHmVF4HWWsm+BjxhcwY9MZ98RH
+         JDTVqGHTV0gS8h0fv3at6BHI7dKVqXy8e+yVsgzUdihD08eRWx6PV6JN3cIuyiFQRerr
+         jftvtORLpeXTX4MXw7KZtGh653rUv56tPokH/iakFAPxFV9KpEcraiUCfwlJguuZPfjZ
+         68og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jKPwU4G5ZX4lcKZD1A5yKqJfsxOjsfGHCxHwZ6UfGno=;
+        b=Vzx+aR4hEiFgL85ERt00xt1oYDdoyivLyrG4Ava35yfrQYsN1gTu5hErPPSwYTSRXg
+         HDXgfRGodbks2L5O4CprzvKPe5JAQgI3MIlqZhn4jkpY+nfMxHbCat1jyiDVNklhNiMG
+         6um87Hkd+HOJvuS1yiPW2Ulcitt07kCOfpcz8IBbPuDzu3K1ruXpFv7j7m/C3dYSJeSt
+         +ssZrKxrEip98dTBtECDX+XHe8Je9cPU/zQl9nVpGFEVwrqqZhtNkaLFVQ02M4Znwacc
+         FLGyWYrOHE1RBZW7Lu7MVmM1Fn2sDHf/3kY1IyEL5+x3kxnUPY7fg9XpnPG+G8YmvGmd
+         51Bw==
+X-Gm-Message-State: APjAAAWkuCqnpKZDcBqWoRBWOkeUtgE5JGDzrA6AaqxeoByC7kGoXBaP
+        TUhrJ8af5gQ8lae01bzT5drvLWLVrbk=
+X-Google-Smtp-Source: APXvYqwEsGbr93t2+n4r/AAfkYjXnQq7ETdPx8Y8kIolecEl6bhAKL63EtJDoI8Eaoer/RAkASE3kQ==
+X-Received: by 2002:adf:eed2:: with SMTP id a18mr6790890wrp.273.1573227739417;
+        Fri, 08 Nov 2019 07:42:19 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id v16sm7474024wrc.84.2019.11.08.07.42.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 08 Nov 2019 07:42:18 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] crypto: tcrypt: constify check alg list
+Date:   Fri,  8 Nov 2019 15:42:13 +0000
+Message-Id: <1573227733-36704-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+this patchs constify the alg list because this list is never modified.
 
-On 08/11/2019 15:34, Daniel Borkmann wrote:
-> On 11/8/19 3:08 PM, Mickaël Salaün wrote:
->> On 06/11/2019 22:45, KP Singh wrote:
->>> On 06-Nov 17:55, Mickaël Salaün wrote:
->>>> On 06/11/2019 11:06, KP Singh wrote:
->>>>> On 05-Nov 11:34, Alexei Starovoitov wrote:
->>>>>> On Tue, Nov 05, 2019 at 07:01:41PM +0100, Mickaël Salaün wrote:
->>>>>>> On 05/11/2019 18:18, Alexei Starovoitov wrote:
-> [...]
->>> * Use a single BPF program type; this is necessary for a key requirement
->>>    of KRSI, i.e. runtime instrumentation. The upcoming prototype should
->>>    illustrate how this works for KRSI - note that it’s possible to vary
->>>    the context types exposed by different hooks.
->>
->> Why a single BPF program type? Do you mean *attach* types? Landlock only
->> use one program type, but will use multiple attach types.
->>
->> Why do you think it is necessary for KRSI or for runtime instrumentation?
->>
->> If it is justified, it could be a dedicated program attach type (e.g.
->> BPF_LANDLOCK_INTROSPECTION).
->>
->> What is the advantage to have the possibility to vary the context types
->> over dedicated *typed* contexts? I don't see any advantages, but at
->> least one main drawback: to require runtime checks (when helpers use
->> this generic context) instead of load time checks (thanks to static type
->> checking of the context).
-> 
-> Lets take security_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
-> as one specific example here: the running kernel has its own internal
-> btf_vmlinux and therefore a complete description of itself. From verifier
-> side we can retrieve & introspect the security_sock_rcv_skb signatue
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ crypto/tcrypt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-OK, this is indeed the signature defined by the kernel API. What happen
-if this API change (e.g. if struct sock is replaced with a struct
-sock_meta)?
+diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+index 83ad0b1fab30..f42f486e90e8 100644
+--- a/crypto/tcrypt.c
++++ b/crypto/tcrypt.c
+@@ -65,7 +65,7 @@ static int mode;
+ static u32 num_mb = 8;
+ static char *tvmem[TVMEMSIZE];
+ 
+-static char *check[] = {
++static const char *check[] = {
+ 	"des", "md5", "des3_ede", "rot13", "sha1", "sha224", "sha256", "sm3",
+ 	"blowfish", "twofish", "serpent", "sha384", "sha512", "md4", "aes",
+ 	"cast6", "arc4", "michael_mic", "deflate", "crc32c", "tea", "xtea",
+@@ -1634,7 +1634,7 @@ static void test_cipher_speed(const char *algo, int enc, unsigned int secs,
+ 
+ static void test_available(void)
+ {
+-	char **name = check;
++	const char **name = check;
+ 
+ 	while (*name) {
+ 		printk("alg %s ", *name);
+-- 
+2.23.0
 
-
-> and
-> thus know that the given BPF attachment point has struct sock and struct
-> sk_buff as input arguments
-
-How does the verifier know a given BPF attachment point for a program
-without relying on its type or attach type? How and where is registered
-this mapping?
-
-To say it another way, if there is no way to differentiate two program
-targeting different hook, I don't understand how the verifier could
-check if a given program can legitimately call a helper which could read
-the tracer and tracee fields (legitimate for a ptrace hook), whereas
-this program may be attached to a sock_rcv_skb hook (and there is no way
-to know that).
-
-
-> which can then be accessed generically by the
-> prog in order to allow sk_filter_trim_cap() to pass or to drop the skb.
-> The same generic approach can be done for many of the other lsm hooks, so
-> single program type would be enough there and context is derived
-> automatically,
-> no dedicated extra context per attach type would be needed and no runtime
-> checks as you mentioned above since its still all asserted at verification
-> time.
-
-I mentioned runtime check because I though a helper should handle the
-case when it doesn't make sense for a program attached to a specific
-point/hook (e.g. ptrace) to use an input argument (e.g. sk) defined for
-another point/hook (e.g. sock_rcv_skb).
-
-
-> 
-> Thanks,
-> Daniel
-> 
-
-Thanks for this explanation Daniel.
