@@ -2,153 +2,180 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE9DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FF7FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70B12084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e0qJDmi5"
+	by mail.kernel.org (Postfix) with ESMTP id E9C732084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfKHNNv (ORCPT
+        id S1728249AbfKHNOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:13:51 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:32837 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfKHNNv (ORCPT
+        Fri, 8 Nov 2019 08:14:09 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:40729 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbfKHNOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:13:51 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w9so209450wrr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:13:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kNFLbuBsjfA45xZtVGklZOqgy65Ce+BGQSXtJuqONCQ=;
-        b=e0qJDmi5MWofxpx4abhPOsy+dOP9D4Z7yzav91vgLB/aQVR9bFVSGVw0dHssefohQl
-         7c7gbxLLF0UPDJ17aKUKeIv70ClPn1plUUMdAHKlbbntu48ROAp2CwGRdznecYkbXoPT
-         T9XGxL2+hi5tVDgIlXVq5yjjmUDYKXJHs7AYDjuraCEQJo1dxkEHLrxTRLsucTdS/3EF
-         wCsJ8mTNg5n/JXUogHy3JRc/AFBkX47Fb234VwPw0GRguNuV90zHC4aMJpg+EiaU/Vh4
-         /PrGXeEQZKb4LsdgqZyukwFR2layOFMakFZjBPZkmLzRknDoViyYYGKiCWOBo/Z1FBtO
-         4qbQ==
+        Fri, 8 Nov 2019 08:14:09 -0500
+Received: by mail-io1-f71.google.com with SMTP id 125so5254769iou.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:14:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kNFLbuBsjfA45xZtVGklZOqgy65Ce+BGQSXtJuqONCQ=;
-        b=cFivIT4V2QjuOvW6IjXP3zujIMA0dvjG+rP/av2S0T650qBV+Qcay94QJMJ/dNEFr2
-         EV8GqlEge3hN4rYgYdZF1osb0xoeECulLhKKk+65tNVAhaKnOZiMslcPuON4tQytCXmH
-         Dh33w9oNK/ol2MyXcewiOuL29Dd6qv70vwul1NYHafxrNw+NwDT+TkZHzm5vyso0JtzN
-         00dccRYoo5TuZsvkB3tfDWTBBt/VmCNQepmP0T4hSw/MIltAy3zP83nFkcsxJETKUihq
-         hAPpuPbwRwWG/r+IvzPEjWsyzed9+OqjZsT4f7yqvzhNj4SFOPvfGnpdxYCyHck0jUOr
-         SyXg==
-X-Gm-Message-State: APjAAAV+lcjtiVkhZEL6qbybK7Q0G2Cq/4olZFJk0SN1dzjrZS1FtPAg
-        v+lxKduLYdo8PzlP23x6XXANyPH3XtfcYg==
-X-Google-Smtp-Source: APXvYqwVdQBkvt937/p59QJllw5exqFZDVqdP57cdRJ90R5XAJ1o0pVXB9IVBQspuXasKFLwCUE7hg==
-X-Received: by 2002:adf:f651:: with SMTP id x17mr8840920wrp.114.1573218828762;
-        Fri, 08 Nov 2019 05:13:48 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u2sm3932111wrg.52.2019.11.08.05.13.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Nov 2019 05:13:48 -0800 (PST)
-Subject: Re: [PATCH] MAINTAINERS: add linux-amlogic list for amlogic crypto
-To:     Corentin Labbe <clabbe@baylibre.com>, herbert@gondor.apana.org.au
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-References: <1573207986-26787-1-git-send-email-clabbe@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <2f97c163-78c4-f2a9-11ca-665abbddc73c@baylibre.com>
-Date:   Fri, 8 Nov 2019 14:13:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=5qPg7AUaFPT0P/f6N1mT2Nun0O6dZE92eys1pDsyui8=;
+        b=KseRMT28RyE7kb0ap5ZqHxVGs2Gpqw2xAzXiBsCTq5qftvNQTCd9Icz1wTlJWyIOi7
+         EQDVAfPGdwAoXqrddhj3CfWZ1E6PeETrRFqvWDBNkyFYfEQWr32Po4ViOSxAQMyd0o75
+         wTKmNzUmM5XILNV8upw5PIXAuHFEjPth7g4DPziFLXEQA1jUC2hKlcIaTGXx14ZEV2R/
+         B9C6lvz8HPLnEwPiViUsTOqL84uhcr69r7QdJwxuM7YTPBFiuBY6b0PjbOOdZLfczlzL
+         g3o+ATxRSj7Ba21m1x1CHQtcbqB3l4jpymAUARD5ETkmgpbemzWL/pbBlRcQmvxWKEQD
+         s7WQ==
+X-Gm-Message-State: APjAAAVlpec8YagrIIYbruJqO71XC5yQtmJW27CMj3SyRVPCl/WlnGYh
+        +sy03XwuX7L9TBfqVm6W/A9qxTeJynbfWuI078rUaUYhRXBJ
+X-Google-Smtp-Source: APXvYqyOtMzgIQGGhqDCHsWzroal3Q1MOG/G0ooE8crNYN2lzzLJtOJb7VYGlgr5j37yiq8FWs3qCJAS9KpCZbzp3+PUj4YIKbxj
 MIME-Version: 1.0
-In-Reply-To: <1573207986-26787-1-git-send-email-clabbe@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:228e:: with SMTP id d14mr9666368iod.122.1573218848352;
+ Fri, 08 Nov 2019 05:14:08 -0800 (PST)
+Date:   Fri, 08 Nov 2019 05:14:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009c36650596d58e21@google.com>
+Subject: KMSAN: uninit-value in _mix_pool_bytes
+From:   syzbot <syzbot+8a8d1324f5b614ad3c8c@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, glider@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/2019 11:13, Corentin Labbe wrote:
-> The linux-amlogic mailing list need to be in copy of all patch for the amlogic crypto.
-> 
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c4c532c70b86..ec1c71dba03d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1488,6 +1488,7 @@ N:	meson
->  ARM/Amlogic Meson SoC Crypto Drivers
->  M:	Corentin Labbe <clabbe@baylibre.com>
->  L:	linux-crypto@vger.kernel.org
-> +L:	linux-amlogic@lists.infradead.org
->  S:	Maintained
->  F:	drivers/crypto/amlogic/
->  F:	Documentation/devicetree/bindings/crypto/amlogic*
-> 
+Hello,
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+syzbot found the following crash on:
+
+HEAD commit:    41550654 [UPSTREAM] KVM: x86: degrade WARN to pr_warn_rate..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=16446805a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=40511ad0c5945201
+dashboard link: https://syzkaller.appspot.com/bug?extid=8a8d1324f5b614ad3c8c
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14517405a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c0d805a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8a8d1324f5b614ad3c8c@syzkaller.appspotmail.com
+
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=0bda, idProduct=8150,  
+bcdDevice=31.ce
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+==================================================================
+BUG: KMSAN: uninit-value in _mix_pool_bytes+0x7de/0x960  
+drivers/char/random.c:621
+CPU: 1 PID: 3089 Comm: kworker/1:2 Not tainted 5.2.0-rc4+ #7
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan.c:611
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:304
+  _mix_pool_bytes+0x7de/0x960 drivers/char/random.c:621
+  add_device_randomness+0x776/0xfa0 drivers/char/random.c:1189
+  register_netdevice+0x1eab/0x2690 net/core/dev.c:8724
+  register_netdev+0x93/0xd0 net/core/dev.c:8823
+  rtl8150_probe+0x11f8/0x1550 drivers/net/usb/rtl8150.c:920
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x5853/0x7320 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Uninit was stored to memory at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:201 [inline]
+  kmsan_save_stack mm/kmsan/kmsan.c:213 [inline]
+  kmsan_internal_chain_origin+0xcc/0x150 mm/kmsan/kmsan.c:414
+  kmsan_memcpy_memmove_metadata+0x9f9/0xe00 mm/kmsan/kmsan.c:297
+  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:317
+  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:139
+  set_ethernet_addr drivers/net/usb/rtl8150.c:285 [inline]
+  rtl8150_probe+0x114c/0x1550 drivers/net/usb/rtl8150.c:916
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x5853/0x7320 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Local variable description: ----node_id.i@rtl8150_probe
+Variable was created at:
+  get_registers drivers/net/usb/rtl8150.c:915 [inline]
+  set_ethernet_addr drivers/net/usb/rtl8150.c:284 [inline]
+  rtl8150_probe+0xdce/0x1550 drivers/net/usb/rtl8150.c:916
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
