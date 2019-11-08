@@ -2,104 +2,111 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00970FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881BCFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E8E215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OtLbRvsV"
+	by mail.kernel.org (Postfix) with ESMTP id 58D3F21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573235333;
+	bh=GE9PFeLXesIuv0zEy2ffSpiHpDpB3tEJiSldwNibaS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aX7y0Fhz+flEycBt+3ZHSA+mFVlPgteWdrUkg7gVf7PIMZ7KlK3KKeTT2V27VlhJ6
+	 584GsoZ7P9G3cHFhRkwSkuAKyortNDK5M+K1RMAMtl70F6wi37zr/pqik/6uoRwsP8
+	 65795JYnCUbyPDZcyfMFeVLODvXiz5miKD8VaEaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbfKHRmZ (ORCPT
+        id S1728485AbfKHRsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:42:25 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39636 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfKHRmZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:42:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a11so8006664wra.6;
-        Fri, 08 Nov 2019 09:42:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bLpxLiOoyJlR/gSpAnwkPXjar8cw71Hz2t/eOeAgaNg=;
-        b=OtLbRvsVMsMOSQOVLGs4ke8ojgitE0iVhTAuaRcljAKVyPVYl6gsmir+PsExInJlxd
-         w/WSaplhQfEaZMj1++wwaDMlvIt5/SYfeOf9/kgskkDgUxcdd6wh3qLJGAMv+YP9Qqkn
-         BC/bosVjIFMmPsW7iiST1bQDiwUDltMN6OcyroCRAGmeWdhxT7yfpIiRDzX6nB2ffFJI
-         CpNDfAbf2NvCWerkXysm2yBWE+L/x5X2renloc44a+EmlkQMMSY2pYsrD/zS56PXiue0
-         6Q+yWyV0WkEeCKRNBR484DaudTWk7NCLhK73/TzzlWQ6srFWIVLhfIKK2FckACLt9VKk
-         /qbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bLpxLiOoyJlR/gSpAnwkPXjar8cw71Hz2t/eOeAgaNg=;
-        b=LFNaRbLXj9zjx5WFCRzz8jQDIlnM+ThUrHWGoFZezGbxe/DyGi9Vy6dsCuX8lOrssr
-         iI1tcIPZh73Yp8MDi9/kQhPfNIIu5T0i1UXaJGOMaT0yErvOuYoStta8kmsETllABEEj
-         i9ewxeKagx5mujTK2lT7y1DRn6m+cFuivKHl3GypdE2kzVXZViMW3tGSguYlj22ccYHh
-         SHIZVpuGg3jnmHgwU/5uZUDCLRLYZCYhDYuF22HMMXSnzemdkq1MXj4xL0wwwb/y/lXN
-         WmS9p9apYaAj89E71lyUFO7XgffuSTimBqQTBlnZu1Hl9Bsc9+0oeCIN0wjn8AA0CxUc
-         aUmA==
-X-Gm-Message-State: APjAAAW+n6NA5hKU7vb+KAiUClVzTTQBpRI85i4RhhEHexTb1nXyJSMW
-        JbiueBZJHBOIJKazYVzIo9/gqioDGCI=
-X-Google-Smtp-Source: APXvYqwj19uqZv95ef6LajG2/vuJSid1NG2XDKHTOp9c05U/dR633lHPrIQpZ1kmfiHvmctDqlu/hA==
-X-Received: by 2002:adf:e8ca:: with SMTP id k10mr8925784wrn.377.1573234943057;
-        Fri, 08 Nov 2019 09:42:23 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id w13sm6267368wrm.8.2019.11.08.09.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 09:42:21 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Fixes for v5.4-rc7
-Date:   Fri,  8 Nov 2019 18:42:20 +0100
-Message-Id: <20191108174220.3384630-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 8 Nov 2019 12:48:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfKHRsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:48:52 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98A920673;
+        Fri,  8 Nov 2019 17:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573235331;
+        bh=GE9PFeLXesIuv0zEy2ffSpiHpDpB3tEJiSldwNibaS4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MSZsLCIscNKdexiVYE6cN58MOHJ17AuEt3qEIS+AD8PSgv6IX4c+q9ZASqv4F4l3m
+         CKFysVQakrkZdtSGp2zOn7tGmKy9BYdUqPA213MDrjVFD02gjk64+S4FbAyk+qV7gm
+         Sdagw9Xh2NOWKREY3IilhnUb6L1KHT9yyu02L+xs=
+Date:   Fri, 8 Nov 2019 17:48:46 +0000
+From:   Will Deacon <will@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
+ explicitly non-modular"
+Message-ID: <20191108174846.GA22677@willie-the-truck>
+References: <20191108151608.20932-1-will@kernel.org>
+ <20191108151608.20932-7-will@kernel.org>
+ <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
+ <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
+ <20191108164728.GB20866@willie-the-truck>
+ <c4cb13d3-3786-2e45-ba57-9965cead9a49@huawei.com>
+ <20191108173248.GA22448@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108173248.GA22448@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Nov 08, 2019 at 05:32:48PM +0000, Will Deacon wrote:
+> On Fri, Nov 08, 2019 at 05:25:09PM +0000, John Garry wrote:
+> > On 08/11/2019 16:47, Will Deacon wrote:
+> > > On Fri, Nov 08, 2019 at 04:44:25PM +0000, John Garry wrote:
+> > > > BTW, it now looks like it was your v1 series I was testing there, on your
+> > > > branch iommu/module. It would be helpful to update for ease of testing.
+> > > 
+> > > Yes, sorry about that. I'll update it now (although I'm not sure it will
+> > > help with this -- I was going to see what happens with other devices such
+> > > as the intel-iommu or storage controllers)
+> > 
+> > So I tried your v2 series for this - it has the same issue, as I
+> > anticipated.
+> 
+> Right, I'm just not sure how resilient drivers are expected to be to force
+> unbinding like this. You can break lots of stuff with root...
+> 
+> > It seems that some iommu drivers do call iommu_device_register(), so maybe a
+> > decent reference. Or simply stop the driver being unbound.
+> 
+> I'm not sure what you mean about iommu_device_register() (we call that
+> already), but I guess we can keep the '.suppress_bind_attrs = true' if
+> necessary. I'll have a play on my laptop and see how well that works if
+> you start unbinding stuff.
 
-The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
+So unbinding the nvme driver goes bang:
 
-  Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
+[90139.090158] nvme nvme0: failed to set APST feature (-19)
+[90141.966780] Aborting journal on device dm-1-8.
+[90141.967124] Buffer I/O error on dev dm-1, logical block 26247168, lost sync page write
+[90141.967169] JBD2: Error -5 detected when updating journal superblock for dm-1-8.
+[90141.967403] Buffer I/O error on dev dm-1, logical block 0, lost sync page write
+[90141.967454] EXT4-fs (dm-1): I/O error while writing superblock
+[90141.967467] EXT4-fs error (device dm-1): ext4_journal_check_start:61: Detected aborted journal
+[90141.967473] EXT4-fs (dm-1): Remounting filesystem read-only
+[90141.967569] Buffer I/O error on dev dm-1, logical block 0, lost sync page write
+[90141.967682] EXT4-fs (dm-1): I/O error while writing superblock
 
-are available in the Git repository at:
+and I've not managed to recover the thing yet (it's stuck trying to reboot.)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.4-rc7
+What state was your system in after unbinding the SMMU?
 
-for you to fetch changes up to 24906a41eecb73d51974ade0847c21e429beec60:
-
-  pwm: bcm-iproc: Prevent unloading the driver module while in use (2019-11-08 18:38:06 +0100)
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Fixes for v5.4-rc7
-
-Here's one more fix to keep a reference to the driver's module as long
-as there are users of the PWM exposed by the driver.
-
-----------------------------------------------------------------
-Uwe Kleine-König (1):
-      pwm: bcm-iproc: Prevent unloading the driver module while in use
-
- drivers/pwm/pwm-bcm-iproc.c | 1 +
- 1 file changed, 1 insertion(+)
+Will
