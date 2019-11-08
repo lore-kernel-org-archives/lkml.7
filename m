@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CA3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCA7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333AB20656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29B920656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215201;
-	bh=FHM4HVtZVOGP6VKYw1QKxuyGGkLfTjwkJEWM9cdaLps=;
+	s=default; t=1573215211;
+	bh=dD/bHB9IMDtRfXZwt5TsNRbb32hxDd5JIvgnXY4MEV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hHcTPUJTfNXT5aiGqQErSy8vIG1UwsERF7iv5QLErer46NQ1m3IE1WkqOAbCM6ZWb
-	 M/P9zplHOZBumF/X1keCGisZ1I7yVP2R7p9aLVvNciiEizWj/TOyHbaErxp89hmk/2
-	 0l7VDN7pU34YgNsnB/khrbcBqdQBecio/sbOWQGM=
+	b=NGFqkEQFTJw0BsF4k+uTXdtR+L1ZCRAXlhStxqxX+6DKg9TauV7PO7vHbFcsY35/U
+	 NX4GvbBgglbmywP83jU95RTlCMuvYvPIRPAyfBtXcS64UkJDifXRRBFnLBaeDarvu4
+	 YaO0bhIOzj3BbiZfD7avCHD5hVYWU17wfCr7JwUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392022AbfKHMNT (ORCPT
+        id S2388392AbfKHMNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:13:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:13:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732607AbfKHLi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:27 -0500
+        id S1732549AbfKHLiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96266222C2;
-        Fri,  8 Nov 2019 11:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB1821D7E;
+        Fri,  8 Nov 2019 11:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213106;
-        bh=FHM4HVtZVOGP6VKYw1QKxuyGGkLfTjwkJEWM9cdaLps=;
+        s=default; t=1573213103;
+        bh=dD/bHB9IMDtRfXZwt5TsNRbb32hxDd5JIvgnXY4MEV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvIj+DkBvmdb5j3T9ZYXQNcEjQHMn+hflBQIhazNhmZZh+RAiFe4GSFTdtJSluzlK
-         90gVNDyQwCOXOfX1l+zdulypMIKI+9fVsex31L8x+pPcoK+kzvbzyiWiyiLRGWVAJh
-         BkNcULp5YY4ZCqyINQ8LtOOYU2ZIPw4J+lCke86Q=
+        b=d8QydOALOmVmevHXYH7osadr9Ddvwt5gkC7vrJze9B2jkuteA7BFDEauISGEI32nN
+         rPK80C32Zum/DzPDMsMOn5KpnSrood0lVlB11HriqDQ+XLFP4PbvQjQsiNVGwip/UT
+         Q0pg/pM1RVx8PulBIY6cUsJZZqw1Di+PuRRbWMYA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven.eckelmann@openmesh.com>,
+Cc:     Maya Erez <merez@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 029/205] ath10k: limit available channels via DT ieee80211-freq-limit
-Date:   Fri,  8 Nov 2019 06:34:56 -0500
-Message-Id: <20191108113752.12502-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 027/205] wil6210: prevent usage of tx ring 0 for eDMA
+Date:   Fri,  8 Nov 2019 06:34:54 -0500
+Message-Id: <20191108113752.12502-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,46 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven.eckelmann@openmesh.com>
+From: Maya Erez <merez@codeaurora.org>
 
-[ Upstream commit 34d5629d2ca89d847b7040762b87964c696c14da ]
+[ Upstream commit df2b53884a5a454bf441ca78e5b57307262c73f4 ]
 
-Tri-band devices (1x 2.4GHz + 2x 5GHz) often incorporate special filters in
-the RX and TX path. These filtered channel can in theory still be used by
-the hardware but the signal strength is reduced so much that it makes no
-sense.
+In enhanced DMA ring 0 is used for RX ring, hence TX ring 0
+is an unused element in ring_tx and ring2cid_tid arrays.
+Initialize ring2cid_tid CID to WIL6210_MAX_CID to prevent a false
+match of CID 0.
+Go over the ring_tx and ring2cid_tid from wil_get_min_tx_ring_id
+and on to prevent access to index 0 in eDMA.
 
-There is already a DT property to limit the available channels but ath10k
-has to manually call this functionality to limit the currrently set wiphy
-channels further.
-
-Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/ath/wil6210/main.c | 7 +++++--
+ drivers/net/wireless/ath/wil6210/txrx.c | 6 ++++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 1419f9d1505fe..9d033da46ec2e 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -18,6 +18,7 @@
+diff --git a/drivers/net/wireless/ath/wil6210/main.c b/drivers/net/wireless/ath/wil6210/main.c
+index d186b6886c6bf..920cb233f4db7 100644
+--- a/drivers/net/wireless/ath/wil6210/main.c
++++ b/drivers/net/wireless/ath/wil6210/main.c
+@@ -223,6 +223,7 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
+ 	struct net_device *ndev = vif_to_ndev(vif);
+ 	struct wireless_dev *wdev = vif_to_wdev(vif);
+ 	struct wil_sta_info *sta = &wil->sta[cid];
++	int min_ring_id = wil_get_min_tx_ring_id(wil);
  
- #include "mac.h"
- 
-+#include <net/cfg80211.h>
- #include <net/mac80211.h>
- #include <linux/etherdevice.h>
- #include <linux/acpi.h>
-@@ -8363,6 +8364,7 @@ int ath10k_mac_register(struct ath10k *ar)
- 		ar->hw->wiphy->bands[NL80211_BAND_5GHZ] = band;
+ 	might_sleep();
+ 	wil_dbg_misc(wil, "disconnect_cid: CID %d, MID %d, status %d\n",
+@@ -273,7 +274,7 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
+ 	memset(sta->tid_crypto_rx, 0, sizeof(sta->tid_crypto_rx));
+ 	memset(&sta->group_crypto_rx, 0, sizeof(sta->group_crypto_rx));
+ 	/* release vrings */
+-	for (i = 0; i < ARRAY_SIZE(wil->ring_tx); i++) {
++	for (i = min_ring_id; i < ARRAY_SIZE(wil->ring_tx); i++) {
+ 		if (wil->ring2cid_tid[i][0] == cid)
+ 			wil_ring_fini_tx(wil, i);
+ 	}
+@@ -604,8 +605,10 @@ int wil_priv_init(struct wil6210_priv *wil)
+ 		wil->sta[i].mid = U8_MAX;
  	}
  
-+	wiphy_read_of_freq_limits(ar->hw->wiphy);
- 	ath10k_mac_setup_ht_vht_cap(ar);
+-	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++)
++	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++) {
+ 		spin_lock_init(&wil->ring_tx_data[i].lock);
++		wil->ring2cid_tid[i][0] = WIL6210_MAX_CID;
++	}
  
- 	ar->hw->wiphy->interface_modes =
+ 	mutex_init(&wil->mutex);
+ 	mutex_init(&wil->vif_mutex);
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index 25a65ca424c84..73cdf54521f9b 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -77,8 +77,9 @@ bool wil_is_tx_idle(struct wil6210_priv *wil)
+ {
+ 	int i;
+ 	unsigned long data_comp_to;
++	int min_ring_id = wil_get_min_tx_ring_id(wil);
+ 
+-	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++) {
++	for (i = min_ring_id; i < WIL6210_MAX_TX_RINGS; i++) {
+ 		struct wil_ring *vring = &wil->ring_tx[i];
+ 		int vring_index = vring - wil->ring_tx;
+ 		struct wil_ring_tx_data *txdata =
+@@ -1945,6 +1946,7 @@ static inline void __wil_update_net_queues(struct wil6210_priv *wil,
+ 					   bool check_stop)
+ {
+ 	int i;
++	int min_ring_id = wil_get_min_tx_ring_id(wil);
+ 
+ 	if (unlikely(!vif))
+ 		return;
+@@ -1977,7 +1979,7 @@ static inline void __wil_update_net_queues(struct wil6210_priv *wil,
+ 		return;
+ 
+ 	/* check wake */
+-	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++) {
++	for (i = min_ring_id; i < WIL6210_MAX_TX_RINGS; i++) {
+ 		struct wil_ring *cur_ring = &wil->ring_tx[i];
+ 		struct wil_ring_tx_data  *txdata = &wil->ring_tx_data[i];
+ 
 -- 
 2.20.1
 
