@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3209FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0A1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BA92196F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169A32087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240197;
-	bh=9r8zL6sSvPcpJIggKFfnzpnK5oCqK/XRjrW9dKyEW+Y=;
+	s=default; t=1573240200;
+	bh=v6GzKwOgnX6TvW5mQt/tLwn7FJcpMVYO23TwKMLssdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9ap15jA2uzTsuYztPv1j8GQBzSS4i0JtQY9puveRbahQ66dUGE4IhtET1A/ZRXp2
-	 jvhb95Yo5Er9SF9tVJPJ4pylazMZKIcXlzlfoD3BUdnHVU9+ajO629RSS2uYOt4mkg
-	 IbYodRB7efaKJ0xCGqOn2jonMyxbzVCvMGrv5vi4=
+	b=bpidIQULmQYF9/V9Xa4dg1xup4VtLGRTxocc/8L7insIINhENH/kw03L/BDatc7vv
+	 NNQDsNROZ8C1zPgtYJlCcapV3GWsCvMufeeP7PjzMQ6MuvbrPxaK0gAQGBZ3cAi8gq
+	 MuE/Jxyh7e8TeV78bHeGCCgGiagIVpRscKpjaePw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391812AbfKHTJz (ORCPT
+        id S1733103AbfKHTJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732947AbfKHTJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:49 -0500
+        id S2391810AbfKHTJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 847BE206A3;
-        Fri,  8 Nov 2019 19:09:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA1A20673;
+        Fri,  8 Nov 2019 19:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240189;
-        bh=9r8zL6sSvPcpJIggKFfnzpnK5oCqK/XRjrW9dKyEW+Y=;
+        s=default; t=1573240194;
+        bh=v6GzKwOgnX6TvW5mQt/tLwn7FJcpMVYO23TwKMLssdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=elMmlWr65SKOQ9Rnwk2KXikOK237PMKpDhC6uOpkL+P+cV+fU2zC5aDeINtWsEyQA
-         EKl1Xn0tcKT857HHO3GuAEE+GNgiRHhfdCoUq5MNKF2Vq2i+1mUSMMa7ZFjTAMDZFO
-         RmQb0oby7J+j2gyibxcx5hkw7+Mp8TJrJkFAPRxk=
+        b=knsE9B0vVYiujl01upMgA0KFpRzD8zU09+G9X22HlKOk2xb0r7PyLc69z0JUukA0H
+         c5rCLPXB4euF6EQe7bfZyPceIOvRp+RCPzPgZ/mFFlFYzxCAMqLI8LBVdKfeicBS3U
+         HkTtNdN5Ttjc6GsQJX37lmy6YQWcMRsHekTkkPQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 077/140] nbd: protect cmd->status with cmd->lock
-Date:   Fri,  8 Nov 2019 19:50:05 +0100
-Message-Id: <20191108174909.960322693@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 069/140] MIPS: bmips: mark exception vectors as char arrays
+Date:   Fri,  8 Nov 2019 19:49:57 +0100
+Message-Id: <20191108174909.531987497@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,62 +63,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-[ Upstream commit de6346ecbc8f5591ebd6c44ac164e8b8671d71d7 ]
+[ Upstream commit e4f5cb1a9b27c0f94ef4f5a0178a3fde2d3d0e9e ]
 
-We already do this for the most part, except in timeout and clear_req.
-For the timeout case we take the lock after we grab a ref on the config,
-but that isn't really necessary because we're safe to touch the cmd at
-this point, so just move the order around.
+The vectors span more than one byte, so mark them as arrays.
 
-For the clear_req cause this is initiated by the user, so again is safe.
+Fixes the following build error when building when using GCC 8.3:
 
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+In file included from ./include/linux/string.h:19,
+                 from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/mips/include/asm/processor.h:15,
+                 from ./arch/mips/include/asm/thread_info.h:16,
+                 from ./include/linux/thread_info.h:38,
+                 from ./include/asm-generic/preempt.h:5,
+                 from ./arch/mips/include/generated/asm/preempt.h:1,
+                 from ./include/linux/preempt.h:81,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/bootmem.h:8,
+                 from arch/mips/bcm63xx/prom.c:10:
+arch/mips/bcm63xx/prom.c: In function 'prom_init':
+./arch/mips/include/asm/string.h:162:11: error: '__builtin_memcpy' forming offset [2, 32] is out of the bounds [0, 1] of object 'bmips_smp_movevec' with type 'char' [-Werror=array-bounds]
+   __ret = __builtin_memcpy((dst), (src), __len); \
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/bcm63xx/prom.c:97:3: note: in expansion of macro 'memcpy'
+   memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
+   ^~~~~~
+In file included from arch/mips/bcm63xx/prom.c:14:
+./arch/mips/include/asm/bmips.h:80:13: note: 'bmips_smp_movevec' declared here
+ extern char bmips_smp_movevec;
+
+Fixes: 18a1eef92dcd ("MIPS: BMIPS: Introduce bmips.h")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/mips/bcm63xx/prom.c      |  2 +-
+ arch/mips/include/asm/bmips.h | 10 +++++-----
+ arch/mips/kernel/smp-bmips.c  |  8 ++++----
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 9650777d0aaf1..7301fe55084bf 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -351,17 +351,16 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
- 	struct nbd_device *nbd = cmd->nbd;
- 	struct nbd_config *config;
- 
-+	if (!mutex_trylock(&cmd->lock))
-+		return BLK_EH_RESET_TIMER;
-+
- 	if (!refcount_inc_not_zero(&nbd->config_refs)) {
- 		cmd->status = BLK_STS_TIMEOUT;
-+		mutex_unlock(&cmd->lock);
- 		goto done;
- 	}
- 	config = nbd->config;
- 
--	if (!mutex_trylock(&cmd->lock)) {
--		nbd_config_put(nbd);
--		return BLK_EH_RESET_TIMER;
--	}
--
- 	if (config->num_connections > 1) {
- 		dev_err_ratelimited(nbd_to_dev(nbd),
- 				    "Connection timed out, retrying (%d/%d alive)\n",
-@@ -755,7 +754,10 @@ static bool nbd_clear_req(struct request *req, void *data, bool reserved)
- {
- 	struct nbd_cmd *cmd = blk_mq_rq_to_pdu(req);
- 
-+	mutex_lock(&cmd->lock);
- 	cmd->status = BLK_STS_IOERR;
-+	mutex_unlock(&cmd->lock);
-+
- 	blk_mq_complete_request(req);
- 	return true;
+diff --git a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
+index 77a836e661c9e..df69eaa453a1c 100644
+--- a/arch/mips/bcm63xx/prom.c
++++ b/arch/mips/bcm63xx/prom.c
+@@ -84,7 +84,7 @@ void __init prom_init(void)
+ 		 * Here we will start up CPU1 in the background and ask it to
+ 		 * reconfigure itself then go back to sleep.
+ 		 */
+-		memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
++		memcpy((void *)0xa0000200, bmips_smp_movevec, 0x20);
+ 		__sync();
+ 		set_c0_cause(C_SW0);
+ 		cpumask_set_cpu(1, &bmips_booted_mask);
+diff --git a/arch/mips/include/asm/bmips.h b/arch/mips/include/asm/bmips.h
+index bf6a8afd7ad27..581a6a3c66e40 100644
+--- a/arch/mips/include/asm/bmips.h
++++ b/arch/mips/include/asm/bmips.h
+@@ -75,11 +75,11 @@ static inline int register_bmips_smp_ops(void)
+ #endif
  }
+ 
+-extern char bmips_reset_nmi_vec;
+-extern char bmips_reset_nmi_vec_end;
+-extern char bmips_smp_movevec;
+-extern char bmips_smp_int_vec;
+-extern char bmips_smp_int_vec_end;
++extern char bmips_reset_nmi_vec[];
++extern char bmips_reset_nmi_vec_end[];
++extern char bmips_smp_movevec[];
++extern char bmips_smp_int_vec[];
++extern char bmips_smp_int_vec_end[];
+ 
+ extern int bmips_smp_enabled;
+ extern int bmips_cpu_offset;
+diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+index 76fae9b79f131..712c15de6ab9f 100644
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -464,10 +464,10 @@ static void bmips_wr_vec(unsigned long dst, char *start, char *end)
+ 
+ static inline void bmips_nmi_handler_setup(void)
+ {
+-	bmips_wr_vec(BMIPS_NMI_RESET_VEC, &bmips_reset_nmi_vec,
+-		&bmips_reset_nmi_vec_end);
+-	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, &bmips_smp_int_vec,
+-		&bmips_smp_int_vec_end);
++	bmips_wr_vec(BMIPS_NMI_RESET_VEC, bmips_reset_nmi_vec,
++		bmips_reset_nmi_vec_end);
++	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, bmips_smp_int_vec,
++		bmips_smp_int_vec_end);
+ }
+ 
+ struct reset_vec_info {
 -- 
 2.20.1
 
