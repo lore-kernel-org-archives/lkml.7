@@ -2,40 +2,61 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D655AFC619A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E191AFC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8DED214DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33BC214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731596AbfKHJib (ORCPT
+        id S1731629AbfKHJid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:38:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39774 "EHLO mx1.suse.de"
+        Fri, 8 Nov 2019 04:38:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39778 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731447AbfKHJi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731477AbfKHJi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 04:38:28 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B2AA8AE68;
+        by mx1.suse.de (Postfix) with ESMTP id 0B6A7AEAF;
         Fri,  8 Nov 2019 09:38:24 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     stable@vger.kernel.org
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Ajay Kaher <akaher@vmware.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH STABLE 4.4 6/8] pipe: add pipe_buf_get() helper
-Date:   Fri,  8 Nov 2019 10:38:12 +0100
-Message-Id: <20191108093814.16032-7-vbabka@suse.cz>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Hillf Danton <hillf.zj@alibaba-inc.com>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Punit Agrawal <punit.agrawal@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH STABLE 4.4 0/8] page refcount overflow backports
+Date:   Fri,  8 Nov 2019 10:38:06 +0100
+Message-Id: <20191108093814.16032-1-vbabka@suse.cz>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191108093814.16032-1-vbabka@suse.cz>
-References: <20191108093814.16032-1-vbabka@suse.cz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,76 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+Hi,
 
-commit 7bf2d1df80822ec056363627e2014990f068f7aa upstream.
+this series backports the CVE-2019-11487 fixes (page refcount overflow) to
+4.4 stable. It differs from Ajay's series [1] in the following:
 
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- fs/fuse/dev.c             |  2 +-
- fs/splice.c               |  4 ++--
- include/linux/pipe_fs_i.h | 11 +++++++++++
- 3 files changed, 14 insertions(+), 3 deletions(-)
+- gup.c variants of fast gup for x86 and s390 are fixed too. I've not fixed
+  sparc, mips, sh. It's unlikely the known overflow scenario based on FUSE,
+  which needs 140GB of RAM, is a problem for those architectures, and I don't
+  feel confident enough to patch them. I've sent the same fixup for 4.9 [3]
+- there are some differences in backport adaptations, hopefully not important.
+  My version is taken from our 4.4 based kernel, which was just simpler for me
+  than adding the missing parts to Ajay's version
+- The last patch fixes another problem in the fast gup implementation on x86,
+  that I've previously posted and got merged to 4.9 stable [2].
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index f5d2d2340b44..36a5df92eb9c 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -2052,7 +2052,7 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 			pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
- 			pipe->nrbufs--;
- 		} else {
--			ibuf->ops->get(pipe, ibuf);
-+			pipe_buf_get(pipe, ibuf);
- 			*obuf = *ibuf;
- 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 			obuf->len = rem;
-diff --git a/fs/splice.c b/fs/splice.c
-index 8398974e1538..fde126369966 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1876,7 +1876,7 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
- 			 * Get a reference to this pipe buffer,
- 			 * so we can copy the contents over.
- 			 */
--			ibuf->ops->get(ipipe, ibuf);
-+			pipe_buf_get(ipipe, ibuf);
- 			*obuf = *ibuf;
- 
- 			/*
-@@ -1948,7 +1948,7 @@ static int link_pipe(struct pipe_inode_info *ipipe,
- 		 * Get a reference to this pipe buffer,
- 		 * so we can copy the contents over.
- 		 */
--		ibuf->ops->get(ipipe, ibuf);
-+		pipe_buf_get(ipipe, ibuf);
- 
- 		obuf = opipe->bufs + nbuf;
- 		*obuf = *ibuf;
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 24f5470d3944..10876f3cb3da 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -115,6 +115,17 @@ struct pipe_buf_operations {
- 	void (*get)(struct pipe_inode_info *, struct pipe_buffer *);
- };
- 
-+/**
-+ * pipe_buf_get - get a reference to a pipe_buffer
-+ * @pipe:	the pipe that the buffer belongs to
-+ * @buf:	the buffer to get a reference to
-+ */
-+static inline void pipe_buf_get(struct pipe_inode_info *pipe,
-+				struct pipe_buffer *buf)
-+{
-+	buf->ops->get(pipe, buf);
-+}
-+
- /* Differs from PIPE_BUF in that PIPE_SIZE is the length of the actual
-    memory allocation, whereas PIPE_BUF makes atomicity guarantees.  */
- #define PIPE_SIZE		PAGE_SIZE
+[1] https://lore.kernel.org/linux-mm/1570581863-12090-1-git-send-email-akaher@vmware.com/
+[2] https://lore.kernel.org/linux-mm/20190802160614.8089-1-vbabka@suse.cz/
+[3] https://lore.kernel.org/linux-mm/9c130fa4-e52d-f8bd-c450-42341c7ab441@suse.cz/
+
+Linus Torvalds (3):
+  mm: make page ref count overflow check tighter and more explicit
+  mm: add 'try_get_page()' helper function
+  mm: prevent get_user_pages() from overflowing page refcount
+
+Matthew Wilcox (1):
+  fs: prevent page refcount overflow in pipe_buf_get
+
+Miklos Szeredi (1):
+  pipe: add pipe_buf_get() helper
+
+Punit Agrawal (1):
+  mm, gup: ensure real head page is ref-counted when using hugepages
+
+Vlastimil Babka (1):
+  x86, mm, gup: prevent get_page() race with munmap in paravirt guest
+
+Will Deacon (1):
+  mm, gup: remove broken VM_BUG_ON_PAGE compound check for hugepages
+
+ arch/s390/mm/gup.c        |  6 +++--
+ arch/x86/mm/gup.c         | 23 ++++++++++++++++++-
+ fs/fuse/dev.c             | 12 +++++-----
+ fs/pipe.c                 |  4 ++--
+ fs/splice.c               | 12 ++++++++--
+ include/linux/mm.h        | 26 ++++++++++++++++++++-
+ include/linux/pipe_fs_i.h | 17 ++++++++++++--
+ kernel/trace/trace.c      |  6 ++++-
+ mm/gup.c                  | 48 +++++++++++++++++++++++++++------------
+ mm/huge_memory.c          |  2 +-
+ mm/hugetlb.c              | 18 +++++++++++++--
+ mm/internal.h             | 17 ++++++++++----
+ 12 files changed, 152 insertions(+), 39 deletions(-)
+
 -- 
 2.23.0
 
