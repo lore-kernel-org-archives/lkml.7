@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D33C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7F6FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0C52085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA2C215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214729;
-	bh=gCCvBVkAILAOcOS7/TzlqJcSoTC8xurVhYWiXU0UjGA=;
+	s=default; t=1573214734;
+	bh=8QGmzeogi6k2oblfvGFyTdoWO5OoMRPbPTDlYihF9qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T2dkd4Kd3t4h8YrDDsb47d8sk5Vdju73kxmgLzUtE7LwhFIp0KoT1ulPHEONn8WNw
-	 aMJxCRT/sWGTv5piIa+pSAT02xxaw3Np7VTLeHAfUAPZOPhgdnQhX8/aTU1iWzeh5E
-	 gah6KUwqduKgGUXRXR3iF4S59wXkv4rD1AnXnm6o=
+	b=MkbbDsuMfGY7uiimbs5KD2o9t8j12vIZP5mQWcV1lxh2eDaAY1vET3bZwH3MlRKzd
+	 ZE68aK1l+OVe15cwI6uxLfHfn178So1sKkt4AtitxwIMppmgabWuiPDTSBA0kNqUWK
+	 FR4tE0eSK78DV9cSZjYdwXMjk5Cz4BNFjn/MP7As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390440AbfKHMF2 (ORCPT
+        id S2389467AbfKHLl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:05:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389491AbfKHLlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:31 -0500
+        id S2389383AbfKHLlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D2CF222C2;
-        Fri,  8 Nov 2019 11:41:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E616E222CF;
+        Fri,  8 Nov 2019 11:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213290;
-        bh=gCCvBVkAILAOcOS7/TzlqJcSoTC8xurVhYWiXU0UjGA=;
+        s=default; t=1573213282;
+        bh=8QGmzeogi6k2oblfvGFyTdoWO5OoMRPbPTDlYihF9qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XRBnOn93+8ij/LRyCQmOBbgtEEj/neElg3XBcjfRfbizk8uHe+LRvxugRNAS+cd/R
-         Cw6PkYN1IvguYFvQvJ1RXoP6FyV393WUY5BvlMedlKYploSFuVgPTfMcHuZqsh+kON
-         kHLOtPSBUvw53o33hX2GhPoYHiXdb7IbKkm0/RW8=
+        b=GtGrG4MLY1S/Mtn6JNMljWULqjgMi/pnnQYyYubXbTaliM9qb+wFE66ik0N6gU9sT
+         dQdjC3d3KgXLpY1LZwFWOFHZvZ33UEuhuemIrQAPpsA42UhDI8q2S6QPX5mp6QCcm0
+         kDbOG9LMZHqwjwrsVXZB9FHDvRP5VwIgCVoQqQ20=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     George Kennedy <george.kennedy@oracle.com>,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Mark Kanda <mark.kanda@oracle.com>,
+Cc:     Sawan Chandak <sawan.chandak@cavium.com>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 150/205] scsi: sym53c8xx: fix NULL pointer dereference panic in sym_int_sir()
-Date:   Fri,  8 Nov 2019 06:36:57 -0500
-Message-Id: <20191108113752.12502-150-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 143/205] scsi: qla2xxx: Check for Register disconnect
+Date:   Fri,  8 Nov 2019 06:36:50 -0500
+Message-Id: <20191108113752.12502-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,77 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Kennedy <george.kennedy@oracle.com>
+From: Sawan Chandak <sawan.chandak@cavium.com>
 
-[ Upstream commit 288315e95264b6355e26609e9dec5dc4563d4ab0 ]
+[ Upstream commit f99c5d294b3653e6ae563eaac5db5b4138afe31c ]
 
-sym_int_sir() in sym_hipd.c does not check the command pointer for NULL before
-using it in debug message prints.
+During adapter shutdown process check for register disconnect before
+proceeding to call PCI functions.
 
-Suggested-by: Matthew Wilcox <matthew.wilcox@oracle.com>
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
-Acked-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: Sawan Chandak <sawan.chandak@cavium.com>
+Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sym53c8xx_2/sym_hipd.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/sym53c8xx_2/sym_hipd.c b/drivers/scsi/sym53c8xx_2/sym_hipd.c
-index bd3f6e2d68344..0a2a54517b151 100644
---- a/drivers/scsi/sym53c8xx_2/sym_hipd.c
-+++ b/drivers/scsi/sym53c8xx_2/sym_hipd.c
-@@ -4370,6 +4370,13 @@ static void sym_nego_rejected(struct sym_hcb *np, struct sym_tcb *tp, struct sym
- 	OUTB(np, HS_PRT, HS_BUSY);
- }
- 
-+#define sym_printk(lvl, tp, cp, fmt, v...) do { \
-+	if (cp)							\
-+		scmd_printk(lvl, cp->cmd, fmt, ##v);		\
-+	else							\
-+		starget_printk(lvl, tp->starget, fmt, ##v);	\
-+} while (0)
-+
- /*
-  *  chip exception handler for programmed interrupts.
-  */
-@@ -4415,7 +4422,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  been selected with ATN.  We do not want to handle that.
- 	 */
- 	case SIR_SEL_ATN_NO_MSG_OUT:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No MSG OUT phase after selection with ATN\n");
- 		goto out_stuck;
- 	/*
-@@ -4423,7 +4430,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  having reselected the initiator.
- 	 */
- 	case SIR_RESEL_NO_MSG_IN:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No MSG IN phase after reselection\n");
- 		goto out_stuck;
- 	/*
-@@ -4431,7 +4438,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	 *  an IDENTIFY.
- 	 */
- 	case SIR_RESEL_NO_IDENTIFY:
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 				"No IDENTIFY after reselection\n");
- 		goto out_stuck;
- 	/*
-@@ -4460,7 +4467,7 @@ static void sym_int_sir(struct sym_hcb *np)
- 	case SIR_RESEL_ABORTED:
- 		np->lastmsg = np->msgout[0];
- 		np->msgout[0] = M_NOOP;
--		scmd_printk(KERN_WARNING, cp->cmd,
-+		sym_printk(KERN_WARNING, tp, cp,
- 			"message %x sent on bad reselection\n", np->lastmsg);
- 		goto out;
- 	/*
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index bfbdec61b3c6e..cb7f4d59343f0 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1744,6 +1744,7 @@ __qla2x00_abort_all_cmds(struct qla_qpair *qp, int res)
+ 				    !ha->flags.eeh_busy &&
+ 				    (!test_bit(ABORT_ISP_ACTIVE,
+ 					&vha->dpc_flags)) &&
++				    !qla2x00_isp_reg_stat(ha) &&
+ 				    (sp->type == SRB_SCSI_CMD)) {
+ 					/*
+ 					 * Don't abort commands in
 -- 
 2.20.1
 
