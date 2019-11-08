@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB361FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1FFFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0202196F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B03B2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240205;
-	bh=/IrYZ2gAkygTZSpQUuLTJGdhRVZlUQDCSL45dT1z7v4=;
+	s=default; t=1573240209;
+	bh=/nY28j1nOrFMxjV93GGSo3Ontn0HA7+C5X1rIXcde9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WekHQBdIQfcyo2FGuAFPXoxYBz0fnBYDUzHPtjylqBk0wDf0/zRsdiRhJjExHcveQ
-	 SVL/CdzD+L5vr7/RqEANT3yjTNRohtuqGscf0S+fokN0v3NdaEYKKuf2oEShXW6PWe
-	 7LsX8cGdMCkV2roodKR5kLTMvlWgviQQnMKaEg1o=
+	b=MU4jyJBDHHp4EaC+GK5ZPMPfTkJwlGbl4zlKi+wI29UA5gfdEmoGE7rTWawsk6kct
+	 OKv0g6p1TWXU1FApnrbyUubXCKncXN1S6gRexAePyqyY8OHBJG3S3k6M4bidmwQYL+
+	 DWFVD+Br7mVcBJ9nKBwGgevr6VMeyJcWceObLw5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391846AbfKHTKE (ORCPT
+        id S1733231AbfKHTKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:10:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42080 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:10:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391825AbfKHTKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:10:01 -0500
+        id S2391078AbfKHTKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:10:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 302D921D7B;
-        Fri,  8 Nov 2019 19:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 384C920673;
+        Fri,  8 Nov 2019 19:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240200;
-        bh=/IrYZ2gAkygTZSpQUuLTJGdhRVZlUQDCSL45dT1z7v4=;
+        s=default; t=1573240203;
+        bh=/nY28j1nOrFMxjV93GGSo3Ontn0HA7+C5X1rIXcde9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3NQgZzZtwe+E4vFi5Ek5d8EVpCPD+euTSS8nioFxnrHcb/SEOyZ+jI5qNXvDw7vN
-         Mh6OPvzlgjpU5wqx6mOpn/uiaJ+68KyU6e5XmdW4a4KqjCBVbcjVj70OoR8Z44r0MD
-         GaVvV3Iv5UktdiN0NK/s08vggGtgZCDWAdMV33TQ=
+        b=ol2czC28vTyPkOrZ+BXcArfuufVxZ0j6H/p4vAb3aen6E5LvLEg9HGBiOeatCUbZA
+         8mPjo45Vc5piXpHtuB7sHafL3JiUGqqqkYGJ6HsMJq1kcVFqj0JW+ys9NAJee+Ckik
+         s+pmrrNqlmSHD33g7F+T2HAiIH4bSj7ILtlW+8zE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Thomas Bartschies <Thomas.Bartschies@cvk.de>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 124/140] net: ensure correct skb->tstamp in various fragmenters
-Date:   Fri,  8 Nov 2019 19:50:52 +0100
-Message-Id: <20191108174912.529483559@linuxfoundation.org>
+Subject: [PATCH 5.3 125/140] net: hns3: fix mis-counting IRQ vector numbers issue
+Date:   Fri,  8 Nov 2019 19:50:53 +0100
+Message-Id: <20191108174912.580652914@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,140 +60,235 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 9669fffc1415bb0c30e5d2ec98a8e1c3a418cb9c ]
+[ Upstream commit 580a05f9d4ada3bfb689140d0efec1efdb8a48da ]
 
-Thomas found that some forwarded packets would be stuck
-in FQ packet scheduler because their skb->tstamp contained
-timestamps far in the future.
+Currently, the num_msi_left means the vector numbers of NIC,
+but if the PF supported RoCE, it contains the vector numbers
+of NIC and RoCE(Not expected).
 
-We thought we addressed this point in commit 8203e2d844d3
-("net: clear skb->tstamp in forwarding paths") but there
-is still an issue when/if a packet needs to be fragmented.
+This may cause interrupts lost in some case, because of the
+NIC module used the vector resources which belongs to RoCE.
 
-In order to meet EDT requirements, we have to make sure all
-fragments get the original skb->tstamp.
+This patch adds a new variable num_nic_msi to store the vector
+numbers of NIC, and adjust the default TQP numbers and rss_size
+according to the value of num_nic_msi.
 
-Note that this original skb->tstamp should be zero in
-forwarding path, but might have a non zero value in
-output path if user decided so.
-
-Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Thomas Bartschies <Thomas.Bartschies@cvk.de>
+Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/netfilter/nf_conntrack_bridge.c |    3 +++
- net/ipv4/ip_output.c                       |    3 +++
- net/ipv6/ip6_output.c                      |    3 +++
- net/ipv6/netfilter.c                       |    3 +++
- 4 files changed, 12 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h               |    2 +
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   |   21 ++++++++++
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h   |    1 
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c     |   11 ++++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c |   28 ++++++++++++--
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h |    1 
+ 6 files changed, 58 insertions(+), 6 deletions(-)
 
---- a/net/bridge/netfilter/nf_conntrack_bridge.c
-+++ b/net/bridge/netfilter/nf_conntrack_bridge.c
-@@ -34,6 +34,7 @@ static int nf_br_ip_fragment(struct net
- {
- 	int frag_max_size = BR_INPUT_SKB_CB(skb)->frag_max_size;
- 	unsigned int hlen, ll_rs, mtu;
-+	ktime_t tstamp = skb->tstamp;
- 	struct ip_frag_state state;
- 	struct iphdr *iph;
- 	int err;
-@@ -81,6 +82,7 @@ static int nf_br_ip_fragment(struct net
- 			if (iter.frag)
- 				ip_fraglist_prepare(skb, &iter);
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -32,6 +32,8 @@
  
-+			skb->tstamp = tstamp;
- 			err = output(net, sk, data, skb);
- 			if (err || !iter.frag)
- 				break;
-@@ -105,6 +107,7 @@ slow_path:
- 			goto blackhole;
- 		}
+ #define HNAE3_MOD_VERSION "1.0"
  
-+		skb2->tstamp = tstamp;
- 		err = output(net, sk, data, skb2);
- 		if (err)
- 			goto blackhole;
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -771,6 +771,7 @@ int ip_do_fragment(struct net *net, stru
- 	struct rtable *rt = skb_rtable(skb);
- 	unsigned int mtu, hlen, ll_rs;
- 	struct ip_fraglist_iter iter;
-+	ktime_t tstamp = skb->tstamp;
- 	struct ip_frag_state state;
- 	int err = 0;
++#define HNAE3_MIN_VECTOR_NUM	2 /* first one for misc, another for IO */
++
+ /* Device IDs */
+ #define HNAE3_DEV_ID_GE				0xA220
+ #define HNAE3_DEV_ID_25GE			0xA221
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -800,6 +800,9 @@ static int hclge_query_pf_resource(struc
+ 		hnae3_get_field(__le16_to_cpu(req->pf_intr_vector_number),
+ 				HCLGE_PF_VEC_NUM_M, HCLGE_PF_VEC_NUM_S);
  
-@@ -846,6 +847,7 @@ int ip_do_fragment(struct net *net, stru
- 				ip_fraglist_prepare(skb, &iter);
- 			}
- 
-+			skb->tstamp = tstamp;
- 			err = output(net, sk, skb);
- 
- 			if (!err)
-@@ -901,6 +903,7 @@ slow_path:
- 		/*
- 		 *	Put this fragment into the sending queue.
++		/* nic's msix numbers is always equals to the roce's. */
++		hdev->num_nic_msi = hdev->num_roce_msi;
++
+ 		/* PF should have NIC vectors and Roce vectors,
+ 		 * NIC vectors are queued before Roce vectors.
  		 */
-+		skb2->tstamp = tstamp;
- 		err = output(net, sk, skb2);
- 		if (err)
- 			goto fail;
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -768,6 +768,7 @@ int ip6_fragment(struct net *net, struct
- 				inet6_sk(skb->sk) : NULL;
- 	struct ip6_frag_state state;
- 	unsigned int mtu, hlen, nexthdr_offset;
-+	ktime_t tstamp = skb->tstamp;
- 	int hroom, err = 0;
- 	__be32 frag_id;
- 	u8 *prevhdr, nexthdr = 0;
-@@ -855,6 +856,7 @@ int ip6_fragment(struct net *net, struct
- 			if (iter.frag)
- 				ip6_fraglist_prepare(skb, &iter);
+@@ -809,6 +812,15 @@ static int hclge_query_pf_resource(struc
+ 		hdev->num_msi =
+ 		hnae3_get_field(__le16_to_cpu(req->pf_intr_vector_number),
+ 				HCLGE_PF_VEC_NUM_M, HCLGE_PF_VEC_NUM_S);
++
++		hdev->num_nic_msi = hdev->num_msi;
++	}
++
++	if (hdev->num_nic_msi < HNAE3_MIN_VECTOR_NUM) {
++		dev_err(&hdev->pdev->dev,
++			"Just %u msi resources, not enough for pf(min:2).\n",
++			hdev->num_nic_msi);
++		return -EINVAL;
+ 	}
  
-+			skb->tstamp = tstamp;
- 			err = output(net, sk, skb);
- 			if (!err)
- 				IP6_INC_STATS(net, ip6_dst_idev(&rt->dst),
-@@ -913,6 +915,7 @@ slow_path:
- 		/*
- 		 *	Put this fragment into the sending queue.
+ 	return 0;
+@@ -1394,6 +1406,10 @@ static int  hclge_assign_tqp(struct hclg
+ 	kinfo->rss_size = min_t(u16, hdev->rss_size_max,
+ 				vport->alloc_tqps / hdev->tm_info.num_tc);
+ 
++	/* ensure one to one mapping between irq and queue at default */
++	kinfo->rss_size = min_t(u16, kinfo->rss_size,
++				(hdev->num_nic_msi - 1) / hdev->tm_info.num_tc);
++
+ 	return 0;
+ }
+ 
+@@ -2172,7 +2188,8 @@ static int hclge_init_msi(struct hclge_d
+ 	int vectors;
+ 	int i;
+ 
+-	vectors = pci_alloc_irq_vectors(pdev, 1, hdev->num_msi,
++	vectors = pci_alloc_irq_vectors(pdev, HNAE3_MIN_VECTOR_NUM,
++					hdev->num_msi,
+ 					PCI_IRQ_MSI | PCI_IRQ_MSIX);
+ 	if (vectors < 0) {
+ 		dev_err(&pdev->dev,
+@@ -2187,6 +2204,7 @@ static int hclge_init_msi(struct hclge_d
+ 
+ 	hdev->num_msi = vectors;
+ 	hdev->num_msi_left = vectors;
++
+ 	hdev->base_msi_vector = pdev->irq;
+ 	hdev->roce_base_vector = hdev->base_msi_vector +
+ 				hdev->roce_base_msix_offset;
+@@ -3644,6 +3662,7 @@ static int hclge_get_vector(struct hnae3
+ 	int alloc = 0;
+ 	int i, j;
+ 
++	vector_num = min_t(u16, hdev->num_nic_msi - 1, vector_num);
+ 	vector_num = min(hdev->num_msi_left, vector_num);
+ 
+ 	for (j = 0; j < vector_num; j++) {
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -795,6 +795,7 @@ struct hclge_dev {
+ 	u32 base_msi_vector;
+ 	u16 *vector_status;
+ 	int *vector_irq;
++	u16 num_nic_msi;	/* Num of nic vectors for this PF */
+ 	u16 num_roce_msi;	/* Num of roce vectors for this PF */
+ 	int roce_base_vector;
+ 
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -540,9 +540,16 @@ static void hclge_tm_vport_tc_info_updat
+ 		kinfo->rss_size = kinfo->req_rss_size;
+ 	} else if (kinfo->rss_size > max_rss_size ||
+ 		   (!kinfo->req_rss_size && kinfo->rss_size < max_rss_size)) {
++		/* if user not set rss, the rss_size should compare with the
++		 * valid msi numbers to ensure one to one map between tqp and
++		 * irq as default.
++		 */
++		if (!kinfo->req_rss_size)
++			max_rss_size = min_t(u16, max_rss_size,
++					     (hdev->num_nic_msi - 1) /
++					     kinfo->num_tc);
++
+ 		/* Set to the maximum specification value (max_rss_size). */
+-		dev_info(&hdev->pdev->dev, "rss changes from %d to %d\n",
+-			 kinfo->rss_size, max_rss_size);
+ 		kinfo->rss_size = max_rss_size;
+ 	}
+ 
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -411,6 +411,13 @@ static int hclgevf_knic_setup(struct hcl
+ 		kinfo->tqp[i] = &hdev->htqp[i].q;
+ 	}
+ 
++	/* after init the max rss_size and tqps, adjust the default tqp numbers
++	 * and rss size with the actual vector numbers
++	 */
++	kinfo->num_tqps = min_t(u16, hdev->num_nic_msix - 1, kinfo->num_tqps);
++	kinfo->rss_size = min_t(u16, kinfo->num_tqps / kinfo->num_tc,
++				kinfo->rss_size);
++
+ 	return 0;
+ }
+ 
+@@ -502,6 +509,7 @@ static int hclgevf_get_vector(struct hna
+ 	int alloc = 0;
+ 	int i, j;
+ 
++	vector_num = min_t(u16, hdev->num_nic_msix - 1, vector_num);
+ 	vector_num = min(hdev->num_msi_left, vector_num);
+ 
+ 	for (j = 0; j < vector_num; j++) {
+@@ -2208,13 +2216,14 @@ static int hclgevf_init_msi(struct hclge
+ 	int vectors;
+ 	int i;
+ 
+-	if (hnae3_get_bit(hdev->ae_dev->flag, HNAE3_DEV_SUPPORT_ROCE_B))
++	if (hnae3_dev_roce_supported(hdev))
+ 		vectors = pci_alloc_irq_vectors(pdev,
+ 						hdev->roce_base_msix_offset + 1,
+ 						hdev->num_msi,
+ 						PCI_IRQ_MSIX);
+ 	else
+-		vectors = pci_alloc_irq_vectors(pdev, 1, hdev->num_msi,
++		vectors = pci_alloc_irq_vectors(pdev, HNAE3_MIN_VECTOR_NUM,
++						hdev->num_msi,
+ 						PCI_IRQ_MSI | PCI_IRQ_MSIX);
+ 
+ 	if (vectors < 0) {
+@@ -2230,6 +2239,7 @@ static int hclgevf_init_msi(struct hclge
+ 
+ 	hdev->num_msi = vectors;
+ 	hdev->num_msi_left = vectors;
++
+ 	hdev->base_msi_vector = pdev->irq;
+ 	hdev->roce_base_vector = pdev->irq + hdev->roce_base_msix_offset;
+ 
+@@ -2495,7 +2505,7 @@ static int hclgevf_query_vf_resource(str
+ 
+ 	req = (struct hclgevf_query_res_cmd *)desc.data;
+ 
+-	if (hnae3_get_bit(hdev->ae_dev->flag, HNAE3_DEV_SUPPORT_ROCE_B)) {
++	if (hnae3_dev_roce_supported(hdev)) {
+ 		hdev->roce_base_msix_offset =
+ 		hnae3_get_field(__le16_to_cpu(req->msixcap_localid_ba_rocee),
+ 				HCLGEVF_MSIX_OFT_ROCEE_M,
+@@ -2504,6 +2514,9 @@ static int hclgevf_query_vf_resource(str
+ 		hnae3_get_field(__le16_to_cpu(req->vf_intr_vector_number),
+ 				HCLGEVF_VEC_NUM_M, HCLGEVF_VEC_NUM_S);
+ 
++		/* nic's msix numbers is always equals to the roce's. */
++		hdev->num_nic_msix = hdev->num_roce_msix;
++
+ 		/* VF should have NIC vectors and Roce vectors, NIC vectors
+ 		 * are queued before Roce vectors. The offset is fixed to 64.
  		 */
-+		frag->tstamp = tstamp;
- 		err = output(net, sk, frag);
- 		if (err)
- 			goto fail;
---- a/net/ipv6/netfilter.c
-+++ b/net/ipv6/netfilter.c
-@@ -119,6 +119,7 @@ int br_ip6_fragment(struct net *net, str
- 				  struct sk_buff *))
- {
- 	int frag_max_size = BR_INPUT_SKB_CB(skb)->frag_max_size;
-+	ktime_t tstamp = skb->tstamp;
- 	struct ip6_frag_state state;
- 	u8 *prevhdr, nexthdr = 0;
- 	unsigned int mtu, hlen;
-@@ -183,6 +184,7 @@ int br_ip6_fragment(struct net *net, str
- 			if (iter.frag)
- 				ip6_fraglist_prepare(skb, &iter);
+@@ -2513,6 +2526,15 @@ static int hclgevf_query_vf_resource(str
+ 		hdev->num_msi =
+ 		hnae3_get_field(__le16_to_cpu(req->vf_intr_vector_number),
+ 				HCLGEVF_VEC_NUM_M, HCLGEVF_VEC_NUM_S);
++
++		hdev->num_nic_msix = hdev->num_msi;
++	}
++
++	if (hdev->num_nic_msix < HNAE3_MIN_VECTOR_NUM) {
++		dev_err(&hdev->pdev->dev,
++			"Just %u msi resources, not enough for vf(min:2).\n",
++			hdev->num_nic_msix);
++		return -EINVAL;
+ 	}
  
-+			skb->tstamp = tstamp;
- 			err = output(net, sk, data, skb);
- 			if (err || !iter.frag)
- 				break;
-@@ -215,6 +217,7 @@ slow_path:
- 			goto blackhole;
- 		}
- 
-+		skb2->tstamp = tstamp;
- 		err = output(net, sk, data, skb2);
- 		if (err)
- 			goto blackhole;
+ 	return 0;
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -265,6 +265,7 @@ struct hclgevf_dev {
+ 	u16 num_msi;
+ 	u16 num_msi_left;
+ 	u16 num_msi_used;
++	u16 num_nic_msix;	/* Num of nic vectors for this VF */
+ 	u16 num_roce_msix;	/* Num of roce vectors for this VF */
+ 	u16 roce_base_msix_offset;
+ 	int roce_base_vector;
 
 
