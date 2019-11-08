@@ -2,115 +2,96 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1EAFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC0FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4AD7206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573231377;
-	bh=g4CoKvF3KBeAiTVPLjlckAUsjTuuIjtO+HohvgouYnY=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=GaU1RDcnrZtp3sa6OhS0sCjUTbpI0dRFtWWgJM5h5UnslUPK82NTf9erbCXHiNSey
-	 +Q0ba9mwVhjsn/SNJzNY2sQzBzyG5ek9NKc7CI2mM2/DtJwNOgU6XutsAcRmdlxdtj
-	 RzGXeJYyef5KZ4wzYE09SIaLIR+zF9W399MqWpQw=
+	by mail.kernel.org (Postfix) with ESMTP id 85CBA206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEgXKDDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfKHQm4 (ORCPT
+        id S1726970AbfKHQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:42:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbfKHQm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:42:56 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B1F206A3;
-        Fri,  8 Nov 2019 16:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573231375;
-        bh=g4CoKvF3KBeAiTVPLjlckAUsjTuuIjtO+HohvgouYnY=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=0ZpsztU1FYRY6L52Ezgj7+jOOs1x/hVT/ozS92H5H+GQTKKKDb+rMwk7lVULhGsF/
-         dGkdS59Ii91Y5vgj+xTa/pyKyS5XkSwV6lSpK4251lQ1R6b0j49oYgNTuw3uUfeI3I
-         WaQv+j6fKwqgsZhzEUdOkSDt+Np7ZYDzDQDg98no=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 8 Nov 2019 11:43:42 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41432 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfKHQnl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:43:41 -0500
+Received: by mail-lf1-f67.google.com with SMTP id j14so4937655lfb.8;
+        Fri, 08 Nov 2019 08:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QQ9Okkt9tA9DcQ4nFpYeZ1WKHytWDSMkKTvTbeicM/E=;
+        b=WEgXKDDOlyqloOBhHSSpkydfNPJ03NP3InerMKtkGE7BGl9rgKG8ashzNF8/l1+yR0
+         H+IjxkCoWYJ1owLsaRCBPRQ6hocLxEmE0HkcSwMEwASexM4/dl5VKSLC0FZikE6TqJkq
+         svoSmD3NDUTcsq92uGofM9gTB8MIJeVhmNYzxeUdGf3kIl3ARzSZAMf3QX0GfY1Hww/3
+         09/PeZbkYQaefV5xpmNtyw/Kve4potPWEOl0cXRK2pZaXYLTZ2Il1aTPS3LdK1MWuGVU
+         LUcX3LcWpM+dk7dDV0X0pPfn8rZGUcgCDd7YfwqFmaGq663F7E3gT1oxUjG3XEF3FCH8
+         5Uug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QQ9Okkt9tA9DcQ4nFpYeZ1WKHytWDSMkKTvTbeicM/E=;
+        b=WNA3oWU5ZfJN5TcchMj/PjtBAES2VMAcnzTn67NeNbWMKunB8UbPPirmIDiR2Cgpty
+         A58CAtnLygszhDkBOyCDF48gjZCWnxy1JG4E9E9YdcaI/qsFlnwKYc5Lz8TWu2UaLDSo
+         +lrruAQJ/N3FgAffAyBBKT+9ivuptlZ8EEYeL6Yy/jY6uw8Vs6zwOc6NEZXVSacTHNrE
+         oVM0Psgf3TwgqfWnYtal2WfZ93m7gP1Sk9EDoKJ/nE+aUAwk9RuaID8+GtVRt6t1RZtg
+         l/k1aKPUyJj4B5vLSQ+ArNE59sxrExRfyNY5dCUaRbUSubxtmbuKRvFud8QH9EB40w8F
+         6x5w==
+X-Gm-Message-State: APjAAAVNIoc2DGWRoQPVAlj9DOS8/dv4phZiKSTw7ZHj9ZZhG7zR374o
+        vhjPDc8hWpNWmWXnj1GHKzO4eQRyWAs=
+X-Google-Smtp-Source: APXvYqyPGYgKX6sIBRZoLrk6RVsabIfXRiR0Rz/knooZTmYPnbXuSAVw6N4BvTqOogMFWgVCslX7rw==
+X-Received: by 2002:ac2:4248:: with SMTP id m8mr7247338lfl.94.1573231419472;
+        Fri, 08 Nov 2019 08:43:39 -0800 (PST)
+Received: from localhost.localdomain ([91.237.107.85])
+        by smtp.googlemail.com with ESMTPSA id a81sm3616844ljf.49.2019.11.08.08.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 08:43:38 -0800 (PST)
+From:   Leonid Maksymchuk <leonmaxx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
+        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
+        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
+        Leonid Maksymchuk <leonmaxx@gmail.com>
+Subject: [PATCH v4 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
+Date:   Fri,  8 Nov 2019 18:43:17 +0200
+Message-Id: <20191108164317.2874-1-leonmaxx@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CACPK8Xe7dmeVjQYObzOw9LdwxH3+1XTcU+RJOZo5C69j8d-yOg@mail.gmail.com>
-References: <20191010020725.3990-1-andrew@aj.id.au> <20191010020725.3990-2-andrew@aj.id.au> <CACPK8XcGgGsoLNpCccKPb-5bojQS4c5BePewwocc-z29On7Rjg@mail.gmail.com> <20191107230029.75ED72178F@mail.kernel.org> <CACPK8Xe7dmeVjQYObzOw9LdwxH3+1XTcU+RJOZo5C69j8d-yOg@mail.gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 08:42:54 -0800
-Message-Id: <20191108164255.44B1F206A3@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Joel Stanley (2019-11-08 03:29:41)
-> On Thu, 7 Nov 2019 at 23:00, Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Joel Stanley (2019-10-31 21:50:42)
-> > > Hi clock maintainers,
-> > >
-> > > On Thu, 10 Oct 2019 at 02:06, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > >
-> > > > The AST2600 has an explicit gate for the RMII RCLK for each of the =
-four
-> > > > MACs.
-> > > >
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > >
-> > > I needed this patch and the aspeed-clock.h one for the aspeed dts
-> > > tree, so I've put them in a branch called "aspeed-clk-for-v5.5" and
-> > > merged that into the aspeed tree. Could you merge that into the clock
-> > > tree when you get to merging these ones?
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git/log/?=
-h=3Daspeed-clk-for-v5.5
-> > >
-> >
-> > Can you send a pull request please?
->=20
-> Sure. Here you go. Let me know if you need it in a separate email.
->=20
-> The following changes since commit d8d9ad83a497f78edd4016df0919a49628dcaf=
-bc:
->=20
->   dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
-> (2019-11-01 15:01:18 +1030)
->=20
-> are available in the Git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git
-> tags/aspeed-5.5-clk
->=20
-> for you to fetch changes up to d8d9ad83a497f78edd4016df0919a49628dcafbc:
->=20
->   dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
-> (2019-11-01 15:01:18 +1030)
->=20
-> ----------------------------------------------------------------
-> ASPEED clock device tree bindings for 5.5
->=20
-> ----------------------------------------------------------------
+Hi,
 
-The diffstat got lost? Anyway, thanks! I pulled it into clk-next.
+this patch series adds support of ASUS TUF laptops on Ryzen CPUs to
+existing asus_wmi platform driver and also fixes minor bug.
+
+v2: fixed indentation.
+v3: patches 2/3 and 3/3 are refactored.
+v4: patch 2/3 are simplified.
+
+Leonid Maksymchuk (3):
+  asus_wmi: Fix return value of fan_boost_mode_store
+  asus_wmi: Support fan boost mode on FX505DY/FX705DY
+  asus_wmi: Set default fan boost mode to normal
+
+ drivers/platform/x86/asus-wmi.c            | 41 +++++++++++++++++-----
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 34 insertions(+), 8 deletions(-)
+
+-- 
+2.23.0
 
