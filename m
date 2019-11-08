@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A669FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54ED2FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6113321924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24462178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239395;
-	bh=KUogLKcEAM1Oo4j6K0X0LbBHYfizmBtH+lKey9kETMM=;
+	s=default; t=1573239398;
+	bh=OnSXf/TO5gzZ3Qt2oWZ815odtj/2blHs/uJeW0mdbrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETdr+wW6we3a2iA+ckW6GeHMAGjZGLM/eEbiRr0lEUHkL/PyDKmvvZkW0rGyY7Jvo
-	 8RAOaE+9wgW1LkO/K0pYoJ7tfoNo5yQzJ1nq31vdGeZ24tuCQtImMHVeeGLn4Ika2Q
-	 KXYSnndT+1eURTshOhXWaf+GqFJt4eRo41LVkN14=
+	b=qsMU3Sq/NmmGaswbxMtRnHbCEvrk2QPfw+UJCg4ENZHNS2lIerDVq4tj7jJhMl3MW
+	 39AIW0I8ev4L0d+HydFPUa/vluuVN1/l4/Cy0s4IMFV+wRYzj7Q9iB2RHVO/sCKuuQ
+	 pMdYO73nKqVmVIcY+UJu+yZY9e8moWH87B51DH1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbfKHS4e (ORCPT
+        id S1732062AbfKHS4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:56:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54092 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:56:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbfKHS4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:30 -0500
+        id S2388322AbfKHS4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79A0C20865;
-        Fri,  8 Nov 2019 18:56:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20A63214DB;
+        Fri,  8 Nov 2019 18:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239389;
-        bh=KUogLKcEAM1Oo4j6K0X0LbBHYfizmBtH+lKey9kETMM=;
+        s=default; t=1573239391;
+        bh=OnSXf/TO5gzZ3Qt2oWZ815odtj/2blHs/uJeW0mdbrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMtTbMnMClpMUu7uZYUwwT2Ke4gpVY8sF9AwW9gAgJsv/jaI2Rg+7MMF1/uXyQFwI
-         LRv2h5HXaj48YfzNQWmm1U0yS4B4um+JHU34g6myAT8RerVGyfCABYyEvRY4wPSnB0
-         nZ6oZb8WbM6TF+MiniIpItzEI8axVYvc7LXltb3o=
+        b=nEt4E2zmitVAy8t1ZQjK5vf88gyxdCFDr++HUjA3hpcoOtAuudHb5QyuBL6sYaUNw
+         2BfVW+dU3REzSXdmDwnTsSU8C67O302RmCI31A+HIHPj+qSga47bsUDn2rv3ALhC1W
+         UW0YkMHiOd6Dep4MZ+GRuNGcsBs74CkFqpdau+Eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 23/34] net: add READ_ONCE() annotation in __skb_wait_for_more_packets()
-Date:   Fri,  8 Nov 2019 19:50:30 +0100
-Message-Id: <20191108174643.872487561@linuxfoundation.org>
+Subject: [PATCH 4.9 24/34] net: dsa: fix switch tree list
+Date:   Fri,  8 Nov 2019 19:50:31 +0100
+Message-Id: <20191108174645.613968861@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
 References: <20191108174618.266472504@linuxfoundation.org>
@@ -60,79 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Vivien Didelot <vivien.didelot@gmail.com>
 
-[ Upstream commit 7c422d0ce97552dde4a97e6290de70ec6efb0fc6 ]
+[ Upstream commit 50c7d2ba9de20f60a2d527ad6928209ef67e4cdd ]
 
-__skb_wait_for_more_packets() can be called while other cpus
-can feed packets to the socket receive queue.
+If there are multiple switch trees on the device, only the last one
+will be listed, because the arguments of list_add_tail are swapped.
 
-KCSAN reported :
-
-BUG: KCSAN: data-race in __skb_wait_for_more_packets / __udp_enqueue_schedule_skb
-
-write to 0xffff888102e40b58 of 8 bytes by interrupt on cpu 0:
- __skb_insert include/linux/skbuff.h:1852 [inline]
- __skb_queue_before include/linux/skbuff.h:1958 [inline]
- __skb_queue_tail include/linux/skbuff.h:1991 [inline]
- __udp_enqueue_schedule_skb+0x2d7/0x410 net/ipv4/udp.c:1470
- __udp_queue_rcv_skb net/ipv4/udp.c:1940 [inline]
- udp_queue_rcv_one_skb+0x7bd/0xc70 net/ipv4/udp.c:2057
- udp_queue_rcv_skb+0xb5/0x400 net/ipv4/udp.c:2074
- udp_unicast_rcv_skb.isra.0+0x7e/0x1c0 net/ipv4/udp.c:2233
- __udp4_lib_rcv+0xa44/0x17c0 net/ipv4/udp.c:2300
- udp_rcv+0x2b/0x40 net/ipv4/udp.c:2470
- ip_protocol_deliver_rcu+0x4d/0x420 net/ipv4/ip_input.c:204
- ip_local_deliver_finish+0x110/0x140 net/ipv4/ip_input.c:231
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_local_deliver+0x133/0x210 net/ipv4/ip_input.c:252
- dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish+0x121/0x160 net/ipv4/ip_input.c:413
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_rcv+0x18f/0x1a0 net/ipv4/ip_input.c:523
- __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
- __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
- process_backlog+0x1d3/0x420 net/core/dev.c:5955
-
-read to 0xffff888102e40b58 of 8 bytes by task 13035 on cpu 1:
- __skb_wait_for_more_packets+0xfa/0x320 net/core/datagram.c:100
- __skb_recv_udp+0x374/0x500 net/ipv4/udp.c:1683
- udp_recvmsg+0xe1/0xb10 net/ipv4/udp.c:1712
- inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
- sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
- ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
- do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
- __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
- __do_sys_recvmmsg net/socket.c:2703 [inline]
- __se_sys_recvmmsg net/socket.c:2696 [inline]
- __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 13035 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
+Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/datagram.c |    2 +-
+ net/dsa/dsa2.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -96,7 +96,7 @@ int __skb_wait_for_more_packets(struct s
- 	if (error)
- 		goto out_err;
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -59,7 +59,7 @@ static struct dsa_switch_tree *dsa_add_d
+ 	dst->tree = tree;
+ 	dst->cpu_switch = -1;
+ 	INIT_LIST_HEAD(&dst->list);
+-	list_add_tail(&dsa_switch_trees, &dst->list);
++	list_add_tail(&dst->list, &dsa_switch_trees);
+ 	kref_init(&dst->refcount);
  
--	if (sk->sk_receive_queue.prev != skb)
-+	if (READ_ONCE(sk->sk_receive_queue.prev) != skb)
- 		goto out;
- 
- 	/* Socket shut down? */
+ 	return dst;
 
 
