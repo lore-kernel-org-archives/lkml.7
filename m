@@ -2,53 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F36FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F470C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBFA20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE8C20650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240594;
-	bh=vezJ62qKN7SM97dUKY4AMhuPYiu4Q4LvtGB+qGrNF5M=;
+	s=default; t=1573240599;
+	bh=+r78vgMnDR87npOWjtfsxJzphjSo8BM6zb8n59LRG3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjiP2fU4m8xRwPUb9rd+8MtuqyllscxG7V1m0sGO7yTu2VqZGdmsCvBorGAHpt2Xc
-	 UPng5K/xe3U9tRfuipetCgCxmA+YU/fA0jFK9G5Q9LiU59xUtwMRpWaH05AazerI09
-	 DrvwB39jhGhYf7CFpGxcCRFfTpiNcE8WrHZlKjfo=
+	b=yQvS9L5ObkiQDE/YJZ18tk/v7x9vxnD8U7imw2bdGlgkeOUcBmF1/NK+NB0es0tUw
+	 8+yt00LOO6BF6zmKm3tH+H13KHrJroprOyB+9Hy017v+BC8HSdMVzOG50W6gcE3QV0
+	 /uj8U+jz9AzRT0g2W4n5EfYyUwiPeF/EY9/l4JRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390639AbfKHTCp (ORCPT
+        id S1733032AbfKHTCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:02:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60426 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:02:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390600AbfKHTCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:02:42 -0500
+        id S1730279AbfKHTCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:02:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD11218AE;
-        Fri,  8 Nov 2019 19:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 214E92087E;
+        Fri,  8 Nov 2019 19:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239761;
-        bh=vezJ62qKN7SM97dUKY4AMhuPYiu4Q4LvtGB+qGrNF5M=;
+        s=default; t=1573239755;
+        bh=+r78vgMnDR87npOWjtfsxJzphjSo8BM6zb8n59LRG3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WpUv3v5hCx5RDOASgFkw2kMqAAQT5o9LKC+xU9lwyIZ9NoIz9iKDwG5afQtPprD18
-         /OhsQwxepKpMzMipOGwOcZpEqxKkQUkdSVqf8ZA9Q5/De2w3wUVzZMqzBLTWypP+Ut
-         LmwuuIyXaq9pr+iFBf4HfsnOi8go68RC5clQsD7E=
+        b=ppVPWOivZUxrxMZHEJV/cIegsfln0C/GVXUM1YRLXoSwqBtMIX/pTuRABpqWmZgmz
+         WQqU/Ir71ltkIjvOozvtgyfPxaNEVYvcI8oUn88vVZOOOmZXdRMTykgwDZfgQPKqAc
+         Vm+iEz8a4RZj6Guw8BBhLG89R/Zk2P8/YfQpwhIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 52/79] udp: fix data-race in udp_set_dev_scratch()
-Date:   Fri,  8 Nov 2019 19:50:32 +0100
-Message-Id: <20191108174815.485316010@linuxfoundation.org>
+        stable@vger.kernel.org, Alain Volmat <alain.volmat@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 33/79] i2c: stm32f7: remove warning when compiling with W=1
+Date:   Fri,  8 Nov 2019 19:50:13 +0100
+Message-Id: <20191108174803.970833444@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -61,102 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Alain Volmat <alain.volmat@st.com>
 
-[ Upstream commit a793183caa9afae907a0d7ddd2ffd57329369bf5 ]
+[ Upstream commit 348e46fbb4cdb2aead79aee1fd8bb25ec5fd25db ]
 
-KCSAN reported a data-race in udp_set_dev_scratch() [1]
+Remove the following warning:
 
-The issue here is that we must not write over skb fields
-if skb is shared. A similar issue has been fixed in commit
-89c22d8c3b27 ("net: Fix skb csum races when peeking")
+drivers/i2c/busses/i2c-stm32f7.c:315:
+warning: cannot understand function prototype:
+'struct stm32f7_i2c_spec i2c_specs[] =
 
-While we are at it, use a helper only dealing with
-udp_skb_scratch(skb)->csum_unnecessary, as this allows
-udp_set_dev_scratch() to be called once and thus inlined.
+Replace a comment starting with /** by simply /* to avoid having
+it interpreted as a kernel-doc comment.
 
-[1]
-BUG: KCSAN: data-race in udp_set_dev_scratch / udpv6_recvmsg
-
-write to 0xffff888120278317 of 1 bytes by task 10411 on cpu 1:
- udp_set_dev_scratch+0xea/0x200 net/ipv4/udp.c:1308
- __first_packet_length+0x147/0x420 net/ipv4/udp.c:1556
- first_packet_length+0x68/0x2a0 net/ipv4/udp.c:1579
- udp_poll+0xea/0x110 net/ipv4/udp.c:2720
- sock_poll+0xed/0x250 net/socket.c:1256
- vfs_poll include/linux/poll.h:90 [inline]
- do_select+0x7d0/0x1020 fs/select.c:534
- core_sys_select+0x381/0x550 fs/select.c:677
- do_pselect.constprop.0+0x11d/0x160 fs/select.c:759
- __do_sys_pselect6 fs/select.c:784 [inline]
- __se_sys_pselect6 fs/select.c:769 [inline]
- __x64_sys_pselect6+0x12e/0x170 fs/select.c:769
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-read to 0xffff888120278317 of 1 bytes by task 10413 on cpu 0:
- udp_skb_csum_unnecessary include/net/udp.h:358 [inline]
- udpv6_recvmsg+0x43e/0xe90 net/ipv6/udp.c:310
- inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
- sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
- ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
- do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
- __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
- __do_sys_recvmmsg net/socket.c:2703 [inline]
- __se_sys_recvmmsg net/socket.c:2696 [inline]
- __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 10413 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 2276f58ac589 ("udp: use a separate rx queue for packet reception")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/udp.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-stm32f7.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1270,6 +1270,20 @@ static void udp_set_dev_scratch(struct s
- 		scratch->_tsize_state |= UDP_SKB_IS_STATELESS;
- }
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 362b23505f214..f4e3613f9361b 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -297,7 +297,7 @@ struct stm32f7_i2c_dev {
+ 	bool use_dma;
+ };
  
-+static void udp_skb_csum_unnecessary_set(struct sk_buff *skb)
-+{
-+	/* We come here after udp_lib_checksum_complete() returned 0.
-+	 * This means that __skb_checksum_complete() might have
-+	 * set skb->csum_valid to 1.
-+	 * On 64bit platforms, we can set csum_unnecessary
-+	 * to true, but only if the skb is not shared.
-+	 */
-+#if BITS_PER_LONG == 64
-+	if (!skb_shared(skb))
-+		udp_skb_scratch(skb)->csum_unnecessary = true;
-+#endif
-+}
-+
- static int udp_skb_truesize(struct sk_buff *skb)
- {
- 	return udp_skb_scratch(skb)->_tsize_state & ~UDP_SKB_IS_STATELESS;
-@@ -1504,10 +1518,7 @@ static struct sk_buff *__first_packet_le
- 			*total += skb->truesize;
- 			kfree_skb(skb);
- 		} else {
--			/* the csum related bits could be changed, refresh
--			 * the scratch area
--			 */
--			udp_set_dev_scratch(skb);
-+			udp_skb_csum_unnecessary_set(skb);
- 			break;
- 		}
- 	}
+-/**
++/*
+  * All these values are coming from I2C Specification, Version 6.0, 4th of
+  * April 2014.
+  *
+-- 
+2.20.1
+
 
 
