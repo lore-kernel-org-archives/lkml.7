@@ -2,181 +2,91 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB128FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60096FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9284E20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:32:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="mTqgr/zo"
+	by mail.kernel.org (Postfix) with ESMTP id 36FCE20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbfKHUcP (ORCPT
+        id S1731422AbfKHUfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:32:15 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:51819 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbfKHUcO (ORCPT
+        Fri, 8 Nov 2019 15:35:12 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:52165 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbfKHUfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:32:14 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 7C2142335B;
-        Fri,  8 Nov 2019 21:32:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573245130;
-        bh=6OR+Z5KfeblJ083HHiSeWa7E3WTa5ngobt1H+ZARamA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mTqgr/zojO6QfmKK52aioToRdveSx81BkWNxzWlpWzbqO0A39kt9/PpRamxsOy4Wh
-         w8H02irm/xprzXQ38HU5sG30kBOqlYSokyWxvZr6AeqtehzJ2+UYtP+aHamUFwhJ5i
-         zc2/RHwqa+HtNqKv6zg2oWzfLdJ3G/YL9NScWQfM=
-From:   Michael Walle <michael@walle.cc>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2] ASoC: wm8904: configure sysclk/FLL automatically
-Date:   Fri,  8 Nov 2019 21:31:52 +0100
-Message-Id: <20191108203152.19098-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Fri, 8 Nov 2019 15:35:11 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MUXd0-1iKLFU3ITg-00QQen; Fri, 08 Nov 2019 21:35:00 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Deepa Dinamani <deepa.kernel@gmail.com>,
+        linux-alpha@vger.kernel.org, netdev@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 1/8] y2038: timex: remove incorrect time_t truncation
+Date:   Fri,  8 Nov 2019 21:34:24 +0100
+Message-Id: <20191108203435.112759-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191108203435.112759-1-arnd@arndb.de>
+References: <20191108203435.112759-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+X-Provags-ID: V03:K1:dsvYf++PaRS643RBIcfftXOiikOLND2cOaNKY9DSf4lXSBk9638
+ lhMQnUQ5oC+UdORdW39GRI2YOYmmzkdt2K8YdgnKGU+Q1xAfY/croquox+EBMHjxSXARGT9
+ 0KoXD79AZobQRGcB4BAfLqfv+dMyxMf9KaFtVcRIAA16T+1NEtuZVuDeIlASU8CyEkGCHNx
+ gAYJo1aZa8zydstxki2/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1nRjZ/tmDjg=:emR5zWF51M5/vEo+98Qgj5
+ lnbGKVBN8OwOj2FSuvwsPCgcN6LedIvlNOmNcBKcifHK40VgpKjAFw2tfBI9Pb9lOCisZHMlQ
+ UgYJBlUEX2GrQSQBuRRgLPsrsEFg8nAt5dl0UdiO2vrCaYoHrs3ssjTNh77iLW3qkjUfcPA/r
+ TLt2R1Ir5LhoMlH5kH9/p7N8FndtLd3Y3wyDbRThOuG7NzJp5DEiHgENEHoLEvpS4YW/kZSWM
+ 2R0R1JiGtePuEDlkNZQnnRvAem3cCKuFMhbk5lEvSQDO5xWR+rV1nnyq1taJX9Thu5smjAbjP
+ NiJLOb9M+SBxTVhQgzorOSfX7GDqlIZE6LLW2eRc/v7vNTLLWys2+qfw2zZLBLZtdQxMf9XRo
+ UNKNJR3sXpJnqnQJywDVKLKrnS6/+gv2+VL/xoQNcBoGDnZbjm2EKnxJVuZJ1MqSb4h8bpdD4
+ jVoo0Q3Jia5qgDYIJx4cqCmXe8SvOyVWNlI5xNnZSMQDVJwk3C+G9xeu4wGC6Y70VEI+Jq0uG
+ my9rYqeWWl/kYJKkQtupze2O70ykbmjRDmCCwcf0RJdp/bBkDWg96ROBzcZiPjuHi9yNkF8z8
+ 664Js3Dn+0KQ22oAb7M58v9laXjw1l1T0VxaaMLE/b3P6tydF0ciIRrcrLuJwqrRv+w6h6gme
+ GUnRujq4IU2xuU91uKfsvlGrbIcXJOOKhxgdkl4AZyUcb6TnYO9IIxlslvmpXVV+PSw6B2hXQ
+ DcSLQDJmcx9Qy66IRjuTUQ3HlGodY38IH5p3onsw70wnIIEZ01F+I9xFf+q4tZhwQ78OesHYu
+ m6wUEUrXwZ3xXgMfnYU8MPbmDMYVB5muevfSfy5ckxLrsP0w8XZ0rOPRQxffJLajGaSxb5YF6
+ by1mEgUmD5heT8jjdxbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a new mode WM8904_CLK_AUTO which automatically enables the FLL
-if a frequency different than the MCLK is set.
+A cast to 'time_t' was accidentally left in place during the
+conversion of __do_adjtimex() to 64-bit timestamps, so the
+resulting value is incorrectly truncated.
 
-These additions make the codec work with the simple-card driver in
-general and especially in systems where the MCLK doesn't match the
-required clock.
+Remove the cast so the 64-bit time gets propagated correctly.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
+Cc: stable@vger.kernel.org
+Fixes: ead25417f82e ("timex: use __kernel_timex internally")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-changes since v1:
- - replaced second clk_get_rate() with mclk_freq
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please note that the v1 patch might still be pending for moderator
-approval.
-
- sound/soc/codecs/wm8904.c | 72 ++++++++++++++++++++++++---------------
- sound/soc/codecs/wm8904.h |  1 +
- 2 files changed, 45 insertions(+), 28 deletions(-)
-
-diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
-index bcb3c9d5abf0..2a7d23a5daa8 100644
---- a/sound/soc/codecs/wm8904.c
-+++ b/sound/soc/codecs/wm8904.c
-@@ -1410,34 +1410,6 @@ static int wm8904_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 65eb796610dc..069ca78fb0bf 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -771,7 +771,7 @@ int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
+ 	/* fill PPS status fields */
+ 	pps_fill_timex(txc);
  
--
--static int wm8904_set_sysclk(struct snd_soc_dai *dai, int clk_id,
--			     unsigned int freq, int dir)
--{
--	struct snd_soc_component *component = dai->component;
--	struct wm8904_priv *priv = snd_soc_component_get_drvdata(component);
--
--	switch (clk_id) {
--	case WM8904_CLK_MCLK:
--		priv->sysclk_src = clk_id;
--		priv->mclk_rate = freq;
--		break;
--
--	case WM8904_CLK_FLL:
--		priv->sysclk_src = clk_id;
--		break;
--
--	default:
--		return -EINVAL;
--	}
--
--	dev_dbg(dai->dev, "Clock source is %d at %uHz\n", clk_id, freq);
--
--	wm8904_configure_clocking(component);
--
--	return 0;
--}
--
- static int wm8904_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- {
- 	struct snd_soc_component *component = dai->component;
-@@ -1824,6 +1796,50 @@ static int wm8904_set_fll(struct snd_soc_dai *dai, int fll_id, int source,
- 	return 0;
- }
- 
-+static int wm8904_set_sysclk(struct snd_soc_dai *dai, int clk_id,
-+			     unsigned int freq, int dir)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct wm8904_priv *priv = snd_soc_component_get_drvdata(component);
-+	unsigned long mclk_freq;
-+	int ret;
-+
-+	switch (clk_id) {
-+	case WM8904_CLK_AUTO:
-+		mclk_freq = clk_get_rate(priv->mclk);
-+		/* enable FLL if a different sysclk is desired */
-+		if (mclk_freq != freq) {
-+			priv->sysclk_src = WM8904_CLK_FLL;
-+			ret = wm8904_set_fll(dai, WM8904_FLL_MCLK,
-+					     WM8904_FLL_MCLK,
-+					     mclk_freq, freq);
-+			if (ret)
-+				return ret;
-+			break;
-+		}
-+		clk_id = WM8904_CLK_MCLK;
-+		/* fallthrough */
-+
-+	case WM8904_CLK_MCLK:
-+		priv->sysclk_src = clk_id;
-+		priv->mclk_rate = freq;
-+		break;
-+
-+	case WM8904_CLK_FLL:
-+		priv->sysclk_src = clk_id;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(dai->dev, "Clock source is %d at %uHz\n", clk_id, freq);
-+
-+	wm8904_configure_clocking(component);
-+
-+	return 0;
-+}
-+
- static int wm8904_digital_mute(struct snd_soc_dai *codec_dai, int mute)
- {
- 	struct snd_soc_component *component = codec_dai->component;
-diff --git a/sound/soc/codecs/wm8904.h b/sound/soc/codecs/wm8904.h
-index c1bca52f9927..de6340446b1f 100644
---- a/sound/soc/codecs/wm8904.h
-+++ b/sound/soc/codecs/wm8904.h
-@@ -10,6 +10,7 @@
- #ifndef _WM8904_H
- #define _WM8904_H
- 
-+#define WM8904_CLK_AUTO 0
- #define WM8904_CLK_MCLK 1
- #define WM8904_CLK_FLL  2
- 
+-	txc->time.tv_sec = (time_t)ts->tv_sec;
++	txc->time.tv_sec = ts->tv_sec;
+ 	txc->time.tv_usec = ts->tv_nsec;
+ 	if (!(time_status & STA_NANO))
+ 		txc->time.tv_usec = ts->tv_nsec / NSEC_PER_USEC;
 -- 
-2.20.1
+2.20.0
 
