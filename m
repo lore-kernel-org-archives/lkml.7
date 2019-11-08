@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A0AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D33C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495DD2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0C52085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214724;
-	bh=o6dh4ufHmInF4oLXS+RpJ8zetcuZ7OaJYzjhG7NToF8=;
+	s=default; t=1573214729;
+	bh=gCCvBVkAILAOcOS7/TzlqJcSoTC8xurVhYWiXU0UjGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpGSXUycd2jh7l3/ey/hrim0I+AhChfJbCtmMbqdMnlF3Y+XFK7IQPxKL6hhz8qzq
-	 UHj+PmwBLyEMZgAPULNu12X51mLTn1JTjpeghwQ4yOtVkmtCAA3lE7AhOrgiKJxz5g
-	 MVgCw8boli83k+wYp6xP14527Vo3pCZ0o0V+HGP4=
+	b=T2dkd4Kd3t4h8YrDDsb47d8sk5Vdju73kxmgLzUtE7LwhFIp0KoT1ulPHEONn8WNw
+	 aMJxCRT/sWGTv5piIa+pSAT02xxaw3Np7VTLeHAfUAPZOPhgdnQhX8/aTU1iWzeh5E
+	 gah6KUwqduKgGUXRXR3iF4S59wXkv4rD1AnXnm6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390211AbfKHMFW (ORCPT
+        id S2390440AbfKHMF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:05:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55102 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:05:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389528AbfKHLlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:37 -0500
+        id S2389491AbfKHLlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE70222CF;
-        Fri,  8 Nov 2019 11:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D2CF222C2;
+        Fri,  8 Nov 2019 11:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213297;
-        bh=o6dh4ufHmInF4oLXS+RpJ8zetcuZ7OaJYzjhG7NToF8=;
+        s=default; t=1573213290;
+        bh=gCCvBVkAILAOcOS7/TzlqJcSoTC8xurVhYWiXU0UjGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+s2hCH0Vktej00JmTku/tfkPVuB/nkmTpLgYpjNSkP3jcKfC8W5MG45r4vvosLSi
-         pmKPw+NNMBN7BR07gvAizgDCPzZxrVJdQEvMUvZy2IgUoG3CbCCrXLMfUB9XcJNMqb
-         y0xnZW9LcKjvquE7jeu8KKl6KR7fzopmRJwShPFk=
+        b=XRBnOn93+8ij/LRyCQmOBbgtEEj/neElg3XBcjfRfbizk8uHe+LRvxugRNAS+cd/R
+         Cw6PkYN1IvguYFvQvJ1RXoP6FyV393WUY5BvlMedlKYploSFuVgPTfMcHuZqsh+kON
+         kHLOtPSBUvw53o33hX2GhPoYHiXdb7IbKkm0/RW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 154/205] kprobes: Don't call BUG_ON() if there is a kprobe in use on free list
-Date:   Fri,  8 Nov 2019 06:37:01 -0500
-Message-Id: <20191108113752.12502-154-sashal@kernel.org>
+Cc:     George Kennedy <george.kennedy@oracle.com>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Mark Kanda <mark.kanda@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 150/205] scsi: sym53c8xx: fix NULL pointer dereference panic in sym_int_sir()
+Date:   Fri,  8 Nov 2019 06:36:57 -0500
+Message-Id: <20191108113752.12502-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -64,48 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: George Kennedy <george.kennedy@oracle.com>
 
-[ Upstream commit cbdd96f5586151e48317d90a403941ec23f12660 ]
+[ Upstream commit 288315e95264b6355e26609e9dec5dc4563d4ab0 ]
 
-Instead of calling BUG_ON(), if we find a kprobe in use on free kprobe
-list, just remove it from the list and keep it on kprobe hash list
-as same as other in-use kprobes.
+sym_int_sir() in sym_hipd.c does not check the command pointer for NULL before
+using it in debug message prints.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/153666126882.21306.10738207224288507996.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Suggested-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Acked-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/sym53c8xx_2/sym_hipd.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index b8efca9dc2cbb..aed90788db5c1 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -544,8 +544,14 @@ static void do_free_cleaned_kprobes(void)
- 	struct optimized_kprobe *op, *tmp;
- 
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
--		BUG_ON(!kprobe_unused(&op->kp));
- 		list_del_init(&op->list);
-+		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
-+			/*
-+			 * This must not happen, but if there is a kprobe
-+			 * still in use, keep it on kprobes hash list.
-+			 */
-+			continue;
-+		}
- 		free_aggr_kprobe(&op->kp);
- 	}
+diff --git a/drivers/scsi/sym53c8xx_2/sym_hipd.c b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+index bd3f6e2d68344..0a2a54517b151 100644
+--- a/drivers/scsi/sym53c8xx_2/sym_hipd.c
++++ b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+@@ -4370,6 +4370,13 @@ static void sym_nego_rejected(struct sym_hcb *np, struct sym_tcb *tp, struct sym
+ 	OUTB(np, HS_PRT, HS_BUSY);
  }
+ 
++#define sym_printk(lvl, tp, cp, fmt, v...) do { \
++	if (cp)							\
++		scmd_printk(lvl, cp->cmd, fmt, ##v);		\
++	else							\
++		starget_printk(lvl, tp->starget, fmt, ##v);	\
++} while (0)
++
+ /*
+  *  chip exception handler for programmed interrupts.
+  */
+@@ -4415,7 +4422,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  been selected with ATN.  We do not want to handle that.
+ 	 */
+ 	case SIR_SEL_ATN_NO_MSG_OUT:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG OUT phase after selection with ATN\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4423,7 +4430,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  having reselected the initiator.
+ 	 */
+ 	case SIR_RESEL_NO_MSG_IN:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG IN phase after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4431,7 +4438,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  an IDENTIFY.
+ 	 */
+ 	case SIR_RESEL_NO_IDENTIFY:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No IDENTIFY after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4460,7 +4467,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	case SIR_RESEL_ABORTED:
+ 		np->lastmsg = np->msgout[0];
+ 		np->msgout[0] = M_NOOP;
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 			"message %x sent on bad reselection\n", np->lastmsg);
+ 		goto out;
+ 	/*
 -- 
 2.20.1
 
