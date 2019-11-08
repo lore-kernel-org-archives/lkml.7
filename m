@@ -2,78 +2,122 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FDEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBF6C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B09F21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573228766;
-	bh=rqwT9BQ1DVff39lbNrzTZleYAcmxMaVgwzFVC5pLXV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fXwEiSArh9ffKL78A6tJZhM8TDfTfE/qmFIseL1EN6xZP8BEPnbw+KI73mYfFi9X8
-	 u7TjuoSlKrtNdKQZ6xUNR5STn0sXV1S1lYwcDavEBNTW8prjncFBkzA1XGBfLwgEa9
-	 ZvErbRd0SVNkDUtZYWzMHUb7JbRjcHlGfIHbgrCg=
+	by mail.kernel.org (Postfix) with ESMTP id 5269E215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:59:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3EhIS0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfKHP7Z (ORCPT
+        id S1727680AbfKHP72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:59:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbfKHP7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:59:25 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB01215EA;
-        Fri,  8 Nov 2019 15:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573228764;
-        bh=rqwT9BQ1DVff39lbNrzTZleYAcmxMaVgwzFVC5pLXV8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QUaNgS0S9E70lxzjDwlRg72D9zNDhn+HbuG6roCKuNR2qLw2l77CZ81hdlDgm3qLy
-         ltqLwGb2t3Smh4hBsV9hG20C7aSgO6UCAEXhsvnWlO53fixj4o+L7k91e4RiRwLvLN
-         Tf7GeXaRllOD7It17rsQPVPaJmz/BpikCOoMcbvI=
-Date:   Fri, 8 Nov 2019 15:59:19 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andreyknvl@google.com, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
- to malformed USB descriptors
-Message-ID: <20191108155918.GA20866@willie-the-truck>
-References: <20191108154838.21487-1-will@kernel.org>
- <20191108155503.GB15731@pendragon.ideasonboard.com>
+        Fri, 8 Nov 2019 10:59:28 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52171 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbfKHP70 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 10:59:26 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q70so6707216wme.1;
+        Fri, 08 Nov 2019 07:59:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Eu4oX7xYfa5MEOO1wKRiehoOBepBzuAtMWUC++GMKtE=;
+        b=O3EhIS0N4Mze/93XT+emgHlgTwiEdn9OmkMPFV2qdEc5qMhzCvrwLQPPJgS33bfyI1
+         IcipeV0LpTcRCXghFTvpyrjHpYWt8ifpiY1XJZaUhGkxoz8APXsGEnCeNzVt5JvRzZm9
+         P9L41Cwd+ChvKUppQJV7pCqMw9hyWjRiYUFhqS9og7Ex1qzkeS0AlpFTrfV/DZCCyc3h
+         pCqCt6vgCDSLQsOuhPTMUohx8By7pbJQ58YK86z6TstqwRKzjsWe/F3A8VPIdSPQAW4F
+         17Mjyj04SvXeusPbrkr7yy54QfEScGG2XWE2kkqa5TIVMPK8NTSysc13Fsx8eWW8myKV
+         nTLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Eu4oX7xYfa5MEOO1wKRiehoOBepBzuAtMWUC++GMKtE=;
+        b=YCceqBsTiuoKpeHP5+rtACMKySqiEEU7YbkTYWu5Go0TmJBulrgRul9Oa9boOA+aED
+         qY/bubEEjFDCOIH2VgFEW0zs/Prcx0AKN1k3uQtoD3GGZbeWD5PPiAAKu+aLBA0oMF6h
+         sPE/GIO83lkhtLk1uznGXTPf4DaG9hILwBgmou2CizLR+7H/MntJ7iLLrY7rZfnBZ7h5
+         dSEEn0zPPKG7DHzOpB+//m26i9UrJtNex0R+EE2E/FBYK9XudSRp1w3IqfCYXyZEeA/W
+         j82fMlY/eNoe64LPijXDC5TbwQnuraooxHL1BCcZpBHnT81t1SiRU4GQg6QI3zgAAM2D
+         /0Fg==
+X-Gm-Message-State: APjAAAXgMQSQKWX+49wACgwF66WQhmAIxLvsl2fuH290CqsxSC0D8cCh
+        qeBfvUUcyQ40yyQ5c+yQ549Gb3mGNKXb0xp494k=
+X-Google-Smtp-Source: APXvYqyEmUfcU1PW2fm96T31Va0NOmni7iNU//QiUgaoi1CjjVsFn1p8BeZm43843cv7FWTvU9yhl3zmTMCNsup0ZQ0=
+X-Received: by 2002:a1c:790b:: with SMTP id l11mr9302935wme.127.1573228764346;
+ Fri, 08 Nov 2019 07:59:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108155503.GB15731@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191108163110.32c19752@canb.auug.org.au>
+In-Reply-To: <20191108163110.32c19752@canb.auug.org.au>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 8 Nov 2019 10:59:12 -0500
+Message-ID: <CADnq5_M3dMPm3vr9xV1wK2bHJs123nG39z3sbxkBdWdonmVjPA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the amdgpu tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On Fri, Nov 8, 2019 at 12:31 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the amdgpu tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+>
+> In file included from <command-line>:
+> include/drm/gpu_scheduler.h:98:21: error: field 'entity_idle' has incomplete type
+>    98 |  struct completion  entity_idle;
+>       |                     ^~~~~~~~~~~
+>
+> followed by lots of similar errors.
+>
+> Caused by commit
+>
+>   83a7772ba223 ("drm/sched: Use completion to wait for sched->thread idle v2.")
+>
+> I added the following patch for today.
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 8 Nov 2019 16:21:32 +1100
+> Subject: [PATCH] drm/sched: struct completion requires linux/completion.h
+>  inclusion
+>
+> Fixes: 83a7772ba223 ("drm/sched: Use completion to wait for sched->thread idle v2.")
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
-> I'm sorry for the delay, and will have to ask you to be a bit more
-> patient I'm afraid. I will leave tomorrow for a week without computer
-> access and will only be able to go through my backlog when I will be
-> back on the 17th.
+Applied.  Thanks!
 
-Ok, thanks for letting me know. I'll poke you again when you're back if
-I don't hear anything -- I haven't actually changed the patch for ages,
-since I don't think it needs further work [1].
+Alex
 
-Will
-
-[1] https://lore.kernel.org/linux-media/20191007162709.3vrtbcpoymmnqikl@willie-the-truck/
+> ---
+>  include/drm/gpu_scheduler.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+> index 6619d2ac6fa3..684692a8ed76 100644
+> --- a/include/drm/gpu_scheduler.h
+> +++ b/include/drm/gpu_scheduler.h
+> @@ -26,6 +26,7 @@
+>
+>  #include <drm/spsc_queue.h>
+>  #include <linux/dma-fence.h>
+> +#include <linux/completion.h>
+>
+>  #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
+>
+> --
+> Cheers,
+> Stephen Rothwell
