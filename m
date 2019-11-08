@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532E1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EFEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBAF207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774AE207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214104;
-	bh=7fjEwiSTXkaGr+C2UuO1PVeK6otW8t2730r5OGPfeSI=;
+	s=default; t=1573214110;
+	bh=BPCOPpeQbZWj52xinWEfuf+g4VQnSwbdAi1/ET2hRTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ek1apkCnzzoFvKcmGGj2V/pf6OIE+PEau8UFSl7GBP7pNpE/1EzJKxgT2B7JQHsRX
-	 VS3CHItJfTPLxC8zPPTfJyeBSH1LukrKUkv/VFOsfd0TCH2Es9ibFyYYP1YBgT55Ot
-	 k/8s/tH/pD7nnBiB5P6w65cfRjFk+1tpGLTEoUhs=
+	b=N9SEPBKelOVg7/+4RuqJ23VRM0QJPbm9TZemnDIFXMz7VMZyENfSzGN7Ggyo9lj7g
+	 NCD0fnzob8UWWOO43oaJdoFmKZ4tAD2wuHEH7xuQzLe8s6KGX0/QovuUZ5/z6mf+JF
+	 z4MwakuYR/bHfVTxJTbdKBzwUMXQ6AhcqB8vsAeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391171AbfKHLzC (ORCPT
+        id S2391396AbfKHLzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:55:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33690 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:55:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391258AbfKHLqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387856AbfKHLqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 06:46:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8FC2245B;
-        Fri,  8 Nov 2019 11:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5035F222C2;
+        Fri,  8 Nov 2019 11:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213566;
-        bh=7fjEwiSTXkaGr+C2UuO1PVeK6otW8t2730r5OGPfeSI=;
+        s=default; t=1573213565;
+        bh=BPCOPpeQbZWj52xinWEfuf+g4VQnSwbdAi1/ET2hRTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRWiMpbMG2ajNh3pRDDsW5wm5/xHfMKNulRx+BnX3Fxo2J7OG3mjQ/eRgM7ESM6vg
-         haHpv4FAXcI3Qe/CHnJzFIaz/0N65ZHf0DW1z95Vq19w7VaCMfkSv8RDzVaHfjuZDe
-         GsmSzborbqPhUZnQC6m453zoCLoMD2KGwB5i7j3Y=
+        b=lN8zU55c+R3rQYIYzj7hUglWdvSdIJhms82WagUI+w3HcxRbrAPScO+v9lLV2unpR
+         gUQLdUOiSJzJSAk8g1fW6ocky4omFNocYPM+iTuxMXfjJF9gVeihATSLIhFLCAnzeR
+         YlU5JH8Rq5vLM2jvdzfbcrBYG+ZKaJg0TxRzNNdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mitch Williams <mitch.a.williams@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/64] i40e: use correct length for strncpy
-Date:   Fri,  8 Nov 2019 06:44:55 -0500
-Message-Id: <20191108114545.15351-14-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/64] ARM: dts: exynos: Fix regulators configuration on Peach Pi/Pit Chromebooks
+Date:   Fri,  8 Nov 2019 06:44:54 -0500
+Message-Id: <20191108114545.15351-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,36 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mitch Williams <mitch.a.williams@intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 7eb74ff891b4e94b8bac48f648a21e4b94ddee64 ]
+[ Upstream commit f8f3b7fc21b1cb59385b780acd9b9a26d04cb7b2 ]
 
-Caught by GCC 8. When we provide a length for strncpy, we should not
-include the terminating null. So we must tell it one less than the size
-of the destination buffer.
+Regulators, which are marked as 'on-in-suspend' seems to be critical for
+board operation, thus they must not be disabled anytime. This can be
+only assured by marking them as 'always-on', because otherwise some
+actions of their clients might result in turning them off. This patch
+restores suspend/resume operation on Peach-Pit Chromebook board. It
+partially reverts 'always-on' property removal done by the commit
+mentioned in the Fixes tag.
 
-Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 665c441eea3d ("ARM: dts: exynos: Remove unneded always-on for regulators on Peach boards")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_ptp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 3 +++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ptp.c b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
-index f1feceab758a5..41cbcb0ac2d94 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ptp.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
-@@ -604,7 +604,8 @@ static long i40e_ptp_create_clock(struct i40e_pf *pf)
- 	if (!IS_ERR_OR_NULL(pf->ptp_clock))
- 		return 0;
- 
--	strncpy(pf->ptp_caps.name, i40e_driver_name, sizeof(pf->ptp_caps.name));
-+	strncpy(pf->ptp_caps.name, i40e_driver_name,
-+		sizeof(pf->ptp_caps.name) - 1);
- 	pf->ptp_caps.owner = THIS_MODULE;
- 	pf->ptp_caps.max_adj = 999999999;
- 	pf->ptp_caps.n_ext_ts = 0;
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 8b754ae8c8f7d..c9d379b1a1669 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -302,6 +302,7 @@
+ 				regulator-name = "vdd_1v35";
+ 				regulator-min-microvolt = <1350000>;
+ 				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -323,6 +324,7 @@
+ 				regulator-name = "vdd_2v";
+ 				regulator-min-microvolt = <2000000>;
+ 				regulator-max-microvolt = <2000000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -333,6 +335,7 @@
+ 				regulator-name = "vdd_1v8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 1f90df2d7ecd8..ae58b8d6f6144 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -302,6 +302,7 @@
+ 				regulator-name = "vdd_1v35";
+ 				regulator-min-microvolt = <1350000>;
+ 				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -323,6 +324,7 @@
+ 				regulator-name = "vdd_2v";
+ 				regulator-min-microvolt = <2000000>;
+ 				regulator-max-microvolt = <2000000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -333,6 +335,7 @@
+ 				regulator-name = "vdd_1v8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
 -- 
 2.20.1
 
