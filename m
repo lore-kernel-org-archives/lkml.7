@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B830BFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78956FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8619C207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E362084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214264;
-	bh=+tsNtYF+z2Lyp9tPCd2Dr0PqAGfSfurgQujhAXNneP8=;
+	s=default; t=1573214269;
+	bh=4BlJTgCIHYa86nRJU6GQNdjkNoCpN8bYhMvm2xuHntA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fyAv2WL0h9tn9vNn77W8LBPYRDeNXfJWjD9ZulQ0F6af6E4Ver3HlgbtBoCASEacl
-	 xkayb4r6OQq62pG91sy566mvGmiTeo0RCRqkHRLB1wSLjMn3rjYlGSF/FlrcYid6Kq
-	 snfoHcucUIeVUW4w6KSoIhoeklobatJsRxa8rKsU=
+	b=CTAqqzfPDlZ7zSGcrMhUFBEq0h+zcvb+F/23+kOgaSzjzasjZ3Cuc5g71U754Bi/R
+	 YWG3h5dg6G0d1MZd5HuBJjtxuZtn1+ItNn/hup98LrMvYngZ9+bTnr9ADdK7ZL4+Bs
+	 K1I6NBaoiMY4KJ4+xa3LnsnYXtHSmT3kyNE3knz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390687AbfKHL5n (ORCPT
+        id S2391220AbfKHL5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:57:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60154 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:57:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390999AbfKHLpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:02 -0500
+        id S2390982AbfKHLpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0224A222C5;
-        Fri,  8 Nov 2019 11:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49D872246A;
+        Fri,  8 Nov 2019 11:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213501;
-        bh=+tsNtYF+z2Lyp9tPCd2Dr0PqAGfSfurgQujhAXNneP8=;
+        s=default; t=1573213499;
+        bh=4BlJTgCIHYa86nRJU6GQNdjkNoCpN8bYhMvm2xuHntA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kjA6NXjQrSqtmXs+4lsRmkylE8AytpjGmK30728qeFnRuRJCIe5grggi00wM99rS/
-         gLbnzEGh9MyAB1s3vB1pCK03LPteAF/7LL/JtZ0ONj7QlAKD1OGDJdkjOvWuY0CtFN
-         5D79t2v7hme0T/73hBLNWcLTAbKk+DrqdOGilN2A=
+        b=IswJPLsOOM0ngF8YLUyW6zkJXBtjj1AEmm8cek5shdQ+9tSXDTA11fELmVxpKeTlf
+         20fbSWFRAzPmEVm0QZCCS2dwg+kIB2hjL8nJmt3EmpPIsYMZuR0MiDAwt+s66VX3kw
+         gaX11euX+x61fje+H1MavmchS64jNWqyK48yy2v4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 078/103] nvmem: core: return error code instead of NULL from nvmem_device_get
-Date:   Fri,  8 Nov 2019 06:42:43 -0500
-Message-Id: <20191108114310.14363-78-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 076/103] kprobes: Don't call BUG_ON() if there is a kprobe in use on free list
+Date:   Fri,  8 Nov 2019 06:42:41 -0500
+Message-Id: <20191108114310.14363-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -60,33 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit ca6ac25cecf0e740d7cc8e03e0ebbf8acbeca3df ]
+[ Upstream commit cbdd96f5586151e48317d90a403941ec23f12660 ]
 
-nvmem_device_get() should return ERR_PTR() on error or valid pointer
-on success, but one of the code path seems to return NULL, so fix it.
+Instead of calling BUG_ON(), if we find a kprobe in use on free kprobe
+list, just remove it from the list and keep it on kprobe hash list
+as same as other in-use kprobes.
 
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/153666126882.21306.10738207224288507996.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/kprobes.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index b414d9d207d45..08b171731664e 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -617,7 +617,7 @@ static struct nvmem_device *nvmem_find(const char *name)
- 	d = bus_find_device(&nvmem_bus_type, NULL, (void *)name, nvmem_match);
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index f7a4602a76f98..d0fe20a5475f7 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -544,8 +544,14 @@ static void do_free_cleaned_kprobes(void)
+ 	struct optimized_kprobe *op, *tmp;
  
- 	if (!d)
--		return NULL;
-+		return ERR_PTR(-ENOENT);
- 
- 	return to_nvmem_device(d);
+ 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+-		BUG_ON(!kprobe_unused(&op->kp));
+ 		list_del_init(&op->list);
++		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
++			/*
++			 * This must not happen, but if there is a kprobe
++			 * still in use, keep it on kprobes hash list.
++			 */
++			continue;
++		}
+ 		free_aggr_kprobe(&op->kp);
+ 	}
  }
 -- 
 2.20.1
