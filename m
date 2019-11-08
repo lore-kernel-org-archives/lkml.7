@@ -2,255 +2,164 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67EBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97909C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F33B215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573209070;
-	bh=kKLG2JES5cLuDs5ImLZ5AHAKe9atzMaG4BvyezuK1aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bww7oet2TArrchSGTR+yUlyS6FV/GcBeaI8Bh8A5JAJx5jnVSX6IgQvN3dRYrRS8G
-	 Tw8o9o5fiyPtTy9TES/1XmdPPPIk5ftMT3jj4Yn1JICTs3HmPw2BR8PopJA6QQ0opi
-	 tcbAM5Y+ccvJzglUkiQcE3B1pD2ye1LydmQUNEkg=
+	by mail.kernel.org (Postfix) with ESMTP id 72D0C215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbfKHKbJ (ORCPT
+        id S1731476AbfKHKbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:31:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49712 "EHLO mx1.suse.de"
+        Fri, 8 Nov 2019 05:31:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50122 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726149AbfKHKbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:31:09 -0500
+        id S1726149AbfKHKbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:31:50 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D6F3BB178;
-        Fri,  8 Nov 2019 10:31:03 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 11:31:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, yuqi jin <jinyuqi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
-Message-ID: <20191108103102.GF15658@dhcp22.suse.cz>
-References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
+        by mx1.suse.de (Postfix) with ESMTP id 77AB0B295;
+        Fri,  8 Nov 2019 10:31:48 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 0C37E1E4331; Fri,  8 Nov 2019 11:31:48 +0100 (CET)
+Date:   Fri, 8 Nov 2019 11:31:48 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     syzbot <syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com>
+Cc:     jack@suse.cz, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mbobrowski@mbobrowski.org,
+        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu, viro@zeniv.linux.org.uk
+Subject: Re: WARNING in iov_iter_pipe
+Message-ID: <20191108103148.GE20863@quack2.suse.cz>
+References: <000000000000d60aa50596c63063@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
+In-Reply-To: <000000000000d60aa50596c63063@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This changelog looks better, thanks! I still have some questions though.
-Btw. cpumask_local_spread is used by the networking code but I do not
-see net guys involved (Cc netdev)
+Hi!
 
-On Thu 07-11-19 09:44:08, Shaokun Zhang wrote:
-> From: yuqi jin <jinyuqi@huawei.com>
+On Thu 07-11-19 10:54:10, syzbot wrote:
+> syzbot found the following crash on:
 > 
-> In the multi-processors and NUMA system, I/O driver will find cpu cores
-> that which shall be bound IRQ. When cpu cores in the local numa have
-> been used, it is better to find the node closest to the local numa node,
-> instead of choosing any online cpu immediately.
+> HEAD commit:    c68c5373 Add linux-next specific files for 20191107
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13d6bcfce00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
+> dashboard link: https://syzkaller.appspot.com/bug?extid=991400e8eba7e00a26e1
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1529829ae00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a55c0ce00000
 > 
-> On Huawei Kunpeng 920 server, there are 4 NUMA node(0 -3) in the 2-cpu
-> system(0 - 1).
-
-Please send a topology of this server (numactl -H).
-
-> We perform PS (parameter server) business test, the
-> behavior of the service is that the client initiates a request through
-> the network card, the server responds to the request after calculation. 
-
-Is the benchmark any ublicly available?
-
-> When two PS processes run on node2 and node3 separately and the
-> network card is located on 'node2' which is in cpu1, the performance
-> of node2 (26W QPS) and node3 (22W QPS) was different.
-> It is better that the NIC queues are bound to the cpu1 cores in turn,
-> then XPS will also be properly initialized, while cpumask_local_spread
-> only considers the local node. When the number of NIC queues exceeds
-> the number of cores in the local node, it returns to the online core
-> directly. So when PS runs on node3 sending a calculated request,
-> the performance is not as good as the node2. It is considered that
-> the NIC and other I/O devices shall initialize the interrupt binding,
-> if the cores of the local node are used up, it is reasonable to return
-> the node closest to it.
-
-Can you post cpu affinities before and after this patch?
-
-> Let's optimize it and find the nearest node through NUMA distance for the
-> non-local NUMA nodes. The performance will be better if it return the
-> nearest node than the random node.
+> The bug was bisected to:
 > 
-> After this patch, the performance of the node3 is the same as node2
-> that is 26W QPS when the network card is still in 'node2'. Since it will
-> return the closest non-local NUMA code rather than random node, it is no
-> harm to others at least.
+> commit b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
+> Author: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+> Date:   Tue Nov 5 12:01:37 2019 +0000
+> 
+>     ext4: introduce direct I/O read using iomap infrastructure
 
-It would be also nice to explain why the current implementation hasn't
-taken the path your have chosen. Was it a simplicity or is there a more
-fundamental reason? Is there any risk that existing users would regress?
-Preferring cpus from the local socket which is what you aim for sounds
-like a logical thing to do so I am wondering why this hasn't been
-considered.
+Hum, interesting and from the first looks the problem looks real.
+Deciphered reproducer is:
 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: yuqi jin <jinyuqi@huawei.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+int fd0 = open("./file0", O_RDWR | O_CREAT | O_EXCL | O_DIRECT, 0);
+int fd1 = open("./file0, O_RDONLY);
+write(fd0, "some_data...", 512);
+sendfile(fd0, fd1, NULL, 0x7fffffa7);
+  -> this is interesting as it will result in reading data from 'file0' at
+     offset X with buffered read and writing them with direct write to
+     offset X+512. So this way we'll grow the file up to those ~2GB in
+     512-byte chunks.
+- not sure if we ever get there but the remainder of the reproducer is:
+fd2 = open("./file0", O_RDWR | O_CREAT | O_NOATIME | O_SYNC, 0);
+sendfile(fd2, fd0, NULL, 0xffffffff)
+  -> doesn't seem too interesting as fd0 is at EOF so this shouldn't do
+     anything.
+
+Matthew, can you have a look?
+
+								Honza
+
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1176cffae00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1376cffae00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1576cffae00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com
+> Fixes: b1b4705d54ab ("ext4: introduce direct I/O read using iomap
+> infrastructure")
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 8715 at lib/iov_iter.c:1162 iov_iter_pipe+0x25b/0x2f0
+> lib/iov_iter.c:1162
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 8715 Comm: syz-executor719 Not tainted 5.4.0-rc6-next-20191107
+> #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x197/0x210 lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:221
+>  __warn.cold+0x2f/0x35 kernel/panic.c:582
+>  report_bug+0x289/0x300 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:iov_iter_pipe+0x25b/0x2f0 lib/iov_iter.c:1162
+> Code: 83 c0 03 38 d0 7c 04 84 d2 75 33 44 89 63 24 48 83 c4 10 5b 41 5c 41
+> 5d 41 5e 41 5f 5d c3 e8 ac ba 2e fe 0f 0b e8 a5 ba 2e fe <0f> 0b e9 53 fe ff
+> ff 4c 89 f7 e8 46 e5 6a fe e9 f5 fd ff ff e8 dc
+> RSP: 0018:ffff8880a0b4f988 EFLAGS: 00010293
+> RAX: ffff88808f1602c0 RBX: ffff8880a0b4fa18 RCX: ffffffff8344ac89
+> RDX: 0000000000000000 RSI: ffffffff8344ae3b RDI: 0000000000000004
+> RBP: ffff8880a0b4f9c0 R08: ffff88808f1602c0 R09: 0000000000000000
+> R10: fffffbfff1390168 R11: ffffffff89c80b47 R12: ffff88808f121c00
+> R13: 0000000000000010 R14: ffff88808f121cc8 R15: ffff88808f121cd0
+>  generic_file_splice_read+0xa7/0x800 fs/splice.c:303
+>  do_splice_to+0x127/0x180 fs/splice.c:877
+>  splice_direct_to_actor+0x2d3/0x970 fs/splice.c:955
+>  do_splice_direct+0x1da/0x2a0 fs/splice.c:1064
+>  do_sendfile+0x597/0xd00 fs/read_write.c:1464
+>  __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+>  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+>  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+>  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x446969
+> Code: e8 4c b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f05c41b8ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+> RAX: ffffffffffffffda RBX: 00000000006dbc58 RCX: 0000000000446969
+> RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000005
+> RBP: 00000000006dbc50 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00000000ffffffff R11: 0000000000000246 R12: 00000000006dbc5c
+> R13: 00007fffb77353df R14: 00007f05c41b99c0 R15: 20c49ba5e353f7cf
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
 > ---
-> ChangeLog from v2:
->     1. Change the variables as static and use spinlock to protect;
->     2. Give more explantation on test and performance;
->  lib/cpumask.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 90 insertions(+), 12 deletions(-)
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
 > 
-> diff --git a/lib/cpumask.c b/lib/cpumask.c
-> index 0cb672eb107c..b98a2256bc5a 100644
-> --- a/lib/cpumask.c
-> +++ b/lib/cpumask.c
-> @@ -6,6 +6,7 @@
->  #include <linux/export.h>
->  #include <linux/memblock.h>
->  #include <linux/numa.h>
-> +#include <linux/spinlock.h>
->  
->  /**
->   * cpumask_next - get the next cpu in a cpumask
-> @@ -192,18 +193,39 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->  }
->  #endif
->  
-> -/**
-> - * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-> - * @i: index number
-> - * @node: local numa_node
-> - *
-> - * This function selects an online CPU according to a numa aware policy;
-> - * local cpus are returned first, followed by non-local ones, then it
-> - * wraps around.
-> - *
-> - * It's not very efficient, but useful for setup.
-> - */
-> -unsigned int cpumask_local_spread(unsigned int i, int node)
-> +static void calc_node_distance(int *node_dist, int node)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < nr_node_ids; i++)
-> +		node_dist[i] = node_distance(node, i);
-> +}
-> +
-> +static int find_nearest_node(int *node_dist, bool *used)
-> +{
-> +	int i, min_dist = node_dist[0], node_id = -1;
-> +
-> +	/* Choose the first unused node to compare */
-> +	for (i = 0; i < nr_node_ids; i++) {
-> +		if (used[i] == 0) {
-> +			min_dist = node_dist[i];
-> +			node_id = i;
-> +			break;
-> +		}
-> +	}
-> +
-> +	/* Compare and return the nearest node */
-> +	for (i = 0; i < nr_node_ids; i++) {
-> +		if (node_dist[i] < min_dist && used[i] == 0) {
-> +			min_dist = node_dist[i];
-> +			node_id = i;
-> +		}
-> +	}
-> +
-> +	return node_id;
-> +}
-> +
-> +static unsigned int __cpumask_local_spread(unsigned int i, int node)
->  {
->  	int cpu;
->  
-> @@ -231,4 +253,60 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
->  	}
->  	BUG();
->  }
-> +
-> +static DEFINE_SPINLOCK(spread_lock);
-> +/**
-> + * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-> + * @i: index number
-> + * @node: local numa_node
-> + *
-> + * This function selects an online CPU according to a numa aware policy;
-> + * local cpus are returned first, followed by the nearest non-local ones,
-> + * then it wraps around.
-> + *
-> + * It's not very efficient, but useful for setup.
-> + */
-> +unsigned int cpumask_local_spread(unsigned int i, int node)
-> +{
-> +	static int node_dist[MAX_NUMNODES];
-> +	static bool used[MAX_NUMNODES];
-> +	unsigned long flags;
-> +	int cpu, j, id;
-> +
-> +	/* Wrap: we always want a cpu. */
-> +	i %= num_online_cpus();
-> +
-> +	if (node == NUMA_NO_NODE) {
-> +		for_each_cpu(cpu, cpu_online_mask)
-> +			if (i-- == 0)
-> +				return cpu;
-> +	} else {
-> +		if (nr_node_ids > MAX_NUMNODES)
-> +			return __cpumask_local_spread(i, node);
-> +
-> +		spin_lock_irqsave(&spread_lock, flags);
-> +		memset(used, 0, nr_node_ids * sizeof(bool));
-> +		calc_node_distance(node_dist, node);
-> +		for (j = 0; j < nr_node_ids; j++) {
-> +			id = find_nearest_node(node_dist, used);
-> +			if (id < 0)
-> +				break;
-> +
-> +			for_each_cpu_and(cpu, cpumask_of_node(id),
-> +					 cpu_online_mask)
-> +				if (i-- == 0) {
-> +					spin_unlock_irqrestore(&spread_lock,
-> +							       flags);
-> +					return cpu;
-> +				}
-> +			used[id] = 1;
-> +		}
-> +		spin_unlock_irqrestore(&spread_lock, flags);
-> +
-> +		for_each_cpu(cpu, cpu_online_mask)
-> +			if (i-- == 0)
-> +				return cpu;
-> +	}
-> +	BUG();
-> +}
->  EXPORT_SYMBOL(cpumask_local_spread);
-> -- 
-> 2.7.4
-
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 -- 
-Michal Hocko
-SUSE Labs
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
