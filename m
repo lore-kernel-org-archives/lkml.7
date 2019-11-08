@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B6CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C37AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C68221D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB92B222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239903;
-	bh=tCu4UpkpbyeBzVGi3Tlm180a+mIntA+FBp6LDTqaeD4=;
+	s=default; t=1573239907;
+	bh=RR+w7adT0I5Z7lEfES6VOEqvuA92c5DKM6Bs1k4wfsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WbafUyAsx/JsxfmnQP7iWhC4hczxbjBAfdhXoVLIThBdH7wY9BmEyd5igO+weibYy
-	 xa/eF1LJJSg4KCubQ/6RcthPydjp1UN/22aC+ojOCRZCzgLBsNU35a13SpOEa+dxkE
-	 8ZBIBboKJ9SdJI4S/3Hm7mZTNsgBbWwDkPHTedGE=
+	b=yFQ18EdRmL8vTX42hXXVVfADUsR0fRNyHyOMyjqpdB6Hxifgko0IWMNGbJ0Wv4YC1
+	 Zz0eWZViqcI+XqPRfaFbreGC3NL6xzBjqIqxSoqj9lN6Kajv/vOEhPLT0bSIy5NJ6o
+	 VfsDtEcrlbfOpOQ2+KGabCMdKmNfuGf7viKCIPnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbfKHTFB (ORCPT
+        id S2389501AbfKHTFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:05:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732512AbfKHTE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:04:56 -0500
+        id S2391097AbfKHTFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1EF9218AE;
-        Fri,  8 Nov 2019 19:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F992218AE;
+        Fri,  8 Nov 2019 19:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239895;
-        bh=tCu4UpkpbyeBzVGi3Tlm180a+mIntA+FBp6LDTqaeD4=;
+        s=default; t=1573239901;
+        bh=RR+w7adT0I5Z7lEfES6VOEqvuA92c5DKM6Bs1k4wfsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rya1hkL2x/fzikFDZYpnzT0MD/xh6IOG1HSnGNOnyfk+J0EQF2IugQ1myJ/04iY9x
-         4erIOu6ly7FUjYR8SOIRzzi6F5sIgxgP0ROotvnVyUkn0YTnI3WQC8sPZgKhWXcU9b
-         iLVbseAr/d9Qrei1TDTCXw00VOVtbslWX0Z+NKQg=
+        b=ptpl8u51RXbNB/Gxc3nZS2Re4ILJwIWTDGrmdBX4DtH0Xa9alyAkPI9znXE6mMQON
+         M2OJn+FlIYO+3i7ErNCl9ScgHGh9iZBFBiEnWmqR8glGuhi5IDw0QoMTOIMEValGE3
+         oWAtyRqNWXCcJeK2eZ+XAwpJ6flmGIUP0IBO/Owc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaska Uimonen <jaska.uimonen@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 019/140] ASoC: intel: bytcr_rt5651: add null check to support_button_press
-Date:   Fri,  8 Nov 2019 19:49:07 +0100
-Message-Id: <20191108174903.875052819@linuxfoundation.org>
+Subject: [PATCH 5.3 020/140] regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
+Date:   Fri,  8 Nov 2019 19:49:08 +0100
+Message-Id: <20191108174904.045931917@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,37 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaska Uimonen <jaska.uimonen@intel.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit 2bdf194e2030fce4f2e91300817338353414ab3b ]
+[ Upstream commit 1252b283141f03c3dffd139292c862cae10e174d ]
 
-When removing sof module the support_button_press function will oops
-because hp_jack pointer is not checked for NULL. So add a check to fix
-this.
+In function pfuze100_regulator_probe(), variable "val" could be
+initialized if regmap_read() fails. However, "val" is used to
+decide the control flow later in the if statement, which is
+potentially unsafe.
 
-Signed-off-by: Jaska Uimonen <jaska.uimonen@intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190927201408.925-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20190929170957.14775-1-yzhai003@ucr.edu
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5651.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/regulator/pfuze100-regulator.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt5651.c b/sound/soc/codecs/rt5651.c
-index 762595de956c1..c506c9305043e 100644
---- a/sound/soc/codecs/rt5651.c
-+++ b/sound/soc/codecs/rt5651.c
-@@ -1770,6 +1770,9 @@ static int rt5651_detect_headset(struct snd_soc_component *component)
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index df5df1c495adb..689537927f6f7 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -788,7 +788,13 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
  
- static bool rt5651_support_button_press(struct rt5651_priv *rt5651)
- {
-+	if (!rt5651->hp_jack)
-+		return false;
+ 		/* SW2~SW4 high bit check and modify the voltage value table */
+ 		if (i >= sw_check_start && i <= sw_check_end) {
+-			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
++			ret = regmap_read(pfuze_chip->regmap,
++						desc->vsel_reg, &val);
++			if (ret) {
++				dev_err(&client->dev, "Fails to read from the register.\n");
++				return ret;
++			}
 +
- 	/* Button press support only works with internal jack-detection */
- 	return (rt5651->hp_jack->status & SND_JACK_MICROPHONE) &&
- 		rt5651->gpiod_hp_det == NULL;
+ 			if (val & sw_hi) {
+ 				if (pfuze_chip->chip_id == PFUZE3000 ||
+ 					pfuze_chip->chip_id == PFUZE3001) {
 -- 
 2.20.1
 
