@@ -2,162 +2,234 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B3DFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167FCC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A75C12067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573241019;
-	bh=KaPdoENFKDZhKN0bLX0NXcGlAkPXtgUsd+ywwP28seg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bEzQetJS+0EDmKLX1AAAwGfUBnvwOE/e+0WLhtIQjs7WIYrxWvrTdpmApjdohiXS2
-	 uS3ilCYwFmtm6U+9sMUkxHaVY0aZ4fYxw1OmLRqqkVyrgcmXCh7hcy2RZw+Nn3zgjP
-	 QwuKSVl9gNGSTt8CyllFnleOfTKpkLNdJMhEQbt8=
+	by mail.kernel.org (Postfix) with ESMTP id D4D8A2067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixqLj5/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbfKHSyS (ORCPT
+        id S2388696AbfKHTXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:54:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732817AbfKHSyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:54:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 Nov 2019 14:23:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27259 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732371AbfKHSxd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:53:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573239211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9FwgetzyW8P48cGLGqGtD4GfxfTRlJoRiG4n2Dado8Y=;
+        b=ixqLj5/qZDjREgmFuroudJ1XpJJThA7TmnfmjNiz/xXh0D5/QaD8nmFy3+UxkfB05PebK8
+        4V7uYVbTuhfhpbR+9T2I29gTw3mIakBVJAROwWFQXv2UaGUtRlIbsOxuh+BPQ0z6bVV4jy
+        I5ul+Cx5+KjskUkgnJ9q5bBA0jM3bw4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-RDOnMV84OlO0Y-tz_4aX-A-1; Fri, 08 Nov 2019 13:53:28 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 942CF21D82;
-        Fri,  8 Nov 2019 18:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239252;
-        bh=KaPdoENFKDZhKN0bLX0NXcGlAkPXtgUsd+ywwP28seg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aSmaTcw8pEQX42JmhJFJ9tnlMj5y+Ffs4qUPXSqxhR7kqLY1Y+gazHkvj5oUXMECg
-         kCympkfWIp2HKugMsEfPSPHv66oVOaTlhHzEvn8vphnSNYCg3N8SmbjRdr1xqmleSD
-         3dw1jQxM8EZEOwyKSe+P91VLNw2NxxT/Xdp2vsHA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
-        <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "David A. Long" <dave.long@linaro.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 52/75] ARM: spectre-v1: fix syscall entry
-Date:   Fri,  8 Nov 2019 19:50:09 +0100
-Message-Id: <20191108174755.241299241@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
-References: <20191108174708.135680837@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C2C88017E0;
+        Fri,  8 Nov 2019 18:53:26 +0000 (UTC)
+Received: from rh2.redhat.com (ovpn-125-42.rdu2.redhat.com [10.10.125.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF6A1600C9;
+        Fri,  8 Nov 2019 18:53:24 +0000 (UTC)
+From:   Mike Christie <mchristi@redhat.com>
+To:     mhocko@kernel.org, david@fromorbit.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        martin@urbackup.org, Damien.LeMoal@wdc.com
+Cc:     Mike Christie <mchristi@redhat.com>
+Subject: [PATCH] Add prctl support for controlling mem reclaim V3
+Date:   Fri,  8 Nov 2019 12:53:19 -0600
+Message-Id: <20191108185319.9326-1-mchristi@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: RDOnMV84OlO0Y-tz_4aX-A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+amd nbd that have userspace components that can run in the IO path. For
+example, iscsi and nbd's userspace deamons may need to recreate a socket
+and/or send IO on it, and dm-multipath's daemon multipathd may need to
+send SG IO or read/write IO to figure out the state of paths and re-set
+them up.
 
-Commit 10573ae547c85b2c61417ff1a106cffbfceada35 upstream.
+In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+memalloc_*_save/restore functions to control the allocation behavior,
+but for userspace we would end up hitting an allocation that ended up
+writing data back to the same device we are trying to allocate for.
+The device is then in a state of deadlock, because to execute IO the
+device needs to allocate memory, but to allocate memory the memory
+layers want execute IO to the device.
 
-Prevent speculation at the syscall table decoding by clamping the index
-used to zero on invalid system call numbers, and using the csdb
-speculative barrier.
+Here is an example with nbd using a local userspace daemon that performs
+network IO to a remote server. We are using XFS on top of the nbd device,
+but it can happen with any FS or other modules layered on top of the nbd
+device that can write out data to free memory.  Here a nbd daemon helper
+thread, msgr-worker-1, is performing a write/sendmsg on a socket to execute
+a request. This kicks off a reclaim operation which results in a WRITE to
+the nbd device and the nbd thread calling back into the mm layer.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Boot-tested-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: David A. Long <dave.long@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[ 1626.609191] msgr-worker-1   D    0  1026      1 0x00004000
+[ 1626.609193] Call Trace:
+[ 1626.609195]  ? __schedule+0x29b/0x630
+[ 1626.609197]  ? wait_for_completion+0xe0/0x170
+[ 1626.609198]  schedule+0x30/0xb0
+[ 1626.609200]  schedule_timeout+0x1f6/0x2f0
+[ 1626.609202]  ? blk_finish_plug+0x21/0x2e
+[ 1626.609204]  ? _xfs_buf_ioapply+0x2e6/0x410
+[ 1626.609206]  ? wait_for_completion+0xe0/0x170
+[ 1626.609208]  wait_for_completion+0x108/0x170
+[ 1626.609210]  ? wake_up_q+0x70/0x70
+[ 1626.609212]  ? __xfs_buf_submit+0x12e/0x250
+[ 1626.609214]  ? xfs_bwrite+0x25/0x60
+[ 1626.609215]  xfs_buf_iowait+0x22/0xf0
+[ 1626.609218]  __xfs_buf_submit+0x12e/0x250
+[ 1626.609220]  xfs_bwrite+0x25/0x60
+[ 1626.609222]  xfs_reclaim_inode+0x2e8/0x310
+[ 1626.609224]  xfs_reclaim_inodes_ag+0x1b6/0x300
+[ 1626.609227]  xfs_reclaim_inodes_nr+0x31/0x40
+[ 1626.609228]  super_cache_scan+0x152/0x1a0
+[ 1626.609231]  do_shrink_slab+0x12c/0x2d0
+[ 1626.609233]  shrink_slab+0x9c/0x2a0
+[ 1626.609235]  shrink_node+0xd7/0x470
+[ 1626.609237]  do_try_to_free_pages+0xbf/0x380
+[ 1626.609240]  try_to_free_pages+0xd9/0x1f0
+[ 1626.609245]  __alloc_pages_slowpath+0x3a4/0xd30
+[ 1626.609251]  ? ___slab_alloc+0x238/0x560
+[ 1626.609254]  __alloc_pages_nodemask+0x30c/0x350
+[ 1626.609259]  skb_page_frag_refill+0x97/0xd0
+[ 1626.609274]  sk_page_frag_refill+0x1d/0x80
+[ 1626.609279]  tcp_sendmsg_locked+0x2bb/0xdd0
+[ 1626.609304]  tcp_sendmsg+0x27/0x40
+[ 1626.609307]  sock_sendmsg+0x54/0x60
+[ 1626.609308]  ___sys_sendmsg+0x29f/0x320
+[ 1626.609313]  ? sock_poll+0x66/0xb0
+[ 1626.609318]  ? ep_item_poll.isra.15+0x40/0xc0
+[ 1626.609320]  ? ep_send_events_proc+0xe6/0x230
+[ 1626.609322]  ? hrtimer_try_to_cancel+0x54/0xf0
+[ 1626.609324]  ? ep_read_events_proc+0xc0/0xc0
+[ 1626.609326]  ? _raw_write_unlock_irq+0xa/0x20
+[ 1626.609327]  ? ep_scan_ready_list.constprop.19+0x218/0x230
+[ 1626.609329]  ? __hrtimer_init+0xb0/0xb0
+[ 1626.609331]  ? _raw_spin_unlock_irq+0xa/0x20
+[ 1626.609334]  ? ep_poll+0x26c/0x4a0
+[ 1626.609337]  ? tcp_tsq_write.part.54+0xa0/0xa0
+[ 1626.609339]  ? release_sock+0x43/0x90
+[ 1626.609341]  ? _raw_spin_unlock_bh+0xa/0x20
+[ 1626.609342]  __sys_sendmsg+0x47/0x80
+[ 1626.609347]  do_syscall_64+0x5f/0x1c0
+[ 1626.609349]  ? prepare_exit_to_usermode+0x75/0xa0
+[ 1626.609351]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This patch adds a new prctl command that daemons can use after they have
+done their initial setup, and before they start to do allocations that
+are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
+flags so both userspace block and FS threads can use it to avoid the
+allocation recursion and try to prevent from being throttled while
+writing out data to free up memory.
+
+Signed-off-by: Mike Christie <mchristi@redhat.com>
 ---
- arch/arm/kernel/entry-common.S |   18 +++++++-----------
- arch/arm/kernel/entry-header.S |   25 +++++++++++++++++++++++++
- 2 files changed, 32 insertions(+), 11 deletions(-)
+V3=20
+- Drop NOFS, set PF_LESS_THROTTLE and rename prctl flag to reflect it
+is more general and can support both FS and block devices. Both fuse
+and block device daemons, nbd and tcmu-runner, have been tested to
+confirm the more restrictive PF_MEMALLOC_NOIO also works for fuse.
 
---- a/arch/arm/kernel/entry-common.S
-+++ b/arch/arm/kernel/entry-common.S
-@@ -223,9 +223,7 @@ local_restart:
- 	tst	r10, #_TIF_SYSCALL_WORK		@ are we tracing syscalls?
- 	bne	__sys_trace
- 
--	cmp	scno, #NR_syscalls		@ check upper syscall limit
--	badr	lr, ret_fast_syscall		@ return address
--	ldrcc	pc, [tbl, scno, lsl #2]		@ call sys_* routine
-+	invoke_syscall tbl, scno, r10, ret_fast_syscall
- 
- 	add	r1, sp, #S_OFF
- 2:	cmp	scno, #(__ARM_NR_BASE - __NR_SYSCALL_BASE)
-@@ -258,14 +256,8 @@ __sys_trace:
- 	mov	r1, scno
- 	add	r0, sp, #S_OFF
- 	bl	syscall_trace_enter
--
--	badr	lr, __sys_trace_return		@ return address
--	mov	scno, r0			@ syscall number (possibly new)
--	add	r1, sp, #S_R0 + S_OFF		@ pointer to regs
--	cmp	scno, #NR_syscalls		@ check upper syscall limit
--	ldmccia	r1, {r0 - r6}			@ have to reload r0 - r6
--	stmccia	sp, {r4, r5}			@ and update the stack args
--	ldrcc	pc, [tbl, scno, lsl #2]		@ call sys_* routine
-+	mov	scno, r0
-+	invoke_syscall tbl, scno, r10, __sys_trace_return, reload=1
- 	cmp	scno, #-1			@ skip the syscall?
- 	bne	2b
- 	add	sp, sp, #S_OFF			@ restore stack
-@@ -317,6 +309,10 @@ sys_syscall:
- 		bic	scno, r0, #__NR_OABI_SYSCALL_BASE
- 		cmp	scno, #__NR_syscall - __NR_SYSCALL_BASE
- 		cmpne	scno, #NR_syscalls	@ check range
-+#ifdef CONFIG_CPU_SPECTRE
-+		movhs	scno, #0
-+		csdb
-+#endif
- 		stmloia	sp, {r5, r6}		@ shuffle args
- 		movlo	r0, r1
- 		movlo	r1, r2
---- a/arch/arm/kernel/entry-header.S
-+++ b/arch/arm/kernel/entry-header.S
-@@ -373,6 +373,31 @@
- #endif
- 	.endm
- 
-+	.macro	invoke_syscall, table, nr, tmp, ret, reload=0
-+#ifdef CONFIG_CPU_SPECTRE
-+	mov	\tmp, \nr
-+	cmp	\tmp, #NR_syscalls		@ check upper syscall limit
-+	movcs	\tmp, #0
-+	csdb
-+	badr	lr, \ret			@ return address
-+	.if	\reload
-+	add	r1, sp, #S_R0 + S_OFF		@ pointer to regs
-+	ldmccia	r1, {r0 - r6}			@ reload r0-r6
-+	stmccia	sp, {r4, r5}			@ update stack arguments
-+	.endif
-+	ldrcc	pc, [\table, \tmp, lsl #2]	@ call sys_* routine
-+#else
-+	cmp	\nr, #NR_syscalls		@ check upper syscall limit
-+	badr	lr, \ret			@ return address
-+	.if	\reload
-+	add	r1, sp, #S_R0 + S_OFF		@ pointer to regs
-+	ldmccia	r1, {r0 - r6}			@ reload r0-r6
-+	stmccia	sp, {r4, r5}			@ update stack arguments
-+	.endif
-+	ldrcc	pc, [\table, \nr, lsl #2]	@ call sys_* routine
-+#endif
-+	.endm
+- Use CAP_SYS_RESOURCE instead of admin.
+
+V2:
+- Use prctl instead of procfs.
+- Add support for NOFS for fuse.
+- Check permissions.
+
+
+ include/uapi/linux/capability.h |  1 +
+ include/uapi/linux/prctl.h      |  4 ++++
+ kernel/sys.c                    | 26 ++++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+)
+
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capabilit=
+y.h
+index 240fdb9a60f6..272dc69fa080 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -301,6 +301,7 @@ struct vfs_ns_cap_data {
+ /* Allow more than 64hz interrupts from the real-time clock */
+ /* Override max number of consoles on console allocation */
+ /* Override max number of keymaps */
++/* Control memory reclaim behavior */
+=20
+ #define CAP_SYS_RESOURCE     24
+=20
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 7da1b37b27aa..07b4f8131e36 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -234,4 +234,8 @@ struct prctl_mm_map {
+ #define PR_GET_TAGGED_ADDR_CTRL=09=0956
+ # define PR_TAGGED_ADDR_ENABLE=09=09(1UL << 0)
+=20
++/* Control reclaim behavior when allocating memory */
++#define PR_SET_IO_FLUSHER=09=0957
++#define PR_GET_IO_FLUSHER=09=0958
 +
- /*
-  * These are the registers used in the syscall handler, and allow us to
-  * have in theory up to 7 arguments to a function - r0 to r6.
-
+ #endif /* _LINUX_PRCTL_H */
+diff --git a/kernel/sys.c b/kernel/sys.c
+index a611d1d58c7d..08c6b682fa99 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2486,6 +2486,32 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, a=
+rg2, unsigned long, arg3,
+ =09=09=09return -EINVAL;
+ =09=09error =3D GET_TAGGED_ADDR_CTRL();
+ =09=09break;
++=09case PR_SET_IO_FLUSHER:
++=09=09if (!capable(CAP_SYS_RESOURCE))
++=09=09=09return -EPERM;
++
++=09=09if (arg3 || arg4 || arg5)
++=09=09=09return -EINVAL;
++
++=09=09if (arg2 =3D=3D 1)
++=09=09=09current->flags |=3D PF_MEMALLOC_NOIO | PF_LESS_THROTTLE;
++=09=09else if (!arg2)
++=09=09=09current->flags &=3D ~(PF_MEMALLOC_NOIO | PF_LESS_THROTTLE);
++=09=09else
++=09=09=09return -EINVAL;
++=09=09break;
++=09case PR_GET_IO_FLUSHER:
++=09=09if (!capable(CAP_SYS_RESOURCE))
++=09=09=09return -EPERM;
++
++=09=09if (arg2 || arg3 || arg4 || arg5)
++=09=09=09return -EINVAL;
++
++=09=09if (current->flags & (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE))
++=09=09=09error =3D 1;
++=09=09else
++=09=09=09error =3D 0;
++=09=09break;
+ =09default:
+ =09=09error =3D -EINVAL;
+ =09=09break;
+--=20
+2.20.1
 
