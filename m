@@ -2,80 +2,175 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3D3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B31FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A412206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED4B206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Twy3xq/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbfKHNCi (ORCPT
+        id S1731319AbfKHNCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:02:38 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38246 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730662AbfKHNCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:02:36 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CD6587B9FF91A25B08F4;
-        Fri,  8 Nov 2019 21:02:33 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 8 Nov 2019
- 21:02:25 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <leoyang.li@nxp.com>, <alexandre.belloni@bootlin.com>
-CC:     <linuxppc-dev@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] soc: fsl: Enable COMPILE_TEST
-Date:   Fri, 8 Nov 2019 21:02:13 +0800
-Message-ID: <20191108130213.23684-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 8 Nov 2019 08:02:43 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57542 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730662AbfKHNCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 08:02:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8D1tQv019203;
+        Fri, 8 Nov 2019 14:02:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=WOEu20nR0i4xRSiZf53WXogNt8wyvzvdiHSB58BEZaY=;
+ b=Twy3xq/J78m2GKUL7TQSQjyWs+R+K39EqeKWroBU2aDiseZJMmNvT8BM4PGMG7y1h2uX
+ P5gHZtJtXLx3yUbnAimdEnCyowD5rige5Fb/6JssRcKE0KCXyxpL37sIG27zoORNhYKX
+ py3Rn/Om7hDf+LRh67Vf7Nzo71XzRjvWNQUOdlW1Hixjaob4RpQMP5U/gizvYW7SlxFM
+ VmBnSpzIf6W8E1z/2NeKWQtJiA5KJIBBKIPXhUn0PSy3KhfvIax13AQF/w0H1wnGahs4
+ YAwEPXAPBqqWL8F3CNlkI/kpJWe62+GDn5gnyBAtVYxUkqqiUAKH7pWtFg4l7MltL8fq 6Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w41vd3kmx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 14:02:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 223DF10003A;
+        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 068212B7DEF;
+        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 8 Nov
+ 2019 14:02:14 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Fri, 8 Nov 2019 14:02:14 +0100
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     Maxime Ripard <mripard@kernel.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Topic: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Index: AQHVljS9qESSyYnraEKgryyZ/0O5Aw==
+Date:   Fri, 8 Nov 2019 13:02:14 +0000
+Message-ID: <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
+References: <20191108103526.22254-1-christophe.roullier@st.com>
+ <20191108103526.22254-2-christophe.roullier@st.com>
+ <20191108104231.GE4345@gilmour.lan>
+In-Reply-To: <20191108104231.GE4345@gilmour.lan>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <24D71ECBC6C48E469CDC8390CA3DFA02@st.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-08_03:2019-11-08,2019-11-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When do COMPILE_TEST buiding for RTC_DRV_FSL_FTM_ALARM,
-we get this warning:
+On 11/8/19 11:42 AM, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
+>> This change is needed for some soc based on snps,dwmac, which have
+>> more than 3 clocks.
+>>
+>> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+>> ---
+>>   Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Doc=
+umentation/devicetree/bindings/net/snps,dwmac.yaml
+>> index 4845e29411e4..376a531062c2 100644
+>> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>> @@ -27,6 +27,7 @@ select:
+>>             - snps,dwmac-3.710
+>>             - snps,dwmac-4.00
+>>             - snps,dwmac-4.10a
+>> +          - snps,dwmac-4.20a
+>>             - snps,dwxgmac
+>>             - snps,dwxgmac-2.10
+>>
+>> @@ -62,6 +63,7 @@ properties:
+>>           - snps,dwmac-3.710
+>>           - snps,dwmac-4.00
+>>           - snps,dwmac-4.10a
+>> +        - snps,dwmac-4.20a
+>>           - snps,dwxgmac
+>>           - snps,dwxgmac-2.10
+>>
+>> @@ -87,7 +89,8 @@ properties:
+>>
+>>     clocks:
+>>       minItems: 1
+>> -    maxItems: 3
+>> +    maxItems: 5
+>> +    additionalItems: true
+> Those additional clocks should be documented
+>
+> Maxime
 
-WARNING: unmet direct dependencies detected for FSL_RCPM
-  Depends on [n]: PM_SLEEP [=y] && (ARM || ARM64)
-  Selected by [m]:
-  - RTC_DRV_FSL_FTM_ALARM [=m] && RTC_CLASS [=y] && (ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST [=y])
+Hi Maxime,
 
-This enable COMPILE_TEST for FSL_RCPM to fix the issue.
+The problem it is specific to our soc, so is it possible to
 
-Fixes: e1c2feb1efa2 ("rtc: fsl-ftm-alarm: allow COMPILE_TEST")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-In commit c6c2d36bc46f ("rtc: fsl-ftm-alarm: Fix build error without PM_SLEEP")
-I posted a wrong kconfig warning(which PM_SLEEP is n), sorry for confusion.
----
- drivers/soc/fsl/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
 
-diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-index 4df32bc..e142662 100644
---- a/drivers/soc/fsl/Kconfig
-+++ b/drivers/soc/fsl/Kconfig
-@@ -43,7 +43,7 @@ config DPAA2_CONSOLE
- 
- config FSL_RCPM
- 	bool "Freescale RCPM support"
--	depends on PM_SLEEP && (ARM || ARM64)
-+	depends on PM_SLEEP && (ARM || ARM64 || COMPILE_TEST)
- 	help
- 	  The NXP QorIQ Processors based on ARM Core have RCPM module
- 	  (Run Control and Power Management), which performs all device-level
--- 
-2.7.4
+and "official" description in soc yaml file (stm32-dwmac.yaml) ?
 
+ =A0 clocks:
+ =A0=A0=A0 minItems: 1
+ =A0=A0=A0 maxItems: 5
+ =A0=A0=A0 additionalItems: true
+ =A0=A0=A0 items:
+ =A0=A0=A0=A0=A0 - description: GMAC main clock
+ =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
+ =A0=A0=A0=A0=A0 - description:
+ =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used for pr=
+ogramming the
+ =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed then =
+the system
+ =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on some pl=
+atforms.
 
++=A0=A0=A0=A0=A0 - description: optional clock
+
++=A0=A0=A0=A0=A0 - description: optional clock
+
+Thanks
+
+Christophe
