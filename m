@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B51C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2E1FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B02207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACE32084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214370;
-	bh=5y7jySM1EY7FEWm+rSzD2iseCEIB0/ban7fS0k4+TEA=;
+	s=default; t=1573214376;
+	bh=HTtoqZyvVxPeVVf9GFCb236etSkJ8xztU8o8/+LFI4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXnRwiW5rp0rS0DbN+I1+oxqRENRAxitMJGX9SNewRPbiiruTrwcJvQtgiu93HgMj
-	 PVkArrapbV2bLR4+yzN23cochHlAn2RtHqqTndsXwK5qdsKBAJZQ9/G2puj1sbNNH5
-	 K9jqG1JRUeEHaxhP212Vwyz9DmP7ceQVnIDeP1zs=
+	b=YSgV8Pu9gOmZ7ZFtz3NY1dMkPehs8uPZ5b2DyXXUeAGLZ/HTnO7l8uSTClNdXKIeu
+	 thVJMuN1Ml4hZnc0VHHx7+Y1k6KwgaG2UADgPBRbkwguRL5iR2u1Mvw2fGQrccSa4r
+	 /dnUDJJ7QyTfzf/fY/unD+zkFVFI4+xg7l3K45Mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391075AbfKHL73 (ORCPT
+        id S2403800AbfKHL7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:59:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:59:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389081AbfKHLoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:12 -0500
+        id S2390676AbfKHLoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5FDF21D82;
-        Fri,  8 Nov 2019 11:44:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DA75222CE;
+        Fri,  8 Nov 2019 11:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213451;
-        bh=5y7jySM1EY7FEWm+rSzD2iseCEIB0/ban7fS0k4+TEA=;
+        s=default; t=1573213447;
+        bh=HTtoqZyvVxPeVVf9GFCb236etSkJ8xztU8o8/+LFI4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xB5ZKhuEwLL3DvBsRxoo7BG7So4ogzWgNAd/1nvlmBepbMEsmy85UeJ6/rT7zR0Or
-         aq4e7TPHLk8Q1hpBKQCECp5/wgkL815betMAZbXnk+QhKrIVtYS4t2dpz+I7cPPGk/
-         dOeH0jgDa4HbxfZGudeiGcw09kJUNl9xaosq0Q00=
+        b=Xuek+e3YKn6xcLLrVBnWgUv4r1zWoZrsvmsUD4k7koB53dl67PN4uEMIfDxqT3dBz
+         nf8aMUx8iCdkpglQXhCpsmtwFZiqdPKD63AAlA9g5PtlpppExfmNB2fYELr5fKuYMx
+         XLN8OI7ax7Oi6l5/QGDtiJqL0HO8yceMUyxfQUXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Muhammad Sammar <muhammads@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 043/103] IB/ipoib: Ensure that MTU isn't less than minimum permitted
-Date:   Fri,  8 Nov 2019 06:42:08 -0500
-Message-Id: <20191108114310.14363-43-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 041/103] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
+Date:   Fri,  8 Nov 2019 06:42:06 -0500
+Message-Id: <20191108114310.14363-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -61,39 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muhammad Sammar <muhammads@mellanox.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 142a9c287613560edf5a03c8d142c8b6ebc1995b ]
+[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
 
-It is illegal to change MTU to a value lower than the minimum MTU
-stated in ethernet spec. In addition to that we need to add 4 bytes
-for encapsulation header (IPOIB_ENCAP_LEN).
+S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
+external pull-up resistors, so disable any pull control for it in
+in controller node. This fixes support for S5M8767 interrupts and
+enables operation of wakeup from S5M8767 RTC alarm.
 
-Before "ifconfig ib0 mtu 0" command, succeeds while it obviously shouldn't.
-
-Signed-off-by: Muhammad Sammar <muhammads@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 1a93d3d58c8a4..caae4bfab950d 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -249,7 +249,8 @@ static int ipoib_change_mtu(struct net_device *dev, int new_mtu)
- 		return 0;
- 	}
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 18a7f396ac5f7..abd1705635f9b 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -169,6 +169,8 @@
+ 		reg = <0x66>;
+ 		interrupt-parent = <&gpx3>;
+ 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&s5m8767_irq>;
  
--	if (new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
-+	if (new_mtu < (ETH_MIN_MTU + IPOIB_ENCAP_LEN) ||
-+	    new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
- 		return -EINVAL;
+ 		vinb1-supply = <&main_dc_reg>;
+ 		vinb2-supply = <&main_dc_reg>;
+@@ -544,6 +546,13 @@
+ 	cap-sd-highspeed;
+ };
  
- 	priv->admin_mtu = new_mtu;
++&pinctrl_0 {
++	s5m8767_irq: s5m8767-irq {
++		samsung,pins = "gpx3-2";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
++};
++
+ &rtc {
+ 	status = "okay";
+ };
 -- 
 2.20.1
 
