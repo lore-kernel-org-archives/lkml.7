@@ -2,55 +2,51 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0A1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A03FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169A32087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B632196F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240200;
-	bh=v6GzKwOgnX6TvW5mQt/tLwn7FJcpMVYO23TwKMLssdU=;
+	s=default; t=1573240201;
+	bh=oDbZB7orneX006l4dQrazAI3AMgWkUEeoDS5nYSAriU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpidIQULmQYF9/V9Xa4dg1xup4VtLGRTxocc/8L7insIINhENH/kw03L/BDatc7vv
-	 NNQDsNROZ8C1zPgtYJlCcapV3GWsCvMufeeP7PjzMQ6MuvbrPxaK0gAQGBZ3cAi8gq
-	 MuE/Jxyh7e8TeV78bHeGCCgGiagIVpRscKpjaePw=
+	b=t1bvPI+dT4NBNP8CZ6OpQZSUAiYWhikk8uM4Czl7mvG0I58Fs6MLarUHAoShqyMLA
+	 SEDmNufnYF0gkn/ih1kwdzayXhaRPts1gaB/k5XXRETejVLrLtJbZ3UcQMYJfBKIrH
+	 IXLktIXdtiMv26+ii7q/+4Dae/Id/wx2sQ7NeNg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733103AbfKHTJ6 (ORCPT
+        id S2391842AbfKHTKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:10:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391810AbfKHTJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:56 -0500
+        id S2391825AbfKHTJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DA1A20673;
-        Fri,  8 Nov 2019 19:09:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E062196F;
+        Fri,  8 Nov 2019 19:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240194;
-        bh=v6GzKwOgnX6TvW5mQt/tLwn7FJcpMVYO23TwKMLssdU=;
+        s=default; t=1573240198;
+        bh=oDbZB7orneX006l4dQrazAI3AMgWkUEeoDS5nYSAriU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=knsE9B0vVYiujl01upMgA0KFpRzD8zU09+G9X22HlKOk2xb0r7PyLc69z0JUukA0H
-         c5rCLPXB4euF6EQe7bfZyPceIOvRp+RCPzPgZ/mFFlFYzxCAMqLI8LBVdKfeicBS3U
-         HkTtNdN5Ttjc6GsQJX37lmy6YQWcMRsHekTkkPQs=
+        b=jcMnwfl84vdrXID4t8qBUrTIae9rDxGnOoaIIilOJNXjBmGVQ/j1xyVFzcXEtwDUX
+         79JPocC52zAmUH2klSYb5gCeCJCA+69qt3SGEFHNUGGfVWqb+YO37tMzaD958utb/8
+         fqgCAWxtkcyrQfkHXpRWjxu2aHZU6IPfhrzj0eAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 069/140] MIPS: bmips: mark exception vectors as char arrays
-Date:   Fri,  8 Nov 2019 19:49:57 +0100
-Message-Id: <20191108174909.531987497@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 115/140] net/mlx5: Fix rtable reference leak
+Date:   Fri,  8 Nov 2019 19:50:43 +0100
+Message-Id: <20191108174912.063099581@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -63,107 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Gorski <jonas.gorski@gmail.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit e4f5cb1a9b27c0f94ef4f5a0178a3fde2d3d0e9e ]
+[ Upstream commit 2347cee83b2bd868bde2d283db0fac89f22be4e0 ]
 
-The vectors span more than one byte, so mark them as arrays.
+If the rt entry gateway family is not AF_INET for multipath device,
+rtable reference is leaked.
+Hence, fix it by releasing the reference.
 
-Fixes the following build error when building when using GCC 8.3:
-
-In file included from ./include/linux/string.h:19,
-                 from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/mips/include/asm/processor.h:15,
-                 from ./arch/mips/include/asm/thread_info.h:16,
-                 from ./include/linux/thread_info.h:38,
-                 from ./include/asm-generic/preempt.h:5,
-                 from ./arch/mips/include/generated/asm/preempt.h:1,
-                 from ./include/linux/preempt.h:81,
-                 from ./include/linux/spinlock.h:51,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/bootmem.h:8,
-                 from arch/mips/bcm63xx/prom.c:10:
-arch/mips/bcm63xx/prom.c: In function 'prom_init':
-./arch/mips/include/asm/string.h:162:11: error: '__builtin_memcpy' forming offset [2, 32] is out of the bounds [0, 1] of object 'bmips_smp_movevec' with type 'char' [-Werror=array-bounds]
-   __ret = __builtin_memcpy((dst), (src), __len); \
-           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/bcm63xx/prom.c:97:3: note: in expansion of macro 'memcpy'
-   memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
-   ^~~~~~
-In file included from arch/mips/bcm63xx/prom.c:14:
-./arch/mips/include/asm/bmips.h:80:13: note: 'bmips_smp_movevec' declared here
- extern char bmips_smp_movevec;
-
-Fixes: 18a1eef92dcd ("MIPS: BMIPS: Introduce bmips.h")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5fb091e8130b ("net/mlx5e: Use hint to resolve route when in HW multipath mode")
+Fixes: e32ee6c78efa ("net/mlx5e: Support tunnel encap over tagged Ethernet")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/mips/bcm63xx/prom.c      |  2 +-
- arch/mips/include/asm/bmips.h | 10 +++++-----
- arch/mips/kernel/smp-bmips.c  |  8 ++++----
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
-index 77a836e661c9e..df69eaa453a1c 100644
---- a/arch/mips/bcm63xx/prom.c
-+++ b/arch/mips/bcm63xx/prom.c
-@@ -84,7 +84,7 @@ void __init prom_init(void)
- 		 * Here we will start up CPU1 in the background and ask it to
- 		 * reconfigure itself then go back to sleep.
- 		 */
--		memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
-+		memcpy((void *)0xa0000200, bmips_smp_movevec, 0x20);
- 		__sync();
- 		set_c0_cause(C_SW0);
- 		cpumask_set_cpu(1, &bmips_booted_mask);
-diff --git a/arch/mips/include/asm/bmips.h b/arch/mips/include/asm/bmips.h
-index bf6a8afd7ad27..581a6a3c66e40 100644
---- a/arch/mips/include/asm/bmips.h
-+++ b/arch/mips/include/asm/bmips.h
-@@ -75,11 +75,11 @@ static inline int register_bmips_smp_ops(void)
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
+@@ -90,15 +90,19 @@ static int mlx5e_route_lookup_ipv4(struc
+ 	if (ret)
+ 		return ret;
+ 
+-	if (mlx5_lag_is_multipath(mdev) && rt->rt_gw_family != AF_INET)
++	if (mlx5_lag_is_multipath(mdev) && rt->rt_gw_family != AF_INET) {
++		ip_rt_put(rt);
+ 		return -ENETUNREACH;
++	}
+ #else
+ 	return -EOPNOTSUPP;
  #endif
- }
  
--extern char bmips_reset_nmi_vec;
--extern char bmips_reset_nmi_vec_end;
--extern char bmips_smp_movevec;
--extern char bmips_smp_int_vec;
--extern char bmips_smp_int_vec_end;
-+extern char bmips_reset_nmi_vec[];
-+extern char bmips_reset_nmi_vec_end[];
-+extern char bmips_smp_movevec[];
-+extern char bmips_smp_int_vec[];
-+extern char bmips_smp_int_vec_end[];
+ 	ret = get_route_and_out_devs(priv, rt->dst.dev, route_dev, out_dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		ip_rt_put(rt);
+ 		return ret;
++	}
  
- extern int bmips_smp_enabled;
- extern int bmips_cpu_offset;
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 76fae9b79f131..712c15de6ab9f 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -464,10 +464,10 @@ static void bmips_wr_vec(unsigned long dst, char *start, char *end)
+ 	if (!(*out_ttl))
+ 		*out_ttl = ip4_dst_hoplimit(&rt->dst);
+@@ -142,8 +146,10 @@ static int mlx5e_route_lookup_ipv6(struc
+ 		*out_ttl = ip6_dst_hoplimit(dst);
  
- static inline void bmips_nmi_handler_setup(void)
- {
--	bmips_wr_vec(BMIPS_NMI_RESET_VEC, &bmips_reset_nmi_vec,
--		&bmips_reset_nmi_vec_end);
--	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, &bmips_smp_int_vec,
--		&bmips_smp_int_vec_end);
-+	bmips_wr_vec(BMIPS_NMI_RESET_VEC, bmips_reset_nmi_vec,
-+		bmips_reset_nmi_vec_end);
-+	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, bmips_smp_int_vec,
-+		bmips_smp_int_vec_end);
- }
- 
- struct reset_vec_info {
--- 
-2.20.1
-
+ 	ret = get_route_and_out_devs(priv, dst->dev, route_dev, out_dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		dst_release(dst);
+ 		return ret;
++	}
+ #else
+ 	return -EOPNOTSUPP;
+ #endif
 
 
