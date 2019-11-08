@@ -2,122 +2,100 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156FAFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB07FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88CE2178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A83420659
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:14:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fj1xYv2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfKHOHM (ORCPT
+        id S1727721AbfKHOOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:07:12 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:59180 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfKHOHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:07:12 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iT4uS-0001Tu-Pp; Fri, 08 Nov 2019 15:06:44 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     Sean Paul <sean@poorly.run>, hjc@rock-chips.com, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/rockchip: use DRM_DEV_ERROR for log output
-Date:   Fri, 08 Nov 2019 15:06:44 +0100
-Message-ID: <4996186.DxzAFJqeGu@diego>
-In-Reply-To: <20191108124630.GA10207@wambui>
-References: <20191107092945.15513-1-wambui.karugax@gmail.com> <20191107133851.GF63329@art_vandelay> <20191108124630.GA10207@wambui>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 8 Nov 2019 09:14:00 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:41960 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfKHON7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 09:13:59 -0500
+Received: by mail-pf1-f202.google.com with SMTP id j2so5040150pfa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:13:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kvgCLct7rYR3LjviNWyKbkLaMi+v4J1t5e+g4Yg8dBw=;
+        b=fj1xYv2YIp+6FKUgb9IjR8d45c21xEvKM//6IKKFbj62T3JCHayAL+rKMP8MbJT7VY
+         Wcgl6NNb3zf8BoTYsT8kG0bomi1igkS9HrByHZ5IgANW14yHoFHuji2q8589jbuKR7el
+         tRyzxfYa8bNTzXFssUr3uNFx8fMEHE7PFkDYQbjwLdtGMfNmcBuF6+vEQMLQ/qKMWKIe
+         ltbTnDUOloCrjecz2IakZnAA5ORdF7Dv9MDL7E6L7Bpaowl437bPyA6zy3cqSiDVJf8E
+         Pfr8MobtKN6Y+1v1Qa5aTew5BaVMSj43pOEtq68mdNR8/c4NaMCXmiUTZ+WlOUmNcgTz
+         CLdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kvgCLct7rYR3LjviNWyKbkLaMi+v4J1t5e+g4Yg8dBw=;
+        b=jmQT7z2E74V5S8b/6uJHqkrM/LC9WMRDTwtClIMVgeX9ic2eTsSglZp5WLBmnqr1bm
+         jf/fWMlrHyDtSii+U8E6wk+baPeebbgEZhajZJm0iXTgSudDY9w889Axe3aCmf4UC6T/
+         MH78V+CwJBXf0kTFnCwm6ugFASuow9kzlHT/lK1Fk7XQJWAk1gnuxk9l458AHMaB0BBF
+         a1Upvs2x73QkGoNwT4h/Z8TaqH6rdkhHCT3YahtUbt4GvyJPa8Z7v5xVWErcbI9G/5Vy
+         JLjAggyycOswN/1kLbENvTJQK1i93k1WlI3SCnk7tEwLTgR3TOuMDZbG1B7c6jma1lt4
+         puRA==
+X-Gm-Message-State: APjAAAXiXYoScs//IGWRta8acI/T2/v3yKXu6Kzl7wNOa3luzAnVEOyj
+        8JlEDSdwOgkp/Lh38rCwq1sgwk69NNPcGg==
+X-Google-Smtp-Source: APXvYqxFBt6XH1gMUdr5UvZBnUd3gHu6PSrrU8imy14sIcyFWas9uy6U69tND+J6NhD4sOeXgc31jMonPkadIg==
+X-Received: by 2002:a63:e801:: with SMTP id s1mr4537856pgh.213.1573222438819;
+ Fri, 08 Nov 2019 06:13:58 -0800 (PST)
+Date:   Fri,  8 Nov 2019 06:13:53 -0800
+Message-Id: <20191108141353.193961-1-edumazet@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH] powerpc: add const qual to local_read() parameter
+From:   Eric Dumazet <edumazet@google.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+A patch in net-next triggered a compile error on powerpc.
 
-[it seems your Reply-To mail header is set strangely as
-Reply-To: 20191107133851.GF63329@art_vandelay
-which confuses my MTA]
+This seems reasonable to relax powerpc local_read() requirements.
 
-Am Freitag, 8. November 2019, 13:46:30 CET schrieb Wambui Karuga:
-> On Thu, Nov 07, 2019 at 08:38:51AM -0500, Sean Paul wrote:
-> > On Thu, Nov 07, 2019 at 01:54:22AM -0800, Joe Perches wrote:
-> > > On Thu, 2019-11-07 at 12:29 +0300, Wambui Karuga wrote:
-> > > > Replace the use of the dev_err macro with the DRM_DEV_ERROR
-> > > > DRM helper macro.
-> > > 
-> > > The commit message should show the reason _why_ you are doing
-> > > this instead of just stating that you are doing this.
-> > > 
-> > > It's not that dev_err is uncommon in drivers/gpu/drm.
-> > > 
-> > 
-> > It is uncommon (this is the sole instance) in rockchip, however. So it makes
-> > sense to convert the dev_* prints in rockchip to DRM_DEV for consistency.
-> > 
-> > Wambui, could you also please convert the dev_warn instance as well?
-> > 
-> Hey, Sean.
-> Trying to convert this dev_warn instance, but the corresponding DRM_WARN
-> macro does not take the dev parameter which seems to be useful in the
-> original output.
-> Should I still convert it to DRM_WARN without the hdmi->dev parameter?
+Fixes: 316580b69d0a ("u64_stats: provide u64_stats_t type")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:	Paul Mackerras <paulus@samba.org>
+Cc:	Michael Ellerman <mpe@ellerman.id.au>
+Cc:	linuxppc-dev@lists.ozlabs.org
+---
+ arch/powerpc/include/asm/local.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There exists DRM_DEV_ERROR, DRM_DEV_INFO and DRM_DEV_DEBUG to
-handle actual devices. Interestingly there is no DRM_DEV_WARN though.
-
-So depending on what Sean suggest another option would be to add the
-missing DRM_DEV_WARN and then use it to replace the dev_warn.
-
-
-Heiko
-
-
-
-> 
-> Thanks,
-> wambui
-> > I'll apply this to drm-misc-next and expand on the commit message a bit.
-> > 
-> > Thanks,
-> > 
-> > Sean
-> > 
-> > > $ git grep -w dev_err drivers/gpu/drm | wc -l
-> > > 1950
-> > > $ git grep -w DRM_DEV_ERROR drivers/gpu/drm | wc -l
-> > > 756
-> > > 
-> > > > diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-> > > []
-> > > > @@ -916,7 +916,7 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
-> > > >  	}
-> > > >  
-> > > >  	if (!dsi->cdata) {
-> > > > -		dev_err(dev, "no dsi-config for %s node\n", np->name);
-> > > > +		DRM_DEV_ERROR(dev, "no dsi-config for %s node\n", np->name);
-> > > >  		return -EINVAL;
-> > > >  	}
-> > > 
-> > > 
-> > > 
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
-> 
-
-
-
+diff --git a/arch/powerpc/include/asm/local.h b/arch/powerpc/include/asm/local.h
+index fdd00939270bf08113b537a090d6a6e34a048361..bc4bd19b7fc235b80ec1132f44409b6fe1057975 100644
+--- a/arch/powerpc/include/asm/local.h
++++ b/arch/powerpc/include/asm/local.h
+@@ -17,7 +17,7 @@ typedef struct
+ 
+ #define LOCAL_INIT(i)	{ (i) }
+ 
+-static __inline__ long local_read(local_t *l)
++static __inline__ long local_read(const local_t *l)
+ {
+ 	return READ_ONCE(l->v);
+ }
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
