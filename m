@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65825FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09768C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287932084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABFC20869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214323;
-	bh=lgzmDY7hvgwZlBz91lc4Dp9NshUnGaue5baV8VcMsmk=;
+	s=default; t=1573214330;
+	bh=OXFMKaga2SWM1GNAklGIzPQ+cm87nnb7spC0IVErYDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VGMapVWYXGMMsilR6/BUmotndEHZGRrLkdCQn5ohbdHRR4T8uTA7wZPL+v7C8/hf6
-	 PInil5iCHvUn+jE2rMp7Jilv9CuvYzUWdTBWp2ZL4Bi909iGs2JrjyBKCnzZodufMX
-	 OaAQM5iv7MHkbjtsnFy2AVmiLEAfsRBd2IiM05E8=
+	b=oX3QQSpXNLNwn6YW7neo8ZlLHhQcKzQi0x4tRL1EnlyOxk/igi+JDMWP1gYQXfpmz
+	 ga57F3d2hV3AmHPRvEhg5GSg1Z5ThiADvOcu3bMWmmXOS8r/ng0Uxq0Ne1mjsP3YAo
+	 lZ123+XjHPSWTxTyeDjqq/alF/hxK6fpvfp3vW5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391426AbfKHL6l (ORCPT
+        id S2391455AbfKHL6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:58:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59590 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:58:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390814AbfKHLog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:36 -0500
+        id S2389271AbfKHLo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C9CC222CF;
-        Fri,  8 Nov 2019 11:44:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A38021D82;
+        Fri,  8 Nov 2019 11:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213475;
-        bh=lgzmDY7hvgwZlBz91lc4Dp9NshUnGaue5baV8VcMsmk=;
+        s=default; t=1573213469;
+        bh=OXFMKaga2SWM1GNAklGIzPQ+cm87nnb7spC0IVErYDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ENbOnxlhEsWcqp6V7esK7k+E2191bPbncxXPsMrxz1ib/twrz8FTdm12O+wBpKJaz
-         +GcIi7w88172tR1oV5/5toJsYqsKW9b2RpPxupfRb8P0cSGoNclrAHR++2sFlT6sOt
-         D6tNEiCszFampVCRmucvb76yu2qjyRxK++e85NRU=
+        b=SnfxK0S6mi8tb/bV8k9TJAWMD/+lgA+JFE9zBahgChqwHlM8Y7JhysLtnay7FlSuV
+         3bnnH2hzD4dhC5ZGxGKkIxVP32NnXjXNqlc8EAJLOMGL4BD6VxWC1mc3xbpxjfnZwI
+         rkDrB+AiP12mAc31yZEFq465b+bjEoFCAor69Y8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 058/103] dmaengine: dma-jz4780: Further residue status fix
-Date:   Fri,  8 Nov 2019 06:42:23 -0500
-Message-Id: <20191108114310.14363-58-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 054/103] ARM: dts: omap3-gta04: keep vpll2 always on
+Date:   Fri,  8 Nov 2019 06:42:19 -0500
+Message-Id: <20191108114310.14363-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -61,44 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 83ef4fb7556b6a673f755da670cbacab7e2c7f1b ]
+[ Upstream commit 1ae00833e30c9b4af5cbfda65d75b1de12f74013 ]
 
-Func jz4780_dma_desc_residue() expects the index to the next hw
-descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
-however, applied modulus before passing it. When the current hw
-descriptor was last in the list, the index passed became zero.
+This is needed to make the display and venc work properly.
+Compare to omap3-beagle.dts.
 
-The resulting excess of reported residue especially caused problems
-with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
-rely on this for determining current DMA location within buffer.
-
-Combined with the recent and related residue-reporting fixes, spurious
-ALSA audio underruns on jz4770 hardware are now fixed.
-
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 803cfb4523b08..aca2d6fd92d56 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -580,7 +580,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 					to_jz4780_dma_desc(vdesc), 0);
- 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
- 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
--			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
-+					jzchan->curr_hwdesc + 1);
- 	} else
- 		txstate->residue = 0;
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 7992489b953e8..e83d0619b3b7c 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -537,6 +537,12 @@
+ 	regulator-max-microvolt = <3150000>;
+ };
  
++/* Needed to power the DPI pins */
++
++&vpll2 {
++	regulator-always-on;
++};
++
+ &dss {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = < &dss_dpi_pins >;
 -- 
 2.20.1
 
