@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167E6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58FAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E61207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB742084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214138;
-	bh=N18+N6OlaSTcc9dJRJHr9msZMDgvNfCMsLX146+55ag=;
+	s=default; t=1573214143;
+	bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpDUIZKcY0biaXzOaR2IKXnUXIahDzTlsKg4Z/QeAbEOhY5yqb9UcTEH7iZmU6EYi
-	 U3uJBPxjjpyNlieQivUgYtL5PJ3j/02R+GeRl8oV7N3g5pebbMp3cMTJnSuxmIFy0N
-	 0ODuL5GGylM6ZgBgNPvXL72TBciT8bJlyfMorewI=
+	b=uaODhr9REGbKF2mIhEJI3lBGqU4JybkYDuzyrBpCJW9Q/Pk2b4PSLTHob7TsCQnTb
+	 gAp8YwVh8twsfzeUfg8SUf+l0ghJnHTsBjoPX8nAxCHwUkXg9kKWocvhunwSg68Q4Z
+	 5HKe0518+RDgJITG2ZFrkGy9+IsDemEv8UMw0z68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389983AbfKHLzh (ORCPT
+        id S2391564AbfKHLzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33328 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:55:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391206AbfKHLpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:55 -0500
+        id S1732842AbfKHLpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47C36222C2;
-        Fri,  8 Nov 2019 11:45:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0756720656;
+        Fri,  8 Nov 2019 11:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213555;
-        bh=N18+N6OlaSTcc9dJRJHr9msZMDgvNfCMsLX146+55ag=;
+        s=default; t=1573213551;
+        bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XoodSAsMpaxIe5aTOFmAAWMun+i0rg+0gcKJG03EJfJmnfEbkzmpa6Jpj+OqUtbG7
-         0FniE25qlc2hbTFDpKHrvx3Pm2u1KDsSSio1QBbDUKLO5TYWhB9ovSy23AgEE/tMYr
-         2zdyEuQI1+MRntCvumzGY8AXqHaP/kqaM1trRQaA=
+        b=UdBuvP54VSo8H3fJf3yWtZSIQ+fQc48X/pUsUq6MlFlINQUyEeby/P8daRFgxAJH3
+         GnVmnfPKHceEWbmoafyQoHOhIKkouz6V6ho17Dnn3KELREsMJRATTnlgSNFfrRmVsK
+         3DKJq6OdVRJw0yEQ/P101kJPw1X92f9QieRktmXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jay Foster <jayfoster@ieee.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/64] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
-Date:   Fri,  8 Nov 2019 06:44:46 -0500
-Message-Id: <20191108114545.15351-5-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 03/64] ALSA: pcm: signedness bug in snd_pcm_plug_alloc()
+Date:   Fri,  8 Nov 2019 06:44:44 -0500
+Message-Id: <20191108114545.15351-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,33 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jay Foster <jayfoster@ieee.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
+[ Upstream commit 6f128fa41f310e1f39ebcea9621d2905549ecf52 ]
 
-Fix a typo. No functional change made by this patch.
+The "frames" variable is unsigned so the error handling doesn't work
+properly.
 
-Signed-off-by: Jay Foster <jayfoster@ieee.org>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/oss/pcm_plugin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index b3501ae2a3bd1..4fba898b8f4f9 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -546,7 +546,7 @@
- 					};
- 				};
- 
--				uart1 {
-+				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
- 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB4 periph A with pullup */
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index a84a1d3d23e56..c6888d76ca5e9 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
 -- 
 2.20.1
 
