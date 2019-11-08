@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F4CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CCBFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C319A21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8145C206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213660;
-	bh=G07mmmbZxw4U7sCnfcE050gp+/zMjMUqCmkE3k+kAnc=;
+	s=default; t=1573213667;
+	bh=uIXzy5NaSb2l3HTFOk/ZUs1O/o+lkruU8kvNmDUkF+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdLBwEySEU9rmKPVsWHvb3mokMl66DOA3Eb7GSdq9doQMfMubAKvQk+QK2lyi+7sT
-	 I7GVmOuwY7kGsKJ/NBJ0RTl9JjD6v+6QgUvxarBr+KE4LPRHDl+iLfood9PVYFIk4d
-	 0xhLnDSZfZnhVcsgLMlpMjMhjs9QS2tOtt0in0YY=
+	b=qmTGA+M/iqfaUZFBCuf2SZpzvn2/dv4lR0tJV4wbq2BZiuftMYEXbJcqDkcsKJA4E
+	 B9m+g5I8l2mMa1Og6QSQNoYy3Qp2isbJJJr8q3hG0drWxPrQEqgvjOIWiUmvE/2nIE
+	 OaXo/SnWTDFk3q1ND9ytpix92o8V44PReR4+oF88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403854AbfKHLri (ORCPT
+        id S2391645AbfKHLrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391588AbfKHLrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:36 -0500
+        id S2391588AbfKHLrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D7F120656;
-        Fri,  8 Nov 2019 11:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09B57222C5;
+        Fri,  8 Nov 2019 11:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213655;
-        bh=G07mmmbZxw4U7sCnfcE050gp+/zMjMUqCmkE3k+kAnc=;
+        s=default; t=1573213659;
+        bh=uIXzy5NaSb2l3HTFOk/ZUs1O/o+lkruU8kvNmDUkF+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0mHndFN31FYymHnLD5PDO8kYzaZGKtaI/jGEttq0wtBcW+JhVKI4PgbrrWYJBi4l
-         Jnyv3GSx/ZYvnd0RU5ZRR29K3fww64lE0OphpDhiuDKGhw5Y0wJ/VpX1cEk4YPX/+c
-         6dzNpWYVBofcom7q1n2+qasQ35hs3JM4fdxQLF60=
+        b=GCxoZEHQOhBfNjec29KelrmEF3Yv6n5UQCtuq+ma0dbqqxS+jHQBLThjcar0oHtP3
+         dXUnjkEOX5zFSfWyUrjJD3qSzzKh2LpZR3rVYupqUpRZLRD75mzezq3DLb4uWqVSuz
+         JYeReGrkDAvtRu9xfLAvIy+yebCIn8bAMWHhhNFc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 10/44] i40e: hold the rtnl lock on clearing interrupt scheme
-Date:   Fri,  8 Nov 2019 06:46:46 -0500
-Message-Id: <20191108114721.15944-10-sashal@kernel.org>
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Raghuram Chary Jallipalli 
+        <raghuramchary.jallipalli@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 14/44] net: lan78xx: Bail out if lan78xx_get_endpoints fails
+Date:   Fri,  8 Nov 2019 06:46:50 -0500
+Message-Id: <20191108114721.15944-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,55 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patryk Małek <patryk.malek@intel.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit 5cba17b14182696d6bb0ec83a1d087933f252241 ]
+[ Upstream commit fa8cd98c06407b5798b927cd7fd14d30f360ed02 ]
 
-Hold the rtnl lock when we're clearing interrupt scheme
-in i40e_shutdown and in i40e_remove.
+We need to bail out if lan78xx_get_endpoints() fails, otherwise the
+result is overwritten.
 
-Signed-off-by: Patryk Małek <patryk.malek@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Raghuram Chary Jallipalli <raghuramchary.jallipalli@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/usb/lan78xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 22c43a776c6cd..756c4ea176554 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -10828,6 +10828,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 	mutex_destroy(&hw->aq.asq_mutex);
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 45a6a7cae4bfc..fc922f8122801 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2246,6 +2246,11 @@ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
+ 	int i;
  
- 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
- 	for (i = 0; i < pf->num_alloc_vsi; i++) {
- 		if (pf->vsi[i]) {
-@@ -10836,6 +10837,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 			pf->vsi[i] = NULL;
- 		}
- 	}
-+	rtnl_unlock();
+ 	ret = lan78xx_get_endpoints(dev, intf);
++	if (ret) {
++		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
++			    ret);
++		return ret;
++	}
  
- 	for (i = 0; i < I40E_MAX_VEB; i++) {
- 		kfree(pf->veb[i]);
-@@ -10982,7 +10984,13 @@ static void i40e_shutdown(struct pci_dev *pdev)
- 	wr32(hw, I40E_PFPM_WUFC,
- 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
+ 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
  
-+	/* Since we're going to destroy queues during the
-+	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
-+	 * whole section
-+	 */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
-+	rtnl_unlock();
- 
- 	if (system_state == SYSTEM_POWER_OFF) {
- 		pci_wake_from_d3(pdev, pf->wol_en);
 -- 
 2.20.1
 
