@@ -2,91 +2,110 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39DFC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63359C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8B92178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QtANlRoK"
+	by mail.kernel.org (Postfix) with ESMTP id 3E6942178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfKHQyi (ORCPT
+        id S1728051AbfKHQz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:54:38 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50264 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKHQyh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:54:37 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA8GmRRQ052691;
-        Fri, 8 Nov 2019 10:48:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573231707;
-        bh=4A4O5I7pwI/p0i8/yVVFwm2hJ5HkTiFhKi6/rXJSUUw=;
-        h=From:To:CC:Subject:Date;
-        b=QtANlRoK8Wi271mYRcJwNxC0JxEQigLC2P2SuVnOWIZuOpcnrJdUjUd2Tj8L5S52h
-         qPQBUiwbgUD2KtDqp1aHgLr0jeOTDliBvnBClxLgFmAm6XF5QHxY/i9DhMaikAJKdJ
-         dasuGsg35kyMrlephdT//rLLE4nvFAo2Y7uJKeLo=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA8GmRGp106711
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 Nov 2019 10:48:27 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 8 Nov
- 2019 10:48:11 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 8 Nov 2019 10:48:11 -0600
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA8GmNLW117597;
-        Fri, 8 Nov 2019 10:48:24 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Subject: [PATCH v3 0/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
-Date:   Fri, 8 Nov 2019 22:18:55 +0530
-Message-ID: <20191108164857.11466-1-vigneshr@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 8 Nov 2019 11:55:59 -0500
+Received: from muru.com ([72.249.23.125]:40894 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfKHQz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:55:58 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0355D80D4;
+        Fri,  8 Nov 2019 16:56:33 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 08:55:54 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Tero Kristo <t-kristo@ti.com>,
+        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 3/5] ARM: dts: dra7: add vpe clkctrl node
+Message-ID: <20191108165554.GF5610@atomide.com>
+References: <20191104203841.3628-1-bparrot@ti.com>
+ <20191104203841.3628-4-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104203841.3628-4-bparrot@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series add DT bindings and driver for TI wrapper for Cadence UFS
-IP that is present on TI's J721e SoC
+Hi,
 
-Vignesh Raghavendra (2):
-  dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for TI UFS wrapper
-  scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
+* Benoit Parrot <bparrot@ti.com> [191104 20:39]:
+> Add clkctrl nodes for VPE module.
 
- .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 68 ++++++++++++++
- drivers/scsi/ufs/Kconfig                      | 10 +++
- drivers/scsi/ufs/Makefile                     |  1 +
- drivers/scsi/ufs/ti-j721e-ufs.c               | 90 +++++++++++++++++++
- 4 files changed, 169 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
- create mode 100644 drivers/scsi/ufs/ti-j721e-ufs.c
+Can you please add a comment describing that we currently need to
+use custom node names here instead of the standard naming?
 
--- 
-2.24.0
+I can queue this and other dts change once I have an immutable clock
+changes branch from Tero.
 
+Or if Tero wants to also pick up the clock node dtsi patch I can ack it,
+up to Tero.
+
+Regards,
+
+Tony
+
+
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  arch/arm/boot/dts/dra7xx-clocks.dtsi | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> index 93e1eb83bed9..d1c2406ec71c 100644
+> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> @@ -1591,10 +1591,10 @@
+>  
+>  	rtc_cm: rtc-cm@700 {
+>  		compatible = "ti,omap4-cm";
+> -		reg = <0x700 0x100>;
+> +		reg = <0x700 0x60>;
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -		ranges = <0 0x700 0x100>;
+> +		ranges = <0 0x700 0x60>;
+>  
+>  		rtc_clkctrl: rtc-clkctrl@20 {
+>  			compatible = "ti,clkctrl";
+> @@ -1603,6 +1603,20 @@
+>  		};
+>  	};
+>  
+> +	vpe_cm: vpe-cm@760 {
+> +		compatible = "ti,omap4-cm";
+> +		reg = <0x760 0xc>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x760 0xc>;
+> +
+> +		vpe_clkctrl: vpe-clkctrl@0 {
+> +			compatible = "ti,clkctrl";
+> +			reg = <0x0 0xc>;
+> +			#clock-cells = <2>;
+> +		};
+> +	};
+> +
+>  };
+>  
+>  &cm_core {
+> -- 
+> 2.17.1
+> 
