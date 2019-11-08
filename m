@@ -2,148 +2,110 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026DEFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E3FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F7021848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A45F21924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hgbSwKvu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ec4plKZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfKHNgs (ORCPT
+        id S1727994AbfKHNlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:36:48 -0500
-Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:15046
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726445AbfKHNgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:36:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l2fcIlkNlbEnR3xORHSYy9D43sqV3bAxCQAT5hcRoVyAYNgRchSAJDZZmpbEsVQmG9BEZ7R2Zeggo24SSLhSz7t5a34wyeckG/5IIlB5iLdl3dMVzBv4oKP8yF8YOm9L3y+sR0XhjQusoict07qAJNKPSQ3cdAskSm+LjIZinjAAk5NIaoYL/4OYplMOT/WpfHt4U4VJGEnVJpx9hCDJsXwiit6MoqQi2mtlG2+ymz/+JsjJufE7OedKRTmcGWniq4QhrvVkIy70pynP6bFNeBALPHZyBYdil9SKKrSYhLf2+G2tnoIRnMBsNlETvBQvMTW5KPXPlIStNB0xZeC2cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1ym6sNZ1SaW2QBxnhuEX3XvAtjtBWLRBDBDlYcxyZTY=;
- b=AcGKdQQuYzbQaD8ZvqvbMheyd89JCpWLRWBQpFDdxpHGKn4q4BYN8dDRALrSbnq4mnEArcNdFM7OWjGqRH/C9p7K+5EQIZVgBYKwtlWYCmyV2Nv3rnm+O3JFse0cKdXv+EO9gebb7aPEcTdJtecgKjMZlbGPHd8iL7eSJ9+kGIXb9TwSmBcY5nnCVyJWsjmNTeQQikxlBjtIgLbBiqt+oKyWxLkYenrZJUKbiPCnYe0VKlA7WdiZwd8pCqWpMK5ASrU0akkjXFyY5tM1Ql91Fnnh/1ayVUQjevuWma7u2cpPd5ze8XkCx95knKk/5xh449aHcUhWLl58mnP6OaU16g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1ym6sNZ1SaW2QBxnhuEX3XvAtjtBWLRBDBDlYcxyZTY=;
- b=hgbSwKvu8oIWOC9js9Q85RKIrcDRwg/3CRR08FHfSyEndVIY7SOTQRsfg64nfWn9vnOpLOyVRUhqy+pA4K8Vtu9ZJRR416/lLn3MPvtn0SveEi/64nc1SGEfppPNw7WvQJfg8gFvwL1mIL8Gi9laNcXP0kbPUXUBwsdPE8oY4D8=
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
- VI1PR0402MB3584.eurprd04.prod.outlook.com (52.134.5.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Fri, 8 Nov 2019 13:36:41 +0000
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::8997:3705:3f41:1d1b]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::8997:3705:3f41:1d1b%7]) with mapi id 15.20.2408.028; Fri, 8 Nov 2019
- 13:36:41 +0000
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Topic: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Index: AQHVlLXLzR/BR8Qmu0iHDS94ZPyJ2qd+RrWAgAATH4CAAAH2AIAC7eQA
-Date:   Fri, 8 Nov 2019 13:36:40 +0000
-Message-ID: <1573220200.16477.32.camel@nxp.com>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-         <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
-         <1573058741.16477.18.camel@nxp.com>
-         <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
-In-Reply-To: <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mirela.rabulea@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8188e02d-5413-418f-6f51-08d76450b01f
-x-ms-traffictypediagnostic: VI1PR0402MB3584:|VI1PR0402MB3584:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3584FB0A885525F952D365068F7B0@VI1PR0402MB3584.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(189003)(199004)(3846002)(26005)(14444005)(446003)(50226002)(6116002)(229853002)(2906002)(476003)(86362001)(6512007)(4326008)(103116003)(5660300002)(66066001)(44832011)(11346002)(6246003)(6436002)(186003)(6486002)(25786009)(2616005)(256004)(316002)(478600001)(2501003)(7736002)(99286004)(486006)(7416002)(54906003)(14454004)(64756008)(91956017)(66556008)(66446008)(8676002)(110136005)(76176011)(81156014)(36756003)(76116006)(8936002)(102836004)(66946007)(71190400001)(6506007)(81166006)(305945005)(71200400001)(66476007)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3584;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jWN946PA2KPjN1PnIgsaAL49Sx683mb0KgOgAcqcHbXe6yBFUm8lxucxgebBtCusiDFTtIQ9cuk9hWSZvpN1hE0NWMgzGlM9SQ+HZ2S9rKxmgMAE6rSKa+zNE4Dr6/P+PREtdlNYae8pLvqa7tw8igSiq15iSmMqptSzBO0iLK0OUgF9E2Cd5dH4wo/g3LEK1uoJvb82wNuv6YZ8LN437RLqQCFuHsJpx4YuSLEeto/fxzaqPQWPMeRRYIfIbVh243leCOZ+1KIVkO8+D5xXuDZr0TVWbseLQXdiGqJh7c/5w8BUYu+VeP+yFfzmmKgyipQ7VxqnB4OKOtN/85Pw7Fus3KjmAUaiVM0c2jjBgrE5AzjT/ZSsVcMSBJ3/tTOgy/xZQXeuyp4/J3IOwHw52pSzAoz5u2eR3gch+A5gTm0Y+S9n2hejuSJYOhZSUK3h
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8490D0E6FF31574AB43620D7EA628ED4@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 8 Nov 2019 08:41:32 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:56566 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfKHNlb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 08:41:31 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8DdJBp173349;
+        Fri, 8 Nov 2019 13:39:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=EN/SCcok43dz7bv91DbkS1Cf4aZc0oMNFHRA92kmMBk=;
+ b=ec4plKZTwIJ70M53HTN2vrxpUQlTbWawXoH78zVVd7xv5KQHBovO01FBfvfhKCO2AuBL
+ lvaVz/WsLyiMxLpK5y7s975OQslHJ9J038te/d0cV4XdALBup9k5ijXMCuajcMfoa7zW
+ 5G2pGqtQ9OTKVkZ2ykc1n82NP1VSxjeEKu30lnjkgqE0bCjo/B3AQdahiaIuCMo4cxGP
+ hNTC+IfUni0MlRqR1nfMuwWQ45BLaEI+D8LgiFlKr1oUvE9KaFd0v+TBZFjolQ4VQisP
+ UHZb7jGUk3MiRKTReK1k6UrngUQ6wHvCpkV6KydGbO6dpxETtlR3pyK+OLKaoyvon4A7 +g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w41w15b8q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 13:39:46 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8DdBFa108201;
+        Fri, 8 Nov 2019 13:39:45 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2w41whtvpq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 13:39:45 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA8DddH7017631;
+        Fri, 8 Nov 2019 13:39:39 GMT
+Received: from tomti.i.net-space.pl (/10.175.202.125)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 Nov 2019 05:39:38 -0800
+Date:   Fri, 8 Nov 2019 14:39:31 +0100
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
+        corbet@lwn.net, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, eric.snowberg@oracle.com, hpa@zytor.com,
+        jgross@suse.com, kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
+        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH v5 2/3] x86/boot: Introduce the kernel_info.setup_type_max
+Message-ID: <20191108133931.ah2an7o4wqqax6fj@tomti.i.net-space.pl>
+References: <20191104151354.28145-1-daniel.kiper@oracle.com>
+ <20191104151354.28145-3-daniel.kiper@oracle.com>
+ <20191108100930.GA4503@zn.tnic>
+ <20191108104702.vwfmvehbeuza4j5w@tomti.i.net-space.pl>
+ <20191108110703.GB4503@zn.tnic>
+ <20191108125248.drmm7xakn7t7oyul@tomti.i.net-space.pl>
+ <20191108130338.GD4503@zn.tnic>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8188e02d-5413-418f-6f51-08d76450b01f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 13:36:40.8967
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ii+yNgcLyGVhtBo7C3wPtminNaupLaw0QOvIemQWnk8Twfh7qjH0reXUi9ft3Ryc3TcnFJmpALjVOv+DBSWghA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3584
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108130338.GD4503@zn.tnic>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=891
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911080136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=969 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911080136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSGFucywNCg0KT24gTWksIDIwMTktMTEtMDYgYXQgMTc6NTIgKzAxMDAsIEhhbnMgVmVya3Vp
-bCB3cm90ZToNCj4gwqAgwqAgwqAgdGVzdCBTY2FsaW5nOiBPSw0KPiBUaGUgcHJlc2VuY2Ugb2Yg
-YSBzY2FsZXIgaXMgc3VzcGljaW91czogaXMgdGhlIGVuY29kZXIgaW5kZWVkDQo+IGNhcGFibGUg
-b2Ygc2NhbGluZz8gSSBzdXNwZWN0IHRoaXMgaXMgYSBidWcuDQoNCk5vLCBpdCdzIG5vdCBjYXBh
-YmxlIG9mIHNjYWxpbmcuIFlvdSBzdXNwZWN0IGEgYnVnIGluIHRoZSBkcml2ZXIgb3IgdGhlDQp0
-ZXN0cz8NCg0KPiBDb2RlYyBpb2N0bHM6DQo+ID4gwqDCoMKgwqDCoMKgdGVzdCBWSURJT0NfKFRS
-WV8pRU5DT0RFUl9DTUQ6IE9LDQo+IFRoZSBwcmVzZW5jZSBvZiB0aGlzLi4uDQo+IA0KPiA+IA0K
-PiA+IMKgwqDCoMKgwqDCoHRlc3QgVklESU9DX0dfRU5DX0lOREVYOiBPSyAoTm90IFN1cHBvcnRl
-ZCkNCj4gPiDCoMKgwqDCoMKgwqB0ZXN0IFZJRElPQ18oVFJZXylERUNPREVSX0NNRDogT0sNCj4g
-Li4uYW5kIHRoaXMgaXMgYWxzbyBzdHJhbmdlIGZvciBhIEpQRUcgY29kZWMuIFRoZXNlIGlvY3Rs
-cyBhcmUNCj4gdHlwaWNhbGx5IG9ubHkNCj4gbmVlZGVkIGZvciBNUEVHL0gyNjQvZXRjLiBjb2Rl
-Y3MsIGFuZCBub3QgZm9yIGEgc2ltcGxlIEpQRUcgY29kZWMuDQo+IA0KPiBUaGUgc2FtZSBpc3N1
-ZXMgYXJlIGZvdW5kIGZvciB0aGUgSlBFRyBkZWNvZGVyLg0KDQpJIGltcGxlbWVudGVkIHRoZSBD
-TURfU1RPUCBmb3IgYm90aCBlbmNvZGVyICYgZGVjb2RlciwgYmVjYXVzZSBpdCB3YXMNCnJlcXVl
-c3RlZCBieSBvdXIgZGV2ZWxvcGVyIGZvciBnc3RyZWFtZXIgcGx1Z2luIGZvciB0aGlzIGNvZGVj
-Lg0KVGhlIGNvbnRleHQgaW4gd2hpY2ggdGhpcyB3YXMgcmVxdWVzdGVkIHdhcyBmb3IgcGxheWlu
-ZyBNSlBFRyB2aWRlb3MgKGENCmNvbmNhdGVuYXRpb24gb2YgSlBFRyBmcmFtZXMpLg0KDQo+IFN0
-cmVhbWluZyBpb2N0bHM6DQo+ID4gwqDCoMKgwqDCoMKgdGVzdCByZWFkL3dyaXRlOiBPSyAoTm90
-IFN1cHBvcnRlZCkNCj4gPiDCoMKgwqDCoMKgwqB0ZXN0IGJsb2NraW5nIHdhaXQ6IE9LDQo+ID4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGZhaWw6IHY0bDItdGVzdC1idWZmZXJzLmNwcCgy
-NTQpOiBnX2ZpZWxkKCkgPT0NCj4gPiBWNEwyX0ZJRUxEX0FOWQ0KPiBUaGUgZHJpdmVyIHNoYWxs
-IG5ldmVyIHJldHVybiBGSUVMRF9BTlkuIFRoaXMgbmVlZHMgdG8gYmUgRklFTERfTk9ORS4NCg0K
-SXMgdGhlcmUgYSAiZ29vZCBleGFtcGxlIiBvZiBhIHY0bCBtMm0gZHJpdmVyIHRoYXQgcGFzc2Vz
-IHRoZXNlDQpzdHJlYW1pbmcgdGVzdHM/IFRoYXQgd291bGQgc2F2ZSBzb21lIHRpbWUgb24gbXkg
-c2lkZS4NCkZvciB0aGUgRklFTERfQU5ZIGlzc3VlLCBJIGdvdCBpbnNwaXJlZCBmcm9tIHlvdXIg
-Y29tbWl0Og0KYWI3YWZhZjMgbWVkaWE6IHZpbTJtOiBhZGQgYnVmX291dF92YWxpZGF0ZSBjYWxs
-YmFjaw0KQnV0IHRoZXJlJ3MgYSBsb3QgbW9yZSB0byBnby4uLg0KDQpUaGFua3MsDQpNaXJlbGEN
-Cg==
+On Fri, Nov 08, 2019 at 02:03:38PM +0100, Borislav Petkov wrote:
+> On Fri, Nov 08, 2019 at 01:52:48PM +0100, Daniel Kiper wrote:
+> > OK, got your comments. I will repost the patch series probably on Tuesday.
+> > I hope that it will land in 5.5 then.
+>
+> I don't see why not if you base it ontop of tip:x86/boot and test it
+> properly before sending.
+
+Great!
+
+> Out of curiosity, is there any particular reason this should be in 5.5?
+
+Just want to have it done... :-))) ...and continue work on stuff which
+depends on it.
+
+Daniel
