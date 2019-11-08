@@ -2,57 +2,58 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E526FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350C1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14295214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A76214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239646;
-	bh=+uwkNBsc9xLP0/A1bdmgBoeocRqkxgLyb7EbacpIHLI=;
+	s=default; t=1573239649;
+	bh=2mGqoX6FAGM5sBwdslHPp6bbqh5CBhXcNDWgI5fLKL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YjsqPpXYnj7TKgzFP7t4TaMXBr0BLcbZt0DNgi9OvW0hvcmMgjv8UdGLvsjyUEnzw
-	 u7p/V05a7TYV0Y3wnKo6xCDDuo/94fwxDwoAW/347ll0GpVQVgcsEyQ1O1q6DkRFgI
-	 3OWqlly+6F8mG9G2dyatacY8TQhcx+dcsXOPmAY8=
+	b=tEqGzOC2yQ6MfLMfxXshQTSQi19k8koOl5lAsozS/ZCdwCT8hK+qBsQnIr8CP3iUL
+	 HKoOsmYyBmbJgkTwsS5rwZ8mKaHHWbb5mZ8kYUd3Pfp9GuMwz8f+eolfxjkm21EFlt
+	 aTBxW6IXpzRXNKzaWzuwo1TQhxa6rwUslKKRG81Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389905AbfKHTAo (ORCPT
+        id S2389945AbfKHTAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389693AbfKHTAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:22 -0500
+        id S2389769AbfKHTAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5A42067B;
-        Fri,  8 Nov 2019 19:00:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA0C32067B;
+        Fri,  8 Nov 2019 19:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239621;
-        bh=+uwkNBsc9xLP0/A1bdmgBoeocRqkxgLyb7EbacpIHLI=;
+        s=default; t=1573239633;
+        bh=2mGqoX6FAGM5sBwdslHPp6bbqh5CBhXcNDWgI5fLKL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btjX+5lvhVKLa4pDFOunB5n1HyoYlV//Adiei8GzmCZsBRDFPv2e7KbK7MGO7F1k4
-         NU+N0pRRzrIEN/EKKP2f3rnxfi/I1MCcAYt7FLlpRu7gE+t5JySYU54Xurh2HK7Ven
-         sgmKKsFp3a3oXG1QEreocx8LMJc+gldrtINpgP24=
+        b=neaSXm3/igqg0/FQfvetPdTHpDeiPFbPUrxY+dBrCp8PXMdAX8rVD5VSAh4b0DzH+
+         8MA5Tclx0a3lt8Z1avy5pUi5GZLvER/zkICXBieJotUO23A2xwJZmJBaNOqpiBNQHU
+         JWr/zKcrqVJXT33yS01HtpYlABAMAYj0REfPoj8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sandipan Das <sandipan@linux.ibm.com>
-Subject: [PATCH 4.14 58/62] powerpc/book3s64/mm: Dont do tlbie fixup for some hardware revisions
-Date:   Fri,  8 Nov 2019 19:50:46 +0100
-Message-Id: <20191108174800.826131432@linuxfoundation.org>
+        stable@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/79] kbuild: add -fcf-protection=none when using retpoline flags
+Date:   Fri,  8 Nov 2019 19:49:41 +0100
+Message-Id: <20191108174746.110230059@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
-References: <20191108174719.228826381@linuxfoundation.org>
+In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
+References: <20191108174745.495640141@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,80 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Seth Forshee <seth.forshee@canonical.com>
 
-commit 677733e296b5c7a37c47da391fc70a43dc40bd67 upstream.
+[ Upstream commit 29be86d7f9cb18df4123f309ac7857570513e8bc ]
 
-The store ordering vs tlbie issue mentioned in commit
-a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on
-POWER9") is fixed for Nimbus 2.3 and Cumulus 1.3 revisions. We don't
-need to apply the fixup if we are running on them
+The gcc -fcf-protection=branch option is not compatible with
+-mindirect-branch=thunk-extern. The latter is used when
+CONFIG_RETPOLINE is selected, and this will fail to build with
+a gcc which has -fcf-protection=branch enabled by default. Adding
+-fcf-protection=none when building with retpoline enabled
+prevents such build failures.
 
-We can only do this on PowerNV. On pseries guest with kvm we still
-don't support redoing the feature fixup after migration. So we should
-be enabling all the workarounds needed, because whe can possibly
-migrate between DD 2.3 and DD 2.2
-
-Cc: stable@vger.kernel.org # v4.14
-Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190924035254.24612-1-aneesh.kumar@linux.ibm.com
-[sandipan: Backported to v4.14]
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/dt_cpu_ftrs.c |   31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -733,9 +733,35 @@ static bool __init cpufeatures_process_f
- 	return true;
- }
+diff --git a/Makefile b/Makefile
+index 6af1c13d8753b..729467fe0933f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -835,6 +835,12 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
+ # change __FILE__ to the relative path from the srctree
+ KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
  
-+/*
-+ * Handle POWER9 broadcast tlbie invalidation issue using
-+ * cpu feature flag.
-+ */
-+static __init void update_tlbie_feature_flag(unsigned long pvr)
-+{
-+	if (PVR_VER(pvr) == PVR_POWER9) {
-+		/*
-+		 * Set the tlbie feature flag for anything below
-+		 * Nimbus DD 2.3 and Cumulus DD 1.3
-+		 */
-+		if ((pvr & 0xe000) == 0) {
-+			/* Nimbus */
-+			if ((pvr & 0xfff) < 0x203)
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+		} else if ((pvr & 0xc000) == 0) {
-+			/* Cumulus */
-+			if ((pvr & 0xfff) < 0x103)
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+		} else {
-+			WARN_ONCE(1, "Unknown PVR");
-+			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+		}
-+	}
-+}
++# ensure -fcf-protection is disabled when using retpoline as it is
++# incompatible with -mindirect-branch=thunk-extern
++ifdef CONFIG_RETPOLINE
++KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
++endif
 +
- static __init void cpufeatures_cpu_quirks(void)
- {
--	int version = mfspr(SPRN_PVR);
-+	unsigned long version = mfspr(SPRN_PVR);
+ # use the deterministic mode of AR if available
+ KBUILD_ARFLAGS := $(call ar-option,D)
  
- 	/*
- 	 * Not all quirks can be derived from the cpufeatures device tree.
-@@ -743,8 +769,7 @@ static __init void cpufeatures_cpu_quirk
- 	if ((version & 0xffffff00) == 0x004e0100)
- 		cur_cpu_spec->cpu_features |= CPU_FTR_POWER9_DD1;
- 
--	if ((version & 0xffff0000) == 0x004e0000)
--		cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+	update_tlbie_feature_flag(version);
- }
- 
- static void __init cpufeatures_setup_finished(void)
+-- 
+2.20.1
+
 
 
