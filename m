@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CA4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2529EFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2B92084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E714321924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214090;
-	bh=lZXxMuWIybLFtXGs8v1ZWRWHg9eTWJ+Zb4KyQrFSfR0=;
+	s=default; t=1573214100;
+	bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJEMVGG45GhSNvZhggZka8HeO/pOIlS4xAnoDYYy3Jvio0TVS47bZNUq6sRxhtc5C
-	 YmJENGITfv8/OW9LgV4HGXvte0t6gq0ulI0i4R5KbZl809FdKnPoCgwPLssv4qa401
-	 baMmhBE0/oND+uD8kAHreEzwEaTc/EfeiKBwzwBY=
+	b=jJrHIsqGEEiqBHW0Zbfu7Uzle4lItsExCWxNBBbWNq0jG3aZR54yZv3TJ4UxoKit0
+	 +sMKHzfhWVSgjhNwq/6Ki+yGJF2mL7e0gq9ED74lyl0lJkFbQwGP/SjdBGj2MrjFKP
+	 6GCQ5pJpDeqgiHuR7coV4fXrdufGURTWgpNiFEyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391021AbfKHLyt (ORCPT
+        id S2390140AbfKHLqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:54:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391277AbfKHLqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:12 -0500
+        id S2391232AbfKHLqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6023D20656;
-        Fri,  8 Nov 2019 11:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 335A12084D;
+        Fri,  8 Nov 2019 11:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213572;
-        bh=lZXxMuWIybLFtXGs8v1ZWRWHg9eTWJ+Zb4KyQrFSfR0=;
+        s=default; t=1573213563;
+        bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqCqO7Y0bJeLwaI1IoAcVrKiR2axvDv4ex+7ZhP1fYE0tB8ZZhELnZb4OXcb1qn48
-         KFTjA19qrDohzkUYc93VjGRGSnu5kC5b8+kQNY+JAltRDXL0ELQLYWzpYabjKAMH8T
-         IZ1rK38F/tOE7LkzJ8UqleLlBfzJ+yL8k9b2VsbI=
+        b=Wh/NAhMz2ugnDDXVkMJErAREJwXNz513BndFE57sYvF5SKuvFlAnkRylC/ZLEXiQI
+         Uo+e84+SKaUaPuE4HJeka3RexGpvjz1J4TF8g257lEeT3VTLTUnGl0S+N5Ky8qUjox
+         8D5c7Of0DMV/MzzbXSbBNukEAa35RC/khc01fRH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/64] iwlwifi: mvm: avoid sending too many BARs
-Date:   Fri,  8 Nov 2019 06:44:59 -0500
-Message-Id: <20191108114545.15351-18-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/64] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
+Date:   Fri,  8 Nov 2019 06:44:53 -0500
+Message-Id: <20191108114545.15351-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,48 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 1a19c139be18ed4d6d681049cc48586fae070120 ]
+[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
 
-When we receive TX response, we may release a few packets
-due to a hole that was closed in the transmission window.
+This patch adds missing properties to the CODEC and sound nodes, so the
+audio will work also on Snow rev5 Chromebook. This patch is an extension
+to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
+DAI properties to the max98095 node in Snow Chromebook")
+and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
+Chromebook").  It has been reported that such changes work fine on the
+rev5 board too.
 
-However, if that frame failed, we will mark all the released
-frames as failed and will send multiple BARs.
-
-This affects statistics badly, and cause unnecessary frames
-transmission.
-
-Instead, mark all the following packets as success, with the
-desired result of sending a bar for the failed frame only.
-
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+[krzk: Fixed typo in phandle to &max98090]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index 1aa74b87599ff..63dcea640d076 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -1303,6 +1303,14 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
- 			break;
- 		}
+diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
+index 90560c316f644..cb986175b69b4 100644
+--- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
++++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
+@@ -23,6 +23,14 @@
  
-+		/*
-+		 * If we are freeing multiple frames, mark all the frames
-+		 * but the first one as acked, since they were acknowledged
-+		 * before
-+		 * */
-+		if (skb_freed > 1)
-+			info->flags |= IEEE80211_TX_STAT_ACK;
+ 		samsung,model = "Snow-I2S-MAX98090";
+ 		samsung,audio-codec = <&max98090>;
 +
- 		iwl_mvm_tx_status_check_trigger(mvm, status);
++		cpu {
++			sound-dai = <&i2s0 0>;
++		};
++
++		codec {
++			sound-dai = <&max98090 0>, <&hdmi>;
++		};
+ 	};
+ };
  
- 		info->status.rates[0].count = tx_resp->failure_frame + 1;
+@@ -34,6 +42,9 @@
+ 		interrupt-parent = <&gpx0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&max98090_irq>;
++		clocks = <&pmu_system_controller 0>;
++		clock-names = "mclk";
++		#sound-dai-cells = <1>;
+ 	};
+ };
+ 
 -- 
 2.20.1
 
