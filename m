@@ -2,51 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5EBFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE7EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8068D222C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3392121D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240072;
-	bh=9nPEdpQYOCY2TlQxk6PBSh9IstcTcETRHvZjaXcvaF0=;
+	s=default; t=1573240075;
+	bh=VhfGaG+t7C4m+boCGdvk/o/VWd6GI2UgcnodDBhjEtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glZALmkv/vPyPgutHtN4XgvbdPuMveiO8zq0DP4H//GJfyHb5qxVusAF0ZA8PT0iy
-	 IchaErX8DUMSTkUC3YUdLWYkfIjo+HOt/aF9g4t8QO6ykfsBp5Iiovcc4/MAFIf1I0
-	 IYCdEVAb5m2kAInwBkB6ZThaGUtfENOVg/YATmzg=
+	b=fM5lx/9WeHcI8mwjsYdDQAojTsm0zCAov3tdw+OAle0v4okIWneSWbEz8C/WORkMs
+	 XVI0hv1JCc4LWJtSyEqW50N9DvtSxhhXRtWCYcDhXCXooLT4fv/TpQvTd7Nb0QYIOW
+	 NGlnef18ik4gZcKguhq5AzbPMcfYoVCRLNfDVmks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391036AbfKHTHu (ORCPT
+        id S2391515AbfKHTHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:07:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38602 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:07:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388499AbfKHTHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:47 -0500
+        id S2391499AbfKHTHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:07:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E1FF21D7F;
-        Fri,  8 Nov 2019 19:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC5A2196F;
+        Fri,  8 Nov 2019 19:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240066;
-        bh=9nPEdpQYOCY2TlQxk6PBSh9IstcTcETRHvZjaXcvaF0=;
+        s=default; t=1573240069;
+        bh=VhfGaG+t7C4m+boCGdvk/o/VWd6GI2UgcnodDBhjEtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5cNlrc19jYGv9CkoEHQsyGrLtgks3YKqP4jghKbrOo5UthIzh3RuGU7vUZPmeBzr
-         ZPdeNWnCPmDR74U5qNoOh3PSuTTN0fMh4xP9M/vCUhfMxn8J5G61shjInBhF/7B77i
-         aKlwf9Ad+ZYUqM+uAm4Um/gsVl/bimLdwmrt6Dj8=
+        b=oiMgUzrWkbgsvY/uQ0lyGtyDOUFjezPXVOF5fjyG7cZbAmHUEFTOMi7FXyB9p/eIf
+         4V8ZkpgpdHe86TzbIxvUskHXz7NTfb26KXSW3dArkTecchHzepxxjH8R38sixjjuo0
+         Sr454osXWZCszbSny+6DZlA7qBywiGX7RsPZXGQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 070/140] irqchip/gic-v3-its: Use the exact ITSList for VMOVP
-Date:   Fri,  8 Nov 2019 19:49:58 +0100
-Message-Id: <20191108174909.582979810@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shahjada Abul Husain <shahjada@chelsio.com>,
+        Vishal Kulkarni <vishal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 079/140] cxgb4: fix panic when attaching to ULD fail
+Date:   Fri,  8 Nov 2019 19:50:07 +0100
+Message-Id: <20191108174910.104572878@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -59,91 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Vishal Kulkarni <vishal@chelsio.com>
 
-[ Upstream commit 8424312516e5d9baeeb0a95d0e4523579b7aa395 ]
+[ Upstream commit fc89cc358fb64e2429aeae0f37906126636507ec ]
 
-On a system without Single VMOVP support (say GITS_TYPER.VMOVP == 0),
-we will map vPEs only on ITSs that will actually control interrupts
-for the given VM.  And when moving a vPE, the VMOVP command will be
-issued only for those ITSs.
+Release resources when attaching to ULD fail. Otherwise, data
+mismatch is seen between LLD and ULD later on, which lead to
+kernel panic when accessing resources that should not even
+exist in the first place.
 
-But when issuing VMOVPs we seemed fail to present the exact ITSList
-to ITSs who are actually included in the synchronization operation.
-The its_list_map we're currently using includes all ITSs in the system,
-even though some of them don't have the corresponding vPE mapping at all.
-
-Introduce get_its_list() to get the per-VM its_list_map, to indicate
-which ITSs have vPE mappings for the given VM, and use this map as
-the expected ITSList when building VMOVP. This is hopefully a performance
-gain not to do some synchronization with those unsuspecting ITSs.
-And initialize the whole command descriptor to zero at beginning, since
-the seq_num and its_list should be RES0 when GITS_TYPER.VMOVP == 1.
-
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1571802386-2680-1-git-send-email-yuzenghui@huawei.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 94cdb8bb993a ("cxgb4: Add support for dynamic allocation of resources for ULD")
+Signed-off-by: Shahjada Abul Husain <shahjada@chelsio.com>
+Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c |   28 ++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index c3a8d732805f5..868c356fbf496 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -175,6 +175,22 @@ static DEFINE_IDA(its_vpeid_ida);
- #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
- #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
+@@ -695,10 +695,10 @@ static void uld_init(struct adapter *ada
+ 	lld->write_cmpl_support = adap->params.write_cmpl_support;
+ }
  
-+static u16 get_its_list(struct its_vm *vm)
-+{
-+	struct its_node *its;
-+	unsigned long its_list = 0;
-+
-+	list_for_each_entry(its, &its_nodes, entry) {
-+		if (!its->is_v4)
-+			continue;
-+
-+		if (vm->vlpi_count[its->list_nr])
-+			__set_bit(its->list_nr, &its_list);
-+	}
-+
-+	return (u16)its_list;
-+}
-+
- static struct its_collection *dev_event_to_col(struct its_device *its_dev,
- 					       u32 event)
+-static void uld_attach(struct adapter *adap, unsigned int uld)
++static int uld_attach(struct adapter *adap, unsigned int uld)
  {
-@@ -976,17 +992,15 @@ static void its_send_vmapp(struct its_node *its,
+-	void *handle;
+ 	struct cxgb4_lld_info lli;
++	void *handle;
  
- static void its_send_vmovp(struct its_vpe *vpe)
+ 	uld_init(adap, &lli);
+ 	uld_queue_init(adap, uld, &lli);
+@@ -708,7 +708,7 @@ static void uld_attach(struct adapter *a
+ 		dev_warn(adap->pdev_dev,
+ 			 "could not attach to the %s driver, error %ld\n",
+ 			 adap->uld[uld].name, PTR_ERR(handle));
+-		return;
++		return PTR_ERR(handle);
+ 	}
+ 
+ 	adap->uld[uld].handle = handle;
+@@ -716,22 +716,22 @@ static void uld_attach(struct adapter *a
+ 
+ 	if (adap->flags & CXGB4_FULL_INIT_DONE)
+ 		adap->uld[uld].state_change(handle, CXGB4_STATE_UP);
++
++	return 0;
+ }
+ 
+-/**
+- *	cxgb4_register_uld - register an upper-layer driver
+- *	@type: the ULD type
+- *	@p: the ULD methods
++/* cxgb4_register_uld - register an upper-layer driver
++ * @type: the ULD type
++ * @p: the ULD methods
+  *
+- *	Registers an upper-layer driver with this driver and notifies the ULD
+- *	about any presently available devices that support its type.  Returns
+- *	%-EBUSY if a ULD of the same type is already registered.
++ * Registers an upper-layer driver with this driver and notifies the ULD
++ * about any presently available devices that support its type.
+  */
+ void cxgb4_register_uld(enum cxgb4_uld type,
+ 			const struct cxgb4_uld_info *p)
  {
--	struct its_cmd_desc desc;
-+	struct its_cmd_desc desc = {};
- 	struct its_node *its;
- 	unsigned long flags;
- 	int col_id = vpe->col_idx;
+-	int ret = 0;
+ 	struct adapter *adap;
++	int ret = 0;
  
- 	desc.its_vmovp_cmd.vpe = vpe;
--	desc.its_vmovp_cmd.its_list = (u16)its_list_map;
- 
- 	if (!its_list_map) {
- 		its = list_first_entry(&its_nodes, struct its_node, entry);
--		desc.its_vmovp_cmd.seq_num = 0;
- 		desc.its_vmovp_cmd.col = &its->collections[col_id];
- 		its_send_single_vcommand(its, its_build_vmovp_cmd, &desc);
+ 	if (type >= CXGB4_ULD_MAX)
  		return;
-@@ -1003,6 +1017,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
- 	raw_spin_lock_irqsave(&vmovp_lock, flags);
- 
- 	desc.its_vmovp_cmd.seq_num = vmovp_seq_num++;
-+	desc.its_vmovp_cmd.its_list = get_its_list(vpe->its_vm);
- 
- 	/* Emit VMOVPs */
- 	list_for_each_entry(its, &its_nodes, entry) {
--- 
-2.20.1
-
+@@ -763,8 +763,12 @@ void cxgb4_register_uld(enum cxgb4_uld t
+ 		if (ret)
+ 			goto free_irq;
+ 		adap->uld[type] = *p;
+-		uld_attach(adap, type);
++		ret = uld_attach(adap, type);
++		if (ret)
++			goto free_txq;
+ 		continue;
++free_txq:
++		release_sge_txq_uld(adap, type);
+ free_irq:
+ 		if (adap->flags & CXGB4_FULL_INIT_DONE)
+ 			quiesce_rx_uld(adap, type);
 
 
