@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E643FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B6CFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA20218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C68221D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239898;
-	bh=4py+xzrfM5ohrANP39y//v96cgpB4cx/K0n1sj51s2o=;
+	s=default; t=1573239903;
+	bh=tCu4UpkpbyeBzVGi3Tlm180a+mIntA+FBp6LDTqaeD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uh/cfMcWYCyKM96SVw4IjnOm5nc9cToezrgk6oyeOBe/vear1c4006NH9SfMTUrn+
-	 159rO7jPaAU13v9bmdIn5zFJaFdbl0iwAJAnNmM9PkQtBD3q0dAqO2wQ78A1IV7F5n
-	 ey2OOnK/FSOoKvPyGyUht6IJoS8iIWD824jtij54=
+	b=WbafUyAsx/JsxfmnQP7iWhC4hczxbjBAfdhXoVLIThBdH7wY9BmEyd5igO+weibYy
+	 xa/eF1LJJSg4KCubQ/6RcthPydjp1UN/22aC+ojOCRZCzgLBsNU35a13SpOEa+dxkE
+	 8ZBIBboKJ9SdJI4S/3Hm7mZTNsgBbWwDkPHTedGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391085AbfKHTEw (ORCPT
+        id S1733094AbfKHTFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:04:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34890 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:05:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391066AbfKHTEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:04:50 -0500
+        id S1732512AbfKHTE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:04:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E06B521D7E;
-        Fri,  8 Nov 2019 19:04:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1EF9218AE;
+        Fri,  8 Nov 2019 19:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239889;
-        bh=4py+xzrfM5ohrANP39y//v96cgpB4cx/K0n1sj51s2o=;
+        s=default; t=1573239895;
+        bh=tCu4UpkpbyeBzVGi3Tlm180a+mIntA+FBp6LDTqaeD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phCnaWrMY+5XLH9D38DMq6SdsvrFNp6grFqaceek9CI73wlcfcH83XHqMMMn5IUCv
-         ueUQMzqCvxct0+LmRAhHTiZS/9e9sFWAvditX3WaY+UTNXJnoHn9NSfL8dEcaOkaf8
-         +7uPvNIyMPxax5hA/LhtyTqD7t3R44+PpIdUpZ5Y=
+        b=rya1hkL2x/fzikFDZYpnzT0MD/xh6IOG1HSnGNOnyfk+J0EQF2IugQ1myJ/04iY9x
+         4erIOu6ly7FUjYR8SOIRzzi6F5sIgxgP0ROotvnVyUkn0YTnI3WQC8sPZgKhWXcU9b
+         iLVbseAr/d9Qrei1TDTCXw00VOVtbslWX0Z+NKQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 017/140] ASoC: rt5682: add NULL handler to set_jack function
-Date:   Fri,  8 Nov 2019 19:49:05 +0100
-Message-Id: <20191108174903.367881072@linuxfoundation.org>
+Subject: [PATCH 5.3 019/140] ASoC: intel: bytcr_rt5651: add null check to support_button_press
+Date:   Fri,  8 Nov 2019 19:49:07 +0100
+Message-Id: <20191108174903.875052819@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -63,50 +63,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jaska Uimonen <jaska.uimonen@intel.com>
 
-[ Upstream commit a315e76fc544f09daf619530a7b2f85865e6b25e ]
+[ Upstream commit 2bdf194e2030fce4f2e91300817338353414ab3b ]
 
-Implement NULL handler in set_jack function to disable
-irq's.
+When removing sof module the support_button_press function will oops
+because hp_jack pointer is not checked for NULL. So add a check to fix
+this.
 
 Signed-off-by: Jaska Uimonen <jaska.uimonen@intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190927201408.925-4-pierre-louis.bossart@linux.intel.com
+Link: https://lore.kernel.org/r/20190927201408.925-2-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5682.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ sound/soc/codecs/rt5651.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index 1ef470700ed5f..c50b75ce82e0b 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -995,6 +995,16 @@ static int rt5682_set_jack_detect(struct snd_soc_component *component,
+diff --git a/sound/soc/codecs/rt5651.c b/sound/soc/codecs/rt5651.c
+index 762595de956c1..c506c9305043e 100644
+--- a/sound/soc/codecs/rt5651.c
++++ b/sound/soc/codecs/rt5651.c
+@@ -1770,6 +1770,9 @@ static int rt5651_detect_headset(struct snd_soc_component *component)
+ 
+ static bool rt5651_support_button_press(struct rt5651_priv *rt5651)
  {
- 	struct rt5682_priv *rt5682 = snd_soc_component_get_drvdata(component);
- 
-+	rt5682->hs_jack = hs_jack;
++	if (!rt5651->hp_jack)
++		return false;
 +
-+	if (!hs_jack) {
-+		regmap_update_bits(rt5682->regmap, RT5682_IRQ_CTRL_2,
-+				   RT5682_JD1_EN_MASK, RT5682_JD1_DIS);
-+		regmap_update_bits(rt5682->regmap, RT5682_RC_CLK_CTRL,
-+				   RT5682_POW_JDH | RT5682_POW_JDL, 0);
-+		return 0;
-+	}
-+
- 	switch (rt5682->pdata.jd_src) {
- 	case RT5682_JD1:
- 		snd_soc_component_update_bits(component, RT5682_CBJ_CTRL_2,
-@@ -1032,8 +1042,6 @@ static int rt5682_set_jack_detect(struct snd_soc_component *component,
- 		break;
- 	}
- 
--	rt5682->hs_jack = hs_jack;
--
- 	return 0;
- }
- 
+ 	/* Button press support only works with internal jack-detection */
+ 	return (rt5651->hp_jack->status & SND_JACK_MICROPHONE) &&
+ 		rt5651->gpiod_hp_det == NULL;
 -- 
 2.20.1
 
