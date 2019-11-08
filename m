@@ -2,178 +2,119 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D775FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2035FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A93207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573241094;
-	bh=WdMTwF1tMvTKaGQ2zKNu14ZCzIA4ENht4XBnlGbzRDE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=qMeXNXDUPNmcXJw441DOop1OyCI3YFbUz7kz91e1u25UYxW5KDivIjE76iIzKsFJT
-	 O3cwYbO1DIxHrYrhOv7JidNb9XeFfmdFH7KDVQpsrLk/B/bVJ3022Cn5y0ZbyGXtNa
-	 UT2ki48pqwUz13yv+lZzxgcMRD6JKUmw0KSbZ3lo=
+	by mail.kernel.org (Postfix) with ESMTP id 9A2E820656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:26:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxvRK/XH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfKHTYx (ORCPT
+        id S1731608AbfKHT0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:24:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbfKHTYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:24:53 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [213.233.149.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C2A2067B;
-        Fri,  8 Nov 2019 19:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573241091;
-        bh=WdMTwF1tMvTKaGQ2zKNu14ZCzIA4ENht4XBnlGbzRDE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=f2lwSIApoACkQCh24xuonVotpzuhxyurrnHhDAs33TFpEI4qWWDPf2fNyytYr5jCP
-         QMTAXF1UmkK5GhLPP6SbK/Kp127Im9UvPIzvQwnVagvsyOCVfrJ2RJKS8nyvy+pWwO
-         sF9cNTFa78XoMmBWD8XeNAn4BtdnpMsVA9N9QzVg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 02A4F35204A1; Fri,  8 Nov 2019 11:24:49 -0800 (PST)
-Date:   Fri, 8 Nov 2019 11:24:48 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Subject: Re: [PATCH 1/2] list: add hlist_unhashed_lockless()
-Message-ID: <20191108192448.GB20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191107193738.195914-1-edumazet@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107193738.195914-1-edumazet@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 8 Nov 2019 14:26:35 -0500
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:39698 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfKHT0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:26:35 -0500
+Received: by mail-qk1-f201.google.com with SMTP id s3so7868254qkd.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:26:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=CkJ8BjIClBalW4Y8w4jj3zANoh6LyH1bD+0n/0uxb4s=;
+        b=DxvRK/XHt9Ol7n7p5ISNiuBjXfbFXBOX5S8wdWgPBxQ7FEeX2sENsoymr4muRy1AVS
+         bMIHbLqlBxqFtvFiQWhELfcdvUZF9qc80iNQLX5WhvuEmVaoNpy7zS0w6Cu0N+EzpzGx
+         72eZ+Q8t8olFKWQihVixJ0+T1pKyMuP9zjBIsUDqp1vTSKllBxz5uqHU9PN2O1BAlEPX
+         N4auhyMbYhUFtqk+NOgz9UzzpgiMnmXrjOdmlTaqJfXOUYWtaHuD1ch1AsSaCbLG01LP
+         IHKb1awqa0gnT7qIxphP8Lpgr1tyq6Fpee4bM65068IjxdrMUwp5RlgYwy1rLisCDg6D
+         K72A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=CkJ8BjIClBalW4Y8w4jj3zANoh6LyH1bD+0n/0uxb4s=;
+        b=qjpuIm2NqnZDmXcQ2tUWHSVRFKCv8AWFlLZWh37UinTHhu6Lp0o/ASBgFuMrulMwl2
+         6yLqtXV+mZgfoE1GUS1rPRwgnYKT8rhbvVB/dOlg4mgaUxYEk5Hi9lG0sx8qBwtxermB
+         kqDGZDtYZnNykRVwx/R54fogurx8YgXnPYVH5sP299jywZ2hfK/jI4MHGQNkyci5Tpr7
+         KZEaKiSEecq+RzTlUiTMjbMbDON1gJVkTqAUFBXj+PYz4E2s17zpGKDGJE5RrNEqbPAn
+         BbBIA9aeKEPHIXLFE1oN+5qFaVgrsZpoZ8gbb8uH5hIwJ8mCLftmcZkbIAlCl1isLDfu
+         1HeA==
+X-Gm-Message-State: APjAAAUihi2hxrDYQFtHdCCxMOzK4Xfy0nZ7t12tsC1FJVOqRci4XFuU
+        McdoJ5VuxSFALrEqO0PqxgsL/t54JiE=
+X-Google-Smtp-Source: APXvYqysL+LzuTzAGpCWRV5hZJ/EIYvM6ZlPZycnNHVHeOUPhvj2NV66yrGjKf/4pBFV10bm6riOtOItdKw=
+X-Received: by 2002:a05:620a:12b7:: with SMTP id x23mr10132390qki.31.1573241193752;
+ Fri, 08 Nov 2019 11:26:33 -0800 (PST)
+Date:   Fri,  8 Nov 2019 12:26:29 -0700
+In-Reply-To: <20190825200621.211494-1-yuzhao@google.com>
+Message-Id: <20191108192629.201556-1-yuzhao@google.com>
+Mime-Version: 1.0
+References: <20190825200621.211494-1-yuzhao@google.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+Subject: [PATCH v2] mm: replace is_zero_pfn with is_huge_zero_pmd for thp
+From:   Yu Zhao <yuzhao@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?=" <jglisse@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yu Zhao <yuzhao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 11:37:37AM -0800, Eric Dumazet wrote:
-> We would like to use hlist_unhashed() from timer_pending(),
-> which runs without protection of a lock.
-> 
-> Note that other callers might also want to use this variant.
-> 
-> Instead of forcing a READ_ONCE() for all hlist_unhashed()
-> callers, add a new helper with an explicit _lockless suffix
-> in the name to better document what is going on.
-> 
-> Also add various WRITE_ONCE() in __hlist_del(), hlist_add_head()
-> and hlist_add_before()/hlist_add_behind() to pair with
-> the READ_ONCE().
-> 
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
+For hugely mapped thp, we use is_huge_zero_pmd() to check if it's
+zero page or not.
 
-I have queued this, but if you prefer it go some other way:
+We do fill ptes with my_zero_pfn() when we split zero thp pmd, but
+this is not what we have in vm_normal_page_pmd() --
+pmd_trans_huge_lock() makes sure of it.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+This is a trivial fix for /proc/pid/numa_maps, and AFAIK nobody
+complains about it.
 
-But shouldn't the uses in include/linux/rculist.h also be converted
-into the patch below?  If so, I will squash the following into your
-patch.
+Gerald Schaefer asked:
+> Maybe the description could also mention the symptom of this bug?
+> I would assume that it affects anon/dirty accounting in gather_pte_stats(),
+> for huge mappings, if zero page mappings are not correctly recognized.
 
-						Thanx, Paul
+I came across this while I was looking at the code, so I'm not aware of
+any symptom.
 
-------------------------------------------------------------------------
+Signed-off-by: Yu Zhao <yuzhao@google.com>
+---
+ mm/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 61c6728a..4b7ae1b 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -173,7 +173,7 @@ static inline void hlist_del_init_rcu(struct hlist_node *n)
- {
- 	if (!hlist_unhashed(n)) {
- 		__hlist_del(n);
--		n->pprev = NULL;
-+		WRITE_ONCE(n->pprev, NULL);
- 	}
- }
+diff --git a/mm/memory.c b/mm/memory.c
+index b1ca51a079f2..cf209f84ce4a 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -654,7 +654,7 @@ struct page *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
  
-@@ -473,7 +473,7 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
- static inline void hlist_del_rcu(struct hlist_node *n)
- {
- 	__hlist_del(n);
--	n->pprev = LIST_POISON2;
-+	WRITE_ONCE(n->pprev, LIST_POISON2);
- }
- 
- /**
-@@ -489,11 +489,11 @@ static inline void hlist_replace_rcu(struct hlist_node *old,
- 	struct hlist_node *next = old->next;
- 
- 	new->next = next;
--	new->pprev = old->pprev;
-+	WRITE_ONCE(new->pprev, old->pprev);
- 	rcu_assign_pointer(*(struct hlist_node __rcu **)new->pprev, new);
- 	if (next)
--		new->next->pprev = &new->next;
--	old->pprev = LIST_POISON2;
-+		WRITE_ONCE(new->next->pprev, &new->next);
-+	WRITE_ONCE(old->pprev, LIST_POISON2);
- }
- 
- /*
-@@ -528,10 +528,10 @@ static inline void hlist_add_head_rcu(struct hlist_node *n,
- 	struct hlist_node *first = h->first;
- 
- 	n->next = first;
--	n->pprev = &h->first;
-+	WRITE_ONCE(n->pprev, &h->first);
- 	rcu_assign_pointer(hlist_first_rcu(h), n);
- 	if (first)
--		first->pprev = &n->next;
-+		WRITE_ONCE(first->pprev, &n->next);
- }
- 
- /**
-@@ -564,7 +564,7 @@ static inline void hlist_add_tail_rcu(struct hlist_node *n,
- 
- 	if (last) {
- 		n->next = last->next;
--		n->pprev = &last->next;
-+		WRITE_ONCE(n->pprev, &last->next);
- 		rcu_assign_pointer(hlist_next_rcu(last), n);
- 	} else {
- 		hlist_add_head_rcu(n, h);
-@@ -592,10 +592,10 @@ static inline void hlist_add_tail_rcu(struct hlist_node *n,
- static inline void hlist_add_before_rcu(struct hlist_node *n,
- 					struct hlist_node *next)
- {
--	n->pprev = next->pprev;
-+	WRITE_ONCE(n->pprev, next->pprev);
- 	n->next = next;
- 	rcu_assign_pointer(hlist_pprev_rcu(n), n);
--	next->pprev = &n->next;
-+	WRITE_ONCE(next->pprev, &n->next);
- }
- 
- /**
-@@ -620,10 +620,10 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
- 					struct hlist_node *prev)
- {
- 	n->next = prev->next;
--	n->pprev = &prev->next;
-+	WRITE_ONCE(n->pprev, &prev->next);
- 	rcu_assign_pointer(hlist_next_rcu(prev), n);
- 	if (n->next)
--		n->next->pprev = &n->next;
-+		WRITE_ONCE(n->next->pprev, &n->next);
- }
- 
- #define __hlist_for_each_rcu(pos, head)				\
+ 	if (pmd_devmap(pmd))
+ 		return NULL;
+-	if (is_zero_pfn(pfn))
++	if (is_huge_zero_pmd(pmd))
+ 		return NULL;
+ 	if (unlikely(pfn > highest_memmap_pfn))
+ 		return NULL;
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
+
