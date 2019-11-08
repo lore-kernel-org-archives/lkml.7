@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7DFFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4943EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95072178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165AD21924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239346;
-	bh=AMS5HYiJhrstqGObyGJIBDjDDf318qk3byxtdFq0vCs=;
+	s=default; t=1573239357;
+	bh=VEGzoeTLT8lvGWnWPd25boqWXP9L00aDYn7nZXOnfPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YJxh+z/AEhhtKOHd2glMSH7zbWLkqCKYyVSPhQdau4lHU8/c46mb0SvDQss4lyAlL
-	 aM1/33kmb5rfZhnDzry2EJgkDGGa0fGND/gRS2dkoJagOZxukZ4d7dMZ0GXqGTOxp2
-	 4KyIet1guAvHmU8z6p+mj5e9mJs76EyRKEiWGBUE=
+	b=QttwW66fQejEcjt2HA1QVX4BRbYU8eeQhj1eCXYNeYdJx049Udif7iedTbCRSc2cy
+	 cJg5NnpNgeOO5WoP/zQVXXpAR4rRKPkuMUQD3JIR9cHe3p8iBvJJb67T0IhzlpqHpR
+	 PZ/+cLk7CnH/Naak8OO6yewn1tIp4o1uw+4VoxT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387817AbfKHSzp (ORCPT
+        id S2387856AbfKHSz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:55:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53156 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:55:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387775AbfKHSzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:55:43 -0500
+        id S1730810AbfKHSzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:55:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E272E218AE;
-        Fri,  8 Nov 2019 18:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 966FA21D7F;
+        Fri,  8 Nov 2019 18:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239342;
-        bh=AMS5HYiJhrstqGObyGJIBDjDDf318qk3byxtdFq0vCs=;
+        s=default; t=1573239345;
+        bh=VEGzoeTLT8lvGWnWPd25boqWXP9L00aDYn7nZXOnfPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n+nH3wnWdLoa67zkQiIypdOVl2K/sfpnQMsDSpoIUUgbx5XYMhxQIvRUyR+rtfWWu
-         RgOEsT/1umYwJLdnbEqxO0REyqgI3QMtmDB/k267wFmDVulusNyNR3KsqOIUJRXgLj
-         KFyH0KYoVTLjm4sazsYHGTlLQs0tZJRLIPUcxxsQ=
+        b=ONptGQM18LRqrTZyrDbioTJ+F2Q76jNihm3hFNMw1ZtGh/bRQ4+s7uYsUq19j7FG1
+         fODF9CJKovevWhmIH53hyABquHKmQO/XJZ2VL5sJgBqtrsoUh+1yzWd3b8EnraAVGh
+         rjlpKKH0uOxlx2/93t2kGc6NWUo4YjAvZ0BXixKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
-        <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Marc Zyngier <marc.zyngier@arm.com>,
-        "David A. Long" <dave.long@linaro.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 45/75] ARM: spectre-v2: harden branch predictor on context switches
-Date:   Fri,  8 Nov 2019 19:50:02 +0100
-Message-Id: <20191108174750.789992059@linuxfoundation.org>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 4.4 36/75] arm/arm64: smccc: Implement SMCCC v1.1 inline primitive
+Date:   Fri,  8 Nov 2019 19:49:53 +0100
+Message-Id: <20191108174745.026583460@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -63,268 +64,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-Commit 06c23f5ffe7ad45b908d0fff604dae08a7e334b9 upstream.
+commit f2d3b2e8759a5833df6f022e42df2d581e6d843c upstream.
 
-Required manual merge of arch/arm/mm/proc-v7.S.
+One of the major improvement of SMCCC v1.1 is that it only clobbers
+the first 4 registers, both on 32 and 64bit. This means that it
+becomes very easy to provide an inline version of the SMC call
+primitive, and avoid performing a function call to stash the
+registers that would otherwise be clobbered by SMCCC v1.0.
 
-Harden the branch predictor against Spectre v2 attacks on context
-switches for ARMv7 and later CPUs.  We do this by:
-
-Cortex A9, A12, A17, A73, A75: invalidating the BTB.
-Cortex A15, Brahma B15: invalidating the instruction cache.
-
-Cortex A57 and Cortex A72 are not addressed in this patch.
-
-Cortex R7 and Cortex R8 are also not addressed as we do not enforce
-memory protection on these cores.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Boot-tested-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: David A. Long <dave.long@linaro.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com> [v4.9 backport]
+Tested-by: Greg Hackmann <ghackmann@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mm/Kconfig          |   19 ++++++
- arch/arm/mm/proc-v7-2level.S |    6 --
- arch/arm/mm/proc-v7.S        |  125 +++++++++++++++++++++++++++++++++----------
- 3 files changed, 115 insertions(+), 35 deletions(-)
+ include/linux/arm-smccc.h |  141 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 141 insertions(+)
 
---- a/arch/arm/mm/Kconfig
-+++ b/arch/arm/mm/Kconfig
-@@ -797,6 +797,25 @@ config CPU_BPREDICT_DISABLE
- config CPU_SPECTRE
- 	bool
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -123,5 +123,146 @@ asmlinkage void arm_smccc_hvc(unsigned l
+ 			unsigned long a5, unsigned long a6, unsigned long a7,
+ 			struct arm_smccc_res *res);
  
-+config HARDEN_BRANCH_PREDICTOR
-+	bool "Harden the branch predictor against aliasing attacks" if EXPERT
-+	depends on CPU_SPECTRE
-+	default y
-+	help
-+	   Speculation attacks against some high-performance processors rely
-+	   on being able to manipulate the branch predictor for a victim
-+	   context by executing aliasing branches in the attacker context.
-+	   Such attacks can be partially mitigated against by clearing
-+	   internal branch predictor state and limiting the prediction
-+	   logic in some situations.
++/* SMCCC v1.1 implementation madness follows */
++#ifdef CONFIG_ARM64
 +
-+	   This config option will take CPU-specific actions to harden
-+	   the branch predictor against aliasing attacks and may rely on
-+	   specific instruction sequences or control bits being set by
-+	   the system firmware.
++#define SMCCC_SMC_INST	"smc	#0"
++#define SMCCC_HVC_INST	"hvc	#0"
 +
-+	   If unsure, say Y.
++#elif defined(CONFIG_ARM)
++#include <asm/opcodes-sec.h>
++#include <asm/opcodes-virt.h>
 +
- config TLS_REG_EMUL
- 	bool
- 	select NEED_KUSER_HELPERS
---- a/arch/arm/mm/proc-v7-2level.S
-+++ b/arch/arm/mm/proc-v7-2level.S
-@@ -41,11 +41,6 @@
-  *	even on Cortex-A8 revisions not affected by 430973.
-  *	If IBE is not set, the flush BTAC/BTB won't do anything.
-  */
--ENTRY(cpu_ca8_switch_mm)
--#ifdef CONFIG_MMU
--	mov	r2, #0
--	mcr	p15, 0, r2, c7, c5, 6		@ flush BTAC/BTB
--#endif
- ENTRY(cpu_v7_switch_mm)
- #ifdef CONFIG_MMU
- 	mmid	r1, r1				@ get mm->context.id
-@@ -66,7 +61,6 @@ ENTRY(cpu_v7_switch_mm)
- #endif
- 	bx	lr
- ENDPROC(cpu_v7_switch_mm)
--ENDPROC(cpu_ca8_switch_mm)
- 
- /*
-  *	cpu_v7_set_pte_ext(ptep, pte)
---- a/arch/arm/mm/proc-v7.S
-+++ b/arch/arm/mm/proc-v7.S
-@@ -87,6 +87,17 @@ ENTRY(cpu_v7_dcache_clean_area)
- 	ret	lr
- ENDPROC(cpu_v7_dcache_clean_area)
- 
-+ENTRY(cpu_v7_iciallu_switch_mm)
-+	mov	r3, #0
-+	mcr	p15, 0, r3, c7, c5, 0		@ ICIALLU
-+	b	cpu_v7_switch_mm
-+ENDPROC(cpu_v7_iciallu_switch_mm)
-+ENTRY(cpu_v7_bpiall_switch_mm)
-+	mov	r3, #0
-+	mcr	p15, 0, r3, c7, c5, 6		@ flush BTAC/BTB
-+	b	cpu_v7_switch_mm
-+ENDPROC(cpu_v7_bpiall_switch_mm)
++#define SMCCC_SMC_INST	__SMC(0)
++#define SMCCC_HVC_INST	__HVC(0)
 +
- 	string	cpu_v7_name, "ARMv7 Processor"
- 	.align
- 
-@@ -152,31 +163,6 @@ ENTRY(cpu_v7_do_resume)
- ENDPROC(cpu_v7_do_resume)
- #endif
- 
--/*
-- * Cortex-A8
-- */
--	globl_equ	cpu_ca8_proc_init,	cpu_v7_proc_init
--	globl_equ	cpu_ca8_proc_fin,	cpu_v7_proc_fin
--	globl_equ	cpu_ca8_reset,		cpu_v7_reset
--	globl_equ	cpu_ca8_do_idle,	cpu_v7_do_idle
--	globl_equ	cpu_ca8_dcache_clean_area, cpu_v7_dcache_clean_area
--	globl_equ	cpu_ca8_set_pte_ext,	cpu_v7_set_pte_ext
--	globl_equ	cpu_ca8_suspend_size,	cpu_v7_suspend_size
--#ifdef CONFIG_ARM_CPU_SUSPEND
--	globl_equ	cpu_ca8_do_suspend,	cpu_v7_do_suspend
--	globl_equ	cpu_ca8_do_resume,	cpu_v7_do_resume
--#endif
--
--/*
-- * Cortex-A9 processor functions
-- */
--	globl_equ	cpu_ca9mp_proc_init,	cpu_v7_proc_init
--	globl_equ	cpu_ca9mp_proc_fin,	cpu_v7_proc_fin
--	globl_equ	cpu_ca9mp_reset,	cpu_v7_reset
--	globl_equ	cpu_ca9mp_do_idle,	cpu_v7_do_idle
--	globl_equ	cpu_ca9mp_dcache_clean_area, cpu_v7_dcache_clean_area
--	globl_equ	cpu_ca9mp_switch_mm,	cpu_v7_switch_mm
--	globl_equ	cpu_ca9mp_set_pte_ext,	cpu_v7_set_pte_ext
- .globl	cpu_ca9mp_suspend_size
- .equ	cpu_ca9mp_suspend_size, cpu_v7_suspend_size + 4 * 2
- #ifdef CONFIG_ARM_CPU_SUSPEND
-@@ -490,10 +476,75 @@ __v7_setup_stack:
- 
- 	@ define struct processor (see <asm/proc-fns.h> and proc-macros.S)
- 	define_processor_functions v7, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
-+
-+#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
-+	@ generic v7 bpiall on context switch
-+	globl_equ	cpu_v7_bpiall_proc_init,	cpu_v7_proc_init
-+	globl_equ	cpu_v7_bpiall_proc_fin,		cpu_v7_proc_fin
-+	globl_equ	cpu_v7_bpiall_reset,		cpu_v7_reset
-+	globl_equ	cpu_v7_bpiall_do_idle,		cpu_v7_do_idle
-+	globl_equ	cpu_v7_bpiall_dcache_clean_area, cpu_v7_dcache_clean_area
-+	globl_equ	cpu_v7_bpiall_set_pte_ext,	cpu_v7_set_pte_ext
-+	globl_equ	cpu_v7_bpiall_suspend_size,	cpu_v7_suspend_size
-+#ifdef CONFIG_ARM_CPU_SUSPEND
-+	globl_equ	cpu_v7_bpiall_do_suspend,	cpu_v7_do_suspend
-+	globl_equ	cpu_v7_bpiall_do_resume,	cpu_v7_do_resume
-+#endif
-+	define_processor_functions v7_bpiall, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
-+
-+#define HARDENED_BPIALL_PROCESSOR_FUNCTIONS v7_bpiall_processor_functions
-+#else
-+#define HARDENED_BPIALL_PROCESSOR_FUNCTIONS v7_processor_functions
 +#endif
 +
- #ifndef CONFIG_ARM_LPAE
-+	@ Cortex-A8 - always needs bpiall switch_mm implementation
-+	globl_equ	cpu_ca8_proc_init,	cpu_v7_proc_init
-+	globl_equ	cpu_ca8_proc_fin,	cpu_v7_proc_fin
-+	globl_equ	cpu_ca8_reset,		cpu_v7_reset
-+	globl_equ	cpu_ca8_do_idle,	cpu_v7_do_idle
-+	globl_equ	cpu_ca8_dcache_clean_area, cpu_v7_dcache_clean_area
-+	globl_equ	cpu_ca8_set_pte_ext,	cpu_v7_set_pte_ext
-+	globl_equ	cpu_ca8_switch_mm,	cpu_v7_bpiall_switch_mm
-+	globl_equ	cpu_ca8_suspend_size,	cpu_v7_suspend_size
-+#ifdef CONFIG_ARM_CPU_SUSPEND
-+	globl_equ	cpu_ca8_do_suspend,	cpu_v7_do_suspend
-+	globl_equ	cpu_ca8_do_resume,	cpu_v7_do_resume
-+#endif
- 	define_processor_functions ca8, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
++#define ___count_args(_0, _1, _2, _3, _4, _5, _6, _7, _8, x, ...) x
 +
-+	@ Cortex-A9 - needs more registers preserved across suspend/resume
-+	@ and bpiall switch_mm for hardening
-+	globl_equ	cpu_ca9mp_proc_init,	cpu_v7_proc_init
-+	globl_equ	cpu_ca9mp_proc_fin,	cpu_v7_proc_fin
-+	globl_equ	cpu_ca9mp_reset,	cpu_v7_reset
-+	globl_equ	cpu_ca9mp_do_idle,	cpu_v7_do_idle
-+	globl_equ	cpu_ca9mp_dcache_clean_area, cpu_v7_dcache_clean_area
-+#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
-+	globl_equ	cpu_ca9mp_switch_mm,	cpu_v7_bpiall_switch_mm
-+#else
-+	globl_equ	cpu_ca9mp_switch_mm,	cpu_v7_switch_mm
-+#endif
-+	globl_equ	cpu_ca9mp_set_pte_ext,	cpu_v7_set_pte_ext
- 	define_processor_functions ca9mp, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
- #endif
++#define __count_args(...)						\
++	___count_args(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
 +
-+	@ Cortex-A15 - needs iciallu switch_mm for hardening
-+	globl_equ	cpu_ca15_proc_init,	cpu_v7_proc_init
-+	globl_equ	cpu_ca15_proc_fin,	cpu_v7_proc_fin
-+	globl_equ	cpu_ca15_reset,		cpu_v7_reset
-+	globl_equ	cpu_ca15_do_idle,	cpu_v7_do_idle
-+	globl_equ	cpu_ca15_dcache_clean_area, cpu_v7_dcache_clean_area
-+#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
-+	globl_equ	cpu_ca15_switch_mm,	cpu_v7_iciallu_switch_mm
-+#else
-+	globl_equ	cpu_ca15_switch_mm,	cpu_v7_switch_mm
-+#endif
-+	globl_equ	cpu_ca15_set_pte_ext,	cpu_v7_set_pte_ext
-+	globl_equ	cpu_ca15_suspend_size,	cpu_v7_suspend_size
-+	globl_equ	cpu_ca15_do_suspend,	cpu_v7_do_suspend
-+	globl_equ	cpu_ca15_do_resume,	cpu_v7_do_resume
-+	define_processor_functions ca15, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
- #ifdef CONFIG_CPU_PJ4B
- 	define_processor_functions pj4b, dabort=v7_early_abort, pabort=v7_pabort, suspend=1
- #endif
-@@ -600,7 +651,7 @@ __v7_ca7mp_proc_info:
- __v7_ca12mp_proc_info:
- 	.long	0x410fc0d0
- 	.long	0xff0ffff0
--	__v7_proc __v7_ca12mp_proc_info, __v7_ca12mp_setup
-+	__v7_proc __v7_ca12mp_proc_info, __v7_ca12mp_setup, proc_fns = HARDENED_BPIALL_PROCESSOR_FUNCTIONS
- 	.size	__v7_ca12mp_proc_info, . - __v7_ca12mp_proc_info
- 
- 	/*
-@@ -610,7 +661,7 @@ __v7_ca12mp_proc_info:
- __v7_ca15mp_proc_info:
- 	.long	0x410fc0f0
- 	.long	0xff0ffff0
--	__v7_proc __v7_ca15mp_proc_info, __v7_ca15mp_setup
-+	__v7_proc __v7_ca15mp_proc_info, __v7_ca15mp_setup, proc_fns = ca15_processor_functions
- 	.size	__v7_ca15mp_proc_info, . - __v7_ca15mp_proc_info
- 
- 	/*
-@@ -620,7 +671,7 @@ __v7_ca15mp_proc_info:
- __v7_b15mp_proc_info:
- 	.long	0x420f00f0
- 	.long	0xff0ffff0
--	__v7_proc __v7_b15mp_proc_info, __v7_b15mp_setup
-+	__v7_proc __v7_b15mp_proc_info, __v7_b15mp_setup, proc_fns = ca15_processor_functions
- 	.size	__v7_b15mp_proc_info, . - __v7_b15mp_proc_info
- 
- 	/*
-@@ -630,9 +681,25 @@ __v7_b15mp_proc_info:
- __v7_ca17mp_proc_info:
- 	.long	0x410fc0e0
- 	.long	0xff0ffff0
--	__v7_proc __v7_ca17mp_proc_info, __v7_ca17mp_setup
-+	__v7_proc __v7_ca17mp_proc_info, __v7_ca17mp_setup, proc_fns = HARDENED_BPIALL_PROCESSOR_FUNCTIONS
- 	.size	__v7_ca17mp_proc_info, . - __v7_ca17mp_proc_info
- 
-+	/* ARM Ltd. Cortex A73 processor */
-+	.type	__v7_ca73_proc_info, #object
-+__v7_ca73_proc_info:
-+	.long	0x410fd090
-+	.long	0xff0ffff0
-+	__v7_proc __v7_ca73_proc_info, __v7_setup, proc_fns = HARDENED_BPIALL_PROCESSOR_FUNCTIONS
-+	.size	__v7_ca73_proc_info, . - __v7_ca73_proc_info
++#define __constraint_write_0						\
++	"+r" (r0), "=&r" (r1), "=&r" (r2), "=&r" (r3)
++#define __constraint_write_1						\
++	"+r" (r0), "+r" (r1), "=&r" (r2), "=&r" (r3)
++#define __constraint_write_2						\
++	"+r" (r0), "+r" (r1), "+r" (r2), "=&r" (r3)
++#define __constraint_write_3						\
++	"+r" (r0), "+r" (r1), "+r" (r2), "+r" (r3)
++#define __constraint_write_4	__constraint_write_3
++#define __constraint_write_5	__constraint_write_4
++#define __constraint_write_6	__constraint_write_5
++#define __constraint_write_7	__constraint_write_6
 +
-+	/* ARM Ltd. Cortex A75 processor */
-+	.type	__v7_ca75_proc_info, #object
-+__v7_ca75_proc_info:
-+	.long	0x410fd0a0
-+	.long	0xff0ffff0
-+	__v7_proc __v7_ca75_proc_info, __v7_setup, proc_fns = HARDENED_BPIALL_PROCESSOR_FUNCTIONS
-+	.size	__v7_ca75_proc_info, . - __v7_ca75_proc_info
++#define __constraint_read_0
++#define __constraint_read_1
++#define __constraint_read_2
++#define __constraint_read_3
++#define __constraint_read_4	"r" (r4)
++#define __constraint_read_5	__constraint_read_4, "r" (r5)
++#define __constraint_read_6	__constraint_read_5, "r" (r6)
++#define __constraint_read_7	__constraint_read_6, "r" (r7)
 +
- 	/*
- 	 * Qualcomm Inc. Krait processors.
- 	 */
++#define __declare_arg_0(a0, res)					\
++	struct arm_smccc_res   *___res = res;				\
++	register u32           r0 asm("r0") = a0;			\
++	register unsigned long r1 asm("r1");				\
++	register unsigned long r2 asm("r2");				\
++	register unsigned long r3 asm("r3")
++
++#define __declare_arg_1(a0, a1, res)					\
++	struct arm_smccc_res   *___res = res;				\
++	register u32           r0 asm("r0") = a0;			\
++	register typeof(a1)    r1 asm("r1") = a1;			\
++	register unsigned long r2 asm("r2");				\
++	register unsigned long r3 asm("r3")
++
++#define __declare_arg_2(a0, a1, a2, res)				\
++	struct arm_smccc_res   *___res = res;				\
++	register u32           r0 asm("r0") = a0;			\
++	register typeof(a1)    r1 asm("r1") = a1;			\
++	register typeof(a2)    r2 asm("r2") = a2;			\
++	register unsigned long r3 asm("r3")
++
++#define __declare_arg_3(a0, a1, a2, a3, res)				\
++	struct arm_smccc_res   *___res = res;				\
++	register u32           r0 asm("r0") = a0;			\
++	register typeof(a1)    r1 asm("r1") = a1;			\
++	register typeof(a2)    r2 asm("r2") = a2;			\
++	register typeof(a3)    r3 asm("r3") = a3
++
++#define __declare_arg_4(a0, a1, a2, a3, a4, res)			\
++	__declare_arg_3(a0, a1, a2, a3, res);				\
++	register typeof(a4) r4 asm("r4") = a4
++
++#define __declare_arg_5(a0, a1, a2, a3, a4, a5, res)			\
++	__declare_arg_4(a0, a1, a2, a3, a4, res);			\
++	register typeof(a5) r5 asm("r5") = a5
++
++#define __declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res)		\
++	__declare_arg_5(a0, a1, a2, a3, a4, a5, res);			\
++	register typeof(a6) r6 asm("r6") = a6
++
++#define __declare_arg_7(a0, a1, a2, a3, a4, a5, a6, a7, res)		\
++	__declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res);		\
++	register typeof(a7) r7 asm("r7") = a7
++
++#define ___declare_args(count, ...) __declare_arg_ ## count(__VA_ARGS__)
++#define __declare_args(count, ...)  ___declare_args(count, __VA_ARGS__)
++
++#define ___constraints(count)						\
++	: __constraint_write_ ## count					\
++	: __constraint_read_ ## count					\
++	: "memory"
++#define __constraints(count)	___constraints(count)
++
++/*
++ * We have an output list that is not necessarily used, and GCC feels
++ * entitled to optimise the whole sequence away. "volatile" is what
++ * makes it stick.
++ */
++#define __arm_smccc_1_1(inst, ...)					\
++	do {								\
++		__declare_args(__count_args(__VA_ARGS__), __VA_ARGS__);	\
++		asm volatile(inst "\n"					\
++			     __constraints(__count_args(__VA_ARGS__)));	\
++		if (___res)						\
++			*___res = (typeof(*___res)){r0, r1, r2, r3};	\
++	} while (0)
++
++/*
++ * arm_smccc_1_1_smc() - make an SMCCC v1.1 compliant SMC call
++ *
++ * This is a variadic macro taking one to eight source arguments, and
++ * an optional return structure.
++ *
++ * @a0-a7: arguments passed in registers 0 to 7
++ * @res: result values from registers 0 to 3
++ *
++ * This macro is used to make SMC calls following SMC Calling Convention v1.1.
++ * The content of the supplied param are copied to registers 0 to 7 prior
++ * to the SMC instruction. The return values are updated with the content
++ * from register 0 to 3 on return from the SMC instruction if not NULL.
++ */
++#define arm_smccc_1_1_smc(...)	__arm_smccc_1_1(SMCCC_SMC_INST, __VA_ARGS__)
++
++/*
++ * arm_smccc_1_1_hvc() - make an SMCCC v1.1 compliant HVC call
++ *
++ * This is a variadic macro taking one to eight source arguments, and
++ * an optional return structure.
++ *
++ * @a0-a7: arguments passed in registers 0 to 7
++ * @res: result values from registers 0 to 3
++ *
++ * This macro is used to make HVC calls following SMC Calling Convention v1.1.
++ * The content of the supplied param are copied to registers 0 to 7 prior
++ * to the HVC instruction. The return values are updated with the content
++ * from register 0 to 3 on return from the HVC instruction if not NULL.
++ */
++#define arm_smccc_1_1_hvc(...)	__arm_smccc_1_1(SMCCC_HVC_INST, __VA_ARGS__)
++
+ #endif /*__ASSEMBLY__*/
+ #endif /*__LINUX_ARM_SMCCC_H*/
 
 
