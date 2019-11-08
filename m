@@ -2,53 +2,51 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0ABFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A9AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10C520673
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD4B20673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240169;
-	bh=8qsdJ47uQfrB7A5Ki3q409/MXPdNkeR+L2SHHSL7maA=;
+	s=default; t=1573240174;
+	bh=rkWc8IbdEaSvrxsOfVoAZ+1MbxALwcX4Njf18RbH3vU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyktFq5SUKrUeAp8Nqjq08PZ+L9fMUlMG0jWzXl0it5OP/zOi8aw7tkWOAiGIiY3e
-	 V7V7DfxAc5+AHny8KXvTrm7sJf5Wo7L741dRSl8HtfY6UUEKzZsa9ZmoapgfFvAIwD
-	 DNfEtj128SgxVDzQ1xXxT481AzVDY0sxfseXAI1c=
+	b=Eigxi6Q7CEvViLmJO2IiiEx2TzzA8woGwiSjDhQGSeC6wM9DAfnb73m+pcwb7Z7jk
+	 9SCHqy+VMVm+vk59HJMsRpZmqbX27Yln2CIi9odnkEu3IGjySBUmxZsjPDnMoOnnw3
+	 9tmX/e7shcpiO9WU+akwyVqV3i9QTLrQwZyz83vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390852AbfKHTJ2 (ORCPT
+        id S2391135AbfKHTJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391792AbfKHTJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:24 -0500
+        id S2403817AbfKHTJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 947CA20673;
-        Fri,  8 Nov 2019 19:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49B252087E;
+        Fri,  8 Nov 2019 19:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240163;
-        bh=8qsdJ47uQfrB7A5Ki3q409/MXPdNkeR+L2SHHSL7maA=;
+        s=default; t=1573240165;
+        bh=rkWc8IbdEaSvrxsOfVoAZ+1MbxALwcX4Njf18RbH3vU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9+RQI+2o5cwuIuafAkfcbO3RrnUQGGCbb/tPfFCO13c84GDB+8KHe09ifFM01B5o
-         YB+JznuX+/bdV9yTvQQNdO1bnjZlZhkwKwQ9LjQFVgcFdXJotAb/5ns01gfjamSpUX
-         l/cm5LrFH2zt+tF+F//nP/Q9BSa6n7aExYzeDrbg=
+        b=1HgA9tv1cZMjYzZwEYu3mzAXz7BcJdi+I3W8T5kd1UI17Y8gBCRd5oFQZBsGPFxXP
+         TvlzXdw2QzGuuNRCD6QO5qQK55xkA1A5iSg+ABk/rVwqSY5UGAD1170Gh8f0RMsUqL
+         IFyY4pXnMW8lhcG34n6JzIWrxfToAbN33DhH/m5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 073/140] i2c: stm32f7: fix a race in slave mode with arbitration loss irq
-Date:   Fri,  8 Nov 2019 19:50:01 +0100
-Message-Id: <20191108174909.738013388@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 109/140] rxrpc: Fix handling of last subpacket of jumbo packet
+Date:   Fri,  8 Nov 2019 19:50:37 +0100
+Message-Id: <20191108174911.749361622@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,74 +59,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 6d6b0d0d5afc8c4c84b08261260ba11dfa5206f2 ]
+[ Upstream commit f9c32435ab7221d1d6cb35738fa85a2da012b23e ]
 
-When in slave mode, an arbitration loss (ARLO) may be detected before the
-slave had a chance to detect the stop condition (STOPF in ISR).
-This is seen when two master + slave adapters switch their roles. It
-provokes the i2c bus to be stuck, busy as SCL line is stretched.
-- the I2C_SLAVE_STOP event is never generated due to STOPF flag is set but
-  don't generate an irq (race with ARLO irq, STOPIE is masked). STOPF flag
-  remains set until next master xfer (e.g. when STOPIE irq get unmasked).
-  In this case, completion is generated too early: immediately upon new
-  transfer request (then it doesn't send all data).
-- Some data get stuck in TXDR register. As a consequence, the controller
-  stretches the SCL line: the bus gets busy until a future master transfer
-  triggers the bus busy / recovery mechanism (this can take time... and
-  may never happen at all)
+When rxrpc_recvmsg_data() sets the return value to 1 because it's drained
+all the data for the last packet, it checks the last-packet flag on the
+whole packet - but this is wrong, since the last-packet flag is only set on
+the final subpacket of the last jumbo packet.  This means that a call that
+receives its last packet in a jumbo packet won't complete properly.
 
-So choice is to let the STOPF being detected by the slave isr handler,
-to properly handle this stop condition. E.g. don't mask IRQs in error
-handler, when the slave is running.
+Fix this by having rxrpc_locate_data() determine the last-packet state of
+the subpacket it's looking at and passing that back to the caller rather
+than having the caller look in the packet header.  The caller then needs to
+cache this in the rxrpc_call struct as rxrpc_locate_data() isn't then
+called again for this packet.
 
-Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumbo packet")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/busses/i2c-stm32f7.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ net/rxrpc/ar-internal.h |    1 +
+ net/rxrpc/recvmsg.c     |   18 +++++++++++++-----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 0af9219e45f79..82705deef7bff 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1503,7 +1503,7 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
- 	void __iomem *base = i2c_dev->base;
- 	struct device *dev = i2c_dev->dev;
- 	struct stm32_i2c_dma *dma = i2c_dev->dma;
--	u32 mask, status;
-+	u32 status;
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -596,6 +596,7 @@ struct rxrpc_call {
+ 	int			debug_id;	/* debug ID for printks */
+ 	unsigned short		rx_pkt_offset;	/* Current recvmsg packet offset */
+ 	unsigned short		rx_pkt_len;	/* Current recvmsg packet len */
++	bool			rx_pkt_last;	/* Current recvmsg packet is last */
  
- 	status = readl_relaxed(i2c_dev->base + STM32F7_I2C_ISR);
+ 	/* Rx/Tx circular buffer, depending on phase.
+ 	 *
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -267,11 +267,13 @@ static int rxrpc_verify_packet(struct rx
+  */
+ static int rxrpc_locate_data(struct rxrpc_call *call, struct sk_buff *skb,
+ 			     u8 *_annotation,
+-			     unsigned int *_offset, unsigned int *_len)
++			     unsigned int *_offset, unsigned int *_len,
++			     bool *_last)
+ {
+ 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+ 	unsigned int offset = sizeof(struct rxrpc_wire_header);
+ 	unsigned int len;
++	bool last = false;
+ 	int ret;
+ 	u8 annotation = *_annotation;
+ 	u8 subpacket = annotation & RXRPC_RX_ANNO_SUBPACKET;
+@@ -281,6 +283,8 @@ static int rxrpc_locate_data(struct rxrp
+ 	len = skb->len - offset;
+ 	if (subpacket < sp->nr_subpackets - 1)
+ 		len = RXRPC_JUMBO_DATALEN;
++	else if (sp->rx_flags & RXRPC_SKB_INCL_LAST)
++		last = true;
  
-@@ -1528,12 +1528,15 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
- 		f7_msg->result = -EINVAL;
+ 	if (!(annotation & RXRPC_RX_ANNO_VERIFIED)) {
+ 		ret = rxrpc_verify_packet(call, skb, annotation, offset, len);
+@@ -291,6 +295,7 @@ static int rxrpc_locate_data(struct rxrp
+ 
+ 	*_offset = offset;
+ 	*_len = len;
++	*_last = last;
+ 	call->conn->security->locate_data(call, skb, _offset, _len);
+ 	return 0;
+ }
+@@ -309,7 +314,7 @@ static int rxrpc_recvmsg_data(struct soc
+ 	rxrpc_serial_t serial;
+ 	rxrpc_seq_t hard_ack, top, seq;
+ 	size_t remain;
+-	bool last;
++	bool rx_pkt_last;
+ 	unsigned int rx_pkt_offset, rx_pkt_len;
+ 	int ix, copy, ret = -EAGAIN, ret2;
+ 
+@@ -319,6 +324,7 @@ static int rxrpc_recvmsg_data(struct soc
+ 
+ 	rx_pkt_offset = call->rx_pkt_offset;
+ 	rx_pkt_len = call->rx_pkt_len;
++	rx_pkt_last = call->rx_pkt_last;
+ 
+ 	if (call->state >= RXRPC_CALL_SERVER_ACK_REQUEST) {
+ 		seq = call->rx_hard_ack;
+@@ -329,6 +335,7 @@ static int rxrpc_recvmsg_data(struct soc
+ 	/* Barriers against rxrpc_input_data(). */
+ 	hard_ack = call->rx_hard_ack;
+ 	seq = hard_ack + 1;
++
+ 	while (top = smp_load_acquire(&call->rx_top),
+ 	       before_eq(seq, top)
+ 	       ) {
+@@ -356,7 +363,8 @@ static int rxrpc_recvmsg_data(struct soc
+ 		if (rx_pkt_offset == 0) {
+ 			ret2 = rxrpc_locate_data(call, skb,
+ 						 &call->rxtx_annotations[ix],
+-						 &rx_pkt_offset, &rx_pkt_len);
++						 &rx_pkt_offset, &rx_pkt_len,
++						 &rx_pkt_last);
+ 			trace_rxrpc_recvmsg(call, rxrpc_recvmsg_next, seq,
+ 					    rx_pkt_offset, rx_pkt_len, ret2);
+ 			if (ret2 < 0) {
+@@ -396,13 +404,12 @@ static int rxrpc_recvmsg_data(struct soc
+ 		}
+ 
+ 		/* The whole packet has been transferred. */
+-		last = sp->hdr.flags & RXRPC_LAST_PACKET;
+ 		if (!(flags & MSG_PEEK))
+ 			rxrpc_rotate_rx_window(call);
+ 		rx_pkt_offset = 0;
+ 		rx_pkt_len = 0;
+ 
+-		if (last) {
++		if (rx_pkt_last) {
+ 			ASSERTCMP(seq, ==, READ_ONCE(call->rx_top));
+ 			ret = 1;
+ 			goto out;
+@@ -415,6 +422,7 @@ out:
+ 	if (!(flags & MSG_PEEK)) {
+ 		call->rx_pkt_offset = rx_pkt_offset;
+ 		call->rx_pkt_len = rx_pkt_len;
++		call->rx_pkt_last = rx_pkt_last;
  	}
- 
--	/* Disable interrupts */
--	if (stm32f7_i2c_is_slave_registered(i2c_dev))
--		mask = STM32F7_I2C_XFER_IRQ_MASK;
--	else
--		mask = STM32F7_I2C_ALL_IRQ_MASK;
--	stm32f7_i2c_disable_irq(i2c_dev, mask);
-+	if (!i2c_dev->slave_running) {
-+		u32 mask;
-+		/* Disable interrupts */
-+		if (stm32f7_i2c_is_slave_registered(i2c_dev))
-+			mask = STM32F7_I2C_XFER_IRQ_MASK;
-+		else
-+			mask = STM32F7_I2C_ALL_IRQ_MASK;
-+		stm32f7_i2c_disable_irq(i2c_dev, mask);
-+	}
- 
- 	/* Disable dma */
- 	if (i2c_dev->use_dma) {
--- 
-2.20.1
-
+ done:
+ 	trace_rxrpc_recvmsg(call, rxrpc_recvmsg_data_return, seq,
 
 
