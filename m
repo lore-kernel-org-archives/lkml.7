@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FC1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D27FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6733E2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F26D20673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240293;
-	bh=49HBYkfwhhhr3Yi35zOi9YBhBh7UK9S4nHQX2zOGc2c=;
+	s=default; t=1573240298;
+	bh=xgSpBqSLkquN9a8a8MVfL6qy56+9Z/eZyt2So1rSis4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YGAJuxUuvEGxjoCqCWtIYuVqix+420JqNcG0pzZ40Ru6wzm6NNNjn07wABpRxzt2b
-	 kYqOrkT9Ohj+XVzND+XTO37fqJRU03e6HOmAtMmYxwL9XqeY5UMzE/RHhZqu803XkQ
-	 Fi/P8601N3xyn0JAfhHmOZfmBbg6RXcHx2o3semA=
+	b=Dg3WzplURcj+vVlEt9U13n7k4X6Gozoled8zYoa7vMaZ1faILtb/iuRqWcYQSrvPy
+	 sjyeNBjinaS8GuaU4BpBdfTwOcuzjTTSec94yGxaZPOUYWmMdLIoHS/KscZv90FKCM
+	 GgnW+Fs6Wi9oeL6V/o79gPPAOtNg3ju4LMxnEco8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391944AbfKHTKy (ORCPT
+        id S2391918AbfKHTKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:10:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43182 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:10:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391934AbfKHTKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:10:51 -0500
+        id S1730571AbfKHTKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:10:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8CDA222C9;
-        Fri,  8 Nov 2019 19:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1829521D7B;
+        Fri,  8 Nov 2019 19:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240250;
-        bh=49HBYkfwhhhr3Yi35zOi9YBhBh7UK9S4nHQX2zOGc2c=;
+        s=default; t=1573240235;
+        bh=xgSpBqSLkquN9a8a8MVfL6qy56+9Z/eZyt2So1rSis4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCk2bWvprto/3kWfbwGljX0kMttluykoL49f0pxSm6S0CWIiL9adqgLTaRx/Mjzlq
-         Q/0kl+ap5FzSjGOjweUnlgOzN7dZcV6wSr7XnVGsZx2MGzbulw2RdQ37t9wQ4mhdtK
-         2LrwA4NzT2OgmYVJoSXSuoFo+K1On8rnMz3W4iwk=
+        b=yIOOdq2P/3nAeI8vnXaJi2Z640nhrLrHxBoxqzWQS41NI2mM5gWa2CIzf/DzI3Hax
+         zyx0Ou81SmEEiQzwI4A2jrFcw5uPzugVQwG0nxVmACWSxFYNaVpV4wC0m4EdkcjXKr
+         2MM2FYRzX26f8TEtlpTLT775Y33/4FQ4OFm2f4wE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 5.3 140/140] usb: gadget: udc: core: Fix segfault if udc_bind_to_driver() for pending driver fails
-Date:   Fri,  8 Nov 2019 19:51:08 +0100
-Message-Id: <20191108174913.368339213@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        David Wysochanski <dwysocha@redhat.com>
+Subject: [PATCH 5.3 135/140] CIFS: Fix retry mid list corruption on reconnects
+Date:   Fri,  8 Nov 2019 19:51:03 +0100
+Message-Id: <20191108174913.103146663@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,97 +61,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 163be6ff7739b12ff300d77897d340f661821da2 upstream.
+commit abe57073d08c13b95a46ccf48cc9dc957d5c6fdb upstream.
 
-If a gadget driver is in the pending drivers list, a UDC
-becomes available and udc_bind_to_driver() fails, then it
-gets deleted from the pending list.
-i.e. list_del(&driver->pending) in check_pending_gadget_drivers().
+When the client hits reconnect it iterates over the mid
+pending queue marking entries for retry and moving them
+to a temporary list to issue callbacks later without holding
+GlobalMid_Lock. In the same time there is no guarantee that
+mids can't be removed from the temporary list or even
+freed completely by another thread. It may cause a temporary
+list corruption:
 
-Then if that gadget driver is unregistered,
-usb_gadget_unregister_driver() does a list_del(&driver->pending)
-again thus causing a page fault as that list entry has been poisoned
-by the previous list_del().
+[  430.454897] list_del corruption. prev->next should be ffff98d3a8f316c0, but was 2e885cb266355469
+[  430.464668] ------------[ cut here ]------------
+[  430.466569] kernel BUG at lib/list_debug.c:51!
+[  430.468476] invalid opcode: 0000 [#1] SMP PTI
+[  430.470286] CPU: 0 PID: 13267 Comm: cifsd Kdump: loaded Not tainted 5.4.0-rc3+ #19
+[  430.473472] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[  430.475872] RIP: 0010:__list_del_entry_valid.cold+0x31/0x55
+...
+[  430.510426] Call Trace:
+[  430.511500]  cifs_reconnect+0x25e/0x610 [cifs]
+[  430.513350]  cifs_readv_from_socket+0x220/0x250 [cifs]
+[  430.515464]  cifs_read_from_socket+0x4a/0x70 [cifs]
+[  430.517452]  ? try_to_wake_up+0x212/0x650
+[  430.519122]  ? cifs_small_buf_get+0x16/0x30 [cifs]
+[  430.521086]  ? allocate_buffers+0x66/0x120 [cifs]
+[  430.523019]  cifs_demultiplex_thread+0xdc/0xc30 [cifs]
+[  430.525116]  kthread+0xfb/0x130
+[  430.526421]  ? cifs_handle_standard+0x190/0x190 [cifs]
+[  430.528514]  ? kthread_park+0x90/0x90
+[  430.530019]  ret_from_fork+0x35/0x40
 
-Fix this by using list_del_init() instead of list_del() in
-check_pending_gadget_drivers().
+Fix this by obtaining extra references for mids being retried
+and marking them as MID_DELETED which indicates that such a mid
+has been dequeued from the pending list.
 
-Test case:
+Also move mid cleanup logic from DeleteMidQEntry to
+_cifs_mid_q_entry_release which is called when the last reference
+to a particular mid is put. This allows to avoid any use-after-free
+of response buffers.
 
-- Make sure no UDC is available
-- modprobe g_mass_storage file=wrongfile
-- Load UDC driver so it becomes available
-	lun0: unable to open backing file: wrongfile
-- modprobe -r g_mass_storage
+The patch needs to be backported to stable kernels. A stable tag
+is not mentioned below because the patch doesn't apply cleanly
+to any actively maintained stable kernel.
 
-[   60.900431] Unable to handle kernel paging request at virtual address dead000000000108
-[   60.908346] Mem abort info:
-[   60.911145]   ESR = 0x96000044
-[   60.914227]   Exception class = DABT (current EL), IL = 32 bits
-[   60.920162]   SET = 0, FnV = 0
-[   60.923217]   EA = 0, S1PTW = 0
-[   60.926354] Data abort info:
-[   60.929228]   ISV = 0, ISS = 0x00000044
-[   60.933058]   CM = 0, WnR = 1
-[   60.936011] [dead000000000108] address between user and kernel address ranges
-[   60.943136] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-[   60.948691] Modules linked in: g_mass_storage(-) usb_f_mass_storage libcomposite xhci_plat_hcd xhci_hcd usbcore ti_am335x_adc kfifo_buf omap_rng cdns3 rng_core udc_core crc32_ce xfrm_user crct10dif_ce snd_so6
-[   60.993995] Process modprobe (pid: 834, stack limit = 0x00000000c2aebc69)
-[   61.000765] CPU: 0 PID: 834 Comm: modprobe Not tainted 4.19.59-01963-g065f42a60499 #92
-[   61.008658] Hardware name: Texas Instruments SoC (DT)
-[   61.014472] pstate: 60000005 (nZCv daif -PAN -UAO)
-[   61.019253] pc : usb_gadget_unregister_driver+0x7c/0x108 [udc_core]
-[   61.025503] lr : usb_gadget_unregister_driver+0x30/0x108 [udc_core]
-[   61.031750] sp : ffff00001338fda0
-[   61.035049] x29: ffff00001338fda0 x28: ffff800846d40000
-[   61.040346] x27: 0000000000000000 x26: 0000000000000000
-[   61.045642] x25: 0000000056000000 x24: 0000000000000800
-[   61.050938] x23: ffff000008d7b0d0 x22: ffff0000088b07c8
-[   61.056234] x21: ffff000001100000 x20: ffff000002020260
-[   61.061530] x19: ffff0000010ffd28 x18: 0000000000000000
-[   61.066825] x17: 0000000000000000 x16: 0000000000000000
-[   61.072121] x15: 0000000000000000 x14: 0000000000000000
-[   61.077417] x13: ffff000000000000 x12: ffffffffffffffff
-[   61.082712] x11: 0000000000000030 x10: 7f7f7f7f7f7f7f7f
-[   61.088008] x9 : fefefefefefefeff x8 : 0000000000000000
-[   61.093304] x7 : ffffffffffffffff x6 : 000000000000ffff
-[   61.098599] x5 : 8080000000000000 x4 : 0000000000000000
-[   61.103895] x3 : ffff000001100020 x2 : ffff800846d40000
-[   61.109190] x1 : dead000000000100 x0 : dead000000000200
-[   61.114486] Call trace:
-[   61.116922]  usb_gadget_unregister_driver+0x7c/0x108 [udc_core]
-[   61.122828]  usb_composite_unregister+0x10/0x18 [libcomposite]
-[   61.128643]  msg_cleanup+0x18/0xfce0 [g_mass_storage]
-[   61.133682]  __arm64_sys_delete_module+0x17c/0x1f0
-[   61.138458]  el0_svc_common+0x90/0x158
-[   61.142192]  el0_svc_handler+0x2c/0x80
-[   61.145926]  el0_svc+0x8/0xc
-[   61.148794] Code: eb03003f d10be033 54ffff21 a94d0281 (f9000420)
-[   61.154869] ---[ end trace afb22e9b637bd9a7 ]---
-Segmentation fault
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-and-tested-by: David Wysochanski <dwysocha@redhat.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/connect.c   |   10 +++++++++-
+ fs/cifs/transport.c |   42 +++++++++++++++++++++++-------------------
+ 2 files changed, 32 insertions(+), 20 deletions(-)
 
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -1154,7 +1154,7 @@ static int check_pending_gadget_drivers(
- 						dev_name(&udc->dev)) == 0) {
- 			ret = udc_bind_to_driver(udc, driver);
- 			if (ret != -EPROBE_DEFER)
--				list_del(&driver->pending);
-+				list_del_init(&driver->pending);
- 			break;
- 		}
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -556,9 +556,11 @@ cifs_reconnect(struct TCP_Server_Info *s
+ 	spin_lock(&GlobalMid_Lock);
+ 	list_for_each_safe(tmp, tmp2, &server->pending_mid_q) {
+ 		mid_entry = list_entry(tmp, struct mid_q_entry, qhead);
++		kref_get(&mid_entry->refcount);
+ 		if (mid_entry->mid_state == MID_REQUEST_SUBMITTED)
+ 			mid_entry->mid_state = MID_RETRY_NEEDED;
+ 		list_move(&mid_entry->qhead, &retry_list);
++		mid_entry->mid_flags |= MID_DELETED;
+ 	}
+ 	spin_unlock(&GlobalMid_Lock);
+ 	mutex_unlock(&server->srv_mutex);
+@@ -568,6 +570,7 @@ cifs_reconnect(struct TCP_Server_Info *s
+ 		mid_entry = list_entry(tmp, struct mid_q_entry, qhead);
+ 		list_del_init(&mid_entry->qhead);
+ 		mid_entry->callback(mid_entry);
++		cifs_mid_q_entry_release(mid_entry);
+ 	}
  
+ 	if (cifs_rdma_enabled(server)) {
+@@ -887,8 +890,10 @@ dequeue_mid(struct mid_q_entry *mid, boo
+ 	if (mid->mid_flags & MID_DELETED)
+ 		printk_once(KERN_WARNING
+ 			    "trying to dequeue a deleted mid\n");
+-	else
++	else {
+ 		list_del_init(&mid->qhead);
++		mid->mid_flags |= MID_DELETED;
++	}
+ 	spin_unlock(&GlobalMid_Lock);
+ }
+ 
+@@ -958,8 +963,10 @@ static void clean_demultiplex_info(struc
+ 		list_for_each_safe(tmp, tmp2, &server->pending_mid_q) {
+ 			mid_entry = list_entry(tmp, struct mid_q_entry, qhead);
+ 			cifs_dbg(FYI, "Clearing mid 0x%llx\n", mid_entry->mid);
++			kref_get(&mid_entry->refcount);
+ 			mid_entry->mid_state = MID_SHUTDOWN;
+ 			list_move(&mid_entry->qhead, &dispose_list);
++			mid_entry->mid_flags |= MID_DELETED;
+ 		}
+ 		spin_unlock(&GlobalMid_Lock);
+ 
+@@ -969,6 +976,7 @@ static void clean_demultiplex_info(struc
+ 			cifs_dbg(FYI, "Callback mid 0x%llx\n", mid_entry->mid);
+ 			list_del_init(&mid_entry->qhead);
+ 			mid_entry->callback(mid_entry);
++			cifs_mid_q_entry_release(mid_entry);
+ 		}
+ 		/* 1/8th of sec is more than enough time for them to exit */
+ 		msleep(125);
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -86,22 +86,8 @@ AllocMidQEntry(const struct smb_hdr *smb
+ 
+ static void _cifs_mid_q_entry_release(struct kref *refcount)
+ {
+-	struct mid_q_entry *mid = container_of(refcount, struct mid_q_entry,
+-					       refcount);
+-
+-	mempool_free(mid, cifs_mid_poolp);
+-}
+-
+-void cifs_mid_q_entry_release(struct mid_q_entry *midEntry)
+-{
+-	spin_lock(&GlobalMid_Lock);
+-	kref_put(&midEntry->refcount, _cifs_mid_q_entry_release);
+-	spin_unlock(&GlobalMid_Lock);
+-}
+-
+-void
+-DeleteMidQEntry(struct mid_q_entry *midEntry)
+-{
++	struct mid_q_entry *midEntry =
++			container_of(refcount, struct mid_q_entry, refcount);
+ #ifdef CONFIG_CIFS_STATS2
+ 	__le16 command = midEntry->server->vals->lock_cmd;
+ 	__u16 smb_cmd = le16_to_cpu(midEntry->command);
+@@ -166,6 +152,19 @@ DeleteMidQEntry(struct mid_q_entry *midE
+ 		}
+ 	}
+ #endif
++
++	mempool_free(midEntry, cifs_mid_poolp);
++}
++
++void cifs_mid_q_entry_release(struct mid_q_entry *midEntry)
++{
++	spin_lock(&GlobalMid_Lock);
++	kref_put(&midEntry->refcount, _cifs_mid_q_entry_release);
++	spin_unlock(&GlobalMid_Lock);
++}
++
++void DeleteMidQEntry(struct mid_q_entry *midEntry)
++{
+ 	cifs_mid_q_entry_release(midEntry);
+ }
+ 
+@@ -173,8 +172,10 @@ void
+ cifs_delete_mid(struct mid_q_entry *mid)
+ {
+ 	spin_lock(&GlobalMid_Lock);
+-	list_del_init(&mid->qhead);
+-	mid->mid_flags |= MID_DELETED;
++	if (!(mid->mid_flags & MID_DELETED)) {
++		list_del_init(&mid->qhead);
++		mid->mid_flags |= MID_DELETED;
++	}
+ 	spin_unlock(&GlobalMid_Lock);
+ 
+ 	DeleteMidQEntry(mid);
+@@ -868,7 +869,10 @@ cifs_sync_mid_result(struct mid_q_entry
+ 		rc = -EHOSTDOWN;
+ 		break;
+ 	default:
+-		list_del_init(&mid->qhead);
++		if (!(mid->mid_flags & MID_DELETED)) {
++			list_del_init(&mid->qhead);
++			mid->mid_flags |= MID_DELETED;
++		}
+ 		cifs_dbg(VFS, "%s: invalid mid state mid=%llu state=%d\n",
+ 			 __func__, mid->mid, mid->mid_state);
+ 		rc = -EIO;
 
 
