@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66CEFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB301FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD6921D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF2E222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213852;
-	bh=tOHwYIJ+ZNa6Ys/BfqqTmWqfcuoUDV1G9q0KLw6kepc=;
+	s=default; t=1573213871;
+	bh=rrZSbi4G4miTJyPIz+Y84gcUjifvPimzBYe2sbVKh24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LWn0x1XPe5o1Ea8CkXAfTS48p2gtZLnFosqBsgUEvNpX4pKrQkG48co4B5vLRLCof
-	 M/YTyVOr4/ZGtSC3Z38YNHZ4rP3gASDdOucr+EbzpyjLqGrg8XfpQPxgw5B7SBZVlJ
-	 eH6qT6Zmhbx4o2rARgzL8f+aqKZzBUxgmMTXV41w=
+	b=vFUBoWX2nyDbfb2iewHa+7JnzAgF/CppcoWX34ab3WJZot0VcH5lCQ8Agk2whkXFD
+	 0/Jsut+gas6j4EZLFmOhW1U0iGTRVoLwuAZizF8LZX6RVgtgi7TNTA36qz3Ld0reJF
+	 YUixm9+5qeIljnvt9073V0WH6GJ56iBDoJvOTqjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403843AbfKHLuv (ORCPT
+        id S1730616AbfKHLvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:50:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:51:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391616AbfKHLrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:43 -0500
+        id S1733219AbfKHLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DE93206A3;
-        Fri,  8 Nov 2019 11:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACF05206A3;
+        Fri,  8 Nov 2019 11:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213663;
-        bh=tOHwYIJ+ZNa6Ys/BfqqTmWqfcuoUDV1G9q0KLw6kepc=;
+        s=default; t=1573213656;
+        bh=rrZSbi4G4miTJyPIz+Y84gcUjifvPimzBYe2sbVKh24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FsnoJEo7DreMC8+xrC7yybZqp2n6c25tyUrqX5R4ZNkMx6aafscAeSy4//iBka2fc
-         BQZLSyhLfz159GRJfIzvMnGuTDT0pNKoKJnkCfcF4tDd8OqwrUyZn51emdr/SKwekg
-         kxOCLxau4EXaiWz1tf6rFGFVUhcSTLHk7lKeRr/c=
+        b=GfQrl1AUhB49WwshRypHXJO0EveSWnqtk9dpnCji/cnoHjy8Ump3O+qOL75D4PD0b
+         hSvX+/wBTGt2xgPMRJ3HeRS7s+UFLDCUejglPasx01d12FmQc+Mwa21CkQVhCETlc1
+         TcBX4b1Enht3SefP6zrdShpOAQqIdjnqHhD+yZio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erik Stromdahl <erik.stromdahl@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 17/44] ath10k: wmi: disable softirq's while calling ieee80211_rx
-Date:   Fri,  8 Nov 2019 06:46:53 -0500
-Message-Id: <20191108114721.15944-17-sashal@kernel.org>
+Cc:     =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 11/44] i40e: Prevent deleting MAC address from VF when set by PF
+Date:   Fri,  8 Nov 2019 06:46:47 -0500
+Message-Id: <20191108114721.15944-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,47 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Stromdahl <erik.stromdahl@gmail.com>
+From: Patryk Małek <patryk.malek@intel.com>
 
-[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
+[ Upstream commit 5907cf6c5bbe78be2ed18b875b316c6028b20634 ]
 
-This is done in order not to trig the below warning in
-ieee80211_rx_napi:
+To prevent VF from deleting MAC address that was assigned by the
+PF we need to check for that scenario when we try to delete a MAC
+address from a VF.
 
-WARN_ON_ONCE(softirq_count() == 0);
-
-ieee80211_rx_napi requires that softirq's are disabled during
-execution.
-
-The High latency bus drivers (SDIO and USB) sometimes call the wmi
-ep_rx_complete callback from non softirq context, resulting in a trigger
-of the above warning.
-
-Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
-softirq context) should be safe as the local_bh_disable and
-local_bh_enable functions (called from ieee80211_rx_ni) are fully
-reentrant.
-
-Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Patryk Małek <patryk.malek@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index b867875aa6e66..f7ce99f67b5c5 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -2294,7 +2294,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
- 		   status->freq, status->band, status->signal,
- 		   status->rate_idx);
- 
--	ieee80211_rx(ar->hw, skb);
-+	ieee80211_rx_ni(ar->hw, skb);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index e116d9a99b8e9..cdb263875efb3 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -1677,6 +1677,16 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
+ 			ret = I40E_ERR_INVALID_MAC_ADDR;
+ 			goto error_param;
+ 		}
 +
- 	return 0;
- }
++		if (vf->pf_set_mac &&
++		    ether_addr_equal(al->list[i].addr,
++				     vf->default_lan_addr.addr)) {
++			dev_err(&pf->pdev->dev,
++				"MAC addr %pM has been set by PF, cannot delete it for VF %d, reset VF to change MAC addr\n",
++				vf->default_lan_addr.addr, vf->vf_id);
++			ret = I40E_ERR_PARAM;
++			goto error_param;
++		}
+ 	}
+ 	vsi = pf->vsi[vf->lan_vsi_idx];
  
 -- 
 2.20.1
