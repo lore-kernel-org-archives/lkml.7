@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AC7FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB5EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414A3222CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED673222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213535;
-	bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
+	s=default; t=1573213539;
+	bh=RBRTeBaME1S9QHwrLDbdRZCqvLjaiRbJ04TB6H3lm/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MXGjGGRa+63FHH7HFJfnqoOSVNileZXebsdQO4CmJ0jy5FB789kreOQcW+fOy13lU
-	 vta+G01//yJdee4bLOGTznF+1nRO15/Uit8CpePwayT5wigK2eXWDR9+A9x3prv/QA
-	 iGY8xFwB9dBrogVHRfIQjwgmmGIgvPMXwg3VZxIk=
+	b=ZPgbEbg8j6lRh3fePZgzT9Pjsr1tdSUXEJa5onCjhHJGNJF9U5+W3sAfJSq5jU9jf
+	 MI9wsAHCOAYa+s0BKvTong7KlNo6EZ0nHVLTSWxNvs9WglPBydbST0uRm6uBhUptdg
+	 +LvhR05iwv9srvt4nabOTkMvrUDlhyUE+tjaoQtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391137AbfKHLpe (ORCPT
+        id S2391153AbfKHLph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391125AbfKHLpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:31 -0500
+        id S2391135AbfKHLpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46C7D222C2;
-        Fri,  8 Nov 2019 11:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F72222D4;
+        Fri,  8 Nov 2019 11:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213531;
-        bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
+        s=default; t=1573213533;
+        bh=RBRTeBaME1S9QHwrLDbdRZCqvLjaiRbJ04TB6H3lm/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZKCfnES2s4CYPqII3Fizsg27YmflcYy1KaTDpCOxFyNDGpNbIBqa6gTBNvbl1hnj
-         ugxGzKECGot2KyC1iX0ORGrfEA1i8CrqZNaPWfuPqCavHocLyiS8sVJpTTKBhpZhz1
-         GSGeN/+D36kdCvTGGTGY54ty55T/q8hAyu+dYo58=
+        b=wBeANvl+Sm1uiY6k1JD8ZCFeKYIo02WXnbhVfEbL59OopCVoiobXgPaOAZy5xc7z0
+         9g7kjsXT9MPSDAdLTuy7EtYxcZb3fykxAw5LkROBRJzlZFDJyEcPWd9Hzilw8ZYVZD
+         HSkPFiCY93LKdO+0RJaxI8jbVr6JPIxqfC2T7YLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Carlo Caione <carlo@caione.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 094/103] arm64: dts: meson: Fix erroneous SPI bus warnings
-Date:   Fri,  8 Nov 2019 06:42:59 -0500
-Message-Id: <20191108114310.14363-94-sashal@kernel.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 096/103] power: reset: at91-poweroff: do not procede if at91_shdwc is allocated
+Date:   Fri,  8 Nov 2019 06:43:01 -0500
+Message-Id: <20191108114310.14363-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -60,53 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 68ecb5c1920c5b98b1e717fd2349fba2ee5d4031 ]
+[ Upstream commit 9f1e44774be578fb92776add95f1fcaf8284d692 ]
 
-dtc has new checks for SPI buses. The meson dts files have a node named
-spi' which causes false positive warnings. As the node is a pinctrl child
-node, change the node name to be 'spi-pins' to fix the warnings.
+There should be only one instance of struct shdwc in the system. This is
+referenced through at91_shdwc. Return in probe if at91_shdwc is already
+allocated.
 
-arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: Warning (spi_bus_bridge): /soc/periphs@c8834000/pinctrl@4b0/spi: incorrect #address-cells for SPI bus
-
-Cc: Carlo Caione <carlo@caione.org>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/power/reset/at91-sama5d2_shdwc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index af834cdbba791..250b5c11c0e25 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -413,7 +413,7 @@
- 			};
- 		};
+diff --git a/drivers/power/reset/at91-sama5d2_shdwc.c b/drivers/power/reset/at91-sama5d2_shdwc.c
+index 31080c2541249..037976a1fe40b 100644
+--- a/drivers/power/reset/at91-sama5d2_shdwc.c
++++ b/drivers/power/reset/at91-sama5d2_shdwc.c
+@@ -246,6 +246,9 @@ static int __init at91_shdwc_probe(struct platform_device *pdev)
+ 	if (!pdev->dev.of_node)
+ 		return -ENODEV;
  
--		spi_pins: spi {
-+		spi_pins: spi-pins {
- 			mux {
- 				groups = "spi_miso",
- 					"spi_mosi",
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index fb8d76a17bc5d..3c30579449608 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -310,7 +310,7 @@
- 			};
- 		};
- 
--		spi_pins: spi {
-+		spi_pins: spi-pins {
- 			mux {
- 				groups = "spi_miso",
- 					"spi_mosi",
++	if (at91_shdwc)
++		return -EBUSY;
++
+ 	at91_shdwc = devm_kzalloc(&pdev->dev, sizeof(*at91_shdwc), GFP_KERNEL);
+ 	if (!at91_shdwc)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
