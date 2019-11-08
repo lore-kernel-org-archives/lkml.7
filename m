@@ -2,156 +2,71 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6C2FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2DEFC6198
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888852178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4482178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfKHKT6 (ORCPT
+        id S1730281AbfKHKZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:19:58 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:32984 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfKHKT6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:19:58 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D8B0828EE5A;
-        Fri,  8 Nov 2019 10:19:55 +0000 (GMT)
-Date:   Fri, 8 Nov 2019 11:19:50 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 for 5.4 1/4] media: hantro: Fix s_fmt for dynamic
- resolution changes
-Message-ID: <20191108111950.717db5ce@collabora.com>
-In-Reply-To: <20191007174505.10681-2-ezequiel@collabora.com>
-References: <20191007174505.10681-1-ezequiel@collabora.com>
-        <20191007174505.10681-2-ezequiel@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 8 Nov 2019 05:25:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:39970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbfKHKZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:25:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9593B31B;
+        Fri,  8 Nov 2019 02:25:20 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9295D3F719;
+        Fri,  8 Nov 2019 02:25:19 -0800 (PST)
+Date:   Fri, 8 Nov 2019 10:25:17 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: linux-next: manual merge of the arm64 tree with the dma-mapping
+ tree
+Message-ID: <20191108102517.GO51202@arrakis.emea.arm.com>
+References: <20191108081109.28867ba1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108081109.28867ba1@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Oct 2019 14:45:02 -0300
-Ezequiel Garcia <ezequiel@collabora.com> wrote:
+On Fri, Nov 08, 2019 at 08:11:09AM +1100, Stephen Rothwell wrote:
+> diff --cc include/linux/dma-direct.h
+> index 6db863c3eb93,d03af3605460..000000000000
+> --- a/include/linux/dma-direct.h
+> +++ b/include/linux/dma-direct.h
+> @@@ -3,11 -3,10 +3,13 @@@
+>   #define _LINUX_DMA_DIRECT_H 1
+>   
+>   #include <linux/dma-mapping.h>
+>  +#include <linux/memblock.h> /* for min_low_pfn */
+>   #include <linux/mem_encrypt.h>
+>   
+> + extern unsigned int zone_dma_bits;
+> + 
+>  +static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr);
+>  +
+>   #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+>   #include <asm/dma-direct.h>
+>   #else
 
-> Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> changed the conditions under S_FMT was allowed for OUTPUT
-> CAPTURE buffers.
-> 
-> However, and according to the mem-to-mem stateless decoder specification,
-> in order to support dynamic resolution changes, S_FMT should be allowed
-> even if OUTPUT buffers have been allocated.
-> 
-> Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
-> modification, provided the pixel format stays the same.
-> 
-> Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
-> 
-> Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> --
-> v2:
-> * Call try_fmt_out before using the format,
->   pointed out by Philipp.
-> 
->  drivers/staging/media/hantro/hantro_v4l2.c | 28 +++++++++++++++-------
->  1 file changed, 19 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-> index 3dae52abb96c..586d243cc3cc 100644
-> --- a/drivers/staging/media/hantro/hantro_v4l2.c
-> +++ b/drivers/staging/media/hantro/hantro_v4l2.c
-> @@ -367,19 +367,26 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
->  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
->  	const struct hantro_fmt *formats;
->  	unsigned int num_fmts;
-> -	struct vb2_queue *vq;
->  	int ret;
->  
-> -	/* Change not allowed if queue is busy. */
-> -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> -	if (vb2_is_busy(vq))
-> -		return -EBUSY;
-> +	ret = vidioc_try_fmt_out_mplane(file, priv, f);
-> +	if (ret)
-> +		return ret;
->  
->  	if (!hantro_is_encoder_ctx(ctx)) {
->  		struct vb2_queue *peer_vq;
->  
-> +		/*
-> +		 * In other to support dynamic resolution change,
+The resolution is fine. Thanks Stephen.
 
-		      ^ order
-
-> +		 * the decoder admits a resolution change, as long
-> +		 * as the pixelformat remains. Can't be done if streaming.
-> +		 */
-> +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
-> +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
-> +			return -EBUSY;
-
-Sorry to chime in only now, but I'm currently looking at the VP9 spec
-and it seems the resolution is allowed to change dynamically [1] (I
-guess the same applies to VP8). IIU the spec correctly, coded frames
-using the new resolution can reference decoded frames using the old
-one (can be higher or lower res BTW). If we force a streamoff to change
-the resolution (as seems to be the case here), we'll lose those ref
-frames (see the hantro_return_bufs() in stop streaming), right?
-Hans, Tomasz, any idea how this dynamic resolution change could/should
-be supported?
-
->  		/*
->  		 * Since format change on the OUTPUT queue will reset
->  		 * the CAPTURE queue, we can't allow doing so
-> @@ -389,12 +396,15 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->  					  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->  		if (vb2_is_busy(peer_vq))
->  			return -EBUSY;
-> +	} else {
-> +		/*
-> +		 * The encoder doesn't admit a format change if
-> +		 * there are OUTPUT buffers allocated.
-> +		 */
-> +		if (vb2_is_busy(vq))
-> +			return -EBUSY;
->  	}
->  
-> -	ret = vidioc_try_fmt_out_mplane(file, priv, f);
-> -	if (ret)
-> -		return ret;
-> -
->  	formats = hantro_get_formats(ctx, &num_fmts);
->  	ctx->vpu_src_fmt = hantro_find_format(formats, num_fmts,
->  					      pix_mp->pixelformat);
-
-[1] Section "5.16 Reference frame scaling" of
-    https://storage.googleapis.com/downloads.webmproject.org/docs/vp9/vp9-bitstream-specification-v0.6-20160331-draft.pdf
+-- 
+Catalin
