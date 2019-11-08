@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC8FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A51206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C287206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbfKHREW (ORCPT
+        id S1730084AbfKHREa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:04:22 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:42300 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKHREN (ORCPT
+        Fri, 8 Nov 2019 12:04:30 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44810 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfKHREL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:04:13 -0500
-Received: by mail-il1-f198.google.com with SMTP id n16so7523648ilm.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 09:04:12 -0800 (PST)
+        Fri, 8 Nov 2019 12:04:11 -0500
+Received: by mail-io1-f72.google.com with SMTP id q13so5798201iot.11
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 09:04:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=s7s+0AUIh85QJo5bIS6QtBdWuP0XF27aERvqgQ8hEgw=;
-        b=qgYFnmcVfsRDEib7Y4rBwdKrinF10EhdVCCUO7TZh1ZO3Ei1dLq9mXj6kRZuGoNH/b
-         RWDSD92aJAbhRXGd256O4hw3y+LjGbUB/hHB7aRA/R+Ul0scxqirruxk+hOk5HndYhT4
-         UlR2gfWeLVM6e4fWzj7fvC8wsgVzI2n9m5T7e3xhILXzkE/C+x80SktpsQm1WKuGOUgW
-         FfBU4S7JfPuJunWLEZKvt3aDGvP1TZkwy6J4j6BUmt6gaJoo13AARcsSorFkuWQd81G4
-         xNGiyRn/Uk0ZWzpZ7VNdARoz+roCgoSKXP5bAwVwsnbm1VGRSZwX0HS9y3XOtgPVrxPF
-         J8lQ==
-X-Gm-Message-State: APjAAAWY3ag1Qn2yGSySwUpqoOt7H3UqDbFHd1iKYYtn9VIYkkn6H0nL
-        M2gCD7jSKXiAgnFMMVhhG+VNIGI9iCwuqHT946fdKuDnwi5E
-X-Google-Smtp-Source: APXvYqx+2483goQJH3/cpm8N4DuiOA1eSgQWI2TcafX7e5/N7Y8JNnxclkD+QFHfXEwadHc3wiUuWt8g62R3dNYkNh8zQ1Z73n7q
+        bh=fTH3wke3SUWD+KbdNuoh7OfY2dQXat+nLBYGUBMdbaU=;
+        b=HJRakgdl+Q6zXzSZgEtqRYLi9QAHSqzOzIkY8QEbsFAKjdnbiHGzlSKgfASxXAUzi+
+         NxfrHBUN91odlpY/MtmWFQybFXqCbOQubifp1/SrHwdAXItbo1S7XOePErOle1IUTfSj
+         m1wv9j7onA+BQiH04ZRdbfqwsmGnZxpFVuEbwpjXnKRTepZYw7VKSMpMYEyZOwCDJWFu
+         SAsKluKA0XUjntFChfON8XIncgPYoHyDnUlyJ+ECEVmlqBsLiPQG/4BuON7llLZUzLLv
+         +VfomasmcRDxW80Xh8hSFRa0gse7qd6ynCE7Qe5TZ52aPykM+V2HCCCsBz/HK8rslsxM
+         DMPQ==
+X-Gm-Message-State: APjAAAVxvflPfrT4f2/GNqgty4oz6GQJOmk5LkPbPUidlAY0Y1C570+r
+        hSYQ9dbUKZO0TqdOnweurBJ01H0cyYOUB5A5jvy8NssKuy+U
+X-Google-Smtp-Source: APXvYqyO/1fM9FwvUsNBAdyyysHvJoiIBXREkWYTIkJi0hcr+2f1QziBzmK5bPqiaK3viqb9n95xokid5VJiBWcBysIkvN2qTsBg
 MIME-Version: 1.0
-X-Received: by 2002:a92:9891:: with SMTP id a17mr14106877ill.292.1573232652212;
- Fri, 08 Nov 2019 09:04:12 -0800 (PST)
-Date:   Fri, 08 Nov 2019 09:04:12 -0800
+X-Received: by 2002:a92:d64d:: with SMTP id x13mr13363985ilp.54.1573232650955;
+ Fri, 08 Nov 2019 09:04:10 -0800 (PST)
+Date:   Fri, 08 Nov 2019 09:04:10 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006264c60596d8c5fa@google.com>
-Subject: KASAN: use-after-free Read in j1939_session_deactivate
-From:   syzbot <syzbot+a47537d3964ef6c874e1@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
+Message-ID: <0000000000004f3d820596d8c51c@google.com>
+Subject: KMSAN: uninit-value in digitv_rc_query
+From:   syzbot <syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com>
+To:     glider@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,120 +57,72 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    847120f8 Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11077272e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8c5e2eca3f31f9bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=a47537d3964ef6c874e1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164973b4e00000
+HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with kmsan_i..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=16860a63600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
+dashboard link: https://syzkaller.appspot.com/bug?extid=6bf9606ee955b646c0e1
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c1101b600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15db3cfd600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a47537d3964ef6c874e1@syzkaller.appspotmail.com
+Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
 
-vcan0: j1939_xtp_rx_abort_one: 0x0000000017fc679a: 0x00000: (2) System  
-resources were needed for another task so this connection managed session  
-was terminated.
-vcan0: j1939_tp_rxtimer: 0x000000000eaf12e4: abort rx timeout. Force  
-session deactivation
-==================================================================
-BUG: KASAN: use-after-free in j1939_session_deactivate+0x80/0x90  
-net/can/j1939/transport.c:1033
-Read of size 8 at addr ffff88809958dc00 by task ksoftirqd/0/9
-
-CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.4.0-rc6+ #0
+dvb-usb: schedule remote query interval to 1000 msecs.
+dvb-usb: Nebula Electronics uDigiTV DVB-T USB2.0) successfully initialized  
+and connected.
+dvb-usb: bulk message failed: -22 (7/0)
+dvb-usb: bulk message failed: -22 (7/0)
+dvb-usb: bulk message failed: -22 (7/-30591)
+dvb-usb: bulk message failed: -22 (7/0)
+=====================================================
+BUG: KMSAN: uninit-value in legacy_dvb_usb_read_remote_control+0x106/0x790  
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:123
+CPU: 1 PID: 3844 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+Workqueue: events legacy_dvb_usb_read_remote_control
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  j1939_session_deactivate+0x80/0x90 net/can/j1939/transport.c:1033
-  j1939_session_deactivate_activate_next+0x17/0x50  
-net/can/j1939/transport.c:1041
-  j1939_tp_rxtimer+0xc8/0x27b net/can/j1939/transport.c:1150
-  __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1576
-  hrtimer_run_softirq+0x17e/0x270 kernel/time/hrtimer.c:1593
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  run_ksoftirqd kernel/softirq.c:603 [inline]
-  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
+  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
+  digitv_rc_query+0x76a/0x890 drivers/media/usb/dvb-usb/digitv.c:259
+  legacy_dvb_usb_read_remote_control+0x106/0x790  
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:123
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-Allocated by task 9265:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  j1939_session_new+0x81/0x3f0 net/can/j1939/transport.c:1384
-  j1939_tp_send+0x249/0x750 net/can/j1939/transport.c:1846
-  j1939_sk_send_loop net/can/j1939/socket.c:995 [inline]
-  j1939_sk_sendmsg+0xb76/0x1450 net/can/j1939/socket.c:1100
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
-  __compat_sys_sendmsg net/compat.c:642 [inline]
-  __do_compat_sys_sendmsg net/compat.c:649 [inline]
-  __se_compat_sys_sendmsg net/compat.c:646 [inline]
-  __ia32_compat_sys_sendmsg+0x7a/0xb0 net/compat.c:646
-  do_syscall_32_irqs_on arch/x86/entry/common.c:333 [inline]
-  do_fast_syscall_32+0x27b/0xdb3 arch/x86/entry/common.c:404
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-Freed by task 9:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  j1939_session_destroy net/can/j1939/transport.c:272 [inline]
-  __j1939_session_release net/can/j1939/transport.c:280 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  j1939_session_put+0x134/0x180 net/can/j1939/transport.c:285
-  j1939_session_deactivate_locked net/can/j1939/transport.c:1021 [inline]
-  j1939_session_deactivate_locked+0x245/0x2f0 net/can/j1939/transport.c:1009
-  j1939_session_deactivate+0x3d/0x90 net/can/j1939/transport.c:1032
-  j1939_session_deactivate_activate_next+0x17/0x50  
-net/can/j1939/transport.c:1041
-  j1939_tp_rxtimer+0xc8/0x27b net/can/j1939/transport.c:1150
-  __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1576
-  hrtimer_run_softirq+0x17e/0x270 kernel/time/hrtimer.c:1593
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88809958dc00
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 0 bytes inside of
-  512-byte region [ffff88809958dc00, ffff88809958de00)
-The buggy address belongs to the page:
-page:ffffea0002656340 refcount:1 mapcount:0 mapping:ffff8880aa400a80  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea00028faa88 ffffea0002a31c48 ffff8880aa400a80
-raw: 0000000000000000 ffff88809958d000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88809958db00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88809958db80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff88809958dc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff88809958dc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809958dd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Local variable description: ----key@digitv_rc_query
+Variable was created at:
+  digitv_rc_query+0x78/0x890 drivers/media/usb/dvb-usb/digitv.c:234
+  legacy_dvb_usb_read_remote_control+0x106/0x790  
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:123
+=====================================================
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 3844 Comm: kworker/1:2 Tainted: G    B             5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events legacy_dvb_usb_read_remote_control
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  panic+0x3c9/0xc1e kernel/panic.c:219
+  kmsan_report+0x2a2/0x2b0 mm/kmsan/kmsan_report.c:131
+  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
+  digitv_rc_query+0x76a/0x890 drivers/media/usb/dvb-usb/digitv.c:259
+  legacy_dvb_usb_read_remote_control+0x106/0x790  
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:123
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
