@@ -2,320 +2,142 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A01FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211D3FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09132084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY938u19"
+	by mail.kernel.org (Postfix) with ESMTP id E9AFB2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573250809;
+	bh=gjzhxfH70PAZBIvPR3hzPHvzG4Qa2IBYqzFwMj/xWL0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bVYun4JLZz3c170dHUZuZcaUQC72jCHlG+QuggFL0/W7ACuEGi0j6F0n5D80oDO2+
+	 tFuvkzKPU9Pj31uzRrcaXxlHGdpULtAtsLeSLoxyDKLPQ/20lKt3gxARP3sgtVSexC
+	 s3icoialN+fUVhRLEzhNwEkEHW7+z99kl8dwKZuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbfKHWEK (ORCPT
+        id S1729895AbfKHWGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:04:10 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35460 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfKHWEJ (ORCPT
+        Fri, 8 Nov 2019 17:06:48 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33294 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfKHWGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:04:09 -0500
-Received: by mail-qt1-f194.google.com with SMTP id n4so3561567qte.2;
-        Fri, 08 Nov 2019 14:04:08 -0800 (PST)
+        Fri, 8 Nov 2019 17:06:47 -0500
+Received: by mail-lj1-f195.google.com with SMTP id t5so7791731ljk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:06:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O0vwRgqyr9uL56xIsnlyB0vtc78SAThHMfFo6yoXABw=;
-        b=aY938u19Cog49SRqtWybDUsW1XMtuSO82o7l20hA26CEolf1ISqAQMs1NEVUB4lVsL
-         VGjGrA5YmWGMThB4p9u/xqGHPYDlyYnuyceNgZKTkl14+pzwxGFdb9xrvM79VOua/wlF
-         ElViveuXnspF2VfaOL1KPVrCT/bLd7yZ1z/EH/cWluIRs6v2gPa5BVp3ve4O2taCjsNZ
-         VGzws7NHAJDKhw6jDiCPwHnxmzcHR+eDIODGs9X3mx7g69eRSJT0AIt2Z2FkoiAPFXd7
-         gkgmJl4709lZnKp5yMPkd1B6p+Y53TLoMU4nmx+aPhlMjyGPTvohpF4Y/iQXiygtpaEI
-         s55Q==
+        bh=PM7aXIqGlTv4ooyqCBP9d/aFSkST3hpJVxVLXow9peg=;
+        b=PS2bjVFaLslkBSK4KUWZW/tIht7XZkmjJaTGU2fPdPRjfl2o/Ml1nSc5Cg3cXbpjrn
+         uVwV0UkzJaP00ag8fp+t0sP9z4xcMjUm8fftb7VXNUC7o8uebivBnfsBFl0/gpgF8qbg
+         C7Lov0mQEbZd2DawPCA8y68rgZ/YLGOFrSlQo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O0vwRgqyr9uL56xIsnlyB0vtc78SAThHMfFo6yoXABw=;
-        b=ssowCHyACvmBp4YkSprTogm9RrHWtOxGiDT3g1URJzlbmM1ViYr5QmOWovDITh9KN/
-         TZVJvNVpGMUiRNn92pm27rDZWhrx428udvz/tbdzemSM4CJbmjANVIpgN/uQqV7SI1Qq
-         pYptJZVZK1JIFDZFfZEZK6pevaqtn3J8XolWg3ci67KKDm/Nf662sYdQY1ZYY3YWU4jA
-         IqEMUuEL7dAPWcTBjSeiM31jHYrVxbqkaz27+eEzst0c7tfcbo83qjyA22c3IVFLmhLK
-         Lx2E9OgQ5iqQYHJvmzgcO50gOUJWji8f4rXBJa5QDDXKsPxD11qR1FETboQ2jmdS7U6B
-         vbfg==
-X-Gm-Message-State: APjAAAVBYarD/9QQp6rCmUTsTP6oRMNJwj90CqDdR35OqL0JCQox3a2U
-        3Hyoua8S6eP1ChA19sYD5EKdxeejXquvS/k8j0o=
-X-Google-Smtp-Source: APXvYqwyLGX0JXK/pBKVeyXYqkFz0n1e5tfoNMxZ4ztu7D4qnyTTQas1W1VReCjSoPCTx3tUVuBMjeNFxPLGjB9kMSU=
-X-Received: by 2002:ac8:3787:: with SMTP id d7mr12914060qtc.160.1573250647838;
- Fri, 08 Nov 2019 14:04:07 -0800 (PST)
+        bh=PM7aXIqGlTv4ooyqCBP9d/aFSkST3hpJVxVLXow9peg=;
+        b=qzMFHjopilD18DFg1xFNh8P38SPrQXSHQRw4kZ+Hez/zVDdHDnQcxvBeYNubMpt7GH
+         lV1/4C+B7SxK+b1eF1CWNgNSDgfJfCA2XHo/WU0kwjfO60eY5OkdAEu8WoP6y3Vae7vj
+         eeYaSaYeq/4PPy4aFB7Ej4a199qCdsUDzOdpIfMuzIAbTk11qB/gO9xiiUwhpQCMK8ZP
+         KWLAHW+2ybzh7/xSANbF+tEXIoL6zEY5XE3L5OxRZw6gy/AcPAAWu2XyaW06FP8ImXvS
+         4hm1RhNpoXYLoJqRT8/q5sPc8RjoqeWVcRaEXqvlTcrd2ITfsGNdYzeCMKlCipdABS8Z
+         IVwA==
+X-Gm-Message-State: APjAAAWRi1IAj1dbz+czVp86tEUYuCVWANcAiDersxYwK2HocNcRB5lL
+        b4yNTGSULx2xhXJakOx3aKzoZVhoAbk=
+X-Google-Smtp-Source: APXvYqzDs2F/qDAmyesGtFeDIG98fVQ3rkBKlPTf3OsUCziGmvMBxNg1ZuRuFGjB8jEaZw71OLterw==
+X-Received: by 2002:a2e:8857:: with SMTP id z23mr5107071ljj.50.1573250802679;
+        Fri, 08 Nov 2019 14:06:42 -0800 (PST)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id d26sm1421593ljo.54.2019.11.08.14.06.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2019 14:06:41 -0800 (PST)
+Received: by mail-lj1-f181.google.com with SMTP id v8so7765924ljh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:06:41 -0800 (PST)
+X-Received: by 2002:a2e:9a8f:: with SMTP id p15mr8150237lji.148.1573250801141;
+ Fri, 08 Nov 2019 14:06:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20191105222652.70226-1-gwendal@chromium.org> <20191105222652.70226-2-gwendal@chromium.org>
-In-Reply-To: <20191105222652.70226-2-gwendal@chromium.org>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Fri, 8 Nov 2019 23:03:56 +0100
-Message-ID: <CAFqH_50q7y-sL0SyA3BDkZ9_YBX_FL90smtXt7v0Z+BW8nrw3A@mail.gmail.com>
-Subject: Re: [PATCH v4 01/17] mfd: cros_ec: Add sensor_count and make
- check_features public
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
+References: <CAHk-=wiGfnHopopFDhcGp1=wg7XY8iGm7tDjgf_zfZZy5tdRjA@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911081649030.1498-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1911081649030.1498-100000@iolanthe.rowland.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 8 Nov 2019 14:06:25 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgu-QXU83ai4XBnh7JJUo2NBW41XhLWf=7wrydR4=ZP0g@mail.gmail.com>
+Message-ID: <CAHk-=wgu-QXU83ai4XBnh7JJUo2NBW41XhLWf=7wrydR4=ZP0g@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Missatge de Gwendal Grignou <gwendal@chromium.org> del dia dt., 5 de
-nov. 2019 a les 23:28:
+On Fri, Nov 8, 2019 at 1:57 PM Alan Stern <stern@rowland.harvard.edu> wrote:
 >
-> Add a new function to return the number of MEMS sensors available in a
-> ChromeOS Embedded Controller.
-> It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
-> registers to find out.
->
-> Also, make check_features public as it can be useful for other drivers
-> to know what the Embedded Controller supports.
->
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> Can we please agree to call these writes something other than
+> "idempotent"?  After all, any write to normal memory is idempotent in
+> the sense that doing it twice has the same effect as doing it once
+> (ignoring possible races, of course).
 
-Version 3 was acked and I think we can maintain his ack, so:
+No!
 
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+You're completely missing the point.
 
-Also,
+Two writes to normal memory are *not* idempotent if they write
+different values. The ordering very much matters, and it's racy and a
+tool should complain.
 
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+But the point of WRITE_IDEMPOTENT() is that it *always* writes the
+same value, so it doesn't matter if two different writers race on it.
 
-Lee, how you would like to handle this? I think will be safe for
-patches 1/2/3 go through the platform-chrome tree without an immutable
-branch. Patch 3 thought still needs and Ack from you if is fine.
+So it really is about being idempotent.
 
-Thanks,
- Enric
+> A better name would be "write-if-different" or "write-if-changed"
 
+No.
 
-> ---
-> Changes in v4:
->   Check patch with --strict option
->     Use sizeof(*obj) instead of sizeof(struct ...obj)
->     Alignement
->     Remove useless ().
-> Changes in v3:
->   Fix doxygen comments.
-> Changes in v2:
->   Fix spelling in commit message.
->   Cleanup the case where DUMP command is not supported.
->   Move code from mfd to platform/chrome/
->
->  drivers/mfd/cros_ec_dev.c                   |  32 ------
->  drivers/platform/chrome/cros_ec_proto.c     | 117 ++++++++++++++++++++
->  include/linux/platform_data/cros_ec_proto.h |   5 +
->  3 files changed, 122 insertions(+), 32 deletions(-)
->
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index 6e6dfd6c1871..a35104e35cb4 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -112,38 +112,6 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
->         { .name = "cros-ec-vbc", }
->  };
->
-> -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> -{
-> -       struct cros_ec_command *msg;
-> -       int ret;
-> -
-> -       if (ec->features[0] == -1U && ec->features[1] == -1U) {
-> -               /* features bitmap not read yet */
-> -               msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
-> -               if (!msg)
-> -                       return -ENOMEM;
-> -
-> -               msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
-> -               msg->insize = sizeof(ec->features);
-> -
-> -               ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> -               if (ret < 0) {
-> -                       dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
-> -                                ret, msg->result);
-> -                       memset(ec->features, 0, sizeof(ec->features));
-> -               } else {
-> -                       memcpy(ec->features, msg->data, sizeof(ec->features));
-> -               }
-> -
-> -               dev_dbg(ec->dev, "EC features %08x %08x\n",
-> -                       ec->features[0], ec->features[1]);
-> -
-> -               kfree(msg);
-> -       }
-> -
-> -       return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
-> -}
-> -
->  static void cros_ec_class_release(struct device *dev)
->  {
->         kfree(to_cros_ec_dev(dev));
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 7db58771ec77..b502933e911b 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -717,3 +717,120 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
->         return host_event;
->  }
->  EXPORT_SYMBOL(cros_ec_get_host_event);
-> +
-> +/**
-> + * cros_ec_check_features - Test for the presence of EC features
-> + *
-> + * @ec: EC device, does not have to be connected directly to the AP,
-> + *      can be daisy chained through another device.
-> + * @feature: One of ec_feature_code bit.
-> + *
-> + * Call this function to test whether the ChromeOS EC supports a feature.
-> + *
-> + * Return: 1 if supported, 0 if not
-> + */
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> +{
-> +       struct cros_ec_command *msg;
-> +       int ret;
-> +
-> +       if (ec->features[0] == -1U && ec->features[1] == -1U) {
-> +               /* features bitmap not read yet */
-> +               msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
-> +               if (!msg)
-> +                       return -ENOMEM;
-> +
-> +               msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
-> +               msg->insize = sizeof(ec->features);
-> +
-> +               ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> +               if (ret < 0) {
-> +                       dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
-> +                                ret, msg->result);
-> +                       memset(ec->features, 0, sizeof(ec->features));
-> +               } else {
-> +                       memcpy(ec->features, msg->data, sizeof(ec->features));
-> +               }
-> +
-> +               dev_dbg(ec->dev, "EC features %08x %08x\n",
-> +                       ec->features[0], ec->features[1]);
-> +
-> +               kfree(msg);
-> +       }
-> +
-> +       return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_check_features);
-> +
-> +/**
-> + * cros_ec_get_sensor_count - Return the number of MEMS sensors supported.
-> + *
-> + * @ec: EC device, does not have to be connected directly to the AP,
-> + *      can be daisy chained through another device.
-> + * Return: < 0 in case of error.
-> + */
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
-> +{
-> +       /*
-> +        * Issue a command to get the number of sensor reported.
-> +        * If not supported, check for legacy mode.
-> +        */
-> +       int ret, sensor_count;
-> +       struct ec_params_motion_sense *params;
-> +       struct ec_response_motion_sense *resp;
-> +       struct cros_ec_command *msg;
-> +       struct cros_ec_device *ec_dev = ec->ec_dev;
-> +       u8 status;
-> +
-> +       msg = kzalloc(sizeof(*msg) + max(sizeof(*params), sizeof(*resp)),
-> +                     GFP_KERNEL);
-> +       if (!msg)
-> +               return -ENOMEM;
-> +
-> +       msg->version = 1;
-> +       msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> +       msg->outsize = sizeof(*params);
-> +       msg->insize = sizeof(*resp);
-> +
-> +       params = (struct ec_params_motion_sense *)msg->data;
-> +       params->cmd = MOTIONSENSE_CMD_DUMP;
-> +
-> +       ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-> +       if (ret < 0) {
-> +               sensor_count = ret;
-> +       } else if (msg->result != EC_RES_SUCCESS) {
-> +               sensor_count = -EPROTO;
-> +       } else {
-> +               resp = (struct ec_response_motion_sense *)msg->data;
-> +               sensor_count = resp->dump.sensor_count;
-> +       }
-> +       kfree(msg);
-> +
-> +       /*
-> +        * Check legacy mode: Let's find out if sensors are accessible
-> +        * via LPC interface.
-> +        */
-> +       if (sensor_count == -EPROTO &&
-> +           ec->cmd_offset == 0 &&
-> +           ec_dev->cmd_readmem) {
-> +               ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
-> +                               1, &status);
-> +               if (ret >= 0 &&
-> +                   (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
-> +                       /*
-> +                        * We have 2 sensors, one in the lid, one in the base.
-> +                        */
-> +                       sensor_count = 2;
-> +               } else {
-> +                       /*
-> +                        * EC uses LPC interface and no sensors are presented.
-> +                        */
-> +                       sensor_count = 0;
-> +               }
-> +       } else if (sensor_count == -EPROTO) {
-> +               /* EC responded, but does not understand DUMP command. */
-> +               sensor_count = 0;
-> +       }
-> +       return sensor_count;
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index 0d4e4aaed37a..f3de0662135d 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -12,6 +12,7 @@
->  #include <linux/mutex.h>
->  #include <linux/notifier.h>
->
-> +#include <linux/mfd/cros_ec.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->
->  #define CROS_EC_DEV_NAME       "cros_ec"
-> @@ -213,4 +214,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
->
->  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
-> +
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
-> +
->  #endif /* __LINUX_CROS_EC_PROTO_H */
-> --
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
->
+Again,  you're totally missing the point.
+
+It's not about "write-if-different".
+
+It's about idempotent writes.
+
+But if you do know that all the possible racing writes are idempotent,
+then AS A POSSIBLE CACHE OPTIMIZATION, you can then say "only do this
+write if somebody else didn't already do it".
+
+But that's a side effect of being idempotent, not the basic rule! And
+it's not necessarily obviously an optimization at all, because the
+cacheline may already be dirty, and checking the old value and having
+a conditional on it may be much more expensive than just writing the
+new value./
+
+The point is that certain writes DO NOT CARE ABOUT ORDERING, because
+they may be setting a sticky flag (or stickily clearing a flag, as in
+this case).  The ordering doesn't matter, because the operation is
+idempotent.
+
+That's what "idempotent" means. You can do it once, or a hundred
+times, and the end result is the same (but is different from not doing
+it at all).
+
+And no, not all writes are idempotent. That's just crazy talk. Writes
+have values.
+
+               Linus
