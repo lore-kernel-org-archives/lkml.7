@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBC3FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA88FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C8320674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F1E20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240726;
-	bh=yCTLQ+ZC2SvobOQCBJNs/UQyWJgi5EYXd6Tcb+AiVy8=;
+	s=default; t=1573240731;
+	bh=86nb92PDTNLvFu8dy83PXzdtNe20eFOcQojuKusXuR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AgSMcWI0uGmrvCf5/eOX3LQLsYXNcjUjGw0WV11gyp0hJS89REyAVGmFYWxQYDgJf
-	 B6/V3SMSM97H5ZvnWESSa5thAVRLXGWw/KZG8TROv3bfVLq23fwMqXS4eyu+KrH7X1
-	 bJvwmXltXmHlazs4GEY0izRGTiItnaomnj7UuyMk=
+	b=tXy03N1AU/DWoCQyI7CaS/iSgHhPrVWp+WjbAw8EkA7ijFeFRxwDskUOTKOze+UG3
+	 L74nzxhoCIHmKm6yU+CgzuKOFeR8/GGQVIMXhN733o8jI3lkkBvHqO91jZRGysk9uN
+	 FPaQXLtA4GSuQE1BAaef0QkNrP5F+eL/XcuBD+8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732893AbfKHTSp (ORCPT
+        id S1731290AbfKHTSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:18:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57264 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:18:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389552AbfKHTAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389507AbfKHTAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 14:00:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9E08224F1;
-        Fri,  8 Nov 2019 18:59:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78EA72248B;
+        Fri,  8 Nov 2019 18:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239554;
-        bh=yCTLQ+ZC2SvobOQCBJNs/UQyWJgi5EYXd6Tcb+AiVy8=;
+        s=default; t=1573239502;
+        bh=86nb92PDTNLvFu8dy83PXzdtNe20eFOcQojuKusXuR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IP5sVWUpAdiKj3eQAj2UxlamhPCauhzYfPeoDnruSYshBvTu3azCNUoiea2+vERhz
-         bCuZwvAcIZfjR0uvYMLfmPHWAx3Eh9ixverJhcwTVw7UCZFLcVvNmqyYHgDy54CPzz
-         xK5QladzuhK7JtP0JcQIHamfFxGghn+xBGsHgFcY=
+        b=IaInbbAHw/3gNX5OpPYs18PGj6pquhgI/A/JpJXV969LZCFn7YyfFuatTRCTpvjZW
+         QNhLAL7eCRZ0Z72n3eyw6q4cMjnlsanf2wSHbErMDBteA7K8Rd/yJSyeCy/T/YoV4j
+         kOQVjUZWZUqaAL4s59IdrpcL1LFR2B+6rAkALpjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 43/62] udp: use skb_queue_empty_lockless()
-Date:   Fri,  8 Nov 2019 19:50:31 +0100
-Message-Id: <20191108174749.702632688@linuxfoundation.org>
+Subject: [PATCH 4.14 26/62] net: annotate lockless accesses to sk->sk_napi_id
+Date:   Fri,  8 Nov 2019 19:50:14 +0100
+Message-Id: <20191108174740.783238674@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -62,96 +62,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 137a0dbe3426fd7bcfe3f8117b36a87b3590e4eb ]
+[ Upstream commit ee8d153d46a3b98c064ee15c0c0a3bbf1450e5a1 ]
 
-syzbot reported a data-race [1].
+We already annotated most accesses to sk->sk_napi_id
 
-We should use skb_queue_empty_lockless() to document that we are
-not ensuring a mutual exclusion and silence KCSAN.
+We missed sk_mark_napi_id() and sk_mark_napi_id_once()
+which might be called without socket lock held in UDP stack.
 
-[1]
-BUG: KCSAN: data-race in __skb_recv_udp / __udp_enqueue_schedule_skb
+KCSAN reported :
+BUG: KCSAN: data-race in udpv6_queue_rcv_one_skb / udpv6_queue_rcv_one_skb
 
-write to 0xffff888122474b50 of 8 bytes by interrupt on cpu 0:
- __skb_insert include/linux/skbuff.h:1852 [inline]
- __skb_queue_before include/linux/skbuff.h:1958 [inline]
- __skb_queue_tail include/linux/skbuff.h:1991 [inline]
- __udp_enqueue_schedule_skb+0x2c1/0x410 net/ipv4/udp.c:1470
- __udp_queue_rcv_skb net/ipv4/udp.c:1940 [inline]
- udp_queue_rcv_one_skb+0x7bd/0xc70 net/ipv4/udp.c:2057
- udp_queue_rcv_skb+0xb5/0x400 net/ipv4/udp.c:2074
- udp_unicast_rcv_skb.isra.0+0x7e/0x1c0 net/ipv4/udp.c:2233
- __udp4_lib_rcv+0xa44/0x17c0 net/ipv4/udp.c:2300
- udp_rcv+0x2b/0x40 net/ipv4/udp.c:2470
- ip_protocol_deliver_rcu+0x4d/0x420 net/ipv4/ip_input.c:204
- ip_local_deliver_finish+0x110/0x140 net/ipv4/ip_input.c:231
+write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 0:
+ sk_mark_napi_id include/net/busy_poll.h:125 [inline]
+ __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
+ udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
+ udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
+ udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
+ __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
+ udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
+ ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
+ ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
  NF_HOOK include/linux/netfilter.h:305 [inline]
  NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_local_deliver+0x133/0x210 net/ipv4/ip_input.c:252
+ ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
  dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish+0x121/0x160 net/ipv4/ip_input.c:413
+ ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
  NF_HOOK include/linux/netfilter.h:305 [inline]
  NF_HOOK include/linux/netfilter.h:299 [inline]
- ip_rcv+0x18f/0x1a0 net/ipv4/ip_input.c:523
+ ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
+ __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
+ __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
+ process_backlog+0x1d3/0x420 net/core/dev.c:5955
+ napi_poll net/core/dev.c:6392 [inline]
+ net_rx_action+0x3ae/0xa90 net/core/dev.c:6460
+
+write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 1:
+ sk_mark_napi_id include/net/busy_poll.h:125 [inline]
+ __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
+ udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
+ udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
+ udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
+ __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
+ udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
+ ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
+ ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
+ dst_input include/net/dst.h:442 [inline]
+ ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
  __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
  __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
  process_backlog+0x1d3/0x420 net/core/dev.c:5955
 
-read to 0xffff888122474b50 of 8 bytes by task 8921 on cpu 1:
- skb_queue_empty include/linux/skbuff.h:1494 [inline]
- __skb_recv_udp+0x18d/0x500 net/ipv4/udp.c:1653
- udp_recvmsg+0xe1/0xb10 net/ipv4/udp.c:1712
- inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
- sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
- ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
- do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
- __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
- __do_sys_recvmmsg net/socket.c:2703 [inline]
- __se_sys_recvmmsg net/socket.c:2696 [inline]
- __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
 Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 8921 Comm: syz-executor.4 Not tainted 5.4.0-rc3+ #0
+CPU: 1 PID: 10890 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 
+Fixes: e68b6e50fa35 ("udp: enable busy polling for all sockets")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/udp.c |    6 +++---
+ include/net/busy_poll.h |    6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1468,7 +1468,7 @@ static int first_packet_length(struct so
+--- a/include/net/busy_poll.h
++++ b/include/net/busy_poll.h
+@@ -134,7 +134,7 @@ static inline void skb_mark_napi_id(stru
+ static inline void sk_mark_napi_id(struct sock *sk, const struct sk_buff *skb)
+ {
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+-	sk->sk_napi_id = skb->napi_id;
++	WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+ #endif
+ }
  
- 	spin_lock_bh(&rcvq->lock);
- 	skb = __first_packet_length(sk, rcvq, &total);
--	if (!skb && !skb_queue_empty(sk_queue)) {
-+	if (!skb && !skb_queue_empty_lockless(sk_queue)) {
- 		spin_lock(&sk_queue->lock);
- 		skb_queue_splice_tail_init(sk_queue, rcvq);
- 		spin_unlock(&sk_queue->lock);
-@@ -1543,7 +1543,7 @@ struct sk_buff *__skb_recv_udp(struct so
- 				return skb;
- 			}
+@@ -143,8 +143,8 @@ static inline void sk_mark_napi_id_once(
+ 					const struct sk_buff *skb)
+ {
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+-	if (!sk->sk_napi_id)
+-		sk->sk_napi_id = skb->napi_id;
++	if (!READ_ONCE(sk->sk_napi_id))
++		WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+ #endif
+ }
  
--			if (skb_queue_empty(sk_queue)) {
-+			if (skb_queue_empty_lockless(sk_queue)) {
- 				spin_unlock_bh(&queue->lock);
- 				goto busy_check;
- 			}
-@@ -1570,7 +1570,7 @@ busy_check:
- 				break;
- 
- 			sk_busy_loop(sk, flags & MSG_DONTWAIT);
--		} while (!skb_queue_empty(sk_queue));
-+		} while (!skb_queue_empty_lockless(sk_queue));
- 
- 		/* sk_queue is empty, reader_queue may contain peeked packets */
- 	} while (timeo &&
 
 
