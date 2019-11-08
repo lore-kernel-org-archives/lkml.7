@@ -6,112 +6,149 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D23FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF563FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D499E206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D61207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733015AbfKHVQc (ORCPT
+        id S1732713AbfKHVRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:16:32 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:58299 "EHLO
+        Fri, 8 Nov 2019 16:17:09 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:39767 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731181AbfKHVQb (ORCPT
+        with ESMTP id S1729617AbfKHVRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:16:31 -0500
+        Fri, 8 Nov 2019 16:17:09 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M4JVv-1iSuV33qcL-000H5U; Fri, 08 Nov 2019 22:16:21 +0100
+ 1MPGiR-1iGill2Ewf-00Pfj2; Fri, 08 Nov 2019 22:16:44 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
+To:     y2038@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 16/23] y2038: timerfd: Use timespec64 internally
-Date:   Fri,  8 Nov 2019 22:12:15 +0100
-Message-Id: <20191108211323.1806194-7-arnd@arndb.de>
+        Stephen Boyd <sboyd@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Li RongQing <lirongqing@baidu.com>, linux-api@vger.kernel.org
+Subject: [PATCH 17/23] y2038: time: avoid timespec usage in settimeofday()
+Date:   Fri,  8 Nov 2019 22:12:16 +0100
+Message-Id: <20191108211323.1806194-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
 References: <20191108210236.1296047-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:f99ERCJnaEP6l1FjibSXxcsOLJa++GmL0I70TNMWQOU34Uv4PDX
- 4k8qz4hBKqfkFDCXzllbDhvO4JPGsO4Gyq0ZmO2QqnY5gw94EUNCLWlqFqVqavgc4qxeQOy
- 1Vm9PZMeYtelGu9Cd9ZSuw+suaPXoCYxh2IF8qUpjaSvm57fdogUtXtLxVNtn/k+dTYz/qq
- 5G4Oue57/1o4PI/8aR1KA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OkS73SaoqFM=:S+wceWhB+XNIMJ5HNqWit5
- Q3+TZe+gn6GOOFrvUfbvpDgm0Hhkc+dotB+2We9f20vQcgSdkXSa50DZXK0YA4mzI89+fC5nB
- cLo8flDUnLvtMmYSmqres7JtqLmpQFpZX8cj070PDVFCkebnoszEa5034Y8FW6eu9PH4e0gj4
- 2zxiOCWw+Bx2BjpBhiuJC4jRoNbakTqLFqlw+ULkkUL7YD7Z/nKB3RKpkWBdJ9ALo9/w3qupN
- xBnCoDpVkjSSx24S5136GIctdOgTIAUCoxx0cu36TIO6pTnhH3kAA+H+14GcMaSrY5FKbtnkr
- JcDCBpKiNRGOrlvSfHe14Ctrl3c4Gg8hiU8j00U/kqDmWwEd1MW14NyzcNJVyCxB+5HW/U/wA
- COp6thxQBXwYUmqGskKaqH3myKOMgSKwk3HoL56m71vcePLblIy5QZJCBiLnw2XfC46MBoWYx
- 1BMdaCnB0f+fWDWCn9qRdW+WXHDqJf+UASmsbn6o5UJKJNM3E4eWosOg+f4yqG8Yq7wRAtfK2
- Khhhge+dZhERKGj9Qm6tVOJjrHbHYM7e/llhGOX3dZy4XOIhYzDKndv+bBKr1zKYKKNa/SR4y
- UBxbe6qY/Xvj7P7deT3+XrTIeG76lTaXqn1Oqpc1jhSEvEqucK8FrZfYRO2kfLT60cw+XgFX2
- YlugG/Wky/czeO/7hd+wNB2V/9fSpapLTiP9Rk+0uiYjhk9Xukk2XNtHAZljSOtsNBZfayOXQ
- QC2oDE4+CAReHgKBjYHnoomccIouL9Ib8ssHuwDd6Dvr56Aymrc7VKz3xvxy4GYp3FdVh5S7m
- OXtwykXFhcmiy8Kr8PxH9WXJ8x3oju+NozZ8bMGVzuthp/ZUuEb77ViqksNFBaj3edaowHO7I
- LqNutc85Y4X02TS+66GQ==
+X-Provags-ID: V03:K1:wVshbT+Rs8/VikEWMEyXeLpYFujcte2DKlRU0hq3zkGqSD7/ggC
+ ygDEdVeGORYn8F1DRnmVs0ye4ZRZyC8WZ/oJHMj80QAM40h9DuovvRJCygRfF0NwTkUVUkc
+ VXWiX8cyr522zIOPoE7TvSpz8nKEF8mVO/9HuXPoD3sh+O598eVubO6C2QnEWdYannsiPFb
+ VmZ9O7pmhM+NyMWqgEdAQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W0d6/OZZjqs=:Lbeg5117r3XMRKTKmdlxk5
+ 1dxvM9R7+omevXsmSib0qdI+f2YGTdsEjwSm5vQ4e6493tRiVH5jvvgJtwWrfoL+dqrVXx4vk
+ ELndXVbDDmS+PvmQ2GZVpXBPITzV1TiMwK1g73synyWXG277DBTJmR3MDoHGMZyj8ONCdnjGU
+ YP1U7hREnmQ6aqfuSUm9zc/ZTNsPxOthF4ZinfgqvXGDgyMz/qCI2Ix8HL8t5oDkEaAdTqvCt
+ c6mQoz9isAPifqiEBPuIV9uZpsycHnVV7Y2xKMEOg6U63YDb2ZZO9UiLtAVeJwUaZsiVEASoA
+ Td2aAzVWivAHFDvycrFs3mhbZenqi6ZD3vU0rpk1q6PRyG+zIs9orqDnQs87G/hYMevPgv7Wd
+ RIen7H5toNquKzyCQ5zTmNCyU5DM0zLKNZ7X73c0LfIPaErVxuPUspl10Ix0sX2Em1xOs/wIs
+ HYOmOlJ9kNUfw12zmIHNSdBcz7oe6frliHbiNVW1nDhK2MGABOp9BZXPRZYzGsVtgIO/+2kCj
+ qNte92VkmzjYU9aEoIgUo7YLMkOS5JZJLGMVWPyvZfh0Tu+xvr1Bzcsvd1GdACxxnbQE3KVfV
+ QNGUdF24YEkGSZsHCwC7GzuRxt9RmZtw0+E/vwlEITefGw/9fGCH1AefXm5wxfCuhibNLKFxh
+ nuAR/MzDCUJ3HVd49mKFbq0VQ2MlBrTvcOZ/qKWabpweS5h9ronRECXNl+HOItiyxLKX4TrX/
+ ugzVjBiUYdCNUzTRLV1iR1WxbekWHeOauVBEr4HhHBmpcSsnjRRJfIlrO50Zozpci7gRJ2Bke
+ ZZg63CgHNX2Ajjj3wpMr5XK8kRi/lMK+NuMbEJ+iCiom1lKQAu4+z3C6PGvdEz3X3HAKb59vN
+ FGHT6NNw6qywPEc3JeDA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-timerfd_show() uses a 'struct itimerspec' internally, but that is
-deprecated because of the time_t overflow and a conflict with the glibc
-type of the same name that is now incompatible in user space.
+The compat_get_timeval() and timeval_valid() interfaces
+are deprecated and getting removed along with the definition
+of struct timeval itself.
 
-Use a pair of timespec64 variables instead as a simple replacement.
-
-As this removes the last use of itimerspec from the kernel, allowing the
-removal of the definition from the uapi headers along with timespec and
-timeval later.
+Change the two implementations of the settimeofday()
+system call to open-code these helpers and completely
+avoid references to timeval.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/timerfd.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ include/linux/syscalls.h |  2 +-
+ kernel/time/time.c       | 20 +++++++++-----------
+ 2 files changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/fs/timerfd.c b/fs/timerfd.c
-index 48305ba41e3c..ac7f59a58f94 100644
---- a/fs/timerfd.c
-+++ b/fs/timerfd.c
-@@ -302,11 +302,11 @@ static ssize_t timerfd_read(struct file *file, char __user *buf, size_t count,
- static void timerfd_show(struct seq_file *m, struct file *file)
- {
- 	struct timerfd_ctx *ctx = file->private_data;
--	struct itimerspec t;
-+	struct timespec64 value, interval;
- 
- 	spin_lock_irq(&ctx->wqh.lock);
--	t.it_value = ktime_to_timespec(timerfd_get_remaining(ctx));
--	t.it_interval = ktime_to_timespec(ctx->tintv);
-+	value = ktime_to_timespec64(timerfd_get_remaining(ctx));
-+	interval = ktime_to_timespec64(ctx->tintv);
- 	spin_unlock_irq(&ctx->wqh.lock);
- 
- 	seq_printf(m,
-@@ -318,10 +318,10 @@ static void timerfd_show(struct seq_file *m, struct file *file)
- 		   ctx->clockid,
- 		   (unsigned long long)ctx->ticks,
- 		   ctx->settime_flags,
--		   (unsigned long long)t.it_value.tv_sec,
--		   (unsigned long long)t.it_value.tv_nsec,
--		   (unsigned long long)t.it_interval.tv_sec,
--		   (unsigned long long)t.it_interval.tv_nsec);
-+		   (unsigned long long)value.tv_sec,
-+		   (unsigned long long)value.tv_nsec,
-+		   (unsigned long long)interval.tv_sec,
-+		   (unsigned long long)interval.tv_nsec);
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index e665920fa359..d0391cc2dae9 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -734,7 +734,7 @@ asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, struct g
+ /* kernel/time.c */
+ asmlinkage long sys_gettimeofday(struct __kernel_old_timeval __user *tv,
+ 				struct timezone __user *tz);
+-asmlinkage long sys_settimeofday(struct timeval __user *tv,
++asmlinkage long sys_settimeofday(struct __kernel_old_timeval __user *tv,
+ 				struct timezone __user *tz);
+ asmlinkage long sys_adjtimex(struct __kernel_timex __user *txc_p);
+ asmlinkage long sys_adjtimex_time32(struct old_timex32 __user *txc_p);
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index bc114f0be8f1..6bfbe640fd3b 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -196,22 +196,21 @@ int do_sys_settimeofday64(const struct timespec64 *tv, const struct timezone *tz
+ 	return 0;
  }
- #else
- #define timerfd_show NULL
+ 
+-SYSCALL_DEFINE2(settimeofday, struct timeval __user *, tv,
++SYSCALL_DEFINE2(settimeofday, struct __kernel_old_timeval __user *, tv,
+ 		struct timezone __user *, tz)
+ {
+ 	struct timespec64 new_ts;
+-	struct timeval user_tv;
+ 	struct timezone new_tz;
+ 
+ 	if (tv) {
+-		if (copy_from_user(&user_tv, tv, sizeof(*tv)))
++		if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
++		    get_user(new_ts.tv_nsec, &tv->tv_usec))
+ 			return -EFAULT;
+ 
+-		if (!timeval_valid(&user_tv))
++		if (tv->tv_usec > USEC_PER_SEC)
+ 			return -EINVAL;
+ 
+-		new_ts.tv_sec = user_tv.tv_sec;
+-		new_ts.tv_nsec = user_tv.tv_usec * NSEC_PER_USEC;
++		new_ts.tv_nsec *= NSEC_PER_USEC;
+ 	}
+ 	if (tz) {
+ 		if (copy_from_user(&new_tz, tz, sizeof(*tz)))
+@@ -245,18 +244,17 @@ COMPAT_SYSCALL_DEFINE2(settimeofday, struct old_timeval32 __user *, tv,
+ 		       struct timezone __user *, tz)
+ {
+ 	struct timespec64 new_ts;
+-	struct timeval user_tv;
+ 	struct timezone new_tz;
+ 
+ 	if (tv) {
+-		if (compat_get_timeval(&user_tv, tv))
++		if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
++		    get_user(new_ts.tv_nsec, &tv->tv_usec))
+ 			return -EFAULT;
+ 
+-		if (!timeval_valid(&user_tv))
++		if (new_ts.tv_nsec > USEC_PER_SEC)
+ 			return -EINVAL;
+ 
+-		new_ts.tv_sec = user_tv.tv_sec;
+-		new_ts.tv_nsec = user_tv.tv_usec * NSEC_PER_USEC;
++		new_ts.tv_nsec *= NSEC_PER_USEC;
+ 	}
+ 	if (tz) {
+ 		if (copy_from_user(&new_tz, tz, sizeof(*tz)))
 -- 
 2.20.0
 
