@@ -2,124 +2,93 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B85FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A380FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3F0222C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pk3X2dXu"
+	by mail.kernel.org (Postfix) with ESMTP id 79D03222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573216462;
+	bh=Tp/mJy2ordfJXjH1/nl11N6dP2U17R3lP2KncOqlLPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XP2JuunPjziKvmh9wFIy5w+9SMQaIdbBl+IDsZmeR5KJG60vVlY8JVdV5AaEVBllj
+	 IQcvp3Ait/OwLuIwFgFatwOLbQgZkM006Ijr7tJ4q7JCy8Qx66lDn8iPjesCO5RbgD
+	 6zyx2QmQfBbkvZKu0mYJBSVbBkBUTml2yGPEn1vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfKHMb4 (ORCPT
+        id S1726405AbfKHMeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:31:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35803 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725883AbfKHMbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 07:31:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573216314;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vMJWjmHAn9oXmduAqxbr7ld97ARES8e+B/CT4q03C/U=;
-        b=Pk3X2dXuQsrYnVohOyyATVZq4LL+KpF/o2zcgCU6/6KWXCBYFHOBPYHilMsRJ5/KSGtsqZ
-        2I/xbcq/PCFNoIIUMfxU4V8JiZwGl96ePB7vEegFt1J5Cp8cnJ9GTc8bCRMAjQzgupkvBR
-        e6nYkz1hURUnUCiymmd38cXNxvVt/Yg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-w8K278-eNPCBfHYDXkJI7g-1; Fri, 08 Nov 2019 07:31:50 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 8 Nov 2019 07:34:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfKHMeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 07:34:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86A11107ACC3;
-        Fri,  8 Nov 2019 12:31:48 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BEFA31001902;
-        Fri,  8 Nov 2019 12:31:45 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id xA8CVjPD004476;
-        Fri, 8 Nov 2019 07:31:45 -0500
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id xA8CViNb004472;
-        Fri, 8 Nov 2019 07:31:44 -0500
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Fri, 8 Nov 2019 07:31:44 -0500 (EST)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Alessio Balsini <balsini@android.com>
-cc:     Jens Axboe <axboe@kernel.dk>, Alasdair G Kergon <agk@redhat.com>,
-        elsk@google.com, dvander@google.com, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: dm-snapshot for system updates in Android
-In-Reply-To: <20191104164900.GA10934@google.com>
-Message-ID: <alpine.LRH.2.02.1911080723130.3392@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20191025101624.GA61225@google.com> <alpine.LRH.2.02.1910290957220.25731@file01.intranet.prod.int.rdu2.redhat.com> <20191104164900.GA10934@google.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87788222C6;
+        Fri,  8 Nov 2019 12:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573216459;
+        bh=Tp/mJy2ordfJXjH1/nl11N6dP2U17R3lP2KncOqlLPo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QS7A4MHMADPPwdCjCQFnF8fFONxKv97OJOn0wTV8ACdb+uNUtyjKOlsHcfi86ISMP
+         yIyYFFbzsqE3Kaf70NDdBj6RZit0Cw8APFlApq4X8fgjTRveyoacuQFmxAw+kl1vU6
+         oreciYK+/wFP4uC73oZmBr9e6utaWeRDH+WH4oMw=
+Date:   Fri, 8 Nov 2019 13:34:16 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Julian Wiedmann <jwi@linux.ibm.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 204/205] s390/qeth: limit csum offload
+ erratum to L3 devices
+Message-ID: <20191108123416.GA732985@kroah.com>
+References: <20191108113752.12502-1-sashal@kernel.org>
+ <20191108113752.12502-204-sashal@kernel.org>
+ <2e4553d6-de1f-bb61-33e4-10a5c23f0aa7@linux.ibm.com>
+ <20191108120025.GM4787@sasha-vm>
+ <4d8f1938-af6e-7e0e-4085-2f7c53390b2d@linux.ibm.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: w8K278-eNPCBfHYDXkJI7g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: TEXT/PLAIN; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d8f1938-af6e-7e0e-4085-2f7c53390b2d@linux.ibm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 08, 2019 at 01:16:26PM +0100, Julian Wiedmann wrote:
+> On 08.11.19 13:00, Sasha Levin wrote:
+> > On Fri, Nov 08, 2019 at 12:50:24PM +0100, Julian Wiedmann wrote:
+> >> On 08.11.19 12:37, Sasha Levin wrote:
+> >>> From: Julian Wiedmann <jwi@linux.ibm.com>
+> >>>
+> >>> [ Upstream commit f231dc9dbd789b0f98a15941e3cebedb4ad72ad5 ]
+> >>>
+> >>> Combined L3+L4 csum offload is only required for some L3 HW. So for
+> >>> L2 devices, don't offload the IP header csum calculation.
+> >>>
+> >>
+> >> NACK, this has no relevance for stable.
+> > 
+> > Sure, I'll drop it.
+> > 
+> > Do you have an idea why the centos and ubuntu folks might have
+> > backported this commit into their kernels?
+> > 
+> 
+> No clue, I trust they have their own reasons.
+> 
 
+I cant see centos backporting anything unless they were asked to do so.
+And this really looks like a "bugfix" to me, why isn't this relevant for
+any older kernel versions?
 
-On Mon, 4 Nov 2019, Alessio Balsini wrote:
+thanks,
 
-> > > -- Alignment
-> > >=20
-> > > Our approach follows the solution proposed by Mikulas [1].
-> > > Being the block alignment of file extents automatically managed by th=
-e
-> > > filesystem, using FIEMAP should have no alignment-related performance=
- issue.
-> > > But in our implementation we hit a misalignment [2] branch which lead=
-s to
-> > > dmwarning messages [3, 4].
-> > >=20
-> > > I have a limited experience with the block layer and dm, so I'm still
-> > > struggling in finding the root cause for this, either in user space o=
-r kernel
-> > > space.
-> >=20
-> > I don't know. What is the block size of the filesystem? Are all mapping=
-s=20
-> > aligned to this block size?
->=20
-> Here follows a just generated warning coming from a Pixel 4 kernel (4.14)=
-:
->=20
-> [ 3093.443808] device-mapper: table: 253:16: adding target device dm-15
-> caused an alignment inconsistency: physical_block_size=3D4096,
-> logical_block_size=3D4096, alignment_offset=3D61440, start=3D0
->=20
-> Does this contain all the info you asked for?
-
-Look at the function blk_stack_limits - it has various checks that make it=
-=20
-return -1. Insert some debugging printk's there and find out which check=20
-made the function return -1.
-
-Based on this, we can find out which of the limits triggered the error=20
-message.
-
-> I started investigating this issue, but since we didn't notice any
-> performance degradation, I prioritized other things. I'll be hopefully
-> able to get back to this warning in the next months.
-> Please let me know if I can help you with that or if you need additional
-> information.
-
-Mikulas
-
+greg k-h
