@@ -2,101 +2,129 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE12EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84596C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97012178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573187401;
-	bh=tqpTzta+Se1TB7bsp9vwIxnbM/32x+fpr6Gz4NiCsUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BdViqMmmsoBbMO5rSa2bopXw15tDetZs6nGJMY/qE5z6cyvpLsCOR7+BKqWXnLkkN
-	 y2rqDTmiJLiK3H9HPSYynrquExlGAj+s9E+HjyJvw3Pahmm07AbgcEJhLGMdglxGRA
-	 /9TIv2SY8uBMHUfxqiR8Gbrq5LRsOu4w904P++Ns=
+	by mail.kernel.org (Postfix) with ESMTP id 565772178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:30:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGQ+a/83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfKHE3p (ORCPT
+        id S1729714AbfKHEaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 23:29:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfKHE3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 23:29:45 -0500
-Received: from localhost (unknown [106.200.194.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC6EA2178F;
-        Fri,  8 Nov 2019 04:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573187384;
-        bh=tqpTzta+Se1TB7bsp9vwIxnbM/32x+fpr6Gz4NiCsUo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mUmLjVWFgPkKpVnapidjks07A8JjQPo+B7cRJRcWJQA+U2UqTnSIPDI0awYh5TP3f
-         UsyPIyx6v2OuKZkavu3mnXWCLUbKsTEkB0pNgXvMWMuJcpujNfWlE1H9q/D7AdouHC
-         0Z2h/h4D4IBXVXPI824hWB0qDQJDtmWs/pQkh6Co=
-Date:   Fri, 8 Nov 2019 09:59:40 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH 1/4] soundwire: sdw_slave: add new fields to
- track probe status
-Message-ID: <20191108042940.GW952516@vkoul-mobl>
-References: <20191023210657.32440-1-pierre-louis.bossart@linux.intel.com>
- <20191023210657.32440-2-pierre-louis.bossart@linux.intel.com>
- <20191103045604.GE2695@vkoul-mobl.Dlink>
- <f53b28bb-1ec7-a400-54ed-51fd55819ecd@linux.intel.com>
+        Thu, 7 Nov 2019 23:30:18 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43531 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfKHEaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 23:30:17 -0500
+Received: by mail-pl1-f195.google.com with SMTP id a18so3172225plm.10;
+        Thu, 07 Nov 2019 20:30:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=GEvPrgPPegoWDjxGYmMInikn90DDnMAOw8xBaDl5kZA=;
+        b=pGQ+a/83A9/0Nc2QLG/lrr1EYbt/bjvX3SE4LpTBgZGf0KilWjqO6VeOG6Jwcb1D23
+         fj+jvlUeTjjSw255ZQykSDw3AJVbte/f/cE1oLe8M6sGNMwYNJK9ALY+tjxZheqDchxu
+         uAZMm1A8J8KM9d9f92xRrv1AInfaJSQbOM4UjupIdxR+V8PDnlIAOjTNsXdQqC1CSA9i
+         7NDAIlAd9wtaEkQI0UHHeMwVQpIhz75MXzB4PVA2lnJTqpyORABxoTq5C4z7RED5Jagj
+         p7JTWMZQtDHju/NCEn/n/ZU5jW56e2cp+KSQRvmhV5kQrLQKAhFZLEAm61D2fgLPindm
+         WN9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=GEvPrgPPegoWDjxGYmMInikn90DDnMAOw8xBaDl5kZA=;
+        b=tuipSY0u4RhqvvkwDy0cwvmhRVcjvh+aQSr53DZb/k2NrrGWveLbI0K5lFbGcwN6KP
+         LvspFGfsbhiEFh5psRAFvB7wwQn8u4lgV0a2XghZInRu2pLRHFwCRs4SsqAKWI8Vl8ab
+         0UJpce4o6nszZtY1kV2IPe4V4ckefDb3CfWJ1vT+/A+9Bl46wSO5eoUxQ8LBbewtuguF
+         6RGRaZ+UbS2x6wU7usIxDa8qEJSzAtZ3XamDdxHuHEj/rqN1fMM7sU72KvhflFZr0Mxt
+         r9NgcYhNE3LuPCkdQbIwtcGGgoyOIR5mnYmWKqQ8gtNO0g3BAfWGG8eADkq922w5Ei9Z
+         C8EA==
+X-Gm-Message-State: APjAAAV/F37t/1R3Q+DhXR3oy8DGn8q+uEFNhTyDaQCDLjtPUN9vS2xB
+        mo6J6fqeW3/4B+K5koODcR38SMpmXkA=
+X-Google-Smtp-Source: APXvYqwQ686n7vNnzVLImLtqcTfZ3PQU/gu1LdOpnaXjAFca86+mHnqZ1aY/PwV9eAq6yZBUTvdpJw==
+X-Received: by 2002:a17:90a:bf04:: with SMTP id c4mr10812587pjs.5.1573187416969;
+        Thu, 07 Nov 2019 20:30:16 -0800 (PST)
+Received: from [192.168.1.101] (122-58-182-39-adsl.sparkbb.co.nz. [122.58.182.39])
+        by smtp.gmail.com with ESMTPSA id x70sm4621756pfd.132.2019.11.07.20.30.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 20:30:16 -0800 (PST)
+Subject: Re: [PATCH v3 05/13] m68k: mm: use pgtable-nopXd instead of
+ 4level-fixup
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mike Rapoport <rppt@kernel.org>
+References: <1572850587-20314-1-git-send-email-rppt@kernel.org>
+ <1572850587-20314-6-git-send-email-rppt@kernel.org>
+ <CAMuHMdUG3V7uxzhbetw75vVeobeP0-bQySb3r=0V5XujUF123g@mail.gmail.com>
+ <20191104094748.GB23288@rapoport-lnx>
+ <CAMuHMdVHsNyLxhaxZcVdLvQ1PUnb=2_+ECPWVD0234V+qu+kOw@mail.gmail.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
+        Richard Weinberger <richard@nod.at>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-um@lists.infradead.org,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <3d908bbf-0469-c53b-dd86-87df98f40ee7@gmail.com>
+Date:   Fri, 8 Nov 2019 17:29:58 +1300
+User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
+ Icedove/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f53b28bb-1ec7-a400-54ed-51fd55819ecd@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAMuHMdVHsNyLxhaxZcVdLvQ1PUnb=2_+ECPWVD0234V+qu+kOw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-11-19, 08:32, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 11/2/19 11:56 PM, Vinod Koul wrote:
-> > On 23-10-19, 16:06, Pierre-Louis Bossart wrote:
-> > > Changes to the sdw_slave structure needed to solve race conditions on
-> > > driver probe.
-> > 
-> > Can you please explain the race you have observed, it would be a very
-> > useful to document it as well
-> 
-> the races are explained in the [PATCH 00/18] soundwire: code hardening and
-> suspend-resume support series.
+Hi Geert,
 
-It would make sense to explain it here as well to give details to
-reviewers, there is nothing wrong with too much detail!
+Am 04.11.2019 um 22:53 schrieb Geert Uytterhoeven:
+>>> This indeed boots fine on ARAnyM, which emulates on 68040.
+>>> It would be good to have some boot testing on '020/030, too.
+>>
+>> To be honest, I have no idea how to to that :)
+>
+> Sure. This was more a request for the fellow m68k users.
+> But don't worry too much about it.  If it breaks '020/'030, we can fix
+> that later.
 
-> > > 
-> > > The functionality is added in the next patch.
-> > 
-> > which one..?
-> 
-> [PATCH 00/18] soundwire: code hardening and suspend-resume support
+Boots fine on 030, too.
 
-Yeah great! let me play detective with 18 patch series. I asked for a
-patch and got a series!
+Cheers,
 
-Again, please help the maintainer to help you. We would love to see this
-merged as well, but please step up and give more details in cover
-letter and changelogs. I shouldn't need to do guesswork and scan through the
-inbox to find the context!
+	Michael
 
--- 
-~Vinod
