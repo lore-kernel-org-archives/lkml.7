@@ -2,976 +2,305 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B6EFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECC3FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6C8218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:29:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aux60g/9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M+5ERXn5"
+	by mail.kernel.org (Postfix) with ESMTP id 70C98218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbfKHJ3q (ORCPT
+        id S1731709AbfKHJah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:29:46 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:38912 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731373AbfKHJ3q (ORCPT
+        Fri, 8 Nov 2019 04:30:37 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8016 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730281AbfKHJag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:29:46 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1929E60D90; Fri,  8 Nov 2019 09:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573205384;
-        bh=7Yss9qpvrdasOy5OoM3KH9ciVil/gwVAv10XeEtcu0k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aux60g/96pBSrkSSMu6zqx0EUse21X+rsFGk7pq2rcXbgoDg2sxD8K8rARp2v7bMa
-         HHykeRrTqVLz8LWpYcyEJLqgugFjASuHjamYzfhj4YaxoXxqtbavIzqYyu0bTiAvtN
-         7N0WKezKVQsj+nxYygANjnSQ00J/yhubkk5In2oQ=
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E1FB660D5A;
-        Fri,  8 Nov 2019 09:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573205375;
-        bh=7Yss9qpvrdasOy5OoM3KH9ciVil/gwVAv10XeEtcu0k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M+5ERXn5NLjpL5euULt2T3Sy68Zob7FRP63fTSmZY/Np8LfeZQ/1VhZVSgDT/ZIZ6
-         U+tfgJ95XT7MvIozi+RamyCnj+kbSXAFeR0Eiv1JavaNzCZaSiGlj82oMVG+nQ7YOR
-         zCnAiTS/5arBuyPP4Y+U3/o/vzxs5a71gZUG/VdE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E1FB660D5A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        swboyd@chromium.org, Roja Rani Yarubandi <rojay@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v5 13/13] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
-Date:   Fri,  8 Nov 2019 14:58:24 +0530
-Message-Id: <20191108092824.9773-14-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191108092824.9773-1-rnayak@codeaurora.org>
-References: <20191108092824.9773-1-rnayak@codeaurora.org>
+        Fri, 8 Nov 2019 04:30:36 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA89MHMo137952
+        for <linux-kernel@vger.kernel.org>; Fri, 8 Nov 2019 04:30:35 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w55nn89hd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 04:30:34 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Fri, 8 Nov 2019 09:30:33 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Nov 2019 09:30:30 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA89UT4351445878
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 09:30:29 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 532A111C054;
+        Fri,  8 Nov 2019 09:30:29 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7915411C052;
+        Fri,  8 Nov 2019 09:30:27 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.52.75])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 09:30:27 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     acme@kernel.org, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH] perf tool: Provide an option to print perf_event_open args and return value
+Date:   Fri,  8 Nov 2019 15:00:24 +0530
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <9d4831b6-71cc-63db-f48c-2627ad97515b@linux.ibm.com>
+References: <9d4831b6-71cc-63db-f48c-2627ad97515b@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110809-0008-0000-0000-0000032CACB4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110809-0009-0000-0000-00004A4BB4BB
+Message-Id: <20191108093024.27077-1-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roja Rani Yarubandi <rojay@codeaurora.org>
+Perf record with verbose=2 already prints this information along with
+whole lot of other traces which requires lot of scrolling. Introduce
+an option to print only perf_event_open() arguments and return value.
 
-Add QUP SE instances configuration for sc7180.
+Sample o/p:
+  $ ./perf --debug perf-event-open=1 record -- ls > /dev/null
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             112
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|PERIOD
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    exclude_kernel                   1
+    mmap                             1
+    comm                             1
+    freq                             1
+    enable_on_exec                   1
+    task                             1
+    precise_ip                       3
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 4308  cpu 0  group_fd -1  flags 0x8 = 4
+  sys_perf_event_open: pid 4308  cpu 1  group_fd -1  flags 0x8 = 5
+  sys_perf_event_open: pid 4308  cpu 2  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid 4308  cpu 3  group_fd -1  flags 0x8 = 8
+  sys_perf_event_open: pid 4308  cpu 4  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid 4308  cpu 5  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid 4308  cpu 6  group_fd -1  flags 0x8 = 11
+  sys_perf_event_open: pid 4308  cpu 7  group_fd -1  flags 0x8 = 12
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1
+    size                             112
+    config                           0x9
+    watermark                        1
+    sample_id_all                    1
+    bpf_event                        1
+    { wakeup_events, wakeup_watermark } 1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
+  sys_perf_event_open failed, error -13
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.002 MB perf.data (9 samples) ]
 
-Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 146 +++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 675 ++++++++++++++++++++++++
- 2 files changed, 821 insertions(+)
+ tools/perf/util/debug.c |  2 ++
+ tools/perf/util/debug.h |  9 +++++++++
+ tools/perf/util/evsel.c | 36 ++++++++++++++++++------------------
+ 3 files changed, 29 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index d8206d1b5896..189254f5ae95 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -17,6 +17,7 @@
- 	compatible = "qcom,sc7180-idp";
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index e55114f0336f..126938bdf732 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -24,6 +24,7 @@
+ #include <linux/ctype.h>
  
- 	aliases {
-+		hsuart0 = &uart3;
- 		serial0 = &uart8;
- 	};
- 
-@@ -231,16 +232,100 @@
- 	};
+ int verbose;
++int debug_peo_args;
+ bool dump_trace = false, quiet = false;
+ int debug_ordered_events;
+ static int redirect_to_stderr;
+@@ -180,6 +181,7 @@ static struct debug_variable {
+ 	{ .name = "ordered-events",	.ptr = &debug_ordered_events},
+ 	{ .name = "stderr",		.ptr = &redirect_to_stderr},
+ 	{ .name = "data-convert",	.ptr = &debug_data_convert },
++	{ .name = "perf-event-open",	.ptr = &debug_peo_args },
+ 	{ .name = NULL, }
  };
  
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
- &qupv3_id_1 {
- 	status = "okay";
- };
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index d25ae1c4cee9..1df9f07f4c1a 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -8,6 +8,7 @@
+ #include <linux/compiler.h>
  
-+&uart3 {
-+	status = "okay";
-+};
-+
- &uart8 {
- 	status = "okay";
- };
+ extern int verbose;
++extern int debug_peo_args;
+ extern bool quiet, dump_trace;
+ extern int debug_ordered_events;
+ extern int debug_data_convert;
+@@ -30,6 +31,14 @@ extern int debug_data_convert;
+ #define pr_debug3(fmt, ...) pr_debugN(3, pr_fmt(fmt), ##__VA_ARGS__)
+ #define pr_debug4(fmt, ...) pr_debugN(4, pr_fmt(fmt), ##__VA_ARGS__)
  
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
++/* Special macro to print perf_event_open arguments/return value. */
++#define pr_debug2_peo(fmt, ...) {				\
++	if (debug_peo_args)						\
++		pr_debugN(0, pr_fmt(fmt), ##__VA_ARGS__);	\
++	else							\
++		pr_debugN(2, pr_fmt(fmt), ##__VA_ARGS__);	\
++}
++
+ #define pr_time_N(n, var, t, fmt, ...) \
+ 	eprintf_time(n, var, t, fmt, ##__VA_ARGS__)
  
-+&qup_i2c2_default {
-+	pinconf {
-+		pins = "gpio15", "gpio16";
-+		drive-strength = <2>;
-+
-+		/* Has external pullup */
-+		bias-disable;
-+	};
-+};
-+
-+&qup_i2c4_default {
-+	pinconf {
-+		pins = "gpio115", "gpio116";
-+		drive-strength = <2>;
-+
-+		/* Has external pullup */
-+		bias-disable;
-+	};
-+};
-+
-+&qup_i2c7_default {
-+	pinconf {
-+		pins = "gpio6", "gpio7";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&qup_i2c9_default {
-+	pinconf {
-+		pins = "gpio46", "gpio47";
-+		drive-strength = <2>;
-+
-+		/* Has external pullup */
-+		bias-disable;
-+	};
-+};
-+
-+&qup_uart3_default {
-+	pinconf-cts {
-+		/*
-+		 * Configure a pull-down on 38 (CTS) to match the pull of
-+		 * the Bluetooth module.
-+		 */
-+		pins = "gpio38";
-+		bias-pull-down;
-+		output-high;
-+	};
-+
-+	pinconf-rts {
-+		/* We'll drive 39 (RTS), so no pull */
-+		pins = "gpio39";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	pinconf-tx {
-+		/* We'll drive 40 (TX), so no pull */
-+		pins = "gpio40";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-high;
-+	};
-+
-+	pinconf-rx {
-+		/*
-+		 * Configure a pull-up on 41 (RX). This is needed to avoid
-+		 * garbage data when the TX pin of the Bluetooth module is
-+		 * in tri-state (module powered off or not driving the
-+		 * signal yet).
-+		 */
-+		pins = "gpio41";
-+		bias-pull-up;
-+	};
-+};
-+
- &qup_uart8_default {
- 	pinconf-tx {
- 		pins = "gpio44";
-@@ -254,3 +339,64 @@
- 		bias-pull-up;
- 	};
- };
-+
-+&qup_spi0_default {
-+	pinconf {
-+		pins = "gpio34", "gpio35", "gpio36", "gpio37";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&qup_spi6_default {
-+	pinconf {
-+		pins = "gpio59", "gpio60", "gpio61", "gpio62";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&qup_spi10_default {
-+	pinconf {
-+		pins = "gpio86", "gpio87", "gpio88", "gpio89";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&qspi {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&qspi_clk &qspi_cs0 &qspi_data01>;
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <25000000>;
-+		spi-tx-bus-width = <2>;
-+		spi-rx-bus-width = <2>;
-+	};
-+};
-+
-+&qspi_cs0 {
-+		pinconf {
-+			pins = "gpio68";
-+			bias-disable;
-+		};
-+};
-+
-+&qspi_clk {
-+		pinconf {
-+			pins = "gpio63";
-+			bias-disable;
-+		};
-+};
-+
-+&qspi_data01 {
-+		pinconf {
-+			pins = "gpio64", "gpio65";
-+
-+			/* High-Z when no transfers; nice to park the lines */
-+			bias-pull-up;
-+		};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index e1d6278d85f7..666e9b92c7ad 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -182,6 +182,214 @@
- 			#power-domain-cells = <1>;
- 		};
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d4451846af93..4176341920e5 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1524,7 +1524,7 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
  
-+		qupv3_id_0: geniqup@8c0000 {
-+			compatible = "qcom,geni-se-qup";
-+			reg = <0 0x008c0000 0 0x6000>;
-+			clock-names = "m-ahb", "s-ahb";
-+			clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
-+				 <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
-+
-+			i2c0: i2c@880000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00880000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c0_default>;
-+				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi0: spi@880000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x00880000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi0_default>;
-+				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart0: serial@880000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00880000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart0_default>;
-+				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c1: i2c@884000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00884000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c1_default>;
-+				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi1: spi@884000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x00884000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi1_default>;
-+				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart1: serial@884000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00884000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart1_default>;
-+				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c2: i2c@888000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00888000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c2_default>;
-+				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart2: serial@888000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00888000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart2_default>;
-+				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c3: i2c@88c000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x0088c000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c3_default>;
-+				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi3: spi@88c000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x0088c000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi3_default>;
-+				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart3: serial@88c000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x0088c000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart3_default>;
-+				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c4: i2c@890000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00890000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c4_default>;
-+				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart4: serial@890000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00890000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart4_default>;
-+				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c5: i2c@894000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00894000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c5_default>;
-+				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi5: spi@894000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x00894000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi5_default>;
-+				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart5: serial@894000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00894000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart5_default>;
-+				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		qupv3_id_1: geniqup@ac0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0 0x00ac0000 0 0x6000>;
-@@ -193,6 +401,93 @@
- 			ranges;
- 			status = "disabled";
+ static void display_attr(struct perf_event_attr *attr)
+ {
+-	if (verbose >= 2) {
++	if (verbose >= 2 || debug_peo_args) {
+ 		fprintf(stderr, "%.60s\n", graph_dotted_line);
+ 		fprintf(stderr, "perf_event_attr:\n");
+ 		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
+@@ -1540,7 +1540,7 @@ static int perf_event_open(struct evsel *evsel,
+ 	int fd;
  
-+			i2c6: i2c@a80000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00a80000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c6_default>;
-+				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi6: spi@a80000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x00a80000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi6_default>;
-+				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart6: serial@a80000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00a80000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart6_default>;
-+				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c7: i2c@a84000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00a84000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c7_default>;
-+				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart7: serial@a84000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00a84000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart7_default>;
-+				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c8: i2c@a88000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00a88000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c8_default>;
-+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi8: spi@a88000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x00a88000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi8_default>;
-+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
- 			uart8: serial@a88000 {
- 				compatible = "qcom,geni-debug-uart";
- 				reg = <0 0x00a88000 0 0x4000>;
-@@ -203,6 +498,104 @@
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
-+
-+			i2c9: i2c@a8c000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00a8c000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c9_default>;
-+				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart9: serial@a8c000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00a8c000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart9_default>;
-+				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c10: i2c@a90000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00a90000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c10_default>;
-+				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi10: spi@a90000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x00a90000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi10_default>;
-+				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart10: serial@a90000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00a90000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart10_default>;
-+				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			i2c11: i2c@a94000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0 0x00a94000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_i2c11_default>;
-+				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			spi11: spi@a94000 {
-+				compatible = "qcom,geni-spi";
-+				reg = <0 0x00a94000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_spi11_default>;
-+				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			uart11: serial@a94000 {
-+				compatible = "qcom,geni-uart";
-+				reg = <0 0x00a94000 0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart11_default>;
-+				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
- 		};
+ 	while (1) {
+-		pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
++		pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
+ 			  pid, cpu, group_fd, flags);
  
- 		pdc: interrupt-controller@b220000 {
-@@ -228,12 +621,294 @@
- 			#interrupt-cells = <2>;
- 			gpio-ranges = <&tlmm 0 0 120>;
+ 		fd = sys_perf_event_open(&evsel->core.attr, pid, cpu, group_fd, flags);
+@@ -1560,9 +1560,9 @@ static int perf_event_open(struct evsel *evsel,
+ 			break;
+ 		}
  
-+			qspi_clk: qspi-clk {
-+				pinmux {
-+					pins = "gpio63";
-+					function = "qspi_clk";
-+				};
-+			};
-+
-+			qspi_cs0: qspi-cs0 {
-+				pinmux {
-+					pins = "gpio68";
-+					function = "qspi_cs";
-+				};
-+			};
-+
-+			qspi_cs1: qspi-cs1 {
-+				pinmux {
-+					pins = "gpio72";
-+					function = "qspi_cs";
-+				};
-+			};
-+
-+			qspi_data01: qspi-data01 {
-+				pinmux-data {
-+					pins = "gpio64", "gpio65";
-+					function = "qspi_data";
-+				};
-+			};
-+
-+			qspi_data12: qspi-data12 {
-+				pinmux-data {
-+					pins = "gpio66", "gpio67";
-+					function = "qspi_data";
-+				};
-+			};
-+
-+			qup_i2c0_default: qup-i2c0-default {
-+				pinmux {
-+					pins = "gpio34", "gpio35";
-+					function = "qup00";
-+				};
-+			};
-+
-+			qup_i2c1_default: qup-i2c1-default {
-+				pinmux {
-+					pins = "gpio0", "gpio1";
-+					function = "qup01";
-+				};
-+			};
-+
-+			qup_i2c2_default: qup-i2c2-default {
-+				pinmux {
-+					pins = "gpio15", "gpio16";
-+					function = "qup02";
-+				};
-+			};
-+
-+			qup_i2c3_default: qup-i2c3-default {
-+				pinmux {
-+					pins = "gpio38", "gpio39";
-+					function = "qup03";
-+				};
-+			};
-+
-+			qup_i2c4_default: qup-i2c4-default {
-+				pinmux {
-+					pins = "gpio115", "gpio116";
-+					function = "qup04";
-+				};
-+			};
-+
-+			qup_i2c5_default: qup-i2c5-default {
-+				pinmux {
-+					pins = "gpio25", "gpio26";
-+					function = "qup05";
-+				};
-+			};
-+
-+			qup_i2c6_default: qup-i2c6-default {
-+				pinmux {
-+					pins = "gpio59", "gpio60";
-+					function = "qup10";
-+				};
-+			};
-+
-+			qup_i2c7_default: qup-i2c7-default {
-+				pinmux {
-+					pins = "gpio6", "gpio7";
-+					function = "qup11";
-+				};
-+			};
-+
-+			qup_i2c8_default: qup-i2c8-default {
-+				pinmux {
-+					pins = "gpio42", "gpio43";
-+					function = "qup12";
-+				};
-+			};
-+
-+			qup_i2c9_default: qup-i2c9-default {
-+				pinmux {
-+					pins = "gpio46", "gpio47";
-+					function = "qup13";
-+				};
-+			};
-+
-+			qup_i2c10_default: qup-i2c10-default {
-+				pinmux {
-+					pins = "gpio86", "gpio87";
-+					function = "qup14";
-+				};
-+			};
-+
-+			qup_i2c11_default: qup-i2c11-default {
-+				pinmux {
-+					pins = "gpio53", "gpio54";
-+					function = "qup15";
-+				};
-+			};
-+
-+			qup_spi0_default: qup-spi0-default {
-+				pinmux {
-+					pins = "gpio34", "gpio35",
-+					       "gpio36", "gpio37";
-+					function = "qup00";
-+				};
-+			};
-+
-+			qup_spi1_default: qup-spi1-default {
-+				pinmux {
-+					pins = "gpio0", "gpio1",
-+					       "gpio2", "gpio3",
-+					       "gpio12", "gpio94";
-+					function = "qup01";
-+				};
-+			};
-+
-+			qup_spi3_default: qup-spi3-default {
-+				pinmux {
-+					pins = "gpio38", "gpio39",
-+					       "gpio40", "gpio41";
-+					function = "qup03";
-+				};
-+			};
-+
-+			qup_spi5_default: qup-spi5-default {
-+				pinmux {
-+					pins = "gpio25", "gpio26",
-+					       "gpio27", "gpio28";
-+					function = "qup05";
-+				};
-+			};
-+
-+			qup_spi6_default: qup-spi6-default {
-+				pinmux {
-+					pins = "gpio59", "gpio60",
-+					       "gpio61", "gpio62",
-+					       "gpio68", "gpio72";
-+					function = "qup10";
-+				};
-+			};
-+
-+			qup_spi8_default: qup-spi8-default {
-+				pinmux {
-+					pins = "gpio42", "gpio43",
-+					       "gpio44", "gpio45";
-+					function = "qup12";
-+				};
-+			};
-+
-+			qup_spi10_default: qup-spi10-default {
-+				pinmux {
-+					pins = "gpio86", "gpio87",
-+					       "gpio88", "gpio89",
-+					       "gpio90", "gpio91";
-+					function = "qup14";
-+				};
-+			};
-+
-+			qup_spi11_default: qup-spi11-default {
-+				pinmux {
-+					pins = "gpio53", "gpio54",
-+					       "gpio55", "gpio56";
-+					function = "qup15";
-+				};
-+			};
-+
-+			qup_uart0_default: qup-uart0-default {
-+				pinmux {
-+					pins = "gpio34", "gpio35",
-+					       "gpio36", "gpio37";
-+					function = "qup00";
-+				};
-+			};
-+
-+			qup_uart1_default: qup-uart1-default {
-+				pinmux {
-+					pins = "gpio0", "gpio1",
-+					       "gpio2", "gpio3";
-+					function = "qup01";
-+				};
-+			};
-+
-+			qup_uart2_default: qup-uart2-default {
-+				pinmux {
-+					pins = "gpio15", "gpio16";
-+					function = "qup02";
-+				};
-+			};
-+
-+			qup_uart3_default: qup-uart3-default {
-+				pinmux {
-+					pins = "gpio38", "gpio39",
-+					       "gpio40", "gpio41";
-+					function = "qup03";
-+				};
-+			};
-+
-+			qup_uart4_default: qup-uart4-default {
-+				pinmux {
-+					pins = "gpio115", "gpio116";
-+					function = "qup04";
-+				};
-+			};
-+
-+			qup_uart5_default: qup-uart5-default {
-+				pinmux {
-+					pins = "gpio25", "gpio26",
-+					       "gpio27", "gpio28";
-+					function = "qup05";
-+				};
-+			};
-+
-+			qup_uart6_default: qup-uart6-default {
-+				pinmux {
-+					pins = "gpio59", "gpio60",
-+					       "gpio61", "gpio62";
-+					function = "qup10";
-+				};
-+			};
-+
-+			qup_uart7_default: qup-uart7-default {
-+				pinmux {
-+					pins = "gpio6", "gpio7";
-+					function = "qup11";
-+				};
-+			};
-+
- 			qup_uart8_default: qup-uart8-default {
- 				pinmux {
- 					pins = "gpio44", "gpio45";
- 					function = "qup12";
- 				};
- 			};
-+
-+			qup_uart9_default: qup-uart9-default {
-+				pinmux {
-+					pins = "gpio46", "gpio47";
-+					function = "qup13";
-+				};
-+			};
-+
-+			qup_uart10_default: qup-uart10-default {
-+				pinmux {
-+					pins = "gpio86", "gpio87",
-+					       "gpio88", "gpio89";
-+					function = "qup14";
-+				};
-+			};
-+
-+			qup_uart11_default: qup-uart11-default {
-+				pinmux {
-+					pins = "gpio53", "gpio54",
-+					       "gpio55", "gpio56";
-+					function = "qup15";
-+				};
-+			};
-+		};
-+
-+		qspi: spi@88dc000 {
-+			compatible = "qcom,qspi-v1";
-+			reg = <0 0x088dc000 0 0x600>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
-+				 <&gcc GCC_QSPI_CORE_CLK>;
-+			clock-names = "iface", "core";
-+			status = "disabled";
- 		};
+-		pr_debug2("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
++		pr_debug2_peo("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
+ 		evsel->core.attr.precise_ip--;
+-		pr_debug2("decreasing precise_ip by one (%d)\n", evsel->core.attr.precise_ip);
++		pr_debug2_peo("decreasing precise_ip by one (%d)\n", evsel->core.attr.precise_ip);
+ 		display_attr(&evsel->core.attr);
+ 	}
  
- 		spmi_bus: spmi@c440000 {
+@@ -1681,12 +1681,12 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 					continue;
+ 				}
+ 
+-				pr_debug2("\nsys_perf_event_open failed, error %d\n",
++				pr_debug2_peo("\nsys_perf_event_open failed, error %d\n",
+ 					  err);
+ 				goto try_fallback;
+ 			}
+ 
+-			pr_debug2(" = %d\n", fd);
++			pr_debug2_peo(" = %d\n", fd);
+ 
+ 			if (evsel->bpf_fd >= 0) {
+ 				int evt_fd = fd;
+@@ -1754,58 +1754,58 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	 */
+ 	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
+ 		perf_missing_features.aux_output = true;
+-		pr_debug2("Kernel has no attr.aux_output support, bailing out\n");
++		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
+ 		goto out_close;
+ 	} else if (!perf_missing_features.bpf && evsel->core.attr.bpf_event) {
+ 		perf_missing_features.bpf = true;
+-		pr_debug2("switching off bpf_event\n");
++		pr_debug2_peo("switching off bpf_event\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.ksymbol && evsel->core.attr.ksymbol) {
+ 		perf_missing_features.ksymbol = true;
+-		pr_debug2("switching off ksymbol\n");
++		pr_debug2_peo("switching off ksymbol\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.write_backward && evsel->core.attr.write_backward) {
+ 		perf_missing_features.write_backward = true;
+-		pr_debug2("switching off write_backward\n");
++		pr_debug2_peo("switching off write_backward\n");
+ 		goto out_close;
+ 	} else if (!perf_missing_features.clockid_wrong && evsel->core.attr.use_clockid) {
+ 		perf_missing_features.clockid_wrong = true;
+-		pr_debug2("switching off clockid\n");
++		pr_debug2_peo("switching off clockid\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.clockid && evsel->core.attr.use_clockid) {
+ 		perf_missing_features.clockid = true;
+-		pr_debug2("switching off use_clockid\n");
++		pr_debug2_peo("switching off use_clockid\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.cloexec && (flags & PERF_FLAG_FD_CLOEXEC)) {
+ 		perf_missing_features.cloexec = true;
+-		pr_debug2("switching off cloexec flag\n");
++		pr_debug2_peo("switching off cloexec flag\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.mmap2 && evsel->core.attr.mmap2) {
+ 		perf_missing_features.mmap2 = true;
+-		pr_debug2("switching off mmap2\n");
++		pr_debug2_peo("switching off mmap2\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.exclude_guest &&
+ 		   (evsel->core.attr.exclude_guest || evsel->core.attr.exclude_host)) {
+ 		perf_missing_features.exclude_guest = true;
+-		pr_debug2("switching off exclude_guest, exclude_host\n");
++		pr_debug2_peo("switching off exclude_guest, exclude_host\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.sample_id_all) {
+ 		perf_missing_features.sample_id_all = true;
+-		pr_debug2("switching off sample_id_all\n");
++		pr_debug2_peo("switching off sample_id_all\n");
+ 		goto retry_sample_id;
+ 	} else if (!perf_missing_features.lbr_flags &&
+ 			(evsel->core.attr.branch_sample_type &
+ 			 (PERF_SAMPLE_BRANCH_NO_CYCLES |
+ 			  PERF_SAMPLE_BRANCH_NO_FLAGS))) {
+ 		perf_missing_features.lbr_flags = true;
+-		pr_debug2("switching off branch sample type no (cycles/flags)\n");
++		pr_debug2_peo("switching off branch sample type no (cycles/flags)\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.group_read &&
+ 		    evsel->core.attr.inherit &&
+ 		   (evsel->core.attr.read_format & PERF_FORMAT_GROUP) &&
+ 		   perf_evsel__is_group_leader(evsel)) {
+ 		perf_missing_features.group_read = true;
+-		pr_debug2("switching off group read\n");
++		pr_debug2_peo("switching off group read\n");
+ 		goto fallback_missing_features;
+ 	}
+ out_close:
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.21.0
 
