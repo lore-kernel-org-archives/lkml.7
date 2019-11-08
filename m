@@ -2,79 +2,75 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D8EFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFEDC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307CF222C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6213222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MeMYs8yF"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="iqwILVQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfKHOZI (ORCPT
+        id S1726932AbfKHO1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:25:08 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36272 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfKHOZH (ORCPT
+        Fri, 8 Nov 2019 09:27:02 -0500
+Received: from mail-io1-f41.google.com ([209.85.166.41]:34754 "EHLO
+        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfKHO1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:25:07 -0500
-Received: by mail-pf1-f195.google.com with SMTP id v19so4688154pfm.3;
-        Fri, 08 Nov 2019 06:25:07 -0800 (PST)
+        Fri, 8 Nov 2019 09:27:02 -0500
+Received: by mail-io1-f41.google.com with SMTP id q83so6567603iod.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:27:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2QPC8QnLvdDe0xE5A31AT6LtAT7sdxDY8gfcrh4eodY=;
-        b=MeMYs8yFEuniNnvauAknagNHFZeN4tBHxXi5NvT/F5Mm+4ANQO0gLGN36OijIBL4U0
-         VgWur1KJ1tkOzo15JLqCylVrw/VcOOocPxhGPvJ76blM+SUdL7QYTN4LkK1VAF9I1hUb
-         zXtRTdBZkUPMQISS5tJW155CDGXvUnJlKOV4MYXk4VMVuqcBVfh6kYmsnt963S16tuSj
-         J99keTacAUtKqeqVvGK0jXjXg38lQAJ0chytk8U1/0xgWu+OSXFdga4/+9uX6xaS99GV
-         B07/MfD8pHf4wOqypNtrufgvu+EnqrZXj65MNYwr+iqMjKnRqjN0wQYt+gUT4iXkz8ly
-         08GQ==
+        bh=U+gZ1iZyMycMyu4RO24BAjLSYNHz9sOObk4L5rAMf7c=;
+        b=iqwILVQYZSgmH9OUII6SqeT4Drvw0j1zpDG2nt3rLVuYNmHI7uc2IUg7rI+JESGb7J
+         VPdhKPgxjTYrje0kLVpESYLZeMPp32BZE9qQW3kRPV4A2Ov04mesqZ7YGidApVohuRQ/
+         s1C0A+EmO3dMNP+YvKu0SHgwE9+YqcymXT1jRkDqwT8LaDVCEAmgQOau+ojwU/TOJyYv
+         FbZ94VSTvKvxoN68eEF3O3bSY5UvDEhKkshv3g7CDh9e3NkSC6+y92JYNZfCRTv7UEh5
+         OXRNey3HvzswzpyTOhU3rakgDLkDbiXKQQS/kgpE9zIr1d955aRiaB8CIeiks5cn7mXa
+         +j+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=2QPC8QnLvdDe0xE5A31AT6LtAT7sdxDY8gfcrh4eodY=;
-        b=ZqsG3WwJtNmWjfOzRsiq+NsqLeJyhawoiKvK1BV0g+UMKKAI3R7mvJ/Rvk2W4CnzY0
-         SpqoXQnHg4y5XKo39mGjRL0wJG6dRwK7pc5vNMZTpsVuFC49JS6KG+41Z2eU6abUwrTd
-         xKLMMG+S7F71F5T9/AlIdhikYtHzGSsQpwe3W+Yjx5kKRplZ1WMHMV+GMAx4du2FlcYq
-         F7hKzjlItDXGyjyxXJjbqjguolSTLYWiNlJbat5xBVXLWg1oLQBLqEdcDmZje3XA63Qa
-         37sDZLbxbxOpH89QbxON50BAkAb8vFJn97/QPONkWTJ6qQphldr32Sz60F/oltQ/0ewe
-         2KgQ==
-X-Gm-Message-State: APjAAAUcA7NPSE/RIXE9xxu3mET8rzWzQLEB3rqFWUtqxmY5YyeFsf7H
-        4eM99wv4lyS+2V/uopMVwV90bB8d
-X-Google-Smtp-Source: APXvYqw6YWG2/tHoaCVNv0mQYgzPu7Ea3OvB1jHTE/F/Zp5kt8YcYZKCCuxIwv66sDmc5Zu5WBaKbA==
-X-Received: by 2002:a65:41c5:: with SMTP id b5mr12021246pgq.78.1573223106517;
-        Fri, 08 Nov 2019 06:25:06 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q199sm6075664pfq.147.2019.11.08.06.25.05
+        bh=U+gZ1iZyMycMyu4RO24BAjLSYNHz9sOObk4L5rAMf7c=;
+        b=CPASnPaQfPO7LRBJ1sdjpxHCb685r5y26z6IBRUKP1HbhgBCApnIrtFrWQuzdO8Rqp
+         IwoTUdLipWb2jZxagvnOFSDoe7m70p62rSQpzfWEsA4zTZ1xrd2JXOMv79M0MypCgJBp
+         zNHNJK9w1mYu2ytLKvYqkxwPQmHKTzY3S+QAJVYYRRu3k0DckO8VoWOh03S/xOdnnC4V
+         9SO0EAIv3J52p51CF5zmxpRG8R7WjS2grw6q2EouR4VR4FrkEiXthz8eB/s3+GrLlWcD
+         18Txn83QWNC6V2jY80Mh7Z9ULfwYp9bEiuh1p7SniSFEqAVBeeGJL6sztecd8zqqAPOO
+         QwhQ==
+X-Gm-Message-State: APjAAAU+j5gCTYhc6RKvOpZ3EEQhMhnCASh658fZ+q209oM0sQYeUG0i
+        O2+9XWoEjVcNR1KBv43My0zwTQvpw08=
+X-Google-Smtp-Source: APXvYqzwYZ+WipkYapK99X3KqatJkMZI+Jw2MzH942P7q0uMgKJc79YO5XDMV6HvnRPVP9zk3ee6lA==
+X-Received: by 2002:a6b:f914:: with SMTP id j20mr11044257iog.223.1573223219271;
+        Fri, 08 Nov 2019 06:26:59 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id u9sm452653ior.46.2019.11.08.06.26.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Nov 2019 06:25:05 -0800 (PST)
-Subject: Re: [PATCH] watchdog: aspeed: Fix clock behaviour for ast2600
-To:     Joel Stanley <joel@jms.id.au>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20191108032905.22463-1-joel@jms.id.au>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <74f32d61-856d-623f-2f37-965d9331aba0@roeck-us.net>
-Date:   Fri, 8 Nov 2019 06:25:04 -0800
+        Fri, 08 Nov 2019 06:26:58 -0800 (PST)
+Subject: Re: [PATCH][V2] ata: pata_artop: make arrays static const, makes
+ object smaller
+To:     Colin King <colin.king@canonical.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-ide@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191006142956.23360-1-colin.king@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5dae76cc-e71d-d295-7947-b7005a7f1af3@kernel.dk>
+Date:   Fri, 8 Nov 2019 07:26:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191108032905.22463-1-joel@jms.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191006142956.23360-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,57 +78,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/7/19 7:29 PM, Joel Stanley wrote:
-> The ast2600 no longer uses bit 4 in the control register to indicate a
-> 1MHz clock (It now controls weather this watchdog is reset by a SOC
-> reset). This means we do not want to set it. It also does not need to be
-> set for the ast2500, as it is read-only on that SoC.
+On 10/6/19 8:29 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> The comment next to the clock rate selection wandered away from where it
-> was set, so put it back next to the register setting it's describing.
+> Don't populate the const arrays on the stack but instead make them
+> static. Makes the object code smaller by 292 bytes.
 > 
-> Fixes: b3528b487448 ("watchdog: aspeed: Add support for AST2600")
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> Before:
+>     text	   data	    bss	    dec	    hex	filename
+>     6988	   3132	    128	  10248	   2808	drivers/ata/pata_artop.o
+> 
+> After:
+>     text	   data	    bss	    dec	    hex	filename
+>     6536	   3292	    128	   9956	   26e4	drivers/ata/pata_artop.o
+> 
+> (gcc version 9.2.1, amd64)
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Applied, thanks.
 
-> ---
->   drivers/watchdog/aspeed_wdt.c | 16 ++++++++++------
->   1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-> index 4ec0906bf12c..7e00960651fa 100644
-> --- a/drivers/watchdog/aspeed_wdt.c
-> +++ b/drivers/watchdog/aspeed_wdt.c
-> @@ -258,11 +258,6 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
->   	if (IS_ERR(wdt->base))
->   		return PTR_ERR(wdt->base);
->   
-> -	/*
-> -	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
-> -	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
-> -	 * good reason to have a faster watchdog counter.
-> -	 */
->   	wdt->wdd.info = &aspeed_wdt_info;
->   	wdt->wdd.ops = &aspeed_wdt_ops;
->   	wdt->wdd.max_hw_heartbeat_ms = WDT_MAX_TIMEOUT_MS;
-> @@ -278,7 +273,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
->   		return -EINVAL;
->   	config = ofdid->data;
->   
-> -	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
-> +	/*
-> +	 * On clock rates:
-> +	 *  - ast2400 wdt can run at PCLK, or 1MHz
-> +	 *  - ast2500 only runs at 1MHz, hard coding bit 4 to 1
-> +	 *  - ast2600 always runs at 1MHz
-> +	 *
-> +	 * Set the ast2400 to run at 1MHz as it simplifies the driver.
-> +	 */
-> +	if (of_device_is_compatible(np, "aspeed,ast2400-wdt"))
-> +		wdt->ctrl = WDT_CTRL_1MHZ_CLK;
->   
->   	/*
->   	 * Control reset on a per-device basis to ensure the
-> 
+-- 
+Jens Axboe
 
