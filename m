@@ -2,141 +2,74 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BBAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E151214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:42:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="b8rh/z43"
+	by mail.kernel.org (Postfix) with ESMTP id ED15A214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbfKHOmH (ORCPT
+        id S1727136AbfKHOpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:42:07 -0500
-Received: from mail-eopbgr690065.outbound.protection.outlook.com ([40.107.69.65]:55616
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726036AbfKHOmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:42:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=et7+RzfSJO2+IWuWVNhXTWbHpAinfUIhb1l0lEn6aGd6J9EnvKPsS0iwIKnxdZTDd5PINfH7KKFXhNjf37j/IgQVPV68WGBqvqc7b2QkdbQEoLw0KCircBKwegjuMliA10xmUnz7JJews8TlaGYrt8IYOVr+hFT7qNhgkmp8vJjtzo3B7OwZU4zH0II2cHXRHjv4tbEZ8AV2JDnUC/5O6xZYePNY5IeoJV97Y5CO6w78tMwxRHM4jcZn1dn6dwFYtqmIYvYSjwB3DnfEaKyiHMRU5ZpkMMZ/Ul19zkSdXDxmQIb9ue4RO3SqB0bRcjzd70LEfyMZTNBbsflpe4m80w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8EH2ySTRLQLbdaDHN29VctGH0uv0+ZEUt0DBxnqXLuo=;
- b=V804wvd7wEApCZarR82pA4nuAqEQFcAk2/3C5oHaNA8gN3tbE7gbnq9NUMGAyns33iUgYFafiz0s/dnHYdWtORNTL5pjKFzneHUXlnCEEjczioTr4H600smqSk4eKIgE9yV7Yfv+fo2aqNfUgZ0f+L5rBoeUD1tPyBnIsA4ZAANrY/rttxspqjsfyzRoqA3liJhCEl83sRJU8EE/syA11ikxr6KPrpWebiMqg75CkrD4g9fNL8TVR0TpS4fBh1m29uNQdpIgPWKuc5JcrT2X0r6nalUvHGvMbbGUPo155q2LyIYoi633y06dlgNhWxeYeL+Gm1macpFAOj37K9YvDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8EH2ySTRLQLbdaDHN29VctGH0uv0+ZEUt0DBxnqXLuo=;
- b=b8rh/z43KN1TRvuuZhsE8deRibXIs+DByorp8oi+xZ1vsRdl0BKqnWtduaBsCtmWTyE7Ipz2IlgdKdfyki7Y9g/ARi7YwvhsajRY4fLY/FdfpuB7Kd6DFX8EAWOsJvaf0+PkRXLRVWHFKryZRLik27/w2yiEYga2MEsXJKmpP58=
-Received: from BYAPR12MB3013.namprd12.prod.outlook.com (20.178.55.219) by
- BYAPR12MB2792.namprd12.prod.outlook.com (20.177.124.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Fri, 8 Nov 2019 14:42:03 +0000
-Received: from BYAPR12MB3013.namprd12.prod.outlook.com
- ([fe80::1174:3feb:de01:4fb9]) by BYAPR12MB3013.namprd12.prod.outlook.com
- ([fe80::1174:3feb:de01:4fb9%6]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
- 14:42:03 +0000
-From:   Mikita Lipski <mlipski@amd.com>
-To:     Colin King <colin.king@canonical.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        Fri, 8 Nov 2019 09:45:32 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:40521 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfKHOpb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 09:45:31 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iT5Vv-0007iL-Vj; Fri, 08 Nov 2019 14:45:28 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Lyude Paul <lyude@redhat.com>,
-        "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>,
-        "Lipski, Mikita" <Mikita.Lipski@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] drm/amd/display: fix dereference of pointer
- aconnector when it is null
-Thread-Topic: [PATCH][next] drm/amd/display: fix dereference of pointer
- aconnector when it is null
-Thread-Index: AQHVlkIp/tTe277tXEmpnQT+Lu2nIKeBWNWA
-Date:   Fri, 8 Nov 2019 14:42:03 +0000
-Message-ID: <7155ecfc-1aff-002d-9cc6-e097525e7cb6@amd.com>
-References: <20191108143814.118856-1-colin.king@canonical.com>
-In-Reply-To: <20191108143814.118856-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YT1PR01CA0024.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::37)
- To BYAPR12MB3013.namprd12.prod.outlook.com (2603:10b6:a03:a9::27)
-x-originating-ip: [165.204.55.250]
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Mikita.Lipski@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9b28eee8-945c-438b-542a-08d76459d1a1
-x-ms-traffictypediagnostic: BYAPR12MB2792:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB27929299D56F6AA755507AE0E47B0@BYAPR12MB2792.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1002;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(376002)(366004)(199004)(189003)(6246003)(186003)(229853002)(2501003)(66446008)(14454004)(52116002)(6506007)(36756003)(54906003)(110136005)(102836004)(71190400001)(71200400001)(66946007)(66066001)(5660300002)(64756008)(316002)(53546011)(386003)(66476007)(486006)(99286004)(66556008)(4326008)(7736002)(31696002)(476003)(305945005)(11346002)(256004)(31686004)(8676002)(446003)(3846002)(6436002)(6116002)(25786009)(6486002)(26005)(81166006)(478600001)(2616005)(81156014)(8936002)(2906002)(2201001)(76176011)(6512007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2792;H:BYAPR12MB3013.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +XTYjAWxMhjho/NftaDmRDWP4CzD95xcbikglUvOW4CziBfKC57A6wJuTc9HSzkRMjOn53GQfuIpgaqt4GqQ5R9Hs8vt60hCrnNR1qzsiXpxtpVlzCN245/46nIAUXVY6R67P0JZ0ysNFtJcZ/N7V1Hs9odMQniHAX7x07CKhNTElQf7DSpVRLbyuq4G57db+gg/GXeo1IKYLhP7XEAGzgEO8FbBxXCRRKv+isvpLiTWabG2v1WFHXaDc8NPz+ZE5iOW4Pryhis/Yq3Soj3sID+fyb4m8ZO5JX+aCrPiaCIx1W5I2HJvzvJNIu6V2C5sKruLEb6ddgYDWqtNDlgfFCuMHuqARIWFSuFpW7FKC3+sAgBjIaPxs53SM0RDgrEdFrHtCVA+MssiyoEcS0Sl7XrXTMllm3n5Q4ty9ol1HCwmKejo6dwQW4MsBThVS7Kv
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6E12F9E10193E2498B9DE2142A6106B4@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amd/display: remove duplicated assignment to grph_obj_type
+Date:   Fri,  8 Nov 2019 14:45:27 +0000
+Message-Id: <20191108144527.120927-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b28eee8-945c-438b-542a-08d76459d1a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 14:42:03.0561
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Bhr9EBZLinrJ5SaTW2eJOt0rddRVWSB1Of6phwA0JOpXOy3nzWDDEFEKKkje9LZc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2792
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIQ0KDQpSZXZpZXdlZC1ieTogTWlraXRhIExpcHNraSA8bWlraXRhLmxpcHNraUBhbWQu
-Y29tPg0KDQpPbiAwOC4xMS4yMDE5IDk6MzgsIENvbGluIEtpbmcgd3JvdGU6DQo+IEZyb206IENv
-bGluIElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IA0KPiBDdXJyZW50bHkg
-cG9pbnRlciBhY29ubmVjdG9yIGlzIGJlaW5nIGRlcmVmZXJlbmNlZCBieSB0aGUgY2FsbCB0bw0K
-PiB0b19kbV9jb25uZWN0b3Jfc3RhdGUgYmVmb3JlIGl0IGlzIGJlaW5nIG51bGwgY2hlY2tlZCwg
-dGhpcyBjb3VsZA0KPiBsZWFkIHRvIGEgbnVsbCBwb2ludGVyIGRlcmVmZXJlbmNlLiAgRml4IHRo
-aXMgYnkgY2hlY2tpbmcgdGhhdA0KPiBhY29ubmVjdG9yIGlzIG51bGwgYmVmb3JlIGRlcmVmZXJl
-bmNpbmcgaXQuDQo+IA0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiRGVyZWZlcmVuY2UgYmVmb3Jl
-IG51bGwgY2hlY2siKQ0KPiBGaXhlczogNTEzM2M2MjQxZDljICgiZHJtL2FtZC9kaXNwbGF5OiBB
-ZGQgTVNUIGF0b21pYyByb3V0aW5lcyIpDQo+IFNpZ25lZC1vZmYtYnk6IENvbGluIElhbiBLaW5n
-IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9h
-bWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX2hlbHBlcnMuYyB8IDUgKystLS0NCj4gICAx
-IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2Rt
-X2hlbHBlcnMuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1
-X2RtX2hlbHBlcnMuYw0KPiBpbmRleCBlM2NkYTY5ODRkMjguLjcyZTY3Nzc5NmE0OCAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1f
-aGVscGVycy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0v
-YW1kZ3B1X2RtX2hlbHBlcnMuYw0KPiBAQCAtMTkzLDEyICsxOTMsMTEgQEAgYm9vbCBkbV9oZWxw
-ZXJzX2RwX21zdF93cml0ZV9wYXlsb2FkX2FsbG9jYXRpb25fdGFibGUoDQo+ICAgCSAqIHRoYXQg
-YmxvY2tzIGJlZm9yZSBjb21taXQgZ3VhcmFudGVlaW5nIHRoYXQgdGhlIHN0YXRlDQo+ICAgCSAq
-IGlzIG5vdCBnb25uYSBiZSBzd2FwcGVkIHdoaWxlIHN0aWxsIGluIHVzZSBpbiBjb21taXQgdGFp
-bCAqLw0KPiAgIA0KPiAtCWRtX2Nvbm5fc3RhdGUgPSB0b19kbV9jb25uZWN0b3Jfc3RhdGUoYWNv
-bm5lY3Rvci0+YmFzZS5zdGF0ZSk7DQo+IC0NCj4gLQ0KPiAgIAlpZiAoIWFjb25uZWN0b3IgfHwg
-IWFjb25uZWN0b3ItPm1zdF9wb3J0KQ0KPiAgIAkJcmV0dXJuIGZhbHNlOw0KPiAgIA0KPiArCWRt
-X2Nvbm5fc3RhdGUgPSB0b19kbV9jb25uZWN0b3Jfc3RhdGUoYWNvbm5lY3Rvci0+YmFzZS5zdGF0
-ZSk7DQo+ICsNCj4gICAJbXN0X21nciA9ICZhY29ubmVjdG9yLT5tc3RfcG9ydC0+bXN0X21ncjsN
-Cj4gICANCj4gICAJaWYgKCFtc3RfbWdyLT5tc3Rfc3RhdGUpDQo+IA0KDQotLSANClRoYW5rcywN
-Ck1pa2l0YSBMaXBza2kNCm1pa2l0YS5saXBza2lAYW1kLmNvbQ0K
+From: Colin Ian King <colin.king@canonical.com>
+
+Variable grph_obj_type is being assigned twice, one of these is
+redundant so remove it.
+
+Addresses-Coverity: ("Evaluation order violation")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+index be6d0cfe41ae..9ba80d828876 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+@@ -365,8 +365,7 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
+ 			router.ddc_valid = false;
+ 			router.cd_valid = false;
+ 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
+-				uint8_t grph_obj_type=
+-				grph_obj_type =
++				uint8_t grph_obj_type =
+ 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
+ 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 
+-- 
+2.20.1
+
