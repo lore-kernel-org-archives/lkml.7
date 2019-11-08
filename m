@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143CCC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A395FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D959B2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1ED12085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="HJOJZkxw"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="arBXPaYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfKHNEe (ORCPT
+        id S1727770AbfKHNBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:04:34 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39982 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbfKHNBk (ORCPT
+        Fri, 8 Nov 2019 08:01:36 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39976 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfKHNBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:01:40 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f4so4412002lfk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:01:37 -0800 (PST)
+        Fri, 8 Nov 2019 08:01:35 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f4so4411803lfk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:01:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KU/n1Q/VNXJbWwIQys/qt9rGcT4PXz5RLqrj6x2UwvM=;
-        b=HJOJZkxwDS0medOsmpThvkVAMPgReePyoCZfeE53ipRTRMDB0W6c5pAuf6ddW16YzH
-         bTOd+bBAagLh5RkQgulpK6Rx2eot8KegFwHr4WplwoCtgkFmTv4Kl1wWcO7q9ySV5I6z
-         pMMrXUWvpVqVoyCYDeiFszP4vKVSXYmeRZehM=
+        bh=KoynnpqyM2T+oZqn3mX12olVYK6D1zjkp8rnCkTSUvs=;
+        b=arBXPaYvk7b9VQYEk27Lbsm2eaj47OMjYlVYaqSiH0ymjHtJ0z8jMJOs56Fvd8UuBJ
+         NKk3dJoZqQrq8Qd6neEX/y/JOno76+Cbx1L38NbXMark/8C5i8DIGjC8HDXiz6AkmhZZ
+         Zs4D4v6HFqp/TvlK8kAms9Xw0N+CDuG7slgBM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KU/n1Q/VNXJbWwIQys/qt9rGcT4PXz5RLqrj6x2UwvM=;
-        b=SOkcPCszbXFAxpkqxXFGPwzKC90hC5IIF6xLXVBTHil7dLW9MRiBY7GBhW748kvw+t
-         6vr9fKD1QHRhXn6Yiku0rrmSVUr0OO9IbqqEJ0jLnJzDgU44bwdiA1FexjQsZnosaDA2
-         RvFISUD7PF5BwOu3fOGtwbB5KzBYnUV0k5Wd864oAHS8f91ALYq75gFc85V+J4rJA3aY
-         PAvHb/NtbR7Zi/2bqKOwSaEdjrRmtimYVaYB4CKoIQordkPoYJTkdK3x8UgH/Md/RIET
-         YLoDsmlwZK5UcjXNY9SvwSRX/wk7P3FiJtCaDQrY6eADDsqg191PpchLb+HFhuMC61PZ
-         xplA==
-X-Gm-Message-State: APjAAAUZK8X2Wfx9H/sgpJVnwCWTUaKy/kIS/85FGG8ni4njZ7EYiC3Q
-        RKDqeURzaS86KoyshT1ULvTnhmhPYwTx0km9
-X-Google-Smtp-Source: APXvYqwV1QSJeo2zO51t+HaG52pdBxkjO72k8ABUQOFAqLzD+fyt+4MoIaNvkXvy8mC20ecsyTXyqQ==
-X-Received: by 2002:a19:5e53:: with SMTP id z19mr6167585lfi.111.1573218096769;
-        Fri, 08 Nov 2019 05:01:36 -0800 (PST)
+        bh=KoynnpqyM2T+oZqn3mX12olVYK6D1zjkp8rnCkTSUvs=;
+        b=WNW/xkKFbtNfmMIEjJumaBcpmyCxDNRqefYAgWfmNs6woJ/7DXZY7g5NNDpyGlr0gR
+         15pATndEzJvY5Cw8u8jsO1bH/5dwczEp0boOkIP8Kei9mqSOFEUkOXBWoKMeumve0vJU
+         qxdxhkm9tBTc9nW0r4SmhPQPYC8XJLdJI+DjeAQQ5inZWBJ1coN3NyQep4atkQ6q9L+I
+         UFhqB3vNTmrgVyCCTsZPelnGonbrewYMyA3KFvuyYzYmJsXI7ps6THIJfrPXVp52iHVf
+         X0dftZ09paQbNW0triHpYlHWF5m6hFUnHXcuFXARmwZqx1QJKR37TuF3MEbTCcCe72UY
+         Ki+Q==
+X-Gm-Message-State: APjAAAVk4RgBo5bECKZH/5Fdc9YJfKGu9nZLQwUsrkl5dwO1lnhuFuUP
+        bAF4KdG9SPCVBT/4MGExqb96Yw==
+X-Google-Smtp-Source: APXvYqw8ntNr9Y7KtuD0WwqwQ/l6wehUmvqisdSJSXgT0uYQXoY9XMkvlc3TmtbKf6RhjcbTykfXxg==
+X-Received: by 2002:a19:f107:: with SMTP id p7mr6501640lfh.91.1573218092860;
+        Fri, 08 Nov 2019 05:01:32 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.35
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:01:36 -0800 (PST)
+        Fri, 08 Nov 2019 05:01:32 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v4 07/47] soc: fsl: qe: qe.c: guard use of pvr_version_is() with CONFIG_PPC32
-Date:   Fri,  8 Nov 2019 14:00:43 +0100
-Message-Id: <20191108130123.6839-8-linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 04/47] soc: fsl: qe: introduce qe_io{read,write}* wrappers
+Date:   Fri,  8 Nov 2019 14:00:40 +0100
+Message-Id: <20191108130123.6839-5-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
@@ -73,53 +73,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e5c5c8d23fef (soc/fsl/qe: only apply QE_General4 workaround on
-affected SoCs) introduced use of pvr_version_is(), saying
+The QUICC engine drivers use the powerpc-specific out_be32() etc. In
+order to allow those drivers to build for other architectures, those
+must be replaced by iowrite32be(). However, on powerpc, out_be32() is
+a simple inline function while iowrite32be() is out-of-line. So in
+order not to introduce a performance regression on powerpc when making
+the drivers work on other architectures, introduce qe_io* helpers.
 
-    The QE_General4 workaround is only valid for the MPC832x and MPC836x
-    SoCs. The other SoCs that embed a QUICC engine are not affected by this
-    hardware bug and thus can use the computed divisors (this was
-    successfully tested on the T1040).
-
-I'm reading the above as saying that the errata does not apply to the
-ARM-based SOCs with QUICC engine. In any case, use of pvr_version_is()
-must be guarded by CONFIG_PPC32 before we can remove the PPC32
-dependency from CONFIG_QUICC_ENGINE, so introduce qe_general4_errata()
-to keep the necessary #ifdeffery localized to a trivial helper.
+Also define the qe_{clr,set,clrset}bits* helpers in terms of these new
+macros.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ include/soc/fsl/qe/qe.h | 34 +++++++++++++++++++++++++---------
+ 1 file changed, 25 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-index 85737e6f5b62..1d8aa62c7ddf 100644
---- a/drivers/soc/fsl/qe/qe.c
-+++ b/drivers/soc/fsl/qe/qe.c
-@@ -197,6 +197,14 @@ EXPORT_SYMBOL(qe_get_brg_clk);
- #define PVR_VER_836x	0x8083
- #define PVR_VER_832x	0x8084
+diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
+index a1aa4eb28f0c..9cac04c692fd 100644
+--- a/include/soc/fsl/qe/qe.h
++++ b/include/soc/fsl/qe/qe.h
+@@ -241,21 +241,37 @@ static inline int qe_alive_during_sleep(void)
+ #define qe_muram_offset cpm_muram_offset
+ #define qe_muram_dma cpm_muram_dma
  
-+static bool qe_general4_errata(void)
-+{
+-#define qe_setbits_be32(_addr, _v) iowrite32be(ioread32be(_addr) |  (_v), (_addr))
+-#define qe_clrbits_be32(_addr, _v) iowrite32be(ioread32be(_addr) & ~(_v), (_addr))
 +#ifdef CONFIG_PPC32
-+	return pvr_version_is(PVR_VER_836x) || pvr_version_is(PVR_VER_832x);
++#define qe_iowrite8(val, addr)     out_8(addr, val)
++#define qe_iowrite16be(val, addr)  out_be16(addr, val)
++#define qe_iowrite32be(val, addr)  out_be32(addr, val)
++#define qe_ioread8(addr)           in_8(addr)
++#define qe_ioread16be(addr)        in_be16(addr)
++#define qe_ioread32be(addr)        in_be32(addr)
++#else
++#define qe_iowrite8(val, addr)     iowrite8(val, addr)
++#define qe_iowrite16be(val, addr)  iowrite16be(val, addr)
++#define qe_iowrite32be(val, addr)  iowrite32be(val, addr)
++#define qe_ioread8(addr)           ioread8(addr)
++#define qe_ioread16be(addr)        ioread16be(addr)
++#define qe_ioread32be(addr)        ioread32be(addr)
 +#endif
-+	return false;
-+}
 +
- /* Program the BRG to the given sampling rate and multiplier
-  *
-  * @brg: the BRG, QE_BRG1 - QE_BRG16
-@@ -223,7 +231,7 @@ int qe_setbrg(enum qe_clock brg, unsigned int rate, unsigned int multiplier)
- 	/* Errata QE_General4, which affects some MPC832x and MPC836x SOCs, says
- 	   that the BRG divisor must be even if you're not using divide-by-16
- 	   mode. */
--	if (pvr_version_is(PVR_VER_836x) || pvr_version_is(PVR_VER_832x))
-+	if (qe_general4_errata())
- 		if (!div16 && (divisor & 1) && (divisor > 3))
- 			divisor++;
++#define qe_setbits_be32(_addr, _v) qe_iowrite32be(qe_ioread32be(_addr) |  (_v), (_addr))
++#define qe_clrbits_be32(_addr, _v) qe_iowrite32be(qe_ioread32be(_addr) & ~(_v), (_addr))
  
+-#define qe_setbits_be16(_addr, _v) iowrite16be(ioread16be(_addr) |  (_v), (_addr))
+-#define qe_clrbits_be16(_addr, _v) iowrite16be(ioread16be(_addr) & ~(_v), (_addr))
++#define qe_setbits_be16(_addr, _v) qe_iowrite16be(qe_ioread16be(_addr) |  (_v), (_addr))
++#define qe_clrbits_be16(_addr, _v) qe_iowrite16be(qe_ioread16be(_addr) & ~(_v), (_addr))
+ 
+-#define qe_setbits_8(_addr, _v) iowrite8(ioread8(_addr) |  (_v), (_addr))
+-#define qe_clrbits_8(_addr, _v) iowrite8(ioread8(_addr) & ~(_v), (_addr))
++#define qe_setbits_8(_addr, _v) qe_iowrite8(qe_ioread8(_addr) |  (_v), (_addr))
++#define qe_clrbits_8(_addr, _v) qe_iowrite8(qe_ioread8(_addr) & ~(_v), (_addr))
+ 
+ #define qe_clrsetbits_be32(addr, clear, set) \
+-	iowrite32be((ioread32be(addr) & ~(clear)) | (set), (addr))
++	qe_iowrite32be((qe_ioread32be(addr) & ~(clear)) | (set), (addr))
+ #define qe_clrsetbits_be16(addr, clear, set) \
+-	iowrite16be((ioread16be(addr) & ~(clear)) | (set), (addr))
++	qe_iowrite16be((qe_ioread16be(addr) & ~(clear)) | (set), (addr))
+ #define qe_clrsetbits_8(addr, clear, set) \
+-	iowrite8((ioread8(addr) & ~(clear)) | (set), (addr))
++	qe_iowrite8((qe_ioread8(addr) & ~(clear)) | (set), (addr))
+ 
+ /* Structure that defines QE firmware binary files.
+  *
 -- 
 2.23.0
 
