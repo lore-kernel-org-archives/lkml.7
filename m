@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB79C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65079C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25AE222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C72B222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213737;
-	bh=xEv4H0IgVHYmb74M4fjlkD9XU6PYj9n5CKOA9uGY6UY=;
+	s=default; t=1573213739;
+	bh=p2phrhNfUoYu+y1XLEsSbb57i+ADHifGc9qdPbL3SXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBiuOUNv0zUlcs259x/n9Ny7hj8aID1wmM7XQaEoS5blY+KknjM4Dm1Fo/hfQ6Lo+
-	 dDwbWE+1WSDzZsVObtz+r1otybr+NyfSjTDyjR3tj29mZXolH+vgQhBAHMMPgDR712
-	 fDgKU+Ze1uTCsyzjwKyWNmqwZXdexnnoV+hApKcA=
+	b=n49kpd06q2Ub2JUSwIYateuAfSYqOgeOvB/cc6vP7FkO0DVyBmXdsliJIW01qxfkN
+	 x1k1z7DuJvprZRuECro5m7Q8Z7nn5A8/1YtQ9DpRPU2Nx2urzrDibOG/5fkzZfs4Z6
+	 7mlIDj2ABd9IKjZ0ux7o2R3WI/wN26rVAsuW+hds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387934AbfKHLsw (ORCPT
+        id S2403859AbfKHLsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:48:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37392 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:48:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389985AbfKHLsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:48:22 -0500
+        id S2391718AbfKHLsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:48:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565A4222CE;
-        Fri,  8 Nov 2019 11:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C490122478;
+        Fri,  8 Nov 2019 11:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213702;
-        bh=xEv4H0IgVHYmb74M4fjlkD9XU6PYj9n5CKOA9uGY6UY=;
+        s=default; t=1573213691;
+        bh=p2phrhNfUoYu+y1XLEsSbb57i+ADHifGc9qdPbL3SXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQCc0olz/1T/5MXoBgSmzm1qUqXiivcoXlGvF/q1Lf1U4DBOmAVoyVf8rMScnSrrs
-         6tnO6ZwYT9nOCeTM+Ge9chQAGuDiQRQcG9eQzg1JWL9ka9gSEzURECKu6mPBqV+vFl
-         pp1/rY2Z7c5Pu1x4ExFRVpyCPAOdIqCXKmvVV7WY=
+        b=xiM+/wt/lGvAyre+EZhMW4OmVYSVGDhwVghD2eUUb/2SnUJ5CQ9w1qfgPtBpAzJpA
+         DlQV0aV5LZAkztGYRsvd/EWFCx/G8zbsef4xE+XVoDNOiGYMciKedLcer2fDaOQANw
+         1wxBp60oI5872Z/v4QxVPNmZtp80Ee0k4L3XPS3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ganesh Goudar <ganeshgr@chelsio.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 41/44] cxgb4: Fix endianness issue in t4_fwcache()
-Date:   Fri,  8 Nov 2019 06:47:17 -0500
-Message-Id: <20191108114721.15944-41-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 36/44] pinctrl: at91-pio4: fix has_config check in atmel_pctl_dt_subnode_to_map()
+Date:   Fri,  8 Nov 2019 06:47:12 -0500
+Message-Id: <20191108114721.15944-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -60,33 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Goudar <ganeshgr@chelsio.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0dc235afc59a226d951352b0adf4a89b532a9d13 ]
+[ Upstream commit b97760ae8e3dc8bb91881c13425a0bff55f2bd85 ]
 
-Do not put host-endian 0 or 1 into big endian feild.
+Smatch complains about this condition:
 
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	if (has_config && num_pins >= 1)
+
+The "has_config" variable is either uninitialized or true.  The
+"num_pins" variable is unsigned and we verified that it is non-zero on
+the lines before so we know "num_pines >= 1" is true.  Really, we could
+just check "num_configs" directly and remove the "has_config" variable.
+
+Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-at91-pio4.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-index de23f23b41de6..832ad1bd1f29b 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3482,7 +3482,7 @@ int t4_fwcache(struct adapter *adap, enum fw_params_param_dev_fwcache op)
- 	c.param[0].mnem =
- 		cpu_to_be32(FW_PARAMS_MNEM_V(FW_PARAMS_MNEM_DEV) |
- 			    FW_PARAMS_PARAM_X_V(FW_PARAMS_PARAM_DEV_FWCACHE));
--	c.param[0].val = (__force __be32)op;
-+	c.param[0].val = cpu_to_be32(op);
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index 9aa82a4e9e254..b4420a0bf7d66 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -477,7 +477,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	unsigned num_pins, num_configs, reserve;
+ 	unsigned long *configs;
+ 	struct property	*pins;
+-	bool has_config;
+ 	u32 pinfunc;
+ 	int ret, i;
  
- 	return t4_wr_mbox(adap, adap->mbox, &c, sizeof(c), NULL);
- }
+@@ -493,9 +492,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		return ret;
+ 	}
+ 
+-	if (num_configs)
+-		has_config = true;
+-
+ 	num_pins = pins->length / sizeof(u32);
+ 	if (!num_pins) {
+ 		dev_err(pctldev->dev, "no pins found in node %s\n",
+@@ -508,7 +504,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	 * map for each pin.
+ 	 */
+ 	reserve = 1;
+-	if (has_config && num_pins >= 1)
++	if (num_configs)
+ 		reserve++;
+ 	reserve *= num_pins;
+ 	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps, num_maps,
+@@ -531,7 +527,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		pinctrl_utils_add_map_mux(pctldev, map, reserved_maps, num_maps,
+ 					  group, func);
+ 
+-		if (has_config) {
++		if (num_configs) {
+ 			ret = pinctrl_utils_add_map_configs(pctldev, map,
+ 					reserved_maps, num_maps, group,
+ 					configs, num_configs,
 -- 
 2.20.1
 
