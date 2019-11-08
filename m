@@ -2,209 +2,126 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30507FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C437FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B9421882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D783221882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qc/H4WjZ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oXvp/OSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKHPa5 (ORCPT
+        id S1726887AbfKHPcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:30:57 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:39332 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfKHPa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:30:56 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8FTYvv090092;
-        Fri, 8 Nov 2019 15:30:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=muD44DGlPRkW2gSEnldlhZU2cQzKDgKv2ZzPgutoDZk=;
- b=qc/H4WjZXVN4KToLhXVmcMHuaYggGM9Iyt3RH+4umpdrZyKUqEnEX75UpQMgLNXwu10P
- PCRWLxeGF+lKPVpvPnC3VjFFtLxdn1rZOXdKqPSeGWfS+pyw6Ig7+vcIFWkKvRiJ3/oS
- OZ2046xNGy97ebwuHE2KFYIsrW2HMHDMkSGG34oLbvsJdr78I++Tj0IhzeVxcOW+b+fB
- v7lUHSeIVJE96+xg3sKNxSfidNAu58LboyysZubkL+TUPEPRDWSTb+57A63/nxpgcfaz
- qbxnqneL8LrJcsP/ijctS0YIHNiDQDLoxJbrefNRUOKqO6a9o0gVDoOBkqpBwEIp9AUl dQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2w41w1609m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 15:30:28 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8FTYSS102648;
-        Fri, 8 Nov 2019 15:30:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2w50m5g2ww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 15:30:27 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA8FUP7i019013;
-        Fri, 8 Nov 2019 15:30:25 GMT
-Received: from dhcp-10-175-178-67.vpn.oracle.com (/10.175.178.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 Nov 2019 07:30:25 -0800
-Date:   Fri, 8 Nov 2019 15:30:15 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-178-67.vpn.oracle.com
-To:     Brendan Higgins <brendanhiggins@google.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: Re: [PATCH v3 linux-kselftest-test 5/6] kunit: allow kunit to be
- loaded as a module
-In-Reply-To: <CAFd5g46s4eY4qEB5UZPeOKNdZXm4+sA9N=4g8gDYAhyhMahZKw@mail.gmail.com>
-Message-ID: <alpine.LRH.2.20.1911081520550.24027@dhcp-10-175-178-67.vpn.oracle.com>
-References: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com> <1571335639-21675-6-git-send-email-alan.maguire@oracle.com> <CAFd5g46s4eY4qEB5UZPeOKNdZXm4+sA9N=4g8gDYAhyhMahZKw@mail.gmail.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Fri, 8 Nov 2019 10:32:14 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59148 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726152AbfKHPcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 10:32:14 -0500
+Received: from zn.tnic (p200300EC2F0D3700C146D27A9F02E8E8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:3700:c146:d27a:9f02:e8e8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEC711EC0D03;
+        Fri,  8 Nov 2019 16:32:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573227128;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Wy2nApVSv0Jbeun95X8bJdRkeSPWfkwqp16W5VjvXSQ=;
+        b=oXvp/OSEVBnqkFXh3X/bJm8gHHcJmwurn9LAgHETk+DvQI2DU/yKp04mOAoXwTlZLhXml3
+        xZL3iV6jYVCunLJB4cfTXT5MrVlGTADTagu7TIPIZyJwsIokQHoP7NMt4aQg0JYXNNMMNW
+        jZbHiNve4Z2jYsOE/PLgU63y6pX6tio=
+Date:   Fri, 8 Nov 2019 16:32:03 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] EDAC, ghes: Fix locking and memory barrier issues
+Message-ID: <20191108153203.GE4503@zn.tnic>
+References: <20191105200732.3053-1-rrichter@marvell.com>
+ <20191105201115.v2pe6k6g2brx5itv@rric.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911080154
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911080154
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191105201115.v2pe6k6g2brx5itv@rric.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019, Brendan Higgins wrote:
-
-> On Thu, Oct 17, 2019 at 11:09 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> >
-> > Making kunit itself buildable as a module allows for "always-on"
-> > kunit configuration; specifying CONFIG_KUNIT=m means the module
-> > is built but only used when loaded.  Kunit test modules will load
-> > kunit.ko as an implicit dependency, so simply running
-> > "modprobe my-kunit-tests" will load the tests along with the kunit
-> > module and run them.
-> >
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> > ---
-> >  lib/kunit/Kconfig     | 2 +-
-> >  lib/kunit/Makefile    | 4 +++-
-> >  lib/kunit/test.c      | 2 ++
-> >  lib/kunit/try-catch.c | 3 +++
-> >  4 files changed, 9 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-> > index 9ebd5e6..065aa16 100644
-> > --- a/lib/kunit/Kconfig
-> > +++ b/lib/kunit/Kconfig
-> > @@ -3,7 +3,7 @@
-> >  #
-> >
-> >  menuconfig KUNIT
-> > -       bool "KUnit - Enable support for unit tests"
-> > +       tristate "KUnit - Enable support for unit tests"
-> >         help
-> >           Enables support for kernel unit tests (KUnit), a lightweight unit
-> >           testing and mocking framework for the Linux kernel. These tests are
-> > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-> > index 769d940..8e2635a 100644
-> > --- a/lib/kunit/Makefile
-> > +++ b/lib/kunit/Makefile
-> > @@ -1,4 +1,6 @@
-> > -obj-$(CONFIG_KUNIT) +=                 test.o \
-> > +obj-$(CONFIG_KUNIT) +=                 kunit.o
-> > +
-> > +kunit-objs +=                          test.o \
-> >                                         string-stream.o \
-> >                                         assert.o \
-> >                                         try-catch.o
-> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > index e8b2443..c0ace36 100644
-> > --- a/lib/kunit/test.c
-> > +++ b/lib/kunit/test.c
-> > @@ -523,3 +523,5 @@ void *kunit_find_symbol(const char *sym)
-> >         return ERR_PTR(-ENOENT);
-> >  }
-> >  EXPORT_SYMBOL(kunit_find_symbol);
-> > +
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> > index 1c1e9af..72fc8ed 100644
-> > --- a/lib/kunit/try-catch.c
-> > +++ b/lib/kunit/try-catch.c
-> > @@ -31,6 +31,8 @@ static int kunit_generic_run_threadfn_adapter(void *data)
-> >         complete_and_exit(try_catch->try_completion, 0);
-> >  }
-> >
-> > +KUNIT_VAR_SYMBOL(sysctl_hung_task_timeout_secs, unsigned long);
+On Tue, Nov 05, 2019 at 08:11:22PM +0000, Robert Richter wrote:
+> On 05.11.19 20:07:51, Robert Richter wrote:
+> > The ghes registration and refcount is broken in several ways:
+> > 
+> >  * ghes_edac_register() returns with success for a 2nd instance even
+> >    if a first instance is still running. This is not correct as the
+> >    first instance may fail later. A subsequent registration may not
+> >    finish before the first. Parallel registrations must be avoided.
+> > 
+> >  * The refcount was increased even if a registration failed. This
+> >    leads to stale counters preventing the device from being released.
+> > 
+> >  * The ghes refcount may not be decremented properly on
+> >    unregistration. Always decrement the refcount once
+> >    ghes_edac_unregister() is called to keep the refcount sane.
+> > 
+> >  * The ghes_pvt pointer is handed to the irq handler before
+> >    registration finished.
+> > 
+> >  * The mci structure could be freed while the irq handler is running.
+> > 
+> > Fix this by adding a mutex to ghes_edac_register(). This mutex
+> > serializes instances to register and unregister. The refcount is only
+> > increased if the registration succeeded. This makes sure the refcount
+> > is in a consistent state after registering or unregistering a device.
+> > Note: A spinlock cannot be used here as the code section may sleep.
+> > 
+> > The ghes_pvt is protected by ghes_lock now. This ensures the pointer
+> > is not updated before registration was finished or while the irq
+> > handler is running. It is unset before unregistering the device
+> > including necessary (implicit) memory barriers making the changes
+> > visible to other cpus. Thus, the device can not be used anymore by an
+> > interrupt.
+> > 
+> > Also, rename ghes_init to ghes_refcount for better readability and
+> > switch to refcount API.
+> > 
+> > A refcount is needed. There can be multiple GHES structures being
+> > defined (see ACPI 6.3 specification, 18.3.2.7 Generic Hardware Error
+> > Source, "Some platforms may describe multiple Generic Hardware Error
+> > Source structures with different notification types, ...").
+> > 
+> > Another approach to use the mci's device refcount (get_device()) and
+> > have a release function does not work here. A release function will be
+> > called only for device_release() with the last put_device() call. The
+> > device must be deleted *before* that with device_del(). This is only
+> > possible by maintaining an own refcount.
+> > 
+> > Fixes: 0fe5f281f749 ("EDAC, ghes: Model a single, logical memory controller")
+> > Fixes: 1e72e673b9d1 ("EDAC/ghes: Fix Use after free in ghes_edac remove path")
+> > Co-developed-by: James Morse <james.morse@arm.com>
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > Co-developed-by: Borislav Petkov <bp@suse.de>
+> > Signed-off-by: Borislav Petkov <bp@suse.de>
+> > Signed-off-by: Robert Richter <rrichter@marvell.com>
 > 
-> Can you just export sysctl_hung_task_timeout_secs?
-> 
-> I don't mean to make you redo all this work for one symbol twice, but
-> I thought we agreed on just exposing this symbol, but in a namespace.
-> It seemed like a good use case for that namespaced exporting thing
-> that Luis was talking about. As I understood it, you would have to
-> export it in the module that defines it, and then use the new
-> MODULE_IMPORT_NS() macro here.
->
+> I hope this SOB chain is correct now.
 
-Sure, I can certainly look into that, though I wonder if we should 
-consider another possibility - should kunit have its own sysctl table for 
-things like configuring timeouts? I can look at adding a patch for that 
-prior to the module patch so the issues with exporting the hung task 
-timeout would go away. Now the reason I suggest this isn't as much a hack 
-to solve this specific problem, rather it seems to fit better with the 
-longer-term intent expressed by the comment around use of the field (at 
-least as I read it, I may be wrong).
+Yeah.
 
-Exporting the symbol does allow us to piggy-back on an existing value, but 
-maybe we should support out our own tunable "kunit_timeout_secs" here?
-Doing so would also lay the groundwork for supporting other kunit 
-tunables in the future if needed. What do you think?
+Applied, thanks.
 
-Many thanks for the review! I've got an updated patchset almost 
-ready with the symbol lookup stuff removed; the above is the last issue 
-outstanding from my side.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks!
-
-Alan
-
-> > +
-> >  static unsigned long kunit_test_timeout(void)
-> >  {
-> >         unsigned long timeout_msecs;
-> > @@ -52,6 +54,7 @@ static unsigned long kunit_test_timeout(void)
-> >          * For more background on this topic, see:
-> >          * https://mike-bland.com/2011/11/01/small-medium-large.html
-> >          */
-> > +       KUNIT_INIT_VAR_SYMBOL(NULL, sysctl_hung_task_timeout_secs);
-> >         if (sysctl_hung_task_timeout_secs) {
-> >                 /*
-> >                  * If sysctl_hung_task is active, just set the timeout to some
-> > --
-> > 1.8.3.1
-> >
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
