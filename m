@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD731FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF24FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D31222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35970222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213208;
-	bh=i2tWQS8K0Ossgcc5vBYSM8RWjs14zDUfRjUMgb8DQSQ=;
+	s=default; t=1573213212;
+	bh=UBcwiqcs+4h2OQNhYlEoP/ApOIVZSmpdBOgLMo93mcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q1WDftUB9pCYrzccIf27AXfc5NOCrTe8NycDxUUwZYkT437qbknLTZCzPocsIXfnQ
-	 IhQkL/b8al+VD2hRTnkX3IvXkAXgEXHnTy7rlkHxURR8sYRp2LaHwVEWH7GtUM9mAs
-	 Jjo+MB1LTe4ua5oUXZ0hci7WbyCk1oPxTK0v5UzA=
+	b=X9An96Bju3VUOC83mRVQihPUlGWH5mSTOEXkpb6jpeYnIKFui/4EYxyD43ArCZTYx
+	 ZrF4UwjAO2ac+Gdcc1SDT+5iySUBvE2RiO2GqMyHVsa1WRWzFxEfS/xeqxacof764M
+	 MSbO6BDFNTpVpATgJyr+Fyru2OrdUTWm465FYIfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388425AbfKHLkH (ORCPT
+        id S2388504AbfKHLkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52930 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388183AbfKHLkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:02 -0500
+        id S2388340AbfKHLkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AE39222C2;
-        Fri,  8 Nov 2019 11:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF32E222C6;
+        Fri,  8 Nov 2019 11:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213202;
-        bh=i2tWQS8K0Ossgcc5vBYSM8RWjs14zDUfRjUMgb8DQSQ=;
+        s=default; t=1573213204;
+        bh=UBcwiqcs+4h2OQNhYlEoP/ApOIVZSmpdBOgLMo93mcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RI6D1H6WT2fLDZwloPGP2np3P381NSN9GYXoNXBGBIqQBf1FP83xmUZlJh26XbDGH
-         XNGcMyCSHaOROvwMzT5GHM6XuMhwcxAFSV4R3iOLXhIFcCqn1kqBp7aNZVnKs9WzBf
-         2cjQ7CknoIyUPYs/qNiQb0bVs9KJL6gXUCAOLY9w=
+        b=PnWLnaNw/NUcfuDGG2fH8PnRDxp5+Ch3F9ItyUtCO1Kj6+tfPJqqQi2hyNlwTUIyJ
+         DmZUrlBhAz4O24jZxNYqvlZJmOipLftpO/xR2MD0aodfaJnSKZVxAbXhYE3J8p9R/W
+         dKq52rsgBxCSIQlv11N0R86jqlNJs6eNJX8Sn5F0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Wu <peter@lekensteyn.nl>, Gerd Hoffmann <kraxel@redhat.com>,
+Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 085/205] qxl: fix null-pointer crash during suspend
-Date:   Fri,  8 Nov 2019 06:35:52 -0500
-Message-Id: <20191108113752.12502-85-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 087/205] cfg80211: validate wmm rule when setting
+Date:   Fri,  8 Nov 2019 06:35:54 -0500
+Message-Id: <20191108113752.12502-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,78 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Wu <peter@lekensteyn.nl>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-[ Upstream commit 7948a2b15873319d1bff4d37c09b9f2bf87b9021 ]
+[ Upstream commit 014f5a250fc49fa8c6cd50093e725e71f3ae52da ]
 
-"crtc->helper_private" is not initialized by the QXL driver and thus the
-"crtc_funcs->disable" call would crash (resulting in suspend failure).
-Fix this by converting the suspend/resume functions to use the
-drm_mode_config_helper_* helpers.
+Add validation check for wmm rule when copy rules from fwdb and print
+error when rule is invalid.
 
-Tested system sleep with QEMU 3.0 using "echo mem > /sys/power/state".
-During suspend the following message is visible from QEMU:
-
-    spice/server/display-channel.c:2425:display_channel_validate_surface: canvas address is 0x7fd05da68308 for 0 (and is NULL)
-    spice/server/display-channel.c:2426:display_channel_validate_surface: failed on 0
-
-This seems to be triggered by QXL_IO_NOTIFY_CMD after
-QXL_IO_DESTROY_PRIMARY_ASYNC, but aside from the warning things still
-seem to work (tested with both the GTK and -spice options).
-
-Signed-off-by: Peter Wu <peter@lekensteyn.nl>
-Link: http://patchwork.freedesktop.org/patch/msgid/20180904202747.14968-1-peter@lekensteyn.nl
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/qxl/qxl_drv.c | 26 +++++---------------------
- 1 file changed, 5 insertions(+), 21 deletions(-)
+ net/wireless/reg.c | 64 +++++++++++++++++++++++++---------------------
+ 1 file changed, 35 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index 2445e75cf7ea6..d00f45eed03ca 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -136,20 +136,11 @@ static int qxl_drm_freeze(struct drm_device *dev)
- {
- 	struct pci_dev *pdev = dev->pdev;
- 	struct qxl_device *qdev = dev->dev_private;
--	struct drm_crtc *crtc;
--
--	drm_kms_helper_poll_disable(dev);
--
--	console_lock();
--	qxl_fbdev_set_suspend(qdev, 1);
--	console_unlock();
-+	int ret;
- 
--	/* unpin the front buffers */
--	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
--		const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
--		if (crtc->enabled)
--			(*crtc_funcs->disable)(crtc);
--	}
-+	ret = drm_mode_config_helper_suspend(dev);
-+	if (ret)
-+		return ret;
- 
- 	qxl_destroy_monitors_object(qdev);
- 	qxl_surf_evict(qdev);
-@@ -175,14 +166,7 @@ static int qxl_drm_resume(struct drm_device *dev, bool thaw)
- 	}
- 
- 	qxl_create_monitors_object(qdev);
--	drm_helper_resume_force_mode(dev);
--
--	console_lock();
--	qxl_fbdev_set_suspend(qdev, 0);
--	console_unlock();
--
--	drm_kms_helper_poll_enable(dev);
--	return 0;
-+	return drm_mode_config_helper_resume(dev);
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 68ae97ef8bf0b..64841238df855 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -847,22 +847,36 @@ static bool valid_regdb(const u8 *data, unsigned int size)
+ 	return true;
  }
  
- static int qxl_pm_suspend(struct device *dev)
+-static void set_wmm_rule(struct ieee80211_reg_rule *rrule,
+-			 struct fwdb_wmm_rule *wmm)
+-{
+-	struct ieee80211_wmm_rule *rule = &rrule->wmm_rule;
+-	unsigned int i;
++static void set_wmm_rule(const struct fwdb_header *db,
++			 const struct fwdb_country *country,
++			 const struct fwdb_rule *rule,
++			 struct ieee80211_reg_rule *rrule)
++{
++	struct ieee80211_wmm_rule *wmm_rule = &rrule->wmm_rule;
++	struct fwdb_wmm_rule *wmm;
++	unsigned int i, wmm_ptr;
++
++	wmm_ptr = be16_to_cpu(rule->wmm_ptr) << 2;
++	wmm = (void *)((u8 *)db + wmm_ptr);
++
++	if (!valid_wmm(wmm)) {
++		pr_err("Invalid regulatory WMM rule %u-%u in domain %c%c\n",
++		       be32_to_cpu(rule->start), be32_to_cpu(rule->end),
++		       country->alpha2[0], country->alpha2[1]);
++		return;
++	}
+ 
+ 	for (i = 0; i < IEEE80211_NUM_ACS; i++) {
+-		rule->client[i].cw_min =
++		wmm_rule->client[i].cw_min =
+ 			ecw2cw((wmm->client[i].ecw & 0xf0) >> 4);
+-		rule->client[i].cw_max = ecw2cw(wmm->client[i].ecw & 0x0f);
+-		rule->client[i].aifsn =  wmm->client[i].aifsn;
+-		rule->client[i].cot = 1000 * be16_to_cpu(wmm->client[i].cot);
+-		rule->ap[i].cw_min = ecw2cw((wmm->ap[i].ecw & 0xf0) >> 4);
+-		rule->ap[i].cw_max = ecw2cw(wmm->ap[i].ecw & 0x0f);
+-		rule->ap[i].aifsn = wmm->ap[i].aifsn;
+-		rule->ap[i].cot = 1000 * be16_to_cpu(wmm->ap[i].cot);
++		wmm_rule->client[i].cw_max = ecw2cw(wmm->client[i].ecw & 0x0f);
++		wmm_rule->client[i].aifsn =  wmm->client[i].aifsn;
++		wmm_rule->client[i].cot =
++			1000 * be16_to_cpu(wmm->client[i].cot);
++		wmm_rule->ap[i].cw_min = ecw2cw((wmm->ap[i].ecw & 0xf0) >> 4);
++		wmm_rule->ap[i].cw_max = ecw2cw(wmm->ap[i].ecw & 0x0f);
++		wmm_rule->ap[i].aifsn = wmm->ap[i].aifsn;
++		wmm_rule->ap[i].cot = 1000 * be16_to_cpu(wmm->ap[i].cot);
+ 	}
+ 
+ 	rrule->has_wmm = true;
+@@ -870,7 +884,7 @@ static void set_wmm_rule(struct ieee80211_reg_rule *rrule,
+ 
+ static int __regdb_query_wmm(const struct fwdb_header *db,
+ 			     const struct fwdb_country *country, int freq,
+-			     struct ieee80211_reg_rule *rule)
++			     struct ieee80211_reg_rule *rrule)
+ {
+ 	unsigned int ptr = be16_to_cpu(country->coll_ptr) << 2;
+ 	struct fwdb_collection *coll = (void *)((u8 *)db + ptr);
+@@ -879,18 +893,14 @@ static int __regdb_query_wmm(const struct fwdb_header *db,
+ 	for (i = 0; i < coll->n_rules; i++) {
+ 		__be16 *rules_ptr = (void *)((u8 *)coll + ALIGN(coll->len, 2));
+ 		unsigned int rule_ptr = be16_to_cpu(rules_ptr[i]) << 2;
+-		struct fwdb_rule *rrule = (void *)((u8 *)db + rule_ptr);
+-		struct fwdb_wmm_rule *wmm;
+-		unsigned int wmm_ptr;
++		struct fwdb_rule *rule = (void *)((u8 *)db + rule_ptr);
+ 
+-		if (rrule->len < offsetofend(struct fwdb_rule, wmm_ptr))
++		if (rule->len < offsetofend(struct fwdb_rule, wmm_ptr))
+ 			continue;
+ 
+-		if (freq >= KHZ_TO_MHZ(be32_to_cpu(rrule->start)) &&
+-		    freq <= KHZ_TO_MHZ(be32_to_cpu(rrule->end))) {
+-			wmm_ptr = be16_to_cpu(rrule->wmm_ptr) << 2;
+-			wmm = (void *)((u8 *)db + wmm_ptr);
+-			set_wmm_rule(rule, wmm);
++		if (freq >= KHZ_TO_MHZ(be32_to_cpu(rule->start)) &&
++		    freq <= KHZ_TO_MHZ(be32_to_cpu(rule->end))) {
++			set_wmm_rule(db, country, rule, rrule);
+ 			return 0;
+ 		}
+ 	}
+@@ -972,12 +982,8 @@ static int regdb_query_country(const struct fwdb_header *db,
+ 		if (rule->len >= offsetofend(struct fwdb_rule, cac_timeout))
+ 			rrule->dfs_cac_ms =
+ 				1000 * be16_to_cpu(rule->cac_timeout);
+-		if (rule->len >= offsetofend(struct fwdb_rule, wmm_ptr)) {
+-			u32 wmm_ptr = be16_to_cpu(rule->wmm_ptr) << 2;
+-			struct fwdb_wmm_rule *wmm = (void *)((u8 *)db + wmm_ptr);
+-
+-			set_wmm_rule(rrule, wmm);
+-		}
++		if (rule->len >= offsetofend(struct fwdb_rule, wmm_ptr))
++			set_wmm_rule(db, country, rule, rrule);
+ 	}
+ 
+ 	return reg_schedule_apply(regdom);
 -- 
 2.20.1
 
