@@ -6,109 +6,89 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8FDFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A23FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF520869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A04E214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbfKHVPa (ORCPT
+        id S1732914AbfKHVPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:15:30 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:46059 "EHLO
+        Fri, 8 Nov 2019 16:15:33 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:33779 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732425AbfKHVP3 (ORCPT
+        with ESMTP id S1732101AbfKHVPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:15:29 -0500
+        Fri, 8 Nov 2019 16:15:32 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MWjUc-1iQvSV0sdk-00X7z7; Fri, 08 Nov 2019 22:15:15 +0100
+ 1N3bCH-1hlI2n3QdX-010fBS; Fri, 08 Nov 2019 22:15:26 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, "David S. Miller" <davem@davemloft.net>
+To:     y2038@lists.linaro.org
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Deepa Dinamani <deepa.kernel@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org
-Subject: [PATCH 13/23] y2038: socket: remove timespec reference in timestamping
-Date:   Fri,  8 Nov 2019 22:12:12 +0100
-Message-Id: <20191108211323.1806194-4-arnd@arndb.de>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH 14/23] y2038: make ns_to_compat_timeval use __kernel_old_timeval
+Date:   Fri,  8 Nov 2019 22:12:13 +0100
+Message-Id: <20191108211323.1806194-5-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
 References: <20191108210236.1296047-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IYjzYvve4HwgUd3LWF3hcYp3XGsNmdTj+aFo75G76y0fsDG/owT
- ArX9Fi9VGH6tv0x2woDwVeV2R1dyaK92WLIrAqWENK5veUYsaDwJLWeK+JhypYxcISRcRJC
- cjsePdvza6eEmh7shkRvT11+XeE7Jl86ZUT3hXuYyPzgHwwInuDwicN5DrCsWFhJKtCuPjh
- Lj4cBfFfvsY9G33VIjgMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JlPu9h1gens=:OPJRztXUGTZz2MC1IDn4A0
- suSnrJB6u9/B1GtIPFzBJHmgAdvL1Ct0kLw5rVLgbNe47vdnDYTiED7S0hvkBpgaiQzWUt9Ip
- ArswN/3rSOq7zFwVqlEVHIbP8d1BuiAHsyN8e5RindxJOiycaVSaS5Y1oi32Os/qbDSIkkuyK
- sjRLh0S4aQrFAqwpgD/7HZ31JUu+hXWwpuQmgYDFO+5Oq2fQTaiIDPJKbcnwBUfzbPIpEQGvO
- +FhnKSj8eztpH5p5pZ8YqN8n7PrVujwmZ/xWiV3ZVLFUaN5Z8H7RDPq8+KaXaCyWR1inurjel
- qfA9vXCz7LaCygipg5Mu6BQNgHEkyr2ykhEYce7S3bd0fQdlvRQsrWBf54nRfGnAfuv1QzPSn
- IQnplaQckYXxGOp7fAXNZHyND4yIGxQsOiBmKpShA4rbqt2xnUt4N6o9mp1eaQ6L6SrKcUCCZ
- 8cy5eeTJypxnGCop2Q7rR8oKvS3WGPBfiNifrh+hLaeYFQLAiuHeUQnAwUj2oKFkNyhZqswTk
- driyMfXxKWergCWqDajaV4fEwBIiay2ni+WsHR5BMPVxguf7j9YhQE3Qg2u5gSKWl2N/1JKYj
- r/VPkNJXvNAoqY2eDo04u4k9QjOW5nabavScLniw7jFoH9rtmDQ/XpyKX2CVmD4vSvux2fl2V
- PAQL+KTlL3Dqaa0gijc2BT2Aw1RHLMexVwKfAaHELJj5dH0p3V6hndkwLHoUjnRVQeEZIeuj8
- DNrnzhYmF0hLP4xMa375H6hJeDfTtbeHQzNltykTUCMTaRo/aii/4J4tLhM7seeBDbGA8ag+p
- RPvMp7BA6rRrvkZRXDcmQkb6omOI8f/hRxqsxjnXZfzNB8LKJI5oRPfP/tyZKC6FccGPlUMll
- 1f4KMOnfZr+BcbtIkimw==
+X-Provags-ID: V03:K1:Pfme16M9JKU/1lQYMjSUnUlUlunFko9yGD1/qMR1+QbuE78z4pf
+ ZHI88gH+wz2J6OBPQID1DtDxbizptVLZT1jhAxDXEzsVfN7ghgDqvT96Hx+hRxj+0iznIqt
+ /PVpStGxYFsdM5EoOazNF0V9hzc3ECTCD9sJDscIIwFm3LzbpdHtOT9CepwMwhnnRp1dkgh
+ bgsEBYh4LC7QcFloIaBXw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BXLkiyXx/ek=:6ux6MXiobQDoYSdUr8teJu
+ Qdu+4y/M2l60Hz+zNN940bfImgo3biC7NDpp6eKqPDDRzYbC71KWA7Hofa/py/3EpjDnbZTVL
+ hyl8IuisupTzJvHQ9dtiFcGhn7gNrAduwMr24dNU/3NYUpiqpaiFN2oamfbtvbXkQstLty5ev
+ DVKLexf7lAzU24EiE9thHI8iU54ku+p4C2kHt0ocPp9mHDm/zCvb34TrqLDnC8cCcbsVZ/NbF
+ lVyLegS3fhlsHkVaAUUuYjFsGpg0hl9MfmfdcGh4QtJ1q0SlOwFny8quFBhuy9anyyiLd7Tyy
+ 1RP/STEVAqsEXCOr9O0frVj38AbbWYAJ6ynQ002lStuq1uq03mzUq4faqi8nm7lRB2LYj8975
+ 3qPOLAL2Gk/kh3ZulEQNHXtaGefQ9j09PYYI9rENTnMIAsLn5IjymW4cR73UBWw7sdtWDpaP/
+ hg47QQSK8cXXbl/jKBPiPCy3TpgOo7T1L9DAALv71cYgRk2mUhR9sc0On1enZS5IcJwKpwM4f
+ aXGKhyE5IUPWFeEKn72L3yQs83CdLkqF2pG9gOxbGP7gdYKk032Nme0eKNZKue4Xi3Lzt76J5
+ 8pUhtsrOmdPBrXgi1EjrQ1T+Qy431V6ptjBBYO9iAgxK+epkMXJaOdlHUsrNkksM7g/qQyDIK
+ Xrcil36hElxlcsPhlGe2PP1vWGDp0FKgWVMI6jo3eciulj4QUes7ERrPc81OkzB/fpWzXIxOn
+ WveEHEHcg2Q+e+gGmHwxeVHyM6h4SaOLX4KBA9AxaZ1TU0tHIjL1CZeW7P6c8Jez3+o7w78A/
+ 81zzirRiIYllZL+9/ABM92Za7yx/GU5Ywl5mpUSpDbRjlkPNcpQmX7To9iWb0A+L+6hwrWSzM
+ KCrNO2bIVQpTWZ2nGtHw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to remove the 'struct timespec' definition and the
-timespec64_to_timespec() helper function, change over the in-kernel
-definition of 'struct scm_timestamping' to use the __kernel_old_timespec
-replacement and open-code the assignment.
+This gets us one step closer to removing 'struct timeval' from the
+kernel. We still keep __kernel_old_timeval for interfaces that we cannot
+fix otherwise, and ns_to_compat_timeval() is provably safe for interfaces
+that are legitimate users of __kernel_old_timeval on native kernels,
+so this is an obvious change.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/uapi/linux/errqueue.h | 7 +++++++
- net/core/scm.c                | 6 ++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ include/linux/compat.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/errqueue.h b/include/uapi/linux/errqueue.h
-index 28491dac074b..0cca19670fd2 100644
---- a/include/uapi/linux/errqueue.h
-+++ b/include/uapi/linux/errqueue.h
-@@ -37,9 +37,16 @@ struct sock_extended_err {
-  *	The timestamping interfaces SO_TIMESTAMPING, MSG_TSTAMP_*
-  *	communicate network timestamps by passing this struct in a cmsg with
-  *	recvmsg(). See Documentation/networking/timestamping.txt for details.
-+ *	User space sees a timespec definition that matches either
-+ *	__kernel_timespec or __kernel_old_timespec, in the kernel we
-+ *	require two structure definitions to provide both.
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index 16dafd9f4b86..3735a22bfbc0 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -937,10 +937,10 @@ static inline bool in_compat_syscall(void) { return is_compat_task(); }
   */
- struct scm_timestamping {
-+#ifdef __KERNEL__
-+	struct __kernel_old_timespec ts[3];
-+#else
- 	struct timespec ts[3];
-+#endif
- };
+ static inline struct old_timeval32 ns_to_old_timeval32(s64 nsec)
+ {
+-	struct timeval tv;
++	struct __kernel_old_timeval tv;
+ 	struct old_timeval32 ctv;
  
- struct scm_timestamping64 {
-diff --git a/net/core/scm.c b/net/core/scm.c
-index 31a38239c92f..dc6fed1f221c 100644
---- a/net/core/scm.c
-+++ b/net/core/scm.c
-@@ -268,8 +268,10 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
- 	struct scm_timestamping tss;
- 	int i;
+-	tv = ns_to_timeval(nsec);
++	tv = ns_to_kernel_old_timeval(nsec);
+ 	ctv.tv_sec = tv.tv_sec;
+ 	ctv.tv_usec = tv.tv_usec;
  
--	for (i = 0; i < ARRAY_SIZE(tss.ts); i++)
--		tss.ts[i] = timespec64_to_timespec(tss_internal->ts[i]);
-+	for (i = 0; i < ARRAY_SIZE(tss.ts); i++) {
-+		tss.ts[i].tv_sec = tss_internal->ts[i].tv_sec;
-+		tss.ts[i].tv_nsec = tss_internal->ts[i].tv_nsec;
-+	}
- 
- 	put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMPING_OLD, sizeof(tss), &tss);
- }
 -- 
 2.20.0
 
