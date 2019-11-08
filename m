@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B59CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C77FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A21F20656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719DE21D82
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213575;
-	bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
+	s=default; t=1573213584;
+	bh=Jeo/39pPQmoT6D0knHh+tThuVePJ8AIQxDESlg922GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NM3313CQKatBXPycjTXpVxnv69OC8tlDMcIUxAAJQa1WZo5WVepEtOs2uItoYgeT6
-	 pZCWYjJPfg1oXiXCqrSsAtHEI0tZcJwERMn8NvVjpkIliIQAY8/DWK1IZsQepNuasC
-	 qLPdUsVXf+3WeG7kajQWo6AhE2mI2t0ZqASLI4vM=
+	b=o8+EZ3yDvnY7HS2xNh7Dn39xHEGeKCvjCHXwlDTN1IADjmnG05UBgVKiNdTDWPKEk
+	 MhcxaKB2RUrEX++3P5aG+OvJnKPBvRy8Ys5DYt5qg/HWm6OWrPU+u4sl7CS602K0yT
+	 XRV5uoBJVV6+d4zJwMb6jX3YrEP/Xnq8RkGBNofY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391282AbfKHLqN (ORCPT
+        id S2391333AbfKHLqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33740 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391263AbfKHLqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:08 -0500
+        id S2391279AbfKHLqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BC1E222D4;
-        Fri,  8 Nov 2019 11:46:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C95C2084D;
+        Fri,  8 Nov 2019 11:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213567;
-        bh=FdP+fL1vqYaHYS2Gi+4ff7HsJqsMAmDjcgusf+HXzzI=;
+        s=default; t=1573213573;
+        bh=Jeo/39pPQmoT6D0knHh+tThuVePJ8AIQxDESlg922GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEWSvYtMCbGpzc4iTZzP3QRKo5Wn7PgpImITZFvVrt4/9qkwngbFAP+z4CGwu1sJA
-         rTbhsdybF1kTG5CkBOgAxZHYd5Y1jMNiuXBTXtk4tCtGIt3w8e9XdtpWbDWcl8YsHc
-         UX049XygglFR8jKMC/yUMkpkUHMvWn0tSAVKg5Lw=
+        b=OBkuRYekczZ/EshlOU6MYWR+Rbe9eKnJpWX+6pTZA5TaVjOiphNG6trpXOKAsQmyA
+         8l1kQgb8tOhVeKm2pe9737YoNb2f4K8L5vmLJMBnxVqjj6VEW6iIzfopKCL52jN3CL
+         /sC3qvQgwVwE40bdHwuIAH0NkccbV1tJWjHB8XNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/64] i40e: hold the rtnl lock on clearing interrupt scheme
-Date:   Fri,  8 Nov 2019 06:44:56 -0500
-Message-Id: <20191108114545.15351-15-sashal@kernel.org>
+Cc:     Marcel Ziswiler <marcel@ziswiler.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 19/64] ARM: dts: pxa: fix power i2c base address
+Date:   Fri,  8 Nov 2019 06:45:00 -0500
+Message-Id: <20191108114545.15351-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,55 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patryk Małek <patryk.malek@intel.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
 
-[ Upstream commit 5cba17b14182696d6bb0ec83a1d087933f252241 ]
+[ Upstream commit 8a1ecc01a473b75ab97be9b36f623e4551a6e9ae ]
 
-Hold the rtnl lock when we're clearing interrupt scheme
-in i40e_shutdown and in i40e_remove.
+There is one too many zeroes in the Power I2C base address. Fix this.
 
-Signed-off-by: Patryk Małek <patryk.malek@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/pxa27x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 886378c5334fa..043b69b5843b0 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -11360,6 +11360,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 	mutex_destroy(&hw->aq.asq_mutex);
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index 9e73dc6b3ed3e..0e1320afa1562 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -70,7 +70,7 @@
+ 			clocks = <&clks CLK_PWM1>;
+ 		};
  
- 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
- 	for (i = 0; i < pf->num_alloc_vsi; i++) {
- 		if (pf->vsi[i]) {
-@@ -11368,6 +11369,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 			pf->vsi[i] = NULL;
- 		}
- 	}
-+	rtnl_unlock();
- 
- 	for (i = 0; i < I40E_MAX_VEB; i++) {
- 		kfree(pf->veb[i]);
-@@ -11513,7 +11515,13 @@ static void i40e_shutdown(struct pci_dev *pdev)
- 	wr32(hw, I40E_PFPM_WUFC,
- 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
- 
-+	/* Since we're going to destroy queues during the
-+	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
-+	 * whole section
-+	 */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
-+	rtnl_unlock();
- 
- 	if (system_state == SYSTEM_POWER_OFF) {
- 		pci_wake_from_d3(pdev, pf->wol_en);
+-		pwri2c: i2c@40f000180 {
++		pwri2c: i2c@40f00180 {
+ 			compatible = "mrvl,pxa-i2c";
+ 			reg = <0x40f00180 0x24>;
+ 			interrupts = <6>;
 -- 
 2.20.1
 
