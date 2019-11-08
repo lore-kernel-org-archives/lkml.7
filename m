@@ -2,153 +2,192 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34098FC6198
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E28FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F2420869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xe/gL0fX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="S+dMcuDF"
+	by mail.kernel.org (Postfix) with ESMTP id 2252720869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732371AbfKHVMN (ORCPT
+        id S1732612AbfKHVM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:12:13 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:33656 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731366AbfKHVMM (ORCPT
+        Fri, 8 Nov 2019 16:12:28 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:38659 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731181AbfKHVM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:12:12 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3CE1E61287; Fri,  8 Nov 2019 21:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573247531;
-        bh=kIPutEfqgY7Kz4haUaBk0dPvawxBf8Awq+g288SKpvE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xe/gL0fX96JCsVAFTSGDIzGbZ9fOwwTCpyXB0MPT4QJe12iUM/IbD6UE/8WtFuPjB
-         0MZvH57JIA+iyrI0VAyIHEuInyDmkWih5Gk0rPHHtGSgkRY1JkfzWMauHUg1OooiF/
-         he2xIiqWUT71pa8MXhSo7G9QIVt0TPxevFsVj+P0=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E599A60D9B;
-        Fri,  8 Nov 2019 21:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573247530;
-        bh=kIPutEfqgY7Kz4haUaBk0dPvawxBf8Awq+g288SKpvE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+dMcuDFKLn0K5FLaavuAd3FR9kGGgfbe7iyiJ/dcFlFC7GXT5YwcjzxG1f92mveP
-         Z2OrJZS5Mw0hpkO0UfCCIvyyLxbHA7FDGr2VS+v+3EqOnIssowuCwP1brXTmDxBX4I
-         v63D3i9RDV2rNqA5Nua9jzqc6sqO+lpZrEHvdFHM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E599A60D9B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v7 1/6] dt-bindings: clock: Document external clocks for MSM8998 gcc
-Date:   Fri,  8 Nov 2019 14:11:58 -0700
-Message-Id: <1573247518-19801-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
-References: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
+        Fri, 8 Nov 2019 16:12:27 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MuUrM-1hcjO90hCk-00rZpx; Fri, 08 Nov 2019 22:12:15 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org
+Subject: [PATCH 09/23] y2038: stat: avoid 'time_t' in 'struct stat'
+Date:   Fri,  8 Nov 2019 22:07:29 +0100
+Message-Id: <20191108210824.1534248-9-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:hQI2PKcMsbaE8ATmNf2BhWXqyHFlTZauM/SrY3t0jiAIGW3xOTB
+ hBBN0IXOSct8hlnQ6w0xvFFKPx4AzXlvbQt+HI21ZvqdieWlTPMP53mXMixyGqPmqpLX2DY
+ 18kt9E8OgSmLQXE29GwEdOk7+TRAL6MlF7MNEprN+IqVwZmx25e2l/aFzmEtBVdILamjFUy
+ Huk0oJvJ7dYi4x9qJROYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K2C61v4B7ck=:smMLVvXqVSSEvnAoP3AxsT
+ OuKZb07AaMqYhICWFPMqlbsAapbNDFK4bOzD/3oRJwzr7UJm1i6wF9XvZSkcRdmlPv/KX0Jgu
+ yUvg6oGveX/ZLlgNXufjr35smf+6i4THT3VNVU7PWkK5mBgzxteOrbgzGYGMXVk14gqD9wjVY
+ Jxa+QtngWpzu6yKHFZp10FgRvCqS0sF1gopRhTHA3/Ulu/bHkRjS40+U/BRGvBZcKFODyqNIu
+ +RF9Fjpc+bY7sIqlKpYISoze8N+wEdBNI6GKALttvycVWdXZaqqsrFvBPRn4chaAmh3Cin9DD
+ RFAW16O6wAMluc5+dvvPJ8clH/mYnZkfmffzCO+BITb8sEwxe5fvEfH2qPJV80Ll6NyK97F07
+ ksemAwS1FEtmrqxA0DOgJGdF1soJ7/tnMHTLt2BIgmZNbRGlRWxu12h+D9EOUrkqD/BSBSkFW
+ OBUi6Kz/2kMsLiEVTskzYiBN5n3mtyWwQobf00gKtMITgu03G8SbcXsr0Y86FRRgFr+H5mSRd
+ CjaBhfs876ftE8uUYNwvI+7tUgfoK+FjGAJZKOCARN79dIE6wSLV55b/hJ6/Eas64A/v56kHS
+ TbCz731akDnJRGLqLGCgD/XHfaDrA7u2NpAnbPrddHwjpY99pomh/6+wUNKnUMZ+OnnFQJ+B5
+ E8VJWnuQ3b+TDEJBGDDCKm4LANvO+4Tw8XAxKyWBfnQtDSs/FNGqLlL63ZlfEdlrYetPrrjTW
+ onYjBFAoYV7bHtvkZLX8eanC/RADpovly16lRZpwutbetKA6NqvtFbseTgxWEAbmLyWB5q/ap
+ 1VlEUAyc/EQF/xFTgy6ejeKrMwbFlvGg2j/NlimY8/yEUyY0xA+cgukXFuQ47MtjhJg/ufCdt
+ /STLYGmt0wiwvRWxE7ZQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The global clock controller on MSM8998 can consume a number of external
-clocks.  Document them.
+The time_t definition may differ between user space and kernel space,
+so replace time_t with an unambiguous 'long' for the mips and sparc.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+The same structures also contain 'off_t', which has the same problem,
+so replace that as well on those two architectures and powerpc.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../devicetree/bindings/clock/qcom,gcc.yaml   | 47 +++++++++++++------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ arch/mips/include/uapi/asm/stat.h    | 16 ++++++++--------
+ arch/powerpc/include/uapi/asm/stat.h |  2 +-
+ arch/sparc/include/uapi/asm/stat.h   | 24 ++++++++++++------------
+ 3 files changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-index e73a56fb60ca..2f3512b6a035 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-@@ -40,20 +40,38 @@ properties:
-        - qcom,gcc-sm8150
+diff --git a/arch/mips/include/uapi/asm/stat.h b/arch/mips/include/uapi/asm/stat.h
+index 95416f366d7f..3d2a3b71845c 100644
+--- a/arch/mips/include/uapi/asm/stat.h
++++ b/arch/mips/include/uapi/asm/stat.h
+@@ -26,17 +26,17 @@ struct stat {
+ 	gid_t		st_gid;
+ 	unsigned	st_rdev;
+ 	long		st_pad2[2];
+-	off_t		st_size;
++	long		st_size;
+ 	long		st_pad3;
+ 	/*
+ 	 * Actually this should be timestruc_t st_atime, st_mtime and st_ctime
+ 	 * but we don't have it under Linux.
+ 	 */
+-	time_t		st_atime;
++	long		st_atime;
+ 	long		st_atime_nsec;
+-	time_t		st_mtime;
++	long		st_mtime;
+ 	long		st_mtime_nsec;
+-	time_t		st_ctime;
++	long		st_ctime;
+ 	long		st_ctime_nsec;
+ 	long		st_blksize;
+ 	long		st_blocks;
+@@ -70,13 +70,13 @@ struct stat64 {
+ 	 * Actually this should be timestruc_t st_atime, st_mtime and st_ctime
+ 	 * but we don't have it under Linux.
+ 	 */
+-	time_t		st_atime;
++	long		st_atime;
+ 	unsigned long	st_atime_nsec;	/* Reserved for st_atime expansion  */
  
-   clocks:
--    minItems: 1
--    maxItems: 3
--    items:
--      - description: Board XO source
--      - description: Board active XO source
--      - description: Sleep clock source
-+    oneOf:
-+      #qcom,gcc-sm8150
-+      #qcom,gcc-sc7180
-+      - items:
-+        - description: Board XO source
-+        - description: Board active XO source
-+        - description: Sleep clock source
-+      #qcom,gcc-msm8998
-+      - items:
-+        - description: Board XO source
-+        - description: USB 3.0 phy pipe clock
-+        - description: UFS phy rx symbol clock for pipe 0
-+        - description: UFS phy rx symbol clock for pipe 1
-+        - description: UFS phy tx symbol clock
-+        - description: PCIE phy pipe clock
+-	time_t		st_mtime;
++	long		st_mtime;
+ 	unsigned long	st_mtime_nsec;	/* Reserved for st_mtime expansion  */
  
-   clock-names:
--    minItems: 1
--    maxItems: 3
--    items:
--      - const: bi_tcxo
--      - const: bi_tcxo_ao
--      - const: sleep_clk
-+    oneOf:
-+      #qcom,gcc-sm8150
-+      #qcom,gcc-sc7180
-+      - items:
-+        - const: bi_tcxo
-+        - const: bi_tcxo_ao
-+        - const: sleep_clk
-+      #qcom,gcc-msm8998
-+      - items:
-+        - const: xo
-+        - const: usb3_pipe
-+        - const: ufs_rx_symbol0
-+        - const: ufs_rx_symbol1
-+        - const: ufs_tx_symbol0
-+        - const: pcie0_pipe
+-	time_t		st_ctime;
++	long		st_ctime;
+ 	unsigned long	st_ctime_nsec;	/* Reserved for st_ctime expansion  */
  
-   '#clock-cells':
-     const: 1
-@@ -118,6 +136,7 @@ else:
-       compatible:
-         contains:
-           enum:
-+            - qcom,gcc-msm8998
-             - qcom,gcc-sm8150
-             - qcom,gcc-sc7180
-   then:
-@@ -179,8 +198,8 @@ examples:
-     clock-controller@100000 {
-       compatible = "qcom,gcc-sc7180";
-       reg = <0x100000 0x1f0000>;
--      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
--      clock-names = "bi_tcxo", "bi_tcxo_ao";
-+      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
-+      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
-       #clock-cells = <1>;
-       #reset-cells = <1>;
-       #power-domain-cells = <1>;
+ 	unsigned long	st_blksize;
+@@ -105,7 +105,7 @@ struct stat {
+ 	unsigned int		st_rdev;
+ 	unsigned int		st_pad1[3]; /* Reserved for st_rdev expansion */
+ 
+-	off_t			st_size;
++	long			st_size;
+ 
+ 	/*
+ 	 * Actually this should be timestruc_t st_atime, st_mtime and st_ctime
+diff --git a/arch/powerpc/include/uapi/asm/stat.h b/arch/powerpc/include/uapi/asm/stat.h
+index afd25f2ff4e8..7871055e5e32 100644
+--- a/arch/powerpc/include/uapi/asm/stat.h
++++ b/arch/powerpc/include/uapi/asm/stat.h
+@@ -40,7 +40,7 @@ struct stat {
+ 	uid_t		st_uid;
+ 	gid_t		st_gid;
+ 	unsigned long	st_rdev;
+-	off_t		st_size;
++	long		st_size;
+ 	unsigned long	st_blksize;
+ 	unsigned long	st_blocks;
+ 	unsigned long	st_atime;
+diff --git a/arch/sparc/include/uapi/asm/stat.h b/arch/sparc/include/uapi/asm/stat.h
+index b6ec4eb217f7..732c41720e24 100644
+--- a/arch/sparc/include/uapi/asm/stat.h
++++ b/arch/sparc/include/uapi/asm/stat.h
+@@ -14,12 +14,12 @@ struct stat {
+ 	uid_t   st_uid;
+ 	gid_t   st_gid;
+ 	unsigned int st_rdev;
+-	off_t   st_size;
+-	time_t  st_atime;
+-	time_t  st_mtime;
+-	time_t  st_ctime;
+-	off_t   st_blksize;
+-	off_t   st_blocks;
++	long    st_size;
++	long    st_atime;
++	long    st_mtime;
++	long    st_ctime;
++	long    st_blksize;
++	long    st_blocks;
+ 	unsigned long  __unused4[2];
+ };
+ 
+@@ -57,15 +57,15 @@ struct stat {
+ 	unsigned short	st_uid;
+ 	unsigned short	st_gid;
+ 	unsigned short	st_rdev;
+-	off_t		st_size;
+-	time_t		st_atime;
++	long		st_size;
++	long		st_atime;
+ 	unsigned long	st_atime_nsec;
+-	time_t		st_mtime;
++	long		st_mtime;
+ 	unsigned long	st_mtime_nsec;
+-	time_t		st_ctime;
++	long		st_ctime;
+ 	unsigned long	st_ctime_nsec;
+-	off_t		st_blksize;
+-	off_t		st_blocks;
++	long		st_blksize;
++	long		st_blocks;
+ 	unsigned long	__unused4[2];
+ };
+ 
 -- 
-2.17.1
+2.20.0
 
