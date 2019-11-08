@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEF9FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE722FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4A42067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A222087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239809;
-	bh=OLx9Vi9JjlRltzTIwfiJ5OeN9fc4fgj5NJrc/CXMSwE=;
+	s=default; t=1573239811;
+	bh=fSFSw5Ejlq/r2im359kXPiTa6jPTCvToQ8CMGigP3Ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gOLQHbftkx5Q4Lhe5+HKZSWlw67nze3V8wGobK5Yj7ZrXYEQtYV5ZlguGFaFqBAeO
-	 Wch6IgLFH9FlkBdRcNiXNxXXvxzpbpmCV5wZ/2qHm85t/EhrwjRe6UOI+naMC6vfjP
-	 gyykHuxk+cJRPOANMl0vsNrsxUZDZL7Na6ijUlyw=
+	b=MLhVbRPKd9ExNVl+Nxkyv4RIfqYdBq8kkoWpeU7cAPy/snzM8DYlIoH106j7r+Ia/
+	 p6jUbM/LiTtGv9b5KuAI8Xzi0FKd4R6BcbzjCuh+rH1GyRrUebM/I2N7+m0J1zRnDk
+	 yZ4rCbtt33wXlJAXQIR8bq/R4Qp3RZhcDsHP+li4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390762AbfKHTD1 (ORCPT
+        id S2390772AbfKHTDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:03:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33046 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388338AbfKHTDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:23 -0500
+        id S1732342AbfKHTD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:03:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77DE2067B;
-        Fri,  8 Nov 2019 19:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7173B2087E;
+        Fri,  8 Nov 2019 19:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239802;
-        bh=OLx9Vi9JjlRltzTIwfiJ5OeN9fc4fgj5NJrc/CXMSwE=;
+        s=default; t=1573239807;
+        bh=fSFSw5Ejlq/r2im359kXPiTa6jPTCvToQ8CMGigP3Ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qRowG7UhteBS+eaZ7NgHZdcS8vNYWR/+MSCPKv3zv9XYBTDRLGeTLLZ60bKfTrzzF
-         cG8Ook/I8rwqgOAabvdewPK94Zjs+9wLWgNmOWsTi6CdsGAwrjb1t/+SGFqe/Nl6X6
-         InrBTxhQcltrG8zEARHHStREsOB95JvBMsqF4dq8=
+        b=0FFnXYXFShJGmhRbaJlNV64nfPq1PMpDY/xUmSOPRK4kBqDXHi8RwM4urwG5/6Ro9
+         rVpaKS0MrUvV+bJFSTdGvqF/xq1Bix6Zn4Q8NOLJCcSq/rY9E8bfjoEgbgTXFG4ZWY
+         MorB6S8nKumValhLhUP9zLc6eyRQ514j+ZRuG9BA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 65/79] net: bcmgenet: dont set phydev->link from MAC
-Date:   Fri,  8 Nov 2019 19:50:45 +0100
-Message-Id: <20191108174822.160399490@linuxfoundation.org>
+Subject: [PATCH 4.19 67/79] net: bcmgenet: reset 40nm EPHY on energy detect
+Date:   Fri,  8 Nov 2019 19:50:47 +0100
+Message-Id: <20191108174823.043570964@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -62,42 +62,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 7de48402faa32298c3551ea32c76ccb4f9d3025d ]
+[ Upstream commit 25382b991d252aed961cd434176240f9de6bb15f ]
 
-When commit 28b2e0d2cd13 ("net: phy: remove parameter new_link from
-phy_mac_interrupt()") removed the new_link parameter it set the
-phydev->link state from the MAC before invoking phy_mac_interrupt().
+The EPHY integrated into the 40nm Set-Top Box devices can falsely
+detect energy when connected to a disabled peer interface. When the
+peer interface is enabled the EPHY will detect and report the link
+as active, but on occasion may get into a state where it is not
+able to exchange data with the connected GENET MAC. This issue has
+not been observed when the link parameters are auto-negotiated;
+however, it has been observed with a manually configured link.
 
-However, once commit 88d6272acaaa ("net: phy: avoid unneeded MDIO
-reads in genphy_read_status") was added this initialization prevents
-the proper determination of the connection parameters by the function
-genphy_read_status().
+It has been empirically determined that issuing a soft reset to the
+EPHY when energy is detected prevents it from getting into this bad
+state.
 
-This commit removes that initialization to restore the proper
-functionality.
-
-Fixes: 88d6272acaaa ("net: phy: avoid unneeded MDIO reads in genphy_read_status")
+Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2619,10 +2619,8 @@ static void bcmgenet_irq_task(struct wor
+@@ -2020,6 +2020,8 @@ static void bcmgenet_link_intr_enable(st
+ 	 */
+ 	if (priv->internal_phy) {
+ 		int0_enable |= UMAC_IRQ_LINK_EVENT;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			int0_enable |= UMAC_IRQ_PHY_DET_R;
+ 	} else if (priv->ext_phy) {
+ 		int0_enable |= UMAC_IRQ_LINK_EVENT;
+ 	} else if (priv->phy_interface == PHY_INTERFACE_MODE_MOCA) {
+@@ -2618,9 +2620,14 @@ static void bcmgenet_irq_task(struct wor
+ 	priv->irq0_stat = 0;
  	spin_unlock_irq(&priv->lock);
  
++	if (status & UMAC_IRQ_PHY_DET_R &&
++	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
++		phy_init_hw(priv->dev->phydev);
++
  	/* Link UP/DOWN event */
--	if (status & UMAC_IRQ_LINK_EVENT) {
--		priv->dev->phydev->link = !!(status & UMAC_IRQ_LINK_UP);
-+	if (status & UMAC_IRQ_LINK_EVENT)
+ 	if (status & UMAC_IRQ_LINK_EVENT)
  		phy_mac_interrupt(priv->dev->phydev);
--	}
++
  }
  
  /* bcmgenet_isr1: handle Rx and Tx priority queues */
+@@ -2715,7 +2722,7 @@ static irqreturn_t bcmgenet_isr0(int irq
+ 	}
+ 
+ 	/* all other interested interrupts handled in bottom half */
+-	status &= UMAC_IRQ_LINK_EVENT;
++	status &= (UMAC_IRQ_LINK_EVENT | UMAC_IRQ_PHY_DET_R);
+ 	if (status) {
+ 		/* Save irq status for bottom-half processing. */
+ 		spin_lock_irqsave(&priv->lock, flags);
 
 
