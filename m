@@ -2,84 +2,97 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037F0FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5D3FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD450206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1031B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FRfas5SP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QZ851sH0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QZ851sH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbfKHDao (ORCPT
+        id S1729633AbfKHDbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:30:44 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40439 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfKHDao (ORCPT
+        Thu, 7 Nov 2019 22:31:01 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:41802 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfKHDbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:30:44 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 22so4041759oip.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 19:30:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NtB37+Q8xvWyEYnhovPvzQrhxqS2lBLxSLUijnwj9JI=;
-        b=FRfas5SPxBMSC4DVisx8MORabFwIgq5lwySDwgKd1CXjN2fmnInTfTzfd/12Zf4kwd
-         7s723mPTXcsbd4eONjrHEs1ExgPXRwpD2so5jW/aA0M1j/Mdd21FWzvKz0NNmR8g45UJ
-         TSQvt/gLwuJ6jvkLvIFFG99T33Yk9Cuk+48m9VmhXMIrFyIZ5Bs2VqKW3s5qR18L4Zss
-         vtb2BBZfNNSJTS8qKcpJnHqR4TdOcX/rVLqIsKfr3LD0e2zcHemW+nGkBXnGKpTnunJz
-         GhcE+cPH7t8F31zni88ZgcGawamvuyZxMQMOgqg9KFlYwMrlRm/u/3PmtnsGgfNQZAV+
-         TqKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NtB37+Q8xvWyEYnhovPvzQrhxqS2lBLxSLUijnwj9JI=;
-        b=Kz7msFpPA15GS28QN7bnQ38YW1LHWt0JcTmMDd6CxwHFLc1CsGZ6/dN5BsEbybMYLw
-         zICgZLwQej2rr4f6HW+YZF80S237CWvRMH5eig/RQBK6fHNCqSWhZ5u45Dtk+QgGfLy9
-         NtiaEvDpaCDi/y5yaJUSyaK+YWJbghNb9E+YWp9IFwGbQ8/oFShszq33h9NRnddK54I8
-         HH+TniwdYosUINOYODRMRd+Ft/44UcOtHRTCWOdrkjEGFwqd+P11NadTalyvVBeOXLCr
-         XFY6vslSmgz0QuxKAFI3n1MrU+R8Yv6HqnwEo9mV2EzZY4TGD5YXEtZiC80L4y2uQFLV
-         xp3w==
-X-Gm-Message-State: APjAAAXDmBu0V+b4ucGN5EoHUDG8ruMY5Cm4gX8Jdm3hZnyKdoZnI8SW
-        lBG01X1BCDWzseNSVE7ljgMTRJEJJVRAY/FxVxlX5A==
-X-Google-Smtp-Source: APXvYqzkdkYe4VeO2i7N7ZYvtM3Hm00GKsbQ7o4949RHdq20XH0TD40W5eXI5rdUew808QiCN7vktLt6WHrVYh8m+0A=
-X-Received: by 2002:aca:3d84:: with SMTP id k126mr6733699oia.70.1573183843511;
- Thu, 07 Nov 2019 19:30:43 -0800 (PST)
+        Thu, 7 Nov 2019 22:31:00 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E197A60DA7; Fri,  8 Nov 2019 03:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573183859;
+        bh=rHEApjQnqfCTZgUSmDIEe5R3XTHBwcKEcnceTTvqqOA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QZ851sH0LCUcD/iOhvnwNcQBEgoMlJkQZJ8hZJGp4Jnjp6ywX67AxO1eonJ+VwlOc
+         +C+qqmPD+moUzeWA63Qd5HPd+cgCOC7Sny4Px7MTt1tqYSuPiHZ9u8MmihbVeoGOeY
+         DDpdLXUkHumy28X5QLtuzi2Gd0V8wgOELnzQK/yg=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33C1360D9B;
+        Fri,  8 Nov 2019 03:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573183859;
+        bh=rHEApjQnqfCTZgUSmDIEe5R3XTHBwcKEcnceTTvqqOA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QZ851sH0LCUcD/iOhvnwNcQBEgoMlJkQZJ8hZJGp4Jnjp6ywX67AxO1eonJ+VwlOc
+         +C+qqmPD+moUzeWA63Qd5HPd+cgCOC7Sny4Px7MTt1tqYSuPiHZ9u8MmihbVeoGOeY
+         DDpdLXUkHumy28X5QLtuzi2Gd0V8wgOELnzQK/yg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33C1360D9B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: clock: Introduce RPMHCC bindings for
+ SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org
+References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org>
+ <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
+ <20191107212409.58CA82087E@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <a47926fb-fb39-c533-8995-fe8563f6c282@codeaurora.org>
+Date:   Fri, 8 Nov 2019 09:00:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191030041358.14450-1-ruansy.fnst@cn.fujitsu.com> <e33532a2-a9e5-1578-bdd8-a83d4710a151@cn.fujitsu.com>
-In-Reply-To: <e33532a2-a9e5-1578-bdd8-a83d4710a151@cn.fujitsu.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 7 Nov 2019 19:30:32 -0800
-Message-ID: <CAPcyv4ivOgMNdvWTtpXw2aaR0o7MEQZ=cDiy=_P9qhVb3QVWdQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/7] xfs: reflink & dedupe for fsdax (read/write path).
-To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        david <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        gujx@cn.fujitsu.com, qi.fuli@fujitsu.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191107212409.58CA82087E@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 7:11 PM Shiyang Ruan <ruansy.fnst@cn.fujitsu.com> wrote:
->
-> Hi Darrick, Dave,
->
-> Do you have any comment on this?
 
-Christoph pointed out at ALPSS that this problem has significant
-overlap with the shared page-cache for reflink problem. So I think we
-need to solve that first and then circle back to dax reflink support.
-I'm starting to take a look at that.
+
+On 11/8/2019 2:54 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-10-29 10:48:18)
+>> Add compatible for SC7180 RPMHCC.
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+> 
+> Applied to clk-next + fixed the sort.
+> 
+
+Thank you Stephen, will keep them sorted from next time.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
