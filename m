@@ -2,135 +2,137 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC23BC17440
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33376C17443
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FC520865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB2E215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 23:14:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UhfCwh86";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TpwbFIzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfKHXKH (ORCPT
+        id S1727210AbfKHXOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 18:10:07 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:44722 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfKHXKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 18:10:07 -0500
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        Fri, 8 Nov 2019 18:14:39 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:59216 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKHXOj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 18:14:39 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6655161152; Fri,  8 Nov 2019 23:14:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573254854;
+        bh=IDArQ3miDu7Zqw4xXWBNZx2KTGjzXaYXHVTJFeSlNEY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UhfCwh86YrYvf4a9y8pw/eXJonzuoiJ1B0x0DOueZ+QEX5Gid1vauuh+uzta/3wiI
+         1dwA8MawEXRrlFEsMjnBDhMQA5U7+VvK092JLz9t/udljC7zsy/A9qB4/G7Su0E3SU
+         leDobC433TvJreumIV0Gw540ZJJ97oVagVqxkbhc=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E74F58125A
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Nov 2019 23:10:06 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id 199so3968533wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 15:10:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6K74qceCeqa8g/2rCGVXRQpYc9szmQov/Xnm7zc5Fls=;
-        b=lAqWSqEK7diLSuglvUAmEFmfh3I8PVrWhfISMtKAbeStOFR1TBHdNQrDrDbI30H4qM
-         uiRlaor+/+OkbBHnM1jJiSHB3zqm3MSkylIqw/MCuYZZzMhUXAFQLXvPNdL28o4VMoJk
-         Z24m2RJbSJDeo3tSSHYe3V3WHczP+QJwyYvk40OOuOLm3lykgKSiCl9hWQXsEV0w6K8R
-         Iwy88zL/6m80QRs7GhQZhmQNXGEim9Mgbw29s1PYheEFRxHHPFNl44DTxCxrOGIeXu23
-         3C96S2i4uZYYXNINbYYZ+EfKsBV4wBQdJS1m4WLrElPnaZWJm7zdklDbUQOo9OQL7WHo
-         C9wg==
-X-Gm-Message-State: APjAAAWKr677garPk1sgFZwG2K3E1croU3J9j7X1JJccB7bYLAR5fQE4
-        rLumbNX1zIupyT2p5p/iD4b67KEmzPB+kC5HKy77Eh3U4IQPe9+V2Jfmxxo9rEeojJUh4pzQrgi
-        iHyiUcG8zgz5zdFlrT57bt7j3
-X-Received: by 2002:a1c:bc56:: with SMTP id m83mr10009253wmf.11.1573254605435;
-        Fri, 08 Nov 2019 15:10:05 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxhUONlSbfaDaTUuX7ouAl87Nm5Cp1aD2Xh2cVF/Oo+Vjy7wKQkujU2V8eh4AhaanmckjMYog==
-X-Received: by 2002:a1c:bc56:: with SMTP id m83mr10009236wmf.11.1573254605114;
-        Fri, 08 Nov 2019 15:10:05 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e8cd:9f0f:a5dc:7ad5? ([2001:b07:6468:f312:e8cd:9f0f:a5dc:7ad5])
-        by smtp.gmail.com with ESMTPSA id a15sm6809956wrw.10.2019.11.08.15.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 15:10:04 -0800 (PST)
-Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>
-References: <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
- <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
- <20191105135414.GA30717@redhat.com>
- <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
- <20191105145651.GD30717@redhat.com>
- <ab18744b-afc7-75d4-b5f3-e77e9aae41a6@redhat.com>
- <20191108135631.GA22507@linux-8ccs>
- <b77283e5-a4bc-1849-fbfa-27741ab2dbd5@redhat.com>
- <20191108200103.GA532@redhat.com>
- <9a3d2936-bd26-430f-a962-9b0f6fe0c2a0@redhat.com>
- <20191108212625.GB532@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <953e95ba-6bb6-25e1-64e8-20e1ea903652@redhat.com>
-Date:   Sat, 9 Nov 2019 00:10:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ACF661152;
+        Fri,  8 Nov 2019 23:14:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573254853;
+        bh=IDArQ3miDu7Zqw4xXWBNZx2KTGjzXaYXHVTJFeSlNEY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TpwbFIzBYwcPZCx1/6DzdirP2TBGzZ2NPDxB/MoqnrhqV0P7d4VcmCYyj9ybtLBY5
+         h6BYuiQmUyS/Z7eU19cQg3C/4QfwUGCtEsmzCaHCPex+/c1Niv76LYhEiP8AJLL6rb
+         0rkfh9EY83V/iBlmMuR+1ylu81r5DTX5vfIRNUaA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ACF661152
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Fri, 8 Nov 2019 16:14:12 -0700
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>, maz@kernel.org,
+        LinusW <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        mkshah@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 04/14] drivers: irqchip: add PDC irqdomain for
+ wakeup capable GPIOs
+Message-ID: <20191108231412.GI16900@codeaurora.org>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+ <1568411962-1022-5-git-send-email-ilina@codeaurora.org>
+ <CAD=FV=WOVHQyk0y3t0eki6cBfBedduQw3T-JZW2dERuCk9tRtA@mail.gmail.com>
+ <20191108215424.GG16900@codeaurora.org>
+ <20191108221636.GH16900@codeaurora.org>
+ <CAD=FV=V_hieLP-qqU23=shM0PdeXpu=Spe3O6a-WHur7w+AnAQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191108212625.GB532@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=V_hieLP-qqU23=shM0PdeXpu=Spe3O6a-WHur7w+AnAQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/19 22:26, Andrea Arcangeli wrote:
-> On Fri, Nov 08, 2019 at 10:02:52PM +0100, Paolo Bonzini wrote:
->> kvm_intel.ko or kvm_amd.ko, I'm not sure why that would be worse for TLB
->> or RAM usage.  The hard part is recording the location of the call sites
-> 
-> Let's ignore the different code complexity of supporting self
-> modifying code: kvm.ko and kvm-*.ko will be located in different
-> pages, hence it'll waste 1 iTLB for every vmexit and 2k of RAM in
-> average.
+On Fri, Nov 08 2019 at 15:57 -0700, Doug Anderson wrote:
+>Hi,
+>
+>On Fri, Nov 8, 2019 at 2:16 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> On Fri, Nov 08 2019 at 14:54 -0700, Lina Iyer wrote:
+>> >On Fri, Nov 08 2019 at 14:22 -0700, Doug Anderson wrote:
+>> >>Hi,
+>> >>
+>> >>On Fri, Sep 13, 2019 at 3:00 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>> >>>
+>> >>>diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
+>> >>>new file mode 100644
+>> >>>index 0000000..85ac4b6
+>> >>>--- /dev/null
+>> >>>+++ b/include/linux/soc/qcom/irq.h
+>> >>>@@ -0,0 +1,19 @@
+>> >>>+/* SPDX-License-Identifier: GPL-2.0-only */
+>> >>>+
+>> >>>+#ifndef __QCOM_IRQ_H
+>> >>>+#define __QCOM_IRQ_H
+>> >>>+
+>> >>
+>> >>I happened to be looking at a pile of patches and one of them added:
+>> >>
+>> >>+#include <linux/irqdomain.h>
+>> >>
+>> >>...right here.  If/when you spin your patch, maybe you should too?  At
+>> >>the moment the patch I was looking at is at:
+>> >>
+>> >>https://android.googlesource.com/kernel/common/+log/refs/heads/android-mainline-tracking
+>> >>
+>> >>Specifically:
+>> >>
+>> >>https://android.googlesource.com/kernel/common/+/448e2302f82a70f52475b6fc32bbe30301052e6b
+>> >>
+>> >>
+>> >Sure, will take care of it in the next spin.
+>> >
+>> Checking for this, it seems like it would not be needed by this header.
+>> There is nothing in this file that would need that header. It was
+>> probably a older version that pulled into that tree.
+>>
+>> Is there a reason now that you see this need?
+>
+>From the note in the commit I found I'd assume that Maulik Shah (who
+>is CCed here) has history?
+>
+>...but looking at it, I see that your header file refers to
+>"IRQ_DOMAIN_FLAG_NONCORE" which is defined in "linux/irqdomain.h".
+Ah, ok. That would need the file. Will add.
 
-This is unlikely to make a difference, since kvm.o and kvm-intel.o are
-overall about 700 KiB in size.  You do lose some inlining opportunities
- with LTO, but without LTO the L1 cache benefits are debatable too.  The
-real loss is in the complexity, I agree with you about that.
-
-> Now about the code complexity, it is even higher than pvops:
-> 
->    KVM				pvops
->    =========                    =============
-> 1) Changes daily		Never change
-> 
-> 2) Patched at runtime		Patched only at boot time early on
->    during module load
->    and multiple times
->    at every load of kvm-*.ko
-> 
-> 3) The patching points to	All patch destinations are linked into
->    code in kernel modules       the kernel
-> 
-> Why exactly should we go through such a complication when it runs
-> slower in the end and it's much more complex to implement and maintain
-> and in fact even more complex than pvops already is?
-
-For completeness, one advantage of patching would be to keep support for
-built-in Intel+AMD.  The modpost patch should be pretty small, and since
-Jessica seemed quite open to it let's do that.
-
-Thanks,
-
-Paolo
-
-> Furthermore by linking the thing statically we'll also enable LTO and
-> other gcc features which would never be possible with those indirect
-> calls.
-> 
-> Thanks,
-> Andrea
-> 
-
+>That means it's good hygiene for you to include the header, right?
+>Otherwise all your users need to know that they should include the
+>header themselves, which is a bit ugly.
+>
+>-Doug
