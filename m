@@ -2,134 +2,121 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39027C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041B7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E9D214DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46F0214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbfKHJhS (ORCPT
+        id S1731423AbfKHJh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:37:18 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61932 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730616AbfKHJhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:37:17 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA89YEEq106494
-        for <linux-kernel@vger.kernel.org>; Fri, 8 Nov 2019 04:37:16 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w539ndcc7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 04:37:11 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alistair@popple.id.au>;
-        Fri, 8 Nov 2019 09:36:01 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Nov 2019 09:35:56 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA89ZtUe53936164
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 09:35:55 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79B7CA4055;
-        Fri,  8 Nov 2019 09:35:55 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 308F3A4040;
-        Fri,  8 Nov 2019 09:35:55 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Nov 2019 09:35:55 +0000 (GMT)
-Received: from townsend.localnet (unknown [9.81.221.11])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 9680AA0278;
-        Fri,  8 Nov 2019 20:35:52 +1100 (AEDT)
-From:   Alistair Popple <alistair@popple.id.au>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Eddie James <eajames@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsi@lists.ozlabs.org
-Subject: Re: [PATCH v2 08/11] dt-bindings: fsi: Add description of FSI master
-Date:   Fri, 08 Nov 2019 20:23:20 +1100
-In-Reply-To: <20191108051945.7109-9-joel@jms.id.au>
-References: <20191108051945.7109-1-joel@jms.id.au> <20191108051945.7109-9-joel@jms.id.au>
+        Fri, 8 Nov 2019 04:37:59 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39422 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730005AbfKHJh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:37:59 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E19B8AC79;
+        Fri,  8 Nov 2019 09:37:56 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 27B4A1E4331; Fri,  8 Nov 2019 10:37:56 +0100 (CET)
+Date:   Fri, 8 Nov 2019 10:37:56 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, dev@openvswitch.org, jack@suse.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pshelar@ovn.org, syzkaller-bugs@googlegroups.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: BUG: MAX_LOCKDEP_ENTRIES too low!
+Message-ID: <20191108093756.GC20863@quack2.suse.cz>
+References: <000000000000ec7273058b877e1f@google.com>
+ <000000000000e676b00596cdbbde@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-x-cbid: 19110809-4275-0000-0000-0000037BEAE6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110809-4276-0000-0000-0000388F3ECA
-Message-Id: <1939926.rcMDTATi7v@townsend>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000e676b00596cdbbde@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Alistair Popple <alistair@popple.id.au>
+I guess this is more for Peter or Ingo...
 
-On Friday, 8 November 2019 4:19:42 PM AEDT Joel Stanley wrote:
-> This describes the FSI master present in the AST2600.
+On Thu 07-11-19 19:54:08, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
 > 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->  .../bindings/fsi/fsi-master-aspeed.txt        | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
+> HEAD commit:    99a8efbb NFC: st21nfca: fix double free
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15ed70d8e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cbbed3e8d4eb64bf
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cd0ec5211ac07c18c049
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13cf5594e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1036c762e00000
 > 
-> diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-> new file mode 100644
-> index 000000000000..b758f91914f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-> @@ -0,0 +1,24 @@
-> +Device-tree bindings for AST2600 FSI master
-> +-------------------------------------------
-> +
-> +The AST2600 contains two identical FSI masters. They share a clock and have a
-> +separate interrupt line and output pins.
-> +
-> +Required properties:
-> + - compatible: "aspeed,ast2600-fsi-master"
-> + - reg: base address and length
-> + - clocks: phandle and clock number
-> + - interrupts: platform dependent interrupt description
-> + - pinctrl-0: phandle to pinctrl node
-> + - pinctrl-names: pinctrl state
-> +
-> +Examples:
-> +
-> +    fsi-master {
-> +        compatible = "aspeed,ast2600-fsi-master", "fsi-master";
-> +        reg = <0x1e79b000 0x94>;
-> +	interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fsi1_default>;
-> +	clocks = <&syscon ASPEED_CLK_GATE_FSICLK>;
-> +    };
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com
 > 
-
-
-
-
+> device 5580n entered promiscuous mode
+> BUG: MAX_LOCKDEP_ENTRIES too low!
+> turning off the locking correctness validator.
+> CPU: 0 PID: 14197 Comm: syz-executor527 Not tainted 5.4.0-rc5+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  alloc_list_entry.cold+0x11/0x18 kernel/locking/lockdep.c:1292
+>  add_lock_to_list kernel/locking/lockdep.c:1313 [inline]
+>  check_prev_add kernel/locking/lockdep.c:2528 [inline]
+>  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+>  validate_chain kernel/locking/lockdep.c:2971 [inline]
+>  __lock_acquire+0x2a15/0x4a00 kernel/locking/lockdep.c:3955
+>  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+>  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+>  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+>  spin_lock_bh include/linux/spinlock.h:343 [inline]
+>  netif_addr_lock_bh include/linux/netdevice.h:4055 [inline]
+>  dev_set_rx_mode+0x20/0x40 net/core/dev.c:7808
+>  dev_set_promiscuity+0xbf/0xe0 net/core/dev.c:7716
+>  internal_dev_create+0x387/0x550 net/openvswitch/vport-internal_dev.c:196
+>  ovs_vport_add+0x150/0x500 net/openvswitch/vport.c:199
+>  new_vport+0x1b/0x1d0 net/openvswitch/datapath.c:194
+>  ovs_dp_cmd_new+0x5e5/0xe30 net/openvswitch/datapath.c:1644
+>  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
+>  genl_rcv_msg+0xca/0x170 net/netlink/genetlink.c:654
+>  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+>  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+>  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+>  sock_sendmsg_nosec net/socket.c:637 [inline]
+>  sock_sendmsg+0xd7/0x130 net/socket.c:657
+>  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+>  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
+>  __do_sys_sendmsg net/socket.c:2365 [inline]
+>  __se_sys_sendmsg net/socket.c:2363 [inline]
+>  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
+>  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x441779
+> Code: e8 9c ad 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> 0f 83 1b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffea7e5fcc8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441779
+> RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
+> RBP: 0000000000058f66 R08: 00007ffe00000025 R09: 00007ffe00000025
+> R10: 0000000000000004 R11: 0000000000000246 R12: 00000000006cdbc0
+> R13: 0000000000000013 R14: 0000000000000000 R15: 0000000000000000
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
