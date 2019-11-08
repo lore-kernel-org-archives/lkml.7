@@ -2,91 +2,176 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E2AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B28EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FEA206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573211114;
-	bh=MjWo6dMvGOtsdJD1m66Vq41P+/0nz5UASDJ/rbl+qZo=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=xMAKi8XFciaqQB99z2dYotZO9lb17Wu/jfjzBbremsA3MAaebHG5TAwJDTM/x7ZRW
-	 EKMEGgOgdOTbCylOatCR2Bw1f74oSCB+lceYKObtUdwJIjXjUfPosDaSRjo8sXL8p+
-	 pCKjTxCqyIxTkgpOLCVLIV649LtgaQLDnLYA0Dw4=
+	by mail.kernel.org (Postfix) with ESMTP id 0B48B206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:06:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uoo+Q71g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731835AbfKHLFN (ORCPT
+        id S1731712AbfKHLGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:05:13 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34714 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731784AbfKHLFN (ORCPT
+        Fri, 8 Nov 2019 06:06:11 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38697 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729896AbfKHLGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:05:13 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l202so4903439oig.1;
-        Fri, 08 Nov 2019 03:05:12 -0800 (PST)
+        Fri, 8 Nov 2019 06:06:10 -0500
+Received: by mail-lf1-f67.google.com with SMTP id q28so4146694lfa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 03:06:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Sy2LP6u2jmHt5m9xRWZK7C9zG0JoW6tUkzFgmde33yU=;
+        b=Uoo+Q71g0cxgu2QJpg7+In6A15rgLEBTHByOzyJL97eOk18NJI51sZj2MVQ/S83qnd
+         PKMsn/7nn9yx2/zuOFefoYhUO82xdF0PH//iratH+QNhSQP3K5MReZu0S9JM4L8+xR6o
+         u1xg4nzdI3kA7WJV5bv/8B/xxMp3YC3o39Bqs/RLx3v7xXV3ub5OpxzmswbJg0IG+1De
+         3a6bBNt510nQw5N2VmgnMKCTPwTSXrZjpkAfEThVXifBOky4VtKm7asTs0JtFnQzrYHc
+         svgkw0HFx6FwYaLAoQJ0CNKC0WWwYovxtgdbqYVM7ZSjRHFH/v++3N8fhWa8xO+K6fo0
+         LolA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=3aTH1Z977b25oWGjuZ0H/5AYWBINoF8nmYXtAY/gL1M=;
-        b=qDrYv4CAE9TZIvOUHD/jNU9Ywd3T+mCJ0kTgsCMmDlPsoQFtUbP6RebY/lgrYfE9Je
-         2gsp5GAV4+ibcwoX+5oZ9V03IG6GiTa1LQ2YUL3U/ZQjL49XXhKDqLKBca0TRqLhZlCj
-         ZvUHQ5fuWgnniXN+3WRWxxceuh1MgPVXfGAqPfpNS4/smo9UEZirrj5cbtsTemMzmTWl
-         mI7rZL+62y6UQO7BeMpV2gzPATZYEG/lzoYwsQgubkEek1FYSXdH0HrxvSRl6v4ng5wL
-         tT3pRU5LKnVKUG4w9PAgkBYCk33eAbyfpYx9d6qQjM0CaIxhHNDrkLiwhThp7FFyPYuz
-         OI1w==
-X-Gm-Message-State: APjAAAX4VvsMcLcqMQ8rMPuvvmzxnVvf0c8Aq+PX/STPL0VTSTJQnIYR
-        THtUPlO0GH7QdHVIbe8BcKP6Nm89e0OqI7gFnSA=
-X-Google-Smtp-Source: APXvYqwm4cJl+Tjng1uo+7i3zAU990Nw38Gcd0+2psUThBjuGsUnGyYtPPbeEoP/Y5CrXW17PqUyMwGx9DiAk79SNRo=
-X-Received: by 2002:aca:530c:: with SMTP id h12mr4567158oib.110.1573211112276;
- Fri, 08 Nov 2019 03:05:12 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Sy2LP6u2jmHt5m9xRWZK7C9zG0JoW6tUkzFgmde33yU=;
+        b=HwS9crx4ongFnUQBtTTsq1qn1gglf2ok3KDRqXfo6xb56j1vgZNPBHaZ7vwTVwvXB4
+         KiVFccpx2ZsNpB3pXpyVG3PrpOuABkbWOMJbowqkdvgVm2CBW6RDSryngPrGTuQ63/wS
+         Bb4Bng32OUynLb4OqTS/9AWWMx3jXpUDMAu0oPR5lg6LniulK1UfoiaZMcDQTC8KRWas
+         DGc49fvVzlqZuotQquvIlE2qCZFAsSa2ll+WcbwZFkTvsTWjowh9L0wa8fRdfJeOXAQK
+         pwBnSJ91x+1Z1JeuSvXLFzBQDuGIT+deH92FkvW62RURC5d3mp1Jr+R+Htwghc/PqnJ7
+         PbgQ==
+X-Gm-Message-State: APjAAAX9pOkV8AO6XDTYlzkYXlwZHZBCUhG2/sYg3Sdt2R3Da4VX9E7c
+        2HDbGcw8FWlsq+8RfF6lT6eZw8NbJj+iCEPApNjfFw==
+X-Google-Smtp-Source: APXvYqzcWpm0BDc9jz0r5KApYRL1BgeSvlL618R0QFv8ISVvZ+ly31FKQ4Gi0zAdRCgTzXjX9FWctLYEWC0qs7nI7vY=
+X-Received: by 2002:ac2:5bca:: with SMTP id u10mr6376774lfn.134.1573211168327;
+ Fri, 08 Nov 2019 03:06:08 -0800 (PST)
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 8 Nov 2019 12:05:01 +0100
-Message-ID: <CAJZ5v0hTxyzNAyEeeZfqu1XNcFY9mYeft9EnAP+zD6s7x0Csqg@mail.gmail.com>
-Subject: [GIT PULL] Power management fix for v5.4-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1572527274-21925-1-git-send-email-sumit.garg@linaro.org>
+ <20191107110603.GA8790@jax> <CAFA6WYMuHqNZTtoda=P4-pweNOKXw_TLKNcBa-XuR5yBV3uRDw@mail.gmail.com>
+ <CAHUa44Hk0LtCsbOcLq=of_pGSAYOnaod13N88ZMQOymmCGEJ6g@mail.gmail.com>
+In-Reply-To: <CAHUa44Hk0LtCsbOcLq=of_pGSAYOnaod13N88ZMQOymmCGEJ6g@mail.gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 8 Nov 2019 16:35:56 +0530
+Message-ID: <CAFA6WYMvVwEB7H5TDK4BBk_e=vTtY4-X8DDa5PD=ggCQn3PHvg@mail.gmail.com>
+Subject: Re: [PATCH] tee: optee: Fix dynamic shm pool allocations
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Carriere Etienne <etienne.carriere@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Jens,
 
-Please pull from the tag
+On Fri, 8 Nov 2019 at 16:09, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+>
+> Hi Sumit,
+>
+> On Thu, Nov 7, 2019 at 1:41 PM Sumit Garg <sumit.garg@linaro.org> wrote:
+> >
+> > Hi Jens,
+> >
+> > On Thu, 7 Nov 2019 at 16:36, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+> > >
+> > > Hi Sumit,
+> > >
+> > > On Thu, Oct 31, 2019 at 06:37:54PM +0530, Sumit Garg wrote:
+> > > > In case of dynamic shared memory pool, kernel memory allocated using
+> > > > dmabuf_mgr pool needs to be registered with OP-TEE prior to its usage
+> > > > during optee_open_session() or optee_invoke_func().
+> > > >
+> > > > So fix dmabuf_mgr pool allocations via an additional call to
+> > > > optee_shm_register().
+> > > >
+> > > > Fixes: 9733b072a12a ("optee: allow to work without static shared memory")
+> > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > >
+> > > Looks good, I'm picking this up. Etienne told me has tested this on some
+> > > of his hardware so I'll add:
+> > > Tested-by: Etienne Carriere <etienne.carriere@linaro.org>
+> > >
+> >
+> > Thanks for picking this up.
+> >
+> > >
+> > > > ---
+> > > >
+> > > > Depends on patch: https://lkml.org/lkml/2019/7/30/506 that adds support
+> > > > to allow registration of kernel buffers with OP-TEE.
+> >
+> > You also need to pick up the dependency patch too. The latest v3 of
+> > this patch is here [1] although its unchanged from v2. Also, If you
+> > pick that up I will drop it from future revisions of Trusted Keys
+> > patchset [2].
+> >
+> > [1] https://lkml.org/lkml/2019/10/31/431
+> > [2] https://lkml.org/lkml/2019/10/31/430
+>
+> So I missed taking [1] into account. I think that it would make more
+> sense to merge this patch ("tee: optee: Fix dynamic shm pool
+> allocations") with [1] ("tee: optee: allow kernel pages to register as
+> shm") into a new patch.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.4-rc7
+Sure, will send v2 as merged patch instead.
 
-with top-most commit c31432fa7f825de0e19838f1ac7746381c509ec4
+-Sumit
 
- cpufreq: intel_pstate: Fix invalid EPB setting
-
-on top of commit a99d8080aaf358d5d23581244e5da23b35e340b9
-
- Linux 5.4-rc6
-
-to receive a power management fix for 5.4-rc7.
-
-This fixes an "unchecked MSR access" warning in the intel_pstate
-cpufreq driver (Srinivas Pandruvada).
-
-Thanks!
-
-
----------------
-
-Srinivas Pandruvada (1):
-      cpufreq: intel_pstate: Fix invalid EPB setting
-
----------------
-
- drivers/cpufreq/intel_pstate.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> Cheers,
+> Jens
+>
+> >
+> > -Sumit
+> >
+> > > >
+> > > >  drivers/tee/optee/shm_pool.c | 12 +++++++++++-
+> > > >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/tee/optee/shm_pool.c b/drivers/tee/optee/shm_pool.c
+> > > > index de1d9b8..0332a53 100644
+> > > > --- a/drivers/tee/optee/shm_pool.c
+> > > > +++ b/drivers/tee/optee/shm_pool.c
+> > > > @@ -17,6 +17,7 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
+> > > >  {
+> > > >       unsigned int order = get_order(size);
+> > > >       struct page *page;
+> > > > +     int rc = 0;
+> > > >
+> > > >       page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
+> > > >       if (!page)
+> > > > @@ -26,12 +27,21 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
+> > > >       shm->paddr = page_to_phys(page);
+> > > >       shm->size = PAGE_SIZE << order;
+> > > >
+> > > > -     return 0;
+> > > > +     if (shm->flags & TEE_SHM_DMA_BUF) {
+> > > > +             shm->flags |= TEE_SHM_REGISTER;
+> > > > +             rc = optee_shm_register(shm->ctx, shm, &page, 1 << order,
+> > > > +                                     (unsigned long)shm->kaddr);
+> > > > +     }
+> > > > +
+> > > > +     return rc;
+> > > >  }
+> > > >
+> > > >  static void pool_op_free(struct tee_shm_pool_mgr *poolm,
+> > > >                        struct tee_shm *shm)
+> > > >  {
+> > > > +     if (shm->flags & TEE_SHM_DMA_BUF)
+> > > > +             optee_shm_unregister(shm->ctx, shm);
+> > > > +
+> > > >       free_pages((unsigned long)shm->kaddr, get_order(shm->size));
+> > > >       shm->kaddr = NULL;
+> > > >  }
+> > > > --
+> > > > 2.7.4
+> > > >
