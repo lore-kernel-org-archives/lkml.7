@@ -2,142 +2,89 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,
-	URIBL_SBL_A autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BF0FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0C2FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C5120650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66E220869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732944AbfKHVlw convert rfc822-to-8bit (ORCPT
+        id S1731914AbfKHVph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:41:52 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52713 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732101AbfKHVlv (ORCPT
+        Fri, 8 Nov 2019 16:45:37 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:57222 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728265AbfKHVph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:41:51 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iTC0b-0004QZ-SH; Fri, 08 Nov 2019 22:41:34 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5FE331C0315;
-        Fri,  8 Nov 2019 22:41:33 +0100 (CET)
-Date:   Fri, 08 Nov 2019 21:41:33 -0000
-From:   "tip-bot2 for Qais Yousef" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/core: Fix compilation error when cgroup not
- selected
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Mel Gorman <mgorman@suse.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ben Segall <bsegall@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191105112212.596-1-qais.yousef@arm.com>
-References: <20191105112212.596-1-qais.yousef@arm.com>
+        Fri, 8 Nov 2019 16:45:37 -0500
+Received: (qmail 6968 invoked by uid 2102); 8 Nov 2019 16:45:36 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 8 Nov 2019 16:45:36 -0500
+Date:   Fri, 8 Nov 2019 16:45:36 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Felipe Balbi <balbi@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH 0/1] usb: gadget: add raw-gadget interface
+In-Reply-To: <cover.1573236684.git.andreyknvl@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911081642461.1498-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Message-ID: <157324929309.29376.17659204577341601254.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+On Fri, 8 Nov 2019, Andrey Konovalov wrote:
 
-Commit-ID:     e3b8b6a0d12cccf772113d6b5c1875192186fbd4
-Gitweb:        https://git.kernel.org/tip/e3b8b6a0d12cccf772113d6b5c1875192186fbd4
-Author:        Qais Yousef <qais.yousef@arm.com>
-AuthorDate:    Tue, 05 Nov 2019 11:22:12 
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 08 Nov 2019 22:34:14 +01:00
+> This patchset (currently a single patch) adds a new userspace interface
+> for the USB Gadget subsystem called USB Raw Gadget (I don't mind changing
+> the name to something else if there are better ideas). This is what
+> currently being used to enable coverage-buided USB fuzzing with syzkaller:
+> 
+> https://github.com/google/syzkaller/blob/master/docs/linux/external_fuzzing_usb.md
+> 
+> Initially I was using GadgetFS (together with the Dummy HCD/UDC module)
+> to perform emulation of USB devices for fuzzing, but later switched to a
+> custom written interface. The incentive to implement a different interface
+> was to provide a somewhat raw and direct access to the USB Gadget layer
+> for the userspace, where every USB request is passed to the userspace to
+> get a response. See documentation for the list of differences between
+> Raw Gadget and GadgetFS.
+> 
+> This patchset has been pushed to the public Linux kernel Gerrit instance:
+> 
+> https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2144
+> 
+> Andrey Konovalov (1):
+>   usb: gadget: add raw-gadget interface
+> 
+>  Documentation/usb/index.rst         |    1 +
+>  Documentation/usb/raw-gadget.rst    |   60 ++
+>  drivers/usb/gadget/Kconfig          |    9 +
+>  drivers/usb/gadget/Makefile         |    2 +
+>  drivers/usb/gadget/raw.c            | 1150 +++++++++++++++++++++++++++
 
-sched/core: Fix compilation error when cgroup not selected
+As a general rule, gadget drivers don't go directly in
+drivers/usb/gadget.  raw.c counts as a legacy driver (because it's not
+written to use the composite gadget framework), so it belongs in
+drivers/usb/gadget/legacy.  That's where the gadgetfs driver lives, for
+example.
 
-When cgroup is disabled the following compilation error was hit
+Alan Stern
 
-	kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
-	kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
-	  struct css_task_iter it;
-			       ^~
-	kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
-	  css_task_iter_start(css, 0, &it);
-	  ^~~~~~~~~~~~~~~~~~~
-	  __sg_page_iter_start
-	kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
-	  while ((p = css_task_iter_next(&it))) {
-		      ^~~~~~~~~~~~~~~~~~
-		      __sg_page_iter_next
-	kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
-	  css_task_iter_end(&it);
-	  ^~~~~~~~~~~~~~~~~
-	  get_task_cred
-	kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
-	  struct css_task_iter it;
-			       ^~
-	cc1: some warnings being treated as errors
-	make[2]: *** [kernel/sched/core.o] Error 1
+>  include/uapi/linux/usb/raw_gadget.h |  164 ++++
+>  6 files changed, 1386 insertions(+)
+>  create mode 100644 Documentation/usb/raw-gadget.rst
+>  create mode 100644 drivers/usb/gadget/raw.c
+>  create mode 100644 include/uapi/linux/usb/raw_gadget.h
 
-Fix by protetion uclamp_update_active_tasks() with
-CONFIG_UCLAMP_TASK_GROUP
-
-Fixes: babbe170e053 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Ben Segall <bsegall@google.com>
-Link: https://lkml.kernel.org/r/20191105112212.596-1-qais.yousef@arm.com
----
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index dd05a37..afd4d80 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1073,6 +1073,7 @@ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
- 	task_rq_unlock(rq, p, &rf);
- }
- 
-+#ifdef CONFIG_UCLAMP_TASK_GROUP
- static inline void
- uclamp_update_active_tasks(struct cgroup_subsys_state *css,
- 			   unsigned int clamps)
-@@ -1091,7 +1092,6 @@ uclamp_update_active_tasks(struct cgroup_subsys_state *css,
- 	css_task_iter_end(&it);
- }
- 
--#ifdef CONFIG_UCLAMP_TASK_GROUP
- static void cpu_util_update_eff(struct cgroup_subsys_state *css);
- static void uclamp_update_root_tg(void)
- {
