@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E779DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B82FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B372820656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641D520656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215114;
-	bh=V4E15JTP8Ncram5dpMtDGj4oBuQLPirvzgjhs8k4/tk=;
+	s=default; t=1573215120;
+	bh=b8J4MxCR33d36gDUpia1X9tMWmKY6k0ovzSnBa1tW+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWhpPw8Uh1gupPAjv7j4XvldmD7QRaThYXJBgjs0Uh6GGSVL3VlrKMxhP/fXqyy66
-	 FaEPZGJVqieU55BKOFH4Ec3BhrSD7vxZBIrODpldhv6nWc5Qb9hnnz8pxG+9bXjtia
-	 yWJfFHT93PCVpP4hXG4FFHe1YZfarGu09T1nooYw=
+	b=O9SgbMkEoxAWAwQrSXITEUG7yjTT8BWOgKxD+xvLCTdzxfBcpB58c1ya76SGR2TSa
+	 g4mBgl6BOUF3mD8r3gZ2t4539sB1qRNFJaVwMDHdg1ugzc2oMtW84MhXmNb1Pf1e5o
+	 yVpl7dYNz4uRwHoHHl4w7TyNl9qa8RZM+kQuqMus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732973AbfKHLi5 (ORCPT
+        id S1732932AbfKHLiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:38:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732788AbfKHLim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:42 -0500
+        id S1732752AbfKHLij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7900E21D7E;
-        Fri,  8 Nov 2019 11:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0834420869;
+        Fri,  8 Nov 2019 11:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213122;
-        bh=V4E15JTP8Ncram5dpMtDGj4oBuQLPirvzgjhs8k4/tk=;
+        s=default; t=1573213118;
+        bh=b8J4MxCR33d36gDUpia1X9tMWmKY6k0ovzSnBa1tW+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kYn2jH9n1jsJaZJgFFeOTHlmbMWxmfPVlEHeB3k8kJOF5O+lhmcgjSqKPdqm+I8B7
-         xF41ZqYsTQrxHIgARqnq68drn45rtpsEzwlYPW+Qq4l5IfKEWbkAwm0HasMcHJCJkh
-         tmAye8b+990TjcUNGLJBvBhIWkIhgwUo7swvCRtU=
+        b=Z20l18vjnP1kOM49pgk7tZQfaK5ADDSl+8yIU6Gxg4/lsYzGdENXUDOGCBE5cK/0J
+         FBI7P4xkf91V1q21MRj2oXr156rcX88k2PTqvHvZJXhV+1537r1FT9ZTwQJtt+c1t9
+         LdLa/0pv5ZYkHbk9c3RGzHt10DvDjp1jBAB3ph7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 041/205] ARM: dts: exynos: Fix HDMI-HPD line handling on Arndale
-Date:   Fri,  8 Nov 2019 06:35:08 -0500
-Message-Id: <20191108113752.12502-41-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 038/205] pinctrl: ingenic: Probe driver at subsys_initcall
+Date:   Fri,  8 Nov 2019 06:35:05 -0500
+Message-Id: <20191108113752.12502-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,55 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrzej Hajda <a.hajda@samsung.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 21cb5a27483a3cfdbcb7508a06a30c0a485e1211 ]
+[ Upstream commit 556a36a71ed80e17ade49225b58513ea3c9e4558 ]
 
-HDMI-HPD was set active low, moreover by default pincontrol chip sets
-pull-down on the pin. As a result HDMI driver assumes TV is always
-connected regardless of actual state.  The patch fixes it.
+Using postcore_initcall() makes the driver try to initialize way too
+early.
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts  | 4 +++-
- arch/arm/boot/dts/exynos5250-pinctrl.dtsi | 5 +++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-ingenic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index bb3fcd652b5d7..9c8ab4b7fb2cf 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -149,9 +149,11 @@
- };
- 
- &hdmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_hpd>;
- 	status = "okay";
- 	ddc = <&i2c_ddc>;
--	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_LOW>;
-+	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
- 	vdd_osc-supply = <&ldo10_reg>;
- 	vdd_pll-supply = <&ldo8_reg>;
- 	vdd-supply = <&ldo8_reg>;
-diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-index b25d520393b8b..d31a68672bfac 100644
---- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-@@ -599,6 +599,11 @@
- 		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
- 		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
- 	};
-+
-+	hdmi_hpd: hdmi-hpd {
-+		samsung,pins = "gpx3-7";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
- };
- 
- &pinctrl_1 {
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 628817c40e3bb..a5accffbc8c91 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -847,4 +847,4 @@ static int __init ingenic_pinctrl_drv_register(void)
+ {
+ 	return platform_driver_register(&ingenic_pinctrl_driver);
+ }
+-postcore_initcall(ingenic_pinctrl_drv_register);
++subsys_initcall(ingenic_pinctrl_drv_register);
 -- 
 2.20.1
 
