@@ -2,124 +2,113 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD35FC6199
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8FDFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A174B214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E6RDJQz/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O3u/QHiV"
+	by mail.kernel.org (Postfix) with ESMTP id 3ADF520869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732866AbfKHVPY (ORCPT
+        id S1732887AbfKHVPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:15:24 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:35274 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbfKHVPY (ORCPT
+        Fri, 8 Nov 2019 16:15:30 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:46059 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732425AbfKHVP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:15:24 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B9D536146F; Fri,  8 Nov 2019 21:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573247723;
-        bh=NtCjd02v1Yds9AVIHvham7yjJZsxN1d2DMJTV0OeTJY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E6RDJQz/Iz2rXlNIER8tWf5prgdkcAg5XxJtBuLd7wO+3UL7MXgnTXh1zGvt9p4IA
-         /I5cTIioSMsf+QsXFUw2mwYski2nLn5nMm4eHsZVd0VDEnRiaRvOrfgpHFmQ3o3Fur
-         mcnpZxeYBb7jObWyjPTcQhQdbKte+q9U+NoAQA3w=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CC8661275;
-        Fri,  8 Nov 2019 21:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573247720;
-        bh=NtCjd02v1Yds9AVIHvham7yjJZsxN1d2DMJTV0OeTJY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O3u/QHiVtXN1/TRGGxZsCGWrvgJQ7Ex9JTHmriYpljoD1XxwgLF/+PlsHm2wWeV8g
-         egyJi7C/JIBtgNQTu/IlcRUg+w1qiEF4hIXH2ROsC8ItHjhuNSN+2Pk7/tEO2kOnZz
-         iEfkIbWuTzPF5Z/pTpUPRpI7YzTJLXdOhkwPDY50=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3CC8661275
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v7 6/6] arm64: dts: qcom: msm8998: Add mmcc node
-Date:   Fri,  8 Nov 2019 14:15:10 -0700
-Message-Id: <1573247710-21035-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
-References: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
+        Fri, 8 Nov 2019 16:15:29 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MWjUc-1iQvSV0sdk-00X7z7; Fri, 08 Nov 2019 22:15:15 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org
+Subject: [PATCH 13/23] y2038: socket: remove timespec reference in timestamping
+Date:   Fri,  8 Nov 2019 22:12:12 +0100
+Message-Id: <20191108211323.1806194-4-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:IYjzYvve4HwgUd3LWF3hcYp3XGsNmdTj+aFo75G76y0fsDG/owT
+ ArX9Fi9VGH6tv0x2woDwVeV2R1dyaK92WLIrAqWENK5veUYsaDwJLWeK+JhypYxcISRcRJC
+ cjsePdvza6eEmh7shkRvT11+XeE7Jl86ZUT3hXuYyPzgHwwInuDwicN5DrCsWFhJKtCuPjh
+ Lj4cBfFfvsY9G33VIjgMg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JlPu9h1gens=:OPJRztXUGTZz2MC1IDn4A0
+ suSnrJB6u9/B1GtIPFzBJHmgAdvL1Ct0kLw5rVLgbNe47vdnDYTiED7S0hvkBpgaiQzWUt9Ip
+ ArswN/3rSOq7zFwVqlEVHIbP8d1BuiAHsyN8e5RindxJOiycaVSaS5Y1oi32Os/qbDSIkkuyK
+ sjRLh0S4aQrFAqwpgD/7HZ31JUu+hXWwpuQmgYDFO+5Oq2fQTaiIDPJKbcnwBUfzbPIpEQGvO
+ +FhnKSj8eztpH5p5pZ8YqN8n7PrVujwmZ/xWiV3ZVLFUaN5Z8H7RDPq8+KaXaCyWR1inurjel
+ qfA9vXCz7LaCygipg5Mu6BQNgHEkyr2ykhEYce7S3bd0fQdlvRQsrWBf54nRfGnAfuv1QzPSn
+ IQnplaQckYXxGOp7fAXNZHyND4yIGxQsOiBmKpShA4rbqt2xnUt4N6o9mp1eaQ6L6SrKcUCCZ
+ 8cy5eeTJypxnGCop2Q7rR8oKvS3WGPBfiNifrh+hLaeYFQLAiuHeUQnAwUj2oKFkNyhZqswTk
+ driyMfXxKWergCWqDajaV4fEwBIiay2ni+WsHR5BMPVxguf7j9YhQE3Qg2u5gSKWl2N/1JKYj
+ r/VPkNJXvNAoqY2eDo04u4k9QjOW5nabavScLniw7jFoH9rtmDQ/XpyKX2CVmD4vSvux2fl2V
+ PAQL+KTlL3Dqaa0gijc2BT2Aw1RHLMexVwKfAaHELJj5dH0p3V6hndkwLHoUjnRVQeEZIeuj8
+ DNrnzhYmF0hLP4xMa375H6hJeDfTtbeHQzNltykTUCMTaRo/aii/4J4tLhM7seeBDbGA8ag+p
+ RPvMp7BA6rRrvkZRXDcmQkb6omOI8f/hRxqsxjnXZfzNB8LKJI5oRPfP/tyZKC6FccGPlUMll
+ 1f4KMOnfZr+BcbtIkimw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MSM8998 Multimedia Clock Controller DT node.
+In order to remove the 'struct timespec' definition and the
+timespec64_to_timespec() helper function, change over the in-kernel
+definition of 'struct scm_timestamping' to use the __kernel_old_timespec
+replacement and open-code the assignment.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 28 +++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ include/uapi/linux/errqueue.h | 7 +++++++
+ net/core/scm.c                | 6 ++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 2f0d4366724b..1d2e8357fb01 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
+diff --git a/include/uapi/linux/errqueue.h b/include/uapi/linux/errqueue.h
+index 28491dac074b..0cca19670fd2 100644
+--- a/include/uapi/linux/errqueue.h
++++ b/include/uapi/linux/errqueue.h
+@@ -37,9 +37,16 @@ struct sock_extended_err {
+  *	The timestamping interfaces SO_TIMESTAMPING, MSG_TSTAMP_*
+  *	communicate network timestamps by passing this struct in a cmsg with
+  *	recvmsg(). See Documentation/networking/timestamping.txt for details.
++ *	User space sees a timespec definition that matches either
++ *	__kernel_timespec or __kernel_old_timespec, in the kernel we
++ *	require two structure definitions to provide both.
+  */
+ struct scm_timestamping {
++#ifdef __KERNEL__
++	struct __kernel_old_timespec ts[3];
++#else
+ 	struct timespec ts[3];
++#endif
+ };
  
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/gpio/gpio.h>
-@@ -1758,6 +1759,33 @@
- 			#size-cells = <0>;
- 		};
+ struct scm_timestamping64 {
+diff --git a/net/core/scm.c b/net/core/scm.c
+index 31a38239c92f..dc6fed1f221c 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -268,8 +268,10 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
+ 	struct scm_timestamping tss;
+ 	int i;
  
-+		mmcc: clock-controller@c8c0000 {
-+			compatible = "qcom,mmcc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x0c8c0000 0x40000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>,
-+				 <0>,
-+				 <0>,
-+				 <0>,
-+				 <0>,
-+				 <0>,
-+				 <0>,
-+				 <0>;
-+			clock-names = "xo",
-+				      "gpll0",
-+				      "dsi0dsi",
-+				      "dsi0byte",
-+				      "dsi1dsi",
-+				      "dsi1byte",
-+				      "hdmipll",
-+				      "dpvco",
-+				      "dplink";
-+		};
-+
- 		apcs_glb: mailbox@17911000 {
- 			compatible = "qcom,msm8998-apcs-hmss-global";
- 			reg = <0x17911000 0x1000>;
+-	for (i = 0; i < ARRAY_SIZE(tss.ts); i++)
+-		tss.ts[i] = timespec64_to_timespec(tss_internal->ts[i]);
++	for (i = 0; i < ARRAY_SIZE(tss.ts); i++) {
++		tss.ts[i].tv_sec = tss_internal->ts[i].tv_sec;
++		tss.ts[i].tv_nsec = tss_internal->ts[i].tv_nsec;
++	}
+ 
+ 	put_cmsg(msg, SOL_SOCKET, SO_TIMESTAMPING_OLD, sizeof(tss), &tss);
+ }
 -- 
-2.17.1
+2.20.0
 
