@@ -2,53 +2,51 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628F1FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7882BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3019220650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D667222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239794;
-	bh=b5E4t656muwHmdXlT7k0hXbv0wJVVOwBCGzDoTObq+8=;
+	s=default; t=1573239797;
+	bh=BW5LGtpYsgo3Aw65GJewEZVruUL09Go2QLUOlLxvtdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DuQS66CPXq3l2EXECtS/GEQJRdFxTC4V3qbQQBvR5/of/FX60Acxwf9cWUPhD5xuY
-	 QY2/ybdhh7ajfzp0UWba8adWE5fCqGAlJ843WBigOBzlAjxIoqiIRfAA9ojI8IcZGZ
-	 EBhrBZ86zXStcPgveKl7RYQbcSBkDssX1tgYq2bo=
+	b=IYtPnIEa310NfndTOeDkVsF7wvJvU5mnY7G5R+QGGjszBp+ws0b61WuMpm7XdZdZl
+	 FCG/HZc+sIGUKz0XOmsk0NvCfWqtawzoxMns66X2txpJemUwx0MRYBdGFyFU3t7LrC
+	 PAwLDj6TOzLDUAtTnFqc4veLOI1H9bp3PqJMJIv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388178AbfKHTDN (ORCPT
+        id S2390744AbfKHTDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:03:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:03:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388044AbfKHTDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:08 -0500
+        id S2390717AbfKHTDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:03:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D325220650;
-        Fri,  8 Nov 2019 19:03:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B802067B;
+        Fri,  8 Nov 2019 19:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239787;
-        bh=b5E4t656muwHmdXlT7k0hXbv0wJVVOwBCGzDoTObq+8=;
+        s=default; t=1573239793;
+        bh=BW5LGtpYsgo3Aw65GJewEZVruUL09Go2QLUOlLxvtdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/qI/c0ywKtJ12vUinXrXWProexSTTEPRqdJQs+piFBF6qySEABD85/2g7zBg6sJt
-         9n6LsuZGxCyetoXX7A/msE6zh51I02U5P4rMUISXjpJlgMpDklD5onXGFl+XieJNYS
-         3uek72l/buvcAkiKPodRTlM/ip/K/OtFde9c7O00=
+        b=sZK2IZw0qbVMy0nYUpR1fPhJ66ZBqtUylB/Mxy72kAF+B/GT5n85nXYJa2KJas+e2
+         YMA1dXZYnymyuAvAEH/4CP9r+G70UgZwRH3g9+usPAJMsFnQ8iV9ve0ekwv1nhdV/L
+         sbS3HZeaASVwGRw7lAy+vVzDXX7RNlXUSngXpGzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/79] cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
-Date:   Fri,  8 Nov 2019 19:50:14 +0100
-Message-Id: <20191108174804.999927937@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 62/79] r8169: fix wrong PHY ID issue with RTL8168dp
+Date:   Fri,  8 Nov 2019 19:50:42 +0100
+Message-Id: <20191108174820.977499466@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -61,180 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit d46b0da7a33dd8c99d969834f682267a45444ab3 ]
+[ Upstream commit 62bdc8fd1c21d4263ebd18bec57f82532d09249f ]
 
-There's a deadlock that is possible and can easily be seen with
-a test where multiple readers open/read/close of the same file
-and a disruption occurs causing reconnect.  The deadlock is due
-a reader thread inside cifs_strict_readv calling down_read and
-obtaining lock_sem, and then after reconnect inside
-cifs_reopen_file calling down_read a second time.  If in
-between the two down_read calls, a down_write comes from
-another process, deadlock occurs.
+As reported in [0] at least one RTL8168dp version has problems
+establishing a link. This chip version has an integrated RTL8211b PHY,
+however the chip seems to report a wrong PHY ID, resulting in a wrong
+PHY driver (for Generic Realtek PHY) being loaded.
+Work around this issue by adding a hook to r8168dp_2_mdio_read()
+for returning the correct PHY ID.
 
-        CPU0                    CPU1
-        ----                    ----
-cifs_strict_readv()
- down_read(&cifsi->lock_sem);
-                               _cifsFileInfo_put
-                                  OR
-                               cifs_new_fileinfo
-                                down_write(&cifsi->lock_sem);
-cifs_reopen_file()
- down_read(&cifsi->lock_sem);
+[0] https://bbs.archlinux.org/viewtopic.php?id=246508
 
-Fix the above by changing all down_write(lock_sem) calls to
-down_write_trylock(lock_sem)/msleep() loop, which in turn
-makes the second down_read call benign since it will never
-block behind the writer while holding lock_sem.
-
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Suggested-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed--by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 242cd9b5866a ("r8169: use phy_resume/phy_suspend")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/cifs/cifsglob.h  |  5 +++++
- fs/cifs/cifsproto.h |  1 +
- fs/cifs/file.c      | 23 +++++++++++++++--------
- fs/cifs/smb2file.c  |  2 +-
- 4 files changed, 22 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/realtek/r8169.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 4dbae6e268d6a..71c2dd0c7f038 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1286,6 +1286,11 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
- struct cifsInodeInfo {
- 	bool can_cache_brlcks;
- 	struct list_head llist;	/* locks helb by this inode */
-+	/*
-+	 * NOTE: Some code paths call down_read(lock_sem) twice, so
-+	 * we must always use use cifs_down_write() instead of down_write()
-+	 * for this semaphore to avoid deadlocks.
-+	 */
- 	struct rw_semaphore lock_sem;	/* protect the fields above */
- 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
- 	struct list_head openFileList;
-diff --git a/fs/cifs/cifsproto.h b/fs/cifs/cifsproto.h
-index 20adda4de83be..d7ac75ea881c7 100644
---- a/fs/cifs/cifsproto.h
-+++ b/fs/cifs/cifsproto.h
-@@ -159,6 +159,7 @@ extern int cifs_unlock_range(struct cifsFileInfo *cfile,
- 			     struct file_lock *flock, const unsigned int xid);
- extern int cifs_push_mandatory_locks(struct cifsFileInfo *cfile);
- 
-+extern void cifs_down_write(struct rw_semaphore *sem);
- extern struct cifsFileInfo *cifs_new_fileinfo(struct cifs_fid *fid,
- 					      struct file *file,
- 					      struct tcon_link *tlink,
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index b4e33ef2ff315..a8e2bc47dcf27 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -280,6 +280,13 @@ cifs_has_mand_locks(struct cifsInodeInfo *cinode)
- 	return has_locks;
- }
- 
-+void
-+cifs_down_write(struct rw_semaphore *sem)
-+{
-+	while (!down_write_trylock(sem))
-+		msleep(10);
-+}
-+
- struct cifsFileInfo *
- cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 		  struct tcon_link *tlink, __u32 oplock)
-@@ -305,7 +312,7 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 	INIT_LIST_HEAD(&fdlocks->locks);
- 	fdlocks->cfile = cfile;
- 	cfile->llist = fdlocks;
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_add(&fdlocks->llist, &cinode->llist);
- 	up_write(&cinode->lock_sem);
- 
-@@ -461,7 +468,7 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
- 	 * Delete any outstanding lock records. We'll lose them when the file
- 	 * is closed anyway.
- 	 */
--	down_write(&cifsi->lock_sem);
-+	cifs_down_write(&cifsi->lock_sem);
- 	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
- 		list_del(&li->llist);
- 		cifs_del_lock_waiters(li);
-@@ -1016,7 +1023,7 @@ static void
- cifs_lock_add(struct cifsFileInfo *cfile, struct cifsLockInfo *lock)
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -1010,6 +1010,10 @@ static int r8168dp_2_mdio_read(struct rt
  {
- 	struct cifsInodeInfo *cinode = CIFS_I(d_inode(cfile->dentry));
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_add_tail(&lock->llist, &cfile->llist->locks);
- 	up_write(&cinode->lock_sem);
- }
-@@ -1038,7 +1045,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
+ 	int value;
  
- try_again:
- 	exist = false;
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
++	/* Work around issue with chip reporting wrong PHY ID */
++	if (reg == MII_PHYSID2)
++		return 0xc912;
++
+ 	r8168dp_2_mdio_start(tp);
  
- 	exist = cifs_find_lock_conflict(cfile, lock->offset, lock->length,
- 					lock->type, &conf_lock, CIFS_LOCK_OP);
-@@ -1060,7 +1067,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
- 					(lock->blist.next == &lock->blist));
- 		if (!rc)
- 			goto try_again;
--		down_write(&cinode->lock_sem);
-+		cifs_down_write(&cinode->lock_sem);
- 		list_del_init(&lock->blist);
- 	}
- 
-@@ -1113,7 +1120,7 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
- 		return rc;
- 
- try_again:
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	if (!cinode->can_cache_brlcks) {
- 		up_write(&cinode->lock_sem);
- 		return rc;
-@@ -1319,7 +1326,7 @@ cifs_push_locks(struct cifsFileInfo *cfile)
- 	int rc = 0;
- 
- 	/* we are going to update can_cache_brlcks here - need a write access */
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	if (!cinode->can_cache_brlcks) {
- 		up_write(&cinode->lock_sem);
- 		return rc;
-@@ -1510,7 +1517,7 @@ cifs_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
- 	if (!buf)
- 		return -ENOMEM;
- 
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	for (i = 0; i < 2; i++) {
- 		cur = buf;
- 		num = 0;
-diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
-index b204e84b87fb5..9168b2266e4fa 100644
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -137,7 +137,7 @@ smb2_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
- 
- 	cur = buf;
- 
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_for_each_entry_safe(li, tmp, &cfile->llist->locks, llist) {
- 		if (flock->fl_start > li->offset ||
- 		    (flock->fl_start + length) <
--- 
-2.20.1
-
+ 	value = r8169_mdio_read(tp, reg);
 
 
