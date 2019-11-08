@@ -2,63 +2,111 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DD0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843E9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE15B215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5235821924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mv2joeqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKHP4l (ORCPT
+        id S1727557AbfKHP6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:56:41 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:56511 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfKHP4l (ORCPT
+        Fri, 8 Nov 2019 10:58:31 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36661 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfKHP6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 10:56:41 -0500
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9B0DCFF803;
-        Fri,  8 Nov 2019 15:56:38 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 16:56:38 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-rtc@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] rtc: bd70528: fix module alias to autoload module
-Message-ID: <20191108155638.GG216543@piout.net>
-References: <20191106083418.159045-1-colin.king@canonical.com>
+        Fri, 8 Nov 2019 10:58:31 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c22so6751338wmd.1;
+        Fri, 08 Nov 2019 07:58:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=54MaFm5VBMDV6T2K1upBSmgHCQwtV4l01lLVii97q6Y=;
+        b=mv2joeqPloU9UDeNXUo3JCrcB64QG+nEy0VfqFs7HZa3wmRER8yz3CA478sLYVy+7s
+         iCkS3TwmcKdRB5AcLPSS2c/dmJmUvwfwksrbiLVl8VAjQATB4dPXkoJS6OQr6bywAF5e
+         c09BFDXGZp1G+/ITuGs45qE4SfdpslP5cpMOYJqmmC4D79j/h3nz0DEgVKlRYmxxNEXw
+         GyA42I/WR4SO4gz9SmAX7i5I6feTckjsQ8mAhKhUG/UlBjA/Rq7Jk5D1bDBx9jhjRP7w
+         UZPPkVBCrn8w9F70nUM2N3MBOWJIKHeqB0OwIBdXUWm3juL8krb54RjqYWaQXP/f4T+u
+         iDmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=54MaFm5VBMDV6T2K1upBSmgHCQwtV4l01lLVii97q6Y=;
+        b=ZK25eFOjCnXpQSxkpLSAIJcgxVJtNAWd1cTozNpTL9bbJFuKeKlwPjKJMrS9y8d0al
+         R8OhTERgRVK/bBZsEB3w9wbW2Da9kz9t9p8LQck6S5GiSP6psjGwty8bihcwNi2XQSjN
+         rTzKX+mL5SqxNoHuq0zpzpHvXMdJjOwU2C2twa8S9UzsZLUGjwKuNYirZY/aqTcIaHBi
+         mBG5eIv8DPzsTgozIYXfqQwC+9r8E0FDDBH1bEckGb++BC0P3z8Ct+x3rg9fAnEKFTTM
+         GRCbliMwzZ6ReqmsXQTZdBB36h5+8O/FrS/89bGd1ESv2QrkbTHkjnw/f7S2QqbYl/HV
+         MpqQ==
+X-Gm-Message-State: APjAAAXy7OVeE4NplNIU1yxHkN/rO8VbyI8xTnM2nwnoZ7Xn1+PlRKsN
+        p4WeN4XQGKV96j44cUGQ3cTACBl+
+X-Google-Smtp-Source: APXvYqxLU8zgDdkhQgCEpkb26FgMwUGhyh9oaKlyKHnXMeb1H0ep+XDOjg8W+GkhCGduqRGrz3jFtA==
+X-Received: by 2002:a1c:1b0d:: with SMTP id b13mr8895424wmb.120.1573228707753;
+        Fri, 08 Nov 2019 07:58:27 -0800 (PST)
+Received: from kwango.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id h124sm7759434wmf.30.2019.11.08.07.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 07:58:26 -0800 (PST)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 5.4-rc7
+Date:   Fri,  8 Nov 2019 16:58:53 +0100
+Message-Id: <20191108155853.23314-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106083418.159045-1-colin.king@canonical.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/2019 08:34:18+0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The module alias platform tag contains a spelling mistake. Fix it.
-> 
-> Fixes: f33506abbcdd ("rtc: bd70528: Add MODULE ALIAS to autoload module")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/rtc/rtc-bd70528.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-Applied, thanks.
+Hi Linus,
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
+
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
+
+are available in the Git repository at:
+
+  https://github.com/ceph/ceph-client.git tags/ceph-for-5.4-rc7
+
+for you to fetch changes up to ff29fde84d1fc82f233c7da0daa3574a3942bec7:
+
+  ceph: return -EINVAL if given fsc mount option on kernel w/o support (2019-11-07 18:03:23 +0100)
+
+----------------------------------------------------------------
+Some late-breaking dentry handling fixes from Al and Jeff, a patch to
+further restrict copy_file_range() to avoid potential data corruption
+from Luis and a fix for !CONFIG_CEPH_FSCACHE kernels.  Everything but
+the fscache fix is marked for stable.
+
+----------------------------------------------------------------
+Al Viro (2):
+      ceph: fix RCU case handling in ceph_d_revalidate()
+      ceph: add missing check in d_revalidate snapdir handling
+
+Jeff Layton (2):
+      ceph: don't try to handle hashed dentries in non-O_CREAT atomic_open
+      ceph: return -EINVAL if given fsc mount option on kernel w/o support
+
+Luis Henriques (2):
+      ceph: fix use-after-free in __ceph_remove_cap()
+      ceph: don't allow copy_file_range when stripe_count != 1
+
+ fs/ceph/caps.c  | 10 +++++-----
+ fs/ceph/dir.c   | 15 ++++++++-------
+ fs/ceph/file.c  | 15 +++++++++++++--
+ fs/ceph/inode.c |  1 +
+ fs/ceph/super.c | 11 ++++++++++-
+ 5 files changed, 37 insertions(+), 15 deletions(-)
