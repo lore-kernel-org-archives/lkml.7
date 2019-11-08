@@ -2,107 +2,166 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C768AFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F64DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E61E20673
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013C220673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:49:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="jVdpzmol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbfKHRtR (ORCPT
+        id S1730913AbfKHRtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:49:17 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2080 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729924AbfKHRtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:49:16 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id CEC7F8DD5204AF80FBFE;
-        Fri,  8 Nov 2019 17:49:14 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 8 Nov 2019 17:49:14 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 8 Nov 2019
- 17:49:14 +0000
-Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
- explicitly non-modular"
-To:     Will Deacon <will@kernel.org>
-CC:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20191108151608.20932-1-will@kernel.org>
- <20191108151608.20932-7-will@kernel.org>
- <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
- <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
- <20191108164728.GB20866@willie-the-truck>
- <c4cb13d3-3786-2e45-ba57-9965cead9a49@huawei.com>
- <20191108173248.GA22448@willie-the-truck>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <5a7df825-ca69-a2ad-e0b8-94a971528b89@huawei.com>
-Date:   Fri, 8 Nov 2019 17:49:13 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 8 Nov 2019 12:49:40 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33275 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730733AbfKHRtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:49:39 -0500
+Received: by mail-lj1-f196.google.com with SMTP id t5so7142358ljk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 09:49:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UVAbz2qNISBamKJ8aYyWKPdYYFUtEofFZoGab/xVx6Q=;
+        b=jVdpzmol350RlxFDs+MLHaRNphUMUP4OvQ5IAPmY8hbKQPQsDF4LD+P6ahIMsJ6Rpl
+         pUMnnGgEWZthCUvXmMqrer+tYk1QstqZ5L0VsSYXs5AIM8mttK7vKXNfkyoZk7SM78xu
+         uJTmzg7POCfLqH9zCG0s8CXDWcSswJF62aIKCvOlPVqevsasjpkz/5ZlbLdOMn0zCJ2j
+         C+dzIMZdnOFJ/mIbpTFmYjSGcDA/erk2dg8nzNoUV87zX7xBouMWtvkTjVmXM1YMpm38
+         Yi5lTSuQ/2AQzOGEB52mqbr8QWFQ7v6EjkHjKgKiTdFpkCcRJpUQpeBRrW2MOz6NXS1x
+         /4EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UVAbz2qNISBamKJ8aYyWKPdYYFUtEofFZoGab/xVx6Q=;
+        b=mpZwFJ7QNyclYtzkrRy6pDKwKJ3OlkHndZWzdZSZoOlIJH+p8Unp0UqhMg+A89vYF6
+         pQz1rb6md1anQPP+CzZt/E+i0YpKB70QdSo3Y+Vvc4+IR7+E2vIUPOsQ07tMo5/xYwea
+         5RUWsH2J1xrjGhb0SgDtNpautJxFVnkmF3E+Oe0W5J/Y+IXTgyvYE0JiJJb167lRZGcE
+         yXJHzKmRtzddgdPcnMv//T+HDR8QRoUQ/swbt30Ar3JDvUZ7/n8ypC7cR4KdP+pfryna
+         UdfjAM43u004UnJuSTmBFXuFujZMnSvUjxX3gPWM5Phqkd7pJvnF9jRY2ZgONfh8FRq7
+         x6ig==
+X-Gm-Message-State: APjAAAUtABs8CMtEGZ1BgtzgBd9QtqPrTIJQ5Jxx918tVuM5mdEigI7P
+        alekQzCz+wfx+gCJ+wjpTv/1RjgsbhdR12kPQTAF
+X-Google-Smtp-Source: APXvYqwXdfG4GypAr+j8sH3slLDDTCL7KQFTcRwsFnuUnnR/MbQkn3eAVhzXbnZTJXwiGsLyrFAGgJuGlFt1dlMpA3Q=
+X-Received: by 2002:a2e:898d:: with SMTP id c13mr7895602lji.54.1573235374890;
+ Fri, 08 Nov 2019 09:49:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191108173248.GA22448@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <cover.1568834524.git.rgb@redhat.com> <230e91cd3e50a3d8015daac135c24c4c58cf0a21.1568834524.git.rgb@redhat.com>
+ <20190927125142.GA25764@hmswarspite.think-freely.org> <CAHC9VhRbSUCB0OZorC4+y+5uJDR5uMXdRn2LOTYGu2gcFJSrcA@mail.gmail.com>
+ <20191024212335.y4ou7g4tsxnotvnk@madcap2.tricolour.ca>
+In-Reply-To: <20191024212335.y4ou7g4tsxnotvnk@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 8 Nov 2019 12:49:23 -0500
+Message-ID: <CAHC9VhTrKVQNvTPoX5xdx-TUX_ukpMv2tNFFqLa2Njs17GuQMg@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V7 06/21] audit: contid limit of 32k imposed to
+ avoid DoS
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Neil Horman <nhorman@tuxdriver.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        Dan Walsh <dwalsh@redhat.com>, mpatel@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/2019 17:32, Will Deacon wrote:
-> On Fri, Nov 08, 2019 at 05:25:09PM +0000, John Garry wrote:
->> On 08/11/2019 16:47, Will Deacon wrote:
->>> On Fri, Nov 08, 2019 at 04:44:25PM +0000, John Garry wrote:
->>>> BTW, it now looks like it was your v1 series I was testing there, on your
->>>> branch iommu/module. It would be helpful to update for ease of testing.
->>>
->>> Yes, sorry about that. I'll update it now (although I'm not sure it will
->>> help with this -- I was going to see what happens with other devices such
->>> as the intel-iommu or storage controllers)
->>
->> So I tried your v2 series for this - it has the same issue, as I
->> anticipated.
-> 
-> Right, I'm just not sure how resilient drivers are expected to be to force
-> unbinding like this. You can break lots of stuff with root...
+On Thu, Oct 24, 2019 at 5:23 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-10-10 20:38, Paul Moore wrote:
+> > On Fri, Sep 27, 2019 at 8:52 AM Neil Horman <nhorman@tuxdriver.com> wrote:
+> > > On Wed, Sep 18, 2019 at 09:22:23PM -0400, Richard Guy Briggs wrote:
+> > > > Set an arbitrary limit on the number of audit container identifiers to
+> > > > limit abuse.
+> > > >
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > ---
+> > > >  kernel/audit.c | 8 ++++++++
+> > > >  kernel/audit.h | 4 ++++
+> > > >  2 files changed, 12 insertions(+)
+> > > >
+> > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > index 53d13d638c63..329916534dd2 100644
+> > > > --- a/kernel/audit.c
+> > > > +++ b/kernel/audit.c
+> >
+> > ...
+> >
+> > > > @@ -2465,6 +2472,7 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+> > > >                               newcont->owner = current;
+> > > >                               refcount_set(&newcont->refcount, 1);
+> > > >                               list_add_rcu(&newcont->list, &audit_contid_hash[h]);
+> > > > +                             audit_contid_count++;
+> > > >                       } else {
+> > > >                               rc = -ENOMEM;
+> > > >                               goto conterror;
+> > > > diff --git a/kernel/audit.h b/kernel/audit.h
+> > > > index 162de8366b32..543f1334ba47 100644
+> > > > --- a/kernel/audit.h
+> > > > +++ b/kernel/audit.h
+> > > > @@ -219,6 +219,10 @@ static inline int audit_hash_contid(u64 contid)
+> > > >       return (contid & (AUDIT_CONTID_BUCKETS-1));
+> > > >  }
+> > > >
+> > > > +extern int audit_contid_count;
+> > > > +
+> > > > +#define AUDIT_CONTID_COUNT   1 << 16
+> > > > +
+> > >
+> > > Just to ask the question, since it wasn't clear in the changelog, what
+> > > abuse are you avoiding here?  Ostensibly you should be able to create as
+> > > many container ids as you have space for, and the simple creation of
+> > > container ids doesn't seem like the resource strain I would be concerned
+> > > about here, given that an orchestrator can still create as many
+> > > containers as the system will otherwise allow, which will consume
+> > > significantly more ram/disk/etc.
+> >
+> > I've got a similar question.  Up to this point in the patchset, there
+> > is a potential issue of hash bucket chain lengths and traversing them
+> > with a spinlock held, but it seems like we shouldn't be putting an
+> > arbitrary limit on audit container IDs unless we have a good reason
+> > for it.  If for some reason we do want to enforce a limit, it should
+> > probably be a tunable value like a sysctl, or similar.
+>
+> Can you separate and clarify the concerns here?
 
-For sure, but it is good practice to limit that.
+"Why are you doing this?" is about as simple as I can pose the question.
 
-I had to fix something like this recently, so know about it... another 
-potential problem is use-after-frees, where your device managed memory 
-is freed at removal but still registered somewhere.
+> I plan to move this patch to the end of the patchset and make it
+> optional, possibly adding a tuning mechanism.  Like the migration from
+> /proc to netlink for loginuid/sessionid/contid/capcontid, this was Eric
+> Biederman's concern and suggested mitigation.
 
-> 
->> It seems that some iommu drivers do call iommu_device_register(), so maybe a
->> decent reference. Or simply stop the driver being unbound.
-> 
-> I'm not sure what you mean about iommu_device_register() (we call that
-> already), 
+Okay, let's just drop it.  I *really* don't like this approach of
+tossing questionable stuff at the end of the patchset; I get why you
+are doing it, but I think we really need to focus on keeping this
+changeset small.  If the number of ACIDs (heh) become unwieldy the
+right solution is to improve the algorithms/structures, if we can't do
+that for some reason, *then* we can fall back to a limiting knob in a
+latter release.
 
-Sorry, I meant to say iommu_device_unregister().
+> As for the first issue of the bucket chain length traversal while
+> holding the list spin-lock, would you prefer to use the rcu lock to
+> traverse the list and then only hold the spin-lock when modifying the
+> list, and possibly even make the spin-lock more fine-grained per list?
 
-but I guess we can keep the '.suppress_bind_attrs = true' if
-> necessary. 
+Until we have a better idea of how this is going to be used, I think
+it's okay for now.  It's also internal to the kernel so we can change
+it at any time.  My comments about the locking/structs was only to try
+and think of some reason why one might want to limit the number of
+ACIDs since neither you or Eric provided any reasoning that I could
+see.
 
-It may be good to add it to older stable kernels also, pre c07b6426df92.
-
-I'll have a play on my laptop and see how well that works if
-> you start unbinding stuff.
-
-Cheers,
-John
+-- 
+paul moore
+www.paul-moore.com
