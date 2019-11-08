@@ -1,118 +1,89 @@
-Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=UFsi=ZH=vger.kernel.org=linux-rtc-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B2CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D3DC432C3
+	for <linux-rtc@archiver.kernel.org>; Fri, 15 Nov 2019 11:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B5C222DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iPPhfX7/"
+	by mail.kernel.org (Postfix) with ESMTP id C7F30206DB
+	for <linux-rtc@archiver.kernel.org>; Fri, 15 Nov 2019 11:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfKRV1L (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:27:11 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49461 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbfKRV1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:27:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574112429;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H2ueiIRt7fqjanQS0GX2y/MsXFCxWQAcy1vqFBO38zo=;
-        b=iPPhfX7/B0l631f4r9r8IM87GpS7cu1pZZ5ZABmbTBwIaDHJYdtgUJMoSiyiZJP22PFLBy
-        oRmLJq+V1ZJwW3x6C4UJF/xwwyQWPxZv6Q9bSWcwYL5J2Eg74mm2OzM3HNWkyZD5GpNXr2
-        uYZ6upp+FIRvSmiDNCKosHOk0fZ1fBI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-83-zMDzssdpODa4prXTJjAb8w-1; Mon, 18 Nov 2019 16:27:06 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EDD08E8046;
-        Mon, 18 Nov 2019 21:27:04 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DF63F6055C;
-        Mon, 18 Nov 2019 21:27:01 +0000 (UTC)
-Subject: Re: [PATCH v2 09/10] iommu/vt-d: Avoid sending invalid page response
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>
-References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1574106153-45867-10-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d412064b-8268-9085-81a7-4aed59ac88a2@redhat.com>
-Date:   Mon, 18 Nov 2019 22:26:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <1574106153-45867-10-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: zMDzssdpODa4prXTJjAb8w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Sender: linux-kernel-owner@vger.kernel.org
+        id S1726983AbfKOLDA (ORCPT <rfc822;linux-rtc@archiver.kernel.org>);
+        Fri, 15 Nov 2019 06:03:00 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:49821 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfKOLDA (ORCPT
+        <rfc822;linux-rtc@vger.kernel.org>); Fri, 15 Nov 2019 06:03:00 -0500
+X-Originating-IP: 90.66.177.178
+Received: from localhost (lfbn-1-2888-178.w90-66.abo.wanadoo.fr [90.66.177.178])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 2B7026000A
+        for <linux-rtc@vger.kernel.org>; Fri, 15 Nov 2019 11:02:58 +0000 (UTC)
+Received: from spool.mail.gandi.net (spool4.mail.gandi.net [217.70.178.213])
+        by nmboxes159.sd4.0x35.net (Postfix) with ESMTP id 976DF4192F
+        for <alexandre.belloni@bootlin.com>; Fri,  8 Nov 2019 22:41:02 +0000 (UTC)
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by spool.mail.gandi.net (Postfix) with ESMTPS id 7778B780425
+        for <alexandre.belloni@bootlin.com>; Fri,  8 Nov 2019 22:41:02 +0000 (UTC)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 436B91A03DF;
+        Fri,  8 Nov 2019 23:41:01 +0100 (CET)
+Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A32A1A03CA;
+        Fri,  8 Nov 2019 23:41:01 +0100 (CET)
+Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.70])
+        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id 2D4F140CB6;
+        Fri,  8 Nov 2019 15:41:00 -0700 (MST)
+From:   Li Yang <leoyang.li@nxp.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>, Biwen Li <biwen.li@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>
+Subject: [PATCH] rtc: fsl-ftm-alarm: remove select FSL_RCPM and default y from Kconfig
+Date:   Fri,  8 Nov 2019 16:40:56 -0600
+Message-Id: <1573252856-11759-1-git-send-email-leoyang.li@nxp.com>
+X-Mailer: git-send-email 1.9.0
+X-Virus-Scanned: ClamAV using ClamSMTP
+Received-SPF: pass (spool4: domain of nxp.com designates 92.121.34.13 as permitted sender) client-ip=92.121.34.13; envelope-from=leoyang.li@nxp.com; helo=inva020.nxp.com;
+X-TUID: Ph8swgQ7LkUY
+Sender: linux-rtc-owner@vger.kernel.org
 Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+List-ID: <linux-rtc.vger.kernel.org>
+X-Mailing-List: linux-rtc@vger.kernel.org
+Message-ID: <20191108224056.okuuG0KIca3p5hpI07pgjI57OozQ3N9hoxWxTz1Z2es@z>
 
-Hi Jacob,
+The Flextimer alarm is primarily used as a wakeup source for system
+power management.  But it shouldn't select the power management driver
+as they don't really have dependency of each other.
 
-On 11/18/19 8:42 PM, Jacob Pan wrote:
-> Page responses should only be sent when last page in group (LPIG) or
-> private data is present in the page request. This patch avoids sending
-> invalid descriptors.
->=20
-> Fixes: 5d308fc1ecf53 ("iommu/vt-d: Add 256-bit invalidation descriptor
-> support")
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/intel-svm.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 26a2f57763ec..098c89246593 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -688,11 +688,10 @@ static irqreturn_t prq_event_thread(int irq, void *=
-d)
->  =09=09=09if (req->priv_data_present)
->  =09=09=09=09memcpy(&resp.qw2, req->priv_data,
->  =09=09=09=09       sizeof(req->priv_data));
-> +=09=09=09resp.qw2 =3D 0;
-> +=09=09=09resp.qw3 =3D 0;
-> +=09=09=09qi_submit_sync(&resp, iommu);
-OK so now all the qwords are initialized ;-)
->  =09=09}
-> -=09=09resp.qw2 =3D 0;
-> -=09=09resp.qw3 =3D 0;
-> -=09=09qi_submit_sync(&resp, iommu);
-> -
->  =09=09head =3D (head + sizeof(*req)) & PRQ_RING_MASK;
->  =09}
-> =20
->=20
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Also remove the default y as it is not a critical feature for the
+systems.
 
-Thanks
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
+---
+ drivers/rtc/Kconfig | 2 --
+ 1 file changed, 2 deletions(-)
 
-Eric
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 1adf9f815652..b33b80243143 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1337,8 +1337,6 @@ config RTC_DRV_IMXDI
+ config RTC_DRV_FSL_FTM_ALARM
+ 	tristate "Freescale FlexTimer alarm timer"
+ 	depends on ARCH_LAYERSCAPE || SOC_LS1021A
+-	select FSL_RCPM
+-	default y
+ 	help
+ 	   For the FlexTimer in LS1012A, LS1021A, LS1028A, LS1043A, LS1046A,
+ 	   LS1088A, LS208xA, we can use FTM as the wakeup source.
+-- 
+2.17.1
 
