@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0D8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6919AFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53590215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33037206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214203;
-	bh=MlEi67HFMVyFzgS1oppUJqq2l7UIJn14A0fj12AmSUw=;
+	s=default; t=1573214208;
+	bh=fTe/6jv6vp2P2ZrGxFtNky6NeEAfIueFoy7sJP/UR2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sINuSUdDt3gn9o93/HttpxYB96biPaagKuG+zcjgbkxW1AsnCj4Ay2mJgMgiwAYxw
-	 pUXAHOfrPYuuePxS2GcjgoV2CMqAI7NoSktlfxq0YTlVwfb6Vo/VRrc35dAtJKr7/w
-	 yBJ+NX1F5tUJXC98YKmOjNc9XnIgkahbNwCi2mh4=
+	b=wpMlqKWBBCq9jL+521BFVoCtZT83aoxUCyEoqCNU8Ky9UiKuXZE8xxVpL18JF7nse
+	 AD/17oT38Hi2u7hSJGaNBRcolsK0KiSc178Q3CKRrWSC9d240h/WiaP1/Agd3GRXZf
+	 hR+X7HHI9iKqZfjh9aa4g4cbtmS4C5V3DiQt1W0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391112AbfKHL4m (ORCPT
+        id S1733171AbfKHLp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:56:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60828 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391107AbfKHLp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:28 -0500
+        id S2391088AbfKHLpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0902D222C2;
-        Fri,  8 Nov 2019 11:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76AD4222D4;
+        Fri,  8 Nov 2019 11:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213527;
-        bh=MlEi67HFMVyFzgS1oppUJqq2l7UIJn14A0fj12AmSUw=;
+        s=default; t=1573213520;
+        bh=fTe/6jv6vp2P2ZrGxFtNky6NeEAfIueFoy7sJP/UR2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iwKgGOEemQu648HN+q0GdVG75pa6F53HKP63slZIv8YpoRDcUx8LNPUaWZvf8Hp/F
-         sbWlkb33wS/3sYIV4aJa/m7mxLBOhoK2ckpCZtnPTqOZsCY25z5w56im9/xjH18A4y
-         K2tYud3OTO7G/yKclShcusjYjotw0Hj4aJaGRtB0=
+        b=wU/vzSC/oupknt7grS1umDVHtpp3MCvzouOJjkfIXKFgrtuVIgeQiXdTk3GLVfXm6
+         quYGU1gkcTATqwyi6xgSGzc+9dW/FMbPWTY0NfVb7BwxpZuPyn8dBZKjkIDh8v9EY8
+         UzAhdQ66XwAWAhxVLItOqGTgGN2HCU+W2438Hhvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 091/103] pinctrl: at91: don't use the same irqchip with multiple gpiochips
-Date:   Fri,  8 Nov 2019 06:42:56 -0500
-Message-Id: <20191108114310.14363-91-sashal@kernel.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/103] soc: qcom: wcnss_ctrl: Avoid string overflow
+Date:   Fri,  8 Nov 2019 06:42:53 -0500
+Message-Id: <20191108114310.14363-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,86 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
 
-[ Upstream commit 0c3dfa176912b5f87732545598200fb55e9c1978 ]
+[ Upstream commit 4c96ed170d658d8826d94edec8ac93ee777981a2 ]
 
-Sharing the same irqchip with multiple gpiochips is not a good
-practice. For instance, when installing hooks, we change the state
-of the irqchip. The initial state of the irqchip for the second
-gpiochip to register is then disrupted.
+'chinfo.name' is used as a NUL-terminated string, but using strncpy() with
+the length equal to the buffer size may result in lack of the termination:
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+drivers//soc/qcom/wcnss_ctrl.c: In function 'qcom_wcnss_open_channel':
+drivers//soc/qcom/wcnss_ctrl.c:284:2: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  strncpy(chinfo.name, name, sizeof(chinfo.name));
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This changes it to use the safer strscpy() instead.
+
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/soc/qcom/wcnss_ctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 569bc28cb9097..404711f0985aa 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1566,16 +1566,6 @@ void at91_pinctrl_gpio_resume(void)
- #define gpio_irq_set_wake	NULL
- #endif /* CONFIG_PM */
+diff --git a/drivers/soc/qcom/wcnss_ctrl.c b/drivers/soc/qcom/wcnss_ctrl.c
+index df3ccb30bc2dd..373400dd816d6 100644
+--- a/drivers/soc/qcom/wcnss_ctrl.c
++++ b/drivers/soc/qcom/wcnss_ctrl.c
+@@ -281,7 +281,7 @@ struct rpmsg_endpoint *qcom_wcnss_open_channel(void *wcnss, const char *name, rp
+ 	struct rpmsg_channel_info chinfo;
+ 	struct wcnss_ctrl *_wcnss = wcnss;
  
--static struct irq_chip gpio_irqchip = {
--	.name		= "GPIO",
--	.irq_ack	= gpio_irq_ack,
--	.irq_disable	= gpio_irq_mask,
--	.irq_mask	= gpio_irq_mask,
--	.irq_unmask	= gpio_irq_unmask,
--	/* .irq_set_type is set dynamically */
--	.irq_set_wake	= gpio_irq_set_wake,
--};
--
- static void gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
-@@ -1616,12 +1606,22 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	struct gpio_chip	*gpiochip_prev = NULL;
- 	struct at91_gpio_chip   *prev = NULL;
- 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
-+	struct irq_chip		*gpio_irqchip;
- 	int ret, i;
+-	strncpy(chinfo.name, name, sizeof(chinfo.name));
++	strscpy(chinfo.name, name, sizeof(chinfo.name));
+ 	chinfo.src = RPMSG_ADDR_ANY;
+ 	chinfo.dst = RPMSG_ADDR_ANY;
  
-+	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
-+	if (!gpio_irqchip)
-+		return -ENOMEM;
-+
- 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
- 
--	/* Setup proper .irq_set_type function */
--	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
-+	gpio_irqchip->name = "GPIO";
-+	gpio_irqchip->irq_ack = gpio_irq_ack;
-+	gpio_irqchip->irq_disable = gpio_irq_mask;
-+	gpio_irqchip->irq_mask = gpio_irq_mask;
-+	gpio_irqchip->irq_unmask = gpio_irq_unmask;
-+	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
-+	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
- 
- 	/* Disable irqs of this PIO controller */
- 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
-@@ -1632,7 +1632,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	 * interrupt.
- 	 */
- 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
--				   &gpio_irqchip,
-+				   gpio_irqchip,
- 				   0,
- 				   handle_edge_irq,
- 				   IRQ_TYPE_NONE);
-@@ -1650,7 +1650,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	if (!gpiochip_prev) {
- 		/* Then register the chain on the parent IRQ */
- 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
--					     &gpio_irqchip,
-+					     gpio_irqchip,
- 					     at91_gpio->pioc_virq,
- 					     gpio_irq_handler);
- 		return 0;
 -- 
 2.20.1
 
