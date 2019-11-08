@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778B7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB557FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAC820656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39BF20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240668;
-	bh=M0UVkOePj3ikgvXAQdawSoh93xuLi/O59UXpH5Hrb50=;
+	s=default; t=1573240672;
+	bh=NA73Es+Vh1SNvAo9n3AQ+edo/B49eTQ+YGnu4Ow7niA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RxlFEEzMv+RcIIeAIftLu+ZKDwZe2bijFtoavgOSM+K06Mw+BMfOxQYlzsehmr08F
-	 09kX/L0Gh/tJXvMFBCC2BO7WAeQ49ZOWb0PUl+HtcMK8cKCizf6Bdp5DpaQnFTwtOR
-	 cLmDFHRpYKtpCTdoh+nzR1/LZ/AETohLiO3ugY90=
+	b=Nvn7myN0VdElOq4A9+EcX2vemKWu+E/htkQFvp+tM9HbO9yy+VG4Z2JmP/BTES2Zm
+	 +aIwV3TjYZ/sPADOsaZavvyMEJ/mg4jH7A6KfA2KE4jO0ftGsG1dgmJVcrnPsu6CLN
+	 xcmnrKD+Ry+Op70bXWzYdeGweNyJTWm2E5chE87U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389925AbfKHTAq (ORCPT
+        id S2389893AbfKHTAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57620 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732993AbfKHTAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:34 -0500
+        id S2389666AbfKHTAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB9DB20865;
-        Fri,  8 Nov 2019 19:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30E8D2087E;
+        Fri,  8 Nov 2019 19:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239624;
-        bh=M0UVkOePj3ikgvXAQdawSoh93xuLi/O59UXpH5Hrb50=;
+        s=default; t=1573239615;
+        bh=NA73Es+Vh1SNvAo9n3AQ+edo/B49eTQ+YGnu4Ow7niA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zkjx3b/StpOx4vb9pjpKh5OP+i1Stu6oeXilZ4StT82NSGKmlmeSqSG0Q38V1WbGy
-         X1huhNk/WHp8g9sN0yMUXTgukGPK+ggdDVncRJ//8R7kF62WMJ0Lw5Y+7RebK2K08V
-         IdSi5acIoQT8m2n/vQ6Lgy7Hopf89K/tg+GZNUwA=
+        b=DOIGb3h3ruDFXmT0A6bwkvidt5FsBZFzKM0xOq9rlqbKzBkwhKHIywBoRj5pEVJr/
+         yQWKCfMoT4igjpYrpns+4CKT+yGGsBRLXC9CjiUGUAF2abNMGHd3Espz/uLULTiHA8
+         Nmwmo9DBNEH3LiUMgM/cxhlpHME3QUziwL87dW6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sandipan Das <sandipan@linux.ibm.com>
-Subject: [PATCH 4.14 59/62] powerpc/book3s64/radix: Rename CPU_FTR_P9_TLBIE_BUG feature flag
-Date:   Fri,  8 Nov 2019 19:50:47 +0100
-Message-Id: <20191108174801.381317731@linuxfoundation.org>
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 56/62] iio: adc: stm32-adc: fix a race when using several adcs with dma and irq
+Date:   Fri,  8 Nov 2019 19:50:44 +0100
+Message-Id: <20191108174759.481533674@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -61,114 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 upstream.
+commit dcb10920179ab74caf88a6f2afadecfc2743b910 upstream.
 
-Rename the #define to indicate this is related to store vs tlbie
-ordering issue. In the next patch, we will be adding another feature
-flag that is used to handles ERAT flush vs tlbie ordering issue.
+End of conversion may be handled by using IRQ or DMA. There may be a
+race when two conversions complete at the same time on several ADCs.
+EOC can be read as 'set' for several ADCs, with:
+- an ADC configured to use IRQs. EOCIE bit is set. The handler is normally
+  called in this case.
+- an ADC configured to use DMA. EOCIE bit isn't set. EOC triggers the DMA
+  request instead. It's then automatically cleared by DMA read. But the
+  handler gets called due to status bit is temporarily set (IRQ triggered
+  by the other ADC).
+So both EOC status bit in CSR and EOCIE control bit must be checked
+before invoking the interrupt handler (e.g. call ISR only for
+IRQ-enabled ADCs).
 
-Cc: stable@vger.kernel.org # v4.14
-Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
-[sandipan: Backported to v4.14]
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/cputable.h    |    4 ++--
- arch/powerpc/kernel/dt_cpu_ftrs.c      |    6 +++---
- arch/powerpc/kvm/book3s_64_mmu_radix.c |    2 +-
- arch/powerpc/kvm/book3s_hv_rm_mmu.c    |    2 +-
- arch/powerpc/mm/hash_native_64.c       |    2 +-
- arch/powerpc/mm/tlb-radix.c            |    2 +-
- 6 files changed, 9 insertions(+), 9 deletions(-)
 
---- a/arch/powerpc/include/asm/cputable.h
-+++ b/arch/powerpc/include/asm/cputable.h
-@@ -215,7 +215,7 @@ enum {
- #define CPU_FTR_DAWR			LONG_ASM_CONST(0x0400000000000000)
- #define CPU_FTR_DABRX			LONG_ASM_CONST(0x0800000000000000)
- #define CPU_FTR_PMAO_BUG		LONG_ASM_CONST(0x1000000000000000)
--#define CPU_FTR_P9_TLBIE_BUG		LONG_ASM_CONST(0x2000000000000000)
-+#define CPU_FTR_P9_TLBIE_STQ_BUG	LONG_ASM_CONST(0x0000400000000000)
- #define CPU_FTR_POWER9_DD1		LONG_ASM_CONST(0x4000000000000000)
+
+---
+ drivers/iio/adc/stm32-adc-core.c |   43 ++++++++++++++++++++++++++++++++++++---
+ drivers/iio/adc/stm32-adc-core.h |    1 
+ 2 files changed, 41 insertions(+), 3 deletions(-)
+
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -45,12 +45,16 @@
+  * @eoc1:	adc1 end of conversion flag in @csr
+  * @eoc2:	adc2 end of conversion flag in @csr
+  * @eoc3:	adc3 end of conversion flag in @csr
++ * @ier:	interrupt enable register offset for each adc
++ * @eocie_msk:	end of conversion interrupt enable mask in @ier
+  */
+ struct stm32_adc_common_regs {
+ 	u32 csr;
+ 	u32 eoc1_msk;
+ 	u32 eoc2_msk;
+ 	u32 eoc3_msk;
++	u32 ier;
++	u32 eocie_msk;
+ };
  
- #ifndef __ASSEMBLY__
-@@ -477,7 +477,7 @@ enum {
- 	    CPU_FTR_CFAR | CPU_FTR_HVMODE | CPU_FTR_VMX_COPY | \
- 	    CPU_FTR_DBELL | CPU_FTR_HAS_PPR | CPU_FTR_DAWR | \
- 	    CPU_FTR_ARCH_207S | CPU_FTR_TM_COMP | CPU_FTR_ARCH_300 | \
--	    CPU_FTR_P9_TLBIE_BUG)
-+	    CPU_FTR_P9_TLBIE_STQ_BUG)
- #define CPU_FTRS_POWER9_DD1 ((CPU_FTRS_POWER9 | CPU_FTR_POWER9_DD1) & \
- 			     (~CPU_FTR_SAO))
- #define CPU_FTRS_CELL	(CPU_FTR_USE_TB | CPU_FTR_LWSYNC | \
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -747,14 +747,14 @@ static __init void update_tlbie_feature_
- 		if ((pvr & 0xe000) == 0) {
- 			/* Nimbus */
- 			if ((pvr & 0xfff) < 0x203)
--				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
- 		} else if ((pvr & 0xc000) == 0) {
- 			/* Cumulus */
- 			if ((pvr & 0xfff) < 0x103)
--				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
- 		} else {
- 			WARN_ONCE(1, "Unknown PVR");
--			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
- 		}
- 	}
- }
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -160,7 +160,7 @@ static void kvmppc_radix_tlbie_page(stru
- 	asm volatile("ptesync": : :"memory");
- 	asm volatile(PPC_TLBIE_5(%0, %1, 0, 0, 1)
- 		     : : "r" (addr), "r" (kvm->arch.lpid) : "memory");
--	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG))
-+	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG))
- 		asm volatile(PPC_TLBIE_5(%0, %1, 0, 0, 1)
- 			     : : "r" (addr), "r" (kvm->arch.lpid) : "memory");
- 	asm volatile("ptesync": : :"memory");
---- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-+++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-@@ -449,7 +449,7 @@ static void do_tlbies(struct kvm *kvm, u
- 				     "r" (rbvalues[i]), "r" (kvm->arch.lpid));
- 		}
+ struct stm32_adc_priv;
+@@ -244,6 +248,8 @@ static const struct stm32_adc_common_reg
+ 	.eoc1_msk = STM32F4_EOC1,
+ 	.eoc2_msk = STM32F4_EOC2,
+ 	.eoc3_msk = STM32F4_EOC3,
++	.ier = STM32F4_ADC_CR1,
++	.eocie_msk = STM32F4_EOCIE,
+ };
  
--		if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
-+		if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
- 			/*
- 			 * Need the extra ptesync to make sure we don't
- 			 * re-order the tlbie
---- a/arch/powerpc/mm/hash_native_64.c
-+++ b/arch/powerpc/mm/hash_native_64.c
-@@ -106,7 +106,7 @@ static inline unsigned long  ___tlbie(un
+ /* STM32H7 common registers definitions */
+@@ -251,8 +257,24 @@ static const struct stm32_adc_common_reg
+ 	.csr = STM32H7_ADC_CSR,
+ 	.eoc1_msk = STM32H7_EOC_MST,
+ 	.eoc2_msk = STM32H7_EOC_SLV,
++	.ier = STM32H7_ADC_IER,
++	.eocie_msk = STM32H7_EOCIE,
+ };
  
- static inline void fixup_tlbie(unsigned long vpn, int psize, int apsize, int ssize)
++static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
++	0, STM32_ADC_OFFSET, STM32_ADC_OFFSET * 2,
++};
++
++static unsigned int stm32_adc_eoc_enabled(struct stm32_adc_priv *priv,
++					  unsigned int adc)
++{
++	u32 ier, offset = stm32_adc_offset[adc];
++
++	ier = readl_relaxed(priv->common.base + offset + priv->cfg->regs->ier);
++
++	return ier & priv->cfg->regs->eocie_msk;
++}
++
+ /* ADC common interrupt for all instances */
+ static void stm32_adc_irq_handler(struct irq_desc *desc)
  {
--	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
-+	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
- 		/* Need the extra ptesync to ensure we don't reorder tlbie*/
- 		asm volatile("ptesync": : :"memory");
- 		___tlbie(vpn, psize, apsize, ssize);
---- a/arch/powerpc/mm/tlb-radix.c
-+++ b/arch/powerpc/mm/tlb-radix.c
-@@ -44,7 +44,7 @@ static inline void fixup_tlbie(void)
- 	unsigned long pid = 0;
- 	unsigned long va = ((1UL << 52) - 1);
+@@ -263,13 +285,28 @@ static void stm32_adc_irq_handler(struct
+ 	chained_irq_enter(chip, desc);
+ 	status = readl_relaxed(priv->common.base + priv->cfg->regs->csr);
  
--	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
-+	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
- 		asm volatile("ptesync": : :"memory");
- 		__tlbie_va(va, pid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
- 	}
+-	if (status & priv->cfg->regs->eoc1_msk)
++	/*
++	 * End of conversion may be handled by using IRQ or DMA. There may be a
++	 * race here when two conversions complete at the same time on several
++	 * ADCs. EOC may be read 'set' for several ADCs, with:
++	 * - an ADC configured to use DMA (EOC triggers the DMA request, and
++	 *   is then automatically cleared by DR read in hardware)
++	 * - an ADC configured to use IRQs (EOCIE bit is set. The handler must
++	 *   be called in this case)
++	 * So both EOC status bit in CSR and EOCIE control bit must be checked
++	 * before invoking the interrupt handler (e.g. call ISR only for
++	 * IRQ-enabled ADCs).
++	 */
++	if (status & priv->cfg->regs->eoc1_msk &&
++	    stm32_adc_eoc_enabled(priv, 0))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 0));
+ 
+-	if (status & priv->cfg->regs->eoc2_msk)
++	if (status & priv->cfg->regs->eoc2_msk &&
++	    stm32_adc_eoc_enabled(priv, 1))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 1));
+ 
+-	if (status & priv->cfg->regs->eoc3_msk)
++	if (status & priv->cfg->regs->eoc3_msk &&
++	    stm32_adc_eoc_enabled(priv, 2))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 2));
+ 
+ 	chained_irq_exit(chip, desc);
+--- a/drivers/iio/adc/stm32-adc-core.h
++++ b/drivers/iio/adc/stm32-adc-core.h
+@@ -37,6 +37,7 @@
+  * --------------------------------------------------------
+  */
+ #define STM32_ADC_MAX_ADCS		3
++#define STM32_ADC_OFFSET		0x100
+ #define STM32_ADCX_COMN_OFFSET		0x300
+ 
+ /* STM32F4 - Registers for each ADC instance */
 
 
