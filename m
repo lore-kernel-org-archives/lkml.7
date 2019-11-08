@@ -2,128 +2,128 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11848FC6199
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD4CFC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C9320674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0AB20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbfKHUiA (ORCPT
+        id S1732423AbfKHUiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:38:00 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:60679 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHUh7 (ORCPT
+        Fri, 8 Nov 2019 15:38:04 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53628 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726349AbfKHUiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:37:59 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M9Evp-1iWjmN29CR-006RBe; Fri, 08 Nov 2019 21:37:48 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        sparclinux@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-input@vger.kernel.org
-Subject: [PATCH 8/8] Input: input_event: fix struct padding on sparc64
-Date:   Fri,  8 Nov 2019 21:34:31 +0100
-Message-Id: <20191108203435.112759-9-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191108203435.112759-1-arnd@arndb.de>
-References: <20191108203435.112759-1-arnd@arndb.de>
+        Fri, 8 Nov 2019 15:38:01 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8KXPHA137890;
+        Fri, 8 Nov 2019 15:37:45 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w5c3yppjr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 15:37:45 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xA8KXeYo139026;
+        Fri, 8 Nov 2019 15:37:44 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w5c3yppj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 15:37:44 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA8KTvBB014679;
+        Fri, 8 Nov 2019 20:37:43 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 2w41ukaka9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 20:37:43 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8Kbgb140436058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 20:37:43 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8809AC05F;
+        Fri,  8 Nov 2019 20:37:42 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D1E43AC05E;
+        Fri,  8 Nov 2019 20:37:41 +0000 (GMT)
+Received: from [9.41.103.158] (unknown [9.41.103.158])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 20:37:41 +0000 (GMT)
+Subject: Re: [PATCH v3] media: aspeed-video: Fix memory leaks in
+ aspeed_video_probe
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        jae.hyun.yoo@linux.intel.com
+Cc:     linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
+        kjlu@umn.edu, openbmc@lists.ozlabs.org,
+        Eddie James <eajames@linux.ibm.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        emamd001@umn.edu, smccaman@umn.edu,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <da959329-aa40-b6e7-dcc9-48183a8da716@linux.intel.com>
+ <20191028171838.28533-1-navid.emamdoost@gmail.com>
+From:   Eddie James <eajames@linux.vnet.ibm.com>
+Message-ID: <6de50e1a-cb05-8d81-d043-00ed25eda845@linux.vnet.ibm.com>
+Date:   Fri, 8 Nov 2019 14:37:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:u6kVp9UKD+j5V6nf6JiBnsKaa0LcdKVi2XG79PhwgluwxaPn537
- JqX1+w4EzLmlGXpLjxX9AvVL+FsYlf7H6657Eapb17jd5kmqUqyaJHFBxnMPnUd4juxe6KT
- gRpRzLHS22sv0vGG9873r88aFqFY8GB1dGUaJUbh67CrdY3MMA9TlE3CGVC1wvOspK+YRBE
- tWERzIcvD8mD0C9zkhlRQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QoQHUljkwik=:jlY4L3FT8f0wD8u1XiFw7Z
- h3+AyZXRuq5c8ebfbAH/dp8y2Q5jMb+GbbhsPaEA2a7MPF1PF/N8JuK+q2AFFRuQJcHecE6M2
- wyIrgZ4fyGSpTREXcdY8PDWuk/NtBKzZuKkXyHreMWKYQub8/FI5mePtE7aORk/e14hj/mB2O
- ERwQFQyraRgE7aYwcH5d4B5CZX+k89/xrvFv2kNZc5Z5PmRNkIN/dfMDxpD9aNji++3uKGg5K
- AgkohYYZmv9XNXkwL4dC3iSCaEca5btoxk2/9tcBUUVMJRhDwgL0bAJpyaGLxrp9+H3ktoABj
- aUtYxzpSgzDnIhxNLyYgM00SIurLlTKQ2fzkQaOvqxXIi4CAcyLH1rfiJPGo+GCK3zdNV0Qbk
- 1tWSII8WsC8sUNoRFhra6Om83Cthg66/7Lsnsvg7fKe3SlHkJpiJBzCxl3eSI/6XAkKG9OWWc
- owcuBuy3UuodiSTwazfxz3NQMGzvnKY+wGFVxuEYPPkJ6JHrVYCd+5k4SnScsgSHJmg3p/yzv
- mApihJBs6/Xj8PCPN688hICGCI4M/ldYU4qdniL17PGVFqVE6QB7E1cu1mOVvvgYUsudeZtcg
- b9b0JX0eKZAb1NfjT445ZS3XzyifaRdVy4gi/coV2v9AHQP8DkYepKymu7sYuKjOSP7D/Z9/v
- f5+XK1Qa4rLaE+NmzvrJxEItcA6IKiB814x53Xq2UjTXCL767wY+LuxXdNdewEwAcjaf+9AqF
- 4iTvqs2QG0ugID76PJtSFqafr2c+sFqAflhL5Rc1RDkBWSQEUKPY3LJtUvVXP/CWSb0K3R14B
- Z3HQVxs+9OTO5jfMMLic3qWm8pn596v8xSot4nX0YnaO5nZSRxY4d0rIjcHMmLjGXxEqFG4m9
- uUXYlF7efhWsZ7UEubSA==
+In-Reply-To: <20191028171838.28533-1-navid.emamdoost@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Going through all uses of timeval, I noticed that we screwed up
-input_event in the previous attempts to fix it:
 
-The time fields now match between kernel and user space, but
-all following fields are in the wrong place.
+On 10/28/19 12:18 PM, Navid Emamdoost wrote:
+> In the implementation of aspeed_video_probe() the allocated memory for
+> video should be released if either devm_ioremap_resource()
+> or aspeed_video_init() or aspeed_video_setup_video() fails. Replace
+> kzalloc() with devm_kzalloc to avoid explicit release for video.
 
-Add the required padding that is implied by the glibc timeval
-definition to fix the layout, and add explicit initialization
-to avoid leaking kernel stack data.
 
-Cc: sparclinux@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: stable@vger.kernel.org
-Fixes: 141e5dcaa735 ("Input: input_event - fix the CONFIG_SPARC64 mixup")
-Fixes: 2e746942ebac ("Input: input_event - provide override for sparc64")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/input/evdev.c       | 3 +++
- drivers/input/misc/uinput.c | 3 +++
- include/uapi/linux/input.h  | 1 +
- 3 files changed, 7 insertions(+)
+Thanks,
 
-diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-index d7dd6fcf2db0..24a90793caf0 100644
---- a/drivers/input/evdev.c
-+++ b/drivers/input/evdev.c
-@@ -228,6 +228,9 @@ static void __pass_event(struct evdev_client *client,
- 						event->input_event_sec;
- 		client->buffer[client->tail].input_event_usec =
- 						event->input_event_usec;
-+#ifdef CONFIG_SPARC64
-+		client->buffer[client->tail].__pad = 0;
-+#endif
- 		client->buffer[client->tail].type = EV_SYN;
- 		client->buffer[client->tail].code = SYN_DROPPED;
- 		client->buffer[client->tail].value = 0;
-diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index 84051f20b18a..1d8c09e9fd47 100644
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -80,6 +80,9 @@ static int uinput_dev_event(struct input_dev *dev,
- 	ktime_get_ts64(&ts);
- 	udev->buff[udev->head].input_event_sec = ts.tv_sec;
- 	udev->buff[udev->head].input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
-+#ifdef CONFIG_SPARC64
-+	udev->buff[udev->head].__pad = 0;
-+#endif
- 	udev->head = (udev->head + 1) % UINPUT_BUFFER_SIZE;
- 
- 	wake_up_interruptible(&udev->waitq);
-diff --git a/include/uapi/linux/input.h b/include/uapi/linux/input.h
-index f056b2a00d5c..9a61c28ed3ae 100644
---- a/include/uapi/linux/input.h
-+++ b/include/uapi/linux/input.h
-@@ -34,6 +34,7 @@ struct input_event {
- 	__kernel_ulong_t __sec;
- #if defined(__sparc__) && defined(__arch64__)
- 	unsigned int __usec;
-+	unsigned int __pad;
- #else
- 	__kernel_ulong_t __usec;
- #endif
--- 
-2.20.0
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
 
+
+>
+> Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+> Changes in v3:
+> 	-- fix call to devm_kzalloc()
+> ---
+>   drivers/media/platform/aspeed-video.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+> index eb12f3793062..70797b41447c 100644
+> --- a/drivers/media/platform/aspeed-video.c
+> +++ b/drivers/media/platform/aspeed-video.c
+> @@ -1646,7 +1646,8 @@ static int aspeed_video_probe(struct platform_device *pdev)
+>   {
+>   	int rc;
+>   	struct resource *res;
+> -	struct aspeed_video *video = kzalloc(sizeof(*video), GFP_KERNEL);
+> +	struct aspeed_video *video =
+> +		devm_kzalloc(&pdev->dev, sizeof(*video), GFP_KERNEL);
+>   
+>   	if (!video)
+>   		return -ENOMEM;
