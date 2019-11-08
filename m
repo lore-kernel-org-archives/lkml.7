@@ -2,96 +2,100 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A111FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CBA206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:43:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEgXKDDO"
+	by mail.kernel.org (Postfix) with ESMTP id 79D67206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKHQnm (ORCPT
+        id S1727390AbfKHQoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:43:42 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41432 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfKHQnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:43:41 -0500
-Received: by mail-lf1-f67.google.com with SMTP id j14so4937655lfb.8;
-        Fri, 08 Nov 2019 08:43:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QQ9Okkt9tA9DcQ4nFpYeZ1WKHytWDSMkKTvTbeicM/E=;
-        b=WEgXKDDOlyqloOBhHSSpkydfNPJ03NP3InerMKtkGE7BGl9rgKG8ashzNF8/l1+yR0
-         H+IjxkCoWYJ1owLsaRCBPRQ6hocLxEmE0HkcSwMEwASexM4/dl5VKSLC0FZikE6TqJkq
-         svoSmD3NDUTcsq92uGofM9gTB8MIJeVhmNYzxeUdGf3kIl3ARzSZAMf3QX0GfY1Hww/3
-         09/PeZbkYQaefV5xpmNtyw/Kve4potPWEOl0cXRK2pZaXYLTZ2Il1aTPS3LdK1MWuGVU
-         LUcX3LcWpM+dk7dDV0X0pPfn8rZGUcgCDd7YfwqFmaGq663F7E3gT1oxUjG3XEF3FCH8
-         5Uug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QQ9Okkt9tA9DcQ4nFpYeZ1WKHytWDSMkKTvTbeicM/E=;
-        b=WNA3oWU5ZfJN5TcchMj/PjtBAES2VMAcnzTn67NeNbWMKunB8UbPPirmIDiR2Cgpty
-         A58CAtnLygszhDkBOyCDF48gjZCWnxy1JG4E9E9YdcaI/qsFlnwKYc5Lz8TWu2UaLDSo
-         +lrruAQJ/N3FgAffAyBBKT+9ivuptlZ8EEYeL6Yy/jY6uw8Vs6zwOc6NEZXVSacTHNrE
-         oVM0Psgf3TwgqfWnYtal2WfZ93m7gP1Sk9EDoKJ/nE+aUAwk9RuaID8+GtVRt6t1RZtg
-         l/k1aKPUyJj4B5vLSQ+ArNE59sxrExRfyNY5dCUaRbUSubxtmbuKRvFud8QH9EB40w8F
-         6x5w==
-X-Gm-Message-State: APjAAAVNIoc2DGWRoQPVAlj9DOS8/dv4phZiKSTw7ZHj9ZZhG7zR374o
-        vhjPDc8hWpNWmWXnj1GHKzO4eQRyWAs=
-X-Google-Smtp-Source: APXvYqyPGYgKX6sIBRZoLrk6RVsabIfXRiR0Rz/knooZTmYPnbXuSAVw6N4BvTqOogMFWgVCslX7rw==
-X-Received: by 2002:ac2:4248:: with SMTP id m8mr7247338lfl.94.1573231419472;
-        Fri, 08 Nov 2019 08:43:39 -0800 (PST)
-Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id a81sm3616844ljf.49.2019.11.08.08.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 08:43:38 -0800 (PST)
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
-        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
-        Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v4 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
-Date:   Fri,  8 Nov 2019 18:43:17 +0200
-Message-Id: <20191108164317.2874-1-leonmaxx@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 8 Nov 2019 11:44:30 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2078 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727149AbfKHQo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:44:29 -0500
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 41E724EA76087BF488D6;
+        Fri,  8 Nov 2019 16:44:27 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 8 Nov 2019 16:44:26 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 8 Nov 2019
+ 16:44:26 +0000
+Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
+ explicitly non-modular"
+From:   John Garry <john.garry@huawei.com>
+To:     Will Deacon <will@kernel.org>, <iommu@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191108151608.20932-1-will@kernel.org>
+ <20191108151608.20932-7-will@kernel.org>
+ <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
+Message-ID: <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
+Date:   Fri, 8 Nov 2019 16:44:25 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 08/11/2019 16:17, John Garry wrote:
+> On 08/11/2019 15:16, Will Deacon wrote:
+>> +MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+> 
+> Hi Will,
+> 
+>>   static struct platform_driver arm_smmu_driver = {
+>>       .driver    = {
+>>           .name        = "arm-smmu-v3",
+>>           .of_match_table    = of_match_ptr(arm_smmu_of_match),
+>> -        .suppress_bind_attrs = true,
+> 
+> Does this mean that we can now manually unbind this driver from the SMMU 
+> device?
+> 
+> Seems dangerous. Here's what happens for me:
+> 
+> root@ubuntu:/sys# cd ./bus/platform/drivers/arm-smmu-v3
+> ind @ubuntu:/sys/bus/platform/drivers/arm-smmu-v3# echo 
+> arm-smmu-v3.0.auto > unbind
+> [   77.580351] hisi_sas_v2_hw HISI0162:01: CQE_AXI_W_ERR (0x800) found!
+> ho [   78.635473] platform arm-smmu-v3.0.auto: CMD_SYNC timeout at 
+> 0x00000146 [hwprod 0x00000146, hwcons 0x00000000]
+> 
+>>       },
+>>       .probe    = arm_smmu_device_probe,
+>> +    .remove    = arm_smmu_device_remove,
+>>       .shutdown = arm_smmu_device_shutdown,
+>>   };
+>> -builtin_platform_driver(arm_smmu_driver);
+>> +module_platform_driver(arm_smmu_driver);
+>> +
 
-this patch series adds support of ASUS TUF laptops on Ryzen CPUs to
-existing asus_wmi platform driver and also fixes minor bug.
+BTW, it now looks like it was your v1 series I was testing there, on 
+your branch iommu/module. It would be helpful to update for ease of testing.
 
-v2: fixed indentation.
-v3: patches 2/3 and 3/3 are refactored.
-v4: patch 2/3 are simplified.
-
-Leonid Maksymchuk (3):
-  asus_wmi: Fix return value of fan_boost_mode_store
-  asus_wmi: Support fan boost mode on FX505DY/FX705DY
-  asus_wmi: Set default fan boost mode to normal
-
- drivers/platform/x86/asus-wmi.c            | 41 +++++++++++++++++-----
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 34 insertions(+), 8 deletions(-)
-
--- 
-2.23.0
+Thanks,
+John
 
