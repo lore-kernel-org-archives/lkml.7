@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5F8FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0012FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740AF20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A814C20650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240427;
-	bh=IpiSE2O0Qb0OJ2zh6eh0U9SBp/2HJbtPHFeAUgw+Whc=;
+	s=default; t=1573240446;
+	bh=iha3b15r24zaUNZ4xERM8q/9md4soFmz8jACeueBba8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C20igWWR1XLD3s/PA0+L0QPVopToHlTQxYc/tlZf9cTjBBPwGRCi8LiJR7nuObZVk
-	 yKTnHZe8uvAXsfN8BBBG+Cnz3xwiQ6lfGk+/27QsgTh8/s4QxW/BEQt4dBKFMitUM/
-	 0D9TmP3Sv8nyqFLJOA2wXRCh01M3axgyyltWsDbc=
+	b=QIegg5+fEho5dWlbwsxlQnvmaUC5oRWO7K5KhbfYGGWTVBZdUL0bL3nMvjROPtyTR
+	 /q/zO3/ycUBuQEYX9su0IBDI5HzDIrSccXLxnYAfFqE0+p+Jv3qwQQo2oLbejEY5tK
+	 /BoCR4NeJfU2NVYYO2J0BXyGodsgfMGLFnj5/rbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388375AbfKHTNp (ORCPT
+        id S2389329AbfKHTOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:13:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:14:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731795AbfKHTHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:13 -0500
+        id S2391316AbfKHTGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:06:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43E0A2087E;
-        Fri,  8 Nov 2019 19:07:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB6E22500;
+        Fri,  8 Nov 2019 18:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240031;
-        bh=IpiSE2O0Qb0OJ2zh6eh0U9SBp/2HJbtPHFeAUgw+Whc=;
+        s=default; t=1573239560;
+        bh=iha3b15r24zaUNZ4xERM8q/9md4soFmz8jACeueBba8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wNiJPyjytdMadfwE6GyNmou/itSDkx9F9x6Wj4Nfv8tALy87GiG5hiW9A28Pis4pB
-         /ScnY9/q9LKdVc85FyIZkCUwDdj4cAwtl4FnK3d5iHv3whsiIBc5ajGJDCo6Q+Rb3W
-         OSs8VAxlBtTtQ0ofeui5HjGzBfvvL6lQh5YL5LOQ=
+        b=2C+Ccl/WUDfkBmJezDFSO45YygFuHT6Jp7d7X3674krupUZWXnecOvAmIuZEZbTlX
+         wNRS0th4iU3TkJvLbqBoD+jZLuzBBc8xO3s1V3b2IRNXNq/nBTKrlvpkUBhcSr9HMJ
+         IM7bzNjUb+gFrmca0cWhvOxoTioC9tTcSedg3YUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 028/140] pinctrl: stmfx: fix null pointer on remove
-Date:   Fri,  8 Nov 2019 19:49:16 +0100
-Message-Id: <20191108174905.323786238@linuxfoundation.org>
+Subject: [PATCH 4.14 09/62] scsi: scsi_dh_alua: handle RTPG sense code correctly during state transitions
+Date:   Fri,  8 Nov 2019 19:49:57 +0100
+Message-Id: <20191108174728.953055636@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
-References: <20191108174900.189064908@linuxfoundation.org>
+In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
+References: <20191108174719.228826381@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Hannes Reinecke <hare@suse.com>
 
-[ Upstream commit 2fd215b8fdbe4d3a609adbe3a323696393cb1e53 ]
+[ Upstream commit b6ce6fb121a655aefe41dccc077141c102145a37 ]
 
-dev_get_platdata(&pdev->dev) returns a pointer on struct stmfx_pinctrl,
-not on struct stmfx (platform_set_drvdata(pdev, pctl); in probe).
-Pointer on struct stmfx is stored in driver data of pdev parent (in probe:
-struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);).
+Some arrays are not capable of returning RTPG data during state
+transitioning, but rather return an 'LUN not accessible, asymmetric access
+state transition' sense code. In these cases we can set the state to
+'transitioning' directly and don't need to evaluate the RTPG data (which we
+won't have anyway).
 
-Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Link: https://lore.kernel.org/r/20191004122342.22018-1-amelie.delaunay@st.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191007135701.32389-1-hare@suse.de
+Reviewed-by: Laurence Oberman <loberman@redhat.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-stmfx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/device_handler/scsi_dh_alua.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index 31b6e511670fc..b7c7f24699c96 100644
---- a/drivers/pinctrl/pinctrl-stmfx.c
-+++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -697,7 +697,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
+index 41f5f64101630..135376ee2cbf0 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -523,6 +523,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
+ 	unsigned int tpg_desc_tbl_off;
+ 	unsigned char orig_transition_tmo;
+ 	unsigned long flags;
++	bool transitioning_sense = false;
  
- static int stmfx_pinctrl_remove(struct platform_device *pdev)
- {
--	struct stmfx *stmfx = dev_get_platdata(&pdev->dev);
-+	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
+ 	if (!pg->expiry) {
+ 		unsigned long transition_tmo = ALUA_FAILOVER_TIMEOUT * HZ;
+@@ -567,13 +568,19 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
+ 			goto retry;
+ 		}
+ 		/*
+-		 * Retry on ALUA state transition or if any
+-		 * UNIT ATTENTION occurred.
++		 * If the array returns with 'ALUA state transition'
++		 * sense code here it cannot return RTPG data during
++		 * transition. So set the state to 'transitioning' directly.
+ 		 */
+ 		if (sense_hdr.sense_key == NOT_READY &&
+-		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
+-			err = SCSI_DH_RETRY;
+-		else if (sense_hdr.sense_key == UNIT_ATTENTION)
++		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a) {
++			transitioning_sense = true;
++			goto skip_rtpg;
++		}
++		/*
++		 * Retry on any other UNIT ATTENTION occurred.
++		 */
++		if (sense_hdr.sense_key == UNIT_ATTENTION)
+ 			err = SCSI_DH_RETRY;
+ 		if (err == SCSI_DH_RETRY &&
+ 		    pg->expiry != 0 && time_before(jiffies, pg->expiry)) {
+@@ -661,7 +668,11 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
+ 		off = 8 + (desc[7] * 4);
+ 	}
  
- 	return stmfx_function_disable(stmfx,
- 				      STMFX_FUNC_GPIO |
++ skip_rtpg:
+ 	spin_lock_irqsave(&pg->lock, flags);
++	if (transitioning_sense)
++		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
++
+ 	sdev_printk(KERN_INFO, sdev,
+ 		    "%s: port group %02x state %c %s supports %c%c%c%c%c%c%c\n",
+ 		    ALUA_DH_NAME, pg->group_id, print_alua_state(pg->state),
 -- 
 2.20.1
 
