@@ -2,53 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6ADFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7758FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C0C20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B41120674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240677;
-	bh=2qkLcwpEbkvyB56eMwEwhqmMpsgXBqVREUPQsPDFVac=;
+	s=default; t=1573240680;
+	bh=HN37Y8k9TjCmVjpYCPPC/KIF+TDcr7oL/MRjDh6vyT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bwlHoKRTcn4RrghsWX2KiXs2wPUr+KsfmI1f8uV1V6rIdQu+wyrHcKV5N9cKF9hKj
-	 Qa238JQQUrkeW4Nq3Rc+8T0/0gWPjdaaCYWvZDW2vJfF9WcJdAuhxxDBJnRRe6+J77
-	 a1jANMEqWS5hXcpAah7vTvcYbFOvisZQ3ea/N3JU=
+	b=D3cDJIVj4xDFugbsIARX4InG/lKcaixCKZp4rqeUNNkQq/Ipq9VjAxkAqdYKZriFq
+	 eyJwFaKT1B7Z3eP9sfNN/0r8iWZ1Gf+EvdIrRdx4kVnf3kaJtYOm9F4xGNFWWWN/+D
+	 pxTJXbMRQjEE4Ngob0F1BJHOXTMLIoYyAjjxopjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389840AbfKHTAk (ORCPT
+        id S2389813AbfKHTAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389663AbfKHTAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:19 -0500
+        id S2389602AbfKHTAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F0EC22459;
-        Fri,  8 Nov 2019 18:57:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 723B622492;
+        Fri,  8 Nov 2019 18:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239473;
-        bh=2qkLcwpEbkvyB56eMwEwhqmMpsgXBqVREUPQsPDFVac=;
+        s=default; t=1573239516;
+        bh=HN37Y8k9TjCmVjpYCPPC/KIF+TDcr7oL/MRjDh6vyT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oFs9lfsVSNvA7Ln6GdiQspbwamKI8iRPSiS4cKPndoUsozFZgpXWaVHzdNYXKpQ16
-         FYDUdCvutjiCKlhl4rs9+LZ3kfbcNl4GybD+6NNH1w/x0UHdzYPkmXTucH3JrwycEa
-         wOYVUPgaRjcMe2+QSF5XV6eJuOP4ZJZC7mT3Hzrs=
+        b=FiI8u7A6irWYeOxXPKsALugE1BwAi8RxgdDoIlU0n5F8FHOYBztITdpBLhtjkF+TA
+         TWuivtTAV8+Po0EjYMfuJokd3JmUyKx3mv4xZ4YC7SSEXqjx85Z95mStjZDGHk35q+
+         49zN8jJXHXVNDhZmCO+b96WeOaEJMp7NGgRGJ9UM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/62] ARM: 8926/1: v7m: remove register save to stack before svc
-Date:   Fri,  8 Nov 2019 19:50:05 +0100
-Message-Id: <20191108174734.215367434@linuxfoundation.org>
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 31/62] net/mlx4_core: Dynamically set guaranteed amount of counters per VF
+Date:   Fri,  8 Nov 2019 19:50:19 +0100
+Message-Id: <20191108174743.346086695@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -61,63 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: afzal mohammed <afzal.mohd.ma@gmail.com>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-[ Upstream commit 2ecb287998a47cc0a766f6071f63bc185f338540 ]
+[ Upstream commit e19868efea0c103f23b4b7e986fd0a703822111f ]
 
-r0-r3 & r12 registers are saved & restored, before & after svc
-respectively. Intention was to preserve those registers across thread to
-handler mode switch.
+Prior to this patch, the amount of counters guaranteed per VF in the
+resource tracker was MLX4_VF_COUNTERS_PER_PORT * MLX4_MAX_PORTS. It was
+set regardless if the VF was single or dual port.
+This caused several VFs to have no guaranteed counters although the
+system could satisfy their request.
 
-On v7-M, hardware saves the register context upon exception in AAPCS
-complaint way. Restoring r0-r3 & r12 is done from stack location where
-hardware saves it, not from the location on stack where these registers
-were saved.
+The fix is to dynamically guarantee counters, based on each VF
+specification.
 
-To clarify, on stm32f429 discovery board:
-
-1. before svc, sp - 0x90009ff8
-2. r0-r3,r12 saved to 0x90009ff8 - 0x9000a00b
-3. upon svc, h/w decrements sp by 32 & pushes registers onto stack
-4. after svc,  sp - 0x90009fd8
-5. r0-r3,r12 restored from 0x90009fd8 - 0x90009feb
-
-Above means r0-r3,r12 is not restored from the location where they are
-saved, but since hardware pushes the registers onto stack, the registers
-are restored correctly.
-
-Note that during register saving to stack (step 2), it goes past
-0x9000a000. And it seems, based on objdump, there are global symbols
-residing there, and it perhaps can cause issues on a non-XIP Kernel
-(on XIP, data section is setup later).
-
-Based on the analysis above, manually saving registers onto stack is at
-best no-op and at worst can cause data section corruption. Hence remove
-storing of registers onto stack before svc.
-
-Fixes: b70cd406d7fe ("ARM: 8671/1: V7M: Preserve registers across switch from Thread to Handler mode")
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Acked-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9de92c60beaa ("net/mlx4_core: Adjust counter grant policy in the resource tracker")
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mm/proc-v7m.S | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |   42 +++++++++++-------
+ 1 file changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
-index 92e84181933ad..c68408d51c4bc 100644
---- a/arch/arm/mm/proc-v7m.S
-+++ b/arch/arm/mm/proc-v7m.S
-@@ -135,7 +135,6 @@ __v7m_setup_cont:
- 	dsb
- 	mov	r6, lr			@ save LR
- 	ldr	sp, =init_thread_union + THREAD_START_SP
--	stmia	sp, {r0-r3, r12}
- 	cpsie	i
- 	svc	#0
- 1:	cpsid	i
--- 
-2.20.1
-
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -471,12 +471,31 @@ void mlx4_init_quotas(struct mlx4_dev *d
+ 		priv->mfunc.master.res_tracker.res_alloc[RES_MPT].quota[pf];
+ }
+ 
+-static int get_max_gauranteed_vfs_counter(struct mlx4_dev *dev)
++static int
++mlx4_calc_res_counter_guaranteed(struct mlx4_dev *dev,
++				 struct resource_allocator *res_alloc,
++				 int vf)
+ {
+-	/* reduce the sink counter */
+-	return (dev->caps.max_counters - 1 -
+-		(MLX4_PF_COUNTERS_PER_PORT * MLX4_MAX_PORTS))
+-		/ MLX4_MAX_PORTS;
++	struct mlx4_active_ports actv_ports;
++	int ports, counters_guaranteed;
++
++	/* For master, only allocate according to the number of phys ports */
++	if (vf == mlx4_master_func_num(dev))
++		return MLX4_PF_COUNTERS_PER_PORT * dev->caps.num_ports;
++
++	/* calculate real number of ports for the VF */
++	actv_ports = mlx4_get_active_ports(dev, vf);
++	ports = bitmap_weight(actv_ports.ports, dev->caps.num_ports);
++	counters_guaranteed = ports * MLX4_VF_COUNTERS_PER_PORT;
++
++	/* If we do not have enough counters for this VF, do not
++	 * allocate any for it. '-1' to reduce the sink counter.
++	 */
++	if ((res_alloc->res_reserved + counters_guaranteed) >
++	    (dev->caps.max_counters - 1))
++		return 0;
++
++	return counters_guaranteed;
+ }
+ 
+ int mlx4_init_resource_tracker(struct mlx4_dev *dev)
+@@ -484,7 +503,6 @@ int mlx4_init_resource_tracker(struct ml
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	int i, j;
+ 	int t;
+-	int max_vfs_guarantee_counter = get_max_gauranteed_vfs_counter(dev);
+ 
+ 	priv->mfunc.master.res_tracker.slave_list =
+ 		kzalloc(dev->num_slaves * sizeof(struct slave_list),
+@@ -601,16 +619,8 @@ int mlx4_init_resource_tracker(struct ml
+ 				break;
+ 			case RES_COUNTER:
+ 				res_alloc->quota[t] = dev->caps.max_counters;
+-				if (t == mlx4_master_func_num(dev))
+-					res_alloc->guaranteed[t] =
+-						MLX4_PF_COUNTERS_PER_PORT *
+-						MLX4_MAX_PORTS;
+-				else if (t <= max_vfs_guarantee_counter)
+-					res_alloc->guaranteed[t] =
+-						MLX4_VF_COUNTERS_PER_PORT *
+-						MLX4_MAX_PORTS;
+-				else
+-					res_alloc->guaranteed[t] = 0;
++				res_alloc->guaranteed[t] =
++					mlx4_calc_res_counter_guaranteed(dev, res_alloc, t);
+ 				break;
+ 			default:
+ 				break;
 
 
