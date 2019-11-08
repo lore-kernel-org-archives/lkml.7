@@ -2,52 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21037FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0A2FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED38620674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B4920674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240929;
-	bh=qtBG9KGoVwj4vVLmTJ8RrLge0p0xuVRCHL1ui7zx5Ag=;
+	s=default; t=1573240934;
+	bh=dbEl2i4Bhjq6++/eGx0bw/oOLJQWB8YBTk8w5f/dfbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNAXhURHIj0MVM+TnB/3mZH1WAifzK+bjfEfFmEohGo1Ck7a0FLkN88NGGVGR8ort
-	 j/SiXaA8Mte0FTooKwhFofMEfqPIDwwtC5ZNjO09bGdXM5MktB7z0EyhaPb+hWKtv9
-	 r/2etggj6LIbeXfTihYZ8QaQA+ELcSqrbeEom4iA=
+	b=wMg7aqPVz93qWvrhz41txHDGdNYOM/mpSBQ3rbK8/qL0dtFWDNEAG0qv8+Zex9W4w
+	 B32FBm5l79BMfZbhV53mLg6Sddf3LBAaHxY0bxeWAyiUmmoILn1ZMpnzLrVELd3F/3
+	 14Q8u14/1e/Sf5ZyeAsXwdmubFPNo9g+BHd+Ija4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732525AbfKHTWH (ORCPT
+        id S2389832AbfKHTWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:22:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54572 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:22:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732708AbfKHS4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:52 -0500
+        id S1731772AbfKHS4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC2FF21D7E;
-        Fri,  8 Nov 2019 18:56:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E0B921924;
+        Fri,  8 Nov 2019 18:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239412;
-        bh=qtBG9KGoVwj4vVLmTJ8RrLge0p0xuVRCHL1ui7zx5Ag=;
+        s=default; t=1573239403;
+        bh=dbEl2i4Bhjq6++/eGx0bw/oOLJQWB8YBTk8w5f/dfbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z44crNc0FEuugk6rlhoD0LdY96bFR6icsNsxL6wyJJoXXa3WxtBRozB5lR7ZFAcFR
-         skNwmLPqZi4r3+dYH+qzoKyHTJeTa1ra7iyE14irSDaIv+fXv/wmolnTO4Ac3gRm/q
-         uZmybqcFry5ztew2mYBh6mEUkZ5DS1F9xdvNj4i4=
+        b=Rugvsg/eU/uYLHomDJegmi4PPi8QgOHxmAWQUs2eapRIO3IarHPXbIsP9K2i28U/i
+         tKRz//zQwOZPn2uaEoKRkCXus3cG4/FPeq2lrvC21AbAHi9/H2WzI+CjDxbvIa5o44
+         URTakjmXn1m2WOAZl7CRd6F3nuAwMrN5vBMsWSHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 30/34] kbuild: use -fmacro-prefix-map to make __FILE__ a relative path
-Date:   Fri,  8 Nov 2019 19:50:37 +0100
-Message-Id: <20191108174652.792481163@linuxfoundation.org>
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 27/34] net/mlx4_core: Dynamically set guaranteed amount of counters per VF
+Date:   Fri,  8 Nov 2019 19:50:34 +0100
+Message-Id: <20191108174648.464103608@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
 References: <20191108174618.266472504@linuxfoundation.org>
@@ -60,55 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-[ Upstream commit a73619a845d5625079cc1b3b820f44c899618388 ]
+[ Upstream commit e19868efea0c103f23b4b7e986fd0a703822111f ]
 
-The __FILE__ macro is used everywhere in the kernel to locate the file
-printing the log message, such as WARN_ON(), etc.  If the kernel is
-built out of tree, this can be a long absolute path, like this:
+Prior to this patch, the amount of counters guaranteed per VF in the
+resource tracker was MLX4_VF_COUNTERS_PER_PORT * MLX4_MAX_PORTS. It was
+set regardless if the VF was single or dual port.
+This caused several VFs to have no guaranteed counters although the
+system could satisfy their request.
 
-  WARNING: CPU: 1 PID: 1 at /path/to/build/directory/arch/arm64/kernel/foo.c:...
+The fix is to dynamically guarantee counters, based on each VF
+specification.
 
-This is because Kbuild runs in the objtree instead of the srctree,
-then __FILE__ is expanded to a file path prefixed with $(srctree)/.
-
-Commit 9da0763bdd82 ("kbuild: Use relative path when building in a
-subdir of the source tree") improved this to some extent; $(srctree)
-becomes ".." if the objtree is a child of the srctree.
-
-For other cases of out-of-tree build, __FILE__ is still the absolute
-path.  It also means the kernel image depends on where it was built.
-
-A brand-new option from GCC, -fmacro-prefix-map, solves this problem.
-If your compiler supports it, __FILE__ is the relative path from the
-srctree regardless of O= option.  This provides more readable log and
-more reproducible builds.
-
-Please note __FILE__ is always an absolute path for external modules.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9de92c60beaa ("net/mlx4_core: Adjust counter grant policy in the resource tracker")
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |   42 +++++++++++-------
+ 1 file changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 19c7e30684077..62ce3766032c9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -837,6 +837,9 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
- # Require designated initializers for all marked structures
- KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -470,12 +470,31 @@ void mlx4_init_quotas(struct mlx4_dev *d
+ 		priv->mfunc.master.res_tracker.res_alloc[RES_MPT].quota[pf];
+ }
  
-+# change __FILE__ to the relative path from the srctree
-+KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+-static int get_max_gauranteed_vfs_counter(struct mlx4_dev *dev)
++static int
++mlx4_calc_res_counter_guaranteed(struct mlx4_dev *dev,
++				 struct resource_allocator *res_alloc,
++				 int vf)
+ {
+-	/* reduce the sink counter */
+-	return (dev->caps.max_counters - 1 -
+-		(MLX4_PF_COUNTERS_PER_PORT * MLX4_MAX_PORTS))
+-		/ MLX4_MAX_PORTS;
++	struct mlx4_active_ports actv_ports;
++	int ports, counters_guaranteed;
 +
- # use the deterministic mode of AR if available
- KBUILD_ARFLAGS := $(call ar-option,D)
++	/* For master, only allocate according to the number of phys ports */
++	if (vf == mlx4_master_func_num(dev))
++		return MLX4_PF_COUNTERS_PER_PORT * dev->caps.num_ports;
++
++	/* calculate real number of ports for the VF */
++	actv_ports = mlx4_get_active_ports(dev, vf);
++	ports = bitmap_weight(actv_ports.ports, dev->caps.num_ports);
++	counters_guaranteed = ports * MLX4_VF_COUNTERS_PER_PORT;
++
++	/* If we do not have enough counters for this VF, do not
++	 * allocate any for it. '-1' to reduce the sink counter.
++	 */
++	if ((res_alloc->res_reserved + counters_guaranteed) >
++	    (dev->caps.max_counters - 1))
++		return 0;
++
++	return counters_guaranteed;
+ }
  
--- 
-2.20.1
-
+ int mlx4_init_resource_tracker(struct mlx4_dev *dev)
+@@ -483,7 +502,6 @@ int mlx4_init_resource_tracker(struct ml
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	int i, j;
+ 	int t;
+-	int max_vfs_guarantee_counter = get_max_gauranteed_vfs_counter(dev);
+ 
+ 	priv->mfunc.master.res_tracker.slave_list =
+ 		kzalloc(dev->num_slaves * sizeof(struct slave_list),
+@@ -600,16 +618,8 @@ int mlx4_init_resource_tracker(struct ml
+ 				break;
+ 			case RES_COUNTER:
+ 				res_alloc->quota[t] = dev->caps.max_counters;
+-				if (t == mlx4_master_func_num(dev))
+-					res_alloc->guaranteed[t] =
+-						MLX4_PF_COUNTERS_PER_PORT *
+-						MLX4_MAX_PORTS;
+-				else if (t <= max_vfs_guarantee_counter)
+-					res_alloc->guaranteed[t] =
+-						MLX4_VF_COUNTERS_PER_PORT *
+-						MLX4_MAX_PORTS;
+-				else
+-					res_alloc->guaranteed[t] = 0;
++				res_alloc->guaranteed[t] =
++					mlx4_calc_res_counter_guaranteed(dev, res_alloc, t);
+ 				res_alloc->res_free -= res_alloc->guaranteed[t];
+ 				break;
+ 			default:
 
 
