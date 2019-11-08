@@ -2,127 +2,321 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8E3FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64045FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3302218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4401218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="fR/E8RyI"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="yi+pmxme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbfKHJml (ORCPT
+        id S1731068AbfKHJmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:42:41 -0500
-Received: from ozlabs.org ([203.11.71.1]:53119 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731436AbfKHJmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:42:39 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 478b0W3jgtz9sP6;
-        Fri,  8 Nov 2019 20:42:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573206156;
-        bh=HX/zf896+L+aLj5O52hjw0t0TJACu18gwzubsdQDKao=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=fR/E8RyIIV9SH5jJ24k4CkSnV7QgtDW3LJ+kkvk99VO/lnDNUOeEMuzs+17FqtD9s
-         f9aDOFogdkIoR66y2NBPqigmk+WXxeltzF0G18vpZNKTHgjj1tVXNfIl4qcwr49R+4
-         KjvsjjfYuOPp1jNkkvlHTM308O3ZfX5yO6V74oyTLvNWwFqPkL1vDIlRqjih0EXEeZ
-         /YnjCKOb7FacQDI7/ZRvygb/VyPh+EZRIvOhLR9gsJ9Jp8PPUWb//aUfqzafQDh4vo
-         roR1lEI0zAvgko5ZtaCyObtNxgeQDkeADjto2j3KY+ZDFRFBaBnwMwY+aVCteqyxZ1
-         JhwFXFnfFOOPw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Eric Richter <erichte@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: Re: [PATCH v7 4/4] powerpc: load firmware trusted keys/hashes into kernel keyring
-In-Reply-To: <20191107042205.13710-5-erichte@linux.ibm.com>
-References: <20191107042205.13710-1-erichte@linux.ibm.com> <20191107042205.13710-5-erichte@linux.ibm.com>
-Date:   Fri, 08 Nov 2019 20:42:26 +1100
-Message-ID: <87eeyi4scd.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 8 Nov 2019 04:42:52 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:33007 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730614AbfKHJmv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:42:51 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id xA89fkgW004821;
+        Fri, 8 Nov 2019 18:41:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xA89fkgW004821
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573206108;
+        bh=pA7NSeUpl2yjsp+KrqmtWgEBo9sOQ6mpwb761PWL7zY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yi+pmxmegUb1pvQZXgkrERxCGiaKeM6PbzDJPn/Ke8RblOEXWEAO97JTEzAzmfBbi
+         N60u7B9Zi7mlC1iqnUjmYwKZ1w0l7QpHwuhfLTnCFzaLlPjCxyM5q9uH6DUGQQwwyZ
+         bYQdD0ypUY8IAV8dUthSdETw0Uc1E1coUq61PA/uPFJnSLOj6N9xhxABxrneZ5hjF+
+         rxpOTDAYZwwiy4zokSacEZpBVbiIT5Sbn4WMv9/uyJKysgN4D2XM3pXbhbPBDK7SSr
+         ODRQrgAZB0Puo1Fk+5mK9jCmPbzG6lMjAQOZxjIJqSp69yHF3Cv795iD+3uf2Vb7rT
+         o5goSu4fxJb5g==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Abdiel Janulgue <abdiel.janulgue@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        Paulo Zanoni <paulo.r.zanoni@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        dri-devel@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/i915: make more headers self-contained
+Date:   Fri,  8 Nov 2019 18:41:42 +0900
+Message-Id: <20191108094142.25942-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Richter <erichte@linux.ibm.com> writes:
-> From: Nayna Jain <nayna@linux.ibm.com>
->
-> The keys used to verify the Host OS kernel are managed by firmware as
-> secure variables. This patch loads the verification keys into the .platform
-> keyring and revocation hashes into .blacklist keyring. This enables
-> verification and loading of the kernels signed by the boot time keys which
-> are trusted by firmware.
->
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: Eric Richter <erichte@linux.ibm.com>
-> ---
->  arch/powerpc/Kconfig                          |  1 +
->  security/integrity/Kconfig                    |  8 ++
->  security/integrity/Makefile                   |  4 +-
->  .../integrity/platform_certs/load_powerpc.c   | 98 +++++++++++++++++++
->  4 files changed, 110 insertions(+), 1 deletion(-)
->  create mode 100644 security/integrity/platform_certs/load_powerpc.c
->
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index cabc091f3fe1..498967a5ef4e 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -939,6 +939,7 @@ config PPC_SECURE_BOOT
->  	bool
->  	depends on PPC_POWERNV
->  	depends on IMA_ARCH_POLICY
-> +	select LOAD_PPC_KEYS
+The headers in the gem/selftests/, gt/selftests, gvt/, selftests/
+directories have never been compile-tested, but it would be possible
+to make them self-contained.
 
-This gave me a warning:
+This commit only addresses missing <linux/types.h> and forward
+struct declarations.
 
-WARNING: unmet direct dependencies detected for LOAD_PPC_KEYS
-  Depends on [n]: INTEGRITY [=y] && INTEGRITY_PLATFORM_KEYRING [=n] && PPC_SECURE_BOOT [=y]
-  Selected by [y]:
-  - PPC_SECURE_BOOT [=y] && PPC_POWERNV [=y] && IMA_ARCH_POLICY [=y]
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-I think you should probably just drop the select ..
+Rebase on git://anongit.freedesktop.org/drm-tip
 
-> diff --git a/security/integrity/Kconfig b/security/integrity/Kconfig
-> index 0bae6adb63a9..26abee23e4e3 100644
-> --- a/security/integrity/Kconfig
-> +++ b/security/integrity/Kconfig
-> @@ -72,6 +72,14 @@ config LOAD_IPL_KEYS
->         depends on S390
->         def_bool y
->  
-> +config LOAD_PPC_KEYS
-> +	bool "Enable loading of platform and blacklisted keys for POWER"
-> +	depends on INTEGRITY_PLATFORM_KEYRING
-> +	depends on PPC_SECURE_BOOT
-> +	help
-> +	  Enable loading of keys to the .platform keyring and blacklisted
-> +	  hashes to the .blacklist keyring for powerpc based platforms.
 
-And instead make this default y, if you think it should be enabled by
-default when its prerequisites are met.
+ drivers/gpu/drm/i915/gem/selftests/mock_context.h | 3 +++
+ drivers/gpu/drm/i915/gt/selftests/mock_timeline.h | 2 ++
+ drivers/gpu/drm/i915/gvt/cmd_parser.h             | 4 ++++
+ drivers/gpu/drm/i915/gvt/display.h                | 5 +++++
+ drivers/gpu/drm/i915/gvt/edid.h                   | 4 ++++
+ drivers/gpu/drm/i915/gvt/execlist.h               | 2 ++
+ drivers/gpu/drm/i915/gvt/fb_decoder.h             | 2 ++
+ drivers/gpu/drm/i915/gvt/hypercall.h              | 4 ++++
+ drivers/gpu/drm/i915/gvt/interrupt.h              | 3 +++
+ drivers/gpu/drm/i915/gvt/mmio.h                   | 2 ++
+ drivers/gpu/drm/i915/gvt/page_track.h             | 3 +++
+ drivers/gpu/drm/i915/gvt/sched_policy.h           | 3 +++
+ drivers/gpu/drm/i915/selftests/mock_gtt.h         | 3 +++
+ drivers/gpu/drm/i915/selftests/mock_region.h      | 5 +++++
+ drivers/gpu/drm/i915/selftests/mock_uncore.h      | 3 +++
+ 15 files changed, 48 insertions(+)
 
-cheers
+diff --git a/drivers/gpu/drm/i915/gem/selftests/mock_context.h b/drivers/gpu/drm/i915/gem/selftests/mock_context.h
+index 0b926653914f..45de09ec28d1 100644
+--- a/drivers/gpu/drm/i915/gem/selftests/mock_context.h
++++ b/drivers/gpu/drm/i915/gem/selftests/mock_context.h
+@@ -7,6 +7,9 @@
+ #ifndef __MOCK_CONTEXT_H
+ #define __MOCK_CONTEXT_H
+ 
++struct drm_file;
++struct drm_i915_private;
++
+ void mock_init_contexts(struct drm_i915_private *i915);
+ 
+ struct i915_gem_context *
+diff --git a/drivers/gpu/drm/i915/gt/selftests/mock_timeline.h b/drivers/gpu/drm/i915/gt/selftests/mock_timeline.h
+index 689efc66c908..d2bcc3df6183 100644
+--- a/drivers/gpu/drm/i915/gt/selftests/mock_timeline.h
++++ b/drivers/gpu/drm/i915/gt/selftests/mock_timeline.h
+@@ -7,6 +7,8 @@
+ #ifndef __MOCK_TIMELINE__
+ #define __MOCK_TIMELINE__
+ 
++#include <linux/types.h>
++
+ struct intel_timeline;
+ 
+ void mock_timeline_init(struct intel_timeline *timeline, u64 context);
+diff --git a/drivers/gpu/drm/i915/gvt/cmd_parser.h b/drivers/gpu/drm/i915/gvt/cmd_parser.h
+index 286703643002..ab25d151932a 100644
+--- a/drivers/gpu/drm/i915/gvt/cmd_parser.h
++++ b/drivers/gpu/drm/i915/gvt/cmd_parser.h
+@@ -38,6 +38,10 @@
+ 
+ #define GVT_CMD_HASH_BITS 7
+ 
++struct intel_gvt;
++struct intel_shadow_wa_ctx;
++struct intel_vgpu_workload;
++
+ void intel_gvt_clean_cmd_parser(struct intel_gvt *gvt);
+ 
+ int intel_gvt_init_cmd_parser(struct intel_gvt *gvt);
+diff --git a/drivers/gpu/drm/i915/gvt/display.h b/drivers/gpu/drm/i915/gvt/display.h
+index a87f33e6a23c..b59b34046e1e 100644
+--- a/drivers/gpu/drm/i915/gvt/display.h
++++ b/drivers/gpu/drm/i915/gvt/display.h
+@@ -35,6 +35,11 @@
+ #ifndef _GVT_DISPLAY_H_
+ #define _GVT_DISPLAY_H_
+ 
++#include <linux/types.h>
++
++struct intel_gvt;
++struct intel_vgpu;
++
+ #define SBI_REG_MAX	20
+ #define DPCD_SIZE	0x700
+ 
+diff --git a/drivers/gpu/drm/i915/gvt/edid.h b/drivers/gpu/drm/i915/gvt/edid.h
+index f6dfc8b795ec..dfe0cbc6aad8 100644
+--- a/drivers/gpu/drm/i915/gvt/edid.h
++++ b/drivers/gpu/drm/i915/gvt/edid.h
+@@ -35,6 +35,10 @@
+ #ifndef _GVT_EDID_H_
+ #define _GVT_EDID_H_
+ 
++#include <linux/types.h>
++
++struct intel_vgpu;
++
+ #define EDID_SIZE		128
+ #define EDID_ADDR		0x50 /* Linux hvm EDID addr */
+ 
+diff --git a/drivers/gpu/drm/i915/gvt/execlist.h b/drivers/gpu/drm/i915/gvt/execlist.h
+index 5ccc2c695848..5c0c1fd30c83 100644
+--- a/drivers/gpu/drm/i915/gvt/execlist.h
++++ b/drivers/gpu/drm/i915/gvt/execlist.h
+@@ -35,6 +35,8 @@
+ #ifndef _GVT_EXECLIST_H_
+ #define _GVT_EXECLIST_H_
+ 
++#include <linux/types.h>
++
+ struct execlist_ctx_descriptor_format {
+ 	union {
+ 		u32 ldw;
+diff --git a/drivers/gpu/drm/i915/gvt/fb_decoder.h b/drivers/gpu/drm/i915/gvt/fb_decoder.h
+index 60c155085029..67b6ede9e707 100644
+--- a/drivers/gpu/drm/i915/gvt/fb_decoder.h
++++ b/drivers/gpu/drm/i915/gvt/fb_decoder.h
+@@ -36,6 +36,8 @@
+ #ifndef _GVT_FB_DECODER_H_
+ #define _GVT_FB_DECODER_H_
+ 
++#include <linux/types.h>
++
+ #define _PLANE_CTL_FORMAT_SHIFT		24
+ #define _PLANE_CTL_TILED_SHIFT		10
+ #define _PIPE_V_SRCSZ_SHIFT		0
+diff --git a/drivers/gpu/drm/i915/gvt/hypercall.h b/drivers/gpu/drm/i915/gvt/hypercall.h
+index 4862fb12778e..9599c0a762b2 100644
+--- a/drivers/gpu/drm/i915/gvt/hypercall.h
++++ b/drivers/gpu/drm/i915/gvt/hypercall.h
+@@ -33,6 +33,10 @@
+ #ifndef _GVT_HYPERCALL_H_
+ #define _GVT_HYPERCALL_H_
+ 
++#include <linux/types.h>
++
++struct device;
++
+ enum hypervisor_type {
+ 	INTEL_GVT_HYPERVISOR_XEN = 0,
+ 	INTEL_GVT_HYPERVISOR_KVM,
+diff --git a/drivers/gpu/drm/i915/gvt/interrupt.h b/drivers/gpu/drm/i915/gvt/interrupt.h
+index 5313fb1b33e1..fcd663811d37 100644
+--- a/drivers/gpu/drm/i915/gvt/interrupt.h
++++ b/drivers/gpu/drm/i915/gvt/interrupt.h
+@@ -32,6 +32,8 @@
+ #ifndef _GVT_INTERRUPT_H_
+ #define _GVT_INTERRUPT_H_
+ 
++#include <linux/types.h>
++
+ enum intel_gvt_event_type {
+ 	RCS_MI_USER_INTERRUPT = 0,
+ 	RCS_DEBUG,
+@@ -135,6 +137,7 @@ enum intel_gvt_event_type {
+ 
+ struct intel_gvt_irq;
+ struct intel_gvt;
++struct intel_vgpu;
+ 
+ typedef void (*gvt_event_virt_handler_t)(struct intel_gvt_irq *irq,
+ 	enum intel_gvt_event_type event, struct intel_vgpu *vgpu);
+diff --git a/drivers/gpu/drm/i915/gvt/mmio.h b/drivers/gpu/drm/i915/gvt/mmio.h
+index 5874f1cb4306..2e68f4b02c94 100644
+--- a/drivers/gpu/drm/i915/gvt/mmio.h
++++ b/drivers/gpu/drm/i915/gvt/mmio.h
+@@ -36,6 +36,8 @@
+ #ifndef _GVT_MMIO_H_
+ #define _GVT_MMIO_H_
+ 
++#include <linux/types.h>
++
+ struct intel_gvt;
+ struct intel_vgpu;
+ 
+diff --git a/drivers/gpu/drm/i915/gvt/page_track.h b/drivers/gpu/drm/i915/gvt/page_track.h
+index fa607a71c3c0..f6eb7135583c 100644
+--- a/drivers/gpu/drm/i915/gvt/page_track.h
++++ b/drivers/gpu/drm/i915/gvt/page_track.h
+@@ -25,6 +25,9 @@
+ #ifndef _GVT_PAGE_TRACK_H_
+ #define _GVT_PAGE_TRACK_H_
+ 
++#include <linux/types.h>
++
++struct intel_vgpu;
+ struct intel_vgpu_page_track;
+ 
+ typedef int (*gvt_page_track_handler_t)(
+diff --git a/drivers/gpu/drm/i915/gvt/sched_policy.h b/drivers/gpu/drm/i915/gvt/sched_policy.h
+index 7b59e3e88b8b..3dacdad5f529 100644
+--- a/drivers/gpu/drm/i915/gvt/sched_policy.h
++++ b/drivers/gpu/drm/i915/gvt/sched_policy.h
+@@ -34,6 +34,9 @@
+ #ifndef __GVT_SCHED_POLICY__
+ #define __GVT_SCHED_POLICY__
+ 
++struct intel_gvt;
++struct intel_vgpu;
++
+ struct intel_gvt_sched_policy_ops {
+ 	int (*init)(struct intel_gvt *gvt);
+ 	void (*clean)(struct intel_gvt *gvt);
+diff --git a/drivers/gpu/drm/i915/selftests/mock_gtt.h b/drivers/gpu/drm/i915/selftests/mock_gtt.h
+index 3387393286de..e3f224f43beb 100644
+--- a/drivers/gpu/drm/i915/selftests/mock_gtt.h
++++ b/drivers/gpu/drm/i915/selftests/mock_gtt.h
+@@ -25,6 +25,9 @@
+ #ifndef __MOCK_GTT_H
+ #define __MOCK_GTT_H
+ 
++struct drm_i915_private;
++struct i915_ggtt;
++
+ void mock_init_ggtt(struct drm_i915_private *i915, struct i915_ggtt *ggtt);
+ void mock_fini_ggtt(struct i915_ggtt *ggtt);
+ 
+diff --git a/drivers/gpu/drm/i915/selftests/mock_region.h b/drivers/gpu/drm/i915/selftests/mock_region.h
+index 24608089d833..329bf74dfaca 100644
+--- a/drivers/gpu/drm/i915/selftests/mock_region.h
++++ b/drivers/gpu/drm/i915/selftests/mock_region.h
+@@ -6,6 +6,11 @@
+ #ifndef __MOCK_REGION_H
+ #define __MOCK_REGION_H
+ 
++#include <linux/types.h>
++
++struct drm_i915_private;
++struct intel_memory_region;
++
+ struct intel_memory_region *
+ mock_region_create(struct drm_i915_private *i915,
+ 		   resource_size_t start,
+diff --git a/drivers/gpu/drm/i915/selftests/mock_uncore.h b/drivers/gpu/drm/i915/selftests/mock_uncore.h
+index 8a2cc553f466..7acf1ef4d488 100644
+--- a/drivers/gpu/drm/i915/selftests/mock_uncore.h
++++ b/drivers/gpu/drm/i915/selftests/mock_uncore.h
+@@ -25,6 +25,9 @@
+ #ifndef __MOCK_UNCORE_H
+ #define __MOCK_UNCORE_H
+ 
++struct drm_i915_private;
++struct intel_uncore;
++
+ void mock_uncore_init(struct intel_uncore *uncore,
+ 		      struct drm_i915_private *i915);
+ 
+-- 
+2.17.1
+
