@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C117FFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A04FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93989206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619A020673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240092;
-	bh=OLuwf24e/31bhS3CECSY0LveJTZ4yHq+llR+jExCtEw=;
+	s=default; t=1573240098;
+	bh=s8a3PHtKvm5UcDZ/xqQFIvDL3A5gyQWQm3dc3/nTjMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rPrXqf5rR4uVPjXYXofhNB7rI87bbRcAGqgruZb9s1PaMk3bIJgVMpIOI55DbMrV
-	 T2tyNt6mgTUe60AKddOFNvL6//IS2drFBuK6f7grM75aio2sXn3v2H7y1xPAHusO1x
-	 MeAQnw2Yh0DBZYMWR/KV7h+TsmOTA9v8TScl1lMQ=
+	b=GCvqmHUVRPrqQhtVjay3GFveYluHZaRryP5mI8lIMPPuq2siij1puERE70pYk2hU/
+	 nIcFAWnlcSfXkyEKPJLK3VE0sj9rEERbAW00wE8SDNZO1PISM9uzCSAJmiAsbHL4Ce
+	 mnA946FkChtkE8sxnY/a7ZZ6BcfjNlV6RBxPoHkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391571AbfKHTIL (ORCPT
+        id S2391594AbfKHTIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:08:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391556AbfKHTII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:08 -0500
+        id S2388241AbfKHTIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:08:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B679920673;
-        Fri,  8 Nov 2019 19:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7078020673;
+        Fri,  8 Nov 2019 19:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240087;
-        bh=OLuwf24e/31bhS3CECSY0LveJTZ4yHq+llR+jExCtEw=;
+        s=default; t=1573240092;
+        bh=s8a3PHtKvm5UcDZ/xqQFIvDL3A5gyQWQm3dc3/nTjMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K170Vp86J+FGgCLNQldPSvbOa/A1IB1VBbNOMG1xv1R/ftpdqAoLVXkF/Uozqusvx
-         q5E5DIiGW4R7bbMeQKZgdH4pSp8i7aM+9WwUOeE9Yzh7MReTN100+Jf+qqVnIJsTJE
-         Pv7ew+hkI5E7ZJ/JYEAD5gnMkH2WDv7toYPsXIio=
+        b=I6wvqjJeadD22jgU8g69E75jenW0IORfcD2VA0lTCF8ATm+FkAzli+diGHdV1ZmhH
+         Gse0VhM2tVFzHzqK7zOYrXEGpBGm6W/kHcozf2MpirXtU6wFNj7PrK3MAT1TREMs0O
+         Kn5tGcDrw51IrQd33oQ6jetmyYDa6NeVp/pVx12w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Vijay Khemka <vijaykhemka@fb.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 085/140] net: annotate lockless accesses to sk->sk_napi_id
-Date:   Fri,  8 Nov 2019 19:50:13 +0100
-Message-Id: <20191108174910.455835258@linuxfoundation.org>
+Subject: [PATCH 5.3 087/140] net: ethernet: ftgmac100: Fix DMA coherency issue with SW checksum
+Date:   Fri,  8 Nov 2019 19:50:15 +0100
+Message-Id: <20191108174910.581446743@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,98 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit ee8d153d46a3b98c064ee15c0c0a3bbf1450e5a1 ]
+[ Upstream commit 88824e3bf29a2fcacfd9ebbfe03063649f0f3254 ]
 
-We already annotated most accesses to sk->sk_napi_id
+We are calling the checksum helper after the dma_map_single()
+call to map the packet. This is incorrect as the checksumming
+code will touch the packet from the CPU. This means the cache
+won't be properly flushes (or the bounce buffering will leave
+us with the unmodified packet to DMA).
 
-We missed sk_mark_napi_id() and sk_mark_napi_id_once()
-which might be called without socket lock held in UDP stack.
+This moves the calculation of the checksum & vlan tags to
+before the DMA mapping.
 
-KCSAN reported :
-BUG: KCSAN: data-race in udpv6_queue_rcv_one_skb / udpv6_queue_rcv_one_skb
+This also has the side effect of fixing another bug: If the
+checksum helper fails, we goto "drop" to drop the packet, which
+will not unmap the DMA mapping.
 
-write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 0:
- sk_mark_napi_id include/net/busy_poll.h:125 [inline]
- __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
- udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
- udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
- udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
- __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
- udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
- ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
- ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
- dst_input include/net/dst.h:442 [inline]
- ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
- __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
- __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
- process_backlog+0x1d3/0x420 net/core/dev.c:5955
- napi_poll net/core/dev.c:6392 [inline]
- net_rx_action+0x3ae/0xa90 net/core/dev.c:6460
-
-write to 0xffff888121c6d108 of 4 bytes by interrupt on cpu 1:
- sk_mark_napi_id include/net/busy_poll.h:125 [inline]
- __udpv6_queue_rcv_skb net/ipv6/udp.c:571 [inline]
- udpv6_queue_rcv_one_skb+0x70c/0xb40 net/ipv6/udp.c:672
- udpv6_queue_rcv_skb+0xb5/0x400 net/ipv6/udp.c:689
- udp6_unicast_rcv_skb.isra.0+0xd7/0x180 net/ipv6/udp.c:832
- __udp6_lib_rcv+0x69c/0x1770 net/ipv6/udp.c:913
- udpv6_rcv+0x2b/0x40 net/ipv6/udp.c:1015
- ip6_protocol_deliver_rcu+0x22a/0xbe0 net/ipv6/ip6_input.c:409
- ip6_input_finish+0x30/0x50 net/ipv6/ip6_input.c:450
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip6_input+0x177/0x190 net/ipv6/ip6_input.c:459
- dst_input include/net/dst.h:442 [inline]
- ip6_rcv_finish+0x110/0x140 net/ipv6/ip6_input.c:76
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ipv6_rcv+0x1a1/0x1b0 net/ipv6/ip6_input.c:284
- __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
- __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
- process_backlog+0x1d3/0x420 net/core/dev.c:5955
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 10890 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: e68b6e50fa35 ("udp: enable busy polling for all sockets")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Fixes: 05690d633f30 ("ftgmac100: Upgrade to NETIF_F_HW_CSUM")
+Reviewed-by: Vijay Khemka <vijaykhemka@fb.com>
+Tested-by: Vijay Khemka <vijaykhemka@fb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/busy_poll.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/faraday/ftgmac100.c |   25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
---- a/include/net/busy_poll.h
-+++ b/include/net/busy_poll.h
-@@ -122,7 +122,7 @@ static inline void skb_mark_napi_id(stru
- static inline void sk_mark_napi_id(struct sock *sk, const struct sk_buff *skb)
- {
- #ifdef CONFIG_NET_RX_BUSY_POLL
--	sk->sk_napi_id = skb->napi_id;
-+	WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
- #endif
- 	sk_rx_queue_set(sk, skb);
- }
-@@ -132,8 +132,8 @@ static inline void sk_mark_napi_id_once(
- 					const struct sk_buff *skb)
- {
- #ifdef CONFIG_NET_RX_BUSY_POLL
--	if (!sk->sk_napi_id)
--		sk->sk_napi_id = skb->napi_id;
-+	if (!READ_ONCE(sk->sk_napi_id))
-+		WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
- #endif
- }
+--- a/drivers/net/ethernet/faraday/ftgmac100.c
++++ b/drivers/net/ethernet/faraday/ftgmac100.c
+@@ -726,6 +726,18 @@ static netdev_tx_t ftgmac100_hard_start_
+ 	 */
+ 	nfrags = skb_shinfo(skb)->nr_frags;
  
++	/* Setup HW checksumming */
++	csum_vlan = 0;
++	if (skb->ip_summed == CHECKSUM_PARTIAL &&
++	    !ftgmac100_prep_tx_csum(skb, &csum_vlan))
++		goto drop;
++
++	/* Add VLAN tag */
++	if (skb_vlan_tag_present(skb)) {
++		csum_vlan |= FTGMAC100_TXDES1_INS_VLANTAG;
++		csum_vlan |= skb_vlan_tag_get(skb) & 0xffff;
++	}
++
+ 	/* Get header len */
+ 	len = skb_headlen(skb);
+ 
+@@ -752,19 +764,6 @@ static netdev_tx_t ftgmac100_hard_start_
+ 	if (nfrags == 0)
+ 		f_ctl_stat |= FTGMAC100_TXDES0_LTS;
+ 	txdes->txdes3 = cpu_to_le32(map);
+-
+-	/* Setup HW checksumming */
+-	csum_vlan = 0;
+-	if (skb->ip_summed == CHECKSUM_PARTIAL &&
+-	    !ftgmac100_prep_tx_csum(skb, &csum_vlan))
+-		goto drop;
+-
+-	/* Add VLAN tag */
+-	if (skb_vlan_tag_present(skb)) {
+-		csum_vlan |= FTGMAC100_TXDES1_INS_VLANTAG;
+-		csum_vlan |= skb_vlan_tag_get(skb) & 0xffff;
+-	}
+-
+ 	txdes->txdes1 = cpu_to_le32(csum_vlan);
+ 
+ 	/* Next descriptor */
 
 
