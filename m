@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B819EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C0DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852F020869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766A421848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214435;
-	bh=pJS58U8mwZIYJHL/49hU2S6Sd3AeaEcSOOkKJJyeS8U=;
+	s=default; t=1573214444;
+	bh=66ajkt9iM6MDmOPzzY+y7AnWo/Vg7+hhgie9nPB1eoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q0kVZ+FntVpT6M4gZfv1mAmxLZBIWilq4+llxO2vS5SfzyX3YMzil9nhyaO44xFwT
-	 pbHqcDzKEDoMJWNlryLlmZgLlxbug470tuBolAUMRlN7XspS16+hxr1GWRvzbYLXGO
-	 5HuTVKQ1YwH8atquUjC8rpAoK2dGTQCU6l6YeX3Q=
+	b=P9UG9hqW/RtLACWFScZM/MnG92ZlIb/9YMsdGsBGMEIsxkhozO00UoLpW+gztlaXJ
+	 YdPrT3DUQXr9flLsBj9COqaab0wjXTtPBehqMqSkw4TD6zY28iQfiiiVV+bWM3GIvY
+	 fY05Th1Ig6G9c++2fhao7ixsFuWLNQlQLo67F6BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391729AbfKHMAV (ORCPT
+        id S2390566AbfKHLns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:00:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58516 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:43:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390600AbfKHLnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:53 -0500
+        id S2390498AbfKHLnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:43:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3862245A;
-        Fri,  8 Nov 2019 11:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58B7222D1;
+        Fri,  8 Nov 2019 11:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213433;
-        bh=pJS58U8mwZIYJHL/49hU2S6Sd3AeaEcSOOkKJJyeS8U=;
+        s=default; t=1573213414;
+        bh=66ajkt9iM6MDmOPzzY+y7AnWo/Vg7+hhgie9nPB1eoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zoS8PnDIyQkDQSChD4uqKBRuLCizD7v8DZX7+Vq9otK8YfycL7risRhtRBiKTQUL4
-         i1GoFFGeQHCgHkbBm+H01nzpTSBJaubYfofDCPavsiPwBOgoWECm2X3GhuarOH4CkB
-         V6OAIo4GL/dY7ACuiafsgAyiiO3NGaZ0GYTWnpSY=
+        b=Hmj5zx5bGZKPJ7L4vczycPv80RtVsL+drE8g5srLX6HGeCq0BaYsriuSqmNao3L7Y
+         M0GZjmw8Bp5X6g8/FLFEXz7qA1wjYOG1S9+aET2PgUP1B2DgZXdwRa7By0gDvrEqPY
+         5c+MUOPT/i1R2kZ+u0tKBMvd49KeUTxhIcNVDrUQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel@ziswiler.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 031/103] ARM: dts: pxa: fix power i2c base address
-Date:   Fri,  8 Nov 2019 06:41:56 -0500
-Message-Id: <20191108114310.14363-31-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 017/103] gfs2: Don't set GFS2_RDF_UPTODATE when the lvb is updated
+Date:   Fri,  8 Nov 2019 06:41:42 -0500
+Message-Id: <20191108114310.14363-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,32 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel@ziswiler.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 8a1ecc01a473b75ab97be9b36f623e4551a6e9ae ]
+[ Upstream commit 4f36cb36c9d14340bb200d2ad9117b03ce992cfe ]
 
-There is one too many zeroes in the Power I2C base address. Fix this.
+The GFS2_RDF_UPTODATE flag in the rgrp is used to determine when
+a rgrp buffer is valid. It's cleared when the glock is invalidated,
+signifying that the buffer data is now invalid. But before this
+patch, function update_rgrp_lvb was setting the flag when it
+determined it had a valid lvb. But that's an invalid assumption:
+just because you have a valid lvb doesn't mean you have valid
+buffers. After all, another node may have made the lvb valid,
+and this node just fetched it from the glock via dlm.
 
-Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Consider this scenario:
+1. The file system is mounted with RGRPLVB option.
+2. In gfs2_inplace_reserve it locks the rgrp glock EX, but thanks
+   to GL_SKIP, it skips the gfs2_rgrp_bh_get.
+3. Since loops == 0 and the allocation target (ap->target) is
+   bigger than the largest known chunk of blocks in the rgrp
+   (rs->rs_rbm.rgd->rd_extfail_pt) it skips that rgrp and bypasses
+   the call to gfs2_rgrp_bh_get there as well.
+4. update_rgrp_lvb sees the lvb MAGIC number is valid, so bypasses
+   gfs2_rgrp_bh_get, but it still sets sets GFS2_RDF_UPTODATE due
+   to this invalid assumption.
+5. The next time update_rgrp_lvb is called, it sees the bit is set
+   and just returns 0, assuming both the lvb and rgrp are both
+   uptodate. But since this is a smaller allocation, or space has
+   been freed by another node, thus adjusting the lvb values,
+   it decides to use the rgrp for allocations, with invalid rd_free
+   due to the fact it was never updated.
+
+This patch changes update_rgrp_lvb so it doesn't set the UPTODATE
+flag anymore. That way, it has no choice but to fetch the latest
+values.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/pxa27x.dtsi | 2 +-
+ fs/gfs2/rgrp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 2ab6986433c82..3228ad5fb725f 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -71,7 +71,7 @@
- 			clocks = <&clks CLK_PWM1>;
- 		};
- 
--		pwri2c: i2c@40f000180 {
-+		pwri2c: i2c@40f00180 {
- 			compatible = "mrvl,pxa-i2c";
- 			reg = <0x40f00180 0x24>;
- 			interrupts = <6>;
+diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
+index b0eee90738ff4..0d72baae51509 100644
+--- a/fs/gfs2/rgrp.c
++++ b/fs/gfs2/rgrp.c
+@@ -1201,7 +1201,7 @@ static int update_rgrp_lvb(struct gfs2_rgrpd *rgd)
+ 	rl_flags = be32_to_cpu(rgd->rd_rgl->rl_flags);
+ 	rl_flags &= ~GFS2_RDF_MASK;
+ 	rgd->rd_flags &= GFS2_RDF_MASK;
+-	rgd->rd_flags |= (rl_flags | GFS2_RDF_UPTODATE | GFS2_RDF_CHECK);
++	rgd->rd_flags |= (rl_flags | GFS2_RDF_CHECK);
+ 	if (rgd->rd_rgl->rl_unlinked == 0)
+ 		rgd->rd_flags &= ~GFS2_RDF_CHECK;
+ 	rgd->rd_free = be32_to_cpu(rgd->rd_rgl->rl_free);
 -- 
 2.20.1
 
