@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB4FFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB614FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EC921D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24B6222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213354;
-	bh=ZcfI9Io9gL+K+leh9xNl/+x3gDLhi0YCH+sL9MOr5HY=;
+	s=default; t=1573213356;
+	bh=AnQeayZI8Q5t0IuDvtp0ycef/61y+WT5LaZc9K/UZ0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKIv5hQaf65Lccl3BLwNRX7bG0rGIuF/7rYhVA6HB3rTzsZX197jCHtLCRc1y8WvU
-	 JvID0yRNXhZSRXdpP9GuPHM3bE0DJpUH7HQ1Ieacb4N/46pI9ccwIc9Gtt8ZA4UwTi
-	 wkm496em3d6J95/AMqIr8rLAbnnJAUmVcA284dOU=
+	b=2XokavwcTmqlLewUlrGs+Y0DkCKrKaGvUIe+lySBerhjqXQVPYN7W6m23WqHqurdS
+	 /ssg2lRGK/ospzDKjkToWYzMpPIpNV42/cGhCG+y3l2hsfT/dnVmdGHHGZvWxQbnXI
+	 G+mfXQdiYDSFgJALmbpjmJG5qND7mKv0U4l20Qos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390035AbfKHLmd (ORCPT
+        id S2390049AbfKHLmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56320 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389945AbfKHLmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:24 -0500
+        id S2389903AbfKHLm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46E6F21D6C;
-        Fri,  8 Nov 2019 11:42:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD05D21D82;
+        Fri,  8 Nov 2019 11:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213344;
-        bh=ZcfI9Io9gL+K+leh9xNl/+x3gDLhi0YCH+sL9MOr5HY=;
+        s=default; t=1573213345;
+        bh=AnQeayZI8Q5t0IuDvtp0ycef/61y+WT5LaZc9K/UZ0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qqe/slqFj3cpUc/f4ycWtoPu9zSXOAFwrg4zOelWrsUytw7i+9LLVyKKC9hYXnFh6
-         rwiIileUgjIbLhV0eZfiaCrdFDWR/ond62warRAMubNNI+rTCWupgV0pVU4qrt1F4Y
-         PGwd4a820U6aGumvp6pA7k1Et6hheVgKdcyITtw4=
+        b=L91WHj27v+YdXfcHNqHSbxQwUhwO25RJELGFwUW91Ia73XGcr8Ky55X3w8hKVfm06
+         rC2Fu66Pthf2QGgDacPecxuhXsjEKFycadoCufx0SBpGyQzilBhs20v+1C8lO2XE1t
+         PQgZnZ76h/5ImLCAZa/DuSZA8uM/aRb6UfXWNZCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jon Mason <jonmason@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 180/205] ARM: dts: bcm: Fix SPI bus warnings
-Date:   Fri,  8 Nov 2019 06:37:27 -0500
-Message-Id: <20191108113752.12502-180-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        linux-aspeed@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 181/205] ARM: dts: aspeed: Fix I2C bus warnings
+Date:   Fri,  8 Nov 2019 06:37:28 -0500
+Message-Id: <20191108113752.12502-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -64,55 +62,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit ab0b47d2eff413d60b0a1fc0c1f87f87f0d7f375 ]
+[ Upstream commit 1426d40e11f730e0c0fd3700a7048082f87b0e6e ]
 
-dtc has new checks for SPI buses. Fix the warnings in node names.
+dtc has new checks for I2C buses. The ASpeed dts files have a node named
+'i2c' which causes a false positive warning. As the node is a 'simple-bus',
+correct the node name to be 'bus' to fix the warnings.
 
-arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dtb: Warning (spi_bus_bridge): /axi@18000000/qspi@27200: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/bcm958525er.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/bcm958525xmc.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/bcm958622hr.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/bcm958625hr.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/bcm988312hr.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
+arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-opp-romulus.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-ast2500-evb.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-opp-zaius.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
+arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
 
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: Jon Mason <jonmason@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-aspeed@lists.ozlabs.org
 Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-hr2.dtsi | 2 +-
- arch/arm/boot/dts/bcm-nsp.dtsi | 2 +-
+ arch/arm/boot/dts/aspeed-g4.dtsi | 2 +-
+ arch/arm/boot/dts/aspeed-g5.dtsi | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.dtsi
-index 3084a7c957339..e4d49731287f6 100644
---- a/arch/arm/boot/dts/bcm-hr2.dtsi
-+++ b/arch/arm/boot/dts/bcm-hr2.dtsi
-@@ -216,7 +216,7 @@
- 			reg = <0x33000 0x14>;
- 		};
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index b23a983f95a53..69f6b9d2e7e7d 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -350,7 +350,7 @@
+ 				status = "disabled";
+ 			};
  
--		qspi: qspi@27200 {
-+		qspi: spi@27200 {
- 			compatible = "brcm,spi-bcm-qspi", "brcm,spi-nsp-qspi";
- 			reg = <0x027200 0x184>,
- 			      <0x027000 0x124>,
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 09ba850463228..2b219addeb449 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -273,7 +273,7 @@
- 			brcm,nand-has-wp;
- 		};
+-			i2c: i2c@1e78a000 {
++			i2c: bus@1e78a000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 87fdc146ff525..d107459fc0f89 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -410,7 +410,7 @@
+ 				status = "disabled";
+ 			};
  
--		qspi: qspi@27200 {
-+		qspi: spi@27200 {
- 			compatible = "brcm,spi-bcm-qspi", "brcm,spi-nsp-qspi";
- 			reg = <0x027200 0x184>,
- 			      <0x027000 0x124>,
+-			i2c: i2c@1e78a000 {
++			i2c: bus@1e78a000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
 -- 
 2.20.1
 
