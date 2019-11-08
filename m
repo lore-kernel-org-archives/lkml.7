@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3FAC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14249C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267A421924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4D3222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213619;
-	bh=sFmxPLvoOWEfl00tsENoIxTweNEQt91iXnciTX2cmDE=;
+	s=default; t=1573213620;
+	bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FgVG5BXVCW3xP3e4Tsj2xisvklNBoFuKjPGapaqHtL6ICnFaCbfdbQuWeZraMNJR0
-	 BdL9DF/V2kNu8WMyuY2/jLLDDsRTH0np4j6rMOm7tza+OQOEHc8O8JDeMCjL3V2/Io
-	 eJS7m02xG6C2z6gUnX7VahVKOME6O4KiDWAJ+ybs=
+	b=15ZMe4kNpoqHDi6rpct4AVqE+Y7NoF2RpiFLWMSGdDxaWptUCO5AieNkjFtCx1uCa
+	 238yTbU98Oe7IFHw46SNDsWoRmZaNHjEjPneNo9XZ5b2W0nzwF1qDmK4e0AHm/05CJ
+	 u3Noy3Z6qifFqxxoxLGYMXdqqzbMwpyqT/p18ajs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403795AbfKHLq6 (ORCPT
+        id S2389853AbfKHLq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391404AbfKHLql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:41 -0500
+        id S1732820AbfKHLqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6685F22466;
-        Fri,  8 Nov 2019 11:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B0722475;
+        Fri,  8 Nov 2019 11:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213601;
-        bh=sFmxPLvoOWEfl00tsENoIxTweNEQt91iXnciTX2cmDE=;
+        s=default; t=1573213602;
+        bh=YWaFJwHRcxWDbhkR+hZxM1T/r643o/UQYp0ATZ5LpZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3HO6ieG/lQrpYLerhR7hr/CmzolNNz+Bn+stt7Jh4hCARSEIJQckzNYRs1knowQb
-         Ig5zEiXQkZe3+v7R2p0dnUBDQ6BqNLsr2SrkANOHDE42vE1YeT6kI0Rvsk8B+qyk0i
-         T25KXXaiYYYjSoNL2VXFEbUtHh0JC8L8uUXcpVCY=
+        b=WhzmiWKilTJKPKUVWJVwRGd89DeXKjvfIW8vIF9YWZyQVtGNIfzrplQamUqIiloNA
+         2vovBdgqSPB4Yj1nSsW/pVeK86+WamnneFhaUY0rNehsG3w8g2PXRB97MUalXUEBeq
+         ihXEJjFgBdz8MctL48RW6FaZBJSyn0/nAWKRO9W8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 40/64] f2fs: fix memory leak of percpu counter in fill_super()
-Date:   Fri,  8 Nov 2019 06:45:21 -0500
-Message-Id: <20191108114545.15351-40-sashal@kernel.org>
+Cc:     George Kennedy <george.kennedy@oracle.com>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Mark Kanda <mark.kanda@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 41/64] scsi: sym53c8xx: fix NULL pointer dereference panic in sym_int_sir()
+Date:   Fri,  8 Nov 2019 06:45:22 -0500
+Message-Id: <20191108114545.15351-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,39 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: George Kennedy <george.kennedy@oracle.com>
 
-[ Upstream commit 4a70e255449c9a13eed7a6eeecc85a1ea63cef76 ]
+[ Upstream commit 288315e95264b6355e26609e9dec5dc4563d4ab0 ]
 
-In fill_super -> init_percpu_info, we should destroy percpu counter
-in error path, otherwise memory allcoated for percpu counter will
-leak.
+sym_int_sir() in sym_hipd.c does not check the command pointer for NULL before
+using it in debug message prints.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Suggested-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Acked-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/sym53c8xx_2/sym_hipd.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 9eff18c1f3e46..e0ac676e0a35c 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1650,8 +1650,12 @@ static int init_percpu_info(struct f2fs_sb_info *sbi)
- 	if (err)
- 		return err;
- 
--	return percpu_counter_init(&sbi->total_valid_inode_count, 0,
-+	err = percpu_counter_init(&sbi->total_valid_inode_count, 0,
- 								GFP_KERNEL);
-+	if (err)
-+		percpu_counter_destroy(&sbi->alloc_valid_block_count);
-+
-+	return err;
+diff --git a/drivers/scsi/sym53c8xx_2/sym_hipd.c b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+index c6425e3df5a04..f1c7714377524 100644
+--- a/drivers/scsi/sym53c8xx_2/sym_hipd.c
++++ b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+@@ -4371,6 +4371,13 @@ static void sym_nego_rejected(struct sym_hcb *np, struct sym_tcb *tp, struct sym
+ 	OUTB(np, HS_PRT, HS_BUSY);
  }
  
++#define sym_printk(lvl, tp, cp, fmt, v...) do { \
++	if (cp)							\
++		scmd_printk(lvl, cp->cmd, fmt, ##v);		\
++	else							\
++		starget_printk(lvl, tp->starget, fmt, ##v);	\
++} while (0)
++
  /*
+  *  chip exception handler for programmed interrupts.
+  */
+@@ -4416,7 +4423,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  been selected with ATN.  We do not want to handle that.
+ 	 */
+ 	case SIR_SEL_ATN_NO_MSG_OUT:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG OUT phase after selection with ATN\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4424,7 +4431,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  having reselected the initiator.
+ 	 */
+ 	case SIR_RESEL_NO_MSG_IN:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG IN phase after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4432,7 +4439,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  an IDENTIFY.
+ 	 */
+ 	case SIR_RESEL_NO_IDENTIFY:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No IDENTIFY after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4461,7 +4468,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	case SIR_RESEL_ABORTED:
+ 		np->lastmsg = np->msgout[0];
+ 		np->msgout[0] = M_NOOP;
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 			"message %x sent on bad reselection\n", np->lastmsg);
+ 		goto out;
+ 	/*
 -- 
 2.20.1
 
