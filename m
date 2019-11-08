@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFDDFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6C9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7350820650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744DA207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214505;
-	bh=TH9xCLF2rAa8rVklfhnNV7Qx4tBI5zCAyNdwfNZCEoc=;
+	s=default; t=1573214515;
+	bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rh8k3QrGqyc5bXB+4zsTztljV8xh5w02juPSSKhv2NH7Khr4DiEkA/ZM9uxESI9rz
-	 ZDyHGj9QLB9WNbsJq84YfULtqEVTHGA039nX7FH0BKz08QzravF/54r7FYi0MDnJdh
-	 oX0rNmqQCiatkPrTidsUGzbEfxd9yO+TCPm0BFKg=
+	b=QP1WiQRlno5nC81NsUIrw/rXqLGwfvTCvtD4NaZhNDBG8tQH+JeMc6lOwolvGgCnJ
+	 shyuth1eVyUMCbEx0hdkXoHio4kADcrQCpPYDTD/hFtaWYAIoMu0ihYdZfS9JTVia8
+	 Yw3uvLk9xu4kYu9DxQ2mBSkHPJ0I0Znqd3q8tE+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391774AbfKHMBf (ORCPT
+        id S2391262AbfKHMBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:01:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:01:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbfKHLng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:36 -0500
+        id S1732829AbfKHLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:43:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC89F222CF;
-        Fri,  8 Nov 2019 11:43:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954B5222C6;
+        Fri,  8 Nov 2019 11:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213415;
-        bh=TH9xCLF2rAa8rVklfhnNV7Qx4tBI5zCAyNdwfNZCEoc=;
+        s=default; t=1573213411;
+        bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4DbY+5oj+SPzyQEAdChaw4+UerSDozNkPrFT++xIZUzo7Gx+d2zLHgloloxcO7M6
-         nQLUwB1G0P9VRNUqGF67ET6n6a3kTro/5svdaL+bsRGFhKgwpSH5AGJjMLDIjScyDX
-         uO0R5x5+nQww4D6xmCxrvWJNsDBQRZLKNEGh1js8=
+        b=e4jFu8uFp3ISRpOQJnkXG1elXD0E3MffG6MW506ji3QA+EfiTeP1HX1jyzjZgm0N0
+         iDw3zA7DpWDkmAum8R6JYHxiRAS8CFLRy43jvd4sHJxlbk1RkdygVRngxMuzsZNXIs
+         GyY1QDdUKBp++N/SBla4rKpASt9I1iNyiDircqmQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 018/103] ASoC: dpcm: Properly initialise hw->rate_max
-Date:   Fri,  8 Nov 2019 06:41:43 -0500
-Message-Id: <20191108114310.14363-18-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 014/103] ALSA: seq: Do error checks at creating system ports
+Date:   Fri,  8 Nov 2019 06:41:39 -0500
+Message-Id: <20191108114310.14363-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,40 +57,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit e33ffbd9cd39da09831ce62c11025d830bf78d9e ]
+[ Upstream commit b8e131542b47b81236ecf6768c923128e1f5db6e ]
 
-If the CPU DAI does not initialise rate_max, say if using
-using KNOT or CONTINUOUS, then the rate_max field will be
-initialised to 0. A value of zero in the rate_max field of
-the hardware runtime will cause the sound card to support no
-sample rates at all. Obviously this is not desired, just a
-different mechanism is being used to apply the constraints. As
-such update the setting of rate_max in dpcm_init_runtime_hw
-to be consistent with the non-DPCM cases and set rate_max to
-UINT_MAX if nothing is defined on the CPU DAI.
+snd_seq_system_client_init() doesn't check the errors returned from
+its port creations.  Let's do it properly and handle the error paths.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/seq_system.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 052b6294a4283..24047375c2fbb 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1578,7 +1578,7 @@ static void dpcm_init_runtime_hw(struct snd_pcm_runtime *runtime,
- 				 u64 formats)
+diff --git a/sound/core/seq/seq_system.c b/sound/core/seq/seq_system.c
+index 8ce1d0b40dce1..ce1f1e4727ab1 100644
+--- a/sound/core/seq/seq_system.c
++++ b/sound/core/seq/seq_system.c
+@@ -123,6 +123,7 @@ int __init snd_seq_system_client_init(void)
  {
- 	runtime->hw.rate_min = stream->rate_min;
--	runtime->hw.rate_max = stream->rate_max;
-+	runtime->hw.rate_max = min_not_zero(stream->rate_max, UINT_MAX);
- 	runtime->hw.channels_min = stream->channels_min;
- 	runtime->hw.channels_max = stream->channels_max;
- 	if (runtime->hw.formats)
+ 	struct snd_seq_port_callback pcallbacks;
+ 	struct snd_seq_port_info *port;
++	int err;
+ 
+ 	port = kzalloc(sizeof(*port), GFP_KERNEL);
+ 	if (!port)
+@@ -144,7 +145,10 @@ int __init snd_seq_system_client_init(void)
+ 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
+ 	port->addr.client = sysclient;
+ 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_TIMER;
+-	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
++	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
++					port);
++	if (err < 0)
++		goto error_port;
+ 
+ 	/* register announcement port */
+ 	strcpy(port->name, "Announce");
+@@ -154,16 +158,24 @@ int __init snd_seq_system_client_init(void)
+ 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
+ 	port->addr.client = sysclient;
+ 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_ANNOUNCE;
+-	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
++	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
++					port);
++	if (err < 0)
++		goto error_port;
+ 	announce_port = port->addr.port;
+ 
+ 	kfree(port);
+ 	return 0;
++
++ error_port:
++	snd_seq_system_client_done();
++	kfree(port);
++	return err;
+ }
+ 
+ 
+ /* unregister our internal client */
+-void __exit snd_seq_system_client_done(void)
++void snd_seq_system_client_done(void)
+ {
+ 	int oldsysclient = sysclient;
+ 
 -- 
 2.20.1
 
