@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45123C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F390CFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6BF21D82
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCC220673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240082;
-	bh=X9HWCaLCercJBd4XdeEGlmWRQSpVMAL5+BGZy2UtPmc=;
+	s=default; t=1573240085;
+	bh=TiYeicv7l4CuzfSl5b3+VRbhNejXlZPRy0xTOy+UU6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZKM9yoh6s5u6/TQCbA2xZn1xuyPOSZ2mAXpQe1CFmNEK9UCkUXnKTuEdCquABVE6Y
-	 es6eSfgz3l75Y/EMzq4gezqQ/Weg3hYDE4QqZYV6UJTNkZA4TNkYf2PExEm3Hc7zUU
-	 OmJPkrwUaD17/HI9g3lHBLkryzKZjSAAX0kFzZVU=
+	b=cw5luwlr2BIuewqQws1hUmSeWSRQUPsyqFykhDqQ33cUEHwMWCwUHAKClVTWm+4zK
+	 LUNj1cSsrQCcmyYc4r80FLxvskG7pk9GfvmoT66ig2+MvdT/ENxnX/sPJRxQ+Igu/b
+	 gO/m2j5RZLrDhiQZicimth2RHhnjtN9YnxVTDduI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391071AbfKHTH7 (ORCPT
+        id S2391552AbfKHTIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:07:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38844 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:08:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390608AbfKHTH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:58 -0500
+        id S1733173AbfKHTIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:08:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C251421D7B;
-        Fri,  8 Nov 2019 19:07:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E95FC2196F;
+        Fri,  8 Nov 2019 19:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240078;
-        bh=X9HWCaLCercJBd4XdeEGlmWRQSpVMAL5+BGZy2UtPmc=;
+        s=default; t=1573240081;
+        bh=TiYeicv7l4CuzfSl5b3+VRbhNejXlZPRy0xTOy+UU6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UczalmWLMLlcqTtDMTcPKBulaL0zwYE/c82BcaOHd0tPfOJfnzbmk0PFFl+Pkyne8
-         YBskxNHUWGJj0tvBn9/toOxIbVLfx1dHp+4XKrA+ooxIQnRkSmqoUadzQwdeHM2BHi
-         eO8FrPhhwC21nKxVW53K5NtbVVqpsHMBZGKo2eiY=
+        b=YJFlsKLB0OtvdiHjXNLxWRiXHxANi7ASlWKLCahRzgpCSIvIYX3h57KdXAZJN7vsg
+         Sxyobi5Fhc+pQj6rtS1h9HcLPne9+x/qpHGVmdZHAWweOknafP5TjGExA9n/3ef5SJ
+         4HBNOn6b526RVIzZuN3u82os+B2ntt1WgF6asVNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Thiemo Nagel <tnagel@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 082/140] erspan: fix the tun_info options_len check for erspan
-Date:   Fri,  8 Nov 2019 19:50:10 +0100
-Message-Id: <20191108174910.277000801@linuxfoundation.org>
+Subject: [PATCH 5.3 083/140] inet: stop leaking jiffies on the wire
+Date:   Fri,  8 Nov 2019 19:50:11 +0100
+Message-Id: <20191108174910.331746977@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -59,51 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 2eb8d6d2910cfe3dc67dc056f26f3dd9c63d47cd ]
+[ Upstream commit a904a0693c189691eeee64f6c6b188bd7dc244e9 ]
 
-The check for !md doens't really work for ip_tunnel_info_opts(info) which
-only does info + 1. Also to avoid out-of-bounds access on info, it should
-ensure options_len is not less than erspan_metadata in both erspan_xmit()
-and ip6erspan_tunnel_xmit().
+Historically linux tried to stick to RFC 791, 1122, 2003
+for IPv4 ID field generation.
 
-Fixes: 1a66a836da ("gre: add collect_md mode to ERSPAN tunnel")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+RFC 6864 made clear that no matter how hard we try,
+we can not ensure unicity of IP ID within maximum
+lifetime for all datagrams with a given source
+address/destination address/protocol tuple.
+
+Linux uses a per socket inet generator (inet_id), initialized
+at connection startup with a XOR of 'jiffies' and other
+fields that appear clear on the wire.
+
+Thiemo Nagel pointed that this strategy is a privacy
+concern as this provides 16 bits of entropy to fingerprint
+devices.
+
+Let's switch to a random starting point, this is just as
+good as far as RFC 6864 is concerned and does not leak
+anything critical.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Thiemo Nagel <tnagel@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_gre.c  |    4 ++--
- net/ipv6/ip6_gre.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/crypto/chelsio/chtls/chtls_cm.c |    2 +-
+ net/dccp/ipv4.c                         |    2 +-
+ net/ipv4/datagram.c                     |    2 +-
+ net/ipv4/tcp_ipv4.c                     |    4 ++--
+ net/sctp/socket.c                       |    2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -509,9 +509,9 @@ static void erspan_fb_xmit(struct sk_buf
- 	key = &tun_info->key;
- 	if (!(tun_info->key.tun_flags & TUNNEL_ERSPAN_OPT))
- 		goto err_free_skb;
--	md = ip_tunnel_info_opts(tun_info);
--	if (!md)
-+	if (tun_info->options_len < sizeof(*md))
- 		goto err_free_skb;
-+	md = ip_tunnel_info_opts(tun_info);
+--- a/drivers/crypto/chelsio/chtls/chtls_cm.c
++++ b/drivers/crypto/chelsio/chtls/chtls_cm.c
+@@ -1297,7 +1297,7 @@ static void make_established(struct sock
+ 	tp->write_seq = snd_isn;
+ 	tp->snd_nxt = snd_isn;
+ 	tp->snd_una = snd_isn;
+-	inet_sk(sk)->inet_id = tp->write_seq ^ jiffies;
++	inet_sk(sk)->inet_id = prandom_u32();
+ 	assign_rxopt(sk, opt);
  
- 	/* ERSPAN has fixed 8 byte GRE header */
- 	version = md->version;
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -980,9 +980,9 @@ static netdev_tx_t ip6erspan_tunnel_xmit
- 		dsfield = key->tos;
- 		if (!(tun_info->key.tun_flags & TUNNEL_ERSPAN_OPT))
- 			goto tx_err;
--		md = ip_tunnel_info_opts(tun_info);
--		if (!md)
-+		if (tun_info->options_len < sizeof(*md))
- 			goto tx_err;
-+		md = ip_tunnel_info_opts(tun_info);
+ 	if (tp->rcv_wnd > (RCV_BUFSIZ_M << 10))
+--- a/net/dccp/ipv4.c
++++ b/net/dccp/ipv4.c
+@@ -117,7 +117,7 @@ int dccp_v4_connect(struct sock *sk, str
+ 						    inet->inet_daddr,
+ 						    inet->inet_sport,
+ 						    inet->inet_dport);
+-	inet->inet_id = dp->dccps_iss ^ jiffies;
++	inet->inet_id = prandom_u32();
  
- 		tun_id = tunnel_id_to_key32(key->tun_id);
- 		if (md->version == 1) {
+ 	err = dccp_connect(sk);
+ 	rt = NULL;
+--- a/net/ipv4/datagram.c
++++ b/net/ipv4/datagram.c
+@@ -73,7 +73,7 @@ int __ip4_datagram_connect(struct sock *
+ 	reuseport_has_conns(sk, true);
+ 	sk->sk_state = TCP_ESTABLISHED;
+ 	sk_set_txhash(sk);
+-	inet->inet_id = jiffies;
++	inet->inet_id = prandom_u32();
+ 
+ 	sk_dst_set(sk, &rt->dst);
+ 	err = 0;
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -300,7 +300,7 @@ int tcp_v4_connect(struct sock *sk, stru
+ 						 inet->inet_daddr);
+ 	}
+ 
+-	inet->inet_id = tp->write_seq ^ jiffies;
++	inet->inet_id = prandom_u32();
+ 
+ 	if (tcp_fastopen_defer_connect(sk, &err))
+ 		return err;
+@@ -1443,7 +1443,7 @@ struct sock *tcp_v4_syn_recv_sock(const
+ 	inet_csk(newsk)->icsk_ext_hdr_len = 0;
+ 	if (inet_opt)
+ 		inet_csk(newsk)->icsk_ext_hdr_len = inet_opt->opt.optlen;
+-	newinet->inet_id = newtp->write_seq ^ jiffies;
++	newinet->inet_id = prandom_u32();
+ 
+ 	if (!dst) {
+ 		dst = inet_csk_route_child_sock(sk, newsk, req);
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -9159,7 +9159,7 @@ void sctp_copy_sock(struct sock *newsk,
+ 	newinet->inet_rcv_saddr = inet->inet_rcv_saddr;
+ 	newinet->inet_dport = htons(asoc->peer.port);
+ 	newinet->pmtudisc = inet->pmtudisc;
+-	newinet->inet_id = asoc->next_tsn ^ jiffies;
++	newinet->inet_id = prandom_u32();
+ 
+ 	newinet->uc_ttl = inet->uc_ttl;
+ 	newinet->mc_loop = 1;
 
 
