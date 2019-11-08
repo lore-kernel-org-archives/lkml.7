@@ -2,271 +2,100 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53DEFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7B0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA88121848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0696C21848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="S1QR/3aA"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VmUcEtSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfKHFw4 (ORCPT
+        id S1726725AbfKHF6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:52:56 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:26065 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfKHFw4 (ORCPT
+        Fri, 8 Nov 2019 00:58:41 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:38701 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfKHF6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:52:56 -0500
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id xA85qa6Z026064;
-        Fri, 8 Nov 2019 14:52:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xA85qa6Z026064
+        Fri, 8 Nov 2019 00:58:41 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xA85wEFE032227;
+        Fri, 8 Nov 2019 14:58:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xA85wEFE032227
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573192357;
-        bh=oze4vkDR6a97yj7MfBeCKtMK2B4lV6gmZ1gcgZSyTSQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S1QR/3aAJ/147DnqJVz4pn/qF0A8gdY8U6dCnOx5MVH4uDJ+02rlXmz71/XdokwOg
-         7Yvh1mNya368a2qaDkeYgMUD7uI147rX49wprZSH0Hlh1oPMfQfHxzUZJnPSaka9hl
-         22VCgMnM17vGtPVHte8ZSG1yPhc/v9Tv9j4HvyVw2pfs0P9N2lsJB2wc8gy2frHBVz
-         GnNRFfZDZrHVGuIk23QszDp6kVgnwENrOc5ZLrOq1uJ/xaqavVOfMYMLUHXHthMvLO
-         0K6fgy5dz34MQSaXneEL1ldUw3hviuVF2P7wo2YqHbz9NCM3gC1gduWSeH6cSEbayn
-         P2nW4BVxE2OFg==
-X-Nifty-SrcIP: [209.85.221.179]
-Received: by mail-vk1-f179.google.com with SMTP id k19so1198579vke.10;
-        Thu, 07 Nov 2019 21:52:37 -0800 (PST)
-X-Gm-Message-State: APjAAAV9IwORv9fCBopfT7N/pqgkZeWzCZxOZBK3fJaL4600tmG4YZz/
-        vNwdrC4KK3TXRz5soib71J6I35jMIfCopERgdrk=
-X-Google-Smtp-Source: APXvYqwf6UskW8myjS2ENLGPYKbSWm2w0jIBBGQF/LzsPjrT0NYXExunWV9HevU28FxQXvEH/5oIohboL5JXuewrYFE=
-X-Received: by 2002:a1f:18ca:: with SMTP id 193mr6058533vky.66.1573192355612;
- Thu, 07 Nov 2019 21:52:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20191030063855.9989-1-yamada.masahiro@socionext.com> <20191030063855.9989-3-yamada.masahiro@socionext.com>
-In-Reply-To: <20191030063855.9989-3-yamada.masahiro@socionext.com>
+        s=dec2015msa; t=1573192695;
+        bh=C6AGQ4ZhToMyLia08WQzoZyBptTxN4AsuUDH8eYeGzY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VmUcEtSzmV/7WNU5m3yOAxTSaW+TgijTWm5aldVprDa0ZcZDfeEBPkrwtWPef+cod
+         Cs/NEUrZMwqMXgOJivtnQK7MpJ9ZFSrtdE82Xm97UXzbkqI60xzoCbMaSKsC3gAgKl
+         rVlEwZ9P/VoDGHWlo/iA6Qo5rQtKUgf0357I4DsbDIVWbA6yCmrH5Ds/0RE6SByOrA
+         N4sVb1fYxUOdSmeS5m0vl7Yt41OkBjVBrxYGMISzoQ1AwEZTJ/1YO7XN9vqKINYPQo
+         5dIOGLjmJ3Ta6T2dwTXjFVrEfM8fugSCl2MjsehIi781Xv/8UyzvcPbK4ZK/jDQ007
+         2uEwhYkWLzh+g==
+X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 8 Nov 2019 14:51:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR3Runh-eLQ7_wLodvo3_+d13UctAzEzbJgWoYnf998jw@mail.gmail.com>
-Message-ID: <CAK7LNAR3Runh-eLQ7_wLodvo3_+d13UctAzEzbJgWoYnf998jw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arch: sembuf.h: make uapi asm/sembuf.h self-contained
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-s390 <linux-s390@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, X86 ML <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] linux/scc.h: make uapi linux/scc.h self-contained
+Date:   Fri,  8 Nov 2019 14:58:08 +0900
+Message-Id: <20191108055809.26969-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Userspace cannot compile <linux/scc.h>
 
-I think you modified the commit log before applying this patch.
-I just noticed a typo.
+  CC      usr/include/linux/scc.h.s
+In file included from <command-line>:32:0:
+./usr/include/linux/scc.h:20:20: error: ‘SIOCDEVPRIVATE’ undeclared here (not in a function)
+  SIOCSCCRESERVED = SIOCDEVPRIVATE,
+                    ^~~~~~~~~~~~~~
 
+Include <linux/sockios.h> to make it self-contained, and add it to
+the compile-test coverage.
 
-commit 411865d8dd2c31f56eefc54bc16fabb47e1bfb73
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed Nov 6 16:07:08 2019 +1100
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-    arch: sembuf.h: make uapi asm/sembuf.h self-contained
+ include/uapi/linux/scc.h | 1 +
+ usr/include/Makefile     | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-    Uuserspace cannot compile <asm/sembuf.h> due to some missing type
-    definitions.  For example, building it for x86 fails as follows:
+diff --git a/include/uapi/linux/scc.h b/include/uapi/linux/scc.h
+index c5bc7f747755..947edb17ce9d 100644
+--- a/include/uapi/linux/scc.h
++++ b/include/uapi/linux/scc.h
+@@ -4,6 +4,7 @@
+ #ifndef _UAPI_SCC_H
+ #define _UAPI_SCC_H
+ 
++#include <linux/sockios.h>
+ 
+ /* selection of hardware types */
+ 
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 107d04bd5ee3..b469e39eafc8 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -41,7 +41,6 @@ header-test- += linux/omapfb.h
+ header-test- += linux/patchkey.h
+ header-test- += linux/phonet.h
+ header-test- += linux/reiserfs_xattr.h
+-header-test- += linux/scc.h
+ header-test- += linux/sctp.h
+ header-test- += linux/signal.h
+ header-test- += linux/sysctl.h
+-- 
+2.17.1
 
-
-
-If possible, could you fix up  s/Uuserspace/Userspace/  ?
-
-
-Thanks.
-Masahiro Yamada
-
-
-
-
-
-On Wed, Oct 30, 2019 at 3:40 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> The user-space cannot compile <asm/sembuf.h> due to some missing type
-> definitions. For example, building it for x86 fails as follows:
->
->   CC      usr/include/asm/sembuf.h.s
-> In file included from <command-line>:32:0:
-> ./usr/include/asm/sembuf.h:17:20: error: field =E2=80=98sem_perm=E2=80=99=
- has incomplete type
->   struct ipc64_perm sem_perm; /* permissions .. see ipc.h */
->                     ^~~~~~~~
-> ./usr/include/asm/sembuf.h:24:2: error: unknown type name =E2=80=98__kern=
-el_time_t=E2=80=99
->   __kernel_time_t sem_otime; /* last semop time */
->   ^~~~~~~~~~~~~~~
-> ./usr/include/asm/sembuf.h:25:2: error: unknown type name =E2=80=98__kern=
-el_ulong_t=E2=80=99
->   __kernel_ulong_t __unused1;
->   ^~~~~~~~~~~~~~~~
-> ./usr/include/asm/sembuf.h:26:2: error: unknown type name =E2=80=98__kern=
-el_time_t=E2=80=99
->   __kernel_time_t sem_ctime; /* last change time */
->   ^~~~~~~~~~~~~~~
-> ./usr/include/asm/sembuf.h:27:2: error: unknown type name =E2=80=98__kern=
-el_ulong_t=E2=80=99
->   __kernel_ulong_t __unused2;
->   ^~~~~~~~~~~~~~~~
-> ./usr/include/asm/sembuf.h:29:2: error: unknown type name =E2=80=98__kern=
-el_ulong_t=E2=80=99
->   __kernel_ulong_t sem_nsems; /* no. of semaphores in array */
->   ^~~~~~~~~~~~~~~~
-> ./usr/include/asm/sembuf.h:30:2: error: unknown type name =E2=80=98__kern=
-el_ulong_t=E2=80=99
->   __kernel_ulong_t __unused3;
->   ^~~~~~~~~~~~~~~~
-> ./usr/include/asm/sembuf.h:31:2: error: unknown type name =E2=80=98__kern=
-el_ulong_t=E2=80=99
->   __kernel_ulong_t __unused4;
->   ^~~~~~~~~~~~~~~~
->
-> It is just a matter of missing include directive.
->
-> Include <asm/ipcbuf.h> to make it self-contained, and add it to
-> the compile-test coverage.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  arch/mips/include/uapi/asm/sembuf.h    | 2 ++
->  arch/parisc/include/uapi/asm/sembuf.h  | 1 +
->  arch/powerpc/include/uapi/asm/sembuf.h | 2 ++
->  arch/sparc/include/uapi/asm/sembuf.h   | 2 ++
->  arch/x86/include/uapi/asm/sembuf.h     | 2 ++
->  arch/xtensa/include/uapi/asm/sembuf.h  | 1 +
->  include/uapi/asm-generic/sembuf.h      | 1 +
->  usr/include/Makefile                   | 1 -
->  8 files changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/mips/include/uapi/asm/sembuf.h b/arch/mips/include/uapi=
-/asm/sembuf.h
-> index 60c89e6cb25b..7d135b93bebd 100644
-> --- a/arch/mips/include/uapi/asm/sembuf.h
-> +++ b/arch/mips/include/uapi/asm/sembuf.h
-> @@ -2,6 +2,8 @@
->  #ifndef _ASM_SEMBUF_H
->  #define _ASM_SEMBUF_H
->
-> +#include <asm/ipcbuf.h>
-> +
->  /*
->   * The semid64_ds structure for the MIPS architecture.
->   * Note extra padding because this structure is passed back and forth
-> diff --git a/arch/parisc/include/uapi/asm/sembuf.h b/arch/parisc/include/=
-uapi/asm/sembuf.h
-> index 3c31163b1241..b17a2460b184 100644
-> --- a/arch/parisc/include/uapi/asm/sembuf.h
-> +++ b/arch/parisc/include/uapi/asm/sembuf.h
-> @@ -3,6 +3,7 @@
->  #define _PARISC_SEMBUF_H
->
->  #include <asm/bitsperlong.h>
-> +#include <asm/ipcbuf.h>
->
->  /*
->   * The semid64_ds structure for parisc architecture.
-> diff --git a/arch/powerpc/include/uapi/asm/sembuf.h b/arch/powerpc/includ=
-e/uapi/asm/sembuf.h
-> index 3f60946f77e3..f42c9c3502c7 100644
-> --- a/arch/powerpc/include/uapi/asm/sembuf.h
-> +++ b/arch/powerpc/include/uapi/asm/sembuf.h
-> @@ -2,6 +2,8 @@
->  #ifndef _ASM_POWERPC_SEMBUF_H
->  #define _ASM_POWERPC_SEMBUF_H
->
-> +#include <asm/ipcbuf.h>
-> +
->  /*
->   * This program is free software; you can redistribute it and/or
->   * modify it under the terms of the GNU General Public License
-> diff --git a/arch/sparc/include/uapi/asm/sembuf.h b/arch/sparc/include/ua=
-pi/asm/sembuf.h
-> index f3d309c2e1cd..5d7764cdf80f 100644
-> --- a/arch/sparc/include/uapi/asm/sembuf.h
-> +++ b/arch/sparc/include/uapi/asm/sembuf.h
-> @@ -2,6 +2,8 @@
->  #ifndef _SPARC_SEMBUF_H
->  #define _SPARC_SEMBUF_H
->
-> +#include <asm/ipcbuf.h>
-> +
->  /*
->   * The semid64_ds structure for sparc architecture.
->   * Note extra padding because this structure is passed back and forth
-> diff --git a/arch/x86/include/uapi/asm/sembuf.h b/arch/x86/include/uapi/a=
-sm/sembuf.h
-> index 89de6cd9f0a7..da0464af7aa6 100644
-> --- a/arch/x86/include/uapi/asm/sembuf.h
-> +++ b/arch/x86/include/uapi/asm/sembuf.h
-> @@ -2,6 +2,8 @@
->  #ifndef _ASM_X86_SEMBUF_H
->  #define _ASM_X86_SEMBUF_H
->
-> +#include <asm/ipcbuf.h>
-> +
->  /*
->   * The semid64_ds structure for x86 architecture.
->   * Note extra padding because this structure is passed back and forth
-> diff --git a/arch/xtensa/include/uapi/asm/sembuf.h b/arch/xtensa/include/=
-uapi/asm/sembuf.h
-> index 09f348d643f1..3b9cdd406dfe 100644
-> --- a/arch/xtensa/include/uapi/asm/sembuf.h
-> +++ b/arch/xtensa/include/uapi/asm/sembuf.h
-> @@ -22,6 +22,7 @@
->  #define _XTENSA_SEMBUF_H
->
->  #include <asm/byteorder.h>
-> +#include <asm/ipcbuf.h>
->
->  struct semid64_ds {
->         struct ipc64_perm sem_perm;             /* permissions .. see ipc=
-.h */
-> diff --git a/include/uapi/asm-generic/sembuf.h b/include/uapi/asm-generic=
-/sembuf.h
-> index 0bae010f1b64..5807fcd643ba 100644
-> --- a/include/uapi/asm-generic/sembuf.h
-> +++ b/include/uapi/asm-generic/sembuf.h
-> @@ -3,6 +3,7 @@
->  #define __ASM_GENERIC_SEMBUF_H
->
->  #include <asm/bitsperlong.h>
-> +#include <asm/ipcbuf.h>
->
->  /*
->   * The semid64_ds structure for x86 architecture.
-> diff --git a/usr/include/Makefile b/usr/include/Makefile
-> index 099d7401aa23..107d04bd5ee3 100644
-> --- a/usr/include/Makefile
-> +++ b/usr/include/Makefile
-> @@ -16,7 +16,6 @@ override c_flags =3D $(UAPI_CFLAGS) -Wp,-MD,$(depfile) =
--I$(objtree)/usr/include
->  # Please consider to fix the header first.
->  #
->  # Sorted alphabetically.
-> -header-test- +=3D asm/sembuf.h
->  header-test- +=3D asm/shmbuf.h
->  header-test- +=3D asm/signal.h
->  header-test- +=3D asm/ucontext.h
-> --
-> 2.17.1
->
-
-
---=20
-Best Regards
-Masahiro Yamada
