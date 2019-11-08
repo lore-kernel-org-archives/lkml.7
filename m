@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563C8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28AEFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2E1206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B781E206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240342;
-	bh=lVfUzs0XaUfMA1SqTd9PMM/LNeM6DjQ5596yGRW+XvI=;
+	s=default; t=1573240355;
+	bh=gXIrIpHgfxXzKWXdKVXOIuIfmFXJaHKIE9oR2oniOSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXhO3zREj/EuKoz3AR0VRZPbfd0DkyhpT298MzFxoAosS906CQ+q9O6qynHIUryi+
-	 EoZBNsOi5TwBu365Lwe0S1FLaE3jRFFBTizvrGGZruE04M4JHEY/9Z5a3f04RWkTSu
-	 vQPVw97RdvRm8vhPg6SNanm1ogpGIcQmLCq716UU=
+	b=JuC45BTiBtsrl9VVFbHzzkdFbgam3pH3KJgwO1KGunQXEK0l3mdp8Y0kN3CZLL4+4
+	 w9pJ/MJ4VGUXav5xcTn3jPv82/V5keYiB9tt0nHYRoUCXnppspB1fGW8b9Zl+/BX3J
+	 A56waliy05F7xzvz8a7rqw1+p0HldhlEIBk1955g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391288AbfKHTMU (ORCPT
+        id S2403787AbfKHTJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:12:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:09:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390051AbfKHTJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:29 -0500
+        id S2391738AbfKHTJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F66B2087E;
-        Fri,  8 Nov 2019 19:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1117420673;
+        Fri,  8 Nov 2019 19:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240168;
-        bh=lVfUzs0XaUfMA1SqTd9PMM/LNeM6DjQ5596yGRW+XvI=;
+        s=default; t=1573240145;
+        bh=gXIrIpHgfxXzKWXdKVXOIuIfmFXJaHKIE9oR2oniOSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIOz8m66vZlBtDJmpCP3YkmKPWQ5evsYhfInVvIq4uh+ogGH3oB25yuSsoavcy3T9
-         hWcoq9MpMFTNV+xCuaHzE0QXkw8tkYFvZjmYPuj50oYnh6tHB1VZ5lp2g6Rw6L8sxw
-         uTk9spj9Nb7OEmNv+oxTVaZ46JcmxLFOPOU+9qig=
+        b=pAqPo4ODirEJkxmpkWSsQX9xaBSc3h5Td+9koOCQzXk3Y93zPPt/ZKTmVbHO3XhkV
+         z8X0JvWF4ZHjNygtn+sZ6eEWnO/ve6zPrIcJY/onIy1Kt9/q0992T73ldkFAvGvart
+         dnicRJHuSWnSMCcJPmdzCD7qvb0FpFKXoydYQpl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Jianbo Liu <jianbol@mellanox.com>,
-        Oz Shlomo <ozsh@mellanox.com>, Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.3 110/140] net/mlx5e: Determine source port properly for vlan push action
-Date:   Fri,  8 Nov 2019 19:50:38 +0100
-Message-Id: <20191108174911.801053479@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Beniamino Galvani <bgalvani@redhat.com>
+Subject: [PATCH 5.3 103/140] ipv4: fix route update on metric change.
+Date:   Fri,  8 Nov 2019 19:50:31 +0100
+Message-Id: <20191108174911.442423763@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,66 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit d5dbcc4e87bc8444bd2f1ca4b8f787e1e5677ec2 ]
+[ Upstream commit 0b834ba00ab5337e938c727e216e1f5249794717 ]
 
-Termination tables are used for vlan push actions on uplink ports.
-To support RoCE dual port the source port value was placed in a register.
-Fix the code to use an API method returning the source port according to
-the FW capabilities.
+Since commit af4d768ad28c ("net/ipv4: Add support for specifying metric
+of connected routes"), when updating an IP address with a different metric,
+the associated connected route is updated, too.
 
-Fixes: 10caabdaad5a ("net/mlx5e: Use termination table for VLAN push actions")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Reviewed-by: Jianbo Liu <jianbol@mellanox.com>
-Reviewed-by: Oz Shlomo <ozsh@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Still, the mentioned commit doesn't handle properly some corner cases:
+
+$ ip addr add dev eth0 192.168.1.0/24
+$ ip addr add dev eth0 192.168.2.1/32 peer 192.168.2.2
+$ ip addr add dev eth0 192.168.3.1/24
+$ ip addr change dev eth0 192.168.1.0/24 metric 10
+$ ip addr change dev eth0 192.168.2.1/32 peer 192.168.2.2 metric 10
+$ ip addr change dev eth0 192.168.3.1/24 metric 10
+$ ip -4 route
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.0
+192.168.2.2 dev eth0 proto kernel scope link src 192.168.2.1
+192.168.3.0/24 dev eth0 proto kernel scope link src 192.168.2.1 metric 10
+
+Only the last route is correctly updated.
+
+The problem is the current test in fib_modify_prefix_metric():
+
+	if (!(dev->flags & IFF_UP) ||
+	    ifa->ifa_flags & (IFA_F_SECONDARY | IFA_F_NOPREFIXROUTE) ||
+	    ipv4_is_zeronet(prefix) ||
+	    prefix == ifa->ifa_local || ifa->ifa_prefixlen == 32)
+
+Which should be the logical 'not' of the pre-existing test in
+fib_add_ifaddr():
+
+	if (!ipv4_is_zeronet(prefix) && !(ifa->ifa_flags & IFA_F_SECONDARY) &&
+	    (prefix != addr || ifa->ifa_prefixlen < 32))
+
+To properly negate the original expression, we need to change the last
+logical 'or' to a logical 'and'.
+
+Fixes: af4d768ad28c ("net/ipv4: Add support for specifying metric of connected routes")
+Reported-and-suggested-by: Beniamino Galvani <bgalvani@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c |   22 +++++++---
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ net/ipv4/fib_frontend.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
-@@ -177,22 +177,32 @@ mlx5_eswitch_termtbl_actions_move(struct
- 	memset(&src->vlan[1], 0, sizeof(src->vlan[1]));
- }
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -1147,7 +1147,7 @@ void fib_modify_prefix_metric(struct in_
+ 	if (!(dev->flags & IFF_UP) ||
+ 	    ifa->ifa_flags & (IFA_F_SECONDARY | IFA_F_NOPREFIXROUTE) ||
+ 	    ipv4_is_zeronet(prefix) ||
+-	    prefix == ifa->ifa_local || ifa->ifa_prefixlen == 32)
++	    (prefix == ifa->ifa_local && ifa->ifa_prefixlen == 32))
+ 		return;
  
-+static bool mlx5_eswitch_offload_is_uplink_port(const struct mlx5_eswitch *esw,
-+						const struct mlx5_flow_spec *spec)
-+{
-+	u32 port_mask, port_value;
-+
-+	if (MLX5_CAP_ESW_FLOWTABLE(esw->dev, flow_source))
-+		return spec->flow_context.flow_source == MLX5_VPORT_UPLINK;
-+
-+	port_mask = MLX5_GET(fte_match_param, spec->match_criteria,
-+			     misc_parameters.source_port);
-+	port_value = MLX5_GET(fte_match_param, spec->match_value,
-+			      misc_parameters.source_port);
-+	return (port_mask & port_value & 0xffff) == MLX5_VPORT_UPLINK;
-+}
-+
- bool
- mlx5_eswitch_termtbl_required(struct mlx5_eswitch *esw,
- 			      struct mlx5_flow_act *flow_act,
- 			      struct mlx5_flow_spec *spec)
- {
--	u32 port_mask = MLX5_GET(fte_match_param, spec->match_criteria,
--				 misc_parameters.source_port);
--	u32 port_value = MLX5_GET(fte_match_param, spec->match_value,
--				  misc_parameters.source_port);
--
- 	if (!MLX5_CAP_ESW_FLOWTABLE_FDB(esw->dev, termination_table))
- 		return false;
- 
- 	/* push vlan on RX */
- 	return (flow_act->action & MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH) &&
--		((port_mask & port_value) == MLX5_VPORT_UPLINK);
-+		mlx5_eswitch_offload_is_uplink_port(esw, spec);
- }
- 
- struct mlx5_flow_handle *
+ 	/* add the new */
 
 
