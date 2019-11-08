@@ -2,283 +2,631 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E6BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2675FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D728C218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="KxGr5TAc";
-	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="DaqaOGMU"
+	by mail.kernel.org (Postfix) with ESMTP id BF425224BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbfKHMXK (ORCPT
+        id S1732799AbfKHMYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:23:10 -0500
-Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:39966 "EHLO
-        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732087AbfKHMXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 07:23:09 -0500
-X-Greylist: delayed 649 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 07:23:08 EST
-Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
-        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8C8T02007914;
-        Fri, 8 Nov 2019 04:11:48 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt1;
- bh=wkI8cH/jniv5ALj2FXj1K1Gx5TA77V/F3NP+QuIDmwc=;
- b=KxGr5TAcL9Vou3gPWV6NkqchrvfVNa7YPqofRSbhM2uE/ECLf6y4pQjs9zJJUGW/GPzv
- JYRYpiWSKOgfl5Nt9fRbJLxlLt4RB/wEgPZDwBrE4K+dFB1CnwFup4Cm+uA2+hd76rpT
- JJOnZ9LvQY/rzD+s1Ne4HbmJxIMCI9j2RERD1Y6jmexXf63up62MdHliAiCf+77tcqni
- 762wbl7ClBrw0mB1NBpNItaRR7DR1laKp95TKeaYAcyO5skLb/mCUV54cilUEzNM/Cup
- EZn9gNViGiINiMWsXkA9EdlsG1GDJKTp+s6uSZv8TUu6fq5xzx2pzWs3ll7NkxkOdFLq 9Q== 
-Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2055.outbound.protection.outlook.com [104.47.38.55])
-        by mx0b-00328301.pphosted.com with ESMTP id 2w50g1g5x3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 04:11:48 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k/bnMkK4jF9L3DILPOkqD9Bz+mRXUDDhnVOFqzB1cEnuBX2KCgkXXKsgewECvyd9lddXvoOLcDy4mqmSRLvrf+U+EWqptUFtmKt1rFRdW79MBJOZT6QUT+/X22cOpWxQ+89jL7bwylZrcAWe/z/LtJHUScR/zIqUmYBS32T/gMqJdkGz/MvifB/lK8MrGEGa7jnYuc1199IETHD43cjEvr6xPfH5JWWYsVFeycNrNl+LMmzkRRpdAJ4EiRHQq+yvaKyt3bgqyb6rcLrrqmVKo53kY+J/1GnSiVpvgNLosf/UUiFa2wW6wxwNkrmOYfwku6F8dnbd1hTDhwZFHhTgXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wkI8cH/jniv5ALj2FXj1K1Gx5TA77V/F3NP+QuIDmwc=;
- b=QdKu/TLwcyT4Hkey3hC5aOusyhQ3VPLBLMOplnNQYKBhz+yOiB4CA+357w7igYjUVj1apUPPhFyaueobbhwuSqymWpB33x3ly7lsGfzbxOTtC6+L1zI7dwQjD5bJzt46Mqr5AVRGQjTtfuwb0FlfzJv3EIs2KZDFJ8qAyXYrdSAm/1CwzNhRtjsAlD35k2hcPiG/08YLqvPa/fEEy4rZwrikR+3PejbQKcsukxjo72LLTX44NK1AvRAvR4laqXdwfgCNsAgnRfN5YzWuPl2s4z5Y2iJGq06/L67eP19uMBKwjUvJ5Ob6dulstc0pdXWIloMkJeaNl+9Omofx2LFkDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=invensense.com; dmarc=pass action=none
- header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wkI8cH/jniv5ALj2FXj1K1Gx5TA77V/F3NP+QuIDmwc=;
- b=DaqaOGMUnD71m8KCYH0Cc0rRJ41YKg7/uyBDPkilCWOA7qZU0HAFHFNM+ExWG2RtkmSgbxgpbZVcwbwAghE1bTtJgqDPUDw+D2gqpt0n8NvNPounujJg3o4DJoK/Z9XSEm4umYfgAYcRa9WGKO8x238M50cmuJg2113KHfveQEk=
-Received: from MN2PR12MB3373.namprd12.prod.outlook.com (20.178.242.33) by
- MN2PR12MB3871.namprd12.prod.outlook.com (10.255.238.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Fri, 8 Nov 2019 12:11:46 +0000
-Received: from MN2PR12MB3373.namprd12.prod.outlook.com
- ([fe80::95a9:35cd:3e40:8ed3]) by MN2PR12MB3373.namprd12.prod.outlook.com
- ([fe80::95a9:35cd:3e40:8ed3%3]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
- 12:11:46 +0000
-From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
-To:     Stephan Gerhold <stephan@gerhold.net>,
-        Jonathan Cameron <jic23@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
-Thread-Topic: [PATCH v2 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
-Thread-Index: AQHVlZuj3hjZAXfriEOOlDXmX+bcQ6eBL+la
-Date:   Fri, 8 Nov 2019 12:11:46 +0000
-Message-ID: <MN2PR12MB33733917812945D0293D9D27C47B0@MN2PR12MB3373.namprd12.prod.outlook.com>
-References: <20191107184342.20361-1-stephan@gerhold.net>
-In-Reply-To: <20191107184342.20361-1-stephan@gerhold.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [77.157.193.39]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 27f4ff27-4062-4b00-db6a-08d76444d38c
-x-ms-traffictypediagnostic: MN2PR12MB3871:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR12MB38719631BEA0881C5626663AC47B0@MN2PR12MB3871.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1775;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(39850400004)(366004)(189003)(199004)(6306002)(11346002)(91956017)(76116006)(86362001)(3846002)(66446008)(64756008)(66476007)(71190400001)(71200400001)(6116002)(229853002)(8676002)(186003)(6436002)(66946007)(66556008)(7696005)(52536014)(76176011)(81156014)(81166006)(2906002)(53546011)(6506007)(6246003)(26005)(102836004)(316002)(8936002)(80792005)(66066001)(110136005)(54906003)(5660300002)(99286004)(256004)(7416002)(7736002)(14454004)(74316002)(966005)(478600001)(4326008)(55016002)(9686003)(446003)(486006)(33656002)(476003)(5024004)(305945005)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3871;H:MN2PR12MB3373.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: invensense.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Qs/1/3C0lNDMG7fvLGDphMWlT5jzW+2B2EeW2T9npxwsTD7uAQjeEmjyUM7uqKNjpKWwo9COZVNoNKaTtbKsWh/cYXeMi6/BniayE6aOvAo2IF0CIin+4CclRcIjpHDjXal0mmSzW+coJw29ACE8DOfOhiRsJu/MV96Zju27XBik/GlomuRb/xbZOwt24bRTgJywRfRwcY1CF96Mt/4FwVv+dlkNwi+ut4zi0SLUXsmJ7y31NSQ/TqyZK9U2cKaV26hXsZkwaf9NyjMHHZc4sN/IXeT1HtG7s6xXjiPhNOrqlqXH5spYoyxOb3i/IuVKPXVtlbHpjyBsmAGYdG39jfz8PgLsGxf04jAu9Fsjucl7P6DVl4QbGc8J7RA6pyUDm9TqZQstGUeFRUlanQ38ExufCe8EDMvAwIt/+R+RTAj0i2QgiJ07uwbRZQpcKEz4ahLJf3Cqo8wxWJRkUOWOeENeb/Rh4A/y8m4poVHHg0k=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 8 Nov 2019 07:24:35 -0500
+Received: from mga02.intel.com ([134.134.136.20]:32300 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732559AbfKHMYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 07:24:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 04:24:34 -0800
+X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
+   d="scan'208";a="196887716"
+Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.48]) ([10.238.129.48])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 08 Nov 2019 04:24:31 -0800
+Subject: Re: [PATCH 1/2] IFC hardware operation layer
+To:     Jason Wang <jasowang@redhat.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Cc:     mst@redhat.com, alex williamson <alex.williamson@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan daly <dan.daly@intel.com>,
+        cunming liang <cunming.liang@intel.com>,
+        tiwei bie <tiwei.bie@intel.com>,
+        jason zeng <jason.zeng@intel.com>
+References: <1572946660-26265-1-git-send-email-lingshan.zhu@intel.com>
+ <1572946660-26265-2-git-send-email-lingshan.zhu@intel.com>
+ <485376113.12775534.1573034984498.JavaMail.zimbra@redhat.com>
+From:   Zhu Lingshan <lingshan.zhu@linux.intel.com>
+Message-ID: <d268a820-9ed3-c7ba-fe5e-4faef56eef04@linux.intel.com>
+Date:   Fri, 8 Nov 2019 20:24:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-OriginatorOrg: invensense.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27f4ff27-4062-4b00-db6a-08d76444d38c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 12:11:46.4362
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1qnhqEprJJcer3KI429k0r6Cl+zz1Vu8WqKA9kxHCCwaKIeE7PT9rW5T5wcy8kqglQDEvNAjlLBO9nqPJ8QHj2OoakKWAuDOYNMPRX8Lo0o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3871
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-08_03:2019-11-08,2019-11-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
- bulkscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911080120
+In-Reply-To: <485376113.12775534.1573034984498.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>=0A=
-=0A=
-Best regards,=0A=
-JB=0A=
-=0A=
-From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org> on =
-behalf of Stephan Gerhold <stephan@gerhold.net>=0A=
-=0A=
-Sent: Thursday, November 7, 2019 19:43=0A=
-=0A=
-To: Jonathan Cameron <jic23@kernel.org>=0A=
-=0A=
-Cc: Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>;=
- Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob Herring <robh+dt@kernel.or=
-g>; Mark Rutland <mark.rutland@arm.com>; Linus Walleij <linus.walleij@linar=
-o.org>; Brian Masney <masneyb@onstation.org>;=0A=
- Jonathan Marek <jonathan@marek.ca>; Jean-Baptiste Maneyrol <JManeyrol@inve=
-nsense.com>; linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; devicet=
-ree@vger.kernel.org <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.=
-org <linux-kernel@vger.kernel.org>;=0A=
- Stephan Gerhold <stephan@gerhold.net>=0A=
-=0A=
-Subject: [PATCH v2 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply=0A=
-=0A=
-=A0=0A=
-=0A=
-=0A=
-=A0CAUTION: This email originated from outside of the organization. Please =
-make sure the sender is who they say they are and do not click links or ope=
-n attachments unless you recognize the sender and know the content is safe.=
-=0A=
-=0A=
-=0A=
-=0A=
-inv_mpu6050 now supports an additional vdd-supply; document it.=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>=0A=
-=0A=
-=0A=
-=0A=
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>=0A=
-=0A=
-=0A=
-=0A=
----=0A=
-=0A=
-=0A=
-=0A=
-Changes in v2:=0A=
-=0A=
-=0A=
-=0A=
-=A0 - Add Reviewed-by from Linus Walleij=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-v1: =0A=
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lore.kernel.org_linu=
-x-2Diio_20191106183536.123070-2D1-2Dstephan-40gerhold.net_&d=3DDwIDAg&c=3DW=
-oJWtq5JV8YrKnzRxvD8NxmTP_1wxfE0prPmo0NeZwg&r=3D4jiDX_1brsSWfCjfA6Ovj1d4h9MF=
-8q7Xk5aBwG28mVk&m=3DO82MQPnLTvlD0nxDzFW1KS3aZpWiI3qYUZwJUy_qqxc&s=3Dddvzqy0=
-PywWDCnge7xbJIhpqN9NltbLrzi4EBVdeA_o&e=3D=0A=
-=0A=
-=0A=
-=0A=
-=0A=
----=0A=
-=0A=
-=0A=
-=0A=
-=A0Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +=0A=
-=0A=
-=0A=
-=0A=
-=A01 file changed, 1 insertion(+)=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Do=
-cumentation/devicetree/bindings/iio/imu/inv_mpu6050.txt=0A=
-=0A=
-=0A=
-=0A=
-index 268bf7568e19..c5ee8a20af9f 100644=0A=
-=0A=
-=0A=
-=0A=
---- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt=0A=
-=0A=
-=0A=
-=0A=
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt=0A=
-=0A=
-=0A=
-=0A=
-@@ -21,6 +21,7 @@ Required properties:=0A=
-=0A=
-=0A=
-=0A=
-=A0=A0 bindings.=0A=
-=0A=
-=0A=
-=0A=
-=A0=0A=
-=0A=
-=0A=
-=0A=
-=A0Optional properties:=0A=
-=0A=
-=0A=
-=0A=
-+ - vdd-supply: regulator phandle for VDD supply=0A=
-=0A=
-=0A=
-=0A=
-=A0 - vddio-supply: regulator phandle for VDDIO supply=0A=
-=0A=
-=0A=
-=0A=
-=A0 - mount-matrix: an optional 3x3 mounting rotation matrix=0A=
-=0A=
-=0A=
-=0A=
-=A0 - i2c-gate node.=A0 These devices also support an auxiliary i2c bus.=A0=
- This is=0A=
-=0A=
-=0A=
-=0A=
--- =0A=
-=0A=
-=0A=
-=0A=
-2.23.0=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
+
+On 11/6/2019 6:09 PM, Jason Wang wrote:
+> On 2019/11/5 下午5:37, Zhu Lingshan wrote:
+>> This commit introduced ifcvf_base layer, which handles hardware
+>> operations and configurations.
+> It looks like the PCI layout is pretty similar to virtio. Can we reuse
+> e.g virtio_pci_modern_probe() (or helpers in virtio_pci_modern.c) to
+> do the probing?
+
+Hello Jason,
+
+Thanks for your kindly comments. IMHO virtio_pci_modern_probe() probes 
+the device after creating VFs, as we can see, virtio-pci can drive this 
+device. To support virtio_mdev and vhost_mdev, we need to unbind the 
+device from virtio-pci, then bind to this driver. In our driver probing, 
+we did something quite different from virtio_pci_modern_porobe(), like 
+memory resource mapping and other configs, yes we can reuse some helpers 
+in virtio, but I wonder whether worth that.
+
+>
+>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>> ---
+>>   drivers/vhost/ifcvf/ifcvf_base.c | 344 +++++++++++++++++++++++++++++++++++++++
+>>   drivers/vhost/ifcvf/ifcvf_base.h | 132 +++++++++++++++
+>>   2 files changed, 476 insertions(+)
+>>   create mode 100644 drivers/vhost/ifcvf/ifcvf_base.c
+>>   create mode 100644 drivers/vhost/ifcvf/ifcvf_base.h
+>>
+>> diff --git a/drivers/vhost/ifcvf/ifcvf_base.c b/drivers/vhost/ifcvf/ifcvf_base.c
+>> new file mode 100644
+>> index 0000000..0659f41
+>> --- /dev/null
+>> +++ b/drivers/vhost/ifcvf/ifcvf_base.c
+>> @@ -0,0 +1,344 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2019 Intel Corporation.
+>> + */
+>> +
+>> +#include "ifcvf_base.h"
+>> +
+>> +static void *get_cap_addr(struct ifcvf_hw *hw, struct virtio_pci_cap *cap)
+>> +{
+>> +	struct ifcvf_adapter *ifcvf;
+>> +	u32 length, offset;
+>> +	u8 bar;
+>> +
+>> +	length = le32_to_cpu(cap->length);
+>> +	offset = le32_to_cpu(cap->offset);
+>> +	bar = le32_to_cpu(cap->bar);
+>> +
+>> +	ifcvf = container_of(hw, struct ifcvf_adapter, vf);
+>> +
+>> +	if (bar >= IFCVF_PCI_MAX_RESOURCE) {
+>> +		IFC_DBG(ifcvf->dev,
+>> +			"Invalid bar number %u to get capabilities.\n", bar);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	if (offset + length < offset) {
+> Can this really happen? Both offset and length are u32.
+Thanks for point this out, removed.
+>
+>> +		IFC_DBG(ifcvf->dev, "offset(%u) + length(%u) overflows\n",
+>> +			offset, length);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	if (offset + length > hw->mem_resource[cap->bar].len) {
+>> +		IFC_DBG(ifcvf->dev,
+>> +			"offset(%u) + len(%u) overflows bar%u to get capabilities.\n",
+>> +			offset, length, bar);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	return hw->mem_resource[bar].addr + offset;
+> I don't see the initialization of mem_resource in the patch, I wonder
+> whether it's better to squash this patch just into patch 2.
+I will split them into small patches in official versions. For RFC can I 
+place this function here for now? init_hw also use it.
+>
+>> +}
+>> +
+>> +int ifcvf_read_config_range(struct pci_dev *dev,
+>> +			uint32_t *val, int size, int where)
+>> +{
+>> +	int ret, i;
+>> +
+>> +	for (i = 0; i < size; i += 4) {
+>> +		ret = pci_read_config_dword(dev, where + i, val + i / 4);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int ifcvf_init_hw(struct ifcvf_hw *hw, struct pci_dev *dev)
+>> +{
+>> +	struct virtio_pci_cap cap;
+>> +	u16 notify_off;
+>> +	int ret;
+>> +	u8 pos;
+>> +	u32 i;
+>> +
+>> +	ret = pci_read_config_byte(dev, PCI_CAPABILITY_LIST, &pos);
+>> +
+>> +	if (ret < 0) {
+>> +		IFC_ERR(&dev->dev, "Failed to read PCI capability list.\n");
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	while (pos) {
+>> +		ret = ifcvf_read_config_range(dev, (u32 *)&cap,
+>> +					      sizeof(cap), pos);
+>> +
+>> +		if (ret < 0) {
+>> +			IFC_ERR(&dev->dev, "Failed to get PCI capability at %x",
+>> +				pos);
+>> +			break;
+>> +		}
+>> +
+>> +		if (cap.cap_vndr != PCI_CAP_ID_VNDR)
+>> +			goto next;
+>> +
+>> +		IFC_DBG(&dev->dev, "read PCI config: config type: %u, PCI bar: %u,\
+>> +			 PCI bar offset: %u, PCI config len: %u.\n",
+>> +			cap.cfg_type, cap.bar, cap.offset, cap.length);
+>> +
+>> +		switch (cap.cfg_type) {
+>> +		case VIRTIO_PCI_CAP_COMMON_CFG:
+>> +			hw->common_cfg = get_cap_addr(hw, &cap);
+>> +			IFC_INFO(&dev->dev, "hw->common_cfg = %p.\n",
+>> +				 hw->common_cfg);
+>> +			break;
+>> +		case VIRTIO_PCI_CAP_NOTIFY_CFG:
+>> +			pci_read_config_dword(dev, pos + sizeof(cap),
+>> +					      &hw->notify_off_multiplier);
+>> +			hw->notify_bar = cap.bar;
+>> +			hw->notify_base = get_cap_addr(hw, &cap);
+>> +			IFC_INFO(&dev->dev, "hw->notify_base = %p.\n",
+>> +				 hw->notify_base);
+>> +			break;
+>> +		case VIRTIO_PCI_CAP_ISR_CFG:
+>> +			hw->isr = get_cap_addr(hw, &cap);
+>> +			IFC_INFO(&dev->dev, "hw->isr = %p.\n", hw->isr);
+>> +			break;
+>> +		case VIRTIO_PCI_CAP_DEVICE_CFG:
+>> +			hw->net_cfg = get_cap_addr(hw, &cap);
+>> +			IFC_INFO(&dev->dev, "hw->net_cfg = %p.\n", hw->net_cfg);
+>> +			break;
+> I think at least you can try to reuse e.g:
+> virtio_pci_find_capability() to aovid duplicating codes.
+Yes virtio_pci_find_capability() is nice, it will work perfect on a 
+device. However users can create more than one hundred of VFs, 
+virtio_pci_find_capability() will find all capabilities in O(n2), users 
+may observe delays if we spend too much time finding the caps. It seems 
+our O(n) code can save some time.
+>
+>> +		}
+>> +next:
+>> +		pos = cap.cap_next;
+>> +	}
+>> +
+>> +	if (hw->common_cfg == NULL || hw->notify_base == NULL ||
+>> +	    hw->isr == NULL || hw->net_cfg == NULL) {
+>> +		IFC_DBG(&dev->dev, "Incomplete PCI capabilities.\n");
+>> +		return -1;
+> Maybe it's better to fail eailier.
+>
+>> +	}
+>> +
+>> +	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>> +		iowrite16(i, &hw->common_cfg->queue_select);
+>> +		notify_off = ioread16(&hw->common_cfg->queue_notify_off);
+>> +		hw->notify_addr[i] = (void *)((u8 *)hw->notify_base +
+>> +				     notify_off * hw->notify_off_multiplier);
+> It might be better to store notify_addr inside the vring_info for
+> better locality.
+Agree, can do
+>
+>> +	}
+>> +
+>> +	hw->lm_cfg = hw->mem_resource[IFCVF_LM_BAR].addr;
+>> +
+>> +	IFC_DBG(&dev->dev, "PCI capability mapping: common cfg: %p,\
+>> +		notify base: %p\n, isr cfg: %p, device cfg: %p,\
+>> +		multiplier: %u\n",
+>> +		hw->common_cfg, hw->notify_base, hw->isr,
+>> +		hw->net_cfg, hw->notify_off_multiplier);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +u8 ifcvf_get_status(struct ifcvf_hw *hw)
+>> +{
+>> +	u8 old_gen, new_gen, status;
+>> +
+>> +	do {
+>> +		old_gen = ioread8(&hw->common_cfg->config_generation);
+>> +		status = ioread8(&hw->common_cfg->device_status);
+>> +		new_gen = ioread8(&hw->common_cfg->config_generation);
+> config generation should be only used for config access not status,
+> and even it did, it should be called from virtio core.
+removed these code.
+>
+>> +	} while (old_gen != new_gen);
+>> +
+>> +	return status;
+>> +}
+>> +
+>> +void ifcvf_set_status(struct ifcvf_hw *hw, u8 status)
+>> +{
+>> +	iowrite8(status, &hw->common_cfg->device_status);
+>> +}
+>> +
+>> +void ifcvf_reset(struct ifcvf_hw *hw)
+>> +{
+>> +	ifcvf_set_status(hw, 0);
+>> +	ifcvf_get_status(hw);
+>> +}
+>> +
+>> +static void ifcvf_add_status(struct ifcvf_hw *hw, u8 status)
+>> +{
+>> +	if (status != 0)
+>> +		status |= ifcvf_get_status(hw);
+>> +
+>> +	ifcvf_set_status(hw, status);
+>> +	ifcvf_get_status(hw);
+>> +}
+>> +
+>> +u64 ifcvf_get_features(struct ifcvf_hw *hw)
+>> +{
+>> +	struct virtio_pci_common_cfg *cfg = hw->common_cfg;
+>> +	u32 features_lo, features_hi;
+>> +
+>> +	iowrite32(0, &cfg->device_feature_select);
+>> +	features_lo = ioread32(&cfg->device_feature);
+>> +
+>> +	iowrite32(1, &cfg->device_feature_select);
+>> +	features_hi = ioread32(&cfg->device_feature);
+>> +
+>> +	return ((u64)features_hi << 32) | features_lo;
+>> +}
+>> +
+>> +void ifcvf_read_net_config(struct ifcvf_hw *hw, u64 offset,
+>> +		       void *dst, int length)
+>> +{
+>> +	u8 old_gen, new_gen, *p;
+>> +	int i;
+>> +
+>> +	WARN_ON(offset + length > sizeof (struct ifcvf_net_config));
+>> +
+>> +	do {
+>> +		old_gen = ioread8(&hw->common_cfg->config_generation);
+> Same here, virtio core has did the call for generation, so no need do
+> do it again here.
+removed
+>
+>> +		p = dst;
+>> +
+>> +		for (i = 0; i < length; i++)
+>> +			*p++ = ioread8((u8 *)hw->net_cfg + offset + i);
+>> +
+>> +		new_gen = ioread8(&hw->common_cfg->config_generation);
+>> +	} while (old_gen != new_gen);
+>> +}
+>> +
+>> +void ifcvf_write_net_config(struct ifcvf_hw *hw, u64 offset,
+>> +			    const void *src, int length)
+>> +{
+>> +	const u8 *p;
+>> +	int i;
+>> +
+>> +	p = src;
+>> +	WARN_ON(offset + length > sizeof (struct ifcvf_net_config));
+>> +
+>> +	for (i = 0; i < length; i++)
+>> +		iowrite8(*p++, (u8 *)hw->net_cfg + offset + i);
+>> +}
+>> +
+>> +static void ifcvf_set_features(struct ifcvf_hw *hw, u64 features)
+>> +{
+>> +	struct virtio_pci_common_cfg *cfg = hw->common_cfg;
+>> +
+>> +	iowrite32(0, &cfg->guest_feature_select);
+>> +	iowrite32(features & ((1ULL << 32) - 1), &cfg->guest_feature);
+> (u32)features ?
+Yes
+>
+>> +
+>> +	iowrite32(1, &cfg->guest_feature_select);
+>> +	iowrite32(features >> 32, &cfg->guest_feature);
+>> +}
+>> +
+>> +static int ifcvf_config_features(struct ifcvf_hw *hw)
+>> +{
+>> +	struct ifcvf_adapter *ifcvf;
+>> +
+>> +	ifcvf =	container_of(hw, struct ifcvf_adapter, vf);
+>> +	ifcvf_set_features(hw, hw->req_features);
+>> +	ifcvf_add_status(hw, VIRTIO_CONFIG_S_FEATURES_OK);
+>> +
+>> +	if (!(ifcvf_get_status(hw) & VIRTIO_CONFIG_S_FEATURES_OK)) {
+>> +		IFC_ERR(ifcvf->dev, "Failed to set FEATURES_OK status\n");
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +void io_write64_twopart(u64 val, u32 *lo, u32 *hi)
+>> +{
+>> +	iowrite32(val & ((1ULL << 32) - 1), lo);
+>> +	iowrite32(val >> 32, hi);
+>> +}
+>> +
+>> +static int ifcvf_hw_enable(struct ifcvf_hw *hw)
+>> +{
+>> +	struct virtio_pci_common_cfg *cfg;
+>> +	struct ifcvf_adapter *ifcvf;
+>> +	u8 *lm_cfg;
+>> +	u32 i;
+>> +
+>> +	ifcvf = container_of(hw, struct ifcvf_adapter, vf);
+>> +	cfg = hw->common_cfg;
+>> +	lm_cfg = hw->lm_cfg;
+>> +	iowrite16(IFCVF_MSI_CONFIG_OFF, &cfg->msix_config);
+>> +
+>> +	if (ioread16(&cfg->msix_config) == VIRTIO_MSI_NO_VECTOR) {
+>> +		IFC_ERR(ifcvf->dev, "No msix vector for device config.\n");
+>> +		return -1;
+>> +	}
+>> +
+>> +	for (i = 0; i < hw->nr_vring; i++) {
+>> +		iowrite16(i, &cfg->queue_select);
+>> +		io_write64_twopart(hw->vring[i].desc, &cfg->queue_desc_lo,
+>> +				&cfg->queue_desc_hi);
+>> +		io_write64_twopart(hw->vring[i].avail, &cfg->queue_avail_lo,
+>> +				&cfg->queue_avail_hi);
+>> +		io_write64_twopart(hw->vring[i].used, &cfg->queue_used_lo,
+>> +				&cfg->queue_used_hi);
+>> +		iowrite16(hw->vring[i].size, &cfg->queue_size);
+>> +
+>> +		*(u32 *)(lm_cfg + IFCVF_LM_RING_STATE_OFFSET +
+>> +				(i / 2) * IFCVF_LM_CFG_SIZE + (i % 2) * 4) =
+>> +			(u32)hw->vring[i].last_avail_idx |
+>> +			((u32)hw->vring[i].last_used_idx << 16);
+> As pointed out by Michael, it's better to formalize lm_cfg as a
+> structure instead of doing math here.
+I can use a variable for the address, to make it better looking, also 
+use iowrite() to make it portable.
+>
+>> +
+>> +		iowrite16(i + IFCVF_MSI_QUEUE_OFF, &cfg->queue_msix_vector);
+>> +		if (ioread16(&cfg->queue_msix_vector) ==
+>> +		    VIRTIO_MSI_NO_VECTOR) {
+>> +			IFC_ERR(ifcvf->dev,
+>> +				"No msix vector for queue %u.\n", i);
+>> +			return -1;
+>> +		}
+>> +
+>> +		iowrite16(1, &cfg->queue_enable);
+> This queue_enable should be done through set_vq_ready() from virtio core.
+Agreed, but on our hardware, if we don't enable the queue, we can do 
+nothing with the queue, even read something. so I have to leave it here.
+But I changes set_vq_ready, now set_vq_ready() will sycn with hardware, 
+we can use it to disable the queue as well.
+>
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void ifcvf_hw_disable(struct ifcvf_hw *hw)
+>> +{
+>> +	struct virtio_pci_common_cfg *cfg;
+>> +	u32 i;
+>> +
+>> +	cfg = hw->common_cfg;
+>> +	iowrite16(VIRTIO_MSI_NO_VECTOR, &cfg->msix_config);
+>> +
+>> +	for (i = 0; i < hw->nr_vring; i++) {
+>> +		iowrite16(i, &cfg->queue_select);
+>> +		iowrite16(0, &cfg->queue_enable);
+>> +		iowrite16(VIRTIO_MSI_NO_VECTOR, &cfg->queue_msix_vector);
+>> +	}
+>> +}
+>> +
+>> +int ifcvf_start_hw(struct ifcvf_hw *hw)
+>> +{
+>> +	ifcvf_reset(hw);
+>> +	ifcvf_add_status(hw, VIRTIO_CONFIG_S_ACKNOWLEDGE);
+>> +	ifcvf_add_status(hw, VIRTIO_CONFIG_S_DRIVER);
+>> +
+>> +	if (ifcvf_config_features(hw) < 0)
+>> +		return -1;
+> It's better to set status to CONFIG_S_FAILED when fail.
+Can do.
+>
+>> +
+>> +	if (ifcvf_hw_enable(hw) < 0)
+>> +		return -1;
+>> +
+>> +	ifcvf_add_status(hw, VIRTIO_CONFIG_S_DRIVER_OK);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +void ifcvf_stop_hw(struct ifcvf_hw *hw)
+>> +{
+>> +	ifcvf_hw_disable(hw);
+>> +	ifcvf_reset(hw);
+>> +}
+>> +
+>> +void ifcvf_notify_queue(struct ifcvf_hw *hw, u16 qid)
+>> +{
+>> +	iowrite16(qid, hw->notify_addr[qid]);
+>> +}
+>> +
+>> +u64 ifcvf_get_queue_notify_off(struct ifcvf_hw *hw, int qid)
+>> +{
+>> +	return (u8 *)hw->notify_addr[qid] -
+>> +		(u8 *)hw->mem_resource[hw->notify_bar].addr;
+>> +}
+>> diff --git a/drivers/vhost/ifcvf/ifcvf_base.h b/drivers/vhost/ifcvf/ifcvf_base.h
+>> new file mode 100644
+>> index 0000000..c97f0eb
+>> --- /dev/null
+>> +++ b/drivers/vhost/ifcvf/ifcvf_base.h
+>> @@ -0,0 +1,132 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>> +/*
+>> + * Copyright (C) 2019 Intel Corporation.
+>> + */
+>> +
+>> +#ifndef _IFCVF_H_
+>> +#define _IFCVF_H_
+>> +
+>> +#include <linux/virtio_mdev_ops.h>
+>> +#include <linux/mdev.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/pci_regs.h>
+>> +#include <uapi/linux/virtio_net.h>
+>> +#include <uapi/linux/virtio_config.h>
+>> +#include <uapi/linux/virtio_pci.h>
+>> +
+>> +#define IFCVF_VENDOR_ID         0x1AF4
+>> +#define IFCVF_DEVICE_ID         0x1041
+>> +#define IFCVF_SUBSYS_VENDOR_ID  0x8086
+>> +#define IFCVF_SUBSYS_DEVICE_ID  0x001A
+>> +
+>> +#define IFCVF_MDEV_LIMIT	1
+>> +
+>> +/*
+>> + * Some ifcvf feature bits (currently bits 28 through 31) are
+>> + * reserved for the transport being used (eg. ifcvf_ring), the
+>> + * rest are per-device feature bits.
+>> + */
+>> +#define IFCVF_TRANSPORT_F_START 28
+>> +#define IFCVF_TRANSPORT_F_END   34
+>> +
+>> +#define IFC_SUPPORTED_FEATURES \
+>> +		((1ULL << VIRTIO_NET_F_MAC)			| \
+>> +		 (1ULL << VIRTIO_F_ANY_LAYOUT)			| \
+>> +		 (1ULL << VIRTIO_F_VERSION_1)			| \
+>> +		 (1ULL << VIRTIO_F_ORDER_PLATFORM)			| \
+>> +		 (1ULL << VIRTIO_NET_F_GUEST_ANNOUNCE)		| \
+>> +		 (1ULL << VIRTIO_NET_F_CTRL_VQ)			| \
+>> +		 (1ULL << VIRTIO_NET_F_STATUS)			| \
+>> +		 (1ULL << VIRTIO_NET_F_MRG_RXBUF)) /* not fully supported */
+> If it was not fully supported, we need to remove it.
+It is supported now :)
+>
+>> +
+>> +//Not support MQ, only one queue pair for now.
+>> +#define IFCVF_MAX_QUEUE_PAIRS		1
+>> +#define IFCVF_MAX_QUEUES		2
+>> +
+>> +#define IFCVF_QUEUE_ALIGNMENT		PAGE_SIZE
+>> +
+>> +#define IFCVF_MSI_CONFIG_OFF	0
+>> +#define IFCVF_MSI_QUEUE_OFF	1
+>> +#define IFCVF_PCI_MAX_RESOURCE	6
+>> +
+>> +#define IFCVF_LM_CFG_SIZE		0x40
+>> +#define IFCVF_LM_RING_STATE_OFFSET	0x20
+>> +#define IFCVF_LM_BAR	4
+>> +
+>> +#define IFCVF_32_BIT_MASK		0xffffffff
+>> +
+>> +#define IFC_ERR(dev, fmt, ...)	dev_err(dev, fmt, ##__VA_ARGS__)
+>> +#define IFC_DBG(dev, fmt, ...)	dev_dbg(dev, fmt, ##__VA_ARGS__)
+>> +#define IFC_INFO(dev, fmt, ...)	dev_info(dev, fmt, ##__VA_ARGS__)
+>> +
+>> +#define IFC_PRIVATE_TO_VF(adapter) \
+>> +	(&((struct ifcvf_adapter *)adapter)->vf)
+>> +
+>> +#define IFCVF_MAX_INTR (IFCVF_MAX_QUEUE_PAIRS * 2 + 1)
+>> +
+>> +struct ifcvf_net_config {
+>> +	u8    mac[6];
+>> +	u16   status;
+>> +	u16   max_virtqueue_pairs;
+>> +} __packed;
+> Why not just use virtio_net_config?
+Using virtio_net_config now.
+>
+>> +
+>> +struct ifcvf_pci_mem_resource {
+>> +	/* Physical address, 0 if not resource. */
+>> +	u64      phys_addr;
+>> +	/* Length of the resource. */
+>> +	u64      len;
+>> +	/* Virtual address, NULL when not mapped. */
+>> +	u8       *addr;
+>> +};
+>> +
+>> +struct vring_info {
+>> +	u64 desc;
+>> +	u64 avail;
+>> +	u64 used;
+>> +	u16 size;
+>> +	u16 last_avail_idx;
+>> +	u16 last_used_idx;
+>> +	bool ready;
+>> +	char msix_name[256];
+>> +	struct virtio_mdev_callback cb;
+>> +};
+>> +
+>> +struct ifcvf_hw {
+>> +	u8	*isr;
+>> +	u8	notify_bar;
+>> +	u8	*lm_cfg;
+>> +	u8	nr_vring;
+>> +	u16	*notify_base;
+>> +	u16	*notify_addr[IFCVF_MAX_QUEUE_PAIRS * 2];
+>> +	u32	notify_off_multiplier;
+>> +	u64	req_features;
+>> +	struct	virtio_pci_common_cfg *common_cfg;
+>> +	struct	ifcvf_net_config *net_cfg;
+>> +	struct	vring_info vring[IFCVF_MAX_QUEUE_PAIRS * 2];
+>> +	struct	ifcvf_pci_mem_resource mem_resource[IFCVF_PCI_MAX_RESOURCE];
+>> +};
+> It's better to add comments to explain each field.
+Added comments for some obscure fields.
+>
+>> +
+>> +struct ifcvf_adapter {
+>> +	struct	device *dev;
+>> +	struct	mutex mdev_lock;
+>> +	int	mdev_count;
+>> +	int	vectors;
+>> +	struct	ifcvf_hw vf;
+>> +};
+>> +
+>> +int ifcvf_init_hw(struct ifcvf_hw *hw, struct pci_dev *dev);
+>> +int ifcvf_start_hw(struct ifcvf_hw *hw);
+>> +void ifcvf_stop_hw(struct ifcvf_hw *hw);
+>> +void ifcvf_notify_queue(struct ifcvf_hw *hw, u16 qid);
+>> +u8 ifcvf_get_linkstatus(struct ifcvf_hw *hw);
+>> +void ifcvf_read_net_config(struct ifcvf_hw *hw, u64 offset,
+>> +			   void *dst, int length);
+>> +void ifcvf_write_net_config(struct ifcvf_hw *hw, u64 offset,
+>> +			    const void *src, int length);
+>> +u8 ifcvf_get_status(struct ifcvf_hw *hw);
+>> +void ifcvf_set_status(struct ifcvf_hw *hw, u8 status);
+>> +void io_write64_twopart(u64 val, u32 *lo, u32 *hi);
+>> +void ifcvf_reset(struct ifcvf_hw *hw);
+>> +u64 ifcvf_get_features(struct ifcvf_hw *hw);
+>> +
+>> +#endif /* _IFCVF_H_ */
+>> -- 
+>> 1.8.3.1
+>>
