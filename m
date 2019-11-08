@@ -7,71 +7,67 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB45C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F1CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93504214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BBF21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573188218;
-	bh=gGcrJLLMEdGJDEnXTg6AGqhRcYT1a9VoEmUmShakP/M=;
+	s=default; t=1573188375;
+	bh=gH4YV/wqrobeQnaVD22aDnltH06bEHnjtZENRGZ48q4=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=wZU21i9Evq61inl7FXkw1DD8KH6BorQ4H2Ozhnt1jSCjvrTjBGNLA/b9uoY6omCqA
-	 ryevQx3JdyHimSfSk3S2bQo3cufs4erAMgi8LjUVoGcDhjDxIfouaGYPlJDfFTLVR6
-	 wP8pTqQaRQjdMCIad43IhV3NBUJNEEpCzGP1rMQg=
+	b=Bl4wSE4SF0oxpijGlMU0xRLkuqsq7kS5qO5oaJUgp09fvmQDSKX8PnR7ko5WolFiB
+	 7uYOtOULpRB+yJnJB7SV6azAB5UPIcIa2btOMVwsXHH5d8G8itlfKWyzl9bUEtDBPc
+	 MhVjN+E4e/i+rujhpwjQ6PrtpeOipDnv3OtJ21wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfKHEnh (ORCPT
+        id S1729706AbfKHEqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 23:43:37 -0500
-Received: from icp-osb-irony-out3.external.iinet.net.au ([203.59.1.153]:32857
-        "EHLO icp-osb-irony-out3.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726219AbfKHEnh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 23:43:37 -0500
-X-Greylist: delayed 557 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Nov 2019 23:43:35 EST
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AWAADi78Rd/zXSMGcNWBkBAQEBAQE?=
- =?us-ascii?q?BAQEBAQEBAQEBAREBAQEBAQEBAQEBAYF+gwyBMYQpj2oBAQeBNn+Ca4V6kUM?=
- =?us-ascii?q?JAQEBAQEBAQEBLwgBAYRAAoQyOBMCDgEBAQQBAQEBAQUDAYVYTIVdAQEBAQI?=
- =?us-ascii?q?BIxVBEAsNCAMCAiYCAlcGDQYCAQGDHgGCUgUvsVp1gTIahB8BgRSDNYFCBoE?=
- =?us-ascii?q?OKIFlikd4gQeBESeCNjU+gQSBOSUChHGCXgSWSpc9gi6HF44kBhuOPwOLMpZ?=
- =?us-ascii?q?6k0qBejMaCCgIgydQkHODW4plYgGQdQEB?=
-X-IPAS-Result: =?us-ascii?q?A2AWAADi78Rd/zXSMGcNWBkBAQEBAQEBAQEBAQEBAQEBA?=
- =?us-ascii?q?REBAQEBAQEBAQEBAYF+gwyBMYQpj2oBAQeBNn+Ca4V6kUMJAQEBAQEBAQEBL?=
- =?us-ascii?q?wgBAYRAAoQyOBMCDgEBAQQBAQEBAQUDAYVYTIVdAQEBAQIBIxVBEAsNCAMCA?=
- =?us-ascii?q?iYCAlcGDQYCAQGDHgGCUgUvsVp1gTIahB8BgRSDNYFCBoEOKIFlikd4gQeBE?=
- =?us-ascii?q?SeCNjU+gQSBOSUChHGCXgSWSpc9gi6HF44kBhuOPwOLMpZ6k0qBejMaCCgIg?=
- =?us-ascii?q?ydQkHODW4plYgGQdQEB?=
-X-IronPort-AV: E=Sophos;i="5.68,280,1569254400"; 
-   d="scan'208";a="224499746"
-Received: from unknown (HELO [10.44.0.22]) ([103.48.210.53])
-  by icp-osb-irony-out3.iinet.net.au with ESMTP; 08 Nov 2019 12:34:16 +0800
+        Thu, 7 Nov 2019 23:46:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfKHEqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 23:46:14 -0500
+Received: from [10.44.0.22] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC92721848;
+        Fri,  8 Nov 2019 04:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573188373;
+        bh=gH4YV/wqrobeQnaVD22aDnltH06bEHnjtZENRGZ48q4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=xRn6UE1fCLscoGa0SSMS43OBs/hmPEGgj8EzH0pTY9x2nudK/0/KLYUDldyDZFBiW
+         eefoao4dK85ZkzfVnGne6x8pop9UgAK0gyCag4BvbaJ1GqmvgyozJHyhg8t+8IWe7v
+         Jqu6973Y1RC3ZxksXaZzEc2ZHihhNBSO+oKuM9iw=
 Subject: Re: [PATCH] mtd: rawnand: driver for Mediatek MT7621 SoC NAND flash
  controller
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        neil@brown.name, blogic@openwrt.org
-References: <20191107073521.11413-1-gerg@kernel.org>
- <20191107084007.GA1203521@kroah.com>
+To:     =?UTF-8?Q?Ren=c3=a9_van_Dorst?= <opensource@vdorst.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, neil@brown.name,
+        DENG Qingfang <dengqf6@mail2.sysu.edu.cn>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <hackpascal@gmail.com>
+References: <20191107092053.Horde.i3MVcW9RqZDOQBMADZX9fuc@www.vdorst.com>
 From:   Greg Ungerer <gerg@kernel.org>
-Message-ID: <eb68fc5f-0a50-3faf-be61-23af5550ef39@kernel.org>
-Date:   Fri, 8 Nov 2019 14:34:15 +1000
+Message-ID: <b7e61be8-bd72-a4ef-6fb7-1047c7874342@kernel.org>
+Date:   Fri, 8 Nov 2019 14:46:07 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191107084007.GA1203521@kroah.com>
+In-Reply-To: <20191107092053.Horde.i3MVcW9RqZDOQBMADZX9fuc@www.vdorst.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/11/19 6:40 pm, Greg KH wrote:
-> On Thu, Nov 07, 2019 at 05:35:21PM +1000, gerg@kernel.org wrote:
+On 7/11/19 7:20 pm, René van Dorst wrote:
+> Quoting gerg@kernel.org:
+> 
 >> From: Greg Ungerer <gerg@kernel.org>
 >>
 >> Add a driver to support the NAND flash controller of the MediaTek MT7621
@@ -85,27 +81,50 @@ On 7/11/19 6:40 pm, Greg KH wrote:
 >> This is a much cleaned up version, put in staging to start with.
 >> It does still have some problems, mainly that it still uses a lot of the
 >> mtd raw nand legacy support.
-> 
-> Is that an issue?  Why not just put it in the "real" part of the kernel
-> then, if those apis are still in use?
-
-Agreed. If the MTD folks have no problem with it.
-
-
+>>
 >> The driver not only compiles, but it works well on the small range of
 >> hardware platforms that it has been used on so far. I have been using
 >> for quite a while now, cleaning up as I get time.
 >>
 >> So... I am looking for comments on the best approach forward with this.
 >> At least in staging it can get some more eyeballs going over it.
+>>
+>> There is a mediatek nand driver already, mtk_nand.c, for their ARM based
+>> System-on-Chip devices. That hardware module looks to have some hardware
+>> similarities with this one. At this point I don't know if that can be
+>> used on the 7621 based devices. (I tried a quick and dirty setup and had
+>> no success using it on the 7621).
+>>
+>> Thoughts?
 > 
-> staging will just nit-pick it to death for coding style issues, it's not
-> going to be get any major api changes/cleanups there usually.  I'd
-> recommend just merging this to the "real" part of the kernel now if it's
-> working for you.
+> +CC DENG Qingfang, Chuanhong Guo, Weijie Gao to the list.
+> 
+> Hi Greg,
+> 
+> Thanks for posting this driver.
+> 
+> But I would like to mention that the openwrt community is currently working on a
+> new version which is based a newer version of the MediaTek vendor driver.
+> That version is currently targeted for the openwrt 4.19 kernel.
+> See full pull request [1] and NAND driver patch [2]
+> 
+> It would be a shame if duplicate work has been done.
 
-I'll spin a v2 based on Dan's feedback, and move it into drivers/mtd.
+Thanks for pointing that out. I have no particular attachment to the
+patch code I sent (I didn't write it). Really just want to see a driver
+in mainline.
 
-Thanks
+I am going to spin a v2 of it, lets see how to the 2 drivers stack up
+against each other.
+
+Regards
 Greg
 
+
+
+> [1]: https://github.com/openwrt/openwrt/pull/2385
+> [2]: https://github.com/openwrt/openwrt/pull/2385/commits/b2569c0a5943fe8f94ba07c9540ecd14006d729a
+> 
+> <snip>
+> 
+> 
