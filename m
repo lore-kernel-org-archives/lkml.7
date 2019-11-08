@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6C9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F04C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744DA207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D942207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214515;
-	bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+	s=default; t=1573214518;
+	bh=oj6ivdFfTCNKtO4RHc9SGueECtIuC8xF3bEQJgR81/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QP1WiQRlno5nC81NsUIrw/rXqLGwfvTCvtD4NaZhNDBG8tQH+JeMc6lOwolvGgCnJ
-	 shyuth1eVyUMCbEx0hdkXoHio4kADcrQCpPYDTD/hFtaWYAIoMu0ihYdZfS9JTVia8
-	 Yw3uvLk9xu4kYu9DxQ2mBSkHPJ0I0Znqd3q8tE+4=
+	b=WV+eBQfYcu242YrXmEGLnRWgJKrz4AMiggBSpzbx77zDBLb1q4j/7Q0HHQUlO15iO
+	 M3uyx1k0urB5ZDHuQPflN1FJxmH7I3T8kkZuokdUXFJGhfxPQxzZtdRyYf7/mpiWwQ
+	 RBa6wu9RVLGKyC+ugkIzCGY5g1N1ixNSpjyF8ueE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391262AbfKHMBx (ORCPT
+        id S2391808AbfKHMB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:01:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:01:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732829AbfKHLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:31 -0500
+        id S2390464AbfKHLna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:43:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 954B5222C6;
-        Fri,  8 Nov 2019 11:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56E1C21D82;
+        Fri,  8 Nov 2019 11:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213411;
-        bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+        s=default; t=1573213409;
+        bh=oj6ivdFfTCNKtO4RHc9SGueECtIuC8xF3bEQJgR81/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e4jFu8uFp3ISRpOQJnkXG1elXD0E3MffG6MW506ji3QA+EfiTeP1HX1jyzjZgm0N0
-         iDw3zA7DpWDkmAum8R6JYHxiRAS8CFLRy43jvd4sHJxlbk1RkdygVRngxMuzsZNXIs
-         GyY1QDdUKBp++N/SBla4rKpASt9I1iNyiDircqmQ=
+        b=r0H9eHSWzR39RazXkLyqSLYCHn3vZMWHb6haw8XbZM3EAbIlFSvJ+7QVn5AsXETbA
+         QPlfWUE7r1PGIAURyWiRdeu6ptdvQxWCRhzuDxSLoEhF5+D7DFC1nlvuNqv6AWumZH
+         mVDgJ2bD8em5pNEc4Qx+6j3oc72zWpkCSvTPTCfs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 014/103] ALSA: seq: Do error checks at creating system ports
-Date:   Fri,  8 Nov 2019 06:41:39 -0500
-Message-Id: <20191108114310.14363-14-sashal@kernel.org>
+Cc:     Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 013/103] cfg80211: Avoid regulatory restore when COUNTRY_IE_IGNORE is set
+Date:   Fri,  8 Nov 2019 06:41:38 -0500
+Message-Id: <20191108114310.14363-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -57,70 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
 
-[ Upstream commit b8e131542b47b81236ecf6768c923128e1f5db6e ]
+[ Upstream commit 7417844b63d4b0dc8ab23f88259bf95de7d09b57 ]
 
-snd_seq_system_client_init() doesn't check the errors returned from
-its port creations.  Let's do it properly and handle the error paths.
+When REGULATORY_COUNTRY_IE_IGNORE is set,  __reg_process_hint_country_ie()
+ignores the country code change request from __cfg80211_connect_result()
+via regulatory_hint_country_ie().
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+After Disconnect, similar to above, country code should not be reset to
+world when country IE ignore is set. But this is violated and restore of
+regulatory settings is invoked by cfg80211_disconnect_work via
+regulatory_hint_disconnect().
+
+To address this, avoid regulatory restore from regulatory_hint_disconnect()
+when COUNTRY_IE_IGNORE is set.
+
+Note: Currently, restore_regulatory_settings() takes care of clearing
+beacon hints. But in the proposed change, regulatory restore is avoided.
+Therefore, explicitly clear beacon hints when DISABLE_BEACON_HINTS
+is not set.
+
+Signed-off-by: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_system.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ net/wireless/reg.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/sound/core/seq/seq_system.c b/sound/core/seq/seq_system.c
-index 8ce1d0b40dce1..ce1f1e4727ab1 100644
---- a/sound/core/seq/seq_system.c
-+++ b/sound/core/seq/seq_system.c
-@@ -123,6 +123,7 @@ int __init snd_seq_system_client_init(void)
- {
- 	struct snd_seq_port_callback pcallbacks;
- 	struct snd_seq_port_info *port;
-+	int err;
- 
- 	port = kzalloc(sizeof(*port), GFP_KERNEL);
- 	if (!port)
-@@ -144,7 +145,10 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_TIMER;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
- 
- 	/* register announcement port */
- 	strcpy(port->name, "Announce");
-@@ -154,16 +158,24 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_ANNOUNCE;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
- 	announce_port = port->addr.port;
- 
- 	kfree(port);
- 	return 0;
-+
-+ error_port:
-+	snd_seq_system_client_done();
-+	kfree(port);
-+	return err;
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index b940d5c2003b0..804eac073b6b9 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -2703,8 +2703,54 @@ static void restore_regulatory_settings(bool reset_user)
+ 	schedule_work(&reg_work);
  }
  
- 
- /* unregister our internal client */
--void __exit snd_seq_system_client_done(void)
-+void snd_seq_system_client_done(void)
++static bool is_wiphy_all_set_reg_flag(enum ieee80211_regulatory_flags flag)
++{
++	struct cfg80211_registered_device *rdev;
++	struct wireless_dev *wdev;
++
++	list_for_each_entry(rdev, &cfg80211_rdev_list, list) {
++		list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
++			wdev_lock(wdev);
++			if (!(wdev->wiphy->regulatory_flags & flag)) {
++				wdev_unlock(wdev);
++				return false;
++			}
++			wdev_unlock(wdev);
++		}
++	}
++
++	return true;
++}
++
+ void regulatory_hint_disconnect(void)
  {
- 	int oldsysclient = sysclient;
- 
++	/* Restore of regulatory settings is not required when wiphy(s)
++	 * ignore IE from connected access point but clearance of beacon hints
++	 * is required when wiphy(s) supports beacon hints.
++	 */
++	if (is_wiphy_all_set_reg_flag(REGULATORY_COUNTRY_IE_IGNORE)) {
++		struct reg_beacon *reg_beacon, *btmp;
++
++		if (is_wiphy_all_set_reg_flag(REGULATORY_DISABLE_BEACON_HINTS))
++			return;
++
++		spin_lock_bh(&reg_pending_beacons_lock);
++		list_for_each_entry_safe(reg_beacon, btmp,
++					 &reg_pending_beacons, list) {
++			list_del(&reg_beacon->list);
++			kfree(reg_beacon);
++		}
++		spin_unlock_bh(&reg_pending_beacons_lock);
++
++		list_for_each_entry_safe(reg_beacon, btmp,
++					 &reg_beacon_list, list) {
++			list_del(&reg_beacon->list);
++			kfree(reg_beacon);
++		}
++
++		return;
++	}
++
+ 	pr_debug("All devices are disconnected, going to restore regulatory settings\n");
+ 	restore_regulatory_settings(false);
+ }
 -- 
 2.20.1
 
