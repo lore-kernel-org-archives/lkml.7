@@ -2,126 +2,103 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EB1FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C894AFC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81351214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D63420650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573249008;
+	bh=aiHMdEMJOgAa6jrM3jbVr8IRnFbQkF1HPb45tscKBaQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MqPsbBB0N+pbixDenTUB8Xj39nv7W7NsBC3WmkquJifcllL6X9mUnQtk064lFllcr
+	 K5m97ExANhSP9TeDQ93XmAITXU/5s/hm5s+emMhUrESd6gZ+aM0qzqRaqOdYsxOZ0A
+	 i1bCyOK64t4Saf4bSlZQVBhHMCU4ruG+GVYWEHzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733257AbfKHVgc (ORCPT
+        id S1733278AbfKHVgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:36:32 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:40285 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731657AbfKHVgc (ORCPT
+        Fri, 8 Nov 2019 16:36:47 -0500
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:44882 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731097AbfKHVgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:36:32 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MHXSD-1ig8Ef1y1B-00DYFh; Fri, 08 Nov 2019 22:36:12 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ander Juaristi <a@juaristi.eus>, wenxu <wenxu@ucloud.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Phil Sutter <phil@nwl.cc>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org
-Subject: [PATCH 09/16] netfilter: nft_meta: use 64-bit time arithmetic
-Date:   Fri,  8 Nov 2019 22:32:47 +0100
-Message-Id: <20191108213257.3097633-10-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191108213257.3097633-1-arnd@arndb.de>
-References: <20191108213257.3097633-1-arnd@arndb.de>
+        Fri, 8 Nov 2019 16:36:46 -0500
+Received: by mail-lj1-f174.google.com with SMTP id g3so7673981ljl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 13:36:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qGYbfXBmYeGO7pa06B9v9RYZuC6G4mksi25tARbE4oY=;
+        b=D2lIv3jCmGx6XX86kRru64oEZZHnbWw2knlo1We7LolVbJbNK9HgSHPqCuNFkLo8ad
+         GU8k1DTmDoi/kms3XxcfX7lhY59TGnHP8CiCPpdo/DYtNT8a4RPLc9sR5QaxINzKAI91
+         MruliR/YTKfAHzSlhF17f4O8c+PUKsS3yl0wk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qGYbfXBmYeGO7pa06B9v9RYZuC6G4mksi25tARbE4oY=;
+        b=WI6Y7uVCwAKkwrfLAyFTUOrvsMRaOiB98on3FHtsXvanYNcvTn+74q92c+dSGJiWH9
+         ojIbMwd1rhGL5MuJWI+9/1LASGJM3FOXzSTLjlwA5KoZv5uEzp6gf7Tcm62xY1EmcX9u
+         kGrBFO8HugH6EvolYCvlK6LygkedvvdcYF+qcUccJfIOUUaYNJYDWnwOR6e/i9IR2rCV
+         K8mqIofjAd7iJVLgQNhSlvJuzYfyAKSS+iWsPH/eIu528/rA8+CxD5XdSJqvIk6rL4di
+         n/O0hyWH/vwptq9GGpimd+ug1x22Im8lVmM9SfPRUWsk172R/ZWOcr+H8DeqXDC+srQ9
+         sW5Q==
+X-Gm-Message-State: APjAAAXcSCUESbk9S8jypCrhhuoOOhAaSXQWO6SmsiUbbhHJqbn1VVs7
+        xtv/5GORBO0YRDK/VZGX65UkhdQTWs0=
+X-Google-Smtp-Source: APXvYqygv9/W81QLQVq7URdIVh0eGNZuhtMPyuLcktDoYh4oyp6fYbweY6Pz+r7cyrxPWv/5JGeV3g==
+X-Received: by 2002:a2e:b4e1:: with SMTP id s1mr8195248ljm.5.1573249002438;
+        Fri, 08 Nov 2019 13:36:42 -0800 (PST)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id n1sm2817702ljg.44.2019.11.08.13.36.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2019 13:36:41 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id n21so7676307ljg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 13:36:40 -0800 (PST)
+X-Received: by 2002:a05:651c:331:: with SMTP id b17mr8336920ljp.133.1573249000556;
+ Fri, 08 Nov 2019 13:36:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8e4BtkTZhkDHnhj4em5WE6DJ2Vkq2Wh8mzdxKAtzODBb4B8f/ed
- 1DGYs7ESWLEtqmT/CcVkHt+/jTl1TdrlCbYVhmDWsfDO6ZSQ/WOUgNlu6NcnJYc1TIxaznY
- ICGDL51il9EAV1ONkEj2C3NvH/5CeXp/Ah0RZdx3J8g4pFdkn0H2eqIASfMU4ZCCfw4FYqq
- mIeUVaqKsjByJJ274lYZw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BXMIyk7bYig=:/XFifkUlnyQ21O7sbEHUKu
- Nd04r+p1qEyeBSJA6OQQIt0C0EEJhrJu5ULg7ArJrDLL6Sc+zGcRT2eBCMuyKOVu2pbT3y/KO
- Qjz3kLq+YSfMw05N8pByhJ5Sgk6lAhl+XHfMQJ47ws5al9fl6GCjo6LjmhfQj6KLsM+hiIxBk
- 7MdHAuoWEcT39E81h/0I9+oL89nPaFCLqPnZwTmSF/FWjpqM8nOSRaiwqQ3i4wCeLjz5qpSK/
- Xlz8ivOmvP6eDQybCUGKiusaZob3Qu5J1HT+iCkdwbkCW7VezbiowHMrx6+YAaoWZ7oGqMCjI
- WNzx2cn+FrVgdxhuePz8qk4yxVoexAwMSYFO8tqcSk2NNCPR+l98/Typ+IDnPBTB6/aYvvFTc
- FLnYlQSfhTbqhm7CRlSAD/Jn2cZr4mJFwenXeyx9jqGvK0epNm3bI4T1s8AXxUdDpZOtAmxsN
- ytctvQbk+kMS6sen/4zxK+MYwgkH4dA1S1tCPAcGk6OnxFcf5hVGCU5G3Oa8gD1SlOelgFWuh
- 3k44ZAjp5/YcrPu3k0aytdVAsWbsZGtej2QVB3mX67/nuj7nS+U6fsqXFr2WEiIFCw2B7cThx
- ZEYPdBFwbvKL8mL9h+2pzE2OpEcIW6u5gIxgnJCyNPHK5LD4DWbgvmyq65jrxITTE7ZKx3e43
- G4moguidGfoX3WGwk4MIoD2sLEVWdV0CW5uafFnB/gUYt9Glob0OWX1xCp8kE4ecBHLbTw1be
- QRiyX7UFJf7QgjYwIpVuhdzqNhLTUyjg8kL8LUDxKbM9tKn/s6AOmtXzmJCtRnnPNXq/G3bxT
- 4DDfDS0cJZl/SuY3dszyqTxUmYYoADpxh/WaDiqwS6tX5SK+eGIVmXzM1p/bDz9QrQ3o4OdXn
- +8OEInWfu8d0Wk8i3ssw==
+References: <000000000000c422a80596d595ee@google.com> <6bddae34-93df-6820-0390-ac18dcbf0927@gmail.com>
+ <CAHk-=whh5bcxCecEL5Fy4XvQjgBTJ9uqvyp7dW=CLU6VNxS9iA@mail.gmail.com>
+ <CANn89iK9mTJ4BN-X3MeSx5LGXGYafXkhZyaUpdXDjVivTwA6Jg@mail.gmail.com>
+ <CAHk-=whNBL63qmO176qOQpkY16xvomog5ocvM=9K55hUgAgOPA@mail.gmail.com>
+ <CANn89iJJiB6avNtZ1qQNTeJwyjW32Pxk_2CwvEJxgQ==kgY0fA@mail.gmail.com>
+ <CANn89i+RrngUr11_iOYDuqDvAZnPfG3ieJR025M78uhiwEPuvQ@mail.gmail.com>
+ <CAHk-=wi-aTQx5-gD51QC6UWJYxQv1p1CnrPpfbn4X1S4AC7G-g@mail.gmail.com> <CANn89iJh-WcvZYQEfdK=RGswQX8e1rp=CR27a6kWQkgK996P7g@mail.gmail.com>
+In-Reply-To: <CANn89iJh-WcvZYQEfdK=RGswQX8e1rp=CR27a6kWQkgK996P7g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 8 Nov 2019 13:36:23 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh_-1pj0vsAHiHf_FVardKkN7AZGX73QwGpViMyF7_mvQ@mail.gmail.com>
+Message-ID: <CAHk-=wh_-1pj0vsAHiHf_FVardKkN7AZGX73QwGpViMyF7_mvQ@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        Marco Elver <elver@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit architectures, get_seconds() returns an unsigned 32-bit
-time value, which also matches the type used in the nft_meta
-code. This will not overflow in year 2038 as a time_t would, but
-it still suffers from the overflow problem later on in year 2106.
+On Fri, Nov 8, 2019 at 12:53 PM Eric Dumazet <edumazet@google.com> wrote:
+>
+> per cpu SNMP counters mostly, with no IRQ safety requirements.
+>
+> Note that this could be implemented using local{64}_add() on arches like x86_64,
+> while others might have to fallback to WRITE_ONCE(variable, variable + add)
 
-Change this instance to use the time64_t type consistently
-and avoid the deprecated get_seconds().
+raw_cpu_add()?
 
-The nft_meta_weekday() calculation potentially gets a little slower
-on 32-bit architectures, but now it has the same behavior as on
-64-bit architectures and does not overflow.
+We already use those for vm_counters where we intentionally accept races.
 
-Fixes: 63d10e12b00d ("netfilter: nft_meta: support for time matching")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/netfilter/nft_meta.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/net/netfilter/nft_meta.c b/net/netfilter/nft_meta.c
-index 317e3a9e8c5b..dda1e55d5801 100644
---- a/net/netfilter/nft_meta.c
-+++ b/net/netfilter/nft_meta.c
-@@ -33,19 +33,19 @@
- 
- static DEFINE_PER_CPU(struct rnd_state, nft_prandom_state);
- 
--static u8 nft_meta_weekday(unsigned long secs)
-+static u8 nft_meta_weekday(time64_t secs)
- {
- 	unsigned int dse;
- 	u8 wday;
- 
- 	secs -= NFT_META_SECS_PER_MINUTE * sys_tz.tz_minuteswest;
--	dse = secs / NFT_META_SECS_PER_DAY;
-+	dse = div_u64(secs, NFT_META_SECS_PER_DAY);
- 	wday = (4 + dse) % NFT_META_DAYS_PER_WEEK;
- 
- 	return wday;
- }
- 
--static u32 nft_meta_hour(unsigned long secs)
-+static u32 nft_meta_hour(time64_t secs)
- {
- 	struct tm tm;
- 
-@@ -250,10 +250,10 @@ void nft_meta_get_eval(const struct nft_expr *expr,
- 		nft_reg_store64(dest, ktime_get_real_ns());
- 		break;
- 	case NFT_META_TIME_DAY:
--		nft_reg_store8(dest, nft_meta_weekday(get_seconds()));
-+		nft_reg_store8(dest, nft_meta_weekday(ktime_get_real_seconds()));
- 		break;
- 	case NFT_META_TIME_HOUR:
--		*dest = nft_meta_hour(get_seconds());
-+		*dest = nft_meta_hour(ktime_get_real_seconds());
- 		break;
- 	default:
- 		WARN_ON(1);
--- 
-2.20.0
-
+              Linus
