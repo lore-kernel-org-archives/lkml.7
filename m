@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CABEFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65953FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D919020650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3376720650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240583;
-	bh=hRXQ8sUkkvj8f+ms3hSWiNmVXTyGDsp/hBlvFvf3ciw=;
+	s=default; t=1573240590;
+	bh=jHGnj6Pen2DqLZH29Nhk0FLpIUw6mQ0Ff6tDdW/GZe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ws1hvqO133gy0SYv6jVn7Exmoypi1W3osm1cPOIjtAotxt+hmsJ5faOq4MK8h1dwU
-	 evkJtDHVuVq5uyVtrmcDw/4OeQpgffWwBhbsVfU2etb9m7iiSdbHgFBA1ivclvFGDj
-	 iXh2spkPTdDfa9iYdzrwXfNCWuH03PJoS5TL0GlQ=
+	b=lc+z9GJgKFIlnvwNmjCe46VX0wuQF6Yp/RyapaRSjI1pc1KOsk8eY8EpshCcfvAdf
+	 U/ocljsvvl1jAcYIUBFymtYBM+V9ToIDpSXTw05H1p0Vbn4So7nedqaShEtzPEh+ey
+	 KxTTAhhOO/5ib+B6ulc6DzVyl1XNCnNaHi1To+/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390727AbfKHTDO (ORCPT
+        id S2390658AbfKHTC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:03:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:02:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390707AbfKHTDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:12 -0500
+        id S2387796AbfKHTCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:02:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DE9E20650;
-        Fri,  8 Nov 2019 19:03:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A78A20650;
+        Fri,  8 Nov 2019 19:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239790;
-        bh=hRXQ8sUkkvj8f+ms3hSWiNmVXTyGDsp/hBlvFvf3ciw=;
+        s=default; t=1573239773;
+        bh=jHGnj6Pen2DqLZH29Nhk0FLpIUw6mQ0Ff6tDdW/GZe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vHbJsjctm92LWjwY4KcNXI4i+B/72JG0IkGoaFyxW62kMQBvgGsqUPUBAQTCbkqcG
-         tRigNhkORhePSGQ1jZDpTEVfca735RRZ+wJSjRijhGPK4shiqaKfg/hO1mzCo4tPN7
-         Y9dSVY4YfHOho6yMshZnjc5OUT6T9ShrSfD6EjRg=
+        b=WAKzCbBs0tp73FQinYbWb+ZvZyu62c5qcGuWk4AdGXVieP17wkBxMQGtDOEOeeO8c
+         IqQ/+EPrkUV9osyYC+UJL0/MSlPBoNLL2GSu3m5U4JKYzq0k2CPb9t6gmVP31Dz4B9
+         7Z3D6aKytTB1txDYKx8eQynBqgUD6XvJ9Irf6SIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 61/79] net/mlx5e: Fix handling of compressed CQEs in case of low NAPI budget
-Date:   Fri,  8 Nov 2019 19:50:41 +0100
-Message-Id: <20191108174820.613541097@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 56/79] net: use skb_queue_empty_lockless() in poll() handlers
+Date:   Fri,  8 Nov 2019 19:50:36 +0100
+Message-Id: <20191108174819.208207951@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -59,57 +59,248 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 9df86bdb6746d7fcfc2fda715f7a7c3d0ddb2654 ]
+[ Upstream commit 3ef7cf57c72f32f61e97f8fa401bc39ea1f1a5d4 ]
 
-When CQE compression is enabled, compressed CQEs use the following
-structure: a title is followed by one or many blocks, each containing 8
-mini CQEs (except the last, which may contain fewer mini CQEs).
+Many poll() handlers are lockless. Using skb_queue_empty_lockless()
+instead of skb_queue_empty() is more appropriate.
 
-Due to NAPI budget restriction, a complete structure is not always
-parsed in one NAPI run, and some blocks with mini CQEs may be deferred
-to the next NAPI poll call - we have the mlx5e_decompress_cqes_cont call
-in the beginning of mlx5e_poll_rx_cq. However, if the budget is
-extremely low, some blocks may be left even after that, but the code
-that follows the mlx5e_decompress_cqes_cont call doesn't check it and
-assumes that a new CQE begins, which may not be the case. In such cases,
-random memory corruptions occur.
-
-An extremely low NAPI budget of 8 is used when busy_poll or busy_read is
-active.
-
-This commit adds a check to make sure that the previous compressed CQE
-has been completely parsed after mlx5e_decompress_cqes_cont, otherwise
-it prevents a new CQE from being fetched in the middle of a compressed
-CQE.
-
-This commit fixes random crashes in __build_skb, __page_pool_put_page
-and other not-related-directly places, that used to happen when both CQE
-compression and busy_poll/busy_read were enabled.
-
-Fixes: 7219ab34f184 ("net/mlx5e: CQE compression")
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/isdn/capi/capi.c     |    2 +-
+ net/atm/common.c             |    2 +-
+ net/bluetooth/af_bluetooth.c |    4 ++--
+ net/caif/caif_socket.c       |    2 +-
+ net/core/datagram.c          |    4 ++--
+ net/decnet/af_decnet.c       |    2 +-
+ net/ipv4/tcp.c               |    2 +-
+ net/ipv4/udp.c               |    2 +-
+ net/nfc/llcp_sock.c          |    4 ++--
+ net/phonet/socket.c          |    4 ++--
+ net/sctp/socket.c            |    4 ++--
+ net/tipc/socket.c            |    4 ++--
+ net/unix/af_unix.c           |    6 +++---
+ net/vmw_vsock/af_vsock.c     |    2 +-
+ 14 files changed, 22 insertions(+), 22 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -1267,8 +1267,11 @@ int mlx5e_poll_rx_cq(struct mlx5e_cq *cq
- 	if (unlikely(!test_bit(MLX5E_RQ_STATE_ENABLED, &rq->state)))
- 		return 0;
+--- a/drivers/isdn/capi/capi.c
++++ b/drivers/isdn/capi/capi.c
+@@ -744,7 +744,7 @@ capi_poll(struct file *file, poll_table
  
--	if (cq->decmprs_left)
-+	if (cq->decmprs_left) {
- 		work_done += mlx5e_decompress_cqes_cont(rq, cq, 0, budget);
-+		if (cq->decmprs_left || work_done >= budget)
-+			goto out;
-+	}
+ 	poll_wait(file, &(cdev->recvwait), wait);
+ 	mask = EPOLLOUT | EPOLLWRNORM;
+-	if (!skb_queue_empty(&cdev->recvqueue))
++	if (!skb_queue_empty_lockless(&cdev->recvqueue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 	return mask;
+ }
+--- a/net/atm/common.c
++++ b/net/atm/common.c
+@@ -667,7 +667,7 @@ __poll_t vcc_poll(struct file *file, str
+ 		mask |= EPOLLHUP;
  
- 	cqe = mlx5_cqwq_get_cqe(&cq->wq);
- 	if (!cqe) {
+ 	/* readable? */
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	/* writable? */
+--- a/net/bluetooth/af_bluetooth.c
++++ b/net/bluetooth/af_bluetooth.c
+@@ -460,7 +460,7 @@ __poll_t bt_sock_poll(struct file *file,
+ 	if (sk->sk_state == BT_LISTEN)
+ 		return bt_accept_poll(sk);
+ 
+-	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
++	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
+ 		mask |= EPOLLERR |
+ 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
+ 
+@@ -470,7 +470,7 @@ __poll_t bt_sock_poll(struct file *file,
+ 	if (sk->sk_shutdown == SHUTDOWN_MASK)
+ 		mask |= EPOLLHUP;
+ 
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	if (sk->sk_state == BT_CLOSED)
+--- a/net/caif/caif_socket.c
++++ b/net/caif/caif_socket.c
+@@ -953,7 +953,7 @@ static __poll_t caif_poll(struct file *f
+ 		mask |= EPOLLRDHUP;
+ 
+ 	/* readable? */
+-	if (!skb_queue_empty(&sk->sk_receive_queue) ||
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
+ 		(sk->sk_shutdown & RCV_SHUTDOWN))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -842,7 +842,7 @@ __poll_t datagram_poll(struct file *file
+ 	mask = 0;
+ 
+ 	/* exceptional events? */
+-	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
++	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
+ 		mask |= EPOLLERR |
+ 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
+ 
+@@ -852,7 +852,7 @@ __poll_t datagram_poll(struct file *file
+ 		mask |= EPOLLHUP;
+ 
+ 	/* readable? */
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	/* Connection-based need to check for termination and startup */
+--- a/net/decnet/af_decnet.c
++++ b/net/decnet/af_decnet.c
+@@ -1213,7 +1213,7 @@ static __poll_t dn_poll(struct file *fil
+ 	struct dn_scp *scp = DN_SK(sk);
+ 	__poll_t mask = datagram_poll(file, sock, wait);
+ 
+-	if (!skb_queue_empty(&scp->other_receive_queue))
++	if (!skb_queue_empty_lockless(&scp->other_receive_queue))
+ 		mask |= EPOLLRDBAND;
+ 
+ 	return mask;
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -595,7 +595,7 @@ __poll_t tcp_poll(struct file *file, str
+ 	}
+ 	/* This barrier is coupled with smp_wmb() in tcp_reset() */
+ 	smp_rmb();
+-	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
++	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
+ 		mask |= EPOLLERR;
+ 
+ 	return mask;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -2651,7 +2651,7 @@ __poll_t udp_poll(struct file *file, str
+ 	__poll_t mask = datagram_poll(file, sock, wait);
+ 	struct sock *sk = sock->sk;
+ 
+-	if (!skb_queue_empty(&udp_sk(sk)->reader_queue))
++	if (!skb_queue_empty_lockless(&udp_sk(sk)->reader_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	/* Check for false positives due to checksum errors */
+--- a/net/nfc/llcp_sock.c
++++ b/net/nfc/llcp_sock.c
+@@ -566,11 +566,11 @@ static __poll_t llcp_sock_poll(struct fi
+ 	if (sk->sk_state == LLCP_LISTEN)
+ 		return llcp_accept_poll(sk);
+ 
+-	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
++	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
+ 		mask |= EPOLLERR |
+ 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
+ 
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	if (sk->sk_state == LLCP_CLOSED)
+--- a/net/phonet/socket.c
++++ b/net/phonet/socket.c
+@@ -351,9 +351,9 @@ static __poll_t pn_socket_poll(struct fi
+ 
+ 	if (sk->sk_state == TCP_CLOSE)
+ 		return EPOLLERR;
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+-	if (!skb_queue_empty(&pn->ctrlreq_queue))
++	if (!skb_queue_empty_lockless(&pn->ctrlreq_queue))
+ 		mask |= EPOLLPRI;
+ 	if (!mask && sk->sk_state == TCP_CLOSE_WAIT)
+ 		return EPOLLHUP;
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -7939,7 +7939,7 @@ __poll_t sctp_poll(struct file *file, st
+ 	mask = 0;
+ 
+ 	/* Is there any exceptional events?  */
+-	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
++	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
+ 		mask |= EPOLLERR |
+ 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
+ 	if (sk->sk_shutdown & RCV_SHUTDOWN)
+@@ -7948,7 +7948,7 @@ __poll_t sctp_poll(struct file *file, st
+ 		mask |= EPOLLHUP;
+ 
+ 	/* Is it readable?  Reconsider this code with TCP-style support.  */
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	/* The association is either gone or not ready.  */
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -731,7 +731,7 @@ static __poll_t tipc_poll(struct file *f
+ 		/* fall thru' */
+ 	case TIPC_LISTEN:
+ 	case TIPC_CONNECTING:
+-		if (!skb_queue_empty(&sk->sk_receive_queue))
++		if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 			revents |= EPOLLIN | EPOLLRDNORM;
+ 		break;
+ 	case TIPC_OPEN:
+@@ -739,7 +739,7 @@ static __poll_t tipc_poll(struct file *f
+ 			revents |= EPOLLOUT;
+ 		if (!tipc_sk_type_connectionless(sk))
+ 			break;
+-		if (skb_queue_empty(&sk->sk_receive_queue))
++		if (skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 			break;
+ 		revents |= EPOLLIN | EPOLLRDNORM;
+ 		break;
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -2661,7 +2661,7 @@ static __poll_t unix_poll(struct file *f
+ 		mask |= EPOLLRDHUP | EPOLLIN | EPOLLRDNORM;
+ 
+ 	/* readable? */
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	/* Connection-based need to check for termination and startup */
+@@ -2690,7 +2690,7 @@ static __poll_t unix_dgram_poll(struct f
+ 	mask = 0;
+ 
+ 	/* exceptional events? */
+-	if (sk->sk_err || !skb_queue_empty(&sk->sk_error_queue))
++	if (sk->sk_err || !skb_queue_empty_lockless(&sk->sk_error_queue))
+ 		mask |= EPOLLERR |
+ 			(sock_flag(sk, SOCK_SELECT_ERR_QUEUE) ? EPOLLPRI : 0);
+ 
+@@ -2700,7 +2700,7 @@ static __poll_t unix_dgram_poll(struct f
+ 		mask |= EPOLLHUP;
+ 
+ 	/* readable? */
+-	if (!skb_queue_empty(&sk->sk_receive_queue))
++	if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	/* Connection-based need to check for termination and startup */
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -873,7 +873,7 @@ static __poll_t vsock_poll(struct file *
+ 		 * the queue and write as long as the socket isn't shutdown for
+ 		 * sending.
+ 		 */
+-		if (!skb_queue_empty(&sk->sk_receive_queue) ||
++		if (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
+ 		    (sk->sk_shutdown & RCV_SHUTDOWN)) {
+ 			mask |= EPOLLIN | EPOLLRDNORM;
+ 		}
 
 
