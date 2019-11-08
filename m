@@ -2,130 +2,168 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E78BFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C39C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D502178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0ED821924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEwVAnBg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pnVTrbUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfKHQMC (ORCPT
+        id S1727112AbfKHQPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:12:02 -0500
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:45991 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfKHQMC (ORCPT
+        Fri, 8 Nov 2019 11:15:15 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38025 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfKHQPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:12:02 -0500
-Received: by mail-wr1-f52.google.com with SMTP id z10so2357774wrs.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 08:12:00 -0800 (PST)
+        Fri, 8 Nov 2019 11:15:14 -0500
+Received: by mail-qk1-f193.google.com with SMTP id e2so5738599qkn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 08:15:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=vfSMyonLNWSStTVXi/+0MEYGDG3O7Vuvm5dH7uvXqwo=;
-        b=AEwVAnBgU2jNScqOseydoEaBBJJxBCXU6NmVBre0HQW5nxkf4unTDsavaxNM/0Ci4D
-         m8RvulI0QkCcVuO3KcSk18U+XtA8zF134kNhGG8XGiu1y1PN9zInpUfT02kMTfDeGPev
-         WWqBVavLqPsIXACZCyCnoYALJCB9+sL4u9yaa4gnL6ljldJqbe/QcOjJ+OBlgmkSOySR
-         Xy5jGfqGi4qll2w6cpzzO6VxWc+9Ging6gM9XMCMstSbTYOhSO21a1t01yIFmoHx5pZh
-         8TUjWYLpXfWXgx19ENEeTxK9lTZKE2jrq+jN4mURIjeHOruPQJbJDmzxmTOhkIf6Onx8
-         ROgg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VprtH8LpSA2C0RoW/En0kv7aKrRt2gpW6XPcJVTh2IQ=;
+        b=pnVTrbURfNh6YBpyTtMajVC7W5UADZCzTJYCF8GwdQbhbC1lisCeyqWbo/6ewR7YnU
+         248jRmi41ct/VEv4uoSckmnIAROqMlJ4wJ4ACJ1PHa46AWJ9hqJuO8YRX1/FbHnKlbq+
+         mAuqsNaPzLx5Gdiz7iuwGkgQ7IyyEt+S0n1eI+AG5mRICtVHym6leNNPnD9mASIyYArB
+         Q0X05441/Bh0z6dW0l5HADvuYZ/6VCefFTycB2jt/uYmTVXEYAXBp0ArbRejlwrIFJav
+         eZsy6hiKRhZFSJjNOxI80FCeDYg2ca8WWgZxWBc60SNBYR9P7aN8Alr/4Q7Y/I1dVouU
+         vULQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vfSMyonLNWSStTVXi/+0MEYGDG3O7Vuvm5dH7uvXqwo=;
-        b=dOzVkkrnIMr1FtUChS1plC+tEsk+gKQLdCwz+bUHl4M3akF87d4qP2lt4t10Mw1pH1
-         IPcWkTpzNQv1a3lVxCbuS9/QMEe/mZSvSguffAFDHADJs6nINiW1UE2+DF3vcvUGKbcE
-         OKG8JfBEjpceD1R3pF4XFdEzLqTHdXVhosibaAlI5ByRnGpisRTupTeTAeKcBmtGa3ha
-         YiEQ1p++FcAeJwcYCgguZ7Wen00ZfijFym22FMUsa921TpKZitboP/1Yq0HFxu/RmmxF
-         dSPoTgCmEce59CBguJ6DeFdZHBU3HSiNW/ltqTJR5/RPor4XfYOPzhQKQkCOFVP1P5H2
-         VPZQ==
-X-Gm-Message-State: APjAAAUDGvJbOlcV8TsMs6LBI1lbsScDODjw1QXJxvW6Fjce8eXWpLNl
-        0g/sl+GXbVoxqY+NDhQfPkrPqcnY
-X-Google-Smtp-Source: APXvYqwdr6usJ4bGyyp0FTiNoGOK4B/8DRuo7APPq8qVeKpq+g8dDL9o6RV8LWA64mmz7H//6YXfdg==
-X-Received: by 2002:adf:e903:: with SMTP id f3mr9637350wrm.121.1573229520107;
-        Fri, 08 Nov 2019 08:12:00 -0800 (PST)
-Received: from debian ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id d13sm6226385wrq.51.2019.11.08.08.11.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Nov 2019 08:11:59 -0800 (PST)
-Date:   Fri, 8 Nov 2019 16:11:57 +0000
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: libtraceevent installing in wrong folder
-Message-ID: <20191108161157.g5aadocnfvragqb2@debian>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VprtH8LpSA2C0RoW/En0kv7aKrRt2gpW6XPcJVTh2IQ=;
+        b=ANwymDSPDnkfwKn4HnTMux37quuo1tZC1PK6R8MhWu6iAlQ9wqCeGtBLIqgXdPyLLL
+         CJ4xNvt2LJ5VihSE/TNxhluOwCwsSfN6HUvk97BwSByw2wDtY2H6ZT9IUJktKvL2H0s5
+         3LG4CvgZIkaIBwD2pL2B7mSsEPrP2nKAhgGgn3gfQZsBCdPwjxtdsTbsacwgvRQLgHvY
+         xe41PIQf5gc2LoiCxew7HqM2/SNdOIKitcAY7/h8nFqwwE18oZMLlLl7Ru9t0lrLltI5
+         Pxy25ctf6v4WIgBKP9Bca+py+DI4ittgygVPet+7/RMidBIyeRfNUEmSFithkdCHfJkc
+         Domw==
+X-Gm-Message-State: APjAAAXaHnBGrsv8eACDjRQR6AwM1vqROP1Fr2yTavYO8ttgk2S1Bx8u
+        mnBQ7fgd6w+fbbGDPaIajKkk1Ek65oCC1GvP/UiZbQ==
+X-Google-Smtp-Source: APXvYqxXO3v+z8Ca7H7xAWxtQ0sQ0IOvsdL+7cUSlTtEdDZCBpgN8p4AHITNn8VZKrDo4yNrk6vQO2ClSj1w7tM5rnM=
+X-Received: by 2002:a37:8e81:: with SMTP id q123mr9858170qkd.250.1573229712422;
+ Fri, 08 Nov 2019 08:15:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <000000000000e3a8e00596d7ca32@google.com>
+In-Reply-To: <000000000000e3a8e00596d7ca32@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 8 Nov 2019 17:15:00 +0100
+Message-ID: <CACT4Y+bOy+OOp2h=jNYJB8xBhQ9x_=MEgP-XcU7KHs7v1v0YPA@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in kernel_sendmsg
+To:     syzbot <syzbot+4b6f070bb7a8ea5420d4@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        David Howells <dhowells@redhat.com>,
+        Alexander Potapenko <glider@google.com>,
+        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Fri, Nov 8, 2019 at 4:54 PM syzbot
+<syzbot+4b6f070bb7a8ea5420d4@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    124037e0 kmsan: drop inlines, rename do_kmsan_task_create()
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1648eb9d600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4b6f070bb7a8ea5420d4
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+4b6f070bb7a8ea5420d4@syzkaller.appspotmail.com
 
-I tried to install libtraceevent. and I used the command:
-"make DESTDIR=/home/sudip/test prefix=/usr install" from tool/lib/traceevent
+I think this is:
 
-And this is what I get:
-sudip@debian:~/test$ pwd
-/home/sudip/test
+#syz dup: KMSAN: use-after-free in rxrpc_send_keepalive
 
-sudip@debian:~/test$ find .
-.
-./usr
-./usr/local
-./usr/local/lib
-./usr/local/lib/x86_64-linux-gnu
-./usr/local/lib/x86_64-linux-gnu/pkgconfig
-./usr/local/lib/x86_64-linux-gnu/pkgconfig/libtraceevent.pc
-./usr/lib64
-./usr/lib64/traceevent
-./usr/lib64/traceevent/plugins
-./usr/lib64/traceevent/plugins/plugin_hrtimer.so
-./usr/lib64/traceevent/plugins/plugin_sched_switch.so
-./usr/lib64/traceevent/plugins/plugin_jbd2.so
-./usr/lib64/traceevent/plugins/plugin_kvm.so
-./usr/lib64/traceevent/plugins/plugin_cfg80211.so
-./usr/lib64/traceevent/plugins/plugin_kmem.so
-./usr/lib64/traceevent/plugins/plugin_scsi.so
-./usr/lib64/traceevent/plugins/plugin_mac80211.so
-./usr/lib64/traceevent/plugins/plugin_function.so
-./usr/lib64/traceevent/plugins/plugin_xen.so
-./usr/lib64/libtraceevent.so
-./usr/lib64/libtraceevent.so.1.1.0
-./usr/lib64/libtraceevent.a
-./usr/lib64/libtraceevent.so.1
-./home
-./home/sudip
-./home/sudip/test
-./home/sudip/test/usr
-./home/sudip/test/usr/include
-./home/sudip/test/usr/include/traceevent
-./home/sudip/test/usr/include/traceevent/event-parse.h
-./home/sudip/test/usr/include/traceevent/trace-seq.h
-./home/sudip/test/usr/include/traceevent/kbuffer.h
-./home/sudip/test/usr/include/traceevent/event-utils.h
+https://syzkaller.appspot.com/bug?id=428e72dc175d0f4b23a1fb9b7d3d16fad7ef2a4b
 
-I am seeing two problems:
-1) It created another home/sudip/test folder inside /home/sudip/test and
-the header files are installed in /home/sudip/test/home/sudip/test/usr/include folder.
-They should have been in /home/sudip/test/usr/include.
-
-2) I used prefix=/usr but the 'pkgconfig' still went to /usr/local
-
-Did I do something wrong?
-
-
--- 
-Regards
-Sudip
+> =====================================================
+> BUG: KMSAN: uninit-value in rxrpc_send_keepalive+0x2fa/0x830
+> net/rxrpc/output.c:655
+> CPU: 0 PID: 3367 Comm: kworker/0:2 Not tainted 5.3.0-rc7+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: krxrpcd rxrpc_peer_keepalive_worker
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+>   kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
+>   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
+>   sock_sendmsg_nosec net/socket.c:637 [inline]
+>   sock_sendmsg net/socket.c:657 [inline]
+>   kernel_sendmsg+0x2c9/0x440 net/socket.c:677
+>   rxrpc_send_keepalive+0x2fa/0x830 net/rxrpc/output.c:655
+>   rxrpc_peer_keepalive_dispatch net/rxrpc/peer_event.c:369 [inline]
+>   rxrpc_peer_keepalive_worker+0xb82/0x1510 net/rxrpc/peer_event.c:430
+>   process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+>   worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+>   kthread+0x4b5/0x4f0 kernel/kthread.c:256
+>   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+>
+> Uninit was created at:
+>   kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
+>   kmsan_internal_poison_shadow+0x53/0x100 mm/kmsan/kmsan.c:134
+>   kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:103
+>   slab_alloc_node mm/slub.c:2790 [inline]
+>   slab_alloc mm/slub.c:2799 [inline]
+>   kmem_cache_alloc_trace+0x8c5/0xd20 mm/slub.c:2816
+>   kmalloc include/linux/slab.h:552 [inline]
+>   __hw_addr_create_ex net/core/dev_addr_lists.c:30 [inline]
+>   __hw_addr_add_ex net/core/dev_addr_lists.c:76 [inline]
+>   __hw_addr_add net/core/dev_addr_lists.c:84 [inline]
+>   dev_addr_init+0x152/0x700 net/core/dev_addr_lists.c:464
+>   alloc_netdev_mqs+0x2a9/0x1650 net/core/dev.c:9150
+>   rtnl_create_link+0x559/0x1190 net/core/rtnetlink.c:2931
+>   __rtnl_newlink net/core/rtnetlink.c:3186 [inline]
+>   rtnl_newlink+0x2757/0x38d0 net/core/rtnetlink.c:3254
+>   rtnetlink_rcv_msg+0x115a/0x1580 net/core/rtnetlink.c:5223
+>   netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
+>   rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5241
+>   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>   netlink_unicast+0xf6c/0x1050 net/netlink/af_netlink.c:1328
+>   netlink_sendmsg+0x110f/0x1330 net/netlink/af_netlink.c:1917
+>   sock_sendmsg_nosec net/socket.c:637 [inline]
+>   sock_sendmsg net/socket.c:657 [inline]
+>   ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
+>   __sys_sendmsg net/socket.c:2356 [inline]
+>   __do_sys_sendmsg net/socket.c:2365 [inline]
+>   __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
+>   __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
+>   do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
+>   entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> =====================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000e3a8e00596d7ca32%40google.com.
