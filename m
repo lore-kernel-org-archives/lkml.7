@@ -2,123 +2,119 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9E3FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5E5FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0319E222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="L1r9uYB1"
+	by mail.kernel.org (Postfix) with ESMTP id 43F5720656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573213314;
+	bh=3ES43x8ohLQmZDTu+juPnCitXAo/wPlqMTd883fgsjI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vJRxuRKW5EF2vUqLVjcvW1BJE4G7kxRzyhXoWgrKhPr7jL2mGagMfDnzXYkXH0EOX
+	 v73jQaRwjArrO6fmbDY+DnhZbfsQhj1wh0FA8UDAuy6SgkO93dUJODGi4zIiFFajie
+	 X0dWVkRyjnp/X4WG7QLgiXIoF0gMbrPGUplSpfzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389622AbfKHLlr (ORCPT
+        id S1733046AbfKHLlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:47 -0500
-Received: from vps.xff.cz ([195.181.215.36]:46878 "EHLO vps.xff.cz"
+        Fri, 8 Nov 2019 06:41:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732905AbfKHLll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1573213299; bh=DTFELkY0GJEkB2dfExMBAyshl9VFk13qMOSBa5R8u4o=;
-        h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-        b=L1r9uYB1CgSwNl9LXzNO62rthSHIe/gMXCu/3zCOzUnXu9jtABcZOiGkCRdIBBXQ3
-         p709SVqoWgeWqfqkUYRVnP79lTFH0l2ONEfdVLhK+M8gou89gfL0kLVV3sQKXwyxBN
-         Qr52LP/xxXm00qR9AW+tn/NHI5FtWtHt88AMDIDw=
-Date:   Fri, 8 Nov 2019 12:41:38 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        mark.rutland@arm.com, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        tglx@linutronix.de, wens@csie.org
-Subject: Re: [PATCH] phy: allwinner: Fix GENMASK misuse
-Message-ID: <20191108114138.snghk5n7kwuw7zz3@core.my.home>
-Mail-Followup-To: Icenowy Zheng <icenowy@aosc.io>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        mark.rutland@arm.com, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        tglx@linutronix.de, wens@csie.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20191020134229.1216351-3-megous@megous.com>
- <20191107204645.13739-1-rikard.falkeborn@gmail.com>
- <20191107214514.kcz42mcehyrrif4o@core.my.home>
- <F563E52E-72BF-4297-A14F-DDE2B490DADB@aosc.io>
+        id S2389629AbfKHLlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:49 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E513222C4;
+        Fri,  8 Nov 2019 11:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573213308;
+        bh=3ES43x8ohLQmZDTu+juPnCitXAo/wPlqMTd883fgsjI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LsAp50mYMpMlVQGLpRxyVOlBXQJMqOSY4E7LAAg5Uszu7zpGGx/AvvaJLbdw7/F8o
+         Ovx3GbMdMuat4RMMCFll2xlKKNmeeo/X4PiqQc8SyAAz47Kbeoi5t8fWctn2IkVirb
+         2UArmWNu6+439k87oRnRUDrUJicKUqwHwoZB0tG0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 156/205] Drivers: hv: vmbus: Fix synic per-cpu context initialization
+Date:   Fri,  8 Nov 2019 06:37:03 -0500
+Message-Id: <20191108113752.12502-156-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
+References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <F563E52E-72BF-4297-A14F-DDE2B490DADB@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 07:29:21PM +0800, Icenowy Zheng wrote:
-> 
-> 
-> 于 2019年11月8日 GMT+08:00 上午5:45:14, "Ondřej Jirman" <megous@megous.com> 写到:
-> >Hello Rikard,
-> >
-> >On Thu, Nov 07, 2019 at 09:46:45PM +0100, Rikard Falkeborn wrote:
-> >> Arguments are supposed to be ordered high then low.
-> >> 
-> >> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> >> ---
-> >> Spotted while trying to add compile time checks of GENMASK arguments.
-> >> Patch has only been compile tested.
-> >
-> >thank you!
-> >
-> >Tested-by: Ondrej Jirman <megous@megous.com>
-> 
-> Does it affect or fix the performance?
+From: Michael Kelley <mikelley@microsoft.com>
 
-See here: https://forum.armbian.com/topic/10131-orange-pi-lite2-usb3-now-working/?do=findComment&comment=88904
+[ Upstream commit f25a7ece08bdb1f2b3c4bbeae942682fc3a99dde ]
 
-Quote:
+If hv_synic_alloc() errors out, the state of the per-cpu context
+for some CPUs is unknown since the zero'ing is done as each
+CPU is iterated over.  In such case, hv_synic_cleanup() may try to
+free memory based on uninitialized values.  Fix this by zero'ing
+the per-cpu context for all CPUs before doing any memory
+allocations that might fail.
 
-> It may or may not help. On Opi3 I see no change, probably because HUB is
-> really close to the SoC, but on boards without a HUB, SoC's USB3 phy will
-> have to drive the signal over the longer cable and this patch might benefit
-> those boards. 
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hv/hv.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-Maybe someone with boards without PHY will test it more.
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 8e923e70e5945..12bc9fa211117 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -189,6 +189,17 @@ static void hv_init_clockevent_device(struct clock_event_device *dev, int cpu)
+ int hv_synic_alloc(void)
+ {
+ 	int cpu;
++	struct hv_per_cpu_context *hv_cpu;
++
++	/*
++	 * First, zero all per-cpu memory areas so hv_synic_free() can
++	 * detect what memory has been allocated and cleanup properly
++	 * after any failures.
++	 */
++	for_each_present_cpu(cpu) {
++		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
++		memset(hv_cpu, 0, sizeof(*hv_cpu));
++	}
+ 
+ 	hv_context.hv_numa_map = kcalloc(nr_node_ids, sizeof(struct cpumask),
+ 					 GFP_KERNEL);
+@@ -198,10 +209,8 @@ int hv_synic_alloc(void)
+ 	}
+ 
+ 	for_each_present_cpu(cpu) {
+-		struct hv_per_cpu_context *hv_cpu
+-			= per_cpu_ptr(hv_context.cpu_context, cpu);
++		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
+ 
+-		memset(hv_cpu, 0, sizeof(*hv_cpu));
+ 		tasklet_init(&hv_cpu->msg_dpc,
+ 			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
+ 
+-- 
+2.20.1
 
-regards,
-	o.
-
-> >
-> >regards,
-> >	o.
-> >
-> >>  drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >> index 1169f3e83a6f..b1c04f71a31d 100644
-> >> --- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >> @@ -49,7 +49,7 @@
-> >>  #define SUNXI_LOS_BIAS(n)		((n) << 3)
-> >>  #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
-> >>  #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
-> >> -#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
-> >> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
-> >>  
-> >>  struct sun50i_usb3_phy {
-> >>  	struct phy *phy;
-> >> -- 
-> >> 2.24.0
-> >> 
