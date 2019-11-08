@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A21C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E044BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6D121D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC563222CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213224;
-	bh=UNQs/91dK9j+/CpReb4++waTjXoKNuAIztVw5SJpU20=;
+	s=default; t=1573213235;
+	bh=yXJ6Nbeh5e1xKhtBk4G9bNNBN67AaO4fXPVEf4EEI/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lu1dals8rifTKMtJ/ik2AZQumsktp/NhMVCQuV5bOkMAMWDQ2BiS5t6HiSVyr1Dkw
-	 lxVwbLX2aK/QcZ04v9myLwryMXLTffKd+qARXkSchxOu0r0FB1Z8O3hj636xiQPbKD
-	 iN3kg+SudMgc0qeFDzdJV2jQhYKgZq+QjdqmHRF8=
+	b=1UNal1GBPYPKIY3iq+oseYk80bmnVR+BV0QwKqJT4n5xaljsFVZIDS/FvTiKyyWn6
+	 xhhwmdG89nRGgo3aV9UOHzHtzHMsiuXAWbCQ5g3xBuSlEnCPs6/2Sun1G4e1vugdZv
+	 KdPYFDE066qIS94ngo7o3ZL+WP/Oglbmg8IvMyHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388584AbfKHLkW (ORCPT
+        id S2388738AbfKHLke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53144 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388499AbfKHLkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:10 -0500
+        id S2388614AbfKHLk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A312720869;
-        Fri,  8 Nov 2019 11:40:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B568222C4;
+        Fri,  8 Nov 2019 11:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213210;
-        bh=UNQs/91dK9j+/CpReb4++waTjXoKNuAIztVw5SJpU20=;
+        s=default; t=1573213226;
+        bh=yXJ6Nbeh5e1xKhtBk4G9bNNBN67AaO4fXPVEf4EEI/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaG33f26paDniZ6uYNG11JaV/qEswcFo1nwo2/lCgurjUZnuNlUHY9qJ0pGrJ9vd5
-         fXkF/RFuyRd2hHA8nkcn3HijSrYwdFsJWOl3jaok49qicMRpm9wddoSRozMgXgBMIN
-         7YJqYakRiHdoy7znPCTySUumxxza7K2FGevU0qu0=
+        b=wn2qIKNk8s8TWWvEkxKTU2xUbJ8YqIq7qNwkDX23O6omj8A49S5Ix5opsLGqx6Gew
+         S8VahwArtbhXwQ8EWa9F5cVAG7t4lSgt8WKE0SpxPUnTDar6ujuftXv7btcuo5Cg91
+         ZJvDv9Xjj1r103OVGlIGiMwFbrZRX6dqD4qwnXwI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 091/205] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
-Date:   Fri,  8 Nov 2019 06:35:58 -0500
-Message-Id: <20191108113752.12502-91-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 099/205] RDMA/core: Follow correct unregister order between sysfs and cgroup
+Date:   Fri,  8 Nov 2019 06:36:06 -0500
+Message-Id: <20191108113752.12502-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
+[ Upstream commit c715a39541bb399eb03d728a996b224d90ce1336 ]
 
-In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
-is set to zero and later vol_quot is computed by dividing by
-lo_vag causing a division by zero error.  Fix this by avoiding
-a zero division and set vol_quot to zero in this specific case
-so that the lowest setting for i is correctly set.
+During register_device() init sequence is,
+(a) register with rdma cgroup followed by
+(b) register with sysfs
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Therefore, unregister_device() sequence should follow the reverse order.
+
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 2 +-
+ drivers/infiniband/core/device.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 64a52d495b1f5..896412d11a31c 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1387,7 +1387,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
- 	 * Searching for a suitable index solving this formula:
- 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
- 	 */
--	vol_quot = (vag * 100) / lo_vag;
-+	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
- 	lo_vol = 0;
- 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
- 		if (vol_quot >= vol_quot_table[i])
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 6d8ac51a39cc0..6a585c3e21923 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -599,8 +599,8 @@ void ib_unregister_device(struct ib_device *device)
+ 	}
+ 	up_read(&lists_rwsem);
+ 
+-	ib_device_unregister_rdmacg(device);
+ 	ib_device_unregister_sysfs(device);
++	ib_device_unregister_rdmacg(device);
+ 
+ 	mutex_unlock(&device_mutex);
+ 
 -- 
 2.20.1
 
