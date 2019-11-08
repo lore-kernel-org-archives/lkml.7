@@ -2,228 +2,109 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8A0FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781A2FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294FB222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A63E206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vx1xViU3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fEgEVf0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbfKHLIV (ORCPT
+        id S1731906AbfKHLJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:08:21 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44941 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfKHLIU (ORCPT
+        Fri, 8 Nov 2019 06:09:02 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49576 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfKHLJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:08:20 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v4so4123715lfd.11
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 03:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=6YNCEMzdVj3nGqDUF06aZU2cu0Jp7PocJPxqwyKwZHI=;
-        b=Vx1xViU3t3C8sBjbI44NAUsvj9pC8QP0qzv1ZUvRgUpOGwHzL0OaC076HpM0hv0Rg+
-         tha9C+jwYbpu0cIbMGCjfqCDQB29prk5hE00rui9azzxjGIrxJOgLm4E3hy1MqBGFhW+
-         bHXG6375ruiYrtaXRV1l8KoXzhBTopxsH4PYY/nMBdJ4mHqS6zgGRkEd8Xu82lS1ovhM
-         4LwNIeYpPMgU6UZI52+BsU2KVPhshOTlB3M2pquj7v3/p7xOx3Y/Kv8JlhyOk3GO3CTE
-         DyEc9D9OCLa2Br/JMo/FExSITW1v0x/XLi2+HfFZ3zmqQzFbcSGgaGvjqZl0QAGWbgkl
-         6FKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=6YNCEMzdVj3nGqDUF06aZU2cu0Jp7PocJPxqwyKwZHI=;
-        b=O6Gv8QZwvaJLAxmjP6/PD4FoQeAf3QLiQqJYsnRyj8NW4tkufTAfiyiYmMp8RNzK41
-         I5OKBdQW4c10b9/dtRWVC8FyqKJ9Ufq5WSwJV0/oY72R5DEGBIXVAc1Sx9EsnKsGYuCv
-         xbAbkdL0LtZDJZj2iQZ6R6PsUedrFXm5JAIO7izW6+jlHFJPIRIWHMTT23EfalVMRH+a
-         H9om2GKsbUZhqogzYv5NapMhN94ULLfnPhFORw+xA1AXos0KR1CWZBrRxDbcP5s6jcMI
-         oAye5UtTLKzPOlmKnB2NylZmJd1rLOhkcP6fCys0OJ9l3uAZUHA3Ri4MqCjRimfkoWfD
-         4/8Q==
-X-Gm-Message-State: APjAAAV8olctfks7C+VSS+yOz73WAwPoFPEeiRXpLub7MQjkwxqrZ5Jl
-        +JYrI1YuOp6oppqi1jYUMXDo7Q/Cb/V4I7EMDKNE0g==
-X-Google-Smtp-Source: APXvYqwHSHcfo1EC8YQwmJdEFhoUb664wkodbYRiWOOUhzjsaptZ0edpD1dxOWGhTzcpxTiR8VkumcsAe7BQ1wqm97w=
-X-Received: by 2002:a19:ec02:: with SMTP id b2mr5328048lfa.121.1573211296528;
- Fri, 08 Nov 2019 03:08:16 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:ac2:4296:0:0:0:0:0 with HTTP; Fri, 8 Nov 2019 03:08:15 -0800 (PST)
-In-Reply-To: <CAMz4kuJe64hdVGBTCvZW3t4_JGnTBRF=NhYDookrzNPiXacq_w@mail.gmail.com>
-References: <cover.1572326519.git.baolin.wang@linaro.org> <19910a2f34b9be81f64637a5a5fc8d07bd5f4885.1572326519.git.baolin.wang@linaro.org>
- <a9f42792-3432-48f2-c5c4-8b03c32995dd@intel.com> <CAMz4kuK=wV1qtO4tOCcqibzKAFD-_p8+OzGOjdkvajVymJ5EgA@mail.gmail.com>
- <2ed0bcd1-fa74-d095-97ee-7d0c46a4fdbb@intel.com> <CAMz4kuJe64hdVGBTCvZW3t4_JGnTBRF=NhYDookrzNPiXacq_w@mail.gmail.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Fri, 8 Nov 2019 19:08:15 +0800
-Message-ID: <CAMz4ku+KVWw-M4AaPJ=Yn8xeLNaD2W4+gVqEN_P0QRwne3wwzA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] mmc: host: sdhci: Add a variable to defer to
- complete data requests if needed
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        baolin.wang7@gmail.com, linux-mmc <linux-mmc@vger.kernel.org>,
+        Fri, 8 Nov 2019 06:09:02 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8B509c050132;
+        Fri, 8 Nov 2019 11:07:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=05GqX2q0ywPMyzyL60tZrM3bsF30oO3GM+yVJb7hsAM=;
+ b=fEgEVf0mYnLW2QGKB5BZV2RimLE5KuUDdegqs4601sC8b2mP2+kthj/9LlDMnBElhOGe
+ IQXTGGvYeykjZ5Ex0sUedxXgS78BhhlkjotTNX5xkB2ic7xkf04KYAvjwpUHhEO2sOzP
+ U8fZ3BLbzJizpakGwlIpRud9qQ3Lg/5IPzjwBHrfshSaEAOXQtctSw1+RGOt4sBeJQ0N
+ 9k3yS89Wmk4lCAkHrrpjdXD+8uY2UDxJ4pqaP8yGHvyMgsCpcq2Vd0DgpMQqmMU1wwF8
+ QHXCc5qTTJClvLPybCXqdKEwN9t/WE7RdPDbxK2Gvb0RHKrhmtkehotcougtNg8ULXu1 Nw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2w41w14mxh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 11:07:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8B4LA8052138;
+        Fri, 8 Nov 2019 11:07:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2w4k31mh0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 11:07:34 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA8B7Vvl006484;
+        Fri, 8 Nov 2019 11:07:34 GMT
+Received: from [192.168.8.47] (/213.41.92.70)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 Nov 2019 03:07:31 -0800
+Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt disable
+To:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+References: <20191023122705.198339581@linutronix.de>
+ <20191023123118.296135499@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <86bf1670-dd35-f310-dab9-106897cc3921@oracle.com>
+Date:   Fri, 8 Nov 2019 12:07:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
+MIME-Version: 1.0
+In-Reply-To: <20191023123118.296135499@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911080109
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911080109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
 
-On 06/11/2019, Baolin Wang <baolin.wang@linaro.org> wrote:
-> On Wed, 6 Nov 2019 at 20:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 6/11/19 12:48 PM, Baolin Wang wrote:
->> > On Wed, 6 Nov 2019 at 18:10, Adrian Hunter <adrian.hunter@intel.com>
->> > wrote:
->> >>
->> >> On 29/10/19 7:43 AM, Baolin Wang wrote:
->> >>> When using the host software queue, it will trigger the next request
->> >>> in
->> >>> irq handler without a context switch. But the sdhci_request() can not
->> >>> be
->> >>> called in interrupt context when using host software queue for some
->> >>> host
->> >>> drivers, due to the get_cd() ops can be sleepable.
->> >>>
->> >>> But for some host drivers, such as Spreadtrum host driver, the card
->> >>> is
->> >>> nonremovable, so the get_cd() ops is not sleepable, which means we
->> >>> can
->> >>> complete the data request and trigger the next request in irq handler
->> >>> to remove the context switch for the Spreadtrum host driver.
->> >>>
->> >>> Thus we still need introduce a variable in struct sdhci_host to
->> >>> indicate
->> >>> that we will always to defer to complete data requests if the
->> >>> sdhci_request()
->> >>> can not be called in interrupt context for some host drivers, when
->> >>> using
->> >>> the host software queue.
->> >>>
->> >>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
->> >>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> >>> ---
->> >>>  drivers/mmc/host/sdhci.c |    2 +-
->> >>>  drivers/mmc/host/sdhci.h |    1 +
->> >>>  2 files changed, 2 insertions(+), 1 deletion(-)
->> >>>
->> >>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> >>> index 850241f..9cf2130 100644
->> >>> --- a/drivers/mmc/host/sdhci.c
->> >>> +++ b/drivers/mmc/host/sdhci.c
->> >>> @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct
->> >>> sdhci_host *host,
->> >>>  {
->> >>>       struct mmc_data *data = mrq->data;
->> >>>
->> >>> -     return host->pending_reset ||
->> >>> +     return host->pending_reset || (host->always_defer_done && data)
->> >>> ||
->>
->> To move ahead in the meantime without a new host API, just defer always
->> i.e.
+On 10/23/19 2:27 PM, Thomas Gleixner wrote:
+> Now that the trap handlers return with interrupts disabled, the
+> unconditional disabling of interrupts in the low level entry code can be
+> removed along with the trace calls.
+> 
+> Add debug checks where appropriate.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/entry_64.S |    9 +++------
+>   1 file changed, 3 insertions(+), 6 deletions(-)
+> 
 
-Before new version, I want to make things clear in case I
-misunderstood your points, so you mean I should set always_defer_done
-= true for our Spreadtrum host driver in this patch? Or just like
-below patch? Thanks.
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 850241f..4bef066 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct
-sdhci_host *host,
- {
-        struct mmc_data *data = mrq->data;
-
--       return host->pending_reset ||
-+       return host->pending_reset || host->always_defer_done ||
-               ((host->flags & SDHCI_REQ_USE_DMA) && data &&
-                data->host_cookie == COOKIE_MAPPED);
- }
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index d89cdb9..a73ce89 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -533,6 +533,7 @@ struct sdhci_host {
-        bool pending_reset;     /* Cmd/data reset is pending */
-        bool irq_wake_enabled;  /* IRQ wakeup is enabled */
-        bool v4_mode;           /* Host Version 4 Enable */
-+       bool always_defer_done; /* Always defer to complete requests */
-
-        struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];  /* Requests done */
-        struct mmc_command *cmd;        /* Current command */
-
-> And I'll wait for a while to see if Ulf will post some comments for
-> this patch set before new version. Thanks.
->
->>
->> +     return host->pending_reset || host->always_defer_done ||
->>
->> >>
->> >> I didn't realize you still wanted to call the request function in
->> >> interrupt
->> >> context.  In my view that needs a new host API
->> >> i.e. int (*request_atomic)(struct mmc_host *mmc, struct mmc_request
->> >> *mrq)
->> >
->> > Actually there are no documentation said that the
->> > mmc_host_ops->request() is a sleepable API, so I introduce a
->> > host->always_defer_done flag to decide if the request can be called in
->> > interrupt context or not, since for some host drivers, the request()
->> > implementation can be called in interrupt context.
->> >
->> > Yes, I agree a new host API is more reasonable, if you do not like the
->> > current approach, I can add new patches to introduce the new
->> > request_atomic() API. But can I create another separate patch set to
->> > do this? since in this patch set, the Spreadtrum host driver's
->> > request() implementation can be called in interrupt context. Or you
->> > still want these changes introducing new request_atomic() can be done
->> > in this patch set? Thanks.
->> >
->> >>
->> >>>              ((host->flags & SDHCI_REQ_USE_DMA) && data &&
->> >>>               data->host_cookie == COOKIE_MAPPED);
->> >>>  }
->> >>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> >>> index d89cdb9..38fbd18 100644
->> >>> --- a/drivers/mmc/host/sdhci.h
->> >>> +++ b/drivers/mmc/host/sdhci.h
->> >>> @@ -533,6 +533,7 @@ struct sdhci_host {
->> >>>       bool pending_reset;     /* Cmd/data reset is pending */
->> >>>       bool irq_wake_enabled;  /* IRQ wakeup is enabled */
->> >>>       bool v4_mode;           /* Host Version 4 Enable */
->> >>> +     bool always_defer_done; /* Always defer to complete data
->> >>> requests */
->> >>>
->> >>>       struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];  /* Requests done
->> >>> */
->> >>>       struct mmc_command *cmd;        /* Current command */
->> >>>
->> >>
->> >
->> >
->>
->
->
-> --
-> Baolin Wang
-> Best Regards
->
-
-
--- 
-Baolin Wang
-Best Regards
+alex.
