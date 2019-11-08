@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016BEFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8444C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BFE215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F23F215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214860;
-	bh=zgtQn59xKSHLgHf3t2ThmqyQQy/k5Hd9egH/wHnXQc4=;
+	s=default; t=1573214867;
+	bh=IEDcQfMvzR+IzJeitdKQq+ocOapyJqcmGHUCSGPIY50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HkJ3XJqkIRKvlsZp75HNvdOho56sX0ykoy3iuRAaT2FWU1Iaih0JXKEx2gocWivMC
-	 /uk1GYNWWoE0RPfzwaZx0ZmTC6suzMv2yp1dLFc/+2Os70Sg2cAbTGnP0LX3zxGOls
-	 D+9WJIKaZsFDr+0yMw9PoJIkBSi0hgJvzH/4K7A4=
+	b=QGg1haqvnyEHcoSQkSWUs3EV5HPUpsf0acmFd8cXzwuRXrHU1VUsPFmJMXURZKKr2
+	 ralBI/MmCh2frBy4P2z1r5xHLVYIjVxFEXBaYjg3Tj9RR9KcqB1xSEciqMi6n2p8pP
+	 3Ce+orlhsZMOZIRn/yLLKKLcnMjnIBUy/AiHihnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391602AbfKHMHj (ORCPT
+        id S2391881AbfKHMHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:07:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:07:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732382AbfKHLku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:50 -0500
+        id S2388949AbfKHLko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A168521D7E;
-        Fri,  8 Nov 2019 11:40:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CCB0222C2;
+        Fri,  8 Nov 2019 11:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213249;
-        bh=zgtQn59xKSHLgHf3t2ThmqyQQy/k5Hd9egH/wHnXQc4=;
+        s=default; t=1573213244;
+        bh=IEDcQfMvzR+IzJeitdKQq+ocOapyJqcmGHUCSGPIY50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0iLX8P4p3Uc0jtDTOUntuGCZghvtYLu/qRo1HuHDfwlbIRBOU7CJV/Ndle2o57FcJ
-         P+brYzKHvLz/9XUxGzMRT1YFHN0kWIi3PSrYxfLqriqsRoIrWWbwwRbFRaOr8XstZ6
-         Lwtr5+LA1SdxrxGJwjLVStNdnXNU7uJznPJcCO8Q=
+        b=CV5FcorhI76pa7vp8NYgTkKRX7Pkui7PmNuL3oWnNvhKEsUNHb4B+uHW8OwCd1xQu
+         kmizxc3aljTXuReVWW0HB9Dyy0zVZRDQSTL9kzwPjUS3QcJvDJ/hcrSckmSpZfwO6W
+         jBASYoVv19OV40gXLDlnNhJ+etYpaUeLsrpDLiL8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 116/205] firmware: arm_scmi: use strlcpy to ensure NULL-terminated strings
-Date:   Fri,  8 Nov 2019 06:36:23 -0500
-Message-Id: <20191108113752.12502-116-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 113/205] failover: Fix error return code in net_failover_create
+Date:   Fri,  8 Nov 2019 06:36:20 -0500
+Message-Id: <20191108113752.12502-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,94 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ca64b719a1e665ac7449b6a968059176af7365a8 ]
+[ Upstream commit 09317da317e55e70ccbe23f65008348a4a1b7c7f ]
 
-Replace all the memcpy() for copying name strings from the firmware with
-strlcpy() to make sure we are bounded by the source buffer size and we
-also always have NULL-terminated strings.
+if failover_register failed, 'err' code should be set correctly
 
-This is needed to avoid out of bounds accesses if the firmware returns
-a non-terminated string.
-
-Reported-by: Olof Johansson <olof@lixom.net>
-Acked-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/base.c    | 2 +-
- drivers/firmware/arm_scmi/clock.c   | 2 +-
- drivers/firmware/arm_scmi/perf.c    | 2 +-
- drivers/firmware/arm_scmi/power.c   | 2 +-
- drivers/firmware/arm_scmi/sensors.c | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/net_failover.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
-index 9dff33ea6416f..204390297f4bd 100644
---- a/drivers/firmware/arm_scmi/base.c
-+++ b/drivers/firmware/arm_scmi/base.c
-@@ -208,7 +208,7 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
+diff --git a/drivers/net/net_failover.c b/drivers/net/net_failover.c
+index 5a749dc25bec4..beeb7eb76ca32 100644
+--- a/drivers/net/net_failover.c
++++ b/drivers/net/net_failover.c
+@@ -765,8 +765,10 @@ struct failover *net_failover_create(struct net_device *standby_dev)
+ 	netif_carrier_off(failover_dev);
  
- 	ret = scmi_do_xfer(handle, t);
- 	if (!ret)
--		memcpy(name, t->rx.buf, SCMI_MAX_STR_SIZE);
-+		strlcpy(name, t->rx.buf, SCMI_MAX_STR_SIZE);
+ 	failover = failover_register(failover_dev, &net_failover_ops);
+-	if (IS_ERR(failover))
++	if (IS_ERR(failover)) {
++		err = PTR_ERR(failover);
+ 		goto err_failover_register;
++	}
  
- 	scmi_xfer_put(handle, t);
+ 	return failover;
  
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index e4119eb34986c..30fc04e284312 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -111,7 +111,7 @@ static int scmi_clock_attributes_get(const struct scmi_handle *handle,
- 
- 	ret = scmi_do_xfer(handle, t);
- 	if (!ret)
--		memcpy(clk->name, attr->name, SCMI_MAX_STR_SIZE);
-+		strlcpy(clk->name, attr->name, SCMI_MAX_STR_SIZE);
- 	else
- 		clk->name[0] = '\0';
- 
-diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-index 64342944d9175..87c99d296ecd3 100644
---- a/drivers/firmware/arm_scmi/perf.c
-+++ b/drivers/firmware/arm_scmi/perf.c
-@@ -174,7 +174,7 @@ scmi_perf_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
- 			dom_info->mult_factor =
- 					(dom_info->sustained_freq_khz * 1000) /
- 					dom_info->sustained_perf_level;
--		memcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
-+		strlcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
- 	}
- 
- 	scmi_xfer_put(handle, t);
-diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-index cfa033b05aed5..62f3401a1f01e 100644
---- a/drivers/firmware/arm_scmi/power.c
-+++ b/drivers/firmware/arm_scmi/power.c
-@@ -106,7 +106,7 @@ scmi_power_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
- 		dom_info->state_set_notify = SUPPORTS_STATE_SET_NOTIFY(flags);
- 		dom_info->state_set_async = SUPPORTS_STATE_SET_ASYNC(flags);
- 		dom_info->state_set_sync = SUPPORTS_STATE_SET_SYNC(flags);
--		memcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
-+		strlcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
- 	}
- 
- 	scmi_xfer_put(handle, t);
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index 27f2092b9882a..b53d5cc9c9f6c 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -140,7 +140,7 @@ static int scmi_sensor_description_get(const struct scmi_handle *handle,
- 			s = &si->sensors[desc_index + cnt];
- 			s->id = le32_to_cpu(buf->desc[cnt].id);
- 			s->type = SENSOR_TYPE(attrh);
--			memcpy(s->name, buf->desc[cnt].name, SCMI_MAX_STR_SIZE);
-+			strlcpy(s->name, buf->desc[cnt].name, SCMI_MAX_STR_SIZE);
- 		}
- 
- 		desc_index += num_returned;
 -- 
 2.20.1
 
