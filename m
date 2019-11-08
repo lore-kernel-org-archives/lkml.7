@@ -2,424 +2,148 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9E0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026DEFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A7A215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F7021848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZpkZ6ozZ";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="3+vYvq/5"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hgbSwKvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfKHNfL (ORCPT
+        id S1728295AbfKHNgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:35:11 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:64238 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726445AbfKHNfK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:35:10 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8DWInf028271;
-        Fri, 8 Nov 2019 05:35:00 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=oKPMiGuP9dG52Svx1Mi/iycbW2+9r0Lvm2L5Esi7L38=;
- b=ZpkZ6ozZfRHyJK1J6ZtmqyO2acFP5gmwcrKpf/tFBhidF2T4vlCTZDEQpSRcVR8I5RUy
- H8ZX5HqPcS24TTfGly7V4JUZlEXl28VMT+jAj5Wma8xu5yXh8JP/F4xDBNd0AME7YPuo
- xh7LWb32D4q4BzQseboMm335MoxaAitIcszE4OXWKh1/yW4oB4kS9mdmy9DO8JmL3C+V
- YYNeiIcvPZX7BXlnvnZav5wPpIGWLK63Tm95iY4ZnqWugk0lE8nX3f0nVbCyn1tBBaJN
- yxLrfsPkC0DnwaY16XqPLDQsFgLvCdVrJrIIT1vxuIDx8txtR6zZU22o96FSajxhjUkY PQ== 
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2055.outbound.protection.outlook.com [104.47.44.55])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2w41ty1bpa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 05:35:00 -0800
+        Fri, 8 Nov 2019 08:36:48 -0500
+Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:15046
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726445AbfKHNgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 08:36:48 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Esmg5ErXggaZo3yOlZ4etALYTOnD2Bj9/Y/pPWTNVFp6OiwB/NTta3Cee51Eib9FUvKsuGy27CYCqKlLe7XC43Q6qUVqBsjqmaN+V2cEmG3GhZk4+ykKq3lrIFw/xKKaDoNDt90mqit7g6On06lHO+xoHGstZvG8GvGwIB4SKAqfCfMA5NAsF0/rzdJnr6bQGuE22w4i4nYBGj6+BZTaqnkHx+mM9WrkXAbG8nQu5aIJPRI5ODNf3yPpQn7MAZtZcNk8CU6qg5e/Gb6VNoO26rh/6G1qMEeN5uIuPxK1mtN5SvAO0RWyhwmv7Lw2x37SoOr1331iehrPCKbwsSlzwQ==
+ b=l2fcIlkNlbEnR3xORHSYy9D43sqV3bAxCQAT5hcRoVyAYNgRchSAJDZZmpbEsVQmG9BEZ7R2Zeggo24SSLhSz7t5a34wyeckG/5IIlB5iLdl3dMVzBv4oKP8yF8YOm9L3y+sR0XhjQusoict07qAJNKPSQ3cdAskSm+LjIZinjAAk5NIaoYL/4OYplMOT/WpfHt4U4VJGEnVJpx9hCDJsXwiit6MoqQi2mtlG2+ymz/+JsjJufE7OedKRTmcGWniq4QhrvVkIy70pynP6bFNeBALPHZyBYdil9SKKrSYhLf2+G2tnoIRnMBsNlETvBQvMTW5KPXPlIStNB0xZeC2cg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oKPMiGuP9dG52Svx1Mi/iycbW2+9r0Lvm2L5Esi7L38=;
- b=aRm22R1qGyOQXBdmCyrEppnMHadnzaU35pntgw4OfmTiNiJ1cg8JODVpsXnpVBKFMPTkDIIXM/Gnyo0ce84P+XUeq/Ehg5xDWmn84qIF1J0Z0Tlqd6x0lmSK2ukrWPDGP+Rs/aJNwcQDiak5oEZe4nZbev4eNc1dUCSqtRBIexskpKHyzmOTmALo9EauRWC7/1kQj1Dq3YXFIeEZSE8dLsUazT/QDSC/h8Oc2qExclGf/lUOW+NFzuCT2peUtojMQ/MfmVvMdRRVH5ZdqLNdilDbJ70RAe8NQhx6ktcrrzUfFtVtjKoAbrLM2iBMxG/gnJvn9wVyRu0/hz+w2kYjlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 64.207.220.243) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ bh=1ym6sNZ1SaW2QBxnhuEX3XvAtjtBWLRBDBDlYcxyZTY=;
+ b=AcGKdQQuYzbQaD8ZvqvbMheyd89JCpWLRWBQpFDdxpHGKn4q4BYN8dDRALrSbnq4mnEArcNdFM7OWjGqRH/C9p7K+5EQIZVgBYKwtlWYCmyV2Nv3rnm+O3JFse0cKdXv+EO9gebb7aPEcTdJtecgKjMZlbGPHd8iL7eSJ9+kGIXb9TwSmBcY5nnCVyJWsjmNTeQQikxlBjtIgLbBiqt+oKyWxLkYenrZJUKbiPCnYe0VKlA7WdiZwd8pCqWpMK5ASrU0akkjXFyY5tM1Ql91Fnnh/1ayVUQjevuWma7u2cpPd5ze8XkCx95knKk/5xh449aHcUhWLl58mnP6OaU16g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oKPMiGuP9dG52Svx1Mi/iycbW2+9r0Lvm2L5Esi7L38=;
- b=3+vYvq/5E/BQmo5bKrKOyUD/QXMCr50Xswv9V0gbie6k3ihUnIo3LIMts2Kuji3PHAt48+rPfhIBP97Wt2urSotO0Y8euzRB473N5MG6/qi73PWosZVLmqr1xtfTI8VeMv7EBG9bGNbHmuFsdJPz6UXpVx63QNzNqdl0/i1k1RM=
-Received: from CH2PR07CA0020.namprd07.prod.outlook.com (2603:10b6:610:20::33)
- by MWHPR07MB2783.namprd07.prod.outlook.com (2603:10b6:300:2b::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22; Fri, 8 Nov
- 2019 13:34:57 +0000
-Received: from CO1NAM05FT010.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e50::208) by CH2PR07CA0020.outlook.office365.com
- (2603:10b6:610:20::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2430.20 via Frontend
- Transport; Fri, 8 Nov 2019 13:34:57 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 64.207.220.243 as permitted sender) receiver=protection.outlook.com;
- client-ip=64.207.220.243; helo=wcmailrelayl01.cadence.com;
-Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
- CO1NAM05FT010.mail.protection.outlook.com (10.152.96.117) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2451.15 via Frontend Transport; Fri, 8 Nov 2019 13:34:54 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id xA8DYp7v133768
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 05:34:52 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Fri, 8 Nov 2019 14:34:50 +0100
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 8 Nov 2019 14:34:50 +0100
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id xA8DYo7W019077;
-        Fri, 8 Nov 2019 13:34:50 GMT
-From:   Milind Parab <mparab@cadence.com>
-To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
-        <davem@davemloft.net>, <f.fainelli@gmail.com>
-CC:     <netdev@vger.kernel.org>, <hkallweit1@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <piotrs@cadence.com>,
-        <dkangude@cadence.com>, <ewanm@cadence.com>, <arthurm@cadence.com>,
-        <stevenh@cadence.com>, Milind Parab <mparab@cadence.com>
-Subject: [PATCH 4/4] net: macb: add support for high speed interface
-Date:   Fri, 8 Nov 2019 13:34:48 +0000
-Message-ID: <1573220088-18945-1-git-send-email-mparab@cadence.com>
-X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1573220027-15842-1-git-send-email-mparab@cadence.com>
-References: <1573220027-15842-1-git-send-email-mparab@cadence.com>
+ bh=1ym6sNZ1SaW2QBxnhuEX3XvAtjtBWLRBDBDlYcxyZTY=;
+ b=hgbSwKvu8oIWOC9js9Q85RKIrcDRwg/3CRR08FHfSyEndVIY7SOTQRsfg64nfWn9vnOpLOyVRUhqy+pA4K8Vtu9ZJRR416/lLn3MPvtn0SveEi/64nc1SGEfppPNw7WvQJfg8gFvwL1mIL8Gi9laNcXP0kbPUXUBwsdPE8oY4D8=
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
+ VI1PR0402MB3584.eurprd04.prod.outlook.com (52.134.5.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Fri, 8 Nov 2019 13:36:41 +0000
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::8997:3705:3f41:1d1b]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::8997:3705:3f41:1d1b%7]) with mapi id 15.20.2408.028; Fri, 8 Nov 2019
+ 13:36:41 +0000
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     "mchehab@kernel.org" <mchehab@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+Thread-Topic: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+Thread-Index: AQHVlLXLzR/BR8Qmu0iHDS94ZPyJ2qd+RrWAgAATH4CAAAH2AIAC7eQA
+Date:   Fri, 8 Nov 2019 13:36:40 +0000
+Message-ID: <1573220200.16477.32.camel@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+         <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
+         <1573058741.16477.18.camel@nxp.com>
+         <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
+In-Reply-To: <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mirela.rabulea@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8188e02d-5413-418f-6f51-08d76450b01f
+x-ms-traffictypediagnostic: VI1PR0402MB3584:|VI1PR0402MB3584:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3584FB0A885525F952D365068F7B0@VI1PR0402MB3584.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0215D7173F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(189003)(199004)(3846002)(26005)(14444005)(446003)(50226002)(6116002)(229853002)(2906002)(476003)(86362001)(6512007)(4326008)(103116003)(5660300002)(66066001)(44832011)(11346002)(6246003)(6436002)(186003)(6486002)(25786009)(2616005)(256004)(316002)(478600001)(2501003)(7736002)(99286004)(486006)(7416002)(54906003)(14454004)(64756008)(91956017)(66556008)(66446008)(8676002)(110136005)(76176011)(81156014)(36756003)(76116006)(8936002)(102836004)(66946007)(71190400001)(6506007)(81166006)(305945005)(71200400001)(66476007)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3584;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jWN946PA2KPjN1PnIgsaAL49Sx683mb0KgOgAcqcHbXe6yBFUm8lxucxgebBtCusiDFTtIQ9cuk9hWSZvpN1hE0NWMgzGlM9SQ+HZ2S9rKxmgMAE6rSKa+zNE4Dr6/P+PREtdlNYae8pLvqa7tw8igSiq15iSmMqptSzBO0iLK0OUgF9E2Cd5dH4wo/g3LEK1uoJvb82wNuv6YZ8LN437RLqQCFuHsJpx4YuSLEeto/fxzaqPQWPMeRRYIfIbVh243leCOZ+1KIVkO8+D5xXuDZr0TVWbseLQXdiGqJh7c/5w8BUYu+VeP+yFfzmmKgyipQ7VxqnB4OKOtN/85Pw7Fus3KjmAUaiVM0c2jjBgrE5AzjT/ZSsVcMSBJ3/tTOgy/xZQXeuyp4/J3IOwHw52pSzAoz5u2eR3gch+A5gTm0Y+S9n2hejuSJYOhZSUK3h
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8490D0E6FF31574AB43620D7EA628ED4@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(376002)(396003)(36092001)(189003)(199004)(70586007)(5660300002)(446003)(426003)(86362001)(305945005)(7696005)(51416003)(2616005)(476003)(76176011)(356004)(50226002)(486006)(8676002)(2201001)(81166006)(7126003)(81156014)(11346002)(126002)(186003)(4326008)(36756003)(48376002)(107886003)(47776003)(53416004)(478600001)(70206006)(336012)(8936002)(106002)(14444005)(110136005)(316002)(26005)(54906003)(50466002)(2906002)(36906005)(16586007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR07MB2783;H:wcmailrelayl01.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:ErrorRetry;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c7426196-08d4-45f1-b698-08d7645070cf
-X-MS-TrafficTypeDiagnostic: MWHPR07MB2783:
-X-Microsoft-Antispam-PRVS: <MWHPR07MB27838A50AA60D568880A91E0D37B0@MWHPR07MB2783.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:923;
-X-Forefront-PRVS: 0215D7173F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BPzs1qwMwd/v/BPp5MqEXPSVPrKZPyDvy6FzT/dWd1aaVq7uy1hfKGusMStfGaOXiT7RJC2YytuPosYIIZ8Ht75i3cTPvYMrCKM5xZGfcaxa7ahHtVpepAlV539EQnPIcLY1N3ytKGe8Mzq60oOqZniv5INHAIKfMghOOGMYmdLpH2ZpUismN+IFqMKzxkBZ9FL1JJptAsvBJ5rQaglUoobazZ5WupPTmVcmTgOqdT3nySsbHVKhMMLeewp0LV1wq0VzSWANmppKEbTvE6HEcozzGiealhwDZ68MjqVQOlV86dpVnbTjkw4cM0D5JaKlQTkEGUSDgVRTOTsj1UCqIPwKJtNcGiWYmXndc+NILFZDQ4ADG6tCv0QdDfx5POW1zy0tN3Zy/ITbhhemaSg/gfprsr1nE+nURItR5tSrWVmYD2Ar5Vi4/L17/PHTUGRKQRvl7jjaeaioT1v2aix5fg==
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2019 13:34:54.8326
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8188e02d-5413-418f-6f51-08d76450b01f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 13:36:40.8967
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7426196-08d4-45f1-b698-08d7645070cf
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR07MB2783
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-08_04:2019-11-08,2019-11-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 impostorscore=0 mlxlogscore=999 bulkscore=0
- adultscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1911080135
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ii+yNgcLyGVhtBo7C3wPtminNaupLaw0QOvIemQWnk8Twfh7qjH0reXUi9ft3Ryc3TcnFJmpALjVOv+DBSWghA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3584
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for high speed USXGMII PCS and 10G
-speed in Cadence ethernet controller driver.
-
-Signed-off-by: Milind Parab <mparab@cadence.com>
----
- drivers/net/ethernet/cadence/macb.h      |   40 +++++++++
- drivers/net/ethernet/cadence/macb_main.c |  130 +++++++++++++++++++++++++++---
- 2 files changed, 160 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 34136a8..d064d76 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -82,6 +82,7 @@
- #define GEM_USRIO		0x000c /* User IO */
- #define GEM_DMACFG		0x0010 /* DMA Configuration */
- #define GEM_JML			0x0048 /* Jumbo Max Length */
-+#define GEM_HS_MAC_CONFIG	0x0050 /* GEM high speed config */
- #define GEM_HRB			0x0080 /* Hash Bottom */
- #define GEM_HRT			0x0084 /* Hash Top */
- #define GEM_SA1B		0x0088 /* Specific1 Bottom */
-@@ -167,6 +168,9 @@
- #define GEM_DCFG7		0x0298 /* Design Config 7 */
- #define GEM_DCFG8		0x029C /* Design Config 8 */
- #define GEM_DCFG10		0x02A4 /* Design Config 10 */
-+#define GEM_DCFG12		0x02AC /* Design Config 12 */
-+#define GEM_USX_CONTROL		0x0A80 /* USXGMII control register */
-+#define GEM_USX_STATUS		0x0A88 /* USXGMII status register */
- 
- #define GEM_TXBDCTRL	0x04cc /* TX Buffer Descriptor control register */
- #define GEM_RXBDCTRL	0x04d0 /* RX Buffer Descriptor control register */
-@@ -274,6 +278,8 @@
- #define MACB_IRXFCS_SIZE	1
- 
- /* GEM specific NCR bitfields. */
-+#define GEM_ENABLE_HS_MAC_OFFSET	31
-+#define GEM_ENABLE_HS_MAC_SIZE		1
- #define GEM_TWO_PT_FIVE_GIG_OFFSET	29
- #define GEM_TWO_PT_FIVE_GIG_SIZE	1
- 
-@@ -465,6 +471,10 @@
- #define MACB_REV_OFFSET				0
- #define MACB_REV_SIZE				16
- 
-+/* Bitfield in HS_MAC_CONFIG */
-+#define GEM_HS_MAC_SPEED_OFFSET			0
-+#define GEM_HS_MAC_SPEED_SIZE			3
-+
- /* Bitfields in PCS_CONTROL. */
- #define GEM_PCS_CTRL_RST_OFFSET			15
- #define GEM_PCS_CTRL_RST_SIZE			1
-@@ -510,6 +520,34 @@
- #define GEM_RXBD_RDBUFF_OFFSET			8
- #define GEM_RXBD_RDBUFF_SIZE			4
- 
-+/* Bitfields in DCFG12. */
-+#define GEM_HIGH_SPEED_OFFSET			26
-+#define GEM_HIGH_SPEED_SIZE			1
-+
-+/* Bitfields in USX_CONTROL. */
-+#define GEM_USX_CTRL_SPEED_OFFSET		14
-+#define GEM_USX_CTRL_SPEED_SIZE			3
-+#define GEM_SERDES_RATE_OFFSET			12
-+#define GEM_SERDES_RATE_SIZE			2
-+#define GEM_RX_SCR_BYPASS_OFFSET		9
-+#define GEM_RX_SCR_BYPASS_SIZE			1
-+#define GEM_TX_SCR_BYPASS_OFFSET		8
-+#define GEM_TX_SCR_BYPASS_SIZE			1
-+#define GEM_RX_SYNC_RESET_OFFSET		2
-+#define GEM_RX_SYNC_RESET_SIZE			1
-+#define GEM_TX_EN_OFFSET			1
-+#define GEM_TX_EN_SIZE				1
-+#define GEM_SIGNAL_OK_OFFSET			0
-+#define GEM_SIGNAL_OK_SIZE			1
-+
-+/* Bitfields in USX_STATUS. */
-+#define GEM_USX_TX_FAULT_OFFSET			28
-+#define GEM_USX_TX_FAULT_SIZE			1
-+#define GEM_USX_RX_FAULT_OFFSET			27
-+#define GEM_USX_RX_FAULT_SIZE			1
-+#define GEM_USX_BLOCK_LOCK_OFFSET		0
-+#define GEM_USX_BLOCK_LOCK_SIZE			1
-+
- /* Bitfields in TISUBN */
- #define GEM_SUBNSINCR_OFFSET			0
- #define GEM_SUBNSINCRL_OFFSET			24
-@@ -673,6 +711,7 @@
- #define MACB_CAPS_SG_DISABLED			BIT(30)
- #define MACB_CAPS_MACB_IS_GEM			BIT(31)
- #define MACB_CAPS_PCS				BIT(24)
-+#define MACB_CAPS_HIGH_SPEED			BIT(25)
- 
- /* LSO settings */
- #define MACB_LSO_UFO_ENABLE			0x01
-@@ -741,6 +780,7 @@
- 	})
- 
- #define MACB_READ_NSR(bp)	macb_readl(bp, NSR)
-+#define GEM_READ_USX_STATUS(bp)	gem_readl(bp, USX_STATUS)
- 
- /* struct macb_dma_desc - Hardware DMA descriptor
-  * @addr: DMA address of data buffer
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index fe107f0..a4c197f 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -81,6 +81,18 @@ struct sifive_fu540_macb_mgmt {
- #define MACB_WOL_HAS_MAGIC_PACKET	(0x1 << 0)
- #define MACB_WOL_ENABLED		(0x1 << 1)
- 
-+enum {
-+	HS_MAC_SPEED_100M,
-+	HS_MAC_SPEED_1000M,
-+	HS_MAC_SPEED_2500M,
-+	HS_MAC_SPEED_5000M,
-+	HS_MAC_SPEED_10000M,
-+};
-+
-+enum {
-+	MACB_SERDES_RATE_10G = 1,
-+};
-+
- /* Graceful stop timeouts in us. We should allow up to
-  * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
-  */
-@@ -90,6 +102,8 @@ struct sifive_fu540_macb_mgmt {
- 
- #define MACB_MDIO_TIMEOUT	1000000 /* in usecs */
- 
-+#define MACB_USX_BLOCK_LOCK_TIMEOUT	1000000 /* in usecs */
-+
- /* DMA buffer descriptor might be different size
-  * depends on hardware configuration:
-  *
-@@ -489,12 +503,32 @@ static void gem_phylink_validate(struct phylink_config *pl_config,
- 		if (!macb_is_gem(bp))
- 			goto empty_set;
- 		break;
-+	case PHY_INTERFACE_MODE_USXGMII:
-+		if (!(bp->caps & MACB_CAPS_HIGH_SPEED &&
-+		      bp->caps & MACB_CAPS_PCS))
-+			goto empty_set;
-+		break;
- 	default:
- 		break;
- 	}
- 
- 	switch (state->interface) {
- 	case PHY_INTERFACE_MODE_NA:
-+	case PHY_INTERFACE_MODE_USXGMII:
-+	case PHY_INTERFACE_MODE_10GKR:
-+		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
-+			phylink_set(mask, 10000baseCR_Full);
-+			phylink_set(mask, 10000baseER_Full);
-+			phylink_set(mask, 10000baseKR_Full);
-+			phylink_set(mask, 10000baseLR_Full);
-+			phylink_set(mask, 10000baseLRM_Full);
-+			phylink_set(mask, 10000baseSR_Full);
-+			phylink_set(mask, 10000baseT_Full);
-+			phylink_set(mask, 5000baseT_Full);
-+			phylink_set(mask, 2500baseX_Full);
-+			phylink_set(mask, 1000baseX_Full);
-+		}
-+	/* fallthrough */
- 	case PHY_INTERFACE_MODE_SGMII:
- 	case PHY_INTERFACE_MODE_GMII:
- 	case PHY_INTERFACE_MODE_RGMII:
-@@ -530,6 +564,80 @@ static int gem_phylink_mac_link_state(struct phylink_config *pl_config,
- 	return -EOPNOTSUPP;
- }
- 
-+static int macb_wait_for_usx_block_lock(struct macb *bp)
-+{
-+	u32 val;
-+
-+	return readx_poll_timeout(GEM_READ_USX_STATUS, bp, val,
-+				  val & GEM_BIT(USX_BLOCK_LOCK),
-+				  1, MACB_USX_BLOCK_LOCK_TIMEOUT);
-+}
-+
-+static inline int gem_mac_usx_configure(struct macb *bp, int spd)
-+{
-+	u32 speed, config;
-+
-+	gem_writel(bp, NCFGR, GEM_BIT(PCSSEL) |
-+		   (~GEM_BIT(SGMIIEN) & gem_readl(bp, NCFGR)));
-+	gem_writel(bp, NCR, gem_readl(bp, NCR) |
-+		   GEM_BIT(ENABLE_HS_MAC));
-+	gem_writel(bp, NCFGR, gem_readl(bp, NCFGR) |
-+		   MACB_BIT(FD));
-+	config = gem_readl(bp, USX_CONTROL);
-+	config = GEM_BFINS(SERDES_RATE, MACB_SERDES_RATE_10G, config);
-+	config &= ~GEM_BIT(TX_SCR_BYPASS);
-+	config &= ~GEM_BIT(RX_SCR_BYPASS);
-+	gem_writel(bp, USX_CONTROL, config |
-+		   GEM_BIT(TX_EN));
-+	config = gem_readl(bp, USX_CONTROL);
-+	gem_writel(bp, USX_CONTROL, config | GEM_BIT(SIGNAL_OK));
-+	if (macb_wait_for_usx_block_lock(bp) < 0) {
-+		netdev_warn(bp->dev, "USXGMII block lock failed");
-+		return -ETIMEDOUT;
-+	}
-+
-+	switch (spd) {
-+	case SPEED_10000:
-+		speed = HS_MAC_SPEED_10000M;
-+		break;
-+	case SPEED_5000:
-+		speed = HS_MAC_SPEED_5000M;
-+		break;
-+	case SPEED_2500:
-+		speed = HS_MAC_SPEED_2500M;
-+		break;
-+	case SPEED_1000:
-+		speed = HS_MAC_SPEED_1000M;
-+		break;
-+	default:
-+	case SPEED_100:
-+		speed = HS_MAC_SPEED_100M;
-+		break;
-+	}
-+
-+	gem_writel(bp, HS_MAC_CONFIG, GEM_BFINS(HS_MAC_SPEED, speed,
-+						gem_readl(bp, HS_MAC_CONFIG)));
-+	gem_writel(bp, USX_CONTROL, GEM_BFINS(USX_CTRL_SPEED, speed,
-+					      gem_readl(bp, USX_CONTROL)));
-+	return 0;
-+}
-+
-+static inline void gem_mac_configure(struct macb *bp, int speed)
-+{
-+	switch (speed) {
-+	case SPEED_1000:
-+		gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-+			   gem_readl(bp, NCFGR));
-+		break;
-+	case SPEED_100:
-+		macb_writel(bp, NCFGR, MACB_BIT(SPD) |
-+			    macb_readl(bp, NCFGR));
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
- 			   const struct phylink_link_state *state)
- {
-@@ -572,18 +680,17 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
- 			reg &= ~GEM_BIT(GBE);
- 		if (state->duplex)
- 			reg |= MACB_BIT(FD);
-+		macb_or_gem_writel(bp, NCFGR, reg);
- 
--		switch (state->speed) {
--		case SPEED_1000:
--			reg |= GEM_BIT(GBE);
--			break;
--		case SPEED_100:
--			reg |= MACB_BIT(SPD);
--			break;
--		default:
--			break;
-+		if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
-+			if (gem_mac_usx_configure(bp, state->speed) < 0) {
-+				spin_unlock_irqrestore(&bp->lock, flags);
-+				phylink_mac_change(bp->pl, false);
-+				return;
-+			}
-+		} else {
-+			gem_mac_configure(bp, state->speed);
- 		}
--		macb_or_gem_writel(bp, NCFGR, reg);
- 
- 		bp->speed = state->speed;
- 		bp->duplex = state->duplex;
-@@ -3419,6 +3526,9 @@ static void macb_configure_caps(struct macb *bp,
- 			bp->caps |= MACB_CAPS_ISR_CLEAR_ON_WRITE;
- 		if (GEM_BFEXT(NO_PCS, dcfg) == 0)
- 			bp->caps |= MACB_CAPS_PCS;
-+		dcfg = gem_readl(bp, DCFG12);
-+		if (GEM_BFEXT(HIGH_SPEED, dcfg) == 1)
-+			bp->caps |= MACB_CAPS_HIGH_SPEED;
- 		dcfg = gem_readl(bp, DCFG2);
- 		if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) == 0)
- 			bp->caps |= MACB_CAPS_FIFO_MODE;
--- 
-1.7.1
-
+SGkgSGFucywNCg0KT24gTWksIDIwMTktMTEtMDYgYXQgMTc6NTIgKzAxMDAsIEhhbnMgVmVya3Vp
+bCB3cm90ZToNCj4gwqAgwqAgwqAgdGVzdCBTY2FsaW5nOiBPSw0KPiBUaGUgcHJlc2VuY2Ugb2Yg
+YSBzY2FsZXIgaXMgc3VzcGljaW91czogaXMgdGhlIGVuY29kZXIgaW5kZWVkDQo+IGNhcGFibGUg
+b2Ygc2NhbGluZz8gSSBzdXNwZWN0IHRoaXMgaXMgYSBidWcuDQoNCk5vLCBpdCdzIG5vdCBjYXBh
+YmxlIG9mIHNjYWxpbmcuIFlvdSBzdXNwZWN0IGEgYnVnIGluIHRoZSBkcml2ZXIgb3IgdGhlDQp0
+ZXN0cz8NCg0KPiBDb2RlYyBpb2N0bHM6DQo+ID4gwqDCoMKgwqDCoMKgdGVzdCBWSURJT0NfKFRS
+WV8pRU5DT0RFUl9DTUQ6IE9LDQo+IFRoZSBwcmVzZW5jZSBvZiB0aGlzLi4uDQo+IA0KPiA+IA0K
+PiA+IMKgwqDCoMKgwqDCoHRlc3QgVklESU9DX0dfRU5DX0lOREVYOiBPSyAoTm90IFN1cHBvcnRl
+ZCkNCj4gPiDCoMKgwqDCoMKgwqB0ZXN0IFZJRElPQ18oVFJZXylERUNPREVSX0NNRDogT0sNCj4g
+Li4uYW5kIHRoaXMgaXMgYWxzbyBzdHJhbmdlIGZvciBhIEpQRUcgY29kZWMuIFRoZXNlIGlvY3Rs
+cyBhcmUNCj4gdHlwaWNhbGx5IG9ubHkNCj4gbmVlZGVkIGZvciBNUEVHL0gyNjQvZXRjLiBjb2Rl
+Y3MsIGFuZCBub3QgZm9yIGEgc2ltcGxlIEpQRUcgY29kZWMuDQo+IA0KPiBUaGUgc2FtZSBpc3N1
+ZXMgYXJlIGZvdW5kIGZvciB0aGUgSlBFRyBkZWNvZGVyLg0KDQpJIGltcGxlbWVudGVkIHRoZSBD
+TURfU1RPUCBmb3IgYm90aCBlbmNvZGVyICYgZGVjb2RlciwgYmVjYXVzZSBpdCB3YXMNCnJlcXVl
+c3RlZCBieSBvdXIgZGV2ZWxvcGVyIGZvciBnc3RyZWFtZXIgcGx1Z2luIGZvciB0aGlzIGNvZGVj
+Lg0KVGhlIGNvbnRleHQgaW4gd2hpY2ggdGhpcyB3YXMgcmVxdWVzdGVkIHdhcyBmb3IgcGxheWlu
+ZyBNSlBFRyB2aWRlb3MgKGENCmNvbmNhdGVuYXRpb24gb2YgSlBFRyBmcmFtZXMpLg0KDQo+IFN0
+cmVhbWluZyBpb2N0bHM6DQo+ID4gwqDCoMKgwqDCoMKgdGVzdCByZWFkL3dyaXRlOiBPSyAoTm90
+IFN1cHBvcnRlZCkNCj4gPiDCoMKgwqDCoMKgwqB0ZXN0IGJsb2NraW5nIHdhaXQ6IE9LDQo+ID4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGZhaWw6IHY0bDItdGVzdC1idWZmZXJzLmNwcCgy
+NTQpOiBnX2ZpZWxkKCkgPT0NCj4gPiBWNEwyX0ZJRUxEX0FOWQ0KPiBUaGUgZHJpdmVyIHNoYWxs
+IG5ldmVyIHJldHVybiBGSUVMRF9BTlkuIFRoaXMgbmVlZHMgdG8gYmUgRklFTERfTk9ORS4NCg0K
+SXMgdGhlcmUgYSAiZ29vZCBleGFtcGxlIiBvZiBhIHY0bCBtMm0gZHJpdmVyIHRoYXQgcGFzc2Vz
+IHRoZXNlDQpzdHJlYW1pbmcgdGVzdHM/IFRoYXQgd291bGQgc2F2ZSBzb21lIHRpbWUgb24gbXkg
+c2lkZS4NCkZvciB0aGUgRklFTERfQU5ZIGlzc3VlLCBJIGdvdCBpbnNwaXJlZCBmcm9tIHlvdXIg
+Y29tbWl0Og0KYWI3YWZhZjMgbWVkaWE6IHZpbTJtOiBhZGQgYnVmX291dF92YWxpZGF0ZSBjYWxs
+YmFjaw0KQnV0IHRoZXJlJ3MgYSBsb3QgbW9yZSB0byBnby4uLg0KDQpUaGFua3MsDQpNaXJlbGEN
+Cg==
