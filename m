@@ -2,112 +2,255 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D10CFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67EBC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C2221848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F33B215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573208891;
-	bh=AOSjNRac0P9NEqExaxB0xZTWmcyhkd13as5AIA1QlAA=;
+	s=default; t=1573209070;
+	bh=kKLG2JES5cLuDs5ImLZ5AHAKe9atzMaG4BvyezuK1aw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lyD8pxGunTfonzbyXSf3sZCNS0Wz5QPx5qBt2fujY0JvDTksVgv4IMOKnF3Ci/M+H
-	 DJR+NV0hAj2sHXrYQsN9SOMkDzzPWd8o8bQmuvqEtjBJrZg3ahrs7UDImDd+ZPd9ki
-	 hrsO4f6gbhW/JQ2A7rn13UprGXoNLunsxs45Rehc=
+	b=Bww7oet2TArrchSGTR+yUlyS6FV/GcBeaI8Bh8A5JAJx5jnVSX6IgQvN3dRYrRS8G
+	 Tw8o9o5fiyPtTy9TES/1XmdPPPIk5ftMT3jj4Yn1JICTs3HmPw2BR8PopJA6QQ0opi
+	 tcbAM5Y+ccvJzglUkiQcE3B1pD2ye1LydmQUNEkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbfKHK2K (ORCPT
+        id S1731310AbfKHKbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:28:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfKHK2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:28:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 997DF206BA;
-        Fri,  8 Nov 2019 10:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573208889;
-        bh=AOSjNRac0P9NEqExaxB0xZTWmcyhkd13as5AIA1QlAA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MMCWRLIPqRMeWNaDQUiiTnuQ2uS0dICkTS3gRPk7P+iNA8cyh/JeygV57zPG+NxmY
-         kYgXxnjTO11HViK4KzLlph40W+a6qDazZbXc9CnT8tRfliiAzNCMxJTKq4Fdbir8td
-         0KJT3vLj5HkWsVy6nOJNtxnn8ZKJlJtgBFH2cHHg=
-Date:   Fri, 8 Nov 2019 11:28:06 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsi@lists.ozlabs.org
-Subject: Re: [PATCH v2 08/11] dt-bindings: fsi: Add description of FSI master
-Message-ID: <20191108102806.GA656785@kroah.com>
-References: <20191108051945.7109-1-joel@jms.id.au>
- <20191108051945.7109-9-joel@jms.id.au>
+        Fri, 8 Nov 2019 05:31:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49712 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726149AbfKHKbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:31:09 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D6F3BB178;
+        Fri,  8 Nov 2019 10:31:03 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 11:31:02 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-kernel@vger.kernel.org, yuqi jin <jinyuqi@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
+Message-ID: <20191108103102.GF15658@dhcp22.suse.cz>
+References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108051945.7109-9-joel@jms.id.au>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 03:49:42PM +1030, Joel Stanley wrote:
-> This describes the FSI master present in the AST2600.
+This changelog looks better, thanks! I still have some questions though.
+Btw. cpumask_local_spread is used by the networking code but I do not
+see net guys involved (Cc netdev)
+
+On Thu 07-11-19 09:44:08, Shaokun Zhang wrote:
+> From: yuqi jin <jinyuqi@huawei.com>
 > 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> Acked-by: Alistair Popple <alistair@popple.id.au>
+> In the multi-processors and NUMA system, I/O driver will find cpu cores
+> that which shall be bound IRQ. When cpu cores in the local numa have
+> been used, it is better to find the node closest to the local numa node,
+> instead of choosing any online cpu immediately.
+> 
+> On Huawei Kunpeng 920 server, there are 4 NUMA node(0 -3) in the 2-cpu
+> system(0 - 1).
+
+Please send a topology of this server (numactl -H).
+
+> We perform PS (parameter server) business test, the
+> behavior of the service is that the client initiates a request through
+> the network card, the server responds to the request after calculation. 
+
+Is the benchmark any ublicly available?
+
+> When two PS processes run on node2 and node3 separately and the
+> network card is located on 'node2' which is in cpu1, the performance
+> of node2 (26W QPS) and node3 (22W QPS) was different.
+> It is better that the NIC queues are bound to the cpu1 cores in turn,
+> then XPS will also be properly initialized, while cpumask_local_spread
+> only considers the local node. When the number of NIC queues exceeds
+> the number of cores in the local node, it returns to the online core
+> directly. So when PS runs on node3 sending a calculated request,
+> the performance is not as good as the node2. It is considered that
+> the NIC and other I/O devices shall initialize the interrupt binding,
+> if the cores of the local node are used up, it is reasonable to return
+> the node closest to it.
+
+Can you post cpu affinities before and after this patch?
+
+> Let's optimize it and find the nearest node through NUMA distance for the
+> non-local NUMA nodes. The performance will be better if it return the
+> nearest node than the random node.
+> 
+> After this patch, the performance of the node3 is the same as node2
+> that is 26W QPS when the network card is still in 'node2'. Since it will
+> return the closest non-local NUMA code rather than random node, it is no
+> harm to others at least.
+
+It would be also nice to explain why the current implementation hasn't
+taken the path your have chosen. Was it a simplicity or is there a more
+fundamental reason? Is there any risk that existing users would regress?
+Preferring cpus from the local socket which is what you aim for sounds
+like a logical thing to do so I am wondering why this hasn't been
+considered.
+
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: yuqi jin <jinyuqi@huawei.com>
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 > ---
->  .../bindings/fsi/fsi-master-aspeed.txt        | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
+> ChangeLog from v2:
+>     1. Change the variables as static and use spinlock to protect;
+>     2. Give more explantation on test and performance;
+>  lib/cpumask.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 90 insertions(+), 12 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-> new file mode 100644
-> index 000000000000..b758f91914f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-> @@ -0,0 +1,24 @@
-> +Device-tree bindings for AST2600 FSI master
-> +-------------------------------------------
+> diff --git a/lib/cpumask.c b/lib/cpumask.c
+> index 0cb672eb107c..b98a2256bc5a 100644
+> --- a/lib/cpumask.c
+> +++ b/lib/cpumask.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/export.h>
+>  #include <linux/memblock.h>
+>  #include <linux/numa.h>
+> +#include <linux/spinlock.h>
+>  
+>  /**
+>   * cpumask_next - get the next cpu in a cpumask
+> @@ -192,18 +193,39 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+>  }
+>  #endif
+>  
+> -/**
+> - * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+> - * @i: index number
+> - * @node: local numa_node
+> - *
+> - * This function selects an online CPU according to a numa aware policy;
+> - * local cpus are returned first, followed by non-local ones, then it
+> - * wraps around.
+> - *
+> - * It's not very efficient, but useful for setup.
+> - */
+> -unsigned int cpumask_local_spread(unsigned int i, int node)
+> +static void calc_node_distance(int *node_dist, int node)
+> +{
+> +	int i;
 > +
-> +The AST2600 contains two identical FSI masters. They share a clock and have a
-> +separate interrupt line and output pins.
+> +	for (i = 0; i < nr_node_ids; i++)
+> +		node_dist[i] = node_distance(node, i);
+> +}
 > +
-> +Required properties:
-> + - compatible: "aspeed,ast2600-fsi-master"
-> + - reg: base address and length
-> + - clocks: phandle and clock number
-> + - interrupts: platform dependent interrupt description
-> + - pinctrl-0: phandle to pinctrl node
-> + - pinctrl-names: pinctrl state
+> +static int find_nearest_node(int *node_dist, bool *used)
+> +{
+> +	int i, min_dist = node_dist[0], node_id = -1;
 > +
-> +Examples:
+> +	/* Choose the first unused node to compare */
+> +	for (i = 0; i < nr_node_ids; i++) {
+> +		if (used[i] == 0) {
+> +			min_dist = node_dist[i];
+> +			node_id = i;
+> +			break;
+> +		}
+> +	}
 > +
-> +    fsi-master {
-> +        compatible = "aspeed,ast2600-fsi-master", "fsi-master";
-> +        reg = <0x1e79b000 0x94>;
-> +	interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fsi1_default>;
-> +	clocks = <&syscon ASPEED_CLK_GATE_FSICLK>;
-> +    };
+> +	/* Compare and return the nearest node */
+> +	for (i = 0; i < nr_node_ids; i++) {
+> +		if (node_dist[i] < min_dist && used[i] == 0) {
+> +			min_dist = node_dist[i];
+> +			node_id = i;
+> +		}
+> +	}
+> +
+> +	return node_id;
+> +}
+> +
+> +static unsigned int __cpumask_local_spread(unsigned int i, int node)
+>  {
+>  	int cpu;
+>  
+> @@ -231,4 +253,60 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
+>  	}
+>  	BUG();
+>  }
+> +
+> +static DEFINE_SPINLOCK(spread_lock);
+> +/**
+> + * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+> + * @i: index number
+> + * @node: local numa_node
+> + *
+> + * This function selects an online CPU according to a numa aware policy;
+> + * local cpus are returned first, followed by the nearest non-local ones,
+> + * then it wraps around.
+> + *
+> + * It's not very efficient, but useful for setup.
+> + */
+> +unsigned int cpumask_local_spread(unsigned int i, int node)
+> +{
+> +	static int node_dist[MAX_NUMNODES];
+> +	static bool used[MAX_NUMNODES];
+> +	unsigned long flags;
+> +	int cpu, j, id;
+> +
+> +	/* Wrap: we always want a cpu. */
+> +	i %= num_online_cpus();
+> +
+> +	if (node == NUMA_NO_NODE) {
+> +		for_each_cpu(cpu, cpu_online_mask)
+> +			if (i-- == 0)
+> +				return cpu;
+> +	} else {
+> +		if (nr_node_ids > MAX_NUMNODES)
+> +			return __cpumask_local_spread(i, node);
+> +
+> +		spin_lock_irqsave(&spread_lock, flags);
+> +		memset(used, 0, nr_node_ids * sizeof(bool));
+> +		calc_node_distance(node_dist, node);
+> +		for (j = 0; j < nr_node_ids; j++) {
+> +			id = find_nearest_node(node_dist, used);
+> +			if (id < 0)
+> +				break;
+> +
+> +			for_each_cpu_and(cpu, cpumask_of_node(id),
+> +					 cpu_online_mask)
+> +				if (i-- == 0) {
+> +					spin_unlock_irqrestore(&spread_lock,
+> +							       flags);
+> +					return cpu;
+> +				}
+> +			used[id] = 1;
+> +		}
+> +		spin_unlock_irqrestore(&spread_lock, flags);
+> +
+> +		for_each_cpu(cpu, cpu_online_mask)
+> +			if (i-- == 0)
+> +				return cpu;
+> +	}
+> +	BUG();
+> +}
+>  EXPORT_SYMBOL(cpumask_local_spread);
 > -- 
-> 2.24.0.rc1
-> 
+> 2.7.4
 
-As these all seem like bog-standard properties, I'll take this now,
-thanks.
-
-greg k-h
+-- 
+Michal Hocko
+SUSE Labs
