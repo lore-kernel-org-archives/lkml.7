@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8C7FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B22FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD9F222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E9522459
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213647;
-	bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cq2wSf+gkcJUotXZUfDtj+s4YgkVbYUtLtNK8zTK1iiu5HXVgq9OkWn7q54OUeyNN
-	 rFjaEU+Jfngfad+2T6/vP0ab1+PIknDc7+v3qvH/8K9AyDiJT1bU9frWw8xqxUkC7j
-	 NnL6+naLhjYSCYW5Qz4xgFSnUtD3fVtqjlKkuJ4I=
+	s=default; t=1573213653;
+	bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a3S9VKjMu9AqzXZvUuDfY8/ZLJ+3lO9HQKbImP0Fo3OBGRIkNC2T76KwPOOwRViEE
+	 oCgzLdyQnF5Ec4D7NUVLy1UoytnuPN63Ik5V+YXtDzKEaTDQ9D3kiHTIwKOvn5FW6w
+	 H/y4sd9VdyYY8X5G9z64JU2m3rQ00EivYsBs8otM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391544AbfKHLr0 (ORCPT
+        id S2391568AbfKHLrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389733AbfKHLrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:24 -0500
+        id S2391550AbfKHLr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DD1222C5;
-        Fri,  8 Nov 2019 11:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5517020656;
+        Fri,  8 Nov 2019 11:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213643;
-        bh=WiBksml3Di1WYFYiOQH1mulf+M8x8gaNtPvMG683ctI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oP7a35t7o/B70xqvk5lOS0jY5MAJ/s+NtK3011/2hfwlYIJ4pVfbd7gugk4/rtTKS
-         0VUnTlZk6TPnfRfqv1BPvu9OiHJlI+0AUuKsM50DIesBiHvTFSgI8hLZRAfvty+r4C
-         ioJxPkCzCRepanoQktZ9vQ12OxRUaJ6GaIh47W5E=
+        s=default; t=1573213648;
+        bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kaT+0u/5CEv3BnUzzFgncP3mu9QyMNSIEVET1xS3VtnOpFOy89cwUqH9wHhDqyRvG
+         sZbWYyBrPNaKmRrV5RNHMO438ILaVrj/k4KV4rRZjoas9QwzUF3hMfHH3ULSOh/yQu
+         WHUxzj9jJE639cCuEGaIGZdgW7G9onqF4DEZpZMk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/44] iio: dac: mcp4922: fix error handling in mcp4922_write_raw
-Date:   Fri,  8 Nov 2019 06:46:37 -0500
-Message-Id: <20191108114721.15944-1-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 04/44] ALSA: seq: Do error checks at creating system ports
+Date:   Fri,  8 Nov 2019 06:46:40 -0500
+Message-Id: <20191108114721.15944-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
+References: <20191108114721.15944-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,49 +57,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 0833627fc3f757a0dca11e2a9c46c96335a900ee ]
+[ Upstream commit b8e131542b47b81236ecf6768c923128e1f5db6e ]
 
-Do not try to write negative values and make sure that the write goes well.
+snd_seq_system_client_init() doesn't check the errors returned from
+its port creations.  Let's do it properly and handle the error paths.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/mcp4922.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ sound/core/seq/seq_system.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/dac/mcp4922.c b/drivers/iio/dac/mcp4922.c
-index 3854d201a5d6c..68dd0be1ac076 100644
---- a/drivers/iio/dac/mcp4922.c
-+++ b/drivers/iio/dac/mcp4922.c
-@@ -94,17 +94,22 @@ static int mcp4922_write_raw(struct iio_dev *indio_dev,
- 		long mask)
+diff --git a/sound/core/seq/seq_system.c b/sound/core/seq/seq_system.c
+index 8ce1d0b40dce1..ce1f1e4727ab1 100644
+--- a/sound/core/seq/seq_system.c
++++ b/sound/core/seq/seq_system.c
+@@ -123,6 +123,7 @@ int __init snd_seq_system_client_init(void)
  {
- 	struct mcp4922_state *state = iio_priv(indio_dev);
-+	int ret;
+ 	struct snd_seq_port_callback pcallbacks;
+ 	struct snd_seq_port_info *port;
++	int err;
  
- 	if (val2 != 0)
- 		return -EINVAL;
+ 	port = kzalloc(sizeof(*port), GFP_KERNEL);
+ 	if (!port)
+@@ -144,7 +145,10 @@ int __init snd_seq_system_client_init(void)
+ 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
+ 	port->addr.client = sysclient;
+ 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_TIMER;
+-	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
++	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
++					port);
++	if (err < 0)
++		goto error_port;
  
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		if (val > GENMASK(chan->scan_type.realbits-1, 0))
-+		if (val < 0 || val > GENMASK(chan->scan_type.realbits - 1, 0))
- 			return -EINVAL;
- 		val <<= chan->scan_type.shift;
--		state->value[chan->channel] = val;
--		return mcp4922_spi_write(state, chan->channel, val);
+ 	/* register announcement port */
+ 	strcpy(port->name, "Announce");
+@@ -154,16 +158,24 @@ int __init snd_seq_system_client_init(void)
+ 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
+ 	port->addr.client = sysclient;
+ 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_ANNOUNCE;
+-	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
++	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
++					port);
++	if (err < 0)
++		goto error_port;
+ 	announce_port = port->addr.port;
+ 
+ 	kfree(port);
+ 	return 0;
 +
-+		ret = mcp4922_spi_write(state, chan->channel, val);
-+		if (!ret)
-+			state->value[chan->channel] = val;
-+		return ret;
-+
- 	default:
- 		return -EINVAL;
- 	}
++ error_port:
++	snd_seq_system_client_done();
++	kfree(port);
++	return err;
+ }
+ 
+ 
+ /* unregister our internal client */
+-void __exit snd_seq_system_client_done(void)
++void snd_seq_system_client_done(void)
+ {
+ 	int oldsysclient = sysclient;
+ 
 -- 
 2.20.1
 
