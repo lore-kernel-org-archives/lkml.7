@@ -2,192 +2,120 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50196FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92E5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279A221924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573210617;
-	bh=h+YQNCXUpiKIYR4cDyG7MP4Y2XncMarx0q08cfw4XtU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TNUNT7pJKsmWc1wTmSZXpoMVWtnR04cEmITwvbtoRGnjeO43aOlJ+bdSJStBYVRcw
-	 AjkkC+TPPSk1O8ZV62AYG99KxUgGp1QCkaseXm77FSYTSCu5413k8mv7XjeZMzklAv
-	 /jFgvup+AoERyARRVlvMO3x9B2wHLEJ+T9CgJm74=
+	by mail.kernel.org (Postfix) with ESMTP id C0971218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrokpjAz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731429AbfKHK44 (ORCPT
+        id S1731506AbfKHK6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:56:56 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45800 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729896AbfKHK4z (ORCPT
+        Fri, 8 Nov 2019 05:58:18 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36952 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729873AbfKHK6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:56:55 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r24so4800789otk.12;
-        Fri, 08 Nov 2019 02:56:55 -0800 (PST)
+        Fri, 8 Nov 2019 05:58:18 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z24so3725227pgu.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 02:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=wISJS0OWPo2/E4IjX1pDBrYSwoR446f1IRAE3ZXUfNg=;
+        b=lrokpjAz8qWZkc7OmPIgihn1TOvIx7tamO/UFjIQ7Hi9QRgTzND01Ew+Njm0A2ElvG
+         A4/NwlYQ3eG1TrsgaVhIPxljDuBueDMoTmzyH9Q6sXTK3Ft1p3/sSDHZU8GeAo2O2wEZ
+         2db2DoY07TwQ5JoatF1Cm2LQYXW+VniirkzYU1pqlFP4LlH+LyqLvLADu7B6hykhjOWt
+         Zf7HjWjAPCac5zDv3skmiVawov0sh77DYhsRY96rh5ExzaHUb4tCiW3Dfti7YfYM1/YR
+         e/EmGauYZQwDZvcDBvBw/1CrbShTJyCcBiYjzb30pQxYGrhNdfvpG48yNSbIBDBGPnV2
+         /0ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jYFPsIc27u29Yjz0g3atZHfF9HksP2WvNGtvLYXFt4s=;
-        b=nnQVe2u52JrgdNm/ir/kYcrOLYo/Euc16m8pgOwvzIRxdjfxQ3PwUC60stiQTFxIRH
-         blcZbhG31m7jiio653pZW4NlFRhIrGzHdgg5QzGXHNajrdWXgz4LWe9/giW/kE25iZeN
-         LuPvh+pM4dAf8ZrbV/pXpYu/g4PH96cUiU5rR2TXVvGtguuuSi41LfLpOIT7ka6A1aCe
-         mFflPsNf48OcvxiUQ3WIrKpoStjadugceP2ZCXPFmsA10O08gIfLWZN9FB+f7vC2EWkS
-         u4k8iJOPcN9Dh/5rw1HGMiUkEEyQluvyEZFrSYrnzboqp2bf/py9fHWo5TnkKELQxpm7
-         N3rQ==
-X-Gm-Message-State: APjAAAUuqw4/n7DabOP3+H5DTATJJZ8+27u2yzOL47e4+cSmOp56V2Dt
-        +yk+DbNi0P+Nv9fKNZEG60WSHTCPvlGb2eFqksI=
-X-Google-Smtp-Source: APXvYqwzTm3wzOcGarzXjc0wFxFI7PdVtjXIwX5UA760FCYy/aDWzz6JWjT08ku65DSG1EKefuNwr1kUemHUEax+ySw=
-X-Received: by 2002:a05:6830:232a:: with SMTP id q10mr8033641otg.262.1573210614545;
- Fri, 08 Nov 2019 02:56:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20191030075141.1039-1-daniel.lezcano@linaro.org>
- <20191030075141.1039-2-daniel.lezcano@linaro.org> <143021538.HHUP3Pj7i7@kreacher>
- <9dfe3bd3-1903-4dc4-0605-27cc867d87ad@linaro.org>
-In-Reply-To: <9dfe3bd3-1903-4dc4-0605-27cc867d87ad@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 8 Nov 2019 11:56:43 +0100
-Message-ID: <CAJZ5v0hLZ9O=QtZ+ktc-_Dk7aJjgD9BRLyYKw1g9Ze2n8KZyVQ@mail.gmail.com>
-Subject: Re: [PATCH V6 2/3] cpuidle: play_idle: Specify play_idle with an idle state
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wISJS0OWPo2/E4IjX1pDBrYSwoR446f1IRAE3ZXUfNg=;
+        b=CDdQXqjuHC3wlVV9HYuglJ3SwByAg8iw/lBOsaDgCZRNzpbd8ShyRuXAzXnjwcWeR8
+         ec3IBLJvKHw6MjAN6wfy6YTKp/LU5Ldrq1m8S6oh143UrglF9DMOSsBBbnW9bhpSGlOP
+         SN026NXq6tJQSIVWovnwtfaUpnavucPhwh0XJ2U99fQUADkdVBSC4a23fUhq1UG45bt6
+         Ju9DMhbtk9oOJvsRauHXzcJUiDxqyYdgBXeSliNKt+3UgHH0bSFTan9ybSbGoYQoFWYC
+         vx9ezC52NLuz47o91Ac7RY08WF2IkzJmsLEaA3eynYvh/uEferRRCj7mjQkUz0PUVf9R
+         VSvQ==
+X-Gm-Message-State: APjAAAWfchqC+ndJe/lw+a39jc93s12zGX6Va3dpZl7nOIyF8TClWUjL
+        9YjtWZ7mkLJecjY1KIacg2hOPw==
+X-Google-Smtp-Source: APXvYqw6zZqtJoMSVOyHzvFRbaQhcvNKVMam7pzqcTmDeakyOOULh6MNYGf+Nuovm/I4m812tZrLgg==
+X-Received: by 2002:a17:90a:b78d:: with SMTP id m13mr12970166pjr.70.1573210697207;
+        Fri, 08 Nov 2019 02:58:17 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id x12sm5111180pfm.130.2019.11.08.02.58.14
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 08 Nov 2019 02:58:16 -0800 (PST)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
+        baolin.wang7@gmail.com, dongwei.wang@unisoc.com,
+        shuiqing.li@unisoc.com, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] watchdog: sprd: Fix the incorrect pointer getting from driver data
+Date:   Fri,  8 Nov 2019 18:57:12 +0800
+Message-Id: <76d4687189ec940baa90cb8d679a8d4c8f02ee80.1573210405.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 11:47 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 08/11/2019 02:20, Rafael J. Wysocki wrote:
-> > On Wednesday, October 30, 2019 8:51:40 AM CET Daniel Lezcano wrote:
-> >> Currently, the play_idle function does not allow to tell which idle
-> >> state we want to go. Improve this by passing the idle state as
-> >> parameter to the function.
-> >>
-> >> Export cpuidle_find_deepest_state() symbol as it is used from the
-> >> intel_powerclamp driver as a module.
-> >>
-> >> There is no functional changes, the cpuidle state is the deepest one.
-> >>
-> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> >> ---
-> >>   V6:
-> >>    - Change variable name 'state' -> 'index':
-> >>      https://lkml.org/lkml/2019/10/28/874
-> >>   V4:
-> >>    - Add EXPORT_SYMBOL_GPL(cpuidle_find_deepest_state) for the
-> >>      intel_powerclamp driver when this one is compiled as a module
-> >>   V3:
-> >>    - Add missing cpuidle.h header
-> >> ---
-> >>  drivers/cpuidle/cpuidle.c                | 1 +
-> >>  drivers/powercap/idle_inject.c           | 4 +++-
-> >>  drivers/thermal/intel/intel_powerclamp.c | 4 +++-
-> >>  include/linux/cpu.h                      | 2 +-
-> >>  kernel/sched/idle.c                      | 4 ++--
-> >>  5 files changed, 10 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> >> index 18523ea6b11b..b871fc2e8e67 100644
-> >> --- a/drivers/cpuidle/cpuidle.c
-> >> +++ b/drivers/cpuidle/cpuidle.c
-> >> @@ -126,6 +126,7 @@ int cpuidle_find_deepest_state(void)
-> >>
-> >>      return find_deepest_state(drv, dev, UINT_MAX, 0, false);
-> >>  }
-> >> +EXPORT_SYMBOL_GPL(cpuidle_find_deepest_state);
-> >
-> > That doesn't appear to be really necessary to me.
-> >
-> >>
-> >>  #ifdef CONFIG_SUSPEND
-> >>  static void enter_s2idle_proper(struct cpuidle_driver *drv,
-> >> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-> >> index cd1270614cc6..233c878cbf46 100644
-> >> --- a/drivers/powercap/idle_inject.c
-> >> +++ b/drivers/powercap/idle_inject.c
-> >> @@ -38,6 +38,7 @@
-> >>  #define pr_fmt(fmt) "ii_dev: " fmt
-> >>
-> >>  #include <linux/cpu.h>
-> >> +#include <linux/cpuidle.h>
-> >>  #include <linux/hrtimer.h>
-> >>  #include <linux/kthread.h>
-> >>  #include <linux/sched.h>
-> >> @@ -138,7 +139,8 @@ static void idle_inject_fn(unsigned int cpu)
-> >>       */
-> >>      iit->should_run = 0;
-> >>
-> >> -    play_idle(READ_ONCE(ii_dev->idle_duration_us));
-> >> +    play_idle(READ_ONCE(ii_dev->idle_duration_us),
-> >> +              cpuidle_find_deepest_state());
-> >
-> > The next patch changes this again and I'm not sure why this intermediate
-> > change is useful.
-> >
-> >>  }
-> >>
-> >>  /**
-> >> diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
-> >> index 53216dcbe173..b55786c169ae 100644
-> >> --- a/drivers/thermal/intel/intel_powerclamp.c
-> >> +++ b/drivers/thermal/intel/intel_powerclamp.c
-> >> @@ -29,6 +29,7 @@
-> >>  #include <linux/delay.h>
-> >>  #include <linux/kthread.h>
-> >>  #include <linux/cpu.h>
-> >> +#include <linux/cpuidle.h>
-> >>  #include <linux/thermal.h>
-> >>  #include <linux/slab.h>
-> >>  #include <linux/tick.h>
-> >> @@ -430,7 +431,8 @@ static void clamp_idle_injection_func(struct kthread_work *work)
-> >>      if (should_skip)
-> >>              goto balance;
-> >>
-> >> -    play_idle(jiffies_to_usecs(w_data->duration_jiffies));
-> >> +    play_idle(jiffies_to_usecs(w_data->duration_jiffies),
-> >> +              cpuidle_find_deepest_state());
-> >
-> > I don't see a reason for changing the code here like this.
-> >
-> > What you really need is to have a way to set a limit on the idle
-> > state exit latency for idle injection on ARM.
->
-> Mmh, yes you are right. The idle state number is part of the internals
-> of the cpuidle framework while the exit latency is an input (from user
-> or kernel).
->
-> > For that you can pass the exit latency limit to play_idle(), but then
-> > you need to change powerclamp to pass UNIT_MAX or similar which is
-> > ugly, or you can redefine cpuidle_use_deepest_state() to take the
-> > exit latency limit as the arg (with 0 meaning use_deepest_state == false).
->
-> Should it make sense to just get the resume latency in
-> cpuidle_use_deepest_state() and pass the value to find_deepest_state()?
+From: Shuiqing Li <shuiqing.li@unisoc.com>
 
-Yes, I would change cpuidle_use_deepest_state() to take the max exit
-latency as the arg (maybe with 0 meaning "don't use the deepest state
-only any more").
+The device driver data saved the 'struct sprd_wdt' object, it is
+incorrect to get 'struct watchdog_device' object from the driver
+data, thus fix it.
 
-> It is the only code path where the constraint is not taken into account
-> AFAICT.
->
-> With this simple change, we can manage everything from the pm_qos API
-> then and this series is no longer needed.
+Fixes: 477603467009 ("watchdog: Add Spreadtrum watchdog driver")
+Reported-by: Dongwei Wang <dongwei.wang@unisoc.com>
+Signed-off-by: Shuiqing Li <shuiqing.li@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/watchdog/sprd_wdt.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-OK
+diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
+index 0bb17b0..65cb55f 100644
+--- a/drivers/watchdog/sprd_wdt.c
++++ b/drivers/watchdog/sprd_wdt.c
+@@ -327,10 +327,9 @@ static int sprd_wdt_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+ {
+-	struct watchdog_device *wdd = dev_get_drvdata(dev);
+ 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+ 
+-	if (watchdog_active(wdd))
++	if (watchdog_active(&wdt->wdd))
+ 		sprd_wdt_stop(&wdt->wdd);
+ 	sprd_wdt_disable(wdt);
+ 
+@@ -339,7 +338,6 @@ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+ 
+ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+ {
+-	struct watchdog_device *wdd = dev_get_drvdata(dev);
+ 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+ 	int ret;
+ 
+@@ -347,7 +345,7 @@ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (watchdog_active(wdd)) {
++	if (watchdog_active(&wdt->wdd)) {
+ 		ret = sprd_wdt_start(&wdt->wdd);
+ 		if (ret) {
+ 			sprd_wdt_disable(wdt);
+-- 
+1.7.9.5
+
