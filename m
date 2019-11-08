@@ -2,158 +2,157 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40801FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA04FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168AB2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215087;
-	bh=fb+uDVLzQj+oXotwUSncvB4df9zFhWnG3pcDqa1qYLI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+9hraquG92iMFObv7Msa4hy3XMn2isn6v0B00BHFt28l+FTh7AXxMoqzB4cPwIVF
-	 kHEQ++bRYa5Uv4dshkOMD6CSWiDrqKN9ylNyNZHKgafRDFUHmwBAfHzM0jrXy++MP8
-	 s30/PKWh3keQTg0mLz9cfdQ/IeyLQTZJB3y7UrIw=
+	by mail.kernel.org (Postfix) with ESMTP id 0B5F52085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391834AbfKHMLZ (ORCPT
+        id S2391961AbfKHMLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:11:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733127AbfKHLjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:12 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4D7521D6C;
-        Fri,  8 Nov 2019 11:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213151;
-        bh=fb+uDVLzQj+oXotwUSncvB4df9zFhWnG3pcDqa1qYLI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbftafiIkkA6f58NU9qzOLsPE/n+7d1Bec+ceHqLED0Q24V88IpSxGuPRI6EK1KvY
-         +QtsxFunXgCnbMwPUEOjWK/nlxO3ONS7GeofPi/mZ1qJuIuh6N9umYiH5HFLgsId0l
-         W2OApOtKNuhUjaEUmx6iHc8y7YkPtLvStG01b+AU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 060/205] media: i2c: Fix pm_runtime_get_if_in_use() usage in sensor drivers
-Date:   Fri,  8 Nov 2019 06:35:27 -0500
-Message-Id: <20191108113752.12502-60-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
-References: <20191108113752.12502-1-sashal@kernel.org>
+        Fri, 8 Nov 2019 07:11:34 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51710 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733060AbfKHLjH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:07 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8BbQlV156719
+        for <linux-kernel@vger.kernel.org>; Fri, 8 Nov 2019 06:39:07 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w41w81wda-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:39:06 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <hbathini@linux.ibm.com>;
+        Fri, 8 Nov 2019 11:39:04 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Nov 2019 11:39:01 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8BcP8R38994364
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 11:38:25 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0B8E11C05C;
+        Fri,  8 Nov 2019 11:39:00 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2D7311C04A;
+        Fri,  8 Nov 2019 11:38:59 +0000 (GMT)
+Received: from [9.184.183.121] (unknown [9.184.183.121])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 11:38:59 +0000 (GMT)
+Subject: Re: [PATCH v3] powerpc/fadump: when fadump is supported register the
+ fadump sysfs files.
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+References: <20191023175651.24833-1-msuchanek@suse.de>
+ <20191107164757.15140-1-msuchanek@suse.de>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Date:   Fri, 8 Nov 2019 17:08:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191107164757.15140-1-msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110811-0012-0000-0000-00000361DDEF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110811-0013-0000-0000-0000219D424D
+Message-Id: <119d91aa-57d4-00db-054c-60769b309c8d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit 4d471563d87b2b83e73b8abffb9273950e6d2e36 ]
 
-pm_runtime_get_if_in_use() returns -EINVAL if runtime PM is disabled. This
-should not be considered an error. Generally the driver has enabled
-runtime PM already so getting this error due to runtime PM being disabled
-will not happen.
+On 07/11/19 10:17 PM, Michal Suchanek wrote:
+> Currently it is not possible to distinguish the case when fadump is
+> supported by firmware and disabled in kernel and completely unsupported
+> using the kernel sysfs interface. User can investigate the devicetree
+> but it is more reasonable to provide sysfs files in case we get some
+> fadumpv2 in the future.
+> 
+> With this patch sysfs files are available whenever fadump is supported
+> by firmware.
+> 
+> There is duplicate message about lack of support by firmware in
+> fadump_reserve_mem and setup_fadump. Remove the duplicate message in
+> setup_fadump.
 
-Instead of checking for lesser or equal to zero, check for zero only.
-Address this for drivers where this pattern exists.
+Thanks for doing this, Michal.
+Exporting the node will be helpful in finding if FADump is supported,
+given FADump is now supported on two different platforms...
 
-This patch has been produced using the following command:
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
 
-$ git grep -l pm_runtime_get_if_in_use -- drivers/media/i2c/ | \
-  xargs perl -i -pe 's/(pm_runtime_get_if_in_use\(.*\)) \<\= 0/!$1/'
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> v2: move the sysfs initialization earlier to avoid condition nesting
+> v3: remove duplicate message
+> ---
+>  arch/powerpc/kernel/fadump.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+> index ed59855430b9..ff0114aeba9b 100644
+> --- a/arch/powerpc/kernel/fadump.c
+> +++ b/arch/powerpc/kernel/fadump.c
+> @@ -1466,16 +1466,15 @@ static void fadump_init_files(void)
+>   */
+>  int __init setup_fadump(void)
+>  {
+> -	if (!fw_dump.fadump_enabled)
+> -		return 0;
+> -
+> -	if (!fw_dump.fadump_supported) {
+> -		printk(KERN_ERR "Firmware-assisted dump is not supported on"
+> -			" this hardware\n");
+> +	if (!fw_dump.fadump_supported)
+>  		return 0;
+> -	}
+>  
+> +	fadump_init_files();
+>  	fadump_show_config();
+> +
+> +	if (!fw_dump.fadump_enabled)
+> +		return 1;
+> +
+>  	/*
+>  	 * If dump data is available then see if it is valid and prepare for
+>  	 * saving it to the disk.
+> @@ -1492,8 +1491,6 @@ int __init setup_fadump(void)
+>  	else if (fw_dump.reserve_dump_area_size)
+>  		fw_dump.ops->fadump_init_mem_struct(&fw_dump);
+>  
+> -	fadump_init_files();
+> -
+>  	return 1;
+>  }
+>  subsys_initcall(setup_fadump);
+> 
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/i2c/ov13858.c | 2 +-
- drivers/media/i2c/ov2685.c  | 2 +-
- drivers/media/i2c/ov5670.c  | 2 +-
- drivers/media/i2c/ov5695.c  | 2 +-
- drivers/media/i2c/ov7740.c  | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index a66f6201f53c7..0e7a85c4996c7 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -1230,7 +1230,7 @@ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
- 	 * Applying V4L2 control value only happens
- 	 * when power is up for streaming
- 	 */
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	ret = 0;
-diff --git a/drivers/media/i2c/ov2685.c b/drivers/media/i2c/ov2685.c
-index 385c1886a9470..98a1f2e312b58 100644
---- a/drivers/media/i2c/ov2685.c
-+++ b/drivers/media/i2c/ov2685.c
-@@ -549,7 +549,7 @@ static int ov2685_set_ctrl(struct v4l2_ctrl *ctrl)
- 		break;
- 	}
- 
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
-diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
-index 7b7c74d773707..53dd30d96e691 100644
---- a/drivers/media/i2c/ov5670.c
-+++ b/drivers/media/i2c/ov5670.c
-@@ -2016,7 +2016,7 @@ static int ov5670_set_ctrl(struct v4l2_ctrl *ctrl)
- 	}
- 
- 	/* V4L2 controls values will be applied only when power is already up */
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
-diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
-index 9a80decd93d3c..5d107c53364d6 100644
---- a/drivers/media/i2c/ov5695.c
-+++ b/drivers/media/i2c/ov5695.c
-@@ -1110,7 +1110,7 @@ static int ov5695_set_ctrl(struct v4l2_ctrl *ctrl)
- 		break;
- 	}
- 
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
-diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
-index 8a6a7a5929aa3..7804013934ab5 100644
---- a/drivers/media/i2c/ov7740.c
-+++ b/drivers/media/i2c/ov7740.c
-@@ -510,7 +510,7 @@ static int ov7740_set_ctrl(struct v4l2_ctrl *ctrl)
- 	int ret;
- 	u8 val = 0;
- 
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
 -- 
-2.20.1
+- Hari
 
