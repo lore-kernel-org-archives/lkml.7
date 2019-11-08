@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F9EFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853FBFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F952085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C60F2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214697;
-	bh=KoIC1QyqhyN8DmbL2eUSeFGN3iQb5ME2i+EKkEFOJQU=;
+	s=default; t=1573214700;
+	bh=lOcuIgcRIm7GuYDO3o9yyq1tvpvKmJ4QikQP3ew0eyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t29QA0vyIAyENUGMLyhexknqYlTor6zi+flLAizQmEXeIJxlBrAUBgYrPGzDMCAO4
-	 IxcNm6Kgsz0KqDsRjxJe3+B4Ajh2aHEMoXKKig8gqi3UKhxIkkcOCwa5H09gbtk31N
-	 4+ZsN0TzxXuwP/ycS96/vSDcQpe2fbbvvDh58+0g=
+	b=v4WDKJD6ef+KX9cEgfJQacvey0ZeU3AXmyniVejb142PqTBqM4OuOb6iN9WjeV5vK
+	 P2sJgleutGek9yLwFv5tQY+aMoenTRDeFIdQiOJGeZzcNaz2GLVTaq/DCLRRSIC4jn
+	 00j35ZCNFARKlLBYHWT4G+TnSiaM6AImk8dTKWjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391807AbfKHMEz (ORCPT
+        id S2391823AbfKHME6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:04:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55558 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:04:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733048AbfKHLl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:57 -0500
+        id S2389703AbfKHLl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 731F621D82;
-        Fri,  8 Nov 2019 11:41:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69F8120656;
+        Fri,  8 Nov 2019 11:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213317;
-        bh=KoIC1QyqhyN8DmbL2eUSeFGN3iQb5ME2i+EKkEFOJQU=;
+        s=default; t=1573213316;
+        bh=lOcuIgcRIm7GuYDO3o9yyq1tvpvKmJ4QikQP3ew0eyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iwn3mYGStOwDpU4cUBRpMK796LpxfH3UtvNZhM6rwhIycF6DslSpAqLVd/2FYJE+W
-         /3z67ghBXkhMi2SKebkCmIen5wqybvWafoYMvz4HTCAyYcbGYCkQ6faM9p2ixMriVs
-         CzWQeH7G/fMONnyaeyVbVCKttqUx6Pj6LTEg/Xqs=
+        b=az7hzMrB3H3+miH+EJmVYKOD9J0S/n9T89RoM1AdJd+ROhHRIyohqd45UuE/2vCt4
+         hxGHYlFi98n8yzqI9uLonOWsIauNc5fiU/wClgCKl4ySKRxkTZPugNA8w4KyEIkDdX
+         689sofICA9X81KI+iEmHXXUGgR6EUEQk+Q7ddolQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+Cc:     Lao Wei <zrlw@qq.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 161/205] media: dvb: fix compat ioctl translation
-Date:   Fri,  8 Nov 2019 06:37:08 -0500
-Message-Id: <20191108113752.12502-161-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 160/205] media: fix: media: pci: meye: validate offset to avoid arbitrary access
+Date:   Fri,  8 Nov 2019 06:37:07 -0500
+Message-Id: <20191108113752.12502-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,80 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Lao Wei <zrlw@qq.com>
 
-[ Upstream commit 1ccbeeb888ac33627d91f1ccf0b84ef3bcadef24 ]
+[ Upstream commit eac7230fdb4672c2cb56f6a01a1744f562c01f80 ]
 
-The VIDEO_GET_EVENT and VIDEO_STILLPICTURE was added back in 2005 but
-it never worked because the command number is wrong.
+Motion eye video4linux driver for Sony Vaio PictureBook desn't validate user-controlled parameter
+'vma->vm_pgoff', a malicious process might access all of kernel memory from user space by trying
+pass different arbitrary address.
+Discussion: http://www.openwall.com/lists/oss-security/2018/07/06/1
 
-Using the right command number means we have a better chance of them
-actually doing the right thing, though clearly nobody has ever tried
-it successfully.
-
-I noticed these while auditing the remaining users of compat_time_t
-for y2038 bugs. This one is fine in that regard, it just never did
-anything.
-
-Fixes: 6e87abd0b8cb ("[DVB]: Add compat ioctl handling.")
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Lao Wei <zrlw@qq.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/compat_ioctl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/media/pci/meye/meye.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 8f08095ee54e9..3a03f74a8cc4e 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -141,6 +141,7 @@ struct compat_video_event {
- 		unsigned int frame_rate;
- 	} u;
- };
-+#define VIDEO_GET_EVENT32 _IOR('o', 28, struct compat_video_event)
+diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
+index 8001d3e9134e4..db2a7ad1e5231 100644
+--- a/drivers/media/pci/meye/meye.c
++++ b/drivers/media/pci/meye/meye.c
+@@ -1460,7 +1460,7 @@ static int meye_mmap(struct file *file, struct vm_area_struct *vma)
+ 	unsigned long page, pos;
  
- static int do_video_get_event(struct file *file,
- 		unsigned int cmd, struct compat_video_event __user *up)
-@@ -152,7 +153,7 @@ static int do_video_get_event(struct file *file,
- 	if (kevent == NULL)
- 		return -EFAULT;
- 
--	err = do_ioctl(file, cmd, (unsigned long)kevent);
-+	err = do_ioctl(file, VIDEO_GET_EVENT, (unsigned long)kevent);
- 	if (!err) {
- 		err  = convert_in_user(&kevent->type, &up->type);
- 		err |= convert_in_user(&kevent->timestamp, &up->timestamp);
-@@ -171,6 +172,7 @@ struct compat_video_still_picture {
-         compat_uptr_t iFrame;
-         int32_t size;
- };
-+#define VIDEO_STILLPICTURE32 _IOW('o', 30, struct compat_video_still_picture)
- 
- static int do_video_stillpicture(struct file *file,
- 		unsigned int cmd, struct compat_video_still_picture __user *up)
-@@ -193,7 +195,7 @@ static int do_video_stillpicture(struct file *file,
- 	if (err)
- 		return -EFAULT;
- 
--	err = do_ioctl(file, cmd, (unsigned long) up_native);
-+	err = do_ioctl(file, VIDEO_STILLPICTURE, (unsigned long) up_native);
- 
- 	return err;
- }
-@@ -1302,9 +1304,9 @@ static long do_ioctl_trans(unsigned int cmd,
- 		return rtc_ioctl(file, cmd, argp);
- 
- 	/* dvb */
--	case VIDEO_GET_EVENT:
-+	case VIDEO_GET_EVENT32:
- 		return do_video_get_event(file, cmd, argp);
--	case VIDEO_STILLPICTURE:
-+	case VIDEO_STILLPICTURE32:
- 		return do_video_stillpicture(file, cmd, argp);
+ 	mutex_lock(&meye.lock);
+-	if (size > gbuffers * gbufsize) {
++	if (size > gbuffers * gbufsize || offset > gbuffers * gbufsize - size) {
+ 		mutex_unlock(&meye.lock);
+ 		return -EINVAL;
  	}
- 
 -- 
 2.20.1
 
