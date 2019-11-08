@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0A4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50B5FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7DE2178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786112178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239670;
-	bh=OskzKgyekS9GSE+7yGkOwIcQl8F2JurHkstQr69ZI+o=;
+	s=default; t=1573239673;
+	bh=1fs3qqd4O57VF5HWpCFLDPCsDsLjL3x6D7m8D8Cgxq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bz1U4/bc55sslDw5xDIqGdhAtX/SPBX/rgV4mjxigU4+H9pqDozLUQgUIyQRyuVOa
-	 NzF//ebmDyuJ7OhlZB279TTBrOyRIExPq26dd600qTDfkbMa0DefkVDsc97d4sAyy7
-	 CYQCwwkDqRAKdu+sIm/XgMHMyrayLIq6L4Mw8jbY=
+	b=oo4tZ6M4YkDZgHRbIWk36F05Vdu+YRF3zTG1BDEFrICC6gs5GoQwo827i8aeVzUx6
+	 e01Hg8xFKXizHuWHW0fEX16qt/WC72R5N2ZF/nOpvKM/pK64IQ06EYWud6yljf64kM
+	 3zalhntKn3ZaIJZEqg168SGI1XwAokh8GDCiz/ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390100AbfKHTBI (ORCPT
+        id S1726587AbfKHTBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:01:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58396 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:01:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730159AbfKHTBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:05 -0500
+        id S2390095AbfKHTBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:01:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6383A222C5;
-        Fri,  8 Nov 2019 19:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B5AA21D7F;
+        Fri,  8 Nov 2019 19:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239664;
-        bh=OskzKgyekS9GSE+7yGkOwIcQl8F2JurHkstQr69ZI+o=;
+        s=default; t=1573239667;
+        bh=1fs3qqd4O57VF5HWpCFLDPCsDsLjL3x6D7m8D8Cgxq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SjWHb3OZBlnB2YWF1LjMG46WFH+0CXEfoYLGT7uTdCBa5OST3K9QpSvgP/T6pYyEe
-         Db6crgLRaih4C5cVn/IsNlZ+vy9LLf8Hy9c9h6RhVtBfnQO93EzzW2ioKVPDfxoCg2
-         OqTJ5uFFHc75YBhezqIu0yiZ1QxT9X5ieM37Bdr8=
+        b=r4H+sdGftpzkhX0yK8QUEJd7qdhTjl3b2ulyr1Yf59fjaGdNSK4RoS6liqxacDbho
+         jCSuYoYGjyHmNNUFYvkhKiN4RDZXiYrZIEdkWlFDefLR6NKXE6p9sHlpJ1IvSIuK70
+         N3A39xGf8qR0Lz0Hmi8mw6dGuW8AMyld1FWXOSC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/79] regulator: of: fix suspend-min/max-voltage parsing
-Date:   Fri,  8 Nov 2019 19:49:42 +0100
-Message-Id: <20191108174746.476200211@linuxfoundation.org>
+Subject: [PATCH 4.19 20/79] perf c2c: Fix memory leak in build_cl_output()
+Date:   Fri,  8 Nov 2019 19:50:00 +0100
+Message-Id: <20191108174755.773287961@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,47 +67,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 131cb1210d4b58acb0695707dad2eb90dcb50a2a ]
+[ Upstream commit ae199c580da1754a2b051321eeb76d6dacd8707b ]
 
-Currently the regulator-suspend-min/max-microvolt must be within the
-root regulator node but the dt-bindings specifies it as subnode
-properties for the regulator-state-[mem/disk/standby] node. The only DT
-using this bindings currently is the at91-sama5d2_xplained.dts and this
-DT uses it correctly. I don't know if it isn't tested but it can't work
-without this fix.
+There is a memory leak problem in the failure paths of
+build_cl_output(), so fix it.
 
-Fixes: f7efad10b5c4 ("regulator: add PM suspend and resume hooks")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Link: https://lore.kernel.org/r/20190917154021.14693-3-m.felsch@pengutronix.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/4d3c0178-5482-c313-98e1-f82090d2d456@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/of_regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/builtin-c2c.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 210fc20f7de7a..b255590aef36e 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -214,12 +214,12 @@ static void of_get_regulation_constraints(struct device_node *np,
- 					"regulator-off-in-suspend"))
- 			suspend_state->enabled = DISABLE_IN_SUSPEND;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 763c2edf52e7d..1452e5153c604 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2626,6 +2626,7 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 	bool add_sym   = false;
+ 	bool add_dso   = false;
+ 	bool add_src   = false;
++	int ret = 0;
  
--		if (!of_property_read_u32(np, "regulator-suspend-min-microvolt",
--					  &pval))
-+		if (!of_property_read_u32(suspend_np,
-+				"regulator-suspend-min-microvolt", &pval))
- 			suspend_state->min_uV = pval;
+ 	if (!buf)
+ 		return -ENOMEM;
+@@ -2644,7 +2645,8 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 			add_dso = true;
+ 		} else if (strcmp(tok, "offset")) {
+ 			pr_err("unrecognized sort token: %s\n", tok);
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto err;
+ 		}
+ 	}
  
--		if (!of_property_read_u32(np, "regulator-suspend-max-microvolt",
--					  &pval))
-+		if (!of_property_read_u32(suspend_np,
-+				"regulator-suspend-max-microvolt", &pval))
- 			suspend_state->max_uV = pval;
+@@ -2667,13 +2669,15 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 		add_sym ? "symbol," : "",
+ 		add_dso ? "dso," : "",
+ 		add_src ? "cl_srcline," : "",
+-		"node") < 0)
+-		return -ENOMEM;
++		"node") < 0) {
++		ret = -ENOMEM;
++		goto err;
++	}
  
- 		if (!of_property_read_u32(suspend_np,
+ 	c2c.show_src = add_src;
+-
++err:
+ 	free(buf);
+-	return 0;
++	return ret;
+ }
+ 
+ static int setup_coalesce(const char *coalesce, bool no_source)
 -- 
 2.20.1
 
