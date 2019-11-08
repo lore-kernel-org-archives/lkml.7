@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6D4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D88FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2883720865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E8A20869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0tKYfww"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhuzaXhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfKHDvT (ORCPT
+        id S1729839AbfKHDwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:51:19 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36676 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbfKHDvS (ORCPT
+        Thu, 7 Nov 2019 22:52:19 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36739 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfKHDwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:51:18 -0500
-Received: by mail-ot1-f67.google.com with SMTP id f10so4068859oto.3;
-        Thu, 07 Nov 2019 19:51:18 -0800 (PST)
+        Thu, 7 Nov 2019 22:52:18 -0500
+Received: by mail-ot1-f65.google.com with SMTP id f10so4070365oto.3;
+        Thu, 07 Nov 2019 19:52:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rhuDy7k1YQ8fNXLKpPn/sc6C1FLdaiYWgUMBjQg/bFo=;
-        b=E0tKYfwwrZDCdsh04gyklOIRSpMjrcZf7XFyRLcpx8x0pxA4Humn44TwuUQLZfK/1b
-         DIJAUa72iHHl3W8JOk9gC0IoqX+RzQFpVTlLZbUsAIV+H8JULQJjB7WF+xoI4A7ibEeb
-         x4OmdARMasC/SpvW/Qxj/m8VVxYvMnAHuzB5pYghTduxlcAih6ob712gkfAOl0RUFWfv
-         6bj1niVXsQ8yZlejOg7g+4vxz+99Xjublz3dvnsnE+PC00dP5xGPe1roWntjK5FEmWsz
-         JgDdCFE8U/7BdNPxiBYtudoex4LpRAacGADeazvwjutcDrZ0v61hhKDNtV75Kab+ZWHC
-         TCZg==
+        bh=aivP/GpZ1KGYpMt8cndt6JZJWRBCraXZuvgFzKajp8o=;
+        b=UhuzaXhwh4V4OtCNmi00QRY7QIuJNsZY7XkdW++ynVvUV5ipDE+Txo4OVE1lAYeXVp
+         HFYurymY/b4axShJS4pi96a4cDFg4XsaEAZuzSDazYZ+xkUuSVfOz7gDMMS5FuNx1I52
+         4pYCYZIKgFb3PDPoZZoQCegxROP3vtLnD5FWU6EWJ4Ay3Fb9bzqhklkrt9EDA4BgpJSL
+         c3X+TIxl0VX21P7JcSN9qfbQ/2nYxRjh79ikAkYQdFlM/5vRUJdU+SDSV4Ga1sN6DW1w
+         InJb+twr0pq9RiCBWOzBp65fPHyJ4wySAymr2YrkSBU1ZtY0cqzuqo6sAfLmA3aY/keC
+         89EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rhuDy7k1YQ8fNXLKpPn/sc6C1FLdaiYWgUMBjQg/bFo=;
-        b=m1Kqsu7MXkgzrPvFdIlCnTHmVEohizdaMY6bwCngtC0vGFyGkSHFBur7KyRwihuGdx
-         TN9eT+b8Q7EefuXLcp7BbHvLrY0xy+t94fYzAQoGeLWDwn1yLH+X8kMCo3F8yd4PSzA1
-         o59YJRzeTcAf3U9dkyETzviFFqYOIKE8BBtF6BBXEccOjySuEf0gCNkpsStduuoHOOwG
-         J98Hpe7rkARhUOL0PlQ8Jj0tE5OxteuwT3Tmt7XVgdJZ+8+ZD8xkx4Bp3wTnCxIG3j63
-         LCHuuXEGLlj2Zwm9bAWx9PAgaK4H6a7A8N+80FjGQIXApWLKT6HlUan3MPpesRK5lMh+
-         jQXw==
-X-Gm-Message-State: APjAAAUdB7A+acpPx4UN9tKxcv1lOFFQC/vdu169GMKeM1ThdUjh79H5
-        F5QWiK9apO+kzcvEfN5qAGKdgLuFFwpwk21xtdQZuGuz
-X-Google-Smtp-Source: APXvYqy2t/kO5ZRGsn5pm8g1lSt5wtAL2Dz+sn0BJoP+m3eFEMrEvRM44WhCuk2uQLh+OC2wKvuDp/aXC2cBaaLmIIw=
-X-Received: by 2002:a9d:6b81:: with SMTP id b1mr6069691otq.70.1573185077890;
- Thu, 07 Nov 2019 19:51:17 -0800 (PST)
+        bh=aivP/GpZ1KGYpMt8cndt6JZJWRBCraXZuvgFzKajp8o=;
+        b=nAaV0g10CaQfo9GeVc1AFHv63etf3orQFykrwanD+UuJQkkc/hmi3/yV0Eto8nIevk
+         em6OSxsxvJ/0p5xc9sTIMYSW5cZmDy4WR16SpINoFAe9bmkdZgaRVfNcW+cJ7PN8uYNI
+         MeOcNK776GUGeRe/gODmI97gkTakGZp7PnhQFyayW7d1dEZ+EYqpeYotT4keuScQesZE
+         Kjh4Nlgg2NTDfn8vK+m4xoBdZhgRV9mAtB4o2LtOhx4c8zE/RPjefDDN2f0xg0PkM3F1
+         N9734Cw89jQ1itrCvQn1WF563f1wtfTTC865IpJHYLHT5wxFhDPpmOm3hzwk81We3ba2
+         voUw==
+X-Gm-Message-State: APjAAAVetQz8ybsqOZnSyaw96pH0aoLQkwGUNMmEg8ZSE/udFY10fVPg
+        jSg40GlLgNp3Ql8gDvJ5XFjhs6RZ2iwCtrpZc20=
+X-Google-Smtp-Source: APXvYqy5Nze/GU5XzkqvIJ38bkcAHVp1VfCQNvotnh9iz5Pbk2Lxb4Ftks1yabXMhPm4deuUl636X1OlG99R3qAShFU=
+X-Received: by 2002:a9d:39c8:: with SMTP id y66mr6154192otb.181.1573185138031;
+ Thu, 07 Nov 2019 19:52:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106140748.13100-1-gch981213@gmail.com> <20191106140748.13100-3-gch981213@gmail.com>
-In-Reply-To: <20191106140748.13100-3-gch981213@gmail.com>
+References: <20191106140748.13100-1-gch981213@gmail.com> <20191106140748.13100-2-gch981213@gmail.com>
+In-Reply-To: <20191106140748.13100-2-gch981213@gmail.com>
 From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Fri, 8 Nov 2019 11:51:06 +0800
-Message-ID: <CAJsYDVJ8zFBJBQHVgyWE1joqGhsq9AibKqrgCZToySPT3p0PnA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: mtd: mtk-quadspi: update bindings for
- mmap flash read
-To:     linux-mtd@lists.infradead.org
+Date:   Fri, 8 Nov 2019 11:52:06 +0800
+Message-ID: <CAJsYDVK7E-LMyA2eH5VhFu9EQWur_BLRNRg0-YTsOiJ+GyEF4g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mtd: mtk-quadspi: add support for memory-mapped flash reading
+To:     linux-mtd@lists.infradead.org,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
 Cc:     David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -80,13 +80,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi all!
 
 On Wed, Nov 6, 2019 at 10:08 PM Chuanhong Guo <gch981213@gmail.com> wrote:
 >
-> update register descriptions and add an example binding using it.
+> PIO reading mode on this controller is ridiculously inefficient
+> (one cmd+addr+dummy sequence reads only one byte)
+> This patch adds support for reading from memory-mapped flash area
+> which increases reading speed from 1MB/s to 5.6MB/s
 >
 > Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> ---
+>  drivers/mtd/spi-nor/mtk-quadspi.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
 
 I'll abandon this patchset and implement DMA reading instead.
 
