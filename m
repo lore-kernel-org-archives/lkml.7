@@ -2,127 +2,128 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C13C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2BFFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598EA214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573236330;
-	bh=sei9SMQyLHzyMd34U4N8rFdQ0R4Ahh89E73Ax2fCsTg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OzpOjm3hDX1cQ6sFyK20Jn5jADBaEIoEICO1n9s6oTCla/yfgK6fBcJYYOOJYrXT0
-	 3i08ThE0rAwsIyDH5KrLU7S87mRv37c+UovEPxwUidv7zBd6pkKFVL6Ne9YdjSB2hG
-	 e6U55AjtL3ouhVnexlCC61v4+kIKPqyr5r8jSBbw=
+	by mail.kernel.org (Postfix) with ESMTP id 8DD75214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbfKHSF3 (ORCPT
+        id S1728779AbfKHSGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:05:29 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40334 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728914AbfKHSF3 (ORCPT
+        Fri, 8 Nov 2019 13:06:19 -0500
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:57756 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726446AbfKHSGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:05:29 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q2so7164863ljg.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:05:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d9NweSEf4drXt4A6DP1qgzu1cS6gHr1cMfGzVR+7ZWY=;
-        b=BFXx5UUjilC2VGGIFH0qbcrUE/AJuyx2/d46qw2iAAOeTsVx8j2aw2hoCox9tJS3wD
-         paX9fnyjuYtJC19oeyWD/gCxwI2Uq0qQyNq71XhkZ11olv7oacH0v1uAPcX/b+eFj2DD
-         4IPRZi+crMZ7QCrYaUhsZncB/RosCknDpvqSg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d9NweSEf4drXt4A6DP1qgzu1cS6gHr1cMfGzVR+7ZWY=;
-        b=PE3iClr4/AMDvW4sklnZH1zn2eTNiiWb9FY2HYlV1OIqp9jhK46GhvyKhevPeGFetQ
-         KhMskzr8ld5SYCmAU5W7ijZlZLyHZ5SSeCz7DnW8P4OGkhcntTgIH8PFWVe+gEo0gm/h
-         OaaBMfMeWsSnArHvWV/YXlOrIYbQdVbcQ65iOpvRQkdPvm799KO1GDHsFtu5nYNmNHgN
-         +85KjZygjc2/P0TMwO6voJDb1hnieXnAP8LHALwNphttaa2AQNskz2eJB70H3/6//suv
-         qe1I+0KcnDNFoB8eML8EqbRrFtgc+vX11WShB6pv421GWE6OZLaz6FkjrhoOlgfDHcu9
-         HNVg==
-X-Gm-Message-State: APjAAAX+P4sUKnRANE+Aea2SdTKGhubiUdCo9VE3NF7aCG+RZAa2v8fu
-        fblPIf+D9ic4gUVYhi6o2KfFMS9ZwSc=
-X-Google-Smtp-Source: APXvYqw0elrUSsZ1A9fkKwOmP7gOpPmvrD3CAqPpj0pg5I+m85zbbwQvRYbcmlEXIpLgZ1mUqXAxEA==
-X-Received: by 2002:a2e:8108:: with SMTP id d8mr7657869ljg.158.1573236326441;
-        Fri, 08 Nov 2019 10:05:26 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id u14sm2890932lfk.47.2019.11.08.10.05.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 10:05:25 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id g3so7136229ljl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:05:25 -0800 (PST)
-X-Received: by 2002:a2e:22c1:: with SMTP id i184mr7860520lji.1.1573236324900;
- Fri, 08 Nov 2019 10:05:24 -0800 (PST)
+        Fri, 8 Nov 2019 13:06:18 -0500
+Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8I23Rl000866;
+        Fri, 8 Nov 2019 18:05:21 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2w5d0sg54m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 18:05:21 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 06C3A6C;
+        Fri,  8 Nov 2019 18:05:20 +0000 (UTC)
+Received: from anatevka.americas.hpqcorp.net (anatevka.americas.hpqcorp.net [10.34.81.30])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id BECA94F;
+        Fri,  8 Nov 2019 18:05:17 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 11:05:17 -0700
+From:   Jerry Hoemann <jerry.hoemann@hpe.com>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watchdog: aspeed: Fix clock behaviour for ast2600
+Message-ID: <20191108180517.GB150483@anatevka.americas.hpqcorp.net>
+Reply-To: Jerry.Hoemann@hpe.com
+References: <20191108032905.22463-1-joel@jms.id.au>
 MIME-Version: 1.0
-References: <000000000000c422a80596d595ee@google.com> <6bddae34-93df-6820-0390-ac18dcbf0927@gmail.com>
- <CAHk-=whh5bcxCecEL5Fy4XvQjgBTJ9uqvyp7dW=CLU6VNxS9iA@mail.gmail.com>
- <CANn89iK9mTJ4BN-X3MeSx5LGXGYafXkhZyaUpdXDjVivTwA6Jg@mail.gmail.com>
- <CAHk-=whNBL63qmO176qOQpkY16xvomog5ocvM=9K55hUgAgOPA@mail.gmail.com> <CANn89iJJiB6avNtZ1qQNTeJwyjW32Pxk_2CwvEJxgQ==kgY0fA@mail.gmail.com>
-In-Reply-To: <CANn89iJJiB6avNtZ1qQNTeJwyjW32Pxk_2CwvEJxgQ==kgY0fA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 8 Nov 2019 10:05:08 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiZdSoweA-W_8iwLy6KLsd-DaZM0gN9_+f-aT4KL64U0g@mail.gmail.com>
-Message-ID: <CAHk-=wiZdSoweA-W_8iwLy6KLsd-DaZM0gN9_+f-aT4KL64U0g@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108032905.22463-1-joel@jms.id.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-08_06:2019-11-08,2019-11-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ suspectscore=4 mlxlogscore=999 malwarescore=0 adultscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911080176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 9:53 AM Eric Dumazet <edumazet@google.com> wrote:
->
-> I personally like WRITE_ONCE() since it adds zero overhead on generated code,
-> and is the facto accessor we used for many years (before KCSAN was conceived)
+On Fri, Nov 08, 2019 at 01:59:05PM +1030, Joel Stanley wrote:
+> The ast2600 no longer uses bit 4 in the control register to indicate a
+> 1MHz clock (It now controls weather this watchdog is reset by a SOC
+> reset). This means we do not want to set it. It also does not need to be
+> set for the ast2500, as it is read-only on that SoC.
 
-So I generally prefer WRITE_ONCE() over adding "volatile" to random
-data structure members.
 
-Because volatile *does* have potentially absolutely horrendous
-overhead on generated code. It just happens to be ok for the simple
-case of writing once to a variable.
+s/weather/whether/
 
-In fact, you bring that up yourself in your next email when you ask
-for "ADD_ONCE()". Exactly because gcc generates absolutely horrendous
-garbage for volatiles, for no actual good reason. Gcc *could* generate
-a single add-to-memory instruction. But no, that's not at all what gcc
-does.
 
-So for the kernel, we've generally had the rule to avoid 'volatile'
-data structures as much as humanly possible, because it actually does
-something much worse than it could do, and the source code _looks_
-simple when the volatile is hidden in the data structures.
+> 
+> The comment next to the clock rate selection wandered away from where it
+> was set, so put it back next to the register setting it's describing.
+> 
+> Fixes: b3528b487448 ("watchdog: aspeed: Add support for AST2600")
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  drivers/watchdog/aspeed_wdt.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+> index 4ec0906bf12c..7e00960651fa 100644
+> --- a/drivers/watchdog/aspeed_wdt.c
+> +++ b/drivers/watchdog/aspeed_wdt.c
+> @@ -258,11 +258,6 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>  	if (IS_ERR(wdt->base))
+>  		return PTR_ERR(wdt->base);
+>  
+> -	/*
+> -	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
+> -	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
+> -	 * good reason to have a faster watchdog counter.
+> -	 */
+>  	wdt->wdd.info = &aspeed_wdt_info;
+>  	wdt->wdd.ops = &aspeed_wdt_ops;
+>  	wdt->wdd.max_hw_heartbeat_ms = WDT_MAX_TIMEOUT_MS;
+> @@ -278,7 +273,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	config = ofdid->data;
+>  
+> -	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
+> +	/*
+> +	 * On clock rates:
+> +	 *  - ast2400 wdt can run at PCLK, or 1MHz
+> +	 *  - ast2500 only runs at 1MHz, hard coding bit 4 to 1
+> +	 *  - ast2600 always runs at 1MHz
+> +	 *
+> +	 * Set the ast2400 to run at 1MHz as it simplifies the driver.
+> +	 */
+> +	if (of_device_is_compatible(np, "aspeed,ast2400-wdt"))
+> +		wdt->ctrl = WDT_CTRL_1MHZ_CLK;
+>  
+>  	/*
+>  	 * Control reset on a per-device basis to ensure the
+> -- 
+> 2.24.0.rc1
 
-Which is why we have READ_ONCE/WRITE_ONCE - it puts the volatile in
-the code, and makes it clear not only what is going on, but also the
-impact it has on code generation.
+-- 
 
-But at the same time, I don't love WRITE_ONCE() when it's not actually
-about writing once. It might be better to have another way to show
-"this variable is a flag that we set to a single value". Even if maybe
-the implementation is then the same (ie we use a 'volatile' assignment
-to make KCSAN happy).
-
-> Hmm, which questionable optimization are you referring to?
-
-The "avoid dirty cacheline" one by adding a read and a conditional.
-Yes, it can be an optimization. And it might not be.
-
-                Linus
+-----------------------------------------------------------------------------
+Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+-----------------------------------------------------------------------------
