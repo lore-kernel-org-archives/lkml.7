@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8497FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EFCFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8795120865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09254218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239614;
-	bh=6Xj2iPooSQl5tujDDpQRGNwTab15vFzRg6rNxiTGoHs=;
+	s=default; t=1573239618;
+	bh=NU7qfOU21zQDW5QJyblEzO5U4tADEDO1kqVIH3u08PE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vh8h7tVk1yFJX8yD9YIOo3OLxxZZxbTEEgXHrZJCPhz9OseKFVd/K9xmU0M5C0faP
-	 iXxhvXzB/jd8ofyl35mcLlKdnyiho/bl9cwsr6iUzcOKana6IxBcWtuW92lDS5sGow
-	 EDJJNTmULiW7CuGEjsU44K7M/w9I+FPvUvRPpF0k=
+	b=2wBjN5kZeoxov5hOmqW5UyIuBQJ3TV56WaxzLde96Bp0XVi1n/VDWDPqizS3I4EbF
+	 crLoBt9AvIdSEjdPeXECtmBTcENd55m7S2eOhNz66n7WTg/P06QXi+YJGMKh7Y56kH
+	 A1HmKqPEHMcpkbhKo1pjiBqaJMD9C8kTHM4niHGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389564AbfKHTAN (ORCPT
+        id S2389612AbfKHTAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57150 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389358AbfKHTAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:04 -0500
+        id S2389418AbfKHTAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BF7222515;
-        Fri,  8 Nov 2019 19:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D368224EE;
+        Fri,  8 Nov 2019 18:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239604;
-        bh=6Xj2iPooSQl5tujDDpQRGNwTab15vFzRg6rNxiTGoHs=;
+        s=default; t=1573239548;
+        bh=NU7qfOU21zQDW5QJyblEzO5U4tADEDO1kqVIH3u08PE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Buc4KlxynUvpjj31ne74ik9s4nHX2ljuiG3W7gPeulGwYYjwwsGfUTMWYTP2ywune
-         XnTIv7ew5yBbs6VYYm95im6BevAdpZUIaJ//PZ1lNqsd62RhWh4YFq1XUXwSw9rJ5z
-         uHH2/QHncAbXMihtRl0NlruwDZCa+tbxEoIPtp2Y=
+        b=YQn5E0oUcArjg23eJe07qhFT3Vf7H3csDQNyFET5oXmmKIHrwUzklnyeIgdoVyUfP
+         WKSzEKtD2vT+Kgqpzl+/qP6D3OSYDoW+DUFNBeIAomtDmFRhWJppw6U0tkNln6rL61
+         kX4QI4XjgbtUAum6hmcQ45bwoNv7l+Y+33FWYDBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, aneesh.kumar@linux.ibm.com,
-        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>
-Subject: [PATCH 4.14 62/62] selftests/powerpc: Fix compile error on tlbie_test due to newer gcc
-Date:   Fri,  8 Nov 2019 19:50:50 +0100
-Message-Id: <20191108174803.966046641@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 41/62] net: bcmgenet: reset 40nm EPHY on energy detect
+Date:   Fri,  8 Nov 2019 19:50:29 +0100
+Message-Id: <20191108174749.232189821@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -61,43 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+From: Doug Berger <opendmb@gmail.com>
 
-commit 5b216ea1c40cf06eead15054c70e238c9bd4729e upstream.
+[ Upstream commit 25382b991d252aed961cd434176240f9de6bb15f ]
 
-Newer versions of GCC (>= 9) demand that the size of the string to be
-copied must be explicitly smaller than the size of the destination.
-Thus, the NULL char has to be taken into account on strncpy.
+The EPHY integrated into the 40nm Set-Top Box devices can falsely
+detect energy when connected to a disabled peer interface. When the
+peer interface is enabled the EPHY will detect and report the link
+as active, but on occasion may get into a state where it is not
+able to exchange data with the connected GENET MAC. This issue has
+not been observed when the link parameters are auto-negotiated;
+however, it has been observed with a manually configured link.
 
-This will avoid the following compiling error:
+It has been empirically determined that issuing a soft reset to the
+EPHY when energy is detected prevents it from getting into this bad
+state.
 
-  tlbie_test.c: In function 'main':
-  tlbie_test.c:639:4: error: 'strncpy' specified bound 100 equals destination size
-      strncpy(logdir, optarg, LOGDIR_NAME_SIZE);
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
-
-Cc: stable@vger.kernel.org # v4.14
-Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191003211010.9711-1-desnesn@linux.ibm.com
-[sandipan: Backported to v4.14]
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/powerpc/mm/tlbie_test.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/tools/testing/selftests/powerpc/mm/tlbie_test.c
-+++ b/tools/testing/selftests/powerpc/mm/tlbie_test.c
-@@ -636,7 +636,7 @@ int main(int argc, char *argv[])
- 			nrthreads = strtoul(optarg, NULL, 10);
- 			break;
- 		case 'l':
--			strncpy(logdir, optarg, LOGDIR_NAME_SIZE);
-+			strncpy(logdir, optarg, LOGDIR_NAME_SIZE - 1);
- 			break;
- 		case 't':
- 			run_time = strtoul(optarg, NULL, 10);
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1985,6 +1985,8 @@ static void bcmgenet_link_intr_enable(st
+ 	 */
+ 	if (priv->internal_phy) {
+ 		int0_enable |= UMAC_IRQ_LINK_EVENT;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			int0_enable |= UMAC_IRQ_PHY_DET_R;
+ 	} else if (priv->ext_phy) {
+ 		int0_enable |= UMAC_IRQ_LINK_EVENT;
+ 	} else if (priv->phy_interface == PHY_INTERFACE_MODE_MOCA) {
+@@ -2608,6 +2610,10 @@ static void bcmgenet_irq_task(struct wor
+ 		bcmgenet_power_up(priv, GENET_POWER_WOL_MAGIC);
+ 	}
+ 
++	if (status & UMAC_IRQ_PHY_DET_R &&
++	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
++		phy_init_hw(priv->dev->phydev);
++
+ 	/* Link UP/DOWN event */
+ 	if (status & UMAC_IRQ_LINK_EVENT)
+ 		phy_mac_interrupt(priv->phydev,
+@@ -2713,8 +2719,7 @@ static irqreturn_t bcmgenet_isr0(int irq
+ 	}
+ 
+ 	/* all other interested interrupts handled in bottom half */
+-	status &= (UMAC_IRQ_LINK_EVENT |
+-		   UMAC_IRQ_MPD_R);
++	status &= (UMAC_IRQ_LINK_EVENT | UMAC_IRQ_MPD_R | UMAC_IRQ_PHY_DET_R);
+ 	if (status) {
+ 		/* Save irq status for bottom-half processing. */
+ 		spin_lock_irqsave(&priv->lock, flags);
 
 
