@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF92C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B1DFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F76222CF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6497C2247A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213488;
-	bh=DgnMDlLLXfeQeKctRy7xaYZdYGgwE1jsdDjdNnqBmGA=;
+	s=default; t=1573213495;
+	bh=Z/wQeacsCU/UcVT0yywx6nIU0Pj0AZJRVkjGg3WJL0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X4rtPMJXU5EZeHAG8KVSE8xtG9xaSw/jLE6Am4TfNwF7Mm6iEllQ5lyCJ4V17Mwqr
-	 JtBAimez9eb4ygOOIgYWFH0vStHVVrfSZ6YYpx/+k62EPSDREIGJY8ayRB4Zrer466
-	 yE0RW3A9SW4X50VjlS61C1frRwmUH9RnTznYaxiw=
+	b=jAsV5oebUwu0DsPwtFZcWgWzyFXr1+K+ZOz1A1bmDLyaZ3sVjRUnRdeoDiqE9bD1U
+	 h/IMXjvZsFM10cunTegue9HdTI0ov53VfpoNLBXbnhza5HzS0wsgFCq5uxtAhtx1uN
+	 v4M+ZhHohjKY9NTsTMCXaYCPHAL9+bgvM6LJbvho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390893AbfKHLor (ORCPT
+        id S2390952AbfKHLoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:44:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:44:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390842AbfKHLoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:39 -0500
+        id S2390882AbfKHLop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93F1522466;
-        Fri,  8 Nov 2019 11:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDFDC22459;
+        Fri,  8 Nov 2019 11:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213479;
-        bh=DgnMDlLLXfeQeKctRy7xaYZdYGgwE1jsdDjdNnqBmGA=;
+        s=default; t=1573213484;
+        bh=Z/wQeacsCU/UcVT0yywx6nIU0Pj0AZJRVkjGg3WJL0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HM7N2yAyo4h/GPPCMzS4+ZWP+QWilwtkChjEYJ9VwMm32upmPMh6xIaotc4lG85p/
-         r5pKSFnUfIOob50V5RbElMo7VO5uLeGQlvTq/7AK27Xzy+LhAEeR3AXghKDP1bjOfZ
-         Uw8WAGS+tFmJ14BxbD0sR0uZmQ7SHTvW1AWzM9Gs=
+        b=Jxqp4HTebTlEs4fI8ZYNfDoRu1l2sByTwS17pCnq2TAYy/rWwK4Y+pdw5aJgXSRjb
+         xl/68S09QZtfRXr4TE9OdgYtmPEHioGIjDsPfcr+ZAEu7QC1/Ums+2bgTCJZDkf+go
+         VyZborXRq7EDZ4VGyahqcP/a8lEC5MhbW6Ya3ryE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 061/103] rtc: pl030: fix possible race condition
-Date:   Fri,  8 Nov 2019 06:42:26 -0500
-Message-Id: <20191108114310.14363-61-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 065/103] signal: Properly deliver SIGILL from uprobes
+Date:   Fri,  8 Nov 2019 06:42:30 -0500
+Message-Id: <20191108114310.14363-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -58,63 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit c778ec85825dc895936940072aea9fe9037db684 ]
+[ Upstream commit 55a3235fc71bf34303e34a95eeee235b2d2a35dd ]
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
+For userspace to tell the difference between a random signal and an
+exception, the exception must include siginfo information.
 
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-before requesting the IRQ.
+Using SEND_SIG_FORCED for SIGILL is thus wrong, and it will result
+in userspace seeing si_code == SI_USER (like a random signal) instead
+of si_code == SI_KERNEL or a more specific si_code as all exceptions
+deliver.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Therefore replace force_sig_info(SIGILL, SEND_SIG_FORCE, current)
+with force_sig(SIG_ILL, current) which gets this right and is
+shorter and easier to type.
+
+Fixes: 014940bad8e4 ("uprobes/x86: Send SIGILL if arch_uprobe_post_xol() fails")
+Fixes: 0b5256c7f173 ("uprobes: Send SIGILL if handle_trampoline() fails")
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pl030.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ kernel/events/uprobes.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pl030.c b/drivers/rtc/rtc-pl030.c
-index f85a1a93e669f..343bb6ed17839 100644
---- a/drivers/rtc/rtc-pl030.c
-+++ b/drivers/rtc/rtc-pl030.c
-@@ -112,6 +112,13 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
- 		goto err_rtc;
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 01941cffa9c2f..c74fc98262508 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1854,7 +1854,7 @@ static void handle_trampoline(struct pt_regs *regs)
+ 
+  sigill:
+ 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
+-	force_sig_info(SIGILL, SEND_SIG_FORCED, current);
++	force_sig(SIGILL, current);
+ 
+ }
+ 
+@@ -1970,7 +1970,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+ 
+ 	if (unlikely(err)) {
+ 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+-		force_sig_info(SIGILL, SEND_SIG_FORCED, current);
++		force_sig(SIGILL, current);
  	}
- 
-+	rtc->rtc = devm_rtc_allocate_device(&dev->dev);
-+	if (IS_ERR(rtc->rtc)) {
-+		ret = PTR_ERR(rtc->rtc);
-+		goto err_rtc;
-+	}
-+
-+	rtc->rtc->ops = &pl030_ops;
- 	rtc->base = ioremap(dev->res.start, resource_size(&dev->res));
- 	if (!rtc->base) {
- 		ret = -ENOMEM;
-@@ -128,12 +135,9 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
- 	if (ret)
- 		goto err_irq;
- 
--	rtc->rtc = rtc_device_register("pl030", &dev->dev, &pl030_ops,
--				       THIS_MODULE);
--	if (IS_ERR(rtc->rtc)) {
--		ret = PTR_ERR(rtc->rtc);
-+	ret = rtc_register_device(rtc->rtc);
-+	if (ret)
- 		goto err_reg;
--	}
- 
- 	return 0;
- 
-@@ -154,7 +158,6 @@ static int pl030_remove(struct amba_device *dev)
- 	writel(0, rtc->base + RTC_CR);
- 
- 	free_irq(dev->irq[0], rtc);
--	rtc_device_unregister(rtc->rtc);
- 	iounmap(rtc->base);
- 	amba_release_regions(dev);
+ }
  
 -- 
 2.20.1
