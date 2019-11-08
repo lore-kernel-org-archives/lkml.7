@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7F6FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7798DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA2C215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EB5215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214734;
-	bh=8QGmzeogi6k2oblfvGFyTdoWO5OoMRPbPTDlYihF9qw=;
+	s=default; t=1573214736;
+	bh=CxMd0H4p3VQzZUSiZPmnNe8aQlpthgB19KGLnWY0qB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MkbbDsuMfGY7uiimbs5KD2o9t8j12vIZP5mQWcV1lxh2eDaAY1vET3bZwH3MlRKzd
-	 ZE68aK1l+OVe15cwI6uxLfHfn178So1sKkt4AtitxwIMppmgabWuiPDTSBA0kNqUWK
-	 FR4tE0eSK78DV9cSZjYdwXMjk5Cz4BNFjn/MP7As=
+	b=EJe5Ig8YnTndWN+zHdiQwO49Ax0jMypMLRSK1zh/v/ykXf/L7iZE72oCFhK8rD6es
+	 2P4Ke2ePQ7vq/tzlzWR3P+IzSJCovYUt23ZVj+BAUHfIqaP6vM8ImF7ts8AgyWqqTR
+	 BkvVDRL+kMXngxrJbdkWoGUv4qoa0/7Xfhe53Dnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389467AbfKHLl3 (ORCPT
+        id S2390589AbfKHMFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:05:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389383AbfKHLlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:23 -0500
+        id S2389459AbfKHLl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E616E222CF;
-        Fri,  8 Nov 2019 11:41:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6184222CE;
+        Fri,  8 Nov 2019 11:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213282;
-        bh=8QGmzeogi6k2oblfvGFyTdoWO5OoMRPbPTDlYihF9qw=;
+        s=default; t=1573213288;
+        bh=CxMd0H4p3VQzZUSiZPmnNe8aQlpthgB19KGLnWY0qB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GtGrG4MLY1S/Mtn6JNMljWULqjgMi/pnnQYyYubXbTaliM9qb+wFE66ik0N6gU9sT
-         dQdjC3d3KgXLpY1LZwFWOFHZvZ33UEuhuemIrQAPpsA42UhDI8q2S6QPX5mp6QCcm0
-         kDbOG9LMZHqwjwrsVXZB9FHDvRP5VwIgCVoQqQ20=
+        b=XgMWdzb925R9rQNJkE3cKm6PtEpbciOuY/OJiSRFvgXZl/mFP+TYqRCrEDZZrdPgz
+         lvqmHVQClXsXAE2Mk/35pQkBDxDgGzqujm3tcT6lizGrwHBvyKG3q5ciOG57FkmvL/
+         zG5q/BrPx/GUbowYOxxt6OUXLFjtMROmUTqxQFqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sawan Chandak <sawan.chandak@cavium.com>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 143/205] scsi: qla2xxx: Check for Register disconnect
-Date:   Fri,  8 Nov 2019 06:36:50 -0500
-Message-Id: <20191108113752.12502-143-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 148/205] scsi: lpfc: Correct invalid EQ doorbell write on if_type=6
+Date:   Fri,  8 Nov 2019 06:36:55 -0500
+Message-Id: <20191108113752.12502-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,33 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sawan Chandak <sawan.chandak@cavium.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit f99c5d294b3653e6ae563eaac5db5b4138afe31c ]
+[ Upstream commit aad59d5d34738d6fd8c359df8048a84cd443e504 ]
 
-During adapter shutdown process check for register disconnect before
-proceeding to call PCI functions.
+During attachment, the driver writes the EQ doorbell to disable potential
+interrupts from an EQ. The current EQ doorbell format used for clearing the
+interrupt is incorrect and uses an if_type=2 format, making the operation act
+on the wrong EQ.
 
-Signed-off-by: Sawan Chandak <sawan.chandak@cavium.com>
-Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
+Correct the code to use the proper if_type=6 EQ doorbell format.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <james.smart@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_sli.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index bfbdec61b3c6e..cb7f4d59343f0 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -1744,6 +1744,7 @@ __qla2x00_abort_all_cmds(struct qla_qpair *qp, int res)
- 				    !ha->flags.eeh_busy &&
- 				    (!test_bit(ABORT_ISP_ACTIVE,
- 					&vha->dpc_flags)) &&
-+				    !qla2x00_isp_reg_stat(ha) &&
- 				    (sp->type == SRB_SCSI_CMD)) {
- 					/*
- 					 * Don't abort commands in
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index a490e63c94b67..e704297618e06 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -392,11 +392,7 @@ lpfc_sli4_if6_eq_clr_intr(struct lpfc_queue *q)
+ 	struct lpfc_register doorbell;
+ 
+ 	doorbell.word0 = 0;
+-	bf_set(lpfc_eqcq_doorbell_eqci, &doorbell, 1);
+-	bf_set(lpfc_eqcq_doorbell_qt, &doorbell, LPFC_QUEUE_TYPE_EVENT);
+-	bf_set(lpfc_eqcq_doorbell_eqid_hi, &doorbell,
+-		(q->queue_id >> LPFC_EQID_HI_FIELD_SHIFT));
+-	bf_set(lpfc_eqcq_doorbell_eqid_lo, &doorbell, q->queue_id);
++	bf_set(lpfc_if6_eq_doorbell_eqid, &doorbell, q->queue_id);
+ 	writel(doorbell.word0, q->phba->sli4_hba.EQDBregaddr);
+ }
+ 
 -- 
 2.20.1
 
