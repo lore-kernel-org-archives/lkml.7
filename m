@@ -4,44 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8709C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D655AFC619A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4314222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DED214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbfKHJi1 (ORCPT
+        id S1731596AbfKHJib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:38:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39674 "EHLO mx1.suse.de"
+        Fri, 8 Nov 2019 04:38:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39774 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731147AbfKHJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:38:27 -0500
+        id S1731447AbfKHJi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:38:28 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 99ECAAE61;
+        by mx1.suse.de (Postfix) with ESMTP id B2AA8AE68;
         Fri,  8 Nov 2019 09:38:24 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     stable@vger.kernel.org
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Ajay Kaher <akaher@vmware.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH STABLE 4.4 8/8] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
-Date:   Fri,  8 Nov 2019 10:38:14 +0100
-Message-Id: <20191108093814.16032-9-vbabka@suse.cz>
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH STABLE 4.4 6/8] pipe: add pipe_buf_get() helper
+Date:   Fri,  8 Nov 2019 10:38:12 +0100
+Message-Id: <20191108093814.16032-7-vbabka@suse.cz>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108093814.16032-1-vbabka@suse.cz>
 References: <20191108093814.16032-1-vbabka@suse.cz>
@@ -52,92 +43,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The x86 version of get_user_pages_fast() relies on disabled interrupts to
-synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
-a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
-releases the page. As TLB flush is done synchronously via IPI disabling
-interrupts blocks the page release, and get_page(), which assumes existing
-reference on page, is thus safe.
-However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
-no blocking thanks to disabled interrupts, and get_page() can succeed on a page
-that was already freed or even reused.
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-We have recently seen this happen with our 4.4 and 4.12 based kernels, with
-userspace (java) that exits a thread, where mm_release() performs a futex_wake()
-on tsk->clear_child_tid, and another thread in parallel unmaps the page where
-tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
-immediately releases the page again, while it's already on a freelist. Symptoms
-include a bad page state warning, general protection faults acessing a poisoned
-list prev/next pointer in the freelist, or free page pcplists of two cpus joined
-together in a single list. Oscar has also reproduced this scenario, with a
-patch inserting delays before the get_page() to make the race window larger.
+commit 7bf2d1df80822ec056363627e2014990f068f7aa upstream.
 
-Fix this by removing the dependency on TLB flush interrupts the same way as the
-generic get_user_pages_fast() code by using page_cache_add_speculative() and
-revalidating the PTE contents after pinning the page. Mainline is safe since
-4.13 where the x86 gup code was removed in favor of the common code. Accessing
-the page table itself safely also relies on disabled interrupts and TLB flush
-IPIs that don't happen with hypercalls, which was acknowledged in commit
-9e52fc2b50de ("x86/mm: Enable RCU based page table freeing
-(CONFIG_HAVE_RCU_TABLE_FREE=y)"). That commit with follups should also be
-backported for full safety, although our reproducer didn't hit a problem
-without that backport.
-
-Reproduced-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- arch/x86/mm/gup.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/fuse/dev.c             |  2 +-
+ fs/splice.c               |  4 ++--
+ include/linux/pipe_fs_i.h | 11 +++++++++++
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/gup.c b/arch/x86/mm/gup.c
-index 6612d532e42e..6379a4883c0a 100644
---- a/arch/x86/mm/gup.c
-+++ b/arch/x86/mm/gup.c
-@@ -9,6 +9,7 @@
- #include <linux/vmstat.h>
- #include <linux/highmem.h>
- #include <linux/swap.h>
-+#include <linux/pagemap.h>
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index f5d2d2340b44..36a5df92eb9c 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -2052,7 +2052,7 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+ 			pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
+ 			pipe->nrbufs--;
+ 		} else {
+-			ibuf->ops->get(pipe, ibuf);
++			pipe_buf_get(pipe, ibuf);
+ 			*obuf = *ibuf;
+ 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+ 			obuf->len = rem;
+diff --git a/fs/splice.c b/fs/splice.c
+index 8398974e1538..fde126369966 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1876,7 +1876,7 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
+ 			 * Get a reference to this pipe buffer,
+ 			 * so we can copy the contents over.
+ 			 */
+-			ibuf->ops->get(ipipe, ibuf);
++			pipe_buf_get(ipipe, ibuf);
+ 			*obuf = *ibuf;
  
- #include <asm/pgtable.h>
+ 			/*
+@@ -1948,7 +1948,7 @@ static int link_pipe(struct pipe_inode_info *ipipe,
+ 		 * Get a reference to this pipe buffer,
+ 		 * so we can copy the contents over.
+ 		 */
+-		ibuf->ops->get(ipipe, ibuf);
++		pipe_buf_get(ipipe, ibuf);
  
-@@ -95,10 +96,23 @@ static noinline int gup_pte_range(pmd_t pmd, unsigned long addr,
- 		}
- 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
- 		page = pte_page(pte);
--		if (unlikely(!try_get_page(page))) {
+ 		obuf = opipe->bufs + nbuf;
+ 		*obuf = *ibuf;
+diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
+index 24f5470d3944..10876f3cb3da 100644
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -115,6 +115,17 @@ struct pipe_buf_operations {
+ 	void (*get)(struct pipe_inode_info *, struct pipe_buffer *);
+ };
+ 
++/**
++ * pipe_buf_get - get a reference to a pipe_buffer
++ * @pipe:	the pipe that the buffer belongs to
++ * @buf:	the buffer to get a reference to
++ */
++static inline void pipe_buf_get(struct pipe_inode_info *pipe,
++				struct pipe_buffer *buf)
++{
++	buf->ops->get(pipe, buf);
++}
 +
-+		if (WARN_ON_ONCE(page_ref_count(page) < 0)) {
-+			pte_unmap(ptep);
-+			return 0;
-+		}
-+
-+		if (!page_cache_get_speculative(page)) {
- 			pte_unmap(ptep);
- 			return 0;
- 		}
-+
-+		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-+			put_page(page);
-+			pte_unmap(ptep);
-+			return 0;
-+		}
-+
- 		SetPageReferenced(page);
- 		pages[*nr] = page;
- 		(*nr)++;
+ /* Differs from PIPE_BUF in that PIPE_SIZE is the length of the actual
+    memory allocation, whereas PIPE_BUF makes atomicity guarantees.  */
+ #define PIPE_SIZE		PAGE_SIZE
 -- 
 2.23.0
 
