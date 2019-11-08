@@ -2,77 +2,96 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51537FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B65FFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239EA218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6987D207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573209563;
+	bh=/3cgKiUJ9juirczVtLqBhfMzf1soL4OejrPSFQ4t2w4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n2RJFd5e/BZjxwoJ7bTbTIRcF7yD31wCF1shlsU3DQAnSKzX7urrOtYpiAw5Xsewv
+	 aynVQVayweLIiB8BPMfcw6UdIVIb60CJVFxsafIEOfCuidaP1ECnOiwRryMJ9u18S+
+	 KYMij0mTdAWCBs/LbTSyIZFX42HFvJHF84IpBZQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfKHKiO (ORCPT
+        id S1731764AbfKHKjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:38:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50762 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfKHKiN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:38:13 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iT1ec-0006Q1-18; Fri, 08 Nov 2019 11:38:10 +0100
-Date:   Fri, 8 Nov 2019 11:37:58 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Florian Weimer <fweimer@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Darren Hart <darren@dvhart.com>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Yang Tao <yang.tao172@zte.com.cn>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Carlos O'Donell <carlos@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [patch 00/12] futex: Cure robust/PI futex exit races
-In-Reply-To: <87o8xm65ar.fsf@oldenburg2.str.redhat.com>
-Message-ID: <alpine.DEB.2.21.1911081136450.26566@nanos.tec.linutronix.de>
-References: <20191106215534.241796846@linutronix.de> <87zhh78gnf.fsf@oldenburg2.str.redhat.com> <87v9rv8g44.fsf@oldenburg2.str.redhat.com> <87o8xm95rt.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911080912520.27903@nanos.tec.linutronix.de>
- <87o8xm65ar.fsf@oldenburg2.str.redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 8 Nov 2019 05:39:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfKHKjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:39:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4B1207FA;
+        Fri,  8 Nov 2019 10:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573209559;
+        bh=/3cgKiUJ9juirczVtLqBhfMzf1soL4OejrPSFQ4t2w4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ut776HMJFRJSHQFqF63ZvwBCxgOFV1R10wdRXbEP4OdEXIBsiSwJSUv2u9iVLflHG
+         x0Rx07AB7qWSlep5s18OGsHZSZR3WIDbmYJ745fxel1oiHxVvEaaA21iM6U7NooJva
+         UUTqccTO84eWe5nSfHOiT0BZbGw4RRJmAfXBEc6U=
+Date:   Fri, 8 Nov 2019 11:39:17 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [GIT PULL] interconnect changes for 5.5
+Message-ID: <20191108103917.GB683302@kroah.com>
+References: <5123bf54-5d62-fc5c-8838-17bc34487d83@linaro.org>
+ <20191107142111.GB109902@kroah.com>
+ <0cb5a6a6-399f-99e3-dc41-50114eea4025@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0cb5a6a6-399f-99e3-dc41-50114eea4025@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Florian Weimer wrote:
-> > On Fri, 8 Nov 2019, Florian Weimer wrote:
-> > Unpatched 5.4-rc6:
-> >
-> > FAIL: nptl/tst-thread-affinity-pthread
-> > original exit status 1
-> > info: Detected CPU set size (in bits): 225
-> > info: Maximum test CPU: 255
-> > error: pthread_create for thread 253 failed: Resource temporarily unavailable
+On Thu, Nov 07, 2019 at 05:42:13PM +0200, Georgi Djakov wrote:
+> Hi Greg,
 > 
-> Huh.  Reverting your patches (at commit 26bc672134241a080a83b2ab9aa8abede8d30e1c)
-> fixes the test for me.
+> On 11/7/19 16:21, Greg Kroah-Hartman wrote:
+> > On Thu, Nov 07, 2019 at 02:46:53PM +0200, Georgi Djakov wrote:
+> >> Hi Greg,
+> >>
+> >> This is a pull request with interconnect patches for the 5.5 merge window.
+> >> All patches have been for a while in linux-next without reported issues. The
+> >> details are in the signed tag. Please consider pulling into char-misc-next.
+> > 
+> > I don't know about
+> > 0003-interconnect-Disallow-interconnect-core-to-be-built-.patch here.
+> > Shouldn't you just fix up the dependancies of subsystems that rely on
+> > this?  We are moving more and more to kernels that "just work" with
+> > everything as modules, even on arm64 systems.  So forbiding the
+> > interconnect code from being able to be built as a module does not feel
+> > good to me at all.
 > 
-> > TBH, the futex changes have absolutely nothing to do with that resource
-> > fail.
-> 
-> I suspect that there are some changes to task exit latency, which
-> triggers the latent resource management bug.
+> Thank you for commenting on this! The initial idea was to keep everything as
+> modular as possible. The reasons behind this change is that other core
+> frameworks like cpufreq (and possibly others) want to call the interconnect
+> APIs. Some of these frameworks are built-in only and it would be easier to
+> handle dependencies if interconnect core built-in too. Now each user that
+> can be built-in has to specify in Kconfig that it depends on INTERCONNECT ||
+> !INTERCONNECT.
 
-Right, and depending on which hardware you run, this changes. On the big
-testbox I use the failure is also bouncing around between thread 252 and
-254.
+That's fine, when those subsystems start to use those apis, that
+dependency needs to be added.  Nothing new here, and you forcing it to
+either be "on or off" isn't going to change that.  Let's do it correctly
+please.
 
-Thanks,
+thanks,
 
-	tglx
+greg k-h
