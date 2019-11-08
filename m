@@ -2,54 +2,61 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3824FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55616FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF4C20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A61620674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240696;
-	bh=NhFgaETRNIdu3H6KVQg/gsjF9aOflfa/TtuGfDhAfsU=;
+	s=default; t=1573240699;
+	bh=u4om3tbxfcn5qsLyuRNyA7htMtOOVZY1cPZ9PRVQ2xc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oHruCHRLB1G+HOkOdwEYt6EV/EJcAwfQjxS1+bpd/gTEyFtOCRRrxreciW+NRybLt
-	 j/ouUS0mJHGBwy6R6NKvi2cVpcjT4oZbrr7VKO1SwbdyTunnwtl9NAtIwW5nY5xdmY
-	 pm9S6Fh80FRF6eJ57Ju4YkqeW3CjK92MPUKXU3WU=
+	b=s3LB/hj1VxVWJugdOGvXnznxt5rfEhiqo/Yn5jw67tbjSBuw8BicnIdj9XIu2LBXQ
+	 wY/LGzdnku60voojGmKMkMDG9HzrSDoYjNYrZoS6ZvBrO4BpYD61c1UHQ8AgBhh0i5
+	 R45XVSHRVE9KZNEtMBjFb/DI4PcNpFlUEXX/zl8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732907AbfKHTAb (ORCPT
+        id S2389783AbfKHTSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57254 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:18:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389528AbfKHTAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:12 -0500
+        id S1732926AbfKHTAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5914F20865;
-        Fri,  8 Nov 2019 18:57:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 682CA2087E;
+        Fri,  8 Nov 2019 19:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239437;
-        bh=NhFgaETRNIdu3H6KVQg/gsjF9aOflfa/TtuGfDhAfsU=;
+        s=default; t=1573239630;
+        bh=u4om3tbxfcn5qsLyuRNyA7htMtOOVZY1cPZ9PRVQ2xc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BINZZl72TS5AT2wtw9Qae0KuYtlu0supKa4csgYFNTEM1VMqyZpbI1O7laTqBz4dF
-         J0pNyp8VMcooCp/7C8/YtHgclGEj3xAsRHmO2RcHYkvF4JddTq1ano0m8ItZVQGBi1
-         UhLk+Z9/zXI59JGAq5dNwh5Y7CjFo+Ah4rPHRbgU=
+        b=txWtUZsCeGF8UuRp71ygjrf5dty46mx4x+0MqhwdV1dHth2jcUFxBeGEhOHM7jQL9
+         gMAULwPkrdF0tiykVgqB/is4YvYRL6EufpsMSXaKnOit1OZRaLC8m+Ivd1Gt8m8hQE
+         MKKt/bQIxANMyrMR6uQn1qVekSTI/thzOStNScBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 13/34] ARM: davinci: dm365: Fix McBSP dma_slave_map entry
-Date:   Fri,  8 Nov 2019 19:50:20 +0100
-Message-Id: <20191108174633.284473354@linuxfoundation.org>
+        stable@vger.kernel.org, Yongji Xie <elohimes@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH 4.14 51/62] sched/wake_q: Fix wakeup ordering for wake_q
+Date:   Fri,  8 Nov 2019 19:50:39 +0100
+Message-Id: <20191108174754.515925895@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
-References: <20191108174618.266472504@linuxfoundation.org>
+In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
+References: <20191108174719.228826381@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,37 +66,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 564b6bb9d42d31fc80c006658cf38940a9b99616 ]
+commit 4c4e3731564c8945ac5ac90fc2a1e1f21cb79c92 upstream.
 
-dm365 have only single McBSP, so the device name is without .0
+Notable cmpxchg() does not provide ordering when it fails, however
+wake_q_add() requires ordering in this specific case too. Without this
+it would be possible for the concurrent wakeup to not observe our
+prior state.
 
-Fixes: 0c750e1fe481d ("ARM: davinci: dm365: Add dma_slave_map to edma")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Andrea Parri provided:
+
+  C wake_up_q-wake_q_add
+
+  {
+	int next = 0;
+	int y = 0;
+  }
+
+  P0(int *next, int *y)
+  {
+	int r0;
+
+	/* in wake_up_q() */
+
+	WRITE_ONCE(*next, 1);   /* node->next = NULL */
+	smp_mb();               /* implied by wake_up_process() */
+	r0 = READ_ONCE(*y);
+  }
+
+  P1(int *next, int *y)
+  {
+	int r1;
+
+	/* in wake_q_add() */
+
+	WRITE_ONCE(*y, 1);      /* wake_cond = true */
+	smp_mb__before_atomic();
+	r1 = cmpxchg_relaxed(next, 1, 2);
+  }
+
+  exists (0:r0=0 /\ 1:r1=0)
+
+  This "exists" clause cannot be satisfied according to the LKMM:
+
+  Test wake_up_q-wake_q_add Allowed
+  States 3
+  0:r0=0; 1:r1=1;
+  0:r0=1; 1:r1=0;
+  0:r0=1; 1:r1=1;
+  No
+  Witnesses
+  Positive: 0 Negative: 3
+  Condition exists (0:r0=0 /\ 1:r1=0)
+  Observation wake_up_q-wake_q_add Never 0 3
+
+Reported-by: Yongji Xie <elohimes@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/mach-davinci/dm365.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/core.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index ef3add9992631..8db549c56914d 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -864,8 +864,8 @@ static s8 dm365_queue_priority_mapping[][2] = {
- };
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -432,10 +432,11 @@ void wake_q_add(struct wake_q_head *head
+ 	 * its already queued (either by us or someone else) and will get the
+ 	 * wakeup due to that.
+ 	 *
+-	 * This cmpxchg() implies a full barrier, which pairs with the write
+-	 * barrier implied by the wakeup in wake_up_q().
++	 * In order to ensure that a pending wakeup will observe our pending
++	 * state, even in the failed case, an explicit smp_mb() must be used.
+ 	 */
+-	if (cmpxchg(&node->next, NULL, WAKE_Q_TAIL))
++	smp_mb__before_atomic();
++	if (cmpxchg_relaxed(&node->next, NULL, WAKE_Q_TAIL))
+ 		return;
  
- static const struct dma_slave_map dm365_edma_map[] = {
--	{ "davinci-mcbsp.0", "tx", EDMA_FILTER_PARAM(0, 2) },
--	{ "davinci-mcbsp.0", "rx", EDMA_FILTER_PARAM(0, 3) },
-+	{ "davinci-mcbsp", "tx", EDMA_FILTER_PARAM(0, 2) },
-+	{ "davinci-mcbsp", "rx", EDMA_FILTER_PARAM(0, 3) },
- 	{ "davinci_voicecodec", "tx", EDMA_FILTER_PARAM(0, 2) },
- 	{ "davinci_voicecodec", "rx", EDMA_FILTER_PARAM(0, 3) },
- 	{ "spi_davinci.2", "tx", EDMA_FILTER_PARAM(0, 10) },
--- 
-2.20.1
-
+ 	get_task_struct(task);
 
 
