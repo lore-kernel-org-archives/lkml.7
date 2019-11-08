@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2FAC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE01FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23A02087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27C32087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="R9nDo10U"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="e/P1lD7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbfKHNB7 (ORCPT
+        id S1729716AbfKHNCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:01:59 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36706 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbfKHNB4 (ORCPT
+        Fri, 8 Nov 2019 08:02:04 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36717 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbfKHNCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:01:56 -0500
-Received: by mail-lj1-f193.google.com with SMTP id k15so6145263lja.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:01:53 -0800 (PST)
+        Fri, 8 Nov 2019 08:02:01 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k15so6145621lja.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:01:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6fFt1ZLVVia10843rsyK8F6LgIm9rFapqPGOb1a1zZs=;
-        b=R9nDo10Ud+gNvAQJx2elWJ2ezKn4CYwaj9lzmRNdXz08cRh78MbVZXBE/b/1n9830H
-         GTxAUYSWZutUrUKagsGjPC8/vcjW8kU/q7knuQiwKt2M/cK+vtRamqMJatpS1/Sa3gtc
-         IR5Tc/3fEOCa/HsBcxU2W+UQQPA8VPCGGrF38=
+        bh=/C1Eg1dR+pzbI0uF0+AzerXAuAR/n78tvkDzoMBSgLI=;
+        b=e/P1lD7zvmjURhmsvbX23QE+8ASowwEgb4BpM1IFfQWI91Tr3jDWiq0X6CrLk99wVN
+         mPk6Txdn0NvIKorqKDh7HBcWVDg2Ic5Yi9fVd1R5QMWlVvOdwlxoWhTPHcB8cInVr8Dv
+         yoknf6mGfRANkmWuDMLpwcTHs5OfxaRyfaFd0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6fFt1ZLVVia10843rsyK8F6LgIm9rFapqPGOb1a1zZs=;
-        b=Qt3TAu1Iyvid5C+C8WRshZVfDR6AlmWqNdbK7jfmAQcWWrzthJp5Rq0FeFG6AUNf38
-         JHt/2sjWXgL1Drr9+2XHEWqL0//QNUB0XlPQ7lyUUzG0Yd2XRIoJaSzU01rGqd3ZFKbu
-         IygCc8Los5I0Fpb5Wecbxyhc/eFaTTjuO98/qbsEqIbI3T/n0Hw7SEsgaSwlM4Lap9nC
-         HXlgDRYOUI8b03K1g6E39muKFAuY1KMtqzRomLUMUegTEi5AjNUx+nCb5g822UNGxOr1
-         QRRz9CoDbq9o7KThYBUs7jIOOLPCDFXBWFpNUnszXIDkbqcCbRz54ylSxpkO/5k3Iwac
-         Bxcw==
-X-Gm-Message-State: APjAAAVdv4ox/CfwXkhzVTYtlGz7YsK3B8VsEaiHSnMuWQDpNEn3wzZ3
-        QF5llkg/37nuCckXZH+D9tUckA==
-X-Google-Smtp-Source: APXvYqyWkJ61oVgQyRyaemn/tR7SOVb1MBntplV1X66lNyC26HdXxpXW75kbtcBgtV0gvTyUHsBN/g==
-X-Received: by 2002:a2e:9119:: with SMTP id m25mr6925324ljg.24.1573218112597;
-        Fri, 08 Nov 2019 05:01:52 -0800 (PST)
+        bh=/C1Eg1dR+pzbI0uF0+AzerXAuAR/n78tvkDzoMBSgLI=;
+        b=UAjsgPzIBYJ8OMGGPqwoe00bCIJsDKdSATN8e1c2V0qbtOfXwf4Nd+F1UwYpavdA8H
+         aEnM5xwy/M8Ndr+8+5+z2UOt7wql7pasEaXN/i2rd5HkLeFYivj1fwRL8nhH/gPVmXwP
+         go8bvEoi5DZ4PpzzS9ML9b0RWUf7g0dFLLPa7VgJZ+ApgnFM+CGd2HLkOgWC57ZvL94G
+         I7G2XfRGfY7h1nTHTvDCes+z5N5WdSwlDudYLgh7Yd+8432SK3gn42jOUUUYSmfQEPnd
+         nE1QewLrNZP8XpADUlIaUTRbaAR2zhRDBYpuZeYmcQRC1uQsbopX3wKXpjH2ppdMEihb
+         EMIw==
+X-Gm-Message-State: APjAAAWDqRz4j242PPZhIjC+ct4C6cR7hrcpuuUZ36shw48508JKaD08
+        DPkSyXYWTloI56bAkAu1VGqAAA==
+X-Google-Smtp-Source: APXvYqxZ1oqYp4p6l2IsGiGO+a6bcfmX2jCuzyyob5hxO/rAt/CL2aEGqAw4ukWNphNhXQIN4rIjrw==
+X-Received: by 2002:a2e:b5a2:: with SMTP id f2mr6611603ljn.108.1573218118236;
+        Fri, 08 Nov 2019 05:01:58 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.51
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.01.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:01:52 -0800 (PST)
+        Fri, 08 Nov 2019 05:01:57 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v4 19/47] soc: fsl: qe: make qe_ic_get_{low,high}_irq static
-Date:   Fri,  8 Nov 2019 14:00:55 +0100
-Message-Id: <20191108130123.6839-20-linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 24/47] soc: fsl: qe: qe_io.c: access device tree property using be32_to_cpu
+Date:   Fri,  8 Nov 2019 14:01:00 +0100
+Message-Id: <20191108130123.6839-25-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
@@ -73,55 +73,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are only called from within qe_ic.c, so make them static.
+We need to apply be32_to_cpu to make this work correctly on
+little-endian hosts.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe_ic.c |  4 ++--
- include/soc/fsl/qe/qe_ic.h | 10 ----------
- 2 files changed, 2 insertions(+), 12 deletions(-)
+ drivers/soc/fsl/qe/qe_io.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
-index 8f74bc6efd5c..23b457e884d8 100644
---- a/drivers/soc/fsl/qe/qe_ic.c
-+++ b/drivers/soc/fsl/qe/qe_ic.c
-@@ -283,7 +283,7 @@ static const struct irq_domain_ops qe_ic_host_ops = {
- };
- 
- /* Return an interrupt vector or 0 if no interrupt is pending. */
--unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
-+static unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+diff --git a/drivers/soc/fsl/qe/qe_io.c b/drivers/soc/fsl/qe/qe_io.c
+index 99aeb01586bd..61dd8eb8c0fe 100644
+--- a/drivers/soc/fsl/qe/qe_io.c
++++ b/drivers/soc/fsl/qe/qe_io.c
+@@ -142,7 +142,7 @@ int par_io_of_config(struct device_node *np)
  {
- 	int irq;
+ 	struct device_node *pio;
+ 	int pio_map_len;
+-	const unsigned int *pio_map;
++	const __be32 *pio_map;
  
-@@ -299,7 +299,7 @@ unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
- }
+ 	if (par_io == NULL) {
+ 		printk(KERN_ERR "par_io not initialized\n");
+@@ -167,9 +167,15 @@ int par_io_of_config(struct device_node *np)
+ 	}
  
- /* Return an interrupt vector or 0 if no interrupt is pending. */
--unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
-+static unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
- {
- 	int irq;
- 
-diff --git a/include/soc/fsl/qe/qe_ic.h b/include/soc/fsl/qe/qe_ic.h
-index d47eb231519e..70bb5a0f6535 100644
---- a/include/soc/fsl/qe/qe_ic.h
-+++ b/include/soc/fsl/qe/qe_ic.h
-@@ -53,14 +53,4 @@ enum qe_ic_grp_id {
- 	QE_IC_GRP_RISCB		/* QE interrupt controller RISC group B */
- };
- 
--#ifdef CONFIG_QUICC_ENGINE
--unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic);
--unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic);
--#else
--static inline unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
--{ return 0; }
--static inline unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
--{ return 0; }
--#endif /* CONFIG_QUICC_ENGINE */
--
- #endif /* _ASM_POWERPC_QE_IC_H */
+ 	while (pio_map_len > 0) {
+-		par_io_config_pin((u8) pio_map[0], (u8) pio_map[1],
+-				(int) pio_map[2], (int) pio_map[3],
+-				(int) pio_map[4], (int) pio_map[5]);
++		u8 port        = be32_to_cpu(pio_map[0]);
++		u8 pin         = be32_to_cpu(pio_map[1]);
++		int dir        = be32_to_cpu(pio_map[2]);
++		int open_drain = be32_to_cpu(pio_map[3]);
++		int assignment = be32_to_cpu(pio_map[4]);
++		int has_irq    = be32_to_cpu(pio_map[5]);
++
++		par_io_config_pin(port, pin, dir, open_drain,
++				  assignment, has_irq);
+ 		pio_map += 6;
+ 		pio_map_len -= 6;
+ 	}
 -- 
 2.23.0
 
