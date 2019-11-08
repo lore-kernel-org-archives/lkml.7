@@ -2,242 +2,133 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCCBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682AEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C1B21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3782A21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZXIzhvrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbfKHJze (ORCPT
+        id S1731447AbfKHJzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:55:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:39660 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbfKHJzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:55:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75F3031B;
-        Fri,  8 Nov 2019 01:55:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEE903F719;
-        Fri,  8 Nov 2019 01:55:31 -0800 (PST)
-Date:   Fri, 8 Nov 2019 09:55:29 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     'Rob Herring' <robh@kernel.org>, kishon@ti.com,
-        'Anvesh Salveru' <anvesh.s@samsung.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
-        'Mark Rutland' <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
- ZRX-DC PHY property
-Message-ID: <20191108095529.GC43905@e119886-lin.cambridge.arm.com>
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
- <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
- <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
- <20191105215332.GA19296@bogus>
- <20191106095340.GO9723@e119886-lin.cambridge.arm.com>
- <001601d595e4$17d8e470$478aad50$@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <001601d595e4$17d8e470$478aad50$@samsung.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        Fri, 8 Nov 2019 04:55:51 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34451 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbfKHJzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:55:51 -0500
+Received: by mail-pl1-f193.google.com with SMTP id k7so3821413pll.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 01:55:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=spYWTHjb7/MYzsI9bYPcwS26fEghILksNMY9w8ImjM0=;
+        b=ZXIzhvrbd4xxyWux72pPsvlPW99KePyYAt/Ja3nYluiduO6c00vIX+TC0Hp44xFrFf
+         gOsQXi3l6l2Ok3XLfAtQopP3BCRIyDFf/tiJLz8G5Qi9hRXrPW7Q1KipED8u0TFo/YFT
+         6NcNpaRUi/NWOsLPT+U6r9d/QWrdh+i8ABP33IeTi1UuxB+2JJNIV97wZauPsBGAYSw9
+         DcrGud7Lk+STyaH/zkeCIEpzEmoier69vvVaRkpdG5CLs3sPcjZJbDh6dwWDm+KEdJEf
+         2KZWnkhgIcoBXlWVkCdHA0d6uWAfurQma5kglDFOlhDHyIa/MMZoqsHOJeEIeDRfF6oY
+         iSpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=spYWTHjb7/MYzsI9bYPcwS26fEghILksNMY9w8ImjM0=;
+        b=aUoC3cGffAr3074O6iz7Pati/UKYYlK5TgIiEIQoiqvnU0Oq/A/9MCna7N1I+n9a/L
+         P+f0Oy+YnkN0u/rRyupoW8I4KA+w1owrg61vXSWSSEKg5SUYMjnuUkdS15Ggw3tOi/j4
+         mxO+GswMDeq2g+31rHnGI8D8VjK4Wgrb9FBtPzx4P74GUV94TpF1ATumUG5NZomO7LFb
+         lv46OxY+x8EKNlNd3NkwRFClMW9NAj82yJpzTEVF2BQ4GR1u1t1iE0rQA1K+QR6SvaAN
+         yZ8ozc3tH9RavZ1PNAYP+iFF+DsIBN7hd4s3ALUMysMNGscH/QViW+xObWyijWH8J9H6
+         jN9g==
+X-Gm-Message-State: APjAAAU/SEu6/Nf/uL/inrnK4W6K2raTAnfC/SoMqEpD7Wh4NU1rEt1U
+        UmKRe5pSKQNzG1UtqNEpksl3Gw==
+X-Google-Smtp-Source: APXvYqxARYtwBC201uyHdNNTlDXaPFI6/906RtwY8BQdnP0JJkgmWvxjTofTB7u4fR8W6vOkU5NcSg==
+X-Received: by 2002:a17:90a:2a41:: with SMTP id d1mr12471267pjg.87.1573206948601;
+        Fri, 08 Nov 2019 01:55:48 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id v14sm5019009pfe.94.2019.11.08.01.55.44
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 08 Nov 2019 01:55:47 -0800 (PST)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     orsonzhai@gmail.com, baolin.wang@linaro.org,
+        baolin.wang7@gmail.com, freeman.liu@unisoc.com,
+        zhang.lyra@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum thermal documentation
+Date:   Fri,  8 Nov 2019 17:54:30 +0800
+Message-Id: <0a6b113010ad772a633b9cfeeb280dc41f17b951.1573206815.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 08:54:53AM +0530, Pankaj Dubey wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: Wednesday, November 6, 2019 3:24 PM
-> > To: Rob Herring <robh@kernel.org>
-> > Cc: Anvesh Salveru <anvesh.s@samsung.com>; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; gustavo.pimentel@synopsys.com;
-> > jingoohan1@gmail.com; pankaj.dubey@samsung.com; Mark Rutland
-> > <mark.rutland@arm.com>
-> > Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
-> ZRX-
-> > DC PHY property
-> > 
-> > On Tue, Nov 05, 2019 at 03:53:32PM -0600, Rob Herring wrote:
-> > > On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
-> > > > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to
-> > > > ZRX-DC specification, then after every 100ms link should transition
-> > > > to recovery state during the low power states which increases power
-> > consumption.
-> > > >
-> > > > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> > > > property in DesignWare controller DT node.
-> > > >
-> > > > CC: Rob Herring <robh+dt@kernel.org>
-> > > > CC: Mark Rutland <mark.rutland@arm.com>
-> > > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > > ---
-> > > > Change in v2: None
-> > > >
-> > > >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > index 78494c4050f7..9507ac38ac89 100644
-> > > > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > @@ -38,6 +38,8 @@ Optional properties:
-> > > >     for data corruption. CDM registers include standard PCIe
-> configuration
-> > > >     space registers, Port Logic registers, DMA and iATU (internal
-> Address
-> > > >     Translation Unit) registers.
-> > > > +- snps,phy-zrxdc-compliant: This property is needed if phy complies
-> > > > +with the
-> > > > +  ZRX-DC specification.
-> > >
-> > > If this is a property of the phy, then it belongs in the phy node or
-> > > should just be implied by the phy's compatible.
-> > 
-> Yes, from HW point of view this is a property of the PHY. As PHY is the one
-> which is ZRXDC compliant or non-compliant.  But as the DW controller
-> programming needs to be altered for handling such phys, so we added it as a
-> DT binding of DW controller driver.
+From: Freeman Liu <freeman.liu@unisoc.com>
 
-I understand how you arrived at the current approach.
+Add the Spreadtrum thermal documentation.
 
-> 
-> We can't use PHY's compatible in case we want this to be in common code
-> (pcie-designware.c), as PHY compatible for each of the platform would be
-> different and PCIe DWC core file is not aware of this compatible. Of-course
-> this can be handled in platform specific driver, but then in that case each
-> of these drivers will add similar code to handle this.
-> 
-> > As suggested in the previous revision of this series [1], this is
-> absolutely a
-> > property of the phy.
-> 
-> Agreed, but as I tried to explain in series [1], this we are adding in
-> controller driver, as controller driver needs to program it's register based
-> on PHY HW property. 
+Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ .../devicetree/bindings/thermal/sprd-thermal.txt   |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.txt
 
-It creates a challenge, but it isn't a good justification for putting the
-property in the wrong place in the DT. The DT should describe the hardware
-without much consideration for ease of programming.
+diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.txt b/Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+new file mode 100644
+index 0000000..a9da7f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+@@ -0,0 +1,41 @@
++* Spreadtrum thermal sensor controller bindings
++
++Required properties:
++- compatible : Should be "sprd,ums512-thermal"
++- reg: Address range of the thermal registers
++- clock-names: "enable" for thermal module enable clock.
++- clocks: Should contain a clock specifier for each entry in clock-names.
++- nvmem-cells: A phandle to the calibration data provided by a nvmem device.
++- nvmem-cell-names: Should be "thm_sign_cal" and "thm_ratio_cal".
++- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
++
++Child nodes properties:
++- reg: Specify the sensor id.
++- nvmem-cells: A phandle to the calibration data provided by a nvmem device.
++- nvmem-cell-names: Should be "sen_delta_cal".
++
++Example:
++
++	ap_thm0: thermal@32200000 {
++		compatible = "sprd,ums512-thermal";
++		reg = <0 0x32200000 0 0x10000>;
++		clock-names = "enable";
++		clocks = <&aonapb_gate CLK_THM0_EB>;
++		#thermal-sensor-cells = <1>;
++		nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
++		nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
++
++		prometheus0-sensor@0{
++			reg = <0>;
++			nvmem-cells = <&thm0_sen0>;
++			nvmem-cell-names = "sen_delta_cal";
++		};
++
++		ank1-sensor@1{
++			reg = <1>;
++			nvmem-cells = <&thm0_sen1>;
++			nvmem-cell-names = "sen_delta_cal";
++		};
++
++		......
++	};
+-- 
+1.7.9.5
 
-> 
-> > 
-> > > IOW, you should be able
-> > > to support this or not without changing DTs.
-> > >
-> > > Is this spec Synopys specific? (About the only thing Google turns up
-> > > are your patches.) If not, then probably shouldn't have a 'snps' prefix.
-> > 
-> > This was also unfamiliar to me, however my current understanding is that
-> Zrx-dc
-> > describes the 'Receiver DC single ended impedance' limits, this is
-> specified in the
-> > PCI specification (table 'Common Receiver Parameters'), with a different
-> limit
-> > for each speed.
-> > 
-> > I believe the purpose of this series is to to satisfy the following
-> implementation
-> > note in the spec "Ports that meet the Zrx-dc specification for 2.5 GT/s
-> while in
-> > the L1.Idle state are therefore not required to implement the 100 ms
-> timeout
-> > and transition to Recovery should avoid implementing it, since it will
-> reduce the
-> > power savings expected from the
-> > L1 state".
-> >
-> 
-> > In other words, if it is known that the phy is compliant then an
-> unnecessary
-> > transition to a higher energy state can be avoided. Though it's the PCI
-> controller
-> > (in this case) that must action this and must find out about the phy it is
-> > connected to.
-> >
-> 
-> Thanks, this is exactly the purpose of the patch. Currently this is being
-> handled in respective platform's driver, this patch intends to move this in
-> common code, where any platform driver using DesignWare controller can use
-> it without repeating same piece of code.
->  
-> > So in my view 'phy-zrxdc-compliant' should be a property of a phy (without
-> snps
-> > prefix), and if a controller wants to determine if it is compliant then
-> there must
-> > be a phandle to the phy so the controller can find out.
-> 
-> 
-> Removing snps prefix, I am OK with it. But for moving this property to PHY
-> node, we need to find solution, how PCIe controller driver will access this
-> property of PHY device.
->  
-> Platform driver which are using DesignWare controller driver has a phandle
-> to PHY, but question is here how does DesignWare controller driver will
-> infer this information from PHY driver. Some approaches which I can think of
-> are:
-> 1) If PHY framework has some generic API to check if a particular property
-> exists in PHY node then it will be useful in such cases. Currently I don't
-> see any such API exists. Though I am not sure if it is OK to add such API in
-> PHY framework for such cases? Adding Kishon to comment on this.
-> 2) Currently phandle to PHY is being stored as part of private data
-> structure of platform specific controller driver, and DesignWare core driver
-> can't access the phandle. So we need to move or keep copy of phandle pointer
-> to DesignWare core driver structure instead of keeping it in platform
-> specific private structure. 
-
-Indeed, these are both valid solutions. In other words put the property in
-the phy, and figure out how you can access that from the controller.
-
-There must be many examples in the kernel of drivers needing to understand
-properties of hardware components they are connected to. Though I haven't
-explored in any detail how to solve this particular challenge.
-
-> 
-> I am open to any suggestion which can help us in keeping common piece of
-> code in DesignWare controller driver than repeating same in each and every
-> platform driver using DWC controller.
-
-Agreed, I'd expect to see a solution that doesn't involve duplicating code
-in the host bridge drivers.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> 
-> Thanks,
-> Pankaj Dubey
-> 
-> > 
-> > [1] https://patchwork.kernel.org/patch/11202121/
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > >
-> > > >  RC mode:
-> > > >  - num-viewport: number of view ports configured in hardware. If a
-> platform
-> > > >    does not specify it, the driver assumes 2.
-> > > > --
-> > > > 2.17.1
-> > > >
-> 
