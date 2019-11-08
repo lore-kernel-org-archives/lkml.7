@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5CFFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A550FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A208120650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466882087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240524;
-	bh=Rms987B6+ojFmyvKudP2KMT2fnBmEwX6WhGEm/v4sVQ=;
+	s=default; t=1573240530;
+	bh=XD1D1VT5cOjCVBZpol8U0nDBMsixK5DchGwMkIdXBi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HmYo6yhFZGZFKUR27h7cilhc4c8pgNMqEECeN/Xx0f3PFC0uU5lyO2Teug0Q49asQ
-	 Vj9QLRDOjVQApLKee08i7MDXbwalMDVK/i2HoAiSU5uVDDbSx5X4kkTtFxPLf+cCuX
-	 6LSYivzaPPkrGpaXeG5vE1OJDcSqIGKBQ10iiiaU=
+	b=ZZYBPw+wvrPdbUs0v9HytIomH/uM305XrnmrIosoFclTTOhNA/r/7iRA9DTJa+c4F
+	 wNok7Yv8W5WAIq2ojAxEI7g5CWxTglR1Psp2nrWcmcREpBuNK/q1tCNSDEq1bFaXfL
+	 7ogPyZC3e3eu8ilZyo7I2yomgSLxTaWqdWpMpJF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390375AbfKHTFR (ORCPT
+        id S2391234AbfKHTP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:15:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390258AbfKHTFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:13 -0500
+        id S1732707AbfKHTFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AF582087E;
-        Fri,  8 Nov 2019 19:05:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587E6218AE;
+        Fri,  8 Nov 2019 19:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239912;
-        bh=Rms987B6+ojFmyvKudP2KMT2fnBmEwX6WhGEm/v4sVQ=;
+        s=default; t=1573239906;
+        bh=XD1D1VT5cOjCVBZpol8U0nDBMsixK5DchGwMkIdXBi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xHnlhrCYKPTl0U4LgIxcWwpbXh9Dedn0jNVDNOFQJpJnGpTXDSeulyRdmNJ5YZLu5
-         IGQkE6LIlBrRHEQlTOOM4hCCl5+gj9/n+dEjD/ayC/k+iyyd0Qcfm217VvSpuRPt6T
-         m/N+PXe1u3GY3narMJ29lLs5cqAqPzSzjv6RFXNI=
+        b=X2pTp49YaFCkZsRH1/N9oIgd3ezlEEzA7hzDrc1wQAF96W4F9VLEGErgLupuBAJ6g
+         U45NrUaeaYSCjqwJf2RKWElEB5ui99MzxnRHUzGb/QMDkQWCYgJZEJ5Z17r1ZV6zjZ
+         lt/85IlBXcIJ17Tm8emvJ5qS5A9QXDlYc3nvht6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 003/140] ASoC: wm8994: Do not register inapplicable controls for WM1811
-Date:   Fri,  8 Nov 2019 19:48:51 +0100
-Message-Id: <20191108174900.487322745@linuxfoundation.org>
+Subject: [PATCH 5.3 022/140] ASoc: rockchip: i2s: Fix RPM imbalance
+Date:   Fri,  8 Nov 2019 19:49:10 +0100
+Message-Id: <20191108174904.352546010@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -63,146 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit ca2347190adb5e4eece73a2b16e96e651c46246b ]
+[ Upstream commit b1e620e7d32f5aad5353cc3cfc13ed99fea65d3a ]
 
-In case of WM1811 device there are currently being registered controls
-referring to registers not existing on that device.
-It has been noticed when getting values of "AIF1ADC2 Volume", "AIF1DAC2
-Volume" controls was failing during ALSA state restoring at boot time:
- "amixer: Mixer hw:0 load error: Device or resource busy"
+If rockchip_pcm_platform_register() fails, e.g. upon deferring to wait
+for an absent DMA channel, we return without disabling RPM, which makes
+subsequent re-probe attempts scream with errors about the unbalanced
+enable. Don't do that.
 
-Reading some registers through I2C was failing with EBUSY error and
-indeed these registers were not available according to the datasheet.
-
-To fix this controls not available on WM1811 are moved to a separate
-array and registered only for WM8994 and WM8958.
-
-There are some further differences between WM8994 and WM1811,
-e.g. registers 603h, 604h, 605h, which are not covered in this patch.
-
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Link: https://lore.kernel.org/r/20190920130218.32690-2-s.nawrocki@samsung.com
+Fixes: ebb75c0bdba2 ("ASoC: rockchip: i2s: Adjust devm usage")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/bcb12a849a05437fb18372bc7536c649b94bdf07.1570029862.git.robin.murphy@arm.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8994.c | 43 +++++++++++++++++++++++----------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
+ sound/soc/rockchip/rockchip_i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index c3d06e8bc54f2..d5fb7f5dd551c 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -533,13 +533,10 @@ static SOC_ENUM_SINGLE_DECL(dac_osr,
- static SOC_ENUM_SINGLE_DECL(adc_osr,
- 			    WM8994_OVERSAMPLING, 1, osr_text);
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 88ebaf6e1880a..a0506e554c98b 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -674,7 +674,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	ret = rockchip_pcm_platform_register(&pdev->dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Could not register PCM\n");
+-		return ret;
++		goto err_suspend;
+ 	}
  
--static const struct snd_kcontrol_new wm8994_snd_controls[] = {
-+static const struct snd_kcontrol_new wm8994_common_snd_controls[] = {
- SOC_DOUBLE_R_TLV("AIF1ADC1 Volume", WM8994_AIF1_ADC1_LEFT_VOLUME,
- 		 WM8994_AIF1_ADC1_RIGHT_VOLUME,
- 		 1, 119, 0, digital_tlv),
--SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
--		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
--		 1, 119, 0, digital_tlv),
- SOC_DOUBLE_R_TLV("AIF2ADC Volume", WM8994_AIF2_ADC_LEFT_VOLUME,
- 		 WM8994_AIF2_ADC_RIGHT_VOLUME,
- 		 1, 119, 0, digital_tlv),
-@@ -556,8 +553,6 @@ SOC_ENUM("AIF2DACR Source", aif2dacr_src),
- 
- SOC_DOUBLE_R_TLV("AIF1DAC1 Volume", WM8994_AIF1_DAC1_LEFT_VOLUME,
- 		 WM8994_AIF1_DAC1_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
--SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
--		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
- SOC_DOUBLE_R_TLV("AIF2DAC Volume", WM8994_AIF2_DAC_LEFT_VOLUME,
- 		 WM8994_AIF2_DAC_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
- 
-@@ -565,17 +560,12 @@ SOC_SINGLE_TLV("AIF1 Boost Volume", WM8994_AIF1_CONTROL_2, 10, 3, 0, aif_tlv),
- SOC_SINGLE_TLV("AIF2 Boost Volume", WM8994_AIF2_CONTROL_2, 10, 3, 0, aif_tlv),
- 
- SOC_SINGLE("AIF1DAC1 EQ Switch", WM8994_AIF1_DAC1_EQ_GAINS_1, 0, 1, 0),
--SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
- SOC_SINGLE("AIF2 EQ Switch", WM8994_AIF2_EQ_GAINS_1, 0, 1, 0),
- 
- WM8994_DRC_SWITCH("AIF1DAC1 DRC Switch", WM8994_AIF1_DRC1_1, 2),
- WM8994_DRC_SWITCH("AIF1ADC1L DRC Switch", WM8994_AIF1_DRC1_1, 1),
- WM8994_DRC_SWITCH("AIF1ADC1R DRC Switch", WM8994_AIF1_DRC1_1, 0),
- 
--WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
--WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
--WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
--
- WM8994_DRC_SWITCH("AIF2DAC DRC Switch", WM8994_AIF2_DRC_1, 2),
- WM8994_DRC_SWITCH("AIF2ADCL DRC Switch", WM8994_AIF2_DRC_1, 1),
- WM8994_DRC_SWITCH("AIF2ADCR DRC Switch", WM8994_AIF2_DRC_1, 0),
-@@ -594,9 +584,6 @@ SOC_SINGLE("Sidetone HPF Switch", WM8994_SIDETONE, 6, 1, 0),
- SOC_ENUM("AIF1ADC1 HPF Mode", aif1adc1_hpf),
- SOC_DOUBLE("AIF1ADC1 HPF Switch", WM8994_AIF1_ADC1_FILTERS, 12, 11, 1, 0),
- 
--SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
--SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
--
- SOC_ENUM("AIF2ADC HPF Mode", aif2adc_hpf),
- SOC_DOUBLE("AIF2ADC HPF Switch", WM8994_AIF2_ADC_FILTERS, 12, 11, 1, 0),
- 
-@@ -637,6 +624,24 @@ SOC_SINGLE("AIF2DAC 3D Stereo Switch", WM8994_AIF2_DAC_FILTERS_2,
- 	   8, 1, 0),
- };
- 
-+/* Controls not available on WM1811 */
-+static const struct snd_kcontrol_new wm8994_snd_controls[] = {
-+SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
-+		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
-+		 1, 119, 0, digital_tlv),
-+SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
-+		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
-+
-+SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
-+
-+WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
-+WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
-+WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
-+
-+SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
-+SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
-+};
-+
- static const struct snd_kcontrol_new wm8994_eq_controls[] = {
- SOC_SINGLE_TLV("AIF1DAC1 EQ1 Volume", WM8994_AIF1_DAC1_EQ_GAINS_1, 11, 31, 0,
- 	       eq_tlv),
-@@ -4258,13 +4263,15 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 	wm8994_handle_pdata(wm8994);
- 
- 	wm_hubs_add_analogue_controls(component);
--	snd_soc_add_component_controls(component, wm8994_snd_controls,
--			     ARRAY_SIZE(wm8994_snd_controls));
-+	snd_soc_add_component_controls(component, wm8994_common_snd_controls,
-+				       ARRAY_SIZE(wm8994_common_snd_controls));
- 	snd_soc_dapm_new_controls(dapm, wm8994_dapm_widgets,
- 				  ARRAY_SIZE(wm8994_dapm_widgets));
- 
- 	switch (control->type) {
- 	case WM8994:
-+		snd_soc_add_component_controls(component, wm8994_snd_controls,
-+					       ARRAY_SIZE(wm8994_snd_controls));
- 		snd_soc_dapm_new_controls(dapm, wm8994_specific_dapm_widgets,
- 					  ARRAY_SIZE(wm8994_specific_dapm_widgets));
- 		if (control->revision < 4) {
-@@ -4284,8 +4291,10 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 		}
- 		break;
- 	case WM8958:
-+		snd_soc_add_component_controls(component, wm8994_snd_controls,
-+					       ARRAY_SIZE(wm8994_snd_controls));
- 		snd_soc_add_component_controls(component, wm8958_snd_controls,
--				     ARRAY_SIZE(wm8958_snd_controls));
-+					       ARRAY_SIZE(wm8958_snd_controls));
- 		snd_soc_dapm_new_controls(dapm, wm8958_dapm_widgets,
- 					  ARRAY_SIZE(wm8958_dapm_widgets));
- 		if (control->revision < 1) {
+ 	return 0;
 -- 
 2.20.1
 
