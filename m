@@ -2,111 +2,125 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF9EFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F000BFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B7E2178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:42:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TOihndvv"
+	by mail.kernel.org (Postfix) with ESMTP id C50E9218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573209757;
+	bh=Tpjnf2GWTDvkR6aqCvBySs7nsoGgpKOv1/rmGC0yfaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t3Eyt6KuKyZMNIQPHLzznuWP8szOJran3ofqnkKheegSQZmdwrl6bKtLAphaLXTBd
+	 OvQbpNNc5tfsdlln6wrflSYf1d3qkqc1z65WQtwT4vz6Fg6FY+aEXtWkalTPPwbhDF
+	 TcC4KdOtD7+lOYYTYVGrw4E87F+ZoDBlL4YSu8dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbfKHKma (ORCPT
+        id S1731887AbfKHKmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:42:30 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:56482 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfKHKma (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:42:30 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8ATKrU049892;
-        Fri, 8 Nov 2019 10:41:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=fp3pnErYbvbxA+Mx+2qhY6ge/lXDQYRira7mNwHpzmY=;
- b=TOihndvvZRuOmCdD9v4KxQOWEt2Z8DYzIjPRDOqkEtapR9zij/fHVdHSg95EfVQK0igQ
- NMqYRU2ZlfYXGuADVsrpPZZILSoibA+sFJF6XXo8jS1NL/P5CxWOp6jFtm+9o4DWapx0
- /1EY3X5OiLmVBCd+xQ5a3tvM5ikXNC+aDqOQrfFuZd2rLTQ+wVrIo0KuKGx5yynRZ75M
- dei9poudgYeaJYFCB+ujpi3eaEoKUBN51IbIos2JADFV9DqRMR54sXT3ygcZHo0vsZl/
- FBuH/Sg6O59q0KEsTanbTQ65h+ES73B1AHyrtNIeAfX1MfVaMKb3LY6UEjbsOlUBZb8L Nw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2w41w1cjaf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 10:41:54 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8ARxuB078391;
-        Fri, 8 Nov 2019 10:41:53 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2w41whf22f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 10:41:53 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA8AfngC006265;
-        Fri, 8 Nov 2019 10:41:52 GMT
-Received: from [192.168.8.47] (/213.41.92.70)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 Nov 2019 02:41:48 -0800
-Subject: Re: [patch V2 06/17] x86/entry/32: Remove redundant interrupt disable
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123118.191230255@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <f8ba6ab8-c42d-f90f-f296-de270d1a7e21@oracle.com>
-Date:   Fri, 8 Nov 2019 11:41:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 8 Nov 2019 05:42:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731704AbfKHKmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:42:35 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AD162178F;
+        Fri,  8 Nov 2019 10:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573209754;
+        bh=Tpjnf2GWTDvkR6aqCvBySs7nsoGgpKOv1/rmGC0yfaI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UptJ0S7oZTBv0d9I0RlV9aZeyCEKwOa/K/FY8IxrQu6u+AVWXByUglJFW4o/QdfZa
+         nW5/cdTO9pZ4iLMlmWCLSXMP+RO3IwZk7aqhE2wUAuJMM8ixJcBNDnHM3eT4Ds9mTo
+         Ah6/7qFO+bNIBK/SZ6Nrb03LlxJVz0bZ7J/OREu8=
+Date:   Fri, 8 Nov 2019 11:42:31 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Christophe Roullier <christophe.roullier@st.com>
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        martin.blumenstingl@googlemail.com, alexandru.ardelean@analog.com,
+        narmstrong@baylibre.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH  1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Message-ID: <20191108104231.GE4345@gilmour.lan>
+References: <20191108103526.22254-1-christophe.roullier@st.com>
+ <20191108103526.22254-2-christophe.roullier@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20191023123118.191230255@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911080103
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911080103
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SWTRyWv/ijrBap1m"
+Content-Disposition: inline
+In-Reply-To: <20191108103526.22254-2-christophe.roullier@st.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 10/23/19 2:27 PM, Thomas Gleixner wrote:
-> Now that the trap handlers return with interrupts disabled, the
-> unconditional disabling of interrupts in the low level entry code can be
-> removed along with the trace calls and the misnomed preempt_stop macro.
-> As a consequence ret_from_exception and ret_from_intr collapse.
-> 
-> Add a debug check to verify that interrupts are disabled depending on
-> CONFIG_DEBUG_ENTRY.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+--SWTRyWv/ijrBap1m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
+> This change is needed for some soc based on snps,dwmac, which have
+> more than 3 clocks.
+>
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 > ---
->   arch/x86/entry/entry_32.S |   21 ++++++---------------
->   1 file changed, 6 insertions(+), 15 deletions(-)
-> 
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> index 4845e29411e4..376a531062c2 100644
+> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> @@ -27,6 +27,7 @@ select:
+>            - snps,dwmac-3.710
+>            - snps,dwmac-4.00
+>            - snps,dwmac-4.10a
+> +          - snps,dwmac-4.20a
+>            - snps,dwxgmac
+>            - snps,dwxgmac-2.10
+>
+> @@ -62,6 +63,7 @@ properties:
+>          - snps,dwmac-3.710
+>          - snps,dwmac-4.00
+>          - snps,dwmac-4.10a
+> +        - snps,dwmac-4.20a
+>          - snps,dwxgmac
+>          - snps,dwxgmac-2.10
+>
+> @@ -87,7 +89,8 @@ properties:
+>
+>    clocks:
+>      minItems: 1
+> -    maxItems: 3
+> +    maxItems: 5
+> +    additionalItems: true
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Those additional clocks should be documented
 
-alex.
+Maxime
+--SWTRyWv/ijrBap1m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcVGlwAKCRDj7w1vZxhR
+xbqKAQDvkfzfxpAJ6TR82T/DMy/J2ehuCMos4R9wkjU53VpciQEAmWKEhrULTnu0
+xg9rU8jTzA5wsosJo34XQ8gcdH7JPgA=
+=vzrR
+-----END PGP SIGNATURE-----
+
+--SWTRyWv/ijrBap1m--
