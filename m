@@ -2,94 +2,194 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F40C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DDFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495F021D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D9521882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ogaerQrj";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K6FMgsuw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pRynUAiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfKHDCZ (ORCPT
+        id S1729171AbfKHDCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:02:25 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:33316 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfKHDCZ (ORCPT
+        Thu, 7 Nov 2019 22:02:47 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39666 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfKHDCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:02:25 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 141BA607C3; Fri,  8 Nov 2019 03:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573182144;
-        bh=6MEqG+MyfYFaJlkiLyiU8jD24mhXwfPMDeWogUK37UQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ogaerQrjDzBnHzLxDD4lKN6b2eu0UASlRF6acUwURlQU3I9RsruXLZ/0bxPHGh+Wb
-         pmJcyOclHOi47eC2w28c1yxvMa4kg6RFrsyjNDYjh37SxGrtgiOt4VW5dcb63ShOT2
-         0sBOwAdt5r6GulNAG8lTjeppWiQRWWKqkumEoOkY=
-Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6F2760863;
-        Fri,  8 Nov 2019 03:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573182143;
-        bh=6MEqG+MyfYFaJlkiLyiU8jD24mhXwfPMDeWogUK37UQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=K6FMgsuwtAAgDSt6ov9n1DPelNZmzgwQtIz9B1wLoAPSLFRympd84IJ7ynpVtmZlO
-         +Wh4KU/VZompUY7HZOhdqRuZGCvkIBE2y0RjgXLsw5CiNa2yNrhk4a04oM6UWWTcbD
-         Lu9re3xdPNkyv4JQQeicmiAGkcrsjyM1x4p8m6z8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6F2760863
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v4 01/14] dt-bindings: qcom: Add SC7180 bindings
-To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Vinod Koul <vkoul@kernel.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org>
- <20191106065017.22144-2-rnayak@codeaurora.org>
- <5dc457d2.1c69fb81.839ab.803b@mx.google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <3ee4b2ac-7977-6663-5d98-238ac702288f@codeaurora.org>
-Date:   Fri, 8 Nov 2019 08:32:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 22:02:47 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so3050277plk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 19:02:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=gv3+n/c+38zvwy3Zq6JG6GHg2sYaACls7c2MhxQMBzE=;
+        b=pRynUAiW1uPF2J9chfhPN9oeKkYWylAn1lkV4lomStqviluWeX7UtfKz1mOwyUaJt3
+         lPgXD7ToZMcLXpR3Fkjf5GlcJE7l3+G9SkH0Ko5CDtEVOuVUls3UK3iRXPHLgPi04eFX
+         aa5gVqh5GtzRDoTwfVj0l3K8QGUhjnAnhQCXpAdcPlvj5GFKtNH2jELUXfm3uYKEAyAc
+         PiCoSj8fZl2qlUuq+9tlSEdqaR3kkSh++al0apUO3LzyvJ/6bPDJCDED1ZKNjd/3Ay7h
+         ZKJnbei7TPPTHf1wGCSfBP8mjWvJ74y4oYT2SLLpebiIYTaUKWOlnkrGDY2DgX1R3TWy
+         S2/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=gv3+n/c+38zvwy3Zq6JG6GHg2sYaACls7c2MhxQMBzE=;
+        b=qDZXw2IxN0blH1KXG4oopKr3y5XeZ9oEhNkBexvWN6OWtOvoLV9Kz88/VDliXlFK4d
+         J1zx4OwfBP7tIoPkGkPpTna8DrpnFK+Ebj8Z2ZnlCISoU2tFz2+MhBiOt+Me54Hn6N7n
+         8iAfgyh1MFHGY1AzFVx0IzbLMCiyo1sqSXTC9tcdYy2cATmGhGzmRY0lQgLLUXrip5a3
+         QxZSUTxf05a41vjTXnZL7tPMWllaOkDpl5uDhQHiYSQNZRTK3JJgbW58mhLO5y42z9VS
+         PQBrYg6E/BvyM17VsZ+agJdu2/Tmm0cMTEctFtQ9Rsh7YHD5sgONtXhbt22okuOHHRLW
+         dr1w==
+X-Gm-Message-State: APjAAAXqq/dli6AnignpA786IRFVJ/CdwukBWTfRk4BO1e8FU7umlRl/
+        dS09megHbzPWeb+CRJTZg+i04g==
+X-Google-Smtp-Source: APXvYqzFaMkN0XzBKKC42AzT60rki5eCoQbSHNn398fYmsVPBLpd07iwotlWqZpRpc4AWVzKPZH01Q==
+X-Received: by 2002:a17:902:fe11:: with SMTP id g17mr7563765plj.329.1573182165525;
+        Thu, 07 Nov 2019 19:02:45 -0800 (PST)
+Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
+        by smtp.gmail.com with ESMTPSA id m123sm4205287pfb.133.2019.11.07.19.02.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 19:02:44 -0800 (PST)
+Date:   Thu, 7 Nov 2019 19:02:40 -0800
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: Re: [PATCH v3 linux-kselftest-test 5/6] kunit: allow kunit to be
+ loaded as a module
+Message-ID: <20191108030240.GA241915@google.com>
+References: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com>
+ <1571335639-21675-6-git-send-email-alan.maguire@oracle.com>
+ <CAFd5g46s4eY4qEB5UZPeOKNdZXm4+sA9N=4g8gDYAhyhMahZKw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5dc457d2.1c69fb81.839ab.803b@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFd5g46s4eY4qEB5UZPeOKNdZXm4+sA9N=4g8gDYAhyhMahZKw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/7/2019 11:13 PM, Stephen Boyd wrote:
-> Quoting Rajendra Nayak (2019-11-05 22:50:04)
->> Add a SoC string 'sc7180' for the qualcomm SC7180 SoC.
->> Also add a new board type 'idp'
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Reviewed-by: Vinod Koul <vkoul@kernel.org>
->> ---
+On Thu, Nov 07, 2019 at 06:43:11PM -0800, Brendan Higgins wrote:
+> On Thu, Oct 17, 2019 at 11:09 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> >
+> > Making kunit itself buildable as a module allows for "always-on"
+> > kunit configuration; specifying CONFIG_KUNIT=m means the module
+> > is built but only used when loaded.  Kunit test modules will load
+> > kunit.ko as an implicit dependency, so simply running
+> > "modprobe my-kunit-tests" will load the tests along with the kunit
+> > module and run them.
+> >
+> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> > ---
+> >  lib/kunit/Kconfig     | 2 +-
+> >  lib/kunit/Makefile    | 4 +++-
+> >  lib/kunit/test.c      | 2 ++
+> >  lib/kunit/try-catch.c | 3 +++
+> >  4 files changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+> > index 9ebd5e6..065aa16 100644
+> > --- a/lib/kunit/Kconfig
+> > +++ b/lib/kunit/Kconfig
+> > @@ -3,7 +3,7 @@
+> >  #
+> >
+> >  menuconfig KUNIT
+> > -       bool "KUnit - Enable support for unit tests"
+> > +       tristate "KUnit - Enable support for unit tests"
+> >         help
+> >           Enables support for kernel unit tests (KUnit), a lightweight unit
+> >           testing and mocking framework for the Linux kernel. These tests are
+> > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+> > index 769d940..8e2635a 100644
+> > --- a/lib/kunit/Makefile
+> > +++ b/lib/kunit/Makefile
+> > @@ -1,4 +1,6 @@
+> > -obj-$(CONFIG_KUNIT) +=                 test.o \
+> > +obj-$(CONFIG_KUNIT) +=                 kunit.o
+> > +
+> > +kunit-objs +=                          test.o \
+> >                                         string-stream.o \
+> >                                         assert.o \
+> >                                         try-catch.o
+> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> > index e8b2443..c0ace36 100644
+> > --- a/lib/kunit/test.c
+> > +++ b/lib/kunit/test.c
+> > @@ -523,3 +523,5 @@ void *kunit_find_symbol(const char *sym)
+> >         return ERR_PTR(-ENOENT);
+> >  }
+> >  EXPORT_SYMBOL(kunit_find_symbol);
+> > +
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+> > index 1c1e9af..72fc8ed 100644
+> > --- a/lib/kunit/try-catch.c
+> > +++ b/lib/kunit/try-catch.c
+> > @@ -31,6 +31,8 @@ static int kunit_generic_run_threadfn_adapter(void *data)
+> >         complete_and_exit(try_catch->try_completion, 0);
+> >  }
+> >
+> > +KUNIT_VAR_SYMBOL(sysctl_hung_task_timeout_secs, unsigned long);
 > 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Can you just export sysctl_hung_task_timeout_secs?
 > 
-> I see that it isn't sorted but o well!
+> I don't mean to make you redo all this work for one symbol twice, but
+> I thought we agreed on just exposing this symbol, but in a namespace.
+> It seemed like a good use case for that namespaced exporting thing
+> that Luis was talking about. As I understood it, you would have to
+> export it in the module that defines it, and then use the new
+> MODULE_IMPORT_NS() macro here.
 
-Well, it wasn't sorted to begin with, so I left it unsorted ¯\_(ツ)_/¯
+Also, I tried applying this and running this on kselftest/test and got
+the following build error:
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+In file included from lib/kunit/try-catch.c:10:
+lib/kunit/try-catch.c: In function ‘kunit_test_timeout’:
+./include/kunit/test.h:132:19: error: lvalue required as unary ‘&’ operand
+  kunit_##symbol = &(symbol)
+                   ^
+lib/kunit/try-catch.c:57:2: note: in expansion of macro ‘KUNIT_INIT_VAR_SYMBOL’
+  KUNIT_INIT_VAR_SYMBOL(NULL, sysctl_hung_task_timeout_secs);
+  ^~~~~~~~~~~~~~~~~~~~~
+
+> > +
+> >  static unsigned long kunit_test_timeout(void)
+> >  {
+> >         unsigned long timeout_msecs;
+> > @@ -52,6 +54,7 @@ static unsigned long kunit_test_timeout(void)
+> >          * For more background on this topic, see:
+> >          * https://mike-bland.com/2011/11/01/small-medium-large.html
+> >          */
+> > +       KUNIT_INIT_VAR_SYMBOL(NULL, sysctl_hung_task_timeout_secs);
+> >         if (sysctl_hung_task_timeout_secs) {
+> >                 /*
+> >                  * If sysctl_hung_task is active, just set the timeout to some
+> > --
+> > 1.8.3.1
+> >
