@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095BBFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC57CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4C6222CF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2762245A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213412;
-	bh=LSJuR6xuJV+Zd/1X8vuZZ7n0Yx4USt8B+Uah0jtEuXg=;
+	s=default; t=1573213415;
+	bh=n+9XzrVxtEeVuhRwZ4HPS0if8MXX+eA8pGGYJcSjOfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZFJf83wSZq3oQHe3ZqHi8imMmMaIU+MmHXzKxrnYbLJxDuAdGfkhcRiGQvj6oDCMh
-	 jIcoMrSXgx2gX2caE7QDzo+MUd+VUCh2vRF7dvKUKnYj8VT6TL91tHImf8kFfO6ScV
-	 cpKP1XuiPs1mM0rQmUF/D6xdRM8J/jo97ft/eIFs=
+	b=oHx6nyH2XM5SWxuDKZ+3DVV5GkDIGMTfc3IImZK53HYZ4b6UFrOPP/M96OD3mWnUm
+	 lrg7HvJcusPvSgfTr8wnZcoMCKDFnn5CzUoGYtM9lgP8wn6+xLVmueBvZ51h04uc/b
+	 dl0dmKx8F6czAneuMI8R6zASGW/TPUpA6LL/ZXaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390474AbfKHLnb (ORCPT
+        id S2390495AbfKHLne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:43:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57704 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:43:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390410AbfKHLnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:18 -0500
+        id S2388524AbfKHLnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:43:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4746B222CF;
-        Fri,  8 Nov 2019 11:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0821222C4;
+        Fri,  8 Nov 2019 11:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213398;
-        bh=LSJuR6xuJV+Zd/1X8vuZZ7n0Yx4USt8B+Uah0jtEuXg=;
+        s=default; t=1573213401;
+        bh=n+9XzrVxtEeVuhRwZ4HPS0if8MXX+eA8pGGYJcSjOfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YYsaFNRT5UjfnhtYlbbEOCV7nJI/uJXkNj5nMdH0LSWNINGw23EiU/BvL5lhcRcJs
-         ByBkrm4kGjf6jMhpPinaxLu/jO8hED2eM8p0IVSlnUsTkdXAsD0RLN8BCoDkt+EKtf
-         6mM7OasqouP6V4Yqr5NmhBnz8oqnu4AaQLtnlUG0=
+        b=jHxG6VT+xSyCepSmpC/Ph1ygr8HOpxj0Z0fmFeXerdyJDFEw1a5VF/LSDxIIzWYch
+         jUcgnZbt6hyuGX+Qdeqr2JznIjrDpVDUwri7dicxKnwZtsHpaBbvfh6dTFsNqcVXwN
+         jrQzIur/yYZa62TZJ6sQmznsU+VCJLoL5c4shEo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Martin Lucina <martin@lucina.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 005/103] arm64: dts: allwinner: a64: Olinuxino: fix DRAM voltage
-Date:   Fri,  8 Nov 2019 06:41:30 -0500
-Message-Id: <20191108114310.14363-5-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 007/103] ALSA: pcm: signedness bug in snd_pcm_plug_alloc()
+Date:   Fri,  8 Nov 2019 06:41:32 -0500
+Message-Id: <20191108114310.14363-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -61,49 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 93366b49a35f3a190052734b3f32c8fe2535b53f ]
+[ Upstream commit 6f128fa41f310e1f39ebcea9621d2905549ecf52 ]
 
-The Olinuxino board uses DDR3L chips which are supposed to be driven
-with 1.35V. The reset default of the AXP is properly set to 1.36V.
+The "frames" variable is unsigned so the error handling doesn't work
+properly.
 
-While technically the chips can also run at 1.5 volts, changing the
-voltage on the fly while booting Linux is asking for trouble. Also
-running at a lower voltage saves power.
-
-So fix the DCDC5 value to match the actual board design.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Tested-by: Martin Lucina <martin@lucina.net>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ sound/core/oss/pcm_plugin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 338e786155b1f..2ef779b027572 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -120,10 +120,14 @@
- 
- /* DCDC3 is polyphased with DCDC2 */
- 
-+/*
-+ * The board uses DDR3L DRAM chips. 1.36V is the closest to the nominal
-+ * 1.35V that the PMIC can drive.
-+ */
- &reg_dcdc5 {
- 	regulator-always-on;
--	regulator-min-microvolt = <1500000>;
--	regulator-max-microvolt = <1500000>;
-+	regulator-min-microvolt = <1360000>;
-+	regulator-max-microvolt = <1360000>;
- 	regulator-name = "vcc-ddr3";
- };
- 
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index 617845d4a811b..b8ab46b8298de 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON(frames <= 0))
++			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
 -- 
 2.20.1
 
