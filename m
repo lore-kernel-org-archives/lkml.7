@@ -2,103 +2,102 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AA0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E959BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C603F218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB370218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UpmHfW2V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tsRLdRka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfKHMl7 (ORCPT
+        id S1726793AbfKHMnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:41:59 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:25269 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfKHMl7 (ORCPT
+        Fri, 8 Nov 2019 07:43:42 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45826 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfKHMnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 07:41:59 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id xA8CfZiN020169;
-        Fri, 8 Nov 2019 21:41:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com xA8CfZiN020169
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573216896;
-        bh=22yogZY8jyZoPkxsCBQlNGZ4kRUtmO2FQfuKV4jBNIQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UpmHfW2VombLNqyRYQdMOxRzsUOkQnTeaQzeIJxSOdD9D45KH1oipBsMF/KUPQxTz
-         Aa2jfWi8Qj5AQJXn4tNLJuh+Neet/mxBnzEqYE6CBT/AU/J0rrfx3lEfyCkCyj3+e/
-         zMOQdwQ8+QfIndyoDtt4JtROzDaCBuaFp/KU4X/779IJ66oLS9SUiZh8/iLsb1VrbL
-         QHSXbi4lZGo1xO3J3Akc6sMh2+/he1YOcP/cB9P1S2LMWj7l6OUkp9obP3G8lPD08I
-         Hv//tCtRO5JcTSJMyrcUZ9QAtNAZdL/kLDUHpLVeTn+3gKQZfZg7WNUYva0Kzm4O9V
-         xWX0Mnhqx5C8A==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org
-Subject: [PATCH] mm: fixmap: convert __set_fixmap_offset() to an inline function
-Date:   Fri,  8 Nov 2019 21:41:33 +0900
-Message-Id: <20191108124133.31751-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 8 Nov 2019 07:43:42 -0500
+Received: by mail-il1-f194.google.com with SMTP id o18so4991744ils.12;
+        Fri, 08 Nov 2019 04:43:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u8obCCtRiabqcHSXwbzDRpusLvtXClX2dy2Z3AWgWUw=;
+        b=tsRLdRka6uE9+Zi4R9xgupIKKeIHBhlzkzzQ2lhv9h33iUzD6p5LVRK722wQrQJmZA
+         8d5ZftrTrbcd371boA41kTRHcOKSk5u0LL28usLarIBcUXlLyxUnLhU7tAZPC4s2MB1c
+         25pOcussRxUmI4+oI75E5IvMtha1hJCR+piZ/fwewgNAG8MvoOY9F83+w6pxzfd8gNI9
+         M57zwvIAuHsO9+qa+/AnyPzFQ0fD4CVtuCWKyw4THyz114kRLRaUf+dPhox9wuMFstg7
+         rixXbNnrKekZaJvNtn/vEwEFr5Q3FUWR05pCDL70j4rOkgadXfPMdbU81ZZAGNh/lnaE
+         X47A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u8obCCtRiabqcHSXwbzDRpusLvtXClX2dy2Z3AWgWUw=;
+        b=t9GGE9W3NklRpKLLWgkjSy1NvfdoA0SoEuO7+iajKJRn1Gih8X22N6F4RoxN0baVpC
+         ug266DY3UaKYSM+b39Rl4FWO5VMWcVuqWzKT05GuJtLU2Xx4OXCgmKfiFFMUA3PtKVzk
+         C8pqluY+h6wQQABuG+MZzpMm8+J4P3KX5HRRnCXfHALt4BakkQJ0EvXD3DudRWrsGWBn
+         zEcACW7qNxLwW2Hcz8CaeWeZ0m9NomYO4YyFUy2wTLvpKVXapg1J0hGITwU/NoNpJB3R
+         qXywmQrjEyXIgeX6RBbjYWDkqKHFsyzh98cvAaMmhM5E8OEoTIERXnNvc6mL8l9/F3e6
+         kEyw==
+X-Gm-Message-State: APjAAAVrfMWssuIA5pI6VIUUDrN9YY12ipM/tFMa8bHEgoMvSYuCLzqS
+        cmtDNqsC7PuyQTf28/1pRSMcSP3XszuDMEK3WhI=
+X-Google-Smtp-Source: APXvYqyy8Qn/FY5+ZKeJwig6c57BebjQNrSLV58a0qU9A0tsNxnAjlIlE/7xIepelyqttm9BkTbRqv+z26qjPQ/YA6w=
+X-Received: by 2002:a92:5850:: with SMTP id m77mr12615200ilb.203.1573217020972;
+ Fri, 08 Nov 2019 04:43:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20191108095007.26187-1-tonylu@linux.alibaba.com>
+In-Reply-To: <20191108095007.26187-1-tonylu@linux.alibaba.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 8 Nov 2019 20:43:04 +0800
+Message-ID: <CALOAHbByAFM5_L4sT8AKz0M1cTWjocceo2OwWcfasT+5nM=Eyg@mail.gmail.com>
+Subject: Re: [PATCH] tcp: remove redundant new line from tcp_event_sk_skb
+To:     Tony Lu <tonylu@linux.alibaba.com>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I just stopped by the ugly variable name, ________addr.
-(8 underscores!)
+On Fri, Nov 8, 2019 at 6:12 PM Tony Lu <tonylu@linux.alibaba.com> wrote:
+>
+> This removes '\n' from trace event class tcp_event_sk_skb to avoid
+> redundant new blank line and make output compact.
+>
+> Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
 
-If this is just a matter of casting to (unsigned long), this variable
-is unneeded since you can do like this:
+Thanks for pointing this out.
 
-({                                                                      \
-        __set_fixmap(idx, phys, flags);                                 \
-        (unsigned long)(fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1))); \
-})
+Reviewed-by: Yafang Shao <laoar.shao@gmail.com>
 
-However, I'd rather like to change it to an inline function since it
-is more readable, and the parameter types are clearer.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/asm-generic/fixmap.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/include/asm-generic/fixmap.h b/include/asm-generic/fixmap.h
-index 8cc7b09c1bc7..de4c36912529 100644
---- a/include/asm-generic/fixmap.h
-+++ b/include/asm-generic/fixmap.h
-@@ -70,14 +70,14 @@ static inline unsigned long virt_to_fix(const unsigned long vaddr)
- 	__set_fixmap(idx, 0, FIXMAP_PAGE_CLEAR)
- #endif
- 
--/* Return a pointer with offset calculated */
--#define __set_fixmap_offset(idx, phys, flags)				\
--({									\
--	unsigned long ________addr;					\
--	__set_fixmap(idx, phys, flags);					\
--	________addr = fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1));	\
--	________addr;							\
--})
-+/* Return a virtual address with offset calculated */
-+static inline unsigned long __set_fixmap_offset(enum fixed_addresses idx,
-+						phys_addr_t phys,
-+						pgprot_t flags)
-+{
-+	__set_fixmap(idx, phys, flags);
-+	return fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1));
-+}
- 
- #define set_fixmap_offset(idx, phys) \
- 	__set_fixmap_offset(idx, phys, FIXMAP_PAGE_NORMAL)
--- 
-2.17.1
-
+> ---
+>  include/trace/events/tcp.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> index 2bc9960a31aa..cf97f6339acb 100644
+> --- a/include/trace/events/tcp.h
+> +++ b/include/trace/events/tcp.h
+> @@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+>                               sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
+>         ),
+>
+> -       TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s\n",
+> +       TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
+>                   __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
+>                   __entry->saddr_v6, __entry->daddr_v6,
+>                   show_tcp_state_name(__entry->state))
+> --
+> 2.24.0
+>
