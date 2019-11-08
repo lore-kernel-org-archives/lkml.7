@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71D5C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20CCC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD83D2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E9721848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215100;
-	bh=IxqNtubm1ik/2pU1sDOhqVUVrkUUGyiic2eiJsNd5K4=;
+	s=default; t=1573215107;
+	bh=HCqGy/wd7vaxpgsJLDIJABoxOA2NNLLVQDuPO1xglAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IVI0MLJVtztvvn0Fgb80XYnG0Yww3/+DVShls6zKeYMTqbxNLaZ10ccLN5g0GwNr
-	 MbwBGv2D/u99XoWXs9YWxnfzItsjo8QuB6T4WU1P8eoc4ebGoJDVPjGJUFX+Kno6Sf
-	 VcrFsFZRZtRfXLxpw07lPOXj61lyawqMbZ7snXPk=
+	b=pHSnXR/iYALqSD6omtfIA2JA9IFnDbIUSY5d5nSoIkwJNiYdUHBXkj7vs6Enh0Ukd
+	 W52863ypuR7b2wykJs9h4ryzo/bIlhXlWnbjiUyy+nAvh8zL3j1llduZawJOc2Dq7K
+	 elxaXdwhfmJQMlGIk86roOnsATKeo0EWImCs0W6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733040AbfKHLjG (ORCPT
+        id S2391735AbfKHMLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:39:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51818 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:11:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732862AbfKHLit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:49 -0500
+        id S1733032AbfKHLjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E752E21D6C;
-        Fri,  8 Nov 2019 11:38:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B28A20869;
+        Fri,  8 Nov 2019 11:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213127;
-        bh=IxqNtubm1ik/2pU1sDOhqVUVrkUUGyiic2eiJsNd5K4=;
+        s=default; t=1573213143;
+        bh=HCqGy/wd7vaxpgsJLDIJABoxOA2NNLLVQDuPO1xglAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MXHHGG3e0rAikKvRaLqLS9al7hwmtjQITZ+tWiL3uUaQ4f45tHMfBAGuzZhd8Gudp
-         FsQnwQaRXRrytvtyxuV4keNdk6aye15yW7a3oirU5tIAa9AOBIAq85b6UmXFAJluLQ
-         y0j41U0t55ZLebiy+aZiqdHhLz5ypFRZ/rucR0TU=
+        b=NHfNmBMERPfPvJPsgXvYEo6eqff2hQ/jFfhDzj9vEUjcDSiWIxKBw0j7S5b0HFWiq
+         awcbS04IknrbkI7R9WREal2LjkWVWrO+xvW0Xa0BkqCnkcBYJVvYUCm5OAhLTvyZEV
+         vaCybZC1WFvSXuwBull0VI0phDP1WHVd3kT/Vdsg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 046/205] i40evf: Validate the number of queues a PF sends
-Date:   Fri,  8 Nov 2019 06:35:13 -0500
-Message-Id: <20191108113752.12502-46-sashal@kernel.org>
+Cc:     Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 056/205] iwlwifi: drop packets with bad status in CD
+Date:   Fri,  8 Nov 2019 06:35:23 -0500
+Message-Id: <20191108113752.12502-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,80 +60,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 3c818910911c93bb5099c6637ec350f90c0e71fc ]
+[ Upstream commit 7891965d74bc48fb42b5068033192f97c9aa2090 ]
 
-A PF can send any number of queues to the VF and the VF may not
-be able to support that many. Check to see that the number of
-queues is less than or equal to the max number of queues the
-VF can have.
+We need to drop packets with errors (such as replay,
+MIC, ICV, conversion, duplicate and so on).
 
-Signed-off-by: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Drop invalid packets, put the status bits in the metadata and
+move the enum definition to the correct place (FW API header).
+
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/intel/i40evf/i40evf_virtchnl.c   | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../net/wireless/intel/iwlwifi/fw/api/rx.h    | 63 +++++++++++++++++++
+ .../net/wireless/intel/iwlwifi/iwl-trans.h    |  1 +
+ .../wireless/intel/iwlwifi/pcie/internal.h    | 60 ------------------
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c  |  8 ++-
+ 4 files changed, 70 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40evf/i40evf_virtchnl.c b/drivers/net/ethernet/intel/i40evf/i40evf_virtchnl.c
-index 565677de5ba37..94dabc9d89f73 100644
---- a/drivers/net/ethernet/intel/i40evf/i40evf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/i40evf/i40evf_virtchnl.c
-@@ -153,6 +153,32 @@ int i40evf_send_vf_config_msg(struct i40evf_adapter *adapter)
- 					  NULL, 0);
- }
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h
+index 2f599353c8856..2ba1401e5c0d5 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h
+@@ -574,6 +574,69 @@ struct iwl_rx_mpdu_desc {
  
+ #define IWL_RX_DESC_SIZE_V1 offsetofend(struct iwl_rx_mpdu_desc, v1)
+ 
++#define IWL_CD_STTS_OPTIMIZED_POS	0
++#define IWL_CD_STTS_OPTIMIZED_MSK	0x01
++#define IWL_CD_STTS_TRANSFER_STATUS_POS	1
++#define IWL_CD_STTS_TRANSFER_STATUS_MSK	0x0E
++#define IWL_CD_STTS_WIFI_STATUS_POS	4
++#define IWL_CD_STTS_WIFI_STATUS_MSK	0xF0
++
 +/**
-+ * i40evf_validate_num_queues
-+ * @adapter: adapter structure
-+ *
-+ * Validate that the number of queues the PF has sent in
-+ * VIRTCHNL_OP_GET_VF_RESOURCES is not larger than the VF can handle.
-+ **/
-+static void i40evf_validate_num_queues(struct i40evf_adapter *adapter)
-+{
-+	if (adapter->vf_res->num_queue_pairs > I40EVF_MAX_REQ_QUEUES) {
-+		struct virtchnl_vsi_resource *vsi_res;
-+		int i;
++ * enum iwl_completion_desc_transfer_status -  transfer status (bits 1-3)
++ * @IWL_CD_STTS_UNUSED: unused
++ * @IWL_CD_STTS_UNUSED_2: unused
++ * @IWL_CD_STTS_END_TRANSFER: successful transfer complete.
++ *	In sniffer mode, when split is used, set in last CD completion. (RX)
++ * @IWL_CD_STTS_OVERFLOW: In sniffer mode, when using split - used for
++ *	all CD completion. (RX)
++ * @IWL_CD_STTS_ABORTED: CR abort / close flow. (RX)
++ * @IWL_CD_STTS_ERROR: general error (RX)
++ */
++enum iwl_completion_desc_transfer_status {
++	IWL_CD_STTS_UNUSED,
++	IWL_CD_STTS_UNUSED_2,
++	IWL_CD_STTS_END_TRANSFER,
++	IWL_CD_STTS_OVERFLOW,
++	IWL_CD_STTS_ABORTED,
++	IWL_CD_STTS_ERROR,
++};
 +
-+		dev_info(&adapter->pdev->dev, "Received %d queues, but can only have a max of %d\n",
-+			 adapter->vf_res->num_queue_pairs,
-+			 I40EVF_MAX_REQ_QUEUES);
-+		dev_info(&adapter->pdev->dev, "Fixing by reducing queues to %d\n",
-+			 I40EVF_MAX_REQ_QUEUES);
-+		adapter->vf_res->num_queue_pairs = I40EVF_MAX_REQ_QUEUES;
-+		for (i = 0; i < adapter->vf_res->num_vsis; i++) {
-+			vsi_res = &adapter->vf_res->vsi_res[i];
-+			vsi_res->num_queue_pairs = I40EVF_MAX_REQ_QUEUES;
-+		}
-+	}
-+}
++/**
++ * enum iwl_completion_desc_wifi_status - wifi status (bits 4-7)
++ * @IWL_CD_STTS_VALID: the packet is valid (RX)
++ * @IWL_CD_STTS_FCS_ERR: frame check sequence error (RX)
++ * @IWL_CD_STTS_SEC_KEY_ERR: error handling the security key of rx (RX)
++ * @IWL_CD_STTS_DECRYPTION_ERR: error decrypting the frame (RX)
++ * @IWL_CD_STTS_DUP: duplicate packet (RX)
++ * @IWL_CD_STTS_ICV_MIC_ERR: MIC error (RX)
++ * @IWL_CD_STTS_INTERNAL_SNAP_ERR: problems removing the snap (RX)
++ * @IWL_CD_STTS_SEC_PORT_FAIL: security port fail (RX)
++ * @IWL_CD_STTS_BA_OLD_SN: block ack received old SN (RX)
++ * @IWL_CD_STTS_QOS_NULL: QoS null packet (RX)
++ * @IWL_CD_STTS_MAC_HDR_ERR: MAC header conversion error (RX)
++ * @IWL_CD_STTS_MAX_RETRANS: reached max number of retransmissions (TX)
++ * @IWL_CD_STTS_EX_LIFETIME: exceeded lifetime (TX)
++ * @IWL_CD_STTS_NOT_USED: completed but not used (RX)
++ * @IWL_CD_STTS_REPLAY_ERR: pn check failed, replay error (RX)
++ */
++enum iwl_completion_desc_wifi_status {
++	IWL_CD_STTS_VALID,
++	IWL_CD_STTS_FCS_ERR,
++	IWL_CD_STTS_SEC_KEY_ERR,
++	IWL_CD_STTS_DECRYPTION_ERR,
++	IWL_CD_STTS_DUP,
++	IWL_CD_STTS_ICV_MIC_ERR,
++	IWL_CD_STTS_INTERNAL_SNAP_ERR,
++	IWL_CD_STTS_SEC_PORT_FAIL,
++	IWL_CD_STTS_BA_OLD_SN,
++	IWL_CD_STTS_QOS_NULL,
++	IWL_CD_STTS_MAC_HDR_ERR,
++	IWL_CD_STTS_MAX_RETRANS,
++	IWL_CD_STTS_EX_LIFETIME,
++	IWL_CD_STTS_NOT_USED,
++	IWL_CD_STTS_REPLAY_ERR,
++};
 +
- /**
-  * i40evf_get_vf_config
-  * @adapter: private adapter structure
-@@ -195,6 +221,11 @@ int i40evf_get_vf_config(struct i40evf_adapter *adapter)
- 	err = (i40e_status)le32_to_cpu(event.desc.cookie_low);
- 	memcpy(adapter->vf_res, event.msg_buf, min(event.msg_len, len));
+ struct iwl_frame_release {
+ 	u8 baid;
+ 	u8 reserved;
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+index 279dd7b7a3fb9..0b8cf7f3af933 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+@@ -269,6 +269,7 @@ struct iwl_rx_cmd_buffer {
+ 	bool _page_stolen;
+ 	u32 _rx_page_order;
+ 	unsigned int truesize;
++	u8 status;
+ };
  
-+	/* some PFs send more queues than we should have so validate that
-+	 * we aren't getting too many queues
-+	 */
-+	if (!err)
-+		i40evf_validate_num_queues(adapter);
- 	i40e_vf_parse_hw_config(hw, adapter->vf_res);
- out_alloc:
- 	kfree(event.msg_buf);
-@@ -1329,6 +1360,7 @@ void i40evf_virtchnl_completion(struct i40evf_adapter *adapter,
- 			  I40E_MAX_VF_VSI *
- 			  sizeof(struct virtchnl_vsi_resource);
- 		memcpy(adapter->vf_res, msg, min(msglen, len));
-+		i40evf_validate_num_queues(adapter);
- 		i40e_vf_parse_hw_config(&adapter->hw, adapter->vf_res);
- 		/* restore current mac address */
- 		ether_addr_copy(adapter->hw.mac.addr, netdev->dev_addr);
+ static inline void *rxb_addr(struct iwl_rx_cmd_buffer *r)
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+index 00f9566bcc213..e9d67ba3e56dd 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+@@ -102,66 +102,6 @@ struct isr_statistics {
+ 	u32 unhandled;
+ };
+ 
+-#define IWL_CD_STTS_OPTIMIZED_POS	0
+-#define IWL_CD_STTS_OPTIMIZED_MSK	0x01
+-#define IWL_CD_STTS_TRANSFER_STATUS_POS	1
+-#define IWL_CD_STTS_TRANSFER_STATUS_MSK	0x0E
+-#define IWL_CD_STTS_WIFI_STATUS_POS	4
+-#define IWL_CD_STTS_WIFI_STATUS_MSK	0xF0
+-
+-/**
+- * enum iwl_completion_desc_transfer_status -  transfer status (bits 1-3)
+- * @IWL_CD_STTS_END_TRANSFER: successful transfer complete.
+- *	In sniffer mode, when split is used, set in last CD completion. (RX)
+- * @IWL_CD_STTS_OVERFLOW: In sniffer mode, when using split - used for
+- *	all CD completion. (RX)
+- * @IWL_CD_STTS_ABORTED: CR abort / close flow. (RX)
+- */
+-enum iwl_completion_desc_transfer_status {
+-	IWL_CD_STTS_UNUSED,
+-	IWL_CD_STTS_UNUSED_2,
+-	IWL_CD_STTS_END_TRANSFER,
+-	IWL_CD_STTS_OVERFLOW,
+-	IWL_CD_STTS_ABORTED,
+-	IWL_CD_STTS_ERROR,
+-};
+-
+-/**
+- * enum iwl_completion_desc_wifi_status - wifi status (bits 4-7)
+- * @IWL_CD_STTS_VALID: the packet is valid (RX)
+- * @IWL_CD_STTS_FCS_ERR: frame check sequence error (RX)
+- * @IWL_CD_STTS_SEC_KEY_ERR: error handling the security key of rx (RX)
+- * @IWL_CD_STTS_DECRYPTION_ERR: error decrypting the frame (RX)
+- * @IWL_CD_STTS_DUP: duplicate packet (RX)
+- * @IWL_CD_STTS_ICV_MIC_ERR: MIC error (RX)
+- * @IWL_CD_STTS_INTERNAL_SNAP_ERR: problems removing the snap (RX)
+- * @IWL_CD_STTS_SEC_PORT_FAIL: security port fail (RX)
+- * @IWL_CD_STTS_BA_OLD_SN: block ack received old SN (RX)
+- * @IWL_CD_STTS_QOS_NULL: QoS null packet (RX)
+- * @IWL_CD_STTS_MAC_HDR_ERR: MAC header conversion error (RX)
+- * @IWL_CD_STTS_MAX_RETRANS: reached max number of retransmissions (TX)
+- * @IWL_CD_STTS_EX_LIFETIME: exceeded lifetime (TX)
+- * @IWL_CD_STTS_NOT_USED: completed but not used (RX)
+- * @IWL_CD_STTS_REPLAY_ERR: pn check failed, replay error (RX)
+- */
+-enum iwl_completion_desc_wifi_status {
+-	IWL_CD_STTS_VALID,
+-	IWL_CD_STTS_FCS_ERR,
+-	IWL_CD_STTS_SEC_KEY_ERR,
+-	IWL_CD_STTS_DECRYPTION_ERR,
+-	IWL_CD_STTS_DUP,
+-	IWL_CD_STTS_ICV_MIC_ERR,
+-	IWL_CD_STTS_INTERNAL_SNAP_ERR,
+-	IWL_CD_STTS_SEC_PORT_FAIL,
+-	IWL_CD_STTS_BA_OLD_SN,
+-	IWL_CD_STTS_QOS_NULL,
+-	IWL_CD_STTS_MAC_HDR_ERR,
+-	IWL_CD_STTS_MAX_RETRANS,
+-	IWL_CD_STTS_EX_LIFETIME,
+-	IWL_CD_STTS_NOT_USED,
+-	IWL_CD_STTS_REPLAY_ERR,
+-};
+-
+ #define IWL_RX_TD_TYPE_MSK	0xff000000
+ #define IWL_RX_TD_SIZE_MSK	0x00ffffff
+ #define IWL_RX_TD_SIZE_2K	BIT(11)
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index 1d144985ea589..80a1a50f5da51 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1198,7 +1198,8 @@ static void iwl_pcie_rx_reuse_rbd(struct iwl_trans *trans,
+ static void iwl_pcie_rx_handle_rb(struct iwl_trans *trans,
+ 				struct iwl_rxq *rxq,
+ 				struct iwl_rx_mem_buffer *rxb,
+-				bool emergency)
++				bool emergency,
++				int i)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct iwl_txq *txq = trans_pcie->txq[trans_pcie->cmd_queue];
+@@ -1224,6 +1225,9 @@ static void iwl_pcie_rx_handle_rb(struct iwl_trans *trans,
+ 			.truesize = max_len,
+ 		};
+ 
++		if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_22560)
++			rxcb.status = rxq->cd[i].status;
++
+ 		pkt = rxb_addr(&rxcb);
+ 
+ 		if (pkt->len_n_flags == cpu_to_le32(FH_RSCSR_FRAME_INVALID)) {
+@@ -1430,7 +1434,7 @@ restart:
+ 			goto out;
+ 
+ 		IWL_DEBUG_RX(trans, "Q %d: HW = %d, SW = %d\n", rxq->id, r, i);
+-		iwl_pcie_rx_handle_rb(trans, rxq, rxb, emergency);
++		iwl_pcie_rx_handle_rb(trans, rxq, rxb, emergency, i);
+ 
+ 		i = (i + 1) & (rxq->queue_size - 1);
+ 
 -- 
 2.20.1
 
