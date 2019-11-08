@@ -2,129 +2,301 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB06C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850C3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BD42084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478332084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TVt3qbZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfKHBkJ (ORCPT
+        id S1728530AbfKHBkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 20:40:09 -0500
-Received: from mail5.windriver.com ([192.103.53.11]:50782 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfKHBkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 20:40:09 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id xA81dlFu025977
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 7 Nov 2019 17:39:47 -0800
-Received: from [128.224.155.112] (128.224.155.112) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 7 Nov
- 2019 17:39:46 -0800
-Subject: Re: [PATCH v5] perf record: Add support for limit perf output file
- size
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>
-References: <20191022080901.3841-1-jiwei.sun@windriver.com>
- <20191101081300.GA2172@krava> <20191107111356.GA23651@kernel.org>
-CC:     <acme@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <mpetlan@redhat.com>,
-        <namhyung@kernel.org>, <a.p.zijlstra@chello.nl>,
-        <adrian.hunter@intel.com>, <Richard.Danter@windriver.com>,
-        <jiwei.sun.bj@qq.com>
-From:   Jiwei Sun <Jiwei.Sun@windriver.com>
-Message-ID: <3f4e70fd-d58c-3b43-3443-e37305dbc85d@windriver.com>
-Date:   Fri, 8 Nov 2019 09:39:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Thu, 7 Nov 2019 20:40:55 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43141 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfKHBky (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 20:40:54 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 3so3609742pfb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 17:40:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=omgkosYhpSIUhGpgr0G9r775xrjXzdbgkWmbfALZqCs=;
+        b=TVt3qbZC+XpXTbvOnxgCdM3ViXxajuGgVp8xhwjyqQhEpKwNpOMn5ffo5IkEwnKg89
+         lZD4e2x0LiBOkjHP9XrKw+gEm2heySILnXJVvxxXEchs/vnpugsWvFIXEfzp50qlx0/e
+         1og4xtxP/vwguP3TpT3FO0Fys5FhIUOCDhBtlz6M4ptwXqNvUrl1PujidH82xRCmCo+B
+         cfD23QlZariy2lUl9+Quymwv/NbOixc9gHKGyU5SnePr24C5TJBG+tDKS37okyydqvWk
+         0rgLHgxDZ8VFf90XdP+CznWH5EwVCQWhhgc6mikOvG45JZsN0ltsnm/ktpJn1EB1Hey9
+         6lEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=omgkosYhpSIUhGpgr0G9r775xrjXzdbgkWmbfALZqCs=;
+        b=HRLTrpQpk+SqTDXS9LNgQ8mEo6hCyfSR9NeXGaJ0pEDvl45qmcwPF4Q7Q2XeFuRoDy
+         9GCmsd8lBZc1O0gULE5cSu8H2p9gV+OD7U7LReECbIo6dXSDDI3e6KrrfR3urbQolPCs
+         FMSh4YjWNxZ2X+di8hOFNXPybNsXmTFNQxcI3CmmT4lgmmIS7592eotkNw5WmfQJnfKp
+         aNE0CL9k9f+A3rSKY9a+j5eW8GlQSThL6ELsN/3Mqs/d0wL2N9EJtnPZyGP+Dp2WcRJF
+         acQdBLhfn2KRWkpgST5Af92nCB5b0cwedqiJ87JddD+9IprtcdRXoWMoqqp5F7zf6HUb
+         V+bw==
+X-Gm-Message-State: APjAAAWJZK50Of/kcVk7l2kOHb8Wrbe3ApILNKCs0uyWGda7Frwy6P13
+        OI5JdEtc/6wFbYdpCWn2OfDpXg==
+X-Google-Smtp-Source: APXvYqzlhYb3nRzqg9PsLj9IoD42cfUInzHIJPEe+c3A8bD6iaesOYDxsQNa0K5hTqY9lUywlCgxxA==
+X-Received: by 2002:a63:f40e:: with SMTP id g14mr8567981pgi.132.1573177252836;
+        Thu, 07 Nov 2019 17:40:52 -0800 (PST)
+Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
+        by smtp.gmail.com with ESMTPSA id hi2sm3246498pjb.22.2019.11.07.17.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 17:40:52 -0800 (PST)
+Date:   Thu, 7 Nov 2019 17:40:47 -0800
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com, keescook@chromium.org,
+        yzaikin@google.com, akpm@linux-foundation.org,
+        yamada.masahiro@socionext.com, catalin.marinas@arm.com,
+        joe.lawrence@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
+        schowdary@nvidia.com, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        linux-doc@vger.kernel.org, Knut Omang <knut.omang@oracle.com>
+Subject: Re: [PATCH v3 linux-kselftest-test 4/6] kunit: allow kunit tests to
+ be loaded as a module
+Message-ID: <20191108014047.GA216971@google.com>
+References: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com>
+ <1571335639-21675-5-git-send-email-alan.maguire@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20191107111356.GA23651@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.112]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571335639-21675-5-git-send-email-alan.maguire@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+On Thu, Oct 17, 2019 at 07:07:17PM +0100, Alan Maguire wrote:
+> as tests are added to kunit, it will become less feasible to execute
+  ^
+nit: please capitalize "as".
 
-On 2019e9411f07f% 19:13, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Nov 01, 2019 at 09:13:00AM +0100, Jiri Olsa escreveu:
->> On Tue, Oct 22, 2019 at 04:09:01PM +0800, jsun4 wrote:
->>> The patch adds a new option to limit the output file size, then based
->>> on it, we can create a wrapper of the perf command that uses the option
->>> to avoid exhausting the disk space by the unconscious user.
->>>
->>> In order to make the perf.data parsable, we just limit the sample data
->>> size, since the perf.data consists of many headers and sample data and
->>> other data, the actual size of the recorded file will bigger than the
->>> setting value.
->>>
->>> Testing it:
->>>
->>>  # ./perf record -a -g --max-size=10M
->>>  Couldn't synthesize bpf events.
->>>  [ perf record: perf size limit reached (10249 KB), stopping session ]
->>>  [ perf record: Woken up 32 times to write data ]
->>>  [ perf record: Captured and wrote 10.133 MB perf.data (71964 samples) ]
->>>
->>>  # ls -lh perf.data
->>>  -rw------- 1 root root 11M Oct 22 14:32 perf.data
->>>
->>>  # ./perf record -a -g --max-size=10K
->>>  [ perf record: perf size limit reached (10 KB), stopping session ]
->>>  Couldn't synthesize bpf events.
->>>  [ perf record: Woken up 0 times to write data ]
->>>  [ perf record: Captured and wrote 1.546 MB perf.data (69 samples) ]
->>>
->>>  # ls -l perf.data
->>>  -rw------- 1 root root 1626952 Oct 22 14:36 perf.data
->>>
->>> Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
->>> ---
->>> v5 changes:
->>>   - Change the output format like [ perf record: perf size limit XX ]
->>>   - change the killing perf way from "raise(SIGTERM)" to set "done == 1"
->>
->> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> all built tests together.  By supporting modular tests we provide
+> a simple way to do selective execution on a running system; specifying
 > 
-> So, had to add this on top to fix the build on multiple building
-> environments, rec->bytes_written is an u64, so we must use PRIu64 or
-> else get errors like:
+> CONFIG_KUNIT=y
+> CONFIG_KUNIT_EXAMPLE_TEST=m
 > 
->   builtin-record.c: In function 'record__write':
->   builtin-record.c:150:5: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'u64' [-Werror=format=]
->        rec->bytes_written >> 10);
->        ^
->     CC       /tmp/build/pe
-
-Sorry for the flaw, and thanks for your suggestion and rectification. 
-And I will pay attention to avoid such mistake next time.
-
-Regards,
-Jiwei
-
+> ...means we can simply "insmod example-test.ko" to run the tests.
 > 
+> To achieve this we need to
 > 
-> - Arnaldo
+> o export the required symbols in kunit
+> o for non-exported symbols, we need to utilize kunit_find_symbol;
+>   the simplest way is for the test suite init to call
+>   KUNIT_INIT_[FN|VAR]_SYMBOL() for each non-exported symbol.
+> o support a new way of declaring test suites.  Because a module cannot
+>   do multiple late_initcall()s, we provide a kunit_test_suites() macro
+>   to declare multiple suites within the same module at once.
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index b9ddfcda9611..b95c000c1ed9 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -145,7 +145,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
->  	rec->bytes_written += size;
+> When compiled as a module, use of KUNIT_INIT_[FN|VAR]_symbol() will
+> retrieve the symbol address via kunit_find_symbol() and assign a local
+> variable with the same symbol name appropriately.  When compiled builtin,
+> these definitions are used to verify that the types we specify match
+> the type of the symbol we are looking for.  Compiler errors will be
+> generated if not.
+> 
+> One wrinkle here is that we cannot use the same names for local function
+> pointer definitions; the reason for this is we have likely #included
+> a definition for the function in question already, so an attempt to
+> redefine it as a function pointer variable fails.  As a result the
+> KUNIT_INIT_FN_SYMBOL() macro requires a name for a local symbol we
+> have defined as a function pointer (with a signature matching the
+> desired function).
+> 
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> ---
+>  include/kunit/test.h           | 115 +++++++++++++++++++++++++++++++++++++----
+>  kernel/sysctl-test.c           |   4 +-
+>  lib/Kconfig.debug              |   2 +-
+>  lib/kunit/Kconfig              |   4 +-
+>  lib/kunit/assert.c             |   8 +++
+>  lib/kunit/example-test.c       |   4 +-
+>  lib/kunit/string-stream-test.c |  44 ++++++++++++----
+>  lib/kunit/test-test.c          |  32 ++++++++----
+>  lib/kunit/test.c               |   9 ++++
+>  lib/kunit/try-catch.c          |   2 +
+>  10 files changed, 187 insertions(+), 37 deletions(-)
+> 
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index c645d18..9a3835a 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -12,6 +12,7 @@
+>  #include <kunit/assert.h>
+>  #include <kunit/try-catch.h>
+>  #include <linux/kernel.h>
+> +#include <linux/module.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
 >  
->  	if (record__output_max_size_exceeded(rec) && !done) {
-> -		fprintf(stderr, "[ perf record: perf size limit reached (%lu KB),"
-> +		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
->  				" stopping session ]\n",
->  				rec->bytes_written >> 10);
->  		done = 1;
-> 
+> @@ -78,6 +79,86 @@ struct kunit_resource {
+>  	struct list_head node;
+>  };
+>  
+> +/**
+> + * KUNIT_VAR_SYMBOL - A helper for defining non-exported variable symbols
+> + *
+> + * @name: name of the symbol.
+> + * @type: type of symbol.
+> + *
+> + * In the module case, we define the pointer to the symbol type where
+> + * we will store the symbol address; KUNIT_INIT_VAR_SYMBOL() will assign
+> + * the symbol name to the dereferenced kunit_<symbol_name>.  Note that
+> + * in the builtin case we still define kunit_<symbol_name>; the reason
+> + * for this is it allows us to verify that the type value is correct
+> + * in the builtin case and has not fallen out-of-sync with its original
+
+Very clever! Can you maybe elaborate on how? I didn't understand until I
+looked at the initialization code. It would probably be sufficient to
+just tell the reader to look at the initialization code.
+
+> + * definition.
+> + */
+> +#ifdef MODULE
+> +#define KUNIT_VAR_SYMBOL(symbol, type)					\
+> +	type * kunit_##symbol;						\
+> +	type symbol
+> +#else
+> +#define KUNIT_VAR_SYMBOL(symbol, type)					\
+> +	type * kunit_##symbol
+> +#endif
+> +
+> +/**
+> + * KUNIT_INIT_VAR_SYMBOL - A helper for initializing non-exported variable
+> + *			   symbols
+> + * @test: optional pointer to test context
+> + * @name: name of symbol
+> + *
+> + * In the module case, initialization consists of using kunit_find_symbol()
+> + * to find the address of the symbol, and if found, we set the variable
+> + * to the dereferenced address value.  As mentioned above, in the builtin
+> + * case we simply assing kunit_<symbol_name> to &<symbol_name> ; this will
+> + * generate a compilation warning if the type we specified in KUNIT_VAR_SYMBOL
+> + * and the type of the symbol itself do not match.
+> + */
+> +#ifdef MODULE
+> +#define KUNIT_INIT_VAR_SYMBOL(test, symbol)				\
+> +	do {								\
+> +		if (!(kunit_##symbol)) {				\
+> +			kunit_##symbol = kunit_find_symbol(#symbol);	\
+> +			if (!IS_ERR((kunit_##symbol)))			\
+> +				symbol = *(kunit_##symbol);		\
+> +		}							\
+> +		if (test)						\
+> +			KUNIT_ASSERT_NOT_ERR_OR_NULL(test,		\
+> +						     kunit_##symbol);	\
+> +	} while (0)
+> +#else
+> +#define KUNIT_INIT_VAR_SYMBOL(test, symbol)				\
+> +	kunit_##symbol = &(symbol)
+> +#endif
+> +
+> +/**
+> + * KUNIT_INIT_FN_SYMBOL - A helper for initializing non-exported function
+> + *			  symbols
+> + * @test: optional pointer to test context
+> + * @symbol: name of symbol
+> + * @name: local name of function used to store function pointer to symbol
+> + *
+> + * In the module case, initialization consists of using kunit_find_symbol()
+> + * to find the address of the symbol, and if found, we set function pointer
+> + * name to the function address value.  In the non-module case, we simply
+> + * assign name to symbol; this will generate a compilation error if the
+> + * type we specified for function pointer @name does not match the symbol
+> + * function type.
+> + */
+> +#ifdef MODULE
+> +#define KUNIT_INIT_FN_SYMBOL(test, symbol, name)			\
+> +	do {								\
+> +		if (!name)						\
+> +			name = kunit_find_symbol(#symbol);		\
+> +		if (test)                                               \
+> +			KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);	\
+> +	} while (0)
+> +#else
+> +#define KUNIT_INIT_FN_SYMBOL(test, symbol, name)			\
+> +	name = symbol
+> +#endif
+> +
+
+Can you put all the KUNIT_*_SYMBOL stuff in another patchset along with
+the kunit_find_symbol?
+
+>  struct kunit;
+>  
+>  /**
+> @@ -197,31 +278,45 @@ struct kunit {
+>  int kunit_run_tests(struct kunit_suite *suite);
+>  
+>  /**
+> - * kunit_test_suite() - used to register a &struct kunit_suite with KUnit.
+> + * kunit_test_suites() - used to register one or more &struct kunit_suite
+> + *			 with KUnit.
+>   *
+> - * @suite: a statically allocated &struct kunit_suite.
+> + * @suites: a statically allocated list of &struct kunit_suite.
+>   *
+> - * Registers @suite with the test framework. See &struct kunit_suite for
+> + * Registers @suites with the test framework. See &struct kunit_suite for
+>   * more information.
+>   *
+> - * NOTE: Currently KUnit tests are all run as late_initcalls; this means
+> + * When builtin,  KUnit tests are all run as late_initcalls; this means
+>   * that they cannot test anything where tests must run at a different init
+>   * phase. One significant restriction resulting from this is that KUnit
+>   * cannot reliably test anything that is initialize in the late_init phase;
+>   * another is that KUnit is useless to test things that need to be run in
+>   * an earlier init phase.
+>   *
+> + * An alternative is to build the tests as a module.  Because modules
+> + * do not support multiple late_initcall()s, we need to initialize an
+> + * array of suites for a module.
+> + *
+>   * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
+>   * late_initcalls.  I have some future work planned to dispatch all KUnit
+>   * tests from the same place, and at the very least to do so after
+>   * everything else is definitely initialized.
+>   */
+> -#define kunit_test_suite(suite)						       \
+> -	static int kunit_suite_init##suite(void)			       \
+> -	{								       \
+> -		return kunit_run_tests(&suite);				       \
+> -	}								       \
+> -	late_initcall(kunit_suite_init##suite)
+> +#define kunit_test_suites(...)						\
+> +	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
+> +	static int kunit_test_suites_init(void)				\
+> +	{								\
+> +		unsigned int i;						\
+> +		for (i = 0; suites[i] != NULL; i++)			\
+> +			kunit_run_tests(suites[i]);			\
+> +		return 0;						\
+> +	}								\
+> +	late_initcall(kunit_test_suites_init);				\
+> +	static void __exit kunit_test_suites_exit(void)			\
+> +	{								\
+> +		return;							\
+> +	}								\
+> +	module_exit(kunit_test_suites_exit)
+>  
+>  /*
+>   * Like kunit_alloc_resource() below, but returns the struct kunit_resource
