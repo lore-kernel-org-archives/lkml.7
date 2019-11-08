@@ -2,119 +2,156 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4F3FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBC3FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D0220674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K5YNkYk1"
+	by mail.kernel.org (Postfix) with ESMTP id 54C8320674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573240726;
+	bh=yCTLQ+ZC2SvobOQCBJNs/UQyWJgi5EYXd6Tcb+AiVy8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AgSMcWI0uGmrvCf5/eOX3LQLsYXNcjUjGw0WV11gyp0hJS89REyAVGmFYWxQYDgJf
+	 B6/V3SMSM97H5ZvnWESSa5thAVRLXGWw/KZG8TROv3bfVLq23fwMqXS4eyu+KrH7X1
+	 bJvwmXltXmHlazs4GEY0izRGTiItnaomnj7UuyMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732462AbfKHTSl (ORCPT
+        id S1732893AbfKHTSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:18:41 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39078 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389565AbfKHTAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:14 -0500
-Received: by mail-wr1-f66.google.com with SMTP id a11so8240967wra.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:00:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q0460TgzgnaZLvm1IV8VLVUyZ7xHs8aC72SXVYWvcVU=;
-        b=K5YNkYk1UQ4vtj9aLjQOleIjNFwGE4P2DPtHyOJKrm0VgEBuu1FvF13NT7V6HiWCsP
-         2u7A8KRacDJqAIeW1V9A/AKGyW3tacYFM4tF+E8y+VrHe1LrIeGifRm2kZvDP9ShD1xk
-         MSn9TeRoGe9QjWqJAovsmJOxKrpscIvIuP7pHGloR+7Ewb9aGj8swRsEYVzKKcV+0Qk7
-         h7QbtOR1ZxrblMnDQ+DR2f8eSTdXOl9q2CoIfpnLlQ4yMKNtrjw4W4+F28N0cwvSfgwf
-         zO/DiJFBfOQjQzmDvNzJq6tnQqw/F5wbcJLgqLPncsZZvPU5Llar08p05tequHk9kSyr
-         Yrrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q0460TgzgnaZLvm1IV8VLVUyZ7xHs8aC72SXVYWvcVU=;
-        b=FJNLaIYmSAi/9xH7CvLLhZevm5mi9MewI+7crxfoq/JEeGpaVC3ZahOmIle/aADHj3
-         9tO6B00l3D3YIXfV+J21GQMmRJgpSSglaLvyYw9xRK3SEmEG0B9qrrhJp3fONBDgfI7/
-         rJ3GIUZ4ywsk7jNevHdwaUik1tBlI1Vo5f5nmSFA6gZ0oAB2/lmcApj35bg9SkkNcR1S
-         knv/CyFKxiYFD/dmrrY24SawDhchloieVmFGsKyGZ9kF92uT3yDw5NfI6TJY5gribOq7
-         oxBf84MKOjHykqOe/cCgC9ia6eUTfoGVniJqw6xyuah/O+yf7eSXtwrUkQ7srNoONG3b
-         TPdQ==
-X-Gm-Message-State: APjAAAWwZYL8oq+Kx6tG8Y4G3RnSyVfTGCYv/wOcz74FUvCx7a3szjGc
-        m4dXcJ9qRw3nHy5fqYfrvApYMgsGgcBjvlFulCecNg==
-X-Google-Smtp-Source: APXvYqxjvSn3tePuyqDvQ6GTaS29yRgNed6/yx0spNQiJlJgU2nkcHKd2TvCuJggSLkyrxxhA+C8KKXP8Qjt6n+6A/g=
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr2543917wra.246.1573239611844;
- Fri, 08 Nov 2019 11:00:11 -0800 (PST)
+        Fri, 8 Nov 2019 14:18:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389552AbfKHTAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:13 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9E08224F1;
+        Fri,  8 Nov 2019 18:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573239554;
+        bh=yCTLQ+ZC2SvobOQCBJNs/UQyWJgi5EYXd6Tcb+AiVy8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IP5sVWUpAdiKj3eQAj2UxlamhPCauhzYfPeoDnruSYshBvTu3azCNUoiea2+vERhz
+         bCuZwvAcIZfjR0uvYMLfmPHWAx3Eh9ixverJhcwTVw7UCZFLcVvNmqyYHgDy54CPzz
+         xK5QladzuhK7JtP0JcQIHamfFxGghn+xBGsHgFcY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 43/62] udp: use skb_queue_empty_lockless()
+Date:   Fri,  8 Nov 2019 19:50:31 +0100
+Message-Id: <20191108174749.702632688@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
+References: <20191108174719.228826381@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191107132755.8517-1-jonas@norrbonn.se> <CAF2d9jjteagJGmt64mNFH-pFmGg_eM8_NNBrDtROcaVKhcNkRQ@mail.gmail.com>
- <d34174c2-a4d4-b3da-ded5-dcb97a89c80c@gmail.com> <229cdce6-f510-5d9f-401b-69bad4af0722@norrbonn.se>
-In-Reply-To: <229cdce6-f510-5d9f-401b-69bad4af0722@norrbonn.se>
-From:   =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS14KS+4KSwKQ==?= 
-        <maheshb@google.com>
-Date:   Fri, 8 Nov 2019 10:59:55 -0800
-Message-ID: <CAF2d9jg01+AjBHJtMMpzdqV1iyGd-vZzVS96nmGmcVJLK82D3A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Add namespace awareness to Netlink methods
-To:     Jonas Bonn <jonas@norrbonn.se>
-Cc:     David Ahern <dsahern@gmail.com>, nicolas.dichtel@6wind.com,
-        linux-netdev <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 7:36 AM Jonas Bonn <jonas@norrbonn.se> wrote:
->
->
->
-> On 07/11/2019 22:11, David Ahern wrote:
-> > On 11/7/19 1:40 PM, Mahesh Bandewar (=E0=A4=AE=E0=A4=B9=E0=A5=87=E0=A4=
-=B6 =E0=A4=AC=E0=A4=82=E0=A4=A1=E0=A5=87=E0=A4=B5=E0=A4=BE=E0=A4=B0) wrote:
-> >> On Thu, Nov 7, 2019 at 5:30 AM Jonas Bonn <jonas@norrbonn.se> wrote:
-> >>>
-> >>> Changed in v3:
-> >>> - added patch 6 for setting IPv6 address outside current namespace
-> >>> - address checkpatch warnings
-> >>> - address comment from Nicolas
-> >>>
-> >>> Changed in v2:
-> >>> - address comment from Nicolas
-> >>> - add accumulated ACK's
-> >>>
-> >>> Currently, Netlink has partial support for acting outside of the curr=
-ent
-> >>> namespace.  It appears that the intention was to extend this to all t=
-he
-> >>> methods eventually, but it hasn't been done to date.
-> >>>
-> >>> With this series RTM_SETLINK, RTM_NEWLINK, RTM_NEWADDR, and RTM_NEWNS=
-ID
-> >>> are extended to respect the selection of the namespace to work in.
-> >>>
-> >> This is nice, is there a plan to update userspace commands using this?
-> >
-> > I'm hoping for an iproute2 update and test cases to validate the change=
-s.
-> >
->
-> I'm looking into it.  The change to iproute2 to support
-> (namespace,index) pairs instead of just (index) to identify interfaces
-> looks to be invasive.  The rest of it looks like trivial changes.
->
-> I've got all these kernel patches tested against my own "namespace aware
-> network manager" that I'm writing for a customer with a particular use
-> case.  iproute2 wasn't actually in play here.
->
-I'll echo David's comment for iproute2 as well as tests to ensure this
-new behavior is usable and healthy.
+From: Eric Dumazet <edumazet@google.com>
 
-> /Jonas
+[ Upstream commit 137a0dbe3426fd7bcfe3f8117b36a87b3590e4eb ]
+
+syzbot reported a data-race [1].
+
+We should use skb_queue_empty_lockless() to document that we are
+not ensuring a mutual exclusion and silence KCSAN.
+
+[1]
+BUG: KCSAN: data-race in __skb_recv_udp / __udp_enqueue_schedule_skb
+
+write to 0xffff888122474b50 of 8 bytes by interrupt on cpu 0:
+ __skb_insert include/linux/skbuff.h:1852 [inline]
+ __skb_queue_before include/linux/skbuff.h:1958 [inline]
+ __skb_queue_tail include/linux/skbuff.h:1991 [inline]
+ __udp_enqueue_schedule_skb+0x2c1/0x410 net/ipv4/udp.c:1470
+ __udp_queue_rcv_skb net/ipv4/udp.c:1940 [inline]
+ udp_queue_rcv_one_skb+0x7bd/0xc70 net/ipv4/udp.c:2057
+ udp_queue_rcv_skb+0xb5/0x400 net/ipv4/udp.c:2074
+ udp_unicast_rcv_skb.isra.0+0x7e/0x1c0 net/ipv4/udp.c:2233
+ __udp4_lib_rcv+0xa44/0x17c0 net/ipv4/udp.c:2300
+ udp_rcv+0x2b/0x40 net/ipv4/udp.c:2470
+ ip_protocol_deliver_rcu+0x4d/0x420 net/ipv4/ip_input.c:204
+ ip_local_deliver_finish+0x110/0x140 net/ipv4/ip_input.c:231
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ip_local_deliver+0x133/0x210 net/ipv4/ip_input.c:252
+ dst_input include/net/dst.h:442 [inline]
+ ip_rcv_finish+0x121/0x160 net/ipv4/ip_input.c:413
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ip_rcv+0x18f/0x1a0 net/ipv4/ip_input.c:523
+ __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
+ __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
+ process_backlog+0x1d3/0x420 net/core/dev.c:5955
+
+read to 0xffff888122474b50 of 8 bytes by task 8921 on cpu 1:
+ skb_queue_empty include/linux/skbuff.h:1494 [inline]
+ __skb_recv_udp+0x18d/0x500 net/ipv4/udp.c:1653
+ udp_recvmsg+0xe1/0xb10 net/ipv4/udp.c:1712
+ inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
+ sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
+ ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
+ do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
+ __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
+ __do_sys_recvmmsg net/socket.c:2703 [inline]
+ __se_sys_recvmmsg net/socket.c:2696 [inline]
+ __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 8921 Comm: syz-executor.4 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/udp.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1468,7 +1468,7 @@ static int first_packet_length(struct so
+ 
+ 	spin_lock_bh(&rcvq->lock);
+ 	skb = __first_packet_length(sk, rcvq, &total);
+-	if (!skb && !skb_queue_empty(sk_queue)) {
++	if (!skb && !skb_queue_empty_lockless(sk_queue)) {
+ 		spin_lock(&sk_queue->lock);
+ 		skb_queue_splice_tail_init(sk_queue, rcvq);
+ 		spin_unlock(&sk_queue->lock);
+@@ -1543,7 +1543,7 @@ struct sk_buff *__skb_recv_udp(struct so
+ 				return skb;
+ 			}
+ 
+-			if (skb_queue_empty(sk_queue)) {
++			if (skb_queue_empty_lockless(sk_queue)) {
+ 				spin_unlock_bh(&queue->lock);
+ 				goto busy_check;
+ 			}
+@@ -1570,7 +1570,7 @@ busy_check:
+ 				break;
+ 
+ 			sk_busy_loop(sk, flags & MSG_DONTWAIT);
+-		} while (!skb_queue_empty(sk_queue));
++		} while (!skb_queue_empty_lockless(sk_queue));
+ 
+ 		/* sk_queue is empty, reader_queue may contain peeked packets */
+ 	} while (timeo &&
+
+
