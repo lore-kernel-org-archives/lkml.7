@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA9FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7CFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C44206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58522085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215284;
-	bh=c/ibTNbMklbkWTbukVx7j2j/iB5SSjr6ytTVhUTXei8=;
+	s=default; t=1573215290;
+	bh=MeTFZGRJid8ZbNeiR81q23RkFona0u2IvdbdJMDE4Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qxMDO48OvRKOoJbAu6wbz+JcQ4G0INU26S/h6WIFhj+LYed3kCR+SfLbaBGf7ZZFx
-	 UszLkWSJXLWt5fB6Kc4dWbiBif7HPfQlKYhwv7pLxFeWrKCUW9gtR5TjuRXo5r92BH
-	 e04sEqGNbm6Ae3jODt1H9w9EnMmGIKBjm5hudo/g=
+	b=vmx0zk2wFCGsrqKrm0gE5VIbzCP4K8NxPecssA7BT1Y+hogWyRYrwhLCHhiYuhq3y
+	 mtelj4kt8OUHgKCud6KdnaPbvxar2SIBsN2kfFysoWf3UtpmFRFpcJmyeTqIEonJ66
+	 WA6Ln5wN6bWM81MTqbrEAiR5jCzOBWlEL1ZT+Dig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392053AbfKHMOn (ORCPT
+        id S1732081AbfKHLh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:14:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:37:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732145AbfKHLiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:04 -0500
+        id S1731463AbfKHLh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:37:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C7622466;
-        Fri,  8 Nov 2019 11:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77B321D6C;
+        Fri,  8 Nov 2019 11:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213083;
-        bh=c/ibTNbMklbkWTbukVx7j2j/iB5SSjr6ytTVhUTXei8=;
+        s=default; t=1573213077;
+        bh=MeTFZGRJid8ZbNeiR81q23RkFona0u2IvdbdJMDE4Yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BybzZFFxFZ/+W2qexF4BIxROzDqXLndHiVJxbSeLxjcqGNBfMq0oFJAn+jHS6731E
-         KoBbyS1Z3vDCudKLYFo7Lslm0JlkMQKBXsCU+wmsC8aXiKjn8Akoofus4obIwUF1KL
-         DKZbIVffVbtlEtszO/nyfP8SHes9zPNhmtvo7SgQ=
+        b=Jbh0crwp9EvwXkrPSS9YSSH4+yq3poZrF9rRoSOc0krts9Olljvstcjrj5k/atK4M
+         IPDPXDMwxFXnpmJhM4iWYdayUmSYKkIkN2GgXus3qKXQf4e+9GqyebB4gRdaKOQGoN
+         8fHxcVJrLdIu/ABXzM11oX295UvXjprKy8+KnaeU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Martin Lucina <martin@lucina.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 009/205] arm64: dts: allwinner: a64: Olinuxino: fix DRAM voltage
-Date:   Fri,  8 Nov 2019 06:34:36 -0500
-Message-Id: <20191108113752.12502-9-sashal@kernel.org>
+Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 004/205] iio: dac: mcp4922: fix error handling in mcp4922_write_raw
+Date:   Fri,  8 Nov 2019 06:34:31 -0500
+Message-Id: <20191108113752.12502-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,49 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
 
-[ Upstream commit 93366b49a35f3a190052734b3f32c8fe2535b53f ]
+[ Upstream commit 0833627fc3f757a0dca11e2a9c46c96335a900ee ]
 
-The Olinuxino board uses DDR3L chips which are supposed to be driven
-with 1.35V. The reset default of the AXP is properly set to 1.36V.
+Do not try to write negative values and make sure that the write goes well.
 
-While technically the chips can also run at 1.5 volts, changing the
-voltage on the fly while booting Linux is asking for trouble. Also
-running at a lower voltage saves power.
-
-So fix the DCDC5 value to match the actual board design.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Tested-by: Martin Lucina <martin@lucina.net>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/iio/dac/mcp4922.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 3f531393eaee9..b3f186434f363 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -142,10 +142,14 @@
+diff --git a/drivers/iio/dac/mcp4922.c b/drivers/iio/dac/mcp4922.c
+index bf9aa3fc0534e..b5190d1dae8e3 100644
+--- a/drivers/iio/dac/mcp4922.c
++++ b/drivers/iio/dac/mcp4922.c
+@@ -94,17 +94,22 @@ static int mcp4922_write_raw(struct iio_dev *indio_dev,
+ 		long mask)
+ {
+ 	struct mcp4922_state *state = iio_priv(indio_dev);
++	int ret;
  
- /* DCDC3 is polyphased with DCDC2 */
+ 	if (val2 != 0)
+ 		return -EINVAL;
  
-+/*
-+ * The board uses DDR3L DRAM chips. 1.36V is the closest to the nominal
-+ * 1.35V that the PMIC can drive.
-+ */
- &reg_dcdc5 {
- 	regulator-always-on;
--	regulator-min-microvolt = <1500000>;
--	regulator-max-microvolt = <1500000>;
-+	regulator-min-microvolt = <1360000>;
-+	regulator-max-microvolt = <1360000>;
- 	regulator-name = "vcc-ddr3";
- };
- 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+-		if (val > GENMASK(chan->scan_type.realbits-1, 0))
++		if (val < 0 || val > GENMASK(chan->scan_type.realbits - 1, 0))
+ 			return -EINVAL;
+ 		val <<= chan->scan_type.shift;
+-		state->value[chan->channel] = val;
+-		return mcp4922_spi_write(state, chan->channel, val);
++
++		ret = mcp4922_spi_write(state, chan->channel, val);
++		if (!ret)
++			state->value[chan->channel] = val;
++		return ret;
++
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
