@@ -4,170 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BA3FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4894FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05FE20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974D220674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732329AbfKHUga (ORCPT
+        id S2387478AbfKHUg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:36:30 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:36201 "EHLO
+        Fri, 8 Nov 2019 15:36:56 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:50269 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732171AbfKHUg3 (ORCPT
+        with ESMTP id S1729683AbfKHUg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:36:29 -0500
+        Fri, 8 Nov 2019 15:36:56 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MEF87-1iadeR36H7-00AGgW; Fri, 08 Nov 2019 21:36:18 +0100
+ 1Mi23L-1hxwm536Mz-00e7qK; Fri, 08 Nov 2019 21:36:36 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
+To:     y2038@lists.linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Eric Dumazet <edumazet@google.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 5/8] netfilter: xt_time: use time64_t
-Date:   Fri,  8 Nov 2019 21:34:28 +0100
-Message-Id: <20191108203435.112759-6-arnd@arndb.de>
+        stable@vger.kernel.org, Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 6/8] lp: fix sparc64 LPSETTIMEOUT ioctl
+Date:   Fri,  8 Nov 2019 21:34:29 +0100
+Message-Id: <20191108203435.112759-7-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108203435.112759-1-arnd@arndb.de>
 References: <20191108203435.112759-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LAqgtMHpuHsHVqesPbRDDOnPbG3k3aIkl2ycNWLlt4hNWDe/h94
- GNpZ9xbyyD7LXXBKIdA2s2/AdUHfbg0DIx01Kj4OMx3p5kvSqUbOebvbj/QnE7eakpz0lHv
- uN5N4Lbi3Ve2HiOXFaAex9XSmQCyebw9uVyDgEMXqAnhjjgfzDAXhsrlExb0jFUFKUWnK+D
- 4XcdXehRUk7EHSe1W5zeA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uTLnXhQlaoA=:6gkTKIzGkH8u4p9n9EzB5+
- lrHh5mqs0gNbpufpMED1aZFRj6EM8Vdvk21VmgHmavXEMmYc2wxSYeavDcGdpdZ7CadtsRnAO
- qsbfYORBBYZdz02Y0pFnzClpTjdJxDYOiPorKaYrirT28tLfMyelNHuTue4mitFpPQkwUJ2vp
- 1FdPn/cyPCua8wGrtCyi9289PPkzr214fg0Fv+WOBBWFYibuPoFVWzXyI83DcKdtvvPnvqIDz
- wdprTdsC/ZkfYx1s1jMPDmmohjYlPkV8FnO3K6nxce9wT/3gnfnxHFHUeiCMMJA22LZs2nOvn
- OLypew6aJxfs20P57HiMNl93gEsT/ycbJ4slABRZ7SD+vI3RGS4lWKiSvlZ4ZZmiwnhqiqFF6
- Fi/2Y9koVFyxao8U3z3LmwEw2d4k9EduaQb3mljAM4tskCgWqBzRabEsK+FQfK0VwMISD3IIW
- eKKPfoaXuB3AV6ejoIfIyfJQvB+avcI6HFn8HPjfm6LOHo9GWEk0eoUOa9jTziwzOGTcl+cD8
- gcHV80qweuOKUQszTaHIGeyW8GHBB0VgQf7EVzpkJjjJF7Cxl4bJVh8XV/7vXbWIf9M7eiW7O
- mucjrJW1Dqc/K1zHhLFKmZyuNrarpADVQ5zsZZu9VmgOrOVksy4eAIJbaKozfWtrjPhTIEmlZ
- D0+GgCVexquumqnxI1GUzSo2LH4sTJm7GUM6VZ190VgN9woJKTRGsN+7Vw1Az+NSbFtjEehCe
- ApXUQOzEXIOlfr98kuJiFJt4keBc1XueRtApEJZ9SKiLF9K6Hg4vDTcxSG9OWPjl48mdsLGTh
- jn56Ebw8x8hxA5jYZEZPKd2MMV86gz8op0dpLqRShX5Ujbjw2cpu0anrthVv58jvg5/ELj2ro
- rymaqfVxE+cCH9UVrcxg==
+X-Provags-ID: V03:K1:AdGIzk8C/keCLr5gehPESKcLmoKBfAibkexFmJLNk/J2fjrWvfQ
+ 8MAcq+hyhFCKe2NGkMCKC8E6hOh4EiIOzxoFMQpf3a/A02gkKmMm67Uoa2gD8xG2+2utJwY
+ cYeiQr+CRTPH4nv3P5X2WlQL+CA52ot2f9Dezuje1gFc+nbrE7YWv6SVCXd9j58mgdTJ/N8
+ lsNRivF1GfWhv/gGAwK9w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mRuBUasDfOU=:flVrvYp7E8yox4TyMBaI4z
+ UYkgcoF1o+2SBVnju+MHHn+yfHpZAqQtuXlQTecwl9wHeKYJ5TKKRtsJp+MjU/UBX2Flde831
+ vQ2JCT18G9LprQqZvqVuf4UDC1voQ0EBV3a9CMXWylrhmSp9RSs22NgQ81ZP3En5UQHevX3mk
+ LmMHcii40IfdAJYmPPAazrcqMu+GOhqXbxRvAYh0UHNbOnRr/zEoYrS0GICHJyCQY0ZpHYC50
+ rm3Uh1TN7AMYsv25mgUOHlLrPKvHTMb8TSbGpEUmp0Uz9loju/Brl6fG8quDJdD1XkmjrnC5X
+ AZjfBYqEYRsezTHUDuV/xGgkauUXMNS2dh/lgVOnOeWi2A6BPFhKhZnIvbFIlP4rFkEN2MuCM
+ sZINyLUT0UxJxOm4t+9chCQOxmB9bMYXbQNdzGSUQ5EVgxrX/dNuZpw7+OACH3P6K1VZNjMIM
+ HA4Amu8XFQR/oU90pQiRRVgXIGt5tqM4AFVweZxqfIeRkHDXdyK3QiayQWG/sI/sfKTB12JuY
+ LKVpokywzACi1TaoB//PcySul25uWn2O8/yv37Xm5tLRfiEU3xu8jUWNWW5MeFPrwdT/rDVsT
+ e3BdROHlQi0tIIxlCkCRArDCICN+wi3VseR+UOMgHdhHilaRIzzHsJYju2NcpnYBkOyyya92t
+ wgt9ECTg4ig1UujjAKyOIHbwkWtrk6/mLA+UqilOT6OIQYbiw5CF+VZdRBUth6InGsEZPEqtp
+ jrbEV7NDpXtGm/2uEgZ3AmDrcNhNFCDb0ZGuoldCn9CkMD7AFX2HLt1ZCHDsq0mE0t41Yvkfr
+ XbC093GVzuzGlrvVN1hd96kwe2m/Yu6WzqFkb7QBzmbK/8bDu4Ct3AJ3cwGn+Ye31SkWwYQte
+ 0v+0lW0dTx0/GuOAc8Ow==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current xt_time driver suffers from the y2038 overflow on 32-bit
-architectures, when the time of day calculations break.
+The layout of struct timeval is different on sparc64 from
+anything else, and the patch I did long ago failed to take
+this into account.
 
-Also, on both 32-bit and 64-bit architectures, there is a problem with
-info->date_start/stop, which is part of the user ABI and overflows in
-in 2106.
+Change it now to handle sparc64 user space correctly again.
 
-Fix the first issue by using time64_t and explicit calls to div_u64()
-and div_u64_rem(), and document the seconds issue.
+Quite likely nobody cares about parallel ports on sparc64,
+but there is no reason not to fix it.
 
-The explicit 64-bit division is unfortunately slower on 32-bit
-architectures, but doing it as unsigned lets us use the optimized
-division-through-multiplication path in most configurations.  This should
-be fine, as the code already does not allow any negative time of day
-values.
-
-Using u32 seconds values consistently would probably also work and
-be a little more efficient, but that doesn't feel right as it would
-propagate the y2106 overflow to more place rather than fewer.
-
+Cc: stable@vger.kernel.org
+Fixes: 9a450484089d ("lp: support 64-bit time_t user space")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- net/netfilter/xt_time.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/char/lp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/netfilter/xt_time.c b/net/netfilter/xt_time.c
-index 8dbb4d48f2ed..67cb98489415 100644
---- a/net/netfilter/xt_time.c
-+++ b/net/netfilter/xt_time.c
-@@ -77,12 +77,12 @@ static inline bool is_leap(unsigned int y)
-  * This is done in three separate functions so that the most expensive
-  * calculations are done last, in case a "simple match" can be found earlier.
-  */
--static inline unsigned int localtime_1(struct xtm *r, time_t time)
-+static inline unsigned int localtime_1(struct xtm *r, time64_t time)
- {
- 	unsigned int v, w;
+diff --git a/drivers/char/lp.c b/drivers/char/lp.c
+index 7c9269e3477a..bd95aba1f9fe 100644
+--- a/drivers/char/lp.c
++++ b/drivers/char/lp.c
+@@ -713,6 +713,10 @@ static int lp_set_timeout64(unsigned int minor, void __user *arg)
+ 	if (copy_from_user(karg, arg, sizeof(karg)))
+ 		return -EFAULT;
  
- 	/* Each day has 86400s, so finding the hour/minute is actually easy. */
--	v         = time % SECONDS_PER_DAY;
-+	div_u64_rem(time, SECONDS_PER_DAY, &v);
- 	r->second = v % 60;
- 	w         = v / 60;
- 	r->minute = w % 60;
-@@ -90,13 +90,13 @@ static inline unsigned int localtime_1(struct xtm *r, time_t time)
- 	return v;
++	/* sparc64 suseconds_t is 32-bit only */
++	if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++		karg[1] >>= 32;
++
+ 	return lp_set_timeout(minor, karg[0], karg[1]);
  }
  
--static inline void localtime_2(struct xtm *r, time_t time)
-+static inline void localtime_2(struct xtm *r, time64_t time)
- {
- 	/*
- 	 * Here comes the rest (weekday, monthday). First, divide the SSTE
- 	 * by seconds-per-day to get the number of _days_ since the epoch.
- 	 */
--	r->dse = time / 86400;
-+	r->dse = div_u64(time, SECONDS_PER_DAY);
- 
- 	/*
- 	 * 1970-01-01 (w=0) was a Thursday (4).
-@@ -105,7 +105,7 @@ static inline void localtime_2(struct xtm *r, time_t time)
- 	r->weekday = (4 + r->dse - 1) % 7 + 1;
- }
- 
--static void localtime_3(struct xtm *r, time_t time)
-+static void localtime_3(struct xtm *r, time64_t time)
- {
- 	unsigned int year, i, w = r->dse;
- 
-@@ -160,7 +160,7 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	const struct xt_time_info *info = par->matchinfo;
- 	unsigned int packet_time;
- 	struct xtm current_time;
--	s64 stamp;
-+	time64_t stamp;
- 
- 	/*
- 	 * We need real time here, but we can neither use skb->tstamp
-@@ -173,14 +173,14 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	 *	1. match before 13:00
- 	 *	2. match after 13:00
- 	 *
--	 * If you match against processing time (get_seconds) it
-+	 * If you match against processing time (ktime_get_real_seconds) it
- 	 * may happen that the same packet matches both rules if
- 	 * it arrived at the right moment before 13:00, so it would be
- 	 * better to check skb->tstamp and set it via __net_timestamp()
- 	 * if needed.  This however breaks outgoing packets tx timestamp,
- 	 * and causes them to get delayed forever by fq packet scheduler.
- 	 */
--	stamp = get_seconds();
-+	stamp = ktime_get_real_seconds();
- 
- 	if (info->flags & XT_TIME_LOCAL_TZ)
- 		/* Adjust for local timezone */
-@@ -193,6 +193,9 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	 *   - 'now' is in the weekday mask
- 	 *   - 'now' is in the daytime range time_start..time_end
- 	 * (and by default, libxt_time will set these so as to match)
-+	 *
-+	 * note: info->date_start/stop are unsigned 32-bit values that
-+	 *	 can hold values beyond y2038, but not after y2106.
- 	 */
- 
- 	if (stamp < info->date_start || stamp > info->date_stop)
 -- 
 2.20.0
 
