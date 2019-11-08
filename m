@@ -2,52 +2,51 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF23FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2998EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C94C20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D45206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240325;
-	bh=kzrBvDn8b+xm6hOzUrZqUhVGdPdFyZ3bEpJWX+vn26g=;
+	s=default; t=1573240336;
+	bh=Eo4M+CcVoL5z+LaKljF9jKB5DJ888zaDFmwooiIRzxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=esqf9J0NUUzUclEa2GYVB8IA4J4DshLgvqbSaVTFq/DkxQKJcXGdkPgFLslZzeZbj
-	 xminWgQF0s9bt0Wgl5Y8nF83HoVPn9oOcyUZImyIjLcP/E2X6/L5d+/0tqqxT+zXtx
-	 7hqaC5TBcpcqfZWIBeoroYsu/OXTqalrLAdLRh+g=
+	b=1TckGvPeaZ0+n577taIujlUHUa6L2Os1WYfQm6Rgxt7TPDxmd0T4wqf/YDzcJdwuP
+	 N/OEz0W6Qpxso152J5pRpL4C7en/JfSyWK02rEpQJSkUhJlEsWSXO4sF/JG3c0rtKN
+	 Q8xsKgWktc+r4p94jYpmGyKNyRqaHy8YAjzhXRiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391035AbfKHTME (ORCPT
+        id S2391078AbfKHTMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:12:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41808 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:12:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391164AbfKHTJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:54 -0500
+        id S1730154AbfKHTJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2029206A3;
-        Fri,  8 Nov 2019 19:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 328272087E;
+        Fri,  8 Nov 2019 19:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240192;
-        bh=kzrBvDn8b+xm6hOzUrZqUhVGdPdFyZ3bEpJWX+vn26g=;
+        s=default; t=1573240174;
+        bh=Eo4M+CcVoL5z+LaKljF9jKB5DJ888zaDFmwooiIRzxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qsx0ECXZqxv7MzBkOMAFMLkNieEefNjm2Jm0I7qKy/+k3qrOy3ZhHv7u/fbx1Qq8I
-         9GPna6Qp/ypIJoUh7/QwBUzVGUrGMFhda9CWOBlIgQ8oSzdkxVIf7pJ3XCvFkMkiT0
-         SWSRmVtBORF5eGdT0TlixfpH26ul+gLiMfpopkPQ=
+        b=kQA8enWiMIOpgYYeG6qN8TSjRT901Bpc44W6nHYA3BEdKyy72VmcuHxpoVzL8OZfg
+         bnUZ7f/ylv46fuqclpkzCwBeNkXcr+7PHJceRZNdWWPUx1MgPpY2tliHeLknSaCIcI
+         V3U8L1lgPwQH4YDQj5FwI/bP8nY/FqqyoZqlaUB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 078/140] nbd: handle racing with errored out commands
-Date:   Fri,  8 Nov 2019 19:50:06 +0100
-Message-Id: <20191108174910.037122962@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 112/140] net/mlx5e: Initialize on stack link modes bitmap
+Date:   Fri,  8 Nov 2019 19:50:40 +0100
+Message-Id: <20191108174911.905416820@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,69 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 7ce23e8e0a9cd38338fc8316ac5772666b565ca9 ]
+[ Upstream commit 926b37f76fb0a22fe93c8873c819fd167180e85c ]
 
-We hit the following warning in production
+Initialize link modes bitmap on stack before using it, otherwise the
+outcome of ethtool set link ksettings might have unexpected values.
 
-print_req_error: I/O error, dev nbd0, sector 7213934408 flags 80700
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 25 PID: 32407 at lib/refcount.c:190 refcount_sub_and_test_checked+0x53/0x60
-Workqueue: knbd-recv recv_work [nbd]
-RIP: 0010:refcount_sub_and_test_checked+0x53/0x60
-Call Trace:
- blk_mq_free_request+0xb7/0xf0
- blk_mq_complete_request+0x62/0xf0
- recv_work+0x29/0xa1 [nbd]
- process_one_work+0x1f5/0x3f0
- worker_thread+0x2d/0x3d0
- ? rescuer_thread+0x340/0x340
- kthread+0x111/0x130
- ? kthread_create_on_node+0x60/0x60
- ret_from_fork+0x1f/0x30
----[ end trace b079c3c67f98bb7c ]---
-
-This was preceded by us timing out everything and shutting down the
-sockets for the device.  The problem is we had a request in the queue at
-the same time, so we completed the request twice.  This can actually
-happen in a lot of cases, we fail to get a ref on our config, we only
-have one connection and just error out the command, etc.
-
-Fix this by checking cmd->status in nbd_read_stat.  We only change this
-under the cmd->lock, so we are safe to check this here and see if we've
-already error'ed this command out, which would indicate that we've
-completed it as well.
-
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 4b95840a6ced ("net/mlx5e: Fix matching of speed to PRM link modes")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/nbd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 7301fe55084bf..5f9d12ce91e5a 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -673,6 +673,12 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 		ret = -ENOENT;
- 		goto out;
- 	}
-+	if (cmd->status != BLK_STS_OK) {
-+		dev_err(disk_to_dev(nbd->disk), "Command already handled %p\n",
-+			req);
-+		ret = -ENOENT;
-+		goto out;
-+	}
- 	if (test_bit(NBD_CMD_REQUEUED, &cmd->flags)) {
- 		dev_err(disk_to_dev(nbd->disk), "Raced with timeout on req %p\n",
- 			req);
--- 
-2.20.1
-
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1021,7 +1021,7 @@ static bool ext_link_mode_requested(cons
+ {
+ #define MLX5E_MIN_PTYS_EXT_LINK_MODE_BIT ETHTOOL_LINK_MODE_50000baseKR_Full_BIT
+ 	int size = __ETHTOOL_LINK_MODE_MASK_NBITS - MLX5E_MIN_PTYS_EXT_LINK_MODE_BIT;
+-	__ETHTOOL_DECLARE_LINK_MODE_MASK(modes);
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(modes) = {0,};
+ 
+ 	bitmap_set(modes, MLX5E_MIN_PTYS_EXT_LINK_MODE_BIT, size);
+ 	return bitmap_intersects(modes, adver, __ETHTOOL_LINK_MODE_MASK_NBITS);
 
 
