@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6E7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06127C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25242085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F9C215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214835;
-	bh=9lp8kFKHd1OL9uVPSrrIRYlikpXGmBVr/jOZMSrQJck=;
+	s=default; t=1573214836;
+	bh=P4rExky2npgISVzRQqzkSOojSANeuOI8O1f1A/oAhMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9ucJyNeBVGJsm5cqeS0mJzQCrJnymt8g9rhlM2r1UXZEzfUrYeTPZ+g7ZrGwF7t0
-	 Jl7DxajcL0hY67R5o71dOHc52GMjWVgqJPv3HbY0za1KEsRQ22+x/Xc1/VZlgdLk9W
-	 /nSd4xZDV1uvBjAop4MxErXgH1RrUvxABOT9anmg=
+	b=qn0GrSdULpBg3wJKNra44JdL+vfso+V+Jw5slmeb6n/veb5tBh9PUy/At8THRT9hX
+	 ZJ2MOMTS3r+URvkureWfH/kMQYo/nRbIWGdHA4Rhdm938subTyEpMAc050G9wubxtB
+	 PwNmGzwrbj7EgQmHvkZiBN6zKqbD6sIGZriF3vM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403824AbfKHMHN (ORCPT
+        id S2391864AbfKHMHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:07:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54116 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:07:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389105AbfKHLlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389104AbfKHLlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 06:41:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EF25222C4;
-        Fri,  8 Nov 2019 11:41:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB27921D7F;
+        Fri,  8 Nov 2019 11:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213260;
-        bh=9lp8kFKHd1OL9uVPSrrIRYlikpXGmBVr/jOZMSrQJck=;
+        s=default; t=1573213259;
+        bh=P4rExky2npgISVzRQqzkSOojSANeuOI8O1f1A/oAhMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y7vDmtHo0T8VJmrIL+wI1v4J9OYgB7dsrJxBjSqLlxu7gLl/Ocx57MiIFCdp62j9X
-         VwfNfl5Z4Hm5JyI+rcb6ujFZm5bkI6h7ddSibpZ/yqkhQFOTVb7I3Ab67yYO8Tq4EN
-         qx+ovUoywaTH5o49ZthNHcl16Y4fM6v4Ct8Wqftw=
+        b=yxurgVqGhoFaWtpav6d0MvrKLUvmCpsfsQTB4dsRr9IuJtyPW7TCqzDpKYvbp/Jzp
+         ja7k3tNauJjmAO5A028hXx3sXUskOkTKuySTDQ0+1SB3q6Ic2/6BiiNXOh8GjVT0K/
+         yyG3Pkk0Yl+DDJF75oce0QylElqBYv8zqTIHHEwc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 125/205] rtc: mt6397: fix possible race condition
-Date:   Fri,  8 Nov 2019 06:36:32 -0500
-Message-Id: <20191108113752.12502-125-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 124/205] gpio: of: Handle SPI chipselect legacy bindings
+Date:   Fri,  8 Nov 2019 06:36:31 -0500
+Message-Id: <20191108113752.12502-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,63 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit babab2f86440352d24e76118fdd7d40cab5fd7bf ]
+[ Upstream commit 6953c57ab1721ce57914fc5741d0ce0568756bb0 ]
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
+The SPI chipselects are assumed to be active low in the current
+binding, so when we want to use GPIO descriptors and handle
+the active low/high semantics in gpiolib, we need a special
+parsing quirk to deal with this.
 
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-before requesting the IRQ.
+We check for the property "spi-cs-high" and if that is
+NOT present we assume the CS line is active low.
 
-Acked-by: Eddie Huang <eddie.huang@mediatek.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+If the line is tagged as active low in the device tree and
+has no "spi-cs-high" property all is fine, the device
+tree and the SPI bindings are in agreement.
+
+If the line is tagged as active high in the device tree with
+the second cell flag and has no "spi-cs-high" property we
+enforce active low semantics (as this is the exception we can
+just tag on the flag).
+
+If the line is tagged as active low with the second cell flag
+AND tagged with "spi-cs-high" the SPI active high property
+takes precedence and we print a warning.
+
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-mt6397.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/gpio/gpiolib-of.c | 50 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index 385f8303bb412..e9a25ec4d434f 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -332,6 +332,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index e0f149bdf98ff..fa212c2a7577c 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -58,7 +58,8 @@ static struct gpio_desc *of_xlate_and_get_gpiod_flags(struct gpio_chip *chip,
+ }
  
- 	platform_set_drvdata(pdev, rtc);
- 
-+	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
-+	if (IS_ERR(rtc->rtc_dev))
-+		return PTR_ERR(rtc->rtc_dev);
-+
- 	ret = request_threaded_irq(rtc->irq, NULL,
- 				   mtk_rtc_irq_handler_thread,
- 				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-@@ -344,11 +348,11 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 
- 	device_init_wakeup(&pdev->dev, 1);
- 
--	rtc->rtc_dev = rtc_device_register("mt6397-rtc", &pdev->dev,
--					   &mtk_rtc_ops, THIS_MODULE);
--	if (IS_ERR(rtc->rtc_dev)) {
-+	rtc->rtc_dev->ops = &mtk_rtc_ops;
-+
-+	ret = rtc_register_device(rtc->rtc_dev);
-+	if (ret) {
- 		dev_err(&pdev->dev, "register rtc device failed\n");
--		ret = PTR_ERR(rtc->rtc_dev);
- 		goto out_free_irq;
- 	}
- 
-@@ -365,7 +369,6 @@ static int mtk_rtc_remove(struct platform_device *pdev)
+ static void of_gpio_flags_quirks(struct device_node *np,
+-				 enum of_gpio_flags *flags)
++				 enum of_gpio_flags *flags,
++				 int index)
  {
- 	struct mt6397_rtc *rtc = platform_get_drvdata(pdev);
+ 	/*
+ 	 * Some GPIO fixed regulator quirks.
+@@ -92,6 +93,51 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 		pr_info("%s uses legacy open drain flag - update the DTS if you can\n",
+ 			of_node_full_name(np));
+ 	}
++
++	/*
++	 * Legacy handling of SPI active high chip select. If we have a
++	 * property named "cs-gpios" we need to inspect the child node
++	 * to determine if the flags should have inverted semantics.
++	 */
++	if (IS_ENABLED(CONFIG_SPI_MASTER) &&
++	    of_property_read_bool(np, "cs-gpios")) {
++		struct device_node *child;
++		u32 cs;
++		int ret;
++
++		for_each_child_of_node(np, child) {
++			ret = of_property_read_u32(child, "reg", &cs);
++			if (!ret)
++				continue;
++			if (cs == index) {
++				/*
++				 * SPI children have active low chip selects
++				 * by default. This can be specified negatively
++				 * by just omitting "spi-cs-high" in the
++				 * device node, or actively by tagging on
++				 * GPIO_ACTIVE_LOW as flag in the device
++				 * tree. If the line is simultaneously
++				 * tagged as active low in the device tree
++				 * and has the "spi-cs-high" set, we get a
++				 * conflict and the "spi-cs-high" flag will
++				 * take precedence.
++				 */
++				if (of_property_read_bool(np, "spi-cs-high")) {
++					if (*flags & OF_GPIO_ACTIVE_LOW) {
++						pr_warn("%s GPIO handle specifies active low - ignored\n",
++							of_node_full_name(np));
++						*flags &= ~OF_GPIO_ACTIVE_LOW;
++					}
++				} else {
++					if (!(*flags & OF_GPIO_ACTIVE_LOW))
++						pr_info("%s enforce active low on chipselect handle\n",
++							of_node_full_name(np));
++					*flags |= OF_GPIO_ACTIVE_LOW;
++				}
++				break;
++			}
++		}
++	}
+ }
  
--	rtc_device_unregister(rtc->rtc_dev);
- 	free_irq(rtc->irq, rtc->rtc_dev);
- 	irq_dispose_mapping(rtc->irq);
+ /**
+@@ -132,7 +178,7 @@ struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+ 		goto out;
  
+ 	if (flags)
+-		of_gpio_flags_quirks(np, flags);
++		of_gpio_flags_quirks(np, flags, index);
+ 
+ 	pr_debug("%s: parsed '%s' property of node '%pOF[%d]' - status (%d)\n",
+ 		 __func__, propname, np, index,
 -- 
 2.20.1
 
