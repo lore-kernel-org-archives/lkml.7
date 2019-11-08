@@ -2,93 +2,88 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A23FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108BEFC6199
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A04E214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2328206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573247741;
+	bh=0OHKn/NSP13Adarhq9wPSTSqkcmLeCqcUJ/45x0J6ok=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=dgzwPF9v/ECPyRcfVYWb4nEUwAhc+OD7gy82ozSk5Fz2JKCi/Dt7NwNtMYZHBAvBQ
+	 tum2+DN5nmXriEMW6CILI5Fzf9BsPsRgoEWLl2cAkkWmrBtXAr4Ed5DbLcB5eg7ui8
+	 GkmHS6pn1NVLfFOiTccOoB50Rckc892USOZO4lZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732914AbfKHVPd (ORCPT
+        id S1732954AbfKHVPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:15:33 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:33779 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732101AbfKHVPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:15:32 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N3bCH-1hlI2n3QdX-010fBS; Fri, 08 Nov 2019 22:15:26 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: [PATCH 14/23] y2038: make ns_to_compat_timeval use __kernel_old_timeval
-Date:   Fri,  8 Nov 2019 22:12:13 +0100
-Message-Id: <20191108211323.1806194-5-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
-References: <20191108210236.1296047-1-arnd@arndb.de>
+        Fri, 8 Nov 2019 16:15:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732926AbfKHVPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:15:39 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9543720869;
+        Fri,  8 Nov 2019 21:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573247738;
+        bh=0OHKn/NSP13Adarhq9wPSTSqkcmLeCqcUJ/45x0J6ok=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=JPORAN6QAt8G+verpqAPM4zK4BVLDPAyfMBkFDOckhcyz7af3S2g4htaHUO2ENWJP
+         DTKTvMhfJHfDx+T3Y8TyJhCEu2H2fjd9YVZyu8fBP08ybyWbx5Zk5UkyJLwjjXs6SO
+         m8lVWe7z2JXWJXzXW4h/G08DGtzDTqlIqVemrTgM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Pfme16M9JKU/1lQYMjSUnUlUlunFko9yGD1/qMR1+QbuE78z4pf
- ZHI88gH+wz2J6OBPQID1DtDxbizptVLZT1jhAxDXEzsVfN7ghgDqvT96Hx+hRxj+0iznIqt
- /PVpStGxYFsdM5EoOazNF0V9hzc3ECTCD9sJDscIIwFm3LzbpdHtOT9CepwMwhnnRp1dkgh
- bgsEBYh4LC7QcFloIaBXw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BXLkiyXx/ek=:6ux6MXiobQDoYSdUr8teJu
- Qdu+4y/M2l60Hz+zNN940bfImgo3biC7NDpp6eKqPDDRzYbC71KWA7Hofa/py/3EpjDnbZTVL
- hyl8IuisupTzJvHQ9dtiFcGhn7gNrAduwMr24dNU/3NYUpiqpaiFN2oamfbtvbXkQstLty5ev
- DVKLexf7lAzU24EiE9thHI8iU54ku+p4C2kHt0ocPp9mHDm/zCvb34TrqLDnC8cCcbsVZ/NbF
- lVyLegS3fhlsHkVaAUUuYjFsGpg0hl9MfmfdcGh4QtJ1q0SlOwFny8quFBhuy9anyyiLd7Tyy
- 1RP/STEVAqsEXCOr9O0frVj38AbbWYAJ6ynQ002lStuq1uq03mzUq4faqi8nm7lRB2LYj8975
- 3qPOLAL2Gk/kh3ZulEQNHXtaGefQ9j09PYYI9rENTnMIAsLn5IjymW4cR73UBWw7sdtWDpaP/
- hg47QQSK8cXXbl/jKBPiPCy3TpgOo7T1L9DAALv71cYgRk2mUhR9sc0On1enZS5IcJwKpwM4f
- aXGKhyE5IUPWFeEKn72L3yQs83CdLkqF2pG9gOxbGP7gdYKk032Nme0eKNZKue4Xi3Lzt76J5
- 8pUhtsrOmdPBrXgi1EjrQ1T+Qy431V6ptjBBYO9iAgxK+epkMXJaOdlHUsrNkksM7g/qQyDIK
- Xrcil36hElxlcsPhlGe2PP1vWGDp0FKgWVMI6jo3eciulj4QUes7ERrPc81OkzB/fpWzXIxOn
- WveEHEHcg2Q+e+gGmHwxeVHyM6h4SaOLX4KBA9AxaZ1TU0tHIjL1CZeW7P6c8Jez3+o7w78A/
- 81zzirRiIYllZL+9/ABM92Za7yx/GU5Ywl5mpUSpDbRjlkPNcpQmX7To9iWb0A+L+6hwrWSzM
- KCrNO2bIVQpTWZ2nGtHw==
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108185503.GB3384779@ulmo>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo> <20191107191933.0B18021D6C@mail.kernel.org> <20191108101116.GA2583136@ulmo> <20191108181249.E284E214DB@mail.kernel.org> <20191108185503.GB3384779@ulmo>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 13:15:37 -0800
+Message-Id: <20191108211538.9543720869@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This gets us one step closer to removing 'struct timeval' from the
-kernel. We still keep __kernel_old_timeval for interfaces that we cannot
-fix otherwise, and ns_to_compat_timeval() is provably safe for interfaces
-that are legitimate users of __kernel_old_timeval on native kernels,
-so this is an obvious change.
+Quoting Thierry Reding (2019-11-08 10:55:03)
+> On Fri, Nov 08, 2019 at 10:12:49AM -0800, Stephen Boyd wrote:
+> >=20
+> > Sure a WARN_ON() sounds fair. That will not take the whole task down
+> > and makes sure that drivers aren't doing something incorrect. Otherwise,
+> > this looks good and we can optimize by caching the parent index later if
+> > we really need to.
+>=20
+> Okay, great. I'll go replace the above patch in the branch that I have.
+> I'm not sure if you saw it, but I had sent this in a pull request for
+> v5.5-rc1 about a week ago because I've got Tegra clock driver patches
+> that depend on this. I can replace this patch with the above proposal
+> and update the Tegra clock driver branch and then resend the two pull
+> requests.
+>=20
+> Does that sound like a plan?
+>=20
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/linux/compat.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/compat.h b/include/linux/compat.h
-index 16dafd9f4b86..3735a22bfbc0 100644
---- a/include/linux/compat.h
-+++ b/include/linux/compat.h
-@@ -937,10 +937,10 @@ static inline bool in_compat_syscall(void) { return is_compat_task(); }
-  */
- static inline struct old_timeval32 ns_to_old_timeval32(s64 nsec)
- {
--	struct timeval tv;
-+	struct __kernel_old_timeval tv;
- 	struct old_timeval32 ctv;
- 
--	tv = ns_to_timeval(nsec);
-+	tv = ns_to_kernel_old_timeval(nsec);
- 	ctv.tv_sec = tv.tv_sec;
- 	ctv.tv_usec = tv.tv_usec;
- 
--- 
-2.20.0
+Yes please refresh the PRs. I don't think anything else is concerning
+but I'll go do a sweep over the Tegra patches right now.
 
