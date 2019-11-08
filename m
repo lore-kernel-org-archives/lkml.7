@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0EBFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBF9FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D8E20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD0220674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240768;
-	bh=0Fumw5pABDtmBx8PhfFyYVSWE/glUAgUa2Q4RqX3LXw=;
+	s=default; t=1573240772;
+	bh=52b2NPQwj3xM9cq/tc1U2aDYddp76xptCa/1BAeQLrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MoflE56iBxXWdZxr101vKMxJkaeNNaOpsBXBihQM1bEw5njQ6IsiClzszq0nTnq5l
-	 9NbAczbn3BTZk+1bXUdVmAw7RPH3zUmu34qh5hXbGII3UBCMiJezD2Od/lGSLyiuwE
-	 FhXNPLGfRC+haZSJ3WEvkAB1e1hAqVcgOuKDtdIM=
+	b=CjGliZl8vnuLplbtCfMSpi+jteAeBaM0e8k0tTAl257h3n2lBpdgKKsaP0E/kxEDH
+	 43+Le3vKCo09Kq9lxX4a4+3lF11H4yjRDdR8p1Btu1UvkD8DJJS08yf2sf0+9+NqLN
+	 uZ7cDKCG8kf6FhZpRihb1YUOOlFFZQgKasMexgCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390143AbfKHTT1 (ORCPT
+        id S2390192AbfKHTT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:19:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57268 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:19:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389478AbfKHTAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389475AbfKHTAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 14:00:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 779A8224D5;
-        Fri,  8 Nov 2019 18:58:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0C0B22490;
+        Fri,  8 Nov 2019 18:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239540;
-        bh=0Fumw5pABDtmBx8PhfFyYVSWE/glUAgUa2Q4RqX3LXw=;
+        s=default; t=1573239513;
+        bh=52b2NPQwj3xM9cq/tc1U2aDYddp76xptCa/1BAeQLrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPYjGZktsdbKWSjIdPdy4Runmw7HSv6dirM7xqPAbeKaxSoHJPnOG9n1g+m0BBFUk
-         eaBOZbnMokdLRtXdeD6cQkusSsOPyIuSdAavSC/pwOIjHhYs1e/tzpAREyGIwDoCRs
-         du8P+ymlgmvR9Yf0jYvADFan5ThLvvQ2CggzbjWE=
+        b=eRXNxv00ct5Cefer6wo23jEB7X19xCpR96Or5+yqjUfYAEPvMjlOFTe27DCmMVlQT
+         mkFIje7JVtoCavRyH/pH7Od6haTRGimNdBHkUmj1gGIKLQAjdvrg7mPAGbkw96lfiP
+         iDEBmyBOo9HRoABe6kvf11fznMn9hNSjJB+bX/HY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 38/62] net: usb: lan78xx: Connect PHY before registering MAC
-Date:   Fri,  8 Nov 2019 19:50:26 +0100
-Message-Id: <20191108174747.578061301@linuxfoundation.org>
+Subject: [PATCH 4.14 30/62] net: hisilicon: Fix ping latency when deal with high throughput
+Date:   Fri,  8 Nov 2019 19:50:18 +0100
+Message-Id: <20191108174742.893290343@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -60,60 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 38b4fe320119859c11b1dc06f6b4987a16344fa1 ]
+[ Upstream commit e56bd641ca61beb92b135298d5046905f920b734 ]
 
-As soon as the netdev is registers, the kernel can start using the
-interface. If the driver connects the MAC to the PHY after the netdev
-is registered, there is a race condition where the interface can be
-opened without having the PHY connected.
+This is due to error in over budget processing.
+When dealing with high throughput, the used buffers
+that exceeds the budget is not cleaned up. In addition,
+it takes a lot of cycles to clean up the used buffer,
+and then the buffer where the valid data is located can take effect.
 
-Change the order to close this race condition.
-
-Fixes: 92571a1aae40 ("lan78xx: Connect phy early")
-Reported-by: Daniel Wagner <dwagner@suse.de>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Tested-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/lan78xx.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3642,10 +3642,14 @@ static int lan78xx_probe(struct usb_inte
- 	/* driver requires remote-wakeup capability during autosuspend. */
- 	intf->needs_remote_wakeup = 1;
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -174,6 +174,7 @@ struct hip04_priv {
+ 	dma_addr_t rx_phys[RX_DESC_NUM];
+ 	unsigned int rx_head;
+ 	unsigned int rx_buf_size;
++	unsigned int rx_cnt_remaining;
  
-+	ret = lan78xx_phy_init(dev);
-+	if (ret < 0)
-+		goto out4;
-+
- 	ret = register_netdev(netdev);
- 	if (ret != 0) {
- 		netif_err(dev, probe, netdev, "couldn't register the device\n");
--		goto out4;
-+		goto out5;
+ 	struct device_node *phy_node;
+ 	struct phy_device *phy;
+@@ -487,7 +488,6 @@ static int hip04_rx_poll(struct napi_str
+ 	struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
+ 	struct net_device *ndev = priv->ndev;
+ 	struct net_device_stats *stats = &ndev->stats;
+-	unsigned int cnt = hip04_recv_cnt(priv);
+ 	struct rx_desc *desc;
+ 	struct sk_buff *skb;
+ 	unsigned char *buf;
+@@ -500,8 +500,8 @@ static int hip04_rx_poll(struct napi_str
+ 
+ 	/* clean up tx descriptors */
+ 	tx_remaining = hip04_tx_reclaim(ndev, false);
+-
+-	while (cnt && !last) {
++	priv->rx_cnt_remaining += hip04_recv_cnt(priv);
++	while (priv->rx_cnt_remaining && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+ 		if (unlikely(!skb)) {
+@@ -547,11 +547,13 @@ refill:
+ 		hip04_set_recv_desc(priv, phys);
+ 
+ 		priv->rx_head = RX_NEXT(priv->rx_head);
+-		if (rx >= budget)
++		if (rx >= budget) {
++			--priv->rx_cnt_remaining;
+ 			goto done;
++		}
+ 
+-		if (--cnt == 0)
+-			cnt = hip04_recv_cnt(priv);
++		if (--priv->rx_cnt_remaining == 0)
++			priv->rx_cnt_remaining += hip04_recv_cnt(priv);
  	}
  
- 	usb_set_intfdata(intf, dev);
-@@ -3658,14 +3662,10 @@ static int lan78xx_probe(struct usb_inte
- 	pm_runtime_set_autosuspend_delay(&udev->dev,
- 					 DEFAULT_AUTOSUSPEND_DELAY);
+ 	if (!(priv->reg_inten & RCV_INT)) {
+@@ -636,6 +638,7 @@ static int hip04_mac_open(struct net_dev
+ 	int i;
  
--	ret = lan78xx_phy_init(dev);
--	if (ret < 0)
--		goto out5;
--
- 	return 0;
- 
- out5:
--	unregister_netdev(netdev);
-+	phy_disconnect(netdev->phydev);
- out4:
- 	usb_free_urb(dev->urb_intr);
- out3:
+ 	priv->rx_head = 0;
++	priv->rx_cnt_remaining = 0;
+ 	priv->tx_head = 0;
+ 	priv->tx_tail = 0;
+ 	hip04_reset_ppe(priv);
 
 
