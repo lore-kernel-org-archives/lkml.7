@@ -2,175 +2,183 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B31FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21D4FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED4B206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA1C206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Twy3xq/J"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="H5JuEuP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbfKHNCn (ORCPT
+        id S1731003AbfKHNC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:02:43 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57542 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730662AbfKHNCk (ORCPT
+        Fri, 8 Nov 2019 08:02:28 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44323 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730461AbfKHNCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:02:40 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8D1tQv019203;
-        Fri, 8 Nov 2019 14:02:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=WOEu20nR0i4xRSiZf53WXogNt8wyvzvdiHSB58BEZaY=;
- b=Twy3xq/J78m2GKUL7TQSQjyWs+R+K39EqeKWroBU2aDiseZJMmNvT8BM4PGMG7y1h2uX
- P5gHZtJtXLx3yUbnAimdEnCyowD5rige5Fb/6JssRcKE0KCXyxpL37sIG27zoORNhYKX
- py3Rn/Om7hDf+LRh67Vf7Nzo71XzRjvWNQUOdlW1Hixjaob4RpQMP5U/gizvYW7SlxFM
- VmBnSpzIf6W8E1z/2NeKWQtJiA5KJIBBKIPXhUn0PSy3KhfvIax13AQF/w0H1wnGahs4
- YAwEPXAPBqqWL8F3CNlkI/kpJWe62+GDn5gnyBAtVYxUkqqiUAKH7pWtFg4l7MltL8fq 6Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w41vd3kmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 14:02:15 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 223DF10003A;
-        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 068212B7DEF;
-        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 8 Nov
- 2019 14:02:14 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Fri, 8 Nov 2019 14:02:14 +0100
-From:   Christophe ROULLIER <christophe.roullier@st.com>
-To:     Maxime Ripard <mripard@kernel.org>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
- 'clocks', 'clock-names' properties
-Thread-Topic: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
- 'clocks', 'clock-names' properties
-Thread-Index: AQHVljS9qESSyYnraEKgryyZ/0O5Aw==
-Date:   Fri, 8 Nov 2019 13:02:14 +0000
-Message-ID: <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
-References: <20191108103526.22254-1-christophe.roullier@st.com>
- <20191108103526.22254-2-christophe.roullier@st.com>
- <20191108104231.GE4345@gilmour.lan>
-In-Reply-To: <20191108104231.GE4345@gilmour.lan>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <24D71ECBC6C48E469CDC8390CA3DFA02@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 8 Nov 2019 08:02:19 -0500
+Received: by mail-lj1-f196.google.com with SMTP id g3so6105080ljl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lTNGYmdFYnmbZW7BpDJGzJwkDqsYkg29EXzmXFmW/h8=;
+        b=H5JuEuP5tLO+DynLcAFFP0N09+DzlW9tVKmrQ/dVJFts+vd+dHMtpA2iNiybLkrIue
+         teBl/LORkM1qYI0PXUTGYUWBT+8bbWRDFfPbAjjljgCudgvFBX7mGvhQWjv0Q8EWQIuE
+         PeMjAXLmxtZUTyKdS4F/EuhaR1nxaUmqhlnAI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lTNGYmdFYnmbZW7BpDJGzJwkDqsYkg29EXzmXFmW/h8=;
+        b=SAuUxTCZ6NBVvk7UVRGCbSGZcgUfXrMPgbRRf5uHXtmGM7qsDZzeQhoXFoqVq+IgWN
+         aysY6V3SPr1y6QPTkLCx5NgPgXjSuOhF52UUfRCxBnXWwyBD7CDmx/5d2e6E9djlXqr3
+         f9xBk+Jwtgl2GUbRsSZZfEGrxwio8b1Q0abIck4myvsGRagjTC2iEiS+WAcVMm8E8sJf
+         5CAbY1wn50eP2mAGjekT6mQzKNXtQHvXMBtKp9nrQxnEozFUDYTbaThW3xCoDQ2dGJKo
+         elA20kUnAS009KwhI+LKzqrighRMOxpnV5PzV8mxltI7OsdL3ws+u3UhBH4AFTFgojot
+         zhHA==
+X-Gm-Message-State: APjAAAWnEHfJ1p+RpGuEzP99WJFaieOWj7IPKKJ0/ENUG5vD/Z+beF4g
+        TsY8lykpdlOnzWfsEDV2Q/Garw==
+X-Google-Smtp-Source: APXvYqzP460JuRM8sVvJMljDGfhC7vukmbMbViHsvnghQLYn1lNCibVb6RIJWYFwFeSahEYRQku9KA==
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr6885689ljk.118.1573218137226;
+        Fri, 08 Nov 2019 05:02:17 -0800 (PST)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 05:02:16 -0800 (PST)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 39/47] soc: fsl: qe: avoid IS_ERR_VALUE in ucc_slow.c
+Date:   Fri,  8 Nov 2019 14:01:15 +0100
+Message-Id: <20191108130123.6839-40-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
+References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-08_03:2019-11-08,2019-11-08 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/8/19 11:42 AM, Maxime Ripard wrote:
-> Hi,
->
-> On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
->> This change is needed for some soc based on snps,dwmac, which have
->> more than 3 clocks.
->>
->> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
->> ---
->>   Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Doc=
-umentation/devicetree/bindings/net/snps,dwmac.yaml
->> index 4845e29411e4..376a531062c2 100644
->> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
->> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
->> @@ -27,6 +27,7 @@ select:
->>             - snps,dwmac-3.710
->>             - snps,dwmac-4.00
->>             - snps,dwmac-4.10a
->> +          - snps,dwmac-4.20a
->>             - snps,dwxgmac
->>             - snps,dwxgmac-2.10
->>
->> @@ -62,6 +63,7 @@ properties:
->>           - snps,dwmac-3.710
->>           - snps,dwmac-4.00
->>           - snps,dwmac-4.10a
->> +        - snps,dwmac-4.20a
->>           - snps,dwxgmac
->>           - snps,dwxgmac-2.10
->>
->> @@ -87,7 +89,8 @@ properties:
->>
->>     clocks:
->>       minItems: 1
->> -    maxItems: 3
->> +    maxItems: 5
->> +    additionalItems: true
-> Those additional clocks should be documented
->
-> Maxime
+When trying to build this for a 64-bit platform, one gets warnings
+from using IS_ERR_VALUE on something which is not sizeof(long).
 
-Hi Maxime,
+Instead, change the various *_offset fields to store a signed integer,
+and simply check for a negative return from qe_muram_alloc(). Since
+qe_muram_free() now accepts and ignores a negative argument, we only
+need to make sure these fields are initialized with -1, and we can
+just unconditionally call qe_muram_free() in ucc_slow_free().
 
-The problem it is specific to our soc, so is it possible to
+Note that the error case for us_pram_offset failed to set that field
+to 0 (which, as noted earlier, is anyway a bogus sentinel value).
 
-propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ drivers/soc/fsl/qe/ucc_slow.c | 22 +++++++++-------------
+ include/soc/fsl/qe/ucc_slow.h |  6 +++---
+ 2 files changed, 12 insertions(+), 16 deletions(-)
 
-and "official" description in soc yaml file (stm32-dwmac.yaml) ?
+diff --git a/drivers/soc/fsl/qe/ucc_slow.c b/drivers/soc/fsl/qe/ucc_slow.c
+index 9b55fd0f50c6..274d34449846 100644
+--- a/drivers/soc/fsl/qe/ucc_slow.c
++++ b/drivers/soc/fsl/qe/ucc_slow.c
+@@ -154,6 +154,9 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 			__func__);
+ 		return -ENOMEM;
+ 	}
++	uccs->rx_base_offset = -1;
++	uccs->tx_base_offset = -1;
++	uccs->us_pram_offset = -1;
+ 
+ 	/* Fill slow UCC structure */
+ 	uccs->us_info = us_info;
+@@ -179,7 +182,7 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 	/* Get PRAM base */
+ 	uccs->us_pram_offset =
+ 		qe_muram_alloc(UCC_SLOW_PRAM_SIZE, ALIGNMENT_OF_UCC_SLOW_PRAM);
+-	if (IS_ERR_VALUE(uccs->us_pram_offset)) {
++	if (uccs->us_pram_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate MURAM for PRAM", __func__);
+ 		ucc_slow_free(uccs);
+ 		return -ENOMEM;
+@@ -206,10 +209,9 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 	uccs->rx_base_offset =
+ 		qe_muram_alloc(us_info->rx_bd_ring_len * sizeof(struct qe_bd),
+ 				QE_ALIGNMENT_OF_BD);
+-	if (IS_ERR_VALUE(uccs->rx_base_offset)) {
++	if (uccs->rx_base_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate %u RX BDs\n", __func__,
+ 			us_info->rx_bd_ring_len);
+-		uccs->rx_base_offset = 0;
+ 		ucc_slow_free(uccs);
+ 		return -ENOMEM;
+ 	}
+@@ -217,9 +219,8 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
+ 	uccs->tx_base_offset =
+ 		qe_muram_alloc(us_info->tx_bd_ring_len * sizeof(struct qe_bd),
+ 			QE_ALIGNMENT_OF_BD);
+-	if (IS_ERR_VALUE(uccs->tx_base_offset)) {
++	if (uccs->tx_base_offset < 0) {
+ 		printk(KERN_ERR "%s: cannot allocate TX BDs", __func__);
+-		uccs->tx_base_offset = 0;
+ 		ucc_slow_free(uccs);
+ 		return -ENOMEM;
+ 	}
+@@ -352,14 +353,9 @@ void ucc_slow_free(struct ucc_slow_private * uccs)
+ 	if (!uccs)
+ 		return;
+ 
+-	if (uccs->rx_base_offset)
+-		qe_muram_free(uccs->rx_base_offset);
+-
+-	if (uccs->tx_base_offset)
+-		qe_muram_free(uccs->tx_base_offset);
+-
+-	if (uccs->us_pram)
+-		qe_muram_free(uccs->us_pram_offset);
++	qe_muram_free(uccs->rx_base_offset);
++	qe_muram_free(uccs->tx_base_offset);
++	qe_muram_free(uccs->us_pram_offset);
+ 
+ 	if (uccs->us_regs)
+ 		iounmap(uccs->us_regs);
+diff --git a/include/soc/fsl/qe/ucc_slow.h b/include/soc/fsl/qe/ucc_slow.h
+index 8696fdea2ae9..d187a6be83bc 100644
+--- a/include/soc/fsl/qe/ucc_slow.h
++++ b/include/soc/fsl/qe/ucc_slow.h
+@@ -185,7 +185,7 @@ struct ucc_slow_private {
+ 	struct ucc_slow_info *us_info;
+ 	struct ucc_slow __iomem *us_regs; /* Ptr to memory map of UCC regs */
+ 	struct ucc_slow_pram *us_pram;	/* a pointer to the parameter RAM */
+-	u32 us_pram_offset;
++	s32 us_pram_offset;
+ 	int enabled_tx;		/* Whether channel is enabled for Tx (ENT) */
+ 	int enabled_rx;		/* Whether channel is enabled for Rx (ENR) */
+ 	int stopped_tx;		/* Whether channel has been stopped for Tx
+@@ -194,8 +194,8 @@ struct ucc_slow_private {
+ 	struct list_head confQ;	/* frames passed to chip waiting for tx */
+ 	u32 first_tx_bd_mask;	/* mask is used in Tx routine to save status
+ 				   and length for first BD in a frame */
+-	u32 tx_base_offset;	/* first BD in Tx BD table offset (In MURAM) */
+-	u32 rx_base_offset;	/* first BD in Rx BD table offset (In MURAM) */
++	s32 tx_base_offset;	/* first BD in Tx BD table offset (In MURAM) */
++	s32 rx_base_offset;	/* first BD in Rx BD table offset (In MURAM) */
+ 	struct qe_bd *confBd;	/* next BD for confirm after Tx */
+ 	struct qe_bd *tx_bd;	/* next BD for new Tx request */
+ 	struct qe_bd *rx_bd;	/* next BD to collect after Rx */
+-- 
+2.23.0
 
- =A0 clocks:
- =A0=A0=A0 minItems: 1
- =A0=A0=A0 maxItems: 5
- =A0=A0=A0 additionalItems: true
- =A0=A0=A0 items:
- =A0=A0=A0=A0=A0 - description: GMAC main clock
- =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
- =A0=A0=A0=A0=A0 - description:
- =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used for pr=
-ogramming the
- =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed then =
-the system
- =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on some pl=
-atforms.
-
-+=A0=A0=A0=A0=A0 - description: optional clock
-
-+=A0=A0=A0=A0=A0 - description: optional clock
-
-Thanks
-
-Christophe
