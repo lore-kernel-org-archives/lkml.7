@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E81C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE3FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D8A21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8180F21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213098;
-	bh=cdrS8Uc5C1CK0pynDXTy5DUwfd0d+1/Gvdh+qg1pCMY=;
+	s=default; t=1573213108;
+	bh=i+9e5uzmPVSTjNnxlthc51AiwO2a9Rqc6wn1xXw9caw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOltH5deWq3gQZSfgIYSNNMU3oUwcUKliVyr4X+1xqpb2N3MxdUQcKgPq08OP04a3
-	 r4PPN+QayuxGqwnIadiIT8dT+k5dctEd6Ne71AZ8u6Tsh7/7asLnwaeM1c+5B7LV1B
-	 xEfQsHNZ89iWRB2sZu4m7fLYZUHD4WbE0XNOoZ3E=
+	b=Tf8/3Ikjf+5saH55prkug+xNYdNEuuvnT/zvUkW8B39PHoSkCfCB6QV7lo4VJX2Vi
+	 LeqYfRta2RvBN9sybc0czeN/Ip33Nm4VTAsHS6b4TH6r65QMkGazLMqhIsFkq3PDgY
+	 c7b3l7FMXo+MIfah8NXT3y+59RR8Yi76T1TlWe9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbfKHLiR (ORCPT
+        id S1732625AbfKHLi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51166 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:38:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732259AbfKHLiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:15 -0500
+        id S1732259AbfKHLiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D44EF222C2;
-        Fri,  8 Nov 2019 11:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2F4B20869;
+        Fri,  8 Nov 2019 11:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213095;
-        bh=cdrS8Uc5C1CK0pynDXTy5DUwfd0d+1/Gvdh+qg1pCMY=;
+        s=default; t=1573213098;
+        bh=i+9e5uzmPVSTjNnxlthc51AiwO2a9Rqc6wn1xXw9caw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btpa0CO/OO2MLs76HbKvlePvTWQ7TYe4u9X0RtfC72jII/V1P68CuYi2qFR3llDzf
-         IuFuucKdSN29Jbl21LpTJjT0FucRFGwZ5VWsVuC6J6byoEFZZIXIbVWuxwpLwDPTiv
-         m3f7QNOSFDvSdysJTwUy9yM8LSJJGkyZipEVVRzQ=
+        b=G3j9EksLH+Lei38ldvTgU2g/Rpyh62ihOaPswjF2oVBjKhq5m4n0pqT9G5lssuLud
+         N67p4HUkyaIrSPAHlYxtFUSPNNtpXSyOX/ij6jLW57zZ4THYHzfxh9NaGu83xQShmk
+         quCjZj4BSG/0epW6aI4YNzuyQJhx4EjW76YjuZow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 020/205] extcon: cht-wc: Return from default case to avoid warnings
-Date:   Fri,  8 Nov 2019 06:34:47 -0500
-Message-Id: <20191108113752.12502-20-sashal@kernel.org>
+Cc:     Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 023/205] ath10k: skip resetting rx filter for WCN3990
+Date:   Fri,  8 Nov 2019 06:34:50 -0500
+Message-Id: <20191108113752.12502-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,47 +60,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit 962341b54b99965ebec5f70c8d39f1c382eea833 ]
+[ Upstream commit 58da3b42307061b71f2dcce2bd1185d578a3aa53 ]
 
-When we have first case to fall through it's not enough to put
-single comment there to satisfy compiler. Instead of doing that,
-return fall back value directly from default case.
+WCN3990 has the MAC_PCU_ADDR1 configured properly
+and hence it will not send spurious ack frames
+during boot up.
 
-This to avoid following warnings:
+Hence the reset_rx_filter workaround is not needed
+for WCN3990. Add a hw_param to indicate if hardware rx
+filter reset is needed and skip the reset_rx_filter for
+WCN3990.
 
-drivers/extcon/extcon-intel-cht-wc.c: In function ‘cht_wc_extcon_get_charger’:
-include/linux/device.h:1420:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/extcon/extcon-intel-cht-wc.c:148:3: note: in expansion of macro ‘dev_warn’
-   dev_warn(ext->dev,
-   ^~~~~~~~
-drivers/extcon/extcon-intel-cht-wc.c:152:2: note: here
-  case CHT_WC_USBSRC_TYPE_SDP:
-  ^~~~
+Tested HW: WCN3990
+Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-intel-cht-wc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/core.c | 17 ++++++++++++++++-
+ drivers/net/wireless/ath/ath10k/hw.h   |  5 +++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
-index 5e1dd27722781..bdb67878179ed 100644
---- a/drivers/extcon/extcon-intel-cht-wc.c
-+++ b/drivers/extcon/extcon-intel-cht-wc.c
-@@ -156,7 +156,7 @@ static int cht_wc_extcon_get_charger(struct cht_wc_extcon_data *ext,
- 		dev_warn(ext->dev,
- 			"Unhandled charger type %d, defaulting to SDP\n",
- 			 ret);
--		/* Fall through, treat as SDP */
-+		return EXTCON_CHG_USB_SDP;
- 	case CHT_WC_USBSRC_TYPE_SDP:
- 	case CHT_WC_USBSRC_TYPE_FLOAT_DP_DN:
- 	case CHT_WC_USBSRC_TYPE_OTHER:
+diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
+index 5210cffb53440..7e64fe426a055 100644
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -91,6 +91,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.rx_ring_fill_level = HTT_RX_RING_FILL_LEVEL,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA988X_HW_2_0_VERSION,
+@@ -124,6 +125,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA9887_HW_1_0_VERSION,
+@@ -157,6 +159,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA6174_HW_2_1_VERSION,
+@@ -189,6 +192,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA6174_HW_2_1_VERSION,
+@@ -221,6 +225,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA6174_HW_3_0_VERSION,
+@@ -253,6 +258,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA6174_HW_3_2_VERSION,
+@@ -288,6 +294,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA99X0_HW_2_0_DEV_VERSION,
+@@ -326,6 +333,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA9984_HW_1_0_DEV_VERSION,
+@@ -369,6 +377,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA9888_HW_2_0_DEV_VERSION,
+@@ -411,6 +420,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA9377_HW_1_0_DEV_VERSION,
+@@ -443,6 +453,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA9377_HW_1_1_DEV_VERSION,
+@@ -477,6 +488,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = QCA4019_HW_1_0_DEV_VERSION,
+@@ -516,6 +528,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = false,
+ 		.shadow_reg_support = false,
+ 		.rri_on_ddr = false,
++		.hw_filter_reset_required = true,
+ 	},
+ 	{
+ 		.id = WCN3990_HW_1_0_DEV_VERSION,
+@@ -540,6 +553,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
+ 		.per_ce_irq = true,
+ 		.shadow_reg_support = true,
+ 		.rri_on_ddr = true,
++		.hw_filter_reset_required = false,
+ 	},
+ };
+ 
+@@ -2406,7 +2420,8 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode,
+ 	 * possible to implicitly make it correct by creating a dummy vdev and
+ 	 * then deleting it.
+ 	 */
+-	if (mode == ATH10K_FIRMWARE_MODE_NORMAL) {
++	if (ar->hw_params.hw_filter_reset_required &&
++	    mode == ATH10K_FIRMWARE_MODE_NORMAL) {
+ 		status = ath10k_core_reset_rx_filter(ar);
+ 		if (status) {
+ 			ath10k_err(ar,
+diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
+index 977f79ebb4fd5..fac58c3c576a2 100644
+--- a/drivers/net/wireless/ath/ath10k/hw.h
++++ b/drivers/net/wireless/ath/ath10k/hw.h
+@@ -589,6 +589,11 @@ struct ath10k_hw_params {
+ 
+ 	/* Number of bytes to be the offset for each FFT sample */
+ 	int spectral_bin_offset;
++
++	/* targets which require hw filter reset during boot up,
++	 * to avoid it sending spurious acks.
++	 */
++	bool hw_filter_reset_required;
+ };
+ 
+ struct htt_rx_desc;
 -- 
 2.20.1
 
