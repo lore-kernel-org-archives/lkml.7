@@ -2,105 +2,128 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB004FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0587DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17152087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC272084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sNGAbhpU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/LqZXmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbfKHD1G (ORCPT
+        id S1729384AbfKHD3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:27:06 -0500
-Received: from ozlabs.org ([203.11.71.1]:48115 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfKHD1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:27:06 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 478QgC2dbPz9sP3;
-        Fri,  8 Nov 2019 14:27:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573183623;
-        bh=L8hdrEO/Huj0NNEdUGCwZ1N0P5lIySi3cYQ2RznsqxM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sNGAbhpUt8NW9XFdADVLAZgshLKGV7a8WPjz4a59usGSRpAGW9HDxJQBT7B+ss/bw
-         R8zr+qM12QRAP/5Igbdc1DdtSMOFjnMsuffl+Nk7z9963LArwoATS5lHypUb1MHVEY
-         pdZzPdH8Ta4jDxr3y2wztyd/WIcW3MQW+dTID86CsHcjnKTUqXLE610kmOiR88ZpYp
-         zUBoUEqCX6lZD//CZ+sXeT9/8jZ2QHbMKSTFBOdYi+d95zkcUr0afy9kv1mL86AYvP
-         7pE8q85AKndBZV91PFI5y6ou6y8lB9XhKUTZ+NhzvVVABWeveVcp4B7BuakW5ZdeUp
-         PlRdMmERYKT1Q==
-Date:   Fri, 8 Nov 2019 14:27:02 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Drew Fustini <drew@pdp7.com>,
-        Kent Gibson <warthog618@gmail.com>
-Subject: linux-next: manual merge of the gpio-brgl tree with the gpio tree
-Message-ID: <20191108142702.2e5ddcbb@canb.auug.org.au>
+        Thu, 7 Nov 2019 22:29:15 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41920 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfKHD3P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 22:29:15 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d29so3085038plj.8;
+        Thu, 07 Nov 2019 19:29:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BJCUfp8ZkVX+2Q/E2RA51yP281dLV5q+tGMP1kt6Ef8=;
+        b=U/LqZXmxhh8yeGmbBFtUj4NR77Lm5hbRR8wTVSBW4aTEN2ZGLfadqRN7ImQUIFSqUy
+         sjK0vvA9nvsEcVG+6F7ZEUbp1oDqZVs7y3wsDjSShszolJglwr6/8GnSQGffR/vrqK+j
+         Pk+tGPaNICEovggBuwTNSv8EYKs3WKMsIVm5qaPBReQe/0tp1wHMQSyO0bUvBrOKbyTp
+         nzJYu8ogUNwqNBa3ZGf087wPssKKXmt16lX17ocJvg3xQ+ySNGOkmgDE0M+dT2XGtRQd
+         kOcLa4MvDCWjT/kF9JBmFHW2SjQexsv/GBZfWlG25fy1fdBWyX7hn1MzYuCRfDwCxdTf
+         eepQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=BJCUfp8ZkVX+2Q/E2RA51yP281dLV5q+tGMP1kt6Ef8=;
+        b=jn7dTdVakPtGxj5HE8P8R6i7qJlRqX9Fb735am7aJRXi/E/Bvj6RGxKh4gSi9dNemI
+         2eJobquMdOnM/Wdcf1nccPxqNaazmM+jwX7DpcE/HOJ6SdkKA7a3oqYa3uyo8w8FN1hZ
+         YVXIRsdTVT8qu4sLoQhDVF1DJChYW0iij0V9ZWPYbmO3jqSIeKgxOqFEPuCJrK3cXUva
+         yMcsy9PehoWeGCG0yBpA+ifIp+CUOOqmq5LIu/+AwsVRKjc+zWqK8k3jAz9ImEg4Lhuk
+         j++QrFC81k7dczL9lJtkxZVp7MRcvXu3K7QeEY1Uf9LFhsLCdj2yu2R2j2Fse62mNrmz
+         mWAw==
+X-Gm-Message-State: APjAAAX1HDWqb3Rh4kUrY6JWtclY5d+7VjKmurJntnXwRqOxUp4O9DM7
+        5/8XPV0BfpbGr1Rxock6tI0sFazcsug=
+X-Google-Smtp-Source: APXvYqwUYaLV2Q5lctEAObWGMEHLJbNchUOQ++A589z1HlK7NWtmUmy5xzScfJRPCcXhohywYKP0ag==
+X-Received: by 2002:a17:902:bb8f:: with SMTP id m15mr4371359pls.121.1573183754056;
+        Thu, 07 Nov 2019 19:29:14 -0800 (PST)
+Received: from voyager.ibm.com ([36.255.48.244])
+        by smtp.gmail.com with ESMTPSA id c13sm4219194pfo.5.2019.11.07.19.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 19:29:13 -0800 (PST)
+From:   Joel Stanley <joel@jms.id.au>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] watchdog: aspeed: Fix clock behaviour for ast2600
+Date:   Fri,  8 Nov 2019 13:59:05 +1030
+Message-Id: <20191108032905.22463-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2rv=tye26ORUMSS_.+MQj/e";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2rv=tye26ORUMSS_.+MQj/e
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The ast2600 no longer uses bit 4 in the control register to indicate a
+1MHz clock (It now controls weather this watchdog is reset by a SOC
+reset). This means we do not want to set it. It also does not need to be
+set for the ast2500, as it is read-only on that SoC.
 
-Hi all,
+The comment next to the clock rate selection wandered away from where it
+was set, so put it back next to the register setting it's describing.
 
-Today's linux-next merge of the gpio-brgl tree got conflicts in:
+Fixes: b3528b487448 ("watchdog: aspeed: Add support for AST2600")
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/watchdog/aspeed_wdt.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-  drivers/gpio/gpiolib.c
-  include/uapi/linux/gpio.h
+diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+index 4ec0906bf12c..7e00960651fa 100644
+--- a/drivers/watchdog/aspeed_wdt.c
++++ b/drivers/watchdog/aspeed_wdt.c
+@@ -258,11 +258,6 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+ 	if (IS_ERR(wdt->base))
+ 		return PTR_ERR(wdt->base);
+ 
+-	/*
+-	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
+-	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
+-	 * good reason to have a faster watchdog counter.
+-	 */
+ 	wdt->wdd.info = &aspeed_wdt_info;
+ 	wdt->wdd.ops = &aspeed_wdt_ops;
+ 	wdt->wdd.max_hw_heartbeat_ms = WDT_MAX_TIMEOUT_MS;
+@@ -278,7 +273,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	config = ofdid->data;
+ 
+-	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
++	/*
++	 * On clock rates:
++	 *  - ast2400 wdt can run at PCLK, or 1MHz
++	 *  - ast2500 only runs at 1MHz, hard coding bit 4 to 1
++	 *  - ast2600 always runs at 1MHz
++	 *
++	 * Set the ast2400 to run at 1MHz as it simplifies the driver.
++	 */
++	if (of_device_is_compatible(np, "aspeed,ast2400-wdt"))
++		wdt->ctrl = WDT_CTRL_1MHZ_CLK;
+ 
+ 	/*
+ 	 * Control reset on a per-device basis to ensure the
+-- 
+2.24.0.rc1
 
-between commit:
-
-  8c550e94b883 ("gpio: expose pull-up/pull-down line flags to userspace")
-
-from the gpio tree and commit:
-
-  6d8251b35add ("gpio: expose pull-up/pull-down line flags to userspace")
-
-from the gpio-brgl tree.
-
-I fixed it up (I just used the latter versions) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2rv=tye26ORUMSS_.+MQj/e
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3E4IYACgkQAVBC80lX
-0Gz6qwf/XcJlSZnD1nvsIWYKt3bYAcZPwJ5SHTpHxXCt3KRgGzhuFvrOFStz98fu
-VB34wGTf5cPxiha99/ZLbc/mj6LB6LGboQdcTiG2GjIRWRqnAp/jDZHx3mJFO3XO
-3Wi7DPbaDDHgfIkvoiQDZ2mcY1csL8/apWMiNSz0a9IaphBVuqV12+7A3bilMNFW
-i12lVS4TXnmEflw5k2tzx0NKK0UU5WoLWBoF2/6HKs5UjSb2+2WdwfkUG2Xo2LIo
-0sMgIu2KZxbOReZ8RluKAlCNlqPmE49AhYX7VEEO9o7/tLfh9+4IbnXr8WanSqg5
-XrExPGDPWDt2s0djCIXYn3RgvUYnHA==
-=TjAD
------END PGP SIGNATURE-----
-
---Sig_/2rv=tye26ORUMSS_.+MQj/e--
