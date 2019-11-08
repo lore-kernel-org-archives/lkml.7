@@ -2,77 +2,68 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51F4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D9DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC1520673
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB456206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573235706;
+	bh=f8Hoi7cBe7NO+DHEj/DMDLWexVAgDB0nHNhMp3Wpmyg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=qJd2+5VDlq9FIXjpm3TWcasEB4bSPDofKBge0pdr/6zdBTe/4+C1rlo20FrefxmRp
+	 BtsiaWy0KB3aWRqkorzCdBhMbCi3mLFZ0igSiJ5moDQnbHptjFeNCgDxtg51V2oueR
+	 qxeEYsPacqMZb+T2dTm9iP5nzbd10A91UKBRYaio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfKHRxd (ORCPT
+        id S1730364AbfKHRzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:53:33 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:59851 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHRxd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:53:33 -0500
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9FDA56000B;
-        Fri,  8 Nov 2019 17:53:29 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 18:53:29 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [RFCv1] rtc: m41t80: disable clock provider support
-Message-ID: <20191108175329.GH216543@piout.net>
-References: <20191108170135.9053-1-sebastian.reichel@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108170135.9053-1-sebastian.reichel@collabora.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 8 Nov 2019 12:55:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfKHRzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:55:05 -0500
+Subject: Re: [GIT PULL] XArray updates for 5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573235704;
+        bh=f8Hoi7cBe7NO+DHEj/DMDLWexVAgDB0nHNhMp3Wpmyg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XJxvizkZco8cqrzA0470/t8bkIgrzjz01CmJawjtTzTCRw9AF0XM486uCkF/M9ZKc
+         3pBWN0r57jb5rLBOy2eIazp882bow0rU+vKRXblPJfK74LLKB8QMxHy+OjeQ0+EhoW
+         0hkdwlqZaHcWKVmiOybNhJ74o/RL73N92q2KfNr8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191108034727.GA30611@bombadil.infradead.org>
+References: <20191108034727.GA30611@bombadil.infradead.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191108034727.GA30611@bombadil.infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/willy/linux-dax.git
+ tags/xarray-5.4
+X-PR-Tracked-Commit-Id: b7e9728f3d7fc5c5c8508d99f1675212af5cfd49
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 410ef736a77b584e1c54a3784ee56ca63114ce11
+Message-Id: <157323570484.12598.13165963828494055920.pr-tracker-bot@kernel.org>
+Date:   Fri, 08 Nov 2019 17:55:04 +0000
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/2019 18:01:35+0100, Sebastian Reichel wrote:
-> Congatec's QMX6 system on module (SoM) uses a m41t62 as RTC. The
-> modules SQW clock output defaults to 32768 Hz. This behaviour is
-> used to provide the i.MX6 CKIL clock. Once the RTC driver is probed,
-> the clock is disabled and all i.MX6 functionality depending on
-> the 32 KHz clock have undefined behaviour (e.g. the hardware watchdog
-> run to fast or slow).
-> 
-> The normal solution would be to properly describe the clock tree
-> in DT, but from the kernel's perspective this is a chicken-and-egg
-> problem: CKIL is required very early, but the clock is only provided
-> after the I2C RTC has been probed.
-> 
-> Technically everything is fine by not touching anything, so this
-> works around the issue by disabling the clock handling from the
-> RTC driver. I guess the proper solution would be to simply mark the
-> clock as always-enabled, but this does not seem to be supported by
-> the clock framework.
-> 
+The pull request you sent on Thu, 7 Nov 2019 19:47:27 -0800:
 
-You need to have a consumer so this clock is not disabled by the CCF
-after seeing nobody uses it. If you need it early, you can have a look
-at rtc-sun6i.c but I would like that to not become a recurrent pattern,
-especially for discrete RTCs.
+> git://git.infradead.org/users/willy/linux-dax.git tags/xarray-5.4
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/410ef736a77b584e1c54a3784ee56ca63114ce11
+
+Thank you!
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
