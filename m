@@ -6,75 +6,73 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDFAFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7711C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA2820869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC290206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbfKHRGD (ORCPT
+        id S1728412AbfKHRGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:06:03 -0500
-Received: from tragedy.dreamhost.com ([66.33.205.236]:45243 "EHLO
-        tragedy.dreamhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbfKHRGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:06:03 -0500
-X-Greylist: delayed 511 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 12:06:02 EST
-Received: from localhost (localhost [127.0.0.1])
-        by tragedy.dreamhost.com (Postfix) with ESMTPS id D5C5715F8AC;
-        Fri,  8 Nov 2019 08:57:29 -0800 (PST)
-Date:   Fri, 8 Nov 2019 16:57:27 +0000 (UTC)
-From:   Sage Weil <sage@newdream.net>
-X-X-Sender: sage@piezo.novalocal
-To:     Luis Henriques <lhenriques@suse.com>
-cc:     Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <ukernel@gmail.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/2] ceph: safely use 'copy-from' Op on Octopus
- OSDs
-In-Reply-To: <20191108164758.GA1760@hermes.olymp>
-Message-ID: <alpine.DEB.2.21.1911081656320.10553@piezo.novalocal>
-References: <20191108141555.31176-1-lhenriques@suse.com> <CAOi1vP-sVQKvpiPLoZ=9s7Hy=c2eQRocxSs1nPrXAUCbbZUZ-g@mail.gmail.com> <20191108164758.GA1760@hermes.olymp>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 8 Nov 2019 12:06:46 -0500
+Received: from muru.com ([72.249.23.125]:40934 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbfKHRGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:06:45 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id BBC8480D4;
+        Fri,  8 Nov 2019 17:07:20 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 09:06:41 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Tero Kristo <t-kristo@ti.com>,
+        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 3/5] ARM: dts: dra7: add vpe clkctrl node
+Message-ID: <20191108170641.GI5610@atomide.com>
+References: <20191104203841.3628-1-bparrot@ti.com>
+ <20191104203841.3628-4-bparrot@ti.com>
+ <20191108165554.GF5610@atomide.com>
+ <20191108170231.ubwfu2nvcwjfabas@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-VR-STATUS: OK
-X-VR-SCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedruddvuddgleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuggftfghnshhusghstghrihgsvgdpffftgfetoffjqffuvfenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffujgfkfhgfgggtsehttdertddtredvnecuhfhrohhmpefurghgvgcuhggvihhluceoshgrghgvsehnvgifughrvggrmhdrnhgvtheqnecukfhppeduvdejrddtrddtrddunecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehlohgtrghlhhhoshhtpdhinhgvthepuddvjedrtddrtddruddprhgvthhurhhnqdhprghthhepufgrghgvucghvghilhcuoehsrghgvgesnhgvfigurhgvrghmrdhnvghtqedpmhgrihhlfhhrohhmpehsrghgvgesnhgvfigurhgvrghmrdhnvghtpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108170231.ubwfu2nvcwjfabas@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Luis Henriques wrote:
-> On Fri, Nov 08, 2019 at 04:15:35PM +0100, Ilya Dryomov wrote:
-> > If the OSD checked for unknown flags, like newer syscalls do, it would
-> > be super easy, but it looks like it doesn't.
+* Benoit Parrot <bparrot@ti.com> [191108 17:00]:
+> Tony Lindgren <tony@atomide.com> wrote on Fri [2019-Nov-08 08:55:54 -0800]:
+> > Hi,
 > > 
-> > An obvious solution is to look at require_osd_release in osdmap, but we
-> > don't decode that in the kernel because it lives the OSD portion of the
-> > osdmap.  We could add that and consider the fact that the client now
-> > needs to decode more than just the client portion a design mistake.
-> > I'm not sure what can of worms does that open and if copy-from alone is
-> > worth it though.  Perhaps that field could be moved to (or a copy of it
-> > be replicated in) the client portion of the osdmap starting with
-> > octopus?  We seem to be running into it on the client side more and
-> > more...
+> > * Benoit Parrot <bparrot@ti.com> [191104 20:39]:
+> > > Add clkctrl nodes for VPE module.
+> > 
+> > Can you please add a comment describing that we currently need to
+> > use custom node names here instead of the standard naming?
 > 
-> I can't say I'm thrilled with the idea of going back to hack into the
-> OSDs code again, I was hoping to be able to handle this with the
-> information we already have on the connection peer_features field.  It
-> took me *months* to have the OSD fix merged in so I'm not really
-> convinced a change to the osdmap would make it into Octopus :-)
-> 
-> (But I'll have a look at this and see if I can understand what moving or
-> replicating the field in the osdmap would really entail.)
+> Tony, what do you mean "custom node name" here?
+> I followed the exact same syntax that was already there... confused..
 
-Adding a copy of require_osd_release in the client portion of the map is 
-an easy thing to do (and probably where it should have gone in the first 
-place!).  Let's do that!
+Oh sorry for being unclear. Yeah so the conclusion of the discussion was
+that we still need custom node names for now.
 
-sage
+And for patch "[PATCH] clk: ti: add clkctrl data dra7 sgx" I added you to
+Cc, and it has this in the patch description:
+
+"Note that because of the current dts node name dependency for mapping to
+ clock domain, we must still use "gpu-clkctrl@" naming instead of generic
+ "clock@" naming for the node. And because of this, it's probably best to
+ apply the dts node addition together along with the other clock changes."
+
+So can you please add something similar to your clock node patches too
+to explain why we cannot use standard node names there?
+
+Regards,
+
+Tony
