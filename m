@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C779FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3905FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195EA222D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C2E206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213604;
-	bh=93VE6Y/iJda7YDrNkr7BnN8q9ahcrr3mWS4oxRWt8W4=;
+	s=default; t=1573213608;
+	bh=Gr3SZ9VHa90+tcO5hNJcOPzYgigEHZhDGHk6WUMb78c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIne8pb28NsWL202NNyRfz0qRnJbm6GvysjSs2e6aBV86+nLS8a94VY/dfGVA+tCg
-	 YTLm72CTb6VQVI86Keff7Zn/Xdv9Hks5aj1QImM0pMoXD47/jVPX9li7FFjYCwSgrO
-	 aM3xSf9VBup8CKQUo4cQk3C5MzHrc3wnZgGsuv6A=
+	b=Bde4VBkSnfoiQZIx8o7sn6EoJbMvhZY6gs77H8PkEhZSlo9CoSL/Mvswi9Kb/Fhuo
+	 pvG3mMj+0alX3xm/8nakJiL1xEvLOVmpT4mieC54V5nG7hGyloNWjLAOPOEQ5cMwHz
+	 Z2GiXT9fkEYjX3AUDaA7lEP4bmzh33FMy9r2xqus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391409AbfKHLqn (ORCPT
+        id S2391435AbfKHLqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34092 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390243AbfKHLqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:24 -0500
+        id S2391281AbfKHLq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9B4620656;
-        Fri,  8 Nov 2019 11:46:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3C6521D82;
+        Fri,  8 Nov 2019 11:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213583;
-        bh=93VE6Y/iJda7YDrNkr7BnN8q9ahcrr3mWS4oxRWt8W4=;
+        s=default; t=1573213586;
+        bh=Gr3SZ9VHa90+tcO5hNJcOPzYgigEHZhDGHk6WUMb78c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wlGUfL1XALEc5IZpPT9nK1+6UDu3IttEHLMdeQMXP6OOOscDPcQAP2WUFhwM06WgK
-         4QqSXPYrchgulH8M4bz5uNpWRhvTzsIJhl7bVnY6gMN3q60WqmULT7sFHhOhmE4VeQ
-         gEy/nneM372FN3no6OVl0gzsXpEC8+Ddw/LOhivI=
+        b=hbnPyiJUFzgmNcsl+TGGyjQgv6KoRP7hbxey7u2f6vnAEkvMfOb5nO9FsfP9bqNc6
+         /gGqrImQLn506VE154O96n2qVFh7vDSkez8xslw5fVP/mZwoB7em4LZzDulowHqDXq
+         wOdcvym8NLcpE8fm4J/i3D3isKqEz9UaFa7uAqeY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yong Zhi <yong.zhi@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 26/64] ASoC: Intel: hdac_hdmi: Limit sampling rates at dai creation
-Date:   Fri,  8 Nov 2019 06:45:07 -0500
-Message-Id: <20191108114545.15351-26-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 29/64] ARM: dts: omap3-gta04: fixes for tvout / venc
+Date:   Fri,  8 Nov 2019 06:45:10 -0500
+Message-Id: <20191108114545.15351-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,44 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhi <yong.zhi@intel.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 3b857472f34faa7d11001afa5e158833812c98d7 ]
+[ Upstream commit f6591391373dbff2c0200e1055d4ff86191578d2 ]
 
-Playback of 44.1Khz contents with HDMI plugged returns
-"Invalid pipe config" because HDMI paths in the FW
-topology are configured to operate at 48Khz.
+* fix connector compatibility (composite)
+* add comment for gpio1 23
+* add proper #address-cells
+* we use only one venc_out channel for composite
 
-This patch filters out sampling rates not supported
-at hdac_hdmi_create_dais() to let user space SRC
-to do the converting.
-
-Signed-off-by: Yong Zhi <yong.zhi@intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hdmi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index c602c4960924c..88355d1719a30 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -1267,6 +1267,12 @@ static int hdac_hdmi_create_dais(struct hdac_device *hdac,
- 		if (ret)
- 			return ret;
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 95c6ac44e307f..67b50dbe28189 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -122,7 +122,7 @@
+ 	};
  
-+		/* Filter out 44.1, 88.2 and 176.4Khz */
-+		rates &= ~(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_88200 |
-+			   SNDRV_PCM_RATE_176400);
-+		if (!rates)
-+			return -EINVAL;
+ 	tv0: connector {
+-		compatible = "svideo-connector";
++		compatible = "composite-video-connector";
+ 		label = "tv";
+ 
+ 		port {
+@@ -134,7 +134,7 @@
+ 
+ 	tv_amp: opa362 {
+ 		compatible = "ti,opa362";
+-		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;	/* GPIO_23 to enable video out amplifier */
+ 
+ 		ports {
+ 			#address-cells = <1>;
+@@ -539,10 +539,14 @@
+ 
+ 	vdda-supply = <&vdac>;
+ 
++	#address-cells = <1>;
++	#size-cells = <0>;
 +
- 		sprintf(dai_name, "intel-hdmi-hifi%d", i+1);
- 		hdmi_dais[i].name = devm_kstrdup(&hdac->dev,
- 					dai_name, GFP_KERNEL);
+ 	port {
++		reg = <0>;
+ 		venc_out: endpoint {
+ 			remote-endpoint = <&opa_in>;
+-			ti,channels = <2>;
++			ti,channels = <1>;
+ 			ti,invert-polarity;
+ 		};
+ 	};
 -- 
 2.20.1
 
