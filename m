@@ -2,52 +2,51 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1414CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CABEFC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19A920650
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D919020650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240569;
-	bh=iS5YkiRMX6QfvMF8CirRm7kVBGedLM1vXfK0qMWYnL4=;
+	s=default; t=1573240583;
+	bh=hRXQ8sUkkvj8f+ms3hSWiNmVXTyGDsp/hBlvFvf3ciw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yo77A/sQeQQ9hLfml4lMppjkJXeuq+RiSXraxF/YXzSh1Gdy99ZFbOLI5+ZJ6rNFk
-	 4+ktIBH0oFvb7bx9j1B92Ldm39TyziQtLU0ih7IHcMSKdZQwf3gG0eTPYZiAqJneIQ
-	 AZlEK5jjeZdxqZYc6LFoJ3YDmlKJU13P+ciFHqik=
+	b=Ws1hvqO133gy0SYv6jVn7Exmoypi1W3osm1cPOIjtAotxt+hmsJ5faOq4MK8h1dwU
+	 evkJtDHVuVq5uyVtrmcDw/4OeQpgffWwBhbsVfU2etb9m7iiSdbHgFBA1ivclvFGDj
+	 iXh2spkPTdDfa9iYdzrwXfNCWuH03PJoS5TL0GlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391087AbfKHTQH (ORCPT
+        id S2390727AbfKHTDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:16:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33402 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:03:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390818AbfKHTDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:40 -0500
+        id S2390707AbfKHTDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:03:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C2C12067B;
-        Fri,  8 Nov 2019 19:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DE9E20650;
+        Fri,  8 Nov 2019 19:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239819;
-        bh=iS5YkiRMX6QfvMF8CirRm7kVBGedLM1vXfK0qMWYnL4=;
+        s=default; t=1573239790;
+        bh=hRXQ8sUkkvj8f+ms3hSWiNmVXTyGDsp/hBlvFvf3ciw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQ0bc8EeH13A5pelWoL0Yeh0s4aRUvPSubsyARqVrlP5apEcKTxGCWLEwfgDBzGmO
-         osIz2KkzJaBLHVK6WoFIEXI7Mk329FxQVXWVlON9+S0OY3XCGxD/7qAOq9RWz611rp
-         EWDPzN8Riy8o81Cs2BuOZSZfbdCqL35nTugEv1Ww=
+        b=vHbJsjctm92LWjwY4KcNXI4i+B/72JG0IkGoaFyxW62kMQBvgGsqUPUBAQTCbkqcG
+         tRigNhkORhePSGQ1jZDpTEVfca735RRZ+wJSjRijhGPK4shiqaKfg/hO1mzCo4tPN7
+         Y9dSVY4YfHOho6yMshZnjc5OUT6T9ShrSfD6EjRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/79] nbd: protect cmd->status with cmd->lock
-Date:   Fri,  8 Nov 2019 19:50:15 +0100
-Message-Id: <20191108174805.118697450@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 61/79] net/mlx5e: Fix handling of compressed CQEs in case of low NAPI budget
+Date:   Fri,  8 Nov 2019 19:50:41 +0100
+Message-Id: <20191108174820.613541097@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,64 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit de6346ecbc8f5591ebd6c44ac164e8b8671d71d7 ]
+[ Upstream commit 9df86bdb6746d7fcfc2fda715f7a7c3d0ddb2654 ]
 
-We already do this for the most part, except in timeout and clear_req.
-For the timeout case we take the lock after we grab a ref on the config,
-but that isn't really necessary because we're safe to touch the cmd at
-this point, so just move the order around.
+When CQE compression is enabled, compressed CQEs use the following
+structure: a title is followed by one or many blocks, each containing 8
+mini CQEs (except the last, which may contain fewer mini CQEs).
 
-For the clear_req cause this is initiated by the user, so again is safe.
+Due to NAPI budget restriction, a complete structure is not always
+parsed in one NAPI run, and some blocks with mini CQEs may be deferred
+to the next NAPI poll call - we have the mlx5e_decompress_cqes_cont call
+in the beginning of mlx5e_poll_rx_cq. However, if the budget is
+extremely low, some blocks may be left even after that, but the code
+that follows the mlx5e_decompress_cqes_cont call doesn't check it and
+assumes that a new CQE begins, which may not be the case. In such cases,
+random memory corruptions occur.
 
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+An extremely low NAPI budget of 8 is used when busy_poll or busy_read is
+active.
+
+This commit adds a check to make sure that the previous compressed CQE
+has been completely parsed after mlx5e_decompress_cqes_cont, otherwise
+it prevents a new CQE from being fetched in the middle of a compressed
+CQE.
+
+This commit fixes random crashes in __build_skb, __page_pool_put_page
+and other not-related-directly places, that used to happen when both CQE
+compression and busy_poll/busy_read were enabled.
+
+Fixes: 7219ab34f184 ("net/mlx5e: CQE compression")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/nbd.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index bd9aafe86c2fc..da6a36d14f4cf 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -349,17 +349,16 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
- 	struct nbd_device *nbd = cmd->nbd;
- 	struct nbd_config *config;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -1267,8 +1267,11 @@ int mlx5e_poll_rx_cq(struct mlx5e_cq *cq
+ 	if (unlikely(!test_bit(MLX5E_RQ_STATE_ENABLED, &rq->state)))
+ 		return 0;
  
-+	if (!mutex_trylock(&cmd->lock))
-+		return BLK_EH_RESET_TIMER;
-+
- 	if (!refcount_inc_not_zero(&nbd->config_refs)) {
- 		cmd->status = BLK_STS_TIMEOUT;
-+		mutex_unlock(&cmd->lock);
- 		goto done;
- 	}
- 	config = nbd->config;
+-	if (cq->decmprs_left)
++	if (cq->decmprs_left) {
+ 		work_done += mlx5e_decompress_cqes_cont(rq, cq, 0, budget);
++		if (cq->decmprs_left || work_done >= budget)
++			goto out;
++	}
  
--	if (!mutex_trylock(&cmd->lock)) {
--		nbd_config_put(nbd);
--		return BLK_EH_RESET_TIMER;
--	}
--
- 	if (config->num_connections > 1) {
- 		dev_err_ratelimited(nbd_to_dev(nbd),
- 				    "Connection timed out, retrying (%d/%d alive)\n",
-@@ -745,7 +744,10 @@ static void nbd_clear_req(struct request *req, void *data, bool reserved)
- {
- 	struct nbd_cmd *cmd = blk_mq_rq_to_pdu(req);
- 
-+	mutex_lock(&cmd->lock);
- 	cmd->status = BLK_STS_IOERR;
-+	mutex_unlock(&cmd->lock);
-+
- 	blk_mq_complete_request(req);
- }
- 
--- 
-2.20.1
-
+ 	cqe = mlx5_cqwq_get_cqe(&cq->wq);
+ 	if (!cqe) {
 
 
