@@ -2,111 +2,112 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881BCFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680A3FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D3F21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573235333;
-	bh=GE9PFeLXesIuv0zEy2ffSpiHpDpB3tEJiSldwNibaS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aX7y0Fhz+flEycBt+3ZHSA+mFVlPgteWdrUkg7gVf7PIMZ7KlK3KKeTT2V27VlhJ6
-	 584GsoZ7P9G3cHFhRkwSkuAKyortNDK5M+K1RMAMtl70F6wi37zr/pqik/6uoRwsP8
-	 65795JYnCUbyPDZcyfMFeVLODvXiz5miKD8VaEaU=
+	by mail.kernel.org (Postfix) with ESMTP id 456DB206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbfKHRsw (ORCPT
+        id S1729773AbfKHRs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:48:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfKHRsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:48:52 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98A920673;
-        Fri,  8 Nov 2019 17:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573235331;
-        bh=GE9PFeLXesIuv0zEy2ffSpiHpDpB3tEJiSldwNibaS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MSZsLCIscNKdexiVYE6cN58MOHJ17AuEt3qEIS+AD8PSgv6IX4c+q9ZASqv4F4l3m
-         CKFysVQakrkZdtSGp2zOn7tGmKy9BYdUqPA213MDrjVFD02gjk64+S4FbAyk+qV7gm
-         Sdagw9Xh2NOWKREY3IilhnUb6L1KHT9yyu02L+xs=
-Date:   Fri, 8 Nov 2019 17:48:46 +0000
-From:   Will Deacon <will@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
- explicitly non-modular"
-Message-ID: <20191108174846.GA22677@willie-the-truck>
-References: <20191108151608.20932-1-will@kernel.org>
- <20191108151608.20932-7-will@kernel.org>
- <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
- <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
- <20191108164728.GB20866@willie-the-truck>
- <c4cb13d3-3786-2e45-ba57-9965cead9a49@huawei.com>
- <20191108173248.GA22448@willie-the-truck>
+        Fri, 8 Nov 2019 12:48:58 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37778 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKHRs5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:48:57 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 78DD929128D
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id EA32148009C; Fri,  8 Nov 2019 18:48:53 +0100 (CET)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Support Opensource <support.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv1 0/5] ASoC: da7213: support for usage with simple-card
+Date:   Fri,  8 Nov 2019 18:48:38 +0100
+Message-Id: <20191108174843.11227-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108173248.GA22448@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 05:32:48PM +0000, Will Deacon wrote:
-> On Fri, Nov 08, 2019 at 05:25:09PM +0000, John Garry wrote:
-> > On 08/11/2019 16:47, Will Deacon wrote:
-> > > On Fri, Nov 08, 2019 at 04:44:25PM +0000, John Garry wrote:
-> > > > BTW, it now looks like it was your v1 series I was testing there, on your
-> > > > branch iommu/module. It would be helpful to update for ease of testing.
-> > > 
-> > > Yes, sorry about that. I'll update it now (although I'm not sure it will
-> > > help with this -- I was going to see what happens with other devices such
-> > > as the intel-iommu or storage controllers)
-> > 
-> > So I tried your v2 series for this - it has the same issue, as I
-> > anticipated.
-> 
-> Right, I'm just not sure how resilient drivers are expected to be to force
-> unbinding like this. You can break lots of stuff with root...
-> 
-> > It seems that some iommu drivers do call iommu_device_register(), so maybe a
-> > decent reference. Or simply stop the driver being unbound.
-> 
-> I'm not sure what you mean about iommu_device_register() (we call that
-> already), but I guess we can keep the '.suppress_bind_attrs = true' if
-> necessary. I'll have a play on my laptop and see how well that works if
-> you start unbinding stuff.
+Hi,
 
-So unbinding the nvme driver goes bang:
+This extends the da7213 driver to be used with simple-audio-card in
+combination with a fixed clock. Here is a snippet of the downstream
+board's DT, that is supposed to be supported by this patchset.
 
-[90139.090158] nvme nvme0: failed to set APST feature (-19)
-[90141.966780] Aborting journal on device dm-1-8.
-[90141.967124] Buffer I/O error on dev dm-1, logical block 26247168, lost sync page write
-[90141.967169] JBD2: Error -5 detected when updating journal superblock for dm-1-8.
-[90141.967403] Buffer I/O error on dev dm-1, logical block 0, lost sync page write
-[90141.967454] EXT4-fs (dm-1): I/O error while writing superblock
-[90141.967467] EXT4-fs error (device dm-1): ext4_journal_check_start:61: Detected aborted journal
-[90141.967473] EXT4-fs (dm-1): Remounting filesystem read-only
-[90141.967569] Buffer I/O error on dev dm-1, logical block 0, lost sync page write
-[90141.967682] EXT4-fs (dm-1): I/O error while writing superblock
+---------------------------------------------------------------------
+/ {
+        sound {
+                compatible = "simple-audio-card";
+                simple-audio-card,name = "audio-card";
+                simple-audio-card,format = "i2s";
+                simple-audio-card,bitclock-master = <&dailink_master>;
+                simple-audio-card,frame-master = <&dailink_master>;
+                
+                simple-audio-card,widgets = "Speaker", "Ext Spk";   
+                simple-audio-card,audio-routing = "Ext Spk", "LINE";
+                
+                simple-audio-card,cpu {
+                        sound-dai = <&ssi1>;
+                };
 
-and I've not managed to recover the thing yet (it's stuck trying to reboot.)
+                dailink_master: simple-audio-card,codec {
+                        sound-dai = <&codec>;
+                };
+        };
 
-What state was your system in after unbinding the SMMU?
+        clk_ext_audio_codec: clock-codec {
+                compatible = "fixed-clock";
+                #clock-cells = <0>;
+                clock-frequency = <12288000>;
+        };
+};
 
-Will
+&i2c1 {
+        codec: audio-codec@1a {
+                compatible = "dlg,da7212";
+                reg = <0x1a>;
+                #sound-dai-cells = <0>;
+                VDDA-supply = <&reg_2v5_audio>;
+                VDDSP-supply = <&reg_5v0_audio>;
+                VDDMIC-supply = <&reg_3v3_audio>;
+                VDDIO-supply = <&reg_3v3_audio>;
+                clocks = <&clk_ext_audio_codec>;
+                clock-names = "mclk";
+        };
+};
+---------------------------------------------------------------------
+
+-- Sebastian
+
+Sebastian Reichel (5):
+  ASoC: da7213: Add regulator support
+  ASoC: Add DA7213 audio codec as selectable option
+  ASoC: da7213: move set_sysclk to codec level
+  ASoC: da7213: move set_pll to codec level
+  ASoC: da7213: add default clock handling
+
+ .../devicetree/bindings/sound/da7213.txt      |   4 +
+ sound/soc/codecs/Kconfig                      |   3 +-
+ sound/soc/codecs/da7213.c                     | 128 ++++++++++++++++--
+ sound/soc/codecs/da7213.h                     |   3 +
+ 4 files changed, 125 insertions(+), 13 deletions(-)
+
+-- 
+2.24.0.rc1
+
