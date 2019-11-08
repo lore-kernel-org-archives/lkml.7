@@ -2,232 +2,140 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEE0FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E30FC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D690A21848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573246821;
-	bh=YdoZzimebFdQV6O7Wb5LCogyJVEvxDbTFEtZFm0YoJw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xcpmCfPDZu5PJ2jnZrk2CefNxcdkIwBSUgQmutOnhHP85LYwSSk9ryQRFdIyyXWIz
-	 1G5PmyS0crGnHcSBdC8YWOmHcxrtu2kNW9EzPuOlng22KIEZsMBnCstmcBL2NYS5oY
-	 WMyH8iSTJIk9r2tubHXHFwGUiC14lJR7aF3tAk5w=
+	by mail.kernel.org (Postfix) with ESMTP id 0FCA52178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:00:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q3LChfPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730968AbfKHVAU (ORCPT
+        id S1731304AbfKHVAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:00:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfKHVAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:00:19 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EECF214DB;
-        Fri,  8 Nov 2019 21:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573246818;
-        bh=YdoZzimebFdQV6O7Wb5LCogyJVEvxDbTFEtZFm0YoJw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BDm7OoLZQoFXeZFGioW90fJ5lk6UvxKXvNJcW02TE6ixkVJGNNmaIKxvncUklmY0l
-         dhKA9J8H01YNa8KBUc4U2zzFIdxe1TP2kSrVoywIVopxa72SUzWscau//ILU10IAF/
-         QtZXjgUYH7v9Mgh7/ZAQ0uZlbRAGjsCU+kUbaCCs=
-Date:   Fri, 8 Nov 2019 13:00:17 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        fsdev <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [RFC v2] writeback: add elastic bdi in cgwb bdp
-Message-Id: <20191108130017.335cd353dd603dbba80b63dd@linux-foundation.org>
-In-Reply-To: <20191026104656.15176-1-hdanton@sina.com>
-References: <20191026104656.15176-1-hdanton@sina.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 8 Nov 2019 16:00:41 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42027 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfKHVAk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:00:40 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so5404654pfh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 13:00:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/6fKp6CqSBNNTOH5oGG1bShIqpaCFBeopQl1N5ozmL8=;
+        b=Q3LChfPNrqBoMIG+qk93Z/uRgabqJU5Yonk/5lavcG+A5aoQNZBbgh8W+gvdW+O3WF
+         Ph6NUvQFnHQa7qpWvvFQPpx6nX+S2/K9cuYiXfe1HqfaHUUDASWrTZfdctHnYl7VXUQ4
+         H0NfOV+Xg64eoLm+H0RV9vZZrnHE8UMtJ3A5s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/6fKp6CqSBNNTOH5oGG1bShIqpaCFBeopQl1N5ozmL8=;
+        b=FfC+0LGsLPncdU5DG7rDE9kp2h+7EmF/su5dSJRtesTC2sZlAikyBAS5ihAXHePY4R
+         bSCfHh5lnhec2ytJVtWdTtskHRnne92rFEnV3XKJjCmqBuyp7hHDni9ZHeNfRLXQ0iC6
+         5QArEIZi7MW83cDHsAxCDzlZ1DnlaRw/F/nyCnM+GttvDUEqAvZDjsiSHEsvprcmsKhy
+         Av+ncuObvhQKD7Ad+4o6OD4aQ+dXWLmg6XAKSmLbSU3/b7b1eDV0GfGvz23k4dNUBw1L
+         VSc9312BB8qv9JqnDNLl1oo9hq8ELNHArRvOlm3lbWmqeFEsppFL7LgWw3PfiWW6pKWa
+         QYdw==
+X-Gm-Message-State: APjAAAUjft5vCrsMFfkXkUWFKONs3nWQt1P5CvWx11Hq76T4+M+r2D+H
+        /bpyZcHuRtBAzHDnOTNnF5WWzw==
+X-Google-Smtp-Source: APXvYqx76TYGNxxUb3yK5CBsoS/H4otOJib03kZygL8sBTWdWl3BQi6ZSlS+rjuyQyVx9kxt8prGIQ==
+X-Received: by 2002:a63:f849:: with SMTP id v9mr12888750pgj.99.1573246838531;
+        Fri, 08 Nov 2019 13:00:38 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j22sm6388221pff.42.2019.11.08.13.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 13:00:37 -0800 (PST)
+Date:   Fri, 8 Nov 2019 13:00:36 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        keescook+coverity-bot@chromium.org, narmstrong@baylibre.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: amlogic - fix two resources leak
+Message-ID: <201911081300.B869D22BB@keescook>
+References: <1573206317-9926-1-git-send-email-clabbe@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573206317-9926-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 26 Oct 2019 18:46:56 +0800 Hillf Danton <hdanton@sina.com> wrote:
+On Fri, Nov 08, 2019 at 09:45:17AM +0000, Corentin Labbe wrote:
+> This patch fixes two resources leak that occur on error path.
+> 
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> Addresses-Coverity-ID: 1487403 ("RESOURCE_LEAK")
+> Addresses-Coverity-ID: 1487401 ("Resource leaks")
+> Fixes: 48fe583fe541 ("crypto: amlogic - Add crypto accelerator for amlogic GXL")
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 
-> 
-> The elastic bdi is the mirror bdi of spinning disks, SSD, USB and
-> other storage devices/instruments on market. The performance of
-> ebdi goes up and down as the pattern of IO dispatched changes, as
-> approximately estimated as below.
-> 
-> 	P = j(..., IO pattern);
-> 
-> In ebdi's view, the bandwidth currently measured in balancing dirty
-> pages has close relation to its performance because the former is a
-> part of the latter.
-> 
-> 	B = y(P);
-> 
-> The functions above suggest there may be a layer violation if it
-> could be better measured somewhere below fs.
-> 
-> It is measured however to the extent that makes every judge happy,
-> and is playing a role in dispatching IO with the IO pattern entirely
-> ignored that is volatile in nature.
-> 
-> And it helps to throttle the dirty speed, with the figure ignored
-> that DRAM in general is x10 faster than ebdi. If B is half of P for
-> instance, then it is near 5% of dirty speed, just 2 points from the
-> figure in the snippet below.
-> 
-> /*
->  * If ratelimit_pages is too high then we can get into dirty-data overload
->  * if a large number of processes all perform writes at the same time.
->  * If it is too low then SMP machines will call the (expensive)
->  * get_writeback_state too often.
->  *
->  * Here we set ratelimit_pages to a level which ensures that when all CPUs are
->  * dirtying in parallel, we cannot go more than 3% (1/32) over the dirty memory
->  * thresholds.
->  */
-> 
-> To prevent dirty speed from running away from laundry speed, ebdi
-> suggests the walk-dog method to put in bdp as a leash seems to
-> churn less in IO pattern.
+Thanks!
 
-I'm finding both the changelog and the patch rather hard to understand.
-The absence of code comments doesn't help.  But the test robot
-performance results look nice.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Presumably you did your own performance testing.  Please share the
-results of that in the changelog.
+-Kees
 
+> ---
+>  drivers/crypto/amlogic/amlogic-gxl-cipher.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> --- a/include/linux/backing-dev-defs.h
-> +++ b/include/linux/backing-dev-defs.h
-> @@ -170,6 +170,8 @@ struct bdi_writeback {
+> diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> index e9283ffdbd23..58b717aab6e8 100644
+> --- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> +++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> @@ -131,7 +131,8 @@ static int meson_cipher(struct skcipher_request *areq)
+>  	if (areq->iv && ivsize > 0) {
+>  		if (ivsize > areq->cryptlen) {
+>  			dev_err(mc->dev, "invalid ivsize=%d vs len=%d\n", ivsize, areq->cryptlen);
+> -			return -EINVAL;
+> +			err = -EINVAL;
+> +			goto theend;
+>  		}
+>  		memcpy(bkeyiv + 32, areq->iv, ivsize);
+>  		keyivlen = 48;
+> @@ -151,9 +152,10 @@ static int meson_cipher(struct skcipher_request *areq)
 >  
->  	struct list_head bdi_node;	/* anchored at bdi->wb_list */
->  
-> +	struct wait_queue_head bdp_waitq;
-
-Please add comments which help the reader find out what "bdp" stands
-for.
-
-
->  #ifdef CONFIG_CGROUP_WRITEBACK
->  	struct percpu_ref refcnt;	/* used only for !root wb's */
->  	struct fprop_local_percpu memcg_completions;
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-> @@ -324,6 +324,8 @@ static int wb_init(struct bdi_writeback
->  			goto out_destroy_stat;
+>  	phykeyiv = dma_map_single(mc->dev, bkeyiv, keyivlen,
+>  				  DMA_TO_DEVICE);
+> -	if (dma_mapping_error(mc->dev, phykeyiv)) {
+> +	err = dma_mapping_error(mc->dev, phykeyiv);
+> +	if (err) {
+>  		dev_err(mc->dev, "Cannot DMA MAP KEY IV\n");
+> -		return -EFAULT;
+> +		goto theend;
 >  	}
 >  
-> +	init_waitqueue_head(&wb->bdp_waitq);
-> +
->  	return 0;
->  
->  out_destroy_stat:
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -1551,6 +1551,39 @@ static inline void wb_dirty_limits(struc
+>  	tloffset = 0;
+> @@ -245,7 +247,6 @@ static int meson_cipher(struct skcipher_request *areq)
+>  	if (areq->iv && ivsize > 0) {
+>  		if (rctx->op_dir == MESON_DECRYPT) {
+>  			memcpy(areq->iv, backup_iv, ivsize);
+> -			kzfree(backup_iv);
+>  		} else {
+>  			scatterwalk_map_and_copy(areq->iv, areq->dst,
+>  						 areq->cryptlen - ivsize,
+> @@ -254,6 +255,7 @@ static int meson_cipher(struct skcipher_request *areq)
 >  	}
+>  theend:
+>  	kzfree(bkeyiv);
+> +	kzfree(backup_iv);
+>  
+>  	return err;
 >  }
->
-> +static bool cgwb_bdp_should_throttle(struct bdi_writeback *wb)
+> -- 
+> 2.23.0
+> 
 
-Please document this function.  Describe the "why" not the "what".
-
-Comment should help readers understand what "cgwb" means.
-
-> +{
-> +	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
-> +
-> +	if (fatal_signal_pending(current))
-> +		return false;
-> +
-> +	gdtc.avail = global_dirtyable_memory();
-> +
-> +	domain_dirty_limits(&gdtc);
-> +
-> +	gdtc.dirty = global_node_page_state(NR_FILE_DIRTY) +
-> +			global_node_page_state(NR_UNSTABLE_NFS) +
-> +			global_node_page_state(NR_WRITEBACK);
-> +
-> +	if (gdtc.dirty < gdtc.bg_thresh)
-> +		return false;
-> +
-> +	if (!writeback_in_progress(wb))
-> +		wb_start_background_writeback(wb);
-
-Add a comment explaining what's going on here and why we're doing this.
-
-> +	return gdtc.dirty > gdtc.thresh &&
-> +		wb_stat(wb, WB_DIRTIED) >
-> +		wb_stat(wb, WB_WRITTEN) +
-> +		wb_stat_error();
-
-Why?
-
-> +}
-> +
-> +static inline void cgwb_bdp(struct bdi_writeback *wb)
-> +{
-> +	wait_event_interruptible_timeout(wb->bdp_waitq,
-> +			!cgwb_bdp_should_throttle(wb), HZ);
-> +}
-> +
->  /*
->   * balance_dirty_pages() must be called by processes which are generating dirty
->   * data.  It looks at the number of dirty pages in the machine and will force
-> @@ -1910,7 +1943,7 @@ void balance_dirty_pages_ratelimited(str
->  	preempt_enable();
->  
->  	if (unlikely(current->nr_dirtied >= ratelimit))
-> -		balance_dirty_pages(wb, current->nr_dirtied);
-> +		cgwb_bdp(wb);
->  
->  	wb_put(wb);
->  }
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -811,6 +811,8 @@ static long wb_split_bdi_pages(struct bd
->  	if (nr_pages == LONG_MAX)
->  		return LONG_MAX;
->  
-> +	return nr_pages;
-> +
->  	/*
->  	 * This may be called on clean wb's and proportional distribution
->  	 * may not make sense, just use the original @nr_pages in those
-> @@ -1604,6 +1606,7 @@ static long writeback_chunk_size(struct
->  		pages = min(pages, work->nr_pages);
->  		pages = round_down(pages + MIN_WRITEBACK_PAGES,
->  				   MIN_WRITEBACK_PAGES);
-> +		pages = work->nr_pages;
->  	}
->  
->  	return pages;
-> @@ -2092,6 +2095,9 @@ void wb_workfn(struct work_struct *work)
->  		wb_wakeup_delayed(wb);
->  
->  	current->flags &= ~PF_SWAPWRITE;
-> +
-> +	if (waitqueue_active(&wb->bdp_waitq))
-> +		wake_up_all(&wb->bdp_waitq);
->  }
-
-Does this patch affect both cgroup writeback and global writeback? 
-Were both tested?  Performance results of both?
-
+-- 
+Kees Cook
