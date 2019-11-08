@@ -2,89 +2,138 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF8DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2830DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE2B222D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213832;
-	bh=qDKjb23qMwMmQedUVQV3sCSnLpgnmjDuN8SzcUJWMbc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lVbbHUugdDxLyqDFDAU9NAPiHOUvlwmnxTLCgQCDhjKNNhi16g4UMUqotXx4jKLw0
-	 FsV2/MCAZGxrVFtMSPoTnVpTqi9wWM95kSwLg8mrDCJLIgZFU98KywmsyjLC24wvmw
-	 o6qSZWxxZmLBF3OthlBroFWof0HkrKF4cKyNM8Bc=
+	by mail.kernel.org (Postfix) with ESMTP id 00F3B21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391673AbfKHLru (ORCPT
+        id S2391276AbfKHLug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403851AbfKHLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:37 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB5D2222CE;
-        Fri,  8 Nov 2019 11:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213657;
-        bh=qDKjb23qMwMmQedUVQV3sCSnLpgnmjDuN8SzcUJWMbc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0TOmDkKi3beJA6f7Z90MnsEWhf8DhxGBwxiz74oFQlCUpAM2gh3VAzfs6mzM0A76
-         CmE6AUZh3g4yJXcCPGzHhNQ817N8Fi9KDitAKry7eyaKF9JXh0od57YjwpIKMbI+1I
-         o1Jj4Lr8WZ4ZteISHgdjDfBIt58vvdZhsi7piyEM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel@ziswiler.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/44] ARM: dts: pxa: fix power i2c base address
-Date:   Fri,  8 Nov 2019 06:46:48 -0500
-Message-Id: <20191108114721.15944-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
-References: <20191108114721.15944-1-sashal@kernel.org>
+        Fri, 8 Nov 2019 06:50:36 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11574 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389511AbfKHLub (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:50:31 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8Bn7OU122408
+        for <linux-kernel@vger.kernel.org>; Fri, 8 Nov 2019 06:50:30 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w55nncpn8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 06:50:30 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Fri, 8 Nov 2019 11:50:28 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Nov 2019 11:50:25 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8BoOhx58785850
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 11:50:25 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C945EA405C;
+        Fri,  8 Nov 2019 11:50:24 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 903E5A4054;
+        Fri,  8 Nov 2019 11:50:24 +0000 (GMT)
+Received: from [9.152.222.69] (unknown [9.152.222.69])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 11:50:24 +0000 (GMT)
+Subject: Re: [PATCH AUTOSEL 4.19 204/205] s390/qeth: limit csum offload
+ erratum to L3 devices
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        linux-s390@vger.kernel.org
+References: <20191108113752.12502-1-sashal@kernel.org>
+ <20191108113752.12502-204-sashal@kernel.org>
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+Date:   Fri, 8 Nov 2019 12:50:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191108113752.12502-204-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110811-0020-0000-0000-00000383B79C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110811-0021-0000-0000-000021D9F06D
+Message-Id: <2e4553d6-de1f-bb61-33e4-10a5c23f0aa7@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel@ziswiler.com>
+On 08.11.19 12:37, Sasha Levin wrote:
+> From: Julian Wiedmann <jwi@linux.ibm.com>
+> 
+> [ Upstream commit f231dc9dbd789b0f98a15941e3cebedb4ad72ad5 ]
+> 
+> Combined L3+L4 csum offload is only required for some L3 HW. So for
+> L2 devices, don't offload the IP header csum calculation.
+> 
 
-[ Upstream commit 8a1ecc01a473b75ab97be9b36f623e4551a6e9ae ]
+NACK, this has no relevance for stable.
 
-There is one too many zeroes in the Power I2C base address. Fix this.
 
-Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/pxa27x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 210192c38df3c..4448505e34d3b 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -63,7 +63,7 @@
- 			clocks = <&clks CLK_PWM1>;
- 		};
- 
--		pwri2c: i2c@40f000180 {
-+		pwri2c: i2c@40f00180 {
- 			compatible = "mrvl,pxa-i2c";
- 			reg = <0x40f00180 0x24>;
- 			interrupts = <6>;
--- 
-2.20.1
+> Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+> Reference-ID: JUP 394553
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/s390/net/qeth_core.h    | 5 -----
+>  drivers/s390/net/qeth_l3_main.c | 5 +++++
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+> index b2657582cfcfd..41a2f901ccee5 100644
+> --- a/drivers/s390/net/qeth_core.h
+> +++ b/drivers/s390/net/qeth_core.h
+> @@ -902,11 +902,6 @@ static inline void qeth_tx_csum(struct sk_buff *skb, u8 *flags, int ipv)
+>  	if ((ipv == 4 && ip_hdr(skb)->protocol == IPPROTO_UDP) ||
+>  	    (ipv == 6 && ipv6_hdr(skb)->nexthdr == IPPROTO_UDP))
+>  		*flags |= QETH_HDR_EXT_UDP;
+> -	if (ipv == 4) {
+> -		/* some HW requires combined L3+L4 csum offload: */
+> -		*flags |= QETH_HDR_EXT_CSUM_HDR_REQ;
+> -		ip_hdr(skb)->check = 0;
+> -	}
+>  }
+>  
+>  static inline void qeth_put_buffer_pool_entry(struct qeth_card *card,
+> diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+> index 9c5e801b3f6cb..c60660cb5a031 100644
+> --- a/drivers/s390/net/qeth_l3_main.c
+> +++ b/drivers/s390/net/qeth_l3_main.c
+> @@ -2054,6 +2054,11 @@ static void qeth_l3_fill_header(struct qeth_card *card, struct qeth_hdr *hdr,
+>  
+>  	if (!skb_is_gso(skb) && skb->ip_summed == CHECKSUM_PARTIAL) {
+>  		qeth_tx_csum(skb, &hdr->hdr.l3.ext_flags, ipv);
+> +		/* some HW requires combined L3+L4 csum offload: */
+> +		if (ipv == 4) {
+> +			hdr->hdr.l3.ext_flags |= QETH_HDR_EXT_CSUM_HDR_REQ;
+> +			ip_hdr(skb)->check = 0;
+> +		}
+>  		if (card->options.performance_stats)
+>  			card->perf_stats.tx_csum++;
+>  	}
+> 
 
