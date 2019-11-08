@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44564C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1465FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1036D21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9622221D82
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239945;
-	bh=PPt6GBJsSbXbytF2kq1k6abXEUt6ZqOmQYI4oa1Cr6c=;
+	s=default; t=1573239948;
+	bh=+MKZtubzbvIj11RUNynTSSWXK2LQLv7HtWhYggHIKz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppDLsHgu0hdwFy7MaPevx49DM3qqKjYZtriD2cxGRqnXb2NlqyHmilgnWtS4tM4Ur
-	 YLZaDPCjM/VzaAsICapKc1JA8owNpc8vK+v3gM6uH4sG4NGq9b54hD83nckglZRvSm
-	 ZgJJBHNIZJzntpjk93LhTtx6l01VzWBJxK94MRsM=
+	b=IpKlQTyg9Zu0KCgVW0yVB6lFNbU12gbEczIckcVKNulJ2kyX5aJgcz93rewzAVj4F
+	 4f2NTf0ERjlrk65n8JSRxfXE5h2w/Zv3JrWkO+SVnLc0MhxhMPNnhE+VquAFguGJCZ
+	 eMDUKB8Y9bSZw2N0ymbt4xeXs0Fdq9r0Wq0WnQJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391169AbfKHTFn (ORCPT
+        id S2391151AbfKHTFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35854 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:05:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391161AbfKHTFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:42 -0500
+        id S1732573AbfKHTFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4100F2067B;
-        Fri,  8 Nov 2019 19:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EB092067B;
+        Fri,  8 Nov 2019 19:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239941;
-        bh=PPt6GBJsSbXbytF2kq1k6abXEUt6ZqOmQYI4oa1Cr6c=;
+        s=default; t=1573239935;
+        bh=+MKZtubzbvIj11RUNynTSSWXK2LQLv7HtWhYggHIKz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=goagINl+NR1LU21b6AephUC2jRQt2YYL3yJ8cTSmcCoxFTQg5G/TeIXMQUIUBnD0A
-         ONPl2QOrg2WoyKJXQbWP6kAeBreoDuHY7zfauVUkzjAXBM2STvfNoSNqnFTkUm0RXO
-         cTAV7OEWMW1DaWb0tSD/sCUGYd4HupJOMvHmxK3E=
+        b=O5h/gaiq7B/GRXrPJUgmDFLk/IVDiIOzIJV8NW4Nzt0t2HTNHqTPYr8VqUg84zb5u
+         QpRBuYbPALg2p23qLAX3uiUTTyU5ST7JeKpy9oXRyof+0TwyWsSoosoRaVJPG5vQal
+         zBXFpxFtsw3+gL+olfRYyGi0s4VMlvzwKww0aUiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Allen Pais <allen.pais@oracle.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Soeren Moch <smoch@web.de>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 035/140] scsi: qla2xxx: fix a potential NULL pointer dereference
-Date:   Fri,  8 Nov 2019 19:49:23 +0100
-Message-Id: <20191108174906.890027432@linuxfoundation.org>
+Subject: [PATCH 5.3 025/140] arm64: dts: rockchip: fix RockPro64 vdd-log regulator settings
+Date:   Fri,  8 Nov 2019 19:49:13 +0100
+Message-Id: <20191108174904.815119139@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -62,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Soeren Moch <smoch@web.de>
 
-[ Upstream commit 35a79a63517981a8aea395497c548776347deda8 ]
+[ Upstream commit 0990c5e7573098117c69651821647c228483e31b ]
 
-alloc_workqueue is not checked for errors and as a result a potential
-NULL dereference could occur.
+The RockPro64 schematic [1] page 18 states a min voltage of 0.8V and a
+max voltage of 1.4V for the VDD_LOG pwm regulator. However, there is an
+additional note that the pwm parameter needs to be modified.
+>From the schematics a voltage range of 0.8V to 1.7V can be calculated.
+Additional voltage measurements on the board show that this fix indeed
+leads to the correct voltage, while without this fix the voltage was set
+too high.
 
-Link: https://lore.kernel.org/r/1568824618-4366-1-git-send-email-allen.pais@oracle.com
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Reviewed-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+
+Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
+Signed-off-by: Soeren Moch <smoch@web.de>
+Link: https://lore.kernel.org/r/20191003215036.15023-1-smoch@web.de
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 2835afbd2edc7..04cf6986eb8e6 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3233,6 +3233,10 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 	    req->req_q_in, req->req_q_out, rsp->rsp_q_in, rsp->rsp_q_out);
- 
- 	ha->wq = alloc_workqueue("qla2xxx_wq", 0, 0);
-+	if (unlikely(!ha->wq)) {
-+		ret = -ENOMEM;
-+		goto probe_failed;
-+	}
- 
- 	if (ha->isp_ops->initialize_adapter(base_vha)) {
- 		ql_log(ql_log_fatal, base_vha, 0x00d6,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index 5818b85255123..cad314f708300 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -166,7 +166,7 @@
+ 		regulator-always-on;
+ 		regulator-boot-on;
+ 		regulator-min-microvolt = <800000>;
+-		regulator-max-microvolt = <1400000>;
++		regulator-max-microvolt = <1700000>;
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
+ };
 -- 
 2.20.1
 
