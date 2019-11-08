@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F0FFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74800FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AC9222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429492087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240024;
-	bh=rfJoh8q2ttJiOkExTu/CY0Vkr6sPogKzCVxD224wjXY=;
+	s=default; t=1573240027;
+	bh=E3vOxg8kySeuRFePBSSnqG+X2RodkIAx0DqkS8qfbuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J//pb4hfGfOMrxuIMc2vV2icThaG5e+Mu5EwJ8OYW2+Vvkj993AiGOed4knA/B5YV
-	 zF5mNFPolKQytEcnjCsVwLjjn67pI8c5e/EO4UTgRMLBSFMpXXnIqMNVtq0pRdHD6N
-	 OANLcCn1KxcAjirpALR04Kp/aOr07pXS+hFK82ew=
+	b=1WAQ2x/NynPIAcFIlYVMjCs0xQ7fbra4VBDm+s2xxeDbueDpW/Q8m0uelM8JjoZ50
+	 8j3vJikjGrxbHwY1Dwhan6pKoffyB91FrhkIsKt/h0HGym1H+/Kh4DOOhmCO+vS+ey
+	 xHO+9Y2MEu9X9nKS4y6Zt5cmJIZL8ctJ1C5/EpY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391404AbfKHTHC (ORCPT
+        id S1732340AbfKHTHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:07:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:07:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391386AbfKHTHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:00 -0500
+        id S2391386AbfKHTHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:07:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86641206A3;
-        Fri,  8 Nov 2019 19:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68422087E;
+        Fri,  8 Nov 2019 19:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240020;
-        bh=rfJoh8q2ttJiOkExTu/CY0Vkr6sPogKzCVxD224wjXY=;
+        s=default; t=1573240023;
+        bh=E3vOxg8kySeuRFePBSSnqG+X2RodkIAx0DqkS8qfbuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kh/0O5Ol1BvpeOFWgYmXU3wik3Dw/haOgYHLGUm1C/S77993IuaSiGSU0IR0I8KkW
-         hCl+zt+knznUDGoDXdP/Fn/ahKu6h8YqEHw0c2VmFx6cyxZKEzdZlQ4lddxbET4XMZ
-         G3ibkhLFZQ324BmfiLcTo15B304GN7PbqRp9lTDY=
+        b=qiZJUYVZt3IqE3DbiWbE1dLwHB6P42A6eLKFsb8gA9uYgqysLH6IH/V4Ezdw14vY8
+         FNE2AdU2HNV5tif8NvF06EHmdAUYmRlKjv9l3cmUKQtvz1iD44EbX3mOK2t3GU3kPX
+         NVo6wsgRRLWQZ77dgi06/7cHagXWu8+TpVfKQ3Ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Fredrik Yhlen <fredrik.yhlen@endian.se>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 060/140] tracing: Fix "gfp_t" format for synthetic events
-Date:   Fri,  8 Nov 2019 19:49:48 +0100
-Message-Id: <20191108174909.046820456@linuxfoundation.org>
+Subject: [PATCH 5.3 061/140] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
+Date:   Fri,  8 Nov 2019 19:49:49 +0100
+Message-Id: <20191108174909.098848717@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,56 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+From: Stefan Wahren <wahrenst@gmx.net>
 
-[ Upstream commit 9fa8c9c647be624e91b09ecffa7cd97ee0600b40 ]
+[ Upstream commit 626c45d223e22090511acbfb481e0ece1de1356d ]
 
-In the format of synthetic events, the "gfp_t" is shown as "signed:1",
-but in fact the "gfp_t" is "unsigned", should be shown as "signed:0".
+bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
+on all Raspberry Pi boards. But there is no driver for this particual
+GPIO on CM3 in mainline yet, so this node was left incomplete without
+the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
+value mismatch of function gpiod_get_from_of_node()") this causing probe
+issues of the leds-gpio driver for users of the CM3 dtsi file.
 
-The issue can be reproduced by the following commands:
+  leds-gpio: probe of leds failed with error -2
 
-echo 'memlatency u64 lat; unsigned int order; gfp_t gfp_flags; int migratetype' > /sys/kernel/debug/tracing/synthetic_events
-cat  /sys/kernel/debug/tracing/events/synthetic/memlatency/format
+Until we have the necessary GPIO driver hide the ACT node for CM3
+to avoid this.
 
-name: memlatency
-ID: 2233
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
-
-        field:u64 lat;  offset:8;       size:8; signed:0;
-        field:unsigned int order;       offset:16;      size:4; signed:0;
-        field:gfp_t gfp_flags;  offset:24;      size:4; signed:1;
-        field:int migratetype;  offset:32;      size:4; signed:1;
-
-print fmt: "lat=%llu, order=%u, gfp_flags=%x, migratetype=%d", REC->lat, REC->order, REC->gfp_flags, REC->migratetype
-
-Link: http://lkml.kernel.org/r/20191018012034.6404-1-zhengjun.xing@linux.intel.com
-
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index dd310d3b58431..725b9b35f933c 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -674,6 +674,8 @@ static bool synth_field_signed(char *type)
- {
- 	if (str_has_prefix(type, "u"))
- 		return false;
-+	if (strcmp(type, "gfp_t") == 0)
-+		return false;
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
+index 81399b2c5af9e..d4f0e455612d4 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
++++ b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
+@@ -8,6 +8,14 @@
+ 		reg = <0 0x40000000>;
+ 	};
  
- 	return true;
- }
++	leds {
++		/*
++		 * Since there is no upstream GPIO driver yet,
++		 * remove the incomplete node.
++		 */
++		/delete-node/ act;
++	};
++
+ 	reg_3v3: fixed-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "3V3";
 -- 
 2.20.1
 
