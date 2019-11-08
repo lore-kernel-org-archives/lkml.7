@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41888C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED1FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE7920869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5250020869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214390;
-	bh=Hq+Kirpl2aSeCgJgShXLAvmK60yJ6X9nHLUCM+aCuiM=;
+	s=default; t=1573214396;
+	bh=wa7YDgehiZ0AGsCxw7mUn8MD6uR/Hfws7/JZg4+w6Mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kaflsl5NJ4vQfHWgRpu1ymtfPayyazlbtCiAsvdO9751ixT+OKhh9/Ak++ywiPBDS
-	 ygNsxZ9zNtY5oirmcTHWa08IHXltnl+057k5IoLfz9hh3v4PbqUcQbxHQSEFwVRmPT
-	 0BPyeuFdL4BsAXCm4pBuL9IlktERW0LO0+x1qLMs=
+	b=hJmkLFqk6OJ3X81IfJqoUJFgGvVfovyS3duWOTB9plCpCewv9nYKgBXf011MqJnUZ
+	 6S4wRS5g10wXi8xwfjgI9H4cVocxi6Q9weqWjttB3LGh3lziww5nV63OMCk9ccLGnI
+	 lAru7ZNjwMsvfCalns1xtlvvqwjUZ7L8OUey3hug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391233AbfKHL7t (ORCPT
+        id S2391613AbfKHL7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:59:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58848 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:59:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390662AbfKHLoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:06 -0500
+        id S2390645AbfKHLoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 052C7222C4;
-        Fri,  8 Nov 2019 11:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9B9222C4;
+        Fri,  8 Nov 2019 11:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213445;
-        bh=Hq+Kirpl2aSeCgJgShXLAvmK60yJ6X9nHLUCM+aCuiM=;
+        s=default; t=1573213443;
+        bh=wa7YDgehiZ0AGsCxw7mUn8MD6uR/Hfws7/JZg4+w6Mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWnMG028658jtQ/1Gb+XNoXkputjgN5y8/8XMTjp7q3YvjSfgVbk14FfqE6Nj8Vj5
-         nM3i9iLtK0Yj6nZIVkuZFGK+gzn2F/kDJu/CuyNB1Dx6w345KjFy077Ju5uMUHHm9c
-         t4dMgPq0/So8Na/AIF0vQUVYfd8F/efjCBu2dAoU=
+        b=dKyixJ7orJKDAM02MQHbef5iWXC1/NxoZaO6lk+XLaHM+QW4QdYwvhdbc5wbFEcIy
+         PUiigw3v2S125JLGyFcF4lIdSOeig8QroQb0bcKpDjPao1E8DqlWktIRIwk3f2LwEz
+         K1hSUgXvyViWk/fwQGPJ6apFP0iutygpfXue8e/k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Raghuram Chary Jallipalli 
-        <raghuramchary.jallipalli@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 039/103] net: lan78xx: Bail out if lan78xx_get_endpoints fails
-Date:   Fri,  8 Nov 2019 06:42:04 -0500
-Message-Id: <20191108114310.14363-39-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 037/103] ARM: dts: meson8: fix the clock controller register size
+Date:   Fri,  8 Nov 2019 06:42:02 -0500
+Message-Id: <20191108114310.14363-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -62,38 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit fa8cd98c06407b5798b927cd7fd14d30f360ed02 ]
+[ Upstream commit f7f9da89bc4f61e33f7b9f5c75c4efdc1f0455d8 ]
 
-We need to bail out if lan78xx_get_endpoints() fails, otherwise the
-result is overwritten.
+The clock controller registers are not 0x460 wide because the reset
+controller starts at CBUS 0x4404. This currently overlaps with the
+clock controller (which is at CBUS 0x4000).
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Raghuram Chary Jallipalli <raghuramchary.jallipalli@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There is no public documentation available on the actual size of the
+clock controller's register area (also called "HHI"). However, in
+Amlogic's GPL kernel sources the last "HHI" register is
+HHI_HDMI_PHY_CNTL2 at CBUS + 0x43a8. 0x400 was chosen because that size
+doesn't seem unlikely.
+
+Fixes: 2c323c43a3d619 ("ARM: dts: meson8: add and use the real clock controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/meson8.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 24b994c68bccd..316930d4129f9 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2818,6 +2818,11 @@ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
- 	int i;
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index b98d44fde6b60..e3ae85d65b39b 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -170,7 +170,7 @@
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 		compatible = "amlogic,meson8-clkc";
+-		reg = <0x8000 0x4>, <0x4000 0x460>;
++		reg = <0x8000 0x4>, <0x4000 0x400>;
+ 	};
  
- 	ret = lan78xx_get_endpoints(dev, intf);
-+	if (ret) {
-+		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
-+			    ret);
-+		return ret;
-+	}
- 
- 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
- 
+ 	pwm_ef: pwm@86c0 {
 -- 
 2.20.1
 
