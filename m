@@ -2,55 +2,56 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B77EFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778B7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54EA214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAC820656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240664;
-	bh=EB16L9vTHdgOumIeosjbfNzBmnYiyoIdyewf7yrkr2k=;
+	s=default; t=1573240668;
+	bh=M0UVkOePj3ikgvXAQdawSoh93xuLi/O59UXpH5Hrb50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+NhY12U4ieeNOO+lf+edvSVAJvKXxjC7Dc7q+sPmJzkldm4HpfbsirhlAamxoN6a
-	 EDG7mbnB5jKV2LkPeji5+dJcZFEV+NXBMvxMNyEGdt4jZiBMpGTVNDO7BRbm1PZB6H
-	 5+sh/jVPukNkOFqB2D89DGnaSBnQzbZYGdwQzmFE=
+	b=RxlFEEzMv+RcIIeAIftLu+ZKDwZe2bijFtoavgOSM+K06Mw+BMfOxQYlzsehmr08F
+	 09kX/L0Gh/tJXvMFBCC2BO7WAeQ49ZOWb0PUl+HtcMK8cKCizf6Bdp5DpaQnFTwtOR
+	 cLmDFHRpYKtpCTdoh+nzR1/LZ/AETohLiO3ugY90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390559AbfKHTRm (ORCPT
+        id S2389925AbfKHTAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:17:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58064 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389940AbfKHTAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:48 -0500
+        id S1732993AbfKHTAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECF1D2067B;
-        Fri,  8 Nov 2019 19:00:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9DB20865;
+        Fri,  8 Nov 2019 19:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239647;
-        bh=EB16L9vTHdgOumIeosjbfNzBmnYiyoIdyewf7yrkr2k=;
+        s=default; t=1573239624;
+        bh=M0UVkOePj3ikgvXAQdawSoh93xuLi/O59UXpH5Hrb50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ucxIkpxyNzDR1gzvMf91imvtAb475hBs6d134N+ApZ19R2ysQluZqHjeKuyuMmd5+
-         tYFkW/R617k6b4ItlxcjPnS/NkfzMak0zfzgXlvOeL5Z7jDQMA6v3dP3u2yZYZWMgl
-         3/aa04BMkcVLBWdRdm5UPoZ5Y//dSM1hW7+BEgno=
+        b=Zkjx3b/StpOx4vb9pjpKh5OP+i1Stu6oeXilZ4StT82NSGKmlmeSqSG0Q38V1WbGy
+         X1huhNk/WHp8g9sN0yMUXTgukGPK+ggdDVncRJ//8R7kF62WMJ0Lw5Y+7RebK2K08V
+         IdSi5acIoQT8m2n/vQ6Lgy7Hopf89K/tg+GZNUwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/79] ARM: mm: fix alignment handler faults under memory pressure
-Date:   Fri,  8 Nov 2019 19:49:54 +0100
-Message-Id: <20191108174752.634183234@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sandipan Das <sandipan@linux.ibm.com>
+Subject: [PATCH 4.14 59/62] powerpc/book3s64/radix: Rename CPU_FTR_P9_TLBIE_BUG feature flag
+Date:   Fri,  8 Nov 2019 19:50:47 +0100
+Message-Id: <20191108174801.381317731@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
-References: <20191108174745.495640141@linuxfoundation.org>
+In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
+References: <20191108174719.228826381@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,110 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 67e15fa5b487adb9b78a92789eeff2d6ec8f5cee ]
+commit 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 upstream.
 
-When the system has high memory pressure, the page containing the
-instruction may be paged out.  Using probe_kernel_address() means that
-if the page is swapped out, the resulting page fault will not be
-handled because page faults are disabled by this function.
+Rename the #define to indicate this is related to store vs tlbie
+ordering issue. In the next patch, we will be adding another feature
+flag that is used to handles ERAT flush vs tlbie ordering issue.
 
-Use get_user() to read the instruction instead.
-
-Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Fixes: b255188f90e2 ("ARM: fix scheduling while atomic warning in alignment handling code")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org # v4.14
+Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
+[sandipan: Backported to v4.14]
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mm/alignment.c | 44 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+ arch/powerpc/include/asm/cputable.h    |    4 ++--
+ arch/powerpc/kernel/dt_cpu_ftrs.c      |    6 +++---
+ arch/powerpc/kvm/book3s_64_mmu_radix.c |    2 +-
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c    |    2 +-
+ arch/powerpc/mm/hash_native_64.c       |    2 +-
+ arch/powerpc/mm/tlb-radix.c            |    2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-index bd2c739d80839..84a6bbaf8cb20 100644
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -768,6 +768,36 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
- 	return NULL;
- }
+--- a/arch/powerpc/include/asm/cputable.h
++++ b/arch/powerpc/include/asm/cputable.h
+@@ -215,7 +215,7 @@ enum {
+ #define CPU_FTR_DAWR			LONG_ASM_CONST(0x0400000000000000)
+ #define CPU_FTR_DABRX			LONG_ASM_CONST(0x0800000000000000)
+ #define CPU_FTR_PMAO_BUG		LONG_ASM_CONST(0x1000000000000000)
+-#define CPU_FTR_P9_TLBIE_BUG		LONG_ASM_CONST(0x2000000000000000)
++#define CPU_FTR_P9_TLBIE_STQ_BUG	LONG_ASM_CONST(0x0000400000000000)
+ #define CPU_FTR_POWER9_DD1		LONG_ASM_CONST(0x4000000000000000)
  
-+static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
-+{
-+	u32 instr = 0;
-+	int fault;
-+
-+	if (user_mode(regs))
-+		fault = get_user(instr, ip);
-+	else
-+		fault = probe_kernel_address(ip, instr);
-+
-+	*inst = __mem_to_opcode_arm(instr);
-+
-+	return fault;
-+}
-+
-+static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
-+{
-+	u16 instr = 0;
-+	int fault;
-+
-+	if (user_mode(regs))
-+		fault = get_user(instr, ip);
-+	else
-+		fault = probe_kernel_address(ip, instr);
-+
-+	*inst = __mem_to_opcode_thumb16(instr);
-+
-+	return fault;
-+}
-+
- static int
- do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- {
-@@ -775,10 +805,10 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	unsigned long instr = 0, instrptr;
- 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
- 	unsigned int type;
--	unsigned int fault;
- 	u16 tinstr = 0;
- 	int isize = 4;
- 	int thumb2_32b = 0;
-+	int fault;
- 
- 	if (interrupts_enabled(regs))
- 		local_irq_enable();
-@@ -787,15 +817,14 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 
- 	if (thumb_mode(regs)) {
- 		u16 *ptr = (u16 *)(instrptr & ~1);
--		fault = probe_kernel_address(ptr, tinstr);
--		tinstr = __mem_to_opcode_thumb16(tinstr);
-+
-+		fault = alignment_get_thumb(regs, ptr, &tinstr);
- 		if (!fault) {
- 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
- 			    IS_T32(tinstr)) {
- 				/* Thumb-2 32-bit */
--				u16 tinst2 = 0;
--				fault = probe_kernel_address(ptr + 1, tinst2);
--				tinst2 = __mem_to_opcode_thumb16(tinst2);
-+				u16 tinst2;
-+				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
- 				instr = __opcode_thumb32_compose(tinstr, tinst2);
- 				thumb2_32b = 1;
- 			} else {
-@@ -804,8 +833,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 			}
+ #ifndef __ASSEMBLY__
+@@ -477,7 +477,7 @@ enum {
+ 	    CPU_FTR_CFAR | CPU_FTR_HVMODE | CPU_FTR_VMX_COPY | \
+ 	    CPU_FTR_DBELL | CPU_FTR_HAS_PPR | CPU_FTR_DAWR | \
+ 	    CPU_FTR_ARCH_207S | CPU_FTR_TM_COMP | CPU_FTR_ARCH_300 | \
+-	    CPU_FTR_P9_TLBIE_BUG)
++	    CPU_FTR_P9_TLBIE_STQ_BUG)
+ #define CPU_FTRS_POWER9_DD1 ((CPU_FTRS_POWER9 | CPU_FTR_POWER9_DD1) & \
+ 			     (~CPU_FTR_SAO))
+ #define CPU_FTRS_CELL	(CPU_FTR_USE_TB | CPU_FTR_LWSYNC | \
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -747,14 +747,14 @@ static __init void update_tlbie_feature_
+ 		if ((pvr & 0xe000) == 0) {
+ 			/* Nimbus */
+ 			if ((pvr & 0xfff) < 0x203)
+-				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
+ 		} else if ((pvr & 0xc000) == 0) {
+ 			/* Cumulus */
+ 			if ((pvr & 0xfff) < 0x103)
+-				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
+ 		} else {
+ 			WARN_ONCE(1, "Unknown PVR");
+-			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
  		}
- 	} else {
--		fault = probe_kernel_address((void *)instrptr, instr);
--		instr = __mem_to_opcode_arm(instr);
-+		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
  	}
+ }
+--- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+@@ -160,7 +160,7 @@ static void kvmppc_radix_tlbie_page(stru
+ 	asm volatile("ptesync": : :"memory");
+ 	asm volatile(PPC_TLBIE_5(%0, %1, 0, 0, 1)
+ 		     : : "r" (addr), "r" (kvm->arch.lpid) : "memory");
+-	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG))
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG))
+ 		asm volatile(PPC_TLBIE_5(%0, %1, 0, 0, 1)
+ 			     : : "r" (addr), "r" (kvm->arch.lpid) : "memory");
+ 	asm volatile("ptesync": : :"memory");
+--- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
++++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+@@ -449,7 +449,7 @@ static void do_tlbies(struct kvm *kvm, u
+ 				     "r" (rbvalues[i]), "r" (kvm->arch.lpid));
+ 		}
  
- 	if (fault) {
--- 
-2.20.1
-
+-		if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
++		if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 			/*
+ 			 * Need the extra ptesync to make sure we don't
+ 			 * re-order the tlbie
+--- a/arch/powerpc/mm/hash_native_64.c
++++ b/arch/powerpc/mm/hash_native_64.c
+@@ -106,7 +106,7 @@ static inline unsigned long  ___tlbie(un
+ 
+ static inline void fixup_tlbie(unsigned long vpn, int psize, int apsize, int ssize)
+ {
+-	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 		/* Need the extra ptesync to ensure we don't reorder tlbie*/
+ 		asm volatile("ptesync": : :"memory");
+ 		___tlbie(vpn, psize, apsize, ssize);
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -44,7 +44,7 @@ static inline void fixup_tlbie(void)
+ 	unsigned long pid = 0;
+ 	unsigned long va = ((1UL << 52) - 1);
+ 
+-	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 		asm volatile("ptesync": : :"memory");
+ 		__tlbie_va(va, pid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
+ 	}
 
 
