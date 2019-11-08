@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE699FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66CEFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFAD21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD6921D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213848;
-	bh=fjra+qU2IHILUSaeMQ2IA40jQ4nA30zAozzoI8R+DHE=;
+	s=default; t=1573213852;
+	bh=tOHwYIJ+ZNa6Ys/BfqqTmWqfcuoUDV1G9q0KLw6kepc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/Et2SmhXJYxoJZejMfkd2zb92Ktp6PIAkMXFjxDE7YlHVPpQOrbwq22wHd2QH3IS
-	 ojYtEKYiphpNAiIPZn83rNr8gcG7DrFonbJT23ktWO0SK/O3t4wBiSYkjl5AfmGKvY
-	 4horf+fmdV9XU+OSrxlN3+UxQY+0hqoUpMymL0QU=
+	b=LWn0x1XPe5o1Ea8CkXAfTS48p2gtZLnFosqBsgUEvNpX4pKrQkG48co4B5vLRLCof
+	 M/YTyVOr4/ZGtSC3Z38YNHZ4rP3gASDdOucr+EbzpyjLqGrg8XfpQPxgw5B7SBZVlJ
+	 eH6qT6Zmhbx4o2rARgzL8f+aqKZzBUxgmMTXV41w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391632AbfKHLro (ORCPT
+        id S2403843AbfKHLuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36354 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:50:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390369AbfKHLrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:41 -0500
+        id S2391616AbfKHLrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B82D222CF;
-        Fri,  8 Nov 2019 11:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE93206A3;
+        Fri,  8 Nov 2019 11:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213660;
-        bh=fjra+qU2IHILUSaeMQ2IA40jQ4nA30zAozzoI8R+DHE=;
+        s=default; t=1573213663;
+        bh=tOHwYIJ+ZNa6Ys/BfqqTmWqfcuoUDV1G9q0KLw6kepc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WTwe/oDafJkcf3JQ56atE2fsPEJqTJHfeNo/TeNx90z/HIQ4prdyMmvCX4kUE41Zq
-         16EEnyfpEC8IA6+q3mCrMten8hoI9z0oh/qVNWB/eN5QNw6jO5V0lLcdmE+7ZRRUdK
-         iojJRDxLPYQrHfjQVZNS2DSuZPajqNKG+qwktqzY=
+        b=FsnoJEo7DreMC8+xrC7yybZqp2n6c25tyUrqX5R4ZNkMx6aafscAeSy4//iBka2fc
+         BQZLSyhLfz159GRJfIzvMnGuTDT0pNKoKJnkCfcF4tDd8OqwrUyZn51emdr/SKwekg
+         kxOCLxau4EXaiWz1tf6rFGFVUhcSTLHk7lKeRr/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 15/44] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
-Date:   Fri,  8 Nov 2019 06:46:51 -0500
-Message-Id: <20191108114721.15944-15-sashal@kernel.org>
+Cc:     Erik Stromdahl <erik.stromdahl@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 17/44] ath10k: wmi: disable softirq's while calling ieee80211_rx
+Date:   Fri,  8 Nov 2019 06:46:53 -0500
+Message-Id: <20191108114721.15944-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -59,36 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Erik Stromdahl <erik.stromdahl@gmail.com>
 
-[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
+[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
 
-In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
-is set to zero and later vol_quot is computed by dividing by
-lo_vag causing a division by zero error.  Fix this by avoiding
-a zero division and set vol_quot to zero in this specific case
-so that the lowest setting for i is correctly set.
+This is done in order not to trig the below warning in
+ieee80211_rx_napi:
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+WARN_ON_ONCE(softirq_count() == 0);
+
+ieee80211_rx_napi requires that softirq's are disabled during
+execution.
+
+The High latency bus drivers (SDIO and USB) sometimes call the wmi
+ep_rx_complete callback from non softirq context, resulting in a trigger
+of the above warning.
+
+Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
+softirq context) should be safe as the local_bh_disable and
+local_bh_enable functions (called from ieee80211_rx_ni) are fully
+reentrant.
+
+Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 4808b70ec12cb..a3dd7030f629c 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1415,7 +1415,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
- 	 * Searching for a suitable index solving this formula:
- 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
- 	 */
--	vol_quot = (vag * 100) / lo_vag;
-+	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
- 	lo_vol = 0;
- 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
- 		if (vol_quot >= vol_quot_table[i])
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index b867875aa6e66..f7ce99f67b5c5 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -2294,7 +2294,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		   status->freq, status->band, status->signal,
+ 		   status->rate_idx);
+ 
+-	ieee80211_rx(ar->hw, skb);
++	ieee80211_rx_ni(ar->hw, skb);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
