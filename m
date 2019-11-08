@@ -2,127 +2,61 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC60C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB007FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540EF214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573193377;
-	bh=fDN1mBJKXXkbsUvrmqvMu3Eczk2hzN49BjHFdS4DsWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pCru1wmEBSmuOtkqbrgJy3ALzUnvlBwmlhVVnkZlFhXzhMf98UoMZTprVIGTqwJse
-	 1KsG4HMtuabi8EF/Y5rN7LoidXTJk26XqkST03fEJRAwYSfkiqffyOsbxvMG5nJK7N
-	 CJn9fyFTjZNt6pPQq3CRIhfQR6t4qsF+UFHyy7KA=
+	by mail.kernel.org (Postfix) with ESMTP id 9752C214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfKHGJg (ORCPT
+        id S1729516AbfKHGKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:09:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52280 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 01:10:13 -0500
+Received: from verein.lst.de ([213.95.11.211]:33056 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbfKHGJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 01:09:36 -0500
-Received: from localhost (unknown [106.200.194.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C07C214DB;
-        Fri,  8 Nov 2019 06:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573193375;
-        bh=fDN1mBJKXXkbsUvrmqvMu3Eczk2hzN49BjHFdS4DsWQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iMwXTbCy0i+k3NGaoN7+dJi6pi4Ep5S6N6rP9TWV7tDgCjmJqBa7Z8ZH9TiVi75Vp
-         jjpHKr5/9htAf2H6iM8rAFbi73qXfjIqDLCWGXeRZfKmeErs1zlQPTVKmXM02PDv5j
-         8ksXwRqw+kCXG+X2bTf8AXXwsXdjCVWSGAGcIkL0=
-Date:   Fri, 8 Nov 2019 11:39:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Elliot Berman <eberman@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org,
-        agross@kernel.org, tsoni@codeaurora.org, sidgup@codeaurora.org,
-        psodagud@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/17] firmware: qcom_scm-64: Add SCM results to
- descriptor
-Message-ID: <20191108060930.GA952516@vkoul-mobl>
-References: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
- <1572917256-24205-7-git-send-email-eberman@codeaurora.org>
+        id S1725802AbfKHGKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 01:10:13 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 68D1368BE1; Fri,  8 Nov 2019 07:10:09 +0100 (CET)
+Date:   Fri, 8 Nov 2019 07:10:09 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+        Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation
+ for RISC-V
+Message-ID: <20191108061009.GA30335@lst.de>
+References: <alpine.DEB.2.21.9999.1910091252160.11044@viisi.sifive.com> <CAMuHMdUfqvkVJHHwyuYxLSxj_iUofx-vSvEj92C5mg3bGxHqmA@mail.gmail.com> <20191010112347.4a7237bb@lwn.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572917256-24205-7-git-send-email-eberman@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191010112347.4a7237bb@lwn.net>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-11-19, 17:27, Elliot Berman wrote:
-> Remove knowledge of arm_smccc_res struct from client wrappers so that
-> client wrappers only work QCOM SCM data structures. SCM calls may have
-> up to 3 arguments, so qcom_scm_call_smccc is responsible now for filling
-> those 3 arguments accordingly.
-> 
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
-> ---
->  drivers/firmware/qcom_scm-64.c | 105 ++++++++++++++++++-----------------------
->  1 file changed, 45 insertions(+), 60 deletions(-)
-> 
-> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> index 76412a5..f6536fa 100644
-> --- a/drivers/firmware/qcom_scm-64.c
-> +++ b/drivers/firmware/qcom_scm-64.c
-> @@ -50,6 +50,7 @@ struct qcom_scm_desc {
->  	u32 cmd;
->  	u32 arginfo;
->  	u64 args[MAX_QCOM_SCM_ARGS];
-> +	u64 res[MAX_QCOM_SCM_RETS];
->  	u32 owner;
->  };
->  
-> @@ -115,8 +116,7 @@ static void qcom_scm_call_do_smccc(const struct qcom_scm_desc *desc,
->  }
->  
->  static int ___qcom_scm_call_smccc(struct device *dev,
-> -				  const struct qcom_scm_desc *desc,
-> -				  struct arm_smccc_res *res, bool atomic)
-> +				  struct qcom_scm_desc *desc, bool atomic)
->  {
->  	int arglen = desc->arginfo & 0xf;
->  	int i;
-> @@ -125,6 +125,7 @@ static int ___qcom_scm_call_smccc(struct device *dev,
->  	void *args_virt = NULL;
->  	size_t alloc_len;
->  	gfp_t flag = atomic ? GFP_ATOMIC : GFP_KERNEL;
-> +	struct arm_smccc_res res;
->  
->  	if (unlikely(arglen > SMCCC_N_REG_ARGS)) {
->  		alloc_len = SMCCC_N_EXT_ARGS * sizeof(u64);
-> @@ -158,15 +159,19 @@ static int ___qcom_scm_call_smccc(struct device *dev,
->  		x5 = args_phys;
->  	}
->  
-> -	qcom_scm_call_do_smccc(desc, res, x5, atomic);
-> +	qcom_scm_call_do_smccc(desc, &res, x5, atomic);
->  
->  	if (args_virt) {
->  		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
->  		kfree(args_virt);
->  	}
->  
-> -	if (res->a0 < 0)
-> -		return qcom_scm_remap_error(res->a0);
-> +	desc->res[0] = res.a1;
-> +	desc->res[1] = res.a2;
-> +	desc->res[2] = res.a3;
+Jon,
 
-res represents result, so can we rename this here and in qcom_scm_desc
-as result, somehow I kept on reading this as res and got confused ;/ or
-maybe it is just me!
+can you please revert this?  The paragraph above this addition already
+describes the riscv case perfecty well with my previous patch:
 
--- 
-~Vinod
+
+	earlycon=	[KNL] Output early console device and options.
+
+			When used with no options, the early console is
+			determined by stdout-path property in device tree's
+			chosen node or the ACPI SPCR table if supported by
+			the platform.
+
+			[RISCV] When used with no options, the early
+			console is determined by the stdout-path
+			property in the device tree's chosen node.
