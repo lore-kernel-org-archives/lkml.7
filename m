@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D43FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E5BFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AAA12178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F1921924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239151;
-	bh=JxFXf/iL0Po+TwuDxjWfrvI5nmMzUx20GCYDtuU1Ewg=;
+	s=default; t=1573239153;
+	bh=RlodDkjESUM8Slmuk9dH1BmilljgeGRbTugX96zDFV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qfmvbs/VDWt2TKHWwkemA9K8DAZfazkZ+4g7OpPcJZoaR7zOmaaPegaaZg1Zzn/fW
-	 2zglIoANAvz8SvtOqm+vSQWVqnB4qPq1jGI54jaRlVayoNuReDbxPULBH7bfewK8y/
-	 r10TWeaguOyq/fMX6iURsD6JHEFQbOoVK6nmjUMg=
+	b=Vimnige2VfEzhWfWViSsMqz+25UsRqfqiurFO40LZoYF39wp+/9epvxkPH5ZTaIBx
+	 C3kWGRTMCIgFxwMzhe+Tn1L905tPjmQcDvajtJgq2lqtin4MpIxJrMJHa6p1Qk87sz
+	 7lsstxxNBE5pYhIeu5wNjPZM1wwsXq0BadDMOBTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbfKHSw3 (ORCPT
+        id S1731398AbfKHSwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:52:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48740 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:52:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbfKHSw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:52:27 -0500
+        id S1731195AbfKHSwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:52:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB35F214DB;
-        Fri,  8 Nov 2019 18:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E14ED21D7E;
+        Fri,  8 Nov 2019 18:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239147;
-        bh=JxFXf/iL0Po+TwuDxjWfrvI5nmMzUx20GCYDtuU1Ewg=;
+        s=default; t=1573239150;
+        bh=RlodDkjESUM8Slmuk9dH1BmilljgeGRbTugX96zDFV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xWnhhc+vxGKayDWoF7piaKVwzAn+YpvjdPalyK9pLWaEVS2HwnJqgz9oNYgHoVxr/
-         1fxXe95aCK2MPxAHlbIYRAc62rcCBjuzWYMXH9pngz1ZH9PXWocPjqFY11/UBYycKT
-         kJOafg+h9Ko+fjXADOcQHFfJ5rtSA+2D/saECvWY=
+        b=Gmkwr7wb0skcYEx/CWx20hCXWRQqiDMvoIx6Z3u4bcHgi5NgPT93UgfIkMuMBf4Ps
+         JQJPEEeWGSUOKBrCC1LZoT9j1qq8/sGJ+geUABWR+9arACl+Skun5Qz1xSC2uvOGeC
+         P6cLEskVja80zqBLTk37Z75Ex1J0trC5bAyubUpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        stable@vger.kernel.org, zhanglin <zhang.lin16@zte.com.cn>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 16/75] net: hisilicon: Fix ping latency when deal with high throughput
-Date:   Fri,  8 Nov 2019 19:49:33 +0100
-Message-Id: <20191108174723.638254470@linuxfoundation.org>
+Subject: [PATCH 4.4 17/75] net: Zeroing the structure ethtool_wolinfo in ethtool_get_wol()
+Date:   Fri,  8 Nov 2019 19:49:34 +0100
+Message-Id: <20191108174723.977583735@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -59,76 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: zhanglin <zhang.lin16@zte.com.cn>
 
-[ Upstream commit e56bd641ca61beb92b135298d5046905f920b734 ]
+[ Upstream commit 5ff223e86f5addbfae26419cbb5d61d98f6fbf7d ]
 
-This is due to error in over budget processing.
-When dealing with high throughput, the used buffers
-that exceeds the budget is not cleaned up. In addition,
-it takes a lot of cycles to clean up the used buffer,
-and then the buffer where the valid data is located can take effect.
+memset() the structure ethtool_wolinfo that has padded bytes
+but the padded bytes have not been zeroed out.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ net/core/ethtool.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -174,6 +174,7 @@ struct hip04_priv {
- 	dma_addr_t rx_phys[RX_DESC_NUM];
- 	unsigned int rx_head;
- 	unsigned int rx_buf_size;
-+	unsigned int rx_cnt_remaining;
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -941,11 +941,13 @@ static int ethtool_reset(struct net_devi
  
- 	struct device_node *phy_node;
- 	struct phy_device *phy;
-@@ -487,7 +488,6 @@ static int hip04_rx_poll(struct napi_str
- 	struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
- 	struct net_device *ndev = priv->ndev;
- 	struct net_device_stats *stats = &ndev->stats;
--	unsigned int cnt = hip04_recv_cnt(priv);
- 	struct rx_desc *desc;
- 	struct sk_buff *skb;
- 	unsigned char *buf;
-@@ -500,8 +500,8 @@ static int hip04_rx_poll(struct napi_str
+ static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
+ {
+-	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
++	struct ethtool_wolinfo wol;
  
- 	/* clean up tx descriptors */
- 	tx_remaining = hip04_tx_reclaim(ndev, false);
--
--	while (cnt && !last) {
-+	priv->rx_cnt_remaining += hip04_recv_cnt(priv);
-+	while (priv->rx_cnt_remaining && !last) {
- 		buf = priv->rx_buf[priv->rx_head];
- 		skb = build_skb(buf, priv->rx_buf_size);
- 		if (unlikely(!skb))
-@@ -544,11 +544,13 @@ static int hip04_rx_poll(struct napi_str
- 		hip04_set_recv_desc(priv, phys);
+ 	if (!dev->ethtool_ops->get_wol)
+ 		return -EOPNOTSUPP;
  
- 		priv->rx_head = RX_NEXT(priv->rx_head);
--		if (rx >= budget)
-+		if (rx >= budget) {
-+			--priv->rx_cnt_remaining;
- 			goto done;
-+		}
++	memset(&wol, 0, sizeof(struct ethtool_wolinfo));
++	wol.cmd = ETHTOOL_GWOL;
+ 	dev->ethtool_ops->get_wol(dev, &wol);
  
--		if (--cnt == 0)
--			cnt = hip04_recv_cnt(priv);
-+		if (--priv->rx_cnt_remaining == 0)
-+			priv->rx_cnt_remaining += hip04_recv_cnt(priv);
- 	}
- 
- 	if (!(priv->reg_inten & RCV_INT)) {
-@@ -633,6 +635,7 @@ static int hip04_mac_open(struct net_dev
- 	int i;
- 
- 	priv->rx_head = 0;
-+	priv->rx_cnt_remaining = 0;
- 	priv->tx_head = 0;
- 	priv->tx_tail = 0;
- 	hip04_reset_ppe(priv);
+ 	if (copy_to_user(useraddr, &wol, sizeof(wol)))
 
 
