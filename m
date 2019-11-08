@@ -7,69 +7,69 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5391EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB4AFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22959214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DB2214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 05:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XS4EhrtL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OU9az6yy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfKHFU1 (ORCPT
+        id S1729906AbfKHFUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:20:27 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42201 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727832AbfKHFU0 (ORCPT
+        Fri, 8 Nov 2019 00:20:32 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45986 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727832AbfKHFUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 00:20:26 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q17so3292057pgt.9;
-        Thu, 07 Nov 2019 21:20:25 -0800 (PST)
+        Fri, 8 Nov 2019 00:20:31 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y24so3252887plr.12;
+        Thu, 07 Nov 2019 21:20:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=abrU7G2BP5v8QeCE5OZCvci6QXqITkbp0Z5/JmfzQPA=;
-        b=XS4EhrtLD7ira7yvelmd2Zy3twZdQh8w75/0Bvi5MIu/L4pOW3y8Uz4PCFCEcn0x2V
-         UJRHR7EHVv4upN1s3mKOU+aXz8ou1jxdpweTYwgv4ZnBbnd7Ii4zfwrgAp55n2AvBJH3
-         1jhNhhQuZvooBbddpFbLmdVJs6jwPqfRAfvZpnzrHYf0XrHgX5EGpC7yIkL5+Us9WUFx
-         BakG/iV27xw1PKS7f7ib3sHdPeWqSavpn0U224EvrUgbgOKPkXXEHgU5eVlcMk3CC16K
-         aYQeJ7wbJ/sy2mgsQ4LVYZXgUfbtEZQm42iDbOBbjbnNadLsIbqADQtzfg1IwqX9IdC7
-         iKVw==
+        bh=IsgxuNQAHTHcIJrS856EvYwzkJI0BrRT1sF+4RZoSHY=;
+        b=OU9az6yy3IUp3SiSu45yKUKtY2YuK45CZcO2G32kWBQjcf5VxlZGvBPTr5tLfyiIX7
+         SX+Y/CAJ6Lohdx8lZQe4N3YilX9GLn2S+d1xDzm0hZAk1CdbQg6PavJ3rw17DojAGuzU
+         JPoCoAmi61dj7AkZEAyNdca0u9PUAqaZFXgTXOI9YdCqPg8h7/PwJizXrFHqgm3TTwG6
+         CLnz8oNQidGkSa83vKRcr9fDfsgEjcDAV9u1fpop4FVxcVnW3+MK1uuieMt9IEq2gzAb
+         qqtL79/JudvPx+EgvVYIAzx5cHcVtft3C5d4MxtTSOhtPB2p1MFfEJp/wfqLgWBGvpQw
+         Pp7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=abrU7G2BP5v8QeCE5OZCvci6QXqITkbp0Z5/JmfzQPA=;
-        b=NYeyBd2IDy07Iavz8tGvYp6Twf0NJYuqy4p1gxO4t7XF7xWxzdMSlm34EyIhJuT6Wv
-         UPcPQztEJc7XHj2k2gs4WYyd49Ddux1JAYXu7+FhBi12wNF5KlEWRwuJfZnPLRecPZAS
-         B3L+y72NEpVtdsld12ZeD4BpUBDtSlMFOeD//Lbp6Ayw7sGpwIGz/yJYqbyztd+8t1Eu
-         JRqfcQn+QxpVrHEWoOR+1xH4FlurUmLRqsASqQWtWaLMqxsT/5DGLtfyG+I7vt+z1qav
-         AQOdzYtSkR1juvfm6dNwHTcpJbKXKP5ImY8gDDcS3fZwkiOE1A6Y7SpWl82/4MUIY3zo
-         IhMg==
-X-Gm-Message-State: APjAAAWj2QVSr/46hU+4Q/zVWQWUMoZtXz9PBw/80q51m0Da4E2Tixsl
-        YhkgILX+LEc5nkCbHfTaigQ=
-X-Google-Smtp-Source: APXvYqzuOVQPOmNdL1oWGOMyR40/RsnF24CKyjQWAw0vN7iQicHxialcfaga7srrNVEALqe7IjKKTQ==
-X-Received: by 2002:a63:495b:: with SMTP id y27mr9468935pgk.438.1573190425229;
-        Thu, 07 Nov 2019 21:20:25 -0800 (PST)
+        bh=IsgxuNQAHTHcIJrS856EvYwzkJI0BrRT1sF+4RZoSHY=;
+        b=DIRky/NJG7gIFHJES5NdpYXqVDWvZscifidan2/vgoiGRwSWWYY7hyVi6AZVgnB6qX
+         kNuh/oNLCt4I44TivDh3hUrrhkYkhP1gkHLHD5VMvUwTBURQw0bOPsw9L9qUJTmMGg/R
+         h7yVFChierF2kNmNqL/rU1PNI8ir62AgqFJssvCko9okslEjtwKvGZ+VhO+3sqSjbbbc
+         MI5q/sXUIQ9AWEzRB1SiKbCnr6q1YOXT1StR1kSdtBmufNZKu/D+aKpNE4CVeW22CY9A
+         lRuJHobR4uDQHtR8IKLonDaWQ+KtnLqufiMY4oV/cEv+CQJaSasWKD8VteIVAXzvk3k0
+         Prfw==
+X-Gm-Message-State: APjAAAXXozsHJXo8xTmTWqE3DlkrExnAmCzuVaSvAzznsGe0BCFfilf+
+        JT7xpF1NGGPHoOxGZ1/H59w=
+X-Google-Smtp-Source: APXvYqz3mckpSnE6ff65rlP5g6npFA0fhlUqDe6bSasd/PfFFnQhvBY+LCB6I6q0nqFNDzgJApwWvQ==
+X-Received: by 2002:a17:902:b604:: with SMTP id b4mr8201575pls.219.1573190430792;
+        Thu, 07 Nov 2019 21:20:30 -0800 (PST)
 Received: from voyager.ibm.com ([36.255.48.244])
-        by smtp.gmail.com with ESMTPSA id v19sm3798443pjr.14.2019.11.07.21.20.20
+        by smtp.gmail.com with ESMTPSA id v19sm3798443pjr.14.2019.11.07.21.20.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 21:20:24 -0800 (PST)
+        Thu, 07 Nov 2019 21:20:29 -0800 (PST)
 From:   Joel Stanley <joel@jms.id.au>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg KH <gregkh@linuxfoundation.org>,
         Jeremy Kerr <jk@ozlabs.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
+Cc:     kbuild test robot <lkp@intel.com>,
         Alistar Popple <alistair@popple.id.au>,
         Eddie James <eajames@linux.ibm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-fsi@lists.ozlabs.org
-Subject: [PATCH v2 05/11] fsi: core: Fix small accesses and unaligned offsets via sysfs
-Date:   Fri,  8 Nov 2019 15:49:39 +1030
-Message-Id: <20191108051945.7109-6-joel@jms.id.au>
+Subject: [PATCH v2 06/11] fsi: fsi_master_class can be static
+Date:   Fri,  8 Nov 2019 15:49:40 +1030
+Message-Id: <20191108051945.7109-7-joel@jms.id.au>
 X-Mailer: git-send-email 2.24.0.rc1
 In-Reply-To: <20191108051945.7109-1-joel@jms.id.au>
 References: <20191108051945.7109-1-joel@jms.id.au>
@@ -80,103 +80,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: kbuild test robot <lkp@intel.com>
 
-Subtracting the offset delta from four-byte alignment lead to wrapping
-of the requested length where `count` is less than `off`. Generalise the
-length handling to enable and optimise aligned access sizes for all
-offset and size combinations. The new formula produces the following
-results for given offset and count values:
+There are no users outside of this file.
 
-    offset  count | length
-    --------------+-------
-    0       1     | 1
-    0       2     | 2
-    0       3     | 2
-    0       4     | 4
-    0       5     | 4
-    1       1     | 1
-    1       2     | 1
-    1       3     | 1
-    1       4     | 1
-    1       5     | 1
-    2       1     | 1
-    2       2     | 2
-    2       3     | 2
-    2       4     | 2
-    2       5     | 2
-    3       1     | 1
-    3       2     | 1
-    3       3     | 1
-    3       4     | 1
-    3       5     | 1
-
-We might need something like this for the cfam chardevs as well, for
-example we don't currently implement any alignment restrictions /
-handling in the hardware master driver.
-
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Fixes: 0604d53d4da8 ("fsi: Add fsi-master class")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/fsi/fsi-core.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ drivers/fsi/fsi-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index c773c65a5058..e02ebcb0c9e6 100644
+index e02ebcb0c9e6..8244da8a7241 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -544,6 +544,31 @@ static int fsi_slave_scan(struct fsi_slave *slave)
- 	return 0;
- }
+@@ -1272,7 +1272,7 @@ static struct attribute *master_attrs[] = {
  
-+static unsigned long aligned_access_size(size_t offset, size_t count)
-+{
-+	unsigned long offset_unit, count_unit;
-+
-+	/* Criteria:
-+	 *
-+	 * 1. Access size must be less than or equal to the maximum access
-+	 *    width or the highest power-of-two factor of offset
-+	 * 2. Access size must be less than or equal to the amount specified by
-+	 *    count
-+	 *
-+	 * The access width is optimal if we can calculate 1 to be strictly
-+	 * equal while still satisfying 2.
-+	 */
-+
-+	/* Find 1 by the bottom bit of offset (with a 4 byte access cap) */
-+	offset_unit = BIT(__builtin_ctzl(offset | 4));
-+
-+	/* Find 2 by the top bit of count */
-+	count_unit = BIT(8 * sizeof(unsigned long) - 1 - __builtin_clzl(count));
-+
-+	/* Constrain the maximum access width to the minimum of both criteria */
-+	return BIT(__builtin_ctzl(offset_unit | count_unit));
-+}
-+
- static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		struct kobject *kobj, struct bin_attribute *attr, char *buf,
- 		loff_t off, size_t count)
-@@ -559,8 +584,7 @@ static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		return -EINVAL;
+ ATTRIBUTE_GROUPS(master);
  
- 	for (total_len = 0; total_len < count; total_len += read_len) {
--		read_len = min_t(size_t, count, 4);
--		read_len -= off & 0x3;
-+		read_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
- 		if (rc)
-@@ -587,8 +611,7 @@ static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
- 		return -EINVAL;
- 
- 	for (total_len = 0; total_len < count; total_len += write_len) {
--		write_len = min_t(size_t, count, 4);
--		write_len -= off & 0x3;
-+		write_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
- 		if (rc)
+-struct class fsi_master_class = {
++static struct class fsi_master_class = {
+ 	.name = "fsi-master",
+ 	.dev_groups = master_groups,
+ };
 -- 
 2.24.0.rc1
 
