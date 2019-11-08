@@ -2,142 +2,122 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1D8FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156FAFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6752178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88CE2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfKHOGd (ORCPT
+        id S1728441AbfKHOHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:06:33 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:60767 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfKHOGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:06:32 -0500
-Received: from [IPv6:2001:420:44c1:2577:2d08:b535:4aeb:85f0]
- ([IPv6:2001:420:44c1:2577:2d08:b535:4aeb:85f0])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id T4u9iG8nuXYiTT4uDi0g6M; Fri, 08 Nov 2019 15:06:30 +0100
-Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
- <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
- <1573058741.16477.18.camel@nxp.com>
- <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
- <1573220200.16477.32.camel@nxp.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <ffbc7501-bb56-b5f2-cd43-209f099be594@xs4all.nl>
-Date:   Fri, 8 Nov 2019 15:06:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 8 Nov 2019 09:07:12 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:59180 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbfKHOHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 09:07:12 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iT4uS-0001Tu-Pp; Fri, 08 Nov 2019 15:06:44 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     Sean Paul <sean@poorly.run>, hjc@rock-chips.com, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/rockchip: use DRM_DEV_ERROR for log output
+Date:   Fri, 08 Nov 2019 15:06:44 +0100
+Message-ID: <4996186.DxzAFJqeGu@diego>
+In-Reply-To: <20191108124630.GA10207@wambui>
+References: <20191107092945.15513-1-wambui.karugax@gmail.com> <20191107133851.GF63329@art_vandelay> <20191108124630.GA10207@wambui>
 MIME-Version: 1.0
-In-Reply-To: <1573220200.16477.32.camel@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfFtHvLism700l44mHiTDlkoGsJR8q8LtIaDRa1DTgNp3cGSGFuG+AfyW/O4wXjgBv9ZLWv4URjd4wl6Ld6p/gwsGJxnWGp20bWz/6JCpoSqH7AfIuHTa
- ko5FOBAcEuspTdRHfTEWIIBPwebHCR0plxObGh8VO3pHLAXmXsiPhAchMpiRF2I72k0CY9VUDc0r9eVZQWZP7C6X/vgzmxbfNvcJaRop+LaUfu/QvglqhImF
- 3PnqaDVkI/ZRF07ckuObAqr2pdWFVQ1MLPbruqHftvev2ZE9NNo6ndK6iXGbfB4TA3O05C/uJFh9HsXYPgfjXdRwQU5lHgLRpEcJxFrQ9YzS2VQUtJCTtnNY
- KFntJPQ+ZhBYMM59lK0blIf6/EbT/GL43IapW2TdzeXlLQ7+zTE0oCVa+O2tIDawNnRgc7ueJkX8wtQwHYvMyRvOx7MWgoeRMoT9sm7CllGCd+7Q/hgmJKeE
- OnA6GdTx/MUnTKfiIIpbfYGvSpUt70w5+la0pi/srt7sa5XGyIlaPCo8IpSwNJZq5L/v4aH26o1kcoAnqNhthX8+djE+K+VBOfJpW1/rar/vs4+EnndeR15C
- gYHqQuvgMx2FaQrwHYyDzCy/e8AvLRyk9FIQsjzwolWN2jguexMmrq2D8+KGSS1faroHSlcSQQRvAY3gXdsQh0/26m2YbFE/R5Gs4nk2UWScrcZvAfbT65hy
- dVl0QDXA9bNdkOi6uOuYg0X6N9xL5oHrtZz9oH55dFGL5lVdnl1WQupFDw32A/PXRQBJ0VskbuOIUzUb/Y+53iSKrO22s7zmc/HeWiGoPmBBPjxkfIKNm3R9
- lt0TPkuqDUc93an56uMutzsa8CXyzBxdEvPFP2HcicYMfo4bsJhY3T5GIDB6vxCbPayE0S9HRMVgGQAR/vXDahkF0d1aLqLO081Iuno8BAmRx95KI8OybP8F
- vNTOaIlrmHzf731D6tf6cXPMqGIk/RdjyLfOeFAiWEbBKpCMcAtxREUDIh2v1KuEbob8VVFNrN2yKq5wzmho9rqihlA=
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/8/19 2:36 PM, Mirela Rabulea wrote:
-> Hi Hans,
-> 
-> On Mi, 2019-11-06 at 17:52 +0100, Hans Verkuil wrote:
->>       test Scaling: OK
->> The presence of a scaler is suspicious: is the encoder indeed
->> capable of scaling? I suspect this is a bug.
-> 
-> No, it's not capable of scaling. You suspect a bug in the driver or the
-> tests?
+Hi,
 
-Actually, I think that's an outstanding bug in v4l-utils. It doesn't
-correctly handle the m2m case with respect to scaling. I think. I'll
-look into this a bit more.
+[it seems your Reply-To mail header is set strangely as
+Reply-To: 20191107133851.GF63329@art_vandelay
+which confuses my MTA]
 
-> 
->> Codec ioctls:
->>>       test VIDIOC_(TRY_)ENCODER_CMD: OK
->> The presence of this...
->>
->>>
->>>       test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->>>       test VIDIOC_(TRY_)DECODER_CMD: OK
->> ...and this is also strange for a JPEG codec. These ioctls are
->> typically only
->> needed for MPEG/H264/etc. codecs, and not for a simple JPEG codec.
->>
->> The same issues are found for the JPEG decoder.
-> 
-> I implemented the CMD_STOP for both encoder & decoder, because it was
-> requested by our developer for gstreamer plugin for this codec.
-> The context in which this was requested was for playing MJPEG videos (a
-> concatenation of JPEG frames).
+Am Freitag, 8. November 2019, 13:46:30 CET schrieb Wambui Karuga:
+> On Thu, Nov 07, 2019 at 08:38:51AM -0500, Sean Paul wrote:
+> > On Thu, Nov 07, 2019 at 01:54:22AM -0800, Joe Perches wrote:
+> > > On Thu, 2019-11-07 at 12:29 +0300, Wambui Karuga wrote:
+> > > > Replace the use of the dev_err macro with the DRM_DEV_ERROR
+> > > > DRM helper macro.
+> > > 
+> > > The commit message should show the reason _why_ you are doing
+> > > this instead of just stating that you are doing this.
+> > > 
+> > > It's not that dev_err is uncommon in drivers/gpu/drm.
+> > > 
+> > 
+> > It is uncommon (this is the sole instance) in rockchip, however. So it makes
+> > sense to convert the dev_* prints in rockchip to DRM_DEV for consistency.
+> > 
+> > Wambui, could you also please convert the dev_warn instance as well?
+> > 
+> Hey, Sean.
+> Trying to convert this dev_warn instance, but the corresponding DRM_WARN
+> macro does not take the dev parameter which seems to be useful in the
+> original output.
+> Should I still convert it to DRM_WARN without the hdmi->dev parameter?
 
-This ioctl makes no sense for JPEG codecs, and in fact jpeg drivers like
-s5p-jpeg or mtk-jpeg do not implement this. This sounds like a gstreamer bug.
-Nicolas, do you know anything about this?
+There exists DRM_DEV_ERROR, DRM_DEV_INFO and DRM_DEV_DEBUG to
+handle actual devices. Interestingly there is no DRM_DEV_WARN though.
 
-> 
->> Streaming ioctls:
->>>       test read/write: OK (Not Supported)
->>>       test blocking wait: OK
->>>               fail: v4l2-test-buffers.cpp(254): g_field() ==
->>> V4L2_FIELD_ANY
->> The driver shall never return FIELD_ANY. This needs to be FIELD_NONE.
-> 
-> Is there a "good example" of a v4l m2m driver that passes these
+So depending on what Sean suggest another option would be to add the
+missing DRM_DEV_WARN and then use it to replace the dev_warn.
 
-vim2m. Also drivers/media/platform/mtk-jpeg/ (although I'm not sure when
-it was last tested with v4l2-compliance, so it might be a bit out of date).
 
-> streaming tests? That would save some time on my side.
-> For the FIELD_ANY issue, I got inspired from your commit:
-> ab7afaf3 media: vim2m: add buf_out_validate callback
-> But there's a lot more to go...
+Heiko
+
+
+
 > 
 > Thanks,
-> Mirela
+> wambui
+> > I'll apply this to drm-misc-next and expand on the commit message a bit.
+> > 
+> > Thanks,
+> > 
+> > Sean
+> > 
+> > > $ git grep -w dev_err drivers/gpu/drm | wc -l
+> > > 1950
+> > > $ git grep -w DRM_DEV_ERROR drivers/gpu/drm | wc -l
+> > > 756
+> > > 
+> > > > diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+> > > []
+> > > > @@ -916,7 +916,7 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
+> > > >  	}
+> > > >  
+> > > >  	if (!dsi->cdata) {
+> > > > -		dev_err(dev, "no dsi-config for %s node\n", np->name);
+> > > > +		DRM_DEV_ERROR(dev, "no dsi-config for %s node\n", np->name);
+> > > >  		return -EINVAL;
+> > > >  	}
+> > > 
+> > > 
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
 > 
 
-Regards,
 
-	Hans
+
+
