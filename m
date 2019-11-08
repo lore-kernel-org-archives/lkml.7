@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21D4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13F3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA1C206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8772F206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="H5JuEuP5"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="O/6AGo/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbfKHNC2 (ORCPT
+        id S1731371AbfKHNCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:02:28 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44323 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730461AbfKHNCT (ORCPT
+        Fri, 8 Nov 2019 08:02:52 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39445 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730945AbfKHNC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:02:19 -0500
-Received: by mail-lj1-f196.google.com with SMTP id g3so6105080ljl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:17 -0800 (PST)
+        Fri, 8 Nov 2019 08:02:28 -0500
+Received: by mail-lf1-f68.google.com with SMTP id z24so1469371lfh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lTNGYmdFYnmbZW7BpDJGzJwkDqsYkg29EXzmXFmW/h8=;
-        b=H5JuEuP5tLO+DynLcAFFP0N09+DzlW9tVKmrQ/dVJFts+vd+dHMtpA2iNiybLkrIue
-         teBl/LORkM1qYI0PXUTGYUWBT+8bbWRDFfPbAjjljgCudgvFBX7mGvhQWjv0Q8EWQIuE
-         PeMjAXLmxtZUTyKdS4F/EuhaR1nxaUmqhlnAI=
+        bh=eoU6yRz6gH6qOWyRe/vJLGf2pgvTpCjyg96xNihJCPI=;
+        b=O/6AGo/ZGsFlsmLzJdyEPO3mV8xhZwNRXLRrD1SwfTKq6IMDjQUNw7j0VpK1oVFyLL
+         wc5e8wLviGXZ87K0ZB9XM3865S7c5VlogZhWCTbefzWUbe06CEYaPSev0sIHG2QmP0NR
+         92+WT/4laZ948//hxG0mEeosoGrg8VxvjMNyk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lTNGYmdFYnmbZW7BpDJGzJwkDqsYkg29EXzmXFmW/h8=;
-        b=SAuUxTCZ6NBVvk7UVRGCbSGZcgUfXrMPgbRRf5uHXtmGM7qsDZzeQhoXFoqVq+IgWN
-         aysY6V3SPr1y6QPTkLCx5NgPgXjSuOhF52UUfRCxBnXWwyBD7CDmx/5d2e6E9djlXqr3
-         f9xBk+Jwtgl2GUbRsSZZfEGrxwio8b1Q0abIck4myvsGRagjTC2iEiS+WAcVMm8E8sJf
-         5CAbY1wn50eP2mAGjekT6mQzKNXtQHvXMBtKp9nrQxnEozFUDYTbaThW3xCoDQ2dGJKo
-         elA20kUnAS009KwhI+LKzqrighRMOxpnV5PzV8mxltI7OsdL3ws+u3UhBH4AFTFgojot
-         zhHA==
-X-Gm-Message-State: APjAAAWnEHfJ1p+RpGuEzP99WJFaieOWj7IPKKJ0/ENUG5vD/Z+beF4g
-        TsY8lykpdlOnzWfsEDV2Q/Garw==
-X-Google-Smtp-Source: APXvYqzP460JuRM8sVvJMljDGfhC7vukmbMbViHsvnghQLYn1lNCibVb6RIJWYFwFeSahEYRQku9KA==
-X-Received: by 2002:a2e:894b:: with SMTP id b11mr6885689ljk.118.1573218137226;
-        Fri, 08 Nov 2019 05:02:17 -0800 (PST)
+        bh=eoU6yRz6gH6qOWyRe/vJLGf2pgvTpCjyg96xNihJCPI=;
+        b=C+rj40NVxZoZuCoSdXjxQvUTX3+tTs1z19qA++2cglvWlYhLbPgKjhS4SCM5Qym9l2
+         OWrR/Yjgo1DaHUKBRRbIk+3ZwDsE9rh799LbMIuZDchwKX4NCjoX4DL+NfRn1FCcLEQC
+         nNMV6+tWM/xTksJfJ6cYsxC3Kdwp3r9MOXFxr4l/ZAORwvfGSKt8a5WaleiWKkzMqwPp
+         B9AJW+CuA0bDsWYm6TzmFETB8TGRWcpVc5TzuAQql203kPsOvTfOQPidp3FQ9srtBroK
+         9Kx7RGdA4DgrKNBGlZB+RFaIfBpydwfMJiY3mYK3qUaeo3ZydpBr/3ZR4xverwy0sz+j
+         qhrg==
+X-Gm-Message-State: APjAAAVsi4zo53NL3Dr8XKygaa889f9GeE7jMRBf/pJC73enGxPXtbAy
+        q0CtO/r7cU+faxEz39PkHe55Gg==
+X-Google-Smtp-Source: APXvYqwxS6IOvsV8gHqknaTDjoYrWzUraN+5B9FEomuPHvbNlLsU0KSDBbHmOzMq8nrZpelvp/lTbQ==
+X-Received: by 2002:ac2:5097:: with SMTP id f23mr6576512lfm.90.1573218146378;
+        Fri, 08 Nov 2019 05:02:26 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.02.16
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.02.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:02:16 -0800 (PST)
+        Fri, 08 Nov 2019 05:02:25 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v4 39/47] soc: fsl: qe: avoid IS_ERR_VALUE in ucc_slow.c
-Date:   Fri,  8 Nov 2019 14:01:15 +0100
-Message-Id: <20191108130123.6839-40-linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 47/47] soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
+Date:   Fri,  8 Nov 2019 14:01:23 +0100
+Message-Id: <20191108130123.6839-48-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
@@ -73,112 +73,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When trying to build this for a 64-bit platform, one gets warnings
-from using IS_ERR_VALUE on something which is not sizeof(long).
+There are also ARM and ARM64 based SOCs with a QUICC Engine, and the
+core QE code as well as net/wan/fsl_ucc_hdlc and tty/serial/ucc_uart
+has now been modified to not rely on ppcisms.
 
-Instead, change the various *_offset fields to store a signed integer,
-and simply check for a negative return from qe_muram_alloc(). Since
-qe_muram_free() now accepts and ignores a negative argument, we only
-need to make sure these fields are initialized with -1, and we can
-just unconditionally call qe_muram_free() in ucc_slow_free().
+So extend the architectures that can select QUICC_ENGINE, and add the
+rather modest requirements of OF && HAS_IOMEM.
 
-Note that the error case for us_pram_offset failed to set that field
-to 0 (which, as noted earlier, is anyway a bogus sentinel value).
+The core code as well as the ucc_uart driver has been tested on an
+LS1021A (arm), and it has also been tested that the QE code still
+works on an mpc8309 (ppc).
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/ucc_slow.c | 22 +++++++++-------------
- include/soc/fsl/qe/ucc_slow.h |  6 +++---
- 2 files changed, 12 insertions(+), 16 deletions(-)
+ drivers/soc/fsl/qe/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/fsl/qe/ucc_slow.c b/drivers/soc/fsl/qe/ucc_slow.c
-index 9b55fd0f50c6..274d34449846 100644
---- a/drivers/soc/fsl/qe/ucc_slow.c
-+++ b/drivers/soc/fsl/qe/ucc_slow.c
-@@ -154,6 +154,9 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
- 			__func__);
- 		return -ENOMEM;
- 	}
-+	uccs->rx_base_offset = -1;
-+	uccs->tx_base_offset = -1;
-+	uccs->us_pram_offset = -1;
+diff --git a/drivers/soc/fsl/qe/Kconfig b/drivers/soc/fsl/qe/Kconfig
+index cfa4b2939992..f1974f811572 100644
+--- a/drivers/soc/fsl/qe/Kconfig
++++ b/drivers/soc/fsl/qe/Kconfig
+@@ -5,7 +5,8 @@
  
- 	/* Fill slow UCC structure */
- 	uccs->us_info = us_info;
-@@ -179,7 +182,7 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
- 	/* Get PRAM base */
- 	uccs->us_pram_offset =
- 		qe_muram_alloc(UCC_SLOW_PRAM_SIZE, ALIGNMENT_OF_UCC_SLOW_PRAM);
--	if (IS_ERR_VALUE(uccs->us_pram_offset)) {
-+	if (uccs->us_pram_offset < 0) {
- 		printk(KERN_ERR "%s: cannot allocate MURAM for PRAM", __func__);
- 		ucc_slow_free(uccs);
- 		return -ENOMEM;
-@@ -206,10 +209,9 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
- 	uccs->rx_base_offset =
- 		qe_muram_alloc(us_info->rx_bd_ring_len * sizeof(struct qe_bd),
- 				QE_ALIGNMENT_OF_BD);
--	if (IS_ERR_VALUE(uccs->rx_base_offset)) {
-+	if (uccs->rx_base_offset < 0) {
- 		printk(KERN_ERR "%s: cannot allocate %u RX BDs\n", __func__,
- 			us_info->rx_bd_ring_len);
--		uccs->rx_base_offset = 0;
- 		ucc_slow_free(uccs);
- 		return -ENOMEM;
- 	}
-@@ -217,9 +219,8 @@ int ucc_slow_init(struct ucc_slow_info * us_info, struct ucc_slow_private ** ucc
- 	uccs->tx_base_offset =
- 		qe_muram_alloc(us_info->tx_bd_ring_len * sizeof(struct qe_bd),
- 			QE_ALIGNMENT_OF_BD);
--	if (IS_ERR_VALUE(uccs->tx_base_offset)) {
-+	if (uccs->tx_base_offset < 0) {
- 		printk(KERN_ERR "%s: cannot allocate TX BDs", __func__);
--		uccs->tx_base_offset = 0;
- 		ucc_slow_free(uccs);
- 		return -ENOMEM;
- 	}
-@@ -352,14 +353,9 @@ void ucc_slow_free(struct ucc_slow_private * uccs)
- 	if (!uccs)
- 		return;
- 
--	if (uccs->rx_base_offset)
--		qe_muram_free(uccs->rx_base_offset);
--
--	if (uccs->tx_base_offset)
--		qe_muram_free(uccs->tx_base_offset);
--
--	if (uccs->us_pram)
--		qe_muram_free(uccs->us_pram_offset);
-+	qe_muram_free(uccs->rx_base_offset);
-+	qe_muram_free(uccs->tx_base_offset);
-+	qe_muram_free(uccs->us_pram_offset);
- 
- 	if (uccs->us_regs)
- 		iounmap(uccs->us_regs);
-diff --git a/include/soc/fsl/qe/ucc_slow.h b/include/soc/fsl/qe/ucc_slow.h
-index 8696fdea2ae9..d187a6be83bc 100644
---- a/include/soc/fsl/qe/ucc_slow.h
-+++ b/include/soc/fsl/qe/ucc_slow.h
-@@ -185,7 +185,7 @@ struct ucc_slow_private {
- 	struct ucc_slow_info *us_info;
- 	struct ucc_slow __iomem *us_regs; /* Ptr to memory map of UCC regs */
- 	struct ucc_slow_pram *us_pram;	/* a pointer to the parameter RAM */
--	u32 us_pram_offset;
-+	s32 us_pram_offset;
- 	int enabled_tx;		/* Whether channel is enabled for Tx (ENT) */
- 	int enabled_rx;		/* Whether channel is enabled for Rx (ENR) */
- 	int stopped_tx;		/* Whether channel has been stopped for Tx
-@@ -194,8 +194,8 @@ struct ucc_slow_private {
- 	struct list_head confQ;	/* frames passed to chip waiting for tx */
- 	u32 first_tx_bd_mask;	/* mask is used in Tx routine to save status
- 				   and length for first BD in a frame */
--	u32 tx_base_offset;	/* first BD in Tx BD table offset (In MURAM) */
--	u32 rx_base_offset;	/* first BD in Rx BD table offset (In MURAM) */
-+	s32 tx_base_offset;	/* first BD in Tx BD table offset (In MURAM) */
-+	s32 rx_base_offset;	/* first BD in Rx BD table offset (In MURAM) */
- 	struct qe_bd *confBd;	/* next BD for confirm after Tx */
- 	struct qe_bd *tx_bd;	/* next BD for new Tx request */
- 	struct qe_bd *rx_bd;	/* next BD to collect after Rx */
+ config QUICC_ENGINE
+ 	bool "QUICC Engine (QE) framework support"
+-	depends on FSL_SOC && PPC32
++	depends on OF && HAS_IOMEM
++	depends on PPC32 || ARM || ARM64 || COMPILE_TEST
+ 	select GENERIC_ALLOCATOR
+ 	select CRC32
+ 	help
 -- 
 2.23.0
 
