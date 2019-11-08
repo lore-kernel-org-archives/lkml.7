@@ -4,51 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFCBC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785B1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97B02085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BF12085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214679;
-	bh=4q0wxmlT8LNfXIg3Vz5jn72hLNxKgjL8rMq45doAlCg=;
+	s=default; t=1573214685;
+	bh=VL9r0Csglza5UEJzSeVP/0TGRgcTmcqr5vr+D1HxZhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7YzM5YiFMFgZ+Hkwj+RuMuxafDuWM0PEwgX1CucuD8OtkZvXRiN2Ap5JvYya8sN2
-	 bTcYd4C5yZNFj0xpN1LniWOVnAjMRw75AD5dpKGRTKxIVOmIvjGINkfgIjCEsBaLGb
-	 QPoprwt0OAfQb+a2mTAeUHqvzWjVNSg+GZ7V4UF0=
+	b=IWRer84ETU008jwIeSC6v7rydCCXWgipLvIbsbtDq82LmP4rYM/TakN6ykNItMw6I
+	 IRSYHQ3tLHU1V3OO5IABFcP5zlT1Zw1hnGEudFNLNrA9IIq4oK1IfX/bzLmWmTWBKy
+	 H4O/206yNlJ54owZ4QPESQFHku0CbGsSM2exZdnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390778AbfKHMEh (ORCPT
+        id S2390426AbfKHMEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:04:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55790 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389773AbfKHLmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:06 -0500
+        id S2389693AbfKHLmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6573E222C5;
-        Fri,  8 Nov 2019 11:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F1DD20656;
+        Fri,  8 Nov 2019 11:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213326;
-        bh=4q0wxmlT8LNfXIg3Vz5jn72hLNxKgjL8rMq45doAlCg=;
+        s=default; t=1573213322;
+        bh=VL9r0Csglza5UEJzSeVP/0TGRgcTmcqr5vr+D1HxZhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fUDzYVoGP3euwLnEOkThbzbyljtrqvitknHJ8LAvYUz0/p0MCfgwVHjSl2hqXyBuG
-         lAMDKJFdBtjwQAOpGhztPwRK6ptiEItck0/f/uwxRkEgqwv5+e3RmnPcahEd6BuGts
-         3VznNQC81XAWYbFwuQzA5yfR6Agz0/yUX9QwL3ZE=
+        b=uGrVW9a0qjGH4k+rcxSqyUcwBP3Nwwgw36mjmjlkXPs6iEld4jjDzcVinP8ZtF96m
+         XG096xtPuUmcD+NoEJjWBNTJ2y7+fVXfbcVFrAhPBGEtC9aLdoNJqwZxvvqDs1AS3x
+         KcmLDqndNtrbDN7Ut2+fDDC4oUEMtsOQ4CUUcM/w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 168/205] arm64: dts: renesas: r8a77965: Fix HS-USB compatible
-Date:   Fri,  8 Nov 2019 06:37:15 -0500
-Message-Id: <20191108113752.12502-168-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 165/205] ALSA: intel8x0m: Register irq handler after register initializations
+Date:   Fri,  8 Nov 2019 06:37:12 -0500
+Message-Id: <20191108113752.12502-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,34 +57,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 99584d93e301d820d817bba2eb77b9152e13009c ]
+[ Upstream commit 7064f376d4a10686f51c879401a569bb4babf9c6 ]
 
-Should be "renesas,usbhs-r8a77965", not "renesas,usbhs-r8a7796".
+The interrupt handler has to be acquired after the other resource
+initialization when allocated with IRQF_SHARED.  Otherwise it's
+triggered before the resource gets ready, and may lead to unpleasant
+behavior.
 
-Fixes: a06e8af801760a98 ("arm64: dts: renesas: r8a77965: add HS-USB node")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/intel8x0m.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 0da4841162610..2ccb1138cdf0c 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -545,7 +545,7 @@
- 		};
+diff --git a/sound/pci/intel8x0m.c b/sound/pci/intel8x0m.c
+index 943a726b1c1b0..c84629190cbaf 100644
+--- a/sound/pci/intel8x0m.c
++++ b/sound/pci/intel8x0m.c
+@@ -1171,16 +1171,6 @@ static int snd_intel8x0m_create(struct snd_card *card,
+ 	}
  
- 		hsusb: usb@e6590000 {
--			compatible = "renesas,usbhs-r8a7796",
-+			compatible = "renesas,usbhs-r8a77965",
- 				     "renesas,rcar-gen3-usbhs";
- 			reg = <0 0xe6590000 0 0x100>;
- 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+  port_inited:
+-	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
+-			KBUILD_MODNAME, chip)) {
+-		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
+-		snd_intel8x0m_free(chip);
+-		return -EBUSY;
+-	}
+-	chip->irq = pci->irq;
+-	pci_set_master(pci);
+-	synchronize_irq(chip->irq);
+-
+ 	/* initialize offsets */
+ 	chip->bdbars_count = 2;
+ 	tbl = intel_regs;
+@@ -1224,11 +1214,21 @@ static int snd_intel8x0m_create(struct snd_card *card,
+ 	chip->int_sta_reg = ICH_REG_GLOB_STA;
+ 	chip->int_sta_mask = int_sta_masks;
+ 
++	pci_set_master(pci);
++
+ 	if ((err = snd_intel8x0m_chip_init(chip, 1)) < 0) {
+ 		snd_intel8x0m_free(chip);
+ 		return err;
+ 	}
+ 
++	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
++			KBUILD_MODNAME, chip)) {
++		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
++		snd_intel8x0m_free(chip);
++		return -EBUSY;
++	}
++	chip->irq = pci->irq;
++
+ 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
+ 		snd_intel8x0m_free(chip);
+ 		return err;
 -- 
 2.20.1
 
