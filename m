@@ -2,198 +2,150 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CBEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBCCC5DF61
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E971721D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:17:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACJVwJRk"
+	by mail.kernel.org (Postfix) with ESMTP id 2B8DF21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 01:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbfKHBRg (ORCPT
+        id S1728116AbfKHBUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 20:17:36 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39280 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728687AbfKHBRb (ORCPT
+        Thu, 7 Nov 2019 20:20:30 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63959 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfKHBUa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 20:17:31 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x28so3605158pfo.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 17:17:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YbemW7AL+I9zYGvxXlbJg+1m1dDalQtynuOAJrGAmWs=;
-        b=ACJVwJRkBGFF/+sRj9R7QOdB9bAbJ6DEyprQOIneKcH3rKcMgobDzmL8cbBhYlFlhK
-         UG2Ts4IPnKEi0BvogIAVPjdl0GyD/nmlUMJ8j3nrOqWM4sZhl4iScMGH6pMgUdIp3agF
-         bAhVgzQJJibox07IVXnsi/E0RBsgmbS4Be+JPffq8vWgbVwBcK/204cFgjRz8+tYE+AW
-         NyEqeFkwbX6OcClJTe51TB9TQpaxHfkYHRX9N6XVF/cffjl/FHsbZQGK/bFdbMs7MisO
-         s6FQbdYw7P81hKyHCx5wpCeqZldGJFTnOsLYsjfKnKeWzlWpzvYZBckyZBX1n6C8/3tY
-         3rog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YbemW7AL+I9zYGvxXlbJg+1m1dDalQtynuOAJrGAmWs=;
-        b=FdaIkoMT6GxvK2xiegFhPZPprfTx5LevqRxYa4YTxW/aZ35biwi7UbgmpAFqyKdCzf
-         iXuRb+ijdJSVksVKWVn/XP//KvtcpBYjS4iBNo9vE3qAMkriXVzdedLQWcvve3sa9SRx
-         RnqnZ6l/I10dPXceR1fAbebc8xP5MKabjbQB1ASpwO98pfJQXRzSwlKFg7Mzx71f3Fr1
-         PFBQqcSDBSYLWRxXpTEgawfAYyKvziNBcgcM/Y+u6BH1G4Rn1jiu13LIgEWRHfoC0cMT
-         jSngL7fzPWFPQ0FoMXzZJi7tPgsD3FRSZU5pY6c1iCqkoB2QoVOK5AFHRhKUg5SECNc3
-         sz8Q==
-X-Gm-Message-State: APjAAAUaCn5eCRpcAIAYj0v5dVJhnZtBmfrJtGEBaDc5w76pwqnVxqsC
-        zEMEb04orzg531iZ8PRLlbUrWJqjyTU=
-X-Google-Smtp-Source: APXvYqyDhmgyCW2jRU4VkuvCxHq08LF27f3i1nfLBp9RaV09aT68CPvXaoPm9q4dclh6MPOcwKx78Q==
-X-Received: by 2002:a63:e84d:: with SMTP id a13mr8340878pgk.226.1573175850634;
-        Thu, 07 Nov 2019 17:17:30 -0800 (PST)
-Received: from localhost.localdomain (c-67-170-172-113.hsd1.or.comcast.net. [67.170.172.113])
-        by smtp.gmail.com with ESMTPSA id s23sm3801627pgh.21.2019.11.07.17.17.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 17:17:30 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v5 3/3] usb: dwc3: Add support for role-switch-default-mode binding
-Date:   Fri,  8 Nov 2019 01:17:23 +0000
-Message-Id: <20191108011723.32390-4-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191108011723.32390-1-john.stultz@linaro.org>
-References: <20191108011723.32390-1-john.stultz@linaro.org>
+        Thu, 7 Nov 2019 20:20:30 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 7418509ce44e4b04; Fri, 8 Nov 2019 02:20:27 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     mathieu.poirier@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org
+Subject: Re: [PATCH V6 2/3] cpuidle: play_idle: Specify play_idle with an idle state
+Date:   Fri, 08 Nov 2019 02:20:27 +0100
+Message-ID: <143021538.HHUP3Pj7i7@kreacher>
+In-Reply-To: <20191030075141.1039-2-daniel.lezcano@linaro.org>
+References: <20191030075141.1039-1-daniel.lezcano@linaro.org> <20191030075141.1039-2-daniel.lezcano@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support the new role-switch-default-mode binding for configuring
-the default role the controller assumes as when the usb role is
-USB_ROLE_NONE
+On Wednesday, October 30, 2019 8:51:40 AM CET Daniel Lezcano wrote:
+> Currently, the play_idle function does not allow to tell which idle
+> state we want to go. Improve this by passing the idle state as
+> parameter to the function.
+> 
+> Export cpuidle_find_deepest_state() symbol as it is used from the
+> intel_powerclamp driver as a module.
+> 
+> There is no functional changes, the cpuidle state is the deepest one.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>   V6:
+>    - Change variable name 'state' -> 'index':
+>      https://lkml.org/lkml/2019/10/28/874
+>   V4:
+>    - Add EXPORT_SYMBOL_GPL(cpuidle_find_deepest_state) for the
+>      intel_powerclamp driver when this one is compiled as a module
+>   V3:
+>    - Add missing cpuidle.h header
+> ---
+>  drivers/cpuidle/cpuidle.c                | 1 +
+>  drivers/powercap/idle_inject.c           | 4 +++-
+>  drivers/thermal/intel/intel_powerclamp.c | 4 +++-
+>  include/linux/cpu.h                      | 2 +-
+>  kernel/sched/idle.c                      | 4 ++--
+>  5 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index 18523ea6b11b..b871fc2e8e67 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -126,6 +126,7 @@ int cpuidle_find_deepest_state(void)
+>  
+>  	return find_deepest_state(drv, dev, UINT_MAX, 0, false);
+>  }
+> +EXPORT_SYMBOL_GPL(cpuidle_find_deepest_state);
 
-This patch was split out from a larger patch originally by
-Yu Chen <chenyu56@huawei.com>
+That doesn't appear to be really necessary to me.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v3: Split this patch out from addition of usb-role-switch
-    handling
-v5: Reworked to use string based role-switch-default-mode
----
- drivers/usb/dwc3/core.h |  3 +++
- drivers/usb/dwc3/drd.c  | 25 ++++++++++++++++++++++---
- 2 files changed, 25 insertions(+), 3 deletions(-)
+>  
+>  #ifdef CONFIG_SUSPEND
+>  static void enter_s2idle_proper(struct cpuidle_driver *drv,
+> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+> index cd1270614cc6..233c878cbf46 100644
+> --- a/drivers/powercap/idle_inject.c
+> +++ b/drivers/powercap/idle_inject.c
+> @@ -38,6 +38,7 @@
+>  #define pr_fmt(fmt) "ii_dev: " fmt
+>  
+>  #include <linux/cpu.h>
+> +#include <linux/cpuidle.h>
+>  #include <linux/hrtimer.h>
+>  #include <linux/kthread.h>
+>  #include <linux/sched.h>
+> @@ -138,7 +139,8 @@ static void idle_inject_fn(unsigned int cpu)
+>  	 */
+>  	iit->should_run = 0;
+>  
+> -	play_idle(READ_ONCE(ii_dev->idle_duration_us));
+> +	play_idle(READ_ONCE(ii_dev->idle_duration_us),
+> +		  cpuidle_find_deepest_state());
 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 6f19e9891767..3c879c9ab1aa 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -953,6 +953,8 @@ struct dwc3_scratchpad_array {
-  *		- USBPHY_INTERFACE_MODE_UTMI
-  *		- USBPHY_INTERFACE_MODE_UTMIW
-  * @role_sw: usb_role_switch handle
-+ * @role_switch_default_mode: default operation mode of controller while
-+ *			usb role is USB_ROLE_NONE.
-  * @usb2_phy: pointer to USB2 PHY
-  * @usb3_phy: pointer to USB3 PHY
-  * @usb2_generic_phy: pointer to USB2 PHY
-@@ -1087,6 +1089,7 @@ struct dwc3 {
- 	struct notifier_block	edev_nb;
- 	enum usb_phy_interface	hsphy_mode;
- 	struct usb_role_switch	*role_sw;
-+	enum usb_dr_mode	role_switch_default_mode;
- 
- 	u32			fladj;
- 	u32			irq_gadget;
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index cd43dc2a96c6..dbb881863297 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -491,7 +491,10 @@ static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
- 		mode = DWC3_GCTL_PRTCAP_DEVICE;
- 		break;
- 	default:
--		mode = DWC3_GCTL_PRTCAP_DEVICE;
-+		if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
-+			mode = DWC3_GCTL_PRTCAP_HOST;
-+		else
-+			mode = DWC3_GCTL_PRTCAP_DEVICE;
- 		break;
- 	}
- 
-@@ -517,7 +520,10 @@ static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
- 		role = dwc->current_otg_role;
- 		break;
- 	default:
--		role = USB_ROLE_DEVICE;
-+		if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
-+			role = USB_ROLE_HOST;
-+		else
-+			role = USB_ROLE_DEVICE;
- 		break;
- 	}
- 	spin_unlock_irqrestore(&dwc->lock, flags);
-@@ -527,6 +533,19 @@ static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
- static int dwc3_setup_role_switch(struct dwc3 *dwc)
- {
- 	struct usb_role_switch_desc dwc3_role_switch = {NULL};
-+	const char *str;
-+	u32 mode;
-+	int ret;
-+
-+	ret = device_property_read_string(dwc->dev, "role-switch-default-mode",
-+					  &str);
-+	if (ret >= 0  && !strncmp(str, "host", strlen("host"))) {
-+		dwc->role_switch_default_mode = USB_DR_MODE_HOST;
-+		mode = DWC3_GCTL_PRTCAP_HOST;
-+	} else {
-+		dwc->role_switch_default_mode = USB_DR_MODE_PERIPHERAL;
-+		mode = DWC3_GCTL_PRTCAP_DEVICE;
-+	}
- 
- 	dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
- 	dwc3_role_switch.set = dwc3_usb_role_switch_set;
-@@ -535,7 +554,7 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
- 	if (IS_ERR(dwc->role_sw))
- 		return PTR_ERR(dwc->role_sw);
- 
--	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
-+	dwc3_set_mode(dwc, mode);
- 	return 0;
- }
- #else
--- 
-2.17.1
+The next patch changes this again and I'm not sure why this intermediate
+change is useful.
+
+>  }
+>  
+>  /**
+> diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
+> index 53216dcbe173..b55786c169ae 100644
+> --- a/drivers/thermal/intel/intel_powerclamp.c
+> +++ b/drivers/thermal/intel/intel_powerclamp.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/kthread.h>
+>  #include <linux/cpu.h>
+> +#include <linux/cpuidle.h>
+>  #include <linux/thermal.h>
+>  #include <linux/slab.h>
+>  #include <linux/tick.h>
+> @@ -430,7 +431,8 @@ static void clamp_idle_injection_func(struct kthread_work *work)
+>  	if (should_skip)
+>  		goto balance;
+>  
+> -	play_idle(jiffies_to_usecs(w_data->duration_jiffies));
+> +	play_idle(jiffies_to_usecs(w_data->duration_jiffies),
+> +		  cpuidle_find_deepest_state());
+
+I don't see a reason for changing the code here like this.
+
+What you really need is to have a way to set a limit on the idle
+state exit latency for idle injection on ARM.
+
+For that you can pass the exit latency limit to play_idle(), but then
+you need to change powerclamp to pass UNIT_MAX or similar which is
+ugly, or you can redefine cpuidle_use_deepest_state() to take the
+exit latency limit as the arg (with 0 meaning use_deepest_state == false).
+
+In the latter case, it would be quite straightforward to add an
+exit_latency argument to cpuidle_find_deepest_state() and note that
+find_deepest_state() takes a max_latency arg already, so that would be
+a trivial change (hint!).
+
+
 
