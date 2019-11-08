@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B156FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C602C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A246206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90862196F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240127;
-	bh=D+7hqOZN4mN4vApLQOqargpgXr0ptIeOZvXRlix83Lk=;
+	s=default; t=1573240131;
+	bh=YvjnO8mm8LxPOaeaGVZWVW45loXXHdJad6136bEEwvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hw3UcrNAdZxEJ/OKJfXNAndHGipzoCEKDNkfg/Hg9lSpflLeyUFbq25Czw7DGB4vp
-	 JlXMp5xbODndca+mXnc1umke+8n5ncumEZqoiJCqLLqOBNm1hSxfxO9a5GvZ5di9O+
-	 U7AXeLH0uePqdedAeNPPka9tyjUs7XGCNp6xsfPk=
+	b=jmk+eHkSOIdKSFRw1SQJltM7tmnbS6328e1XPsn8X8AeD9ipzXCvjqotmpxeHRpH+
+	 v355rcOmFwxaow4eAApPM8aqSMM52Wu3ktJeSYStjt+Pw4Z3bMH/HYY1Lc8SJPTkDA
+	 8Ki27IZrzikFh+N2tOQaodpAz0+Axn4VCTqIqmoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391698AbfKHTIq (ORCPT
+        id S2403774AbfKHTIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39922 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:08:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391682AbfKHTIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:45 -0500
+        id S1733278AbfKHTIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:08:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EF452087E;
-        Fri,  8 Nov 2019 19:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B6562087E;
+        Fri,  8 Nov 2019 19:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240124;
-        bh=D+7hqOZN4mN4vApLQOqargpgXr0ptIeOZvXRlix83Lk=;
+        s=default; t=1573240128;
+        bh=YvjnO8mm8LxPOaeaGVZWVW45loXXHdJad6136bEEwvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RWv+wZzmTWKCvzhPDJCbhlilMbVHlzeh1AiS7ruWwrHbqboElUfM5azKEWoyAno2U
-         v/tSbswMEFMYujt1Avv5A6B6KvnAmXbq7BDrndQLd5zNLkq6mW6NWVh6giEZOrYWMz
-         OVMa+RkX0FSPs6a0yTp9P97RS5A8cbxt6yFF8LK8=
+        b=HButf7zpbKiN6TGiNCXOy0Wk2FMV0pKa93g9a887NKJpku0acLS+BAEmwzo9Ckjvu
+         HjLYaYFjGJNOa7UEqm4wbHk3TW++MMlCU6F586yJ2O4vBjIpKd6nPC1a9N7PxR1hCf
+         O/zZyNv4jBYE7rL00BdgwsSq1BICM1vjFp5Ymdpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 097/140] vxlan: check tun_info options_len properly
-Date:   Fri,  8 Nov 2019 19:50:25 +0100
-Message-Id: <20191108174911.133253670@linuxfoundation.org>
+Subject: [PATCH 5.3 098/140] net: add skb_queue_empty_lockless()
+Date:   Fri,  8 Nov 2019 19:50:26 +0100
+Message-Id: <20191108174911.184234366@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -59,38 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit eadf52cf1852196a1363044dcda22fa5d7f296f7 ]
+[ Upstream commit d7d16a89350ab263484c0aa2b523dd3a234e4a80 ]
 
-This patch is to improve the tun_info options_len by dropping
-the skb when TUNNEL_VXLAN_OPT is set but options_len is less
-than vxlan_metadata. This can void a potential out-of-bounds
-access on ip_tun_info.
+Some paths call skb_queue_empty() without holding
+the queue lock. We must use a barrier in order
+to not let the compiler do strange things, and avoid
+KCSAN splats.
 
-Fixes: ee122c79d422 ("vxlan: Flow based tunneling")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Adding a barrier in skb_queue_empty() might be overkill,
+I prefer adding a new helper to clearly identify
+points where the callers might be lockless. This might
+help us finding real bugs.
+
+The corresponding WRITE_ONCE() should add zero cost
+for current compilers.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vxlan.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/linux/skbuff.h |   33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2487,9 +2487,11 @@ static void vxlan_xmit_one(struct sk_buf
- 		vni = tunnel_id_to_key32(info->key.tun_id);
- 		ifindex = 0;
- 		dst_cache = &info->dst_cache;
--		if (info->options_len &&
--		    info->key.tun_flags & TUNNEL_VXLAN_OPT)
-+		if (info->key.tun_flags & TUNNEL_VXLAN_OPT) {
-+			if (info->options_len < sizeof(*md))
-+				goto drop;
- 			md = ip_tunnel_info_opts(info);
-+		}
- 		ttl = info->key.ttl;
- 		tos = info->key.tos;
- 		label = info->key.label;
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1501,6 +1501,19 @@ static inline int skb_queue_empty(const
+ }
+ 
+ /**
++ *	skb_queue_empty_lockless - check if a queue is empty
++ *	@list: queue head
++ *
++ *	Returns true if the queue is empty, false otherwise.
++ *	This variant can be used in lockless contexts.
++ */
++static inline bool skb_queue_empty_lockless(const struct sk_buff_head *list)
++{
++	return READ_ONCE(list->next) == (const struct sk_buff *) list;
++}
++
++
++/**
+  *	skb_queue_is_last - check if skb is the last entry in the queue
+  *	@list: queue head
+  *	@skb: buffer
+@@ -1853,9 +1866,11 @@ static inline void __skb_insert(struct s
+ 				struct sk_buff *prev, struct sk_buff *next,
+ 				struct sk_buff_head *list)
+ {
+-	newsk->next = next;
+-	newsk->prev = prev;
+-	next->prev  = prev->next = newsk;
++	/* see skb_queue_empty_lockless() for the opposite READ_ONCE() */
++	WRITE_ONCE(newsk->next, next);
++	WRITE_ONCE(newsk->prev, prev);
++	WRITE_ONCE(next->prev, newsk);
++	WRITE_ONCE(prev->next, newsk);
+ 	list->qlen++;
+ }
+ 
+@@ -1866,11 +1881,11 @@ static inline void __skb_queue_splice(co
+ 	struct sk_buff *first = list->next;
+ 	struct sk_buff *last = list->prev;
+ 
+-	first->prev = prev;
+-	prev->next = first;
++	WRITE_ONCE(first->prev, prev);
++	WRITE_ONCE(prev->next, first);
+ 
+-	last->next = next;
+-	next->prev = last;
++	WRITE_ONCE(last->next, next);
++	WRITE_ONCE(next->prev, last);
+ }
+ 
+ /**
+@@ -2011,8 +2026,8 @@ static inline void __skb_unlink(struct s
+ 	next	   = skb->next;
+ 	prev	   = skb->prev;
+ 	skb->next  = skb->prev = NULL;
+-	next->prev = prev;
+-	prev->next = next;
++	WRITE_ONCE(next->prev, prev);
++	WRITE_ONCE(prev->next, next);
+ }
+ 
+ /**
 
 
