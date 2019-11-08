@@ -2,87 +2,123 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B512C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8236FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D79A218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE52214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573206319;
+	bh=RyaF0P64KB+zuHRQ5KT30v/2KWtVTZYqW+LT7tjqrkM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CvafaXYjMjiEnRH1RDAoGQDRZ7sdnqcBqEGHxQWE7wsK8f3vABmFsZvsMvcQ2mgTP
+	 JiYT/3etFrm/dLWbiskWj/ABv4fQSFvGYDTLvy4FhNhII9Lic9zNxi/dqnGKtVfYhA
+	 lCM1xRzPdL4ZdkhrHqKXJArMWG778QdFLlFWWWEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbfKHJn0 convert rfc822-to-8bit (ORCPT
+        id S1731110AbfKHJpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:43:26 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:56621 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730005AbfKHJn0 (ORCPT
+        Fri, 8 Nov 2019 04:45:18 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44062 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbfKHJpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:43:26 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xA89guVu009625, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xA89guVu009625
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 8 Nov 2019 17:42:56 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Fri, 8 Nov
- 2019 17:42:56 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?iso-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "'DTML'" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-Subject: [PATCH v2 0/2] Initial RTD1619 SoC and Realtek Mjolnir EVB support
-Thread-Topic: [PATCH v2 0/2] Initial RTD1619 SoC and Realtek Mjolnir EVB
- support
-Thread-Index: AdWWGJhW6hHY3ZYJQ8qKkqaxghH5QQ==
-Date:   Fri, 8 Nov 2019 09:42:55 +0000
-Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF91F9CB@RTITMBSVM04.realtek.com.tw>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Fri, 8 Nov 2019 04:45:18 -0500
+Received: by mail-oi1-f195.google.com with SMTP id s71so4683939oih.11;
+        Fri, 08 Nov 2019 01:45:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2UcYEqpXM4Ks5cSeDXBgcT+UaloVWs40SjYreEdd2/E=;
+        b=eOeheU5Y+zTGOcagb5GAR6eBrbWUVjyYDLhBA5gs7wKhGjEtVoE/h+5lToDnmximL0
+         +UaXOdrCXR2ee5qecn5o7AP7rkHvzvbWT5fLDc8dB8m9s9ixKLk9eEmiF+LwOW3FNjhP
+         UK7YxckIwB4+XieYMA2VVL3OzXopD7WxcgAJgE1iPYKt0U9/LvWIgtpojh/L75ClP18K
+         vxUHqx8u2AkGY6LsrjmpXGKKx+pjcnBWDEuI8T6R0AAa13Tvtmxa555p1cqkHjJbbAFN
+         cDwyt0XKAC86qJxjHIKK7FNTm53ke59x5VlcP/JFU6csT7rq6o43a+22hxfnnbKIcyrk
+         cQfA==
+X-Gm-Message-State: APjAAAXFQjwOu4+hRXrXOPi0m0DooRvpbdZizc8QTQ6oiOeIa1N+tw4d
+        2XJ2QD/qT85Vid64bIHOTx5vffs4MoxNHvW5sD4=
+X-Google-Smtp-Source: APXvYqxCGQtKJWcBpHJX65cp2GU/cjS3W5KP9vfqBCFJwJo6ZAHeabdQN3yBAgkA6Sc/z9oEmO8Ff7VpUXttTzhC1jg=
+X-Received: by 2002:a05:6808:8c5:: with SMTP id k5mr8874416oij.57.1573206315744;
+ Fri, 08 Nov 2019 01:45:15 -0800 (PST)
 MIME-Version: 1.0
+References: <10494959.bKODIZ00nm@kreacher> <3269796.AzLOQfDnpo@kreacher>
+ <CAJZ5v0jM3+qMvO6dx=FmK-xF0q3YKOwBf-yUPXSBfRjxJ59Cpg@mail.gmail.com> <000701d59610$e0b3caa0$a21b5fe0$@net>
+In-Reply-To: <000701d59610$e0b3caa0$a21b5fe0$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 8 Nov 2019 10:45:03 +0100
+Message-ID: <CAJZ5v0gsK0OmqAvw2BVGvajPmCTrRGFVVZ0+Y99ZkbbUcWYGOg@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle: Use nanoseconds as the unit of time
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+On Fri, Nov 8, 2019 at 9:45 AM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.11.07 17:44 Rafael J. Wysocki wrote:
+> > On Thu, Nov 7, 2019 at 3:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >>
+> >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >>
+> >> Currently, the cpuidle subsystem uses microseconds as the unit of
+> >> time which (among other things) causes the idle loop to incur some
+> >> integer division overhead for no clear benefit.
+> >>
+> >> In order to allow cpuidle to measure time in nanoseconds, add two
+> >> additional fields, exit_latency_ns and target_residency_ns, to
+> >> represent the exit latency and target residency of an idle state
+> >> in nanoseconds, respectively, to struct cpuidle_state_usage and
+> >> initialize them with the help of the corresponding values in
+> >> microseconds provided by drivers.  In addition to that, change
+> >> cpuidle_governor_latency_req() to return the idle state exit
+> >> latency constraint in nanoseconds.
+> >>
+> >> With that, meeasure idle state residency (last_residency_ns in
+> >> struct cpuidle_device and time_ns in struct cpuidle_driver) in
+> >> nanoseconds and update the cpuidle core and governors accordingly.
+> >>
+> >> However, the menu governor still computes typical intervals in
+> >> microseconds to avoid integer overflows.
+> >
+> > Since this addresses all of the comments received by the RFC version
+> > that was posted over a month ago and I don't see any more issues with
+> > it, I'm tempted to simply queue it up for 5.5 unless somebody sees a
+> > good enough reason why that would be a bad idea.
+>
+> Could I please have another day or two?
 
-This series adds Device Trees for the Realtek RTD1619 SoC and Realtek's
-Mjolnir EVB.
+Sure, it won't go straight into linux-next anyway. :-)
 
-v1 -> v2:
-* Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
-* Add uart1 and uart2 device node into rtd16xx.dtsi
-* move cpus node and the interrupt-affinity into rtd16xx.dtsi
-* Specify the r-bus ranges
+> I did try the RFC version, but not much as I went off on those
+> teo issues and backtracked pretty quickly.
+>
+> I have been running this v2 today, with both menu and teo
+> governors. Acquiring some baseline reference data to compare
+> to now. The menu governor response seems different (Supporting
+> information/graphs will come later).
 
-James Tai (2):
-  dt-bindings: arm: realtek: Document RTD1619 and Realtek Mjolnir EVB
-  arm64: dts: Initial RTD1619 SoC and Realtek Mjolnir EVB support
+That may be good or bad, depending in what way it is different. :-)
 
- .../devicetree/bindings/arm/realtek.yaml      |   6 +
- arch/arm64/boot/dts/realtek/Makefile          |   2 +
- .../boot/dts/realtek/rtd1619-mjolnir.dts      |  40 +++++
- arch/arm64/boot/dts/realtek/rtd1619.dtsi      |  12 ++
- arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 154 ++++++++++++++++++
- 5 files changed, 214 insertions(+)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+> teo just started.
+>
+> I lost a bunch of time due to being somewhat linux-next challenged.
 
---
-2.17.1
+No worries, please take your time!
 
+I very much appreciate the testing work you are doing.
+
+Cheers!
