@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FC9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB78EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E150A21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C051921882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573232308;
-	bh=B54jz4qKiAKq00pCNpSYlqmcTaIUb8ea/paIzyVL370=;
+	s=default; t=1573232309;
+	bh=2Hk8gOXa08kj69horSbxfYvl7NxCz6+fEZy/qkuf53A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OvgPEQ+T4GR95Iw2rYY0oZ2cc2y3uMGz6tqYBxQm7OZvPAEzlPU0cW3QZxVcLFq4g
-	 ZuDDdK6hdFQ2KsXNyN5EfOQ7cq2lhAFx/FiBB6vPFAu1BVpTvauuJd9UCaN7W1guCh
-	 4W/VkVPjtuV1VvJp/JFkQq900UVgg4zsHsq/esgk=
+	b=wsOGzwx60y6UFv9zoewobcN+R2IQMpH6ZKcqleVU6fJpraFUfMiHkZLfXIy/bgxvy
+	 X+MVqJQWsPFALueHC2XcSCXO1dv3qzkukmwiRmQ5EoTpWklg/SufVJx2FrLS7c0oPn
+	 rD1t5ZZR2m0p43P2t8Q74+5H+cmkpNyNFnUg+tjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbfKHQ61 (ORCPT
+        id S1729072AbfKHQ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:58:27 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:58972 "EHLO
+        Fri, 8 Nov 2019 11:58:26 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:51335 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728206AbfKHQ6O (ORCPT
+        by vger.kernel.org with ESMTP id S1727827AbfKHQ6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 11:58:14 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iT7aP-0002sR-ON; Fri, 08 Nov 2019 17:58:13 +0100
+        id 1iT7aO-0002sR-PB; Fri, 08 Nov 2019 17:58:12 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>, lorenzo.pieralisi@arm.com,
         Andrew.Murray@arm.com, yuzenghui@huawei.com,
         Heyi Guo <guoheyi@huawei.com>
-Subject: [PATCH v2 09/11] irqchip/gic-v3-its: Synchronise INT/CLEAR commands targetting a VLPI using VSYNC
-Date:   Fri,  8 Nov 2019 16:58:03 +0000
-Message-Id: <20191108165805.3071-10-maz@kernel.org>
+Subject: [PATCH v2 07/11] irqchip/gic-v3-its: Add its_vlpi_map helpers
+Date:   Fri,  8 Nov 2019 16:58:01 +0000
+Message-Id: <20191108165805.3071-8-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108165805.3071-1-maz@kernel.org>
 References: <20191108165805.3071-1-maz@kernel.org>
@@ -56,127 +56,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have so far always injected/cleared VLPIs using either
-INT+SYNC or CLEAR+SYNC sequences, but that's pretty wrong
-for two reasons:
+Obtaining the mapping information for a VLPI is something quite common,
+and the GICv4.1 code is going to make even more use of it. Expose it as
+a separate set of helpers.
 
-- SYNC only synchronises physical LPIs
-- The collection ID that for the associated LPI doesn't match
-  the redistributor the vPE is associated with
-
-Instead, send an {INT,CLEAR}+VSYNC for forwarded LPIs, ensuring
-that the ITS synchronises against the virtual pending table.
-
-Reported-by: Zenghui Yu <yuzenghui@huawei.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20191027144234.8395-8-maz@kernel.org
 ---
- drivers/irqchip/irq-gic-v3-its.c | 79 ++++++++++++++++++++++++++++++--
- 1 file changed, 75 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 47 ++++++++++++++++++++++----------
+ 1 file changed, 32 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 427496b7baf6..a83828e983ff 100644
+index 94f13d6b8400..cad8fd18bab7 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -718,6 +718,42 @@ static struct its_vpe *its_build_vinv_cmd(struct its_node *its,
- 	return valid_vpe(its, map->vpe);
+@@ -207,6 +207,15 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
+ 	return its->collections + its_dev->event_map.col_map[event];
  }
  
-+static struct its_vpe *its_build_vint_cmd(struct its_node *its,
-+					  struct its_cmd_block *cmd,
-+					  struct its_cmd_desc *desc)
++static struct its_vlpi_map *dev_event_to_vlpi_map(struct its_device *its_dev,
++					       u32 event)
 +{
-+	struct its_vlpi_map *map;
++	if (WARN_ON_ONCE(event >= its_dev->event_map.nr_lpis))
++		return NULL;
 +
-+	map = dev_event_to_vlpi_map(desc->its_int_cmd.dev,
-+				    desc->its_int_cmd.event_id);
-+
-+	its_encode_cmd(cmd, GITS_CMD_INT);
-+	its_encode_devid(cmd, desc->its_int_cmd.dev->device_id);
-+	its_encode_event_id(cmd, desc->its_int_cmd.event_id);
-+
-+	its_fixup_cmd(cmd);
-+
-+	return valid_vpe(its, map->vpe);
++	return its_dev->event_map.vlpi_maps[event];
 +}
 +
-+static struct its_vpe *its_build_vclear_cmd(struct its_node *its,
-+					    struct its_cmd_block *cmd,
-+					    struct its_cmd_desc *desc)
-+{
-+	struct its_vlpi_map *map;
-+
-+	map = dev_event_to_vlpi_map(desc->its_clear_cmd.dev,
-+				    desc->its_clear_cmd.event_id);
-+
-+	its_encode_cmd(cmd, GITS_CMD_CLEAR);
-+	its_encode_devid(cmd, desc->its_clear_cmd.dev->device_id);
-+	its_encode_event_id(cmd, desc->its_clear_cmd.event_id);
-+
-+	its_fixup_cmd(cmd);
-+
-+	return valid_vpe(its, map->vpe);
-+}
-+
- static u64 its_cmd_ptr_to_offset(struct its_node *its,
- 				 struct its_cmd_block *ptr)
+ static struct its_collection *irq_to_col(struct irq_data *d)
  {
-@@ -1098,6 +1134,34 @@ static void its_send_vinv(struct its_device *dev, u32 event_id)
- 	its_send_single_vcommand(dev->its, its_build_vinv_cmd, &desc);
- }
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+@@ -968,7 +977,7 @@ static void its_send_invall(struct its_node *its, struct its_collection *col)
  
-+static void its_send_vint(struct its_device *dev, u32 event_id)
-+{
-+	struct its_cmd_desc desc;
-+
-+	/*
-+	 * There is no real VINT command. This is just a normal INT,
-+	 * with a VSYNC instead of a SYNC.
-+	 */
-+	desc.its_int_cmd.dev = dev;
-+	desc.its_int_cmd.event_id = event_id;
-+
-+	its_send_single_vcommand(dev->its, its_build_vint_cmd, &desc);
-+}
-+
-+static void its_send_vclear(struct its_device *dev, u32 event_id)
-+{
-+	struct its_cmd_desc desc;
-+
-+	/*
-+	 * There is no real VCLEAR command. This is just a normal CLEAR,
-+	 * with a VSYNC instead of a SYNC.
-+	 */
-+	desc.its_clear_cmd.dev = dev;
-+	desc.its_clear_cmd.event_id = event_id;
-+
-+	its_send_single_vcommand(dev->its, its_build_vclear_cmd, &desc);
-+}
-+
+ static void its_send_vmapti(struct its_device *dev, u32 id)
+ {
+-	struct its_vlpi_map *map = &dev->event_map.vlpi_maps[id];
++	struct its_vlpi_map *map = dev_event_to_vlpi_map(dev, id);
+ 	struct its_cmd_desc desc;
+ 
+ 	desc.its_vmapti_cmd.vpe = map->vpe;
+@@ -982,7 +991,7 @@ static void its_send_vmapti(struct its_device *dev, u32 id)
+ 
+ static void its_send_vmovi(struct its_device *dev, u32 id)
+ {
+-	struct its_vlpi_map *map = &dev->event_map.vlpi_maps[id];
++	struct its_vlpi_map *map = dev_event_to_vlpi_map(dev, id);
+ 	struct its_cmd_desc desc;
+ 
+ 	desc.its_vmovi_cmd.vpe = map->vpe;
+@@ -1060,20 +1069,26 @@ static void its_send_vinvall(struct its_node *its, struct its_vpe *vpe)
  /*
   * irqchip functions - assumes MSI, mostly.
   */
-@@ -1291,10 +1355,17 @@ static int its_irq_set_irqchip_state(struct irq_data *d,
- 	if (which != IRQCHIP_STATE_PENDING)
- 		return -EINVAL;
++static struct its_vlpi_map *get_vlpi_map(struct irq_data *d)
++{
++	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
++	u32 event = its_get_event_id(d);
++
++	if (!irqd_is_forwarded_to_vcpu(d))
++		return NULL;
++
++	return dev_event_to_vlpi_map(its_dev, event);
++}
  
--	if (state)
--		its_send_int(its_dev, event);
--	else
--		its_send_clear(its_dev, event);
-+	if (irqd_is_forwarded_to_vcpu(d)) {
-+		if (state)
-+			its_send_vint(its_dev, event);
-+		else
-+			its_send_vclear(its_dev, event);
-+	} else {
-+		if (state)
-+			its_send_int(its_dev, event);
-+		else
-+			its_send_clear(its_dev, event);
-+	}
+ static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
+ {
++	struct its_vlpi_map *map = get_vlpi_map(d);
+ 	irq_hw_number_t hwirq;
+ 	void *va;
+ 	u8 *cfg;
  
- 	return 0;
- }
+-	if (irqd_is_forwarded_to_vcpu(d)) {
+-		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+-		u32 event = its_get_event_id(d);
+-		struct its_vlpi_map *map;
+-
+-		va = page_address(its_dev->event_map.vm->vprop_page);
+-		map = &its_dev->event_map.vlpi_maps[event];
++	if (map) {
++		va = page_address(map->vm->vprop_page);
+ 		hwirq = map->vintid;
+ 
+ 		/* Remember the updated property */
+@@ -1133,11 +1148,14 @@ static void its_vlpi_set_doorbell(struct irq_data *d, bool enable)
+ {
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 	u32 event = its_get_event_id(d);
++	struct its_vlpi_map *map;
+ 
+-	if (its_dev->event_map.vlpi_maps[event].db_enabled == enable)
++	map = dev_event_to_vlpi_map(its_dev, event);
++
++	if (map->db_enabled == enable)
+ 		return;
+ 
+-	its_dev->event_map.vlpi_maps[event].db_enabled = enable;
++	map->db_enabled = enable;
+ 
+ 	/*
+ 	 * More fun with the architecture:
+@@ -1366,19 +1384,18 @@ static int its_vlpi_map(struct irq_data *d, struct its_cmd_info *info)
+ static int its_vlpi_get(struct irq_data *d, struct its_cmd_info *info)
+ {
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+-	u32 event = its_get_event_id(d);
++	struct its_vlpi_map *map = get_vlpi_map(d);
+ 	int ret = 0;
+ 
+ 	mutex_lock(&its_dev->event_map.vlpi_lock);
+ 
+-	if (!its_dev->event_map.vm ||
+-	    !its_dev->event_map.vlpi_maps[event].vm) {
++	if (!its_dev->event_map.vm || !map->vm) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+ 	/* Copy our mapping information to the incoming request */
+-	*info->map = its_dev->event_map.vlpi_maps[event];
++	*info->map = *map;
+ 
+ out:
+ 	mutex_unlock(&its_dev->event_map.vlpi_lock);
 -- 
 2.20.1
 
