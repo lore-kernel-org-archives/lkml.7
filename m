@@ -2,217 +2,139 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF2C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEFFFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFB8A2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990E72084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:07:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="WoD1xaYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732223AbfKHUHO (ORCPT
+        id S2387543AbfKHUHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:07:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52534 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729075AbfKHUHN (ORCPT
+        Fri, 8 Nov 2019 15:07:48 -0500
+Received: from alln-iport-2.cisco.com ([173.37.142.89]:4873 "EHLO
+        alln-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729075AbfKHUHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:07:13 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iTAX5-0002Bl-8G; Fri, 08 Nov 2019 21:06:59 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B13771C0105;
-        Fri,  8 Nov 2019 21:06:58 +0100 (CET)
-Date:   Fri, 08 Nov 2019 20:06:58 -0000
-From:   "tip-bot2 for Zhang Xiaoxu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mtrr] x86/mtrr: Restrict MTRR ranges dumping and ioctl()
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tyler Hicks <tyhicks@canonical.com>, "x86-ml" <x86@kernel.org>,
-        zhangxiaoxu@huawei.com, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191105071714.27376-1-zhangxiaoxu5@huawei.com>
-References: <20191105071714.27376-1-zhangxiaoxu5@huawei.com>
-MIME-Version: 1.0
-Message-ID: <157324361834.29376.5328593346754751963.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 8 Nov 2019 15:07:48 -0500
+X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 15:07:46 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=3146; q=dns/txt; s=iport;
+  t=1573243666; x=1574453266;
+  h=from:to:cc:subject:date:message-id;
+  bh=DrRVxIIRXdAFmb4wXgTdIy5Gpr7D2ps+wz38/V+1l6k=;
+  b=WoD1xaYxz7DhpEzNZ6ngsmK1LdUe7ZytATDVDnczxKttpR3n1Bc7HBLf
+   bT7YTDVvS+QYW+0rUH7tsKYWF+T3C3m89KdPZyRUv5Q/QbHnIElJKjWf3
+   C97D1dHxY01FMcwtxZH08N//1M2kNxXvy0Ymr1Y1S/7Ixu7eigZlUGyGN
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.68,283,1569283200"; 
+   d="scan'208";a="368687233"
+Received: from alln-core-11.cisco.com ([173.36.13.133])
+  by alln-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 08 Nov 2019 20:00:41 +0000
+Received: from zorba.cisco.com ([10.24.83.59])
+        by alln-core-11.cisco.com (8.15.2/8.15.2) with ESMTP id xA8K0eEc022208;
+        Fri, 8 Nov 2019 20:00:40 GMT
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Phillip Lougher <phillip@squashfs.org.uk>
+Cc:     "yusun2@cisco.com" <yusun2@cisco.com>, xe-linux-external@cisco.com,
+        Daniel Walker <dwalker@fifo99.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] fs/squashfs: Make SquashFS xz initialization mode configurable
+Date:   Fri,  8 Nov 2019 12:00:39 -0800
+Message-Id: <20191108200040.20259-1-danielwa@cisco.com>
+X-Mailer: git-send-email 2.17.1
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.24.83.59, [10.24.83.59]
+X-Outbound-Node: alln-core-11.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mtrr branch of tip:
+From: "yusun2@cisco.com" <yusun2@cisco.com>
 
-Commit-ID:     d5a8b06841082ead88493eb918dd646a12c19d8e
-Gitweb:        https://git.kernel.org/tip/d5a8b06841082ead88493eb918dd646a12c19d8e
-Author:        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-AuthorDate:    Tue, 05 Nov 2019 15:17:14 +08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 08 Nov 2019 20:59:40 +01:00
+Make SquashFS xz initialization mode configurable to be either
+XZ_PREALLOC or XZ_DYNALLOC. The default mode is XZ_PREALLOC.
 
-x86/mtrr: Restrict MTRR ranges dumping and ioctl()
+SquashFS multi-threaded per-CPU decompressor is proven to
+effectively resolve the I/O bottleneck and boost the outcome
+of other boot time optimization technologies on some I/O bound
+platforms. However it allocates extra memory on per-processor
+per-mounted-package basis. Making XZ_DYNALLOC mode an option
+for the xz decompressor initialization in SquashFS minimizes
+the memory impact.
 
-/proc/mtrr dumps the physical memory ranges of the variable range MTRRs
-along with their respective sizes and caching attributes. Since that
-file is world-readable, it presents a small information leak about the
-physical address ranges of a system which should be blocked.
-
-Make that file root-only.
-
-Make the ioctl root-only as well because the $NAME read ioctl also
-allows access. Replace the checks in the write ioctls with a single one
-on entry.
-
- [ bp: rewrite commit message. ]
-
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tyler Hicks <tyhicks@canonical.com>
-Cc: x86-ml <x86@kernel.org>
-Cc: zhangxiaoxu@huawei.com
-Link: https://lkml.kernel.org/r/20191105071714.27376-1-zhangxiaoxu5@huawei.com
+Signed-off-by: Yu Sun <yusun2@cisco.com>
+Cc: xe-linux-external@cisco.com
+Signed-off-by: Daniel Walker <dwalker@fifo99.com>
 ---
- arch/x86/kernel/cpu/mtrr/if.c | 32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ fs/squashfs/Kconfig      | 32 ++++++++++++++++++++++++++++++++
+ fs/squashfs/xz_wrapper.c |  6 +++++-
+ 2 files changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mtrr/if.c b/arch/x86/kernel/cpu/mtrr/if.c
-index 4d36dcc..8e0cee8 100644
---- a/arch/x86/kernel/cpu/mtrr/if.c
-+++ b/arch/x86/kernel/cpu/mtrr/if.c
-@@ -84,6 +84,15 @@ mtrr_file_del(unsigned long base, unsigned long size,
- 	return reg;
- }
+diff --git a/fs/squashfs/Kconfig b/fs/squashfs/Kconfig
+index 916e78fabcaa..9cf2ebf89374 100644
+--- a/fs/squashfs/Kconfig
++++ b/fs/squashfs/Kconfig
+@@ -223,3 +223,35 @@ config SQUASHFS_FRAGMENT_CACHE_SIZE
  
-+static ssize_t
-+mtrr_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
-+{
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
+ 	  Note there must be at least one cached fragment.  Anything
+ 	  much more than three will probably not make much difference.
 +
-+	return seq_read(file, buf, size, ppos);
-+}
++choice
++    prompt "XZ decompressor operation mode"
++    depends on SQUASHFS_XZ
++    default SQUASHFS_XZ_DICT_PREALLOC
++    help
++      Squashfs now utilizes the two different multi-call modes of xz
++      decompression. They each exhibits various trade-offs between
++      decompression performance and memory consumption.
 +
- /*
-  * seq_file can seek but we ignore it.
-  *
-@@ -165,6 +174,9 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
- 	struct mtrr_gentry gentry;
- 	void __user *arg = (void __user *) __arg;
- 
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
++      If in doubt, select "XZ preallocated multi-call mode"
 +
- 	memset(&gentry, 0, sizeof(gentry));
++config SQUASHFS_XZ_DICT_PREALLOC
++    bool "XZ preallocated multi-call mode"
++    help
++      Traditionally Squashfs has used XZ_PREALLOC operation mode for
++      xz decompression, under which the xz dictionary buffer is allocated
++      at initialization.
++
++config SQUASHFS_XZ_DICT_DYNALLOC
++    bool "XZ dynamic-allocated multi-call mode"
++    help
++      By default Squashfs uses XZ_PREALLOC operation mode for xz decompressor.
++      This, however, potentially lead to significant increase of memory
++      consumption, especially when SquashFS per-cpu multi-threaded
++      decompressor is applied.
++
++      If the system has memory constraints, setting this option will force
++      SquashFS to use XZ_DYNALLOC mode, and thus reduce memory footprint.
++      In this case, the LZMA2 dictionary is allocated upon needed with the
++      required size.
++endchoice
+diff --git a/fs/squashfs/xz_wrapper.c b/fs/squashfs/xz_wrapper.c
+index 4b2f2051a6dc..6d6946bb5e4c 100644
+--- a/fs/squashfs/xz_wrapper.c
++++ b/fs/squashfs/xz_wrapper.c
+@@ -90,7 +90,11 @@ static void *squashfs_xz_init(struct squashfs_sb_info *msblk, void *buff)
+ 		goto failed;
+ 	}
  
- 	switch (cmd) {
-@@ -226,8 +238,6 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_ADD_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err =
- 		    mtrr_file_add(sentry.base, sentry.size, sentry.type, true,
- 				  file, 0);
-@@ -236,24 +246,18 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_SET_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err = mtrr_add(sentry.base, sentry.size, sentry.type, false);
- 		break;
- 	case MTRRIOC_DEL_ENTRY:
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_DEL_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err = mtrr_file_del(sentry.base, sentry.size, file, 0);
- 		break;
- 	case MTRRIOC_KILL_ENTRY:
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_KILL_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err = mtrr_del(-1, sentry.base, sentry.size);
- 		break;
- 	case MTRRIOC_GET_ENTRY:
-@@ -279,8 +283,6 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_ADD_PAGE_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err =
- 		    mtrr_file_add(sentry.base, sentry.size, sentry.type, true,
- 				  file, 1);
-@@ -289,8 +291,6 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_SET_PAGE_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err =
- 		    mtrr_add_page(sentry.base, sentry.size, sentry.type, false);
- 		break;
-@@ -298,16 +298,12 @@ mtrr_ioctl(struct file *file, unsigned int cmd, unsigned long __arg)
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_DEL_PAGE_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err = mtrr_file_del(sentry.base, sentry.size, file, 1);
- 		break;
- 	case MTRRIOC_KILL_PAGE_ENTRY:
- #ifdef CONFIG_COMPAT
- 	case MTRRIOC32_KILL_PAGE_ENTRY:
- #endif
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		err = mtrr_del_page(-1, sentry.base, sentry.size);
- 		break;
- 	case MTRRIOC_GET_PAGE_ENTRY:
-@@ -387,7 +383,7 @@ static int mtrr_open(struct inode *inode, struct file *file)
- static const struct file_operations mtrr_fops = {
- 	.owner			= THIS_MODULE,
- 	.open			= mtrr_open,
--	.read			= seq_read,
-+	.read			= mtrr_read,
- 	.llseek			= seq_lseek,
- 	.write			= mtrr_write,
- 	.unlocked_ioctl		= mtrr_ioctl,
-@@ -436,7 +432,7 @@ static int __init mtrr_if_init(void)
- 	    (!cpu_has(c, X86_FEATURE_CENTAUR_MCR)))
- 		return -ENODEV;
- 
--	proc_create("mtrr", S_IWUSR | S_IRUGO, NULL, &mtrr_fops);
-+	proc_create("mtrr", 0600, NULL, &mtrr_fops);
- 	return 0;
- }
- arch_initcall(mtrr_if_init);
+-	stream->state = xz_dec_init(XZ_PREALLOC, comp_opts->dict_size);
++	if (IS_ENABLED(CONFIG_SQUASHFS_XZ_DICT_DYNALLOC)) {
++	    stream->state = xz_dec_init(XZ_DYNALLOC, comp_opts->dict_size);
++	} else {
++	    stream->state = xz_dec_init(XZ_PREALLOC, comp_opts->dict_size);
++	}
+ 	if (stream->state == NULL) {
+ 		kfree(stream);
+ 		err = -ENOMEM;
+-- 
+2.17.1
+
