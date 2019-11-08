@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D365C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56D6FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5032067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3832067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240945;
-	bh=H8DwnQzxdmC9AtSbI+5z2WagDrrcQST/upFS0U/jWFc=;
+	s=default; t=1573240949;
+	bh=L8xFWu/+/7/Nkr5p+5Zx106+m2sJDDPUmMD7Cw6e4JQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVCXnuz9CbujL0kd/+nmmK3/S9XKi4c/80zueype4lw+IF0+czUZ7s9sBslt1cphi
-	 bOYBVzv2+I5ONS/XN7YZGZGPKCBHyGb0R0URjRzR6Ei4zlBMWKFZIlkfAOBejyC9by
-	 vxXIpKq8bPL2zLqFWBAhzCuxqt+eIzgIXSKDs3KY=
+	b=itVqDRrmnY7i0UZPoP64ZZFT1PjZjk3GVX4dcaqQYKreg41RWQn+ikqVD6Ytinsoe
+	 +QoUm7c76w2SgvZDoqMnCctiA3NGcDhc2izXiOTZCjGlmV5/IyfUpuDnp2CzrjYpv6
+	 CXJnvVSGLfc6pETkqGrhmGkvtWUYAy6QM3s+dGJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388271AbfKHS41 (ORCPT
+        id S2389755AbfKHTW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:56:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53812 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:22:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388133AbfKHS4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:56:15 -0500
+        id S1732317AbfKHS40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ECAB218AE;
-        Fri,  8 Nov 2019 18:56:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A79F214DB;
+        Fri,  8 Nov 2019 18:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239374;
-        bh=H8DwnQzxdmC9AtSbI+5z2WagDrrcQST/upFS0U/jWFc=;
+        s=default; t=1573239385;
+        bh=L8xFWu/+/7/Nkr5p+5Zx106+m2sJDDPUmMD7Cw6e4JQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNnaL5ekdVNTtI85o3Bgvd/UE4iadRSOlBNX20Qm/micE23oW3yUUjRmJYj1Ab9kb
-         ikYAMx8s67f8G+AdGnUQU6vRSt1pPMoYxzCKL2UgTLg1GeOjTwwT/oQnlyKWA63Fjn
-         roHXpCUzckC2YtKztVBL1BKKcnDYqmTjp5WFeUPM=
+        b=Q7z3BhGw43Nsvi1dD0UOQkAT3Zd/kmT/wYUM8w//5bJorj7XcyWEHFiMQ3b37QD/b
+         3a8rq4j3jx5YVBA1MM8Jd0MUEBZxb39yZ/QQTS+Cs7brpIee0up/T3nHG7dX7F+Fr0
+         PG8oDr7fp0jPHJ5GCH9htQew8MCrMocITQ7+OW9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Thiemo Nagel <tnagel@google.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Wei Wang <weiwan@google.com>,
+        Craig Gallek <cgallek@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 18/34] dccp: do not leak jiffies on the wire
-Date:   Fri,  8 Nov 2019 19:50:25 +0100
-Message-Id: <20191108174638.029422308@linuxfoundation.org>
+Subject: [PATCH 4.9 22/34] selftests: net: reuseport_dualstack: fix uninitalized parameter
+Date:   Fri,  8 Nov 2019 19:50:29 +0100
+Message-Id: <20191108174643.100159854@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
 References: <20191108174618.266472504@linuxfoundation.org>
@@ -60,32 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Wei Wang <weiwan@google.com>
 
-[ Upstream commit 3d1e5039f5f87a8731202ceca08764ee7cb010d3 ]
+[ Upstream commit d64479a3e3f9924074ca7b50bd72fa5211dca9c1 ]
 
-For some reason I missed the case of DCCP passive
-flows in my previous patch.
+This test reports EINVAL for getsockopt(SOL_SOCKET, SO_DOMAIN)
+occasionally due to the uninitialized length parameter.
+Initialize it to fix this, and also use int for "test_family" to comply
+with the API standard.
 
-Fixes: a904a0693c18 ("inet: stop leaking jiffies on the wire")
+Fixes: d6a61f80b871 ("soreuseport: test mixed v4/v6 sockets")
+Reported-by: Maciej Żenczykowski <maze@google.com>
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Thiemo Nagel <tnagel@google.com>
+Signed-off-by: Wei Wang <weiwan@google.com>
+Cc: Craig Gallek <cgallek@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dccp/ipv4.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/reuseport_dualstack.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/dccp/ipv4.c
-+++ b/net/dccp/ipv4.c
-@@ -417,7 +417,7 @@ struct sock *dccp_v4_request_recv_sock(c
- 	RCU_INIT_POINTER(newinet->inet_opt, rcu_dereference(ireq->ireq_opt));
- 	newinet->mc_index  = inet_iif(skb);
- 	newinet->mc_ttl	   = ip_hdr(skb)->ttl;
--	newinet->inet_id   = jiffies;
-+	newinet->inet_id   = prandom_u32();
+--- a/tools/testing/selftests/net/reuseport_dualstack.c
++++ b/tools/testing/selftests/net/reuseport_dualstack.c
+@@ -128,7 +128,7 @@ static void test(int *rcv_fds, int count
+ {
+ 	struct epoll_event ev;
+ 	int epfd, i, test_fd;
+-	uint16_t test_family;
++	int test_family;
+ 	socklen_t len;
  
- 	if (dst == NULL && (dst = inet_csk_route_child_sock(sk, newsk, req)) == NULL)
- 		goto put_and_exit;
+ 	epfd = epoll_create(1);
+@@ -145,6 +145,7 @@ static void test(int *rcv_fds, int count
+ 	send_from_v4(proto);
+ 
+ 	test_fd = receive_once(epfd, proto);
++	len = sizeof(test_family);
+ 	if (getsockopt(test_fd, SOL_SOCKET, SO_DOMAIN, &test_family, &len))
+ 		error(1, errno, "failed to read socket domain");
+ 	if (test_family != AF_INET)
 
 
