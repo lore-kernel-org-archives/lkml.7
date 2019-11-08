@@ -2,112 +2,104 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577C5FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00970FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D95215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E8E215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:42:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OtLbRvsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfKHRmH (ORCPT
+        id S1730005AbfKHRmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:42:07 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:56406 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726199AbfKHRmG (ORCPT
+        Fri, 8 Nov 2019 12:42:25 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39636 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfKHRmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:42:06 -0500
-Received: (qmail 4415 invoked by uid 2102); 8 Nov 2019 12:42:05 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 8 Nov 2019 12:42:05 -0500
-Date:   Fri, 8 Nov 2019 12:42:05 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Will Deacon <will@kernel.org>
-cc:     linux-kernel@vger.kernel.org, Yunjae Lee <lyj7694@gmail.com>,
-        SeongJae Park <sj38.park@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        <linux-alpha@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH 10/13] tools/memory-model: Remove smp_read_barrier_depends()
- from informal doc
-In-Reply-To: <20191108170120.22331-11-will@kernel.org>
-Message-ID: <Pine.LNX.4.44L0.1911081241460.1498-100000@iolanthe.rowland.org>
+        Fri, 8 Nov 2019 12:42:25 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a11so8006664wra.6;
+        Fri, 08 Nov 2019 09:42:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bLpxLiOoyJlR/gSpAnwkPXjar8cw71Hz2t/eOeAgaNg=;
+        b=OtLbRvsVMsMOSQOVLGs4ke8ojgitE0iVhTAuaRcljAKVyPVYl6gsmir+PsExInJlxd
+         w/WSaplhQfEaZMj1++wwaDMlvIt5/SYfeOf9/kgskkDgUxcdd6wh3qLJGAMv+YP9Qqkn
+         BC/bosVjIFMmPsW7iiST1bQDiwUDltMN6OcyroCRAGmeWdhxT7yfpIiRDzX6nB2ffFJI
+         CpNDfAbf2NvCWerkXysm2yBWE+L/x5X2renloc44a+EmlkQMMSY2pYsrD/zS56PXiue0
+         6Q+yWyV0WkEeCKRNBR484DaudTWk7NCLhK73/TzzlWQ6srFWIVLhfIKK2FckACLt9VKk
+         /qbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bLpxLiOoyJlR/gSpAnwkPXjar8cw71Hz2t/eOeAgaNg=;
+        b=LFNaRbLXj9zjx5WFCRzz8jQDIlnM+ThUrHWGoFZezGbxe/DyGi9Vy6dsCuX8lOrssr
+         iI1tcIPZh73Yp8MDi9/kQhPfNIIu5T0i1UXaJGOMaT0yErvOuYoStta8kmsETllABEEj
+         i9ewxeKagx5mujTK2lT7y1DRn6m+cFuivKHl3GypdE2kzVXZViMW3tGSguYlj22ccYHh
+         SHIZVpuGg3jnmHgwU/5uZUDCLRLYZCYhDYuF22HMMXSnzemdkq1MXj4xL0wwwb/y/lXN
+         WmS9p9apYaAj89E71lyUFO7XgffuSTimBqQTBlnZu1Hl9Bsc9+0oeCIN0wjn8AA0CxUc
+         aUmA==
+X-Gm-Message-State: APjAAAW+n6NA5hKU7vb+KAiUClVzTTQBpRI85i4RhhEHexTb1nXyJSMW
+        JbiueBZJHBOIJKazYVzIo9/gqioDGCI=
+X-Google-Smtp-Source: APXvYqwj19uqZv95ef6LajG2/vuJSid1NG2XDKHTOp9c05U/dR633lHPrIQpZ1kmfiHvmctDqlu/hA==
+X-Received: by 2002:adf:e8ca:: with SMTP id k10mr8925784wrn.377.1573234943057;
+        Fri, 08 Nov 2019 09:42:23 -0800 (PST)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id w13sm6267368wrm.8.2019.11.08.09.42.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 09:42:21 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Fixes for v5.4-rc7
+Date:   Fri,  8 Nov 2019 18:42:20 +0100
+Message-Id: <20191108174220.3384630-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Will Deacon wrote:
+Hi Linus,
 
-> 'smp_read_barrier_depends()' has gone the way of mmiowb() and so many
-> esoteric memory barriers before it. Drop the two mentions of this
-> deceased barrier from the LKMM informal explanation document.
-> 
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  .../Documentation/explanation.txt             | 26 +++++++++----------
->  1 file changed, 12 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> index 488f11f6c588..3050bf67b8d0 100644
-> --- a/tools/memory-model/Documentation/explanation.txt
-> +++ b/tools/memory-model/Documentation/explanation.txt
-> @@ -1118,12 +1118,10 @@ maintain at least the appearance of FIFO order.
->  In practice, this difficulty is solved by inserting a special fence
->  between P1's two loads when the kernel is compiled for the Alpha
->  architecture.  In fact, as of version 4.15, the kernel automatically
-> -adds this fence (called smp_read_barrier_depends() and defined as
-> -nothing at all on non-Alpha builds) after every READ_ONCE() and atomic
-> -load.  The effect of the fence is to cause the CPU not to execute any
-> -po-later instructions until after the local cache has finished
-> -processing all the stores it has already received.  Thus, if the code
-> -was changed to:
-> +adds this fence after every READ_ONCE() and atomic load on Alpha.  The
-> +effect of the fence is to cause the CPU not to execute any po-later
-> +instructions until after the local cache has finished processing all
-> +the stores it has already received.  Thus, if the code was changed to:
->  
->  	P1()
->  	{
-> @@ -1142,14 +1140,14 @@ READ_ONCE() or another synchronization primitive rather than accessed
->  directly.
->  
->  The LKMM requires that smp_rmb(), acquire fences, and strong fences
-> -share this property with smp_read_barrier_depends(): They do not allow
-> -the CPU to execute any po-later instructions (or po-later loads in the
-> -case of smp_rmb()) until all outstanding stores have been processed by
-> -the local cache.  In the case of a strong fence, the CPU first has to
-> -wait for all of its po-earlier stores to propagate to every other CPU
-> -in the system; then it has to wait for the local cache to process all
-> -the stores received as of that time -- not just the stores received
-> -when the strong fence began.
-> +share this property: They do not allow the CPU to execute any po-later
-> +instructions (or po-later loads in the case of smp_rmb()) until all
-> +outstanding stores have been processed by the local cache.  In the
-> +case of a strong fence, the CPU first has to wait for all of its
-> +po-earlier stores to propagate to every other CPU in the system; then
-> +it has to wait for the local cache to process all the stores received
-> +as of that time -- not just the stores received when the strong fence
-> +began.
->  
->  And of course, none of this matters for any architecture other than
->  Alpha.
+The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+  Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.4-rc7
+
+for you to fetch changes up to 24906a41eecb73d51974ade0847c21e429beec60:
+
+  pwm: bcm-iproc: Prevent unloading the driver module while in use (2019-11-08 18:38:06 +0100)
+
+Thanks,
+Thierry
+
+----------------------------------------------------------------
+pwm: Fixes for v5.4-rc7
+
+Here's one more fix to keep a reference to the driver's module as long
+as there are users of the PWM exposed by the driver.
+
+----------------------------------------------------------------
+Uwe Kleine-König (1):
+      pwm: bcm-iproc: Prevent unloading the driver module while in use
+
+ drivers/pwm/pwm-bcm-iproc.c | 1 +
+ 1 file changed, 1 insertion(+)
