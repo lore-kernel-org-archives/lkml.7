@@ -2,245 +2,153 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F27FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34098FC6198
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAF0214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F2420869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xe/gL0fX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="S+dMcuDF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732573AbfKHVLY (ORCPT
+        id S1732371AbfKHVMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:11:24 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:56197 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHVLX (ORCPT
+        Fri, 8 Nov 2019 16:12:13 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:33656 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731366AbfKHVMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:11:23 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MOzGc-1iGzm719gK-00PNQ7; Fri, 08 Nov 2019 22:11:03 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 07/23] y2038: vdso: powerpc: avoid timespec references
-Date:   Fri,  8 Nov 2019 22:07:27 +0100
-Message-Id: <20191108210824.1534248-7-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191108210236.1296047-1-arnd@arndb.de>
-References: <20191108210236.1296047-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lx86RfWyo1UtJmp56v0swjpp1ZWdSL3mM/CF24wl/EwN3VfO2KR
- j/eJXK26jFhg4VDBKMZnBKXvjJlTnXuhBv4X0pvatFTBWnn4TEN4bPDkd7iYKgHePuxM/tb
- wUwHYFsQXBh0x5JEX0SRRQIXE1SdA3wsE47PhksU0OV5C8D0xBjkRrcfg736jm6VFDtgqS3
- 3QIN7Q4EkUAp7uOhcSRpA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Rd/L+EZnQb0=:UjleirH8JG1dR2gQl/Q6DR
- GOM0RkhxTsPJjHfHyivo5x41Frwviz6le8FWEzShs/U2Ro/kGU+xvA8mN+yEU2nIEEg3jDcY/
- c5h2VbhNuKgzzRJJUwUjUx3xltr2qfbQCpGK7KjkXPlTPds/XqqiFPxHnE+0r2c4qOVP4jmP7
- WwanXtBSlBsEbvLuHq8Hoovn74Ocz54mpPGVpF4Kq66XuWBuCPJMVaJfo7ULJ3i1xOxSnVX3v
- KbHID6hOzNJieoF2OZkYkhdL7kvpEbwBXAVDQDHMNK5nyYpRmp/6rXp97HYGcm3lAjdfRCmNd
- iKGTvwcgR4BD4R7NrJ6uq3V9Wl4TJDo6ouEcPv8QnnHZLfgpJ5WWvXodkkxf3pMabfvOAgDec
- hretNvCjx1E6sWSljXS7Cj/BykZTI6OSLvwDL/rfsF/8+0erJYRNFa1pg6wc/RszUhPdC3lIh
- 9f5iUfY64HtC4d8ZCP0MxCzKpwq795IWhcW6UEBQzjdDTLq3VMaaLFICBwOGbomGeJtZbUB5f
- tszDN2uLLaHuc7KmVnlZC+JphbuaI3r6M3ZogEpLcC9QVcrNNl1EeYnGmVYJW032U0WA1p2Np
- rocuQR0wc8PQeKTGBifdtFBaiuxb+d6uBmhy1Th7HAYjo6pZWfCE4aBLPsalPKfJ5uyVZRN8S
- FAvLzEts8YFMQ3VgVsAaPV4leRizzFM6abySu+NXDp3N1KTAV8ZfC8EITaj4b/mkrjDQgEx/1
- dAh6pR9cY1nbX1nEUtalVPv1n/UJvNxsa5HD7vPIR+IHSA/ecLTsBh0LKbNi1cFjZhj0Rjk6P
- ELCJpRpIXQirHw4bXiw+aIz4FGoVHiIv9GQmp4Ylbo0pplVtQPv/7WOUkeGuCEPqzY/Z9IQcw
- ywdKmC+WhY23VmlASp5Q==
+        Fri, 8 Nov 2019 16:12:12 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3CE1E61287; Fri,  8 Nov 2019 21:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573247531;
+        bh=kIPutEfqgY7Kz4haUaBk0dPvawxBf8Awq+g288SKpvE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xe/gL0fX96JCsVAFTSGDIzGbZ9fOwwTCpyXB0MPT4QJe12iUM/IbD6UE/8WtFuPjB
+         0MZvH57JIA+iyrI0VAyIHEuInyDmkWih5Gk0rPHHtGSgkRY1JkfzWMauHUg1OooiF/
+         he2xIiqWUT71pa8MXhSo7G9QIVt0TPxevFsVj+P0=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E599A60D9B;
+        Fri,  8 Nov 2019 21:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573247530;
+        bh=kIPutEfqgY7Kz4haUaBk0dPvawxBf8Awq+g288SKpvE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S+dMcuDFKLn0K5FLaavuAd3FR9kGGgfbe7iyiJ/dcFlFC7GXT5YwcjzxG1f92mveP
+         Z2OrJZS5Mw0hpkO0UfCCIvyyLxbHA7FDGr2VS+v+3EqOnIssowuCwP1brXTmDxBX4I
+         v63D3i9RDV2rNqA5Nua9jzqc6sqO+lpZrEHvdFHM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E599A60D9B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v7 1/6] dt-bindings: clock: Document external clocks for MSM8998 gcc
+Date:   Fri,  8 Nov 2019 14:11:58 -0700
+Message-Id: <1573247518-19801-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
+References: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a preparation to stop using 'struct timespec' in the kernel,
-change the powerpc vdso implementation:
+The global clock controller on MSM8998 can consume a number of external
+clocks.  Document them.
 
-- split up the vdso data definition to have equivalent members
-   for seconds and nanoseconds instead of an xtime structure
-
-- use timespec64 as an intermediate for the xtime update
-
-- change the asm-offsets definition to be based the appropriate
-  fixed-length types
-
-This is only a temporary fix for changing the types, in order
-to actually support a 64-bit safe vdso32 version of clock_gettime(),
-the entire powerpc vdso should be replaced with the generic
-lib/vdso/ implementation. If that happens first, this patch
-becomes obsolete.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- arch/powerpc/include/asm/vdso_datapage.h  |  6 ++++--
- arch/powerpc/kernel/asm-offsets.c         | 14 +++++---------
- arch/powerpc/kernel/time.c                |  5 +++--
- arch/powerpc/kernel/vdso32/gettimeofday.S |  6 ++----
- arch/powerpc/kernel/vdso64/gettimeofday.S |  8 ++++----
- 5 files changed, 18 insertions(+), 21 deletions(-)
+ .../devicetree/bindings/clock/qcom,gcc.yaml   | 47 +++++++++++++------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
-index c61d59ed3b45..a115970a6809 100644
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -81,7 +81,8 @@ struct vdso_data {
- 	__u32 stamp_sec_fraction;		/* fractional seconds of stamp_xtime */
- 	__s32 wtom_clock_nsec;			/* Wall to monotonic clock nsec */
- 	__s64 wtom_clock_sec;			/* Wall to monotonic clock sec */
--	struct timespec stamp_xtime;		/* xtime as at tb_orig_stamp */
-+	__s64 stamp_xtime_sec;			/* xtime secs as at tb_orig_stamp */
-+	__s64 stamp_xtime_nsec;			/* xtime nsecs as at tb_orig_stamp */
-    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- };
-@@ -101,7 +102,8 @@ struct vdso_data {
- 	__u32 tz_dsttime;		/* Type of dst correction	0x5C */
- 	__s32 wtom_clock_sec;			/* Wall to monotonic clock */
- 	__s32 wtom_clock_nsec;
--	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
-+	__s32 stamp_xtime_sec;		/* xtime seconds as at tb_orig_stamp */
-+	__s32 stamp_xtime_nsec;		/* xtime nsecs as at tb_orig_stamp */
- 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- 	__u32 dcache_block_size;	/* L1 d-cache block size     */
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 827f4c354e13..f22bd6d1fe93 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -385,7 +385,8 @@ int main(void)
- 	OFFSET(CFG_SYSCALL_MAP32, vdso_data, syscall_map_32);
- 	OFFSET(WTOM_CLOCK_SEC, vdso_data, wtom_clock_sec);
- 	OFFSET(WTOM_CLOCK_NSEC, vdso_data, wtom_clock_nsec);
--	OFFSET(STAMP_XTIME, vdso_data, stamp_xtime);
-+	OFFSET(STAMP_XTIME_SEC, vdso_data, stamp_xtime_sec);
-+	OFFSET(STAMP_XTIME_NSEC, vdso_data, stamp_xtime_nsec);
- 	OFFSET(STAMP_SEC_FRAC, vdso_data, stamp_sec_fraction);
- 	OFFSET(CFG_ICACHE_BLOCKSZ, vdso_data, icache_block_size);
- 	OFFSET(CFG_DCACHE_BLOCKSZ, vdso_data, dcache_block_size);
-@@ -395,18 +396,13 @@ int main(void)
- 	OFFSET(CFG_SYSCALL_MAP64, vdso_data, syscall_map_64);
- 	OFFSET(TVAL64_TV_SEC, __kernel_old_timeval, tv_sec);
- 	OFFSET(TVAL64_TV_USEC, __kernel_old_timeval, tv_usec);
-+#endif
-+	OFFSET(TSPC64_TV_SEC, __kernel_timespec, tv_sec);
-+	OFFSET(TSPC64_TV_NSEC, __kernel_timespec, tv_nsec);
- 	OFFSET(TVAL32_TV_SEC, old_timeval32, tv_sec);
- 	OFFSET(TVAL32_TV_USEC, old_timeval32, tv_usec);
--	OFFSET(TSPC64_TV_SEC, timespec, tv_sec);
--	OFFSET(TSPC64_TV_NSEC, timespec, tv_nsec);
- 	OFFSET(TSPC32_TV_SEC, old_timespec32, tv_sec);
- 	OFFSET(TSPC32_TV_NSEC, old_timespec32, tv_nsec);
--#else
--	OFFSET(TVAL32_TV_SEC, __kernel_old_timeval, tv_sec);
--	OFFSET(TVAL32_TV_USEC, __kernel_old_timeval, tv_usec);
--	OFFSET(TSPC32_TV_SEC, timespec, tv_sec);
--	OFFSET(TSPC32_TV_NSEC, timespec, tv_nsec);
--#endif
- 	/* timeval/timezone offsets for use by vdso */
- 	OFFSET(TZONE_TZ_MINWEST, timezone, tz_minuteswest);
- 	OFFSET(TZONE_TZ_DSTTIME, timezone, tz_dsttime);
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 694522308cd5..1fad5a04d083 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -885,7 +885,7 @@ static notrace u64 timebase_read(struct clocksource *cs)
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+index e73a56fb60ca..2f3512b6a035 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+@@ -40,20 +40,38 @@ properties:
+        - qcom,gcc-sm8150
  
- void update_vsyscall(struct timekeeper *tk)
- {
--	struct timespec xt;
-+	struct timespec64 xt;
- 	struct clocksource *clock = tk->tkr_mono.clock;
- 	u32 mult = tk->tkr_mono.mult;
- 	u32 shift = tk->tkr_mono.shift;
-@@ -957,7 +957,8 @@ void update_vsyscall(struct timekeeper *tk)
- 	vdso_data->tb_to_xs = new_tb_to_xs;
- 	vdso_data->wtom_clock_sec = tk->wall_to_monotonic.tv_sec;
- 	vdso_data->wtom_clock_nsec = tk->wall_to_monotonic.tv_nsec;
--	vdso_data->stamp_xtime = xt;
-+	vdso_data->stamp_xtime_sec = xt.sec;
-+	vdso_data->stamp_xtime_nsec = xt.nsec;
- 	vdso_data->stamp_sec_fraction = frac_sec;
- 	smp_wmb();
- 	++(vdso_data->tb_update_count);
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 4327665ad86f..37ba4c3d965b 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -15,10 +15,8 @@
- /* Offset for the low 32-bit part of a field of long type */
- #if defined(CONFIG_PPC64) && defined(CONFIG_CPU_BIG_ENDIAN)
- #define LOPART	4
--#define TSPEC_TV_SEC	TSPC64_TV_SEC+LOPART
- #else
- #define LOPART	0
--#define TSPEC_TV_SEC	TSPC32_TV_SEC
- #endif
+   clocks:
+-    minItems: 1
+-    maxItems: 3
+-    items:
+-      - description: Board XO source
+-      - description: Board active XO source
+-      - description: Sleep clock source
++    oneOf:
++      #qcom,gcc-sm8150
++      #qcom,gcc-sc7180
++      - items:
++        - description: Board XO source
++        - description: Board active XO source
++        - description: Sleep clock source
++      #qcom,gcc-msm8998
++      - items:
++        - description: Board XO source
++        - description: USB 3.0 phy pipe clock
++        - description: UFS phy rx symbol clock for pipe 0
++        - description: UFS phy rx symbol clock for pipe 1
++        - description: UFS phy tx symbol clock
++        - description: PCIE phy pipe clock
  
- 	.text
-@@ -192,7 +190,7 @@ V_FUNCTION_BEGIN(__kernel_time)
- 	bl	__get_datapage@local
- 	mr	r9, r3			/* datapage ptr in r9 */
+   clock-names:
+-    minItems: 1
+-    maxItems: 3
+-    items:
+-      - const: bi_tcxo
+-      - const: bi_tcxo_ao
+-      - const: sleep_clk
++    oneOf:
++      #qcom,gcc-sm8150
++      #qcom,gcc-sc7180
++      - items:
++        - const: bi_tcxo
++        - const: bi_tcxo_ao
++        - const: sleep_clk
++      #qcom,gcc-msm8998
++      - items:
++        - const: xo
++        - const: usb3_pipe
++        - const: ufs_rx_symbol0
++        - const: ufs_rx_symbol1
++        - const: ufs_tx_symbol0
++        - const: pcie0_pipe
  
--	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
-+	lwz	r3,STAMP_XTIME_SEC+LOWPART(r9)
- 
- 	cmplwi	r11,0			/* check if t is NULL */
- 	beq	2f
-@@ -268,7 +266,7 @@ __do_get_tspec:
- 	 * as a 32.32 fixed-point number in r3 and r4.
- 	 * Load & add the xtime stamp.
- 	 */
--	lwz	r5,STAMP_XTIME+TSPEC_TV_SEC(r9)
-+	lwz	r5,STAMP_XTIME_SEC+LOWPART(r9)
- 	lwz	r6,STAMP_SEC_FRAC(r9)
- 	addc	r4,r4,r6
- 	adde	r3,r3,r5
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index 07bfe33fe874..1f24e411af80 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -116,8 +116,8 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 * CLOCK_REALTIME_COARSE, below values are needed for MONOTONIC_COARSE
- 	 * too
- 	 */
--	ld      r4,STAMP_XTIME+TSPC64_TV_SEC(r3)
--	ld      r5,STAMP_XTIME+TSPC64_TV_NSEC(r3)
-+	ld      r4,STAMP_XTIME_SEC(r3)
-+	ld      r5,STAMP_XTIME_NSEC(r3)
- 	bne     cr6,75f
- 
- 	/* CLOCK_MONOTONIC_COARSE */
-@@ -220,7 +220,7 @@ V_FUNCTION_BEGIN(__kernel_time)
- 	mr	r11,r3			/* r11 holds t */
- 	bl	V_LOCAL_FUNC(__get_datapage)
- 
--	ld	r4,STAMP_XTIME+TSPC64_TV_SEC(r3)
-+	ld	r4,STAMP_XTIME_SEC(r3)
- 
- 	cmpldi	r11,0			/* check if t is NULL */
- 	beq	2f
-@@ -265,7 +265,7 @@ V_FUNCTION_BEGIN(__do_get_tspec)
- 	mulhdu	r6,r6,r5		/* in units of 2^-32 seconds */
- 
- 	/* Add stamp since epoch */
--	ld	r4,STAMP_XTIME+TSPC64_TV_SEC(r3)
-+	ld	r4,STAMP_XTIME_SEC(r3)
- 	lwz	r5,STAMP_SEC_FRAC(r3)
- 	or	r0,r4,r5
- 	or	r0,r0,r6
+   '#clock-cells':
+     const: 1
+@@ -118,6 +136,7 @@ else:
+       compatible:
+         contains:
+           enum:
++            - qcom,gcc-msm8998
+             - qcom,gcc-sm8150
+             - qcom,gcc-sc7180
+   then:
+@@ -179,8 +198,8 @@ examples:
+     clock-controller@100000 {
+       compatible = "qcom,gcc-sc7180";
+       reg = <0x100000 0x1f0000>;
+-      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
+-      clock-names = "bi_tcxo", "bi_tcxo_ao";
++      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
++      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+       #clock-cells = <1>;
+       #reset-cells = <1>;
+       #power-domain-cells = <1>;
 -- 
-2.20.0
+2.17.1
 
