@@ -1,120 +1,74 @@
-Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052CCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED846C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E317214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 23:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="qJ6+3nX2"
+	by mail.kernel.org (Postfix) with ESMTP id A2661214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfKGX74 (ORCPT
+        id S1728019AbfKHADS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 18:59:56 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36168 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfKGX74 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 18:59:56 -0500
-Received: by mail-io1-f67.google.com with SMTP id s3so4361153ioe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 15:59:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
-        b=qJ6+3nX2A0cxXp5ywWmFmELron2FyoN3FDc1ffUYMSP1vQyxNNpAwPSnIE5uLNzHPq
-         yyTkSrkV4O5kQntMue3g7+nconlzJcFJaaHJJvfJhYiZk1qUc6eQ7eSGlcWwJjDZxSRI
-         7S/mzRsyDqgZuUtoTd4Nl/Yt1BDw/i2DmXmPOTsRh50NUe/3/3QtgZHdZFheYVUikA7M
-         N+9OqwsvL5vJn14W36FB7KmRrDoQ5hyXXvKRhWwjTE1IpQ+HN47iJQHz64V389iY1Cde
-         pazLb/um+PtgdVcge3dhBcECyUDnNWvzK6hGd+wFsEi3EaLHfwIrCnq7ZBaYeiJrTqA1
-         C3tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
-        b=WsEDs9eW9AW3D3abYqmYq0EgR4uCPj1cu6eY6H0ZVfS/kri7e2NwEscnQkiP/eIDJi
-         7/RmZ42NdhAZyklHZSZFiyycESOGymUVW8oq1C3tYWUHqw9t7bNEnB0badKUIgOzNbbV
-         VY88R5xkw8QLCU4En8joJeJjC5TtXZN4knH5tWnFmJjDUg/S5ysSIi3Cq4tXyKpDisG+
-         FnnafvFvUukHHlWu0X3yc4W7uIhj1kEFRCaL346cB/RI7oc7nPT0hjgS8MxTw5l+QP5c
-         EwPzxRpHJT3OWB6LV7yANBSXAm+V8HVBIUqBP8/8KFLGASDbYLdXC6JzzRnvm1sYXdZS
-         uLmA==
-X-Gm-Message-State: APjAAAUK/J9C4zu2S+btfC4D3vltf4JFZmylMiQFNsl1rlL5HVhRJtxJ
-        uZ+mzZmOHx+xcjdlglfoNtTyBGf7jBZJLm8zC4yOyX+DNMKiDg==
-X-Google-Smtp-Source: APXvYqwdhyG4PRd2KuyuhMDVRxc8TrIjKm0QEGmFDeLDmPvQFWLzeehD5bVsnZtjSW2ZuPfUI6UWw5ZPpD3feEOMNM8=
-X-Received: by 2002:a5e:8202:: with SMTP id l2mr6723828iom.207.1573171195298;
- Thu, 07 Nov 2019 15:59:55 -0800 (PST)
+        Thu, 7 Nov 2019 19:03:18 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:49646 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfKHADR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 19:03:17 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko.stuebner@theobroma-systems.com>)
+        id 1iSrjz-00065H-Jt; Fri, 08 Nov 2019 01:03:03 +0100
+From:   Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+To:     dri-devel@lists.freedesktop.org, a.hajda@samsung.com
+Cc:     hjc@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net, philippe.cornu@st.com,
+        yannick.fertre@st.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        heiko@sntech.de, christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v2 0/5] dw-mipi-dsi support for Rockchip px30
+Date:   Fri,  8 Nov 2019 01:02:48 +0100
+Message-Id: <20191108000253.8560-1-heiko.stuebner@theobroma-systems.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191025202004.GA147688@google.com> <1ade6a9f-9532-c400-9bb0-4e68ed5752ce@linux.intel.com>
- <CAOesGMhdAUKj9f0=sVwH7kffr=P-LqWWqKxKK3N3e0MpcjLExw@mail.gmail.com> <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
-In-Reply-To: <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Thu, 7 Nov 2019 15:59:43 -0800
-Message-ID: <CAOesGMi2hnEhZvvcWg44LzjAr44LhzQ58s=u=THpfn=RRLLA7w@mail.gmail.com>
-Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
- back old behavior
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 2:07 PM Kuppuswamy Sathyanarayanan
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
->
-> On 11/7/19 12:09 PM, Olof Johansson wrote:
-> > On Thu, Nov 7, 2019 at 12:02 PM Kuppuswamy Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> >> Hi,
-> >>
-> >> On 10/25/19 1:20 PM, Bjorn Helgaas wrote:
-> >>> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
-> >>>> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
-> >>>> the behavior was changed such that native (kernel) handling of DPC
-> >>>> got tied to whether the kernel also handled AER. While this is what
-> >>>> the standard recommends, there are BIOSes out there that lack the DPC
-> >>>> handling since it was never required in the past.
-> >>> Some systems do not grant OS control of AER via _OSC.  I guess the
-> >>> problem is that on those systems, the OS DPC driver used to work, but
-> >>> after eed85ff4c0da7, it does not.  Right?
-> >> I need some clarification on this issue. Do you mean in these systems,
-> >> firmware expects OS to handle DPC and AER, but it does not let OS know
-> >> about it via _OSC ?
-> > The OS and BIOS both assumed behavior as before eed85ff4c0da7 -- AER
-> > handled by firmware but DPC handled by kernel.
-> >
-> > I.e. a classic case of "Sure, the spec says this, but in reality
-> > implementations relied on actual behavior", and someone had a
-> > regression and need a way to restore previous behavior.
->
-> Got it. I don't know whether its good to add hacks to support products
-> that does not follow spec.
-> But, do you think it would be useful to add some kind of warning message
-> when this option is
-> enabled ? May be it could be useful in debugging.
+This series adds support for the dsi controller on the px30.
+The main difference to previous incarnations is the use of an
+external dphy for the output.
 
-It's not a "hack", it is fixing a regression in behavior because of
-changed assumptions by the kernel.
-
-We're pretty clear as a kernel community: We don't regress our users.
-So, in cases like these, we need to make sure we allow people to use
-their hardware the same way they used it with an older kernel.
-
-A printk() to indicate that this mode is enabled could be useful, if
-nothing else to make sure that the pre-eed85ff4c0da7 behavior is
-enabled without having to grep /proc/cmdline.
+changes in v2:
+- drop handling the dphy-pll manually, instead use the regular
+  phy configuration operations, thanks Laurent for the suggestion
+- add missing px30 compatible to the binding and make
+  binding changes separate patches
 
 
--Olof
+Heiko Stuebner (5):
+  drm/bridge/synopsys: dsi: move phy_ops callbacks around panel
+    enablement
+  dt-bindings: display: rockchip-dsi: document external phys
+  drm/rockchip: add ability to handle external dphys in mipi-dsi
+  dt-bindings: display: rockchip-dsi: add px30 compatible
+  drm/rockchip: dsi: add px30 support
+
+ .../display/rockchip/dw_mipi_dsi_rockchip.txt | 13 ++-
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 13 ++-
+ .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 95 ++++++++++++++++++-
+ 3 files changed, 106 insertions(+), 15 deletions(-)
+
+-- 
+2.23.0
+
