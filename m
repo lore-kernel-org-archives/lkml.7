@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70153FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0DEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5EC2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA91A2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214568;
-	bh=hF3+0/awYwGTiTMznroF4fqR9vXqdkxIXXDkxWqji8s=;
+	s=default; t=1573214574;
+	bh=jSGFsiKCQFZBLSEAsjsqgfDUw/IFfM12cjJ2KDf7CbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dXlnfoZmvYxxvip5ohZ2JFlGUcUGNjNMTUKir2BCOUDhjNrJX5AHglFqoqTzwz/NH
-	 j+nWmfMHLSmlkvle14/zW/SBwrZFhlyWE04CCEdgT54VzliTE37IeDGuoeFLJwgUU0
-	 w+XJSlbLcvqkIZMi4FUs8nsF/ezy6elzLKRzy4+w=
+	b=mmsQtElXpevdRRs08LV7E4wsX97t0bjQPqMVVqTKSsswg7EBxr0ub+iU+gBm1sMR5
+	 QW55snD4WEzzaR4ry/+1XG/29iZDrV7xTqYDZ2Uck4iFlJn+yNMtjfEpwPzLWzF6r/
+	 /j4RFxI2JrF41AlnyFFk1oiQXJmTuF6mGAjmFfjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390269AbfKHLnA (ORCPT
+        id S2390868AbfKHMCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:43:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:02:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390249AbfKHLm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:58 -0500
+        id S2388148AbfKHLmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD0BC21D82;
-        Fri,  8 Nov 2019 11:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87439222C5;
+        Fri,  8 Nov 2019 11:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213377;
-        bh=hF3+0/awYwGTiTMznroF4fqR9vXqdkxIXXDkxWqji8s=;
+        s=default; t=1573213375;
+        bh=jSGFsiKCQFZBLSEAsjsqgfDUw/IFfM12cjJ2KDf7CbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1DMoWibHae2tYpZ9BfB77y11ZYJfCXkxOiPXUdAS4UDGsbZ3sfs6lWbqJA8/S5CdI
-         tES1kx2EDvWR41Kk4J76HSu9ejaK7V3nsBwCt+OJMm3NnFSEyvrGZmY5p/sMgfCLMq
-         eAU/tLOkirTjUsWWsbaqEmA1tVXr9q8Rn3zR0az0=
+        b=pvvv4hqxrIF3SsUrIENelz8BGnmuk/l8GD16SaoEdXmeuLJlX+3hnyIsJFwZIFoWM
+         C+CrGibob3vq1EsN6PeRXZos6u+sjQEY2Q+cwJjopbXhWhu7bVPwP8LmVUqREOgrE8
+         pJIpIsMPotLu6+DPd/awFiJB9b/Lj0/5YYTv8GN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
         linux-rockchip@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 201/205] arm64: dts: rockchip: Fix I2C bus unit-address error on rk3399-puma-haikou
-Date:   Fri,  8 Nov 2019 06:37:48 -0500
-Message-Id: <20191108113752.12502-201-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 200/205] ARM: dts: rockchip: Fix erroneous SPI bus dtc warnings on rk3036
+Date:   Fri,  8 Nov 2019 06:37:47 -0500
+Message-Id: <20191108113752.12502-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,11 +61,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 501500e65fa96f899230d66153fefd780f08dd34 ]
+[ Upstream commit 131c3eb428ccd5f0c784b9edb4f72ec296a045d2 ]
 
-dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
+dtc has new checks for SPI buses. The rk3036 dts file has a node named
+spi' which causes false positive warnings. As the node is a pinctrl child
+node, change the node name to be 'spi-pins' to fix the warnings.
 
-arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dtb: Warning (i2c_bus_reg): /i2c@ff3d0000/codec@0a: I2C bus unit address format error, expected "a"
+arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
+arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
+arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
 
 Cc: Heiko Stuebner <heiko@sntech.de>
 Cc: linux-rockchip@lists.infradead.org
@@ -73,22 +78,22 @@ Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts | 2 +-
+ arch/arm/boot/dts/rk3036.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
-index 8ce4a79d9360f..1e6a71066c163 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
-@@ -131,7 +131,7 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 67f57200d9a06..d560fc4051c5f 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -733,7 +733,7 @@
+ 			/* no rts / cts for uart2 */
+ 		};
  
--	sgtl5000: codec@0a {
-+	sgtl5000: codec@a {
- 		compatible = "fsl,sgtl5000";
- 		reg = <0x0a>;
- 		clocks = <&sgtl5000_clk>;
+-		spi {
++		spi-pins {
+ 			spi_txd:spi-txd {
+ 				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
+ 			};
 -- 
 2.20.1
 
