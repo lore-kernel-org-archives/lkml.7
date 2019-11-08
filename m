@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F00C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5580FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3FE222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82CC9222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213748;
-	bh=Klx/vYedqDT/UALTFgFJbMomfAZhczkTY09h71IdXCw=;
+	s=default; t=1573213751;
+	bh=zrACi/zrpE++6Yp8Y3AqZM16ao3eA7zrnaBCivxJV+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qS2FF3hL5NDgXzth/3cbtC+8UJyWR67uoWXNf/gTrhKaTKugaziWqp+DAZ3bs1iuG
-	 cfnV3ZvDBFqH44cBsl5BpI+ZMSrms0d0RDlx8RMnUvE2Ja+eF6ZJ7hdJYVP2qnobyR
-	 FSXxl2MZkp0XnXPo2CIRgKALVTrmYTKPy9rFPYN8=
+	b=X9UUVzlzhTJhLes5hg1zhRie0aM/YKWU+NfT0X1efefCXrDBHYbkVrGROF/AUWO4X
+	 h6LNG5mL1nOVgBP3/0EtAfgAhhLwJl8wNEWrm4I1laq6nvYbCIeb5JoyC6hdGxY6mF
+	 BfDXwFwL9kOZDbOpveVCquC2X7TPrSIXjx+F9Npw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388528AbfKHLtH (ORCPT
+        id S2391739AbfKHLsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:49:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37478 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:48:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391745AbfKHLs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:48:27 -0500
+        id S2391689AbfKHLrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B56F222CF;
-        Fri,  8 Nov 2019 11:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9A65222C5;
+        Fri,  8 Nov 2019 11:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213706;
-        bh=Klx/vYedqDT/UALTFgFJbMomfAZhczkTY09h71IdXCw=;
+        s=default; t=1573213675;
+        bh=zrACi/zrpE++6Yp8Y3AqZM16ao3eA7zrnaBCivxJV+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RK+Ci0QQIq3tCOaI2O//MjR+GM4OTnUZOJ6yTFm6PbHANPQfId9WvfBo5KFcS1cVq
-         gWn+2pqTAs5iBWqUzjCF4kN25u+6KKVDggb5PC+Fp5o+yoIQKjlyJo8Ighbb9OqraY
-         LS1MtgFwNwnNOwpB7xiZNzeRd92zKFppvc8MlmRI=
+        b=Y2ACvtfMnC+v9xyIx5+8MHxWw8CnJKvNkypZkOMeYg9Vg4tkeOl/cXEHnoMHy+Zx7
+         BuDWNTUnT3NT72JJvgsZxSYDmea90xYPSsCCu606/WWY4vDpa/T8+oeW7MUaNq1Umm
+         02f8PHPmwhzt8La3u7M+XZysJTkf3EKBZTZw7Heo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 43/44] power: supply: max8998-charger: Fix platform data retrieval
-Date:   Fri,  8 Nov 2019 06:47:19 -0500
-Message-Id: <20191108114721.15944-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 26/44] signal: Properly deliver SIGILL from uprobes
+Date:   Fri,  8 Nov 2019 06:47:02 -0500
+Message-Id: <20191108114721.15944-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,36 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Figa <tomasz.figa@gmail.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit cb90a2c6f77fe9b43d1e3f759bb2f13fe7fa1811 ]
+[ Upstream commit 55a3235fc71bf34303e34a95eeee235b2d2a35dd ]
 
-Since the max8998 MFD driver supports instantiation by DT, platform data
-retrieval is handled in MFD probe and cell drivers should get use
-the pdata field of max8998_dev struct to obtain them.
+For userspace to tell the difference between a random signal and an
+exception, the exception must include siginfo information.
 
-Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Using SEND_SIG_FORCED for SIGILL is thus wrong, and it will result
+in userspace seeing si_code == SI_USER (like a random signal) instead
+of si_code == SI_KERNEL or a more specific si_code as all exceptions
+deliver.
+
+Therefore replace force_sig_info(SIGILL, SEND_SIG_FORCE, current)
+with force_sig(SIG_ILL, current) which gets this right and is
+shorter and easier to type.
+
+Fixes: 014940bad8e4 ("uprobes/x86: Send SIGILL if arch_uprobe_post_xol() fails")
+Fixes: 0b5256c7f173 ("uprobes: Send SIGILL if handle_trampoline() fails")
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/max8998_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/uprobes.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/max8998_charger.c b/drivers/power/max8998_charger.c
-index b64cf0f141425..66438029bdd0c 100644
---- a/drivers/power/max8998_charger.c
-+++ b/drivers/power/max8998_charger.c
-@@ -85,7 +85,7 @@ static const struct power_supply_desc max8998_battery_desc = {
- static int max8998_battery_probe(struct platform_device *pdev)
- {
- 	struct max8998_dev *iodev = dev_get_drvdata(pdev->dev.parent);
--	struct max8998_platform_data *pdata = dev_get_platdata(iodev->dev);
-+	struct max8998_platform_data *pdata = iodev->pdata;
- 	struct power_supply_config psy_cfg = {};
- 	struct max8998_battery_data *max8998;
- 	struct i2c_client *i2c;
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index aad43c88a6685..8cad3cd92e23e 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1836,7 +1836,7 @@ static void handle_trampoline(struct pt_regs *regs)
+ 
+  sigill:
+ 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
+-	force_sig_info(SIGILL, SEND_SIG_FORCED, current);
++	force_sig(SIGILL, current);
+ 
+ }
+ 
+@@ -1952,7 +1952,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+ 
+ 	if (unlikely(err)) {
+ 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+-		force_sig_info(SIGILL, SEND_SIG_FORCED, current);
++		force_sig(SIGILL, current);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
