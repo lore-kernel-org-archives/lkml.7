@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FC6FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0579C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577D92178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FB321924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573229371;
-	bh=XONYQsEoNe8yVWiybJpTIylgaGizvlUWWexXaABvNxg=;
+	s=default; t=1573229373;
+	bh=s0nzmpWNJbD5C+AskEEvykR21U7P7AkJtAJ0XDJ+leU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3mKd+nvGPW6qT+BlZHMpE+fSywvJl6alYs/AGADTSZ3nVhVwZDap64iajxEurWdU
-	 6AlwZTU3AVJF5pziU1BCcX/fRIhPzTVJJh1Nit6kmne2+wmjzOU/iUM1RRdM9YtZjB
-	 6Z/8IOrsodjontS/4vxjyL7WEofZHZ+rEpAgU1kg=
+	b=JNhPaFChhzXo4/3ZRY2yTqZMb3PrS19kHCtUPXcAxtYWZ5PTd5Za0h7Js1I8hD7Tb
+	 nAly2LJeBzc8AMJ6++dkw8jh1oCBMoh6yvL6gDS9DgdjTVxkDwIoYSgIrJ5zw7OZY5
+	 2x41VU/lhEe1fispgAWEEzaUSvvFmy50/kU6aJQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbfKHQJa (ORCPT
+        id S1728312AbfKHQJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55252 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 11:09:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbfKHQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:09:28 -0500
+        id S1728124AbfKHQJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:09:30 -0500
 Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 407D721D82;
-        Fri,  8 Nov 2019 16:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66EF3222C4;
+        Fri,  8 Nov 2019 16:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573229368;
-        bh=XONYQsEoNe8yVWiybJpTIylgaGizvlUWWexXaABvNxg=;
+        s=default; t=1573229369;
+        bh=s0nzmpWNJbD5C+AskEEvykR21U7P7AkJtAJ0XDJ+leU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+0a+rZoGK8baZ8RtUPEP5dXwYAdacH2bRiwraNRRrUHJFMoybLuxEviHRV2Zj3On
-         3/zIrpKqMcQiZYiPwj0VJ3LUvkVxE+Q25JIDk59LkQ7Y4POga029VnZXbAzHSw1hEP
-         YYqIF3oaDNjcr2sztFERCk/Me38178YwL7g2lo9c=
+        b=yHAxhXRdH7GCOuexwhYHk/6J6PEls5JPFd6QC++qEPxawfDUh0qNJnu728bBaEVdk
+         A1h4Zm4JIZokRxiWJFMV3vRBJC9/w+h2QAGrDZGbX06g81Jhl5xCGRpYNzG+TuHJ7K
+         AdM8YHgAC5Tzzg3rGK2VvoekGUt1DVbJqyd/qZcg=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>
@@ -46,9 +46,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 3/4] irq_work: Slightly simplify IRQ_WORK_PENDING clearing
-Date:   Fri,  8 Nov 2019 17:08:57 +0100
-Message-Id: <20191108160858.31665-4-frederic@kernel.org>
+Subject: [RFC PATCH 4/4] irq_work: Weaken ordering in irq_work_run_list()
+Date:   Fri,  8 Nov 2019 17:08:58 +0100
+Message-Id: <20191108160858.31665-5-frederic@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108160858.31665-1-frederic@kernel.org>
 References: <20191108160858.31665-1-frederic@kernel.org>
@@ -59,9 +59,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of fetching the value of flags and perform an xchg() to clear
-a bit, just use atomic_fetch_andnot() that is more suitable to do that
-job in one operation while keeping the full ordering.
+(This patch is RFC because it makes the code less clear in favour of
+ordering optimization, ordering which has yet to pass under careful
+eyes. Not sure it's worth it.)
+
+Clearing IRQ_WORK_PENDING from atomic_fetch_andnot() let us know the
+old value of flags that we can reuse in the later cmpxchg() to clear
+IRQ_WORK_BUZY if necessary.
+
+However there is no need to read flags atomically here. Its value can't
+be concurrently changed before we clear the IRQ_WORK_PENDING bit. So we
+can safely read it before the call to atomic_fetch_andnot() which can
+then become atomic_andnot() followed by an smp_mb__after_atomic(). That
+preserves the ordering that makes sure we see the latest updates
+preceding irq_work_claim() while it doesn't raise a new IPI while
+observing the work already queued.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
@@ -69,48 +81,52 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/irq_work.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ kernel/irq_work.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 255454a48346..49c53f80a13a 100644
+index 49c53f80a13a..b709ab05cbfd 100644
 --- a/kernel/irq_work.c
 +++ b/kernel/irq_work.c
-@@ -34,7 +34,7 @@ static bool irq_work_claim(struct irq_work *work)
+@@ -34,8 +34,8 @@ static bool irq_work_claim(struct irq_work *work)
  	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED, &work->flags);
  	/*
  	 * If the work is already pending, no need to raise the IPI.
--	 * The pairing atomic_xchg() in irq_work_run() makes sure
-+	 * The pairing atomic_fetch_andnot() in irq_work_run() makes sure
- 	 * everything we did before is visible.
+-	 * The pairing atomic_fetch_andnot() in irq_work_run() makes sure
+-	 * everything we did before is visible.
++	 * The pairing atomic_andnot() followed by a barrier in irq_work_run()
++	 * makes sure everything we did before is visible.
  	 */
  	if (oflags & IRQ_WORK_PENDING)
-@@ -135,7 +135,6 @@ static void irq_work_run_list(struct llist_head *list)
- {
- 	struct irq_work *work, *tmp;
- 	struct llist_node *llnode;
--	int flags;
- 
- 	BUG_ON(!irqs_disabled());
- 
-@@ -144,6 +143,7 @@ static void irq_work_run_list(struct llist_head *list)
+ 		return false;
+@@ -143,7 +143,7 @@ static void irq_work_run_list(struct llist_head *list)
  
  	llnode = llist_del_all(list);
  	llist_for_each_entry_safe(work, tmp, llnode, llnode) {
-+		int flags;
+-		int flags;
++		int flags = atomic_read(&work->flags);
  		/*
  		 * Clear the PENDING bit, after this point the @work
  		 * can be re-used.
-@@ -151,8 +151,7 @@ static void irq_work_run_list(struct llist_head *list)
+@@ -151,14 +151,16 @@ static void irq_work_run_list(struct llist_head *list)
  		 * to claim that work don't rely on us to handle their data
  		 * while we are in the middle of the func.
  		 */
--		flags = atomic_read(&work->flags) & ~IRQ_WORK_PENDING;
--		atomic_xchg(&work->flags, flags);
-+		flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
+-		flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
++		atomic_andnot(IRQ_WORK_PENDING, &work->flags);
++		smp_mb__after_atomic();
  
  		work->func(work);
  		/*
+ 		 * Clear the BUSY bit and return to the free state if
+ 		 * no-one else claimed it meanwhile.
+ 		 */
+-		(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
++		(void)atomic_cmpxchg(&work->flags, flags & ~IRQ_WORK_PENDING,
++				     flags & ~IRQ_WORK_CLAIMED);
+ 	}
+ }
+ 
 -- 
 2.23.0
 
