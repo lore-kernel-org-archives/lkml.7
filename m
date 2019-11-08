@@ -2,58 +2,77 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2C6FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04244C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060B020865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF0C021D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573184637;
+	bh=UyFRcER2CU7b2usXRZ6M6BFrcXtS8XVut2oA/vpT6MI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wFO3pJs7qTMSard1viyYz46GJ78a8/xPlF40kBpJu9FzXccaoNmq8Agoy92QIy2ex
+	 LYoxWUs1JmGPtAkkzD9q2R98VqjCO4cUC1s822HCG6o7tQiSyMKcQpeJNtNmHcSRc+
+	 ttyxeccXAUPNml9IygMXLYF23Gh+MBgvxI/y/i0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbfKHDmA (ORCPT
+        id S1729595AbfKHDn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:42:00 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52632 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfKHDl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:41:59 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C32C514EBB7A9;
-        Thu,  7 Nov 2019 19:41:58 -0800 (PST)
-Date:   Thu, 07 Nov 2019 19:41:56 -0800 (PST)
-Message-Id: <20191107.194156.2189564128567853310.davem@davemloft.net>
-To:     michael@walle.cc
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        claudiu.manoil@nxp.com, andrew@lunn.ch
-Subject: Re: [PATCH] enetc: fix return value for enetc_ioctl()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191107235821.12767-1-michael@walle.cc>
-References: <20191107235821.12767-1-michael@walle.cc>
-X-Mailer: Mew version 6.8 on Emacs 26.1
+        Thu, 7 Nov 2019 22:43:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbfKHDn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 22:43:56 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C9BD20865;
+        Fri,  8 Nov 2019 03:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573184635;
+        bh=UyFRcER2CU7b2usXRZ6M6BFrcXtS8XVut2oA/vpT6MI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HgC8I55B+cni+z12bFD6e03F5aFRtA2tUpkdkxKQNIlacFiy9Zp3Qsie5vE9DmM53
+         q2IfB5TrMpKZKTjkgDaak4c0JtjtPPwmoAsa814d6y8Sh68Chxg8GcTnxXdg2cwC+p
+         mz4fe2CxlG4yNvRG2EpaoQEEUGoLNH9tLeqnBbTs=
+Date:   Thu, 7 Nov 2019 19:43:55 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH 01/11] mm: vmscan: move inactive_list_is_low() swap
+ check to the caller
+Message-Id: <20191107194355.c1a511b6b4da4cbbafbf0188@linux-foundation.org>
+In-Reply-To: <CALvZod64t1OGuhrvB1QChUYvUs2yQF-qAi5F=gcntHN84rr=sQ@mail.gmail.com>
+References: <20190603210746.15800-1-hannes@cmpxchg.org>
+        <20190603210746.15800-2-hannes@cmpxchg.org>
+        <CALvZod64t1OGuhrvB1QChUYvUs2yQF-qAi5F=gcntHN84rr=sQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 Nov 2019 19:41:59 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
-Date: Fri,  8 Nov 2019 00:58:21 +0100
+On Wed, 6 Nov 2019 18:50:37 -0800 Shakeel Butt <shakeelb@google.com> wrote:
 
-> Return -EOPNOTSUPP instead of -EINVAL if the requested ioctl is not
-> implemented.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> On Mon, Jun 3, 2019 at 3:05 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> ...
+>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-Always specificy explcitly the target tree for your change, in the
-Subject line, which in this case should have been:
+hm, you appear to have reviewed a five month old version.  Hoping that
+nothing changed too much, I added your review tags to the one week old
+version ;)
 
-	[PATCH net-next] enetc: ...
