@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2315AFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356D1FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32CB222CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020132245A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213530;
-	bh=nrwlX0+o3IBQvyjj/20EPhRXPTRgqzdCYKUR/stkalw=;
+	s=default; t=1573213533;
+	bh=2UhFLBsOtNLWkKSg9OQa1ADu0rYZXbSSRK1EzggFSac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLrlGYlIqi8ggHserRHbcB6gt+bS+wox01AW+eDluhAHZbKw7FOvaqBvIiVP6srG5
-	 hTs9rAsaZYwMABuklbLqqKgWofW6wZoIuTvIt6RtYqkX916V4U1EJ9rRWOyiB9TM4n
-	 zVrqzWkw+Msow1ppcivPpwofI18kSTza4tf/3l6U=
+	b=WnIfB7r3puNTdVgt4LIysaQcAHrqF3BHh90J+bgxk4ZmW9oJxz6PE03g3q+vAaSel
+	 N8LnGWTuBsfaOfXJP8MgyT2gbyEzL15zrfarQyf7JPkaORft4Eqz5hRgICBNgxK+Wb
+	 roIz1JCNfnlt7eoJoOtrIh9pSf6Gy3ZlF8SH2XA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388597AbfKHLp2 (ORCPT
+        id S2391129AbfKHLpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60800 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391102AbfKHLp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:27 -0500
+        id S2391114AbfKHLp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F30CF222C4;
-        Fri,  8 Nov 2019 11:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EA2222C4;
+        Fri,  8 Nov 2019 11:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213526;
-        bh=nrwlX0+o3IBQvyjj/20EPhRXPTRgqzdCYKUR/stkalw=;
+        s=default; t=1573213528;
+        bh=2UhFLBsOtNLWkKSg9OQa1ADu0rYZXbSSRK1EzggFSac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wG3p3ZECYfbX2DjUgpkRAPwgyZDa9MzkUxW/0DNs35mLuySLp5Qghm0KSnDZWhoSY
-         y7o7TRpd96UrRYORwhxec1IJ4kDToVwS0TkwEN+kUcdPmw1rFLAOfrIOT9J+bJlJzz
-         /uNeXhHnjkqB2uNz+B2mR8M0NzWWjhlDaVesq8+o=
+        b=2Gm3wvPAOkcbRqn65UMzk4MVjGEeh5yOX6k+J1GWpYVrKpfkmffrnSVmRZTCw046G
+         NP/KwJLSlGvEvGab2bkxWfSlN4il6SuYUY6UKLsHA3Y3VZjMFEQZDM5wSdF7+YsNc3
+         GmN/MM+89Vz+1/Ob1xI2C4fmSBAZZO70NGl61tyc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 090/103] ARM: dts: socfpga: Fix I2C bus unit-address error
-Date:   Fri,  8 Nov 2019 06:42:55 -0500
-Message-Id: <20191108114310.14363-90-sashal@kernel.org>
+Cc:     Ganesh Goudar <ganeshgr@chelsio.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 092/103] cxgb4: Fix endianness issue in t4_fwcache()
+Date:   Fri,  8 Nov 2019 06:42:57 -0500
+Message-Id: <20191108114310.14363-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -58,34 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@kernel.org>
+From: Ganesh Goudar <ganeshgr@chelsio.com>
 
-[ Upstream commit cbbc488ed85061a765cf370c3e41f383c1e0add6 ]
+[ Upstream commit 0dc235afc59a226d951352b0adf4a89b532a9d13 ]
 
-dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
+Do not put host-endian 0 or 1 into big endian feild.
 
-arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dtb: Warning (i2c_bus_reg): /soc/i2c@ffc04000/adxl345@0: I2C bus unit address format error, expected "53"
-
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-index b280e64941938..31b01a998b2ed 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-@@ -88,7 +88,7 @@
- 	status = "okay";
- 	clock-frequency = <100000>;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+index 1802debbd3c7e..39bcf27902e4b 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -3750,7 +3750,7 @@ int t4_fwcache(struct adapter *adap, enum fw_params_param_dev_fwcache op)
+ 	c.param[0].mnem =
+ 		cpu_to_be32(FW_PARAMS_MNEM_V(FW_PARAMS_MNEM_DEV) |
+ 			    FW_PARAMS_PARAM_X_V(FW_PARAMS_PARAM_DEV_FWCACHE));
+-	c.param[0].val = (__force __be32)op;
++	c.param[0].val = cpu_to_be32(op);
  
--	adxl345: adxl345@0 {
-+	adxl345: adxl345@53 {
- 		compatible = "adi,adxl345";
- 		reg = <0x53>;
- 
+ 	return t4_wr_mbox(adap, adap->mbox, &c, sizeof(c), NULL);
+ }
 -- 
 2.20.1
 
