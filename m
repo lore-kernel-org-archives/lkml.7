@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0884C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EF8C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF48F218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C13B2067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239712;
-	bh=Pkh8O6u6Xi3YkNZ+kgSiq60tEkoy6kaOzhQaxlLsPqA=;
+	s=default; t=1573239716;
+	bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+BNAsRXIbuvmyG2v198JRtHYFRJo73FEc8nLcu023M6Md3Tjh/dZxxvO7lbxuw/h
-	 GJ5BQvQ/Y06FNcKUF9cpKits2XxlRl4XvPJ3xqYP7JL6joHnnLdDFcUzf5ZML9SUCJ
-	 NVHYWpUzTX1UfdhVKNlvaSb0QNkqCtU1bRuhu6ys=
+	b=szFhg8H+agcjYr/TtEhlHiGcPp79dLWsxsuM4xeJ3sIB5hdoZlpXhoI0N52wJNob7
+	 eEhgq4mxRMCuKMMlZRgr/2NKsVboS2F8fhvH8JziBMOR1v9Zpaw85sZXzE4gXUw92Q
+	 l0/Y0xdIpgIL756OsXPRYR3WMREoy5S6TjNmBD08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390345AbfKHTBv (ORCPT
+        id S2390370AbfKHTBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:01:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59208 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:01:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390314AbfKHTBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:46 -0500
+        id S2390348AbfKHTBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:01:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53D63222C5;
-        Fri,  8 Nov 2019 19:01:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 079062067B;
+        Fri,  8 Nov 2019 19:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239705;
-        bh=Pkh8O6u6Xi3YkNZ+kgSiq60tEkoy6kaOzhQaxlLsPqA=;
+        s=default; t=1573239711;
+        bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUWEOVAclTfLlOPVb2lwYcSz4Ib7Pq6M0OwdofICONncksDiufLPupFt0jlr+9+an
-         4FHEYHopmHE5YB9BXMDPO0UvxzE/049KTqD7AkNNI6hCgf2oweL/9IbH4RMiLWi6mq
-         TrhewygcU5lrg3lZwBXty/PXInrHVTwyUxomEBwo=
+        b=YtHpVG39P/Rz1av6fLgn11wZRTwrB5LnFSXcNvfaRoTWmBmQGTIrLZMh5NbMQRK5C
+         v1oXU3AaEEl/iDoC6rCVQFmPwuM/olpLuWYBQXFpkc1QaEPmRBSUDdzPPtPQsfXZCu
+         +4gZD43laBGFeFe6Ycr0k8OVQ6WplTdo+j49kTqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <mripard@kernel.org>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 05/79] arm64: dts: allwinner: a64: sopine-baseboard: Add PHY regulator delay
-Date:   Fri,  8 Nov 2019 19:49:45 +0100
-Message-Id: <20191108174748.006012861@linuxfoundation.org>
+Subject: [PATCH 4.19 07/79] regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
+Date:   Fri,  8 Nov 2019 19:49:47 +0100
+Message-Id: <20191108174749.216787984@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,48 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit ccdf3aaa27ded6db9a93eed3ca7468bb2353b8fe ]
+[ Upstream commit f64db548799e0330897c3203680c2ee795ade518 ]
 
-It turns out that sopine-baseboard needs same fix as pine64-plus
-for ethernet PHY. Here too Realtek ethernet PHY chip needs additional
-power on delay to properly initialize. Datasheet mentions that chip
-needs 30 ms to be properly powered on and that it needs some more time
-to be initialized.
+ti_abb_wait_txdone() may return -ETIMEDOUT when ti_abb_check_txdone()
+returns true in the latest iteration of the while loop because the timeout
+value is abb->settling_time + 1. Similarly, ti_abb_clear_all_txdone() may
+return -ETIMEDOUT when ti_abb_check_txdone() returns false in the latest
+iteration of the while loop. Fix it.
 
-Fix that by adding 100ms ramp delay to regulator responsible for
-powering PHY.
-
-Note that issue was found out and fix tested on pine64-lts, but it's
-basically the same as sopine-baseboard, only layout and connectors
-differ.
-
-Fixes: bdfe4cebea11 ("arm64: allwinner: a64: add Ethernet PHY regulator for several boards")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Nishanth Menon <nm@ti.com>
+Link: https://lore.kernel.org/r/20190929095848.21960-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts      | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/regulator/ti-abb-regulator.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index c21f2331add60..285cb7143b96c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -113,6 +113,12 @@
- };
+diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
+index cced1ffb896c1..89b9314d64c9d 100644
+--- a/drivers/regulator/ti-abb-regulator.c
++++ b/drivers/regulator/ti-abb-regulator.c
+@@ -173,19 +173,14 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
+ 	while (timeout++ <= abb->settling_time) {
+ 		status = ti_abb_check_txdone(abb);
+ 		if (status)
+-			break;
++			return 0;
  
- &reg_dc1sw {
-+	/*
-+	 * Ethernet PHY needs 30ms to properly power up and some more
-+	 * to initialize. 100ms should be plenty of time to finish
-+	 * whole process.
-+	 */
-+	regulator-enable-ramp-delay = <100000>;
- 	regulator-name = "vcc-phy";
- };
+ 		udelay(1);
+ 	}
  
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
+ }
+ 
+ /**
+@@ -205,19 +200,14 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
+ 
+ 		status = ti_abb_check_txdone(abb);
+ 		if (!status)
+-			break;
++			return 0;
+ 
+ 		udelay(1);
+ 	}
+ 
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
+ }
+ 
+ /**
 -- 
 2.20.1
 
