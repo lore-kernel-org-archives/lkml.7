@@ -2,56 +2,52 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60205C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717E0FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3646B21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423EA218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239214;
-	bh=5q8MdXl36BTYt1/zFIU1xr7uiq22NFrK9WPUMpYkyg0=;
+	s=default; t=1573239216;
+	bh=v3Vsq1jWVxR4xtDWLkdlbQS32M/Y8m4OfBUBuowFf88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=huf8j++CNtV3NnNRSLtnWTrzCF4BtbjoEknN5ersq7YpQCvwdMMbzz7qehu7l7Ksh
-	 LBKAL8pMGcQndB8Wlg+TyngdKVoU1gRA/9guG17CJ11tIpbe+bhhOLeeP1ufavbZEG
-	 eIcLKmv4EmYsDT7BNBlYA0RVcc8U7CiA2W9PA27k=
+	b=0bE0xp9FPL/GGNZ+CsnANhf8bL5Ni8Fw+myKOcL02X2U1aUOEHIfx74GSenZ8rqOk
+	 JS16aWbMYpo6EhgJuVWzU3GNmh81xL7pI982NX9hv3v+lixPtI4ZZQfylFVI1NfNnV
+	 RGYc3z5nhEZF83a701wpRVm3ymaOUttstgg6VIkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732426AbfKHSxd (ORCPT
+        id S1732457AbfKHSxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:53:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50140 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:53:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732341AbfKHSx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:53:29 -0500
+        id S1732330AbfKHSxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:53:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 128B3218AE;
-        Fri,  8 Nov 2019 18:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B675A21D7E;
+        Fri,  8 Nov 2019 18:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239208;
-        bh=5q8MdXl36BTYt1/zFIU1xr7uiq22NFrK9WPUMpYkyg0=;
+        s=default; t=1573239211;
+        bh=v3Vsq1jWVxR4xtDWLkdlbQS32M/Y8m4OfBUBuowFf88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zXKwNwBG+CZ7/p032AlPwQ0E6MGBcUyM3Vtq7DUrbPzN+PvlKpbRz/A2rD7OhKi67
-         O99fWLmo28k/qTPkBKFZ4mbVHL8vCKoOMq0O1FUy98A371UW0wPV8vTFx8XYUBjwQ4
-         v8+i9D3ZzMAgUQS+oJsj0FQDZFLYC2mh8IaQ4Lvc=
+        b=I82p5YtCYvUiux2B1qCo801zFqtMQWb/AV+FfQtljZJsDctlbIRNhRNcU/JdTDjgo
+         e64k1zsdP1Od7CJPtkeig2eSLGq9xE5VOn8rtx8+P4V6mlsHn7ZFWINHquossIvHzB
+         LT8pv1C/HUn0nN6E0m1YCD/3mdgdczqyj3VgBCGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 4.4 35/75] arm/arm64: smccc: Make function identifiers an unsigned quantity
-Date:   Fri,  8 Nov 2019 19:49:52 +0100
-Message-Id: <20191108174744.434421656@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/75] ASoc: rockchip: i2s: Fix RPM imbalance
+Date:   Fri,  8 Nov 2019 19:49:21 +0100
+Message-Id: <20191108174711.263144275@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -64,54 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-commit ded4c39e93f3b72968fdb79baba27f3b83dad34c upstream.
+[ Upstream commit b1e620e7d32f5aad5353cc3cfc13ed99fea65d3a ]
 
-Function identifiers are a 32bit, unsigned quantity. But we never
-tell so to the compiler, resulting in the following:
+If rockchip_pcm_platform_register() fails, e.g. upon deferring to wait
+for an absent DMA channel, we return without disabling RPM, which makes
+subsequent re-probe attempts scream with errors about the unbalanced
+enable. Don't do that.
 
- 4ac:   b26187e0        mov     x0, #0xffffffff80000001
-
-We thus rely on the firmware narrowing it for us, which is not
-always a reasonable expectation.
-
-Cc: stable@vger.kernel.org
-Reported-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com> [v4.9 backport]
-Tested-by: Greg Hackmann <ghackmann@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: ebb75c0bdba2 ("ASoC: rockchip: i2s: Adjust devm usage")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/bcb12a849a05437fb18372bc7536c649b94bdf07.1570029862.git.robin.murphy@arm.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/arm-smccc.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/rockchip/rockchip_i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -14,14 +14,16 @@
- #ifndef __LINUX_ARM_SMCCC_H
- #define __LINUX_ARM_SMCCC_H
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 58ee64594f075..f583f317644a1 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -530,7 +530,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Could not register PCM\n");
+-		return ret;
++		goto err_suspend;
+ 	}
  
-+#include <uapi/linux/const.h>
-+
- /*
-  * This file provides common defines for ARM SMC Calling Convention as
-  * specified in
-  * http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-  */
- 
--#define ARM_SMCCC_STD_CALL		0
--#define ARM_SMCCC_FAST_CALL		1
-+#define ARM_SMCCC_STD_CALL	        _AC(0,U)
-+#define ARM_SMCCC_FAST_CALL	        _AC(1,U)
- #define ARM_SMCCC_TYPE_SHIFT		31
- 
- #define ARM_SMCCC_SMC_32		0
+ 	return 0;
+-- 
+2.20.1
+
 
 
