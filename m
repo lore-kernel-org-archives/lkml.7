@@ -2,92 +2,224 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E08FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6AAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6D321D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213269;
-	bh=Ze+zPj9F92/cxye0P++w2Oo8cvHRn+ZLD1meN+16LYM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0edgOoHkkysr+LQS70OCLmAsWAW5UGYT4TWoLCLXNJ1lNUX2R8cilXLT38EIrOdJ
-	 hkfXqHSJ0meIiK6haGwNfR5LS+LJIi8UvFC4AEiAWjxJb2CqNVZKAoZ87Fbjiw5b+D
-	 LVbltYCtNzNZ+goYJ/vOoqrp3EyYDpkra07gEYTY=
+	by mail.kernel.org (Postfix) with ESMTP id E20E422459
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389192AbfKHLlI (ORCPT
+        id S2389219AbfKHLlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53976 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:11 -0500
+Received: from mga04.intel.com ([192.55.52.120]:37523 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389067AbfKHLk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF7621D7F;
-        Fri,  8 Nov 2019 11:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213256;
-        bh=Ze+zPj9F92/cxye0P++w2Oo8cvHRn+ZLD1meN+16LYM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z+ySufRCxQT76o86mKikddIfB73kqEZSUZ8HZ1oo93TtkjS94J7hHvWclWGlLQMXg
-         IosjEwBEG/QmM0ZcB514u+TlqHBM7lKrfhllLfr8MO76t5oUKC11YsIxoZSRRIiJeg
-         lxHIk3eAHAt8+qJomHyKKbDgWZxYl1X7ZFalr05w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 121/205] dmaengine: dma-jz4780: Don't depend on MACH_JZ4780
-Date:   Fri,  8 Nov 2019 06:36:28 -0500
-Message-Id: <20191108113752.12502-121-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
-References: <20191108113752.12502-1-sashal@kernel.org>
+        id S2389136AbfKHLlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 03:41:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
+   d="scan'208";a="205970904"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 08 Nov 2019 03:40:59 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iT2dO-0002lG-IF; Fri, 08 Nov 2019 13:40:58 +0200
+Date:   Fri, 8 Nov 2019 13:40:58 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v5 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191108114058.GE32742@smile.fi.intel.com>
+References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
+ <890db37db56e7e49e83b9fa03903bf3482c624c7.1573196057.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <890db37db56e7e49e83b9fa03903bf3482c624c7.1573196057.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+On Fri, Nov 08, 2019 at 05:42:22PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+> controls pin multiplexing & configuration including GPIO functions selection &
+> GPIO attributes configuration.
+> 
+> This IP is not based on & does not have anything in common with Chassis
+> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+> 
+> Add a new GPIO & pin control framework based driver for this IP.
 
-[ Upstream commit c558ecd21c852c97ff98dc6c61f715ba420ec251 ]
+> +static void eqbr_gpio_enable_irq(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
+> +	unsigned int offset = irqd_to_hwirq(d);
+> +	unsigned long flags;
+> +
 
-If we make this driver depend on MACH_JZ4780, that means it can be
-enabled only if we're building a kernel specially crafted for a
-JZ4780-based board, while most GNU/Linux distributions will want one
-generic MIPS kernel that works on multiple boards.
+> +	gc->direction_input(gc, offset);
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Does this any IO?
+If so, between above and below a window of possible race.
+Ditto for all other functions that do something similar.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index dacf3f42426de..a4f95574eb9ad 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -143,7 +143,7 @@ config DMA_JZ4740
- 
- config DMA_JZ4780
- 	tristate "JZ4780 DMA support"
--	depends on MACH_JZ4780 || COMPILE_TEST
-+	depends on MIPS || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
+> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
+> +	writel(BIT(offset), gctrl->membase + GPIO_IRNRNSET);
+> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
+> +}
+
+> +		ret = bgpio_init(&gctrl->chip, dev, gctrl->bank->nr_pins / 8,
+> +				 gctrl->membase + GPIO_IN,
+> +				 gctrl->membase + GPIO_OUTSET,
+> +				 gctrl->membase + GPIO_OUTCLR,
+> +				 gctrl->membase + GPIO_DIR,
+
+> +				 NULL,
+> +				 0);
+
+One line?
+
+> +static int get_drv_cur(void __iomem *mem, unsigned int offset)
+> +{
+> +	unsigned int idx = offset / DRV_CUR_PINS; /* 0-15, 16-31 per register*/
+> +	unsigned int val;
+> +
+> +	val = readl(mem + REG_DRCC(idx));
+
+> +	offset %= DRV_CUR_PINS;
+
+From style point of view is better to have
+	... foo = offset / X;
+	... bar = offset % X;
+
+directly in definition block. Moreover, for example, on x86 it might be
+converted by compiler to single idiv call in assembly that returns in
+(eax, edx) both values at once.
+
+> +	val = PARSE_DRV_CURRENT(val, offset);
+> +
+> +	return val;
+> +}
+
+> +	if (!(bank->aval_pinmap & BIT(offset))) {
+> +		dev_err(pctl->dev,
+> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
+> +			pin, bank->pin_base, bank->aval_pinmap);
+> +		return -ENODEV;
+> +	}
+
+Looks like aval_pinmap is NIH of valid_mask bitmap in GPIO library.
+Can you check if it suits your purposes?
+
+> +static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
+> +			 unsigned int nr_funcs, unsigned int *idx)
+> +{
+> +	int i;
+> +
+
+> +	if (!funcs || !nr_funcs)
+> +		return false;
+
+nr_funcs check is a dup of the one in for loop.
+
+> +	for (i = 0; i < nr_funcs; i++) {
+
+> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
+
+An extra space, but you may use !strcmp() and make it shorter without redundant
+parentheses.
+
+> +			*idx = i;
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+
+> +		switch (op) {
+> +			case OP_COUNT_NR_FUNCS:
+
+case goes usually on the same column as switch.
+
+> +				if (!is_func_exist(funcs, fn_name,
+> +						   *nr_funcs, &fid))
+> +					*nr_funcs = *nr_funcs + 1;
+> +				break;
+> +
+> +			case OP_ADD_FUNCS:
+> +				if (!is_func_exist(funcs, fn_name,
+> +						   *nr_funcs, &fid))
+> +					funcs[i].name = fn_name;
+> +				break;
+> +
+> +			case OP_COUNT_NR_FUNC_GRPS:
+> +				if (is_func_exist(funcs, fn_name,
+> +						  *nr_funcs, &fid))
+> +					funcs[fid].nr_groups++;
+> +				break;
+> +
+> +			case OP_ADD_FUNC_GRPS:
+> +				if (is_func_exist(funcs, fn_name,
+> +						  *nr_funcs, &fid)) {
+
+> +					for(j=0;
+
+Other style issueS.
+
+> +					    j < funcs[fid].nr_groups;
+> +					    j++) {
+> +						if (!funcs[fid].groups[j])
+> +							break;
+> +					}
+> +					funcs[fid].groups[j] = prop->value;
+> +				}
+> +				break;
+> +
+> +			default:
+> +				return -EINVAL;
+
+> +
+
+Redundant blank line.
+
+> +		}
+
+> +	for (i = 0; i < nr_funcs; i++) {
+> +		if (funcs[i].nr_groups) {
+
+	if (!foo)
+		continue;
+?
+
+> +			funcs[i].groups = devm_kcalloc(dev, funcs[i].nr_groups,
+> +						       sizeof(*(funcs[i].groups)),
+> +						       GFP_KERNEL);
+> +			if (!funcs[i].groups)
+> +				return -ENOMEM;
+> +		}
+> +	}
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
