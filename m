@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD43C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFCBC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07192085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97B02085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214674;
-	bh=ycY+drilEGsuAc0TqZW982ftVP8L7XHLLduCT27lNnk=;
+	s=default; t=1573214679;
+	bh=4q0wxmlT8LNfXIg3Vz5jn72hLNxKgjL8rMq45doAlCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V5gcbTwB57Yd0iL/ateiiSRTLRACZUDQZdJglLmBWIYoyQ4ZJtSBPRtASsr/KnOSx
-	 qWQcAFtrfTkiTB7YuQ6mb1Ur7gCAEp5/DNFZ2fHe/VGYehckFV9trQ8Dmty+/19Mrq
-	 WPRykQEX+IYzOXiiQfG4FLeeweMGfth8nnEEg2dU=
+	b=k7YzM5YiFMFgZ+Hkwj+RuMuxafDuWM0PEwgX1CucuD8OtkZvXRiN2Ap5JvYya8sN2
+	 bTcYd4C5yZNFj0xpN1LniWOVnAjMRw75AD5dpKGRTKxIVOmIvjGINkfgIjCEsBaLGb
+	 QPoprwt0OAfQb+a2mTAeUHqvzWjVNSg+GZ7V4UF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733155AbfKHLmH (ORCPT
+        id S2390778AbfKHMEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55688 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:04:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389755AbfKHLmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:04 -0500
+        id S2389773AbfKHLmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20C5C222C4;
-        Fri,  8 Nov 2019 11:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6573E222C5;
+        Fri,  8 Nov 2019 11:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213323;
-        bh=ycY+drilEGsuAc0TqZW982ftVP8L7XHLLduCT27lNnk=;
+        s=default; t=1573213326;
+        bh=4q0wxmlT8LNfXIg3Vz5jn72hLNxKgjL8rMq45doAlCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sCL5RmDDusTZgove/q9ztclYeIG7sKbTDQrAaA7exScOLvt2jrRaxgQ69UR7BeTwX
-         rfv3Vpv8EmsGlQv8dodRvMVz6fPak9pRz1ZNbmg1+pbjwoySf2KO8Zq2VdH5wSZF3n
-         bQxtdbaRdldxjXWqQqD1tiq0ZLU8ekVYpf4FeoYg=
+        b=fUDzYVoGP3euwLnEOkThbzbyljtrqvitknHJ8LAvYUz0/p0MCfgwVHjSl2hqXyBuG
+         lAMDKJFdBtjwQAOpGhztPwRK6ptiEItck0/f/uwxRkEgqwv5+e3RmnPcahEd6BuGts
+         3VznNQC81XAWYbFwuQzA5yfR6Agz0/yUX9QwL3ZE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 166/205] arm64: dts: renesas: salvator-common: adv748x: Override secondary addresses
-Date:   Fri,  8 Nov 2019 06:37:13 -0500
-Message-Id: <20191108113752.12502-166-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 168/205] arm64: dts: renesas: r8a77965: Fix HS-USB compatible
+Date:   Fri,  8 Nov 2019 06:37:15 -0500
+Message-Id: <20191108113752.12502-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,36 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit e3da41a6c28f9b61ea03df987f1c9ffffc8b8e60 ]
+[ Upstream commit 99584d93e301d820d817bba2eb77b9152e13009c ]
 
-Ensure that the ADV748x device addresses do not conflict, and group them
-together (visually in i2cdetect)
+Should be "renesas,usbhs-r8a77965", not "renesas,usbhs-r8a7796".
 
-Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Fixes: a06e8af801760a98 ("arm64: dts: renesas: r8a77965: add HS-USB node")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 7d3d866a00635..3b90f816dfefc 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -420,7 +420,10 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 0da4841162610..2ccb1138cdf0c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -545,7 +545,7 @@
+ 		};
  
- 	video-receiver@70 {
- 		compatible = "adi,adv7482";
--		reg = <0x70>;
-+		reg = <0x70 0x71 0x72 0x73 0x74 0x75
-+		       0x60 0x61 0x62 0x63 0x64 0x65>;
-+		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
-+			    "infoframe", "cbus", "cec", "sdp", "txa", "txb" ;
- 
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ 		hsusb: usb@e6590000 {
+-			compatible = "renesas,usbhs-r8a7796",
++			compatible = "renesas,usbhs-r8a77965",
+ 				     "renesas,rcar-gen3-usbhs";
+ 			reg = <0 0xe6590000 0 0x100>;
+ 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.20.1
 
