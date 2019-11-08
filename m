@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB3CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E526FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D6F2067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14295214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239636;
-	bh=VF547Q+UrNwRXr4sDr3Y7MlkbWR5j1ZST7OYdWdPn2Y=;
+	s=default; t=1573239646;
+	bh=+uwkNBsc9xLP0/A1bdmgBoeocRqkxgLyb7EbacpIHLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qMuiLWo+WJH00j5d72XnkhdrJ7JbQes0gZ4nGpGwsTlhTYaXV2yMh67FXZpCPU7qB
-	 kkzggo3xJP3QdAbsnTRURQ0iv1zuB6odjY4uy749mTkiIFvobDgAtrkEZi+b5aje3e
-	 VJzu9Vg5lHGf/gD1g4Mx8aZNxM+te5a02MtHgXG4=
+	b=YjsqPpXYnj7TKgzFP7t4TaMXBr0BLcbZt0DNgi9OvW0hvcmMgjv8UdGLvsjyUEnzw
+	 u7p/V05a7TYV0Y3wnKo6xCDDuo/94fwxDwoAW/347ll0GpVQVgcsEyQ1O1q6DkRFgI
+	 3OWqlly+6F8mG9G2dyatacY8TQhcx+dcsXOPmAY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732948AbfKHTAf (ORCPT
+        id S2389905AbfKHTAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:00:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57238 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:00:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389524AbfKHTAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:12 -0500
+        id S2389693AbfKHTAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3873224A1;
-        Fri,  8 Nov 2019 18:58:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A5A42067B;
+        Fri,  8 Nov 2019 19:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239525;
-        bh=VF547Q+UrNwRXr4sDr3Y7MlkbWR5j1ZST7OYdWdPn2Y=;
+        s=default; t=1573239621;
+        bh=+uwkNBsc9xLP0/A1bdmgBoeocRqkxgLyb7EbacpIHLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mi1Uk+ZWg4jClYXjeGbC6lZe4lsbh19g1SpM3FMouZuTtF2BDI/UNWpPHyy+f+Pwf
-         /MWDyMeuBCQOelORlkK680v8n9nsd9YDqsVymZUGLajW7jXuwgJ7FbNttibN1R2XPr
-         vw3lJXsX5Y7vAlHA5M+WYC6tLRKYF+rNUpqDICf4=
+        b=btjX+5lvhVKLa4pDFOunB5n1HyoYlV//Adiei8GzmCZsBRDFPv2e7KbK7MGO7F1k4
+         NU+N0pRRzrIEN/EKKP2f3rnxfi/I1MCcAYt7FLlpRu7gE+t5JySYU54Xurh2HK7Ven
+         sgmKKsFp3a3oXG1QEreocx8LMJc+gldrtINpgP24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 34/62] udp: fix data-race in udp_set_dev_scratch()
-Date:   Fri,  8 Nov 2019 19:50:22 +0100
-Message-Id: <20191108174745.061425151@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sandipan Das <sandipan@linux.ibm.com>
+Subject: [PATCH 4.14 58/62] powerpc/book3s64/mm: Dont do tlbie fixup for some hardware revisions
+Date:   Fri,  8 Nov 2019 19:50:46 +0100
+Message-Id: <20191108174800.826131432@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
@@ -61,102 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit a793183caa9afae907a0d7ddd2ffd57329369bf5 ]
+commit 677733e296b5c7a37c47da391fc70a43dc40bd67 upstream.
 
-KCSAN reported a data-race in udp_set_dev_scratch() [1]
+The store ordering vs tlbie issue mentioned in commit
+a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on
+POWER9") is fixed for Nimbus 2.3 and Cumulus 1.3 revisions. We don't
+need to apply the fixup if we are running on them
 
-The issue here is that we must not write over skb fields
-if skb is shared. A similar issue has been fixed in commit
-89c22d8c3b27 ("net: Fix skb csum races when peeking")
+We can only do this on PowerNV. On pseries guest with kvm we still
+don't support redoing the feature fixup after migration. So we should
+be enabling all the workarounds needed, because whe can possibly
+migrate between DD 2.3 and DD 2.2
 
-While we are at it, use a helper only dealing with
-udp_skb_scratch(skb)->csum_unnecessary, as this allows
-udp_set_dev_scratch() to be called once and thus inlined.
-
-[1]
-BUG: KCSAN: data-race in udp_set_dev_scratch / udpv6_recvmsg
-
-write to 0xffff888120278317 of 1 bytes by task 10411 on cpu 1:
- udp_set_dev_scratch+0xea/0x200 net/ipv4/udp.c:1308
- __first_packet_length+0x147/0x420 net/ipv4/udp.c:1556
- first_packet_length+0x68/0x2a0 net/ipv4/udp.c:1579
- udp_poll+0xea/0x110 net/ipv4/udp.c:2720
- sock_poll+0xed/0x250 net/socket.c:1256
- vfs_poll include/linux/poll.h:90 [inline]
- do_select+0x7d0/0x1020 fs/select.c:534
- core_sys_select+0x381/0x550 fs/select.c:677
- do_pselect.constprop.0+0x11d/0x160 fs/select.c:759
- __do_sys_pselect6 fs/select.c:784 [inline]
- __se_sys_pselect6 fs/select.c:769 [inline]
- __x64_sys_pselect6+0x12e/0x170 fs/select.c:769
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-read to 0xffff888120278317 of 1 bytes by task 10413 on cpu 0:
- udp_skb_csum_unnecessary include/net/udp.h:358 [inline]
- udpv6_recvmsg+0x43e/0xe90 net/ipv6/udp.c:310
- inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
- sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
- ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
- do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
- __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
- __do_sys_recvmmsg net/socket.c:2703 [inline]
- __se_sys_recvmmsg net/socket.c:2696 [inline]
- __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 10413 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 2276f58ac589 ("udp: use a separate rx queue for packet reception")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org # v4.14
+Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190924035254.24612-1-aneesh.kumar@linux.ibm.com
+[sandipan: Backported to v4.14]
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/udp.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/dt_cpu_ftrs.c |   31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1195,6 +1195,20 @@ static void udp_set_dev_scratch(struct s
- 		scratch->_tsize_state |= UDP_SKB_IS_STATELESS;
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -733,9 +733,35 @@ static bool __init cpufeatures_process_f
+ 	return true;
  }
  
-+static void udp_skb_csum_unnecessary_set(struct sk_buff *skb)
++/*
++ * Handle POWER9 broadcast tlbie invalidation issue using
++ * cpu feature flag.
++ */
++static __init void update_tlbie_feature_flag(unsigned long pvr)
 +{
-+	/* We come here after udp_lib_checksum_complete() returned 0.
-+	 * This means that __skb_checksum_complete() might have
-+	 * set skb->csum_valid to 1.
-+	 * On 64bit platforms, we can set csum_unnecessary
-+	 * to true, but only if the skb is not shared.
-+	 */
-+#if BITS_PER_LONG == 64
-+	if (!skb_shared(skb))
-+		udp_skb_scratch(skb)->csum_unnecessary = true;
-+#endif
++	if (PVR_VER(pvr) == PVR_POWER9) {
++		/*
++		 * Set the tlbie feature flag for anything below
++		 * Nimbus DD 2.3 and Cumulus DD 1.3
++		 */
++		if ((pvr & 0xe000) == 0) {
++			/* Nimbus */
++			if ((pvr & 0xfff) < 0x203)
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++		} else if ((pvr & 0xc000) == 0) {
++			/* Cumulus */
++			if ((pvr & 0xfff) < 0x103)
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++		} else {
++			WARN_ONCE(1, "Unknown PVR");
++			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++		}
++	}
 +}
 +
- static int udp_skb_truesize(struct sk_buff *skb)
+ static __init void cpufeatures_cpu_quirks(void)
  {
- 	return udp_skb_scratch(skb)->_tsize_state & ~UDP_SKB_IS_STATELESS;
-@@ -1430,10 +1444,7 @@ static struct sk_buff *__first_packet_le
- 			*total += skb->truesize;
- 			kfree_skb(skb);
- 		} else {
--			/* the csum related bits could be changed, refresh
--			 * the scratch area
--			 */
--			udp_set_dev_scratch(skb);
-+			udp_skb_csum_unnecessary_set(skb);
- 			break;
- 		}
- 	}
+-	int version = mfspr(SPRN_PVR);
++	unsigned long version = mfspr(SPRN_PVR);
+ 
+ 	/*
+ 	 * Not all quirks can be derived from the cpufeatures device tree.
+@@ -743,8 +769,7 @@ static __init void cpufeatures_cpu_quirk
+ 	if ((version & 0xffffff00) == 0x004e0100)
+ 		cur_cpu_spec->cpu_features |= CPU_FTR_POWER9_DD1;
+ 
+-	if ((version & 0xffff0000) == 0x004e0000)
+-		cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++	update_tlbie_feature_flag(version);
+ }
+ 
+ static void __init cpufeatures_setup_finished(void)
 
 
