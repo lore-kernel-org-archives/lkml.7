@@ -2,211 +2,136 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3F4FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A5FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4C620679
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CCB20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:05:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yFIvI/nd"
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="OGeRhNwU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfKHQEX (ORCPT
+        id S1727451AbfKHQFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:04:23 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44670 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfKHQEX (ORCPT
+        Fri, 8 Nov 2019 11:05:09 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33839 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfKHQFJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:04:23 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA8G41ud040231;
-        Fri, 8 Nov 2019 10:04:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573229041;
-        bh=RQLuI3bVRjnGZ4T0rUT7hoe93Bh+p1MDphEFDAXWInA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yFIvI/nd+xrp061E2ZNxp6CIKBP8wbhauCb0ck2aFDcs+Q3wkPeqZzZ2TgD/aTy90
-         aNa9MxZBSPsnFEA6gaGdq37RhmIjAkEJO6S5byfx+Zf8KuDlPVFfCbRE7d+kuzX79n
-         Nw+LY6obvpHke5xCaEWz2UAvrthVVJuTtj1a+iEE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA8G41qe107220;
-        Fri, 8 Nov 2019 10:04:01 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 8 Nov
- 2019 10:03:44 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 8 Nov 2019 10:03:44 -0600
-Received: from [10.250.132.49] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA8G3wBg036082;
-        Fri, 8 Nov 2019 10:03:58 -0600
-Subject: Re: [PATCH v5 3/6] mtd: spi-nor: Extend the SR Read Back test
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20191107084135.22122-1-tudor.ambarus@microchip.com>
- <20191107084135.22122-4-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <c77ad4df-43f7-7c24-4944-0656d05ec467@ti.com>
-Date:   Fri, 8 Nov 2019 21:33:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 8 Nov 2019 11:05:09 -0500
+Received: by mail-il1-f194.google.com with SMTP id p6so5585638ilp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 08:05:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WWhxxwtXBsYr3ujNQbOniWk+oJ9McNvg7ht/PhD1bwA=;
+        b=OGeRhNwUh5ZORqAH7nioyjRY3n4m1e0tf7rrXmZWM/nkvzRr+Jz78odb6aMdX1AfNN
+         Gj0OXw+m5mb4FIsAEQ+hGtoBqv5rLgdhs/nG8KK8+8iDA5oofV8DmgMds9VPfp+IAYXJ
+         jRi/aBENaspw3XTZrzU6IXgDDs4peaARaEpbY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WWhxxwtXBsYr3ujNQbOniWk+oJ9McNvg7ht/PhD1bwA=;
+        b=jgFQZTZHMtCYLEeXW9lxIIerzHCWhoYdtH2LweSihM5Hjn2sXuGXiSftpP/AdjXU6D
+         nqf8eiGpGfZsLjVOaB3nlAes83VMBMsB7JkDvehAkKkLgxdu33aplKuYwVAIXRqXGOZj
+         L+f3KLSCdSgF4Uq9p6P4NG1jhBfXZ3+37zUO6t9j8qMyKieNKZeqfwXkHDg3/MrVlT1V
+         RIaFAI0/7DoJroWPRtgqSFFcjjF/glOXvPXtpf1UZboU2buCEYU8PHwC2WOx5TPQ3P6Y
+         S6ynE5opR5tvWMYz+BS3TbeVehMZWljydFLrC4WeMz3RnOf7FFeRkoJ/yckJLtfH0xAn
+         B/aA==
+X-Gm-Message-State: APjAAAW9100POXR9raXowX96xTAP9IBhR79AThiIbAs5kL7jK0Zq6+ZL
+        324U6/ADpUKRgJKyzdwYZVDiIpMe8qg9t4tMj3cy1A==
+X-Google-Smtp-Source: APXvYqyMR9OW7SeX51o9tfRFIg3JQm5oVrpif96xXuOURB6DQd71NN/ekFza/Eww6hYPI147Lbj3qHHvKAelLBLe7fE=
+X-Received: by 2002:a92:a189:: with SMTP id b9mr14223728ill.259.1573229106630;
+ Fri, 08 Nov 2019 08:05:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191107084135.22122-4-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1571990538-6133-1-git-send-email-teawaterz@linux.alibaba.com>
+In-Reply-To: <1571990538-6133-1-git-send-email-teawaterz@linux.alibaba.com>
+From:   Dan Streetman <ddstreet@ieee.org>
+Date:   Fri, 8 Nov 2019 11:04:29 -0500
+Message-ID: <CALZtONCQ1YqpAXfZS6jemHuKpBXhLz440EcxSoWZbxrH0kyLHg@mail.gmail.com>
+Subject: Re: [PATCH] zswap: Add shrink_enabled that can disable swap shrink to
+ increase store performance
+To:     Hui Zhu <teawaterz@linux.alibaba.com>
+Cc:     Seth Jennings <sjenning@redhat.com>, Linux-MM <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 25, 2019 at 4:02 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
+>
+> zswap will try to shrink pool when zswap is full.
+> This commit add shrink_enabled that can disable swap shrink to increase
+> store performance.  User can disable swap shrink if care about the store
+> performance.
 
+I don't understand - if zswap is full it can't store any more pages
+without shrinking the current pool.  This commit will just force all
+pages to swap when zswap is full.  This has nothing to do with 'store
+performance'.
 
-On 07-Nov-19 2:11 PM, Tudor.Ambarus@microchip.com wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> 
-> Test that all the bits from Status Register 1 and Status Register 2
-> were written correctly.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+I think it would be much better to remove any user option for this and
+implement some hysteresis; store pages normally until the zpool is
+full, then reject all pages going to that pool until there is some %
+free, at which point allow pages to be stored into the pool again.
+That will prevent (or at least reduce) the constant performance hit
+when a zpool fills up, and just fallback to normal swapping to disk
+until the zpool has some amount of free space again.
 
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
-
+>
+> For example in a VM with 1 CPU 1G memory 4G swap:
+> echo lz4 > /sys/module/zswap/parameters/compressor
+> echo z3fold > /sys/module/zswap/parameters/zpool
+> echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
+> echo 1 > /sys/module/zswap/parameters/enabled
+> usemem -a -n 1 $((4000 * 1024 * 1024))
+> 4718592000 bytes / 114937822 usecs = 40091 KB/s
+> 101700 usecs to free memory
+> echo 0 > /sys/module/zswap/parameters/shrink_enabled
+> usemem -a -n 1 $((4000 * 1024 * 1024))
+> 4718592000 bytes / 8837320 usecs = 521425 KB/s
+> 129577 usecs to free memory
+>
+> The store speed increased when zswap shrink disabled.
+>
+> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
 > ---
->  drivers/mtd/spi-nor/spi-nor.c | 58 +++++++++++++++++++++++++++++--------------
->  1 file changed, 39 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 06aac894ee6d..d33ad56d3b67 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -2047,20 +2047,7 @@ static int macronix_quad_enable(struct spi_nor *nor)
->  
->  	nor->bouncebuf[0] |= SR_QUAD_EN_MX;
->  
-> -	ret = spi_nor_write_sr(nor, nor->bouncebuf, 1);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = spi_nor_read_sr(nor, nor->bouncebuf);
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (!(nor->bouncebuf[0] & SR_QUAD_EN_MX)) {
-> -		dev_dbg(nor->dev, "Macronix Quad bit not set\n");
-> -		return -EIO;
-> -	}
-> -
-> -	return 0;
-> +	return spi_nor_write_sr1_and_check(nor, nor->bouncebuf[0]);
->  }
->  
->  /**
-> @@ -2080,6 +2067,7 @@ static int spansion_no_read_cr_quad_enable(struct spi_nor *nor)
->  {
->  	u8 *sr_cr = nor->bouncebuf;
->  	int ret;
-> +	u8 sr_written;
->  
->  	/* Keep the current value of the Status Register. */
->  	ret = spi_nor_read_sr(nor, sr_cr);
-> @@ -2088,7 +2076,22 @@ static int spansion_no_read_cr_quad_enable(struct spi_nor *nor)
->  
->  	sr_cr[1] = CR_QUAD_EN_SPAN;
->  
-> -	return spi_nor_write_sr(nor, sr_cr, 2);
-> +	ret = spi_nor_write_sr(nor, sr_cr, 2);
-> +	if (ret)
-> +		return ret;
+>  mm/zswap.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 46a3223..731e3d1e 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -114,6 +114,10 @@ static bool zswap_same_filled_pages_enabled = true;
+>  module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
+>                    bool, 0644);
+>
+> +/* Enable/disable zswap shrink (enabled by default) */
+> +static bool zswap_shrink_enabled = true;
+> +module_param_named(shrink_enabled, zswap_shrink_enabled, bool, 0644);
 > +
-> +	sr_written = sr_cr[0];
+>  /*********************************
+>  * data structures
+>  **********************************/
+> @@ -947,6 +951,9 @@ static int zswap_shrink(void)
+>         struct zswap_pool *pool;
+>         int ret;
+>
+> +       if (!zswap_shrink_enabled)
+> +               return -EPERM;
 > +
-> +	ret = spi_nor_read_sr(nor, sr_cr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (sr_cr[0] != sr_written) {
-> +		dev_err(nor->dev, "SR: Read back test failed\n");
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  /**
-> @@ -2108,6 +2111,7 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
->  {
->  	u8 *sr_cr = nor->bouncebuf;
->  	int ret;
-> +	u8 sr_written;
->  
->  	/* Check current Quad Enable bit value. */
->  	ret = spi_nor_read_cr(nor, &sr_cr[1]);
-> @@ -2128,13 +2132,26 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
->  	if (ret)
->  		return ret;
->  
-> +	sr_written = sr_cr[0];
-> +
-> +	ret = spi_nor_read_sr(nor, sr_cr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (sr_written != sr_cr[0]) {
-> +		dev_err(nor->dev, "SR: Read back test failed\n");
-> +		return -EIO;
-> +	}
-> +
-> +	sr_written = sr_cr[1];
-> +
->  	/* Read back and check it. */
->  	ret = spi_nor_read_cr(nor, &sr_cr[1]);
->  	if (ret)
->  		return ret;
->  
-> -	if (!(sr_cr[1] & CR_QUAD_EN_SPAN)) {
-> -		dev_dbg(nor->dev, "Spansion Quad bit not set\n");
-> +	if (sr_cr[1] != sr_written) {
-> +		dev_dbg(nor->dev, "CR: Read back test failed\n");
->  		return -EIO;
->  	}
->  
-> @@ -2157,6 +2174,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
->  {
->  	u8 *sr2 = nor->bouncebuf;
->  	int ret;
-> +	u8 sr2_written;
->  
->  	/* Check current Quad Enable bit value. */
->  	ret = spi_nor_read_sr2(nor, sr2);
-> @@ -2172,13 +2190,15 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
->  	if (ret)
->  		return ret;
->  
-> +	sr2_written = *sr2;
-> +
->  	/* Read back and check it. */
->  	ret = spi_nor_read_sr2(nor, sr2);
->  	if (ret)
->  		return ret;
->  
-> -	if (!(*sr2 & SR2_QUAD_EN_BIT7)) {
-> -		dev_dbg(nor->dev, "SR2 Quad bit not set\n");
-> +	if (*sr2 != sr2_written) {
-> +		dev_dbg(nor->dev, "SR2: Read back test failed\n");
->  		return -EIO;
->  	}
->  
-> 
+>         pool = zswap_pool_last_get();
+>         if (!pool)
+>                 return -ENOENT;
+> --
+> 2.7.4
+>
