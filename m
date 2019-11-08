@@ -2,51 +2,53 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31B7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EE9FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A81215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00F5215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213963;
-	bh=fCHwIOGu3unDcLR2KdVSgi3LcxKQ2gDJuYvU66MMI3g=;
+	s=default; t=1573213967;
+	bh=ZAx0fEcBD9m4Nbw2ebqqSD3+Nv0VfV8ewMW/gLcECVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxr48BaZHpYHNZ0rs8Pz15nwHIYNvJ8wk8Rn03U0qxQI6DFoK7M+HEwvMCdIo3l3p
-	 IIPmQxfrBLPSpzhUfXusd/bGI1HKq2whYfQIqddRXcTGDQ1V5WBTw1X2Gzepr8zXMx
-	 P/TGwTl4j9Xgntb/rx1qe5Zem+kEMoMOQEi3Ih+Q=
+	b=Fz9DQTtOn3+mNVl9hDFU9eYt5IALSdpNh20A8KSfItiWckZauqN3ztSq0UJ5zGVh/
+	 TUtx3EIn+k3CwO53HDKyz4CKwS1+iQe18usMiZ7DyZGLYgo2sk30I3bpenm+UZbh+g
+	 aA4v4uM0Bo/1OA0Qei1y43wDs+A9lgjf2Rzfgo0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391546AbfKHLwm (ORCPT
+        id S2403821AbfKHLrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:52:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35270 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390586AbfKHLrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:06 -0500
+        id S1732138AbfKHLqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5A7218AE;
-        Fri,  8 Nov 2019 11:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28432218AE;
+        Fri,  8 Nov 2019 11:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213625;
-        bh=fCHwIOGu3unDcLR2KdVSgi3LcxKQ2gDJuYvU66MMI3g=;
+        s=default; t=1573213607;
+        bh=ZAx0fEcBD9m4Nbw2ebqqSD3+Nv0VfV8ewMW/gLcECVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PuF3IvBgvvCpjOno+OZ2ZMssAh7bz7eTB9cbKVL9ihEgBDD9ET46lGx5Gy7xcY0E/
-         qkup5hCNps8+GPIOw+HpO/VpurTwDRw1p22McM53yDz1nj4jI4VMWjUWBkBb4+MrBG
-         +tNnWGZYGm0Vknr/fywf5DcjFL+xH3ZijACns5Hk=
+        b=SSMAeRMh8GSCMhtJR0UgIsAQSprMtSgzL3HP0tGpIO2NmX6eH10trPTZ8WqZMYplE
+         Bk5GLn2XQi+SxmjTi9aUbqTgFPMLxPC0p33SV7G+n2MO0p5NYUJsIRPrMmEvD3rzLo
+         8GDJOoHkZMSDcZmJocXOt5M9NqTNS8ghUdy1ujh4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Modra <amodra@gmail.com>, Reza Arbab <arbab@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 53/64] powerpc/vdso: Correct call frame information
-Date:   Fri,  8 Nov 2019 06:45:34 -0500
-Message-Id: <20191108114545.15351-53-sashal@kernel.org>
+Cc:     Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        Jack Wang <jinpu.wang@profitbricks.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 44/64] scsi: pm80xx: Fixed system hang issue during kexec boot
+Date:   Fri,  8 Nov 2019 06:45:25 -0500
+Message-Id: <20191108114545.15351-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,98 +61,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Modra <amodra@gmail.com>
+From: Deepak Ukey <deepak.ukey@microchip.com>
 
-[ Upstream commit 56d20861c027498b5a1112b4f9f05b56d906fdda ]
+[ Upstream commit 72349b62a571effd6faadd0600b8e657dd87afbf ]
 
-Call Frame Information is used by gdb for back-traces and inserting
-breakpoints on function return for the "finish" command.  This failed
-when inside __kernel_clock_gettime.  More concerning than difficulty
-debugging is that CFI is also used by stack frame unwinding code to
-implement exceptions.  If you have an app that needs to handle
-asynchronous exceptions for some reason, and you are unlucky enough to
-get one inside the VDSO time functions, your app will crash.
+When the firmware is not responding, execution of kexec boot causes a system
+hang. When firmware assertion happened, driver get notified with interrupt
+vector updated in MPI configuration table. Then, the driver will read
+scratchpad register and set controller_fatal_error flag to true.
 
-What's wrong:  There is control flow in __kernel_clock_gettime that
-reaches label 99 without saving lr in r12.  CFI info however is
-interpreted by the unwinder without reference to control flow: It's a
-simple matter of "Execute all the CFI opcodes up to the current
-address".  That means the unwinder thinks r12 contains the return
-address at label 99.  Disabuse it of that notion by resetting CFI for
-the return address at label 99.
-
-Note that the ".cfi_restore lr" could have gone anywhere from the
-"mtlr r12" a few instructions earlier to the instruction at label 99.
-I put the CFI as late as possible, because in general that's best
-practice (and if possible grouped with other CFI in order to reduce
-the number of CFI opcodes executed when unwinding).  Using r12 as the
-return address is perfectly fine after the "mtlr r12" since r12 on
-that code path still contains the return address.
-
-__get_datapage also has a CFI error.  That function temporarily saves
-lr in r0, and reflects that fact with ".cfi_register lr,r0".  A later
-use of r0 means the CFI at that point isn't correct, as r0 no longer
-contains the return address.  Fix that too.
-
-Signed-off-by: Alan Modra <amodra@gmail.com>
-Tested-by: Reza Arbab <arbab@linux.ibm.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso32/datapage.S     | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 1 +
- arch/powerpc/kernel/vdso64/datapage.S     | 1 +
- arch/powerpc/kernel/vdso64/gettimeofday.S | 1 +
- 4 files changed, 4 insertions(+)
+ drivers/scsi/pm8001/pm8001_hwi.c |  6 +++
+ drivers/scsi/pm8001/pm8001_sas.c |  7 +++
+ drivers/scsi/pm8001/pm8001_sas.h |  1 +
+ drivers/scsi/pm8001/pm80xx_hwi.c | 80 +++++++++++++++++++++++++++++---
+ drivers/scsi/pm8001/pm80xx_hwi.h |  3 ++
+ 5 files changed, 91 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 3745113fcc652..2a7eb5452aba7 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 6b2b69616e776..7b341b86216c2 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -139,6 +139,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
-index abf17feffe404..bf96686915116 100644
---- a/arch/powerpc/kernel/vdso64/datapage.S
-+++ b/arch/powerpc/kernel/vdso64/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index 3820213248836..09b2a49f6dd53 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -124,6 +124,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
+diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
+index 10546faac58c6..f374abfb7f1f8 100644
+--- a/drivers/scsi/pm8001/pm8001_hwi.c
++++ b/drivers/scsi/pm8001/pm8001_hwi.c
+@@ -1479,6 +1479,12 @@ u32 pm8001_mpi_msg_consume(struct pm8001_hba_info *pm8001_ha,
+ 		} else {
+ 			u32 producer_index;
+ 			void *pi_virt = circularQ->pi_virt;
++			/* spurious interrupt during setup if
++			 * kexec-ing and driver doing a doorbell access
++			 * with the pre-kexec oq interrupt setup
++			 */
++			if (!pi_virt)
++				break;
+ 			/* Update the producer index from SPC */
+ 			producer_index = pm8001_read_32(pi_virt);
+ 			circularQ->producer_index = cpu_to_le32(producer_index);
+diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
+index d1fcd21f7f7dd..e64a13f0bce17 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.c
++++ b/drivers/scsi/pm8001/pm8001_sas.c
+@@ -374,6 +374,13 @@ static int pm8001_task_exec(struct sas_task *task,
+ 		return 0;
+ 	}
+ 	pm8001_ha = pm8001_find_ha_by_dev(task->dev);
++	if (pm8001_ha->controller_fatal_error) {
++		struct task_status_struct *ts = &t->task_status;
++
++		ts->resp = SAS_TASK_UNDELIVERED;
++		t->task_done(t);
++		return 0;
++	}
+ 	PM8001_IO_DBG(pm8001_ha, pm8001_printk("pm8001_task_exec device \n "));
+ 	spin_lock_irqsave(&pm8001_ha->lock, flags);
+ 	do {
+diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
+index 6628cc38316c2..d8768ac41ebbf 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.h
++++ b/drivers/scsi/pm8001/pm8001_sas.h
+@@ -531,6 +531,7 @@ struct pm8001_hba_info {
+ 	u32			logging_level;
+ 	u32			fw_status;
+ 	u32			smp_exp_mode;
++	bool			controller_fatal_error;
+ 	const struct firmware 	*fw_image;
+ 	struct isr_param irq_vector[PM8001_MAX_MSIX_VEC];
+ };
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index eb4fee61df729..9edd61c063a1a 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -572,6 +572,9 @@ static void update_main_config_table(struct pm8001_hba_info *pm8001_ha)
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.pcs_event_log_size);
+ 	pm8001_mw32(address, MAIN_PCS_EVENT_LOG_OPTION,
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.pcs_event_log_severity);
++	/* Update Fatal error interrupt vector */
++	pm8001_ha->main_cfg_tbl.pm80xx_tbl.fatal_err_interrupt |=
++					((pm8001_ha->number_of_intr - 1) << 8);
+ 	pm8001_mw32(address, MAIN_FATAL_ERROR_INTERRUPT,
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.fatal_err_interrupt);
+ 	pm8001_mw32(address, MAIN_EVENT_CRC_CHECK,
+@@ -1099,6 +1102,9 @@ static int pm80xx_chip_init(struct pm8001_hba_info *pm8001_ha)
+ 		return -EBUSY;
+ 	}
+ 
++	/* Initialize the controller fatal error flag */
++	pm8001_ha->controller_fatal_error = false;
++
+ 	/* Initialize pci space address eg: mpi offset */
+ 	init_pci_device_addresses(pm8001_ha);
+ 	init_default_table_values(pm8001_ha);
+@@ -1207,13 +1213,17 @@ pm80xx_chip_soft_rst(struct pm8001_hba_info *pm8001_ha)
+ 	u32 bootloader_state;
+ 	u32 ibutton0, ibutton1;
+ 
+-	/* Check if MPI is in ready state to reset */
+-	if (mpi_uninit_check(pm8001_ha) != 0) {
+-		PM8001_FAIL_DBG(pm8001_ha,
+-			pm8001_printk("MPI state is not ready\n"));
+-		return -1;
++	/* Process MPI table uninitialization only if FW is ready */
++	if (!pm8001_ha->controller_fatal_error) {
++		/* Check if MPI is in ready state to reset */
++		if (mpi_uninit_check(pm8001_ha) != 0) {
++			regval = pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1);
++			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk(
++				"MPI state is not ready scratch1 :0x%x\n",
++				regval));
++			return -1;
++		}
+ 	}
+-
+ 	/* checked for reset register normal state; 0x0 */
+ 	regval = pm8001_cr32(pm8001_ha, 0, SPC_REG_SOFT_RESET);
+ 	PM8001_INIT_DBG(pm8001_ha,
+@@ -3717,6 +3727,46 @@ static void process_one_iomb(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 	}
+ }
+ 
++static void print_scratchpad_registers(struct pm8001_hba_info *pm8001_ha)
++{
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_0: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_0)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_1:0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_2: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_2)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_3: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_3)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_0: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_0)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_1: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_1)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_2: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_2)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_3: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_3)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_4: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_4)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_5: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_5)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_RSVD_SCRATCH_PAD_0: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_6)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_RSVD_SCRATCH_PAD_1: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_7)));
++}
++
+ static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
+ {
+ 	struct outbound_queue_table *circularQ;
+@@ -3724,10 +3774,28 @@ static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
+ 	u8 uninitialized_var(bc);
+ 	u32 ret = MPI_IO_STATUS_FAIL;
+ 	unsigned long flags;
++	u32 regval;
+ 
++	if (vec == (pm8001_ha->number_of_intr - 1)) {
++		regval = pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1);
++		if ((regval & SCRATCH_PAD_MIPSALL_READY) !=
++					SCRATCH_PAD_MIPSALL_READY) {
++			pm8001_ha->controller_fatal_error = true;
++			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk(
++				"Firmware Fatal error! Regval:0x%x\n", regval));
++			print_scratchpad_registers(pm8001_ha);
++			return ret;
++		}
++	}
+ 	spin_lock_irqsave(&pm8001_ha->lock, flags);
+ 	circularQ = &pm8001_ha->outbnd_q_tbl[vec];
+ 	do {
++		/* spurious interrupt during setup if kexec-ing and
++		 * driver doing a doorbell access w/ the pre-kexec oq
++		 * interrupt setup.
++		 */
++		if (!circularQ->pi_virt)
++			break;
+ 		ret = pm8001_mpi_msg_consume(pm8001_ha, circularQ, &pMsg1, &bc);
+ 		if (MPI_IO_STATUS_SUCCESS == ret) {
+ 			/* process the outbound message */
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.h b/drivers/scsi/pm8001/pm80xx_hwi.h
+index 7a443bad61634..411b414a9a0ef 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.h
++++ b/drivers/scsi/pm8001/pm80xx_hwi.h
+@@ -1288,6 +1288,9 @@ typedef struct SASProtocolTimerConfig SASProtocolTimerConfig_t;
+ #define SCRATCH_PAD_BOOT_LOAD_SUCCESS	0x0
+ #define SCRATCH_PAD_IOP0_READY		0xC00
+ #define SCRATCH_PAD_IOP1_READY		0x3000
++#define SCRATCH_PAD_MIPSALL_READY	(SCRATCH_PAD_IOP1_READY | \
++					SCRATCH_PAD_IOP0_READY | \
++					SCRATCH_PAD_RAAE_READY)
+ 
+ /* boot loader state */
+ #define SCRATCH_PAD1_BOOTSTATE_MASK		0x70	/* Bit 4-6 */
 -- 
 2.20.1
 
