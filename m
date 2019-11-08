@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988BAFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF274FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7092C2067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E391214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240646;
-	bh=8Q9g2juXNBV5no/rSw06P+H5qP7c3cfW0hVwZxa0L+4=;
+	s=default; t=1573240648;
+	bh=HrRc/uzkTfFPv0L8nCGXB774/xM81RQM7rhRnnprTsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b3kc7OYLPpI1l/CTFrMbFcQmidk7Ev9iFmHn5wt2jRsrcH9gbFdDYFSr+e4LubffO
-	 u2OGax6ZO057gJ/xFF5fpOA0UpfdtHvQviY+iOq22DXHCx7hbhT/iThwZE7Q4hf8s+
-	 5FtIqO8ApoNsJfOxrrRvKJnVCCxmKEmN3jHjHJWY=
+	b=Jz5p99yEE/HDDI+BqMf53mSoyEI7Xn5xogOqeizzRHeBj2aVEsbqVPk9dAa8UQwiZ
+	 Nbw7ZRSQjMJwCsnhwia2OVb583J6UkOLhuiwW7z7yqBlxUcPULuiu2ZVAkfJ3OLuwO
+	 /KHGJbzNafp/MqgspJD4Usi2XEmTkjBkLZoC9PtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390068AbfKHTBH (ORCPT
+        id S1732312AbfKHTBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:01:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58340 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:01:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390062AbfKHTBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:01:02 -0500
+        id S2390021AbfKHTA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA1D62178F;
-        Fri,  8 Nov 2019 19:01:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9A42067B;
+        Fri,  8 Nov 2019 19:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239662;
-        bh=8Q9g2juXNBV5no/rSw06P+H5qP7c3cfW0hVwZxa0L+4=;
+        s=default; t=1573239656;
+        bh=HrRc/uzkTfFPv0L8nCGXB774/xM81RQM7rhRnnprTsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NmqXjra6ZgMH7fv8LknQuEk9TEwujUezgCsn89Rw0ZqgaQnEtBKOUQPI2Rqbo/R9S
-         OFLvF6I26JVn5NxwZtHCicQjOIr1Aqx7pAkWdNJYY3UPUEGSrV8f3J7zF4njofQymx
-         zru9Fy03AnF0SAyfoPYX2lEAl3N1rWuRZZYkgqAI=
+        b=fhtbjmjcqmLSebKEdoq3SsRsHGM3B74+0wAayhV2FskE0SbCqncFgMCRpEC7tLdm2
+         /JUNw1ROw3S+kBg808wMlDEGt7HdvBhIESGQCWA8feVF10jphN6mDktavDuUjoL+Ld
+         TecNoMK9bOehGG6Cvt9ZKAZ6TDsYrpzsHgDUb8ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/79] ARM: dts: imx7s: Correct GPTs ipg clock source
-Date:   Fri,  8 Nov 2019 19:49:59 +0100
-Message-Id: <20191108174755.240726768@linuxfoundation.org>
+Subject: [PATCH 4.19 17/79] scsi: sni_53c710: fix compilation error
+Date:   Fri,  8 Nov 2019 19:49:57 +0100
+Message-Id: <20191108174754.313536921@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -60,62 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit 252b9e21bcf46b0d16f733f2e42b21fdc60addee ]
+[ Upstream commit 0ee6211408a8e939428f662833c7301394125b80 ]
 
-i.MX7S/D's GPT ipg clock should be from GPT clock root and
-controlled by CCM's GPT CCGR, using correct clock source for
-GPT ipg clock instead of IMX7D_CLK_DUMMY.
+Drop out memory dev_printk() with wrong device pointer argument.
 
-Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+[mkp: typo]
+
+Link: https://lore.kernel.org/r/20191009151118.32350-1-tbogendoerfer@suse.de
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/scsi/sni_53c710.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index a7f697b0290ff..90f5bdfa9b3ce 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -443,7 +443,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302d0000 0x10000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
- 					 <&clks IMX7D_GPT1_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 			};
-@@ -452,7 +452,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302e0000 0x10000>;
- 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
- 					 <&clks IMX7D_GPT2_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -462,7 +462,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302f0000 0x10000>;
- 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
- 					 <&clks IMX7D_GPT3_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -472,7 +472,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x30300000 0x10000>;
- 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
- 					 <&clks IMX7D_GPT4_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
+diff --git a/drivers/scsi/sni_53c710.c b/drivers/scsi/sni_53c710.c
+index 1f9a087daf69f..3102a75984d3b 100644
+--- a/drivers/scsi/sni_53c710.c
++++ b/drivers/scsi/sni_53c710.c
+@@ -78,10 +78,8 @@ static int snirm710_probe(struct platform_device *dev)
+ 
+ 	base = res->start;
+ 	hostdata = kzalloc(sizeof(*hostdata), GFP_KERNEL);
+-	if (!hostdata) {
+-		dev_printk(KERN_ERR, dev, "Failed to allocate host data\n");
++	if (!hostdata)
+ 		return -ENOMEM;
+-	}
+ 
+ 	hostdata->dev = &dev->dev;
+ 	dma_set_mask(&dev->dev, DMA_BIT_MASK(32));
 -- 
 2.20.1
 
