@@ -2,109 +2,91 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14F0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E2AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A39EC206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:04:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A8NLIWCi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GfWqVwQo"
+	by mail.kernel.org (Postfix) with ESMTP id 81FEA206BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573211114;
+	bh=MjWo6dMvGOtsdJD1m66Vq41P+/0nz5UASDJ/rbl+qZo=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=xMAKi8XFciaqQB99z2dYotZO9lb17Wu/jfjzBbremsA3MAaebHG5TAwJDTM/x7ZRW
+	 EKMEGgOgdOTbCylOatCR2Bw1f74oSCB+lceYKObtUdwJIjXjUfPosDaSRjo8sXL8p+
+	 pCKjTxCqyIxTkgpOLCVLIV649LtgaQLDnLYA0Dw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731756AbfKHLEN (ORCPT
+        id S1731835AbfKHLFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:04:13 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:41226 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfKHLEN (ORCPT
+        Fri, 8 Nov 2019 06:05:13 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34714 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731784AbfKHLFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:04:13 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2887460913; Fri,  8 Nov 2019 11:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573211052;
-        bh=d85PiEzTKZnD4rW8ooec1lt7MpOUj9J4ixcs+n0zX9I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A8NLIWCigNLq8rWL3fhGp8qYpPpfNAQsUDH6Hvor1IKXBZPHwGOhrOidC9+NaUj3Y
-         wm8NMY5+5Doi+ApMxd+ZACQjGn4gi08HpKJL/PHWzLWQmPyIbomje1uYeUcuB94hX/
-         ESnVYf4t9g/3qAMHPly5aFHlg6d2cAQitpaGXSRE=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5021A602BD;
-        Fri,  8 Nov 2019 11:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573211050;
-        bh=d85PiEzTKZnD4rW8ooec1lt7MpOUj9J4ixcs+n0zX9I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GfWqVwQoV9Amr3ZDWp0foiRawDLhM6EebifTzZYdkktLhfYQGun36efBNw3/s58BF
-         Y2X2HnRxr7fjM1Yh+rax2UK3bW0Q09eAZPIQ56QOCTlWR9dm5RmZVfnOYeZUin5WYt
-         Dm7rjxmKbcgR36Ig1Tg597wOO7kCvFKb7Vt6idyk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5021A602BD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: Fix deadlock under storage almost full/dirty condition
-Date:   Fri,  8 Nov 2019 16:33:47 +0530
-Message-Id: <1573211027-30785-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 8 Nov 2019 06:05:13 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l202so4903439oig.1;
+        Fri, 08 Nov 2019 03:05:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=3aTH1Z977b25oWGjuZ0H/5AYWBINoF8nmYXtAY/gL1M=;
+        b=qDrYv4CAE9TZIvOUHD/jNU9Ywd3T+mCJ0kTgsCMmDlPsoQFtUbP6RebY/lgrYfE9Je
+         2gsp5GAV4+ibcwoX+5oZ9V03IG6GiTa1LQ2YUL3U/ZQjL49XXhKDqLKBca0TRqLhZlCj
+         ZvUHQ5fuWgnniXN+3WRWxxceuh1MgPVXfGAqPfpNS4/smo9UEZirrj5cbtsTemMzmTWl
+         mI7rZL+62y6UQO7BeMpV2gzPATZYEG/lzoYwsQgubkEek1FYSXdH0HrxvSRl6v4ng5wL
+         tT3pRU5LKnVKUG4w9PAgkBYCk33eAbyfpYx9d6qQjM0CaIxhHNDrkLiwhThp7FFyPYuz
+         OI1w==
+X-Gm-Message-State: APjAAAX4VvsMcLcqMQ8rMPuvvmzxnVvf0c8Aq+PX/STPL0VTSTJQnIYR
+        THtUPlO0GH7QdHVIbe8BcKP6Nm89e0OqI7gFnSA=
+X-Google-Smtp-Source: APXvYqwm4cJl+Tjng1uo+7i3zAU990Nw38Gcd0+2psUThBjuGsUnGyYtPPbeEoP/Y5CrXW17PqUyMwGx9DiAk79SNRo=
+X-Received: by 2002:aca:530c:: with SMTP id h12mr4567158oib.110.1573211112276;
+ Fri, 08 Nov 2019 03:05:12 -0800 (PST)
+MIME-Version: 1.0
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 8 Nov 2019 12:05:01 +0100
+Message-ID: <CAJZ5v0hTxyzNAyEeeZfqu1XNcFY9mYeft9EnAP+zD6s7x0Csqg@mail.gmail.com>
+Subject: [GIT PULL] Power management fix for v5.4-rc7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There could be a potential deadlock when the storage capacity
-is almost full and theren't enough free segments available, due
-to which FG_GC is needed in the atomic commit ioctl as shown in
-the below callstack -
+Hi Linus,
 
-schedule_timeout
-io_schedule_timeout
-congestion_wait
-f2fs_drop_inmem_pages_all
-f2fs_gc
-f2fs_balance_fs
-__write_node_page
-f2fs_fsync_node_pages
-f2fs_do_sync_file
-f2fs_ioctl
+Please pull from the tag
 
-If this inode doesn't have i_gc_failures[GC_FAILURE_ATOMIC] set,
-then it waits forever in f2fs_drop_inmem_pages_all(), for this
-atomic inode to be dropped. And the rest of the system is stuck
-waiting for sbi->gc_mutex lock, which is acquired by f2fs_balance_fs()
-in the stack above.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.4-rc7
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
- fs/f2fs/segment.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+with top-most commit c31432fa7f825de0e19838f1ac7746381c509ec4
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index da830fc..335ec09 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -300,7 +300,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
- 
- 	if (inode) {
- 		if (gc_failure) {
--			if (fi->i_gc_failures[GC_FAILURE_ATOMIC])
-+			if (fi->i_gc_failures[GC_FAILURE_ATOMIC] ||
-+				F2FS_I(inode)->inmem_task == current)
- 				goto drop;
- 			goto skip;
- 		}
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+ cpufreq: intel_pstate: Fix invalid EPB setting
 
+on top of commit a99d8080aaf358d5d23581244e5da23b35e340b9
+
+ Linux 5.4-rc6
+
+to receive a power management fix for 5.4-rc7.
+
+This fixes an "unchecked MSR access" warning in the intel_pstate
+cpufreq driver (Srinivas Pandruvada).
+
+Thanks!
+
+
+---------------
+
+Srinivas Pandruvada (1):
+      cpufreq: intel_pstate: Fix invalid EPB setting
+
+---------------
+
+ drivers/cpufreq/intel_pstate.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
