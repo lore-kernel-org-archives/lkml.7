@@ -2,248 +2,71 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B142FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D835DFC6198
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E19206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE2D20869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573247229;
+	bh=yw3Wks3+OuBGI/aNPSNar3tbWKS3qQGk9xnPEixJja4=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=VkC5hkw4ETWHJEjfIhHRJoFXhl19bGvWQHX7WZjXyFOP7AaQMPv7anIGYUAe6hROy
+	 7l2p78bxFAHAqv7+15KqOh6sMqBJXkcR+r3n1BtvCKfGEjLAwJPaPYeAxDL3Wcairy
+	 AAR6AD7kkJFdjjfTLyUflVLPHTydbTJAuPv3zLfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbfKHVFh (ORCPT
+        id S1732020AbfKHVHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:05:37 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:38665 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfKHVFg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:05:36 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MI41P-1ifa9R3rIV-00FECL; Fri, 08 Nov 2019 22:03:03 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        rth@twiddle.net, tony.luck@intel.com, paul.burton@mips.com,
-        green.hu@gmail.com, deller@gmx.de, mpe@ellerman.id.au,
-        davem@davemloft.net, tglx@linutronix.de, x86@kernel.org,
-        jdike@addtoit.com, richard@nod.at, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, john.stultz@linaro.org, sboyd@kernel.org,
-        rostedt@goodmis.org, vincenzo.frascino@arm.com,
-        paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org,
-        peterz@infradead.org, will@kernel.org, deepa.kernel@gmail.com,
-        christian@brauner.io, heiko.carstens@de.ibm.com,
-        christophe.leroy@c-s.fr, ebiederm@xmission.com,
-        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, netdev@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: [PATCH 00/23] y2038 cleanups
-Date:   Fri,  8 Nov 2019 22:02:21 +0100
-Message-Id: <20191108210236.1296047-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 8 Nov 2019 16:07:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729973AbfKHVHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:07:08 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8220420865;
+        Fri,  8 Nov 2019 21:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573247227;
+        bh=yw3Wks3+OuBGI/aNPSNar3tbWKS3qQGk9xnPEixJja4=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=BY5QsDaODsF9hk1DYyI3IArhHOnTu8UKKbwE0QtpYAF3T/b9VPB5nQU9xTSeJgGV/
+         5licrcxzE9BGmKxkW8wiXtSw0YAevku1DP8m/wHcbuyCvm+LFgfNo2KnlzPXyTD2Qd
+         +5CfFYvCbxSp3bEXgbpMJtVAUZm2Tyzk6Zd6E0cU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:UnBnEVvh9e/TAlbVJpAgl+cZfINqrWh9dLOxhM2cR8aLh8bxi43
- imnX6NUaeePS5+DRA0WRYUJVamsiPbbVcIxpp/4FOrH5eYIasgtQ9F4iNEhxTjL7CjcCc5K
- bAv59di7IK248c9R001Bzfk5n9zBi6XSKGbbURpyvKXfff1XY6BWVKsSxLxE879MSpi2NAc
- hQzqPBvdAyeO+K+Sge1xw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OIDj0+r1Q9A=:9gN4BqFLWG42/ujpgO6Cgr
- o8zqBPZmLIUIEnDlrrAXeH2vLeBpIadNXhV86RgylTicv9xsmYlpVaFpBMf/H/Yjlzbw54cpy
- eh/U17TACQhr/ys8Bi+1eshVGdQxS5ivhF8awvsaZnAXg9mNAA8jkqXgpcpwWt367C/8Kd86R
- PArvSuqzyeR9kXxr8BvqUTmoaE4g6Rd8F0lY4P97kcm/hZDDTFU9lm0mHxnM0bHAyM+SvOHYd
- iw+439TjI1JHDeQqBpLukAr0wnd9IY2f05cEO8b48Hy7kYtbaI2rom9bTJZ3BbKszOykd7H0q
- oK4Ya32pPC2rfGc0OBMvlJAfW+U7J0Y2JHzAkyUMd/7/mal+bfzBkSg8A0O6/exDyl/Z/WNJy
- m3TRmxcGqeD+mrruFnCOYH9J91b9cbHcwtFZD/CAY9jd9786DVfTW8CKd5BLmZRsHl71EyEi5
- K6mfaAx63kT3i52V/5zPjVHi/xplJ3YpYGzCTEeY7jgkxp6i6NqIi2ghC/8j5/eYAtCM51h3d
- Z8Ob7p2gDLZwWhpdQ4b78C5ehph2lPjnzxiqzxTyMT+MD96QhPQWmWVKsWIK0FAs0qvDqsP2a
- GKGNlVHb+qr7JyGt+fF9+SvIKG13x6Bhw26DKuQtLgfO6qnyM9jMr6nN5/5EV/9nPPKgeZMi6
- a1svux7RWVOd64AYgjbwsp2PjdbU/xpWDDSVGOMhQmktNt60nxmbkWIkGbMHoosfsFgXXEfB4
- i7LmjSLuzVGAOXL0n7HULZV9tfkZIv5cbllBdYB5FinD1QYgQQG36yK6WhFCFvCPmv1hlou8U
- ye11gYsvTwOfF7tDpZ1QmTJ1v1Q1y1VYzfbIpHyUIMvlz8YcXL2vDgC6IMOdob8B3C6bh7EPJ
- j24sn73RDOt7PznprOsg==
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191107214018.184105-1-sboyd@kernel.org>
+References: <20191107214018.184105-1-sboyd@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH] clk: qcom: rpmh: Reuse sdm845 clks for sm8150
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 13:07:06 -0800
+Message-Id: <20191108210707.8220420865@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a series of cleanups for the y2038 work, mostly intended
-for namespace cleaning: the kernel defines the traditional
-time_t, timeval and timespec types that often lead to y2038-unsafe
-code. Even though the unsafe usage is mostly gone from the kernel,
-having the types and associated functions around means that we
-can still grow new users, and that we may be missing conversions
-to safe types that actually matter.
+Quoting Stephen Boyd (2019-11-07 13:40:18)
+> The SM8150 list of clks is almost the same as the list for SDM845,
+> except there isn't an IPA clk. Just point to the SDM845 clks from the
+> SM8150 list for now so we can reduce the amount of struct bloat in this
+> driver.
+>=20
+> Suggested-by: Vinod Koul <vkoul@kernel.org>
+> Cc: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-As there is no rush on any of these patches, I would either
-queue them up in linux-next through my y2038 branch, or
-Thomas could add them to the tip tree if he wants.
-
-As mentioned in another series, this is part of a larger
-effort to fix all the remaining bits and pieces that are
-not completed yet from the y2038 conversion, and the full
-set can be found at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=y2038-endgame
-
-Maintainers, please review and provide Acks.
-
-Let me know if you have any opinion on whether we should do
-the include last two patches of this series or not.
-
-     Arnd
-
-Arnd Bergmann (23):
-  y2038: remove CONFIG_64BIT_TIME
-  y2038: add __kernel_old_timespec and __kernel_old_time_t
-  y2038: vdso: change timeval to __kernel_old_timeval
-  y2038: vdso: change timespec to __kernel_old_timespec
-  y2038: vdso: change time_t to __kernel_old_time_t
-  y2038: vdso: nds32: open-code timespec_add_ns()
-  y2038: vdso: powerpc: avoid timespec references
-  y2038: ipc: remove __kernel_time_t reference from headers
-  y2038: stat: avoid 'time_t' in 'struct stat'
-  y2038: uapi: change __kernel_time_t to __kernel_old_time_t
-  y2038: rusage: use __kernel_old_timeval
-  y2038: syscalls: change remaining timeval to __kernel_old_timeval
-  y2038: socket: remove timespec reference in timestamping
-  y2038: make ns_to_compat_timeval use __kernel_old_timeval
-  y2038: elfcore: Use __kernel_old_timeval for process times
-  y2038: timerfd: Use timespec64 internally
-  y2038: time: avoid timespec usage in settimeofday()
-  y2038: itimer: compat handling to itimer.c
-  y2038: use compat_{get,set}_itimer on alpha
-  y2038: move itimer reset into itimer.c
-  y2038: itimer: change implementation to timespec64
-  [RFC] y2038: itimer: use ktime_t internally
-  y2038: allow disabling time32 system calls
-
- arch/Kconfig                              |  11 +-
- arch/alpha/kernel/osf_sys.c               |  67 +-----
- arch/alpha/kernel/syscalls/syscall.tbl    |   4 +-
- arch/ia64/kernel/asm-offsets.c            |   2 +-
- arch/mips/include/uapi/asm/msgbuf.h       |   6 +-
- arch/mips/include/uapi/asm/sembuf.h       |   4 +-
- arch/mips/include/uapi/asm/shmbuf.h       |   6 +-
- arch/mips/include/uapi/asm/stat.h         |  16 +-
- arch/mips/kernel/binfmt_elfn32.c          |   4 +-
- arch/mips/kernel/binfmt_elfo32.c          |   4 +-
- arch/nds32/kernel/vdso/gettimeofday.c     |  61 +++--
- arch/parisc/include/uapi/asm/msgbuf.h     |   6 +-
- arch/parisc/include/uapi/asm/sembuf.h     |   4 +-
- arch/parisc/include/uapi/asm/shmbuf.h     |   6 +-
- arch/powerpc/include/asm/asm-prototypes.h |   3 +-
- arch/powerpc/include/asm/vdso_datapage.h  |   6 +-
- arch/powerpc/include/uapi/asm/msgbuf.h    |   6 +-
- arch/powerpc/include/uapi/asm/sembuf.h    |   4 +-
- arch/powerpc/include/uapi/asm/shmbuf.h    |   6 +-
- arch/powerpc/include/uapi/asm/stat.h      |   2 +-
- arch/powerpc/kernel/asm-offsets.c         |  18 +-
- arch/powerpc/kernel/syscalls.c            |   4 +-
- arch/powerpc/kernel/time.c                |   5 +-
- arch/powerpc/kernel/vdso32/gettimeofday.S |   6 +-
- arch/powerpc/kernel/vdso64/gettimeofday.S |   8 +-
- arch/sparc/include/uapi/asm/msgbuf.h      |   6 +-
- arch/sparc/include/uapi/asm/sembuf.h      |   4 +-
- arch/sparc/include/uapi/asm/shmbuf.h      |   6 +-
- arch/sparc/include/uapi/asm/stat.h        |  24 +-
- arch/sparc/vdso/vclock_gettime.c          |  36 +--
- arch/x86/entry/vdso/vclock_gettime.c      |   6 +-
- arch/x86/entry/vsyscall/vsyscall_64.c     |   4 +-
- arch/x86/include/uapi/asm/msgbuf.h        |   6 +-
- arch/x86/include/uapi/asm/sembuf.h        |   4 +-
- arch/x86/include/uapi/asm/shmbuf.h        |   6 +-
- arch/x86/um/vdso/um_vdso.c                |  12 +-
- fs/aio.c                                  |   2 +-
- fs/binfmt_elf.c                           |  12 +-
- fs/binfmt_elf_fdpic.c                     |  12 +-
- fs/compat_binfmt_elf.c                    |   4 +-
- fs/select.c                               |  10 +-
- fs/timerfd.c                              |  14 +-
- fs/utimes.c                               |   8 +-
- include/linux/compat.h                    |  19 +-
- include/linux/syscalls.h                  |  16 +-
- include/linux/time.h                      |   9 +-
- include/linux/time32.h                    |   2 +-
- include/linux/types.h                     |   2 +-
- include/trace/events/timer.h              |  29 +--
- include/uapi/asm-generic/msgbuf.h         |  12 +-
- include/uapi/asm-generic/posix_types.h    |   1 +
- include/uapi/asm-generic/sembuf.h         |   7 +-
- include/uapi/asm-generic/shmbuf.h         |  12 +-
- include/uapi/linux/cyclades.h             |   6 +-
- include/uapi/linux/elfcore.h              |   8 +-
- include/uapi/linux/errqueue.h             |   7 +
- include/uapi/linux/msg.h                  |   6 +-
- include/uapi/linux/ppp_defs.h             |   4 +-
- include/uapi/linux/resource.h             |   4 +-
- include/uapi/linux/sem.h                  |   4 +-
- include/uapi/linux/shm.h                  |   6 +-
- include/uapi/linux/time.h                 |   6 +-
- include/uapi/linux/time_types.h           |   5 +
- include/uapi/linux/utime.h                |   4 +-
- ipc/syscall.c                             |   2 +-
- kernel/compat.c                           |  24 --
- kernel/power/power.h                      |   2 +-
- kernel/sys.c                              |   4 +-
- kernel/sys_ni.c                           |  23 ++
- kernel/time/hrtimer.c                     |   2 +-
- kernel/time/itimer.c                      | 280 ++++++++++++++--------
- kernel/time/time.c                        |  32 ++-
- lib/vdso/gettimeofday.c                   |   4 +-
- net/core/scm.c                            |   6 +-
- net/socket.c                              |   2 +-
- security/selinux/hooks.c                  |  10 +-
- 76 files changed, 501 insertions(+), 504 deletions(-)
-
--- 
-2.20.0
-
-Cc: rth@twiddle.net
-Cc: tony.luck@intel.com
-Cc: paul.burton@mips.com
-Cc: green.hu@gmail.com
-Cc: deller@gmx.de
-Cc: mpe@ellerman.id.au
-Cc: davem@davemloft.net
-Cc: tglx@linutronix.de
-Cc: x86@kernel.org
-Cc: jdike@addtoit.com
-Cc: richard@nod.at
-Cc: viro@zeniv.linux.org.uk
-Cc: bcrl@kvack.org
-Cc: john.stultz@linaro.org
-Cc: sboyd@kernel.org
-Cc: rostedt@goodmis.org
-Cc: arnd@arndb.de
-Cc: vincenzo.frascino@arm.com
-Cc: paul@paul-moore.com
-Cc: sds@tycho.nsa.gov
-Cc: eparis@parisplace.org
-Cc: peterz@infradead.org
-Cc: will@kernel.org
-Cc: deepa.kernel@gmail.com
-Cc: christian@brauner.io
-Cc: heiko.carstens@de.ibm.com
-Cc: christophe.leroy@c-s.fr
-Cc: ebiederm@xmission.com
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-alpha@vger.kernel.org>
-Cc: linux-ia64@vger.kernel.org>
-Cc: linux-mips@vger.kernel.org>
-Cc: linux-parisc@vger.kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org>
-Cc: sparclinux@vger.kernel.org>
-Cc: linux-um@lists.infradead.org>
-Cc: linux-fsdevel@vger.kernel.org>
-Cc: linux-aio@kvack.org>
-Cc: linux-api@vger.kernel.org>
-Cc: linux-arch@vger.kernel.org>
-Cc: netdev@vger.kernel.org>
-Cc: selinux@vger.kernel.org>
+Applied to clk-next
 
