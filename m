@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E0CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CFCFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17EC4222C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA9E21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239310;
-	bh=R+Td6S4dI+TenoqDGGPIUd7g1JBpVKmkh8jNH1/o1pk=;
+	s=default; t=1573239312;
+	bh=ujPc1fIhvRd5erak0GQgPSowVKTT2kQickvsRoK/fVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PEYorSl8XoMpHkJxdDcgkmpaw7JWrZKJtXyNuw2j/aExpZCuFTCiWlPCYcX/Y3yW/
-	 YmxQP+/7PYXf9qzH9rEd0RYRNyOKaACrvItDX6/QijVo9o7KbxYiAMqbXvuGKZsAp9
-	 PYGXw+eREEphjSfS2TCjLaWfPEBAQyT60AFM3kB4=
+	b=AcVk+X2h1o9jo2ZkIMiIABmDnsPMeDDd7HVoqEmLcryTsv85ZiI3eKN4yrJTOz/Qr
+	 1zxsdvv7zhct5yB/zK4wQeOOd+PB3uk4l4pRcjoBTpzyVHZLF2NsYyAeRqPmZwxYwZ
+	 CSNUKszqy8mZ0s1Yi+oxyMiTqrFYZrMDi/jec9w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733240AbfKHSzI (ORCPT
+        id S1733243AbfKHSzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:55:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:55:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731291AbfKHSzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:55:05 -0500
+        id S1731278AbfKHSzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:55:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C47ED214DB;
-        Fri,  8 Nov 2019 18:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1904920865;
+        Fri,  8 Nov 2019 18:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239304;
-        bh=R+Td6S4dI+TenoqDGGPIUd7g1JBpVKmkh8jNH1/o1pk=;
+        s=default; t=1573239301;
+        bh=ujPc1fIhvRd5erak0GQgPSowVKTT2kQickvsRoK/fVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q6R3R2YSLRCOHXTf2JM9F4hrUp8fGBaPNqR91+Z8eLHuD/pG1UP9pMIQo71rigesl
-         VjPbrdVOEu7J9qZEZM7TSgJyJA1bC/k40SfkEviawDbswVllLcVPwYvHHFCleE80Nx
-         8L+ermw/+5FkR2k6hLjURr2D1Nmao8QJDISAGwKc=
+        b=t+L0pGSoOxjsvo6SIPBAT3xDkX8fIClzZnG6E221xjdnWc9E/eVjnlxPhuDJBNf32
+         RH2/jigcUgXruCiCL53NHqdKGZljKv6/kgTHy5kotwqm/fAf18m2ebfM2H21yzAchP
+         KQH6Mlav6guq8BZ3F6zqzsyQX7n5gk5MI+SVNWHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "David A. Long" <dave.long@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 68/75] ARM: split out processor lookup
-Date:   Fri,  8 Nov 2019 19:50:25 +0100
-Message-Id: <20191108174810.091463197@linuxfoundation.org>
+Subject: [PATCH 4.4 67/75] ARM: make lookup_processor_type() non-__init
+Date:   Fri,  8 Nov 2019 19:50:24 +0100
+Message-Id: <20191108174809.058667447@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -65,11 +65,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Commit 65987a8553061515b5851b472081aedb9837a391 upstream.
+Commit 899a42f836678a595f7d2bc36a5a0c2b03d08cbc upstream.
 
-Split out the lookup of the processor type and associated error handling
-from the rest of setup_processor() - we will need to use this in the
-secondary CPU bringup path for big.Little Spectre variant 2 mitigation.
+Move lookup_processor_type() out of the __init section so it is callable
+from (eg) the secondary startup code during hotplug.
 
 Reviewed-by: Julien Thierry <julien.thierry@arm.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
@@ -79,71 +78,30 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/include/asm/cputype.h |    1 +
- arch/arm/kernel/setup.c        |   31 +++++++++++++++++++------------
- 2 files changed, 20 insertions(+), 12 deletions(-)
+ arch/arm/kernel/head-common.S |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm/include/asm/cputype.h
-+++ b/arch/arm/include/asm/cputype.h
-@@ -93,6 +93,7 @@
- #define ARM_CPU_PART_SCORPION		0x510002d0
+--- a/arch/arm/kernel/head-common.S
++++ b/arch/arm/kernel/head-common.S
+@@ -122,6 +122,9 @@ __mmap_switched_data:
+ 	.long	init_thread_union + THREAD_START_SP @ sp
+ 	.size	__mmap_switched_data, . - __mmap_switched_data
  
- extern unsigned int processor_id;
-+struct proc_info_list *lookup_processor(u32 midr);
- 
- #ifdef CONFIG_CPU_CP15
- #define read_cpuid(reg)							\
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -599,22 +599,29 @@ static void __init smp_build_mpidr_hash(
- }
- #endif
- 
--static void __init setup_processor(void)
-+/*
-+ * locate processor in the list of supported processor types.  The linker
-+ * builds this table for us from the entries in arch/arm/mm/proc-*.S
-+ */
-+struct proc_info_list *lookup_processor(u32 midr)
- {
--	struct proc_info_list *list;
-+	struct proc_info_list *list = lookup_processor_type(midr);
- 
--	/*
--	 * locate processor in the list of supported processor
--	 * types.  The linker builds this table for us from the
--	 * entries in arch/arm/mm/proc-*.S
--	 */
--	list = lookup_processor_type(read_cpuid_id());
- 	if (!list) {
--		pr_err("CPU configuration botched (ID %08x), unable to continue.\n",
--		       read_cpuid_id());
--		while (1);
-+		pr_err("CPU%u: configuration botched (ID %08x), CPU halted\n",
-+		       smp_processor_id(), midr);
-+		while (1)
-+		/* can't use cpu_relax() here as it may require MMU setup */;
- 	}
- 
-+	return list;
-+}
++	__FINIT
++	.text
 +
-+static void __init setup_processor(void)
-+{
-+	unsigned int midr = read_cpuid_id();
-+	struct proc_info_list *list = lookup_processor(midr);
-+
- 	cpu_name = list->cpu_name;
- 	__cpu_architecture = __get_cpu_architecture();
+ /*
+  * This provides a C-API version of __lookup_processor_type
+  */
+@@ -133,9 +136,6 @@ ENTRY(lookup_processor_type)
+ 	ldmfd	sp!, {r4 - r6, r9, pc}
+ ENDPROC(lookup_processor_type)
  
-@@ -632,7 +639,7 @@ static void __init setup_processor(void)
- #endif
- 
- 	pr_info("CPU: %s [%08x] revision %d (ARMv%s), cr=%08lx\n",
--		cpu_name, read_cpuid_id(), read_cpuid_id() & 15,
-+		list->cpu_name, midr, midr & 15,
- 		proc_arch[cpu_architecture()], get_cr());
- 
- 	snprintf(init_utsname()->machine, __NEW_UTS_LEN + 1, "%s%c",
+-	__FINIT
+-	.text
+-
+ /*
+  * Read processor ID register (CP#15, CR0), and look up in the linker-built
+  * supported processor list.  Note that we can't use the absolute addresses
 
 
