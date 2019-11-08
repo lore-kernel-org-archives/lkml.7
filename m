@@ -2,103 +2,124 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83ABFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B85FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA14D224D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3F0222C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EKxBWMQk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pk3X2dXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733064AbfKHMZa (ORCPT
+        id S1726125AbfKHMb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:25:30 -0500
-Received: from m12-14.163.com ([220.181.12.14]:43228 "EHLO m12-14.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731312AbfKHMZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 07:25:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:Mime-Version:Message-ID; bh=sXQMq
-        3Mqv1FBKPWUPLWRvdfBQohYfVcpdQ2VLUApC3A=; b=EKxBWMQkXqRLBW+ET0XpU
-        ewCrcYcB3V+EJZOeedsbfJAZSzOn8r72vxHkPZYwx4Uu3M+Za60fKkbiCUf6mVa2
-        rzhNBT4YJCzRTPsp0K84CoZq14D/bW9AnolowlrADuEUiaKxTDUXQDdfAzxEEmY8
-        bLEO64igE16Sq3neVIwSzU=
-Received: from SKY-20180422ZRB (unknown [117.36.117.81])
-        by smtp10 (Coremail) with SMTP id DsCowADXbtOWXsVdh_N6CA--.56297S2;
-        Fri, 08 Nov 2019 20:24:55 +0800 (CST)
-Date:   Fri, 8 Nov 2019 20:25:41 +0800
-From:   "sxauwsk@163.com" <sxauwsk@163.com>
-To:     "Shubhrajyoti Datta" <shubhrajyoti.datta@gmail.com>
-Cc:     "Michal Simek" <michal.simek@xilinx.com>,
-        "Shubhrajyoti Datta" <shubhrajyoti.datta@xilinx.com>,
-        "Wolfram Sang" <wsa@the-dreams.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v2] i2c: cadence: try reset when master receive arbitration lost
-References: <20190219012447.5900-1-sxauwsk@163.com>, 
-        <CAKfKVtEwHcydp=+hNhG91h3qbMoYOPq7jEYjbuAVrWXT53DC3Q@mail.gmail.com>, 
-        <2019110516474778997625@163.com>, 
-        <CAKfKVtH8OvA9Hku8V2CxRkX8hiouLzsEJTTDQWgBtQF8PGXyBQ@mail.gmail.com>
-X-Priority: 3
-X-GUID: B69C82CD-C26C-4FA3-8703-82AD1DB2BEFE
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.14.406[cn]
-Mime-Version: 1.0
-Message-ID: <201911082025396282138@163.com>
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: base64
-X-CM-TRANSID: DsCowADXbtOWXsVdh_N6CA--.56297S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ary7KF45XFW3CF1fKrW7urg_yoW8CFy3pa
-        y8Ja4fKF4DJF1SyrsF9F1v9FWjg3yxGF98Gr15Jw18uas0kryjyFy2kFZ8uFyxGrW7Aws0
-        vr4vvwn2gas8ZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeoGQUUUUU=
-X-Originating-IP: [117.36.117.81]
-X-CM-SenderInfo: 5v0d34lvn6il2tof0z/xtbBZBdnJlQHHiI53AAAs4
+        Fri, 8 Nov 2019 07:31:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35803 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725883AbfKHMbz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 07:31:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573216314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vMJWjmHAn9oXmduAqxbr7ld97ARES8e+B/CT4q03C/U=;
+        b=Pk3X2dXuQsrYnVohOyyATVZq4LL+KpF/o2zcgCU6/6KWXCBYFHOBPYHilMsRJ5/KSGtsqZ
+        2I/xbcq/PCFNoIIUMfxU4V8JiZwGl96ePB7vEegFt1J5Cp8cnJ9GTc8bCRMAjQzgupkvBR
+        e6nYkz1hURUnUCiymmd38cXNxvVt/Yg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-w8K278-eNPCBfHYDXkJI7g-1; Fri, 08 Nov 2019 07:31:50 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86A11107ACC3;
+        Fri,  8 Nov 2019 12:31:48 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BEFA31001902;
+        Fri,  8 Nov 2019 12:31:45 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id xA8CVjPD004476;
+        Fri, 8 Nov 2019 07:31:45 -0500
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id xA8CViNb004472;
+        Fri, 8 Nov 2019 07:31:44 -0500
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Fri, 8 Nov 2019 07:31:44 -0500 (EST)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Alessio Balsini <balsini@android.com>
+cc:     Jens Axboe <axboe@kernel.dk>, Alasdair G Kergon <agk@redhat.com>,
+        elsk@google.com, dvander@google.com, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: dm-snapshot for system updates in Android
+In-Reply-To: <20191104164900.GA10934@google.com>
+Message-ID: <alpine.LRH.2.02.1911080723130.3392@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20191025101624.GA61225@google.com> <alpine.LRH.2.02.1910290957220.25731@file01.intranet.prod.int.rdu2.redhat.com> <20191104164900.GA10934@google.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: w8K278-eNPCBfHYDXkJI7g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: TEXT/PLAIN; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PkhpIFNoaWthaSwKPgo+T24gVHVlLCBOb3YgNSwgMjAxOSBhdCAyOjE4IFBNIHN4YXV3c2tAMTYz
-LmNvbSA8c3hhdXdza0AxNjMuY29tPiB3cm90ZToKPj4KPj4gPkhpIFNoaWthaSwKPj4gPgo+PiA+
-T24gVHVlLCBGZWIgMTksIDIwMTkgYXQgODoxOSBBTSBTaGlrYWkgV2FuZyA8c3hhdXdza0AxNjMu
-Y29tPiB3cm90ZToKPj4gPj4KPj4gPj4gV2hlbiB0aGUgYWRhcHRlciByZWNlaXZlIGFyYml0cmF0
-aW9uIGxvc3QgZXJyb3IgaW50ZXJydXB0cywKPj4gPj4gY2Ruc19pMmNfbWFzdGVyX3hmZXIgcmV0
-dXJuIHRvIHRoZSBjYWxsZXIgZGlyZWN0bHkgaW5zdGVhZCBvZiByZXNldHRpbmcKPj4gPj4gdGhl
-IGFkYXB0ZXIgd2hpY2ggcmVzdWx0ZWQgaW4gdGhlIGFkYXB0ZXIgYmVpbmcgb3V0IG9mIGNvbnRy
-b2wuCj4+ID4+Cj4+ID4+IFNvIHdoZW4gZHJpdmVyIGRldGVjdCBlcnJfc3RhdHVzIHN1Y2ggYXMg
-YXJiaXRyYXRpb24gbG9zdCwKPj4gPj4gdGhlbiB0cnkgdG8gcmVwYWlyIGFuZCBmaXggaXQuCj4+
-ID4+Cj4+ID5JIGFtIG1pc3NpbmcgdGhlIGlzc3VlIHRoYXQgeW91IGFyZSBmYWNpbmcuCj4+ID5Z
-b3UgYXJlIGhhdmluZyBhIG11bHRpbWFzdGVyIHNjZW5hcmlvIGFuZCBnZXR0aW5nIGFyYml0cmF0
-aW9uIGxvc3QuCj4+ID4KPj4gPnRoZSBjdXJyZW50IGNvZGUgd291bGQgYXR0ZW1wdCBhIHJldHJ5
-IGRpZCB0aGF0IGxlYWQgdG8gYW55IGlzc3Vlcz8KPj4gPgo+PiA+Q2FuIHlvdSBleHBsYWluIHRo
-ZSBpc3N1ZSB0aGF0IHlvdSBhcmUgZmFjaW5nPwo+Pgo+PiBPZiBjb3VyY2UswqAgVGhlIGZvbGxv
-d2luZyBkZXNjcmliZSBteSBzaXR1YXRpb24uCj4+Cj4+IEluIG15IHByb2R1Y3QswqAgVG91Y2hz
-Y3JlZW4gY29ubmVjdCB0byB6eW5xLTcwMDAgWEM3WjAxMCBieSBpMmMgYnVzKCBKdXN0IGNvbm5l
-Y3Qgb25seSBvbmUgaTJjLWRldmljZSBvZiB0b3VjaHNjcmVlbiksCj4+IHdoZW4gdXNlciB0YXAg
-VG91Y2hzY3JlZW4sIFRvdWNoc2NyZWVuIGludGVycnVwdCBzZW5kIHRvIENQVSBhbmQgbm90aWZ5
-ZWQgaTJjLWRyaXZlciB0byBvYnRhaW4gbG9jYXRpb24gZGF0YSBieSBpMmMtYnVzLAo+Cj5TbyBp
-dCBpcyBzaW5nbGUgbWFzdGVyIHNpbmdsZSBzbGF2ZS4KPj4KPj4gd2hlbiBUYXAgdGhlIHNjcmVl
-biBmcmVxdWVudGx5LMKgIHNvbWV0aW1lcyBDUFUgZ2V0IGludGVycnVwdCBmcm9tIHRvdWNoc2Ny
-ZWVuIGFuZCB0cnkgdG8gb2J0YWluIGRhdGEswqAgdGhlbiBkZXRlY3QgYXJiaXRyYXRpb24gbG9z
-dCwKPnRoZSBhcmJpdHJhdGlvbiBsb3N0IGlzIHN1cnByaXNpbmcgaW4gbm9uLW11bHRpbWFzdGVy
-IHNjZW5hcmlvLgo+SXMgdGhlcmUgYW55IG90aGVyIG1hc3RlciBpbiB0aGUgY29uZmlndXJhdGlv
-biB0aGF0IHdlIG1heSBub3QgYmUgdHJpZ2dlcmluZy4KPk9yIGNhbsKgIHlvdSBwcm9iZSB0aGUg
-bGluZXM/Cj4KPj4gQWx0aG91Z2ggaTJjLWRyaXZlciB0cnkgdGhyZWUgdGltZXMswqAgaXQncyB1
-c2VsZXNzLgo+Cj5Zb3UgZ2V0IGJ1cyBidXN5PyB3aGF0IGlzIHRoZSBpc3N1ZS4KPj4KPj4gQWN0
-dWFsbHkgaTJjIGNsb2NrLWxpbmUgYW5kIGRhdGEtbGluZSBrZWVwIGhpZ2gsIHRoYXQgbWVhbiBp
-MmMgYnVzIGZyZWUuCj4+IE9uY2UgdGhpcyBzaXR1YXRpb24gb2NjdXIsIGkyYy1jb250cm9sIGRp
-ZCd0IHdvcmsgYW55bmF5IGJ1dCBjcHUgcmVjZWl2ZSBpbnRlcnJwdXRzIHN0aWxsLgo+Pgo+PiBJ
-IGFtIHNvcnJ5IHRoYXQgSSBoYXZlJ3QgZm91bmQgYSBnb29kIHNvbHV0aW9uIGZvciB0aGlzIGlz
-c3VzZTsgCgpZZXMsIMKgSSBjYW4ndCBiZWxpZXZlIHRoYXQsIMKgTWF5YmUgY2F1c2VkIGJ5IHRo
-ZSBoYXJkd2FyZSBlbnZpcm9ubWVudCBvciBhbnkgb3RoZXIgd2VsbC4KQWRkaXRpb25hbGx5IEkg
-aGF2ZSd0IMKgcHJvYmUgdGhpcyBpc3N1ZSByZWNlbnRseS7CoA==
 
+
+On Mon, 4 Nov 2019, Alessio Balsini wrote:
+
+> > > -- Alignment
+> > >=20
+> > > Our approach follows the solution proposed by Mikulas [1].
+> > > Being the block alignment of file extents automatically managed by th=
+e
+> > > filesystem, using FIEMAP should have no alignment-related performance=
+ issue.
+> > > But in our implementation we hit a misalignment [2] branch which lead=
+s to
+> > > dmwarning messages [3, 4].
+> > >=20
+> > > I have a limited experience with the block layer and dm, so I'm still
+> > > struggling in finding the root cause for this, either in user space o=
+r kernel
+> > > space.
+> >=20
+> > I don't know. What is the block size of the filesystem? Are all mapping=
+s=20
+> > aligned to this block size?
+>=20
+> Here follows a just generated warning coming from a Pixel 4 kernel (4.14)=
+:
+>=20
+> [ 3093.443808] device-mapper: table: 253:16: adding target device dm-15
+> caused an alignment inconsistency: physical_block_size=3D4096,
+> logical_block_size=3D4096, alignment_offset=3D61440, start=3D0
+>=20
+> Does this contain all the info you asked for?
+
+Look at the function blk_stack_limits - it has various checks that make it=
+=20
+return -1. Insert some debugging printk's there and find out which check=20
+made the function return -1.
+
+Based on this, we can find out which of the limits triggered the error=20
+message.
+
+> I started investigating this issue, but since we didn't notice any
+> performance degradation, I prioritized other things. I'll be hopefully
+> able to get back to this warning in the next months.
+> Please let me know if I can help you with that or if you need additional
+> information.
+
+Mikulas
 
