@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078CCC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6751AFC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C98222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328E62245A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213276;
-	bh=gqF0Xk1DbU2gg9xKC0sPCvRiCbjg6vSi0Iu0g9ztgMQ=;
+	s=default; t=1573213282;
+	bh=TGsOxMyPWE5J2waCsiFoRzIAdziPYQCI2nChIIFrhiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDY44UsuMLij4ZjJIVdfxo2+Lwtk1YnXB7y4wod4dyC7q4ioer0JTwc3DKteeimQl
-	 lJDtlwOVidAbOwKQAMwpehrh5f6YhBDNf4iDfqjTqqpfK6TGKCFoPbryjfObIBC8Wm
-	 q9IK6Vf1rk7Ell/wnJufm5Q6bPYKCKIVKGLEn/cY=
+	b=jNF7XCr1vC57E5MXheQ6Ypg8AQbvftJ9LU3cQCFaBlUUI59EGb4bArQgPRoNtCfzO
+	 72qN42kCb7/e7fFepWvGpkGXalEXejG8TgrS4DQ+M4j435THO9ATNTTX/Znv59i3Dh
+	 WhF/StEEhcyaOJe5C+4TasRLg/lMr0lEGsHb60J4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389260AbfKHLlP (ORCPT
+        id S2389374AbfKHLlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389195AbfKHLlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:08 -0500
+        id S2389227AbfKHLlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D09ED21D6C;
-        Fri,  8 Nov 2019 11:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE7DC222CF;
+        Fri,  8 Nov 2019 11:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213268;
-        bh=gqF0Xk1DbU2gg9xKC0sPCvRiCbjg6vSi0Iu0g9ztgMQ=;
+        s=default; t=1573213272;
+        bh=TGsOxMyPWE5J2waCsiFoRzIAdziPYQCI2nChIIFrhiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=agqHCrROlrbRL/o00ysRtB5unBu5DNkkW8yhme6N6lsZENDfnlK16ObzRdjQCsXm6
-         u22SMtEAsh610ymnwt1647aGOTZEZVlKA0kw6xtu2p+UfKocC2kwqXLyV+6e/CHeCo
-         kdhPJ4nxha9c3EU8ig/cX9AmqpSYnrEa1Ye9VWJQ=
+        b=JrtBQM2c34qggKGChPE09KAPlyE69PwESatb6I/mxLQsKNEb0v2VgiftSC54qzkdY
+         3LHP4bQ/px8IECgaHJkZRC2xQwZ5XSUUWWXpUZdNxj5gHZUkaDgETuOiwqH5Wfv3on
+         FxkK8QoE92SIMGlg8sI+9YjqC7ttnsMA/7bdw1Yc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 131/205] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
-Date:   Fri,  8 Nov 2019 06:36:38 -0500
-Message-Id: <20191108113752.12502-131-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 134/205] f2fs: fix memory leak of write_io in fill_super()
+Date:   Fri,  8 Nov 2019 06:36:41 -0500
+Message-Id: <20191108113752.12502-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,42 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
+[ Upstream commit 0b2103e886e6de9802e1170e57c573443286a483 ]
 
-If the first process started (aka /sbin/init) receives a SIGKILL it
-will panic the system if it is delivered.  Making the system unusable
-and undebugable.  It isn't much better if the first process started
-receives SIGSTOP.
+It needs to release memory allocated for sbi->write_io in error path,
+otherwise, it will cause memory leak.
 
-So always ignore SIGSTOP and SIGKILL sent to init.
-
-This is done in a separate clause in sig_task_ignored as force_sig_info
-can clear SIG_UNKILLABLE and this protection should work even then.
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/signal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/f2fs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 0e6bc3049427e..7278302e34850 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -78,6 +78,10 @@ static bool sig_task_ignored(struct task_struct *t, int sig, bool force)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 6851afc3bf805..588c575bd72b0 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2923,7 +2923,7 @@ try_onemore:
+ 				     GFP_KERNEL);
+ 		if (!sbi->write_io[i]) {
+ 			err = -ENOMEM;
+-			goto free_options;
++			goto free_bio_info;
+ 		}
  
- 	handler = sig_handler(t, sig);
- 
-+	/* SIGKILL and SIGSTOP may not be sent to the global init */
-+	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
-+		return true;
-+
- 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
- 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
- 		return true;
+ 		for (j = HOT; j < n; j++) {
 -- 
 2.20.1
 
