@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFAEFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17EEFC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDA321D7B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D03421D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239929;
-	bh=SnSrBVejywLMeyE9C0F/6AVkXlcUCkdN+mdYWqUZVu8=;
+	s=default; t=1573239931;
+	bh=QkelrQeDpMB5g0UJzJENR2b4+5kFAu4fE4coBk7cjFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NdrqfYi4rUv3A8FRxugj4NWC2TaDyum0AOWZoyS6aIPq+NUy9xuSb47d4qS3XVy5p
-	 E4/eaTOL5ZjbyJ2bechZkfTlWoxHSNgbHNqroIcxulIh0HDotliw2Kxg2smP9CCZnA
-	 IOHT5O8pNAWBOH4wWmvGDns99nW16kk3323fSdJQ=
+	b=ePJQG2EQTWYEwLVrjSWQ1v8aEJ1KHSghjbImyFVueD+oj5WTLK9kiQ22zlm8P1oO+
+	 FIpkwTBfQexfarOIWfw/QEpDPh6lv/zoLCdS+XHay2Wz/u6geY12cVx6pkj3jf1KxQ
+	 47rNgN1pzFkp3Y4hSqwznXXiAEAcUaE8tr6vSiXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390077AbfKHTF1 (ORCPT
+        id S2389548AbfKHTFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:05:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35536 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:05:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388576AbfKHTFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:05:25 -0500
+        id S2390462AbfKHTF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:05:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C57F620650;
-        Fri,  8 Nov 2019 19:05:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DFD02067B;
+        Fri,  8 Nov 2019 19:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239924;
-        bh=SnSrBVejywLMeyE9C0F/6AVkXlcUCkdN+mdYWqUZVu8=;
+        s=default; t=1573239926;
+        bh=QkelrQeDpMB5g0UJzJENR2b4+5kFAu4fE4coBk7cjFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5JyML/dwbG4UOZLhHNM5oFZ3aDNWguArjCZHrTQ4Zp7fjzQiKlFuKEiSKcHfkVXi
-         I+Ng5YL6R1xTqmkE8BlYweMwpVZosU3s4anadyI8Ucao9ur778okwO0x8a4PvR1j3K
-         h+OsQZKADgKsCz+6SzLl3KmO5BOexocv8Hnqzku0=
+        b=0cAtIfKNF59FsVyTBcG6ZNDUqgCB+3DALgi7MWg5tu6RPoMGUoRjiFLB7qhO+SZOM
+         qO/K/h1HcG596NgwZJtFHRLi/97S65GKVACpJUHRCaXme7lwUQecHFaa9WocGoWj3f
+         0a4mQgKZ6cPDm73GYOgopNsQoZRgt/NlkFp6h9LU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harald Geyer <harald@ccbib.org>,
-        "Jared D. McNeill" <jmcneill@NetBSD.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Emmanuel Vadot <manu@FreeBSD.org>,
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
         Maxime Ripard <mripard@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 007/140] arm64: dts: allwinner: a64: Drop PMU node
-Date:   Fri,  8 Nov 2019 19:48:55 +0100
-Message-Id: <20191108174901.368958757@linuxfoundation.org>
+Subject: [PATCH 5.3 008/140] arm64: dts: allwinner: a64: sopine-baseboard: Add PHY regulator delay
+Date:   Fri,  8 Nov 2019 19:48:56 +0100
+Message-Id: <20191108174901.478751742@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -63,46 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit ed3e9406bcbc32f84dc4aa4cb4767852e5ab086c ]
+[ Upstream commit ccdf3aaa27ded6db9a93eed3ca7468bb2353b8fe ]
 
-Looks like PMU in A64 is broken, it generates no interrupts at all and
-as result 'perf top' shows no events.
+It turns out that sopine-baseboard needs same fix as pine64-plus
+for ethernet PHY. Here too Realtek ethernet PHY chip needs additional
+power on delay to properly initialize. Datasheet mentions that chip
+needs 30 ms to be properly powered on and that it needs some more time
+to be initialized.
 
-Tested on Pine64-LTS.
+Fix that by adding 100ms ramp delay to regulator responsible for
+powering PHY.
 
-Fixes: 34a97fcc71c2 ("arm64: dts: allwinner: a64: Add PMU node")
-Cc: Harald Geyer <harald@ccbib.org>
-Cc: Jared D. McNeill <jmcneill@NetBSD.org>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Reviewed-by: Emmanuel Vadot <manu@FreeBSD.org>
+Note that issue was found out and fix tested on pine64-lts, but it's
+basically the same as sopine-baseboard, only layout and connectors
+differ.
+
+Fixes: bdfe4cebea11 ("arm64: allwinner: a64: add Ethernet PHY regulator for several boards")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 ---------
- 1 file changed, 9 deletions(-)
+ .../boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts      | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 9cc9bdde81ac2..cd92f546c4838 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -142,15 +142,6 @@
- 		clock-output-names = "ext-osc32k";
- 	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index e6fb9683f2135..25099202c52c9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -159,6 +159,12 @@
+ };
  
--	pmu {
--		compatible = "arm,cortex-a53-pmu";
--		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
--	};
--
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
+ &reg_dc1sw {
++	/*
++	 * Ethernet PHY needs 30ms to properly power up and some more
++	 * to initialize. 100ms should be plenty of time to finish
++	 * whole process.
++	 */
++	regulator-enable-ramp-delay = <100000>;
+ 	regulator-name = "vcc-phy";
+ };
+ 
 -- 
 2.20.1
 
