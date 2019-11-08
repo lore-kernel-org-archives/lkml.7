@@ -2,95 +2,202 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72350C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C7EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F26C2084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C174521D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:28:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bMbOArz5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjepFhLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfKHAVc (ORCPT
+        id S1728462AbfKHA2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:21:32 -0500
-Received: from ozlabs.org ([203.11.71.1]:59651 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfKHAVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:21:31 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 478LY51kKtz9sPT;
-        Fri,  8 Nov 2019 11:21:29 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573172489;
-        bh=wJ134fVt/5GKrex9pkMrD0W2xjP3wa4gqJRMV0Aa7ZA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bMbOArz5LIdC7KPSlepL1XlnuxPJG+QBJpC9PtdNbKKT+YhBKRtBjzcQMJFLH8qiu
-         Y5rVqWibDDybFilfSKAg/amZP1PHWga+1wMecFJJB0uutmxp4KPLddRz3QYFz7vLF2
-         2i9j5NByEJ8yhm52zoMxJoyTa+k8jFNR+iY/sCSa3A0+7mjf76niDd28/4F8lgYMZi
-         AVdBs2MfSNcmKRx80RcWLXurO6J8OHgWp0+2IaY4Q47yxl286Fu5/pHbiuK+kv8l7F
-         BwCNPkwTG8l4cfOEX0KNfLQhGMqIBvArpKR+AVAOVw6By3b/C7VqF1vbaQo8NA6QTG
-         x6XTRE0l2U7TA==
-Date:   Fri, 8 Nov 2019 11:21:27 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leo Li <sunpeng.li@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: linux-next: build warning after merge of the amdgpu tree
-Message-ID: <20191108112127.33c01bb5@canb.auug.org.au>
+        Thu, 7 Nov 2019 19:28:48 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45102 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfKHA2s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 19:28:48 -0500
+Received: by mail-pg1-f193.google.com with SMTP id w11so2969270pga.12;
+        Thu, 07 Nov 2019 16:28:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XOYj8fwd6G13bfB6dw7/4NRGSZvNUGATw6lJpkiiYaM=;
+        b=HjepFhLAHHGMXWfYoZsWU1XQuk06LTghgV8wYT/gX3RxT3xx8+LZfeLNmJiIJhPOF9
+         bxPwy4YkMtd40gtKIInMhP0kXius8osRpeZcm5l01c4ntTIG5UQDrVto96durcZgFRfV
+         VB9FbsRLj68JGvbfoAfY5FTmvgy0dkXN2u7A9oh+vO/sXNnTBVK2FW5Y0aPNI0K3UrRW
+         WbsmJhhJZeMnnrF67vhyorkSx+Ul5HcG4RxfL72PvDJ2Bjk0DrIw0eMpb3K1B4H+o+AI
+         NvjqpT45kA8r4pqbsm/MehPVrbua68glFdW0STE2LwLC5SNh3HHXKJ3iFiCJLXPeF8E0
+         ZFXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XOYj8fwd6G13bfB6dw7/4NRGSZvNUGATw6lJpkiiYaM=;
+        b=J7eK19qH53LrQKN0uvAArsBNL6EFwssEnbpri6nZsABq5ObQkEmUghe3MP4FVDAaaD
+         +O+YRve1VvDvwITsHKPao5q/GTSiGUN3/6mJAeIytJhXjkLyaOONLumDA4uo/Y/M3eRI
+         2nnh/Q7UFTVVl+ByfgelwDD7jKUnYwpu6IQZl/1snxNdUGy7sN/EJ5LctBDXivXGMNpJ
+         ql47aERuvKCAPgInAMhh+CoKWOJg6DmAmKRPu+xZYfaLNViAOP1wh8jh7fBGt9hqxDAW
+         h3BZq4DcQywXWUsELPwLjcVh0/VMsTtCEgqhYXJd0KCisIBZks7S24tkLPNTb4X+aqjP
+         7a3w==
+X-Gm-Message-State: APjAAAXwLaxBu+Q6WTMsALK9V1UQmZeSv5OO7xWFRrSBCqY67dwhxOYH
+        I1bRgMwz8ne9yn78y0/+RO82C3IU
+X-Google-Smtp-Source: APXvYqwDXVUG1PhSxibzdMEVEc2Jh8krEpZCg7wIuQ4j/1aj8LCH9y8ODJ8QwE6WItaRHlRyohawSw==
+X-Received: by 2002:a63:9543:: with SMTP id t3mr8305265pgn.350.1573172926768;
+        Thu, 07 Nov 2019 16:28:46 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id f25sm4758197pfk.10.2019.11.07.16.28.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 16:28:46 -0800 (PST)
+Date:   Thu, 7 Nov 2019 16:28:44 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 11/15] software node: move small properties inline
+ when copying
+Message-ID: <20191108002844.GX57214@dtor-ws>
+References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
+ <47671501.dVG71sAca0@kreacher>
+ <20191105235656.GW57214@dtor-ws>
+ <3310518.lfHdziMng4@kreacher>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3llplXz27kiyECUYPLPt1e5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3310518.lfHdziMng4@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3llplXz27kiyECUYPLPt1e5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 08, 2019 at 01:04:31AM +0100, Rafael J. Wysocki wrote:
+> On Wednesday, November 6, 2019 12:56:56 AM CET Dmitry Torokhov wrote:
+> > Hi Rafael,
+> > 
+> > On Wed, Nov 06, 2019 at 12:42:02AM +0100, Rafael J. Wysocki wrote:
+> > > On Wednesday, October 23, 2019 10:02:29 PM CET Dmitry Torokhov wrote:
+> > > > When copying/duplicating set of properties, move smaller properties that
+> > > > were stored separately directly inside property entry structures. We can
+> > > > move:
+> > > > 
+> > > > - up to 8 bytes from U8 arrays
+> > > > - up to 4 words
+> > > > - up to 2 double words
+> > > > - one U64 value
+> > > > - one or 2 strings.
+> > > 
+> > > Yes, we can do that, but how much of a difference does this really make?
+> > 
+> > Arguably not much I think, but it was pretty cheap to do.
+> > 
+> > > 
+> > > Also, how can one distinguish between a single-value property and an inline
+> > > array which this change?  By looking at the length?
+> > 
+> > We do not really need to distinguish between the 2. The device
+> > properties API is typically wrap single values around arrays (i.e. it is
+> > perfectly fine to use scalar API to fetch first element of array and use
+> > array API to fetch a scalar). So we have property of certain type with
+> > certain number of elements, and it can either be stored inside
+> > property_entry structure, or outside of it. They are 2 orthogonal
+> > concepts.
+> > 
+> > > 
+> > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > > ---
+> > > >  drivers/base/swnode.c | 10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> > > > index 18a30fb3cc58..49e1108aa4b7 100644
+> > > > --- a/drivers/base/swnode.c
+> > > > +++ b/drivers/base/swnode.c
+> > > > @@ -280,6 +280,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+> > > >  	if (!dst->name)
+> > > >  		goto out_free_data;
+> > > >  
+> > > > +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
+> > > > +		/* We have an opportunity to move the data inline */
+> > > > +		const void *tmp = dst->pointer;
+> > > > +
+> > > > +		memcpy(&dst->value, tmp, dst->length);
+> > > > +		dst->is_inline = true;
+> > > > +
+> > > > +		kfree(tmp);
+> > > 
+> > > This would have been more useful if we had been able to avoid making the
+> > > allocation altogether.
+> > 
+> > OK, I can do that and re-send this patch and the one with the tests.
+> 
+> But if you do that, IMO it would be prudent to extend the definition of
+> struct property_entry like this:
+> 
+>  struct property_entry {
+>  	const char *name;
+>  	size_t length;
+>  	bool is_array;
+>  	enum dev_prop_type type;
+>  	union {
+>  		union {
+>  			const u8 *u8_data;
+>  			const u16 *u16_data;
+>  			const u32 *u32_data;
+>  			const u64 *u64_data;
+>  			const char * const *str;
+>  		} pointer;
+>  		union {
+>  			u8 u8_data;
+>  			u16 u16_data;
+>  			u32 u32_data;
+>  			u64 u64_data;
+>  			const char *str;
+> +			u8 u8_buf[sizeof(u64)];
+> +			u16 u16_buf[sizeof(u64)/sizeof(u16)];
+> +			u32 u32_buf[sizeof(u64)/sizeof(u32)];
+> +			char char_buf[sizeof(u64)];
+>  		} value;
+>  	};
+>  };
+> 
+> to make it clear that the value field is going to be used as an array in
+> some cases.
 
-Hi all,
+Sorry, just sent out updated series before receiving your email. I can
+cook up new patch cleaning this. I think we can drop scalars and only
+have arrays and have initializers use <type>_data[0] to create initial
+property entries.
 
-After merging the amdgpu tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+> 
+> > In the mean time, can you please consider patches 12-14?
+> 
+> I cannot find drivers/platform/x86/intel_cht_int33fe_typec.c in the mainline,
+> so I cannot apply patch [13/15] now and I'm not sure how useful it would be
+> to apply patches [10,12/15] without the other two.
 
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:503:13: warning=
-: 'dm_dcn_crtc_high_irq' defined but not used [-Wunused-function]
-  503 | static void dm_dcn_crtc_high_irq(void *interrupt_params)
-      |             ^~~~~~~~~~~~~~~~~~~~
+Hmm, drivers/platform/x86/intel_cht_int33fe_typec.c used to be
+drivers/platform/x86/intel_cht_int33fe.c I think.
 
-Introduced by commit
+I can either regenerate against your tree instead of -next (but then
+there will be merge conflict) or we could postpone #13 and #14 (or #5
+and #6 in v7) till after merge window.
 
-  75856c84993d ("drm/amd/display: Send vblank and user events at vsartup fo=
-r DCN")
+Please let me know.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3llplXz27kiyECUYPLPt1e5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3EtQcACgkQAVBC80lX
-0GyR0Qf+Pu0mbi8E3nBNcYrCaxPPlQdy6fPotX9X/Kk/cnK+ExqLPV+uwOC1bqme
-m6ui+9nRBgZfYaaz0bn7cRcE6K6XcxqKjMX3KbEbq8pj0ad1QB1+r20g/fvWD06H
-DQ6uEh1B/c+hS6OWHe41Q2FIdwjR8gMDejbLZXDjpXgLaJDQIXpw+OS+LymjIOWT
-u6H4kQm6t/i2++OJJDDWMGcsZDRjsolFdOAj0FMXPVYTQCDmXQemTnsWL3h5zrvB
-g6TVI2RGpsoXMKAHnwHacE3k5fEYq8NEnAb/qRLCln0GGefG/qhzYjNT7n8ojxhA
-EBxm9ypGizTXEJpoPPOV9DwJHtIyzQ==
-=cXti
------END PGP SIGNATURE-----
-
---Sig_/3llplXz27kiyECUYPLPt1e5--
+-- 
+Dmitry
