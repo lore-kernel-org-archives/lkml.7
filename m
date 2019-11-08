@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB301FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CDDFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF2E222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01161222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213871;
-	bh=rrZSbi4G4miTJyPIz+Y84gcUjifvPimzBYe2sbVKh24=;
+	s=default; t=1573213884;
+	bh=yb2jTU2J1Pcb1tIvnOIHJBWKHeSbxjsNa/OwZZEyHl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vFUBoWX2nyDbfb2iewHa+7JnzAgF/CppcoWX34ab3WJZot0VcH5lCQ8Agk2whkXFD
-	 0/Jsut+gas6j4EZLFmOhW1U0iGTRVoLwuAZizF8LZX6RVgtgi7TNTA36qz3Ld0reJF
-	 YUixm9+5qeIljnvt9073V0WH6GJ56iBDoJvOTqjs=
+	b=yyzRwNzBUajaWEjlKAAMVngpZT7hh1u7muX54tQ/H8j14wD0Wv5xTgY2pM4rSOP/X
+	 f4OcOnW3bUeGAHbRQo3XaQxwU3GY4Jj1n5UfoVn2o/dysXPDLOQz15SFVFfOV+bod2
+	 cgYelpMUKt4vChXU6AytQC+XnG4rjA2r64qKTels=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbfKHLvK (ORCPT
+        id S2390158AbfKHLvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:51:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36226 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:51:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733219AbfKHLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:37 -0500
+        id S2391573AbfKHLrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACF05206A3;
-        Fri,  8 Nov 2019 11:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67904206A3;
+        Fri,  8 Nov 2019 11:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213656;
-        bh=rrZSbi4G4miTJyPIz+Y84gcUjifvPimzBYe2sbVKh24=;
+        s=default; t=1573213653;
+        bh=yb2jTU2J1Pcb1tIvnOIHJBWKHeSbxjsNa/OwZZEyHl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GfQrl1AUhB49WwshRypHXJO0EveSWnqtk9dpnCji/cnoHjy8Ump3O+qOL75D4PD0b
-         hSvX+/wBTGt2xgPMRJ3HeRS7s+UFLDCUejglPasx01d12FmQc+Mwa21CkQVhCETlc1
-         TcBX4b1Enht3SefP6zrdShpOAQqIdjnqHhD+yZio=
+        b=zVLf1nRQIFS4AheG/eZhECrq/SlNz54FyxVp7Rx8WCvKB/9WM/CKLcGI+9T0WudCT
+         RmiCbttWpIOMLEW0JDCINcE6OvYqjViNToZzgG/Tu/nkLrBpMaGS1idRgZpCn2Eg1M
+         mePKSJTBuQaPiaE54npHZOjhqs5JdS5s5TQ5afoo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/44] i40e: Prevent deleting MAC address from VF when set by PF
-Date:   Fri,  8 Nov 2019 06:46:47 -0500
-Message-Id: <20191108114721.15944-11-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 08/44] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
+Date:   Fri,  8 Nov 2019 06:46:44 -0500
+Message-Id: <20191108114721.15944-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,42 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patryk Małek <patryk.malek@intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 5907cf6c5bbe78be2ed18b875b316c6028b20634 ]
+[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
 
-To prevent VF from deleting MAC address that was assigned by the
-PF we need to check for that scenario when we try to delete a MAC
-address from a VF.
+This patch adds missing properties to the CODEC and sound nodes, so the
+audio will work also on Snow rev5 Chromebook. This patch is an extension
+to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
+DAI properties to the max98095 node in Snow Chromebook")
+and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
+Chromebook").  It has been reported that such changes work fine on the
+rev5 board too.
 
-Signed-off-by: Patryk Małek <patryk.malek@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+[krzk: Fixed typo in phandle to &max98090]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index e116d9a99b8e9..cdb263875efb3 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -1677,6 +1677,16 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
- 			ret = I40E_ERR_INVALID_MAC_ADDR;
- 			goto error_param;
- 		}
+diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
+index f811dc8006605..0d46f754070e4 100644
+--- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
++++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
+@@ -23,6 +23,14 @@
+ 
+ 		samsung,model = "Snow-I2S-MAX98090";
+ 		samsung,audio-codec = <&max98090>;
 +
-+		if (vf->pf_set_mac &&
-+		    ether_addr_equal(al->list[i].addr,
-+				     vf->default_lan_addr.addr)) {
-+			dev_err(&pf->pdev->dev,
-+				"MAC addr %pM has been set by PF, cannot delete it for VF %d, reset VF to change MAC addr\n",
-+				vf->default_lan_addr.addr, vf->vf_id);
-+			ret = I40E_ERR_PARAM;
-+			goto error_param;
-+		}
- 	}
- 	vsi = pf->vsi[vf->lan_vsi_idx];
++		cpu {
++			sound-dai = <&i2s0 0>;
++		};
++
++		codec {
++			sound-dai = <&max98090 0>, <&hdmi>;
++		};
+ 	};
+ };
+ 
+@@ -34,6 +42,9 @@
+ 		interrupt-parent = <&gpx0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&max98090_irq>;
++		clocks = <&pmu_system_controller 0>;
++		clock-names = "mclk";
++		#sound-dai-cells = <1>;
+ 	};
+ };
  
 -- 
 2.20.1
