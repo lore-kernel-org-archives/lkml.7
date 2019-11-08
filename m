@@ -2,102 +2,135 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79062C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB5DFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA3B218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573209158;
-	bh=Zrz2muJg2Wi+GRQmY5YrG97htwFJeAI4OLuBB+7I9q8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Qcu00nCguaLatywKZMWPoigwPvr0fyc89mEPst6sUiveLi9q+ExRY7HtjypFlySHe
-	 5MjeWMUXnVPbfzg2lJok17BDVOYI54NknvBIs7MI6awqLv1Qcsd2ICFYMZXn++telO
-	 nm+ZxfAIPkCMdyo67vrxYnymovh4gmWwdQsVHXpk=
+	by mail.kernel.org (Postfix) with ESMTP id 7BCD221848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 10:33:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UcenVrjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731556AbfKHKch (ORCPT
+        id S1731731AbfKHKdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:32:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfKHKcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:32:36 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 Nov 2019 05:33:03 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46996 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731656AbfKHKdC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:33:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573209182;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GJIemJ28V7SlVdwM6PWNhep+T2p/t4Izn4GDnmEe/tw=;
+        b=UcenVrjzlY4xcfplDTmN7ODuVN19AxU1j5VE2fUWjxQ6NsLYvClZjurgVbxjNf2e1uvFoa
+        N8ZlV2HtqXN3Xb5bSHK8knHGLWsgBwVh2zsx72FsiC9gnIMzbS6on9UHDDVnJoAr6WMaJ7
+        YCRk/qDhG52F6UQW+qpeUHObadf+Cp4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-aPiaQ9JyNAWA4YQ0AdCh0w-1; Fri, 08 Nov 2019 05:32:58 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2560221848;
-        Fri,  8 Nov 2019 10:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573209156;
-        bh=Zrz2muJg2Wi+GRQmY5YrG97htwFJeAI4OLuBB+7I9q8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VHgT/2EnB2SWziDwi5HEB34jb3w3+2Aq7SjBroebo0+uAw9zbBJ03g96pSSzC9sFK
-         /c8qvBba/M45Qc4t7Kq1b6JhqeNY6yYVApR+hUWyCyKpWSqZFTjiXpx+2Yl5xdN5xn
-         dQymNY83aVUX4OcEePulA5Y9b8AGI+V3S2HzOWSo=
-Date:   Fri, 8 Nov 2019 10:32:31 +0000
-From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     catalin.marinas@arm.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM Kernel Mailing List 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [GIT PULL] arm64: Fix for -rc7
-Message-ID: <20191108103231.GA19153@willie-the-truck>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4195D800C72;
+        Fri,  8 Nov 2019 10:32:56 +0000 (UTC)
+Received: from [10.36.116.54] (ovpn-116-54.ams2.redhat.com [10.36.116.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F2931A8D8;
+        Fri,  8 Nov 2019 10:32:53 +0000 (UTC)
+From:   Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH v7 01/11] iommu/vt-d: Cache virtual command capability
+ register
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Message-ID: <bd0db993-b29d-4a5a-56d4-c2af699eadfd@redhat.com>
+Date:   Fri, 8 Nov 2019 11:32:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1571946904-86776-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: aPiaQ9JyNAWA4YQ0AdCh0w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Jacob,
 
-Please pull this single arm64 fix for -rc7. It's a revert of 747a70e60b72
-("arm64: Fix copy-on-write referencing in HugeTLB"), not because that
-patch was wrong, but because it was broken by aa57157be69f ("arm64: Ensure
-VM_WRITE|VM_SHARED ptes are clean by default") which we merged in -rc6.
+On 10/24/19 9:54 PM, Jacob Pan wrote:
+> Virtual command registers are used in the guest only, to prevent
+> vmexit cost, we cache the capability and store it during initialization.
+>=20
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/dmar.c        | 1 +
+>  include/linux/intel-iommu.h | 4 ++++
+>  2 files changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> index eecd6a421667..49bb7d76e646 100644
+> --- a/drivers/iommu/dmar.c
+> +++ b/drivers/iommu/dmar.c
+> @@ -950,6 +950,7 @@ static int map_iommu(struct intel_iommu *iommu, u64 p=
+hys_addr)
+>  =09=09warn_invalid_dmar(phys_addr, " returns all ones");
+>  =09=09goto unmap;
+>  =09}
+> +=09iommu->vccap =3D dmar_readq(iommu->reg + DMAR_VCCAP_REG);
+> =20
+>  =09/* the registers might be more than one page */
+>  =09map_size =3D max_t(int, ecap_max_iotlb_offset(iommu->ecap),
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index ed11ef594378..2e1bed9b7eef 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -186,6 +186,9 @@
+>  #define ecap_max_handle_mask(e) ((e >> 20) & 0xf)
+>  #define ecap_sc_support(e)=09((e >> 7) & 0x1) /* Snooping Control */
+> =20
+> +/* Virtual command interface capabilities */
+> +#define vccap_pasid(v)=09=09((v & DMA_VCS_PAS)) /* PASID allocation */
+> +
+>  /* IOTLB_REG */
+>  #define DMA_TLB_FLUSH_GRANU_OFFSET  60
+>  #define DMA_TLB_GLOBAL_FLUSH (((u64)1) << 60)
+> @@ -520,6 +523,7 @@ struct intel_iommu {
+>  =09u64=09=09reg_size; /* size of hw register set */
+>  =09u64=09=09cap;
+>  =09u64=09=09ecap;
+> +=09u64=09=09vccap;
+>  =09u32=09=09gcmd; /* Holds TE, EAFL. Don't need SRTP, SFL, WBF */
+>  =09raw_spinlock_t=09register_lock; /* protect register handling */
+>  =09int=09=09seq_id;=09/* sequence id of the iommu */
+>=20
 
-We spotted the issue in Android (AOSP), where one of the JIT threads gets
-stuck on a write fault during boot because the faulting pte is marked as
-PTE_DIRTY | PTE_WRITE | PTE_RDONLY and the fault handler decides that
-there's nothing to do thanks to pte_same() masking out PTE_RDONLY.
+with DMA_VCS_PAS's move in this patch as pointed out by Kevin or
+vccap_pasid() move to patch 3, feel free to add
 
-Thanks to John Stultz for reporting this and testing this so quickly, and
-to Steve Capper for confirming that the HugeTLB tests continue to pass.
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Cheers,
+Eric
 
-Will
-
---->8
-
-The following changes since commit 1cf45b8fdbb87040e1d1bd793891089f4678aa41:
-
-  arm64: apply ARM64_ERRATUM_843419 workaround for Brahma-B53 core (2019-11-01 10:47:37 +0000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to 6767df245f4736d0cf0c6fb7cf9cf94b27414245:
-
-  arm64: Do not mask out PTE_RDONLY in pte_same() (2019-11-06 19:31:56 +0000)
-
-----------------------------------------------------------------
-arm64 fix for -rc7
-
-- Fix pte_same() to avoid getting stuck on write fault
-
-----------------------------------------------------------------
-Catalin Marinas (1):
-      arm64: Do not mask out PTE_RDONLY in pte_same()
-
- arch/arm64/include/asm/pgtable.h | 17 -----------------
- 1 file changed, 17 deletions(-)
