@@ -2,168 +2,142 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22784FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1D8FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32A02178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GFG8Bngh"
+	by mail.kernel.org (Postfix) with ESMTP id 2D6752178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKHOGQ (ORCPT
+        id S1727949AbfKHOGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:06:16 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58928 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfKHOGQ (ORCPT
+        Fri, 8 Nov 2019 09:06:33 -0500
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:60767 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbfKHOGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 09:06:16 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191108140613euoutp011d45072668c04633294c85a38fe6552c~VNQyslpKp0324403244euoutp01J
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Nov 2019 14:06:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191108140613euoutp011d45072668c04633294c85a38fe6552c~VNQyslpKp0324403244euoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573221973;
-        bh=N+JCkz4JeDOFadjc5rrFs2UE9NippHyLnoYIO9LMYBg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=GFG8Bngh77npG5R41S8Ms7pbUOUb1LtJk00qFUfdrXwATH68iySYo8AFmnD3Rd5ke
-         Sl3Sd2ddIGaPwfuWYkGPd8+bIFuwqPzSd635rHs8kGJpgLQin33Ndzuf2n4+g2nFaw
-         6KPQdYQoYve1lUpvTyAFxYZCxk9tWu8NmeBd7fEM=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191108140613eucas1p2fff573cac0dd5366361e9a6cc2d58071~VNQylDFbo0666806668eucas1p2u;
-        Fri,  8 Nov 2019 14:06:13 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id A9.18.04309.55675CD5; Fri,  8
-        Nov 2019 14:06:13 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191108140612eucas1p152704f9fb95a6187f536beacd66097d7~VNQyLxode0694406944eucas1p1M;
-        Fri,  8 Nov 2019 14:06:12 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191108140612eusmtrp12ef22e7307c356a0ee608d70bfb9d664~VNQyLM8d22316223162eusmtrp1c;
-        Fri,  8 Nov 2019 14:06:12 +0000 (GMT)
-X-AuditID: cbfec7f4-afbff700000010d5-dc-5dc576555138
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8B.24.04166.45675CD5; Fri,  8
-        Nov 2019 14:06:12 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191108140612eusmtip2177259d5802e85fc4f9be980128fced7~VNQx0F0MB2151621516eusmtip2X;
-        Fri,  8 Nov 2019 14:06:12 +0000 (GMT)
-Subject: Re: [PATCH][V2] ata: pata_artop: make arrays static const, makes
- object smaller
-To:     Colin King <colin.king@canonical.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-ide@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <50c64370-067a-a15e-29d6-dff3fc25cc77@samsung.com>
-Date:   Fri, 8 Nov 2019 15:06:08 +0100
+        Fri, 8 Nov 2019 09:06:32 -0500
+Received: from [IPv6:2001:420:44c1:2577:2d08:b535:4aeb:85f0]
+ ([IPv6:2001:420:44c1:2577:2d08:b535:4aeb:85f0])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id T4u9iG8nuXYiTT4uDi0g6M; Fri, 08 Nov 2019 15:06:30 +0100
+Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+ <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
+ <1573058741.16477.18.camel@nxp.com>
+ <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
+ <1573220200.16477.32.camel@nxp.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <ffbc7501-bb56-b5f2-cd43-209f099be594@xs4all.nl>
+Date:   Fri, 8 Nov 2019 15:06:25 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191006142956.23360-1-colin.king@canonical.com>
+In-Reply-To: <1573220200.16477.32.camel@nxp.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGKsWRmVeSWpSXmKPExsWy7djP87qhZUdjDWY94bJYfbefzeL36l42
-        i623pC2O7XjEZHF51xw2B1aPWQ29bB6Xz5Z6fN4kF8AcxWWTkpqTWZZapG+XwJVx/uZb9oKF
-        fBV3Dp9haWD8xtXFyMkhIWAicevDAvYuRi4OIYEVjBKnrn1ihnC+MEpM+L0TyvnMKNH5aj0b
-        TEvnoUtMEInljBILNr9khXDeMkpsOXAArEpYIEri4NTN7CC2iIC7xIxds5hAbGaBOIlX5z8x
-        gthsAlYSE9tXgdm8AnYSk07+A+tlEVCReLJ3HyuILSoQIfHpwWFWiBpBiZMzn7CA2JxA9fu3
-        trBAzBSXuPVkPtR8eYntb+eAnS0h0M8usfPwC6izXSS63uxjhrCFJV4d38IOYctInJ7cwwLR
-        sI5R4m/HC6ju7YwSyyf/g+q2ljh8/CLQGRxAKzQl1u/Shwg7Siyfc4wRJCwhwCdx460gxBF8
-        EpO2TWeGCPNKdLQJQVSrSWxYtoENZm3XzpXMExiVZiF5bRaSd2YheWcWwt4FjCyrGMVTS4tz
-        01OLjfJSy/WKE3OLS/PS9ZLzczcxAlPL6X/Hv+xg3PUn6RCjAAejEg9vhMyRWCHWxLLiytxD
-        jBIczEoivJwtQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK81QwPooUE0hNLUrNTUwtSi2CyTByc
-        Ug2MwlUJ/FYS/S4ftx53uv94IWdEXGNwX2zebhN2vUM7DnvYiT1d+S39xv0LUre84qTdnn1x
-        dl9rtMZivn/WopKYpX6bmUQDT1wPi5BMYFLbruG7/UddjN4n/6zLCb9aTxVN+LPxUJNH8PVf
-        v5XfaNUGt8oeePXpwoNzsW+v3dM/eFA4P0No8/4TSizFGYmGWsxFxYkAZdbd5ikDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsVy+t/xe7ohZUdjDZpmGFisvtvPZvF7dS+b
-        xdZb0hbHdjxisri8aw6bA6vHrIZeNo/LZ0s9Pm+SC2CO0rMpyi8tSVXIyC8usVWKNrQw0jO0
-        tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Ms4f/Mte8FCvoo7h8+wNDB+4+pi5OSQEDCR
-        6Dx0iamLkYtDSGApo8SDe20sXYwcQAkZiePryyBqhCX+XOtiA7GFBF4zSlzYnARiCwtESRyc
-        upkdxBYRcJeYsWsWE4jNLBAncebYD0aImRMZJTbsngLWzCZgJTGxfRUjiM0rYCcx6eQ/sDiL
-        gIrEk737WEFsUYEIicM7ZkHVCEqcnPmEBcTmBKrfv7WFBWKBusSfeZeYIWxxiVtP5kMtlpfY
-        /nYO8wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAuNo27Gf
-        m3cwXtoYfIhRgINRiYd3g9yRWCHWxLLiytxDjBIczEoivJwtQCHelMTKqtSi/Pii0pzU4kOM
-        pkDPTWSWEk3OB8Z4Xkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkG
-        RsHsZpaAZPWNXe/Vr79vnXa8WujmXkapxZcThZ3OFAv0SvBVhXDP3RPRrC7GNqNe2rHU4cCd
-        iL0HW9706Gy8UWEwu+KAbmm17Ld9Ydm3T374kvXZ3ynm+tJp6Sc6rLL9dPnruR44sDnc3Nz4
-        V3xZk+WkEhafW9u7lTaFG33NeTzp2L11ydkmSizFGYmGWsxFxYkAXMMIpbkCAAA=
-X-CMS-MailID: 20191108140612eucas1p152704f9fb95a6187f536beacd66097d7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191006143000epcas2p168872c0c7b1e1879e31931d3244dfd4d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191006143000epcas2p168872c0c7b1e1879e31931d3244dfd4d
-References: <CGME20191006143000epcas2p168872c0c7b1e1879e31931d3244dfd4d@epcas2p1.samsung.com>
-        <20191006142956.23360-1-colin.king@canonical.com>
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfFtHvLism700l44mHiTDlkoGsJR8q8LtIaDRa1DTgNp3cGSGFuG+AfyW/O4wXjgBv9ZLWv4URjd4wl6Ld6p/gwsGJxnWGp20bWz/6JCpoSqH7AfIuHTa
+ ko5FOBAcEuspTdRHfTEWIIBPwebHCR0plxObGh8VO3pHLAXmXsiPhAchMpiRF2I72k0CY9VUDc0r9eVZQWZP7C6X/vgzmxbfNvcJaRop+LaUfu/QvglqhImF
+ 3PnqaDVkI/ZRF07ckuObAqr2pdWFVQ1MLPbruqHftvev2ZE9NNo6ndK6iXGbfB4TA3O05C/uJFh9HsXYPgfjXdRwQU5lHgLRpEcJxFrQ9YzS2VQUtJCTtnNY
+ KFntJPQ+ZhBYMM59lK0blIf6/EbT/GL43IapW2TdzeXlLQ7+zTE0oCVa+O2tIDawNnRgc7ueJkX8wtQwHYvMyRvOx7MWgoeRMoT9sm7CllGCd+7Q/hgmJKeE
+ OnA6GdTx/MUnTKfiIIpbfYGvSpUt70w5+la0pi/srt7sa5XGyIlaPCo8IpSwNJZq5L/v4aH26o1kcoAnqNhthX8+djE+K+VBOfJpW1/rar/vs4+EnndeR15C
+ gYHqQuvgMx2FaQrwHYyDzCy/e8AvLRyk9FIQsjzwolWN2jguexMmrq2D8+KGSS1faroHSlcSQQRvAY3gXdsQh0/26m2YbFE/R5Gs4nk2UWScrcZvAfbT65hy
+ dVl0QDXA9bNdkOi6uOuYg0X6N9xL5oHrtZz9oH55dFGL5lVdnl1WQupFDw32A/PXRQBJ0VskbuOIUzUb/Y+53iSKrO22s7zmc/HeWiGoPmBBPjxkfIKNm3R9
+ lt0TPkuqDUc93an56uMutzsa8CXyzBxdEvPFP2HcicYMfo4bsJhY3T5GIDB6vxCbPayE0S9HRMVgGQAR/vXDahkF0d1aLqLO081Iuno8BAmRx95KI8OybP8F
+ vNTOaIlrmHzf731D6tf6cXPMqGIk/RdjyLfOeFAiWEbBKpCMcAtxREUDIh2v1KuEbob8VVFNrN2yKq5wzmho9rqihlA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/8/19 2:36 PM, Mirela Rabulea wrote:
+> Hi Hans,
+> 
+> On Mi, 2019-11-06 at 17:52 +0100, Hans Verkuil wrote:
+>>       test Scaling: OK
+>> The presence of a scaler is suspicious: is the encoder indeed
+>> capable of scaling? I suspect this is a bug.
+> 
+> No, it's not capable of scaling. You suspect a bug in the driver or the
+> tests?
 
-On 10/6/19 4:29 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate the const arrays on the stack but instead make them
-> static. Makes the object code smaller by 292 bytes.
-> 
-> Before:
->    text	   data	    bss	    dec	    hex	filename
->    6988	   3132	    128	  10248	   2808	drivers/ata/pata_artop.o
-> 
-> After:
->    text	   data	    bss	    dec	    hex	filename
->    6536	   3292	    128	   9956	   26e4	drivers/ata/pata_artop.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Actually, I think that's an outstanding bug in v4l-utils. It doesn't
+correctly handle the m2m case with respect to scaling. I think. I'll
+look into this a bit more.
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> 
+>> Codec ioctls:
+>>>       test VIDIOC_(TRY_)ENCODER_CMD: OK
+>> The presence of this...
+>>
+>>>
+>>>       test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>>>       test VIDIOC_(TRY_)DECODER_CMD: OK
+>> ...and this is also strange for a JPEG codec. These ioctls are
+>> typically only
+>> needed for MPEG/H264/etc. codecs, and not for a simple JPEG codec.
+>>
+>> The same issues are found for the JPEG decoder.
+> 
+> I implemented the CMD_STOP for both encoder & decoder, because it was
+> requested by our developer for gstreamer plugin for this codec.
+> The context in which this was requested was for playing MJPEG videos (a
+> concatenation of JPEG frames).
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+This ioctl makes no sense for JPEG codecs, and in fact jpeg drivers like
+s5p-jpeg or mtk-jpeg do not implement this. This sounds like a gstreamer bug.
+Nicolas, do you know anything about this?
 
-> ---
 > 
-> V2: fix up commit message
+>> Streaming ioctls:
+>>>       test read/write: OK (Not Supported)
+>>>       test blocking wait: OK
+>>>               fail: v4l2-test-buffers.cpp(254): g_field() ==
+>>> V4L2_FIELD_ANY
+>> The driver shall never return FIELD_ANY. This needs to be FIELD_NONE.
 > 
-> ---
->  drivers/ata/pata_artop.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Is there a "good example" of a v4l m2m driver that passes these
+
+vim2m. Also drivers/media/platform/mtk-jpeg/ (although I'm not sure when
+it was last tested with v4l2-compliance, so it might be a bit out of date).
+
+> streaming tests? That would save some time on my side.
+> For the FIELD_ANY issue, I got inspired from your commit:
+> ab7afaf3 media: vim2m: add buf_out_validate callback
+> But there's a lot more to go...
 > 
-> diff --git a/drivers/ata/pata_artop.c b/drivers/ata/pata_artop.c
-> index 3aa006c5ed0c..6bd2228bb6ff 100644
-> --- a/drivers/ata/pata_artop.c
-> +++ b/drivers/ata/pata_artop.c
-> @@ -100,7 +100,7 @@ static void artop6210_load_piomode(struct ata_port *ap, struct ata_device *adev,
->  {
->  	struct pci_dev *pdev	= to_pci_dev(ap->host->dev);
->  	int dn = adev->devno + 2 * ap->port_no;
-> -	const u16 timing[2][5] = {
-> +	static const u16 timing[2][5] = {
->  		{ 0x0000, 0x000A, 0x0008, 0x0303, 0x0301 },
->  		{ 0x0700, 0x070A, 0x0708, 0x0403, 0x0401 }
->  
-> @@ -154,7 +154,7 @@ static void artop6260_load_piomode (struct ata_port *ap, struct ata_device *adev
->  {
->  	struct pci_dev *pdev	= to_pci_dev(ap->host->dev);
->  	int dn = adev->devno + 2 * ap->port_no;
-> -	const u8 timing[2][5] = {
-> +	static const u8 timing[2][5] = {
->  		{ 0x00, 0x0A, 0x08, 0x33, 0x31 },
->  		{ 0x70, 0x7A, 0x78, 0x43, 0x41 }
->  
+> Thanks,
+> Mirela
+> 
+
+Regards,
+
+	Hans
