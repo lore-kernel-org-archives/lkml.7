@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BBFFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4154FFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F9A207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B082084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214491;
-	bh=wuXGaCurOLNVfx79qh8djeDpvCXeYHqq5oLCFT/3IoY=;
+	s=default; t=1573214498;
+	bh=RKRTRBPAlk+f+aw3C7A6A3UDnlrwH0Cc8yXEXBYKvkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cH8OGMPNkm30Hfqt+Pt1UU1IAHQNxb3G8CLAmB0HCQCN9tdkwAjGkPiT6N8a1nfvk
-	 2uYFnxfSduban72hS+l5tFyuWISFoy6waQJ9kbvgHZBQ526/w5KwS4KyG9o/JNO9f2
-	 a7R3h8ULsOvUts2tSJJ2R5MRhfoDHpDVxKA8n7fs=
+	b=A8qQq/oyOrSTSsgXn9xqZdweNhr1ixoAZIXwiSR/SHclOVw3L54cB5okRETS3IRcE
+	 FOME7yTDKz+V+Vj3A0dU3FP/bijTOFPcLTrboS2dsiPU1C8ECTOPqTExfucbz3FU9S
+	 +/6qxE7gplD7EvcThpiI3GB6gYpXslAPsHedxAHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389079AbfKHMB3 (ORCPT
+        id S2389585AbfKHMBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:01:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58156 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:01:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390500AbfKHLnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:37 -0500
+        id S2390487AbfKHLne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:43:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2EC322466;
-        Fri,  8 Nov 2019 11:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD6AC222C6;
+        Fri,  8 Nov 2019 11:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213416;
-        bh=wuXGaCurOLNVfx79qh8djeDpvCXeYHqq5oLCFT/3IoY=;
+        s=default; t=1573213413;
+        bh=RKRTRBPAlk+f+aw3C7A6A3UDnlrwH0Cc8yXEXBYKvkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQMuBfyi00Ql5kRZmg/M+HKDQNnpzaaxj0v0zx6f0FqPnQYbkreJNOHzvZkj3Q2kU
-         YMKgSgVZjlJgPSV0XjpLOVY6sCygQGj2wWomhUGFV5l9XgfJFgmSxOvKk5htlm+X7B
-         P//2Aq/zNfIC4+JA0aRh8l/gk6xj7kz5h64VZcuI=
+        b=dY4e2MvzVDfqELynxtCPL+gzwTzL1T2uDze9r8OVm5+lp4iI5CdAjXjh9UVAp+Ntd
+         8zSDTtco+VzaArxVWGi+D8+26QdA/islZW7aDlN6a33qi2nlfLmRaK6PER2MECrQfG
+         IHIeCBv7u7umE6FqsHjmUspXuXR9fMaHFjzgnjgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 019/103] pinctrl: ingenic: Probe driver at subsys_initcall
-Date:   Fri,  8 Nov 2019 06:41:44 -0500
-Message-Id: <20191108114310.14363-19-sashal@kernel.org>
+Cc:     Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 016/103] ath10k: limit available channels via DT ieee80211-freq-limit
+Date:   Fri,  8 Nov 2019 06:41:41 -0500
+Message-Id: <20191108114310.14363-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,30 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Sven Eckelmann <sven.eckelmann@openmesh.com>
 
-[ Upstream commit 556a36a71ed80e17ade49225b58513ea3c9e4558 ]
+[ Upstream commit 34d5629d2ca89d847b7040762b87964c696c14da ]
 
-Using postcore_initcall() makes the driver try to initialize way too
-early.
+Tri-band devices (1x 2.4GHz + 2x 5GHz) often incorporate special filters in
+the RX and TX path. These filtered channel can in theory still be used by
+the hardware but the signal strength is reduced so much that it makes no
+sense.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+There is already a DT property to limit the available channels but ath10k
+has to manually call this functionality to limit the currrently set wiphy
+channels further.
+
+Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 103aaab413570..1541f8cba5562 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -849,4 +849,4 @@ static int __init ingenic_pinctrl_drv_register(void)
- {
- 	return platform_driver_register(&ingenic_pinctrl_driver);
- }
--postcore_initcall(ingenic_pinctrl_drv_register);
-+subsys_initcall(ingenic_pinctrl_drv_register);
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 58a3c42c4aedb..8c4bb56c262f6 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -17,6 +17,7 @@
+ 
+ #include "mac.h"
+ 
++#include <net/cfg80211.h>
+ #include <net/mac80211.h>
+ #include <linux/etherdevice.h>
+ #include <linux/acpi.h>
+@@ -8174,6 +8175,7 @@ int ath10k_mac_register(struct ath10k *ar)
+ 		ar->hw->wiphy->bands[NL80211_BAND_5GHZ] = band;
+ 	}
+ 
++	wiphy_read_of_freq_limits(ar->hw->wiphy);
+ 	ath10k_mac_setup_ht_vht_cap(ar);
+ 
+ 	ar->hw->wiphy->interface_modes =
 -- 
 2.20.1
 
