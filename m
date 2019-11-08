@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA94CFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B277AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848EB20869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8030E21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213141;
-	bh=DCGoM8RFU/85m16B7mGU3/4vxVxz030aYpVZQqpMOeU=;
+	s=default; t=1573213143;
+	bh=W6uN9xHq7HGKDzwyHjCpDmU5tv6iPNN8Hw2AZv3Xizw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wdgVYn7lm8jFi9dXXLiH/ty77+vul3obhJhEX9rrmu1EXl+XK4HZ63RLV9FRRM6ew
-	 /CpNSYV/FX0mQjpfCO9WgAdphxirbGyZBcAkntTzkoz1hFji3zDoA0HLxHyROTyUbw
-	 qQdbVjNXlC6U+QWhNJA4QHIaLBPNNecxuVwsf7ns=
+	b=1/6I+lIjgx6aIGDWnNTxwu0gHiXtxQg72DjkG0Nqou4lmeXM+wkGdmEPjhEpZbuS2
+	 Cl9v4vtbmIhgIGXThus0eh8k0eyILXEny+2FbMIeEzPRO/5ljqx/T9im3a24USrQOi
+	 wikiVBgKP6Rf95cMmfGA+XJnMTi/qus1ejU0Dh8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733005AbfKHLi7 (ORCPT
+        id S1733027AbfKHLjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51694 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:39:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732701AbfKHLin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:43 -0500
+        id S1732846AbfKHLip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 823A321D82;
-        Fri,  8 Nov 2019 11:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CE7222C2;
+        Fri,  8 Nov 2019 11:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213123;
-        bh=DCGoM8RFU/85m16B7mGU3/4vxVxz030aYpVZQqpMOeU=;
+        s=default; t=1573213125;
+        bh=W6uN9xHq7HGKDzwyHjCpDmU5tv6iPNN8Hw2AZv3Xizw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BCHCYQKjZu0WXcs3MJUZWdayn7RkZTCkHIrvMnWfAeC1hAoXdV//RnhxQxwDP53N0
-         xzSVBZzUzqif8cm7FLVuTpDBPSJG1dumRFPkPF7CE1Ip60znUzkj8DDpLr/BVqEhts
-         iXKmfgs0Irv9yQXrP6p4p3PWOAAPuRk/jrj1dVrM=
+        b=zLLRUHcAX+KJ8SNb7iOrcrDgdbPYe2wV8p1J0eWfiu1fr5rUn/Qg2o6lXkDNaksIc
+         +ICsNPTmC9YIDJqvNiJb/Vzk9n8Aoc6LhFugukCuDiHqMj1kGJVG2dp3UWrRcKfupI
+         itTUeoMLJHjjW6mEgPuCshQIus9Ld5fsvIpzJRyI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Alan Tull <atull@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 042/205] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
-Date:   Fri,  8 Nov 2019 06:35:09 -0500
-Message-Id: <20191108113752.12502-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 044/205] arm64: dts: stratix10: i2c clock running out of spec
+Date:   Fri,  8 Nov 2019 06:35:11 -0500
+Message-Id: <20191108113752.12502-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,55 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Alan Tull <atull@kernel.org>
 
-[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
+[ Upstream commit c8da1d15b8a4957f105ad77bb1404d72e304566f ]
 
-This patch adds missing properties to the CODEC and sound nodes, so the
-audio will work also on Snow rev5 Chromebook. This patch is an extension
-to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
-DAI properties to the max98095 node in Snow Chromebook")
-and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
-Chromebook").  It has been reported that such changes work fine on the
-rev5 board too.
+DesignWare I2C controller was observed running at 105.93kHz rather
+than the specified 100kHz.  Adjust device tree settings to bring it
+within spec (a slightly conservative 98 MHz).
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-[krzk: Fixed typo in phandle to &max98090]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Alan Tull <atull@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-index 0348b1c49a691..7cbfc6f1f4b8f 100644
---- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-@@ -20,6 +20,14 @@
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 7c661753bfaf4..faa017d4cd56b 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -124,6 +124,8 @@
+ &i2c1 {
+ 	status = "okay";
+ 	clock-frequency = <100000>;
++	i2c-sda-falling-time-ns = <890>;  /* hcnt */
++	i2c-sdl-falling-time-ns = <890>;  /* lcnt */
  
- 		samsung,model = "Snow-I2S-MAX98090";
- 		samsung,audio-codec = <&max98090>;
-+
-+		cpu {
-+			sound-dai = <&i2s0 0>;
-+		};
-+
-+		codec {
-+			sound-dai = <&max98090 0>, <&hdmi>;
-+		};
- 	};
- };
- 
-@@ -31,6 +39,9 @@
- 		interrupt-parent = <&gpx0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&max98090_irq>;
-+		clocks = <&pmu_system_controller 0>;
-+		clock-names = "mclk";
-+		#sound-dai-cells = <1>;
- 	};
- };
- 
+ 	adc@14 {
+ 		compatible = "lltc,ltc2497";
 -- 
 2.20.1
 
