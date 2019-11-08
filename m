@@ -2,100 +2,120 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A111FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94691C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D67206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67397206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E3x9+d1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfKHQoa (ORCPT
+        id S1727564AbfKHQod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:44:30 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2078 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727149AbfKHQo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:44:29 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 41E724EA76087BF488D6;
-        Fri,  8 Nov 2019 16:44:27 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 8 Nov 2019 16:44:26 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 8 Nov 2019
- 16:44:26 +0000
-Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
- explicitly non-modular"
-From:   John Garry <john.garry@huawei.com>
-To:     Will Deacon <will@kernel.org>, <iommu@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20191108151608.20932-1-will@kernel.org>
- <20191108151608.20932-7-will@kernel.org>
- <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
-Message-ID: <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
-Date:   Fri, 8 Nov 2019 16:44:25 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 8 Nov 2019 11:44:33 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:51850 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbfKHQoc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:44:32 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8GhtjN157379;
+        Fri, 8 Nov 2019 16:44:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2019-08-05;
+ bh=hYfdkMRkteIIGT2KkzkdkMeBEpG1ri1et0Pk3CjcHd8=;
+ b=E3x9+d1a1S5vvXX4xu5lf8IHXRaRaQ7IIansWvtjg7s/E2HDCeWt8C4TUus78dgh6Wty
+ e9rNBiuHKlzwAW/yrI+6lHdz7yooGEH8S2az8VH5YqEPKYJXzk2c+rDMJir3dwzWH9Dl
+ ZTGMcuPUq7Btinbv5vEm9pzl47+qzSKFbnJDCzh27JCvxSekJRauM6p0uEd4hS3AVJn4
+ DEatjmazAsc37oX12zd32e5qFdeDzyrG1sqKtWAigHnH289i6JKQ9IDy7ZFYYhDPFc3x
+ 3q5P/gcspWmZiz++HUVlnhzZLpfjsMvOAuvC+TUsUAqHLT9UykEXXAuZpyS9619mK44+ 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2w41w16f6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 16:44:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8GhmeS115175;
+        Fri, 8 Nov 2019 16:44:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2w50m5nhms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 16:44:16 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA8GiEeO031808;
+        Fri, 8 Nov 2019 16:44:15 GMT
+Received: from asu (/92.220.18.196)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 Nov 2019 08:44:14 -0800
+Message-ID: <c77e82629f04f0183853884abbeddd871d8f5ab7.camel@oracle.com>
+Subject: Re: [PATCH] mm: provide interface for retrieving kmem_cache name
+From:   Knut Omang <knut.omang@oracle.com>
+To:     Christopher Lameter <cl@linux.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Fri, 08 Nov 2019 17:44:10 +0100
+In-Reply-To: <alpine.DEB.2.21.1911081534470.32431@www.lameter.com>
+References: <20191107115404.3030723-1-knut.omang@oracle.com>
+         <20191107115806.GP8314@dhcp22.suse.cz>
+         <27006f47b0b85fb99acee2a638207268aef8d010.camel@oracle.com>
+         <20191107131342.GT8314@dhcp22.suse.cz>
+         <alpine.DEB.2.21.1911081534470.32431@www.lameter.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=921
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911080164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=996 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911080164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/2019 16:17, John Garry wrote:
-> On 08/11/2019 15:16, Will Deacon wrote:
->> +MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+On Fri, 2019-11-08 at 15:37 +0000, Christopher Lameter wrote:
+> On Thu, 7 Nov 2019, Michal Hocko wrote:
 > 
-> Hi Will,
+> > On Thu 07-11-19 13:26:09, Knut Omang wrote:
+> > > On Thu, 2019-11-07 at 12:58 +0100, Michal Hocko wrote:
+> > > > On Thu 07-11-19 12:54:04, Knut Omang wrote:
+> > > > > With the restructuring done in commit 9adeaa226988
+> > > > > ("mm, slab: move memcg_cache_params structure to mm/slab.h")
+> > > > >
+> > > > > it is no longer possible for code external to mm to access
 > 
->>   static struct platform_driver arm_smmu_driver = {
->>       .driver    = {
->>           .name        = "arm-smmu-v3",
->>           .of_match_table    = of_match_ptr(arm_smmu_of_match),
->> -        .suppress_bind_attrs = true,
+> That patch only affected the memcg_cache_params structure and not
+> kmem_cache.
 > 
-> Does this mean that we can now manually unbind this driver from the SMMU 
-> device?
-> 
-> Seems dangerous. Here's what happens for me:
-> 
-> root@ubuntu:/sys# cd ./bus/platform/drivers/arm-smmu-v3
-> ind @ubuntu:/sys/bus/platform/drivers/arm-smmu-v3# echo 
-> arm-smmu-v3.0.auto > unbind
-> [   77.580351] hisi_sas_v2_hw HISI0162:01: CQE_AXI_W_ERR (0x800) found!
-> ho [   78.635473] platform arm-smmu-v3.0.auto: CMD_SYNC timeout at 
-> 0x00000146 [hwprod 0x00000146, hwcons 0x00000000]
-> 
->>       },
->>       .probe    = arm_smmu_device_probe,
->> +    .remove    = arm_smmu_device_remove,
->>       .shutdown = arm_smmu_device_shutdown,
->>   };
->> -builtin_platform_driver(arm_smmu_driver);
->> +module_platform_driver(arm_smmu_driver);
->> +
+> And I do not see any references to the memcg_cache_param?
 
-BTW, it now looks like it was your v1 series I was testing there, on 
-your branch iommu/module. It would be helpful to update for ease of testing.
+Good point, I should have made explicit reference to it. 
 
-Thanks,
-John
+It gets inlined into kmem_cache with CONFIG_SLUB if CONFIG_MEMCG is set
+(include/linux/slub_def.h, line 112)
+
+> The fields that all allocators need to expose are listed in
+> the struct kmme_cache definition in linux/mm/slab.h.
+
+So I take that kmem_cache::name was still intended to be public, 
+just that that broke due to the inlining of struct memcg_cache_param 
+in slub_def.h?
+
+Knut
 
