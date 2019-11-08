@@ -2,113 +2,95 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4100FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE62DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B449206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OR+SNRg8"
+	by mail.kernel.org (Postfix) with ESMTP id A00F22084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbfKHNK5 (ORCPT
+        id S1727751AbfKHNMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:10:57 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39280 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbfKHNK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:10:57 -0500
-Received: by mail-il1-f195.google.com with SMTP id a7so4657358ild.6;
-        Fri, 08 Nov 2019 05:10:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nahHqUz3/obBwpqlgIc7CwCj/FhH1UqSQVTekcxe7BA=;
-        b=OR+SNRg8B5FpGfACVmeUC9pt4iY0Vkss6VVhaboxI2i70dB61cUT6e+fmHi0eBdQVp
-         xOEqrJFBrvbLx777AsccJ7XtJ3EL9tNfbYKjEK3F41nzEq6kx1mPabhcp3PRoZE0k23T
-         mFrWfUXkATA/fnwa/wq6PVR8uVEq75Q/+SjUZwko/mC2Kc3JnroaCMUKakzqRSEA15tZ
-         o9DCgPfnBiaZ6sUYN2mtiQtLRMnVPqK8y9qNtIs0FiSJThAphZWYZph5r9CQg/znQyGV
-         jYVfFeifAGZPpBtkrjc7y+VpJiVgBIRBtkcc3HdfxqRZHqmQOVpkCyRDC1Gr76wAiic9
-         mmkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nahHqUz3/obBwpqlgIc7CwCj/FhH1UqSQVTekcxe7BA=;
-        b=ekTMiRsztUoml0rJVrcloZdNAsnflpVcUHH22C4TwEaOBSS9/7bPgKCmXeN+o+3+OI
-         0ywmxCxt30VY5fE6u23cysXbAiljEf8n7FkSQuR5UyBRoLaRVIy+3/yOQbh7zj65u4hI
-         QUDMlw92C695AgOaunWJAcVTZzhvHLrnSo7k2SLIu/g2WjFA+VvvymQC58z5ce+AO1XZ
-         sd5DaP/z0LlUW2mRjsEhNRJCL+6wP5KWAGh6jk3dyIVF+YTUtDZvPR6Ccyjcn99MLKKe
-         zlZ1pXUAmW6HNmn2ICLNUaDW1YxDpsfM2GxLpCyXnN1rjGPXBHs+u7hKQDnvB4aPh6/V
-         TD3w==
-X-Gm-Message-State: APjAAAXSvoQNKsatTtSm/tVH/tQSDOogaDexTc/KUSqN1AR3843raTM1
-        03DwtJwT4Orqawb7fJOKplrmGYwJOFYv/CUF+lckkRCr
-X-Google-Smtp-Source: APXvYqzAJU4sRg6jJnt/2BiUBevqIWVuv2bDwxN256RfPHia7sufV/QREhysjcqQtvzRFBxS0vnIPjqM1G310HnS5sU=
-X-Received: by 2002:a92:cb84:: with SMTP id z4mr13137312ilo.78.1573218655594;
- Fri, 08 Nov 2019 05:10:55 -0800 (PST)
+        Fri, 8 Nov 2019 08:12:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46874 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726445AbfKHNMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 08:12:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 15F75AE2A;
+        Fri,  8 Nov 2019 13:12:39 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 8C0061E3BE4; Fri,  8 Nov 2019 14:12:38 +0100 (CET)
+Date:   Fri, 8 Nov 2019 14:12:38 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 5/5] fs/xfs: Allow toggle of physical DAX flag
+Message-ID: <20191108131238.GK20863@quack2.suse.cz>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <20191020155935.12297-6-ira.weiny@intel.com>
+ <20191021004536.GD8015@dread.disaster.area>
+ <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <20191018130507.29893-1-aford173@gmail.com>
-In-Reply-To: <20191018130507.29893-1-aford173@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 8 Nov 2019 07:10:45 -0600
-Message-ID: <CAHCN7xJ9aAHjHToM5mGixWvJb7hAOenST7Fkett84nNQdUghmA@mail.gmail.com>
-Subject: Re: [PATCH] fbdev/omap: fix max fclk divider for omap36xx
-To:     linux-fbdev@vger.kernel.org
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Adam Ford <adam.ford@logicpd.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 8:05 AM Adam Ford <aford173@gmail.com> wrote:
->
-> The OMAP36xx and AM/DM37x TRMs say that the maximum divider for DSS fclk
-> (in CM_CLKSEL_DSS) is 32. Experimentation shows that this is not
-> correct, and using divider of 32 breaks DSS with a flood or underflows
-> and sync losts. Dividers up to 31 seem to work fine.
->
-> There is another patch to the DT files to limit the divider correctly,
-> but as the DSS driver also needs to know the maximum divider to be able
-> to iteratively find good rates, we also need to do the fix in the DSS
-> driver.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: stable@vger.kernel.org # linux-4.4.y only
+On Mon 21-10-19 15:49:31, Ira Weiny wrote:
+> On Mon, Oct 21, 2019 at 11:45:36AM +1100, Dave Chinner wrote:
+> > On Sun, Oct 20, 2019 at 08:59:35AM -0700, ira.weiny@intel.com wrote:
+> > That, fundamentally, is the issue here - it's not setting/clearing
+> > the DAX flag that is the issue, it's doing a swap of the
+> > mapping->a_ops while there may be other code using that ops
+> > structure.
+> > 
+> > IOWs, if there is any code anywhere in the kernel that
+> > calls an address space op without holding one of the three locks we
+> > hold here (i_rwsem, MMAPLOCK, ILOCK) then it can race with the swap
+> > of the address space operations.
+> > 
+> > By limiting the address space swap to file sizes of zero, we rule
+> > out the page fault path (mmap of a zero length file segv's with an
+> > access beyond EOF on the first read/write page fault, right?).
+> 
+> Yes I checked that and thought we were safe here...
+> 
+> > However, other aops callers that might run unlocked and do the wrong
+> > thing if the aops pointer is swapped between check of the aop method
+> > existing and actually calling it even if the file size is zero?
+> > 
+> > A quick look shows that FIBMAP (ioctl_fibmap())) looks susceptible
+> > to such a race condition with the current definitions of the XFS DAX
+> > aops. I'm guessing there will be others, but I haven't looked
+> > further than this...
+> 
+> I'll check for others and think on what to do about this.  ext4 will have the
+> same problem I think.  :-(
 
-This is basically the same patch as the only Tomi reviewed for 4.9,
-but it is based on 4.4.
+Just as a datapoint, ext4 is bold and sets inode->i_mapping->a_ops on
+existing inodes when switching journal data flag and so far it has not
+blown up. What we did to deal with issues Dave describes is that we
+introduced percpu rw-semaphore guarding switching of aops and then inside
+problematic functions redirect callbacks in the right direction under this
+semaphore. Somewhat ugly but it seems to work.
 
-Is there any way these can be integrated?
-
-thank you,
-
-adam
->
-> diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/fbdev/omap2/dss/dss.c
-> index 9200a8668b49..a57c3a5f4bf8 100644
-> --- a/drivers/video/fbdev/omap2/dss/dss.c
-> +++ b/drivers/video/fbdev/omap2/dss/dss.c
-> @@ -843,7 +843,7 @@ static const struct dss_features omap34xx_dss_feats = {
->  };
->
->  static const struct dss_features omap3630_dss_feats = {
-> -       .fck_div_max            =       32,
-> +       .fck_div_max            =       31,
->         .dss_fck_multiplier     =       1,
->         .parent_clk_name        =       "dpll4_ck",
->         .dpi_select_source      =       &dss_dpi_select_source_omap2_omap3,
-> --
-> 2.17.1
->
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
