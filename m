@@ -2,119 +2,120 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3FEFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189DAFC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6813214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:44:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rKeQu1Zi"
+	by mail.kernel.org (Postfix) with ESMTP id EC8F420674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfKHUoT (ORCPT
+        id S1727931AbfKHUph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:44:19 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43355 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfKHUoT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:44:19 -0500
-Received: by mail-qt1-f193.google.com with SMTP id l24so7922641qtp.10
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 12:44:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+x5g1UVg7HX2xGAQ0OJa7E0znsv6MEg8H6qRGEA46KQ=;
-        b=rKeQu1ZisiH1z4nG/Spx3Hk5NI7OH7ghWVVE4sJnGjupBFTUb0/cXDmc9WqVGLNgsG
-         9xiS6GWqUeOvlke3Xd8+2imV2vlrx4dxiG5s7/4la0ZDYNCrhcC084LahTpo0+lwN85G
-         K5U6U0mLGthyDy/l6qk4yji+GJEmXY4OaFD527GpqiJy/F83NKDgRM6+NiD9xiaeOa2S
-         JOTXb6/dyb+AcZipK9q1SMW/PGTQ+KV0XtGZB9Nfs/u/0wSc+Sl7Bg1VfBkVE16Qtp7O
-         saY+Ml0JLyAYbZiW/eX2UOIVkAcpv2AQ0O+WSAzhRvqUjpyNVq9oJR6OUGdkXzeWlk7w
-         eYeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+x5g1UVg7HX2xGAQ0OJa7E0znsv6MEg8H6qRGEA46KQ=;
-        b=m0HZD4Z1t0kcsZ+dLqvxSmf69wFJvKnyYTHMe+AOumfPnIGwsXxZywJNO3TU6UXpvC
-         jEyU6/dv0gIH1mKjnG4nIaM2AfsOkck+mBiSz8CjrRYdO75tG/ZmNGGoUHYTP1E3ftu5
-         l2qjDmZoBKeTcCUikoEDIW1Ai6e+di+BlK8kngS34h6ez3UafsX6mqHFhxYWePxSNMQm
-         d1BKHDGzsYGbmpkcB5/W0ZVH1ma1rVQpsptiC6IV+JFdlJ8/iEo81SNZemdMk7tw5B64
-         AlMCSItJPoCLkugmQCvXTC3eYsTmPRTe19iUWQflJkfsRxEGRKCRg1V23e3nvInUiBXE
-         Plfw==
-X-Gm-Message-State: APjAAAXdL1IQ0xrvV2zOsWM/YqX87aO8cWtXIOisEKyv7jCeIE371VJ+
-        oKmz9KVmk/mZjvvwKh4lRB2/7w==
-X-Google-Smtp-Source: APXvYqw//vDNtVmESgIvld+GVVJAa8OFASSIYuyNEbIaC229uB5fxFRo2kZDfigEVv3+zsL1IKATgw==
-X-Received: by 2002:ac8:2fda:: with SMTP id m26mr13159952qta.374.1573245858287;
-        Fri, 08 Nov 2019 12:44:18 -0800 (PST)
-Received: from ovpn-124-239.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s75sm3602579qke.14.2019.11.08.12.44.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Nov 2019 12:44:17 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@suse.com, hannes@cmpxchg.org, guro@fb.com,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/vmscan: fix an undefined behavior for zone id
-Date:   Fri,  8 Nov 2019 15:44:07 -0500
-Message-Id: <20191108204407.1435-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Fri, 8 Nov 2019 15:45:37 -0500
+Received: from muru.com ([72.249.23.125]:41162 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbfKHUpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 15:45:36 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B9A1380D4;
+        Fri,  8 Nov 2019 20:46:10 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 12:45:31 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, hns@goldelico.com,
+        adam.ford@logicpd.com, Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thermal: ti-soc-thermal:  Enable addition power
+ management
+Message-ID: <20191108204531.GN5610@atomide.com>
+References: <20191108200501.29864-1-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108200501.29864-1-aford173@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The -next commit "mm: vmscan: simplify lruvec_lru_size()" [1] introduced
-an undefined behavior as zone_idx could equal to MAX_NR_ZONES, and then
-zid is then out of range.
+* Adam Ford <aford173@gmail.com> [191108 20:05]:
+> The bandgap sensor can be idled when the processor is too, but it
+> isn't currently being done, so the power consumption of OMAP3
+> boards can elevated if the bangap sensor is enabled.
 
-[ 5399.483257] LTP: starting mtest01w (mtest01 -p80 -w)
-[ 5400.245051] ================================================================================
-[ 5400.255784] UBSAN: Undefined behaviour in ./include/linux/memcontrol.h:536:26
-[ 5400.265235] index 5 is out of range for type 'long unsigned int [5][5]'
-[ 5400.273925] CPU: 28 PID: 455 Comm: kswapd7 Tainted: G        W         5.4.0-rc6-next-20191108 #3
-[ 5400.285461] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-[ 5400.295784] Call Trace:
-[ 5400.299483]  dump_stack+0x7a/0xaa
-[ 5400.304052]  ubsan_epilogue+0x9/0x26
-[ 5400.309180]  __ubsan_handle_out_of_bounds.cold.13+0x2b/0x36
-[ 5400.316192]  inactive_list_is_low+0x8bb/0x9f0
-[ 5400.321952]  balance_pgdat+0x252/0x7d0
-[ 5400.327006]  kswapd+0x251/0x590
-[ 5400.331725]  ? finish_wait+0x90/0x90
-[ 5400.336574]  kthread+0x12a/0x140
-[ 5400.341102]  ? balance_pgdat+0x7d0/0x7d0
-[ 5400.346330]  ? kthread_create_worker_on_cpu+0x70/0x70
-[ 5400.352810]  ret_from_fork+0x27/0x50
+Great, thanks for doing this!
 
-[1] https://lore.kernel.org/linux-mm/20191022144803.302233-2-hannes@cmpxchg.org/
+> This patch attempts to use some additional power management
+> to idle the clock to the bandgap when not needed.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/vmscan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Maybe add also something like this to the patch description:
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d97985262dda..9485b80d6b5b 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -317,7 +317,7 @@ unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone
- 	unsigned long size = 0;
- 	int zid;
- 
--	for (zid = 0; zid <= zone_idx; zid++) {
-+	for (zid = 0; zid < zone_idx; zid++) {
- 		struct zone *zone = &lruvec_pgdat(lruvec)->node_zones[zid];
- 
- 		if (!managed_zone(zone))
--- 
-2.21.0 (Apple Git-122.2)
+As otherwise the bandgap clock blocks deeper idle states
+the SoC. To must idle bandgap with cpu_notifier instead of
+runtime PM to avoid tagging it with pm_runtime_irq_safe()
+that we want to stop using for drivers in general.
 
+> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+...
+> +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
+> +				  unsigned long cmd, void *v)
+> +{
+> +	struct ti_bandgap *bgp;
+> +
+> +	bgp = container_of(nb, struct ti_bandgap, nb);
+> +
+> +	spin_lock(&bgp->lock);
+> +	switch (cmd) {
+> +	case CPU_CLUSTER_PM_ENTER:
+> +		if (bgp->is_suspended)
+> +			break;
+> +		ti_bandgap_save_ctxt(bgp);
+> +		ti_bandgap_power(bgp, false);
+> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
+> +			clk_disable_unprepare(bgp->fclock);
+> +		break;
+> +	case CPU_CLUSTER_PM_ENTER_FAILED:
+> +	case CPU_CLUSTER_PM_EXIT:
+> +		if (bgp->is_suspended)
+> +			break;
+> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
+> +			clk_prepare_enable(bgp->fclock);
+> +		ti_bandgap_power(bgp, true);
+> +		ti_bandgap_restore_ctxt(bgp);
+> +		break;
+> +	}
+> +	spin_unlock(&bgp->lock);
+> +
+> +	return NOTIFY_OK;
+> +}
+
+You need to use clk_disable() and clk_enable() instead
+of the prepare and unprepare variants here because
+the prepare and unprepare variants are helpers for
+non-atomic context and won't necessarily work for the
+cpu_notifier. See the comments in include/linux/clk.h
+for clock_prepare_enable().
+
+I tested this briefly with CONFIG_OMAP3_THERMAL=y and
+after idling the UARTs on torpedo, and it still hits
+off mode during idle consuming 5 - 7 mW for the
+main_battery_som line as measured with the shunt :)
+So this means we can finally then enable also
+CONFIG_OMAP3_THERMAL=y in the defconfigs.
+
+Also, you may want to check if the driver needs to
+save and restore it's context in the notifier as that
+might get lost during the off mode depending what
+domain it's at.
+
+Regards,
+
+Tony
