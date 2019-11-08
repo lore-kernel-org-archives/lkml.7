@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ADFFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E211FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 663B121848
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A3521D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215025;
-	bh=at/HoHkmjnY+BK7GL6shu8EYd2ZI3hl/LZhn9cks92k=;
+	s=default; t=1573215027;
+	bh=ZPSKGSZEulSokc6OQ6g3QxfBYvIV5a0XHwF8ROZCzws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwvD42jaIEAUf8XXiA4X6k3dYmqjewPmkvfLISviKMPcpfpW0pqaFH+EIkIcvgL6L
-	 QbbAOsJfZahW+qi3f1Mh2OZtVlb1gGMwndGZF32N+QWt4NamJZ9vrQdXYoEV2az5Z0
-	 HyWGJAMaiF6FcMxRce+rvUBcfQEMnYwFtnHa97ow=
+	b=Cev87yiti6dHci38QjLOVgvFnTZFih4bOJeqUpLCu/ZwPoNglJUHj4IE/AWlLUVzT
+	 RofIAMOz2jqJBtgRZx81ZtbnOBT1LWPKbhBmfFqSw+XsFWug9EbYCSosw6EmbFPOL7
+	 lEbpAUqRgYSPHUYXo35T8OfV4Mc0M2U4iTfULjro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387859AbfKHLjn (ORCPT
+        id S2387830AbfKHLjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:39:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52446 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:39:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387583AbfKHLjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:32 -0500
+        id S2387396AbfKHLj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DE621D7E;
-        Fri,  8 Nov 2019 11:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A599D21D7E;
+        Fri,  8 Nov 2019 11:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213171;
-        bh=at/HoHkmjnY+BK7GL6shu8EYd2ZI3hl/LZhn9cks92k=;
+        s=default; t=1573213165;
+        bh=ZPSKGSZEulSokc6OQ6g3QxfBYvIV5a0XHwF8ROZCzws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNRbBhUpnUPcB9IbXZhzSTIJ9pmsIjivU1W2GcJBoPTq0X32pfD2gn1H+6sNOPwBJ
-         5A0+hbg1elJtEL8fOADttiTL9IqgTon1/1r2qz0S9gJyanpDS3yAQiBw2QKjSAv82i
-         tZh5hZlx2B0WiVy+90NbFyZ5vJu6+AwfA6RNk1Ig=
+        b=G76pBEJH3zlNtGtfwcBqJRch4iVm00H2UX5TxEHvmswglGUXVMItC00zT+Qfslf7k
+         XPwJcXHS5Yqou9YeKtzZasfUa0IBR+oKd3/8UzMZ5OoJWWHx9GJuhcGw6K3+tlyk0n
+         uwt2QOQp8XafnZ7gxHa1rLZX+qqYPcs4Lq0RMbM0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiada Wang <jiada_wang@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 070/205] ASoC: rsnd: ssi: Fix issue in dma data address assignment
-Date:   Fri,  8 Nov 2019 06:35:37 -0500
-Message-Id: <20191108113752.12502-70-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 068/205] mt76: Fix comparisons with invalid hardware key index
+Date:   Fri,  8 Nov 2019 06:35:35 -0500
+Message-Id: <20191108113752.12502-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,69 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiada Wang <jiada_wang@mentor.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 0e289012b47a2de1f029a6b61c75998e2f159dd9 ]
+[ Upstream commit 81c8eccc2404d06082025b773f1d90e8c861bc6a ]
 
-Same SSI device may be used in different dai links,
-by only having one dma struct in rsnd_ssi, after the first
-instance's dma config be initilized, the following instances
-can no longer configure dma, this causes issue, when their
-dma data address are different from the first instance.
+With gcc 4.1.2:
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
-[Kuninori: tidyup for upstream]
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Tested-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+    drivers/net/wireless/mediatek/mt76/mt76x0/tx.c: In function ‘mt76x0_tx’:
+    drivers/net/wireless/mediatek/mt76/mt76x0/tx.c:169: warning: comparison is always true due to limited range of data type
+    drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c: In function ‘mt76x2_tx’:
+    drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c:35: warning: comparison is always true due to limited range of data type
+
+While assigning -1 to a u8 works fine, comparing with -1 does not work
+as expected.
+
+Fix this by comparing with 0xff, like is already done in some other
+places.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/rsnd.h | 1 +
- sound/soc/sh/rcar/ssi.c  | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76x0/tx.c        | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
-index 8f7a0abfa751e..f64c7058b258b 100644
---- a/sound/soc/sh/rcar/rsnd.h
-+++ b/sound/soc/sh/rcar/rsnd.h
-@@ -438,6 +438,7 @@ struct rsnd_dai_stream {
- 	char name[RSND_DAI_NAME_SIZE];
- 	struct snd_pcm_substream *substream;
- 	struct rsnd_mod *mod[RSND_MOD_MAX];
-+	struct rsnd_mod *dma;
- 	struct rsnd_dai *rdai;
- 	struct device *dmac_dev; /* for IPMMU */
- 	u32 parent_ssi_status;
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index 9410e0a9b14b7..33dc8d6ad35b2 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -72,7 +72,6 @@
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c b/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
+index 751b49c28ae53..c45d05d5aab1d 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
+@@ -166,7 +166,7 @@ void mt76x0_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
+ 	if (sta) {
+ 		msta = (struct mt76_sta *) sta->drv_priv;
+ 		wcid = &msta->wcid;
+-	} else if (vif && (!info->control.hw_key && wcid->hw_key_idx != -1)) {
++	} else if (vif && (!info->control.hw_key && wcid->hw_key_idx != 0xff)) {
+ 		struct mt76_vif *mvif = (struct mt76_vif *)vif->drv_priv;
  
- struct rsnd_ssi {
- 	struct rsnd_mod mod;
--	struct rsnd_mod *dma;
+ 		wcid = &mvif->group_wcid;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
+index 36afb166fa3ff..c0ca0df84ed8b 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
+@@ -32,7 +32,7 @@ void mt76x2_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
+ 		msta = (struct mt76x2_sta *)control->sta->drv_priv;
+ 		wcid = &msta->wcid;
+ 		/* sw encrypted frames */
+-		if (!info->control.hw_key && wcid->hw_key_idx != -1)
++		if (!info->control.hw_key && wcid->hw_key_idx != 0xff)
+ 			control->sta = NULL;
+ 	}
  
- 	u32 flags;
- 	u32 cr_own;
-@@ -873,7 +872,6 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
- 			      struct rsnd_dai_stream *io,
- 			      struct rsnd_priv *priv)
- {
--	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
- 	int ret;
- 
- 	/*
-@@ -888,7 +886,7 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
- 		return ret;
- 
- 	/* SSI probe might be called many times in MUX multi path */
--	ret = rsnd_dma_attach(io, mod, &ssi->dma);
-+	ret = rsnd_dma_attach(io, mod, &io->dma);
- 
- 	return ret;
- }
 -- 
 2.20.1
 
