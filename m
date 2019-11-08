@@ -2,117 +2,159 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B95FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA879FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFC92084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56EC2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="IvccwVtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfKHRZN (ORCPT
+        id S1728691AbfKHRZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:25:13 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2079 "EHLO huawei.com"
+        Fri, 8 Nov 2019 12:25:40 -0500
+Received: from mx1.cock.li ([185.10.68.5]:41597 "EHLO cock.li"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726101AbfKHRZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:25:12 -0500
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1CCADF52432EBF2D3D08;
-        Fri,  8 Nov 2019 17:25:11 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 8 Nov 2019 17:25:10 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 8 Nov 2019
- 17:25:10 +0000
-Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
- explicitly non-modular"
-To:     Will Deacon <will@kernel.org>
-CC:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20191108151608.20932-1-will@kernel.org>
- <20191108151608.20932-7-will@kernel.org>
- <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
- <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
- <20191108164728.GB20866@willie-the-truck>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <c4cb13d3-3786-2e45-ba57-9965cead9a49@huawei.com>
-Date:   Fri, 8 Nov 2019 17:25:09 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1727168AbfKHRZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:25:40 -0500
 MIME-Version: 1.0
-In-Reply-To: <20191108164728.GB20866@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
+        t=1573233936; bh=DvPBCKCvwYkepsqF//djDiV5yjdiIlN1MfE4y/aJIBU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IvccwVtSSJPXQH5WDnqdwuvUm8Xy708R1ELiN03SlMTLXidJGTGPEyGfdc58Rw9zz
+         gN8OPwuEblZbnTQ0N3pNeQbLyGrdeoApaA5Jlx25vHLXhRd9WOYJQBVnjsre8JFNFK
+         HZtjP1LwWUVJI28d46o1diUoQXHGXvVGmPrc5nwu+hurvU42d7klc8OKhwBTl1OoRN
+         e6KpvQGdYR1YkNx4xuNKMTxrqOc+iMBoE7/auQKvahbO+mWGhE4AYsvR8rQeLzOEtc
+         o1z53BOkHIfN4NZhb4Vo8gzN77giEKst3ns1a30TUpMTkmbXyIhftMoEG7M1Q/sy07
+         2YBKo1y+rc4wQ==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 08 Nov 2019 17:25:32 +0000
+From:   nipponmail@firemail.cc
+To:     chocolatejollis38@gmail.com
+Cc:     gnu-system-discuss@gnu.org,
+        gnu-system-discuss 
+        <gnu-system-discuss-bounces+nipponmail=firemail.cc@gnu.org>,
+        gnu-misc-discuss@gnu.org, rms@gnu.org,
+        Florian Weimer <fw@deneb.enyo.de>,
+        =?UTF-8?Q?Alexandre_Fran=C3=A7ois_Garreau?= 
+        <galex-713@galex-713.eu>, Jean Louis <bugs@gnu.support>,
+        mrbrklyn@panix.com, linux-kernel@vger.kernel.org,
+        Paul Smith <psmith@gnu.org>,
+        Adam Spiers <gnu-system-discuss@adamspiers.org>,
+        debian-user@lists.debian.org, Paolo Bonzini <bonzini@gnu.org>,
+        esr@thyrsus.com, chocolatejollis38@gmail.com
+Subject: Re: Is negative publicity always harmful? - I support RMS' past
+ "pro-paedo" statements
+In-Reply-To: <cb08a870bd2599913720746dc517e605@redchan.it>
+References: <5ec38bda-be9c-337e-ec18-a3b983a68b73@runbox.com>
+ <c41d45a4-9065-4d6f-1958-ff52ad21d564@codesourcery.com>
+ <imnyqlhp.321942@gmail.com> <87ftj2xkzg.fsf@gnu.org>
+ <CAJ=RwfZJa61uhPNy2T2ZDRmbaL6RwyFxfNh3z+1e2utB1hQ52g@mail.gmail.com>
+ <1572981600.4630.57.camel@softwarelibre.nl>
+ <CAJ=RwfZCMoRphnKk=_oO0EX_XskuePX7cozpTaMzt0xO-EaHMw@mail.gmail.com>
+ <bfff5cf7-58e7-5d97-7c7f-9e7b55e3365f@mrbrklyn.com>
+ <cb08a870bd2599913720746dc517e605@redchan.it>
+Message-ID: <2eca235281e708cd1efca264e70b6563@firemail.cc>
+X-Sender: nipponmail@firemail.cc
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/2019 16:47, Will Deacon wrote:
-> On Fri, Nov 08, 2019 at 04:44:25PM +0000, John Garry wrote:
->> On 08/11/2019 16:17, John Garry wrote:
->>> On 08/11/2019 15:16, Will Deacon wrote:
->>>> +MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
->>>
->>> Hi Will,
->>>
->>>>    static struct platform_driver arm_smmu_driver = {
->>>>        .driver    = {
->>>>            .name        = "arm-smmu-v3",
->>>>            .of_match_table    = of_match_ptr(arm_smmu_of_match),
->>>> -        .suppress_bind_attrs = true,
->>>
->>> Does this mean that we can now manually unbind this driver from the SMMU
->>> device?
->>>
->>> Seems dangerous. Here's what happens for me:
->>>
->>> root@ubuntu:/sys# cd ./bus/platform/drivers/arm-smmu-v3
->>> ind @ubuntu:/sys/bus/platform/drivers/arm-smmu-v3# echo
->>> arm-smmu-v3.0.auto > unbind
->>> [   77.580351] hisi_sas_v2_hw HISI0162:01: CQE_AXI_W_ERR (0x800) found!
->>> ho [   78.635473] platform arm-smmu-v3.0.auto: CMD_SYNC timeout at
->>> 0x00000146 [hwprod 0x00000146, hwcons 0x00000000]
->>>
->>>>        },
->>>>        .probe    = arm_smmu_device_probe,
->>>> +    .remove    = arm_smmu_device_remove,
->>>>        .shutdown = arm_smmu_device_shutdown,
->>>>    };
->>>> -builtin_platform_driver(arm_smmu_driver);
->>>> +module_platform_driver(arm_smmu_driver);
->>>> +
->>
->> BTW, it now looks like it was your v1 series I was testing there, on your
->> branch iommu/module. It would be helpful to update for ease of testing.
+On 2019-11-08 04:39, chocolatejollis38@gmail.com wrote:
+> Go to hell, you nasty, sick, subhuman fuck.
 > 
 
-Hi Will,
+Chocolate Jollis 38 at gmail.com:
+We all die and go to Sheol eventually.
+(Except, perhaps, Prophets, here and there)
+(RMS is our Software Prophet)
 
-> Yes, sorry about that. I'll update it now (although I'm not sure it will
-> help with this -- I was going to see what happens with other devices such
-> as the intel-iommu or storage controllers)
+If you think I am "subhuman", judge me on my merits: this is my current 
+free software project: libregamewiki.org/Chaos_Esque_Anthology . I 
+brought it from 18 weapons to over 200, from 3 vehicles to 30, from 0 
+spells to over 50, added city generation, built the building models 
+(which include interiors), built the level-of-detail models for such 
+things, added RTS style building, and mine-craft-style block building, 
+added furnishings, and made 50 levels myself. (And of, course, over 100 
+other models needed, and music, and 2 texturesets I made). All of it is 
+free software and free media (GPL2, GPL3, CC-BY, CC-BY-SA, etc)
 
-So I tried your v2 series for this - it has the same issue, as I 
-anticipated.
+I absolutely support RMS' past "pro-paedo" statements, so do many of us 
+men in the programming and hacker communities. I want RMS to know that, 
+instead of having input only from what are called "normies" today. None 
+of his statements were wrong, but you guys pressured him and pushed him 
+and got him to recant.
 
-It seems that some iommu drivers do call iommu_device_register(), so 
-maybe a decent reference. Or simply stop the driver being unbound.
+And then you attacked him anyway and got him thrown out of his home of 
+40 years. Because you're you. That's what "Your kind" does. Just like my 
+"subhuman" kind writes free software for decades, and supports 
+immigration to turn your terrible societies into a society where men can 
+be happy.
 
-Cheers,
-John
 
+>> On Nov 7, 2019, at 10:20 AM, gameonlinux@redchan.it wrote:
+>> 
+>> \ufeff[Looks like everyone's going all-in in this thread, so be it]
+>> 
+>> I am glad RMS made past pro-paedophile statements. I support them, as 
+>> a man, and as an enemy of women who want men to be equal or servile to 
+>> women.
+>> 
+>> The Torah explicitly allows men to marry female children, including in 
+>> cases of the rape (tahphas) of the girl child: Devarim chapter 22, 
+>> verse 28. Key words: Na'ar (child (hebrew masoretic text)), Padia 
+>> (child: padia+philos = paedophillia (greek septuagint)) Puella (young 
+>> girl (latin vulgate))
+>> 
+>>> Nachmanides points out that a child may be called na'ar from the 
+>>> moment he is born.
+>> 
+>> Sunni Islam also allows child brides: Bukari Hadith book 5. Ashia was 
+>> a child when she married Muhammed:
+>> Sahih Bukhari 5:58:236
+>> Sahih Bukhari 7:62:64
+>> Sahih Bukhari 8:73:151
+>> 
+>> The vedic traditions also allow, or require, child marraige: saying 
+>> that if a man fails to marry his daughter off by 9 or 12 he goes to 
+>> hell.
+>> 
+>> I am a prolific free-software hacker and have been so for 20 years. 
+>> (My current project is: libregamewiki.org/Chaos_Esque_Anthology , 
+>> where I brought the project from 18 weapons to over 200, added spell 
+>> casting, city generation, built many maps(50+) and 3d models (100+), 
+>> along with textures, music, etc)
+>> I am also a licensed attorney.
+>> 
+>> I support RMS' past statements regarding paedophillia, and am saddened 
+>> and hurt that he has retracted them and has stepped away on the path 
+>> to eventually presumably endorsing the jailing, torture, and killing 
+>> of man-on-girl (AKA: virgin marraige) paedophiles: in keeping with the 
+>> religion of his despicable country and the rulers there-of (said 
+>> country's women)
+>> 
+>> Why RMS? Why?
+>> Man+girl is GOOD for men.
+>> It's BAD for women.
+>> Man being an economic slave to woman is GOOD for women, and BAD for 
+>> men. There is no happy middle ground.
+>> 
+>>> On 2019-11-06 02:54, Ruben Safir wrote:
+>>>> On 11/5/19 4:02 PM, Thompson, David wrote:
+>>>> Maybe this would be a reasonable request if we ignored all the 
+>>>> context
+>>>> of what has transpired in the past month or so (which, we must not
+>>>> forget, was just the straw that broke the camel's back after *years*
+>>>> of problematic behavior),
+>>> there has been NO problematic behavior by RMS.  You would never have
+>>> survived 30+ years in the spotlight like he has.  He has been rock 
+>>> solid
+>>> and saying otherwise don't give it any ground.
