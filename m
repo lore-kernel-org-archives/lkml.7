@@ -2,75 +2,152 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F48FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36782FC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2E420656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE6B20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:21:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573240916;
+	bh=XrldGzU/vehg9sYXQT4wwRSAys/T6+j97R70Fz5Jux4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CvIcOzpmnfMO9CsDaiqPgVzD/Z6DRE9d72QeS6iO0oYVXGY/V59094QqaUmBw4AZh
+	 PCeHxPuIhFx4k+HuJvSKmIx+bvM0THUw1kIDUZ0MNmYNSQiNneoYOaOcHYQRCd1SyF
+	 LHSPrNffp2De6qALzNcUeX5qrKquyEGDh2V2ZOqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390522AbfKHTVl (ORCPT
+        id S2388537AbfKHS45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:21:41 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:36558 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732277AbfKHTVj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:21:39 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 89E451539AF1E;
-        Fri,  8 Nov 2019 11:21:38 -0800 (PST)
-Date:   Fri, 08 Nov 2019 11:21:38 -0800 (PST)
-Message-Id: <20191108.112138.629818881403847512.davem@davemloft.net>
-To:     alexandre.torgue@st.com
-Cc:     christophe.roullier@st.com, robh@kernel.org, joabreu@synopsys.com,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        peppe.cavallaro@st.com, linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        andrew@lunn.ch
-Subject: Re: [PATCH V4 net-next 0/4] net: ethernet: stmmac: cleanup clock
- and optimization
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <8c4efcce-b46f-ac94-a367-50ff5d78c8a2@st.com>
-References: <20191107084757.17910-1-christophe.roullier@st.com>
-        <20191107.152640.1457462659040029467.davem@davemloft.net>
-        <8c4efcce-b46f-ac94-a367-50ff5d78c8a2@st.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 08 Nov 2019 11:21:39 -0800 (PST)
+        Fri, 8 Nov 2019 13:56:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388399AbfKHS4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:56:47 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5B412067B;
+        Fri,  8 Nov 2019 18:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573239406;
+        bh=XrldGzU/vehg9sYXQT4wwRSAys/T6+j97R70Fz5Jux4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=v2aEUaOdi95wJsfN5a0AzYmoxXWZ9EOIWE9nmnYK0TMkQrZvv8vK0q2/XgQ2Q+oNV
+         Zv8GlKuC550CrviBKqh67RzlrDkfov0DnlVsIMIXndli/nctvzVmRgd1k/8HGN/jYZ
+         0JMa2/yNfGD0iCxH6NmRbB3hDTFV/LVs+W1f6HRw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Thiemo Nagel <tnagel@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 28/34] inet: stop leaking jiffies on the wire
+Date:   Fri,  8 Nov 2019 19:50:35 +0100
+Message-Id: <20191108174651.026609810@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
+References: <20191108174618.266472504@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Date: Fri, 8 Nov 2019 11:35:23 +0100
+From: Eric Dumazet <edumazet@google.com>
 
-> Hi David
-> 
-> On 11/8/19 12:26 AM, David Miller wrote:
->> From: Christophe Roullier <christophe.roullier@st.com>
->> Date: Thu, 7 Nov 2019 09:47:53 +0100
->> 
->>> Some improvements:
->>>   - manage syscfg as optional clock,
->>>   - update slew rate of ETH_MDIO pin,
->>>   - Enable gating of the MAC TX clock during TX low-power mode
->>>
->>> V4: Update with Andrew Lunn remark
->> This is mostly ARM DT updates, which tree should this go through?
->> I don't want to step on toes this time :-)
->> 
-> 
-> I'll take DT patches in my STM32 tree.
+[ Upstream commit a904a0693c189691eeee64f6c6b188bd7dc244e9 ]
 
-Ok, I took patch #1 into net-next.
+Historically linux tried to stick to RFC 791, 1122, 2003
+for IPv4 ID field generation.
+
+RFC 6864 made clear that no matter how hard we try,
+we can not ensure unicity of IP ID within maximum
+lifetime for all datagrams with a given source
+address/destination address/protocol tuple.
+
+Linux uses a per socket inet generator (inet_id), initialized
+at connection startup with a XOR of 'jiffies' and other
+fields that appear clear on the wire.
+
+Thiemo Nagel pointed that this strategy is a privacy
+concern as this provides 16 bits of entropy to fingerprint
+devices.
+
+Let's switch to a random starting point, this is just as
+good as far as RFC 6864 is concerned and does not leak
+anything critical.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Thiemo Nagel <tnagel@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/dccp/ipv4.c     |    2 +-
+ net/ipv4/datagram.c |    2 +-
+ net/ipv4/tcp_ipv4.c |    4 ++--
+ net/sctp/socket.c   |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+--- a/net/dccp/ipv4.c
++++ b/net/dccp/ipv4.c
+@@ -121,7 +121,7 @@ int dccp_v4_connect(struct sock *sk, str
+ 						    inet->inet_daddr,
+ 						    inet->inet_sport,
+ 						    inet->inet_dport);
+-	inet->inet_id = dp->dccps_iss ^ jiffies;
++	inet->inet_id = prandom_u32();
+ 
+ 	err = dccp_connect(sk);
+ 	rt = NULL;
+--- a/net/ipv4/datagram.c
++++ b/net/ipv4/datagram.c
+@@ -75,7 +75,7 @@ int __ip4_datagram_connect(struct sock *
+ 	inet->inet_dport = usin->sin_port;
+ 	sk->sk_state = TCP_ESTABLISHED;
+ 	sk_set_txhash(sk);
+-	inet->inet_id = jiffies;
++	inet->inet_id = prandom_u32();
+ 
+ 	sk_dst_set(sk, &rt->dst);
+ 	err = 0;
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -239,7 +239,7 @@ int tcp_v4_connect(struct sock *sk, stru
+ 							   inet->inet_sport,
+ 							   usin->sin_port);
+ 
+-	inet->inet_id = tp->write_seq ^ jiffies;
++	inet->inet_id = prandom_u32();
+ 
+ 	err = tcp_connect(sk);
+ 
+@@ -1307,7 +1307,7 @@ struct sock *tcp_v4_syn_recv_sock(const
+ 	inet_csk(newsk)->icsk_ext_hdr_len = 0;
+ 	if (inet_opt)
+ 		inet_csk(newsk)->icsk_ext_hdr_len = inet_opt->opt.optlen;
+-	newinet->inet_id = newtp->write_seq ^ jiffies;
++	newinet->inet_id = prandom_u32();
+ 
+ 	if (!dst) {
+ 		dst = inet_csk_route_child_sock(sk, newsk, req);
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -7734,7 +7734,7 @@ void sctp_copy_sock(struct sock *newsk,
+ 	newinet->inet_rcv_saddr = inet->inet_rcv_saddr;
+ 	newinet->inet_dport = htons(asoc->peer.port);
+ 	newinet->pmtudisc = inet->pmtudisc;
+-	newinet->inet_id = asoc->next_tsn ^ jiffies;
++	newinet->inet_id = prandom_u32();
+ 
+ 	newinet->uc_ttl = inet->uc_ttl;
+ 	newinet->mc_loop = 1;
+
+
