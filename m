@@ -2,119 +2,139 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2035FC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F06EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2E820656
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxvRK/XH"
+	by mail.kernel.org (Postfix) with ESMTP id EA1F42067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573241258;
+	bh=5MuVgvyCLaORD6Q1QL/LqE+iJOwhSsGkPwO+sGRLSxk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=hic68KoQitiyLBv0ieB9kwl+jE3Lp+Bw5Y1VUOR/LCBYFcjSvMygdglljVxGbw1ou
+	 CsOQEgOIfL4PZt8pFkIocsWDgVop9xBmz8bR9tx9YMen/TCQWxGSDo/VgH/UJmd70u
+	 1xLYyStSG+5Hw3DpDMFZ6RnNeOgKxD8ocmZJ46c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbfKHT0f (ORCPT
+        id S1731956AbfKHT1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:26:35 -0500
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:39698 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfKHT0f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:26:35 -0500
-Received: by mail-qk1-f201.google.com with SMTP id s3so7868254qkd.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:26:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=CkJ8BjIClBalW4Y8w4jj3zANoh6LyH1bD+0n/0uxb4s=;
-        b=DxvRK/XHt9Ol7n7p5ISNiuBjXfbFXBOX5S8wdWgPBxQ7FEeX2sENsoymr4muRy1AVS
-         bMIHbLqlBxqFtvFiQWhELfcdvUZF9qc80iNQLX5WhvuEmVaoNpy7zS0w6Cu0N+EzpzGx
-         72eZ+Q8t8olFKWQihVixJ0+T1pKyMuP9zjBIsUDqp1vTSKllBxz5uqHU9PN2O1BAlEPX
-         N4auhyMbYhUFtqk+NOgz9UzzpgiMnmXrjOdmlTaqJfXOUYWtaHuD1ch1AsSaCbLG01LP
-         IHKb1awqa0gnT7qIxphP8Lpgr1tyq6Fpee4bM65068IjxdrMUwp5RlgYwy1rLisCDg6D
-         K72A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=CkJ8BjIClBalW4Y8w4jj3zANoh6LyH1bD+0n/0uxb4s=;
-        b=qjpuIm2NqnZDmXcQ2tUWHSVRFKCv8AWFlLZWh37UinTHhu6Lp0o/ASBgFuMrulMwl2
-         6yLqtXV+mZgfoE1GUS1rPRwgnYKT8rhbvVB/dOlg4mgaUxYEk5Hi9lG0sx8qBwtxermB
-         kqDGZDtYZnNykRVwx/R54fogurx8YgXnPYVH5sP299jywZ2hfK/jI4MHGQNkyci5Tpr7
-         KZEaKiSEecq+RzTlUiTMjbMbDON1gJVkTqAUFBXj+PYz4E2s17zpGKDGJE5RrNEqbPAn
-         BbBIA9aeKEPHIXLFE1oN+5qFaVgrsZpoZ8gbb8uH5hIwJ8mCLftmcZkbIAlCl1isLDfu
-         1HeA==
-X-Gm-Message-State: APjAAAUihi2hxrDYQFtHdCCxMOzK4Xfy0nZ7t12tsC1FJVOqRci4XFuU
-        McdoJ5VuxSFALrEqO0PqxgsL/t54JiE=
-X-Google-Smtp-Source: APXvYqysL+LzuTzAGpCWRV5hZJ/EIYvM6ZlPZycnNHVHeOUPhvj2NV66yrGjKf/4pBFV10bm6riOtOItdKw=
-X-Received: by 2002:a05:620a:12b7:: with SMTP id x23mr10132390qki.31.1573241193752;
- Fri, 08 Nov 2019 11:26:33 -0800 (PST)
-Date:   Fri,  8 Nov 2019 12:26:29 -0700
-In-Reply-To: <20190825200621.211494-1-yuzhao@google.com>
-Message-Id: <20191108192629.201556-1-yuzhao@google.com>
-Mime-Version: 1.0
-References: <20190825200621.211494-1-yuzhao@google.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v2] mm: replace is_zero_pfn with is_huge_zero_pmd for thp
-From:   Yu Zhao <yuzhao@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?=" <jglisse@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yu Zhao <yuzhao@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 8 Nov 2019 14:27:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730416AbfKHT1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:27:36 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [213.233.149.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A1F320659;
+        Fri,  8 Nov 2019 19:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573241255;
+        bh=5MuVgvyCLaORD6Q1QL/LqE+iJOwhSsGkPwO+sGRLSxk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=BNvudVJ7gYMDFWmqv/WHW8fHm7xyInDO1jKuRAGOzHu9CRMPBCzzfsEEdZmdZ+ek9
+         KXykYo7kM/xTjFDQmbgny697e27THLzHt1FCU8U8h+R6uogpvfC4vtBPQzG7ShrtZ6
+         UChU6r6r8iIlsW6jt2bO94WZE1tTq2rJDAglW0dA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8455F35204A1; Fri,  8 Nov 2019 11:27:21 -0800 (PST)
+Date:   Fri, 8 Nov 2019 11:27:21 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Subject: Re: [PATCH 2/2] timer: use hlist_unhashed_lockless() in
+ timer_pending()
+Message-ID: <20191108192721.GC20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191107193738.195914-1-edumazet@google.com>
+ <20191107193738.195914-2-edumazet@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107193738.195914-2-edumazet@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For hugely mapped thp, we use is_huge_zero_pmd() to check if it's
-zero page or not.
+On Thu, Nov 07, 2019 at 11:37:38AM -0800, Eric Dumazet wrote:
+> timer_pending() is mostly used in lockless contexts.
+> 
+> Without proper annotations, KCSAN might detect a data-race [1]
+> 
+> Using hlist_unhashed_lockless() instead of hand-coding it
+> seems appropriate (as suggested by Paul E. McKenney).
+> 
+> [1]
+> 
+> BUG: KCSAN: data-race in del_timer / detach_if_pending
+> 
+> write to 0xffff88808697d870 of 8 bytes by task 10 on cpu 0:
+>  __hlist_del include/linux/list.h:764 [inline]
+>  detach_timer kernel/time/timer.c:815 [inline]
+>  detach_if_pending+0xcd/0x2d0 kernel/time/timer.c:832
+>  try_to_del_timer_sync+0x60/0xb0 kernel/time/timer.c:1226
+>  del_timer_sync+0x6b/0xa0 kernel/time/timer.c:1365
+>  schedule_timeout+0x2d2/0x6e0 kernel/time/timer.c:1896
+>  rcu_gp_fqs_loop+0x37c/0x580 kernel/rcu/tree.c:1639
+>  rcu_gp_kthread+0x143/0x230 kernel/rcu/tree.c:1799
+>  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> 
+> read to 0xffff88808697d870 of 8 bytes by task 12060 on cpu 1:
+>  del_timer+0x3b/0xb0 kernel/time/timer.c:1198
+>  sk_stop_timer+0x25/0x60 net/core/sock.c:2845
+>  inet_csk_clear_xmit_timers+0x69/0xa0 net/ipv4/inet_connection_sock.c:523
+>  tcp_clear_xmit_timers include/net/tcp.h:606 [inline]
+>  tcp_v4_destroy_sock+0xa3/0x3f0 net/ipv4/tcp_ipv4.c:2096
+>  inet_csk_destroy_sock+0xf4/0x250 net/ipv4/inet_connection_sock.c:836
+>  tcp_close+0x6f3/0x970 net/ipv4/tcp.c:2497
+>  inet_release+0x86/0x100 net/ipv4/af_inet.c:427
+>  __sock_release+0x85/0x160 net/socket.c:590
+>  sock_close+0x24/0x30 net/socket.c:1268
+>  __fput+0x1e1/0x520 fs/file_table.c:280
+>  ____fput+0x1f/0x30 fs/file_table.c:313
+>  task_work_run+0xf6/0x130 kernel/task_work.c:113
+>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>  exit_to_usermode_loop+0x2b4/0x2c0 arch/x86/entry/common.c:163
+> 
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 1 PID: 12060 Comm: syz-executor.5 Not tainted 5.4.0-rc3+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine,
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
 
-We do fill ptes with my_zero_pfn() when we split zero thp pmd, but
-this is not what we have in vm_normal_page_pmd() --
-pmd_trans_huge_lock() makes sure of it.
+And I queued this one as well, but again if you would prefer it go
+up elsewhere, for whatever it is worth:
 
-This is a trivial fix for /proc/pid/numa_maps, and AFAIK nobody
-complains about it.
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-Gerald Schaefer asked:
-> Maybe the description could also mention the symptom of this bug?
-> I would assume that it affects anon/dirty accounting in gather_pte_stats(),
-> for huge mappings, if zero page mappings are not correctly recognized.
-
-I came across this while I was looking at the code, so I'm not aware of
-any symptom.
-
-Signed-off-by: Yu Zhao <yuzhao@google.com>
----
- mm/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a079f2..cf209f84ce4a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -654,7 +654,7 @@ struct page *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
- 
- 	if (pmd_devmap(pmd))
- 		return NULL;
--	if (is_zero_pfn(pfn))
-+	if (is_huge_zero_pmd(pmd))
- 		return NULL;
- 	if (unlikely(pfn > highest_memmap_pfn))
- 		return NULL;
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
-
+> ---
+>  include/linux/timer.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/timer.h b/include/linux/timer.h
+> index 1e6650ed066d5d28251b0bd385fc37ef94c96532..0dc19a8c39c9e49a7cde3d34bfa4be8871cbc1c2 100644
+> --- a/include/linux/timer.h
+> +++ b/include/linux/timer.h
+> @@ -164,7 +164,7 @@ static inline void destroy_timer_on_stack(struct timer_list *timer) { }
+>   */
+>  static inline int timer_pending(const struct timer_list * timer)
+>  {
+> -	return timer->entry.pprev != NULL;
+> +	return !hlist_unhashed_lockless(&timer->entry);
+>  }
+>  
+>  extern void add_timer_on(struct timer_list *timer, int cpu);
+> -- 
+> 2.24.0.432.g9d3f5f5b63-goog
+> 
