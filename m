@@ -2,123 +2,126 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8236FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A30C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE52214DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573206319;
-	bh=RyaF0P64KB+zuHRQ5KT30v/2KWtVTZYqW+LT7tjqrkM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CvafaXYjMjiEnRH1RDAoGQDRZ7sdnqcBqEGHxQWE7wsK8f3vABmFsZvsMvcQ2mgTP
-	 JiYT/3etFrm/dLWbiskWj/ABv4fQSFvGYDTLvy4FhNhII9Lic9zNxi/dqnGKtVfYhA
-	 lCM1xRzPdL4ZdkhrHqKXJArMWG778QdFLlFWWWEI=
+	by mail.kernel.org (Postfix) with ESMTP id EFD32214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lbk0ljkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbfKHJpS (ORCPT
+        id S1731340AbfKHJpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:45:18 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44062 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730069AbfKHJpS (ORCPT
+        Fri, 8 Nov 2019 04:45:36 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34189 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbfKHJpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:45:18 -0500
-Received: by mail-oi1-f195.google.com with SMTP id s71so4683939oih.11;
-        Fri, 08 Nov 2019 01:45:16 -0800 (PST)
+        Fri, 8 Nov 2019 04:45:36 -0500
+Received: by mail-wm1-f67.google.com with SMTP id v3so6910016wmh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 01:45:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=w0FiN6gyAyacF2gs8LToS4qHDjvvIl4Fdx7KgNHxcPA=;
+        b=lbk0ljknocwIdkmF9k7GAivkHRDTe/IAjZGyeQYpGPDyWtGzQmSXi4OPx48dAgQO0J
+         TMvYwp/agAMuRMGZj6lkbkJ+rTmtdHV52hEpEf1LJfXOcKs1uYdC7rSy+vs/M8ZR6SKx
+         NU+mmP3iv3Pl2/Y/LVuUzmpS/b3BpIIYVYuCK6Y9GnUbTs/slK8qwiPZzPfCj4GUDkhT
+         OGhdrWrwzuQfnXXtLYvvdNhAV+aANu6mo0CcXevdI5/q3duUfaB1RAoX2SEHj5YztOmt
+         rVtHFeQqKCG1RiVCj1gxnZmQy5THOMv3RalfhBY9RGDSGtgOm5d6M67bKxxnJLiIqyZ2
+         948g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2UcYEqpXM4Ks5cSeDXBgcT+UaloVWs40SjYreEdd2/E=;
-        b=eOeheU5Y+zTGOcagb5GAR6eBrbWUVjyYDLhBA5gs7wKhGjEtVoE/h+5lToDnmximL0
-         +UaXOdrCXR2ee5qecn5o7AP7rkHvzvbWT5fLDc8dB8m9s9ixKLk9eEmiF+LwOW3FNjhP
-         UK7YxckIwB4+XieYMA2VVL3OzXopD7WxcgAJgE1iPYKt0U9/LvWIgtpojh/L75ClP18K
-         vxUHqx8u2AkGY6LsrjmpXGKKx+pjcnBWDEuI8T6R0AAa13Tvtmxa555p1cqkHjJbbAFN
-         cDwyt0XKAC86qJxjHIKK7FNTm53ke59x5VlcP/JFU6csT7rq6o43a+22hxfnnbKIcyrk
-         cQfA==
-X-Gm-Message-State: APjAAAXFQjwOu4+hRXrXOPi0m0DooRvpbdZizc8QTQ6oiOeIa1N+tw4d
-        2XJ2QD/qT85Vid64bIHOTx5vffs4MoxNHvW5sD4=
-X-Google-Smtp-Source: APXvYqxCGQtKJWcBpHJX65cp2GU/cjS3W5KP9vfqBCFJwJo6ZAHeabdQN3yBAgkA6Sc/z9oEmO8Ff7VpUXttTzhC1jg=
-X-Received: by 2002:a05:6808:8c5:: with SMTP id k5mr8874416oij.57.1573206315744;
- Fri, 08 Nov 2019 01:45:15 -0800 (PST)
-MIME-Version: 1.0
-References: <10494959.bKODIZ00nm@kreacher> <3269796.AzLOQfDnpo@kreacher>
- <CAJZ5v0jM3+qMvO6dx=FmK-xF0q3YKOwBf-yUPXSBfRjxJ59Cpg@mail.gmail.com> <000701d59610$e0b3caa0$a21b5fe0$@net>
-In-Reply-To: <000701d59610$e0b3caa0$a21b5fe0$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 8 Nov 2019 10:45:03 +0100
-Message-ID: <CAJZ5v0gsK0OmqAvw2BVGvajPmCTrRGFVVZ0+Y99ZkbbUcWYGOg@mail.gmail.com>
-Subject: Re: [PATCH v2] cpuidle: Use nanoseconds as the unit of time
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=w0FiN6gyAyacF2gs8LToS4qHDjvvIl4Fdx7KgNHxcPA=;
+        b=DOFu9ykGEx9gVOfFtvErg+7yaTFbW5pxombZ0m9SAd7KuTXzp4KIWn2JmkGmCjQkEK
+         pPZeT07F2fD5E6AzYoA8RM67P/OqREknn9q+S1vS7Auomr4y+0yhoU8ej12i2d0osSgA
+         xL/toBQp5/qWsBTR4hZAHPUdzktxuc4WfPLqFjC4Gc3zKoUHMQlR49bcz6lWcKrTOb7f
+         7JnnsW7GZSEEnhem6w4bQgHsSrxGTifQXI5mzTdI/NdTjnWazbdi5LuHBBmlPQldAwB4
+         wJsTHM19N2Wy0s35YC20LBNRYgk1PRnf2KGjp6vID9nnpcgeI9eqkItyZlfL+eH10sti
+         OEWg==
+X-Gm-Message-State: APjAAAVECr8K3jr6q2M29GTBAQifZVUHfaK/jiGaFtj7/Gt2SqTQUP7/
+        yjNWQ/uN7IJvhZ0CjmeWXkL1zQ==
+X-Google-Smtp-Source: APXvYqxyMB4JCp9NWE1ioQbruVXzPQumvhGWe31zInW2/Ji/Iz9hHST1fhd3vJd3yu3ksEJkV7WIVg==
+X-Received: by 2002:a7b:c08f:: with SMTP id r15mr7125636wmh.45.1573206334295;
+        Fri, 08 Nov 2019 01:45:34 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id c24sm10601737wrb.27.2019.11.08.01.45.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 08 Nov 2019 01:45:33 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        keescook+coverity-bot@chromium.org, narmstrong@baylibre.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] crypto: amlogic - fix two resources leak
+Date:   Fri,  8 Nov 2019 09:45:17 +0000
+Message-Id: <1573206317-9926-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 9:45 AM Doug Smythies <dsmythies@telus.net> wrote:
->
-> On 2019.11.07 17:44 Rafael J. Wysocki wrote:
-> > On Thu, Nov 7, 2019 at 3:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >>
-> >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>
-> >> Currently, the cpuidle subsystem uses microseconds as the unit of
-> >> time which (among other things) causes the idle loop to incur some
-> >> integer division overhead for no clear benefit.
-> >>
-> >> In order to allow cpuidle to measure time in nanoseconds, add two
-> >> additional fields, exit_latency_ns and target_residency_ns, to
-> >> represent the exit latency and target residency of an idle state
-> >> in nanoseconds, respectively, to struct cpuidle_state_usage and
-> >> initialize them with the help of the corresponding values in
-> >> microseconds provided by drivers.  In addition to that, change
-> >> cpuidle_governor_latency_req() to return the idle state exit
-> >> latency constraint in nanoseconds.
-> >>
-> >> With that, meeasure idle state residency (last_residency_ns in
-> >> struct cpuidle_device and time_ns in struct cpuidle_driver) in
-> >> nanoseconds and update the cpuidle core and governors accordingly.
-> >>
-> >> However, the menu governor still computes typical intervals in
-> >> microseconds to avoid integer overflows.
-> >
-> > Since this addresses all of the comments received by the RFC version
-> > that was posted over a month ago and I don't see any more issues with
-> > it, I'm tempted to simply queue it up for 5.5 unless somebody sees a
-> > good enough reason why that would be a bad idea.
->
-> Could I please have another day or two?
+This patch fixes two resources leak that occur on error path.
 
-Sure, it won't go straight into linux-next anyway. :-)
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1487403 ("RESOURCE_LEAK")
+Addresses-Coverity-ID: 1487401 ("Resource leaks")
+Fixes: 48fe583fe541 ("crypto: amlogic - Add crypto accelerator for amlogic GXL")
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ drivers/crypto/amlogic/amlogic-gxl-cipher.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-> I did try the RFC version, but not much as I went off on those
-> teo issues and backtracked pretty quickly.
->
-> I have been running this v2 today, with both menu and teo
-> governors. Acquiring some baseline reference data to compare
-> to now. The menu governor response seems different (Supporting
-> information/graphs will come later).
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+index e9283ffdbd23..58b717aab6e8 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+@@ -131,7 +131,8 @@ static int meson_cipher(struct skcipher_request *areq)
+ 	if (areq->iv && ivsize > 0) {
+ 		if (ivsize > areq->cryptlen) {
+ 			dev_err(mc->dev, "invalid ivsize=%d vs len=%d\n", ivsize, areq->cryptlen);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto theend;
+ 		}
+ 		memcpy(bkeyiv + 32, areq->iv, ivsize);
+ 		keyivlen = 48;
+@@ -151,9 +152,10 @@ static int meson_cipher(struct skcipher_request *areq)
+ 
+ 	phykeyiv = dma_map_single(mc->dev, bkeyiv, keyivlen,
+ 				  DMA_TO_DEVICE);
+-	if (dma_mapping_error(mc->dev, phykeyiv)) {
++	err = dma_mapping_error(mc->dev, phykeyiv);
++	if (err) {
+ 		dev_err(mc->dev, "Cannot DMA MAP KEY IV\n");
+-		return -EFAULT;
++		goto theend;
+ 	}
+ 
+ 	tloffset = 0;
+@@ -245,7 +247,6 @@ static int meson_cipher(struct skcipher_request *areq)
+ 	if (areq->iv && ivsize > 0) {
+ 		if (rctx->op_dir == MESON_DECRYPT) {
+ 			memcpy(areq->iv, backup_iv, ivsize);
+-			kzfree(backup_iv);
+ 		} else {
+ 			scatterwalk_map_and_copy(areq->iv, areq->dst,
+ 						 areq->cryptlen - ivsize,
+@@ -254,6 +255,7 @@ static int meson_cipher(struct skcipher_request *areq)
+ 	}
+ theend:
+ 	kzfree(bkeyiv);
++	kzfree(backup_iv);
+ 
+ 	return err;
+ }
+-- 
+2.23.0
 
-That may be good or bad, depending in what way it is different. :-)
-
-> teo just started.
->
-> I lost a bunch of time due to being somewhat linux-next challenged.
-
-No worries, please take your time!
-
-I very much appreciate the testing work you are doing.
-
-Cheers!
