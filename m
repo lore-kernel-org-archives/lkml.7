@@ -2,128 +2,134 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD4CFC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C70FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD0AB20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED20120674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J8gWtGHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732423AbfKHUiE (ORCPT
+        id S1730622AbfKHUmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:38:04 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53628 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726349AbfKHUiB (ORCPT
+        Fri, 8 Nov 2019 15:42:44 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:58294 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKHUmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:38:01 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8KXPHA137890;
-        Fri, 8 Nov 2019 15:37:45 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w5c3yppjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 15:37:45 -0500
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xA8KXeYo139026;
-        Fri, 8 Nov 2019 15:37:44 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w5c3yppj9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 15:37:44 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA8KTvBB014679;
-        Fri, 8 Nov 2019 20:37:43 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 2w41ukaka9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 20:37:43 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8Kbgb140436058
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 20:37:43 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8809AC05F;
-        Fri,  8 Nov 2019 20:37:42 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1E43AC05E;
-        Fri,  8 Nov 2019 20:37:41 +0000 (GMT)
-Received: from [9.41.103.158] (unknown [9.41.103.158])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Nov 2019 20:37:41 +0000 (GMT)
-Subject: Re: [PATCH v3] media: aspeed-video: Fix memory leaks in
- aspeed_video_probe
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        jae.hyun.yoo@linux.intel.com
-Cc:     linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
-        kjlu@umn.edu, openbmc@lists.ozlabs.org,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        emamd001@umn.edu, smccaman@umn.edu,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <da959329-aa40-b6e7-dcc9-48183a8da716@linux.intel.com>
- <20191028171838.28533-1-navid.emamdoost@gmail.com>
-From:   Eddie James <eajames@linux.vnet.ibm.com>
-Message-ID: <6de50e1a-cb05-8d81-d043-00ed25eda845@linux.vnet.ibm.com>
-Date:   Fri, 8 Nov 2019 14:37:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 8 Nov 2019 15:42:44 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8KaroZ135343;
+        Fri, 8 Nov 2019 20:42:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2019-08-05;
+ bh=YFcF5yZOFSYJOtP4chVp60q0TBH1UftoJWGPVLOwz4c=;
+ b=J8gWtGHGofxxuUBifDFLRsga2/1BFYkidP3A5zDU58Tu3fr1K1eBqt5kB3xSW7PNqCTf
+ BvskA5NAWwayKn3zVP2dPsiSSxfxwLN8/QMup2c3fPgjUzdrHROGfC7NR+tB3VlugmBP
+ RcrYDYfcICaV6Gze7WBmNUzTY0Xlk3lZ5tpn5XManydh6BLBWPad1T5ID1wFSFcoY3i0
+ nbwWWJJvySiFAf/DSfnfv31wXz9yF/gg0jkWoBErzFgr0IXIdpKa7VySsIL1a8l5CM7X
+ 8TR8w/pSl+p+FK+UF3/AGAN7iEuqPJzu2nFguUoa9zLN446iQl2WOrIZWXcRd7RZOHFN Bw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2w41w17jep-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 20:42:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA8KXgQC119890;
+        Fri, 8 Nov 2019 20:40:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2w4k3481a6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Nov 2019 20:40:31 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA8KeTDd001743;
+        Fri, 8 Nov 2019 20:40:30 GMT
+Received: from asu (/92.220.18.196)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 Nov 2019 12:40:29 -0800
+Message-ID: <80c402e5fa60cbe7c521c43103d3ee0e8a8c80eb.camel@oracle.com>
+Subject: Re: [PATCH] mm: provide interface for retrieving kmem_cache name
+From:   Knut Omang <knut.omang@oracle.com>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Fri, 08 Nov 2019 21:40:24 +0100
+In-Reply-To: <alpine.DEB.2.21.1911081647230.756@www.lameter.com>
+References: <20191107115404.3030723-1-knut.omang@oracle.com>
+          <20191107115806.GP8314@dhcp22.suse.cz>
+          <27006f47b0b85fb99acee2a638207268aef8d010.camel@oracle.com>
+          <20191107131342.GT8314@dhcp22.suse.cz>
+          <alpine.DEB.2.21.1911081534470.32431@www.lameter.com>
+         <c77e82629f04f0183853884abbeddd871d8f5ab7.camel@oracle.com>
+         <alpine.DEB.2.21.1911081647230.756@www.lameter.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20191028171838.28533-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080198
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9435 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=952
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911080198
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9435 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911080198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-11-08 at 16:49 +0000, Christopher Lameter wrote:
+> On Fri, 8 Nov 2019, Knut Omang wrote:
+> 
+> > On Fri, 2019-11-08 at 15:37 +0000, Christopher Lameter wrote:
+> > > On Thu, 7 Nov 2019, Michal Hocko wrote:
+> > >
+> > > > On Thu 07-11-19 13:26:09, Knut Omang wrote:
+> > > > > On Thu, 2019-11-07 at 12:58 +0100, Michal Hocko wrote:
+> > > > > > On Thu 07-11-19 12:54:04, Knut Omang wrote:
+> > > > > > > With the restructuring done in commit 9adeaa226988
+> > > > > > > ("mm, slab: move memcg_cache_params structure to mm/slab.h")
+> > > > > > >
+> > > > > > > it is no longer possible for code external to mm to access
+> > >
+> > > That patch only affected the memcg_cache_params structure and not
+> > > kmem_cache.
+> > >
+> > > And I do not see any references to the memcg_cache_param?
+> >
+> > Good point, I should have made explicit reference to it.
+> >
+> > It gets inlined into kmem_cache with CONFIG_SLUB if CONFIG_MEMCG is set
+> > (include/linux/slub_def.h, line 112)
+> 
+> Yes but that does not affect the "name" field on line 105
+> 
+> > > The fields that all allocators need to expose are listed in
+> > > the struct kmme_cache definition in linux/mm/slab.h.
+> >
+> > So I take that kmem_cache::name was still intended to be public,
+> > just that that broke due to the inlining of struct memcg_cache_param
+> > in slub_def.h?
+> 
+> The patch did not change the name field. I am not sure what is broken?
+> 
+> Maybe you need memcg_params to compose a name of the memcg with the slab
+> name?
 
-On 10/28/19 12:18 PM, Navid Emamdoost wrote:
-> In the implementation of aspeed_video_probe() the allocated memory for
-> video should be released if either devm_ioremap_resource()
-> or aspeed_video_init() or aspeed_video_setup_video() fails. Replace
-> kzalloc() with devm_kzalloc to avoid explicit release for video.
+No, it's just that the slub definition of struct kmem_cache won't compile because
+the definition of struct memcg_cache_params is no longer available.
 
+Knut
 
-Thanks,
-
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-
-
->
-> Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> Changes in v3:
-> 	-- fix call to devm_kzalloc()
-> ---
->   drivers/media/platform/aspeed-video.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-> index eb12f3793062..70797b41447c 100644
-> --- a/drivers/media/platform/aspeed-video.c
-> +++ b/drivers/media/platform/aspeed-video.c
-> @@ -1646,7 +1646,8 @@ static int aspeed_video_probe(struct platform_device *pdev)
->   {
->   	int rc;
->   	struct resource *res;
-> -	struct aspeed_video *video = kzalloc(sizeof(*video), GFP_KERNEL);
-> +	struct aspeed_video *video =
-> +		devm_kzalloc(&pdev->dev, sizeof(*video), GFP_KERNEL);
->   
->   	if (!video)
->   		return -ENOMEM;
