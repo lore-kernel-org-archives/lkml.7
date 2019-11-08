@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2AEFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDF2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95433218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E3021882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573232321;
-	bh=Yq0WH1A3aBZ2qmcCt7kEOce3q5/xPlNmECeIChQ2Phw=;
+	s=default; t=1573232325;
+	bh=UxxGBHDqjY2VGqy5K9bfQaX5TyXw61uuJhlrbPBRkNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NdQf/SxPC7hEIIdMiCvm3CVUwnCddbzcvreT3A3fKqi9xQljkGSBSkj7XK8LFCzEy
-	 TrxNSSDYz0TCzURUnc2oMhNCp/b6lb5bpZlhHI9V1CE1lymoitkerluPygYpZKsZuh
-	 U0ibcksEzltDU94os2jjjBFk/55Je81hJgY7fggg=
+	b=w7TBisfEznLm9Edi39bITfPRqNpMZHzvrG+UmL4/O3EfUBtZSYO6WTu8XdRovzobt
+	 vQuolmq0XeDUradCI3ceDs6JiwJP5SjeJbUiWsI6XbymMqw+womzz6FiYVNIfDk5HV
+	 iJeL5RM5jiBJWmId92DELSryYRT29nuw0FJVWuZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfKHQ6L (ORCPT
+        id S1729811AbfKHQ6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:58:11 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37744 "EHLO
+        Fri, 8 Nov 2019 11:58:44 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:60969 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfKHQ6L (ORCPT
+        by vger.kernel.org with ESMTP id S1726294AbfKHQ6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 11:58:11 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iT7aM-0002sR-6H; Fri, 08 Nov 2019 17:58:10 +0100
+        id 1iT7aM-0002sR-KS; Fri, 08 Nov 2019 17:58:10 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>, lorenzo.pieralisi@arm.com,
         Andrew.Murray@arm.com, yuzenghui@huawei.com,
         Heyi Guo <guoheyi@huawei.com>
-Subject: [PATCH v2 01/11] irqchip/gic-v3-its: Free collection mapping on device teardown
-Date:   Fri,  8 Nov 2019 16:57:55 +0000
-Message-Id: <20191108165805.3071-2-maz@kernel.org>
+Subject: [PATCH v2 02/11] irqchip/gic-v3-its: Factor out wait_for_syncr primitive
+Date:   Fri,  8 Nov 2019 16:57:56 +0000
+Message-Id: <20191108165805.3071-3-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108165805.3071-1-maz@kernel.org>
 References: <20191108165805.3071-1-maz@kernel.org>
@@ -56,38 +56,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We allocate the collection mapping on device creation, but somehow
-free it on the irqdomain free path, which is pretty inconsistent
-and has led to bugs in the past.
-
-Move it to the point where we teardown the device, making the
-alloc/free symetric.
+Waiting for a redistributor to have performed an operation is a
+common thing to do, and the idiom is already spread around.
+As we're going to make even more use of this, let's have a primitive
+that does just that.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20191027144234.8395-3-maz@kernel.org
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 787e8eec9a7f..cc6aea602a7a 100644
+index cc6aea602a7a..34eab323ea69 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2471,6 +2471,7 @@ static void its_free_device(struct its_device *its_dev)
- 	raw_spin_lock_irqsave(&its_dev->its->lock, flags);
- 	list_del(&its_dev->entry);
- 	raw_spin_unlock_irqrestore(&its_dev->its->lock, flags);
-+	kfree(its_dev->event_map.col_map);
- 	kfree(its_dev->itt);
- 	kfree(its_dev);
+@@ -1090,6 +1090,12 @@ static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
+ 		dsb(ishst);
  }
-@@ -2679,7 +2680,6 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 		its_lpi_free(its_dev->event_map.lpi_map,
- 			     its_dev->event_map.lpi_base,
- 			     its_dev->event_map.nr_lpis);
--		kfree(its_dev->event_map.col_map);
  
- 		/* Unmap device/itt */
- 		its_send_mapd(its_dev, 0);
++static void wait_for_syncr(void __iomem *rdbase)
++{
++	while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
++		cpu_relax();
++}
++
+ static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
+ {
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+@@ -2772,8 +2778,7 @@ static void its_vpe_db_proxy_move(struct its_vpe *vpe, int from, int to)
+ 
+ 		rdbase = per_cpu_ptr(gic_rdists->rdist, from)->rd_base;
+ 		gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_CLRLPIR);
+-		while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
+-			cpu_relax();
++		wait_for_syncr(rdbase);
+ 
+ 		return;
+ 	}
+@@ -2929,8 +2934,7 @@ static void its_vpe_send_inv(struct irq_data *d)
+ 
+ 		rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
+ 		gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_INVLPIR);
+-		while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
+-			cpu_relax();
++		wait_for_syncr(rdbase);
+ 	} else {
+ 		its_vpe_send_cmd(vpe, its_send_inv);
+ 	}
+@@ -2972,8 +2976,7 @@ static int its_vpe_set_irqchip_state(struct irq_data *d,
+ 			gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_SETLPIR);
+ 		} else {
+ 			gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_CLRLPIR);
+-			while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
+-				cpu_relax();
++			wait_for_syncr(rdbase);
+ 		}
+ 	} else {
+ 		if (state)
 -- 
 2.20.1
 
