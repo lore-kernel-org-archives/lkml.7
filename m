@@ -2,121 +2,164 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_SBL,
-	URIBL_SBL_A,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1102FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C83C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7331F21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83FB21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CSeBGviP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SG91JlLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbfKHJAr (ORCPT
+        id S1731169AbfKHJAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:00:47 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36659 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730005AbfKHJAq (ORCPT
+        Fri, 8 Nov 2019 04:00:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20214 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731127AbfKHJAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:00:46 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k13so3585040pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 01:00:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=4mA/9w+p4ZyPfP618OGaLYeasHgkEFTburLhkdeh8Lw=;
-        b=CSeBGviPRt2/P3HOhMFEdRZs+ILwW5TPxv/TB+YeJDUPzK2T3ptP3mKQO5BjNoUIvE
-         ag5ENFE/uMiUHfofqja/O4qkx1fgWpSbjKf7E9qJ6jKNvrstn30J7dQ0JwWJh6vMRd/2
-         pC22Lqp60LieCWtmhZIsFDpR+qEFDRR+nzuxvB7XUI3q9oVhtRg6MImhtUHYmT+NELIM
-         6ZidCcZ+Q68re198a/5oL6XCXgfHsCAxu/Z5KPqRFJJXvAutuG4fQ7ZYBTSRoyry19NU
-         teIGjhsIzppsebkiow26ahkc5wwA6ZGjrFAje4GyImyHoUdMPJCyCcWfV0lRARAdkJUi
-         lsaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4mA/9w+p4ZyPfP618OGaLYeasHgkEFTburLhkdeh8Lw=;
-        b=eSrIKPYu0RfP6Mpq3rHNWvz/0enRC2AotfP5ABc3NlAX5zTrDkIXhYaNRfKLvbEL7y
-         P+U4Qs8TY+ErtEK1LML5DcMiFD2nlaW/TFUpGNre9qOTJWiPVgW/LtOJv8Ddhr2Sabd/
-         9Mcwz4ClVyr3YcskwbS8bzHbcPCc0DdTA3lcYQME8NYrAAJ45MI1iTTFChdZ1FCg/kgu
-         7urbb6Hyt6DY41TvPgv0tnWMum45L8G9Z0yDFiJmdHmyFjel43rG9Vp1KCLJHVpv289E
-         KMwflCwJxx1vaOMYJ/tQQ513GK0T/1aPqK7YdQMFls0tGp/p02eZ45WdZazYiYiSwYdr
-         15Cw==
-X-Gm-Message-State: APjAAAXd9GMYBkW9kCDVYUNJ18xhV7fosU2MZKV8qKbZg+H7ND/u9NBQ
-        KN+hJXInvs3SxSVocWuZB4kFI/6Nbzg=
-X-Google-Smtp-Source: APXvYqx4IphqT43H1gJB2tzKQeJV2eonVGQE6tl6qIW3cvRDXBGlE55PSNn/1/Xn54s0jPojQmXuWg==
-X-Received: by 2002:aa7:8d04:: with SMTP id j4mr2048566pfe.49.1573203645268;
-        Fri, 08 Nov 2019 01:00:45 -0800 (PST)
-Received: from gamma07.internal.sifive.com ([64.62.193.194])
-        by smtp.gmail.com with ESMTPSA id m65sm8636707pje.3.2019.11.08.01.00.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 08 Nov 2019 01:00:44 -0800 (PST)
-From:   Zong Li <zong.li@sifive.com>
-To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, anup@brainfault.org,
-        hch@infradead.org
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH v3] riscv: Use PMD_SIZE to repalce PTE_PARENT_SIZE
-Date:   Fri,  8 Nov 2019 01:00:40 -0800
-Message-Id: <1573203640-6173-1-git-send-email-zong.li@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 8 Nov 2019 04:00:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573203649;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=R1cBLL262d5PbXD6F0/Q3yv5N9eCafn0HD776UEyAek=;
+        b=SG91JlLCeADjMyj5cTm5UO32Fa4MbJcFWFSa/rfsD+cHI1cxegWgd8kIQsoUxdN0Xnvt3X
+        pchBTqqR1TWN9jf8vKlgQVKEIPwG/iia1OmsXz6e8Tn5KXpDXNCBXDTsXwgfbnjWOCx57W
+        lEDWwjazV4sLIeptRolU/39IQ4GBp6o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-uiASuWksMTKVsC_UFMqNDA-1; Fri, 08 Nov 2019 04:00:45 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADB88477;
+        Fri,  8 Nov 2019 09:00:43 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-112.pek2.redhat.com [10.72.12.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94FFA5D6A5;
+        Fri,  8 Nov 2019 09:00:32 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
+        horms@verge.net.au, kexec@lists.infradead.org
+Subject: [PATCH 0/3 v9] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
+Date:   Fri,  8 Nov 2019 17:00:24 +0800
+Message-Id: <20191108090027.11082-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: uiASuWksMTKVsC_UFMqNDA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PMD_SIZE is equal to PGDIR_SIZE when __PAGETABLE_PMD_FOLDED is
-defined.
+In purgatory(), the main things are as below:
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
+[1] verify sha256 hashes for various segments.
+    Lets keep these codes, and do not touch the logic.
 
----
- arch/riscv/mm/init.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+[2] copy the first 640k content to a backup region.
+    Lets safely remove it and clean all code related to backup region.
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 573463d..e83df7a 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -273,7 +273,6 @@ static void __init create_pmd_mapping(pmd_t *pmdp,
- #define get_pgd_next_virt(__pa)	get_pmd_virt(__pa)
- #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)	\
- 	create_pmd_mapping(__nextp, __va, __pa, __sz, __prot)
--#define PTE_PARENT_SIZE		PMD_SIZE
- #define fixmap_pgd_next		fixmap_pmd
- #else
- #define pgd_next_t		pte_t
-@@ -281,7 +280,6 @@ static void __init create_pmd_mapping(pmd_t *pmdp,
- #define get_pgd_next_virt(__pa)	get_pte_virt(__pa)
- #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)	\
- 	create_pte_mapping(__nextp, __va, __pa, __sz, __prot)
--#define PTE_PARENT_SIZE		PGDIR_SIZE
- #define fixmap_pgd_next		fixmap_pte
- #endif
- 
-@@ -314,14 +312,11 @@ static void __init create_pgd_mapping(pgd_t *pgdp,
- 
- static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
- {
--	uintptr_t map_size = PAGE_SIZE;
-+	/* Upgrade to PMD_SIZE mappings whenever possible */
-+	if ((base & (PMD_SIZE - 1)) || (size & (PMD_SIZE - 1)))
-+		return PAGE_SIZE;
- 
--	/* Upgrade to PMD/PGDIR mappings whenever possible */
--	if (!(base & (PTE_PARENT_SIZE - 1)) &&
--	    !(size & (PTE_PARENT_SIZE - 1)))
--		map_size = PTE_PARENT_SIZE;
--
--	return map_size;
-+	return PMD_SIZE;
- }
- 
- /*
--- 
-2.7.4
+This patch series will remove the backup region, because the current
+handling of copying the first 640k runs into problems when SME is
+active(https://bugzilla.kernel.org/show_bug.cgi?id=3D204793).
+
+The low 1M region will always be reserved when the crashkernel kernel
+command line option is specified. And this way makes it unnecessary to
+do anything with the low 1M region, because the memory allocated later
+won't fall into the low 1M area.
+
+This series includes three patches:
+[1] x86/kdump: always reserve the low 1M when the crashkernel option
+    is specified
+    The low 1M region will always be reserved when the crashkernel
+    kernel command line option is specified, which ensures that the
+    memory allocated later won't fall into the low 1M area.
+
+[2] x86/kdump: clean up all the code related to the backup region
+    Remove the backup region and clean up.
+
+[3] kexec: Fix i386 build warnings that missed declaration of struct
+    kimage
+
+Changes since v1:
+[1] Add extra checking condition: when the crashkernel option is
+    specified, reserve the low 640k area.
+
+Changes since v2:
+[1] Reserve the low 1M region when the crashkernel option is only
+    specified.(Suggested by Eric)
+
+[2] Remove the unused crash_copy_backup_region()
+
+[3] Remove the backup region and clean up
+
+[4] Split them into three patches
+
+Changes since v3:
+[1] Improve the first patch's log
+
+[2] Improve the third patch based on Eric's suggestions
+
+Changes since v4:
+[1] Correct some typos, and also improve the first patch's log
+
+[2] Add a new function kexec_reserve_low_1MiB() in kernel/kexec_core.c
+    and which is called by reserve_real_mode(). (Suggested by Boris)
+
+Changes since v5:
+[1] Call the cmdline_find_option() instead of strstr() to check the
+    crashkernel option. (Suggested by Hatayama)
+
+[2] Add a weak function kexec_reserve_low_1MiB() in kernel/kexec_core.c,
+    and implement the kexec_reserve_low_1MiB() in arch/x86/kernel/
+    machine_kexec_64.c so that it does not cause the compile error
+    on non-x86 kernel, and also ensures that it can work well on x86
+    kernel.
+
+Changes since v6:
+[1] Move the kexec_reserve_low_1MiB() to arch/x86/kernel/crash.c and
+    also move its declaration function to arch/x86/include/asm/crash.h
+    (Suggested by Dave Young)
+
+[2] Adjust the corresponding header files.
+
+Changes since v7:
+[1] Change the function name from kexec_reserve_low_1MiB() to
+    crash_reserve_low_1M().
+
+[2] Fix some warnings reported by kduild.
+
+Changes since v8:
+[1] Fix some build warnings reported by kbuild and make it as a separate
+    patch.
+
+Lianbo Jiang (3):
+  x86/kdump: always reserve the low 1M when the crashkernel option is
+    specified
+  x86/kdump: clean up all the code related to the backup region
+  kexec: Fix i386 build warnings that missed declaration of struct
+    kimage
+
+ arch/x86/include/asm/crash.h       |   8 +++
+ arch/x86/include/asm/kexec.h       |  10 ---
+ arch/x86/include/asm/purgatory.h   |  10 ---
+ arch/x86/kernel/crash.c            | 102 ++++++++---------------------
+ arch/x86/kernel/machine_kexec_64.c |  47 -------------
+ arch/x86/purgatory/purgatory.c     |  19 ------
+ arch/x86/realmode/init.c           |   2 +
+ 7 files changed, 36 insertions(+), 162 deletions(-)
+
+--=20
+2.17.1
 
