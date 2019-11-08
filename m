@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2749FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30191FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69943222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2259222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213171;
-	bh=quaFVzJRdtGC0pYG6THaiNj51wCyvvfrzByeOymHtEo=;
+	s=default; t=1573213178;
+	bh=dpSjd1hk84fWWcoabhUygmApwukG2qV9KDnFTNF0n4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tujU5r6IkEiHXx3kMskYTd8AxQPtBfwaRCaI4m7OLPbQcFTk+Fy6rtb2B5JwzyWel
-	 t3pjSpj7y94sLjtAqGa68z1iT/Ch5csSmD+7jLSnjWBnR2KmSETRLgCg1vrFXnmvwP
-	 f/kQEPKs7tqRTnQBmxsIuLoG4iHn3x1CP8B0Le3k=
+	b=TzXGmV5pX/BrXCvryP8LwcIhU+l2fzOCwL62kLfzGxdwWAA5J6ADoOGIAmhVO1kD3
+	 xgAsJgQyG2VB73ij+ct0CVcWTNDRlhlnk8XAWYrG1O9wbxwqN7LQ9UaWMvTaDXrbe7
+	 zx37XcTqtNmIAupmaJz4TqmkMG0cZYTpmhAzI6Vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387541AbfKHLja (ORCPT
+        id S2387724AbfKHLjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:39:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52086 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:39:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733118AbfKHLjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:09 -0500
+        id S1733266AbfKHLjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7982620869;
-        Fri,  8 Nov 2019 11:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF50D20869;
+        Fri,  8 Nov 2019 11:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213149;
-        bh=quaFVzJRdtGC0pYG6THaiNj51wCyvvfrzByeOymHtEo=;
+        s=default; t=1573213162;
+        bh=dpSjd1hk84fWWcoabhUygmApwukG2qV9KDnFTNF0n4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16X08zWAS1efqdqalvvGccLUXYgq2tuDRnRNSaQ2h5dDY9Ux11PjRhUHf7sfOLzf2
-         HfEu+sPxLadm8wG+KI46BVTtXTFizvHFCqvmerOftgtZVOt79bQr3ahfm4vnTZw/iV
-         7ZyNVwFVObRzGLqXtNKME4+nbkvy3Xk4Aey+RKZI=
+        b=e0Q1atK0JSKAM7ED9iKEbpRoPvUI+pKdiuYcPxJRf6YLAd59Gw3jr4wB/V5axgYT9
+         xLpzdD5+Q49vOdWGQLfJCXchi8iD0ij+xMzdEe4q5RaTH4fZx7se26DwO0OOBiFjiP
+         8vvjrhNRyKcQaDMKDDLwkNcYGY5CfnQn7gdNSXwA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 058/205] iwlwifi: mvm: avoid sending too many BARs
-Date:   Fri,  8 Nov 2019 06:35:25 -0500
-Message-Id: <20191108113752.12502-58-sashal@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 067/205] brcmfmac: fix wrong strnchr usage
+Date:   Fri,  8 Nov 2019 06:35:34 -0500
+Message-Id: <20191108113752.12502-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,48 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 1a19c139be18ed4d6d681049cc48586fae070120 ]
+[ Upstream commit cb18e2e9ec71d42409a51b83546686c609780dde ]
 
-When we receive TX response, we may release a few packets
-due to a hole that was closed in the transmission window.
+strnchr takes arguments in the order of its name: string, max bytes to
+read, character to search for. Here we're passing '\n' aka 10 as the
+buffer size, and searching for sizeof(buf) aka BRCMF_DCMD_SMLEN aka
+256 (aka '\0', since it's implicitly converted to char) within those 10
+bytes.
 
-However, if that frame failed, we will mark all the released
-frames as failed and will send multiple BARs.
+Just interchanging the last two arguments would still leave a bug,
+because if we've been successful once, there are not sizeof(buf)
+characters left after the new value of p.
 
-This affects statistics badly, and cause unnecessary frames
-transmission.
+Since clmver is immediately afterwards passed as a %s argument, I assume
+that it is actually a properly nul-terminated string. For that case, we
+have strreplace().
 
-Instead, mark all the following packets as success, with the
-desired result of sending a bar for the failed frame only.
-
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index 5615ce55cef56..cb2e52e7f46c9 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -1438,6 +1438,14 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
- 			break;
- 		}
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index 27893af63ebc3..8510d207ee87d 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -296,9 +296,7 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
+ 		/* Replace all newline/linefeed characters with space
+ 		 * character
+ 		 */
+-		ptr = clmver;
+-		while ((ptr = strnchr(ptr, '\n', sizeof(buf))) != NULL)
+-			*ptr = ' ';
++		strreplace(clmver, '\n', ' ');
  
-+		/*
-+		 * If we are freeing multiple frames, mark all the frames
-+		 * but the first one as acked, since they were acknowledged
-+		 * before
-+		 * */
-+		if (skb_freed > 1)
-+			info->flags |= IEEE80211_TX_STAT_ACK;
-+
- 		iwl_mvm_tx_status_check_trigger(mvm, status);
- 
- 		info->status.rates[0].count = tx_resp->failure_frame + 1;
+ 		brcmf_dbg(INFO, "CLM version = %s\n", clmver);
+ 	}
 -- 
 2.20.1
 
