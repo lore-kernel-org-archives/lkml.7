@@ -2,92 +2,105 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D46FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB004FC6194
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9029921D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573183531;
-	bh=OQWLutCvyBNF31F7nVyat1ronJZrpce2IWGhQEDJklg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FK4x6RaXdxQzM5T3hLlANSKYUMBsrUHFL39TMCFhgT3srfTzNZ3fhS4Lx4Eo0h9Fl
-	 Uwq2XAZ3IHkR/r4+rixVEa1GYcN89CN/U9yDd3BEd6CKBk4EYrRwSe8sL3FIWyIjGu
-	 essBzDjZNBtG5EUxAHIApCw6DhIEQefrUqDMxkDs=
+	by mail.kernel.org (Postfix) with ESMTP id A17152087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 03:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sNGAbhpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfKHDZa (ORCPT
+        id S1729372AbfKHD1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 22:25:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38220 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 22:27:06 -0500
+Received: from ozlabs.org ([203.11.71.1]:48115 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfKHDZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 22:25:29 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726094AbfKHD1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 22:27:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C222084D;
-        Fri,  8 Nov 2019 03:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573183529;
-        bh=OQWLutCvyBNF31F7nVyat1ronJZrpce2IWGhQEDJklg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EL2vfDt6Mw43aU8kaHTYInmtABbFRAMAOtsu/cUlsSL+yYrhw0c5kItTFOXfkIjl8
-         Y0b/qWgeolc6lq72oqbSsaPu3G7EN0ptlwK005z41DkQtbsDfU/HxzMGK8hKMkguIH
-         SfXE8gnrqWFYUWlSvy6ewTwdns60UlSGCNDkbslM=
-Date:   Thu, 7 Nov 2019 19:25:28 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Nicolas Geoffray <ngeoffray@google.com>,
-        kernel-team@android.com, Hugh Dickins <hughd@google.com>,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH 1/2] memfd: Fix COW issue on MAP_PRIVATE and
- F_SEAL_FUTURE_WRITE mappings
-Message-Id: <20191107192528.0c22e8e122a04d4f8d29c5eb@linux-foundation.org>
-In-Reply-To: <20191108020614.GA99567@google.com>
-References: <20191107195355.80608-1-joel@joelfernandes.org>
-        <20191107170023.0695732bb67eb80acd4caee5@linux-foundation.org>
-        <20191108020614.GA99567@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 478QgC2dbPz9sP3;
+        Fri,  8 Nov 2019 14:27:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573183623;
+        bh=L8hdrEO/Huj0NNEdUGCwZ1N0P5lIySi3cYQ2RznsqxM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sNGAbhpUt8NW9XFdADVLAZgshLKGV7a8WPjz4a59usGSRpAGW9HDxJQBT7B+ss/bw
+         R8zr+qM12QRAP/5Igbdc1DdtSMOFjnMsuffl+Nk7z9963LArwoATS5lHypUb1MHVEY
+         pdZzPdH8Ta4jDxr3y2wztyd/WIcW3MQW+dTID86CsHcjnKTUqXLE610kmOiR88ZpYp
+         zUBoUEqCX6lZD//CZ+sXeT9/8jZ2QHbMKSTFBOdYi+d95zkcUr0afy9kv1mL86AYvP
+         7pE8q85AKndBZV91PFI5y6ou6y8lB9XhKUTZ+NhzvVVABWeveVcp4B7BuakW5ZdeUp
+         PlRdMmERYKT1Q==
+Date:   Fri, 8 Nov 2019 14:27:02 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Drew Fustini <drew@pdp7.com>,
+        Kent Gibson <warthog618@gmail.com>
+Subject: linux-next: manual merge of the gpio-brgl tree with the gpio tree
+Message-ID: <20191108142702.2e5ddcbb@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/2rv=tye26ORUMSS_.+MQj/e";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 21:06:14 -0500 Joel Fernandes <joel@joelfernandes.org> wrote:
+--Sig_/2rv=tye26ORUMSS_.+MQj/e
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Nov 07, 2019 at 05:00:23PM -0800, Andrew Morton wrote:
-> > On Thu,  7 Nov 2019 14:53:54 -0500 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> > 
-> > > F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
-> > > A private mapping created after the memfd file that gets sealed with
-> > > F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
-> > > children and parent share the same memory, even though the mapping is
-> > > private.
-> > 
-> > That sounds fairly serious.  Should this be backported into -stable kernels?
-> 
-> Yes, it should be.
+Hi all,
 
-I added
+Today's linux-next merge of the gpio-brgl tree got conflicts in:
 
-Fixes: ab3948f58ff84 ("mm/memfd: add an F_SEAL_FUTURE_WRITE seal to memfd")
-Cc: <stable@vger.kernel.org>
+  drivers/gpio/gpiolib.c
+  include/uapi/linux/gpio.h
 
-> The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so
-> v5.3.x stable kernels would need a backport. I can submit a backport tomorrow
-> unless we are Ok with stable automatically picking it up (I believe the
-> stable folks "auto select" fixes which should detect this is a fix since I
-> have said it is a fix in the subject line).
+between commit:
 
-The Cc:stable tag should trigger the appropriate actions, assisted by
-the Fixes:.  I doubt if "fix" in the Subject has much effect.
+  8c550e94b883 ("gpio: expose pull-up/pull-down line flags to userspace")
 
+from the gpio tree and commit:
+
+  6d8251b35add ("gpio: expose pull-up/pull-down line flags to userspace")
+
+from the gpio-brgl tree.
+
+I fixed it up (I just used the latter versions) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2rv=tye26ORUMSS_.+MQj/e
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3E4IYACgkQAVBC80lX
+0Gz6qwf/XcJlSZnD1nvsIWYKt3bYAcZPwJ5SHTpHxXCt3KRgGzhuFvrOFStz98fu
+VB34wGTf5cPxiha99/ZLbc/mj6LB6LGboQdcTiG2GjIRWRqnAp/jDZHx3mJFO3XO
+3Wi7DPbaDDHgfIkvoiQDZ2mcY1csL8/apWMiNSz0a9IaphBVuqV12+7A3bilMNFW
+i12lVS4TXnmEflw5k2tzx0NKK0UU5WoLWBoF2/6HKs5UjSb2+2WdwfkUG2Xo2LIo
+0sMgIu2KZxbOReZ8RluKAlCNlqPmE49AhYX7VEEO9o7/tLfh9+4IbnXr8WanSqg5
+XrExPGDPWDt2s0djCIXYn3RgvUYnHA==
+=TjAD
+-----END PGP SIGNATURE-----
+
+--Sig_/2rv=tye26ORUMSS_.+MQj/e--
