@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26885C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE865FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F032820673
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A4721D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240112;
-	bh=hkUr9mVII/pWMUyNQSBGENs7BmcYT7x/GDuTB7r/VGo=;
+	s=default; t=1573240117;
+	bh=TAuMHgqwJJKTmBeWOg5vHut9F581cQ4TYt5g1x0s8Pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mzLxEj4lfnBaPUAblz0yUdBYf+bEZ4pcc+/QPtAwW3CLH6EhY8W+sxoZTJ6lrmOmC
-	 uIX6Fo7AIZ6NZEhQzbON0CsSjsmsS+Ck/37wbJMtUu5wis5q2098hiKDZretrXo7Sn
-	 /N9FVaOQcKov+S+5ZChVq9Yq4rhiUXuivnq/wdVo=
+	b=FzmlCgsoIBlvowetRrbUVqCddfJ5OQG8/hbxiufN29DGHCMEJQlHREM0Raz4sDvuC
+	 Zar0ttR2nGeU7bb4uDU5tWANSOdcKWlvE97Z7HY7UsZW4MO8k76j0MYyxS7OuxsCgs
+	 Ib5iVv2DqdA62hfWRQWRelTWPIlB8oyC+vlnse1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391147AbfKHTIa (ORCPT
+        id S2391655AbfKHTIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:08:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39412 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:08:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390840AbfKHTIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:08:25 -0500
+        id S2391628AbfKHTIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:08:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49346206A3;
-        Fri,  8 Nov 2019 19:08:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3AD206A3;
+        Fri,  8 Nov 2019 19:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240104;
-        bh=hkUr9mVII/pWMUyNQSBGENs7BmcYT7x/GDuTB7r/VGo=;
+        s=default; t=1573240113;
+        bh=TAuMHgqwJJKTmBeWOg5vHut9F581cQ4TYt5g1x0s8Pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exia+78lKuw4VwN/RSzng+8mUsn9SJeTDDXmPz04p70A4YyzLtCxHSrS4w6BGJujD
-         ZksDKc9In6e4HQCWpjFChHSOY0AkLL02tDH7Xq3n1M80cCJ1q7n79m8/b/88wthZX0
-         l8lNHUqV9GXgUPpERgWJumcip35rpFClCLaXVpR8=
+        b=C+Wk7k39kzyKJKzYJUOoQ604rrl6M2x4iSZQ8yZyEnXs9WzVXTwdiKBZHHw9cO9fb
+         Q7Df4C62ks1RGgcumqhm93oDqFdZH/LmhbSEYetCq1C+efon4ZmnkOd/1noIzv2R6D
+         gjhVkY6tL5a51mgSuuVA0sp4erUiHEEA5NeRWSnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 090/140] net/mlx4_core: Dynamically set guaranteed amount of counters per VF
-Date:   Fri,  8 Nov 2019 19:50:18 +0100
-Message-Id: <20191108174910.752221626@linuxfoundation.org>
+        stable@vger.kernel.org, Woojung Huh <woojung.huh@microchip.com>,
+        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Miller <davem@davemloft.net>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH 5.3 093/140] net: usb: lan78xx: Disable interrupts before calling generic_handle_irq()
+Date:   Fri,  8 Nov 2019 19:50:21 +0100
+Message-Id: <20191108174910.923423603@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -61,94 +65,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Daniel Wagner <dwagner@suse.de>
 
-[ Upstream commit e19868efea0c103f23b4b7e986fd0a703822111f ]
+[ Upstream commit 0a29ac5bd3a988dc151c8d26910dec2557421f64 ]
 
-Prior to this patch, the amount of counters guaranteed per VF in the
-resource tracker was MLX4_VF_COUNTERS_PER_PORT * MLX4_MAX_PORTS. It was
-set regardless if the VF was single or dual port.
-This caused several VFs to have no guaranteed counters although the
-system could satisfy their request.
+lan78xx_status() will run with interrupts enabled due to the change in
+ed194d136769 ("usb: core: remove local_irq_save() around ->complete()
+handler"). generic_handle_irq() expects to be run with IRQs disabled.
 
-The fix is to dynamically guarantee counters, based on each VF
-specification.
+[    4.886203] 000: irq 79 handler irq_default_primary_handler+0x0/0x8 enabled interrupts
+[    4.886243] 000: WARNING: CPU: 0 PID: 0 at kernel/irq/handle.c:152 __handle_irq_event_percpu+0x154/0x168
+[    4.896294] 000: Modules linked in:
+[    4.896301] 000: CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.6 #39
+[    4.896310] 000: Hardware name: Raspberry Pi 3 Model B+ (DT)
+[    4.896315] 000: pstate: 60000005 (nZCv daif -PAN -UAO)
+[    4.896321] 000: pc : __handle_irq_event_percpu+0x154/0x168
+[    4.896331] 000: lr : __handle_irq_event_percpu+0x154/0x168
+[    4.896339] 000: sp : ffff000010003cc0
+[    4.896346] 000: x29: ffff000010003cc0 x28: 0000000000000060
+[    4.896355] 000: x27: ffff000011021980 x26: ffff00001189c72b
+[    4.896364] 000: x25: ffff000011702bc0 x24: ffff800036d6e400
+[    4.896373] 000: x23: 000000000000004f x22: ffff000010003d64
+[    4.896381] 000: x21: 0000000000000000 x20: 0000000000000002
+[    4.896390] 000: x19: ffff8000371c8480 x18: 0000000000000060
+[    4.896398] 000: x17: 0000000000000000 x16: 00000000000000eb
+[    4.896406] 000: x15: ffff000011712d18 x14: 7265746e69206465
+[    4.896414] 000: x13: ffff000010003ba0 x12: ffff000011712df0
+[    4.896422] 000: x11: 0000000000000001 x10: ffff000011712e08
+[    4.896430] 000: x9 : 0000000000000001 x8 : 000000000003c920
+[    4.896437] 000: x7 : ffff0000118cc410 x6 : ffff0000118c7f00
+[    4.896445] 000: x5 : 000000000003c920 x4 : 0000000000004510
+[    4.896453] 000: x3 : ffff000011712dc8 x2 : 0000000000000000
+[    4.896461] 000: x1 : 73a3f67df94c1500 x0 : 0000000000000000
+[    4.896466] 000: Call trace:
+[    4.896471] 000:  __handle_irq_event_percpu+0x154/0x168
+[    4.896481] 000:  handle_irq_event_percpu+0x50/0xb0
+[    4.896489] 000:  handle_irq_event+0x40/0x98
+[    4.896497] 000:  handle_simple_irq+0xa4/0xf0
+[    4.896505] 000:  generic_handle_irq+0x24/0x38
+[    4.896513] 000:  intr_complete+0xb0/0xe0
+[    4.896525] 000:  __usb_hcd_giveback_urb+0x58/0xd8
+[    4.896533] 000:  usb_giveback_urb_bh+0xd0/0x170
+[    4.896539] 000:  tasklet_action_common.isra.0+0x9c/0x128
+[    4.896549] 000:  tasklet_hi_action+0x24/0x30
+[    4.896556] 000:  __do_softirq+0x120/0x23c
+[    4.896564] 000:  irq_exit+0xb8/0xd8
+[    4.896571] 000:  __handle_domain_irq+0x64/0xb8
+[    4.896579] 000:  bcm2836_arm_irqchip_handle_irq+0x60/0xc0
+[    4.896586] 000:  el1_irq+0xb8/0x140
+[    4.896592] 000:  arch_cpu_idle+0x10/0x18
+[    4.896601] 000:  do_idle+0x200/0x280
+[    4.896608] 000:  cpu_startup_entry+0x20/0x28
+[    4.896615] 000:  rest_init+0xb4/0xc0
+[    4.896623] 000:  arch_call_rest_init+0xc/0x14
+[    4.896632] 000:  start_kernel+0x454/0x480
 
-Fixes: 9de92c60beaa ("net/mlx4_core: Adjust counter grant policy in the resource tracker")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Fixes: ed194d136769 ("usb: core: remove local_irq_save() around ->complete() handler")
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Stefan Wahren <wahrenst@gmx.net>
+Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: David Miller <davem@davemloft.net>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Tested-by: Stefan Wahren <wahrenst@gmx.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |   42 +++++++++++-------
- 1 file changed, 26 insertions(+), 16 deletions(-)
+ drivers/net/usb/lan78xx.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-@@ -471,12 +471,31 @@ void mlx4_init_quotas(struct mlx4_dev *d
- 		priv->mfunc.master.res_tracker.res_alloc[RES_MPT].quota[pf];
- }
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -1265,8 +1265,11 @@ static void lan78xx_status(struct lan78x
+ 		netif_dbg(dev, link, dev->net, "PHY INTR: 0x%08x\n", intdata);
+ 		lan78xx_defer_kevent(dev, EVENT_LINK_RESET);
  
--static int get_max_gauranteed_vfs_counter(struct mlx4_dev *dev)
-+static int
-+mlx4_calc_res_counter_guaranteed(struct mlx4_dev *dev,
-+				 struct resource_allocator *res_alloc,
-+				 int vf)
- {
--	/* reduce the sink counter */
--	return (dev->caps.max_counters - 1 -
--		(MLX4_PF_COUNTERS_PER_PORT * MLX4_MAX_PORTS))
--		/ MLX4_MAX_PORTS;
-+	struct mlx4_active_ports actv_ports;
-+	int ports, counters_guaranteed;
-+
-+	/* For master, only allocate according to the number of phys ports */
-+	if (vf == mlx4_master_func_num(dev))
-+		return MLX4_PF_COUNTERS_PER_PORT * dev->caps.num_ports;
-+
-+	/* calculate real number of ports for the VF */
-+	actv_ports = mlx4_get_active_ports(dev, vf);
-+	ports = bitmap_weight(actv_ports.ports, dev->caps.num_ports);
-+	counters_guaranteed = ports * MLX4_VF_COUNTERS_PER_PORT;
-+
-+	/* If we do not have enough counters for this VF, do not
-+	 * allocate any for it. '-1' to reduce the sink counter.
-+	 */
-+	if ((res_alloc->res_reserved + counters_guaranteed) >
-+	    (dev->caps.max_counters - 1))
-+		return 0;
-+
-+	return counters_guaranteed;
- }
- 
- int mlx4_init_resource_tracker(struct mlx4_dev *dev)
-@@ -484,7 +503,6 @@ int mlx4_init_resource_tracker(struct ml
- 	struct mlx4_priv *priv = mlx4_priv(dev);
- 	int i, j;
- 	int t;
--	int max_vfs_guarantee_counter = get_max_gauranteed_vfs_counter(dev);
- 
- 	priv->mfunc.master.res_tracker.slave_list =
- 		kcalloc(dev->num_slaves, sizeof(struct slave_list),
-@@ -603,16 +621,8 @@ int mlx4_init_resource_tracker(struct ml
- 				break;
- 			case RES_COUNTER:
- 				res_alloc->quota[t] = dev->caps.max_counters;
--				if (t == mlx4_master_func_num(dev))
--					res_alloc->guaranteed[t] =
--						MLX4_PF_COUNTERS_PER_PORT *
--						MLX4_MAX_PORTS;
--				else if (t <= max_vfs_guarantee_counter)
--					res_alloc->guaranteed[t] =
--						MLX4_VF_COUNTERS_PER_PORT *
--						MLX4_MAX_PORTS;
--				else
--					res_alloc->guaranteed[t] = 0;
-+				res_alloc->guaranteed[t] =
-+					mlx4_calc_res_counter_guaranteed(dev, res_alloc, t);
- 				break;
- 			default:
- 				break;
+-		if (dev->domain_data.phyirq > 0)
++		if (dev->domain_data.phyirq > 0) {
++			local_irq_disable();
+ 			generic_handle_irq(dev->domain_data.phyirq);
++			local_irq_enable();
++		}
+ 	} else
+ 		netdev_warn(dev->net,
+ 			    "unexpected interrupt: 0x%08x\n", intdata);
 
 
