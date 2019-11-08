@@ -2,51 +2,51 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A451C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEC4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCF22085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EE22085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214961;
-	bh=1trDmOUYVi/h8TeA1Jy2TYemlFI7NDFW1aOIVk9jWwk=;
+	s=default; t=1573214969;
+	bh=vhKnsVvdS3bhGTQPSXRiTcKVgFkmQF7EkajVkSUKU9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mfg1J/WDGGBSplSw95NdWGxYDi3BvMW97Wz7zp/kMoTrSh1WIO7K/Xu5UEHfF7YWJ
-	 DrSw/YmAZBWrPgGGzlKImP0aS073i10vkp6/IffO2VxHtm8riBZ1BoGpzPwIkyF1wB
-	 xYrGjpl8fmkrlBtvMkbylBgdCcJTUXz1Sdtu8coI=
+	b=BFDhA7X28rubPDOiyd8vpiuvxzfEJqfN7S7BUtr9NzaymClF5q+AoDaFFSZJqzyLv
+	 iynkACvMH20qwqWVy2wpX6CWPzCSyB2+d/8Gj2wgv8an3GmJmcu4f+8nBd9npWwoD6
+	 d2BhB/UQdriLmI7dmo92Xk7HW2JLN7mbjo06T0J0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391937AbfKHMJU (ORCPT
+        id S2391939AbfKHMJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:09:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53134 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:09:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388436AbfKHLkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:09 -0500
+        id S2388374AbfKHLkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F99222C6;
-        Fri,  8 Nov 2019 11:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E85E3222CB;
+        Fri,  8 Nov 2019 11:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213209;
-        bh=1trDmOUYVi/h8TeA1Jy2TYemlFI7NDFW1aOIVk9jWwk=;
+        s=default; t=1573213205;
+        bh=vhKnsVvdS3bhGTQPSXRiTcKVgFkmQF7EkajVkSUKU9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CjpKEg3Vyw1y9ZsRn9sou3pmHUi595QPkjEd/YXlTg7OwXNQ+YjdXm8m7gt6F489A
-         Tpr5Pj3KM7aWB0s1s7FKqQ3YlokGX1ZpLpHyVrAKEHN0ZyAVFujdnoN2mZqmTNawIA
-         8pgKxjtNOF2E3Y5qZ+6AYhTUSWn+6cGf/l7rTBfQ=
+        b=cuT0LSJRWH9BxciCOiyfBkBQ8Q8lfEQRsflirBUAORibrVmaTXqvQAu1ZTMXHch2Z
+         dIqIUZ3lzO1cGMPg+g6Q3qFSz57+cDIXTMi2mfKPSA32t+tApOBXgfxChFDsTE6H64
+         Lel5QzVLRIdJdNoGA17zSdJ6+68EXUsl1IEzy940=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 090/205] rtnetlink: move type calculation out of loop
-Date:   Fri,  8 Nov 2019 06:35:57 -0500
-Message-Id: <20191108113752.12502-90-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 088/205] f2fs: avoid wrong decrypted data from disk
+Date:   Fri,  8 Nov 2019 06:35:55 -0500
+Message-Id: <20191108113752.12502-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,39 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 87ccbb1f943625884b824c5560f635dcea8e4510 ]
+[ Upstream commit 0ded69f632bb717be9aeea3ae74e29050fcb060c ]
 
-I don't see how the type - which is one of
-RTM_{GETADDR,GETROUTE,GETNETCONF} - can change. So do the message type
-calculation once before entering the for loop.
+1. Create a file in an encrypted directory
+2. Do GC & drop caches
+3. Read stale data before its bio for metapage was not issued yet
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/rtnetlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/data.c    | 18 ++++++++++--------
+ fs/f2fs/f2fs.h    |  2 +-
+ fs/f2fs/file.c    |  3 +--
+ fs/f2fs/segment.c |  6 +++++-
+ 4 files changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 3932eed379a40..a199bd85085da 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -3268,13 +3268,13 @@ static int rtnl_dump_all(struct sk_buff *skb, struct netlink_callback *cb)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 9511466bc7857..c61beaedf0789 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -575,9 +575,6 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
+ 		ctx->bio = bio;
+ 		ctx->enabled_steps = post_read_steps;
+ 		bio->bi_private = ctx;
+-
+-		/* wait the page to be moved by cleaning */
+-		f2fs_wait_on_block_writeback(sbi, blkaddr);
+ 	}
+ 
+ 	return bio;
+@@ -592,6 +589,9 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
+ 	if (IS_ERR(bio))
+ 		return PTR_ERR(bio);
+ 
++	/* wait for GCed page writeback via META_MAPPING */
++	f2fs_wait_on_block_writeback(inode, blkaddr);
++
+ 	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
+ 		bio_put(bio);
+ 		return -EFAULT;
+@@ -1569,6 +1569,12 @@ submit_and_realloc:
+ 			}
+ 		}
+ 
++		/*
++		 * If the page is under writeback, we need to wait for
++		 * its completion to see the correct decrypted data.
++		 */
++		f2fs_wait_on_block_writeback(inode, block_nr);
++
+ 		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
+ 			goto submit_and_realloc;
+ 
+@@ -1637,7 +1643,7 @@ static int encrypt_one_page(struct f2fs_io_info *fio)
+ 		return 0;
+ 
+ 	/* wait for GCed page writeback via META_MAPPING */
+-	f2fs_wait_on_block_writeback(fio->sbi, fio->old_blkaddr);
++	f2fs_wait_on_block_writeback(inode, fio->old_blkaddr);
+ 
+ retry_encrypt:
+ 	fio->encrypted_page = fscrypt_encrypt_page(inode, fio->page,
+@@ -2402,10 +2408,6 @@ repeat:
+ 
+ 	f2fs_wait_on_page_writeback(page, DATA, false);
+ 
+-	/* wait for GCed page writeback via META_MAPPING */
+-	if (f2fs_post_read_required(inode))
+-		f2fs_wait_on_block_writeback(sbi, blkaddr);
+-
+ 	if (len == PAGE_SIZE || PageUptodate(page))
+ 		return 0;
+ 
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index fb216488d67a9..6d361c8c61306 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2973,7 +2973,7 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+ 			struct f2fs_io_info *fio, bool add_list);
+ void f2fs_wait_on_page_writeback(struct page *page,
+ 			enum page_type type, bool ordered);
+-void f2fs_wait_on_block_writeback(struct f2fs_sb_info *sbi, block_t blkaddr);
++void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr);
+ void f2fs_write_data_summaries(struct f2fs_sb_info *sbi, block_t start_blk);
+ void f2fs_write_node_summaries(struct f2fs_sb_info *sbi, block_t start_blk);
+ int f2fs_lookup_journal_in_cursum(struct f2fs_journal *journal, int type,
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 8d1eb8dec6058..6972c6d7c3893 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -112,8 +112,7 @@ mapped:
+ 	f2fs_wait_on_page_writeback(page, DATA, false);
+ 
+ 	/* wait for GCed page writeback via META_MAPPING */
+-	if (f2fs_post_read_required(inode))
+-		f2fs_wait_on_block_writeback(sbi, dn.data_blkaddr);
++	f2fs_wait_on_block_writeback(inode, dn.data_blkaddr);
+ 
+ out_sem:
+ 	up_read(&F2FS_I(inode)->i_mmap_sem);
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 10d5dcdb34be6..d78009694f3fd 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3214,10 +3214,14 @@ void f2fs_wait_on_page_writeback(struct page *page,
+ 	}
+ }
+ 
+-void f2fs_wait_on_block_writeback(struct f2fs_sb_info *sbi, block_t blkaddr)
++void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr)
  {
- 	int idx;
- 	int s_idx = cb->family;
-+	int type = cb->nlh->nlmsg_type - RTM_BASE;
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct page *cpage;
  
- 	if (s_idx == 0)
- 		s_idx = 1;
- 
- 	for (idx = 1; idx <= RTNL_FAMILY_MAX; idx++) {
- 		struct rtnl_link **tab;
--		int type = cb->nlh->nlmsg_type-RTM_BASE;
- 		struct rtnl_link *link;
- 		rtnl_dumpit_func dumpit;
++	if (!f2fs_post_read_required(inode))
++		return;
++
+ 	if (!is_valid_data_blkaddr(sbi, blkaddr))
+ 		return;
  
 -- 
 2.20.1
