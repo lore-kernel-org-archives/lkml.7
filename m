@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CE0FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AB1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A4B222CF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A070D222CF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213817;
-	bh=VD4UdahY3GQ+xQ2/+jHwTXiwPVyL987arVvNOOss+w0=;
+	s=default; t=1573213823;
+	bh=j7UqUvscSKQTKuABSb9Rd+j8p8e8+zIJM25RECCrkEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M3x7b0fzWUYfEK0MQbSG3kcoLURT0gEFKWnutS/UhSeb20f5uhNuJ1raY1xVmayAT
-	 qsNY3WcPNicP3FsIJQLLOoo+7pCn5MBRp6ohh3gE7pd0nX8jSRqnhU3OkWzCFopcma
-	 PHEgI3U4D7WrPNQiTLvk4ARDsk/uE2aiLwz97oo0=
+	b=HwWxazFERLyjs/+OgRub+HIGtRvCYwgBEF3o1azNSitpE4GREWwzTphzZ3dJFkHBc
+	 D43nZ6Gf/O+AF3+ogxYYqcOd0fhr8cB+LCvSAQr+BRylJgI9dXguCJGGTTFxE/Vh4C
+	 GoCA4qaNL4BnlwEeKyCVyjjYX6B6oxfvUHmewevs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391177AbfKHLuQ (ORCPT
+        id S2403805AbfKHLuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:50:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36654 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:50:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391683AbfKHLrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:52 -0500
+        id S2391671AbfKHLru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F28022459;
-        Fri,  8 Nov 2019 11:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21670222CE;
+        Fri,  8 Nov 2019 11:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213672;
-        bh=VD4UdahY3GQ+xQ2/+jHwTXiwPVyL987arVvNOOss+w0=;
+        s=default; t=1573213669;
+        bh=j7UqUvscSKQTKuABSb9Rd+j8p8e8+zIJM25RECCrkEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NXe3X35z3lFae9cdAJzGdnbX2cRPlkEbCUMGiZeZebQeknjEXDt0BQIlNKKBOArai
-         Vf/72gAQ+JnsiR+X3HNpIojx9IQGXkrClV/EohQRUS/73uOihxZqAZoeD+YYk3dJvR
-         21srGf3PFHghqqrYjrDlVKzcgy1P378AKmxjTvDI=
+        b=F7/T6eHnUGveMJWcOmE3MmGc3FGoo7DbJ182VYunwSIpR14zFS2WC2tCxCpwhBtmr
+         4eOSif7Bctx80QN4lcxXua8izIBPVBNx6nEYYkbM28Ach4sZ9DjNe/NbM//gfeUz/J
+         pkAI2A6IRTsWBbkXVSV6wzFDhbAcUZV0vWg4cyoM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 24/44] dmaengine: dma-jz4780: Further residue status fix
-Date:   Fri,  8 Nov 2019 06:47:00 -0500
-Message-Id: <20191108114721.15944-24-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 22/44] ARM: dts: omap3-gta04: make NAND partitions compatible with recent U-Boot
+Date:   Fri,  8 Nov 2019 06:46:58 -0500
+Message-Id: <20191108114721.15944-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -61,44 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 83ef4fb7556b6a673f755da670cbacab7e2c7f1b ]
+[ Upstream commit fa99c21ecb3cd4021a60d0e8bf880e78b5bd0729 ]
 
-Func jz4780_dma_desc_residue() expects the index to the next hw
-descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
-however, applied modulus before passing it. When the current hw
-descriptor was last in the list, the index passed became zero.
+Vendor defined U-Boot has changed the partition scheme a while ago:
 
-The resulting excess of reported residue especially caused problems
-with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
-rely on this for determining current DMA location within buffer.
+* kernel partition 6MB
+* file system partition uses the remainder up to end of the NAND
+* increased size of the environment partition (to get an OneNAND compatible base address)
+* shrink the U-Boot partition
 
-Combined with the recent and related residue-reporting fixes, spurious
-ALSA audio underruns on jz4770 hardware are now fixed.
+Let's be compatible (e.g. Debian kernel built from upstream).
 
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 8344b7c91fe35..1d01e3805f9c2 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -576,7 +576,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 					to_jz4780_dma_desc(vdesc), 0);
- 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
- 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
--			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
-+					jzchan->curr_hwdesc + 1);
- 	} else
- 		txstate->residue = 0;
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 196b3f5158c90..0ea793e365e45 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -523,22 +523,22 @@
  
+ 		bootloaders@80000 {
+ 			label = "U-Boot";
+-			reg = <0x80000 0x1e0000>;
++			reg = <0x80000 0x1c0000>;
+ 		};
+ 
+-		bootloaders_env@260000 {
++		bootloaders_env@240000 {
+ 			label = "U-Boot Env";
+-			reg = <0x260000 0x20000>;
++			reg = <0x240000 0x40000>;
+ 		};
+ 
+ 		kernel@280000 {
+ 			label = "Kernel";
+-			reg = <0x280000 0x400000>;
++			reg = <0x280000 0x600000>;
+ 		};
+ 
+-		filesystem@680000 {
++		filesystem@880000 {
+ 			label = "File System";
+-			reg = <0x680000 0xf980000>;
++			reg = <0x880000 0>;	/* 0 = MTDPART_SIZ_FULL */
+ 		};
+ 	};
+ };
 -- 
 2.20.1
 
