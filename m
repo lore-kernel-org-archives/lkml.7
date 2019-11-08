@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA3FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6942FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E0521D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF09A2178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdY6nR0/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1dyS/W0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfKHIpd (ORCPT
+        id S1730878AbfKHIpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:45:33 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46177 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfKHIpa (ORCPT
+        Fri, 8 Nov 2019 03:45:36 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53306 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfKHIpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 03:45:30 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b3so5994238wrs.13;
-        Fri, 08 Nov 2019 00:45:28 -0800 (PST)
+        Fri, 8 Nov 2019 03:45:32 -0500
+Received: by mail-wm1-f65.google.com with SMTP id x4so5260697wmi.3;
+        Fri, 08 Nov 2019 00:45:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lXctZT9szOude0/tzOobu9MVmKEaCphOc5TWHI1R/+o=;
-        b=WdY6nR0/Jp+x7ZOowmnVHfztGLVygNvroENA6yBkFeG6Y8J6MdNWkU5wlp+hZFdGLE
-         JGz2/0cgugAvqCRFUlxMF40CNgPH0eOMT4XkfrObYacIn3gXmDD4p/aMz1PTm7fpW3ha
-         r80j+ukVgX1HPOMbZ1Ss+smvyms6gB94q3id8WN/f4wdRgpnJoQRomnSGLtmbE9RtQna
-         h9bklZ9VcEXBTCv1lGEkNbk34tPD8tpDwvUJAgm5QImq5gklZenXpk2ss5cmVyJFsnCy
-         PXYbFfziTLWXsrOfjpeSz2QMyZ2wumiEo/KTYw5054vX82a/EEuMWkeu8Nrb1Kn3/mOh
-         qC+Q==
+        bh=o1BbTTGdSFKY2gKlnZB56hqOxy66kjY0LgiclhRJDv0=;
+        b=C1dyS/W0NAlPRWhXtx8M04st3Ji81RU6NVq5t+9WHq97OdhgLePwxDGl3Cruq/vZPd
+         DhMB3BDpQ9jyil8oXeLUcnBbpOhWwv0qM4eJ9r1DWxSVAXweAgSmuhTKrKoIW/UjqRB8
+         3iIe5/qXLUa7pNPl83YENVRzssGRhi4YaVcGmiVRgz7IBMqSAZAhijS+2p7GRQfbwuFk
+         cl38aPIvbDXot2aNqlghO7DJoyJx3cor3VtsLCISWwWyl1arlRUPR4VUcxBxW+kfmzmf
+         EV+V1LpkKB8obh/ddgEvSJ9UeBITSOTJAlg23+Lw9qzcOjOi6UY2ZlMHWRXoO0xS1W5/
+         t7Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lXctZT9szOude0/tzOobu9MVmKEaCphOc5TWHI1R/+o=;
-        b=PyvcUaeZNVkVom08Rik6MHqMwP7hlUSWlAI7kLLRuEt412jl8p1jtXCanmkrMPvUyt
-         Rh/wCbxSBZK3CxCqTQJdIvy6AahAZcV1wHsaYGgvF5UpuoS+ydXHblmKHNLjGTE3V7Zp
-         Zr6TSe+f7kNne2kkt1oR1C2SPdbpiH19s+u7caKB/YIyy/hcTTtG6wvCe8HILuTUljx7
-         1UtPMD2ChnWghLpCm7LAUpk+BraIfujodLatuFzLR2EA27Kh3AZ2eS2S3RPiIKyTZTol
-         E5qc/tqhJpPonzoKXa/iu7P6NQHS4Da4OL24OlXArZmqtY43QliLtvlWN8x3nB3B6ymA
-         a8AA==
-X-Gm-Message-State: APjAAAXn4CipsfUEr0SBWYsaFruZ+vd3029gXe6wu7mIYQX+OusbcNh6
-        frBsqi7cp/sVVMAK8JS/KMU=
-X-Google-Smtp-Source: APXvYqwP1PQg+Qz0CsAYeKQRWcWxaJuimaCkAjha6SKIoYhOxnoyF8fMyOe15V7v2E8HDLzWw/GVZg==
-X-Received: by 2002:adf:f685:: with SMTP id v5mr7586956wrp.246.1573202727559;
-        Fri, 08 Nov 2019 00:45:27 -0800 (PST)
+        bh=o1BbTTGdSFKY2gKlnZB56hqOxy66kjY0LgiclhRJDv0=;
+        b=HCj9SDME4t+LmbfunJ+8jstJeJ4CttmhLoQSSMNAe/mUPo15hDgWP/NFiIZL74Afof
+         5wEm9rZyTWwUvmTxWliRNhywn4kpJZRz0erPs8jyVmjFIHojeZzskITW3cPqIJAT36SC
+         2u5ZNtYZUBC39umTcwuzKsgZWOiaz4Q9abK4ayrEfyhxZn4JeaoysC/DhFDdWIxDSrSq
+         GsP7cnels99It1bG+zz/2u7D9a7YArfAGfU9KrkZ3/o2ClN3pZqXp1RP+lkip199AhzH
+         wS9BYWxLk/IXF+xINLx3c/XHzs/0lQ6Gh4DqOmz3QsJtYlCZu2iYCZ9y1O9ugKouRR23
+         hb0A==
+X-Gm-Message-State: APjAAAVCWb+89vaEGpk51cZXa6qYH6YlPGk69OSucfBX1A+VOsABrwZq
+        JvBTyezuDKGcrvnlMiOcml0=
+X-Google-Smtp-Source: APXvYqxwBaxdGVAxdGG5OfhwPgDnJ/JZT/ybNdD4d2t31vpqkvY3E2BRG4vS88zywqSF6FNS60xWrQ==
+X-Received: by 2002:a1c:740a:: with SMTP id p10mr7053319wmc.121.1573202729584;
+        Fri, 08 Nov 2019 00:45:29 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.26
+        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 00:45:27 -0800 (PST)
+        Fri, 08 Nov 2019 00:45:29 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -70,9 +70,9 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
-Date:   Fri,  8 Nov 2019 09:45:11 +0100
-Message-Id: <20191108084517.21617-2-peron.clem@gmail.com>
+Subject: [PATCH v4 4/7] pwm: sun4i: Add support to output source clock directly
+Date:   Fri,  8 Nov 2019 09:45:14 +0100
+Message-Id: <20191108084517.21617-5-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
 References: <20191108084517.21617-1-peron.clem@gmail.com>
@@ -86,88 +86,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-H6 PWM block is basically the same as A20 PWM, except that it also has
-bus clock and reset line which needs to be handled accordingly.
+PWM core has an option to bypass whole logic and output unchanged source
+clock as PWM output. This is achieved by enabling bypass bit.
 
-Expand Allwinner PWM binding with H6 PWM specifics.
+Note that when bypass is enabled, no other setting has any meaning, not
+even enable bit.
+
+This mode of operation is needed to achieve high enough frequency to
+serve as clock source for AC200 chip which is integrated into same
+package as H6 SoC.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/pwm/pwm-sun4i.c | 44 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-index 0ac52f83a58c..1bae446febbb 100644
---- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-@@ -30,13 +30,51 @@ properties:
-       - items:
-           - const: allwinner,sun50i-h5-pwm
-           - const: allwinner,sun5i-a13-pwm
-+      - const: allwinner,sun50i-h6-pwm
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index a10022d6c0fd..9cc928ab47bc 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -3,6 +3,10 @@
+  * Driver for Allwinner sun4i Pulse Width Modulation Controller
+  *
+  * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
++ *
++ * Limitations:
++ * - When outputing the source clock directly, the PWM logic will be bypassed
++ *   and the currently running period is not guaranteed to be completed
+  */
  
-   reg:
-     maxItems: 1
+ #include <linux/bitops.h>
+@@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
  
-   clocks:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: Module Clock
-+      - description: Bus Clock
-+
-+  # Even though it only applies to subschemas under the conditionals,
-+  # not listing them here will trigger a warning because of the
-+  # additionalsProperties set to false.
-+  clock-names: true
-+
-+  resets:
-     maxItems: 1
+ struct sun4i_pwm_data {
+ 	bool has_prescaler_bypass;
++	bool has_direct_mod_clk_output;
+ 	unsigned int npwm;
+ };
  
-+  if:
-+    properties:
-+      compatible:
-+        contains:
-+          const: allwinner,sun50i-h6-pwm
-+
-+  then:
-+    properties:
-+      clocks:
-+        maxItems: 2
-+
-+      clock-names:
-+        items:
-+          - const: mod
-+          - const: bus
-+
-+    required:
-+      - clock-names
-+      - resets
-+
-+  else:
-+    properties:
-+      clocks:
-+        maxItems: 1
-+
- required:
-   - "#pwm-cells"
-   - compatible
-@@ -54,4 +92,14 @@ examples:
-         #pwm-cells = <3>;
-     };
+@@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
  
-+  - |
-+    pwm@300a000 {
-+      compatible = "allwinner,sun50i-h6-pwm";
-+      reg = <0x0300a000 0x400>;
-+      clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
-+      clock-names = "mod", "bus";
-+      resets = <&ccu RST_BUS_PWM>;
-+      #pwm-cells = <3>;
-+    };
+ 	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+ 
++	/*
++	 * PWM chapter in H6 manual has a diagram which explains that if bypass
++	 * bit is set, no other setting has any meaning. Even more, experiment
++	 * proved that also enable bit is ignored in this case.
++	 */
++	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
++	    sun4i_pwm->data->has_direct_mod_clk_output) {
++		state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
++		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
++		state->polarity = PWM_POLARITY_NORMAL;
++		state->enabled = true;
++		return;
++	}
 +
- ...
+ 	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+ 	    sun4i_pwm->data->has_prescaler_bypass)
+ 		prescaler = 1;
+@@ -204,6 +223,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+ 	struct pwm_state cstate;
+ 	u32 ctrl;
++	bool bypass = false;
+ 	int ret;
+ 	unsigned int delay_us;
+ 	unsigned long now;
+@@ -218,9 +238,24 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		}
+ 	}
+ 
++	/*
++	 * Although it would make much more sense to check for bypass in
++	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
++	 */
++	if (state->enabled) {
++		u32 clk_rate = clk_get_rate(sun4i_pwm->clk);
++		bypass = (state->period * clk_rate >= NSEC_PER_SEC) &&
++			 (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
++			 (state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC);
++	}
++
+ 	spin_lock(&sun4i_pwm->ctrl_lock);
+ 	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+ 
++	/* We can skip calculation and apply parameters */
++	if (bypass && sun4i_pwm->data->has_direct_mod_clk_output)
++		goto bypass_mode;
++
+ 	if ((cstate.period != state->period) ||
+ 	    (cstate.duty_cycle != state->duty_cycle)) {
+ 		u32 period, duty, val;
+@@ -258,6 +293,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		ctrl |= BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
+ 
+ 	ctrl |= BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
++
+ 	if (state->enabled) {
+ 		ctrl |= BIT_CH(PWM_EN, pwm->hwpwm);
+ 	} else if (!sun4i_pwm->needs_delay[pwm->hwpwm]) {
+@@ -265,6 +301,14 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+ 	}
+ 
++bypass_mode:
++	if (sun4i_pwm->data->has_direct_mod_clk_output) {
++		if (bypass)
++			ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
++		else
++			ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
++	}
++
+ 	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+ 
+ 	spin_unlock(&sun4i_pwm->ctrl_lock);
 -- 
 2.20.1
 
