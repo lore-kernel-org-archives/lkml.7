@@ -2,84 +2,94 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407B6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB36C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186D42178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732962178F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 15:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LChmcK/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfKHPT6 (ORCPT
+        id S1727031AbfKHPUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:19:58 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:57938 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfKHPT5 (ORCPT <rfc822;linux-kernel@vger.kernel.orG>);
-        Fri, 8 Nov 2019 10:19:57 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iT63D-0007HK-B7; Fri, 08 Nov 2019 23:19:51 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iT63A-00078c-Kq; Fri, 08 Nov 2019 23:19:48 +0800
-Date:   Fri, 8 Nov 2019 23:19:48 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Chris Healy <cphealy@gmail.com>,
-        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] enable CAAM's HWRNG as default
-Message-ID: <20191108151948.ojn6ga3preh66utl@gondor.apana.org.au>
-References: <20191029162916.26579-1-andrew.smirnov@gmail.com>
- <226f5a669c2199408abcdec0ccddc9ff05672631.camel@pengutronix.de>
- <CAHQ1cqF3BgberQMMY3sKH5iabG3oN6-H=o-y00Q710zrB7KNgw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHQ1cqF3BgberQMMY3sKH5iabG3oN6-H=o-y00Q710zrB7KNgw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 8 Nov 2019 10:20:43 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40803 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKHPUn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 10:20:43 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z16so5569426qkg.7;
+        Fri, 08 Nov 2019 07:20:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=b2126fd4YC8W/bbuzmb7jSc88Zo3Jrrtko50Ol11fSU=;
+        b=LChmcK/PQf51+GD0y6vAxvdjiNBz51CifKdsFPcLaEULktET3DjlnS1cNFIQghWs/w
+         d8SC0kGXh7CqM40riOQsbySu5GhJy86pCVFXdWPUlsuj49+n4rNW5f/e2st3PLsCXb/Y
+         Z9Ud12DdurRW8Cd5eVa5L9BG/QjYM0r2phSSZC8cY3ZHCyK6WuIWmETfZ2M/CIuuHUaw
+         rhD0I1DnosVKJqmVF00cgHWh6/jRceK8SqBzJrIJV8GfiSt337Pd3gja1qSdyikYMudw
+         KFT1LCX2F+ZhjzdmGvlxx0NrW8Grkxoxn8WE9IwBDjP6BHh9xNg88tXaApzOFhzVlqeA
+         puIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=b2126fd4YC8W/bbuzmb7jSc88Zo3Jrrtko50Ol11fSU=;
+        b=FhhpzKsn9+93g1R7pTejywfXqkzJXP3pT6b1hCUI2vw9YzjTsU20Hn4yaOlMF5I9vG
+         uLWvqkcAOJEqWB4oF6wCBv2gnJaAiJmPAfl/rm2pQXd3Ob70F4N2qMKbBuExfHyVr/Tl
+         oM9L3u1evt3XRhPRE1NVwo+ecNO9TZMUNe6KGJ+/Z6QhAuCxlWrCSOUdpFqRgARrB1RL
+         GAYsextCKHcjzuWtu8x2PR84pAw/csMnPWLci9ihLDkHyRkFTLv2twTyhqKt/GaJxGiB
+         rpBCz3HeNSvbtAGkl94/40o8/xtRc0LYXRKxlKXkOBs1AhZWcnG7p2jewu0DJFjnRT8k
+         MTSg==
+X-Gm-Message-State: APjAAAVlfABy9mmWnSS4/kCtqG2e7HaTyZX3R4OS8WKaI6JuzrqFgnQ3
+        e47SWRkWLlgkuFCq+i4igvGw+9VH
+X-Google-Smtp-Source: APXvYqykTm1ckHRJO089qGMaBPP7Je+PTnhJNYEq1pFpGU+91DWezpdKVUJZE4Yqy01OE1tiyBVlyg==
+X-Received: by 2002:a37:a250:: with SMTP id l77mr9458501qke.455.1573226440419;
+        Fri, 08 Nov 2019 07:20:40 -0800 (PST)
+Received: from alpha-Inspiron-5480.lan ([170.84.225.113])
+        by smtp.gmail.com with ESMTPSA id t127sm3164392qkf.43.2019.11.08.07.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 07:20:39 -0800 (PST)
+From:   Ramon Fontes <ramonreisfontes@gmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Cc:     johannes@sipsolutions.net, kvalo@codeaurora.org,
+        davem@davemloft.net, Ramon Fontes <ramonreisfontes@gmail.com>
+Subject: [PATCH] mac80211_hwsim: set the maximum EIRP output power for 5GHz
+Date:   Fri,  8 Nov 2019 12:20:13 -0300
+Message-Id: <20191108152013.13418-1-ramonreisfontes@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 12:58:24PM -0700, Andrey Smirnov wrote:
->
-> > I'm not sure if we can ever use the job based RNG interface to hook it
-> > up to the Linux HWRNG interface. After all the job based RNG interface
-> > is always a DRNG, which only gets seeded by the TRNG. The reseed
-> > interval is given in number of clock cycles, so there is no clear
-> > correlation between really true random input bits and the number of
-> > DRNG output bits.
-> 
-> Doesn't enabling prediction resistance gives us that correlation? E.g.
-> that every time new random data is generated, DRNG is reseeded? I am
-> assuming even if this is true we'd have to significantly limit
-> generated data length (< seed length?), so maybe what you propose
-> below is still simpler.
+ETSI has been set the maximum EIRP output power to 36 dBm (4000 mW)
+Source: https://www.etsi.org/deliver/etsi_en/302500_302599/302502/01.02.01_60/en_302502v010201p.pdf
 
-Prediction resistance should be sufficient in general.  However,
-is the prediction resistance reseeding done in real time?
+Signed-off-by: Ramon Fontes <ramonreisfontes@gmail.com>
+---
+ drivers/net/wireless/mac80211_hwsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > I've hacked up some proof of concept code which uses the TRNG access in
-> > the control interface to get the raw TRNG random bits. This seems to
-> > yield about 6400 bit/s of true entropy. It may be better to use this
-> > interface to hook up to the Linux HWRNG framework.
-> 
-> OK, I'll take a look into that and send out a v2 with results.
-
-I've backed out the patch-set for now but if we can clarify the
-prediction resistance implementation details then I'm happy to
-put it back in.
-
-Thanks,
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 14f562cd7..af83791df 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -305,7 +305,7 @@ static struct net_device *hwsim_mon; /* global monitor netdev */
+ 	.band = NL80211_BAND_5GHZ, \
+ 	.center_freq = (_freq), \
+ 	.hw_value = (_freq), \
+-	.max_power = 20, \
++	.max_power = 36, \
+ }
+ 
+ static const struct ieee80211_channel hwsim_channels_2ghz[] = {
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.17.1
+
