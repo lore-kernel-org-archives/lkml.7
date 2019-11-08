@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356D1FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AC7FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020132245A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414A3222CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213533;
-	bh=2UhFLBsOtNLWkKSg9OQa1ADu0rYZXbSSRK1EzggFSac=;
+	s=default; t=1573213535;
+	bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WnIfB7r3puNTdVgt4LIysaQcAHrqF3BHh90J+bgxk4ZmW9oJxz6PE03g3q+vAaSel
-	 N8LnGWTuBsfaOfXJP8MgyT2gbyEzL15zrfarQyf7JPkaORft4Eqz5hRgICBNgxK+Wb
-	 roIz1JCNfnlt7eoJoOtrIh9pSf6Gy3ZlF8SH2XA0=
+	b=MXGjGGRa+63FHH7HFJfnqoOSVNileZXebsdQO4CmJ0jy5FB789kreOQcW+fOy13lU
+	 vta+G01//yJdee4bLOGTznF+1nRO15/Uit8CpePwayT5wigK2eXWDR9+A9x3prv/QA
+	 iGY8xFwB9dBrogVHRfIQjwgmmGIgvPMXwg3VZxIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391129AbfKHLpb (ORCPT
+        id S2391137AbfKHLpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60848 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391114AbfKHLp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:29 -0500
+        id S2391125AbfKHLpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14EA2222C4;
-        Fri,  8 Nov 2019 11:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46C7D222C2;
+        Fri,  8 Nov 2019 11:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213528;
-        bh=2UhFLBsOtNLWkKSg9OQa1ADu0rYZXbSSRK1EzggFSac=;
+        s=default; t=1573213531;
+        bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Gm3wvPAOkcbRqn65UMzk4MVjGEeh5yOX6k+J1GWpYVrKpfkmffrnSVmRZTCw046G
-         NP/KwJLSlGvEvGab2bkxWfSlN4il6SuYUY6UKLsHA3Y3VZjMFEQZDM5wSdF7+YsNc3
-         GmN/MM+89Vz+1/Ob1xI2C4fmSBAZZO70NGl61tyc=
+        b=MZKCfnES2s4CYPqII3Fizsg27YmflcYy1KaTDpCOxFyNDGpNbIBqa6gTBNvbl1hnj
+         ugxGzKECGot2KyC1iX0ORGrfEA1i8CrqZNaPWfuPqCavHocLyiS8sVJpTTKBhpZhz1
+         GSGeN/+D36kdCvTGGTGY54ty55T/q8hAyu+dYo58=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ganesh Goudar <ganeshgr@chelsio.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 092/103] cxgb4: Fix endianness issue in t4_fwcache()
-Date:   Fri,  8 Nov 2019 06:42:57 -0500
-Message-Id: <20191108114310.14363-92-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Carlo Caione <carlo@caione.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 094/103] arm64: dts: meson: Fix erroneous SPI bus warnings
+Date:   Fri,  8 Nov 2019 06:42:59 -0500
+Message-Id: <20191108114310.14363-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -60,33 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Goudar <ganeshgr@chelsio.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 0dc235afc59a226d951352b0adf4a89b532a9d13 ]
+[ Upstream commit 68ecb5c1920c5b98b1e717fd2349fba2ee5d4031 ]
 
-Do not put host-endian 0 or 1 into big endian feild.
+dtc has new checks for SPI buses. The meson dts files have a node named
+spi' which causes false positive warnings. As the node is a pinctrl child
+node, change the node name to be 'spi-pins' to fix the warnings.
 
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: Warning (spi_bus_bridge): /soc/periphs@c8834000/pinctrl@4b0/spi: incorrect #address-cells for SPI bus
+
+Cc: Carlo Caione <carlo@caione.org>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-index 1802debbd3c7e..39bcf27902e4b 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3750,7 +3750,7 @@ int t4_fwcache(struct adapter *adap, enum fw_params_param_dev_fwcache op)
- 	c.param[0].mnem =
- 		cpu_to_be32(FW_PARAMS_MNEM_V(FW_PARAMS_MNEM_DEV) |
- 			    FW_PARAMS_PARAM_X_V(FW_PARAMS_PARAM_DEV_FWCACHE));
--	c.param[0].val = (__force __be32)op;
-+	c.param[0].val = cpu_to_be32(op);
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index af834cdbba791..250b5c11c0e25 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -413,7 +413,7 @@
+ 			};
+ 		};
  
- 	return t4_wr_mbox(adap, adap->mbox, &c, sizeof(c), NULL);
- }
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index fb8d76a17bc5d..3c30579449608 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -310,7 +310,7 @@
+ 			};
+ 		};
+ 
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
 -- 
 2.20.1
 
