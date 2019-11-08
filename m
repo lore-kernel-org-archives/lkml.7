@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5393FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B309AFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811132085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CE12085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214611;
-	bh=iqogOG83UqGQrex91E6FXlk3qi2tYosf4jEpV0kVbUk=;
+	s=default; t=1573214617;
+	bh=nrwlX0+o3IBQvyjj/20EPhRXPTRgqzdCYKUR/stkalw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSVhyCRO2DSGBhzfWXLMJBMlLsXIAlsSAyV0k9JuoLKE/isyF3JAbSgoeEEw3oeV+
-	 qZ9fING8eKtRarpueUvnzat4dyy/o7OO4qL6zueutwbS3wbnw5R00UkspyihRtCDA1
-	 PZUlhbs9XDuY7z871JDePktK+83NimV+sQNsbbYA=
+	b=KMoxF9mkmDM9v/G7GOt2IbZ8cC/R0ZLe1+ZD/o/SF77OlZcU4MNzsA4OLFu41dnEr
+	 Atq3ow+eCQLXiECHvRlLCBPuDHpVjZT6sMX1KRbooY5FpKOBmxDemh9awcNLt8pV2s
+	 k5uqGGFNl1ipe4hlZGDdzs9vDoJGyRwYuvrpvPVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388012AbfKHLmo (ORCPT
+        id S2390083AbfKHLmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56734 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390074AbfKHLmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:38 -0500
+        id S2390022AbfKHLmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90526222C6;
-        Fri,  8 Nov 2019 11:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B98A9222C4;
+        Fri,  8 Nov 2019 11:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213358;
-        bh=iqogOG83UqGQrex91E6FXlk3qi2tYosf4jEpV0kVbUk=;
+        s=default; t=1573213352;
+        bh=nrwlX0+o3IBQvyjj/20EPhRXPTRgqzdCYKUR/stkalw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/FYyXYmzYZvK4H0GH1Z+jQZ9dQCfMeSlaMLfcUCcVqeD9og2WSAj+J2/bYcUqzfi
-         VprdgGrp5RAJoUYNGb9EAwO8OcYR9CwGqIvWAGoaZJnDltX9N8QStHdD6JErqmlS2O
-         6b1AemCPIoZ0GzbGU6xz4/E1QLeprGMCPrv/357g=
+        b=nREjhohDWst3qN1gtoPIvo4AnQFlagpcudWFVkbYhHwucapQFB6aAZ0JFbGl8eXXi
+         XVAvXP6uKncP8Q0Lgmk3Vkwi0UTUXylUvgLrtKhpHfAbvCNVz68D1ztBLodYiTana7
+         dAFbHX/MWEv+XPYoS8Px11iX2k8Fw3hYRCaBOyvc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ganesh Goudar <ganeshgr@chelsio.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 188/205] cxgb4: Fix endianness issue in t4_fwcache()
-Date:   Fri,  8 Nov 2019 06:37:35 -0500
-Message-Id: <20191108113752.12502-188-sashal@kernel.org>
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 183/205] ARM: dts: socfpga: Fix I2C bus unit-address error
+Date:   Fri,  8 Nov 2019 06:37:30 -0500
+Message-Id: <20191108113752.12502-183-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,33 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Goudar <ganeshgr@chelsio.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 0dc235afc59a226d951352b0adf4a89b532a9d13 ]
+[ Upstream commit cbbc488ed85061a765cf370c3e41f383c1e0add6 ]
 
-Do not put host-endian 0 or 1 into big endian feild.
+dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
 
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dtb: Warning (i2c_bus_reg): /soc/i2c@ffc04000/adxl345@0: I2C bus unit address format error, expected "53"
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-index 5fe5d16dee724..8350c0c9b89d1 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3889,7 +3889,7 @@ int t4_fwcache(struct adapter *adap, enum fw_params_param_dev_fwcache op)
- 	c.param[0].mnem =
- 		cpu_to_be32(FW_PARAMS_MNEM_V(FW_PARAMS_MNEM_DEV) |
- 			    FW_PARAMS_PARAM_X_V(FW_PARAMS_PARAM_DEV_FWCACHE));
--	c.param[0].val = (__force __be32)op;
-+	c.param[0].val = cpu_to_be32(op);
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+index b280e64941938..31b01a998b2ed 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -88,7 +88,7 @@
+ 	status = "okay";
+ 	clock-frequency = <100000>;
  
- 	return t4_wr_mbox(adap, adap->mbox, &c, sizeof(c), NULL);
- }
+-	adxl345: adxl345@0 {
++	adxl345: adxl345@53 {
+ 		compatible = "adi,adxl345";
+ 		reg = <0x53>;
+ 
 -- 
 2.20.1
 
