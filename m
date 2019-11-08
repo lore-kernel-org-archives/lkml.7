@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4EAC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3FAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B5C222CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267A421924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213615;
-	bh=2NH2aPOnWgCz8AGVS9bfabIWQVJ7FDudN2JH3TKaiso=;
+	s=default; t=1573213619;
+	bh=sFmxPLvoOWEfl00tsENoIxTweNEQt91iXnciTX2cmDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y3/soOOhby5qB3cyvEKch1gScZVzDunncCoWQyp4PEeCVWGlnjg9onkl35MhragjD
-	 GM/fX7wLVhetGFWVOrqj2MZXyOyGZfw/jm4eOjHqOq/Eb1EcG10Nhb7QS5ydreJnAY
-	 NzE2+NEIht8L/pGRe2CgF76GAb6hrMJjaJ0D7pU8=
+	b=FgVG5BXVCW3xP3e4Tsj2xisvklNBoFuKjPGapaqHtL6ICnFaCbfdbQuWeZraMNJR0
+	 BdL9DF/V2kNu8WMyuY2/jLLDDsRTH0np4j6rMOm7tza+OQOEHc8O8JDeMCjL3V2/Io
+	 eJS7m02xG6C2z6gUnX7VahVKOME6O4KiDWAJ+ybs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391460AbfKHLqy (ORCPT
+        id S2403795AbfKHLq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391376AbfKHLqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:37 -0500
+        id S2391404AbfKHLql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E764222C2;
-        Fri,  8 Nov 2019 11:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6685F22466;
+        Fri,  8 Nov 2019 11:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213597;
-        bh=2NH2aPOnWgCz8AGVS9bfabIWQVJ7FDudN2JH3TKaiso=;
+        s=default; t=1573213601;
+        bh=sFmxPLvoOWEfl00tsENoIxTweNEQt91iXnciTX2cmDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MWSXSJNbYxP7MOQYjsZ+rubEHBiGQR3gcgSllqZAWxTCsmQwGX9DBEutykZ3qxBi6
-         3yEz/U5yKwa/mnbVhVBaZNpYthDAl6vxFsaNpvEDZjf6xQriUPlhIX9948Xej0UkhH
-         ugC5lkuhGA/8RP+Xc8W9Wj32oPyKAR+5Xcb0/bAg=
+        b=k3HO6ieG/lQrpYLerhR7hr/CmzolNNz+Bn+stt7Jh4hCARSEIJQckzNYRs1knowQb
+         Ig5zEiXQkZe3+v7R2p0dnUBDQ6BqNLsr2SrkANOHDE42vE1YeT6kI0Rvsk8B+qyk0i
+         T25KXXaiYYYjSoNL2VXFEbUtHh0JC8L8uUXcpVCY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 37/64] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
-Date:   Fri,  8 Nov 2019 06:45:18 -0500
-Message-Id: <20191108114545.15351-37-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 40/64] f2fs: fix memory leak of percpu counter in fill_super()
+Date:   Fri,  8 Nov 2019 06:45:21 -0500
+Message-Id: <20191108114545.15351-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,42 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
+[ Upstream commit 4a70e255449c9a13eed7a6eeecc85a1ea63cef76 ]
 
-If the first process started (aka /sbin/init) receives a SIGKILL it
-will panic the system if it is delivered.  Making the system unusable
-and undebugable.  It isn't much better if the first process started
-receives SIGSTOP.
+In fill_super -> init_percpu_info, we should destroy percpu counter
+in error path, otherwise memory allcoated for percpu counter will
+leak.
 
-So always ignore SIGSTOP and SIGKILL sent to init.
-
-This is done in a separate clause in sig_task_ignored as force_sig_info
-can clear SIG_UNKILLABLE and this protection should work even then.
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/signal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/f2fs/super.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 2bb1f9dc86c7d..30914b3c76b21 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -71,6 +71,10 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 9eff18c1f3e46..e0ac676e0a35c 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1650,8 +1650,12 @@ static int init_percpu_info(struct f2fs_sb_info *sbi)
+ 	if (err)
+ 		return err;
  
- 	handler = sig_handler(t, sig);
- 
-+	/* SIGKILL and SIGSTOP may not be sent to the global init */
-+	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
-+		return true;
+-	return percpu_counter_init(&sbi->total_valid_inode_count, 0,
++	err = percpu_counter_init(&sbi->total_valid_inode_count, 0,
+ 								GFP_KERNEL);
++	if (err)
++		percpu_counter_destroy(&sbi->alloc_valid_block_count);
 +
- 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
- 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
- 		return 1;
++	return err;
+ }
+ 
+ /*
 -- 
 2.20.1
 
