@@ -2,88 +2,165 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46266C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8258BFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B4620659
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBC1207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kf1DS4bG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hULN7kc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbfKHUBL (ORCPT
+        id S1732057AbfKHUCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:01:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22966 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387659AbfKHUBK (ORCPT
+        Fri, 8 Nov 2019 15:02:44 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38503 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730685AbfKHUCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:01:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573243270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ffctAtbPXcBTBuLIiux2KaHS5fRMOIGSG7xeRH/sRtU=;
-        b=Kf1DS4bGTEAMSnNhLI2HzEKFLu8rf6DLRrnZQpsTB6SQmZFDYOJhrQVKz10Nml6NJxxmBM
-        dgDxu7hGGwgqB3GsVSkkc8TwW3pUOD7yAJfB1GjyMwAv/eUf0H2p1GlcDidvwmKYXI2qPr
-        k5mCp18XITZ3Qw4t4ksz9PTaeByuYDs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-DcqyWUrLNZu7yMhqcdDBxw-1; Fri, 08 Nov 2019 15:01:06 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D6AE1800DFB;
-        Fri,  8 Nov 2019 20:01:05 +0000 (UTC)
-Received: from mail (ovpn-125-151.rdu2.redhat.com [10.10.125.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A0D5560C18;
-        Fri,  8 Nov 2019 20:01:04 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 15:01:03 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>
-Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
-Message-ID: <20191108200103.GA532@redhat.com>
-References: <20191104230001.27774-1-aarcange@redhat.com>
- <20191104230001.27774-4-aarcange@redhat.com>
- <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
- <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
- <20191105135414.GA30717@redhat.com>
- <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
- <20191105145651.GD30717@redhat.com>
- <ab18744b-afc7-75d4-b5f3-e77e9aae41a6@redhat.com>
- <20191108135631.GA22507@linux-8ccs>
- <b77283e5-a4bc-1849-fbfa-27741ab2dbd5@redhat.com>
+        Fri, 8 Nov 2019 15:02:43 -0500
+Received: by mail-il1-f194.google.com with SMTP id u17so1316262ilq.5;
+        Fri, 08 Nov 2019 12:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mYf/nyD6rltSVBlJ1rEzYYkSo9gCsLs6tcnYeIJug6o=;
+        b=hULN7kc6Ntx0VJDf3/r/Ug9KysUhIby/9+oydfz0Fpzli6ZoQi5By2We85qloWst6B
+         KxA7mlmhvc4EGkfx4O5/Rjo3X4lURuasgZxveoz5Rwc7Vu3TEPnThe95kgYLEtF/T9NS
+         2d3emfu3AjAaSsvEo1kUuny8w3oBima7EHy72jpIdQJZYvTqOgozrbFgbFfJPN10rZts
+         E5uMw+UwJ8+Efan0vuD+xVy7VFvetRj4c7eIuMVTxPNafABcb0qCm6CJX+POcsypAcSO
+         I5muVAbCYSUVpAjhtGzYGl88oG9TF1ym7IOsepCWEORdapjFaCV1D2GUqlWBkEtzoWuY
+         +eyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mYf/nyD6rltSVBlJ1rEzYYkSo9gCsLs6tcnYeIJug6o=;
+        b=N9+s+A61s+RnBvEmh/z6TRHBcvO1QsuX4HNOZPVOspjln3V/Tap4oafdzm91vGhhbl
+         eRwzF73SW/BPl0bcFPBq+mn3Ht2/BeJsWtdXuOExszcg0voDCQ7hPRtlFeoDIrDvTN3K
+         W3N60LDyfws4MK+7+Yg615RBvZ8Y1TuKX2r/BD2IpmE4wCVh0A6IGWbuAA6k5s7tm19O
+         TQNyuEhkB23kAjwt/bo25IJc+JgILqh70JDqutJlPWZmb2n9un78p6oT/qODHZl5fbiP
+         sRoXh+vGbDW2/vN/M2W/YEXcpJLxtR6uZbmMZ+eIyQZp8c7PN4C31zq3SWzgikU5EpKD
+         /n7Q==
+X-Gm-Message-State: APjAAAUQ38K3mKBGdcWG767/hL1IaDAPdhFItyvpEL+WiUkn26kxTq0Z
+        rRl91oKxVbYr/87p660SP1/blbH9jXIHBWhZgRo=
+X-Google-Smtp-Source: APXvYqwFjCYO6s12BEyvIYjLOyp6JD59hgPbNgslBpXqVMXVo7xFRqxpwstlboDNb3up2WkJsPVmP6NtsZNsXXoTNKo=
+X-Received: by 2002:a92:ca8d:: with SMTP id t13mr14120645ilo.58.1573243361073;
+ Fri, 08 Nov 2019 12:02:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <b77283e5-a4bc-1849-fbfa-27741ab2dbd5@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: DcqyWUrLNZu7yMhqcdDBxw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191007220540.30690-1-aford173@gmail.com> <20191022162223.GU5610@atomide.com>
+ <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
+ <20191022221919.GF5610@atomide.com> <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+ <20191023143646.GG5610@atomide.com>
+In-Reply-To: <20191023143646.GG5610@atomide.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 8 Nov 2019 14:02:29 -0600
+Message-ID: <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 08:51:04PM +0100, Paolo Bonzini wrote:
-> I suppose we could use code patching mechanism to avoid the retpolines.
->  Andrea, what do you think about that?  That would have the advantage
-> that we won't have to remove kvm_x86_ops. :)
+On Wed, Oct 23, 2019 at 9:36 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * H. Nikolaus Schaller <hns@goldelico.com> [191023 04:42]:
+> >
+> > > Am 23.10.2019 um 00:19 schrieb Tony Lindgren <tony@atomide.com>:
+> > >
+> > > * Adam Ford <aford173@gmail.com> [191022 19:01]:
+> > >> On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
+> > >>>
+> > >>> Hi,
+> > >>>
+> > >>> * Adam Ford <aford173@gmail.com> [191007 15:06]:
+> > >>>> The some in the OMAP3 family have a bandgap thermal sensor, but
+> > >>>> omap2plus has it disabled.
+> > >>>>
+> > >>>> This patch enables the OMAP3_THERMAL by default like the rest of
+> > >>>> the OMAP family.
+> > >>>
+> > >>> Looks like this breaks off mode during idle for omap3, and that's
+> > >>> probably why it never got enabled. The difference in power
+> > >>> consumption during idle is about 7mW vs 32mW for the SoC as
+> > >>> measured from torpedo shunt for main_battery_som.
+> > >>>
+> > >>> I think the right fix might be simply to add handling for
+> > >>> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
+> > >>> it during idle like we have for gpio-omap.c for example.
+> > >>
+> > >> I am not sure I know where to start on fixing that issue.  Would you
+> > >> entertain enabling the driver if we set the device tree to 'disabled'
+> > >> by default?  This way if people want to to use it, it can be enabled
+> > >> on a per-device option.  Once the power stuff gets resolved, we might
+> > >> be able to enable it by default.  For people who are planning on using
+> > >> the DM3730 @ 1GHz in high temp environments, I am not sure they'll
+> > >> care about low power.
+> > >
+> > > They should both work fine together though. They are not mutually
+> > > exclusive features.
+> > >
+> > >> I'll try to look into it when I have time, but I was hoping a
+> > >> compromise might be a reasonable work-around.
+> > >
+> > > It should be hopefully a trivial fix.. I have not looked at the
+> > > driver code though.
+> >
+> > If I am taken right, it is the drivers/thermal/ti-soc-thermal/ti-*.c
+> > which is a common driver for omap3, omap4, omap5. They only differ
+> > in the thermal data and which registers and bits are used to access
+> > the ADC.
+>
+> Yes so it seems. Enabling OMAP3_THERMAL adds support to
+> of_ti_bandgap_match[] for omap3 and causes the issue.
+>
+> > So is this problem with off mode also known for omap4 and omap5?
+>
+> Probably. But we don't have off mode working for omap4, and
+> it cannot be used for omap5 AFAIK.
+>
+> My guess is we need to call clk_disable() and call
+> ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
+> what ti_bandgap_suspend does. And then restore it on
+> CPU_CLUSTER_PM_EXIT.
+>
+> There's a similar example already in gpio_omap_cpu_notifier().
+> Not sure if there is some related errata to deal with too,
+> probably the old Nokia n900 or n9 would provide some hints
+> on what exactly needs to be done.
 
-page 17 covers pvops:
+I 'think' I have a patch ready that does what you're asking, but I
+will fully admit that I don't completely grasp what's going on.
 
-https://people.redhat.com/~aarcange/slides/2019-KVM-monolithic.pdf
+I'll submit it as an RFC, but I am not even sure I understand what to
+put into the description, so if you're OK with reviewing the RFC, feel
+free to mark up the actual commit message as well.
 
+From what I can see, the changes haven't negatively impact stuff. I
+didn't see the power consumption go up before, so I am not sure I can
+replicate your findings.
+
+It'll be posted shortly.
+
+adam
+>
+> Regards,
+>
+> Tony
