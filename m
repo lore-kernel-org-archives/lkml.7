@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BE5FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B92FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488E921D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA11921D6C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213295;
-	bh=P75uqMyjoRXnhEw5QxuO8/QYPU7dEevRD9g0hwqkyu0=;
+	s=default; t=1573213299;
+	bh=IPfFpNkXVBfD3r8yyTcbXoGbM9yP96Lps47iWKfbr+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4aT9Og/YrRVU9BuSEBymI7s57ake4LzsWRXXgQl9T2/7vM1MAJdRyLhdOv03uQbm
-	 /ajqdmXt1P3MdN8iuZLevUhkpd+l2W1rZliyLSuJ9wDhjWl/qQGnOinIQf/a9RpeHB
-	 Cw9GvBn1D0PnsC18jVuCnKPPCLG2hi2l2UdTChyA=
+	b=buCaNkPONRMnOFoCIga+EqJS+mo6E+EsrDBREe9amQRcO+UlJDi5nzJrH5Mx+2YhZ
+	 YT8s3+/s98GegkJyTXK3ewtaqQUfWD4qrraaRYyACyK1Aue7fXps2iydlj53PZCNfY
+	 CTaRplzfFfws/Ip3kFGNKBQCr2vHTIAvqv/ZEBCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732865AbfKHLle (ORCPT
+        id S2389554AbfKHLli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732178AbfKHLla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:30 -0500
+        id S2389517AbfKHLle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E096221D82;
-        Fri,  8 Nov 2019 11:41:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5001B21D6C;
+        Fri,  8 Nov 2019 11:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213289;
-        bh=P75uqMyjoRXnhEw5QxuO8/QYPU7dEevRD9g0hwqkyu0=;
+        s=default; t=1573213294;
+        bh=IPfFpNkXVBfD3r8yyTcbXoGbM9yP96Lps47iWKfbr+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0ailCVtCuq+wC6opG8g7PSsdJUA7jlKW5/sUodhKEvQZcEFbR7DurUcJvsnvgK8G
-         mvgT66fpDavbyJcdm+imR+C0gvAAsEotcTK4ubZ2Vo3ls6Y6IN72fcBf/B2kIQHW0B
-         p7Hyo6i8PpCpejGslUROGZr2In0UrtW8zQSziWNE=
+        b=afGg++sQmJVNQ6EHvWVN5GmiZAPkdb8HlZwM7j5LZNBIB+qBchtIGiJXqD8JU2dVy
+         TUtnfzxyMC5FwaJ2HvV2AoVQqEF6ssmYzgwJJG7+sxOl4Vlq8Nlnn7gkfeGors4lCn
+         OAW0lrHAvBiy4xpRtoEWj3qy0IsZ+OYw4YsitoLk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
+Cc:     Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        Jack Wang <jinpu.wang@profitbricks.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 149/205] scsi: lpfc: Fix errors in log messages.
-Date:   Fri,  8 Nov 2019 06:36:56 -0500
-Message-Id: <20191108113752.12502-149-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 152/205] scsi: pm80xx: Corrected dma_unmap_sg() parameter
+Date:   Fri,  8 Nov 2019 06:36:59 -0500
+Message-Id: <20191108113752.12502-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,61 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Deepak Ukey <deepak.ukey@microchip.com>
 
-[ Upstream commit 2879265f514b1f4154288243c91438ddbedb3ed4 ]
+[ Upstream commit 76cb25b058034d37244be6aca97a2ad52a5fbcad ]
 
-Message 6408 is displayed for each entry in an array, but the cpu and queue
-numbers were incorrect for the entry.  Message 6001 includes an extraneous
-character.
+For the function dma_unmap_sg(), the <nents> parameter should be number of
+elements in the scatter list prior to the mapping, not after the mapping.
 
-Resolve both issues
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c  | 2 +-
- drivers/scsi/lpfc/lpfc_nvmet.c | 7 +++----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ drivers/scsi/pm8001/pm8001_sas.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 645ffb5332b4a..8ee585e453dcf 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -282,7 +282,7 @@ lpfc_nvme_delete_queue(struct nvme_fc_local_port *pnvme_lport,
- 	vport = lport->vport;
- 
- 	lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME,
--			"6001 ENTER.  lpfc_pnvme %p, qidx x%xi qhandle %p\n",
-+			"6001 ENTER.  lpfc_pnvme %p, qidx x%x qhandle %p\n",
- 			lport, qidx, handle);
- 	kfree(handle);
- }
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index e2575c8ec93e8..4ca38bc5694c6 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -1340,15 +1340,14 @@ lpfc_nvmet_setup_io_context(struct lpfc_hba *phba)
- 			idx = 0;
- 	}
- 
--	infop = phba->sli4_hba.nvmet_ctx_info;
--	for (j = 0; j < phba->cfg_nvmet_mrq; j++) {
--		for (i = 0; i < phba->sli4_hba.num_present_cpu; i++) {
-+	for (i = 0; i < phba->sli4_hba.num_present_cpu; i++) {
-+		for (j = 0; j < phba->cfg_nvmet_mrq; j++) {
-+			infop = lpfc_get_ctx_list(phba, i, j);
- 			lpfc_printf_log(phba, KERN_INFO, LOG_NVME | LOG_INIT,
- 					"6408 TOTAL NVMET ctx for CPU %d "
- 					"MRQ %d: cnt %d nextcpu %p\n",
- 					i, j, infop->nvmet_ctx_list_cnt,
- 					infop->nvmet_ctx_next_cpu);
--			infop++;
- 		}
- 	}
- 	return 0;
+diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
+index 947d6017d004c..576a0f091933b 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.c
++++ b/drivers/scsi/pm8001/pm8001_sas.c
+@@ -466,7 +466,7 @@ err_out:
+ 	dev_printk(KERN_ERR, pm8001_ha->dev, "pm8001 exec failed[%d]!\n", rc);
+ 	if (!sas_protocol_ata(t->task_proto))
+ 		if (n_elem)
+-			dma_unmap_sg(pm8001_ha->dev, t->scatter, n_elem,
++			dma_unmap_sg(pm8001_ha->dev, t->scatter, t->num_scatter,
+ 				t->data_dir);
+ out_done:
+ 	spin_unlock_irqrestore(&pm8001_ha->lock, flags);
 -- 
 2.20.1
 
