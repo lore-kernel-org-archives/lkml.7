@@ -2,117 +2,283 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8295FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E6BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4EC206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D728C218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xqvv0JCt"
+	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="KxGr5TAc";
+	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="DaqaOGMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732038AbfKHMWX (ORCPT
+        id S1732236AbfKHMXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:22:23 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38816 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727598AbfKHMWX (ORCPT
+        Fri, 8 Nov 2019 07:23:10 -0500
+Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:39966 "EHLO
+        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732087AbfKHMXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 07:22:23 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 15so3857542pgh.5;
-        Fri, 08 Nov 2019 04:22:22 -0800 (PST)
+        Fri, 8 Nov 2019 07:23:09 -0500
+X-Greylist: delayed 649 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 07:23:08 EST
+Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
+        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8C8T02007914;
+        Fri, 8 Nov 2019 04:11:48 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt1;
+ bh=wkI8cH/jniv5ALj2FXj1K1Gx5TA77V/F3NP+QuIDmwc=;
+ b=KxGr5TAcL9Vou3gPWV6NkqchrvfVNa7YPqofRSbhM2uE/ECLf6y4pQjs9zJJUGW/GPzv
+ JYRYpiWSKOgfl5Nt9fRbJLxlLt4RB/wEgPZDwBrE4K+dFB1CnwFup4Cm+uA2+hd76rpT
+ JJOnZ9LvQY/rzD+s1Ne4HbmJxIMCI9j2RERD1Y6jmexXf63up62MdHliAiCf+77tcqni
+ 762wbl7ClBrw0mB1NBpNItaRR7DR1laKp95TKeaYAcyO5skLb/mCUV54cilUEzNM/Cup
+ EZn9gNViGiINiMWsXkA9EdlsG1GDJKTp+s6uSZv8TUu6fq5xzx2pzWs3ll7NkxkOdFLq 9Q== 
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2055.outbound.protection.outlook.com [104.47.38.55])
+        by mx0b-00328301.pphosted.com with ESMTP id 2w50g1g5x3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 04:11:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k/bnMkK4jF9L3DILPOkqD9Bz+mRXUDDhnVOFqzB1cEnuBX2KCgkXXKsgewECvyd9lddXvoOLcDy4mqmSRLvrf+U+EWqptUFtmKt1rFRdW79MBJOZT6QUT+/X22cOpWxQ+89jL7bwylZrcAWe/z/LtJHUScR/zIqUmYBS32T/gMqJdkGz/MvifB/lK8MrGEGa7jnYuc1199IETHD43cjEvr6xPfH5JWWYsVFeycNrNl+LMmzkRRpdAJ4EiRHQq+yvaKyt3bgqyb6rcLrrqmVKo53kY+J/1GnSiVpvgNLosf/UUiFa2wW6wxwNkrmOYfwku6F8dnbd1hTDhwZFHhTgXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wkI8cH/jniv5ALj2FXj1K1Gx5TA77V/F3NP+QuIDmwc=;
+ b=QdKu/TLwcyT4Hkey3hC5aOusyhQ3VPLBLMOplnNQYKBhz+yOiB4CA+357w7igYjUVj1apUPPhFyaueobbhwuSqymWpB33x3ly7lsGfzbxOTtC6+L1zI7dwQjD5bJzt46Mqr5AVRGQjTtfuwb0FlfzJv3EIs2KZDFJ8qAyXYrdSAm/1CwzNhRtjsAlD35k2hcPiG/08YLqvPa/fEEy4rZwrikR+3PejbQKcsukxjo72LLTX44NK1AvRAvR4laqXdwfgCNsAgnRfN5YzWuPl2s4z5Y2iJGq06/L67eP19uMBKwjUvJ5Ob6dulstc0pdXWIloMkJeaNl+9Omofx2LFkDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=invensense.com; dmarc=pass action=none
+ header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=265ilrPyAc+08beKAE2CsGbxxp/QxNAUXvuAhj1glKw=;
-        b=Xqvv0JCtG2UB2ibnORP5AnamGOCO5c5RCClyrHl5tAcm0SKqpjy3Jb8jbFJlv54Gs4
-         bqs0hUGHEO6qTLaRqH5AmbEl/9BJaRElGMx7JbzJFtcz9suz8bAkY3czNgrYc+gjK3Hq
-         r4jnLqxU9bXeSQi8rzhgeqacY7VO1QZ/o4yvCkvgGPoR8uZKY7Hsc8/tGDxml1w8CO4f
-         NLSht01j9yKBWBUBuUZ6M2oa6XkSnQgB+Rq6ZquOeKVj6EMzVXtMPORtsMosRN0BaDKq
-         kVWHh87zTtyoYmR6jNFcloHsuuQhZcU9ZrnBeljnwt7nvZrOyW0i/O6CZqLFS4krF2ai
-         WD7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=265ilrPyAc+08beKAE2CsGbxxp/QxNAUXvuAhj1glKw=;
-        b=I4O+zwE3QM+9rHbs9b74ihV/fkMwzjIOn5jjxlS79xqCaWIAh9bFT5jFQREYuLdQsU
-         gdMTOYLjvOyoJpLqrhxc3vvpN8LSJGsGfd8FW2tIVfe2EsXzgG6xhpPoc+ujm+29G0Ah
-         geYYOaH0N8ie+boaOXm4Iy44zN9J1dHLpft26d/tI/XJUPTi+Ej/Dy0P8YffDzDQnVhp
-         d525SAHVomZZaYE62NIuGL3OIYsY3ouftxRcRnyiPmMNPUYUypFFNJnqNoLAYPPEM71E
-         B93nfz4RIYDo0TjWp7l/YIkWL7iujmVKNnBTeNMybWr+ezICZa+uM7DHJN6ZCQqzeZbT
-         UmSQ==
-X-Gm-Message-State: APjAAAWhOrU9Ky9HbHcPbIywzi2Eh/hbFK5FNgwMDHkQ0jm5fi3S1USZ
-        HrpmJJnJxpm7rJvEnFabwlI=
-X-Google-Smtp-Source: APXvYqwIeSgiKu+IYnmeeumT/W7JTJ8l7PzqnI/dvRO+PyZMa04u0DS4TctCHfVEreUrjgTqhw7/vg==
-X-Received: by 2002:a63:f923:: with SMTP id h35mr11853341pgi.323.1573215742278;
-        Fri, 08 Nov 2019 04:22:22 -0800 (PST)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id j23sm5465721pfe.95.2019.11.08.04.22.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 04:22:21 -0800 (PST)
-Subject: Re: [PATCH] tcp: remove redundant new line from tcp_event_sk_skb
-To:     Tony Lu <tonylu@linux.alibaba.com>, edumazet@google.com,
-        rostedt@goodmis.org, mingo@redhat.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20191108095007.26187-1-tonylu@linux.alibaba.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <795f4bb1-b40e-1745-0df4-6e55d80d5272@gmail.com>
-Date:   Fri, 8 Nov 2019 04:22:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191108095007.26187-1-tonylu@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+ d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wkI8cH/jniv5ALj2FXj1K1Gx5TA77V/F3NP+QuIDmwc=;
+ b=DaqaOGMUnD71m8KCYH0Cc0rRJ41YKg7/uyBDPkilCWOA7qZU0HAFHFNM+ExWG2RtkmSgbxgpbZVcwbwAghE1bTtJgqDPUDw+D2gqpt0n8NvNPounujJg3o4DJoK/Z9XSEm4umYfgAYcRa9WGKO8x238M50cmuJg2113KHfveQEk=
+Received: from MN2PR12MB3373.namprd12.prod.outlook.com (20.178.242.33) by
+ MN2PR12MB3871.namprd12.prod.outlook.com (10.255.238.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Fri, 8 Nov 2019 12:11:46 +0000
+Received: from MN2PR12MB3373.namprd12.prod.outlook.com
+ ([fe80::95a9:35cd:3e40:8ed3]) by MN2PR12MB3373.namprd12.prod.outlook.com
+ ([fe80::95a9:35cd:3e40:8ed3%3]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
+ 12:11:46 +0000
+From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+To:     Stephan Gerhold <stephan@gerhold.net>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
+Thread-Topic: [PATCH v2 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
+Thread-Index: AQHVlZuj3hjZAXfriEOOlDXmX+bcQ6eBL+la
+Date:   Fri, 8 Nov 2019 12:11:46 +0000
+Message-ID: <MN2PR12MB33733917812945D0293D9D27C47B0@MN2PR12MB3373.namprd12.prod.outlook.com>
+References: <20191107184342.20361-1-stephan@gerhold.net>
+In-Reply-To: <20191107184342.20361-1-stephan@gerhold.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [77.157.193.39]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 27f4ff27-4062-4b00-db6a-08d76444d38c
+x-ms-traffictypediagnostic: MN2PR12MB3871:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR12MB38719631BEA0881C5626663AC47B0@MN2PR12MB3871.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1775;
+x-forefront-prvs: 0215D7173F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(39850400004)(366004)(189003)(199004)(6306002)(11346002)(91956017)(76116006)(86362001)(3846002)(66446008)(64756008)(66476007)(71190400001)(71200400001)(6116002)(229853002)(8676002)(186003)(6436002)(66946007)(66556008)(7696005)(52536014)(76176011)(81156014)(81166006)(2906002)(53546011)(6506007)(6246003)(26005)(102836004)(316002)(8936002)(80792005)(66066001)(110136005)(54906003)(5660300002)(99286004)(256004)(7416002)(7736002)(14454004)(74316002)(966005)(478600001)(4326008)(55016002)(9686003)(446003)(486006)(33656002)(476003)(5024004)(305945005)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3871;H:MN2PR12MB3373.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: invensense.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Qs/1/3C0lNDMG7fvLGDphMWlT5jzW+2B2EeW2T9npxwsTD7uAQjeEmjyUM7uqKNjpKWwo9COZVNoNKaTtbKsWh/cYXeMi6/BniayE6aOvAo2IF0CIin+4CclRcIjpHDjXal0mmSzW+coJw29ACE8DOfOhiRsJu/MV96Zju27XBik/GlomuRb/xbZOwt24bRTgJywRfRwcY1CF96Mt/4FwVv+dlkNwi+ut4zi0SLUXsmJ7y31NSQ/TqyZK9U2cKaV26hXsZkwaf9NyjMHHZc4sN/IXeT1HtG7s6xXjiPhNOrqlqXH5spYoyxOb3i/IuVKPXVtlbHpjyBsmAGYdG39jfz8PgLsGxf04jAu9Fsjucl7P6DVl4QbGc8J7RA6pyUDm9TqZQstGUeFRUlanQ38ExufCe8EDMvAwIt/+R+RTAj0i2QgiJ07uwbRZQpcKEz4ahLJf3Cqo8wxWJRkUOWOeENeb/Rh4A/y8m4poVHHg0k=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: invensense.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27f4ff27-4062-4b00-db6a-08d76444d38c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 12:11:46.4362
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1qnhqEprJJcer3KI429k0r6Cl+zz1Vu8WqKA9kxHCCwaKIeE7PT9rW5T5wcy8kqglQDEvNAjlLBO9nqPJ8QHj2OoakKWAuDOYNMPRX8Lo0o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3871
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-08_03:2019-11-08,2019-11-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911080120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/8/19 1:50 AM, Tony Lu wrote:
-> This removes '\n' from trace event class tcp_event_sk_skb to avoid
-> redundant new blank line and make output compact.
-> 
-> Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
-> ---
->  include/trace/events/tcp.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-> index 2bc9960a31aa..cf97f6339acb 100644
-> --- a/include/trace/events/tcp.h
-> +++ b/include/trace/events/tcp.h
-> @@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
->  			      sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
->  	),
->  
-> -	TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s\n",
-> +	TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
->  		  __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
->  		  __entry->saddr_v6, __entry->daddr_v6,
->  		  show_tcp_state_name(__entry->state))
-> 
-
-This seems good to me. Only few comments :
-
-I would add a
-
-Fixes: af4325ecc24f ("tcp: expose sk_state in tcp_retransmit_skb tracepoint")
-
-And also CC (I just did in this reply) the author of the above patch to make sure nothing unexpected happens.
-
-Thanks.
-
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>=0A=
+=0A=
+Best regards,=0A=
+JB=0A=
+=0A=
+From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org> on =
+behalf of Stephan Gerhold <stephan@gerhold.net>=0A=
+=0A=
+Sent: Thursday, November 7, 2019 19:43=0A=
+=0A=
+To: Jonathan Cameron <jic23@kernel.org>=0A=
+=0A=
+Cc: Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>;=
+ Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob Herring <robh+dt@kernel.or=
+g>; Mark Rutland <mark.rutland@arm.com>; Linus Walleij <linus.walleij@linar=
+o.org>; Brian Masney <masneyb@onstation.org>;=0A=
+ Jonathan Marek <jonathan@marek.ca>; Jean-Baptiste Maneyrol <JManeyrol@inve=
+nsense.com>; linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; devicet=
+ree@vger.kernel.org <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.=
+org <linux-kernel@vger.kernel.org>;=0A=
+ Stephan Gerhold <stephan@gerhold.net>=0A=
+=0A=
+Subject: [PATCH v2 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply=0A=
+=0A=
+=A0=0A=
+=0A=
+=0A=
+=A0CAUTION: This email originated from outside of the organization. Please =
+make sure the sender is who they say they are and do not click links or ope=
+n attachments unless you recognize the sender and know the content is safe.=
+=0A=
+=0A=
+=0A=
+=0A=
+inv_mpu6050 now supports an additional vdd-supply; document it.=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>=0A=
+=0A=
+=0A=
+=0A=
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>=0A=
+=0A=
+=0A=
+=0A=
+---=0A=
+=0A=
+=0A=
+=0A=
+Changes in v2:=0A=
+=0A=
+=0A=
+=0A=
+=A0 - Add Reviewed-by from Linus Walleij=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+v1: =0A=
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lore.kernel.org_linu=
+x-2Diio_20191106183536.123070-2D1-2Dstephan-40gerhold.net_&d=3DDwIDAg&c=3DW=
+oJWtq5JV8YrKnzRxvD8NxmTP_1wxfE0prPmo0NeZwg&r=3D4jiDX_1brsSWfCjfA6Ovj1d4h9MF=
+8q7Xk5aBwG28mVk&m=3DO82MQPnLTvlD0nxDzFW1KS3aZpWiI3qYUZwJUy_qqxc&s=3Dddvzqy0=
+PywWDCnge7xbJIhpqN9NltbLrzi4EBVdeA_o&e=3D=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+---=0A=
+=0A=
+=0A=
+=0A=
+=A0Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +=0A=
+=0A=
+=0A=
+=0A=
+=A01 file changed, 1 insertion(+)=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Do=
+cumentation/devicetree/bindings/iio/imu/inv_mpu6050.txt=0A=
+=0A=
+=0A=
+=0A=
+index 268bf7568e19..c5ee8a20af9f 100644=0A=
+=0A=
+=0A=
+=0A=
+--- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt=0A=
+=0A=
+=0A=
+=0A=
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt=0A=
+=0A=
+=0A=
+=0A=
+@@ -21,6 +21,7 @@ Required properties:=0A=
+=0A=
+=0A=
+=0A=
+=A0=A0 bindings.=0A=
+=0A=
+=0A=
+=0A=
+=A0=0A=
+=0A=
+=0A=
+=0A=
+=A0Optional properties:=0A=
+=0A=
+=0A=
+=0A=
++ - vdd-supply: regulator phandle for VDD supply=0A=
+=0A=
+=0A=
+=0A=
+=A0 - vddio-supply: regulator phandle for VDDIO supply=0A=
+=0A=
+=0A=
+=0A=
+=A0 - mount-matrix: an optional 3x3 mounting rotation matrix=0A=
+=0A=
+=0A=
+=0A=
+=A0 - i2c-gate node.=A0 These devices also support an auxiliary i2c bus.=A0=
+ This is=0A=
+=0A=
+=0A=
+=0A=
+-- =0A=
+=0A=
+=0A=
+=0A=
+2.23.0=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
