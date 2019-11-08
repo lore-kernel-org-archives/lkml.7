@@ -2,125 +2,207 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7088CFC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0329BFC6197
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4472720865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="0QMe2Dam"
+	by mail.kernel.org (Postfix) with ESMTP id C8EE3214DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573252312;
+	bh=hXgXlga8MM0o2yd0itfeDxgoO6zMYIg93uGHnxnY8C8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=nHdiiO+T3RriIHfTOQfbPbGzoxF9MGuD1nlC+AaYMseG71VqgD88691QNua2ud0+T
+	 5j0sw9OskAMTfUaWOodfGFRNBLtpf56CKpv+Yo7bS4UgO96z7MGf8bMXoSa4uBH+W+
+	 q2WOLlPf8qcB2U7w3qaP17WV4Est52tXFsah2mbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfKHW3o (ORCPT
+        id S1730722AbfKHWbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:29:44 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40336 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfKHW3n (ORCPT
+        Fri, 8 Nov 2019 17:31:51 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42624 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729164AbfKHWbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:29:43 -0500
-Received: by mail-io1-f66.google.com with SMTP id p6so8036458iod.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:29:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tG3CMleYdOoOJlDJUqZcQjcg5RUyLpG6Jn1aCKR4UeI=;
-        b=0QMe2DamNA24EOuI+UywMP9UlxhPIEd9A3ejSSwX5dRvxIuLh1eyekTxCIaEXQw45R
-         54KJMXm13tA1bXnQ5gJkP3Bc2AXpK5GqrZmTonZGLH7QjaBf30/ySbas7znjaZC8cE1G
-         dvINXztNO0uL0txG0mi6Bc5/ap9kcdnlTiqhlqswN/TjS2cBK4KeW5Nwx13lqVQuEvxX
-         oGKBNxbZ5TalYTw1lCFi09i1ffQkcnGX5b5VkolnEU5VWoGxPkE3Trg9U5Fmdt/c9FIa
-         zNy9okvAx34ttHfQFN4jU4TQ/XK6X0+WuB4rn384C8czKSZAdSDyG4KOBvp6caVBgMS9
-         LBzQ==
+        Fri, 8 Nov 2019 17:31:51 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s5so5710918pfh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:31:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tG3CMleYdOoOJlDJUqZcQjcg5RUyLpG6Jn1aCKR4UeI=;
-        b=jIR7BxqK4zfBnK4124bRvAwU+GTkv8w+AyK/6I2x5uimCiuOxcLCxqGswPN7ZtPmlF
-         Kg1AoK7N+UH8nW8sHpYMDGmpMbVQPNBl1IxvQ4d2QvEFkPrK1/3b7uvABy9xq1ueyZIu
-         euWftaqbcfEZgNufaw3CqEE5Xg/NH5uh5gVk0tpT+B8NKgAaupwRgcgTHV+gNtBGDyB6
-         sc2GOtWhqoC/BhEJzN1COxrD0StaCY24jsdhTcTzYZ02LFlq6WTcoj/waapYbKn8k1KD
-         8pj1sb96f8SllAi9bS8UJBUTGzyURCxUaeEyZqKvhCX7FEZYPKpv7+7wK/VNtekoFDD6
-         4mew==
-X-Gm-Message-State: APjAAAWnPVg5kUTuUPViqsVhLxndgW71WCYWtaE2HBXL/xe9Fz7DTHzj
-        6+WwGs+FYjjBrOIdb3Kywl+2iPJ5kkWNQdDvr5rwRm9Vy4dnxw==
-X-Google-Smtp-Source: APXvYqxR2Iojnfzgt1D2EKNQghVo4JbH2TyZSSa7HkkqJ9Q6NanRF7wM7yANUTTIbJh1g1uWd98XskwAsn4twL28rCk=
-X-Received: by 2002:a6b:6509:: with SMTP id z9mr12039319iob.123.1573252182905;
- Fri, 08 Nov 2019 14:29:42 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uOMwlXA0YCJxSB/0tZdjm9vpOf0PBhXbvsTTJSciZBo=;
+        b=YHtoMo+Smmf4nheTP5Ssye+fQPNTSTfHWaiJRqZmBosU3H1bHsE0rB+sfM7z80Xy0x
+         +N6j9poEJyUySepGAXlMnk8eW7cT5uLI6wP5Gf9UCW37J++SPnLB6BillSJhxVxGICO8
+         GAlIDSlAGuz2RvR9TQNnXpWB4ipZbOWPdnn+tYLf1bMnM9hcP3+he3j58d8X7yrRIHk9
+         L3uJIxmuy0DUngSVJcip8fjHwZXJSJRzsik8BXNpxDCjBTEKtxdjE97THAh4O9SKF4nV
+         i168oYzU2924TUa9C2IHetlzquSSfxYW6loQqdTpicTb4OdswnoSdRNfqWaFeXXa+gpa
+         CbJg==
+X-Gm-Message-State: APjAAAXzXxsZv6S3HZ1q1moM9DtyZ+ozjdQ+CVzTy3IizYhfGq3Qmjj9
+        0IYFfsrCLkw7rBE2bi6qIPIPXQ==
+X-Google-Smtp-Source: APXvYqxgsTzvWwKVeIOAd8QL9w8gxGiA6Qrkb61KTL7dh0OSi94Xnte59tfcevtvB/aF+pXShlPMww==
+X-Received: by 2002:a17:90a:fb53:: with SMTP id iq19mr16819626pjb.138.1573252310306;
+        Fri, 08 Nov 2019 14:31:50 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:3602:86ff:fef6:e86b? ([2601:646:c200:1ef2:3602:86ff:fef6:e86b])
+        by smtp.googlemail.com with ESMTPSA id e1sm6479853pgv.82.2019.11.08.14.31.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2019 14:31:49 -0800 (PST)
+Subject: Re: [patch 2/9] x86/process: Unify copy_thread_tls()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20191106193459.581614484@linutronix.de>
+ <20191106202805.948064985@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Message-ID: <53a6f346-fca1-ac04-ee34-6d472a0d4408@kernel.org>
+Date:   Fri, 8 Nov 2019 14:31:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <CAOesGMjVUCd9bN=pggS-ECjMR42b0SqXKewsp+NYFSVqRgSWrg@mail.gmail.com>
- <20191107211801.GA107543@google.com> <20191108110736.GA10708@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191108110736.GA10708@e121166-lin.cambridge.arm.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 8 Nov 2019 14:29:31 -0800
-Message-ID: <CAOesGMhxs0A-YTXpS9Lqk_sn2=Q5jaCM2+mjEuvtwSX9Y49eMw@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the pci tree with the arm-soc tree
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191106202805.948064985@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 3:07 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Thu, Nov 07, 2019 at 03:18:01PM -0600, Bjorn Helgaas wrote:
-> > On Thu, Nov 07, 2019 at 10:27:20AM -0800, Olof Johansson wrote:
-> > > On Wed, Nov 6, 2019 at 2:46 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > >
-> > > > Hi all,
-> > > >
-> > > > Today's linux-next merge of the pci tree got a conflict in:
-> > > >
-> > > >   arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > >
-> > > > between commit:
-> > > >
-> > > >   68e36a429ef5 ("arm64: dts: ls1028a: Move thermal-zone out of SoC")
-> > > >
-> > > > from the arm-soc tree and commit:
-> > > >
-> > > >   8d49ebe713ab ("arm64: dts: ls1028a: Add PCIe controller DT nodes")
-> > >
-> > > Bjorn, we ask that driver subsystem maintainers don't pick up DT
-> > > changes since it causes conflicts like these.
-> > >
-> > > Is it easy for you to drop this patch, or are we stuck with it?
-> > > Ideally it should never have been sent to you in the first place. :(
-> >
-> > Lorenzo, is it feasible for you to drop it from your pci/layerscape
-> > branch and repush it?  If so, I can redo the merge into my "next"
-> > branch.
->
-> Done. Should we ignore all dts updates from now onwards ?
+On 11/6/19 11:35 AM, Thomas Gleixner wrote:
+> While looking at the TSS io bitmap it turned out that any change in that
+> area would require identical changes to copy_thread_tls(). The 32 and 64
+> bit variants share sufficient code to consolidate them into a common
+> function to avoid duplication of upcoming modifications.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/x86/include/asm/ptrace.h    |    6 ++
+>  arch/x86/include/asm/switch_to.h |   10 ++++
+>  arch/x86/kernel/process.c        |   94 +++++++++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/process_32.c     |   68 ----------------------------
+>  arch/x86/kernel/process_64.c     |   75 -------------------------------
+>  5 files changed, 110 insertions(+), 143 deletions(-)
+> 
+> --- a/arch/x86/include/asm/ptrace.h
+> +++ b/arch/x86/include/asm/ptrace.h
+> @@ -361,5 +361,11 @@ extern int do_get_thread_area(struct tas
+>  extern int do_set_thread_area(struct task_struct *p, int idx,
+>  			      struct user_desc __user *info, int can_allocate);
+>  
+> +#ifdef CONFIG_X86_64
+> +# define do_set_thread_area_64(p, s, t)	do_arch_prctl_64(p, s, t)
+> +#else
+> +# define do_set_thread_area_64(p, s, t)	(0)
+> +#endif
+> +
+>  #endif /* !__ASSEMBLY__ */
+>  #endif /* _ASM_X86_PTRACE_H */
+> --- a/arch/x86/include/asm/switch_to.h
+> +++ b/arch/x86/include/asm/switch_to.h
+> @@ -103,7 +103,17 @@ static inline void update_task_stack(str
+>  	if (static_cpu_has(X86_FEATURE_XENPV))
+>  		load_sp0(task_top_of_stack(task));
+>  #endif
+> +}
+>  
+> +static inline void kthread_frame_init(struct inactive_task_frame *frame,
+> +				      unsigned long fun, unsigned long arg)
+> +{
+> +	frame->bx = fun;
+> +#ifdef CONFIG_X86_32
+> +	frame->di = arg;
+> +#else
+> +	frame->r12 = arg;
+> +#endif
+>  }
+>  
+>  #endif /* _ASM_X86_SWITCH_TO_H */
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -132,6 +132,100 @@ void exit_thread(struct task_struct *tsk
+>  	fpu__drop(fpu);
+>  }
+>  
+> +static int set_new_tls(struct task_struct *p, unsigned long tls)
+> +{
+> +	struct user_desc __user *utls = (struct user_desc __user *)tls;
+> +
+> +	if (in_ia32_syscall())
+> +		return do_set_thread_area(p, -1, utls, 0);
+> +	else
+> +		return do_set_thread_area_64(p, ARCH_SET_FS, tls);
+> +}
+> +
+> +static inline int copy_io_bitmap(struct task_struct *tsk)
+> +{
+> +	if (likely(!test_tsk_thread_flag(current, TIF_IO_BITMAP)))
+> +		return 0;
+> +
+> +	tsk->thread.io_bitmap_ptr = kmemdup(current->thread.io_bitmap_ptr,
+> +					    IO_BITMAP_BYTES, GFP_KERNEL);
 
-Thanks!
+tsk->thread.io_bitmap_max = current->thread.io_bitmap_max?
 
-Indeed, dts updates should only go in through the platform maintainers
-(i.e. through soc tree), unless there are strong reasons to bring them
-in through driver trees.
+I realize you inherited this from the code you're refactoring, but it
+does seem to be missing.
 
-If there's a need for a dt-include to be shared between driver and
-dts, getting them on a stable branch that's merged through both trees
-is usually the best way. Reach out when that happens and we can
-coordinate.
+> +	if (!tsk->thread.io_bitmap_ptr) {
+> +		tsk->thread.io_bitmap_max = 0;
+> +		return -ENOMEM;
+> +	}
+> +	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+> +	return 0;
+> +}
+> +
+> +static inline void free_io_bitmap(struct task_struct *tsk)
+> +{
+> +	if (tsk->thread.io_bitmap_ptr) {
+> +		kfree(tsk->thread.io_bitmap_ptr);
+> +		tsk->thread.io_bitmap_ptr = NULL;
+> +		tsk->thread.io_bitmap_max = 0;
+> +	}
+> +}
+> +
+> +int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+> +		    unsigned long arg, struct task_struct *p, unsigned long tls)
+> +{
+> +	struct inactive_task_frame *frame;
+> +	struct fork_frame *fork_frame;
+> +	struct pt_regs *childregs;
+> +	int ret;
+> +
+> +	childregs = task_pt_regs(p);
+> +	fork_frame = container_of(childregs, struct fork_frame, regs);
+> +	frame = &fork_frame->frame;
+> +
+> +	frame->bp = 0;
+> +	frame->ret_addr = (unsigned long) ret_from_fork;
+> +	p->thread.sp = (unsigned long) fork_frame;
+> +	p->thread.io_bitmap_ptr = NULL;
+> +	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
+> +
+> +#ifdef CONFIG_X86_64
+> +	savesegment(gs, p->thread.gsindex);
+> +	p->thread.gsbase = p->thread.gsindex ? 0 : current->thread.gsbase;
+> +	savesegment(fs, p->thread.fsindex);
+> +	p->thread.fsbase = p->thread.fsindex ? 0 : current->thread.fsbase;
+> +	savesegment(es, p->thread.es);
+> +	savesegment(ds, p->thread.ds);
+> +#else
+> +	/* Clear all status flags including IF and set fixed bit. */
+> +	frame->flags = X86_EFLAGS_FIXED;
+> +#endif
 
+Want to do another commit to make the eflags fixup unconditional?  I'm
+wondering if we have a bug.
 
-Regards,
+Other than these questions:
 
--Olof
+Acked-by: Andy Lutomirski <luto@kernel.org>
