@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CBCC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96865FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45053222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BA5222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213713;
-	bh=bEMiRdC2DTv+ADXauOoOV3CvMlfZpHZO/onVhiyscok=;
+	s=default; t=1573213716;
+	bh=NRLAl6V12SzZIvNvM/58GkrMfGcZ5KGi5UFCtt3HtR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P13bwgU1BVeqb0X0mUsE4FqGiDje1vC/CjDNJ2E0I9rdMgHaa/UzMobj2MmPFBnaD
-	 VC1xFL+dNWfHliV32XR0kV3nFVNM2cF4Qivo4DgT+MFfRaZcLmaCY9eFm6Meq0hYJc
-	 GYY897hD97Q1UBg2GoSfPwBgtRh+XXQtjcNqqu4Q=
+	b=1qJaQ0AIfr9wV6VJNxfCHHhV02pEY9IfoLxSG3ZA1HvBMtdXyeu2PnweskWuyeJTv
+	 ZUwNmKAp+wV6fcXdyq8sUfeXQhaN7gbXocFaERfZ7qIY6wwdF3m+tpSf2cCmiGKb5X
+	 ylbpCpHKP1E4fkaQuvBCI8T7oPedUmVeoPLlBB38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388130AbfKHLsb (ORCPT
+        id S2391768AbfKHLsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:48:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36882 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:48:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390799AbfKHLsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:48:01 -0500
+        id S2390819AbfKHLsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:48:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84681222CE;
-        Fri,  8 Nov 2019 11:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79B2F22473;
+        Fri,  8 Nov 2019 11:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213681;
-        bh=bEMiRdC2DTv+ADXauOoOV3CvMlfZpHZO/onVhiyscok=;
+        s=default; t=1573213686;
+        bh=NRLAl6V12SzZIvNvM/58GkrMfGcZ5KGi5UFCtt3HtR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eKJqrGyApfa9/mGcO4a4Ayu4EzBmHVV4SH/sZZJ9WCSye13rgm1sbq2CnbLsbQ+Y8
-         Ssg9FjjOEXh1qU/Vzz3stV3NE23JJiHdP2cGPVRvuqWGjskIxrbM90nCdxPqI/KDtb
-         +0m2wUruy12iWQH1OQhaQO4aJ6rA1byJt9U85j84=
+        b=F9YN2C/RkdRZzEWVRGQ3GfwaXIdnSGIiivuKG5xLUG37HNdLOydxFCC761tiHW2Fh
+         N1PW7l4Zwp7lzyFpjliUdQYMgddQJS4xpdBg6HsoqCWAsCmr4CY4YLqLvyGJrii1c+
+         N6+jT6YjjjFTE7MCYvdiyV4Q6MPuDzrYMvOn1ZT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 29/44] ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff" is set
-Date:   Fri,  8 Nov 2019 06:47:05 -0500
-Message-Id: <20191108114721.15944-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 33/44] nvmem: core: return error code instead of NULL from nvmem_device_get
+Date:   Fri,  8 Nov 2019 06:47:09 -0500
+Message-Id: <20191108114721.15944-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -59,72 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 8148d2136002da2e2887caf6a07bbd9c033f14f3 ]
+[ Upstream commit ca6ac25cecf0e740d7cc8e03e0ebbf8acbeca3df ]
 
-One of the Freescale recommended sequences for power off with external
-PMIC is the following:
-...
-3.  SoC is programming PMIC for power off when standby is asserted.
-4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
+nvmem_device_get() should return ERR_PTR() on error or valid pointer
+on success, but one of the code path seems to return NULL, so fix it.
 
-See:
-http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
-page 5083
-
-This patch implements step 4. of this sequence.
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/nvmem/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index a19d20f23e716..fff529c5f9b36 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -602,6 +602,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
- 				   IMX6Q_GPR1_GINT);
- }
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 931cc33e46f02..5d6d1bb4f1106 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -457,7 +457,7 @@ static struct nvmem_device *nvmem_find(const char *name)
+ 	d = bus_find_device(&nvmem_bus_type, NULL, (void *)name, nvmem_match);
  
-+static void imx6_pm_stby_poweroff(void)
-+{
-+	imx6_set_lpm(STOP_POWER_OFF);
-+	imx6q_suspend_finish(0);
-+
-+	mdelay(1000);
-+
-+	pr_emerg("Unable to poweroff system\n");
-+}
-+
-+static int imx6_pm_stby_poweroff_probe(void)
-+{
-+	if (pm_power_off) {
-+		pr_warn("%s: pm_power_off already claimed  %p %pf!\n",
-+			__func__, pm_power_off, pm_power_off);
-+		return -EBUSY;
-+	}
-+
-+	pm_power_off = imx6_pm_stby_poweroff;
-+	return 0;
-+}
-+
- void __init imx6_pm_ccm_init(const char *ccm_compat)
- {
- 	struct device_node *np;
-@@ -618,6 +640,9 @@ void __init imx6_pm_ccm_init(const char *ccm_compat)
- 	val = readl_relaxed(ccm_base + CLPCR);
- 	val &= ~BM_CLPCR_LPM;
- 	writel_relaxed(val, ccm_base + CLPCR);
-+
-+	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
-+		imx6_pm_stby_poweroff_probe();
- }
+ 	if (!d)
+-		return NULL;
++		return ERR_PTR(-ENOENT);
  
- void __init imx6q_pm_init(void)
+ 	return to_nvmem_device(d);
+ }
 -- 
 2.20.1
 
