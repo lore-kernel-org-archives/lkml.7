@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B26CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5CFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F649222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F95222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213358;
-	bh=lxoQO1EoauxQvVrXhOgcjT27wnFtW9WZsPTLQMG3sWA=;
+	s=default; t=1573213363;
+	bh=0vx65RjpRJZQ4ULHxxgE65D1vts6kuf75w99/xFy9+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uPys03Mv+nHDGorxhhO0kF3MImuCBscbr1gYtW9bGWD7RIFxzuthKLs6LLA+qwQgY
-	 lPNJJ6d5vG4JzzZAOY2rEJaiS90SNgZZZrke0X7X3cNkG+olzWmn1FQyDRkL9X6U0e
-	 pzdasoYeWw7zKe2EH7oAMilvLagUM1AmKz+b4o8A=
+	b=zFG4TBUA3mOglSwAsoyOtR4FylmSBN5ho6+dgBZx2ujnT0ArH0t333/p2K7PdRTAc
+	 pZQNt9fhxX+zrGqjfDGA2oRlXFLqALeXDWFK+/eqXLIreRNUbYa+ja/Wdgv7U7Ms9B
+	 2+voWZzvcmpXx8oIiPF1NLyO207e5c/8JKlY9tSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390063AbfKHLmh (ORCPT
+        id S2390108AbfKHLml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390012AbfKHLmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:32 -0500
+        id S2390064AbfKHLmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92FEE21D7B;
-        Fri,  8 Nov 2019 11:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44BC521D82;
+        Fri,  8 Nov 2019 11:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213351;
-        bh=lxoQO1EoauxQvVrXhOgcjT27wnFtW9WZsPTLQMG3sWA=;
+        s=default; t=1573213357;
+        bh=0vx65RjpRJZQ4ULHxxgE65D1vts6kuf75w99/xFy9+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=svwlLwWQZWdZx5xue/2NOi8fzDwdofOv11A20r1JNW0XsXBNmEBBbOr3lnjEYMwCj
-         7FNE8RaZsOstn4Bbw7XSJ00LQW+/kJIIeQ7/5yNdiZEZDUBOopi4RTASqrs+nrIFSw
-         jOQh48fl1F6r+AzFJzkZ9piy9Pv58+83bi8lnbG4=
+        b=rOx3Ns4gxYodKNQEZVOPm9mfbadLU9tEUbsh8kahZxlIbQgYTGRbbdOgFGIacwMSU
+         sXC+yQPa8rCKJqCr2zp54JvC1CK3znp8A52hGSYPoGWBkQDcKm7nAnYOQEJSaHUnWT
+         Z/LdedJQvWv9UMkHIwjL+YnQOhnIbxBXFywpnVBM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Modra <amodra@gmail.com>, Reza Arbab <arbab@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 182/205] powerpc/vdso: Correct call frame information
-Date:   Fri,  8 Nov 2019 06:37:29 -0500
-Message-Id: <20191108113752.12502-182-sashal@kernel.org>
+Cc:     Sherry Yang <sherryy@android.com>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 187/205] android: binder: no outgoing transaction when thread todo has transaction
+Date:   Fri,  8 Nov 2019 06:37:34 -0500
+Message-Id: <20191108113752.12502-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,98 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Modra <amodra@gmail.com>
+From: Sherry Yang <sherryy@android.com>
 
-[ Upstream commit 56d20861c027498b5a1112b4f9f05b56d906fdda ]
+[ Upstream commit 44b73962cb25f1c8170ea695c4564b05a75e1fd4 ]
 
-Call Frame Information is used by gdb for back-traces and inserting
-breakpoints on function return for the "finish" command.  This failed
-when inside __kernel_clock_gettime.  More concerning than difficulty
-debugging is that CFI is also used by stack frame unwinding code to
-implement exceptions.  If you have an app that needs to handle
-asynchronous exceptions for some reason, and you are unlucky enough to
-get one inside the VDSO time functions, your app will crash.
+When a process dies, failed reply is sent to the sender of any transaction
+queued on a dead thread's todo list. The sender asserts that the
+received failed reply corresponds to the head of the transaction stack.
+This assert can fail if the dead thread is allowed to send outgoing
+transactions when there is already a transaction on its todo list,
+because this new transaction can end up on the transaction stack of the
+original sender. The following steps illustrate how this assertion can
+fail.
 
-What's wrong:  There is control flow in __kernel_clock_gettime that
-reaches label 99 without saving lr in r12.  CFI info however is
-interpreted by the unwinder without reference to control flow: It's a
-simple matter of "Execute all the CFI opcodes up to the current
-address".  That means the unwinder thinks r12 contains the return
-address at label 99.  Disabuse it of that notion by resetting CFI for
-the return address at label 99.
+1. Thread1 sends txn19 to Thread2
+   (T1->transaction_stack=txn19, T2->todo+=txn19)
+2. Without processing todo list, Thread2 sends txn20 to Thread1
+   (T1->todo+=txn20, T2->transaction_stack=txn20)
+3. T1 processes txn20 on its todo list
+   (T1->transaction_stack=txn20->txn19, T1->todo=<empty>)
+4. T2 dies, T2->todo cleanup attempts to send failed reply for txn19, but
+   T1->transaction_stack points to txn20 -- assertion failes
 
-Note that the ".cfi_restore lr" could have gone anywhere from the
-"mtlr r12" a few instructions earlier to the instruction at label 99.
-I put the CFI as late as possible, because in general that's best
-practice (and if possible grouped with other CFI in order to reduce
-the number of CFI opcodes executed when unwinding).  Using r12 as the
-return address is perfectly fine after the "mtlr r12" since r12 on
-that code path still contains the return address.
+Step 2. is the incorrect behavior. When there is a transaction on a
+thread's todo list, this thread should not be able to send any outgoing
+synchronous transactions. Only the head of the todo list needs to be
+checked because only threads that are waiting for proc work can directly
+receive work from another thread, and no work is allowed to be queued
+on such a thread without waking up the thread. This patch also enforces
+that a thread is not waiting for proc work when a work is directly
+enqueued to its todo list.
 
-__get_datapage also has a CFI error.  That function temporarily saves
-lr in r0, and reflects that fact with ".cfi_register lr,r0".  A later
-use of r0 means the CFI at that point isn't correct, as r0 no longer
-contains the return address.  Fix that too.
-
-Signed-off-by: Alan Modra <amodra@gmail.com>
-Tested-by: Reza Arbab <arbab@linux.ibm.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Acked-by: Arve Hjønnevåg <arve@android.com>
+Signed-off-by: Sherry Yang <sherryy@android.com>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso32/datapage.S     | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 1 +
- arch/powerpc/kernel/vdso64/datapage.S     | 1 +
- arch/powerpc/kernel/vdso64/gettimeofday.S | 1 +
- 4 files changed, 4 insertions(+)
+ drivers/android/binder.c | 44 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 3745113fcc652..2a7eb5452aba7 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 75cff3f336b3a..afd516b572f86 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -139,6 +139,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
-index abf17feffe404..bf96686915116 100644
---- a/arch/powerpc/kernel/vdso64/datapage.S
-+++ b/arch/powerpc/kernel/vdso64/datapage.S
-@@ -37,6 +37,7 @@ data_page_branch:
- 	mtlr	r0
- 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
- 	lwz	r0,0(r3)
-+  .cfi_restore lr
- 	add	r3,r0,r3
- 	blr
-   .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index afbad2ac31472..1f324c28705bc 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -169,6 +169,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 */
- 99:
- 	li	r0,__NR_clock_gettime
-+  .cfi_restore lr
- 	sc
- 	blr
-   .cfi_endproc
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index 6e04e7a707a12..cf4367135a00b 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -822,6 +822,7 @@ static void
+ binder_enqueue_deferred_thread_work_ilocked(struct binder_thread *thread,
+ 					    struct binder_work *work)
+ {
++	WARN_ON(!list_empty(&thread->waiting_thread_node));
+ 	binder_enqueue_work_ilocked(work, &thread->todo);
+ }
+ 
+@@ -839,6 +840,7 @@ static void
+ binder_enqueue_thread_work_ilocked(struct binder_thread *thread,
+ 				   struct binder_work *work)
+ {
++	WARN_ON(!list_empty(&thread->waiting_thread_node));
+ 	binder_enqueue_work_ilocked(work, &thread->todo);
+ 	thread->process_todo = true;
+ }
+@@ -1270,19 +1272,12 @@ static int binder_inc_node_nilocked(struct binder_node *node, int strong,
+ 		} else
+ 			node->local_strong_refs++;
+ 		if (!node->has_strong_ref && target_list) {
++			struct binder_thread *thread = container_of(target_list,
++						    struct binder_thread, todo);
+ 			binder_dequeue_work_ilocked(&node->work);
+-			/*
+-			 * Note: this function is the only place where we queue
+-			 * directly to a thread->todo without using the
+-			 * corresponding binder_enqueue_thread_work() helper
+-			 * functions; in this case it's ok to not set the
+-			 * process_todo flag, since we know this node work will
+-			 * always be followed by other work that starts queue
+-			 * processing: in case of synchronous transactions, a
+-			 * BR_REPLY or BR_ERROR; in case of oneway
+-			 * transactions, a BR_TRANSACTION_COMPLETE.
+-			 */
+-			binder_enqueue_work_ilocked(&node->work, target_list);
++			BUG_ON(&thread->todo != target_list);
++			binder_enqueue_deferred_thread_work_ilocked(thread,
++								   &node->work);
+ 		}
+ 	} else {
+ 		if (!internal)
+@@ -2733,6 +2728,7 @@ static void binder_transaction(struct binder_proc *proc,
+ {
+ 	int ret;
+ 	struct binder_transaction *t;
++	struct binder_work *w;
+ 	struct binder_work *tcomplete;
+ 	binder_size_t *offp, *off_end, *off_start;
+ 	binder_size_t off_min;
+@@ -2874,6 +2870,29 @@ static void binder_transaction(struct binder_proc *proc,
+ 			goto err_invalid_target_handle;
+ 		}
+ 		binder_inner_proc_lock(proc);
++
++		w = list_first_entry_or_null(&thread->todo,
++					     struct binder_work, entry);
++		if (!(tr->flags & TF_ONE_WAY) && w &&
++		    w->type == BINDER_WORK_TRANSACTION) {
++			/*
++			 * Do not allow new outgoing transaction from a
++			 * thread that has a transaction at the head of
++			 * its todo list. Only need to check the head
++			 * because binder_select_thread_ilocked picks a
++			 * thread from proc->waiting_threads to enqueue
++			 * the transaction, and nothing is queued to the
++			 * todo list while the thread is on waiting_threads.
++			 */
++			binder_user_error("%d:%d new transaction not allowed when there is a transaction on thread todo\n",
++					  proc->pid, thread->pid);
++			binder_inner_proc_unlock(proc);
++			return_error = BR_FAILED_REPLY;
++			return_error_param = -EPROTO;
++			return_error_line = __LINE__;
++			goto err_bad_todo_list;
++		}
++
+ 		if (!(tr->flags & TF_ONE_WAY) && thread->transaction_stack) {
+ 			struct binder_transaction *tmp;
+ 
+@@ -3256,6 +3275,7 @@ err_alloc_tcomplete_failed:
+ 	kfree(t);
+ 	binder_stats_deleted(BINDER_STAT_TRANSACTION);
+ err_alloc_t_failed:
++err_bad_todo_list:
+ err_bad_call_stack:
+ err_empty_call_stack:
+ err_dead_binder:
 -- 
 2.20.1
 
