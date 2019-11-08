@@ -2,124 +2,108 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AE1FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA9AFC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D692178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:47:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2fNiNh6"
+	by mail.kernel.org (Postfix) with ESMTP id 1202921924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573231657;
+	bh=cs+B3yBrSuaAZXL4uv8XzM+V7pyVqJSiFSP8eVhd1EE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2A50R3tQCupHIlRbzWIa9VN9csrdgx34aR4ftmXHDuxROlcwKJ/J63SLx1tewiWSV
+	 x6YzDLTtfxFVy7gq+r1sn+/I7C/U8MByLhFYFSyjZwdi/rWxjFx6xborqrYBT/96ol
+	 2KJRrFJ4wIa/RWNXhgC+Yub2OMV/s3JH2rbDzn+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKHQr0 (ORCPT
+        id S1727573AbfKHQrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:47:26 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34384 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfKHQr0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:47:26 -0500
-Received: by mail-lj1-f196.google.com with SMTP id 139so6925876ljf.1;
-        Fri, 08 Nov 2019 08:47:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ruDzCFGTnibQWfw6eGTcqpKQB6fF0oRUt7fDkDjSl4k=;
-        b=A2fNiNh6wFIBLG0Gy4E9lTn2QQkhbfkInruQoJ19Tn4MVDI7qdmLPX2BHfNHkheAR2
-         SazZrHu9lZFI3abwISz3kGuvCbCvM9GZ3BuV7lZOktkDoUjHU2H2FLlX40POzn+RXsW0
-         u37WEN9wQ4y4MtjvDA/kGOUiYWs1kvw5JFmuX4T6JPPs3NbObv7sVI3v9+Yh7qupLzxi
-         pC/a3RWnKTp3+0ZQ/vIK7E1EnM3iB0gZzb0OWPgyIkTSPW9odEHd8ZZUikZHFvwGDm06
-         i2eEJsDxFmrkaQfQVnptmXX0AGIS17PeCI4AasSwEykk7bXRkCK/SwEzBRrbG9q/OBYk
-         HAvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ruDzCFGTnibQWfw6eGTcqpKQB6fF0oRUt7fDkDjSl4k=;
-        b=tmyE09vvo2RcZxphil8V1fcBMeWF6WDL6QyKMejuGTaHSEZgBuSYxYa6anglt5L3Oj
-         W7xaP+A2MJwGV1kZXeR9jy3iTjcoq/InPiMssinSRoiu6Q/VfZkct5Sa08BpQelzucgi
-         fdipiptptpzAmhpffOrpoQiCPWMFxkD6Ern6gsFZiAKnzBn+xtWwHmHNl1HlVlFT2cUG
-         FDcWF6g4FIxMl9T5sWfx6fZLSL4vFsLtwkZkerLp6ACniOblSo3jbvtcYGhTWoh7APxc
-         B4dE4oRM4cCIwYPVVlzLpw2crLmVY32q7n3fe5KzNUUQ89QnG+OaR4Scz0YqMxMmvY7v
-         72fA==
-X-Gm-Message-State: APjAAAWBDIWOBbQLP2l7+Wn3g3gvQQy0Jmlby1nkwv1WZVKo/D2fHso8
-        f+SIlxaUpxlY2ncw03fGFj2mlNT+9hM=
-X-Google-Smtp-Source: APXvYqx/g1MVap0Pkj3DOsKO7eHBIvo4hWDmGcLEXx335XgFY9+ODFw4MbZgkqh7sXcGBGUXU2VSXQ==
-X-Received: by 2002:a2e:9d8d:: with SMTP id c13mr1219810ljj.71.1573231643626;
-        Fri, 08 Nov 2019 08:47:23 -0800 (PST)
-Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id i30sm3162236lfp.39.2019.11.08.08.47.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 08:47:23 -0800 (PST)
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
-        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
-        Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v4 3/3] asus_wmi: Set default fan boost mode to normal
-Date:   Fri,  8 Nov 2019 18:46:52 +0200
-Message-Id: <20191108164652.3223-1-leonmaxx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191108164317.2874-1-leonmaxx@gmail.com>
-References: <20191108164317.2874-1-leonmaxx@gmail.com>
+        Fri, 8 Nov 2019 11:47:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfKHQrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:47:35 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C2D621882;
+        Fri,  8 Nov 2019 16:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573231655;
+        bh=cs+B3yBrSuaAZXL4uv8XzM+V7pyVqJSiFSP8eVhd1EE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0ZKTAliYefLOXM89fFk6VfR6ZAhxURhObP0x1v8/X3wN4FqrZMSDSCosI/M4v4Wv1
+         IJrlwqP6AAsJZfvSyKWILkCfqkEzkmD3z2YPLvczvMO7S55ZLcd5AJkKrJrp3lJftg
+         iJffAEbRSwFQ1JO91ch7fPeGEgnVa572cgcaWeMo=
+Date:   Fri, 8 Nov 2019 16:47:30 +0000
+From:   Will Deacon <will@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 6/9] Revert "iommu/arm-smmu: Make arm-smmu-v3
+ explicitly non-modular"
+Message-ID: <20191108164728.GB20866@willie-the-truck>
+References: <20191108151608.20932-1-will@kernel.org>
+ <20191108151608.20932-7-will@kernel.org>
+ <06dfd385-1af0-3106-4cc5-6a5b8e864759@huawei.com>
+ <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e906ed1-ab85-7e25-9b29-5497e98da8d8@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set default fan boost mode to normal for multiple reasons:
+On Fri, Nov 08, 2019 at 04:44:25PM +0000, John Garry wrote:
+> On 08/11/2019 16:17, John Garry wrote:
+> > On 08/11/2019 15:16, Will Deacon wrote:
+> > > +MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+> > 
+> > Hi Will,
+> > 
+> > >   static struct platform_driver arm_smmu_driver = {
+> > >       .driver    = {
+> > >           .name        = "arm-smmu-v3",
+> > >           .of_match_table    = of_match_ptr(arm_smmu_of_match),
+> > > -        .suppress_bind_attrs = true,
+> > 
+> > Does this mean that we can now manually unbind this driver from the SMMU
+> > device?
+> > 
+> > Seems dangerous. Here's what happens for me:
+> > 
+> > root@ubuntu:/sys# cd ./bus/platform/drivers/arm-smmu-v3
+> > ind @ubuntu:/sys/bus/platform/drivers/arm-smmu-v3# echo
+> > arm-smmu-v3.0.auto > unbind
+> > [   77.580351] hisi_sas_v2_hw HISI0162:01: CQE_AXI_W_ERR (0x800) found!
+> > ho [   78.635473] platform arm-smmu-v3.0.auto: CMD_SYNC timeout at
+> > 0x00000146 [hwprod 0x00000146, hwcons 0x00000000]
+> > 
+> > >       },
+> > >       .probe    = arm_smmu_device_probe,
+> > > +    .remove    = arm_smmu_device_remove,
+> > >       .shutdown = arm_smmu_device_shutdown,
+> > >   };
+> > > -builtin_platform_driver(arm_smmu_driver);
+> > > +module_platform_driver(arm_smmu_driver);
+> > > +
+> 
+> BTW, it now looks like it was your v1 series I was testing there, on your
+> branch iommu/module. It would be helpful to update for ease of testing.
 
-1) existing code assumes that laptop started in normal mode and that is
-   not always correct.
-2) FX705DY/FX505DY starts in silent mode and under heavy CPU load it
-   overheats and drops CPU frequency to 399MHz [1]. Setting fan mode to
-   normal avoids overheating.
+Yes, sorry about that. I'll update it now (although I'm not sure it will
+help with this -- I was going to see what happens with other devices such
+as the intel-iommu or storage controllers)
 
-[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
-
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 4f9c0b99f352..e6565b4e7ed7 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1675,6 +1675,15 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
- 	return 0;
- }
- 
-+static int fan_boost_mode_set_default(struct asus_wmi *asus)
-+{
-+	if (!asus->fan_boost_mode_available)
-+		return 0;
-+
-+	asus->fan_boost_mode = ASUS_FAN_BOOST_MODE_NORMAL;
-+	return fan_boost_mode_write(asus);
-+}
-+
- static int fan_boost_mode_switch_next(struct asus_wmi *asus)
- {
- 	u8 mask = asus->fan_boost_mode_mask;
-@@ -2451,6 +2460,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-+	fan_boost_mode_set_default(asus);
- 
- 	err = asus_wmi_sysfs_init(asus->platform_device);
- 	if (err)
--- 
-2.23.0
-
+Will
