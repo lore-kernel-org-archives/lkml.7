@@ -2,121 +2,73 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DB4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98986FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B814620869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7499B214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 07:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbfKHHa3 (ORCPT
+        id S1729964AbfKHHdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 02:30:29 -0500
-Received: from mx.socionext.com ([202.248.49.38]:10541 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfKHHa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 02:30:29 -0500
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 08 Nov 2019 16:30:27 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 95741180B84;
-        Fri,  8 Nov 2019 16:30:27 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 8 Nov 2019 16:30:35 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 635E740364;
-        Fri,  8 Nov 2019 16:30:27 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 27386121B00;
-        Fri,  8 Nov 2019 16:30:27 +0900 (JST)
-Date:   Fri, 08 Nov 2019 16:30:27 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-In-Reply-To: <20191107124617.GA43905@e119886-lin.cambridge.arm.com>
-References: <20191107205239.65C1.4A936039@socionext.com> <20191107124617.GA43905@e119886-lin.cambridge.arm.com>
-Message-Id: <20191108163026.0DFB.4A936039@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+        Fri, 8 Nov 2019 02:33:15 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:48524 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725900AbfKHHdP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 02:33:15 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=xiejingfeng@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0ThU0D.W_1573198392;
+Received: from 30.5.113.47(mailfrom:xiejingfeng@linux.alibaba.com fp:SMTPD_---0ThU0D.W_1573198392)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 08 Nov 2019 15:33:13 +0800
+User-Agent: Microsoft-MacOutlook/10.1f.0.191103
+Date:   Fri, 08 Nov 2019 15:33:24 +0800
+Subject: [PATCH] psi:fix divide by zero in psi_update_stats
+From:   tim <xiejingfeng@linux.alibaba.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>
+Message-ID: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
+Thread-Topic: [PATCH] psi:fix divide by zero in psi_update_stats
+Mime-version: 1.0
+Content-type: text/plain;
+        charset="UTF-8"
+Content-transfer-encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-+CC Kishon
+In psi_update_stats, it is possible that period has value like
+0xXXXXXXXX00000000 where the lower 32 bit is 0, then it calls div_u64 which
+truncates u64 period to u32, results in zero divisor.
+Use div64_u64() instead of div_u64()  if the divisor is u64 to avoid
+truncation to 32-bit on 64-bit platforms.
 
-On Thu, 7 Nov 2019 12:46:17 +0000 <andrew.murray@arm.com> wrote:
-
-> On Thu, Nov 07, 2019 at 08:52:39PM +0900, Kunihiko Hayashi wrote:
-> > Hi Andrew,
-> > Thank you for your comments.
-> > 
-> > On Thu, 7 Nov 2019 10:02:08 +0000 <andrew.murray@arm.com> wrote:
-> > 
-> > > On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
-> > > > When PERST# is asserted once, EP configuration will be initialized.
-> > > 
-> > > I don't quite understand this - does the EP/RC mode depend on how often
-> > > PERST# is toggled?
-> > 
-> > I think of connecting this RC controller and EP based on `Linux PCI
-> > endpoint framework' in another machine.
-> > 
-> > While this RC driver is probing, the EP driver might be also probing and
-> > configurating itself using configfs. If PERST# is toggled after the EP
-> > has done its configuration, this configuration will be lost.
-> > 
-> > I expect that the EP configurates after RC has toggled PERST#, however,
-> > there is no way to synchronize both of them.
-> > 
-> 
-> OK I understand where you are coming from now. Please ensure the commit
-> message gives this rationale.
-
-I'll explain about that in the commit message next.
-
-> However, If I understand correctly, doesn't your solution only work some
-> of the time? What happens if you boot both machines at the same time,
-> and PERST# isn't asserted prior to the kernel booting?
-
-I think it contains an annoying problem.
-
-If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
-and the RC driver can't access PCI bus.
-
-As a result, this patch works and deasserts PERST# (and EP configuration will
-be lost). So boot sequence needs to include deasserting PERST#.
-
-> The only way you can ensure the EP is started after the RC is initialised
-> is to start the EP after the RC is initialised.
-
-Yes, it's the only soution for now.
-
-> I'm not sure what the solution is here, but it feels like this approach
-> only partially solves it.
-
-Surely relying on outside of the driver doesn't seem to be a complete solution.
-
-If there is the way that `Linux PCI endpoint framework' assumes,
-I'd like to follow it, however, I can't find the other way.
-
-Thank you,
-
+Signed-off-by: xiejingfeng <xiejingfeng@linux.alibaba.com>
 ---
-Best Regards,
-Kunihiko Hayashi
+ kernel/sched/psi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 517e3719027e..399d6f106de5 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -291,7 +291,7 @@ static void calc_avgs(unsigned long avg[3], int missed_periods,
+ 	}
+ 
+ 	/* Sample the most recent active period */
+-	pct = div_u64(time * 100, period);
++	pct = div64_u64(time * 100, period);
+ 	pct *= FIXED_1;
+ 	avg[0] = calc_load(avg[0], EXP_10s, pct);
+ 	avg[1] = calc_load(avg[1], EXP_60s, pct);
+-- 
+2.14.4.44.g2045bb
+
 
 
