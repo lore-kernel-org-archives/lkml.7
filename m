@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80563FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BE5FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4301E21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488E921D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213292;
-	bh=ij0fpTMs+VIPq+Mtv/Rltj5I1qlhRyELJ2VMzh8RZxA=;
+	s=default; t=1573213295;
+	bh=P75uqMyjoRXnhEw5QxuO8/QYPU7dEevRD9g0hwqkyu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGTuqRi+SCrUfiaco17+8g5eLCJ1os6YAVFcWy2jatrw8Ri9dYuEcNlffFHR2Fp5O
-	 VvhrkrSPihqI56a/DvbDM8UuyhcaWlGI/ixKMwLl8HP4jxRqrWO7T6Upy+VnGLI5uO
-	 WBCiZ7tyqcYkXaK3NJjB0O9ry2Df4fnIyzThLuRA=
+	b=w4aT9Og/YrRVU9BuSEBymI7s57ake4LzsWRXXgQl9T2/7vM1MAJdRyLhdOv03uQbm
+	 /ajqdmXt1P3MdN8iuZLevUhkpd+l2W1rZliyLSuJ9wDhjWl/qQGnOinIQf/a9RpeHB
+	 Cw9GvBn1D0PnsC18jVuCnKPPCLG2hi2l2UdTChyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389489AbfKHLlb (ORCPT
+        id S1732865AbfKHLle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54684 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389416AbfKHLlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:24 -0500
+        id S1732178AbfKHLla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D4922245A;
-        Fri,  8 Nov 2019 11:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E096221D82;
+        Fri,  8 Nov 2019 11:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213283;
-        bh=ij0fpTMs+VIPq+Mtv/Rltj5I1qlhRyELJ2VMzh8RZxA=;
+        s=default; t=1573213289;
+        bh=P75uqMyjoRXnhEw5QxuO8/QYPU7dEevRD9g0hwqkyu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gjku4gr6gd7QjHLvfcWCSLUZa+vwcVXii/7oZj2TBCggBD6S1LIRTj8ZNe4sdnnZD
-         IedGMBUxsXVCaXyRj/om1GoUsx2rBF/xk7HeGgMrohx4izpJUyWOuAmi/929EqD68j
-         D22tG//GnzhochFtcknHkwBgIRnQTKzcTLA9ArkU=
+        b=y0ailCVtCuq+wC6opG8g7PSsdJUA7jlKW5/sUodhKEvQZcEFbR7DurUcJvsnvgK8G
+         mvgT66fpDavbyJcdm+imR+C0gvAAsEotcTK4ubZ2Vo3ls6Y6IN72fcBf/B2kIQHW0B
+         p7Hyo6i8PpCpejGslUROGZr2In0UrtW8zQSziWNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <quinn.tran@cavium.com>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 144/205] scsi: qla2xxx: Fix port speed display on chip reset
-Date:   Fri,  8 Nov 2019 06:36:51 -0500
-Message-Id: <20191108113752.12502-144-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 149/205] scsi: lpfc: Fix errors in log messages.
+Date:   Fri,  8 Nov 2019 06:36:56 -0500
+Message-Id: <20191108113752.12502-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,32 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <quinn.tran@cavium.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 5d74c87a20adcc77b19753c315ad9c320b2288be ]
+[ Upstream commit 2879265f514b1f4154288243c91438ddbedb3ed4 ]
 
-Clear port speed value on chip reset.
+Message 6408 is displayed for each entry in an array, but the cpu and queue
+numbers were incorrect for the entry.  Message 6001 includes an extraneous
+character.
 
-Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
-Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
+Resolve both issues
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <james.smart@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_nvme.c  | 2 +-
+ drivers/scsi/lpfc/lpfc_nvmet.c | 7 +++----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 8f502505aa796..653d535e3052f 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -6502,6 +6502,7 @@ qla2x00_abort_isp_cleanup(scsi_qla_host_t *vha)
- 	if (!(IS_P3P_TYPE(ha)))
- 		ha->isp_ops->reset_chip(vha);
+diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+index 645ffb5332b4a..8ee585e453dcf 100644
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -282,7 +282,7 @@ lpfc_nvme_delete_queue(struct nvme_fc_local_port *pnvme_lport,
+ 	vport = lport->vport;
  
-+	ha->link_data_rate = PORT_SPEED_UNKNOWN;
- 	SAVE_TOPO(ha);
- 	ha->flags.rida_fmt2 = 0;
- 	ha->flags.n2n_ae = 0;
+ 	lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME,
+-			"6001 ENTER.  lpfc_pnvme %p, qidx x%xi qhandle %p\n",
++			"6001 ENTER.  lpfc_pnvme %p, qidx x%x qhandle %p\n",
+ 			lport, qidx, handle);
+ 	kfree(handle);
+ }
+diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
+index e2575c8ec93e8..4ca38bc5694c6 100644
+--- a/drivers/scsi/lpfc/lpfc_nvmet.c
++++ b/drivers/scsi/lpfc/lpfc_nvmet.c
+@@ -1340,15 +1340,14 @@ lpfc_nvmet_setup_io_context(struct lpfc_hba *phba)
+ 			idx = 0;
+ 	}
+ 
+-	infop = phba->sli4_hba.nvmet_ctx_info;
+-	for (j = 0; j < phba->cfg_nvmet_mrq; j++) {
+-		for (i = 0; i < phba->sli4_hba.num_present_cpu; i++) {
++	for (i = 0; i < phba->sli4_hba.num_present_cpu; i++) {
++		for (j = 0; j < phba->cfg_nvmet_mrq; j++) {
++			infop = lpfc_get_ctx_list(phba, i, j);
+ 			lpfc_printf_log(phba, KERN_INFO, LOG_NVME | LOG_INIT,
+ 					"6408 TOTAL NVMET ctx for CPU %d "
+ 					"MRQ %d: cnt %d nextcpu %p\n",
+ 					i, j, infop->nvmet_ctx_list_cnt,
+ 					infop->nvmet_ctx_next_cpu);
+-			infop++;
+ 		}
+ 	}
+ 	return 0;
 -- 
 2.20.1
 
