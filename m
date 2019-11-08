@@ -6,150 +6,168 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104B8FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BA3FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBCF20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05FE20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 20:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbfKHUgS (ORCPT
+        id S1732329AbfKHUga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:36:18 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:52967 "EHLO
+        Fri, 8 Nov 2019 15:36:30 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:36201 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfKHUgS (ORCPT
+        with ESMTP id S1732171AbfKHUg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 15:36:18 -0500
+        Fri, 8 Nov 2019 15:36:29 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N7yuz-1hpfJe1Cz5-014yOw; Fri, 08 Nov 2019 21:35:57 +0100
+ 1MEF87-1iadeR36H7-00AGgW; Fri, 08 Nov 2019 21:36:18 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, Corey Minyard <minyard@acm.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
-        openipmi-developer@lists.sourceforge.net
-Subject: [PATCH 4/8] ipmi: kill off 'timespec' usage again
-Date:   Fri,  8 Nov 2019 21:34:27 +0100
-Message-Id: <20191108203435.112759-5-arnd@arndb.de>
+To:     y2038@lists.linaro.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Eric Dumazet <edumazet@google.com>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH 5/8] netfilter: xt_time: use time64_t
+Date:   Fri,  8 Nov 2019 21:34:28 +0100
+Message-Id: <20191108203435.112759-6-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191108203435.112759-1-arnd@arndb.de>
 References: <20191108203435.112759-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:5h5zjTJTFS7NU7dR3OxD3RGZD81MiMNfiSZHg3//WQd5cEspSJc
- LIApSfiSz9Te28wkEE3ctR6BIBgRSUZv+L8WoFHniGGNul2rk23RWvU9J1joypQooUlQ9/Y
- DGmmNTguceLb02Y1evbVHD9ZTU8F11CtM7iKaUrqM2+zVzRGt7fUWskVkjFrWQxFHRWNCDP
- Wk8+4Q6wKeQ6K8pK07LrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TcWOuYfgQ1c=:5rJazEAWe8fZzBgGo5S7kS
- vEWFdfZBBTUpkp+pnxRlr2kLO4coolsU4UPvtSI/uWs6ncs2JIzQNkPtmpnxkSNYqY4aluw1Q
- +WUFzBe0iTFJFKK3OGgLW//tPpefDApoosfIVPfo6ZqSCOyaCypL59y8vqDdr/WVrpBtdN37d
- odZGiMdY5BAPDC5mMpXRE3MShieMhVrCIMBrJ+1qfeGSLSNZp3v2Wpm73FJeTVztusApsgWh1
- uVoMimJy7Hy3SiRv1FRWJrpeZ03G/WVodq3+zpnppq47d2x8WwuKbyAsOm9Lj/kKsIoLjUzF6
- +E3JzqvTv/oEMEK3MMvyHK8dnFvwAgm3RBGKlDRVJw63T+HnP33YXm1rs5oo1o+7rrLAqJlep
- NfRtxeJ3aShvYjGwpd3WB5Q92YPyB1Dqu81MtAgh0pAOlDImOXcdSVSuuVzqP7MqqiYE++mue
- CWV6DkqUrt5stJvHGqX9unK2mFM8Ga2ukfxYgB2YE4KqpS9LBpCw0RvWlI6CRLyZEiBIqiJbn
- A0bs+MvnRh37jz1HsGtAXmFM01joN1dktLIurvpV9iBgaeusR6eSNg9ixohYBwRVtUEs/pBnk
- BdD8VFtif50YujggMHE6LqfQIqaBEBn8XIVhFhgolWqn4nZOyjx4m0cmTF7vv2R+8MeVGQ1yI
- fQ7g5IH0MGfIK2GnlcSeTTSo88dcMo83TyzJmhrXvQoHTYIdOsX1S5RK+nHQWsXzdNF/LILJq
- GqeI0NScCQSLY1bZhOGnhhafLyEiMv65GDYeYBdU2+lsuX8kew1uHY61pmcRpmKVwydWkjvuZ
- IMn9bi1scc/juK2D5DpZRKZTlm8qjQ1TxO3kLdowUbQAO0ufELXvrEh50YL25ros262CVd7Pt
- 97v5Wkz54JcwT1EXeUGw==
+X-Provags-ID: V03:K1:LAqgtMHpuHsHVqesPbRDDOnPbG3k3aIkl2ycNWLlt4hNWDe/h94
+ GNpZ9xbyyD7LXXBKIdA2s2/AdUHfbg0DIx01Kj4OMx3p5kvSqUbOebvbj/QnE7eakpz0lHv
+ uN5N4Lbi3Ve2HiOXFaAex9XSmQCyebw9uVyDgEMXqAnhjjgfzDAXhsrlExb0jFUFKUWnK+D
+ 4XcdXehRUk7EHSe1W5zeA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uTLnXhQlaoA=:6gkTKIzGkH8u4p9n9EzB5+
+ lrHh5mqs0gNbpufpMED1aZFRj6EM8Vdvk21VmgHmavXEMmYc2wxSYeavDcGdpdZ7CadtsRnAO
+ qsbfYORBBYZdz02Y0pFnzClpTjdJxDYOiPorKaYrirT28tLfMyelNHuTue4mitFpPQkwUJ2vp
+ 1FdPn/cyPCua8wGrtCyi9289PPkzr214fg0Fv+WOBBWFYibuPoFVWzXyI83DcKdtvvPnvqIDz
+ wdprTdsC/ZkfYx1s1jMPDmmohjYlPkV8FnO3K6nxce9wT/3gnfnxHFHUeiCMMJA22LZs2nOvn
+ OLypew6aJxfs20P57HiMNl93gEsT/ycbJ4slABRZ7SD+vI3RGS4lWKiSvlZ4ZZmiwnhqiqFF6
+ Fi/2Y9koVFyxao8U3z3LmwEw2d4k9EduaQb3mljAM4tskCgWqBzRabEsK+FQfK0VwMISD3IIW
+ eKKPfoaXuB3AV6ejoIfIyfJQvB+avcI6HFn8HPjfm6LOHo9GWEk0eoUOa9jTziwzOGTcl+cD8
+ gcHV80qweuOKUQszTaHIGeyW8GHBB0VgQf7EVzpkJjjJF7Cxl4bJVh8XV/7vXbWIf9M7eiW7O
+ mucjrJW1Dqc/K1zHhLFKmZyuNrarpADVQ5zsZZu9VmgOrOVksy4eAIJbaKozfWtrjPhTIEmlZ
+ D0+GgCVexquumqnxI1GUzSo2LH4sTJm7GUM6VZ190VgN9woJKTRGsN+7Vw1Az+NSbFtjEehCe
+ ApXUQOzEXIOlfr98kuJiFJt4keBc1XueRtApEJZ9SKiLF9K6Hg4vDTcxSG9OWPjl48mdsLGTh
+ jn56Ebw8x8hxA5jYZEZPKd2MMV86gz8op0dpLqRShX5Ujbjw2cpu0anrthVv58jvg5/ELj2ro
+ rymaqfVxE+cCH9UVrcxg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'struct timespec' is getting removed from the kernel. The usage in ipmi
-was fixed before in commit 48862ea2ce86 ("ipmi: Update timespec usage
-to timespec64"), but unfortunately it crept back in.
+The current xt_time driver suffers from the y2038 overflow on 32-bit
+architectures, when the time of day calculations break.
 
-The busy looping code can better use ktime_t anyway, so use that
-there to simplify the implementation.
+Also, on both 32-bit and 64-bit architectures, there is a problem with
+info->date_start/stop, which is part of the user ABI and overflows in
+in 2106.
 
-Fixes: cbb19cb1eef0 ("ipmi_si: Convert timespec64 to timespec")
+Fix the first issue by using time64_t and explicit calls to div_u64()
+and div_u64_rem(), and document the seconds issue.
+
+The explicit 64-bit division is unfortunately slower on 32-bit
+architectures, but doing it as unsigned lets us use the optimized
+division-through-multiplication path in most configurations.  This should
+be fine, as the code already does not allow any negative time of day
+values.
+
+Using u32 seconds values consistently would probably also work and
+be a little more efficient, but that doesn't feel right as it would
+propagate the y2106 overflow to more place rather than fewer.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 40 +++++++++++---------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
+ net/netfilter/xt_time.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 6b9a0593d2eb..c7cc8538b84a 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -265,10 +265,10 @@ static void cleanup_ipmi_si(void);
- #ifdef DEBUG_TIMING
- void debug_timestamp(char *msg)
- {
--	struct timespec t;
-+	struct timespec64 t;
- 
--	ktime_get_ts(&t);
--	pr_debug("**%s: %ld.%9.9ld\n", msg, (long) t.tv_sec, t.tv_nsec);
-+	ktime_get_ts64(&t);
-+	pr_debug("**%s: %lld.%9.9ld\n", msg, t.tv_sec, t.tv_nsec);
- }
- #else
- #define debug_timestamp(x)
-@@ -935,38 +935,25 @@ static void set_run_to_completion(void *send_info, bool i_run_to_completion)
- }
- 
- /*
-- * Use -1 in the nsec value of the busy waiting timespec to tell that
-- * we are spinning in kipmid looking for something and not delaying
-- * between checks
-+ * Use -1 as a special constant to tell that we are spinning in kipmid
-+ * looking for something and not delaying between checks
+diff --git a/net/netfilter/xt_time.c b/net/netfilter/xt_time.c
+index 8dbb4d48f2ed..67cb98489415 100644
+--- a/net/netfilter/xt_time.c
++++ b/net/netfilter/xt_time.c
+@@ -77,12 +77,12 @@ static inline bool is_leap(unsigned int y)
+  * This is done in three separate functions so that the most expensive
+  * calculations are done last, in case a "simple match" can be found earlier.
   */
--static inline void ipmi_si_set_not_busy(struct timespec *ts)
--{
--	ts->tv_nsec = -1;
--}
--static inline int ipmi_si_is_busy(struct timespec *ts)
--{
--	return ts->tv_nsec != -1;
--}
--
-+#define IPMI_TIME_NOT_BUSY ns_to_ktime(-1ull)
- static inline bool ipmi_thread_busy_wait(enum si_sm_result smi_result,
- 					 const struct smi_info *smi_info,
--					 struct timespec *busy_until)
-+					 ktime_t *busy_until)
+-static inline unsigned int localtime_1(struct xtm *r, time_t time)
++static inline unsigned int localtime_1(struct xtm *r, time64_t time)
  {
- 	unsigned int max_busy_us = 0;
+ 	unsigned int v, w;
  
- 	if (smi_info->si_num < num_max_busy_us)
- 		max_busy_us = kipmid_max_busy_us[smi_info->si_num];
- 	if (max_busy_us == 0 || smi_result != SI_SM_CALL_WITH_DELAY)
--		ipmi_si_set_not_busy(busy_until);
--	else if (!ipmi_si_is_busy(busy_until)) {
--		ktime_get_ts(busy_until);
--		timespec_add_ns(busy_until, max_busy_us * NSEC_PER_USEC);
-+		*busy_until = IPMI_TIME_NOT_BUSY;
-+	else if (*busy_until == IPMI_TIME_NOT_BUSY) {
-+		*busy_until = ktime_get() + max_busy_us * NSEC_PER_USEC;
- 	} else {
--		struct timespec now;
--
--		ktime_get_ts(&now);
--		if (unlikely(timespec_compare(&now, busy_until) > 0)) {
--			ipmi_si_set_not_busy(busy_until);
-+		if (unlikely(ktime_get() > *busy_until)) {
-+			*busy_until = IPMI_TIME_NOT_BUSY;
- 			return false;
- 		}
- 	}
-@@ -988,9 +975,8 @@ static int ipmi_thread(void *data)
- 	struct smi_info *smi_info = data;
- 	unsigned long flags;
- 	enum si_sm_result smi_result;
--	struct timespec busy_until = { 0, 0 };
-+	ktime_t busy_until = IPMI_TIME_NOT_BUSY;
+ 	/* Each day has 86400s, so finding the hour/minute is actually easy. */
+-	v         = time % SECONDS_PER_DAY;
++	div_u64_rem(time, SECONDS_PER_DAY, &v);
+ 	r->second = v % 60;
+ 	w         = v / 60;
+ 	r->minute = w % 60;
+@@ -90,13 +90,13 @@ static inline unsigned int localtime_1(struct xtm *r, time_t time)
+ 	return v;
+ }
  
--	ipmi_si_set_not_busy(&busy_until);
- 	set_user_nice(current, MAX_NICE);
- 	while (!kthread_should_stop()) {
- 		int busy_wait;
+-static inline void localtime_2(struct xtm *r, time_t time)
++static inline void localtime_2(struct xtm *r, time64_t time)
+ {
+ 	/*
+ 	 * Here comes the rest (weekday, monthday). First, divide the SSTE
+ 	 * by seconds-per-day to get the number of _days_ since the epoch.
+ 	 */
+-	r->dse = time / 86400;
++	r->dse = div_u64(time, SECONDS_PER_DAY);
+ 
+ 	/*
+ 	 * 1970-01-01 (w=0) was a Thursday (4).
+@@ -105,7 +105,7 @@ static inline void localtime_2(struct xtm *r, time_t time)
+ 	r->weekday = (4 + r->dse - 1) % 7 + 1;
+ }
+ 
+-static void localtime_3(struct xtm *r, time_t time)
++static void localtime_3(struct xtm *r, time64_t time)
+ {
+ 	unsigned int year, i, w = r->dse;
+ 
+@@ -160,7 +160,7 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ 	const struct xt_time_info *info = par->matchinfo;
+ 	unsigned int packet_time;
+ 	struct xtm current_time;
+-	s64 stamp;
++	time64_t stamp;
+ 
+ 	/*
+ 	 * We need real time here, but we can neither use skb->tstamp
+@@ -173,14 +173,14 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ 	 *	1. match before 13:00
+ 	 *	2. match after 13:00
+ 	 *
+-	 * If you match against processing time (get_seconds) it
++	 * If you match against processing time (ktime_get_real_seconds) it
+ 	 * may happen that the same packet matches both rules if
+ 	 * it arrived at the right moment before 13:00, so it would be
+ 	 * better to check skb->tstamp and set it via __net_timestamp()
+ 	 * if needed.  This however breaks outgoing packets tx timestamp,
+ 	 * and causes them to get delayed forever by fq packet scheduler.
+ 	 */
+-	stamp = get_seconds();
++	stamp = ktime_get_real_seconds();
+ 
+ 	if (info->flags & XT_TIME_LOCAL_TZ)
+ 		/* Adjust for local timezone */
+@@ -193,6 +193,9 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ 	 *   - 'now' is in the weekday mask
+ 	 *   - 'now' is in the daytime range time_start..time_end
+ 	 * (and by default, libxt_time will set these so as to match)
++	 *
++	 * note: info->date_start/stop are unsigned 32-bit values that
++	 *	 can hold values beyond y2038, but not after y2106.
+ 	 */
+ 
+ 	if (stamp < info->date_start || stamp > info->date_stop)
 -- 
 2.20.0
 
