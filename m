@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB1DFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09398C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA66214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51B421D7B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239219;
-	bh=eXUV9usKsFNCJl0ds2onpvux96p6TGBk/4ggU3O/OPA=;
+	s=default; t=1573239222;
+	bh=0bQe948ftx6P4hbTLJm624vlLfbcA0R1ysh4srYT92c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nokvd0CpkTp0MTtHlCg71gMq902z7PF42Cwi3smhV8XH4EHSHFrH90bCQbVp/6lSL
-	 /DRnZnE8vIauOpCS1TmYMGVVHRzpkEBgNuLfLgIVt2zrCWZjKYA7sX7wd86rAxkSCX
-	 rL3vKCawhCdOWyorPk7Xugc2pBiRO+kyBfi/OeKk=
+	b=gUfyMxqcOGE8ftB527QK5WKBUttjHAwP3Id+vDFY5JHIT0R0QEF3SwiZhiaX/2WdZ
+	 OaVHGrF+5e1itQzmW3f0pICl2DBKvgOYhcyXKQ6k1/nRaGkmV/1Gq8AsSeya1lcHnr
+	 aaYLcTokAsQcos9i+KUIrhizJnZXSTjF8m8cJRqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732499AbfKHSxi (ORCPT
+        id S1732543AbfKHSxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:53:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50298 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 13:53:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732452AbfKHSxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:53:34 -0500
+        id S1732497AbfKHSxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:53:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E697D20865;
-        Fri,  8 Nov 2019 18:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88987218AE;
+        Fri,  8 Nov 2019 18:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239214;
-        bh=eXUV9usKsFNCJl0ds2onpvux96p6TGBk/4ggU3O/OPA=;
+        s=default; t=1573239217;
+        bh=0bQe948ftx6P4hbTLJm624vlLfbcA0R1ysh4srYT92c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wf5darkdRo0ORFhIy4xr2Cg+MjEqsIBMHzlCr8EuKfaz5WJClOgFa3m1VteGtAu7a
-         +ZRCjVVvUEhniDsb12Fgpr+Bd7jSHx5f1sAr4SltCgIXwcFeONNXryZWy8qdRvDmtG
-         kP16ZLcb9NNyXjCBLB1rl8U0eSuNErrOXxgTSloo=
+        b=Ae/QLM+9d39Tx6I3uDaoBuI97gUHNmcGp2P9n78jU0YMqb41nU62MFk+m80uOi8Nh
+         7733JVnZ00bTyGCg3EEdmfI0fQmfsJp+D0vhjbMpP9oMqRKs9056Y2zjUZ/x6hjRAa
+         31UM23pvgRFgoOg9gfQmTb1gcwLN6on0dhT0bURA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 05/75] ARM: dts: logicpd-torpedo-som: Remove twl_keypad
-Date:   Fri,  8 Nov 2019 19:49:22 +0100
-Message-Id: <20191108174712.152333101@linuxfoundation.org>
+Subject: [PATCH 4.4 06/75] ARM: mm: fix alignment handler faults under memory pressure
+Date:   Fri,  8 Nov 2019 19:49:23 +0100
+Message-Id: <20191108174713.215864380@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -60,38 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 6b512b0ee091edcb8e46218894e4c917d919d3dc ]
+[ Upstream commit 67e15fa5b487adb9b78a92789eeff2d6ec8f5cee ]
 
-The TWL4030 used on the Logit PD Torpedo SOM does not have the
-keypad pins routed.  This patch disables the twl_keypad driver
-to remove some splat during boot:
+When the system has high memory pressure, the page containing the
+instruction may be paged out.  Using probe_kernel_address() means that
+if the page is swapped out, the resulting page fault will not be
+handled because page faults are disabled by this function.
 
-twl4030_keypad 48070000.i2c:twl@48:keypad: missing or malformed property linux,keymap: -22
-twl4030_keypad 48070000.i2c:twl@48:keypad: Failed to build keymap
-twl4030_keypad: probe of 48070000.i2c:twl@48:keypad failed with error -22
+Use get_user() to read the instruction instead.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-[tony@atomide.com: removed error time stamps]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Fixes: b255188f90e2 ("ARM: fix scheduling while atomic warning in alignment handling code")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/logicpd-torpedo-som.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mm/alignment.c | 44 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-index e05670423d8b7..a6c59bf698b31 100644
---- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-+++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-@@ -169,3 +169,7 @@
- &twl_gpio {
- 	ti,use-leds;
- };
+diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
+index 7d5f4c736a16b..cd18eda014c24 100644
+--- a/arch/arm/mm/alignment.c
++++ b/arch/arm/mm/alignment.c
+@@ -767,6 +767,36 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
+ 	return NULL;
+ }
+ 
++static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
++{
++	u32 instr = 0;
++	int fault;
 +
-+&twl_keypad {
-+	status = "disabled";
-+};
++	if (user_mode(regs))
++		fault = get_user(instr, ip);
++	else
++		fault = probe_kernel_address(ip, instr);
++
++	*inst = __mem_to_opcode_arm(instr);
++
++	return fault;
++}
++
++static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
++{
++	u16 instr = 0;
++	int fault;
++
++	if (user_mode(regs))
++		fault = get_user(instr, ip);
++	else
++		fault = probe_kernel_address(ip, instr);
++
++	*inst = __mem_to_opcode_thumb16(instr);
++
++	return fault;
++}
++
+ static int
+ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ {
+@@ -774,10 +804,10 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 	unsigned long instr = 0, instrptr;
+ 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
+ 	unsigned int type;
+-	unsigned int fault;
+ 	u16 tinstr = 0;
+ 	int isize = 4;
+ 	int thumb2_32b = 0;
++	int fault;
+ 
+ 	if (interrupts_enabled(regs))
+ 		local_irq_enable();
+@@ -786,15 +816,14 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 
+ 	if (thumb_mode(regs)) {
+ 		u16 *ptr = (u16 *)(instrptr & ~1);
+-		fault = probe_kernel_address(ptr, tinstr);
+-		tinstr = __mem_to_opcode_thumb16(tinstr);
++
++		fault = alignment_get_thumb(regs, ptr, &tinstr);
+ 		if (!fault) {
+ 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
+ 			    IS_T32(tinstr)) {
+ 				/* Thumb-2 32-bit */
+-				u16 tinst2 = 0;
+-				fault = probe_kernel_address(ptr + 1, tinst2);
+-				tinst2 = __mem_to_opcode_thumb16(tinst2);
++				u16 tinst2;
++				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
+ 				instr = __opcode_thumb32_compose(tinstr, tinst2);
+ 				thumb2_32b = 1;
+ 			} else {
+@@ -803,8 +832,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 			}
+ 		}
+ 	} else {
+-		fault = probe_kernel_address((void *)instrptr, instr);
+-		instr = __mem_to_opcode_arm(instr);
++		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
+ 	}
+ 
+ 	if (fault) {
 -- 
 2.20.1
 
