@@ -3,113 +3,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5843DFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDFAFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F26B206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA2820869
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 17:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfKHRFw (ORCPT
+        id S1729647AbfKHRGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:05:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbfKHRFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 12:05:51 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A243A206BA;
-        Fri,  8 Nov 2019 17:05:50 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 12:05:48 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Subject: Re: libtraceevent installing in wrong folder
-Message-ID: <20191108120548.4118879a@gandalf.local.home>
-In-Reply-To: <20191108161157.g5aadocnfvragqb2@debian>
-References: <20191108161157.g5aadocnfvragqb2@debian>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 8 Nov 2019 12:06:03 -0500
+Received: from tragedy.dreamhost.com ([66.33.205.236]:45243 "EHLO
+        tragedy.dreamhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbfKHRGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 12:06:03 -0500
+X-Greylist: delayed 511 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 12:06:02 EST
+Received: from localhost (localhost [127.0.0.1])
+        by tragedy.dreamhost.com (Postfix) with ESMTPS id D5C5715F8AC;
+        Fri,  8 Nov 2019 08:57:29 -0800 (PST)
+Date:   Fri, 8 Nov 2019 16:57:27 +0000 (UTC)
+From:   Sage Weil <sage@newdream.net>
+X-X-Sender: sage@piezo.novalocal
+To:     Luis Henriques <lhenriques@suse.com>
+cc:     Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <ukernel@gmail.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/2] ceph: safely use 'copy-from' Op on Octopus
+ OSDs
+In-Reply-To: <20191108164758.GA1760@hermes.olymp>
+Message-ID: <alpine.DEB.2.21.1911081656320.10553@piezo.novalocal>
+References: <20191108141555.31176-1-lhenriques@suse.com> <CAOi1vP-sVQKvpiPLoZ=9s7Hy=c2eQRocxSs1nPrXAUCbbZUZ-g@mail.gmail.com> <20191108164758.GA1760@hermes.olymp>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-VR-STATUS: OK
+X-VR-SCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedruddvuddgleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuggftfghnshhusghstghrihgsvgdpffftgfetoffjqffuvfenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffujgfkfhgfgggtsehttdertddtredvnecuhfhrohhmpefurghgvgcuhggvihhluceoshgrghgvsehnvgifughrvggrmhdrnhgvtheqnecukfhppeduvdejrddtrddtrddunecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehlohgtrghlhhhoshhtpdhinhgvthepuddvjedrtddrtddruddprhgvthhurhhnqdhprghthhepufgrghgvucghvghilhcuoehsrghgvgesnhgvfigurhgvrghmrdhnvghtqedpmhgrihhlfhhrohhmpehsrghgvgesnhgvfigurhgvrghmrdhnvghtpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-[ I also added linux-trace-devel, but it was good to Cc LKML too ]
-
-On Fri, 8 Nov 2019 16:11:57 +0000
-Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
-
-> Hi Steve,
+On Fri, 8 Nov 2019, Luis Henriques wrote:
+> On Fri, Nov 08, 2019 at 04:15:35PM +0100, Ilya Dryomov wrote:
+> > If the OSD checked for unknown flags, like newer syscalls do, it would
+> > be super easy, but it looks like it doesn't.
+> > 
+> > An obvious solution is to look at require_osd_release in osdmap, but we
+> > don't decode that in the kernel because it lives the OSD portion of the
+> > osdmap.  We could add that and consider the fact that the client now
+> > needs to decode more than just the client portion a design mistake.
+> > I'm not sure what can of worms does that open and if copy-from alone is
+> > worth it though.  Perhaps that field could be moved to (or a copy of it
+> > be replicated in) the client portion of the osdmap starting with
+> > octopus?  We seem to be running into it on the client side more and
+> > more...
 > 
-> I tried to install libtraceevent. and I used the command:
-> "make DESTDIR=/home/sudip/test prefix=/usr install" from tool/lib/traceevent
+> I can't say I'm thrilled with the idea of going back to hack into the
+> OSDs code again, I was hoping to be able to handle this with the
+> information we already have on the connection peer_features field.  It
+> took me *months* to have the OSD fix merged in so I'm not really
+> convinced a change to the osdmap would make it into Octopus :-)
 > 
-> And this is what I get:
-> sudip@debian:~/test$ pwd
-> /home/sudip/test
-> 
-> sudip@debian:~/test$ find .
-> .
-> ./usr
-> ./usr/local
-> ./usr/local/lib
-> ./usr/local/lib/x86_64-linux-gnu
-> ./usr/local/lib/x86_64-linux-gnu/pkgconfig
-> ./usr/local/lib/x86_64-linux-gnu/pkgconfig/libtraceevent.pc
-> ./usr/lib64
-> ./usr/lib64/traceevent
-> ./usr/lib64/traceevent/plugins
-> ./usr/lib64/traceevent/plugins/plugin_hrtimer.so
-> ./usr/lib64/traceevent/plugins/plugin_sched_switch.so
-> ./usr/lib64/traceevent/plugins/plugin_jbd2.so
-> ./usr/lib64/traceevent/plugins/plugin_kvm.so
-> ./usr/lib64/traceevent/plugins/plugin_cfg80211.so
-> ./usr/lib64/traceevent/plugins/plugin_kmem.so
-> ./usr/lib64/traceevent/plugins/plugin_scsi.so
-> ./usr/lib64/traceevent/plugins/plugin_mac80211.so
-> ./usr/lib64/traceevent/plugins/plugin_function.so
-> ./usr/lib64/traceevent/plugins/plugin_xen.so
-> ./usr/lib64/libtraceevent.so
-> ./usr/lib64/libtraceevent.so.1.1.0
-> ./usr/lib64/libtraceevent.a
-> ./usr/lib64/libtraceevent.so.1
-> ./home
-> ./home/sudip
-> ./home/sudip/test
-> ./home/sudip/test/usr
-> ./home/sudip/test/usr/include
-> ./home/sudip/test/usr/include/traceevent
-> ./home/sudip/test/usr/include/traceevent/event-parse.h
-> ./home/sudip/test/usr/include/traceevent/trace-seq.h
-> ./home/sudip/test/usr/include/traceevent/kbuffer.h
-> ./home/sudip/test/usr/include/traceevent/event-utils.h
-> 
-> I am seeing two problems:
-> 1) It created another home/sudip/test folder inside /home/sudip/test and
-> the header files are installed in /home/sudip/test/home/sudip/test/usr/include folder.
-> They should have been in /home/sudip/test/usr/include.
-> 
-> 2) I used prefix=/usr but the 'pkgconfig' still went to /usr/local
-> 
-> Did I do something wrong?
+> (But I'll have a look at this and see if I can understand what moving or
+> replicating the field in the osdmap would really entail.)
 
-No, but you showed that the installation part is poorly tested. I
-mostly tested just the code from trace-cmd, and even the installation
-paths from that repo. I should have tested the kernel repo as well, but
-failed to do this.
+Adding a copy of require_osd_release in the client portion of the map is 
+an easy thing to do (and probably where it should have gone in the first 
+place!).  Let's do that!
 
-Thanks for reporting, I need to take a look, or if you want to have a go
-at it, that would be great too :-)
-
--- Steve
-
-
+sage
