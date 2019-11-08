@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2529EFC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532E1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E714321924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBAF207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214100;
-	bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
+	s=default; t=1573214104;
+	bh=7fjEwiSTXkaGr+C2UuO1PVeK6otW8t2730r5OGPfeSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJrHIsqGEEiqBHW0Zbfu7Uzle4lItsExCWxNBBbWNq0jG3aZR54yZv3TJ4UxoKit0
-	 +sMKHzfhWVSgjhNwq/6Ki+yGJF2mL7e0gq9ED74lyl0lJkFbQwGP/SjdBGj2MrjFKP
-	 6GCQ5pJpDeqgiHuR7coV4fXrdufGURTWgpNiFEyQ=
+	b=ek1apkCnzzoFvKcmGGj2V/pf6OIE+PEau8UFSl7GBP7pNpE/1EzJKxgT2B7JQHsRX
+	 VS3CHItJfTPLxC8zPPTfJyeBSH1LukrKUkv/VFOsfd0TCH2Es9ibFyYYP1YBgT55Ot
+	 k/8s/tH/pD7nnBiB5P6w65cfRjFk+1tpGLTEoUhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390140AbfKHLqK (ORCPT
+        id S2391171AbfKHLzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33612 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:55:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391232AbfKHLqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:04 -0500
+        id S2391258AbfKHLqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 335A12084D;
-        Fri,  8 Nov 2019 11:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D8FC2245B;
+        Fri,  8 Nov 2019 11:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213563;
-        bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
+        s=default; t=1573213566;
+        bh=7fjEwiSTXkaGr+C2UuO1PVeK6otW8t2730r5OGPfeSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wh/NAhMz2ugnDDXVkMJErAREJwXNz513BndFE57sYvF5SKuvFlAnkRylC/ZLEXiQI
-         Uo+e84+SKaUaPuE4HJeka3RexGpvjz1J4TF8g257lEeT3VTLTUnGl0S+N5Ky8qUjox
-         8D5c7Of0DMV/MzzbXSbBNukEAa35RC/khc01fRH4=
+        b=mRWiMpbMG2ajNh3pRDDsW5wm5/xHfMKNulRx+BnX3Fxo2J7OG3mjQ/eRgM7ESM6vg
+         haHpv4FAXcI3Qe/CHnJzFIaz/0N65ZHf0DW1z95Vq19w7VaCMfkSv8RDzVaHfjuZDe
+         GsmSzborbqPhUZnQC6m453zoCLoMD2KGwB5i7j3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/64] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
-Date:   Fri,  8 Nov 2019 06:44:53 -0500
-Message-Id: <20191108114545.15351-12-sashal@kernel.org>
+Cc:     Mitch Williams <mitch.a.williams@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 14/64] i40e: use correct length for strncpy
+Date:   Fri,  8 Nov 2019 06:44:55 -0500
+Message-Id: <20191108114545.15351-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,55 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Mitch Williams <mitch.a.williams@intel.com>
 
-[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
+[ Upstream commit 7eb74ff891b4e94b8bac48f648a21e4b94ddee64 ]
 
-This patch adds missing properties to the CODEC and sound nodes, so the
-audio will work also on Snow rev5 Chromebook. This patch is an extension
-to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
-DAI properties to the max98095 node in Snow Chromebook")
-and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
-Chromebook").  It has been reported that such changes work fine on the
-rev5 board too.
+Caught by GCC 8. When we provide a length for strncpy, we should not
+include the terminating null. So we must tell it one less than the size
+of the destination buffer.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-[krzk: Fixed typo in phandle to &max98090]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/net/ethernet/intel/i40e/i40e_ptp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-index 90560c316f644..cb986175b69b4 100644
---- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-@@ -23,6 +23,14 @@
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_ptp.c b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
+index f1feceab758a5..41cbcb0ac2d94 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_ptp.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
+@@ -604,7 +604,8 @@ static long i40e_ptp_create_clock(struct i40e_pf *pf)
+ 	if (!IS_ERR_OR_NULL(pf->ptp_clock))
+ 		return 0;
  
- 		samsung,model = "Snow-I2S-MAX98090";
- 		samsung,audio-codec = <&max98090>;
-+
-+		cpu {
-+			sound-dai = <&i2s0 0>;
-+		};
-+
-+		codec {
-+			sound-dai = <&max98090 0>, <&hdmi>;
-+		};
- 	};
- };
- 
-@@ -34,6 +42,9 @@
- 		interrupt-parent = <&gpx0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&max98090_irq>;
-+		clocks = <&pmu_system_controller 0>;
-+		clock-names = "mclk";
-+		#sound-dai-cells = <1>;
- 	};
- };
- 
+-	strncpy(pf->ptp_caps.name, i40e_driver_name, sizeof(pf->ptp_caps.name));
++	strncpy(pf->ptp_caps.name, i40e_driver_name,
++		sizeof(pf->ptp_caps.name) - 1);
+ 	pf->ptp_caps.owner = THIS_MODULE;
+ 	pf->ptp_caps.max_adj = 999999999;
+ 	pf->ptp_caps.n_ext_ts = 0;
 -- 
 2.20.1
 
