@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64BAFA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0280CFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CB5206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5F0222D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 13:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="XVACoOOu"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="fbtFc25Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbfKHNDD (ORCPT
+        id S1731592AbfKHNDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:03:03 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34255 "EHLO
+        Fri, 8 Nov 2019 08:03:05 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34253 "EHLO
         mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730799AbfKHNCZ (ORCPT
+        with ESMTP id S1730779AbfKHNCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 08:02:25 -0500
-Received: by mail-lf1-f68.google.com with SMTP id f5so4431846lfp.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:24 -0800 (PST)
+        Fri, 8 Nov 2019 08:02:24 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f5so4431808lfp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 05:02:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2QjvBFt/Ahp0rywmkIDhfkZ7dAuBAKpWua4zqIA54R0=;
-        b=XVACoOOuXlxl4Cy3V/J8sGSeCCFw8ZKOKZ7FqB/K3JgCxUCJ1xCj/Mqawr8e2qIujx
-         O7k1zBR8675/UVFNVWJud7B7gGy4eRxvGFDaQiIdBxLuh/UvxbGJ2jiZIbbPNPtq2kf0
-         ZABUDJvpYchPCeIhdPhVBPmgejb6251Cuy5iE=
+        bh=SKjk4xtgUQ/kA6JZGPtMJVtONpNy6V4lFIeGBwHjI8g=;
+        b=fbtFc25QQKF1HYy9EJWgNQgGlj4NvVM/SZQzlg+mehsa55gfaar01ZvOzQEFiHiJS8
+         NIWL01E4b4KculB+YonomNkzR6/ye1LnowBIkbJ9/0ahn29mzO+PzUdzYz/FKdLUGozG
+         3Bl1Mlzo2VusjD/D//znojGiimZguwgG2m4r0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2QjvBFt/Ahp0rywmkIDhfkZ7dAuBAKpWua4zqIA54R0=;
-        b=VRhwAVMXgidrgP9FUMsPJR63Uk2Tzk0X/msf1a/rcHgpVtFYskj4djQKuWkb/pgdj0
-         LO/XQwDAu07+dLv35XyFQaaUhRCbRP7rm6WWvbfgQQIzRSOqFWUcwQuGIrpxGuExZzRF
-         2OtXky2FGwB8t6SUj8pkIxWHbygSjhYtBlrIyTyXFajW+yqJAHsogyc4emQxJ3k+ZMWi
-         4eQdo2Dw+mI84GidphlLFe/fw/CksiBqbKBZOwIBwVRaRaRmHnlQsUZo2Jv/58wV7lmQ
-         IlS88JMNApo2A4S0Oa83jFj5HPukkfPbRgFAqxdeGeRzqZZvNozopciVhwiuJ6PuCMdR
-         /LfA==
-X-Gm-Message-State: APjAAAX/XiLwX4H1yNK5tFtqaj2IvmMXYOAQm6cWxvO920ZWa9HBC7aO
-        KAK6zphIO3ob5U1J7zS0xXkaAQ==
-X-Google-Smtp-Source: APXvYqwScoFAHiImQMnrTZk87e9zBJh2EkwdHqWoi9bG9XRi4pfN3RXUv9ZB5CXwEIsQqOH7j53G/g==
-X-Received: by 2002:a19:820e:: with SMTP id e14mr6605403lfd.29.1573218143917;
-        Fri, 08 Nov 2019 05:02:23 -0800 (PST)
+        bh=SKjk4xtgUQ/kA6JZGPtMJVtONpNy6V4lFIeGBwHjI8g=;
+        b=qFcpPCSzJwd4Z2QMlOf6Yr6E8T1qWNFPgY7Vha1w1eedMl1afO2uRWIXtCpjUn4Xy4
+         IGWz0jsIvc3UkRzeXWyIGo+Pqc06Blyp/QMr/EhmDcSuFCtPI8zQYSsFfU8hAw/C4HcN
+         BJiwG8Q7+LjwVL/rR8sRADGxMAy+leSSeVZdNO7KJs8bvuHBgoY3uaj4118aYx7coe0P
+         XirWCRI1mvZo1N0NBV2pWPaYaCRpAzirnDEpTF9Cqzzjlw4E2MddpHd4reXa6lhaWdA5
+         /pTE58WkF7KA8K9TnOfo3nUsgeySNcOG7nakJU+iO2+Z5+jQO6XBll1wFQHqGloiiKQV
+         RlZQ==
+X-Gm-Message-State: APjAAAUNWV+xKNp15Xms5Ywm4iUgyj8O+Ju3q8lHRdte2hzrTZIDd8QH
+        xgbpaKC1bJ91WLW2gN6/Gs0DKQ==
+X-Google-Smtp-Source: APXvYqwH4Au0vtX7CvDcjAgRV7H9RHuuGAfZs53rG3gF/CjSF6Puxm/KMJghDcukVOdVzQRBjC2v/w==
+X-Received: by 2002:a19:f107:: with SMTP id p7mr6505066lfh.91.1573218142811;
+        Fri, 08 Nov 2019 05:02:22 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.02.22
+        by smtp.gmail.com with ESMTPSA id d28sm2454725lfn.33.2019.11.08.05.02.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 05:02:23 -0800 (PST)
+        Fri, 08 Nov 2019 05:02:22 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -61,9 +61,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         Scott Wood <oss@buserror.net>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 45/47] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
-Date:   Fri,  8 Nov 2019 14:01:21 +0100
-Message-Id: <20191108130123.6839-46-linux@rasmusvillemoes.dk>
+Subject: [PATCH v4 44/47] net/wan/fsl_ucc_hdlc: fix reading of __be16 registers
+Date:   Fri,  8 Nov 2019 14:01:20 +0100
+Message-Id: <20191108130123.6839-45-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
 References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
@@ -74,34 +74,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qiang Zhao points out that these offsets get written to 16-bit
-registers, and there are some QE platforms with more than 64K
-muram. So it is possible that qe_muram_alloc() gives us an allocation
-that can't actually be used by the hardware, so detect and reject
-that.
+When releasing the allocated muram resource, we rely on reading back
+the offsets from the riptr/tiptr registers. But those registers are
+__be16 (and we indeed write them using iowrite16be), so we can't just
+read them back with a normal C dereference.
 
-Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
+This is not currently a real problem, since for now the driver is
+PPC32-only. But it will soon be allowed to be used on arm and arm64 as
+well.
+
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wan/fsl_ucc_hdlc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index 8d13586bb774..f029eaa7cfc0 100644
+index 405b24a5a60d..8d13586bb774 100644
 --- a/drivers/net/wan/fsl_ucc_hdlc.c
 +++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -245,6 +245,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
- 		ret = -ENOMEM;
- 		goto free_riptr;
- 	}
-+	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
-+		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
-+		ret = -ENOMEM;
-+		goto free_tiptr;
-+	}
+@@ -732,8 +732,8 @@ static int uhdlc_open(struct net_device *dev)
  
- 	/* Set RIPTR, TIPTR */
- 	iowrite16be(riptr, &priv->ucc_pram->riptr);
+ static void uhdlc_memclean(struct ucc_hdlc_private *priv)
+ {
+-	qe_muram_free(priv->ucc_pram->riptr);
+-	qe_muram_free(priv->ucc_pram->tiptr);
++	qe_muram_free(ioread16be(&priv->ucc_pram->riptr));
++	qe_muram_free(ioread16be(&priv->ucc_pram->tiptr));
+ 
+ 	if (priv->rx_bd_base) {
+ 		dma_free_coherent(priv->dev,
 -- 
 2.23.0
 
