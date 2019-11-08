@@ -2,92 +2,95 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB950C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A927FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D04218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073B6218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213030;
-	bh=G5j+RwShAgrettv3VQJ2Hzibs0yOoFaJu63CqOxn8Oo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VeLeA2Di0a7CNbTZCW5VbBPu93FDb9raOlnpzFdP0Uy93SIbkJ9OJRmNgTfnbd1zx
-	 v7mFj7GJkaz2J04J2uOr/tf7S4TlmarVg02K9dnOttB6xslh3xL1bYDBAX8pKwhv7C
-	 T6bFNBlJgZ+xrXKkKJTJw7BEOb693H55a966XYBQ=
+	s=default; t=1573213076;
+	bh=fUrFUQ0VcsIJkVEdn4DWVyWlVpEN5y6KkxK0GRYbpqI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=s47h4R1nyWH6Lujwzc3epdOeO+NVDHXM/gMLzo+61itak/ieZp/fml93mJ05vv8nW
+	 rsF3a64xhzetisuQIrHrZmZHXzD+R/CmZa5svEWuJip4BOOq2W55pQAWanYLjQCR3Q
+	 XMHgDxLArTFYphhXpgBa4Fs1K0EkFXSu0zCA260o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbfKHLhJ (ORCPT
+        id S1731922AbfKHLhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:37:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50384 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:37:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfKHLhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:37:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731463AbfKHLhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:37:54 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C480320869;
-        Fri,  8 Nov 2019 11:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AB0820869;
+        Fri,  8 Nov 2019 11:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213028;
-        bh=G5j+RwShAgrettv3VQJ2Hzibs0yOoFaJu63CqOxn8Oo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iWFuYTQcqXM/DR65wCIopKLQsBH2V3ve8n4fUHcE6O0QCwEWq5LcBR7HT3UYbVuXy
-         LLH+DzR/qTOHmtgWKoaaTL5pocOV+6Wehrg/cMS5rr/2mDYoYQbR8bXug4dIKrlFDH
-         izPZgMynJUZ3fTgx+ygLAuT+nnb+N95WoPMCQjcs=
-Date:   Fri, 8 Nov 2019 12:37:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Breno =?iso-8859-1?Q?Leit=E3o?= <leitao@debian.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David@rox.of.borg, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Casey Leedom <leedom@chelsio.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] power: avs: smartreflex: Remove superfluous cast in
- debugfs_create_file() call
-Message-ID: <20191108113705.GA721212@kroah.com>
-References: <20191021145149.31657-1-geert+renesas@glider.be>
- <20191021145149.31657-5-geert+renesas@glider.be>
- <4367615.jSCgeRn5tF@kreacher>
+        s=default; t=1573213074;
+        bh=fUrFUQ0VcsIJkVEdn4DWVyWlVpEN5y6KkxK0GRYbpqI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CtH520QXPkwXtxcOilnL8TiNOtkC1GRuQDZ7QAku0eiPFjooHMr7QjSTbznFl5Nfy
+         47aPFezSZiawBV01lEiN3oAqUomTX4AG+bhRd/s90RIsbAIlhhMhI99YN70UYLTErT
+         s+vVbr9uxAof/ELWJLpYEGgNjJoapO3RgDxsmtoE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stefan Agner <stefan@agner.ch>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 001/205] iio: adc: max9611: explicitly cast gain_selectors
+Date:   Fri,  8 Nov 2019 06:34:28 -0500
+Message-Id: <20191108113752.12502-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4367615.jSCgeRn5tF@kreacher>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 12:24:42PM +0100, Rafael J. Wysocki wrote:
-> On Monday, October 21, 2019 4:51:48 PM CET Geert Uytterhoeven wrote:
-> > There is no need to cast a typed pointer to a void pointer when calling
-> > a function that accepts the latter.  Remove it, as the cast prevents
-> > further compiler checks.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Greg, have you taken this one by any chance?
+From: Stefan Agner <stefan@agner.ch>
 
-Nope, it's all yours!  :)
+[ Upstream commit b1ec0802503820ccbc894aadfd2a44da20232f5e ]
+
+After finding a reasonable gain, the function converts the configured
+gain to a gain configuration option selector enum max9611_csa_gain.
+Make the conversion clearly visible by using an explicit cast. This
+also avoids a warning seen with clang:
+  drivers/iio/adc/max9611.c:292:16: warning: implicit conversion from
+      enumeration type 'enum max9611_conf_ids' to different enumeration
+      type 'enum max9611_csa_gain' [-Wenum-conversion]
+                        *csa_gain = gain_selectors[i];
+                                  ~ ^~~~~~~~~~~~~~~~~
+
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/adc/max9611.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index 49c1956e6a674..0884435eec68d 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -289,7 +289,7 @@ static int max9611_read_csa_voltage(struct max9611_dev *max9611,
+ 			return ret;
+ 
+ 		if (*adc_raw > 0) {
+-			*csa_gain = gain_selectors[i];
++			*csa_gain = (enum max9611_csa_gain)gain_selectors[i];
+ 			return 0;
+ 		}
+ 	}
+-- 
+2.20.1
 
