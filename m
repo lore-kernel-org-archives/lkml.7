@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB938FC6194
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CBDC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C2C222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D28222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213893;
-	bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
+	s=default; t=1573213896;
+	bh=roSwoKZWQipXQsi+ap37IQV/ZBeJIpUYo3fNcdBMcbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQ87HyZ7TL2kJPKOdHbHatu+y4MRHrtaP8xmzU1/oaIcJzqgYv7/XiDRWT3SyddKn
-	 RU1OU6CsJHTKSvw+ZjVxCpDSZYLs8O3S5Ra9MwjcTdWOEIOjds4EO7OywmCX3bNPya
-	 jWtA2sJpEbuPfnajzImX09xZDyQadgiZfSqIl6sg=
+	b=D/AYoEku/9fOfBcl2Jl3AOoK9m53GR6wqK++NWdkshwaoeL+q2aNr4dzOFIhiiw8X
+	 YQVx3pXSM40ScHiCrqxmZwoS+iQY7RkxjWPHr14NR0EIqq0kP3D5UOtUuqXM+Hw+a5
+	 9jqIhZfu9Nu1Ih0tbeuefrTiE4JkfARaoyJYOigI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391555AbfKHLra (ORCPT
+        id S2387725AbfKHLvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35922 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391543AbfKHLr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:26 -0500
+        id S2387792AbfKHLra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 162DB20656;
-        Fri,  8 Nov 2019 11:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39986222CE;
+        Fri,  8 Nov 2019 11:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213645;
-        bh=v6v8I+DBAADPhAi8quRgCkikJDr/4ewsDfazDomxKTo=;
+        s=default; t=1573213649;
+        bh=roSwoKZWQipXQsi+ap37IQV/ZBeJIpUYo3fNcdBMcbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ck/MgDI9IXE9BUApBV5NH898eFutT2VY2gVTL3zBjv/w6UPU/YLUbyDh9hH1Gerfm
-         DXCcf7JSo9QqM6GA/c3FEBu23te8a59YFWEUeHvu0Yu7ZLXk7+PMWoD1RS8RqoRqkI
-         ohMfpm8AvRoiQajtwDOVZLVW8z4pvf7zv/lplzJE=
+        b=LjKEZtlJtucU/4mzbF9U3pnx0r4tCfSmXWyd2QUgRf9SPJhx6gk2nymTg8QLeoJgK
+         No3GFjWOdf0qPLl8TGsILgFVbfUUqSi1HxduAl2Tlr90vlwbi8B9b7yI7kyTYr94bw
+         vbFeYGiYmultmkMslCqRFcoaDx884zDE+iyQEVEo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/44] ALSA: pcm: signedness bug in snd_pcm_plug_alloc()
-Date:   Fri,  8 Nov 2019 06:46:38 -0500
-Message-Id: <20191108114721.15944-2-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.4 05/44] gfs2: Don't set GFS2_RDF_UPTODATE when the lvb is updated
+Date:   Fri,  8 Nov 2019 06:46:41 -0500
+Message-Id: <20191108114721.15944-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -58,42 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 6f128fa41f310e1f39ebcea9621d2905549ecf52 ]
+[ Upstream commit 4f36cb36c9d14340bb200d2ad9117b03ce992cfe ]
 
-The "frames" variable is unsigned so the error handling doesn't work
-properly.
+The GFS2_RDF_UPTODATE flag in the rgrp is used to determine when
+a rgrp buffer is valid. It's cleared when the glock is invalidated,
+signifying that the buffer data is now invalid. But before this
+patch, function update_rgrp_lvb was setting the flag when it
+determined it had a valid lvb. But that's an invalid assumption:
+just because you have a valid lvb doesn't mean you have valid
+buffers. After all, another node may have made the lvb valid,
+and this node just fetched it from the glock via dlm.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Consider this scenario:
+1. The file system is mounted with RGRPLVB option.
+2. In gfs2_inplace_reserve it locks the rgrp glock EX, but thanks
+   to GL_SKIP, it skips the gfs2_rgrp_bh_get.
+3. Since loops == 0 and the allocation target (ap->target) is
+   bigger than the largest known chunk of blocks in the rgrp
+   (rs->rs_rbm.rgd->rd_extfail_pt) it skips that rgrp and bypasses
+   the call to gfs2_rgrp_bh_get there as well.
+4. update_rgrp_lvb sees the lvb MAGIC number is valid, so bypasses
+   gfs2_rgrp_bh_get, but it still sets sets GFS2_RDF_UPTODATE due
+   to this invalid assumption.
+5. The next time update_rgrp_lvb is called, it sees the bit is set
+   and just returns 0, assuming both the lvb and rgrp are both
+   uptodate. But since this is a smaller allocation, or space has
+   been freed by another node, thus adjusting the lvb values,
+   it decides to use the rgrp for allocations, with invalid rd_free
+   due to the fact it was never updated.
+
+This patch changes update_rgrp_lvb so it doesn't set the UPTODATE
+flag anymore. That way, it has no choice but to fetch the latest
+values.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/oss/pcm_plugin.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/gfs2/rgrp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
-index a84a1d3d23e56..c6888d76ca5e9 100644
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
- 		while (plugin->next) {
- 			if (plugin->dst_frames)
- 				frames = plugin->dst_frames(plugin, frames);
--			if (snd_BUG_ON(frames <= 0))
-+			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
- 				return -ENXIO;
- 			plugin = plugin->next;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
-@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
- 		while (plugin->prev) {
- 			if (plugin->src_frames)
- 				frames = plugin->src_frames(plugin, frames);
--			if (snd_BUG_ON(frames <= 0))
-+			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
- 				return -ENXIO;
- 			plugin = plugin->prev;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
+diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
+index 9c159e6ad1164..e632006a52df6 100644
+--- a/fs/gfs2/rgrp.c
++++ b/fs/gfs2/rgrp.c
+@@ -1228,7 +1228,7 @@ static int update_rgrp_lvb(struct gfs2_rgrpd *rgd)
+ 	rl_flags = be32_to_cpu(rgd->rd_rgl->rl_flags);
+ 	rl_flags &= ~GFS2_RDF_MASK;
+ 	rgd->rd_flags &= GFS2_RDF_MASK;
+-	rgd->rd_flags |= (rl_flags | GFS2_RDF_UPTODATE | GFS2_RDF_CHECK);
++	rgd->rd_flags |= (rl_flags | GFS2_RDF_CHECK);
+ 	if (rgd->rd_rgl->rl_unlinked == 0)
+ 		rgd->rd_flags &= ~GFS2_RDF_CHECK;
+ 	rgd->rd_free = be32_to_cpu(rgd->rd_rgl->rl_free);
 -- 
 2.20.1
 
