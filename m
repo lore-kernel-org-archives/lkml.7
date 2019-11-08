@@ -2,129 +2,131 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F1CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A038C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BBF21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573188375;
-	bh=gH4YV/wqrobeQnaVD22aDnltH06bEHnjtZENRGZ48q4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Bl4wSE4SF0oxpijGlMU0xRLkuqsq7kS5qO5oaJUgp09fvmQDSKX8PnR7ko5WolFiB
-	 7uYOtOULpRB+yJnJB7SV6azAB5UPIcIa2btOMVwsXHH5d8G8itlfKWyzl9bUEtDBPc
-	 MhVjN+E4e/i+rujhpwjQ6PrtpeOipDnv3OtJ21wI=
+	by mail.kernel.org (Postfix) with ESMTP id 4E73621848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 04:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Aga5bP62"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbfKHEqO (ORCPT
+        id S1729813AbfKHExD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 23:46:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 23:53:03 -0500
+Received: from ozlabs.org ([203.11.71.1]:45079 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfKHEqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 23:46:14 -0500
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726281AbfKHExC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 23:53:02 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC92721848;
-        Fri,  8 Nov 2019 04:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573188373;
-        bh=gH4YV/wqrobeQnaVD22aDnltH06bEHnjtZENRGZ48q4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=xRn6UE1fCLscoGa0SSMS43OBs/hmPEGgj8EzH0pTY9x2nudK/0/KLYUDldyDZFBiW
-         eefoao4dK85ZkzfVnGne6x8pop9UgAK0gyCag4BvbaJ1GqmvgyozJHyhg8t+8IWe7v
-         Jqu6973Y1RC3ZxksXaZzEc2ZHihhNBSO+oKuM9iw=
-Subject: Re: [PATCH] mtd: rawnand: driver for Mediatek MT7621 SoC NAND flash
- controller
-To:     =?UTF-8?Q?Ren=c3=a9_van_Dorst?= <opensource@vdorst.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, neil@brown.name,
-        DENG Qingfang <dengqf6@mail2.sysu.edu.cn>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <hackpascal@gmail.com>
-References: <20191107092053.Horde.i3MVcW9RqZDOQBMADZX9fuc@www.vdorst.com>
-From:   Greg Ungerer <gerg@kernel.org>
-Message-ID: <b7e61be8-bd72-a4ef-6fb7-1047c7874342@kernel.org>
-Date:   Fri, 8 Nov 2019 14:46:07 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 478SZB0Shjz9s7T;
+        Fri,  8 Nov 2019 15:52:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573188777;
+        bh=lsTl8lWOKmxCnD0se991UB82l6huuBGMFOozceyJHpc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Aga5bP62YWYX6iNtz585PAG4ScKlPSlTrEjqwE3ki+YzY7ybieoqKfiAYYHN3ZWFB
+         dgeiWeIzKbrAc1LjDEbqb+7n6BKo8ZoNAEGb/GpuSMY/qWGblDc3ftTHDFdi/3SYk7
+         f1uv5aZrwD6T5U/U9em7j4VZ9CxAvSzmWzmiTf/WhUxI4t1uwco2iMnRw+QceM6uTZ
+         tLRh0cdl4StpJ6QyKwe/vbR2oz7U5o4mUFwxyUqRMMEe92kUlQJVrFAdfZZd5xU9JS
+         ZYhkfWeXPzcZdut4sV7iiXkFFIh/Y1JyCFSYtdaVfsbRy5iI42riGD6QP401UVoRGe
+         p7+WJZ1Mo/MGA==
+Date:   Fri, 8 Nov 2019 15:52:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        openrisc@lists.librecores.org, linux-mtd@lists.infradead.org,
+        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: generic-iomap tree for linux-next
+Message-ID: <20191108155248.0a32a03a@canb.auug.org.au>
+In-Reply-To: <20191108132000.3e7bd5b8@canb.auug.org.au>
+References: <20191029064834.23438-1-hch@lst.de>
+        <20191107204743.GA22863@lst.de>
+        <20191108132000.3e7bd5b8@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191107092053.Horde.i3MVcW9RqZDOQBMADZX9fuc@www.vdorst.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/tVtmaodFaJa/ooywirx=fo/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/tVtmaodFaJa/ooywirx=fo/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/11/19 7:20 pm, René van Dorst wrote:
-> Quoting gerg@kernel.org:
-> 
->> From: Greg Ungerer <gerg@kernel.org>
->>
->> Add a driver to support the NAND flash controller of the MediaTek MT7621
->> System-on-Chip device. (This one is the MIPS based parts from Mediatek).
->>
->> This code is a re-working of the earlier patches for this hardware that
->> have been floating around the internet for years:
->>
->> https://github.com/ReclaimYourPrivacy/cloak/blob/master/target/linux/ramips/patches-3.18/0045-mtd-add-mt7621-nand-support.patch
->>
->> This is a much cleaned up version, put in staging to start with.
->> It does still have some problems, mainly that it still uses a lot of the
->> mtd raw nand legacy support.
->>
->> The driver not only compiles, but it works well on the small range of
->> hardware platforms that it has been used on so far. I have been using
->> for quite a while now, cleaning up as I get time.
->>
->> So... I am looking for comments on the best approach forward with this.
->> At least in staging it can get some more eyeballs going over it.
->>
->> There is a mediatek nand driver already, mtk_nand.c, for their ARM based
->> System-on-Chip devices. That hardware module looks to have some hardware
->> similarities with this one. At this point I don't know if that can be
->> used on the 7621 based devices. (I tried a quick and dirty setup and had
->> no success using it on the 7621).
->>
->> Thoughts?
-> 
-> +CC DENG Qingfang, Chuanhong Guo, Weijie Gao to the list.
-> 
-> Hi Greg,
-> 
-> Thanks for posting this driver.
-> 
-> But I would like to mention that the openwrt community is currently working on a
-> new version which is based a newer version of the MediaTek vendor driver.
-> That version is currently targeted for the openwrt 4.19 kernel.
-> See full pull request [1] and NAND driver patch [2]
-> 
-> It would be a shame if duplicate work has been done.
+Hi Christoph,
 
-Thanks for pointing that out. I have no particular attachment to the
-patch code I sent (I didn't write it). Really just want to see a driver
-in mainline.
+On Fri, 8 Nov 2019 13:20:00 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> On Thu, 7 Nov 2019 21:47:43 +0100 Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > can you add the generic-ioremap tree:
+> >=20
+> >    git://git.infradead.org/users/hch/ioremap.git
+> >=20
+> > to linux-next?  =20
+>=20
+> I assume you mean the for-next branch?
 
-I am going to spin a v2 of it, lets see how to the 2 drivers stack up
-against each other.
+With that assumption, added from today.
 
-Regards
-Greg
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
 
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
 
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
 
-> [1]: https://github.com/openwrt/openwrt/pull/2385
-> [2]: https://github.com/openwrt/openwrt/pull/2385/commits/b2569c0a5943fe8f94ba07c9540ecd14006d729a
-> 
-> <snip>
-> 
-> 
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/tVtmaodFaJa/ooywirx=fo/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3E9KAACgkQAVBC80lX
+0GzmWwf+Klgi0tTyTa+t0RWIsOgTgCRRshcd2R+zC2TAQiqpOvNWxiNkHSOO6rPt
+AIwk9/iB+0v8JHEaYe+JqqmAtlRJjfMKtLkGBCB8WLQ/Sw+V+BW+2kZfZbMDL47C
+Q2NA/MqqCVxs38kWlJA+gd3xF1FJLjYYuHlhaksjzlHUVGVcCxeXRrd521DYPcwm
+9ZzSoL0488rxdiISFluZ44y3nKSgX3Ye5J4DnymJod7hsctYKZvWL+GxoizD+i6m
+HgzcYw5CxoMeQcS9WgBNCafeABW7i7w3jfCsmBjTNWCuUkE+Pruoct6C6G6Q5LqS
+jgJAqa5QBfJCS5OsMXSaf1cZapFTkQ==
+=R1aO
+-----END PGP SIGNATURE-----
+
+--Sig_/tVtmaodFaJa/ooywirx=fo/--
