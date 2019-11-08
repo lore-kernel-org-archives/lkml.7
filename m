@@ -2,97 +2,162 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5E9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3D0FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7242087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534BC2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573206592;
+	bh=5kpwDh1GiCrKm9Z75Z0Gq4hWVb7DrQiCr7y4dnMzD4I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mVBPfBzs6bUlC3HYbMtk/MeuCO4QQ6lqN4L4vJvX8KpGqsUXu/q20Rj0yZKwVsixi
+	 4wdUCxsEMEqf6bqGgs8HMqACRaWOzqvf1s2OIw9rfmhwW2I8D+P7VVuHyOap9QHSgH
+	 A1CZCn9rO49Hu/lhpA3O7DYhAl5j47C53OaTDsFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbfKHJsy convert rfc822-to-8bit (ORCPT
+        id S1731222AbfKHJtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:48:54 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:42745 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730616AbfKHJsy (ORCPT
+        Fri, 8 Nov 2019 04:49:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33363 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730281AbfKHJtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:48:54 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xiejingfeng@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0ThUhb-7_1573206530;
-Received: from 30.5.113.47(mailfrom:xiejingfeng@linux.alibaba.com fp:SMTPD_---0ThUhb-7_1573206530)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 08 Nov 2019 17:48:50 +0800
-User-Agent: Microsoft-MacOutlook/10.1f.0.191103
-Date:   Fri, 08 Nov 2019 17:49:01 +0800
-Subject: Re: [PATCH] psi:fix divide by zero in psi_update_stats
-From:   Jingfeng Xie <xiejingfeng@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Ingo Molnar <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Xunlei Pang <xlpang@linux.alibaba.com>
-Message-ID: <4BB2BD4E-96A9-42C5-9EEC-115CF69A0C1D@linux.alibaba.com>
-Thread-Topic: [PATCH] psi:fix divide by zero in psi_update_stats
-References: <C377A5F1-F86F-4A27-966F-0285EC6EA934@linux.alibaba.com>
- <20191108093136.GI4114@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191108093136.GI4114@hirez.programming.kicks-ass.net>
-Mime-version: 1.0
-Content-type: text/plain;
-        charset="UTF-8"
-Content-transfer-encoding: 8BIT
+        Fri, 8 Nov 2019 04:49:50 -0500
+Received: by mail-ot1-f65.google.com with SMTP id u13so4709097ote.0;
+        Fri, 08 Nov 2019 01:49:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PXhk35FnSv3RYE2duWbbP8N7X18rhZ+eNW/MZeoOBgU=;
+        b=r/cW/KHO2PENnIlBy9OkqH0LVaHKDJNPKJkyj+P/t3dfspkPv0sXKqr46j17XPE9KN
+         7CFVLHuA9Wx1jcIpgGlUGx+BjkiL2z9ri+uT7z1yafMRzxcPouxzq/SdFJmGUgyWKm3V
+         dsUe2yo2CUkk28klnUOE2Ga9pnTXJgarEIbXN2tKy2HmuiWH8A5Vl+KaorKhbcLzXDB5
+         D5GnwQyeaohotBjSVIV0mQPx3bjDtiUS6StOQTytpXMNsOX3rN89hn5g55JxRkwjFzPX
+         u3sCWJimskleTBkiaUfSKkYId2kNIWfic+0F3tVIzh9Z53oEIjQlGJHR2EXA8sjLG83g
+         eZJQ==
+X-Gm-Message-State: APjAAAWzPGJc8ZljZ0xXlmgU9R/kz+vN3ZVqyYy4PjBnLl/OvSXEf/vz
+        PRZQ4jX2bTjayIBksNhZIrjLLZnmo+P8eoN+oDY=
+X-Google-Smtp-Source: APXvYqzH33iSMEk7XoGRawDI6yY8/C9YzXVKTLKUoEMi306vUDxotxdEUXKsTJYXJyw7+piUB6jQphkEqDEuWAZ6moI=
+X-Received: by 2002:a05:6830:232a:: with SMTP id q10mr7756723otg.262.1573206589736;
+ Fri, 08 Nov 2019 01:49:49 -0800 (PST)
+MIME-Version: 1.0
+References: <20191108042225.45391-1-dmitry.torokhov@gmail.com> <20191108042225.45391-2-dmitry.torokhov@gmail.com>
+In-Reply-To: <20191108042225.45391-2-dmitry.torokhov@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 8 Nov 2019 10:49:38 +0100
+Message-ID: <CAJZ5v0ghf58k_-dVZZGygQRBiVZuFfKUpFUsNK_0D15jvftRMw@mail.gmail.com>
+Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It happens multiple times on our online machines, the crash call trace is like below:
-[58914.066423] divide error: 0000 [#1] SMP
-[58914.070416] Modules linked in: ipmi_poweroff ipmi_watchdog toa overlay fuse tcp_diag inet_diag binfmt_misc aisqos(O) aisqos_hotfixes(O)
-[58914.083158] CPU: 94 PID: 140364 Comm: kworker/94:2 Tainted: G W OE K 4.9.151-015.ali3000.alios7.x86_64 #1
-[58914.093722] Hardware name: Alibaba Alibaba Cloud ECS/Alibaba Cloud ECS, BIOS 3.23.34 02/14/2019
-[58914.102728] Workqueue: events psi_update_work
-[58914.107258] task: ffff8879da83c280 task.stack: ffffc90059dcc000
-[58914.113336] RIP: 0010:[] [] psi_update_stats+0x1c1/0x330
-[58914.122183] RSP: 0018:ffffc90059dcfd60 EFLAGS: 00010246
-[58914.127650] RAX: 0000000000000000 RBX: ffff8858fe98be50 RCX: 000000007744d640
-[58914.134947] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00003594f700648e
-[58914.142243] RBP: ffffc90059dcfdf8 R08: 0000359500000000 R09: 0000000000000000
-[58914.149538] R10: 0000000000000000 R11: 0000000000000000 R12: 0000359500000000
-[58914.156837] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8858fe98bd78
-[58914.164136] FS: 0000000000000000(0000) GS:ffff887f7f380000(0000) knlGS:0000000000000000
-[58914.172529] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[58914.178467] CR2: 00007f2240452090 CR3: 0000005d5d258000 CR4: 00000000007606f0
-[58914.185765] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[58914.193061] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[58914.200360] PKRU: 55555554
-[58914.203221] Stack:
-[58914.205383] ffff8858fe98bd48 00000000000002f0 0000002e81036d09 ffffc90059dcfde8
-[58914.213168] ffff8858fe98bec8 0000000000000000 0000000000000000 0000000000000000
-[58914.220951] 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-[58914.228734] Call Trace:
-[58914.231337] [] psi_update_work+0x22/0x60
-[58914.237067] [] process_one_work+0x189/0x420
-[58914.243063] [] worker_thread+0x4e/0x4b0
-[58914.248701] [] ? process_one_work+0x420/0x420
-[58914.254869] [] kthread+0xe6/0x100
-[58914.259994] [] ? kthread_park+0x60/0x60
-[58914.265640] [] ret_from_fork+0x39/0x50
-[58914.271193] Code: 41 29 c3 4d 39 dc 4d 0f 42 dc <49> f7 f1 48 8b 13 48 89 c7 48 c1
-[58914.279691] RIP [] psi_update_stats+0x1c1/0x330
-[58914.286053] RSP
+On Fri, Nov 8, 2019 at 5:22 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> We do not need a special flag to know if we are dealing with an array,
+> as we can get that data from ratio between element length and the data
+> size, however we do need a flag to know whether the data is stored
+> directly inside property_entry or separately.
 
-With full kdump vmcore analysis,  The R8 is period in psi_update_stats which results in the zero division error.
+So the subject is slightly misleading, because it is not a rename.  I
+would say "replace x with y" instead.
 
+[Arguably I can change that when applying the patch, but since we are
+going to wait for the dependencies to go in, it should not be a big
+deal to send an update of this patch alone?]
 
-﻿On 2019/11/8 PM 5:31，“Peter Zijlstra”<peterz@infradead.org> wrote:
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/base/swnode.c    | 12 +++++-------
+>  include/linux/property.h | 13 ++++++++-----
+>  2 files changed, 13 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index d8d0dc0ca5acf..18a30fb3cc588 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -108,10 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
+>         if (!prop->length)
+>                 return NULL;
+>
+> -       if (prop->is_array)
+> -               return prop->pointer;
+> -
+> -       return &prop->value;
+> +       return prop->is_inline ? &prop->value : prop->pointer;
+>  }
+>
+>  static const void *property_entry_find(const struct property_entry *props,
+> @@ -205,7 +202,7 @@ static void property_entry_free_data(const struct property_entry *p)
+>         const char * const *src_str;
+>         size_t i, nval;
+>
+> -       if (p->is_array) {
+> +       if (!p->is_inline) {
+>                 if (p->type == DEV_PROP_STRING && p->pointer) {
+>                         src_str = p->pointer;
+>                         nval = p->length / sizeof(const char *);
+> @@ -250,7 +247,7 @@ static int property_entry_copy_data(struct property_entry *dst,
+>         const void *pointer = property_get_pointer(src);
+>         const void *new;
+>
+> -       if (src->is_array) {
+> +       if (!src->is_inline) {
+>                 if (!src->length)
+>                         return -ENODATA;
+>
+> @@ -264,15 +261,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+>                                 return -ENOMEM;
+>                 }
+>
+> -               dst->is_array = true;
+>                 dst->pointer = new;
+>         } else if (src->type == DEV_PROP_STRING) {
+>                 new = kstrdup(src->value.str, GFP_KERNEL);
+>                 if (!new && src->value.str)
+>                         return -ENOMEM;
+>
+> +               dst->is_inline = true;
+>                 dst->value.str = new;
+>         } else {
+> +               dst->is_inline = true;
+>                 dst->value = src->value;
+>         }
+>
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 48335288c2a96..dad0ad11b55e2 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -227,15 +227,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+>   * struct property_entry - "Built-in" device property representation.
+>   * @name: Name of the property.
+>   * @length: Length of data making up the value.
+> - * @is_array: True when the property is an array.
+> + * @is_inline: True when the property value is embedded in
+> + *     &struct property_entry instance.
+>   * @type: Type of the data in unions.
+> - * @pointer: Pointer to the property (an array of items of the given type).
+> - * @value: Value of the property (when it is a single item of the given type).
+> + * @pointer: Pointer to the property when it is stored separately from
+> + *     the &struct property_entry instance.
+> + * @value: Value of the property when it is stored inline.
 
-    On Fri, Nov 08, 2019 at 03:33:24PM +0800, tim wrote:
-    > In psi_update_stats, it is possible that period has value like
-    > 0xXXXXXXXX00000000 where the lower 32 bit is 0, then it calls div_u64 which
-    
-    How can this happen? Is that a valid case or should we be avoiding that?
-    
-
-
+And while at it, can you please try to make the comments shorter so
+they each take one line?
