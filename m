@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40446FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6577EFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0688D222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30810222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213708;
-	bh=uvCdUrjrWSnYFMWKZGFTPKzZZAEZI014z2XOl7Z2dv4=;
+	s=default; t=1573213710;
+	bh=zbwwBlaYHwL+rJY6Xyn+HDacEmixhwy2vSR2zBkAyNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HkSrUNw+Zk/wg3pfgudOmAsSlYgjC0btxX/hoL2pCFCavp7frw/HRbI+hUBg344de
-	 MqB6FcalT/7/gPF2EWwMkzenx84nozA9iRj1m2o5CsCghmycGkyEWrR8Lo3WwmfR5G
-	 yR45yG7QimVK++Bb3mOCcPxIo08msmY9DARf6dWY=
+	b=FwjYC0BnmLmeZnUqYEkVpCQ1e8x28W/aNE9fuge5dkLfYBXyDnMWeGFMbkTGylTT8
+	 A+ILBhZPDZ+IQ2z0oZm+bp9DK1P/0LBNrmDs9l+jZyqC9r0+N03J6pAeHHf5wlt0jz
+	 hYvnNWsT9uJUTj8ojPWhfqQ8wGfBqIKAIn9/oa7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391747AbfKHLs1 (ORCPT
+        id S2388834AbfKHLs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:48:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36766 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:48:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391643AbfKHLr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:58 -0500
+        id S2390811AbfKHLsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:48:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5BB6206A3;
-        Fri,  8 Nov 2019 11:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76AC42246A;
+        Fri,  8 Nov 2019 11:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213677;
-        bh=uvCdUrjrWSnYFMWKZGFTPKzZZAEZI014z2XOl7Z2dv4=;
+        s=default; t=1573213682;
+        bh=zbwwBlaYHwL+rJY6Xyn+HDacEmixhwy2vSR2zBkAyNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDypVvue3PmajijrA7JWgWR+3BmETcF7IjURqlYdTtxbKAFRXzxyhQE0FgeUfKNnK
-         g9N1a/amnfXH1Ua11ENlrdZk2U9GOM758FXQ/krd+GweytzBy/fTZQB0NKxxG6aaX8
-         ksaydGO5l6o7N7cEDeoWWPzwrs5jq08xtVTYjHGk=
+        b=zALFeBM/wZIk1j2fBq5nvVgeQF1w48ti51d/+1LYseWW6hpmA7MMr95wFLfNC7b1z
+         r+Xd+06QziRUozWoIWNCrvxuyEtaMhik2oWF5vpta6gyZA5JigSrsPrfJiAYkf2osW
+         V8TJy7YwoHscSNttZpxf6ladAAf4km4/6DCKSPEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 27/44] signal: Properly deliver SIGSEGV from x86 uprobes
-Date:   Fri,  8 Nov 2019 06:47:03 -0500
-Message-Id: <20191108114721.15944-27-sashal@kernel.org>
+Cc:     Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        Jack Wang <jinpu.wang@profitbricks.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 30/44] scsi: pm80xx: Corrected dma_unmap_sg() parameter
+Date:   Fri,  8 Nov 2019 06:47:06 -0500
+Message-Id: <20191108114721.15944-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -59,43 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Deepak Ukey <deepak.ukey@microchip.com>
 
-[ Upstream commit 4a63c1ffd384ebdce40aac9c997dab68379137be ]
+[ Upstream commit 76cb25b058034d37244be6aca97a2ad52a5fbcad ]
 
-For userspace to tell the difference between an random signal
-and an exception, the exception must include siginfo information.
+For the function dma_unmap_sg(), the <nents> parameter should be number of
+elements in the scatter list prior to the mapping, not after the mapping.
 
-Using SEND_SIG_FORCED for SIGSEGV is thus wrong, and it will result in
-userspace seeing si_code == SI_USER (like a random signal) instead of
-si_code == SI_KERNEL or a more specific si_code as all exceptions
-deliver.
-
-Therefore replace force_sig_info(SIGSEGV, SEND_SIG_FORCE, current)
-with force_sig(SIG_SEGV, current) which gets this right and is shorter
-and easier to type.
-
-Fixes: 791eca10107f ("uretprobes/x86: Hijack return address")
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/uprobes.c | 2 +-
+ drivers/scsi/pm8001/pm8001_sas.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 178d63cac321b..60b12c14cf6fb 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -983,7 +983,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
- 		pr_err("uprobe: return address clobbered: pid=%d, %%sp=%#lx, "
- 			"%%ip=%#lx\n", current->pid, regs->sp, regs->ip);
- 
--		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
-+		force_sig(SIGSEGV, current);
- 	}
- 
- 	return -1;
+diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
+index 949198c01ced6..ef1687f798cc1 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.c
++++ b/drivers/scsi/pm8001/pm8001_sas.c
+@@ -463,7 +463,7 @@ static int pm8001_task_exec(struct sas_task *task,
+ 	dev_printk(KERN_ERR, pm8001_ha->dev, "pm8001 exec failed[%d]!\n", rc);
+ 	if (!sas_protocol_ata(t->task_proto))
+ 		if (n_elem)
+-			dma_unmap_sg(pm8001_ha->dev, t->scatter, n_elem,
++			dma_unmap_sg(pm8001_ha->dev, t->scatter, t->num_scatter,
+ 				t->data_dir);
+ out_done:
+ 	spin_unlock_irqrestore(&pm8001_ha->lock, flags);
 -- 
 2.20.1
 
