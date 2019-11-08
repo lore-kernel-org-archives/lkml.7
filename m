@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE1AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8360FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337A02084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751F0207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213978;
-	bh=ON1L6FHRZCSgyfc+YX7cNsYgDakQmYbouwjMn0KnQBE=;
+	s=default; t=1573213986;
+	bh=OlyRncxziSux4y0NWzxwnX71DQ/gmhItu0fkmbMkQtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T77vk/6DYz8CvfLDowReCnaBYheOBIRDwY0Q01279A4rKb3hiYWBQI3g7RKL3EZAc
-	 r7qzbJYd9vaVICyvlvmt/pI+R5epUYRilqkwlp9xQWrSTR3euiiZSvtxgHBCibXAz9
-	 ZIL4OAR2OGwjqsLzj88/4q8lGrvXf8DiAsgO1Xqo=
+	b=foOrjecZLh61H8HOIqvG4J8xc26pWWzXksWQiQjWmn+JvT51NdcFVw75LPHgwX1RW
+	 o19bXI3xklULrPQDI9BRESTeYWV+Erb5owTHcyCklKrRsRfb4PSTm1IeGR0TA4gFws
+	 V1fXfJ+ayf6lPRBGt1BJDiJ45fm6Fw63/82E8vEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391616AbfKHLw4 (ORCPT
+        id S2390543AbfKHLq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:52:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35102 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403799AbfKHLq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:59 -0500
+        id S2391390AbfKHLqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9FE9218AE;
-        Fri,  8 Nov 2019 11:46:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6192D222CE;
+        Fri,  8 Nov 2019 11:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213618;
-        bh=ON1L6FHRZCSgyfc+YX7cNsYgDakQmYbouwjMn0KnQBE=;
+        s=default; t=1573213598;
+        bh=OlyRncxziSux4y0NWzxwnX71DQ/gmhItu0fkmbMkQtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CRnwpEht6byJvfdDH/NiC9BbKN16tUy042TS5yiR+BjCWeoIY8XZ/rRjrGzupZ2ip
-         QDEkkxLF79+y6IVUWL5UToJWG8MH1rXbI6Vsuvrvz3lUah8GbedU+UbC0wDi4qMK9b
-         GPSlAzp7fAXcEYnQbxN4VKCiDEePsKw6S3oqV3GA=
+        b=t198V+WddBEfU/8mowUfPq9TszKjhklWSAPf0NC/srCK+WwknyW5QTFwdDOyvIBhz
+         M2jOJfyxkgcEdZMXgMShLIXCwSCK4uRGxLBg6k7IKTkueVJbj7d671VxjIjieF4Sdl
+         Y+9JDno6ER3BiQAidbApdR/SpxlpP6y4elqOhTHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 51/64] llc: avoid blocking in llc_sap_close()
-Date:   Fri,  8 Nov 2019 06:45:32 -0500
-Message-Id: <20191108114545.15351-51-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 38/64] signal: Properly deliver SIGILL from uprobes
+Date:   Fri,  8 Nov 2019 06:45:19 -0500
+Message-Id: <20191108114545.15351-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,52 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit 9708d2b5b7c648e8e0a40d11e8cea12f6277f33c ]
+[ Upstream commit 55a3235fc71bf34303e34a95eeee235b2d2a35dd ]
 
-llc_sap_close() is called by llc_sap_put() which
-could be called in BH context in llc_rcv(). We can't
-block in BH.
+For userspace to tell the difference between a random signal and an
+exception, the exception must include siginfo information.
 
-There is no reason to block it here, kfree_rcu() should
-be sufficient.
+Using SEND_SIG_FORCED for SIGILL is thus wrong, and it will result
+in userspace seeing si_code == SI_USER (like a random signal) instead
+of si_code == SI_KERNEL or a more specific si_code as all exceptions
+deliver.
 
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Therefore replace force_sig_info(SIGILL, SEND_SIG_FORCE, current)
+with force_sig(SIG_ILL, current) which gets this right and is
+shorter and easier to type.
+
+Fixes: 014940bad8e4 ("uprobes/x86: Send SIGILL if arch_uprobe_post_xol() fails")
+Fixes: 0b5256c7f173 ("uprobes: Send SIGILL if handle_trampoline() fails")
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/llc.h  | 1 +
- net/llc/llc_core.c | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ kernel/events/uprobes.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/llc.h b/include/net/llc.h
-index 82d989995d18a..95e5ced4c1339 100644
---- a/include/net/llc.h
-+++ b/include/net/llc.h
-@@ -66,6 +66,7 @@ struct llc_sap {
- 	int sk_count;
- 	struct hlist_nulls_head sk_laddr_hash[LLC_SK_LADDR_HASH_ENTRIES];
- 	struct hlist_head sk_dev_hash[LLC_SK_DEV_HASH_ENTRIES];
-+	struct rcu_head rcu;
- };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index fbfab5722254a..8ddd29476c0dc 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1846,7 +1846,7 @@ static void handle_trampoline(struct pt_regs *regs)
  
- static inline
-diff --git a/net/llc/llc_core.c b/net/llc/llc_core.c
-index e896a2c53b120..f1e442a39db8d 100644
---- a/net/llc/llc_core.c
-+++ b/net/llc/llc_core.c
-@@ -127,9 +127,7 @@ void llc_sap_close(struct llc_sap *sap)
- 	list_del_rcu(&sap->node);
- 	spin_unlock_bh(&llc_sap_list_lock);
+  sigill:
+ 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
+-	force_sig_info(SIGILL, SEND_SIG_FORCED, current);
++	force_sig(SIGILL, current);
  
--	synchronize_rcu();
--
--	kfree(sap);
-+	kfree_rcu(sap, rcu);
  }
  
- static struct packet_type llc_packet_type __read_mostly = {
+@@ -1962,7 +1962,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+ 
+ 	if (unlikely(err)) {
+ 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+-		force_sig_info(SIGILL, SEND_SIG_FORCED, current);
++		force_sig(SIGILL, current);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
