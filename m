@@ -2,60 +2,55 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F31C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A048FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B9F2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51D0214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240802;
-	bh=edyaPEsSFDSaiIed7hgWIzOEDLJ9eNGK6LfhNHk5TbA=;
+	s=default; t=1573240815;
+	bh=g2BON5a5jLpDiYBnmSleR8ildfbDV/YBltGJeWLKpHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AgGswSfuktPRnH/Ynw4FZQpy/u+w5PA0480/h2h1ps3wnk0GvpgVO57cOeqOZmzJl
-	 2XKCqEE1Bh7pkLK7X39YskqzezlkzYJFeou4NC8x3Ah7sCGogZOi1y3qy75qQhB1mH
-	 4G1Se7EUMekPzivOlqb+KpNqKEXlqzVQrw6fZl/w=
+	b=Pab6gpezZLzce0Nk6kJJ7+k85d+72wNRXz1vndXneA0YyCthHhnfGgX8IsJWoGKqn
+	 jWks8RAsRnzAwYcH7lOf8Ha/Rrgds+Vl5kKJXyiczDI3K8bO5+nPlo97grH88GYhEr
+	 NIB8SxaFBVf2Qvbh9nkrn+5MA2mcW7IfByQbjGJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbfKHTUB (ORCPT
+        id S2390378AbfKHTUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:20:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:20:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389454AbfKHTAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:00:09 -0500
+        id S1731773AbfKHTAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:00:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E7F22067B;
-        Fri,  8 Nov 2019 18:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18ECA224F0;
+        Fri,  8 Nov 2019 18:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239449;
-        bh=edyaPEsSFDSaiIed7hgWIzOEDLJ9eNGK6LfhNHk5TbA=;
+        s=default; t=1573239551;
+        bh=g2BON5a5jLpDiYBnmSleR8ildfbDV/YBltGJeWLKpHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZSCSx9ZEqxbJXn8aGeGkUydPWAJWijRZSGg+3KrsunmlYG5Sw498/fyt6GHpoKKYA
-         ILjj0Klu6hYw/cdGoC76ua8nsLhfIgpLp1jzlt1eYfb5yZOvm99iXUTLAIi8/W6zua
-         YeEa9VjKksQ7piRwzj+SO2dmdWsy19AiaLAL9438=
+        b=yjk3+/V1o5ZD/pC3rfeSk5B0N6dUmZsQ/6LbhvfqLg2UL5JOoWyQU3fbAIqXLcUE9
+         yt+LdtZ29ntuf6LcMajBKWpHNb48hKie8YnsG9P7+TwVTG9v9ME5YNk4ksAOm+iojF
+         tpWxUvYpGmdzeiz1FiOE3gi0GOh+QNmH/nHLwT7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 01/62] arm64: dts: Fix gpio to pinmux mapping
-Date:   Fri,  8 Nov 2019 19:49:49 +0100
-Message-Id: <20191108174721.289735410@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 42/62] net: add skb_queue_empty_lockless()
+Date:   Fri,  8 Nov 2019 19:50:30 +0100
+Message-Id: <20191108174749.326432373@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
 References: <20191108174719.228826381@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,61 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 965f6603e3335a953f4f876792074cb36bf65f7f ]
+[ Upstream commit d7d16a89350ab263484c0aa2b523dd3a234e4a80 ]
 
-There are total of 151 non-secure gpio (0-150) and four
-pins of pinmux (91, 92, 93 and 94) are not mapped to any
-gpio pin, hence update same in DT.
+Some paths call skb_queue_empty() without holding
+the queue lock. We must use a barrier in order
+to not let the compiler do strange things, and avoid
+KCSAN splats.
 
-Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Adding a barrier in skb_queue_empty() might be overkill,
+I prefer adding a new helper to clearly identify
+points where the callers might be lockless. This might
+help us finding real bugs.
+
+The corresponding WRITE_ONCE() should add zero cost
+for current compilers.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi | 5 +++--
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi         | 3 +--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ include/linux/skbuff.h |   33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-index 15214d05fec1c..8c20d4a0cb4ed 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-@@ -42,13 +42,14 @@
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1346,6 +1346,19 @@ static inline int skb_queue_empty(const
+ }
  
- 		pinmux: pinmux@0014029c {
- 			compatible = "pinctrl-single";
--			reg = <0x0014029c 0x250>;
-+			reg = <0x0014029c 0x26c>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			pinctrl-single,register-width = <32>;
- 			pinctrl-single,function-mask = <0xf>;
- 			pinctrl-single,gpio-range = <
--				&range 0 154 MODE_GPIO
-+				&range 0  91 MODE_GPIO
-+				&range 95 60 MODE_GPIO
- 				>;
- 			range: gpio-range {
- 				#pinctrl-single,gpio-range-cells = <3>;
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 2b76293b51c83..3d2921ef29351 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -444,8 +444,7 @@
- 					<&pinmux 108 16 27>,
- 					<&pinmux 135 77 6>,
- 					<&pinmux 141 67 4>,
--					<&pinmux 145 149 6>,
--					<&pinmux 151 91 4>;
-+					<&pinmux 145 149 6>;
- 		};
+ /**
++ *	skb_queue_empty_lockless - check if a queue is empty
++ *	@list: queue head
++ *
++ *	Returns true if the queue is empty, false otherwise.
++ *	This variant can be used in lockless contexts.
++ */
++static inline bool skb_queue_empty_lockless(const struct sk_buff_head *list)
++{
++	return READ_ONCE(list->next) == (const struct sk_buff *) list;
++}
++
++
++/**
+  *	skb_queue_is_last - check if skb is the last entry in the queue
+  *	@list: queue head
+  *	@skb: buffer
+@@ -1709,9 +1722,11 @@ static inline void __skb_insert(struct s
+ 				struct sk_buff *prev, struct sk_buff *next,
+ 				struct sk_buff_head *list)
+ {
+-	newsk->next = next;
+-	newsk->prev = prev;
+-	next->prev  = prev->next = newsk;
++	/* see skb_queue_empty_lockless() for the opposite READ_ONCE() */
++	WRITE_ONCE(newsk->next, next);
++	WRITE_ONCE(newsk->prev, prev);
++	WRITE_ONCE(next->prev, newsk);
++	WRITE_ONCE(prev->next, newsk);
+ 	list->qlen++;
+ }
  
- 		i2c1: i2c@000e0000 {
--- 
-2.20.1
-
+@@ -1722,11 +1737,11 @@ static inline void __skb_queue_splice(co
+ 	struct sk_buff *first = list->next;
+ 	struct sk_buff *last = list->prev;
+ 
+-	first->prev = prev;
+-	prev->next = first;
++	WRITE_ONCE(first->prev, prev);
++	WRITE_ONCE(prev->next, first);
+ 
+-	last->next = next;
+-	next->prev = last;
++	WRITE_ONCE(last->next, next);
++	WRITE_ONCE(next->prev, last);
+ }
+ 
+ /**
+@@ -1867,8 +1882,8 @@ static inline void __skb_unlink(struct s
+ 	next	   = skb->next;
+ 	prev	   = skb->prev;
+ 	skb->next  = skb->prev = NULL;
+-	next->prev = prev;
+-	prev->next = next;
++	WRITE_ONCE(next->prev, prev);
++	WRITE_ONCE(prev->next, next);
+ }
+ 
+ /**
 
 
