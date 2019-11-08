@@ -2,255 +2,400 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C7BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD14C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D55221882
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CBDD21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aBgZ+P1B"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cJr8tyqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfKHQSa (ORCPT
+        id S1727279AbfKHQU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:18:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46497 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725941AbfKHQS3 (ORCPT
+        Fri, 8 Nov 2019 11:20:28 -0500
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:40332 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726152AbfKHQU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:18:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573229907;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fEUGEbDEfPr/owp9u8Xo/PbGoTk1t896oZ4K9wNCr+I=;
-        b=aBgZ+P1B9kSHofjM2UT7qGRIvYKMlfFsYNHR6Y0BnaZMzc3h7QyLVXUmApJpCngmo4SzYm
-        Shtq82d5QddoPLfw5lU8E2+ffb6TJFJY1niVb1lhR3pZcxnuVlWEn21OB0QhGyUcKTKdDB
-        FEgubkem0P3deyyrQP1/NbZziAD0H6I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-lZCKI3h0Pv2OQ-r-J7Nqeg-1; Fri, 08 Nov 2019 11:18:25 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 8 Nov 2019 11:20:27 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFF0B1800D7B;
-        Fri,  8 Nov 2019 16:18:23 +0000 (UTC)
-Received: from [10.36.116.54] (ovpn-116-54.ams2.redhat.com [10.36.116.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 17F695DA7F;
-        Fri,  8 Nov 2019 16:18:11 +0000 (UTC)
-Subject: Re: [PATCH v7 10/11] iommu/vt-d: Support flushing more translation
- cache types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1571946904-86776-11-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <467e60cc-efb1-83d4-2dea-f6131a60428b@redhat.com>
-Date:   Fri, 8 Nov 2019 17:18:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D7BBFC0DDF;
+        Fri,  8 Nov 2019 16:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1573230027; bh=lEh2vJ+HFB4itdNvQR3zgigmBmACBtQME/IsJ9KgRJY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cJr8tyqBag44AOx+Dky+jh6Dj683Uqkozl+j/+3EXL3dcWrXPDRkemUTBO3PJsntV
+         UWOB3eTsn5VAT+Xq67napW3rTSoyoJvYKsOgu0UyG/XcnuqRFEnkjhxqFdeoKdxVrm
+         H5q1L3RrE0Twy8576NodQUdACi6sMsYWjDP2uDN3wyERLbU0uwaB0+1A5V0XZ6sj3+
+         63bniCLPDOwjixWJe1IRxVfPskb/v5ZXXzvQNDpxE12yDV+djxX5zWVcUM+2AIaoQ6
+         MgbHNVOygQ8k9P6suFDCt4+aO/B0Fs3Ic6guEC3leJ6eoH1jxpqknqBmzJeGYdLOLh
+         o7ASP0e0lN4oQ==
+Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.76])
+        by mailhost.synopsys.com (Postfix) with ESMTP id CBD5AA00AB;
+        Fri,  8 Nov 2019 16:20:24 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v3] ARC: ARCv2: jump label: implement jump label patching
+Date:   Fri,  8 Nov 2019 19:20:22 +0300
+Message-Id: <20191108162022.3436-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1571946904-86776-11-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: lZCKI3h0Pv2OQ-r-J7Nqeg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+Implement jump label patching for ARC. Jump labels provide
+an interface to generate dynamic branches using
+self-modifying code.
 
-On 10/24/19 9:55 PM, Jacob Pan wrote:
-> When Shared Virtual Memory is exposed to a guest via vIOMMU, scalable
-> IOTLB invalidation may be passed down from outside IOMMU subsystems.
-> This patch adds invalidation functions that can be used for additional
-> translation cache types.
->=20
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/dmar.c        | 46 +++++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/iommu/intel-pasid.c |  3 ++-
->  include/linux/intel-iommu.h | 21 +++++++++++++++++----
->  3 files changed, 65 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index 49bb7d76e646..0ce2d32ff99e 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -1346,6 +1346,20 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16=
- did, u64 addr,
->  =09qi_submit_sync(&desc, iommu);
->  }
-> =20
-> +/* PASID-based IOTLB Invalidate */
-> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr, u32 p=
-asid,
-> +=09=09unsigned int size_order, u64 granu, int ih)
-> +{
-> +=09struct qi_desc desc =3D {.qw2 =3D 0, .qw3 =3D 0};
-> +
-> +=09desc.qw0 =3D QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
-> +=09=09QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
-> +=09desc.qw1 =3D QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(ih) |
-> +=09=09QI_EIOTLB_AM(size_order);
-> +
-> +=09qi_submit_sync(&desc, iommu);
-> +}
-> +
->  void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->  =09=09=09u16 qdep, u64 addr, unsigned mask)
->  {
-> @@ -1369,6 +1383,38 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu,=
- u16 sid, u16 pfsid,
->  =09qi_submit_sync(&desc, iommu);
->  }
-> =20
-> +/* PASID-based device IOTLB Invalidate */
-> +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
-> +=09=09u32 pasid,  u16 qdep, u64 addr, unsigned size_order, u64 granu)
-> +{
-> +=09struct qi_desc desc;
-> +
-> +=09desc.qw0 =3D QI_DEV_EIOTLB_PASID(pasid) | QI_DEV_EIOTLB_SID(sid) |
-> +=09=09QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
-> +=09=09QI_DEV_IOTLB_PFSID(pfsid);
-> +=09desc.qw1 =3D QI_DEV_EIOTLB_GLOB(granu);
-> +
-> +=09/* If S bit is 0, we only flush a single page. If S bit is set,
-> +=09 * The least significant zero bit indicates the invalidation address
-> +=09 * range. VT-d spec 6.5.2.6.
-> +=09 * e.g. address bit 12[0] indicates 8KB, 13[0] indicates 16KB.
-> +=09 */
-> +=09if (!size_order) {
-> +=09=09desc.qw0 |=3D QI_DEV_EIOTLB_ADDR(addr) & ~QI_DEV_EIOTLB_SIZE;
-this is desc.qw1
+This allows us to implement conditional branches where
+changing branch direction is expensive but branch selection
+is basically 'free'
 
-With that fixed and the qi_flush_dev_piotlb init issue spotted by Lu,
-feel free to add my
+This implementation uses 32-bit NOP and BRANCH instructions
+which forced to be aligned by 4 to guarantee that they don't
+cross L1 cache line boundary / L1 I$ cache fetch block
+boundary and can be update atomically.
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+Changes v1->v2:
+ * Patched instruction should not cross L1 I$ fetch block boundary and
+   not only L1 I$ line. Fix comments and asserts in code.
+ * Other small comments fix and code cleanup.
+Changes v2->v3:
+ * Code cleanup.
+ * Mark testdata array as __initconst
+ * Drop check about fetch block in code.
+ * Invert ARC_DBG_JUMP_LABEL vs STATIC_KEYS_SELFTEST dependency.
 
-Thanks
+ arch/arc/Kconfig                  |   8 ++
+ arch/arc/include/asm/cache.h      |   2 +
+ arch/arc/include/asm/jump_label.h |  72 +++++++++++++
+ arch/arc/kernel/Makefile          |   1 +
+ arch/arc/kernel/jump_label.c      | 170 ++++++++++++++++++++++++++++++
+ 5 files changed, 253 insertions(+)
+ create mode 100644 arch/arc/include/asm/jump_label.h
+ create mode 100644 arch/arc/kernel/jump_label.c
 
-Eric
-
-> +=09} else {
-> +=09=09unsigned long mask =3D 1UL << (VTD_PAGE_SHIFT + size_order);
-> +=09=09desc.qw1 |=3D QI_DEV_EIOTLB_ADDR(addr & ~mask) | QI_DEV_EIOTLB_SIZ=
-E;
-> +=09}
-> +=09qi_submit_sync(&desc, iommu);
-> +}
-> +
-> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu,=
- int pasid)
-> +{
-> +=09struct qi_desc desc =3D {.qw1 =3D 0, .qw2 =3D 0, .qw3 =3D 0};
-> +
-> +=09desc.qw0 =3D QI_PC_PASID(pasid) | QI_PC_DID(did) | QI_PC_GRAN(granu) =
-| QI_PC_TYPE;
-> +=09qi_submit_sync(&desc, iommu);
-> +}
->  /*
->   * Disable Queued Invalidation interface.
->   */
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index f846a907cfcf..6d7a701ef4d3 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -491,7 +491,8 @@ pasid_cache_invalidation_with_pasid(struct intel_iomm=
-u *iommu,
->  {
->  =09struct qi_desc desc;
-> =20
-> -=09desc.qw0 =3D QI_PC_DID(did) | QI_PC_PASID_SEL | QI_PC_PASID(pasid);
-> +=09desc.qw0 =3D QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
-> +=09=09QI_PC_PASID(pasid) | QI_PC_TYPE;
->  =09desc.qw1 =3D 0;
->  =09desc.qw2 =3D 0;
->  =09desc.qw3 =3D 0;
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 6c74c71b1ebf..a25fb3a0ea5b 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -332,7 +332,7 @@ enum {
->  #define QI_IOTLB_GRAN(gran) =09(((u64)gran) >> (DMA_TLB_FLUSH_GRANU_OFFS=
-ET-4))
->  #define QI_IOTLB_ADDR(addr)=09(((u64)addr) & VTD_PAGE_MASK)
->  #define QI_IOTLB_IH(ih)=09=09(((u64)ih) << 6)
-> -#define QI_IOTLB_AM(am)=09=09(((u8)am))
-> +#define QI_IOTLB_AM(am)=09=09(((u8)am) & 0x3f)
-> =20
->  #define QI_CC_FM(fm)=09=09(((u64)fm) << 48)
->  #define QI_CC_SID(sid)=09=09(((u64)sid) << 32)
-> @@ -350,16 +350,21 @@ enum {
->  #define QI_PC_DID(did)=09=09(((u64)did) << 16)
->  #define QI_PC_GRAN(gran)=09(((u64)gran) << 4)
-> =20
-> -#define QI_PC_ALL_PASIDS=09(QI_PC_TYPE | QI_PC_GRAN(0))
-> -#define QI_PC_PASID_SEL=09=09(QI_PC_TYPE | QI_PC_GRAN(1))
-> +/* PASID cache invalidation granu */
-> +#define QI_PC_ALL_PASIDS=090
-> +#define QI_PC_PASID_SEL=09=091
-> =20
->  #define QI_EIOTLB_ADDR(addr)=09((u64)(addr) & VTD_PAGE_MASK)
->  #define QI_EIOTLB_IH(ih)=09(((u64)ih) << 6)
-> -#define QI_EIOTLB_AM(am)=09(((u64)am))
-> +#define QI_EIOTLB_AM(am)=09(((u64)am) & 0x3f)
->  #define QI_EIOTLB_PASID(pasid) =09(((u64)pasid) << 32)
->  #define QI_EIOTLB_DID(did)=09(((u64)did) << 16)
->  #define QI_EIOTLB_GRAN(gran) =09(((u64)gran) << 4)
-> =20
-> +/* QI Dev-IOTLB inv granu */
-> +#define QI_DEV_IOTLB_GRAN_ALL=09=091
-> +#define QI_DEV_IOTLB_GRAN_PASID_SEL=090
-> +
->  #define QI_DEV_EIOTLB_ADDR(a)=09((u64)(a) & VTD_PAGE_MASK)
->  #define QI_DEV_EIOTLB_SIZE=09(((u64)1) << 11)
->  #define QI_DEV_EIOTLB_GLOB(g)=09((u64)g)
-> @@ -655,8 +660,16 @@ extern void qi_flush_context(struct intel_iommu *iom=
-mu, u16 did, u16 sid,
->  =09=09=09     u8 fm, u64 type);
->  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
->  =09=09=09  unsigned int size_order, u64 type);
-> +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr=
-,
-> +=09=09=09u32 pasid, unsigned int size_order, u64 type, int ih);
->  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 p=
-fsid,
->  =09=09=09u16 qdep, u64 addr, unsigned mask);
-> +
-> +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 =
-pfsid,
-> +=09=09=09u32 pasid, u16 qdep, u64 addr, unsigned size_order, u64 granu);
-> +
-> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64=
- granu, int pasid);
-> +
->  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iomm=
-u);
-> =20
->  extern int dmar_ir_support(void);
->=20
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index 8383155c8c82..375f9d278139 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -46,6 +46,7 @@ config ARC
+ 	select OF_EARLY_FLATTREE
+ 	select PCI_SYSCALL if PCI
+ 	select PERF_USE_VMALLOC if ARC_CACHE_VIPT_ALIASING
++	select HAVE_ARCH_JUMP_LABEL if ISA_ARCV2 && !CPU_ENDIAN_BE32
+ 
+ config ARCH_HAS_CACHE_LINE_SIZE
+ 	def_bool y
+@@ -525,6 +526,13 @@ config ARC_DW2_UNWIND
+ config ARC_DBG_TLB_PARANOIA
+ 	bool "Paranoia Checks in Low Level TLB Handlers"
+ 
++config ARC_DBG_JUMP_LABEL
++	bool "Paranoid checks in Static Keys (jump labels) code"
++	depends on JUMP_LABEL
++	default y if STATIC_KEYS_SELFTEST
++	help
++	  Enable paranoid checks and self-test of both ARC-specific and generic
++	  part of static keys (jump labels) related code.
+ endif
+ 
+ config ARC_BUILTIN_DTB_NAME
+diff --git a/arch/arc/include/asm/cache.h b/arch/arc/include/asm/cache.h
+index 918804c7c1a4..d8ece4292388 100644
+--- a/arch/arc/include/asm/cache.h
++++ b/arch/arc/include/asm/cache.h
+@@ -25,6 +25,8 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <linux/build_bug.h>
++
+ /* Uncached access macros */
+ #define arc_read_uncached_32(ptr)	\
+ ({					\
+diff --git a/arch/arc/include/asm/jump_label.h b/arch/arc/include/asm/jump_label.h
+new file mode 100644
+index 000000000000..9d9618079739
+--- /dev/null
++++ b/arch/arc/include/asm/jump_label.h
+@@ -0,0 +1,72 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_ARC_JUMP_LABEL_H
++#define _ASM_ARC_JUMP_LABEL_H
++
++#ifndef __ASSEMBLY__
++
++#include <linux/stringify.h>
++#include <linux/types.h>
++
++#define JUMP_LABEL_NOP_SIZE 4
++
++/*
++ * NOTE about '.balign 4':
++ *
++ * To make atomic update of patched instruction available we need to guarantee
++ * that this instruction doesn't cross L1 cache line boundary.
++ *
++ * As of today we simply align instruction which can be patched by 4 byte using
++ * ".balign 4" directive. In that case patched instruction is aligned with one
++ * 16-bit NOP_S if this is required.
++ * However 'align by 4' directive is much stricter than it actually required.
++ * It's enough that our 32-bit instruction don't cross L1 cache line boundary /
++ * L1 I$ fetch block boundary which can be achieved by using
++ * ".bundle_align_mode" assembler directive. That will save us from adding
++ * useless NOP_S padding in most of the cases.
++ *
++ * TODO: switch to ".bundle_align_mode" directive using whin it will be
++ * supported by ARC toolchain.
++ */
++
++static __always_inline bool arch_static_branch(struct static_key *key,
++					       bool branch)
++{
++	asm_volatile_goto(".balign "__stringify(JUMP_LABEL_NOP_SIZE)"	\n"
++		 "1:							\n"
++		 "nop							\n"
++		 ".pushsection __jump_table, \"aw\"			\n"
++		 ".word 1b, %l[l_yes], %c0				\n"
++		 ".popsection						\n"
++		 : : "i" (&((char *)key)[branch]) : : l_yes);
++
++	return false;
++l_yes:
++	return true;
++}
++
++static __always_inline bool arch_static_branch_jump(struct static_key *key,
++						    bool branch)
++{
++	asm_volatile_goto(".balign "__stringify(JUMP_LABEL_NOP_SIZE)"	\n"
++		 "1:							\n"
++		 "b %l[l_yes]						\n"
++		 ".pushsection __jump_table, \"aw\"			\n"
++		 ".word 1b, %l[l_yes], %c0				\n"
++		 ".popsection						\n"
++		 : : "i" (&((char *)key)[branch]) : : l_yes);
++
++	return false;
++l_yes:
++	return true;
++}
++
++typedef u32 jump_label_t;
++
++struct jump_entry {
++	jump_label_t code;
++	jump_label_t target;
++	jump_label_t key;
++};
++
++#endif  /* __ASSEMBLY__ */
++#endif
+diff --git a/arch/arc/kernel/Makefile b/arch/arc/kernel/Makefile
+index de6251132310..e784f5396dda 100644
+--- a/arch/arc/kernel/Makefile
++++ b/arch/arc/kernel/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_ARC_EMUL_UNALIGNED) 	+= unaligned.o
+ obj-$(CONFIG_KGDB)			+= kgdb.o
+ obj-$(CONFIG_ARC_METAWARE_HLINK)	+= arc_hostlink.o
+ obj-$(CONFIG_PERF_EVENTS)		+= perf_event.o
++obj-$(CONFIG_JUMP_LABEL)		+= jump_label.o
+ 
+ obj-$(CONFIG_ARC_FPU_SAVE_RESTORE)	+= fpu.o
+ CFLAGS_fpu.o   += -mdpfp
+diff --git a/arch/arc/kernel/jump_label.c b/arch/arc/kernel/jump_label.c
+new file mode 100644
+index 000000000000..b8600dc325b5
+--- /dev/null
++++ b/arch/arc/kernel/jump_label.c
+@@ -0,0 +1,170 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/kernel.h>
++#include <linux/jump_label.h>
++
++#include "asm/cacheflush.h"
++
++#define JUMPLABEL_ERR	"ARC: jump_label: ERROR: "
++
++/* Halt system on fatal error to make debug easier */
++#define arc_jl_fatal(format...)						\
++({									\
++	pr_err(JUMPLABEL_ERR format);					\
++	BUG();								\
++})
++
++static inline u32 arc_gen_nop(void)
++{
++	/* 1x 32bit NOP in middle endian */
++	return 0x7000264a;
++}
++
++/*
++ * Atomic update of patched instruction is only available if this
++ * instruction doesn't cross L1 cache line boundary. You can read about
++ * the way we achieve this in arc/include/asm/jump_label.h
++ */
++static inline void instruction_align_assert(void *addr, int len)
++{
++	unsigned long a = (unsigned long)addr;
++
++	if ((a >> L1_CACHE_SHIFT) != ((a + len - 1) >> L1_CACHE_SHIFT))
++		arc_jl_fatal("instruction (addr %px) cross L1 cache line border",
++			     addr);
++}
++
++/*
++ * ARCv2 'Branch unconditionally' instruction:
++ * 00000ssssssssss1SSSSSSSSSSNRtttt
++ * s S[n:0] lower bits signed immediate (number is bitfield size)
++ * S S[m:n+1] upper bits signed immediate (number is bitfield size)
++ * t S[24:21] upper bits signed immediate (branch unconditionally far)
++ * N N <.d> delay slot mode
++ * R R Reserved
++ */
++static inline u32 arc_gen_branch(jump_label_t pc, jump_label_t target)
++{
++	u32 instruction_l, instruction_r;
++	u32 pcl = pc & GENMASK(31, 2);
++	u32 u_offset = target - pcl;
++	u32 s, S, t;
++
++	/*
++	 * Offset in 32-bit branch instruction must to fit into s25.
++	 * Something is terribly broken if we get such huge offset within one
++	 * function.
++	 */
++	if ((s32)u_offset < -16777216 || (s32)u_offset > 16777214)
++		arc_jl_fatal("gen branch with offset (%d) not fit in s25",
++			     (s32)u_offset);
++
++	/*
++	 * All instructions are aligned by 2 bytes so we should never get offset
++	 * here which is not 2 bytes aligned.
++	 */
++	if (u_offset & 0x1)
++		arc_jl_fatal("gen branch with offset (%d) unaligned to 2 bytes",
++			     (s32)u_offset);
++
++	s = (u_offset >> 1)  & GENMASK(9, 0);
++	S = (u_offset >> 11) & GENMASK(9, 0);
++	t = (u_offset >> 21) & GENMASK(3, 0);
++
++	/* 00000ssssssssss1 */
++	instruction_l = (s << 1) | 0x1;
++	/* SSSSSSSSSSNRtttt */
++	instruction_r = (S << 6) | t;
++
++	return (instruction_r << 16) | (instruction_l & GENMASK(15, 0));
++}
++
++void arch_jump_label_transform(struct jump_entry *entry,
++			       enum jump_label_type type)
++{
++	jump_label_t *instr_addr = (jump_label_t *)entry->code;
++	u32 instr;
++
++	instruction_align_assert(instr_addr, JUMP_LABEL_NOP_SIZE);
++
++	if (type == JUMP_LABEL_JMP)
++		instr = arc_gen_branch(entry->code, entry->target);
++	else
++		instr = arc_gen_nop();
++
++	WRITE_ONCE(*instr_addr, instr);
++	flush_icache_range(entry->code, entry->code + JUMP_LABEL_NOP_SIZE);
++}
++
++void arch_jump_label_transform_static(struct jump_entry *entry,
++				      enum jump_label_type type)
++{
++	/*
++	 * We use only one NOP type (1x, 4 byte) in arch_static_branch, so
++	 * there's no need to patch an identical NOP over the top of it here.
++	 * The generic code calls 'arch_jump_label_transform' if the NOP needs
++	 * to be replaced by a branch, so 'arch_jump_label_transform_static' is
++	 * never called with type other than JUMP_LABEL_NOP.
++	 */
++	BUG_ON(type != JUMP_LABEL_NOP);
++}
++
++#ifdef CONFIG_ARC_DBG_JUMP_LABEL
++#define SELFTEST_MSG	"ARC: instruction generation self-test: "
++
++struct arc_gen_branch_testdata {
++	jump_label_t pc;
++	jump_label_t target_address;
++	u32 expected_instr;
++};
++
++static __init int branch_gen_test(const struct arc_gen_branch_testdata *test)
++{
++	u32 instr_got;
++
++	instr_got = arc_gen_branch(test->pc, test->target_address);
++	if (instr_got == test->expected_instr)
++		return 0;
++
++	pr_err(SELFTEST_MSG "FAIL:\n arc_gen_branch(0x%08x, 0x%08x) != 0x%08x, got 0x%08x\n",
++	       test->pc, test->target_address,
++	       test->expected_instr, instr_got);
++
++	return -EFAULT;
++}
++
++/*
++ * Offset field in branch instruction is not continuous. Test all
++ * available offset field and sign combinations. Test data is generated
++ * from real working code.
++ */
++static const struct arc_gen_branch_testdata arcgenbr_test_data[] __initconst = {
++	{0x90007548, 0x90007514, 0xffcf07cd}, /* tiny (-52) offs */
++	{0x9000c9c0, 0x9000c782, 0xffcf05c3}, /* tiny (-574) offs */
++	{0x9000cc1c, 0x9000c782, 0xffcf0367}, /* tiny (-1178) offs */
++	{0x9009dce0, 0x9009d106, 0xff8f0427}, /* small (-3034) offs */
++	{0x9000f5de, 0x90007d30, 0xfc0f0755}, /* big  (-30892) offs */
++	{0x900a2444, 0x90035f64, 0xc9cf0321}, /* huge (-443616) offs */
++	{0x90007514, 0x9000752c, 0x00000019}, /* tiny (+24) offs */
++	{0x9001a578, 0x9001a77a, 0x00000203}, /* tiny (+514) offs */
++	{0x90031ed8, 0x90032634, 0x0000075d}, /* tiny (+1884) offs */
++	{0x9008c7f2, 0x9008d3f0, 0x00400401}, /* small (+3072) offs */
++	{0x9000bb38, 0x9003b340, 0x17c00009}, /* big  (+194568) offs */
++	{0x90008f44, 0x90578d80, 0xb7c2063d}  /* huge (+5701180) offs */
++};
++
++static __init int instr_gen_test(void)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(arcgenbr_test_data); i++)
++		if (branch_gen_test(&arcgenbr_test_data[i]))
++			return -EFAULT;
++
++	pr_info(SELFTEST_MSG "OK\n");
++
++	return 0;
++}
++early_initcall(instr_gen_test);
++
++#endif /* CONFIG_ARC_DBG_JUMP_LABEL */
+-- 
+2.21.0
 
