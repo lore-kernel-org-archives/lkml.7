@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7882BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C01C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D667222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7404215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239797;
-	bh=BW5LGtpYsgo3Aw65GJewEZVruUL09Go2QLUOlLxvtdo=;
+	s=default; t=1573239801;
+	bh=EaCQpflTUZSUJ+NfNeJT/l/Xy4jwsgfkrS/58WizykM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IYtPnIEa310NfndTOeDkVsF7wvJvU5mnY7G5R+QGGjszBp+ws0b61WuMpm7XdZdZl
-	 FCG/HZc+sIGUKz0XOmsk0NvCfWqtawzoxMns66X2txpJemUwx0MRYBdGFyFU3t7LrC
-	 PAwLDj6TOzLDUAtTnFqc4veLOI1H9bp3PqJMJIv4=
+	b=LaCiiKImocqROMGWryir2iuyIHi5ljFVq1lsIeu6ceSNFW0gWYSicg6Tywmcu9/rB
+	 dn6AYOIJlDf2s/H8wOGk+fWQLSZ00LTATQtoPqS9uY4hdd2v4DAQaCBlYXoVj8hSWG
+	 08nEuSZF6QWV9EcO+V3vlzX0zPzzJEd1QKm8MYM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390744AbfKHTDP (ORCPT
+        id S2390750AbfKHTDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:03:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:03:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390717AbfKHTDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:03:13 -0500
+        id S2388365AbfKHTDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:03:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B802067B;
-        Fri,  8 Nov 2019 19:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D69372067B;
+        Fri,  8 Nov 2019 19:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239793;
-        bh=BW5LGtpYsgo3Aw65GJewEZVruUL09Go2QLUOlLxvtdo=;
+        s=default; t=1573239796;
+        bh=EaCQpflTUZSUJ+NfNeJT/l/Xy4jwsgfkrS/58WizykM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZK2IZw0qbVMy0nYUpR1fPhJ66ZBqtUylB/Mxy72kAF+B/GT5n85nXYJa2KJas+e2
-         YMA1dXZYnymyuAvAEH/4CP9r+G70UgZwRH3g9+usPAJMsFnQ8iV9ve0ekwv1nhdV/L
-         sbS3HZeaASVwGRw7lAy+vVzDXX7RNlXUSngXpGzw=
+        b=Pmw7vURyjljujKmwnDCo1g58qruhq+N2tjDy+QlkDSOqInm+ZHsqU1V4X3nJ9RU/F
+         m6xknIVuMXc5twgberTORRtT/Z+Tk+7L/DRPCWsAfhn/78YSWzrgYSMD/YDr8Uj87E
+         pJA68FKhIpwuowHOb/nnqMIkNC4x5dm10BQ/8Jwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 62/79] r8169: fix wrong PHY ID issue with RTL8168dp
-Date:   Fri,  8 Nov 2019 19:50:42 +0100
-Message-Id: <20191108174820.977499466@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 63/79] net/mlx5e: Fix ethtool self test: link speed
+Date:   Fri,  8 Nov 2019 19:50:43 +0100
+Message-Id: <20191108174821.264362420@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -59,39 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 62bdc8fd1c21d4263ebd18bec57f82532d09249f ]
+[ Upstream commit 534e7366f41b0c689b01af4375aefcd1462adedf ]
 
-As reported in [0] at least one RTL8168dp version has problems
-establishing a link. This chip version has an integrated RTL8211b PHY,
-however the chip seems to report a wrong PHY ID, resulting in a wrong
-PHY driver (for Generic Realtek PHY) being loaded.
-Work around this issue by adding a hook to r8168dp_2_mdio_read()
-for returning the correct PHY ID.
+Ethtool self test contains a test for link speed. This test reads the
+PTYS register and determines whether the current speed is valid or not.
+Change current implementation to use the function mlx5e_port_linkspeed()
+that does the same check and fails when speed is invalid. This code
+redundancy lead to a bug when mlx5e_port_linkspeed() was updated with
+expended speeds and the self test was not.
 
-[0] https://bbs.archlinux.org/viewtopic.php?id=246508
-
-Fixes: 242cd9b5866a ("r8169: use phy_resume/phy_suspend")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2c81bfd5ae56 ("net/mlx5e: Move port speed code from en_ethtool.c to en/port.c")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c |   15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -1010,6 +1010,10 @@ static int r8168dp_2_mdio_read(struct rt
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
+@@ -35,6 +35,7 @@
+ #include <linux/udp.h>
+ #include <net/udp.h>
+ #include "en.h"
++#include "en/port.h"
+ 
+ enum {
+ 	MLX5E_ST_LINK_STATE,
+@@ -80,22 +81,12 @@ static int mlx5e_test_link_state(struct
+ 
+ static int mlx5e_test_link_speed(struct mlx5e_priv *priv)
  {
- 	int value;
+-	u32 out[MLX5_ST_SZ_DW(ptys_reg)];
+-	u32 eth_proto_oper;
+-	int i;
++	u32 speed;
  
-+	/* Work around issue with chip reporting wrong PHY ID */
-+	if (reg == MII_PHYSID2)
-+		return 0xc912;
-+
- 	r8168dp_2_mdio_start(tp);
+ 	if (!netif_carrier_ok(priv->netdev))
+ 		return 1;
  
- 	value = r8169_mdio_read(tp, reg);
+-	if (mlx5_query_port_ptys(priv->mdev, out, sizeof(out), MLX5_PTYS_EN, 1))
+-		return 1;
+-
+-	eth_proto_oper = MLX5_GET(ptys_reg, out, eth_proto_oper);
+-	for (i = 0; i < MLX5E_LINK_MODES_NUMBER; i++) {
+-		if (eth_proto_oper & MLX5E_PROT_MASK(i))
+-			return 0;
+-	}
+-	return 1;
++	return mlx5e_port_linkspeed(priv->mdev, &speed);
+ }
+ 
+ struct mlx5ehdr {
 
 
