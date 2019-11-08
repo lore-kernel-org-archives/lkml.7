@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEC4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A23FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EE22085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656E12085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214969;
-	bh=vhKnsVvdS3bhGTQPSXRiTcKVgFkmQF7EkajVkSUKU9w=;
+	s=default; t=1573214978;
+	bh=S4hGAQcWq3BmNUikVDjThFlx+Q15Rqc902O6gvM3WAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFDhA7X28rubPDOiyd8vpiuvxzfEJqfN7S7BUtr9NzaymClF5q+AoDaFFSZJqzyLv
-	 iynkACvMH20qwqWVy2wpX6CWPzCSyB2+d/8Gj2wgv8an3GmJmcu4f+8nBd9npWwoD6
-	 d2BhB/UQdriLmI7dmo92Xk7HW2JLN7mbjo06T0J0=
+	b=l9wQe0v1lPcEAsOY71muBaWdaOY5qjCcrvnz3h3UcxekMku3nzZKrZrEBk0/n+fur
+	 wcAOXT/9VD5EAi9wcbivdym3wxNL6bzYDNpuE4bpH6RWr5d0IC6ojfllmsOWwWRDmi
+	 pEVH/z+35l3o/jL7Dy5H/LP+Eg2Q/Msxdu9FIPjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391939AbfKHMJ2 (ORCPT
+        id S2390695AbfKHMJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:09:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53016 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:09:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388374AbfKHLkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:06 -0500
+        id S2388327AbfKHLkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E85E3222CB;
-        Fri,  8 Nov 2019 11:40:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D08220869;
+        Fri,  8 Nov 2019 11:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213205;
-        bh=vhKnsVvdS3bhGTQPSXRiTcKVgFkmQF7EkajVkSUKU9w=;
+        s=default; t=1573213203;
+        bh=S4hGAQcWq3BmNUikVDjThFlx+Q15Rqc902O6gvM3WAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuT0LSJRWH9BxciCOiyfBkBQ8Q8lfEQRsflirBUAORibrVmaTXqvQAu1ZTMXHch2Z
-         dIqIUZ3lzO1cGMPg+g6Q3qFSz57+cDIXTMi2mfKPSA32t+tApOBXgfxChFDsTE6H64
-         Lel5QzVLRIdJdNoGA17zSdJ6+68EXUsl1IEzy940=
+        b=Qq88hRicGKqQOitO6zQ/IJuQ/JIEtFMuzR9gVvlhgZWD5dbCPxJXjuQDnxprADI11
+         ncdFnuUeeoziRrmoQacQxClKZGuI3eWCfxYP1oCM/9lGu7dNBbhQveEP5bPOJVcurM
+         kZtIH+VmiTTs3RNkBVkXlo4qT8XYQsVDnci3WYhk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+Cc:     Naftali Goldstein <naftali.goldstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 088/205] f2fs: avoid wrong decrypted data from disk
-Date:   Fri,  8 Nov 2019 06:35:55 -0500
-Message-Id: <20191108113752.12502-88-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 086/205] mac80211: fix saving a few HE values
+Date:   Fri,  8 Nov 2019 06:35:53 -0500
+Message-Id: <20191108113752.12502-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,128 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Naftali Goldstein <naftali.goldstein@intel.com>
 
-[ Upstream commit 0ded69f632bb717be9aeea3ae74e29050fcb060c ]
+[ Upstream commit 77cbbc35a49b75969d98edce9400beb21720aa39 ]
 
-1. Create a file in an encrypted directory
-2. Do GC & drop caches
-3. Read stale data before its bio for metapage was not issued yet
+After masking the he_oper_params, to get the requested values as
+integers one must rshift and not lshift.  Fix that by using the
+le32_get_bits() macro.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 41cbb0f5a295 ("mac80211: add support for HE")
+Signed-off-by: Naftali Goldstein <naftali.goldstein@intel.com>
+[converted to use le32_get_bits()]
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c    | 18 ++++++++++--------
- fs/f2fs/f2fs.h    |  2 +-
- fs/f2fs/file.c    |  3 +--
- fs/f2fs/segment.c |  6 +++++-
- 4 files changed, 17 insertions(+), 12 deletions(-)
+ net/mac80211/mlme.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 9511466bc7857..c61beaedf0789 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -575,9 +575,6 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
- 		ctx->bio = bio;
- 		ctx->enabled_steps = post_read_steps;
- 		bio->bi_private = ctx;
--
--		/* wait the page to be moved by cleaning */
--		f2fs_wait_on_block_writeback(sbi, blkaddr);
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 5c9dcafbc3424..b0667467337d4 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -3255,19 +3255,16 @@ static bool ieee80211_assoc_success(struct ieee80211_sub_if_data *sdata,
  	}
  
- 	return bio;
-@@ -592,6 +589,9 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
- 	if (IS_ERR(bio))
- 		return PTR_ERR(bio);
+ 	if (bss_conf->he_support) {
+-		u32 he_oper_params =
+-			le32_to_cpu(elems.he_operation->he_oper_params);
++		bss_conf->bss_color =
++			le32_get_bits(elems.he_operation->he_oper_params,
++				      IEEE80211_HE_OPERATION_BSS_COLOR_MASK);
  
-+	/* wait for GCed page writeback via META_MAPPING */
-+	f2fs_wait_on_block_writeback(inode, blkaddr);
-+
- 	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
- 		bio_put(bio);
- 		return -EFAULT;
-@@ -1569,6 +1569,12 @@ submit_and_realloc:
- 			}
- 		}
+-		bss_conf->bss_color = he_oper_params &
+-				      IEEE80211_HE_OPERATION_BSS_COLOR_MASK;
+ 		bss_conf->htc_trig_based_pkt_ext =
+-			(he_oper_params &
+-			 IEEE80211_HE_OPERATION_DFLT_PE_DURATION_MASK) <<
+-			IEEE80211_HE_OPERATION_DFLT_PE_DURATION_OFFSET;
++			le32_get_bits(elems.he_operation->he_oper_params,
++			      IEEE80211_HE_OPERATION_DFLT_PE_DURATION_MASK);
+ 		bss_conf->frame_time_rts_th =
+-			(he_oper_params &
+-			 IEEE80211_HE_OPERATION_RTS_THRESHOLD_MASK) <<
+-			IEEE80211_HE_OPERATION_RTS_THRESHOLD_OFFSET;
++			le32_get_bits(elems.he_operation->he_oper_params,
++			      IEEE80211_HE_OPERATION_RTS_THRESHOLD_MASK);
  
-+		/*
-+		 * If the page is under writeback, we need to wait for
-+		 * its completion to see the correct decrypted data.
-+		 */
-+		f2fs_wait_on_block_writeback(inode, block_nr);
-+
- 		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
- 			goto submit_and_realloc;
- 
-@@ -1637,7 +1643,7 @@ static int encrypt_one_page(struct f2fs_io_info *fio)
- 		return 0;
- 
- 	/* wait for GCed page writeback via META_MAPPING */
--	f2fs_wait_on_block_writeback(fio->sbi, fio->old_blkaddr);
-+	f2fs_wait_on_block_writeback(inode, fio->old_blkaddr);
- 
- retry_encrypt:
- 	fio->encrypted_page = fscrypt_encrypt_page(inode, fio->page,
-@@ -2402,10 +2408,6 @@ repeat:
- 
- 	f2fs_wait_on_page_writeback(page, DATA, false);
- 
--	/* wait for GCed page writeback via META_MAPPING */
--	if (f2fs_post_read_required(inode))
--		f2fs_wait_on_block_writeback(sbi, blkaddr);
--
- 	if (len == PAGE_SIZE || PageUptodate(page))
- 		return 0;
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index fb216488d67a9..6d361c8c61306 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2973,7 +2973,7 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 			struct f2fs_io_info *fio, bool add_list);
- void f2fs_wait_on_page_writeback(struct page *page,
- 			enum page_type type, bool ordered);
--void f2fs_wait_on_block_writeback(struct f2fs_sb_info *sbi, block_t blkaddr);
-+void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr);
- void f2fs_write_data_summaries(struct f2fs_sb_info *sbi, block_t start_blk);
- void f2fs_write_node_summaries(struct f2fs_sb_info *sbi, block_t start_blk);
- int f2fs_lookup_journal_in_cursum(struct f2fs_journal *journal, int type,
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 8d1eb8dec6058..6972c6d7c3893 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -112,8 +112,7 @@ mapped:
- 	f2fs_wait_on_page_writeback(page, DATA, false);
- 
- 	/* wait for GCed page writeback via META_MAPPING */
--	if (f2fs_post_read_required(inode))
--		f2fs_wait_on_block_writeback(sbi, dn.data_blkaddr);
-+	f2fs_wait_on_block_writeback(inode, dn.data_blkaddr);
- 
- out_sem:
- 	up_read(&F2FS_I(inode)->i_mmap_sem);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 10d5dcdb34be6..d78009694f3fd 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3214,10 +3214,14 @@ void f2fs_wait_on_page_writeback(struct page *page,
- 	}
- }
- 
--void f2fs_wait_on_block_writeback(struct f2fs_sb_info *sbi, block_t blkaddr)
-+void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr)
- {
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct page *cpage;
- 
-+	if (!f2fs_post_read_required(inode))
-+		return;
-+
- 	if (!is_valid_data_blkaddr(sbi, blkaddr))
- 		return;
- 
+ 		bss_conf->multi_sta_back_32bit =
+ 			sta->sta.he_cap.he_cap_elem.mac_cap_info[2] &
 -- 
 2.20.1
 
