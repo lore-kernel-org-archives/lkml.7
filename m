@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B51C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AFAFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A98222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843B3222C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213197;
-	bh=U9HD4B/xPEJdt+6Ll1JEDtratWwqcI5JSfiG63CzEsQ=;
+	s=default; t=1573213201;
+	bh=ofw07OPqfVsTRQQpssHKxW1SwJBvUUdFDL1NMDfnIdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PMX3sSCatSCqDXs8uARmRZAgNnCxwLwY/i7KQYbZ5xBrD1qpyXld9hlZrmRCcxTdt
-	 h+yXgczzHd3Y5RiMXbfTsGqjLC+cLlabR7lGHYC8owLDUTA21pOg/qNZOJQKaTf0Hl
-	 QkTupcqs5s7tLCAYvc0p0n/Sl9Cc5GnXmt3wAvxs=
+	b=m54nuFQZqEYPvbDdmVQn3AIytCNnlx6kSNX/A0XjZCMn/eQehpwJFyZ1XuujHhSum
+	 UHzrKQkrK0AoIgJR37jpVhNRDIKS7Kj2De/CM6QQjlU/gUIW6eTSFuXtn6olyo1NzZ
+	 0wLcmSiYByTrNm3aauoDIpDb0Z8DRuWpwOs7CKLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388163AbfKHLjz (ORCPT
+        id S2388250AbfKHLkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:39:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387934AbfKHLjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:39:45 -0500
+        id S2388183AbfKHLj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05762222C2;
-        Fri,  8 Nov 2019 11:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 453EC21D6C;
+        Fri,  8 Nov 2019 11:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213184;
-        bh=U9HD4B/xPEJdt+6Ll1JEDtratWwqcI5JSfiG63CzEsQ=;
+        s=default; t=1573213196;
+        bh=ofw07OPqfVsTRQQpssHKxW1SwJBvUUdFDL1NMDfnIdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPc8h6ZBUE7o7TG5kyp1XXjDBgCFO0hPAI40UbAtD60dqmrVc/cDwLLKH+1jz+rHL
-         m9xpZmxD3LrEa1WEAeitNmL6DSdkqFy+wegYhVgh3mLrrI7zXEvFdAPSU9D8tXQGUK
-         ysJJrLPQSl4+XkmvTApJTepwuX4joZH/orswApbA=
+        b=NBiG0uBxazGFtRFuaUCFSTQ4fSHmZRCZS7LK+gtflVD1BkAARbIt7muvhwjn8YyH5
+         fFE4lZvXe32ycyjjCenjcZUHOmzRbFbnUAEEXw0NkXxVWTlORWtNMFnI0qhri5oJiu
+         rMslqiWrStRvpvub8bISHClF+JcjSTrQvg9fyt7g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Moni Shoua <monis@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 075/205] net/mlx5: Fix atomic_mode enum values
-Date:   Fri,  8 Nov 2019 06:35:42 -0500
-Message-Id: <20191108113752.12502-75-sashal@kernel.org>
+Cc:     Kurt Kanzenbach <kurt@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 082/205] mtd: rawnand: fsl_ifc: fixup SRAM init for newer ctrl versions
+Date:   Fri,  8 Nov 2019 06:35:49 -0500
+Message-Id: <20191108113752.12502-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,39 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moni Shoua <monis@mellanox.com>
+From: Kurt Kanzenbach <kurt@linutronix.de>
 
-[ Upstream commit aa7e80b220f3a543eefbe4b7e2c5d2b73e2e2ef7 ]
+[ Upstream commit ff8648f29fe58c2d94d32a076d2de7b92be4b485 ]
 
-The field atomic_mode is 4 bits wide and therefore can hold values
-from 0x0 to 0xf. Remove the unnecessary 20 bit shift that made the values
-be incorrect. While that, remove unused enum values.
+Newer versions of the IFC controller use a different method of initializing the
+internal SRAM: Instead of reading from flash, a bit in the NAND configuration
+register has to be set in order to trigger the self-initializing process.
 
-Fixes: 57cda166bbe0 ("net/mlx5: Add DCT command interface")
-Signed-off-by: Moni Shoua <monis@mellanox.com>
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mlx5/driver.h | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/mtd/nand/raw/fsl_ifc_nand.c | 33 +++++++++++++++++++++++------
+ include/linux/fsl_ifc.h             |  2 ++
+ 2 files changed, 28 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
-index e8b92dee5a726..ae64fced188d1 100644
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -163,10 +163,7 @@ enum mlx5_dcbx_oper_mode {
- };
+diff --git a/drivers/mtd/nand/raw/fsl_ifc_nand.c b/drivers/mtd/nand/raw/fsl_ifc_nand.c
+index e4f5792dc5893..7e7729df78278 100644
+--- a/drivers/mtd/nand/raw/fsl_ifc_nand.c
++++ b/drivers/mtd/nand/raw/fsl_ifc_nand.c
+@@ -30,6 +30,7 @@
+ #include <linux/mtd/partitions.h>
+ #include <linux/mtd/nand_ecc.h>
+ #include <linux/fsl_ifc.h>
++#include <linux/iopoll.h>
  
- enum mlx5_dct_atomic_mode {
--	MLX5_ATOMIC_MODE_DCT_OFF        = 20,
--	MLX5_ATOMIC_MODE_DCT_NONE       = 0 << MLX5_ATOMIC_MODE_DCT_OFF,
--	MLX5_ATOMIC_MODE_DCT_IB_COMP    = 1 << MLX5_ATOMIC_MODE_DCT_OFF,
--	MLX5_ATOMIC_MODE_DCT_CX         = 2 << MLX5_ATOMIC_MODE_DCT_OFF,
-+	MLX5_ATOMIC_MODE_DCT_CX         = 2,
- };
+ #define ERR_BYTE		0xFF /* Value returned for read
+ 					bytes when read failed	*/
+@@ -769,6 +770,27 @@ static int fsl_ifc_sram_init(struct fsl_ifc_mtd *priv)
+ 	uint32_t csor = 0, csor_8k = 0, csor_ext = 0;
+ 	uint32_t cs = priv->bank;
  
- enum {
++	if (ctrl->version < FSL_IFC_VERSION_1_1_0)
++		return 0;
++
++	if (ctrl->version > FSL_IFC_VERSION_1_1_0) {
++		u32 ncfgr, status;
++		int ret;
++
++		/* Trigger auto initialization */
++		ncfgr = ifc_in32(&ifc_runtime->ifc_nand.ncfgr);
++		ifc_out32(ncfgr | IFC_NAND_NCFGR_SRAM_INIT_EN, &ifc_runtime->ifc_nand.ncfgr);
++
++		/* Wait until done */
++		ret = readx_poll_timeout(ifc_in32, &ifc_runtime->ifc_nand.ncfgr,
++					 status, !(status & IFC_NAND_NCFGR_SRAM_INIT_EN),
++					 10, IFC_TIMEOUT_MSECS * 1000);
++		if (ret)
++			dev_err(priv->dev, "Failed to initialize SRAM!\n");
++
++		return ret;
++	}
++
+ 	/* Save CSOR and CSOR_ext */
+ 	csor = ifc_in32(&ifc_global->csor_cs[cs].csor);
+ 	csor_ext = ifc_in32(&ifc_global->csor_cs[cs].csor_ext);
+@@ -825,6 +847,7 @@ static int fsl_ifc_chip_init(struct fsl_ifc_mtd *priv)
+ 	struct nand_chip *chip = &priv->chip;
+ 	struct mtd_info *mtd = nand_to_mtd(&priv->chip);
+ 	u32 csor;
++	int ret;
+ 
+ 	/* Fill in fsl_ifc_mtd structure */
+ 	mtd->dev.parent = priv->dev;
+@@ -918,13 +941,9 @@ static int fsl_ifc_chip_init(struct fsl_ifc_mtd *priv)
+ 		chip->ecc.algo = NAND_ECC_HAMMING;
+ 	}
+ 
+-	if (ctrl->version >= FSL_IFC_VERSION_1_1_0) {
+-		int ret;
+-
+-		ret = fsl_ifc_sram_init(priv);
+-		if (ret)
+-			return ret;
+-	}
++	ret = fsl_ifc_sram_init(priv);
++	if (ret)
++		return ret;
+ 
+ 	/*
+ 	 * As IFC version 2.0.0 has 16KB of internal SRAM as compared to older
+diff --git a/include/linux/fsl_ifc.h b/include/linux/fsl_ifc.h
+index 3fdfede2f0f3e..5f343b796ad95 100644
+--- a/include/linux/fsl_ifc.h
++++ b/include/linux/fsl_ifc.h
+@@ -274,6 +274,8 @@
+  */
+ /* Auto Boot Mode */
+ #define IFC_NAND_NCFGR_BOOT		0x80000000
++/* SRAM Initialization */
++#define IFC_NAND_NCFGR_SRAM_INIT_EN	0x20000000
+ /* Addressing Mode-ROW0+n/COL0 */
+ #define IFC_NAND_NCFGR_ADDR_MODE_RC0	0x00000000
+ /* Addressing Mode-ROW0+n/COL0+n */
 -- 
 2.20.1
 
