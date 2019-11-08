@@ -2,99 +2,133 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EECFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0ABFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF2421D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D61jjhVf"
+	by mail.kernel.org (Postfix) with ESMTP id A10C520673
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573240169;
+	bh=8qsdJ47uQfrB7A5Ki3q409/MXPdNkeR+L2SHHSL7maA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PyktFq5SUKrUeAp8Nqjq08PZ+L9fMUlMG0jWzXl0it5OP/zOi8aw7tkWOAiGIiY3e
+	 V7V7DfxAc5+AHny8KXvTrm7sJf5Wo7L741dRSl8HtfY6UUEKzZsa9ZmoapgfFvAIwD
+	 DNfEtj128SgxVDzQ1xXxT481AzVDY0sxfseXAI1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403814AbfKHTJZ (ORCPT
+        id S2390852AbfKHTJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:09:25 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37310 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391772AbfKHTJX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:09:23 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p24so5254203pfn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 11:09:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=rJ1urZ8T7mCJHoBlOuQT5kf7O0+8075YXJJdXtDtH7U=;
-        b=D61jjhVfWDWSMveOGbAsO21SqjPj0dRPXQmK22xQFY1GOYifueuPRNL45P6whbv76d
-         +koe7VPSRs9Hh0QYnbedzWgk8x0eJhqNXE50FDnKgoM8VYb8R3vRcxEYY962NbGNzyAH
-         ZozKEI0ik3vBEAuReccVPRkzTxDkUVmi0rZRk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=rJ1urZ8T7mCJHoBlOuQT5kf7O0+8075YXJJdXtDtH7U=;
-        b=rF5nI/h6OlBsauw0/BiWwTgrCEWY75ypvkvJWTj5cat1b9DtBsaHubUwxSqdAZC7rp
-         YUZj2qd6YRiV7vA1nS0Nbz4EEs3bTdG/HijRzm+v7ZZFGgl3D8p5ZzQprjjS9o59cduM
-         k+/De+5Fl3mAFb69b6dhr8bGNCWsAgbzvA58Kfh9fAiLgPQ2YlaSzZIaUhMGzucbFKTF
-         x0MJP0d/7Sr/4gpWDUqc1EK08gqLF3S0WnL+7R+QJpMIM9KUqFTSUbs5gGnpPvnVcSFS
-         R45e2LXuwAzTRcMkmwk5RARNkNXNAQ2cgCjw72mrZlMoQHh5R8Iqc1WBEx5F2ndrxvBY
-         dnWg==
-X-Gm-Message-State: APjAAAVNjcZwZmRADm5A9NoIRgZqjhNokEBgXjN4PhMlsmv23qB84ZRy
-        BideRM4zmk549xXvkOyp66bh7Q==
-X-Google-Smtp-Source: APXvYqwF6BcI+PSkqcZ1hzG3Fq8z2hINUeBNu1KSX2QSnhuU5EyKjQGpElD+ZP55Yu2cmAcXBJIhOg==
-X-Received: by 2002:a62:174d:: with SMTP id 74mr13732051pfx.145.1573240163193;
-        Fri, 08 Nov 2019 11:09:23 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id l72sm6138763pjb.18.2019.11.08.11.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 11:09:22 -0800 (PST)
-Message-ID: <5dc5bd62.1c69fb81.682a4.0fa6@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 8 Nov 2019 14:09:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391792AbfKHTJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:09:24 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 947CA20673;
+        Fri,  8 Nov 2019 19:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573240163;
+        bh=8qsdJ47uQfrB7A5Ki3q409/MXPdNkeR+L2SHHSL7maA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i9+RQI+2o5cwuIuafAkfcbO3RrnUQGGCbb/tPfFCO13c84GDB+8KHe09ifFM01B5o
+         YB+JznuX+/bdV9yTvQQNdO1bnjZlZhkwKwQ9LjQFVgcFdXJotAb/5ns01gfjamSpUX
+         l/cm5LrFH2zt+tF+F//nP/Q9BSa6n7aExYzeDrbg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 073/140] i2c: stm32f7: fix a race in slave mode with arbitration loss irq
+Date:   Fri,  8 Nov 2019 19:50:01 +0100
+Message-Id: <20191108174909.738013388@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
+References: <20191108174900.189064908@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5790f59f-951a-f1b4-bb31-f9cefec0c642@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-3-rnayak@codeaurora.org> <5dc4588e.1c69fb81.5f75c.83ad@mx.google.com> <5790f59f-951a-f1b4-bb31-f9cefec0c642@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v4 02/14] arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 11:09:21 -0800
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-07 19:48:57)
->=20
-> On 11/7/2019 11:16 PM, Stephen Boyd wrote:
-> > Quoting Rajendra Nayak (2019-11-05 22:50:05)
-> >> +                       qup_uart8_default: qup-uart8-default {
-> >> +                               pinmux {
-> >> +                                       pins =3D "gpio44", "gpio45";
-> >> +                                       function =3D "qup12";
-> >=20
-> > That looks weird to have qup12 function on uart8. It's right?
->=20
-> So we have 2 qup instances each with 6 SEs on sc7180.
-> So the i2c/uart/spi SE instances are numbered from 0 to 5 in the first qup
-> and 6 to 11 in the next.
-> The pinctrl functions however have it named qup0 to 5 for first and
-> qup10 to 15 for the next which is weird. Now all data in the pinctrl
-> driver is autogenerated using hw description so its coming from that.
->=20
-> Just for comparison, on sdm845 we had 2 qup instances with 8 SE's
-> and the function names were qup0 to 8 for first and 9 to 15 for the
-> second.
->=20
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-Alright. Good to know the hardware description is all messed up.
+[ Upstream commit 6d6b0d0d5afc8c4c84b08261260ba11dfa5206f2 ]
+
+When in slave mode, an arbitration loss (ARLO) may be detected before the
+slave had a chance to detect the stop condition (STOPF in ISR).
+This is seen when two master + slave adapters switch their roles. It
+provokes the i2c bus to be stuck, busy as SCL line is stretched.
+- the I2C_SLAVE_STOP event is never generated due to STOPF flag is set but
+  don't generate an irq (race with ARLO irq, STOPIE is masked). STOPF flag
+  remains set until next master xfer (e.g. when STOPIE irq get unmasked).
+  In this case, completion is generated too early: immediately upon new
+  transfer request (then it doesn't send all data).
+- Some data get stuck in TXDR register. As a consequence, the controller
+  stretches the SCL line: the bus gets busy until a future master transfer
+  triggers the bus busy / recovery mechanism (this can take time... and
+  may never happen at all)
+
+So choice is to let the STOPF being detected by the slave isr handler,
+to properly handle this stop condition. E.g. don't mask IRQs in error
+handler, when the slave is running.
+
+Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 0af9219e45f79..82705deef7bff 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1503,7 +1503,7 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
+ 	void __iomem *base = i2c_dev->base;
+ 	struct device *dev = i2c_dev->dev;
+ 	struct stm32_i2c_dma *dma = i2c_dev->dma;
+-	u32 mask, status;
++	u32 status;
+ 
+ 	status = readl_relaxed(i2c_dev->base + STM32F7_I2C_ISR);
+ 
+@@ -1528,12 +1528,15 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
+ 		f7_msg->result = -EINVAL;
+ 	}
+ 
+-	/* Disable interrupts */
+-	if (stm32f7_i2c_is_slave_registered(i2c_dev))
+-		mask = STM32F7_I2C_XFER_IRQ_MASK;
+-	else
+-		mask = STM32F7_I2C_ALL_IRQ_MASK;
+-	stm32f7_i2c_disable_irq(i2c_dev, mask);
++	if (!i2c_dev->slave_running) {
++		u32 mask;
++		/* Disable interrupts */
++		if (stm32f7_i2c_is_slave_registered(i2c_dev))
++			mask = STM32F7_I2C_XFER_IRQ_MASK;
++		else
++			mask = STM32F7_I2C_ALL_IRQ_MASK;
++		stm32f7_i2c_disable_irq(i2c_dev, mask);
++	}
+ 
+ 	/* Disable dma */
+ 	if (i2c_dev->use_dma) {
+-- 
+2.20.1
+
+
 
