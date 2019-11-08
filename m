@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E1AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CECC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53C1206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB10B206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240269;
-	bh=bKoMmIiBMC4E++nd+QbmW9mGEaYvvFbCN54HCakwmvA=;
+	s=default; t=1573240272;
+	bh=Kjw+2QLKYR5UB55VJ4VUm6OR/YR73ojPHfrdVlByYpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oH9RAQl8ADVPok+HApVg/15Hh3ysifyTwdqhcgjkaTYwDvRGzzWeciLy6Cxu1qn25
-	 mKmMD5VN5oXUeyirjETAM4/Ky9KbsgFdy/9h4uvflGWLKX0N08kT5dcF0zK3v5LMnS
-	 vYTNbGfj/p7MqfGa9+WHl7/MNnSs4PMUqnx9epuw=
+	b=2WiBFGm7//KxBBP9/KjnArlp8qbE61ByPZDhzp+1H1SdkmxeaOkCjY/iqvWOVNs+I
+	 +11Len9bVnDK5LV/+zsiMzqjnVxQhWOtGVr/ey32v5su8xz+TWnQfCA5vMSvYwgzJ4
+	 /TzZtfKFc45b1vtKR+p12AnGDFp80F27I5w/x84o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391978AbfKHTLI (ORCPT
+        id S2391986AbfKHTLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:11:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:11:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391962AbfKHTLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:11:05 -0500
+        id S2391974AbfKHTLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:11:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 145CB21D7E;
-        Fri,  8 Nov 2019 19:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418D021D82;
+        Fri,  8 Nov 2019 19:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240264;
-        bh=bKoMmIiBMC4E++nd+QbmW9mGEaYvvFbCN54HCakwmvA=;
+        s=default; t=1573240267;
+        bh=Kjw+2QLKYR5UB55VJ4VUm6OR/YR73ojPHfrdVlByYpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+ZSKNjthMwdXC58tYptt2IXo0JT6XNO5NW/1lHAA+0E69eLxUeHhBaVkwn8njwwy
-         Ikznd1pVWrjmdzMfBsBf1Ejg1m4cY2eiYGZFQPsYmWVp/KZ1K5eVxzJD7aA3Z8Eh2h
-         0cqxvEE1NMElz6yKrgutsFEEu97LMm98sniuNeMM=
+        b=XMwYx+BjuQq+Lht8PCuryVivVzPXgHuo+jBREg5M/Pvu8l9nygdkpNGcUT0HQ7ZxE
+         LSyNIrb2i4aNh694WXzscqhRN9dsWFVMvbh8H5n1r4QRzJFhqrHrsfs9N9xdLD1gcC
+         c7RQZ57dAsQhK8I7T0r94cd/bwjx2yAAOhbj9a+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        stable@vger.kernel.org, Hubert Feurstein <h.feurstein@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 121/140] net: bcmgenet: dont set phydev->link from MAC
-Date:   Fri,  8 Nov 2019 19:50:49 +0100
-Message-Id: <20191108174912.376294261@linuxfoundation.org>
+Subject: [PATCH 5.3 122/140] net: dsa: b53: Do not clear existing mirrored port mask
+Date:   Fri,  8 Nov 2019 19:50:50 +0100
+Message-Id: <20191108174912.427144237@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
 References: <20191108174900.189064908@linuxfoundation.org>
@@ -60,44 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 7de48402faa32298c3551ea32c76ccb4f9d3025d ]
+[ Upstream commit c763ac436b668d7417f0979430ec0312ede4093d ]
 
-When commit 28b2e0d2cd13 ("net: phy: remove parameter new_link from
-phy_mac_interrupt()") removed the new_link parameter it set the
-phydev->link state from the MAC before invoking phy_mac_interrupt().
+Clearing the existing bitmask of mirrored ports essentially prevents us
+from capturing more than one port at any given time. This is clearly
+wrong, do not clear the bitmask prior to setting up the new port.
 
-However, once commit 88d6272acaaa ("net: phy: avoid unneeded MDIO
-reads in genphy_read_status") was added this initialization prevents
-the proper determination of the connection parameters by the function
-genphy_read_status().
-
-This commit removes that initialization to restore the proper
-functionality.
-
-Fixes: 88d6272acaaa ("net: phy: avoid unneeded MDIO reads in genphy_read_status")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Reported-by: Hubert Feurstein <h.feurstein@gmail.com>
+Fixes: ed3af5fd08eb ("net: dsa: b53: Add support for port mirroring")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/dsa/b53/b53_common.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2617,10 +2617,8 @@ static void bcmgenet_irq_task(struct wor
- 	spin_unlock_irq(&priv->lock);
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1808,7 +1808,6 @@ int b53_mirror_add(struct dsa_switch *ds
+ 		loc = B53_EG_MIR_CTL;
  
- 	/* Link UP/DOWN event */
--	if (status & UMAC_IRQ_LINK_EVENT) {
--		priv->dev->phydev->link = !!(status & UMAC_IRQ_LINK_UP);
-+	if (status & UMAC_IRQ_LINK_EVENT)
- 		phy_mac_interrupt(priv->dev->phydev);
--	}
- }
+ 	b53_read16(dev, B53_MGMT_PAGE, loc, &reg);
+-	reg &= ~MIRROR_MASK;
+ 	reg |= BIT(port);
+ 	b53_write16(dev, B53_MGMT_PAGE, loc, reg);
  
- /* bcmgenet_isr1: handle Rx and Tx priority queues */
 
 
