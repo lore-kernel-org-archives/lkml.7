@@ -2,107 +2,188 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6B5C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373DDFC6195
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A200A214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052D9215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573236759;
-	bh=lkvzY4O9DhxZCYUqr8lUZGJXYZj7SilXVcdxOfioOTo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2n5B/0MT+KRKnW6bwx4BlTwgYxzL2u6Z46w24dNH0RySeWb4nzHY1ID6VhQDX1W3v
-	 jiN2xU1C4V43REh0YdvlSwNpfKOlChCtKPwZzkNM8sgLyVv2StYLvv2dnd5KR14HP5
-	 4h1U3FRCUaxwFt7TSDbnwKWWvKuSR5DcfvMmdlRU=
+	s=default; t=1573236773;
+	bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=VX3NHDhAObfgacEUNUYljry7N/s2j+4JZgXhqDewHUpAzqnsxRsY9aSZlw6edfC8j
+	 abyYRlvNARLBaouGo7BNafcLNWcq1PrfEqTt2LS4j1SgAUgt4oZ7YiSxMJrSeef5mO
+	 RsIN8nRwtU6446IPrkyZ+OlDQbYCnAkVuS80uz2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfKHSMi (ORCPT
+        id S1729486AbfKHSMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:12:38 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37095 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfKHSMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:12:38 -0500
-Received: by mail-lf1-f65.google.com with SMTP id b20so5156039lfp.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:12:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UwOe/0M2mqJUTnI7Cbij9+EXC9Tu0LMdXKdxLl7NQv8=;
-        b=Tty72ZI+f/UrYcmEO8Ttap8J2ndzFJNgOvOIEsjOGXNDZDxbS3eJdFc1wvOgAkhTae
-         HLu2Gs/SEuoh93AyFYWuYVGXZRyvcZzwo9IRcP7UYgKpfdaT0318sOFFV7yfTAuoQUuM
-         qzCAoo7N2AMj7L2Iz8ESsZqrPCxDcoIImZAlU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UwOe/0M2mqJUTnI7Cbij9+EXC9Tu0LMdXKdxLl7NQv8=;
-        b=CmSzuNhmfAEtfa+boKwcWVmpCalPCZ4nEseyJrlQU10iHwemQhmoVFCOF2IPQ81JB5
-         AVl03KUmhIywEBHWl6Itt1ssATAsBPmYhVQE9sf3+4hiptwyJ2ueLjVAlcSnZpdHKk2b
-         VU7uqLE/gcVFRmHSzBn8ZifV9kLDVLzzQ1NxZnSPk9kbx3ocQWAUeRjWpQkZfNZ4iJsx
-         MNAs7PtlFvo9wZOmhvcPm8ntRaJU5gTzgwdW5LpG+rNkMg0fjvlrmhiWZM/u0fEK1Ix/
-         Lqw7ELpxaVNPUdJxuE/J68FCzeuSIhnkz6MBwQ53PkSM4OL/ZJTnPEAYnJoSSbvKORnC
-         fKGA==
-X-Gm-Message-State: APjAAAVdCN1Yim3g8iLLP58Da0uc0XwggVz6ZB/VqyVnydGy9UI9L2WP
-        kpLZOzdUuZ0GnBGW6wB0fk5EAUlrBdc=
-X-Google-Smtp-Source: APXvYqw0DlPlBtiB/khHn+iCIIO6B5wpkUfr5wdVhE4E4d16kQ5wJgGLjaJcigkR6Nx9G4ci7HRJYw==
-X-Received: by 2002:a19:ec16:: with SMTP id b22mr8147481lfa.74.1573236754100;
-        Fri, 08 Nov 2019 10:12:34 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id i30sm3267945lfp.39.2019.11.08.10.12.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 10:12:33 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id q2so7185894ljg.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 10:12:31 -0800 (PST)
-X-Received: by 2002:a05:651c:331:: with SMTP id b17mr7846398ljp.133.1573236751292;
- Fri, 08 Nov 2019 10:12:31 -0800 (PST)
+        Fri, 8 Nov 2019 13:12:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbfKHSMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:12:51 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E284E214DB;
+        Fri,  8 Nov 2019 18:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573236770;
+        bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=bOSP1g9YSgcPhvpPAlL+a9JRxoTij3qU1HwCLePyjL/IOXi+sJLpbHKsEH1gLuhqO
+         AhekoDy5jkd3MDdy7HhsZZoxylHaNfro54qAvKiCVLal478ISREwfbOcvq5jWDC4W2
+         2RYU+3Bt4uPMUGJxhiOjNEqvgvwJuki6MI+L4owo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <000000000000c422a80596d595ee@google.com> <6bddae34-93df-6820-0390-ac18dcbf0927@gmail.com>
- <CAHk-=whh5bcxCecEL5Fy4XvQjgBTJ9uqvyp7dW=CLU6VNxS9iA@mail.gmail.com>
- <CANn89iK9mTJ4BN-X3MeSx5LGXGYafXkhZyaUpdXDjVivTwA6Jg@mail.gmail.com>
- <CAHk-=whNBL63qmO176qOQpkY16xvomog5ocvM=9K55hUgAgOPA@mail.gmail.com>
- <CANn89iJJiB6avNtZ1qQNTeJwyjW32Pxk_2CwvEJxgQ==kgY0fA@mail.gmail.com>
- <CANn89i+RrngUr11_iOYDuqDvAZnPfG3ieJR025M78uhiwEPuvQ@mail.gmail.com> <CANn89iLN758CpQPKcd++NLdj62LS-ekiEUV91VREzMsamLn9bw@mail.gmail.com>
-In-Reply-To: <CANn89iLN758CpQPKcd++NLdj62LS-ekiEUV91VREzMsamLn9bw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 8 Nov 2019 10:12:15 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wg5+N2WS2vO6doxfza1G8zk4DP5RhodiaSeAyf+Ooy7wQ@mail.gmail.com>
-Message-ID: <CAHk-=wg5+N2WS2vO6doxfza1G8zk4DP5RhodiaSeAyf+Ooy7wQ@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108101116.GA2583136@ulmo>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo> <20191107191933.0B18021D6C@mail.kernel.org> <20191108101116.GA2583136@ulmo>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 10:12:49 -0800
+Message-Id: <20191108181249.E284E214DB@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 10:02 AM Eric Dumazet <edumazet@google.com> wrote:
->
-> Another interesting KCSAN report :
->
-> static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
-> {
->         s64 ret = fbc->count;   // data-race ....
+Quoting Thierry Reding (2019-11-08 02:11:16)
+> On Thu, Nov 07, 2019 at 11:19:32AM -0800, Stephen Boyd wrote:
+> > Quoting Thierry Reding (2019-11-07 07:21:15)
+> > > On Thu, Nov 07, 2019 at 03:54:03AM +0300, Dmitry Osipenko wrote:
+> > > > 07.11.2019 02:10, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > > > Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
+> > > > >> This patch adds an API clk_hw_get_parent_index to get index of t=
+he
+> > > > >> clock parent to use during the clock restore operations on system
+> > > > >> resume.
+> > > > > =20
+> > > > > Is there a reason we can't save the clk hw index at suspend time =
+by
+> > > > > reading the hardware to understand the current parent? The parent=
+ index
+> > > > > typically doesn't matter unless we're trying to communicate somet=
+hing
+> > > > > from the framework to the provider driver. Put another way, I wou=
+ld
+> > > > > think the provider driver can figure out the index itself without=
+ having
+> > > > > to go through the framework to do so.
+> > > >=20
+> > > > Isn't it a bit wasteful to duplicate information about the parent w=
+ithin
+> > > > a provider if framework already has that info? The whole point of t=
+his
+> > > > new API is to allow providers to avoid that unnecessary duplication.
+> > > >=20
+> > > > Please note that clk_hw_get_parent_index is getting used only at the
+> > > > resume time and not at suspend.
+> > >=20
+> > > I agree with this. All of the information that we need is already cac=
+hed
+> > > in the framework. Doing this in the driver would mean essentially add=
+ing
+> > > a "saved parent" field along with code to read the value at suspend t=
+ime
+> > > to the three types of clocks that currently use this core helper.
+> >=20
+> > Don't we already have a "saved parent" field by storing the pointer to
+> > the clk_hw?
+> >=20
+> > >=20
+> > > That's certainly something that we *can* do, but it doesn't sound lik=
+e a
+> > > better option than simply querying the framework for the value that we
+> > > need.
+> > >=20
+> >=20
+> > Let me say this another way. Why does this driver want to know the index
+> > that the framework uses for some clk_hw pointer? Perhaps it happens to
+> > align with the same value that hardware uses, but I still don't
+> > understand why the driver wants to know what the framework has decided
+> > is the index for some clk_hw pointer.
+> >=20
+> > Or is this something like "give me the index for the parent that the
+> > framework thinks I currently have but in reality don't have anymore
+> > because the register contents were wiped and we need to reparent it"?
+>=20
+> Yeah, that's exactly what this is being used for. It's used to restore
+> the parent/child relationship during resume after the registers have
+> been wiped during supend.
 
-Yeah, I think that's fundamentally broken on 32-bit. It might need a
-sequence lock instead of that raw_spinlock_t to be sanely done
-properly on 32-bit.
+Ok cool. Our whole suspend/resume and save/restore story hasn't really
+been well thought out so we may want to pull all this logic into the
+core one day. For now it's OK to do the heavy lifting from provider
+drivers until someone gets a better grasp on how this should all work.
 
-Or we just admit that 32-bit doesn't really matter any more in the
-long run, and that this is not a problem in practice because the
-32-bit overflow basically never happens on small machines anyway.
+>=20
+> > A generic API to get any index for this question is overkill and we sho=
+uld
+> > consider adding some sort of API like clk_hw_get_current_parent_index(),
+> > or a framework flag that tells the framework this parent is incorrect
+> > and we need to call the .set_parent() op again to reconfigure it.
+>=20
+> Okay, I think I see what you're saying. The current implementation does
+> carry a bit of a risk because users could be calling this function with
+> any arbitrary pair of struct clk_hw *, even completely unrelated ones.
+>=20
+> How about we turn it into this instead:
+>=20
+>         /**
+>          * clk_hw_get_parent_index - return the index of the parent clock
+>          * @hw: clk_hw associated with the clk being consumed
+>          *
+>          * Fetches and returns the index of parent clock. Returns -EINVAL=
+ if the given
+>          * clock does not have a current parent.
+>          */
+>         int clk_hw_get_parent_index(struct clk_hw *hw)
+>         {
+>                 struct clk_hw *parent =3D clk_hw_get_parent(hw);
+>=20
+>                 if (!parent)
+>                         return -EINVAL;
+>=20
+>                 return clk_fetch_parent_index(hw->core, parent->core);
+>         }
+>         EXPORT_SYMBOL_GPL(clk_hw_get_parent_index);
+>=20
+> I think that has the advantage that we can't pass it a parent that's not
+> really a parent. There's still the slightly weird case where the clock
+> doesn't have a current parent, but hopefully that's something we are not
+> going to encounter much. After all this only makes sense to be called on
+> mux clocks and they always do have a parent by definition.
 
-               Linus
+Right.
+
+>=20
+> Perhaps we should be more explicit and wrap that !parent conditional in
+> a WARN_ON()? In my local patches I do that at the call sites because
+> they are all functions returning void, so we'd be silently ignoring the
+> cases, but I think it may make sense to have it in the core.
+>=20
+
+Sure a WARN_ON() sounds fair. That will not take the whole task down
+and makes sure that drivers aren't doing something incorrect. Otherwise,
+this looks good and we can optimize by caching the parent index later if
+we really need to.
+
