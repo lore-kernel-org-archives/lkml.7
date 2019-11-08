@@ -2,61 +2,95 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB007FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3BFC5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9752C214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B72214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 06:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfKHGKN (ORCPT
+        id S1729761AbfKHGL0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:10:13 -0500
-Received: from verein.lst.de ([213.95.11.211]:33056 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbfKHGKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 01:10:13 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 68D1368BE1; Fri,  8 Nov 2019 07:10:09 +0100 (CET)
-Date:   Fri, 8 Nov 2019 07:10:09 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-        Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation
- for RISC-V
-Message-ID: <20191108061009.GA30335@lst.de>
-References: <alpine.DEB.2.21.9999.1910091252160.11044@viisi.sifive.com> <CAMuHMdUfqvkVJHHwyuYxLSxj_iUofx-vSvEj92C5mg3bGxHqmA@mail.gmail.com> <20191010112347.4a7237bb@lwn.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010112347.4a7237bb@lwn.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Fri, 8 Nov 2019 01:11:26 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:60241 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfKHGL0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 01:11:26 -0500
+Received: from marcel-macpro.fritz.box (p5B3D2BA4.dip0.t-ipconnect.de [91.61.43.164])
+        by mail.holtmann.org (Postfix) with ESMTPSA id BDC44CED12;
+        Fri,  8 Nov 2019 07:20:28 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v2 2/4] Bluetooth: btbcm: Support pcm configuration
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191107232713.48577-3-abhishekpandit@chromium.org>
+Date:   Fri, 8 Nov 2019 07:11:24 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <95E7AD4E-E434-4249-9861-199375534CB1@holtmann.org>
+References: <20191107232713.48577-1-abhishekpandit@chromium.org>
+ <20191107232713.48577-3-abhishekpandit@chromium.org>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jon,
+Hi Abhishek,
 
-can you please revert this?  The paragraph above this addition already
-describes the riscv case perfecty well with my previous patch:
+> Add BCM vendor specific commands to configure PCM.
 
+please be a bit more descriptive and you can also add the command decoding from btmon here if you like.
 
-	earlycon=	[KNL] Output early console device and options.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> Changes in v2: None
+> 
+> drivers/bluetooth/btbcm.c | 35 +++++++++++++++++++++++++++++++++++
+> drivers/bluetooth/btbcm.h | 10 ++++++++++
+> 2 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+> index 2d2e6d862068..f052518f7b0c 100644
+> --- a/drivers/bluetooth/btbcm.c
+> +++ b/drivers/bluetooth/btbcm.c
+> @@ -105,6 +105,41 @@ int btbcm_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+> }
+> EXPORT_SYMBOL_GPL(btbcm_set_bdaddr);
+> 
+> +int btbcm_set_pcm_params(struct hci_dev *hdev,
+> +			 const struct bcm_set_pcm_int_params *int_params,
+> +			 const struct bcm_set_pcm_format_params *format_params)
+> +{
+> +	struct sk_buff *skb;
+> +	int err;
+> +
+> +	if (int_params) {
+> +		skb = __hci_cmd_sync(hdev, 0xfc1c, 5, int_params,
+> +				     HCI_INIT_TIMEOUT);
+> +		if (IS_ERR(skb)) {
+> +			err = PTR_ERR(skb);
+> +			bt_dev_err(hdev, "BCM: Set PCM int params failed (%d)",
+> +				   err);
+> +			return err;
+> +		}
+> +		kfree_skb(skb);
+> +	}
 
-			When used with no options, the early console is
-			determined by stdout-path property in device tree's
-			chosen node or the ACPI SPCR table if supported by
-			the platform.
+Actually lets do btbcm_set_pcm_int_params and focus on the ones you are using right now.
 
-			[RISCV] When used with no options, the early
-			console is determined by the stdout-path
-			property in the device tree's chosen node.
+Regards
+
+Marcel
+
