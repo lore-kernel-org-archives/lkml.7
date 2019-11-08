@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F4EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2451C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA7A2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFC32085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215172;
-	bh=GFSVBNLPJtFDTvTDouENezti5bv31KmrpDsn995p2Sk=;
+	s=default; t=1573215178;
+	bh=Y4FdlwIm9c/henSoa6RBnUIlwhJJ7s4sawtG84K2ywg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k/ZPA89TTYMgXxlWlSJvNbBq7JZ5yT9FjfAyg9zDYoAh0nhGVINwhmeQiMg+wZXZO
-	 FsvNHwr8cGLz5C83TwxD8WJDOlu16wwEmBU3+8EJbpkl8coQEiUzYto2mGAgAR0V17
-	 b5Y8sCY08eB2hdfCNARa/gJPHXbpJY3B4aFu3H70=
+	b=rONMJYpG91gkSW7aYqLf/gqpTNi/5EymBwa6qzLW9rc1VhWGwwdRlU/T2oal41f27
+	 rSfsbNCeXt9A6Cu82Anq9A8LNPvgGm3OP9+GtHbvarAibX/eURsR+SYPhw+6L9f4H5
+	 wYcgWdfePl0Ey2PjoqLpoMSIJKQUsLnvJbmTUDiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390867AbfKHMMu (ORCPT
+        id S2390948AbfKHMM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:12:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:12:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732721AbfKHLie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:34 -0500
+        id S1732378AbfKHLid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A98021D82;
-        Fri,  8 Nov 2019 11:38:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58C2721D7F;
+        Fri,  8 Nov 2019 11:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213113;
-        bh=GFSVBNLPJtFDTvTDouENezti5bv31KmrpDsn995p2Sk=;
+        s=default; t=1573213112;
+        bh=Y4FdlwIm9c/henSoa6RBnUIlwhJJ7s4sawtG84K2ywg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IEdkKAXNeS/LLb2+iNcfBGi/p8/rmNfOs6bb3i44OF4K3zbnajDYwlAmqG3s1E5Ld
-         4gWT7TXMXQbCAjtDkYOrSGolW6K/EJmxOUpsUiKimTVH8UAUVW4t91iAfmcpFNs36/
-         wMJwnaIxoHA7Qgu9hpFr+R3atfGeuYdwU4Xc2UB8=
+        b=OxGUbpTukX5XZyjkzv+Y1YSZX42mfMrB4kVs+E6iUgNeYgACtXl+XOK9/ryAkIC5Z
+         ZfjcBis5lXGxrLPCWSIB6eDqqt0PZ68kEd4uhlcMqO+T+uAhyjt+EFsH1q9GL1bqeT
+         pgL28CFUHdYIGWxwSnmjxmlZV70n2681ufTrbmd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 036/205] ASoC: meson: axg-fifo: report interrupt request failure
-Date:   Fri,  8 Nov 2019 06:35:03 -0500
-Message-Id: <20191108113752.12502-36-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 035/205] ASoC: dpcm: Properly initialise hw->rate_max
+Date:   Fri,  8 Nov 2019 06:35:02 -0500
+Message-Id: <20191108113752.12502-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,34 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit dadfab7272b13ca441efdb9aa9117bc669680b05 ]
+[ Upstream commit e33ffbd9cd39da09831ce62c11025d830bf78d9e ]
 
-Return value of request_irq() was irgnored. Fix this and report
-the failure if any
+If the CPU DAI does not initialise rate_max, say if using
+using KNOT or CONTINUOUS, then the rate_max field will be
+initialised to 0. A value of zero in the rate_max field of
+the hardware runtime will cause the sound card to support no
+sample rates at all. Obviously this is not desired, just a
+different mechanism is being used to apply the constraints. As
+such update the setting of rate_max in dpcm_init_runtime_hw
+to be consistent with the non-DPCM cases and set rate_max to
+UINT_MAX if nothing is defined on the CPU DAI.
 
-Fixes: 6dc4fa179fb8 ("ASoC: meson: add axg fifo base driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-fifo.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/soc-pcm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-index 30262550e37b1..0e4f65e654c4b 100644
---- a/sound/soc/meson/axg-fifo.c
-+++ b/sound/soc/meson/axg-fifo.c
-@@ -203,6 +203,8 @@ static int axg_fifo_pcm_open(struct snd_pcm_substream *ss)
- 
- 	ret = request_irq(fifo->irq, axg_fifo_pcm_irq_block, 0,
- 			  dev_name(dev), ss);
-+	if (ret)
-+		return ret;
- 
- 	/* Enable pclk to access registers and clock the fifo ip */
- 	ret = clk_prepare_enable(fifo->pclk);
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 6566c8831a965..551bfc581fc12 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1683,7 +1683,7 @@ static void dpcm_init_runtime_hw(struct snd_pcm_runtime *runtime,
+ 				 struct snd_soc_pcm_stream *stream)
+ {
+ 	runtime->hw.rate_min = stream->rate_min;
+-	runtime->hw.rate_max = stream->rate_max;
++	runtime->hw.rate_max = min_not_zero(stream->rate_max, UINT_MAX);
+ 	runtime->hw.channels_min = stream->channels_min;
+ 	runtime->hw.channels_max = stream->channels_max;
+ 	if (runtime->hw.formats)
 -- 
 2.20.1
 
