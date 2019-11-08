@@ -2,203 +2,150 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389E0C5DF61
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F6AC5DF61
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E257A206BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F712084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 00:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRNakx9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfKHARJ (ORCPT
+        id S1728217AbfKHASI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:17:09 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:40270 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfKHARJ (ORCPT
+        Thu, 7 Nov 2019 19:18:08 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36896 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfKHASI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:17:09 -0500
-Received: from [10.20.41.27] (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPAxScj8s8RdYo4AAA--.116S3;
-        Fri, 08 Nov 2019 08:17:00 +0800 (CST)
-Subject: Re: [PATCH REPLY] MIPS: Scan the DMI system information
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20191107112801.7037-1-jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yangyinglu@loongson.cn, jdelvare@suse.de,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <acd64ec9-e471-6fee-6505-ae3286a2972e@loongson.cn>
-Date:   Fri, 8 Nov 2019 08:16:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 7 Nov 2019 19:18:08 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p24so3556966pfn.4;
+        Thu, 07 Nov 2019 16:18:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N5uDsHtEnAyV8LSXcbH33x3kolR6+Pd+L+XI2h0ZELA=;
+        b=JRNakx9yETLweznBgCj2Te6iCoo7Yk7x9osXt0sKe+QG7XBEGDFOMgjMuq662AM38W
+         WYIau2/vV1hgThm6474EWPVfcy1rlpr7V9gw5A7epAKELMNgdM88d9rA/R+ArDoo7jd8
+         VjKtdyKu+TcARD5PDIVBPn10GGihdwTs9qLbC47a9A9TbHLSJmhuvTibVDPXdtFsHtSs
+         C7lX/Xv6SJTaLM19/kRdkp3c8cJNJrb+fK3Q32AoNo9YCD438YaDetTDpq/SGmOIgbUv
+         c66q7tMnO02vbTInKc4o0vRrAxAvkBFNGbfv/6/V0AsS0ILgxHF3YlXw/BjcWOE5C6l1
+         LZyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N5uDsHtEnAyV8LSXcbH33x3kolR6+Pd+L+XI2h0ZELA=;
+        b=QX+q8xo/j4bTW84JPGT5If4MpFdpFpKgO597JsG13peTyGzf0qouMYZCJscSW0+A+H
+         wwZuR4yhNbezwLkFH/3sPfL4wZarfMYXNl5SpXPZAfnMp/Ey+7IY0NWkQDVcV3iM0S7g
+         cM/BGgikcK+EybciElfwdBtHldMidOdRMTmqTfmzlCaWdhBpg1R8Y8MYoHmkl2giplXX
+         YwxNTT++iWkv/RHBLNnVSCIQCty2iIcCi85Bh/L6FIjWO0vbmWdV0POhThAsTTAnnB5Q
+         nNnyzRJRbPgEMiC9VOAjQERS9Do3hsDRYr+fdxqx177I7pXgcOxt5t4CalYZQZ8+Ncla
+         I/rw==
+X-Gm-Message-State: APjAAAUkImpkbXQFQeDEbN1W2uh36Z6Y7jOYAuGHpI3mI6Inr/DHO650
+        ac9LDcWcn70uhgemaqStOMQ=
+X-Google-Smtp-Source: APXvYqy4Lzc9D8X48KWYpp9KjxD+6XJ9XparNQWCvrQusK/mtGINDs+3sU14TBkXf0GcODY1UnSfUQ==
+X-Received: by 2002:a63:2042:: with SMTP id r2mr8220794pgm.32.1573172286899;
+        Thu, 07 Nov 2019 16:18:06 -0800 (PST)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id m68sm3688764pfb.122.2019.11.07.16.18.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 16:18:06 -0800 (PST)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v7 0/6] software node: add support for reference properties
+Date:   Thu,  7 Nov 2019 16:17:57 -0800
+Message-Id: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-In-Reply-To: <20191107112801.7037-1-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: QMiowPAxScj8s8RdYo4AAA--.116S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryrurW3Aw43ur4fGF4rXwb_yoWrtrWrpa
-        9xA3Zayr48GF17G34fA34fuF1Yqws3WF90kFyj9r1xZas8Zw17Jrs3Krs2kryDZrWkKay0
-        gF1SgF15CrZFkaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VCY1x0262k0Y48FwI0_Jr0_Gr1lYx0Ex4A2jsIE14v26r
-        4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I
-        648v4I1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-        67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
-        nIWIevJa73UjIFyTuYvjfU5eHqUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/07/2019 07:28 PM, Jiaxun Yang wrote:
-> Hi Tiezhu and Jean,
->
-> What about do like this?
-> We shouldn't follow x86's Kconfig as most of MIPS devices
-> don't support DMI.
->
-> And, we can reuse map/unmap from io.h to reduce
-> maintinance overhead.
+These series implement "references" properties for software nodes as true
+properties, instead of managing them completely separately.
 
-Hi Jiaxun,
+The first 2 patches do away with separate handling of arrays vs
+single-value properties, and treat everything as arrays (which really
+matches how we handle OF or ACPI properties). Instead we recognize that
+data, if it is small enough, may be embedded into property_entry
+structure. As a side effect, properties can be converted from having their
+data stored separately to embedding their data when they are being copied.
 
-Thanks for your modification, it looks better, let me verify and test it,
-and then I will send a v2 patch.
+Patch #3 implements PROPERTY_ENTRY_REF() and friends; patch #4 converts
+the user of references to the property syntax, and patch #5 removes the
+remains of references as entities that are managed separately.
 
-Thanks,
+Patch #6 adds unit tests to verify that the handling of property
+entries is correct.
 
-Tiezhu Yang
+Changed in v7:
+- rebased onto next-20191107
+- dropped already applied patches
+- reworked patch that moved small properties inline on copying to
+  avoid temporary allocation
+- cleaned up logic for embedding vs storing values out-of-line
+- fixed handling of embedded 2-element string array on x32
 
->
-> Thanks
->
-> Jiaxun
->
->> 8------------------------------------------------------8<
-> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-> driver can easily match various of mainboards.
->
-> In the SMBIOS reference specification, the table anchor string "_SM_" is
-> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-> but there exists a special case for loongson platform, when call function
-> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-> it is reserved for SMBIOS and can be normally access in the BIOS.
->
-> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->   arch/mips/Kconfig           |  9 +++++++++
->   arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
->   arch/mips/kernel/setup.c    |  2 ++
->   drivers/firmware/dmi_scan.c |  6 +++++-
->   4 files changed, 36 insertions(+), 1 deletion(-)
->   create mode 100644 arch/mips/include/asm/dmi.h
->
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index c3a022ca3345..414f3a0ea397 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -2759,6 +2759,15 @@ config HW_PERF_EVENTS
->   	  Enable hardware performance counter support for perf events. If
->   	  disabled, perf events will use software events only.
->   
-> +config DMI
-> +	default y if MACH_LOONGSON64
-> +	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-> +	bool "Enable DMI scanning"
-> +	help
-> +	  Enabled scanning of DMI to identify machine quirks. Say Y
-> +	  here unless you have verified that your setup is not
-> +	  affected by entries in the DMI blacklist.
-> +
->   config SMP
->   	bool "Multi-Processing support"
->   	depends on SYS_SUPPORTS_SMP
-> diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
-> new file mode 100644
-> index 000000000000..5153ef6fe8a2
-> --- /dev/null
-> +++ b/arch/mips/include/asm/dmi.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_MIPS_DMI_H
-> +#define _ASM_MIPS_DMI_H
-> +
-> +#include <linux/io.h>
-> +#include <linux/memblock.h>
-> +
-> +#define dmi_early_remap(x, l)		ioremap_cache(x, l)
-> +#define dmi_early_unmap(x, l)		iounmap(x)
-> +#define dmi_remap(x, l)		ioremap_cache(x, l)
-> +#define dmi_unmap(x)			iounmap(x)
-> +
-> +/* MIPS initialize DMI scan before SLAB is ready, so we use memblock here */
-> +#define dmi_alloc(l)			memblock_alloc_low(l, PAGE_SIZE)
-> +
-> +#if defined(CONFIG_MACH_LOONGSON64)
-> +#define SMBIOS_ENTRY_POINT_SCAN_START	0xfffe000
-> +#endif
-> +
-> +#endif /* _ASM_MIPS_DMI_H */
-> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-> index c3d4212b5f1d..da7d312e20eb 100644
-> --- a/arch/mips/kernel/setup.c
-> +++ b/arch/mips/kernel/setup.c
-> @@ -28,6 +28,7 @@
->   #include <linux/decompress/generic.h>
->   #include <linux/of_fdt.h>
->   #include <linux/of_reserved_mem.h>
-> +#include <linux/dmi.h>
->   
->   #include <asm/addrspace.h>
->   #include <asm/bootinfo.h>
-> @@ -802,6 +803,7 @@ void __init setup_arch(char **cmdline_p)
->   #endif
->   
->   	arch_mem_init(cmdline_p);
-> +	dmi_setup();
->   
->   	resource_init();
->   	plat_smp_setup();
-> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-> index 35ed56b9c34f..ee2dbebf2063 100644
-> --- a/drivers/firmware/dmi_scan.c
-> +++ b/drivers/firmware/dmi_scan.c
-> @@ -11,6 +11,10 @@
->   #include <asm/dmi.h>
->   #include <asm/unaligned.h>
->   
-> +#ifndef SMBIOS_ENTRY_POINT_SCAN_START
-> +#define SMBIOS_ENTRY_POINT_SCAN_START 0xf0000
-> +#endif
-> +
->   struct kobject *dmi_kobj;
->   EXPORT_SYMBOL_GPL(dmi_kobj);
->   
-> @@ -661,7 +665,7 @@ static void __init dmi_scan_machine(void)
->   			return;
->   		}
->   	} else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
-> -		p = dmi_early_remap(0xF0000, 0x10000);
-> +		p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
->   		if (p == NULL)
->   			goto error;
->   
+Changes in v6:
+- rebased onto next-20191023
+- fixed patch moving small properties inline
+- fixed handling boolean properties after is_array -> is_inline
+  conversion
+- changed comments around is_inline "stored directly" vs embedded
+  in one place (Andy)
+- added unit tests for property entries based on KUnit framework
+- added Any's reviewed-by/acked-by
 
+Changes in v5:
+- rebased onto next-20191011
+
+Changes in v4:
+- dealt with union aliasing concerns
+- inline small properties on copy
+
+Changes in v3:
+- added various cleanups before implementing reference properties
+
+Changes in v2:
+- reworked code so that even single-entry reference properties are
+  stored as arrays (i.e. the software_node_ref_args instances are
+  not part of property_entry structure) to avoid size increase.
+  From user's POV nothing is changed, one can still use PROPERTY_ENTRY_REF
+  macro to define reference "inline".
+- dropped unused DEV_PROP_MAX
+- rebased on linux-next
+
+Dmitry Torokhov (6):
+  software node: rename is_array to is_inline
+  software node: allow embedding of small arrays into property_entry
+  software node: implement reference properties
+  platform/x86: intel_cht_int33fe: use inline reference properties
+  software node: remove separate handling of references
+  software node: add basic tests for property entries
+
+ drivers/base/swnode.c                         | 142 +++---
+ drivers/base/test/Makefile                    |   2 +
+ drivers/base/test/property-entry-test.c       | 472 ++++++++++++++++++
+ .../platform/x86/intel_cht_int33fe_typec.c    |  81 +--
+ include/linux/property.h                      |  84 ++--
+ 5 files changed, 640 insertions(+), 141 deletions(-)
+ create mode 100644 drivers/base/test/property-entry-test.c
+
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
