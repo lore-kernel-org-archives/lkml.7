@@ -2,95 +2,77 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E602EFC6195
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC48C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE912178F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB5F21924
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 16:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573231994;
+	bh=wCFPCJjeLp/mKUX4a3nBezjesoDUvdEgEo0knwJoKiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0aQgHsXrJQhdrpZGfEOQj91dkbhn/NnsNS/k2WHB0PW1pymYTLeFkUTjs647+7H5h
+	 RsaZ8N12V6lDqjjoSJlFHHUtDlSs+WMqcxBrbqPCX55aINHtcj5wjVSz+Q0lb9Q9Qj
+	 TP9TIc/amP/OMDcBbKKtCaeHSafKFxDONuoGoaO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfKHQwm convert rfc822-to-8bit (ORCPT
+        id S1727149AbfKHQxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:52:42 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:33404 "EHLO gloria.sntech.de"
+        Fri, 8 Nov 2019 11:53:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfKHQwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 11:52:42 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iT7Uy-0002QA-3f; Fri, 08 Nov 2019 17:52:36 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: dts: rockchip: Split rk3399-roc-pc for with and without mezzanine board.
-Date:   Fri, 08 Nov 2019 17:52:35 +0100
-Message-ID: <4421021.f1aGTiCmcP@diego>
-In-Reply-To: <616df0fa-a503-1a57-12b6-43bcd674db8c@fivetechno.de>
-References: <7293c5f6-a07f-cf51-954f-92907879eea2@fivetechno.de> <1628743.87kQKnQNn8@diego> <616df0fa-a503-1a57-12b6-43bcd674db8c@fivetechno.de>
+        id S1726049AbfKHQxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:53:12 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7F7C2178F;
+        Fri,  8 Nov 2019 16:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573231992;
+        bh=wCFPCJjeLp/mKUX4a3nBezjesoDUvdEgEo0knwJoKiw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nBYjcowddhlr9DrZa28wAXpkV7VCFVTL2XVfAtFdK1ft/AvMzEZQb63K4uLIQeVnT
+         vXTNJEAmY7sU1jih6pNGaWPDkjpyRlPpWm0zNdR8y1xZ0iqxmp+ZBt3gLq92f+d8FJ
+         w/PmfsLNGi7pRMtpMzy3kbAVqbxnsAoEYyprL6ZI=
+Date:   Fri, 8 Nov 2019 17:53:09 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: most: Convert to the common vmalloc memalloc
+Message-ID: <20191108165309.GA1168209@kroah.com>
+References: <20191108164528.998-1-tiwai@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108164528.998-1-tiwai@suse.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
-
-Am Freitag, 8. November 2019, 16:18:39 CET schrieb Markus Reichl:
-> Am 08.11.19 um 15:41 schrieb Heiko Stübner:
-> > Am Montag, 4. November 2019, 16:22:25 CET schrieb Markus Reichl:
-> >> For rk3399-roc-pc is a mezzanine board available that carries M.2 and
-> >> POE interfaces. Use it with a separate dts.
-> >> 
-> >> ---
-> >> v3: Use enum in binding and full name in compatible string and file name.
-> >> v2: Add new compatible string for roc-pc with mezzanine board.
-> >> --
-> >> 
-> >> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> >> ---
-> >>  .../devicetree/bindings/arm/rockchip.yaml     |   4 +-
-> >>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
-> >>  .../dts/rockchip/rk3399-roc-pc-mezzanine.dts  |  72 ++
-> >>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
-> >>  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 770 ++++++++++++++++++
-> >>  5 files changed, 847 insertions(+), 757 deletions(-)
-> >>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> >>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> >> 
-> > 
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> index 7e07dae33d0f..cd4195425309 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> @@ -4,764 +4,9 @@
-> > 
-> > This whole hunk fails to apply against my current branch for 5.5
-> > which contain your other patches [0].
-> > 
-> > And the moved block is obviously so big that I can't really check
-> > which part is somehow different, so I'd ask you to rebase this
-> > patch accordingly, so that it applies again.
+On Fri, Nov 08, 2019 at 05:45:28PM +0100, Takashi Iwai wrote:
+> The recent change (*) in the ALSA memalloc core allows us to drop the
+> special vmalloc-specific allocation and page handling.  This patch
+> coverts to the common code.
+> (*) 1fe7f397cfe2: ALSA: memalloc: Add vmalloc buffer allocation
+>                   support
+>     7e8edae39fd1: ALSA: pcm: Handle special page mapping in the
+>                   default mmap handler
 > 
-> Yes, will rebase and come with v4.
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> 
+> ---
+> 
+> Since the prerequisite commits above are found only on for-next branch
+> of sound git tree, please give ACK if the patch is OK; then I'll apply
+> it on top of my branch.  Thanks!
+> 
+> 
 
-Not wanting to put any pressure on you, but do you have an estimate
-for this? I need to do my second (and final) round of pull requests for
-v5.5, so it would of course be interesting if it's sensible to wait for
-your respin ;-)
-
-Thanks
-Heiko
-
-
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
