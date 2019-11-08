@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0A0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69680C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05BB21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35ADA21848
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214906;
-	bh=ZQk8HUJVVWdkb6PKw7UQGNwXF9TB19ZXHOw1EDZu7as=;
+	s=default; t=1573214910;
+	bh=NgTsZq5LbL3QYqBe2oz5+VeHyhCREUqx2iZfVrpgkDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SjUo2JsizzNhaxZN/JTJyHBOFIO8ogIJgfjLQbfBBvZerTi5GMZgSHbJaRKDFByQ1
-	 C0Iq59zL+CpH2jK4Wbd+xrF1+m0wTzHje11TVcMyEr3bEJy9blSjnLXH6jC7XnhIOc
-	 vAJNiRWbloeWobYaN94iwth1YC0WweVSrJ9O5iYI=
+	b=DR2enGvnbymMNvE7xbEUK0WJuJWHGA9zq5FLgDUqWqJPdIOWf3+VXVE9C9ByD8eXW
+	 G7jUhjINKlJS4vRsOOtwi6+2x2uWbANhx7SLkm9TqLDYI753tmORrXs8tWPOYlKNDM
+	 YVyExBdmhT1Sn9dZn+GJ9Cyb2yTrmdhPDHSJTYwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391895AbfKHMIZ (ORCPT
+        id S2388667AbfKHLkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:08:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388712AbfKHLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:33 -0500
+        id S2388543AbfKHLkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865E021D7E;
-        Fri,  8 Nov 2019 11:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E323222C4;
+        Fri,  8 Nov 2019 11:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213233;
-        bh=ZQk8HUJVVWdkb6PKw7UQGNwXF9TB19ZXHOw1EDZu7as=;
+        s=default; t=1573213214;
+        bh=NgTsZq5LbL3QYqBe2oz5+VeHyhCREUqx2iZfVrpgkDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+57rJxBPYuSY5pplj8VlUPB2IcBScUdppmgJz3uB52Fsn/YPMsJq3l3HAI0DGScI
-         n5Dkl+MXnlZfbpfs4L+BUbkYGRJecUfYFjGhvYyOl2npzuw85lM+1feqUZ/n3oQWD6
-         eb8axDipyZx8OUJKG5V2WwwNW9OsxM5LZyYNI+R0=
+        b=1hfXleEa+6NK8RWbGz5dQKUrDSH/xQyt5ivXCSo1bjxZ14XHllOr/K+V3YcsAXNMM
+         mmBQ1Zyfe4lL6m/M9vWC7jEgchNWPO+YW9EEIWTuP0V5EUPi4KxfRIWRjJXgp9nZy7
+         aivUhF8B2zV3CESAmb2tEP0VKUB/dXfIMsw2wkHw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yong Zhi <yong.zhi@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 103/205] ASoC: Intel: hdac_hdmi: Limit sampling rates at dai creation
-Date:   Fri,  8 Nov 2019 06:36:10 -0500
-Message-Id: <20191108113752.12502-103-sashal@kernel.org>
+Cc:     Erik Stromdahl <erik.stromdahl@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 094/205] ath10k: wmi: disable softirq's while calling ieee80211_rx
+Date:   Fri,  8 Nov 2019 06:36:01 -0500
+Message-Id: <20191108113752.12502-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,44 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhi <yong.zhi@intel.com>
+From: Erik Stromdahl <erik.stromdahl@gmail.com>
 
-[ Upstream commit 3b857472f34faa7d11001afa5e158833812c98d7 ]
+[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
 
-Playback of 44.1Khz contents with HDMI plugged returns
-"Invalid pipe config" because HDMI paths in the FW
-topology are configured to operate at 48Khz.
+This is done in order not to trig the below warning in
+ieee80211_rx_napi:
 
-This patch filters out sampling rates not supported
-at hdac_hdmi_create_dais() to let user space SRC
-to do the converting.
+WARN_ON_ONCE(softirq_count() == 0);
 
-Signed-off-by: Yong Zhi <yong.zhi@intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ieee80211_rx_napi requires that softirq's are disabled during
+execution.
+
+The High latency bus drivers (SDIO and USB) sometimes call the wmi
+ep_rx_complete callback from non softirq context, resulting in a trigger
+of the above warning.
+
+Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
+softirq context) should be safe as the local_bh_disable and
+local_bh_enable functions (called from ieee80211_rx_ni) are fully
+reentrant.
+
+Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hdmi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index 098196610542a..be2473166bfaf 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -1410,6 +1410,12 @@ static int hdac_hdmi_create_dais(struct hdac_device *hdev,
- 		if (ret)
- 			return ret;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 583147f00fa4e..40b36e73bb48c 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -2487,7 +2487,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		   status->freq, status->band, status->signal,
+ 		   status->rate_idx);
  
-+		/* Filter out 44.1, 88.2 and 176.4Khz */
-+		rates &= ~(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_88200 |
-+			   SNDRV_PCM_RATE_176400);
-+		if (!rates)
-+			return -EINVAL;
+-	ieee80211_rx(ar->hw, skb);
++	ieee80211_rx_ni(ar->hw, skb);
 +
- 		sprintf(dai_name, "intel-hdmi-hifi%d", i+1);
- 		hdmi_dais[i].name = devm_kstrdup(&hdev->dev,
- 					dai_name, GFP_KERNEL);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
