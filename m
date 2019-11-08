@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D283CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8C1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB8721924
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3410F2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214927;
-	bh=Ne3xpqHDEVTaOIwtvgtj6SoGrIn4XBahTRxtBYOMvZ0=;
+	s=default; t=1573214931;
+	bh=C6IkK7Gqz3rOVkZpbjQqtq8pgpHfEsSqDX4SCQ5deCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jffY+/u6BkfJPGUr14QxxNbsIxlTwoRrgjMJTjGNqhvK6ptvNPCiuIusTJl1u8naM
-	 vm/m5JjtCdsWnT9I3bj/Y61OExUOwBO2KpKvkT3WnVh/9J1l9yVmuvDAB3y18sOPld
-	 vxPgWSa2JgVGwpf/O+aGDpOSFSTvbhiEsH1YcCGE=
+	b=GwB9Ktv573akMXUAIuu5+ZtmZxGPrRdejoiGb5uYpgPCwzgFC2iYoa9+5y9o1zc+O
+	 IeJOldmjVIKHHsK+h0Io3XYv9scmi6u6H5JcZZW3XFMznyXmPTHwfinXUu0T38C2Kt
+	 rLn/h4qqgX1Gyg9y7JUoo8fyV2a/78gT5OofM9m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388635AbfKHLk1 (ORCPT
+        id S2391914AbfKHMIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53216 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:08:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388528AbfKHLkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:13 -0500
+        id S2388592AbfKHLkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D6FC20869;
-        Fri,  8 Nov 2019 11:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F41520869;
+        Fri,  8 Nov 2019 11:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213212;
-        bh=Ne3xpqHDEVTaOIwtvgtj6SoGrIn4XBahTRxtBYOMvZ0=;
+        s=default; t=1573213223;
+        bh=C6IkK7Gqz3rOVkZpbjQqtq8pgpHfEsSqDX4SCQ5deCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8j4RTqw9jELV558r0fjuJwDIA3GRzvSYI0MD34OFyB4PyUmxeZgtUk4izG79iZHE
-         DBChrRjSHqkkn1FVhvwL2SAcgNL6s81WWzwGx1hxWHZp7fOshzIzSW8CW5wmWrII7U
-         iruLA+kpsBu4N7Xg+BNme/cX9OMKa97MkQ+IVAc0=
+        b=jr1GPnWTlKokVlCgMCM3jFZIjgZMebyQoMhPR94mB+VbfhcH8FX/pXwUboGAUVLS8
+         MbOuAA5MY4DEVsFFHUxrr84jUQWgmKBlcObAF0blCPZmuG3A5m/Vaixm8dK7ockUx9
+         xWPhnuZ5lzFhVur2qy1f+Q4HETWdTlCJkw3TbVYI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 093/205] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
-Date:   Fri,  8 Nov 2019 06:36:00 -0500
-Message-Id: <20191108113752.12502-93-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 098/205] RDMA/core: Rate limit MAD error messages
+Date:   Fri,  8 Nov 2019 06:36:05 -0500
+Message-Id: <20191108113752.12502-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,49 +61,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
+[ Upstream commit f9d08f1e1939ad4d92e38bd3dee6842512f5bee6 ]
 
-S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
-external pull-up resistors, so disable any pull control for it in
-in controller node. This fixes support for S5M8767 interrupts and
-enables operation of wakeup from S5M8767 RTC alarm.
+While registering a mad agent, a user space can trigger various errors
+and flood the logs.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Therefore, decrease verbosity and rate limit such error messages.
+While we are at it, use __func__ to print function name.
+
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/infiniband/core/mad.c | 72 ++++++++++++++++++-----------------
+ 1 file changed, 37 insertions(+), 35 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 9c8ab4b7fb2cf..4ab1f1c66c27f 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -170,6 +170,8 @@
- 		reg = <0x66>;
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&s5m8767_irq>;
+diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
+index 74aa3e651bc3c..218411282069b 100644
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -223,30 +223,30 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
+ 	/* Validate parameters */
+ 	qpn = get_spl_qp_index(qp_type);
+ 	if (qpn == -1) {
+-		dev_notice(&device->dev,
+-			   "ib_register_mad_agent: invalid QP Type %d\n",
+-			   qp_type);
++		dev_dbg_ratelimited(&device->dev, "%s: invalid QP Type %d\n",
++				    __func__, qp_type);
+ 		goto error1;
+ 	}
  
- 		vinb1-supply = <&main_dc_reg>;
- 		vinb2-supply = <&main_dc_reg>;
-@@ -530,6 +532,13 @@
- 	cap-sd-highspeed;
- };
+ 	if (rmpp_version && rmpp_version != IB_MGMT_RMPP_VERSION) {
+-		dev_notice(&device->dev,
+-			   "ib_register_mad_agent: invalid RMPP Version %u\n",
+-			   rmpp_version);
++		dev_dbg_ratelimited(&device->dev,
++				    "%s: invalid RMPP Version %u\n",
++				    __func__, rmpp_version);
+ 		goto error1;
+ 	}
  
-+&pinctrl_0 {
-+	s5m8767_irq: s5m8767-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+};
-+
- &rtc {
- 	status = "okay";
- };
+ 	/* Validate MAD registration request if supplied */
+ 	if (mad_reg_req) {
+ 		if (mad_reg_req->mgmt_class_version >= MAX_MGMT_VERSION) {
+-			dev_notice(&device->dev,
+-				   "ib_register_mad_agent: invalid Class Version %u\n",
+-				   mad_reg_req->mgmt_class_version);
++			dev_dbg_ratelimited(&device->dev,
++					    "%s: invalid Class Version %u\n",
++					    __func__,
++					    mad_reg_req->mgmt_class_version);
+ 			goto error1;
+ 		}
+ 		if (!recv_handler) {
+-			dev_notice(&device->dev,
+-				   "ib_register_mad_agent: no recv_handler\n");
++			dev_dbg_ratelimited(&device->dev,
++					    "%s: no recv_handler\n", __func__);
+ 			goto error1;
+ 		}
+ 		if (mad_reg_req->mgmt_class >= MAX_MGMT_CLASS) {
+@@ -256,9 +256,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
+ 			 */
+ 			if (mad_reg_req->mgmt_class !=
+ 			    IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE) {
+-				dev_notice(&device->dev,
+-					   "ib_register_mad_agent: Invalid Mgmt Class 0x%x\n",
+-					   mad_reg_req->mgmt_class);
++				dev_dbg_ratelimited(&device->dev,
++					"%s: Invalid Mgmt Class 0x%x\n",
++					__func__, mad_reg_req->mgmt_class);
+ 				goto error1;
+ 			}
+ 		} else if (mad_reg_req->mgmt_class == 0) {
+@@ -266,8 +266,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
+ 			 * Class 0 is reserved in IBA and is used for
+ 			 * aliasing of IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE
+ 			 */
+-			dev_notice(&device->dev,
+-				   "ib_register_mad_agent: Invalid Mgmt Class 0\n");
++			dev_dbg_ratelimited(&device->dev,
++					    "%s: Invalid Mgmt Class 0\n",
++					    __func__);
+ 			goto error1;
+ 		} else if (is_vendor_class(mad_reg_req->mgmt_class)) {
+ 			/*
+@@ -275,18 +276,19 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
+ 			 * ensure supplied OUI is not zero
+ 			 */
+ 			if (!is_vendor_oui(mad_reg_req->oui)) {
+-				dev_notice(&device->dev,
+-					   "ib_register_mad_agent: No OUI specified for class 0x%x\n",
+-					   mad_reg_req->mgmt_class);
++				dev_dbg_ratelimited(&device->dev,
++					"%s: No OUI specified for class 0x%x\n",
++					__func__,
++					mad_reg_req->mgmt_class);
+ 				goto error1;
+ 			}
+ 		}
+ 		/* Make sure class supplied is consistent with RMPP */
+ 		if (!ib_is_mad_class_rmpp(mad_reg_req->mgmt_class)) {
+ 			if (rmpp_version) {
+-				dev_notice(&device->dev,
+-					   "ib_register_mad_agent: RMPP version for non-RMPP class 0x%x\n",
+-					   mad_reg_req->mgmt_class);
++				dev_dbg_ratelimited(&device->dev,
++					"%s: RMPP version for non-RMPP class 0x%x\n",
++					__func__, mad_reg_req->mgmt_class);
+ 				goto error1;
+ 			}
+ 		}
+@@ -297,9 +299,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
+ 					IB_MGMT_CLASS_SUBN_LID_ROUTED) &&
+ 			    (mad_reg_req->mgmt_class !=
+ 					IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE)) {
+-				dev_notice(&device->dev,
+-					   "ib_register_mad_agent: Invalid SM QP type: class 0x%x\n",
+-					   mad_reg_req->mgmt_class);
++				dev_dbg_ratelimited(&device->dev,
++					"%s: Invalid SM QP type: class 0x%x\n",
++					__func__, mad_reg_req->mgmt_class);
+ 				goto error1;
+ 			}
+ 		} else {
+@@ -307,9 +309,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
+ 					IB_MGMT_CLASS_SUBN_LID_ROUTED) ||
+ 			    (mad_reg_req->mgmt_class ==
+ 					IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE)) {
+-				dev_notice(&device->dev,
+-					   "ib_register_mad_agent: Invalid GS QP type: class 0x%x\n",
+-					   mad_reg_req->mgmt_class);
++				dev_dbg_ratelimited(&device->dev,
++					"%s: Invalid GS QP type: class 0x%x\n",
++					__func__, mad_reg_req->mgmt_class);
+ 				goto error1;
+ 			}
+ 		}
+@@ -324,18 +326,18 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
+ 	/* Validate device and port */
+ 	port_priv = ib_get_mad_port(device, port_num);
+ 	if (!port_priv) {
+-		dev_notice(&device->dev,
+-			   "ib_register_mad_agent: Invalid port %d\n",
+-			   port_num);
++		dev_dbg_ratelimited(&device->dev, "%s: Invalid port %d\n",
++				    __func__, port_num);
+ 		ret = ERR_PTR(-ENODEV);
+ 		goto error1;
+ 	}
+ 
+-	/* Verify the QP requested is supported.  For example, Ethernet devices
+-	 * will not have QP0 */
++	/* Verify the QP requested is supported. For example, Ethernet devices
++	 * will not have QP0.
++	 */
+ 	if (!port_priv->qp_info[qpn].qp) {
+-		dev_notice(&device->dev,
+-			   "ib_register_mad_agent: QP %d not supported\n", qpn);
++		dev_dbg_ratelimited(&device->dev, "%s: QP %d not supported\n",
++				    __func__, qpn);
+ 		ret = ERR_PTR(-EPROTONOSUPPORT);
+ 		goto error1;
+ 	}
 -- 
 2.20.1
 
