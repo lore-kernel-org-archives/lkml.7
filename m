@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EFEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BB2FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774AE207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DE1207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214110;
-	bh=BPCOPpeQbZWj52xinWEfuf+g4VQnSwbdAi1/ET2hRTQ=;
+	s=default; t=1573214116;
+	bh=UcVJUPglSscPWgOYcHOUcXLNRDwLqyUnDRJRi2uan6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N9SEPBKelOVg7/+4RuqJ23VRM0QJPbm9TZemnDIFXMz7VMZyENfSzGN7Ggyo9lj7g
-	 NCD0fnzob8UWWOO43oaJdoFmKZ4tAD2wuHEH7xuQzLe8s6KGX0/QovuUZ5/z6mf+JF
-	 z4MwakuYR/bHfVTxJTbdKBzwUMXQ6AhcqB8vsAeo=
+	b=rXnOv4oVdHh+qqwUmK4qwnBahaILewKhS7KxN3JsU9QsAdzyHGVPze+pCMDZ6ybzq
+	 GJWPZ2zKDKTGqakYLdf2dj/G9lnQtQwQXFdcZmj7CcUc3gYmQhYBVZ8mqBUISq8t/d
+	 veobYLklARjQL9X89sRbkbjzmNuD61kWutNWC9M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391396AbfKHLzJ (ORCPT
+        id S2391477AbfKHLzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:55:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33650 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:55:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387856AbfKHLqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:06 -0500
+        id S2391239AbfKHLqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5035F222C2;
-        Fri,  8 Nov 2019 11:46:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0F74222D4;
+        Fri,  8 Nov 2019 11:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213565;
-        bh=BPCOPpeQbZWj52xinWEfuf+g4VQnSwbdAi1/ET2hRTQ=;
+        s=default; t=1573213561;
+        bh=UcVJUPglSscPWgOYcHOUcXLNRDwLqyUnDRJRi2uan6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lN8zU55c+R3rQYIYzj7hUglWdvSdIJhms82WagUI+w3HcxRbrAPScO+v9lLV2unpR
-         gUQLdUOiSJzJSAk8g1fW6ocky4omFNocYPM+iTuxMXfjJF9gVeihATSLIhFLCAnzeR
-         YlU5JH8Rq5vLM2jvdzfbcrBYG+ZKaJg0TxRzNNdg=
+        b=KNQSCeeKEX6dKP5nWSQzIADxL2WA5IDNpD4DRYPKL+oBiz33ByGhVhQDWVabTNPTy
+         bvP8hVYk0tpktPInpZ0wdjgv+QUEs3n9YFv/YpUgbkdm+sRF6c4Y+H5/6CJPMyTGnp
+         G3Zhov5mp7nPwiTbB/hy+94NKZAFhYm9FzqkXi5s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/64] ARM: dts: exynos: Fix regulators configuration on Peach Pi/Pit Chromebooks
-Date:   Fri,  8 Nov 2019 06:44:54 -0500
-Message-Id: <20191108114545.15351-13-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 10/64] ASoC: dpcm: Properly initialise hw->rate_max
+Date:   Fri,  8 Nov 2019 06:44:51 -0500
+Message-Id: <20191108114545.15351-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,84 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit f8f3b7fc21b1cb59385b780acd9b9a26d04cb7b2 ]
+[ Upstream commit e33ffbd9cd39da09831ce62c11025d830bf78d9e ]
 
-Regulators, which are marked as 'on-in-suspend' seems to be critical for
-board operation, thus they must not be disabled anytime. This can be
-only assured by marking them as 'always-on', because otherwise some
-actions of their clients might result in turning them off. This patch
-restores suspend/resume operation on Peach-Pit Chromebook board. It
-partially reverts 'always-on' property removal done by the commit
-mentioned in the Fixes tag.
+If the CPU DAI does not initialise rate_max, say if using
+using KNOT or CONTINUOUS, then the rate_max field will be
+initialised to 0. A value of zero in the rate_max field of
+the hardware runtime will cause the sound card to support no
+sample rates at all. Obviously this is not desired, just a
+different mechanism is being used to apply the constraints. As
+such update the setting of rate_max in dpcm_init_runtime_hw
+to be consistent with the non-DPCM cases and set rate_max to
+UINT_MAX if nothing is defined on the CPU DAI.
 
-Fixes: 665c441eea3d ("ARM: dts: exynos: Remove unneded always-on for regulators on Peach boards")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 3 +++
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 3 +++
- 2 files changed, 6 insertions(+)
+ sound/soc/soc-pcm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 8b754ae8c8f7d..c9d379b1a1669 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -302,6 +302,7 @@
- 				regulator-name = "vdd_1v35";
- 				regulator-min-microvolt = <1350000>;
- 				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -323,6 +324,7 @@
- 				regulator-name = "vdd_2v";
- 				regulator-min-microvolt = <2000000>;
- 				regulator-max-microvolt = <2000000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -333,6 +335,7 @@
- 				regulator-name = "vdd_1v8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 1f90df2d7ecd8..ae58b8d6f6144 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -302,6 +302,7 @@
- 				regulator-name = "vdd_1v35";
- 				regulator-min-microvolt = <1350000>;
- 				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -323,6 +324,7 @@
- 				regulator-name = "vdd_2v";
- 				regulator-min-microvolt = <2000000>;
- 				regulator-max-microvolt = <2000000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -333,6 +335,7 @@
- 				regulator-name = "vdd_1v8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 1d00f6e894ef4..d69559e458725 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1592,7 +1592,7 @@ static void dpcm_init_runtime_hw(struct snd_pcm_runtime *runtime,
+ 				 u64 formats)
+ {
+ 	runtime->hw.rate_min = stream->rate_min;
+-	runtime->hw.rate_max = stream->rate_max;
++	runtime->hw.rate_max = min_not_zero(stream->rate_max, UINT_MAX);
+ 	runtime->hw.channels_min = stream->channels_min;
+ 	runtime->hw.channels_max = stream->channels_max;
+ 	if (runtime->hw.formats)
 -- 
 2.20.1
 
