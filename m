@@ -2,676 +2,233 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAE8FC6196
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998D2FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1119A20865
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:17:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BUSnB9Wx"
+	by mail.kernel.org (Postfix) with ESMTP id 6B91F20865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 22:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbfKHWRx (ORCPT
+        id S1730799AbfKHWSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:17:53 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36205 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfKHWRw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:17:52 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k13so4891680pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 14:17:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0jPCI52JEgZu3YeH2R0NF9pLpqO1ZcHvaLBnQIEkn5w=;
-        b=BUSnB9WxCCTnM9Pj9kKXoPVd8EXcMz2Kzg9p5XVFwnMb1PlKvSywwoOnbvxIeIcidf
-         HSl1i07YRkaNqxVTNfP3NCpFEt2vvvRajH8BeCZSZ+vnP8eLHLenk1AZ974NGoMJL7D6
-         HDKk737fzkoP+9d+uvLOdIPF0j9Bfo6yR/cOMqqZXrzIBx8zpBgV7KYN0gpTWQuGw5kX
-         Qw0vqEzZrobxnVLjbU0PVkHD8QQiME82bwJPt1kL1aqXL3oglTGIJutNDnb3Fy1K4pFh
-         Y3o1VKxr7AMsrIENauVHZDA7O3hBRznyUV1hfcUKDppMKKvylj+U8LpmPQcKQfJtv6qd
-         BAtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0jPCI52JEgZu3YeH2R0NF9pLpqO1ZcHvaLBnQIEkn5w=;
-        b=KUWZVj66i7TyfQ9Rt0I6IIzfsqBkxqPaznE3gtijseXki9E/K+dBFy/Z6Dpk42tP1v
-         PYUKy8LJk7+oUW2ZAj1CVPWJax7MEQO6YYc8NMKV/oa6SwvFOR66yR2AqvYXkM7t1SrZ
-         +i7LNr7cyRHhycuOxwh7rNmXRrtgwDFZfT9Js+b1udq9BEXqLcK2TNLcECnIsYv5IdWN
-         yWfbGrPZP/WKg7KMN/Wvm8TDdKn2D9qJTLfGMSqvjQZ5YWQgHqrOhHLF55ThkbwY94m5
-         yvqVLim/MICCkS4RAScyivwLpb2Jtkb113RYUKzgQ3D5FxrGADG1em9LEfknnFdFEvr/
-         zx/g==
-X-Gm-Message-State: APjAAAVD/YtS8qZTNZxcSrS43573e+NJNU4ZKrX7jiO+qhmKL/2CV6Xn
-        VK33lrdyCcRQ98jE2LWJb+C4A9iHgVbwTEfSZRJjNg==
-X-Google-Smtp-Source: APXvYqx1wvznqh3ltkyulT8ADyf+1/kLFEOzPhUomIPXlP75EjdNMNVU9PW9oWVVOhDXZXu+h61N2I7Dr+QO9avIJeQ=
-X-Received: by 2002:a63:541e:: with SMTP id i30mr14709132pgb.130.1573251471020;
- Fri, 08 Nov 2019 14:17:51 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1573236684.git.andreyknvl@google.com> <282c5da077ad53ce4e5ff9b4350bbf62b33bb6a9.1573236684.git.andreyknvl@google.com>
- <20191108211745.GA1282512@kroah.com>
-In-Reply-To: <20191108211745.GA1282512@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Fri, 8 Nov 2019 23:17:39 +0100
-Message-ID: <CAAeHK+yFcVgY4uBw2GCN7fE1sUO=x=Z3w5P+3GFCE-qOKVo=yw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] usb: gadget: add raw-gadget interface
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     USB list <linux-usb@vger.kernel.org>,
+        Fri, 8 Nov 2019 17:18:15 -0500
+Received: from mga03.intel.com ([134.134.136.65]:2880 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbfKHWSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 17:18:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 14:18:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
+   d="scan'208";a="377883818"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 08 Nov 2019 14:18:13 -0800
+Date:   Fri, 8 Nov 2019 14:22:42 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Felipe Balbi <balbi@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v7 02/11] iommu/vt-d: Enlightened PASID allocation
+Message-ID: <20191108142242.5eb2b0bc@jacob-builder>
+In-Reply-To: <79e3f867-8892-2314-e6f6-eac7d9b4f15b@redhat.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1571946904-86776-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <79e3f867-8892-2314-e6f6-eac7d9b4f15b@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 10:17 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Nov 08, 2019 at 07:26:55PM +0100, Andrey Konovalov wrote:
-> > USB Raw Gadget is a kernel module that provides a userspace interface for
-> > the USB Gadget subsystem. Essentially it allows to emulate USB devices
-> > from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
-> > currently a strictly debugging feature and shouldn't be used in
-> > production.
-> >
-> > Raw Gadget is similar to GadgetFS, but provides a more low-level and
-> > direct access to the USB Gadget layer for the userspace. The key
-> > differences are:
-> >
-> > 1. Every USB request is passed to the userspace to get a response, while
-> >    GadgetFS responds to some USB requests internally based on the provided
-> >    descriptors. However note, that the UDC driver might respond to some
-> >    requests on its own and never forward them to the Gadget layer.
-> >
-> > 2. GadgetFS performs some sanity checks on the provided USB descriptors,
-> >    while Raw Gadget allows you to provide arbitrary data as responses to
-> >    USB requests.
-> >
-> > 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
-> >    while GadgetFS currently binds to the first available UDC.
-> >
-> > 4. Raw Gadget uses predictable endpoint names (handles) across different
-> >    UDCs (as long as UDCs have enough endpoints of each required transfer
-> >    type).
-> >
-> > 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
->
-> I like the idea, and you've shown that you can do neat stuff with this,
-> so that's a good proof-of-concept.
->
-> But, at the least, use a "real" char device node for this, not debugfs.
-> Switch this to a misc device and I'll be glad to review it.
+On Fri, 8 Nov 2019 11:33:22 +0100
+Auger Eric <eric.auger@redhat.com> wrote:
 
-Hi Greg! Great, thanks! =) I'll review your comments and send an
-updated version next week!
+> Hi Jacob,
+> On 10/24/19 9:54 PM, Jacob Pan wrote:
+> > From: Lu Baolu <baolu.lu@linux.intel.com>
+> > 
+> > Enabling IOMMU in a guest requires communication with the host
+> > driver for certain aspects. Use of PASID ID to enable Shared Virtual
+> > Addressing (SVA) requires managing PASID's in the host. VT-d 3.0
+> > spec provides a Virtual Command Register (VCMD) to facilitate this.
+> > Writes to this register in the guest are trapped by QEMU which
+> > proxies the call to the host driver.
+> > 
+> > This virtual command interface consists of a capability register,
+> > a virtual command register, and a virtual response register. Refer
+> > to section 10.4.42, 10.4.43, 10.4.44 for more information.
+> > 
+> > This patch adds the enlightened PASID allocation/free interfaces
+> > via the virtual command interface.
+> > 
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> > ---
+> >  drivers/iommu/intel-pasid.c | 56
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> > drivers/iommu/intel-pasid.h | 13 ++++++++++-
+> > include/linux/intel-iommu.h |  2 ++ 3 files changed, 70
+> > insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iommu/intel-pasid.c
+> > b/drivers/iommu/intel-pasid.c index 040a445be300..d81e857d2b25
+> > 100644 --- a/drivers/iommu/intel-pasid.c
+> > +++ b/drivers/iommu/intel-pasid.c
+> > @@ -63,6 +63,62 @@ void *intel_pasid_lookup_id(int pasid)
+> >  	return p;
+> >  }
+> >  
+> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
+> > *pasid) +{
+> > +	unsigned long flags;
+> > +	u8 status_code;
+> > +	int ret = 0;
+> > +	u64 res;
+> > +
+> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, VCMD_CMD_ALLOC);
+> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
+> > +		      !(res & VCMD_VRSP_IP), res);
+> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
+> > +
+> > +	status_code = VCMD_VRSP_SC(res);
+> > +	switch (status_code) {
+> > +	case VCMD_VRSP_SC_SUCCESS:
+> > +		*pasid = VCMD_VRSP_RESULT(res);
+> > +		break;
+> > +	case VCMD_VRSP_SC_NO_PASID_AVAIL:
+> > +		pr_info("IOMMU: %s: No PASID available\n",
+> > iommu->name);
+> > +		ret = -ENOMEM;
+> > +		break;
+> > +	default:
+> > +		ret = -ENODEV;
+> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
+> > +			iommu->name, status_code);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
+> > +{
+> > +	unsigned long flags;
+> > +	u8 status_code;
+> > +	u64 res;
+> > +
+> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, (pasid << 8) |
+> > VCMD_CMD_FREE);
+> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
+> > +		      !(res & VCMD_VRSP_IP), res);
+> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
+> > +
+> > +	status_code = VCMD_VRSP_SC(res);
+> > +	switch (status_code) {
+> > +	case VCMD_VRSP_SC_SUCCESS:
+> > +		break;
+> > +	case VCMD_VRSP_SC_INVALID_PASID:
+> > +		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
+> > +		break;
+> > +	default:
+> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
+> > +			iommu->name, status_code);
+> > +	}
+> > +}
+> > +
+> >  /*
+> >   * Per device pasid table management:
+> >   */
+> > diff --git a/drivers/iommu/intel-pasid.h
+> > b/drivers/iommu/intel-pasid.h index fc8cd8f17de1..e413e884e685
+> > 100644 --- a/drivers/iommu/intel-pasid.h
+> > +++ b/drivers/iommu/intel-pasid.h
+> > @@ -23,6 +23,16 @@
+> >  #define is_pasid_enabled(entry)		(((entry)->lo >> 3)
+> > & 0x1) #define get_pasid_dir_size(entry)	(1 <<
+> > ((((entry)->lo >> 9) & 0x7) + 7)) 
+> > +/* Virtual command interface for enlightened pasid management. */
+> > +#define VCMD_CMD_ALLOC			0x1
+> > +#define VCMD_CMD_FREE			0x2
+> > +#define VCMD_VRSP_IP			0x1
+> > +#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
+> > +#define VCMD_VRSP_SC_SUCCESS		0
+> > +#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
+> > +#define VCMD_VRSP_SC_INVALID_PASID	1
+> > +#define VCMD_VRSP_RESULT(e)		(((e) >> 8) & 0xfffff)  
+> nit: pasid is 20b but result field is 56b large
+> Just in case a new command were to be added later on.
+Good point, will rename to VCMD_VRSP_RESULT_PASID andd new macros for
+future new commands with different results.
+> > +
+> >  /*
+> >   * Domain ID reserved for pasid entries programmed for first-level
+> >   * only and pass-through transfer modes.
+> > @@ -95,5 +105,6 @@ int intel_pasid_setup_pass_through(struct
+> > intel_iommu *iommu, struct device *dev, int pasid);
+> >  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+> >  				 struct device *dev, int pasid);
+> > -
+> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
+> > *pasid); +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned
+> > int pasid); #endif /* __INTEL_PASID_H */
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index 2e1bed9b7eef..1d4b8dcdc5d8
+> > 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -161,6 +161,7 @@
+> >  #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
+> >  #define ecap_flts(e)		(((e) >> 47) & 0x1)
+> >  #define ecap_slts(e)		(((e) >> 46) & 0x1)
+> > +#define ecap_vcs(e)		(((e) >> 44) & 0x1)  
+> nit: this addition is not related to this patch
+> may be moved to [3] as vccap_pasid
+Sounds good.
 
->
-> Some minor nits that jump out at me other than debugfs:
->
-> > +static void raw_event_queue_destroy(struct raw_event_queue *queue)
-> > +{
-> > +     int i;
-> > +
-> > +     for (i = 0; i < queue->size; i++) {
-> > +             pr_debug("freeing event[%d] = %px\n", i, queue->events[i]);
->
-> You still have a lot of debugging messages in here.  Most of these can
-> be removed, as ftrace is useful instead now that you "know" the code
-> works properly.
->
-> > +             kfree(queue->events[i]);
-> > +     }
-> > +     queue->size = 0;
-> > +}
-> > +
-> > +/*----------------------------------------------------------------------*/
-> > +
-> > +struct raw_dev;
-> > +
-> > +#define USB_RAW_MAX_ENDPOINTS 32
-> > +
-> > +enum ep_state {
-> > +     STATE_EP_DISABLED,
-> > +     STATE_EP_ENABLED,
-> > +};
-> > +
-> > +struct raw_ep {
-> > +     struct raw_dev          *dev;
-> > +     enum ep_state           state;
-> > +     struct usb_ep           *ep;
-> > +     struct usb_request      *req;
-> > +     bool                    urb_queued;
-> > +     bool                    disabling;
-> > +     ssize_t                 status;
-> > +};
-> > +
-> > +enum dev_state {
-> > +     STATE_DEV_INVALID = 0,
-> > +     STATE_DEV_OPENED,
-> > +     STATE_DEV_INITIALIZED,
-> > +     STATE_DEV_RUNNING,
-> > +     STATE_DEV_CLOSED,
-> > +     STATE_DEV_FAILED
-> > +};
-> > +
-> > +struct raw_dev {
-> > +     refcount_t                      count;
->
-> Why not just use a "real" struct device?
->
-> Or a kref at the least, no need to roll your own refcount logic here,
-> right?
->
-> > +     spinlock_t                      lock;
-> > +
-> > +     const char                      *udc_name;
-> > +     struct usb_gadget_driver        driver;
-> > +
-> > +     /* Protected by lock: */
-> > +     enum dev_state                  state;
-> > +     bool                            gadget_registered;
-> > +     struct usb_gadget               *gadget;
-> > +     struct usb_request              *req;
-> > +     bool                            ep0_in_pending;
-> > +     bool                            ep0_out_pending;
-> > +     bool                            ep0_urb_queued;
-> > +     ssize_t                         ep0_status;
-> > +     struct raw_ep                   eps[USB_RAW_MAX_ENDPOINTS];
-> > +
-> > +     struct completion               ep0_done;
-> > +     struct raw_event_queue          queue;
-> > +};
-> > +
-> > +static struct raw_dev *dev_new(void)
-> > +{
-> > +     struct raw_dev *dev;
-> > +
-> > +     dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-> > +     if (!dev)
-> > +             return NULL;
-> > +     refcount_set(&dev->count, 1); /* Matches dev_put() in raw_release(). */
-> > +     spin_lock_init(&dev->lock);
-> > +     init_completion(&dev->ep0_done);
-> > +     raw_event_queue_init(&dev->queue);
-> > +     pr_debug("device created\n");
-> > +     return dev;
-> > +}
-> > +
-> > +static inline void dev_get(struct raw_dev *dev)
-> > +{
-> > +     refcount_inc(&dev->count);
-> > +}
-> > +
-> > +static void dev_put(struct raw_dev *dev)
-> > +{
-> > +     int i;
-> > +
-> > +     if (likely(!refcount_dec_and_test(&dev->count)))
-> > +             return;
->
-> unless you can measure it, don't use likely/unlikely as the compiler and
-> cpu can almost always get it right instead.
->
-> > +     kfree(dev->udc_name);
-> > +     kfree(dev->driver.udc_name);
-> > +     if (dev->req) {
-> > +             if (dev->ep0_urb_queued)
-> > +                     usb_ep_dequeue(dev->gadget->ep0, dev->req);
-> > +             usb_ep_free_request(dev->gadget->ep0, dev->req);
-> > +     }
-> > +     raw_event_queue_destroy(&dev->queue);
-> > +     for (i = 0; i < USB_RAW_MAX_ENDPOINTS; i++) {
-> > +             if (dev->eps[i].state != STATE_EP_ENABLED)
-> > +                     continue;
-> > +             usb_ep_disable(dev->eps[i].ep);
-> > +             usb_ep_free_request(dev->eps[i].ep, dev->eps[i].req);
-> > +             kfree(dev->eps[i].ep->desc);
-> > +             dev->eps[i].state = STATE_EP_DISABLED;
-> > +     }
-> > +     kfree(dev);
-> > +     pr_debug("device freed\n");
->
-> ftrace :)
->
-> > +static void gadget_unbind(struct usb_gadget *gadget)
-> > +{
-> > +     struct raw_dev *dev = get_gadget_data(gadget);
-> > +     unsigned long flags;
-> > +
-> > +     if (WARN_ON(!dev))
-> > +             return;
->
-> Why warn?  How can this happen?
->
-> > +     spin_lock_irqsave(&dev->lock, flags);
-> > +     set_gadget_data(gadget, NULL);
-> > +     spin_unlock_irqrestore(&dev->lock, flags);
-> > +     dev_put(dev); /* Matches dev_get() in gadget_bind(). */
-> > +     pr_debug("unbound\n");
-> > +}
-> > +
-> > +static int gadget_setup(struct usb_gadget *gadget,
-> > +                     const struct usb_ctrlrequest *ctrl)
-> > +{
-> > +     int ret = 0;
-> > +     struct raw_dev *dev = get_gadget_data(gadget);
-> > +     unsigned long flags;
-> > +
-> > +     pr_debug("bRequestType: 0x%x (%s), bRequest: 0x%x,\n"
-> > +             "                   wValue: 0x%x, wIndex: 0x%x, wLength: %d\n",
-> > +             ctrl->bRequestType,
-> > +             (ctrl->bRequestType & USB_DIR_IN) ? "IN" : "OUT",
-> > +             ctrl->bRequest, ctrl->wValue, ctrl->wIndex, ctrl->wLength);
-> > +
-> > +     if (WARN_ON(!dev))
-> > +             return -ENODEV;
->
-> Same here.
->
-> > +     spin_lock_irqsave(&dev->lock, flags);
-> > +     if (dev->state != STATE_DEV_RUNNING) {
-> > +             pr_err("ignoring, device is not running\n");
-> > +             ret = -ENODEV;
-> > +             goto out_unlock;
-> > +     }
-> > +     pr_debug("in_pending: %d, out_pending: %d\n",
-> > +                     dev->ep0_in_pending, dev->ep0_out_pending);
-> > +     if (dev->ep0_in_pending || dev->ep0_out_pending) {
-> > +             pr_debug("stalling, already have pending request\n");
-> > +             ret = -EBUSY;
-> > +             goto out_unlock;
-> > +     }
-> > +     if ((ctrl->bRequestType & USB_DIR_IN) && ctrl->wLength) {
-> > +             pr_debug("ep0_in_pending <= true\n");
-> > +             dev->ep0_in_pending = true;
-> > +     } else {
-> > +             pr_debug("ep0_out_pending <= true\n");
-> > +             dev->ep0_out_pending = true;
-> > +     }
-> > +     spin_unlock_irqrestore(&dev->lock, flags);
-> > +
-> > +     ret = raw_queue_event(dev, USB_RAW_EVENT_CONTROL, sizeof(*ctrl), ctrl);
-> > +     if (ret < 0)
-> > +             pr_err("failed to queue event\n");
-> > +     pr_debug("event queued\n");
-> > +     goto out;
-> > +
-> > +out_unlock:
-> > +     spin_unlock_irqrestore(&dev->lock, flags);
-> > +out:
-> > +     return ret;
-> > +}
-> > +
-> > +static void gadget_disconnect(struct usb_gadget *gadget)
-> > +{
-> > +     pr_debug("ignoring\n");
-> > +}
-> > +
-> > +static void gadget_suspend(struct usb_gadget *gadget)
-> > +{
-> > +     pr_debug("ignoring\n");
-> > +}
-> > +
-> > +static void gadget_resume(struct usb_gadget *gadget)
-> > +{
-> > +     pr_debug("ignoring\n");
-> > +}
-> > +
-> > +static void gadget_reset(struct usb_gadget *gadget)
-> > +{
-> > +     pr_debug("ignoring\n");
-> > +}
->
-> I think you don't even need functions for these, right?  If not, just
-> remove.  If you do, we should fix the gadget core to not require them :)
->
-> > +
-> > +/*----------------------------------------------------------------------*/
-> > +
-> > +static int raw_open(struct inode *inode, struct file *fd)
-> > +{
-> > +     struct raw_dev *dev;
-> > +
-> > +     dev = dev_new();
-> > +     if (!dev) {
-> > +             pr_err("failed to created device");
->
-> So many error messages printed on failures, you only needed the original
-> one if memory was gone that the core sent out.
->
-> > +             return -ENOMEM;
-> > +     }
-> > +     fd->private_data = dev;
-> > +     dev->state = STATE_DEV_OPENED;
-> > +     pr_debug("device opened");
-> > +     return 0;
-> > +}
-> > +
-> > +static int raw_release(struct inode *inode, struct file *fd)
-> > +{
-> > +     int ret = 0;
-> > +     struct raw_dev *dev = fd->private_data;
-> > +     unsigned long flags;
-> > +     bool unregister = false;
-> > +
-> > +     if (!dev)
-> > +             return -EBUSY;
->
-> How can that happen?
->
-> > +
-> > +     spin_lock_irqsave(&dev->lock, flags);
-> > +     dev->state = STATE_DEV_CLOSED;
-> > +     pr_debug("device is closed\n");
-> > +     if (!dev->gadget) {
-> > +             spin_unlock_irqrestore(&dev->lock, flags);
-> > +             goto out_put;
-> > +     }
-> > +     if (dev->gadget_registered)
-> > +             unregister = true;
-> > +     dev->gadget_registered = false;
-> > +     spin_unlock_irqrestore(&dev->lock, flags);
-> > +
-> > +     if (unregister) {
-> > +             ret = usb_gadget_unregister_driver(&dev->driver);
-> > +             WARN_ON(ret != 0);
-> > +             dev_put(dev); /* Matches dev_get() in raw_ioctl_run(). */
-> > +     }
-> > +
-> > +out_put:
-> > +     dev_put(dev); /* Matches dev_new() in raw_open(). */
-> > +     pr_debug("device released");
-> > +     return ret;
-> > +}
-> > +
-> > +/*----------------------------------------------------------------------*/
-> > +
-> > +#define UDC_NAME_LENGTH_MAX 128
-> > +
-> > +static int raw_ioctl_init(struct raw_dev *dev, unsigned long value)
-> > +{
-> > +     int ret = 0;
-> > +     struct usb_raw_init arg;
-> > +     char *udc_driver_name;
-> > +     char *udc_device_name;
-> > +     unsigned long flags;
-> > +
-> > +     ret = copy_from_user(&arg, (void __user *)value, sizeof(arg));
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     switch (arg.speed) {
-> > +     case USB_SPEED_LOW:
-> > +     case USB_SPEED_FULL:
-> > +     case USB_SPEED_HIGH:
-> > +     case USB_SPEED_SUPER:
-> > +             break;
-> > +     default:
-> > +             arg.speed = USB_SPEED_HIGH;
-> > +     }
-> > +
-> > +     udc_driver_name = kmalloc(UDC_NAME_LENGTH_MAX, GFP_KERNEL);
-> > +     if (!udc_driver_name)
-> > +             return -ENOMEM;
-> > +     ret = strncpy_from_user(udc_driver_name, arg.driver_name,
-> > +                                     UDC_NAME_LENGTH_MAX);
-> > +     if (ret < 0) {
-> > +             kfree(udc_driver_name);
-> > +             return ret;
-> > +     }
-> > +     ret = 0;
-> > +     pr_debug("udc_driver_name: %s\n", udc_driver_name);
-> > +
-> > +     udc_device_name = kmalloc(UDC_NAME_LENGTH_MAX, GFP_KERNEL);
-> > +     if (!udc_device_name) {
-> > +             kfree(udc_driver_name);
-> > +             return -ENOMEM;
-> > +     }
-> > +     ret = strncpy_from_user(udc_device_name, arg.device_name,
-> > +                                     UDC_NAME_LENGTH_MAX);
->
-> You are burying the max size of names in the .c code, put it in the .h
-> to give userspace a chance.
->
-> > +static bool check_ep_caps(struct usb_ep *ep,
-> > +                             struct usb_endpoint_descriptor *desc)
-> > +{
-> > +     switch (desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
-> > +     case USB_ENDPOINT_XFER_ISOC:
->
-> We have functions/macros for endpoint types, right?  Can't you use them
-> here?
->
-> > +             if (!ep->caps.type_iso)
-> > +                     return false;
-> > +             break;
-> > +     case USB_ENDPOINT_XFER_BULK:
-> > +             if (!ep->caps.type_bulk)
-> > +                     return false;
-> > +             break;
-> > +     case USB_ENDPOINT_XFER_INT:
-> > +             if (!ep->caps.type_int)
-> > +                     return false;
-> > +             break;
-> > +     default:
-> > +             return false;
-> > +     }
-> > +
-> > +     switch (desc->bEndpointAddress & USB_ENDPOINT_DIR_MASK) {
-> > +     case USB_DIR_IN:
->
-> Same here, we have macros for this.
->
-> > +static int __init raw_init(void)
-> > +{
-> > +     raw_file = debugfs_create_file("raw-gadget", 0600,
-> > +                     usb_debug_root, NULL, &raw_ops);
-> > +     if (!raw_file) {
->
-> this return value will never be NULL no matter what.  So you just tested
-> for an impossiblity :)
->
-> In the future, there's never a new to check any return value for any
-> debugfs calls, it's not an issue.
->
-> > +             pr_err("failed to create raw-gadget in debugfs\n");
-> > +             return -ENOMEM;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> > +static void __exit raw_exit(void)
-> > +{
-> > +     if (!raw_file)
-> > +             return;
->
-> No need to check:
->
-> > +     debugfs_remove(raw_file);
->
-> that call can take NULL
->
-> > +     raw_file = NULL;
->
-> No need for this :)
->
-> > +/*
-> > + * struct usb_raw_init - argument for USB_RAW_IOCTL_INIT ioctl.
-> > + * @speed: The speed of the emulated USB device, takes the same values as
-> > + *     the usb_device_speed enum: USB_SPEED_FULL, USB_SPEED_HIGH, etc.
-> > + * @driver_name: The name of the UDC driver.
-> > + * @device_name: The name of a UDC instance.
-> > + *
-> > + * The last two fields identify a UDC the gadget driver should bind to.
-> > + * For example, Dummy UDC has "dummy_udc" as its driver_name and "dummy_udc.N"
-> > + * as its device_name, where N in the index of the Dummy UDC instance.
-> > + * At the same time the dwc2 driver that is used on Raspberry Pi Zero, has
-> > + * "20980000.usb" as both driver_name and device_name.
-> > + */
-> > +struct usb_raw_init {
-> > +     uint64_t        speed;
-> > +     const char      *driver_name;
-> > +     const char      *device_name;
->
-> If you have structures crossing the user/kernel boundry, always use the
-> correct data types.  Those start with "__".  So this would be __u32 and
-> __u8 * instead.
->
-> > +};
-> > +
-> > +/* The type of event fetched with the USB_RAW_IOCTL_EVENT_FETCH ioctl. */
-> > +enum usb_raw_event_type {
-> > +     USB_RAW_EVENT_INVALID,
-> > +
-> > +     /* This event is queued when the driver has bound to a UDC. */
-> > +     USB_RAW_EVENT_CONNECT,
-> > +
-> > +     /* This event is queued when a new control request arrived to ep0. */
-> > +     USB_RAW_EVENT_CONTROL,
-> > +
-> > +     /* The list might grow in the future. */
-> > +};
-> > +
-> > +/*
-> > + * struct usb_raw_event - argument for USB_RAW_IOCTL_EVENT_FETCH ioctl.
-> > + * @type: The type of the fetched event.
-> > + * @length: Length of the data buffer. Updated by the driver and set to the
-> > + *     actual length of the fetched event data.
-> > + * @data: A buffer to store the fetched event data.
-> > + *
-> > + * Currently the fetched data buffer is empty for USB_RAW_EVENT_CONNECT,
-> > + * and contains struct usb_ctrlrequest for USB_RAW_EVENT_CONTROL.
-> > + */
-> > +struct usb_raw_event {
-> > +     uint32_t        type;
-> > +     uint32_t        length;
-> > +     char            data[0];
->
-> __u32 please.
->
-> > +};
-> > +
-> > +#define USB_RAW_IO_FLAGS_ZERO        0x0001
-> > +#define USB_RAW_IO_FLAGS_MASK        0x0001
-> > +
-> > +static int usb_raw_io_flags_valid(uint16_t flags)
-> > +{
-> > +     return (flags & ~USB_RAW_IO_FLAGS_MASK) == 0;
-> > +}
-> > +
-> > +static int usb_raw_io_flags_zero(uint16_t flags)
-> > +{
-> > +     return (flags & USB_RAW_IO_FLAGS_ZERO);
-> > +}
-> > +
-> > +/*
-> > + * struct usb_raw_ep_io - argument for USB_RAW_IOCTL_EP0/EP_WRITE/READ ioctls.
-> > + * @ep: Endpoint handle as returned by USB_RAW_IOCTL_EP_ENABLE for
-> > + *     USB_RAW_IOCTL_EP_WRITE/READ. Ignored for USB_RAW_IOCTL_EP0_WRITE/READ.
-> > + * @flags: When USB_RAW_IO_FLAGS_ZERO is specified, the zero flag is set on
-> > + *     the submitted USB request, see include/linux/usb/gadget.h for details.
-> > + * @length: Length of data.
-> > + * @data: Data to send for USB_RAW_IOCTL_EP0/EP_WRITE. Buffer to store received
-> > + *     data for USB_RAW_IOCTL_EP0/EP_READ.
-> > + */
-> > +struct usb_raw_ep_io {
-> > +     uint16_t        ep;
-> > +     uint16_t        flags;
->
-> __u16
->
-> > +     uint32_t        length;
-> > +     char            data[0];
-> > +};
-> > +
-> > +/*
-> > + * Initializes a Raw Gadget instance.
-> > + * Accepts a pointer to the usb_raw_init struct as an argument.
-> > + * Returns 0 on success or negative error code on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_INIT           _IOW('U', 0, struct usb_raw_init)
-> > +
-> > +/*
-> > + * Instructs Raw Gadget to bind to a UDC and start emulating a USB device.
-> > + * Returns 0 on success or negative error code on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_RUN            _IO('U', 1)
-> > +
-> > +/*
-> > + * A blocking ioctl that waits for an event and returns fetched event data to
-> > + * the user.
-> > + * Accepts a pointer to the usb_raw_event struct.
-> > + * Returns 0 on success or negative error code on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_EVENT_FETCH    _IOR('U', 2, struct usb_raw_event)
-> > +
-> > +/*
-> > + * Queues an IN (OUT for READ) urb as a response to the last control request
-> > + * received on endpoint 0, provided that was an IN (OUT for READ) request and
-> > + * waits until the urb is completed. Copies received data to user for READ.
-> > + * Accepts a pointer to the usb_raw_ep_io struct as an argument.
-> > + * Returns length of trasferred data on success or negative error code on
-> > + * failure.
-> > + */
-> > +#define USB_RAW_IOCTL_EP0_WRITE              _IOW('U', 3, struct usb_raw_ep_io)
-> > +#define USB_RAW_IOCTL_EP0_READ               _IOWR('U', 4, struct usb_raw_ep_io)
-> > +
-> > +/*
-> > + * Finds an endpoint that supports the transfer type specified in the
-> > + * descriptor and enables it.
-> > + * Accepts a pointer to the usb_endpoint_descriptor struct as an argument.
-> > + * Returns enabled endpoint handle on success or negative error code on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_EP_ENABLE              _IOW('U', 5, struct usb_endpoint_descriptor)
-> > +
-> > +/* Disables specified endpoint.
-> > + * Accepts endpoint handle as an argument.
-> > + * Returns 0 on success or negative error code on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_EP_DISABLE     _IOW('U', 6, int)
->
-> __u32, right?
->
->
-> > +
-> > +/*
-> > + * Queues an IN (OUT for READ) urb as a response to the last control request
-> > + * received on endpoint usb_raw_ep_io.ep, provided that was an IN (OUT for READ)
-> > + * request and waits until the urb is completed. Copies received data to user
-> > + * for READ.
-> > + * Accepts a pointer to the usb_raw_ep_io struct as an argument.
-> > + * Returns length of trasferred data on success or negative error code on
-> > + * failure.
-> > + */
-> > +#define USB_RAW_IOCTL_EP_WRITE               _IOW('U', 7, struct usb_raw_ep_io)
-> > +#define USB_RAW_IOCTL_EP_READ                _IOWR('U', 8, struct usb_raw_ep_io)
-> > +
-> > +/*
-> > + * Switches the gadget into the configured state.
-> > + * Returns 0 on success or negative error code on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_CONFIGURE              _IO('U', 9)
-> > +
-> > +/*
-> > + * Constrains UDC VBUS power usage.
-> > + * Accepts current limit in 2 mA units as an argument.
-> > + * Returns 0 on success or negative error code on failure.
-> > + */
-> > +#define USB_RAW_IOCTL_VBUS_DRAW              _IOW('U', 10, uint32_t)
->
-> __u32
->
-> thanks,
->
-> greg k-h
+Thanks
+> >  #define ecap_smts(e)		(((e) >> 43) & 0x1)
+> >  #define ecap_dit(e)		((e >> 41) & 0x1)
+> >  #define ecap_pasid(e)		((e >> 40) & 0x1)
+> > @@ -282,6 +283,7 @@
+> >  
+> >  /* PRS_REG */
+> >  #define DMA_PRS_PPR	((u32)1)
+> > +#define DMA_VCS_PAS	((u64)1)
+> >  
+> >  #define IOMMU_WAIT_OP(iommu, offset, op, cond,
+> > sts)			\ do
+> > {
+> > \ 
+> Otherwise looks good to me
+> 
+> Thanks
+> 
+> Eric
+> 
+
+[Jacob Pan]
