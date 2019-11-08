@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657F8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4E7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BA52067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A4520650
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573239779;
-	bh=WmOcJMhOy+iSbGh+HRZw31aZbXaM0RzcRwAY467U6fg=;
+	s=default; t=1573239784;
+	bh=hzW88UZxpAFQvgK9U1evcPbDX2209EJy7ym2DLKfcm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SXdgU8zog2V/6lRxsL6OmsqgTXcr2Y/758b8akLA6M5NBfqwNmBiU8JSYOlkwoZal
-	 lDqqb/24I32ddTaItW9jz3otAvCn92yqK0eMp+S30KrflmaHRc/692dwtyGpSjTckR
-	 PT1bx8tS8pYAnnw7BIcukKHaSvJqamYzo9uUuKbg=
+	b=Ds4NaKsilAFXhajWOIuwloy8yHaLIK7IWV+ECvke2rLWliFboLBwW5sl+13ff4Nsr
+	 UMDR86cW9rBdD+cMB+ZBEkIrXrkUxMDj/41IaRnKmbNk+TGiCzuV+HPQ0G0XboJAU8
+	 vgKoBoQ0CZ1xNU4KQsxgZ0BSdA/j6DWxUzb/8pUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390673AbfKHTC6 (ORCPT
+        id S2390680AbfKHTDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:02:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60770 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:03:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387457AbfKHTC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:02:56 -0500
+        id S2387457AbfKHTDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 14:03:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35AB5215EA;
-        Fri,  8 Nov 2019 19:02:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6300420650;
+        Fri,  8 Nov 2019 19:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239775;
-        bh=WmOcJMhOy+iSbGh+HRZw31aZbXaM0RzcRwAY467U6fg=;
+        s=default; t=1573239778;
+        bh=hzW88UZxpAFQvgK9U1evcPbDX2209EJy7ym2DLKfcm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VlvQd4sCeV90xYKexsz5L8TwpBRUhJNdY4PhIWT7lDDBMjq+ik97bU707uiDilBhF
-         NeobbkUqLSKzgboFNhrxMJrQEfcrNPVirDThzBT3b3tf5viLvItNuPDbbufj/HsSVB
-         FgDxxbbbagYLpdEyXqVuytuIHc3uQ9vZoBw17yeE=
+        b=tifkYwiHZ247UKSsiwbH0Z2hJMUsLVoK8WrnPh5eM4xdRzZlJ7LgvZHMIlp31B7vw
+         px/i+8wsZtmSPVAuKi1vxH+ogli//44008DS+s0JHS2uMvRoraIXNhNPrlFddfq5iq
+         tPlonmfGquj/8ddUwtlB7uVw2/WVz936kFiHy4uc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 57/79] net: use skb_queue_empty_lockless() in busy poll contexts
-Date:   Fri,  8 Nov 2019 19:50:37 +0100
-Message-Id: <20191108174819.403194786@linuxfoundation.org>
+Subject: [PATCH 4.19 58/79] net: add READ_ONCE() annotation in __skb_wait_for_more_packets()
+Date:   Fri,  8 Nov 2019 19:50:38 +0100
+Message-Id: <20191108174819.605659189@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
 References: <20191108174745.495640141@linuxfoundation.org>
@@ -61,79 +62,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3f926af3f4d688e2e11e7f8ed04e277a14d4d4a4 ]
+[ Upstream commit 7c422d0ce97552dde4a97e6290de70ec6efb0fc6 ]
 
-Busy polling usually runs without locks.
-Let's use skb_queue_empty_lockless() instead of skb_queue_empty()
+__skb_wait_for_more_packets() can be called while other cpus
+can feed packets to the socket receive queue.
 
-Also uses READ_ONCE() in __skb_try_recv_datagram() to address
-a similar potential problem.
+KCSAN reported :
+
+BUG: KCSAN: data-race in __skb_wait_for_more_packets / __udp_enqueue_schedule_skb
+
+write to 0xffff888102e40b58 of 8 bytes by interrupt on cpu 0:
+ __skb_insert include/linux/skbuff.h:1852 [inline]
+ __skb_queue_before include/linux/skbuff.h:1958 [inline]
+ __skb_queue_tail include/linux/skbuff.h:1991 [inline]
+ __udp_enqueue_schedule_skb+0x2d7/0x410 net/ipv4/udp.c:1470
+ __udp_queue_rcv_skb net/ipv4/udp.c:1940 [inline]
+ udp_queue_rcv_one_skb+0x7bd/0xc70 net/ipv4/udp.c:2057
+ udp_queue_rcv_skb+0xb5/0x400 net/ipv4/udp.c:2074
+ udp_unicast_rcv_skb.isra.0+0x7e/0x1c0 net/ipv4/udp.c:2233
+ __udp4_lib_rcv+0xa44/0x17c0 net/ipv4/udp.c:2300
+ udp_rcv+0x2b/0x40 net/ipv4/udp.c:2470
+ ip_protocol_deliver_rcu+0x4d/0x420 net/ipv4/ip_input.c:204
+ ip_local_deliver_finish+0x110/0x140 net/ipv4/ip_input.c:231
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ip_local_deliver+0x133/0x210 net/ipv4/ip_input.c:252
+ dst_input include/net/dst.h:442 [inline]
+ ip_rcv_finish+0x121/0x160 net/ipv4/ip_input.c:413
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ NF_HOOK include/linux/netfilter.h:299 [inline]
+ ip_rcv+0x18f/0x1a0 net/ipv4/ip_input.c:523
+ __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5010
+ __netif_receive_skb+0x37/0xf0 net/core/dev.c:5124
+ process_backlog+0x1d3/0x420 net/core/dev.c:5955
+
+read to 0xffff888102e40b58 of 8 bytes by task 13035 on cpu 1:
+ __skb_wait_for_more_packets+0xfa/0x320 net/core/datagram.c:100
+ __skb_recv_udp+0x374/0x500 net/ipv4/udp.c:1683
+ udp_recvmsg+0xe1/0xb10 net/ipv4/udp.c:1712
+ inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
+ sock_recvmsg_nosec+0x5c/0x70 net/socket.c:871
+ ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
+ do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
+ __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
+ __do_sys_recvmmsg net/socket.c:2703 [inline]
+ __se_sys_recvmmsg net/socket.c:2696 [inline]
+ __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 13035 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 
 Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/crypto/chelsio/chtls/chtls_io.c |    2 +-
- net/core/datagram.c                     |    2 +-
- net/core/sock.c                         |    2 +-
- net/ipv4/tcp.c                          |    2 +-
- net/sctp/socket.c                       |    2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ net/core/datagram.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/chelsio/chtls/chtls_io.c
-+++ b/drivers/crypto/chelsio/chtls/chtls_io.c
-@@ -1716,7 +1716,7 @@ int chtls_recvmsg(struct sock *sk, struc
- 		return peekmsg(sk, msg, len, nonblock, flags);
- 
- 	if (sk_can_busy_loop(sk) &&
--	    skb_queue_empty(&sk->sk_receive_queue) &&
-+	    skb_queue_empty_lockless(&sk->sk_receive_queue) &&
- 	    sk->sk_state == TCP_ESTABLISHED)
- 		sk_busy_loop(sk, nonblock);
- 
 --- a/net/core/datagram.c
 +++ b/net/core/datagram.c
-@@ -279,7 +279,7 @@ struct sk_buff *__skb_try_recv_datagram(
- 			break;
+@@ -95,7 +95,7 @@ int __skb_wait_for_more_packets(struct s
+ 	if (error)
+ 		goto out_err;
  
- 		sk_busy_loop(sk, flags & MSG_DONTWAIT);
--	} while (sk->sk_receive_queue.prev != *last);
-+	} while (READ_ONCE(sk->sk_receive_queue.prev) != *last);
+-	if (sk->sk_receive_queue.prev != skb)
++	if (READ_ONCE(sk->sk_receive_queue.prev) != skb)
+ 		goto out;
  
- 	error = -EAGAIN;
- 
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3483,7 +3483,7 @@ bool sk_busy_loop_end(void *p, unsigned
- {
- 	struct sock *sk = p;
- 
--	return !skb_queue_empty(&sk->sk_receive_queue) ||
-+	return !skb_queue_empty_lockless(&sk->sk_receive_queue) ||
- 	       sk_busy_loop_timeout(sk, start_time);
- }
- EXPORT_SYMBOL(sk_busy_loop_end);
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1948,7 +1948,7 @@ int tcp_recvmsg(struct sock *sk, struct
- 	if (unlikely(flags & MSG_ERRQUEUE))
- 		return inet_recv_error(sk, msg, len, addr_len);
- 
--	if (sk_can_busy_loop(sk) && skb_queue_empty(&sk->sk_receive_queue) &&
-+	if (sk_can_busy_loop(sk) && skb_queue_empty_lockless(&sk->sk_receive_queue) &&
- 	    (sk->sk_state == TCP_ESTABLISHED))
- 		sk_busy_loop(sk, nonblock);
- 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -8334,7 +8334,7 @@ struct sk_buff *sctp_skb_recv_datagram(s
- 		if (sk_can_busy_loop(sk)) {
- 			sk_busy_loop(sk, noblock);
- 
--			if (!skb_queue_empty(&sk->sk_receive_queue))
-+			if (!skb_queue_empty_lockless(&sk->sk_receive_queue))
- 				continue;
- 		}
- 
+ 	/* Socket shut down? */
 
 
