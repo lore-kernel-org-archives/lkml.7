@@ -2,127 +2,110 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2C2C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A95FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EAD214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF927214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 09:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbfKHJ7S (ORCPT
+        id S1731145AbfKHJ7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:59:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:39712 "EHLO foss.arm.com"
+        Fri, 8 Nov 2019 04:59:30 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:51686 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbfKHJ7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:59:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C544531B;
-        Fri,  8 Nov 2019 01:59:16 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AC3D3F719;
-        Fri,  8 Nov 2019 01:59:15 -0800 (PST)
-Date:   Fri, 8 Nov 2019 09:59:14 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is
- deasserted
-Message-ID: <20191108095913.GD43905@e119886-lin.cambridge.arm.com>
-References: <20191107205239.65C1.4A936039@socionext.com>
- <20191107124617.GA43905@e119886-lin.cambridge.arm.com>
- <20191108163026.0DFB.4A936039@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108163026.0DFB.4A936039@socionext.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        id S1728513AbfKHJ7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:59:30 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D365E1A0368;
+        Fri,  8 Nov 2019 10:59:27 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 51EA81A036C;
+        Fri,  8 Nov 2019 10:59:23 +0100 (CET)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 63A25402DF;
+        Fri,  8 Nov 2019 17:59:17 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     linux-devel@linux.nxdi.nxp.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Wen He <wen.he_1@nxp.com>
+Subject: [v7 1/2] dt/bindings: clk: Add YAML schemas for LS1028A Display Clock bindings
+Date:   Fri,  8 Nov 2019 17:47:34 +0800
+Message-Id: <20191108094735.8174-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
-> Hi Andrew,
-> +CC Kishon
-> 
-> On Thu, 7 Nov 2019 12:46:17 +0000 <andrew.murray@arm.com> wrote:
-> 
-> > On Thu, Nov 07, 2019 at 08:52:39PM +0900, Kunihiko Hayashi wrote:
-> > > Hi Andrew,
-> > > Thank you for your comments.
-> > > 
-> > > On Thu, 7 Nov 2019 10:02:08 +0000 <andrew.murray@arm.com> wrote:
-> > > 
-> > > > On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
-> > > > > When PERST# is asserted once, EP configuration will be initialized.
-> > > > 
-> > > > I don't quite understand this - does the EP/RC mode depend on how often
-> > > > PERST# is toggled?
-> > > 
-> > > I think of connecting this RC controller and EP based on `Linux PCI
-> > > endpoint framework' in another machine.
-> > > 
-> > > While this RC driver is probing, the EP driver might be also probing and
-> > > configurating itself using configfs. If PERST# is toggled after the EP
-> > > has done its configuration, this configuration will be lost.
-> > > 
-> > > I expect that the EP configurates after RC has toggled PERST#, however,
-> > > there is no way to synchronize both of them.
-> > > 
-> > 
-> > OK I understand where you are coming from now. Please ensure the commit
-> > message gives this rationale.
-> 
-> I'll explain about that in the commit message next.
-> 
-> > However, If I understand correctly, doesn't your solution only work some
-> > of the time? What happens if you boot both machines at the same time,
-> > and PERST# isn't asserted prior to the kernel booting?
-> 
-> I think it contains an annoying problem.
-> 
-> If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
-> and the RC driver can't access PCI bus.
-> 
-> As a result, this patch works and deasserts PERST# (and EP configuration will
-> be lost). So boot sequence needs to include deasserting PERST#.
-> 
-> > The only way you can ensure the EP is started after the RC is initialised
-> > is to start the EP after the RC is initialised.
-> 
-> Yes, it's the only soution for now.
-> 
-> > I'm not sure what the solution is here, but it feels like this approach
-> > only partially solves it.
-> 
-> Surely relying on outside of the driver doesn't seem to be a complete solution.
-> 
-> If there is the way that `Linux PCI endpoint framework' assumes,
-> I'd like to follow it, however, I can't find the other way.
+LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
+output interface. Add a YAML schema for this.
 
-Indeed, this must be a common problem - many host controller drivers in the
-tree toggle perst on start up.
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/clock/fsl,plldig.yaml | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
 
-Keen for any feedback from Kishon on this.
+diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+new file mode 100644
+index 000000000000..32274e94aafc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
++
++maintainers:
++  - Wen He <wen.he_1@nxp.com>
++
++description: |
++  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
++  interface in the display core, as implemented in TSMC CLN28HPM PLL.
++  which generate and offers pixel clocks to Display.
++
++properties:
++  compatible:
++    const: fsl,ls1028a-plldig
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++examples:
++  # Display PIXEL Clock node:
++  - |
++    dpclk: clock-display@f1f0000 {
++        compatible = "fsl,ls1028a-plldig";
++        reg = <0x0 0xf1f0000 0x0 0xffff>;
++        #clock-cells = <0>;
++        clocks = <&osc_27m>;
++    };
++
++...
+-- 
+2.17.1
 
-Thanks,
-
-Andrew Murray
-
-> 
-> Thank you,
-> 
-> ---
-> Best Regards,
-> Kunihiko Hayashi
-> 
-> 
