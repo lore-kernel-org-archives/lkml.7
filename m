@@ -2,89 +2,125 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0C2FC6197
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF71FC6196
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66E220869
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BF0215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 21:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731914AbfKHVph (ORCPT
+        id S1727612AbfKHVse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:45:37 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:57222 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728265AbfKHVph (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:45:37 -0500
-Received: (qmail 6968 invoked by uid 2102); 8 Nov 2019 16:45:36 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 8 Nov 2019 16:45:36 -0500
-Date:   Fri, 8 Nov 2019 16:45:36 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Felipe Balbi <balbi@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH 0/1] usb: gadget: add raw-gadget interface
-In-Reply-To: <cover.1573236684.git.andreyknvl@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911081642461.1498-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Fri, 8 Nov 2019 16:48:34 -0500
+Received: from mga17.intel.com ([192.55.52.151]:20333 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfKHVsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:48:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 13:48:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
+   d="scan'208";a="197038024"
+Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
+  by orsmga008.jf.intel.com with ESMTP; 08 Nov 2019 13:48:32 -0800
+From:   thor.thayer@linux.intel.com
+To:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>
+Subject: [PATCH] arm64: dts: agilex: Add EDAC Device Tree
+Date:   Fri,  8 Nov 2019 15:50:25 -0600
+Message-Id: <1573249825-21769-1-git-send-email-thor.thayer@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Andrey Konovalov wrote:
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-> This patchset (currently a single patch) adds a new userspace interface
-> for the USB Gadget subsystem called USB Raw Gadget (I don't mind changing
-> the name to something else if there are better ideas). This is what
-> currently being used to enable coverage-buided USB fuzzing with syzkaller:
-> 
-> https://github.com/google/syzkaller/blob/master/docs/linux/external_fuzzing_usb.md
-> 
-> Initially I was using GadgetFS (together with the Dummy HCD/UDC module)
-> to perform emulation of USB devices for fuzzing, but later switched to a
-> custom written interface. The incentive to implement a different interface
-> was to provide a somewhat raw and direct access to the USB Gadget layer
-> for the userspace, where every USB request is passed to the userspace to
-> get a response. See documentation for the list of differences between
-> Raw Gadget and GadgetFS.
-> 
-> This patchset has been pushed to the public Linux kernel Gerrit instance:
-> 
-> https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2144
-> 
-> Andrey Konovalov (1):
->   usb: gadget: add raw-gadget interface
-> 
->  Documentation/usb/index.rst         |    1 +
->  Documentation/usb/raw-gadget.rst    |   60 ++
->  drivers/usb/gadget/Kconfig          |    9 +
->  drivers/usb/gadget/Makefile         |    2 +
->  drivers/usb/gadget/raw.c            | 1150 +++++++++++++++++++++++++++
+Add the device tree nodes required to support the Intel
+Agilex SoCFPGA EDAC framework.
 
-As a general rule, gadget drivers don't go directly in
-drivers/usb/gadget.  raw.c counts as a legacy driver (because it's not
-written to use the composite gadget framework), so it belongs in
-drivers/usb/gadget/legacy.  That's where the gadgetfs driver lives, for
-example.
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 59 +++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-Alan Stern
-
->  include/uapi/linux/usb/raw_gadget.h |  164 ++++
->  6 files changed, 1386 insertions(+)
->  create mode 100644 Documentation/usb/raw-gadget.rst
->  create mode 100644 drivers/usb/gadget/raw.c
->  create mode 100644 include/uapi/linux/usb/raw_gadget.h
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+index f9d1b26a3384..2b3468590f30 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -534,6 +534,65 @@
+ 			reg = <0xf8011100 0xc0>;
+ 		};
+ 
++		eccmgr {
++			compatible = "altr,socfpga-s10-ecc-manager",
++				     "altr,socfpga-a10-ecc-manager";
++			altr,sysmgr-syscon = <&sysmgr>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			interrupts = <0 15 4>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			ranges;
++
++			sdramedac {
++				compatible = "altr,sdram-edac-s10";
++				altr,sdr-syscon = <&sdr>;
++				interrupts = <16 4>;
++			};
++
++			ocram-ecc@ff8cc000 {
++				compatible = "altr,socfpga-s10-ocram-ecc",
++					     "altr,socfpga-a10-ocram-ecc";
++				reg = <0xff8cc000 0x100>;
++				altr,ecc-parent = <&ocram>;
++				interrupts = <1 4>;
++			};
++
++			usb0-ecc@ff8c4000 {
++				compatible = "altr,socfpga-s10-usb-ecc",
++					     "altr,socfpga-usb-ecc";
++				reg = <0xff8c4000 0x100>;
++				altr,ecc-parent = <&usb0>;
++				interrupts = <2 4>;
++			};
++
++			emac0-rx-ecc@ff8c0000 {
++				compatible = "altr,socfpga-s10-eth-mac-ecc",
++					     "altr,socfpga-eth-mac-ecc";
++				reg = <0xff8c0000 0x100>;
++				altr,ecc-parent = <&gmac0>;
++				interrupts = <4 4>;
++			};
++
++			emac0-tx-ecc@ff8c0400 {
++				compatible = "altr,socfpga-s10-eth-mac-ecc",
++					     "altr,socfpga-eth-mac-ecc";
++				reg = <0xff8c0400 0x100>;
++				altr,ecc-parent = <&gmac0>;
++				interrupts = <5 4>;
++			};
++
++			sdmmca-ecc@ff8c8c00 {
++				compatible = "altr,socfpga-s10-sdmmc-ecc",
++					     "altr,socfpga-sdmmc-ecc";
++				reg = <0xff8c8c00 0x100>;
++				altr,ecc-parent = <&mmc>;
++				interrupts = <14 4>,
++					     <15 4>;
++			};
++		};
++
+ 		qspi: spi@ff8d2000 {
+ 			compatible = "cdns,qspi-nor";
+ 			#address-cells = <1>;
+-- 
+2.7.4
 
