@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126B4FA372C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D929FA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB47D2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CDF20865
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 19:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573241013;
-	bh=cQ6O9i2OVnda+kKcgWGPsFTPLXKs5+7r3Jbs5SVGFxc=;
+	s=default; t=1573241016;
+	bh=SiRX2WcJEqeeFkGkg/ORrfHEGEouVfa+skK4XZUnyiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=phgYACKVmRKXiXbEuXYrxXMLQX8/zLj28UYMGZGAf1JVBo3lmtvPImQWn3XtokDIJ
-	 hvKgulr0Ym/7RohnTNNX5tarftCbOunFiVIQD3j2o4XvSW20v3YblVG9vxF6WX735f
-	 Vryx3v4cz6IHbf2d0W4C8Ixo8rlawf4TchoyT3GQ=
+	b=uu0h0zVfd+elDrLKIYLy6pjN1LXyGtS+FcXm5c5/WIEZQ+Qk20tILod4lMqsXzfxe
+	 jn2NCkxqdkE7UwWKJlaerxuLid+yb+HygD/9AZfLxGLCSSSJts70P1ro+w9frDe9q1
+	 A4XRFKRV1TvZ/r075rENdrx+wqrBKjoKKPTxcR8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbfKHSyU (ORCPT
+        id S2388976AbfKHTXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:54:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51264 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 14:23:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732849AbfKHSyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:54:16 -0500
+        id S1732884AbfKHSyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:54:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98834222C4;
-        Fri,  8 Nov 2019 18:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61C42178F;
+        Fri,  8 Nov 2019 18:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573239255;
-        bh=cQ6O9i2OVnda+kKcgWGPsFTPLXKs5+7r3Jbs5SVGFxc=;
+        s=default; t=1573239249;
+        bh=SiRX2WcJEqeeFkGkg/ORrfHEGEouVfa+skK4XZUnyiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g2ROwaqocmQdGpXJSAHBknbLXKYQ0JCclCvUZsqah2cKCPgtvY0wEKPOsYAr3Onvp
-         jUad2iqYg/fPHRKd1p9MlGxBL3eaBT8XQKq+IKxUcuoQ9OO6WM+SXwET6z+/zjrBhm
-         SE5jI7yXelCKigHh7WenEFxQvToA+iu+I5Wu2mGM=
+        b=y5nalBcmpyZwlIK7cnwrxXVUfv5z0vNrvQHN4gragwF/ZVpgRfQiXO+GD/srdizzT
+         Sh7N08G/EExB+N4EQUj0gQ6CKBJxTANoQITvF1/uHaVyDk3yC1TFMyfrzERUdfpU9V
+         OzVHP11cYjx9drEbM+CiCAiqvsRCUuT7mQRbJoN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, Ard Biesheuvel" 
-        <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        <ardb@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tony Lindgren <tony@atomide.com>,
         "David A. Long" <dave.long@linaro.org>,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.4 53/75] ARM: signal: copy registers using __copy_from_user()
-Date:   Fri,  8 Nov 2019 19:50:10 +0100
-Message-Id: <20191108174755.756286220@linuxfoundation.org>
+Subject: [PATCH 4.4 51/75] ARM: spectre-v1: add array_index_mask_nospec() implementation
+Date:   Fri,  8 Nov 2019 19:50:08 +0100
+Message-Id: <20191108174754.520254735@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191108174708.135680837@linuxfoundation.org>
 References: <20191108174708.135680837@linuxfoundation.org>
@@ -64,83 +65,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Commit c32cd419d6650e42b9cdebb83c672ec945e6bd7e upstream.
+Commit 1d4238c56f9816ce0f9c8dbe42d7f2ad81cb6613 upstream.
 
-__get_user_error() is used as a fast accessor to make copying structure
-members in the signal handling path as efficient as possible.  However,
-with software PAN and the recent Spectre variant 1, the efficiency is
-reduced as these are no longer fast accessors.
+Add an implementation of the array_index_mask_nospec() function for
+mitigating Spectre variant 1 throughout the kernel.
 
-In the case of software PAN, it has to switch the domain register around
-each access, and with Spectre variant 1, it would have to repeat the
-access_ok() check for each access.
-
-It becomes much more efficient to use __copy_from_user() instead, so
-let's use this for the ARM integer registers.
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Boot-tested-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: David A. Long <dave.long@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/kernel/signal.c |   38 +++++++++++++++++++++-----------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+ arch/arm/include/asm/barrier.h |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
---- a/arch/arm/kernel/signal.c
-+++ b/arch/arm/kernel/signal.c
-@@ -141,6 +141,7 @@ struct rt_sigframe {
+--- a/arch/arm/include/asm/barrier.h
++++ b/arch/arm/include/asm/barrier.h
+@@ -108,5 +108,26 @@ do {									\
+ #define smp_mb__before_atomic()	smp_mb()
+ #define smp_mb__after_atomic()	smp_mb()
  
- static int restore_sigframe(struct pt_regs *regs, struct sigframe __user *sf)
- {
-+	struct sigcontext context;
- 	struct aux_sigframe __user *aux;
- 	sigset_t set;
- 	int err;
-@@ -149,23 +150,26 @@ static int restore_sigframe(struct pt_re
- 	if (err == 0)
- 		set_current_blocked(&set);
- 
--	__get_user_error(regs->ARM_r0, &sf->uc.uc_mcontext.arm_r0, err);
--	__get_user_error(regs->ARM_r1, &sf->uc.uc_mcontext.arm_r1, err);
--	__get_user_error(regs->ARM_r2, &sf->uc.uc_mcontext.arm_r2, err);
--	__get_user_error(regs->ARM_r3, &sf->uc.uc_mcontext.arm_r3, err);
--	__get_user_error(regs->ARM_r4, &sf->uc.uc_mcontext.arm_r4, err);
--	__get_user_error(regs->ARM_r5, &sf->uc.uc_mcontext.arm_r5, err);
--	__get_user_error(regs->ARM_r6, &sf->uc.uc_mcontext.arm_r6, err);
--	__get_user_error(regs->ARM_r7, &sf->uc.uc_mcontext.arm_r7, err);
--	__get_user_error(regs->ARM_r8, &sf->uc.uc_mcontext.arm_r8, err);
--	__get_user_error(regs->ARM_r9, &sf->uc.uc_mcontext.arm_r9, err);
--	__get_user_error(regs->ARM_r10, &sf->uc.uc_mcontext.arm_r10, err);
--	__get_user_error(regs->ARM_fp, &sf->uc.uc_mcontext.arm_fp, err);
--	__get_user_error(regs->ARM_ip, &sf->uc.uc_mcontext.arm_ip, err);
--	__get_user_error(regs->ARM_sp, &sf->uc.uc_mcontext.arm_sp, err);
--	__get_user_error(regs->ARM_lr, &sf->uc.uc_mcontext.arm_lr, err);
--	__get_user_error(regs->ARM_pc, &sf->uc.uc_mcontext.arm_pc, err);
--	__get_user_error(regs->ARM_cpsr, &sf->uc.uc_mcontext.arm_cpsr, err);
-+	err |= __copy_from_user(&context, &sf->uc.uc_mcontext, sizeof(context));
-+	if (err == 0) {
-+		regs->ARM_r0 = context.arm_r0;
-+		regs->ARM_r1 = context.arm_r1;
-+		regs->ARM_r2 = context.arm_r2;
-+		regs->ARM_r3 = context.arm_r3;
-+		regs->ARM_r4 = context.arm_r4;
-+		regs->ARM_r5 = context.arm_r5;
-+		regs->ARM_r6 = context.arm_r6;
-+		regs->ARM_r7 = context.arm_r7;
-+		regs->ARM_r8 = context.arm_r8;
-+		regs->ARM_r9 = context.arm_r9;
-+		regs->ARM_r10 = context.arm_r10;
-+		regs->ARM_fp = context.arm_fp;
-+		regs->ARM_ip = context.arm_ip;
-+		regs->ARM_sp = context.arm_sp;
-+		regs->ARM_lr = context.arm_lr;
-+		regs->ARM_pc = context.arm_pc;
-+		regs->ARM_cpsr = context.arm_cpsr;
-+	}
- 
- 	err |= !valid_user_regs(regs);
- 
++#ifdef CONFIG_CPU_SPECTRE
++static inline unsigned long array_index_mask_nospec(unsigned long idx,
++						    unsigned long sz)
++{
++	unsigned long mask;
++
++	asm volatile(
++		"cmp	%1, %2\n"
++	"	sbc	%0, %1, %1\n"
++	CSDB
++	: "=r" (mask)
++	: "r" (idx), "Ir" (sz)
++	: "cc");
++
++	return mask;
++}
++#define array_index_mask_nospec array_index_mask_nospec
++#endif
++
++#include <asm-generic/barrier.h>
++
+ #endif /* !__ASSEMBLY__ */
+ #endif /* __ASM_BARRIER_H */
 
 
