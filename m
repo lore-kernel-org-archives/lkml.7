@@ -2,76 +2,130 @@ Return-Path: <SRS0=1LW7=ZA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C72C5DF60
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFDEFA372C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C39207FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51B4207FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Nov 2019 08:20:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="tb4SJdKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfKHIUp (ORCPT
+        id S1730303AbfKHIUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:20:45 -0500
-Received: from mga06.intel.com ([134.134.136.31]:10567 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbfKHIUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Nov 2019 03:20:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 00:20:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,280,1569308400"; 
-   d="scan'208";a="213200201"
-Received: from rafalwi-mobl.ger.corp.intel.com (HELO localhost) ([10.252.3.149])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Nov 2019 00:20:33 -0800
-Date:   Fri, 8 Nov 2019 10:20:31 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>
-Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
-Message-ID: <20191108082031.GC3370@linux.intel.com>
-References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
- <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
- <20191029092920.GA14494@linux.intel.com>
- <20191030093045.GB12481@linux.intel.com>
- <20191031211252.GC10507@linux.intel.com>
- <20191105111057.GA20879@linux.intel.com>
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32994 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfKHIUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 03:20:44 -0500
+Received: by mail-lj1-f194.google.com with SMTP id t5so5272043ljk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 00:20:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QG9zESozXuPqax0Su22O3OuOKh63DOSfZk/pA62adHY=;
+        b=tb4SJdKVM/w0afIl2iDuSX1FsRMT3D5VW7rb46sbKMYFjCDJ7FG4wbT+OmmYHd9Np+
+         mAn67I7zY5tlX5PbhNUT9ZUgvP5KhWQDjKCATuXQa8qTt0eOnlE3Pqa610+pSZrmYtDs
+         6PkyyKCSTj7M+vwQ4+/OFkc29lK/eXpbnf2vjAmCIBAjzcxy2doAC8x0Tqut3x2C+7zT
+         nP+XezvW/C+sH7/eLPd7VC652IqObU6nbzKPRE9jRYarWSJsUhkF4+YySPGDBK0rdxPe
+         Y+GnIwsIx320akOFEEnwpR2jHL0sR5N/QQbq9YnBnKfiFkYtmPQPKN+W8PdUopjyyQcJ
+         2LnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QG9zESozXuPqax0Su22O3OuOKh63DOSfZk/pA62adHY=;
+        b=HXCs7XrJ1PfEzCbTqGRnV0TqSOiQPjlZ2pZRiq8BSDynXf4ZzQaungKh9H0djvJe2/
+         u9JFmriIF7AsjGsgHzQw6+5nOzzQNv7BfkB54WrZBn6McVbnwgl8BHFeTwatmJeq7A+X
+         O1QSQbH9ZJ/DJaUNUBDyk+r0buFOQsKW59qeAQ8WwagVHQ6nkquGg33XNm5gYzKuWaBv
+         mYbns/6Irc++H1sseWrCI0EvXDfW9d1iojgoHUZ/znJ9t0m6KtNIhbojqJXB/UjabO6E
+         NzarnbRv6FFNuXZ+72M717H4Ld5AZ06YcQ8d1dpVcuvztLHULHa2iqO1+vpAQVZcqR0z
+         SUpg==
+X-Gm-Message-State: APjAAAWIjPpljNcmgJr5ctQLNBNR6cr8B/QGnbdrieBubSJFx4pZ+JXU
+        6gzlEnvxbgl8o5j/nhdwfVaoTA==
+X-Google-Smtp-Source: APXvYqyq6o5NlSxHPqiqstI0v5ozYcuJbwWvebOQkf/OT4itQMED7hNHHM+1S1k07Hx73vma7ozOdw==
+X-Received: by 2002:a2e:8595:: with SMTP id b21mr286960lji.155.1573201242525;
+        Fri, 08 Nov 2019 00:20:42 -0800 (PST)
+Received: from [10.0.156.104] ([195.22.87.57])
+        by smtp.gmail.com with ESMTPSA id 68sm2523544ljf.26.2019.11.08.00.20.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2019 00:20:41 -0800 (PST)
+Subject: Re: [PATCH v3 1/6] rtnetlink: allow RTM_SETLINK to reference other
+ namespaces
+To:     =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS1?=
+         =?UTF-8?B?4KS+4KSwKQ==?= <maheshb@google.com>
+Cc:     nicolas.dichtel@6wind.com, linux-netdev <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>
+References: <20191107132755.8517-1-jonas@norrbonn.se>
+ <20191107132755.8517-2-jonas@norrbonn.se>
+ <CAF2d9jjRLZ07Qx0NJ9fi1iUpHn+qYEJ+cacKgBmeZ2FvZLObEQ@mail.gmail.com>
+From:   Jonas Bonn <jonas@norrbonn.se>
+Message-ID: <fff51fa7-5c42-7fa7-6208-d911b18bd91e@norrbonn.se>
+Date:   Fri, 8 Nov 2019 09:20:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105111057.GA20879@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAF2d9jjRLZ07Qx0NJ9fi1iUpHn+qYEJ+cacKgBmeZ2FvZLObEQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 01:11:22PM +0200, Jarkko Sakkinen wrote:
-> I'll add @count to address this. This output field will contain the
-> number of bytes actually written instead of overwriting input
-> parameters, which is a bad practice in anyway.
+Hi Mahesh,
+
+On 07/11/2019 21:36, Mahesh Bandewar (महेश बंडेवार) wrote:
+> On Thu, Nov 7, 2019 at 5:30 AM Jonas Bonn <jonas@norrbonn.se> wrote:
+>>
+>>
+>> +       /* A hack to preserve kernel<->userspace interface.
+>> +        * It was previously allowed to pass the IFLA_TARGET_NETNSID
+>> +        * attribute as a way to _set_ the network namespace.  In this
+>> +        * case, the device interface was assumed to be in the  _current_
+>> +        * namespace.
+>> +        * If the device cannot be found in the target namespace then we
+>> +        * assume that the request is to set the device in the current
+>> +        * namespace and thus we attempt to find the device there.
+>> +        */
+> Could this bypasses the ns_capable() check? i.e. if the target is
+> "foo" but your current ns is bar. The process may be "capable" is foo
+> but the interface is not found in foo but present in bar and ends up
+> modifying it (especially when you are not capable in bar)?
+
+I don't think so.  There was never any capable-check for the "current" 
+namespace so there's no change in that regard.
+
+I do think there is an issue with this hack that I can't see any 
+workaround for.  If the user specifies an interface (by name or index) 
+for another namespace that doesn't exist, there's a potential problem if 
+that name/index happens to exist in the "current" namespace.  In that 
+case, one many end up inadvertently modifying the interface in the 
+current namespace.  I don't see how to avoid that while maintaining the 
+backwards compatibility.
+
+My absolute preference would be to drop this compat-hack altogether. 
+iproute2 doesn't use a bare TARGET_NETNSID in this manner (for changing 
+namespaces) and I didn't find any other users by a quick search of other 
+prominent Netlink users:  systemd, network-manager, connman.  This 
+compat-hack is there for the _potential ab-user_ of the interface, not 
+for any known such.
+
 > 
-> We don't need to actually cap to anything but API must be able to
-> support such scenario. Caller must be prepared to deal with the
-> situation where the return value is zero but @count < @length.
+>> +       if (!dev && tgt_net) {
+>> +               net = sock_net(skb->sk);
+>> +               if (ifm->ifi_index > 0)
+>> +                       dev = __dev_get_by_index(net, ifm->ifi_index);
+>> +               else if (tb[IFLA_IFNAME])
+>> +                       dev = __dev_get_by_name(net, ifname);
+>> +       }
 
-I summarized here my reasoning on @count:
 
-https://lore.kernel.org/linux-sgx/20191108081331.GB3370@linux.intel.com/
-
-/Jarkko
+/Jonas
