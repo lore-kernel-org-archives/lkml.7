@@ -2,139 +2,118 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF55C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 20:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DA6C17446
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE95421848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 20:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75C621D7B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfKIUwa (ORCPT
+        id S1726702AbfKIVDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 15:52:30 -0500
-Received: from gentwo.org ([3.19.106.255]:39100 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfKIUwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 15:52:30 -0500
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 9CEE23EC14; Sat,  9 Nov 2019 20:52:29 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 9A0DA3E886;
-        Sat,  9 Nov 2019 20:52:29 +0000 (UTC)
-Date:   Sat, 9 Nov 2019 20:52:29 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Yu Zhao <yuzhao@google.com>
-cc:     Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v4 2/2] mm: avoid slub allocation while holding
- list_lock
-In-Reply-To: <20191108193958.205102-2-yuzhao@google.com>
-Message-ID: <alpine.DEB.2.21.1911092024560.9034@www.lameter.com>
-References: <20190914000743.182739-1-yuzhao@google.com> <20191108193958.205102-1-yuzhao@google.com> <20191108193958.205102-2-yuzhao@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 9 Nov 2019 16:03:09 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:34273 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfKIVDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 16:03:09 -0500
+Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N5VTm-1hrmS02jko-016stv; Sat, 09 Nov 2019 22:03:06 +0100
+Received: by mail-qv1-f45.google.com with SMTP id w11so3519335qvu.13;
+        Sat, 09 Nov 2019 13:03:06 -0800 (PST)
+X-Gm-Message-State: APjAAAV2k8JvymMxplEpZ4LWlhRJ12lcRL5DPKRX91lIzt3uALcIcpi0
+        St2XKjMdDm8nFqDWlv08kWalMFSW0AXhnL8fwMw=
+X-Google-Smtp-Source: APXvYqzVWdaWa9r60I/4Z9hpe05+E921xzLR8H/PZkF7j6E78aa0x1vFwmnnWC69tXfwFmEaoi/5dhGDrttFdJdYruM=
+X-Received: by 2002:a0c:fde8:: with SMTP id m8mr16974889qvu.4.1573333385442;
+ Sat, 09 Nov 2019 13:03:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
+ <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com>
+In-Reply-To: <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 9 Nov 2019 22:02:49 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
+Message-ID: <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
+Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Gl1fFRfO9j2DtrAd5m3vLUZBvw9/Qo04K69D9QBhEGuOD3kC6Ny
+ oJrNEFUAUBLNcpyJd2NO/dlDsQfw9Sx0x1h/mb2qXrr25t9QyHsazOvrdCPsRHKjBDxl844
+ lLTq5Rdq8mkxH+Z5ZBX6DsSnrGRaVSmGFaY66BoLJi6JMnwp6zjC0bGDz5RmAJpWHhSHKhu
+ gn5MdMPpuQPw6FkLwB1lQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ut+WqSDbMvI=:qi5JdruNp2M1RiCv44NEpL
+ NClrdIpdVHDSulBhWPNKUy5IgZNyGwnR20PN7pXrApDtHKovD3EfNtslqN2/jYr0B4eH9CzcT
+ y8YjI8eky82YrPxm2jMwRPZ2QNpsH/u4qYD7SexAYPhURFPANKx8/4bFv22KMM0/N2c8/mHBA
+ fOqyMWHyPAJgejXwt57yHWDgKcz3wHziYlErVJXitZo/FsMFSrK24BCEsphqkKorbuQ3pgay6
+ wgrj0V1NFXlgSCS5GNu/uoarBsn2vISyJ8RBc72IJUWSdVVvvappxtPKl3NW1NA6PQ2F104uo
+ GwNyeos9tJ7IDP7PSf5IOvP6U4n2tafCh8rHVFLNUhz3WUcOcUEpmZXRM8lGc48bvIXTXT+zr
+ P6jlJ9DxeY4gas5oxVmABJiEnrCLNPmRz/dAGf+BBabZAdAC7OhCVQCFGSPE13h39/j5xPGfR
+ u4mfQSoyPwZ4hT9tGgADLv1ljE3Hzw5PSCJLyhUmKwanoqhfDm0hcYB78ulb00rr4ngBXfb25
+ MVeAwHfhHQ5uoM9SC1tqjiWNF5yh2tgHrOiYPisTVqqgSHrbnpIUEjUblJygy5U+FHGGXD27S
+ 0F/QqLs3FYOuLOfun6Pz7nOvRrCZX448Ir0R7aEfg4TTaQ/n4MVRHRGLMgemP2gzHn8Vh4j2K
+ xKn5811CPZA/NanWNOOOyYH3kaBJJn3U6uPobs4iAd8yEstZKL6jdlscaR9s67gQwGIatJl2v
+ eKUIcMGGY3kjGOBcWQBdYQU8V6YGTxP5LfQtRgGXm6egfA06cbOEXWvToPTG+jd+vt27lTqec
+ A/vGneTmMHiJeyUb5ydqIrgU49cdvLQmEGh6XC54TqVfC+HJOWn7fNSOv66cZONFJ6mF8FX0V
+ UmGEuS8UyAaAWkjhy4Vw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Yu Zhao wrote:
+On Sat, Nov 9, 2019 at 2:43 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
 
-> If we are already under list_lock, don't call kmalloc(). Otherwise we
-> will run into deadlock because kmalloc() also tries to grab the same
-> lock.
+> > -struct itimerval;
+> > -extern int do_setitimer(int which, struct itimerval *value,
+> > -                       struct itimerval *ovalue);
+> > -extern int do_getitimer(int which, struct itimerval *value);
+> > +#ifdef CONFIG_POSIX_TIMERS
+> > +extern void clear_itimer(void);
+> > +#else
+> > +static inline void clear_itimer(void) {}
+> > +#endif
+> >
 
-How did this happen? The kmalloc needs to be always done before the
-list_lock is taken.
-
-> Fixing the problem by using a static bitmap instead.
+> > @@ -249,6 +249,17 @@ int do_setitimer(int which, struct itimerval *value, struct itimerval *ovalue)
+> >         return 0;
+> >  }
+> >
+> > +#ifdef CONFIG_SECURITY_SELINUX
 >
->   WARNING: possible recursive locking detected
->   --------------------------------------------
->   mount-encrypted/4921 is trying to acquire lock:
->   (&(&n->list_lock)->rlock){-.-.}, at: ___slab_alloc+0x104/0x437
+> Did you mean "#ifdef CONFIG_POSIX_TIMERS" here to match the header?
+
+No, this part is intentional, CONFIG_POSIX_TIMERS already controls
+whether itimer.c is
+compiled in the first place, but this function is only needed when called from
+the selinux driver.
+
+> > -               }
+> > +               if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+> > +                       clear_itimer();
 >
->   but task is already holding lock:
->   (&(&n->list_lock)->rlock){-.-.}, at: __kmem_cache_shutdown+0x81/0x3cb
->
->   other info that might help us debug this:
->    Possible unsafe locking scenario:
->
->          CPU0
->          ----
->     lock(&(&n->list_lock)->rlock);
->     lock(&(&n->list_lock)->rlock);
->
->    *** DEADLOCK ***
+> Since you already define a no-op fallback for the case of
+> !IS_ENABLED(CONFIG_POSIX_TIMERS) in time.h, why not simply call
+> clear_itimer() unconditionally?
 
+Ah right, that was indeed my plan here when I changed the declaration
+in the header, I just forgot to remove the if(). Fixed now.
 
-Ahh. list_slab_objects() in shutdown?
+Thanks for the review!
 
-There is a much easier fix for this:
-
-
-
-[FIX] slub: Remove kmalloc under list_lock from list_slab_objects()
-
-list_slab_objects() is called when a slab is destroyed and there are objects still left
-to list the objects in the syslog. This is a pretty rare event.
-
-And there it seems we take the list_lock and call kmalloc while holding that lock.
-
-Perform the allocation in free_partial() before the list_lock is taken.
-
-Fixes: bbd7d57bfe852d9788bae5fb171c7edb4021d8ac ("slub: Potential stack overflow")
-Signed-off-by: Christoph Lameter <cl@linux.com>
-
-Index: linux/mm/slub.c
-===================================================================
---- linux.orig/mm/slub.c	2019-10-15 13:54:57.032655296 +0000
-+++ linux/mm/slub.c	2019-11-09 20:43:52.374187381 +0000
-@@ -3690,14 +3690,11 @@ error:
- }
-
- static void list_slab_objects(struct kmem_cache *s, struct page *page,
--							const char *text)
-+					const char *text, unsigned long *map)
- {
- #ifdef CONFIG_SLUB_DEBUG
- 	void *addr = page_address(page);
- 	void *p;
--	unsigned long *map = bitmap_zalloc(page->objects, GFP_ATOMIC);
--	if (!map)
--		return;
- 	slab_err(s, page, text, s->name);
- 	slab_lock(page);
-
-@@ -3723,6 +3720,10 @@ static void free_partial(struct kmem_cac
- {
- 	LIST_HEAD(discard);
- 	struct page *page, *h;
-+	unsigned long *map = bitmap_alloc(oo_objects(s->max), GFP_KERNEL);
-+
-+	if (!map)
-+		return;
-
- 	BUG_ON(irqs_disabled());
- 	spin_lock_irq(&n->list_lock);
-@@ -3732,7 +3733,8 @@ static void free_partial(struct kmem_cac
- 			list_add(&page->slab_list, &discard);
- 		} else {
- 			list_slab_objects(s, page,
--			"Objects remaining in %s on __kmem_cache_shutdown()");
-+			"Objects remaining in %s on __kmem_cache_shutdown()",
-+			map);
- 		}
- 	}
- 	spin_unlock_irq(&n->list_lock);
+      Arnd
