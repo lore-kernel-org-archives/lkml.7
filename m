@@ -2,162 +2,191 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BF1C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 06:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8551C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5B921924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 06:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573282417;
-	bh=gI7K6Y4VDN8HX2L2f1LVi3Kp5/2nU5WVO5P6Q+Ml6Iw=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=mJbGothKZBah3AAFz0qAvxBtD9iuYkfrKrzZ4d0grXPSRpJQG/Dbudb/IK92ZbEzu
-	 WeBaNIjQ/MRp46jqmzQy+DQmgkQBnD8k1uAUZqBBUCpjbzEwQUENT+vV14N4izx3A1
-	 9TZ/nSTxTh7CED8UPVC8RIMBOQmeWQtp47siiqYA=
+	by mail.kernel.org (Postfix) with ESMTP id B257921848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eNKAefhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfKIGxg (ORCPT
+        id S1726289AbfKIHFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 01:53:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfKIGxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 01:53:36 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64A03214E0;
-        Sat,  9 Nov 2019 06:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573282414;
-        bh=gI7K6Y4VDN8HX2L2f1LVi3Kp5/2nU5WVO5P6Q+Ml6Iw=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=ZcJWDTlyTfPyHRnr7agTyoD/fRqWGcdidHh0pajxmpvSbudKtdH13pmhnFOJM2hV9
-         Uj2iioRsQZh/3/BU85tfh3HqOWTygIUqpqKSIw+5JPH0FxxCIMmFCBSZslVdILe6qN
-         GAZ59v7RtqCLPJyjMUzWKk1rAIop/gSYL6o3Zsew=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191109014151.yd2untpgnuinermj@earth.universe>
-References: <20191108170135.9053-1-sebastian.reichel@collabora.com> <20191108175329.GH216543@piout.net> <20191108223415.dio3pwkf24jfs5o4@earth.universe> <20191109002449.534B6207FA@mail.kernel.org> <20191109014151.yd2untpgnuinermj@earth.universe>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [RFCv1] rtc: m41t80: disable clock provider support
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 22:53:33 -0800
-Message-Id: <20191109065334.64A03214E0@mail.kernel.org>
+        Sat, 9 Nov 2019 02:05:42 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34428 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfKIHFm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 02:05:42 -0500
+Received: by mail-pg1-f193.google.com with SMTP id c9so966711pgc.1;
+        Fri, 08 Nov 2019 23:05:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZCWySZwIFzo2R68xigCV0RDhtUpT4rtgzjsd95CcpwQ=;
+        b=eNKAefhxCaa3zY6JByKGRa8WBVBBnoI0ZkPv9LLZz9qO3eYRoWbg5y6KdfqF9g+GLn
+         9RGGyjCbTguezobMDVYXOKVD0JI8ABdKhSH1J1G0dTt6ULRGAWs+cRBLimdYjjhcAQun
+         P+0tpsXw5sbWtnQgEb41Owm+8ehVY2p+KDcK7jpepDmNlfxoW2k+XPJfWdDtbtGMQIon
+         fB9iiJMcHa/V97mEbISMdqcCIfokDoXrGd1FFlXKlriKrZeBgiBEigv4pGzPrk1Nt/4c
+         g/IRf6I50Pf0yt/7jQ8anvaaQTaj3ZkCkyPnh6aY7r/Ugqq0Lb0X0B+6g9Tanrjbaq/5
+         c1Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZCWySZwIFzo2R68xigCV0RDhtUpT4rtgzjsd95CcpwQ=;
+        b=CC0KAcYTGhhEfZi3CSYcOonrC+F9ubmRk5sfrAjdBIDLsHsmF/zswp1v6AeJZug8V2
+         YUk1QK2YBbETor2PzVqoJRKmtoNu0XuGdnXIsRQFSoLf/RixuH0eel+M0AkdM+FvKLfO
+         F5oo9mqAEK6aTWRoHI8yXxsFf6jSLJ8LZT+EF01nbFF0HeLy8wPcRq80DH6QGPM8wJoY
+         CB09Q7kaWknNDrhhuiy44Ow2iXobC1UErO7OItGemPzdrTyFCyI1bssMB3aWB8feaF/+
+         tpUsOx/w3tB0pjYnCyjMKMSR9kHredpdwAlmMLdtks+JdePAhg1/QuJ10dYeb/8xFSEe
+         /Yzg==
+X-Gm-Message-State: APjAAAWEP0Esf6uorwIj6ukoqNQqK8WdgqM1ymzixIprSkLZlkFonRAv
+        y9HpHFVjjL3M2kpWyiMsVc/9sJ/N
+X-Google-Smtp-Source: APXvYqzrHyFC3iNi9gdl0/Mi61B9vgmW5ATsn68KqWw+xYueR5oDvgvcOpJax3cgw4PCUgZt27Dxzg==
+X-Received: by 2002:a63:1b41:: with SMTP id b1mr16833656pgm.335.1573283140988;
+        Fri, 08 Nov 2019 23:05:40 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id b200sm8337991pfb.86.2019.11.08.23.05.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 08 Nov 2019 23:05:40 -0800 (PST)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH 1/2] KVM: X86: Single target IPI fastpath
+Date:   Sat,  9 Nov 2019 15:05:34 +0800
+Message-Id: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sebastian Reichel (2019-11-08 17:41:51)
-> Hi,
->=20
-> On Fri, Nov 08, 2019 at 04:24:48PM -0800, Stephen Boyd wrote:
-> > Quoting Sebastian Reichel (2019-11-08 14:34:15)
-> > > On Fri, Nov 08, 2019 at 06:53:29PM +0100, Alexandre Belloni wrote:
-> > > > On 08/11/2019 18:01:35+0100, Sebastian Reichel wrote:
-> > > > > Congatec's QMX6 system on module (SoM) uses a m41t62 as RTC. The
-> > > > > modules SQW clock output defaults to 32768 Hz. This behaviour is
-> > > > > used to provide the i.MX6 CKIL clock. Once the RTC driver is prob=
-ed,
-> > > > > the clock is disabled and all i.MX6 functionality depending on
-> > > > > the 32 KHz clock have undefined behaviour (e.g. the hardware watc=
-hdog
-> > > > > run to fast or slow).
-> > > > >=20
-> > > > > The normal solution would be to properly describe the clock tree
-> > > > > in DT, but from the kernel's perspective this is a chicken-and-egg
-> > > > > problem: CKIL is required very early, but the clock is only provi=
-ded
-> > > > > after the I2C RTC has been probed.
-> > > > >=20
-> > > > > Technically everything is fine by not touching anything, so this
-> > > > > works around the issue by disabling the clock handling from the
-> > > > > RTC driver. I guess the proper solution would be to simply mark t=
-he
-> > > > > clock as always-enabled, but this does not seem to be supported by
-> > > > > the clock framework.
-> > > > >=20
-> > > >=20
-> > > > You need to have a consumer so this clock is not disabled by the CCF
-> > > > after seeing nobody uses it.
-> > >=20
-> > > That's why I was wondering if we can have something like regulator's
-> > > always-enabled for clocks.
-> >=20
-> > There's a flag CLK_IS_CRITICAL that providers can set.
->=20
-> Thanks, that is what I was looking for.
-> Is there a DT binding to set that flag for a clock?
->=20
+From: Wanpeng Li <wanpengli@tencent.com>
 
-No.
+This patch tries to optimize x2apic physical destination mode, fixed delivery
+mode single target IPI by delivering IPI to receiver immediately after sender
+writes ICR vmexit to avoid various checks when possible.
 
-> > > > If you need it early, you can have a look at rtc-sun6i.c but I
-> > > > would like that to not become a recurrent pattern, especially for
-> > > > discrete RTCs.
-> > >=20
-> > > I don't just need it early. The issue is, that CKIL is the 32khz
-> > > low frequency clock fed into the i.MX6. It is initialized by the
-> > > clock manager, so I need it before any of the SoC clocks are
-> > > registered. Without the SoC clocks, the I2C bus cannot be probed
-> > > and thus the RTC driver cannot be probed.
-> > >=20
-> >=20
-> > Is this the chicken-egg scenario? I read this thread but I can't follow
-> > along with what the problem is. Sorry.
->=20
-> Yes. The board has an I2C based RTC (m41t62), which provides a programmab=
-le 1
-> Hz to 32 kHz square wave (SQW) output defaulting to 32 kHz. The board des=
-igners
-> connected the RTC's SQW output to the i.MX6 CKIL clock input instead of a=
-dding
-> another oscillator. The i.MX6 CCM acquires that clock in imx6q_clocks_ini=
-t()
-> (and assumes it is a fixed clock):
->=20
-> hws[IMX6QDL_CLK_CKIL] =3D imx6q_obtain_fixed_clk_hw(ccm_node, "ckil", 0);
+Testing on Xeon Skylake server:
 
-Who uses the IMX6QDL_CLK_CKIL though? Grep on kernel sources shows me
-nothing.
+The virtual IPI latency from sender send to receiver receive reduces more than
+330+ cpu cycles.
 
->=20
-> Changing this to reference the RTC SQW results in the chicken-egg scenari=
-o. It
-> would mean, that imx6q_clocks_init() cannot complete without the RTC driv=
-er, but
-> the RTC cannot probe without the I2C bus driver and the I2C bus driver ne=
-eds some
-> clocks from the i.MX6.
->=20
-> I think adding the clock-is-critical flag is the best solution for
-> this setup, but on most boards the RTC SQW clock is not critical and
-> should be disabled. Did I miss a DT flag, that can be added on the
-> specific board?
->=20
+Running hackbench(reschedule ipi) in the guest, the avg handle time of MSR_WRITE
+caused vmexit reduces more than 1000+ cpu cycles:
 
-The clk framework can unwind this problem for you. It lazily evaluates
-parents so that clk controllers can probe without needing all their
-parent clks to exist yet.
+Before patch:
 
-The clocks in i.MX6 can be registered first and some of those can be
-left "orphaned". Then the i2c driver can probe and get the i2c clks it
-needs from the i.MX6 driver and use them because their path to the root
-is registered. The i2c driver can then probe the RTC which provides the
-CLK_CKIL parent.
+  VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+MSR_WRITE    5417390    90.01%    16.31%      0.69us    159.60us    1.08us
 
-Does something go wrong, or you're just concerned that it might not
-work?
+After patch:
+
+  VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+MSR_WRITE    6726109    90.73%    62.18%      0.48us    191.27us    0.58us
+
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/vmx/vmx.c   | 39 +++++++++++++++++++++++++++++++++++++--
+ include/linux/kvm_host.h |  1 +
+ 2 files changed, 38 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 5d21a4a..5c67061 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5924,7 +5924,9 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
+-	if (exit_reason < kvm_vmx_max_exit_handlers
++	if (vcpu->fast_vmexit)
++		return 1;
++	else if (exit_reason < kvm_vmx_max_exit_handlers
+ 	    && kvm_vmx_exit_handlers[exit_reason])
+ 		return kvm_vmx_exit_handlers[exit_reason](vcpu);
+ 	else {
+@@ -6474,6 +6476,34 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+ 
+ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+ 
++static int handle_ipi_fastpath(struct kvm_vcpu *vcpu)
++{
++	u32 index;
++	u64 data;
++	int ret = 0;
++
++	if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) {
++		/*
++		 * fastpath to IPI target
++		 */
++		index = kvm_rcx_read(vcpu);
++		data = kvm_read_edx_eax(vcpu);
++
++		if (((index - APIC_BASE_MSR) << 4 == APIC_ICR) &&
++			((data & KVM_APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
++			((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
++
++			kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> 32));
++			ret = kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, (u32)data);
++
++			if (ret == 0)
++				ret = kvm_skip_emulated_instruction(vcpu);
++		};
++	};
++
++	return ret;
++}
++
+ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -6615,6 +6645,12 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 				  | (1 << VCPU_EXREG_CR3));
+ 	vcpu->arch.regs_dirty = 0;
+ 
++	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
++	vcpu->fast_vmexit = false;
++	if (!is_guest_mode(vcpu) &&
++		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
++		vcpu->fast_vmexit = handle_ipi_fastpath(vcpu);
++
+ 	pt_guest_exit(vmx);
+ 
+ 	/*
+@@ -6634,7 +6670,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	vmx->nested.nested_run_pending = 0;
+ 	vmx->idt_vectoring_info = 0;
+ 
+-	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+ 	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+ 		kvm_machine_check();
+ 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 719fc3e..7a7358b 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -319,6 +319,7 @@ struct kvm_vcpu {
+ #endif
+ 	bool preempted;
+ 	bool ready;
++	bool fast_vmexit;
+ 	struct kvm_vcpu_arch arch;
+ 	struct dentry *debugfs_dentry;
+ };
+-- 
+2.7.4
 
