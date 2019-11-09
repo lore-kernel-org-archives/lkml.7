@@ -2,91 +2,106 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A5BC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F91CC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E171421848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B562207FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfKISCc (ORCPT
+        id S1726458AbfKIS0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 13:02:32 -0500
-Received: from orthanc.universe-factory.net ([104.238.176.138]:54932 "EHLO
-        orthanc.universe-factory.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726597AbfKISCc (ORCPT
+        Sat, 9 Nov 2019 13:26:05 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:36720 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfKIS0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 13:02:32 -0500
-Received: from localhost.localdomain (unknown [185.216.33.116])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by orthanc.universe-factory.net (Postfix) with ESMTPSA id 3EDB81F56D;
-        Sat,  9 Nov 2019 18:54:38 +0100 (CET)
-From:   Matthias Schiffer <mschiffer@universe-factory.net>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net,
-        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        Matthias Schiffer <mschiffer@universe-factory.net>
-Subject: [PATCH net-next 1/2] vxlan: implement get_link_ksettings ethtool method
-Date:   Sat,  9 Nov 2019 18:54:13 +0100
-Message-Id: <c69ddec1c46f436946c45c3a3a4ff2763992c9f6.1573321597.git.mschiffer@universe-factory.net>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1573321597.git.mschiffer@universe-factory.net>
-References: <cover.1573321597.git.mschiffer@universe-factory.net>
+        Sat, 9 Nov 2019 13:26:05 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iTVQv-00051B-Km; Sat, 09 Nov 2019 18:26:01 +0000
+Date:   Sat, 9 Nov 2019 18:26:01 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wugyuan@cn.ibm.com, Jeff Layton <jlayton@kernel.org>,
+        hsiangkao@aol.com, Jan Kara <jack@suse.cz>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH][RFC] race in exportfs_decode_fh()
+Message-ID: <20191109182601.GW26530@ZenIV.linux.org.uk>
+References: <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+ <20191022143736.GX26530@ZenIV.linux.org.uk>
+ <20191022201131.GZ26530@ZenIV.linux.org.uk>
+ <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
+ <20191101234622.GM26530@ZenIV.linux.org.uk>
+ <20191102172229.GT20975@paulmck-ThinkPad-P72>
+ <20191102180842.GN26530@ZenIV.linux.org.uk>
+ <20191109031333.GA8566@ZenIV.linux.org.uk>
+ <CAHk-=wg9e5PDG-y-j6uryc0RCbfZ36yB0a8qBb2hCWNrH4r_3g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg9e5PDG-y-j6uryc0RCbfZ36yB0a8qBb2hCWNrH4r_3g@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to VLAN and similar drivers, we can forward get_link_ksettings to
-the lower dev if we have one to get meaningful speed/duplex data.
+On Sat, Nov 09, 2019 at 08:55:38AM -0800, Linus Torvalds wrote:
+> On Fri, Nov 8, 2019 at 7:13 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > We have derived the parent from fhandle, we have a disconnected dentry for child,
+> > we go look for the name.  We even find it.  Now, we want to look it up.  And
+> > some bastard goes and unlinks it, just as we are trying to lock the parent.
+> > We do a lookup, and get a negative dentry.  Then we unlock the parent... and
+> > some other bastard does e.g. mkdir with the same name.  OK, nresult->d_inode
+> > is not NULL (anymore).  It has fuck-all to do with the original fhandle
+> > (different inumber, etc.) but we happily accept it.
+> 
+> No arguments with your patch, although I doubt that this case has
+> actually ever happened in practice ;)
 
-Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
----
- drivers/net/vxlan.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+Frankly, by this point I'm rather tempted to introduce new sparse annotation for
+dentries - "might not be positive".  The thing is, there are four cases when
+->d_inode is guaranteed to be stable:
+	1) nobody else has seen that dentry; that includes in-lookup ones - they
+can be found in in-lookup hash by d_alloc_parallel(), but it'll wait until they
+cease to be in-lookup.
+	2) ->d_lock is held
+	3) pinned positive
+	4) pinned, parent held at least shared
+Anything else can have ->d_inode changed by another thread.  And class 3 is by
+far the most common.  As the matter of fact, most of dentry pointers in the
+system (as opposed to (h)lists traversing dentries) are such.
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 11f5776affb1..bf04bc2e68c2 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -3175,9 +3175,29 @@ static void vxlan_get_drvinfo(struct net_device *netdev,
- 	strlcpy(drvinfo->driver, "vxlan", sizeof(drvinfo->driver));
- }
- 
-+static int vxlan_get_link_ksettings(struct net_device *dev,
-+				    struct ethtool_link_ksettings *cmd)
-+{
-+	struct vxlan_dev *vxlan = netdev_priv(dev);
-+	struct vxlan_rdst *dst = &vxlan->default_dst;
-+	struct net_device *lowerdev = __dev_get_by_index(vxlan->net,
-+							 dst->remote_ifindex);
-+
-+	if (!lowerdev) {
-+		cmd->base.duplex = DUPLEX_UNKNOWN;
-+		cmd->base.port = PORT_OTHER;
-+		cmd->base.speed = SPEED_UNKNOWN;
-+
-+		return 0;
-+	}
-+
-+	return __ethtool_get_link_ksettings(lowerdev, cmd);
-+}
-+
- static const struct ethtool_ops vxlan_ethtool_ops = {
--	.get_drvinfo	= vxlan_get_drvinfo,
--	.get_link	= ethtool_op_get_link,
-+	.get_drvinfo		= vxlan_get_drvinfo,
-+	.get_link		= ethtool_op_get_link,
-+	.get_link_ksettings	= vxlan_get_link_ksettings,
- };
- 
- static struct socket *vxlan_create_sock(struct net *net, bool ipv6,
--- 
-2.24.0
+For obvious reasons we have shitloads of ->d_inode accesses; I'd been going
+through a tree-wide audit of those and doing that manually is bloody unpleasant.
+And we do have races in that area - the one above is the latest I'd caught;
+there had been more and I'm fairly sure that it's not the last.
 
+Redoing that kind of audit every once in a while is something I wouldn't
+wish on anyone; it would be nice to use sparse to narrow the field.  Note
+that simply checking ->d_inode (or ->d_flags) is not enough unless we
+know them to be stable.  E.g. callers of lookup_one_len_unlocked() tend
+to be racy exactly because of such tests.  I'm going to add
+lookup_positive_unlocked() that would return ERR_PTR(-ENOENT) on
+negatives and convert the callers - with one exception they treat
+negatives the same way they would treat ERR_PTR(-ENOENT) and their
+tests are racy.  I'd rather have sufficient barriers done in one common
+helper, instead of trying to add them in 11 places and hope that new
+users won't fuck it up...
+
+I'm still not sure what's the best way to do the annotations - propagation
+is not a big deal, but expressing the transitions and checking that
+maybe-negative ones are not misused is trickier.  The last part can
+be actually left to manual audit - annotations would already reduce
+the search area big way.  A not too ugly way to say that now this dentry
+is known to be non-negative, OTOH...  I want to finish the audit and
+take a good look at the list of places where such transitions happen.
