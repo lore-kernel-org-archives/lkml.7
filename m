@@ -2,142 +2,110 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BC5C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D44EC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D507921848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573319940;
-	bh=HzJ7dGmJxIILn40spE1JrouBnapRyxOA8oFRQa2+oEk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bXWYwcP5Pv3Wo4L/3pNKEtij9RDXyeko/KKED2p/6LmMVd6CfrFBoIcyZGP+KfxER
-	 xseE487ebnCGg5N8FG2VY6jhQbRulbUn2KR3bL1f0p+ebZfqjxOPDaplmYSMPnSajH
-	 vruXBxmXYbiIoW0NBCFSUQx2cM0jJXJq/bpMgv78=
+	by mail.kernel.org (Postfix) with ESMTP id 55278214E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WMLHZ2Pk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfKIRS7 (ORCPT
+        id S1726559AbfKIRVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 12:18:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44572 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 12:21:51 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:58318 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfKIRS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 12:18:59 -0500
-Received: from localhost (unknown [106.51.111.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F762075C;
-        Sat,  9 Nov 2019 17:18:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573319937;
-        bh=HzJ7dGmJxIILn40spE1JrouBnapRyxOA8oFRQa2+oEk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MFHEGeFMED+7A5jC+amrIsC3ZCxVOcSdC2rvONfCQS3Ixf5udq5kHzG/4XObnTcfE
-         PMQ3NScJDWL5cqt19X9zTZ3TNe0aCvNI9H8xFlkisRBquq4CD1Q4VkQyc2N1P/KmkC
-         u4oN1zI5Pzcyspa6Sf/vJSdF6y4WcS+OqGK4PVdo=
-Date:   Sat, 9 Nov 2019 22:48:53 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-Message-ID: <20191109171853.GF952516@vkoul-mobl>
-References: <20191022214616.7943-1-logang@deltatee.com>
- <20191022214616.7943-2-logang@deltatee.com>
+        id S1726204AbfKIRVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 12:21:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GnBQ82YlwA0ID38IFrxIGR1cO4p7JxsUcnjCyBe4x6E=; b=WMLHZ2PkZVx00hZyvDfl5UIP9s
+        gxOZwLATHW98FpyGk4aPz/fdyyErcYH6+PsWU9Tvl96ExhmGlT5yQgcO3HNlC8WAjmgDTVuz2JJL+
+        0k+cYrj8jVYxbCpGO/3yPXL3w68p1vm4H2Of5dZz/8GRYVTfN3y1LjhbqcdCg4LSM9z8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iTUQf-0003Ct-CI; Sat, 09 Nov 2019 18:21:41 +0100
+Date:   Sat, 9 Nov 2019 18:21:41 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+Message-ID: <20191109172141.GL22978@lunn.ch>
+References: <20191109105642.30700-1-olteanv@gmail.com>
+ <20191109150953.GJ22978@lunn.ch>
+ <CA+h21hrqczuOhTzWFZKX0XvgjgTzHT=3AdCPvO_eSabOzA3OCQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191022214616.7943-2-logang@deltatee.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+h21hrqczuOhTzWFZKX0XvgjgTzHT=3AdCPvO_eSabOzA3OCQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Logan,
-
-Sorry for delay in reply!
-
-On 22-10-19, 15:46, Logan Gunthorpe wrote:
-> dma_chan_to_owner() dereferences the driver from the struct device to
-> obtain the owner and call module_[get|put](). However, if the backing
-> device is unbound before the dma_device is unregistered, the driver
-> will be cleared and this will cause a NULL pointer dereference.
-
-Have you been able to repro this? If so how..?
-
-The expectation is that the driver shall unregister before removed.
+On Sat, Nov 09, 2019 at 05:16:48PM +0200, Vladimir Oltean wrote:
+> On Saturday, 9 November 2019, Andrew Lunn <andrew@lunn.ch> wrote:
+> > On Sat, Nov 09, 2019 at 12:56:42PM +0200, Vladimir Oltean wrote:
+> >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+> >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+> >>
+> >> The interrupts are active low, but the GICv2 controller does not support
+> >> active-low and falling-edge interrupts, so the only mode it can be
+> >> configured in is rising-edge.
+> >
+> > Hi Vladimir
+> >
+> > So how does this work? The rising edge would occur after the interrupt
+> > handler has completed? What triggers the interrupt handler?
+> >
+> >         Andrew
+> >
 > 
-> Instead, store a pointer to the owner module in the dma_device struct
-> so the module reference can be properly put when the channel is put, even
-> if the backing device was destroyed first.
+> Hi Andrew,
 > 
-> This change helps to support a safer unbind of DMA engines.
+> I hope I am not terribly confused about this. I thought I am telling the
+> interrupt controller to raise an IRQ as a result of the low-to-high transition
+> of the electrical signal. Experimentation sure seems to agree with me. So the
+> IRQ is generated immediately _after_ the PHY has left the line in open drain
+> and it got pulled up to Vdd.
 
-For error cases which should be fixed, so maybe this is a right way and
-gets things fixed :)
+Hi Vladimir
 
-> If the dma_device is unregistered in the driver's remove function,
-> there's no guarantee that there are no existing clients and a users
-> action may trigger the WARN_ONCE in dma_async_device_unregister()
-> which is unlikely to leave the system in a consistent state.
-> Instead, a better approach is to allow the backing driver to go away
-> and fail any subsequent requests to it.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  drivers/dma/dmaengine.c   | 4 +++-
->  include/linux/dmaengine.h | 2 ++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 03ac4b96117c..4b604086b1b3 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -179,7 +179,7 @@ __dma_device_satisfies_mask(struct dma_device *device,
->  
->  static struct module *dma_chan_to_owner(struct dma_chan *chan)
->  {
-> -	return chan->device->dev->driver->owner;
-> +	return chan->device->owner;
->  }
->  
->  /**
-> @@ -919,6 +919,8 @@ int dma_async_device_register(struct dma_device *device)
->  		return -EIO;
->  	}
->  
-> +	device->owner = device->dev->driver->owner;
-> +
->  	if (dma_has_cap(DMA_MEMCPY, device->cap_mask) && !device->device_prep_dma_memcpy) {
->  		dev_err(device->dev,
->  			"Device claims capability %s, but op is not defined\n",
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 8fcdee1c0cf9..13aa0abb71de 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -674,6 +674,7 @@ struct dma_filter {
->   * @fill_align: alignment shift for memset operations
->   * @dev_id: unique device ID
->   * @dev: struct device reference for dma mapping api
-> + * @owner: owner module (automatically set based on the provided dev)
->   * @src_addr_widths: bit mask of src addr widths the device supports
->   *	Width is specified in bytes, e.g. for a device supporting
->   *	a width of 4 the mask should have BIT(4) set.
-> @@ -737,6 +738,7 @@ struct dma_device {
->  
->  	int dev_id;
->  	struct device *dev;
-> +	struct module *owner;
->  
->  	u32 src_addr_widths;
->  	u32 dst_addr_widths;
-> -- 
-> 2.20.1
+                       t1                    t2
 
--- 
-~Vinod
+     ------------------\                     /----------------
+                        \-------------------/
+
+The interrupt output is active low. So it is high by default. At time
+t1 something happens, say the link is established. The interrupt
+becomes active, we have a failing edge. We want the interrupt
+controller to fire. Lets say it does. The interrupt handler runs, and
+clears the interrupt cause. This is at time t2. We then get a rising
+edge and the PHY releases the interrupt, and the level returns to
+high.
+
+So how does this work if you have the interrupt controller triggering
+on a rising edge? The edge won't rise until the interrupt handler
+finishes its work.
+
+	 Andrew
+
+   
