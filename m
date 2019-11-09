@@ -2,140 +2,101 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45B3C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB84C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B9821848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6642621848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:54:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrcVhD0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfKIHu0 (ORCPT
+        id S1726383AbfKIHy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 02:50:26 -0500
-Received: from mx-out.tlen.pl ([193.222.135.158]:28267 "EHLO mx-out.tlen.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfKIHu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 02:50:26 -0500
-Received: (wp-smtpd smtp.tlen.pl 37743 invoked from network); 9 Nov 2019 08:50:22 +0100
-Received: from unknown (HELO sarna-pc.localdomain) (p.sarna@o2.pl@[12.207.198.221])
-          (envelope-sender <p.sarna@tlen.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <mike.kravetz@oracle.com>; 9 Nov 2019 08:50:22 +0100
-From:   Piotr Sarna <p.sarna@tlen.pl>
-To:     mike.kravetz@oracle.com, linux-kernel@vger.kernel.org
-Cc:     Piotr Sarna <p.sarna@tlen.pl>, linux-mm@kvack.org,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        mhocko@kernel.org,
-        syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com
-Subject: [PATCH v2] hugetlbfs: add O_TMPFILE support
-Date:   Sat,  9 Nov 2019 08:50:12 +0100
-Message-Id: <bc9383eff6e1374d79f3a92257ae829ba1e6ae60.1573285189.git.p.sarna@tlen.pl>
+        Sat, 9 Nov 2019 02:54:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34759 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfKIHy3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 02:54:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id k7so5348142pll.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 23:54:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=veiAcMlIgcLHjJxd0QNhUHza9s431ffRaEJpWcEHXlA=;
+        b=ZrcVhD0E25ufPrmCCfZ8MdFHm7QQe97Zw1uyYMICsTUBdeTTZku7sXrCkCp00Y8WTj
+         ssQNLd0wY4j5kVeBQOlyt+J8HxJQUV2+ZycfVCAFWt7NyqBsvWB60WV5wR8rfkQ2VY2N
+         0K8O05POwFRF8UJTOljz9j40NxSX5E+k/TK+lMU7/7BG+Vfszm9WfoA7Kd13lSB/6FiK
+         lOOu0ERBepCRgVwSyr/vXyegHkDjSp5ve0mC23B5Ju5n21ilfXQILL7E5RNlxV5IHaoC
+         y95+fHo5YQQJQAT9NgMuHZ3tNSjwcx/qcRUnusSjy3QvTQpKL3rs+v2rC60U/EZI5Ozg
+         4njw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=veiAcMlIgcLHjJxd0QNhUHza9s431ffRaEJpWcEHXlA=;
+        b=seaEHwpTUb9RpSlej97W2wHEl+py7TqRtjPNIMyI48+kzxeR+4X0pkqafEVqaYqIXK
+         Af9e9pz11cP0FRRTh+yCn8VVB2L1ANc90Ieme88CLnnpRq8SQKE2uQZrDXMK57SeGBi3
+         l4+BcXwn0ay0VwzaYzYwcW2Z0yxSxr2BD+OGOfDNYrxpEdCGNmt+nGn2vbNcEvqE4y5Y
+         Ceeq674c5uwF/+L386ioac8ACkstHuc91R5as7KHQudOOIFGCgClsAcJLd8b/jHwdLSR
+         WbvldHyqu9XhVNK6hLLIAj0W/zTofQcdsJ2x6bXCmG6sUKarXJ2fN9QaHP8Hb+k2N0Rm
+         8HEA==
+X-Gm-Message-State: APjAAAVIJtrEvVE3yRKOzemdGdhpT0oXjBVZs2oYuOStDmDRp2mzZsrL
+        CmRdVvmzFTEcKKeZmtwEAPw=
+X-Google-Smtp-Source: APXvYqxvItN9OnqheTvov4hpS8eX99Ly+f08T42CJNk7Az9Z5y+C87MbZqWmuka9RwkjJGMYYz+pvw==
+X-Received: by 2002:a17:902:6802:: with SMTP id h2mr14901704plk.135.1573286068169;
+        Fri, 08 Nov 2019 23:54:28 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id y1sm9578671pfq.138.2019.11.08.23.54.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 23:54:27 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] drm/virtgpu: fix double unregistration
+Date:   Sat,  9 Nov 2019 15:54:17 +0800
+Message-Id: <20191109075417.29808-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-WP-MailID: 939dbc952ae583a528cb1dffcdafb309
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [EdON]                               
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With hugetlbfs, a common pattern for mapping anonymous huge pages
-is to create a temporary file first. Currently libraries like
-libhugetlbfs and seastar create these with a standard mkstemp+unlink
-trick, but it would be more robust to be able to simply pass
-the O_TMPFILE flag to open(). O_TMPFILE is already supported by several
-file systems like ext4 and xfs. The implementation simply uses the existing
-d_tmpfile utility function to instantiate the dcache entry for the file.
+drm_put_dev also calls drm_dev_unregister, so dev will be unregistered
+twice.
+Replace it with drm_dev_put to fix it.
 
-Tested manually by successfully creating a temporary file by opening
-it with (O_TMPFILE|O_RDWR) on mounted hugetlbfs and successfully
-mapping 2M huge pages with it. Without the patch, trying to open
-a file with O_TMPFILE results in -ENOSUP.
-
-v2 changes:
- * syzkaller thankfully discovered a bug during unmount - tmpfile
-erroneously called dget() on a dentry when creating a tmpfile,
-and it was never countered by a dput(), because tmpfile is never
-explicitly unlinked. In v2, dget() is simply not called for tmpfile.
-Verified manually, and also with the reproducer provided by syzkaller.
-Reported-by: syzbot+136d2439a4e6561ea00c@syzkaller.appspotmail.com
-
-Signed-off-by: Piotr Sarna <p.sarna@tlen.pl>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- fs/hugetlbfs/inode.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index a478df035651..a39d7a0a158e 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -815,8 +815,11 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- /*
-  * File creation. Allocate an inode, and we're done..
-  */
--static int hugetlbfs_mknod(struct inode *dir,
--			struct dentry *dentry, umode_t mode, dev_t dev)
-+static int do_hugetlbfs_mknod(struct inode *dir,
-+			struct dentry *dentry,
-+			umode_t mode,
-+			dev_t dev,
-+			bool tmpfile)
- {
- 	struct inode *inode;
- 	int error = -ENOSPC;
-@@ -824,13 +827,23 @@ static int hugetlbfs_mknod(struct inode *dir,
- 	inode = hugetlbfs_get_inode(dir->i_sb, dir, mode, dev);
- 	if (inode) {
- 		dir->i_ctime = dir->i_mtime = current_time(dir);
--		d_instantiate(dentry, inode);
--		dget(dentry);	/* Extra count - pin the dentry in core */
-+		if (tmpfile) {
-+			d_tmpfile(dentry, inode);
-+		} else {
-+			d_instantiate(dentry, inode);
-+			dget(dentry);/* Extra count - pin the dentry in core */
-+		}
- 		error = 0;
- 	}
- 	return error;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+index 0fc32fa0b3c0..fccc24e21af8 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.c
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+@@ -138,7 +138,7 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+ 
+ 	drm_dev_unregister(dev);
+ 	virtio_gpu_deinit(dev);
+-	drm_put_dev(dev);
++	drm_dev_put(dev);
  }
  
-+static int hugetlbfs_mknod(struct inode *dir,
-+			struct dentry *dentry, umode_t mode, dev_t dev)
-+{
-+	return do_hugetlbfs_mknod(dir, dentry, mode, dev, false);
-+}
-+
- static int hugetlbfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
- {
- 	int retval = hugetlbfs_mknod(dir, dentry, mode | S_IFDIR, 0);
-@@ -844,6 +857,12 @@ static int hugetlbfs_create(struct inode *dir, struct dentry *dentry, umode_t mo
- 	return hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0);
- }
- 
-+static int hugetlbfs_tmpfile(struct inode *dir,
-+			struct dentry *dentry, umode_t mode)
-+{
-+	return do_hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0, true);
-+}
-+
- static int hugetlbfs_symlink(struct inode *dir,
- 			struct dentry *dentry, const char *symname)
- {
-@@ -1102,6 +1121,7 @@ static const struct inode_operations hugetlbfs_dir_inode_operations = {
- 	.mknod		= hugetlbfs_mknod,
- 	.rename		= simple_rename,
- 	.setattr	= hugetlbfs_setattr,
-+	.tmpfile	= hugetlbfs_tmpfile,
- };
- 
- static const struct inode_operations hugetlbfs_inode_operations = {
+ static void virtio_gpu_config_changed(struct virtio_device *vdev)
 -- 
 2.23.0
 
