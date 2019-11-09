@@ -2,218 +2,196 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE644C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49F5C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C094B21924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8434121848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfKIMM2 (ORCPT
+        id S1726514AbfKIMSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 07:12:28 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:33603 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfKIMM1 (ORCPT
+        Sat, 9 Nov 2019 07:18:05 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:60171 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726374AbfKIMSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 07:12:27 -0500
-Received: from mail-qv1-f41.google.com ([209.85.219.41]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MNtGq-1iIUSX1xEG-00OFPX for <linux-kernel@vger.kernel.org>; Sat, 09 Nov
- 2019 13:12:25 +0100
-Received: by mail-qv1-f41.google.com with SMTP id g12so3253957qvy.12
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 04:12:25 -0800 (PST)
-X-Gm-Message-State: APjAAAXPx/AuybLb2gJmXlxJ/fqKVkxfJrtTcD3WYi6+KfAhJd3MUqfs
-        bW3ivuBq2o9f5uwgmajz9gp2fwQ2ZvgRElUrmxY=
-X-Google-Smtp-Source: APXvYqwrFNWF6Dpd4vh4zt7FVLqZIoiTzNk6q+TuwKkce6U0Xebk5BkpHFMk7HkcxM1TafkZVAgFj3m4JatiBrbujwQ=
-X-Received: by 2002:a0c:fde8:: with SMTP id m8mr15109594qvu.4.1573301544256;
- Sat, 09 Nov 2019 04:12:24 -0800 (PST)
+        Sat, 9 Nov 2019 07:18:05 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id TPgliwjdHPMT8TPgoiPHDu; Sat, 09 Nov 2019 13:18:03 +0100
+Subject: Re: [PATCH v2 for 5.4 1/4] media: hantro: Fix s_fmt for dynamic
+ resolution changes
+To:     Tomasz Figa <tfiga@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+References: <20191007174505.10681-1-ezequiel@collabora.com>
+ <20191007174505.10681-2-ezequiel@collabora.com>
+ <20191108111950.717db5ce@collabora.com>
+ <CAAFQd5DiAnP5pc4SoPV3aDM7k71wYmPtAHzN7thquf47EOioHw@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <64b62284-ec32-41f4-21cb-883c1ee293e4@xs4all.nl>
+Date:   Sat, 9 Nov 2019 13:17:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191108213257.3097633-1-arnd@arndb.de> <20191108213257.3097633-16-arnd@arndb.de>
- <3a0cfce79620152facfe31b442a735db1dcda436.camel@pengutronix.de>
-In-Reply-To: <3a0cfce79620152facfe31b442a735db1dcda436.camel@pengutronix.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 9 Nov 2019 13:12:07 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a13jSRqzZ-aDETdxk-BKgfXaAhdWiSn7aW+u3MFf06fWw@mail.gmail.com>
-Message-ID: <CAK8P3a13jSRqzZ-aDETdxk-BKgfXaAhdWiSn7aW+u3MFf06fWw@mail.gmail.com>
-Subject: Re: [PATCH 15/16] drm/etnaviv: use ktime_t for timeouts
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Emil Velikov <emil.velikov@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:HOEFJ5qxD2Bh82m6q0PDxcve+Hvh/8jUZBKyoReDNwvBGBDrz99
- 2EjiksTy3mDcEmJJXn4nICaERyP7uwuaZBIGT3KeIlisL7RT6AiMMCQV3hA+dhT5qILnzat
- 43b3gHzhQ24q7mOi7rDQibrplGzhYvTUd4q5dCiMXit5xuy0YDS5m7KpiMcwX87i+kmxY/y
- Gz/LZfbfrpv9tDT/QCCgg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GqzViut1/R0=:bP6MC3QMhn0kWCtzDfRKnB
- lQj2ox0RcEQ42PoMxPC4eytmwT2CFX87Kg9ZSWc3CZ6lqyBhU/zVgZY6O93+QCgQxMo4kQRbv
- hru3pMIiXUT0GS0SKcV/qwWEYWWuZR6SDdqVnhwUtjZ38s7KHOWKYX5lSS6eRK1BQUKq/JDeO
- 41bGET69+QaL37vBjtLKtYU59bL8wCVI8OdM0THry9SnR524pQmxQa4gBcQEnCPo1ggjhFKux
- 1p1uEjIggesxT69jmOJeFF4fXxEVB116DiwD5b4SXVz4tr2dk9ZldSkbpo9UKfFtVlO3ue6LD
- IkGpV9dVbueikjobbG0RyW1Drm46pDCmAf8ivw0rcJgYNKMU7m6J0tPzAOzwyNmY3Y5LW0pOM
- uTSEGDgReoXb9+X1n7Ki8+6Ow/HA0pJJf6Amwt0pH1Kg2bS+3+sKzIDauDTzngN6lL/EBHVaT
- 1A7e+8qgjFC3cRYVsS2/UExgbzOdbQn4ozHmZ2Xa2ULGvpvyHDhQap4DtvEhH+GizehCbk/yZ
- +35NfwtLadOvKiihCjb3esLIG2Fh7IcYvZGTH2s+gyRsOmDI9HKMRpMmTZWQMwBarFNCag0Ao
- WwPPXu1hP32yul9qGMdrhPncWLClmSo/XNsGwN4xYPsyvusaTRoLbAEiktbFZ5lF1k9gFtjaf
- 6fHG+Ei+PFLqLU70+DYYb+JW0lPa5H8HVwyU8DgIYJ8VmBZG1XjNuYFu8oBRvZOm9+gD4j5cc
- dFrH1LS6RB/usMv2UBDJGpFfBHV+360xaPM/dJGOG/Vab4QrGOhTSpICagasz5hPG2gqZyEK8
- P/t24X9u52KL4WrutwkwvcawOWZqIOeUfCS0VoFTu6O1B/FKeKe7sCM8mRl/XtnDEDvHEwZag
- prqLWKe1lRfClZ8A0ToA==
+In-Reply-To: <CAAFQd5DiAnP5pc4SoPV3aDM7k71wYmPtAHzN7thquf47EOioHw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfM/1PjcWtzrcPF6jTGFZRWWxxyB++4M0JKfQwTihar4cCrJwqprAeEwDvyGobuvdyWqWveLOb8MyhPoGGDDA6ark21iEDnowfD5iTMsx1lhIxM/c3dpY
+ 7Ix3Fzv7KabSYU0zxTruZD9q84RNlGjSc5dQ/YmGvmJhrcA3DeTnjLjGmzAyNRN7s2UJFReO381NgGs3urLcIHjb9CbUk6qN/z2JGLi14ghPvbvU0wWvc/CL
+ +J2LKziz3gGfu3KwOblTjAXdqxpGqfQlPs6YnGgEtNqx0XfcMWXd+by6E3KKL7zmdO2rBrtoN8Rvttl2WJ7Y+5gNwCHYPWaEXYgvMlHlr3hbilRj/hEDkWtg
+ KvnaWe0OpASyQgcrXDJbnt7EMAJsdW+D6BL6vTtPWQ+EhxNQnZZzT1qRdtNb6i7DkChSvJQmPVIABIUpyoH78K5ci7Chr5OAGpcttKCXYrxwXX9/nDd+o7lO
+ iA1rQ2oPXRE/Y5Gfog81cH0f2J19DcyaIaScoKM/doSIoBwsnjTqrXD2BNFj8ntyBkSbUmiKuRv0NXsQOWvSkiDWnTzyfxI3KyDkSIc0NOVGOLzTH8nm5esN
+ IzxQn5J31v8uOiJ71GMk5kwTdjxKPWZJtRAZLm9FfyWWiGNnjnSPRre49EPndabf3iQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 9, 2019 at 12:03 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Am Freitag, den 08.11.2019, 22:32 +0100 schrieb Arnd Bergmann:
-> > struct timespec is being removed from the kernel because it often leads
-> > to code that is not y2038-safe.
-> >
-> > In the etnaviv driver, monotonic timestamps are used, which do not suffer
-> > from overflow, but using ktime_t still leads to better code overall.
-> >
-> > The conversion is straightforward for the most part, except for
-> > etnaviv_timeout_to_jiffies(), which needs to handle arguments larger
-> > than MAX_JIFFY_OFFSET on 32-bit architectures.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On 11/8/19 12:52 PM, Tomasz Figa wrote:
+> On Fri, Nov 8, 2019 at 7:20 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+>>
+>> On Mon,  7 Oct 2019 14:45:02 -0300
+>> Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>>
+>>> Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+>>> changed the conditions under S_FMT was allowed for OUTPUT
+>>> CAPTURE buffers.
+>>>
+>>> However, and according to the mem-to-mem stateless decoder specification,
+>>> in order to support dynamic resolution changes, S_FMT should be allowed
+>>> even if OUTPUT buffers have been allocated.
+>>>
+>>> Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
+>>> modification, provided the pixel format stays the same.
+>>>
+>>> Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
+>>>
+>>> Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+>>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>>> --
+>>> v2:
+>>> * Call try_fmt_out before using the format,
+>>>   pointed out by Philipp.
+>>>
+>>>  drivers/staging/media/hantro/hantro_v4l2.c | 28 +++++++++++++++-------
+>>>  1 file changed, 19 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
+>>> index 3dae52abb96c..586d243cc3cc 100644
+>>> --- a/drivers/staging/media/hantro/hantro_v4l2.c
+>>> +++ b/drivers/staging/media/hantro/hantro_v4l2.c
+>>> @@ -367,19 +367,26 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+>>>  {
+>>>       struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+>>>       struct hantro_ctx *ctx = fh_to_ctx(priv);
+>>> +     struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+>>>       const struct hantro_fmt *formats;
+>>>       unsigned int num_fmts;
+>>> -     struct vb2_queue *vq;
+>>>       int ret;
+>>>
+>>> -     /* Change not allowed if queue is busy. */
+>>> -     vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+>>> -     if (vb2_is_busy(vq))
+>>> -             return -EBUSY;
+>>> +     ret = vidioc_try_fmt_out_mplane(file, priv, f);
+>>> +     if (ret)
+>>> +             return ret;
+>>>
+>>>       if (!hantro_is_encoder_ctx(ctx)) {
+>>>               struct vb2_queue *peer_vq;
+>>>
+>>> +             /*
+>>> +              * In other to support dynamic resolution change,
+>>
+>>                       ^ order
+>>
+>>> +              * the decoder admits a resolution change, as long
+>>> +              * as the pixelformat remains. Can't be done if streaming.
+>>> +              */
+>>> +             if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
+>>> +                 pix_mp->pixelformat != ctx->src_fmt.pixelformat))
+>>> +                     return -EBUSY;
+>>
+>> Sorry to chime in only now, but I'm currently looking at the VP9 spec
+>> and it seems the resolution is allowed to change dynamically [1] (I
+>> guess the same applies to VP8). IIU the spec correctly, coded frames
+>> using the new resolution can reference decoded frames using the old
+>> one (can be higher or lower res BTW). If we force a streamoff to change
+>> the resolution (as seems to be the case here), we'll lose those ref
+>> frames (see the hantro_return_bufs() in stop streaming), right?
+>> Hans, Tomasz, any idea how this dynamic resolution change could/should
+>> be supported?
+> 
+> The same problem applies to stateful decoders as well. This is an
+> inherent limitation of the current V4L2 API. To handle this kind of
+> streams we would have to make the format a per-buffer parameter,
+> rather than per-queue as it is defined currently.
 
-> > @@ -368,7 +366,7 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
-> >               return -ENXIO;
-> >
-> >       if (args->flags & ETNA_WAIT_NONBLOCK)
-> > -             timeout = NULL;
-> > +             timeout = ktime_set(0, 0);
->
-> This is a change in behavior, as far as I can see. After this change
-> the called internal function is not able to differentiate between a
-> NONBLOCK call and a blocking call with 0 timeout. The difference being
-> that on a busy object the NONBLOCK call will return -EBUSY, while a
-> blocking call will return -ETIMEDOUT.
+This would be interesting to implement in new streaming ioctls.
 
-Ah, good point. I created this patch a long time ago (cherry-picked it out
-of an older branch I had done), so I don't remember how I concluded this
-was a safe conversion, of if I missed that difference originally.
+There are more reasons besides codec support why you would want that
+(i.e. a resolution change on an HDMI input). It's kind of supported
+since you can allocate larger buffers than needed for the current format,
+but currently there is no way to see when a new resolution is received.
 
-> But then CLOCK_MONOTONIC starts at 0 and should not never wrap, right?
+Related to this is the fact that while you can add new buffers on the
+fly (CREATE_BUFS), you can't delete unused buffers. Also, the max number
+of buffers (32) is too small for some of the more advanced scenarios.
 
-Yes, that is correct.
+This really needs to be addressed as well in new streaming ioctls.
 
-> If that's the case then we should never encounter a genuine 0 timeout
-> and this change would be okay.
+Regards,
 
-That's quite likely, I'd say any program passing {0,0} as a timeout without
-ETNA_WAIT_NONBLOCK is already broken, but if we leave it like that,
-it would be best to describe the reasoning in the changelog.
+	Hans
 
-Should I change the changelog, or change the patch to restore the
-current behavior instead?
+> 
+> Best regards,
+> Tomasz
+> 
+>>
+>>>               /*
+>>>                * Since format change on the OUTPUT queue will reset
+>>>                * the CAPTURE queue, we can't allow doing so
+>>> @@ -389,12 +396,15 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+>>>                                         V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>>               if (vb2_is_busy(peer_vq))
+>>>                       return -EBUSY;
+>>> +     } else {
+>>> +             /*
+>>> +              * The encoder doesn't admit a format change if
+>>> +              * there are OUTPUT buffers allocated.
+>>> +              */
+>>> +             if (vb2_is_busy(vq))
+>>> +                     return -EBUSY;
+>>>       }
+>>>
+>>> -     ret = vidioc_try_fmt_out_mplane(file, priv, f);
+>>> -     if (ret)
+>>> -             return ret;
+>>> -
+>>>       formats = hantro_get_formats(ctx, &num_fmts);
+>>>       ctx->vpu_src_fmt = hantro_find_format(formats, num_fmts,
+>>>                                             pix_mp->pixelformat);
+>>
+>> [1] Section "5.16 Reference frame scaling" of
+>>     https://storage.googleapis.com/downloads.webmproject.org/docs/vp9/vp9-bitstream-specification-v0.6-20160331-draft.pdf
 
-I guess I could fold the change below into my patch to make it transparent
-to the application again.
-
-      Arnd
-
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 1250c5e06329..162cedfb7f72 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -354,6 +354,7 @@ static int etnaviv_ioctl_wait_fence(struct
-drm_device *dev, void *data,
-        ktime_t timeout = ktime_set(args->timeout.tv_sec,
-                                    args->timeout.tv_nsec);
-        struct etnaviv_gpu *gpu;
-+       int ret;
-
-        if (args->flags & ~(ETNA_WAIT_NONBLOCK))
-                return -EINVAL;
-@@ -365,8 +366,12 @@ static int etnaviv_ioctl_wait_fence(struct
-drm_device *dev, void *data,
-        if (!gpu)
-                return -ENXIO;
-
--       if (args->flags & ETNA_WAIT_NONBLOCK)
--               timeout = ktime_set(0, 0);
-+       if (args->flags & ETNA_WAIT_NONBLOCK) {
-+               ret = etnaviv_gpu_wait_fence_interruptible(gpu, args->fence,
-+                                                          ktime_set(0, 0));
-+
-+               return (ret == -ETIMEDOUT) ? -EBUSY : ret;
-+       }
-
-        return etnaviv_gpu_wait_fence_interruptible(gpu, args->fence,
-                                                    timeout);
-@@ -421,10 +426,13 @@ static int etnaviv_ioctl_gem_wait(struct
-drm_device *dev, void *data,
-        if (!obj)
-                return -ENOENT;
-
--       if (args->flags & ETNA_WAIT_NONBLOCK)
--               timeout = ktime_set(0, 0);
--
--       ret = etnaviv_gem_wait_bo(gpu, obj, timeout);
-+       if (args->flags & ETNA_WAIT_NONBLOCK) {
-+               ret = etnaviv_gem_wait_bo(gpu, obj, ktime_set(0, 0));
-+               if (ret == -ETIMEDOUT)
-+                       ret = -EBUSY;
-+       } else {
-+               ret = etnaviv_gem_wait_bo(gpu, obj, timeout);
-+       }
-
-        drm_gem_object_put_unlocked(obj);
-
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index e42b1c4d902c..fa6986c5a5fe 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1135,6 +1135,7 @@ int etnaviv_gpu_wait_fence_interruptible(struct
-etnaviv_gpu *gpu,
-        u32 id, ktime_t timeout)
- {
-        struct dma_fence *fence;
-+       unsigned long remaining;
-        int ret;
-
-        /*
-@@ -1151,12 +1152,12 @@ int
-etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
-        if (!fence)
-                return 0;
-
--       if (!timeout) {
--               /* No timeout was requested: just test for completion */
--               ret = dma_fence_is_signaled(fence) ? 0 : -EBUSY;
-+       if (!timeout ||
-+           (remaining = etnaviv_timeout_to_jiffies(timeout)) == 0) {
-+               /* No timeout was requested, or timeout is already expired,
-+                * just test for completion */
-+               ret = dma_fence_is_signaled(fence) ? 0 : -ETIMEDOUT;
-        } else {
--               unsigned long remaining = etnaviv_timeout_to_jiffies(timeout);
--
-                ret = dma_fence_wait_timeout(fence, true, remaining);
-                if (ret == 0)
-                        ret = -ETIMEDOUT;
-@@ -1185,7 +1186,7 @@ int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
-        long ret;
-
-        if (!timeout)
--               return !is_active(etnaviv_obj) ? 0 : -EBUSY;
-+               return !is_active(etnaviv_obj) ? 0 : -ETIMEDOUT;
-
-        remaining = etnaviv_timeout_to_jiffies(timeout);
