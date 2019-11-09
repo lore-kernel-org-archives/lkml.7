@@ -2,158 +2,68 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28258C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492ADC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053B4207FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1683D20869
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfKIXIZ (ORCPT
+        id S1726586AbfKIXQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 18:08:25 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:54221 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726591AbfKIXIZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 18:08:25 -0500
-Received: (qmail 31724 invoked by uid 500); 9 Nov 2019 18:08:24 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 9 Nov 2019 18:08:24 -0500
-Date:   Sat, 9 Nov 2019 18:08:24 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-In-Reply-To: <CAHk-=wgu-QXU83ai4XBnh7JJUo2NBW41XhLWf=7wrydR4=ZP0g@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1911091708150.29750-100000@netrider.rowland.org>
+        Sat, 9 Nov 2019 18:16:30 -0500
+Received: from gentwo.org ([3.19.106.255]:39124 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbfKIXQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 18:16:29 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id F39EA3EC14; Sat,  9 Nov 2019 23:16:28 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id F15353E886;
+        Sat,  9 Nov 2019 23:16:28 +0000 (UTC)
+Date:   Sat, 9 Nov 2019 23:16:28 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Yu Zhao <yuzhao@google.com>
+cc:     Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v4 2/2] mm: avoid slub allocation while holding
+ list_lock
+In-Reply-To: <20191109230147.GA75074@google.com>
+Message-ID: <alpine.DEB.2.21.1911092313460.32415@www.lameter.com>
+References: <20190914000743.182739-1-yuzhao@google.com> <20191108193958.205102-1-yuzhao@google.com> <20191108193958.205102-2-yuzhao@google.com> <alpine.DEB.2.21.1911092024560.9034@www.lameter.com> <20191109230147.GA75074@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Linus Torvalds wrote:
+On Sat, 9 Nov 2019, Yu Zhao wrote:
 
-> On Fri, Nov 8, 2019 at 1:57 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > Can we please agree to call these writes something other than
-> > "idempotent"?  After all, any write to normal memory is idempotent in
-> > the sense that doing it twice has the same effect as doing it once
-> > (ignoring possible races, of course).
-> 
-> No!
-> 
-> You're completely missing the point.
-> 
-> Two writes to normal memory are *not* idempotent if they write
-> different values. The ordering very much matters, and it's racy and a
-> tool should complain.
+> >  	struct page *page, *h;
+> > +	unsigned long *map = bitmap_alloc(oo_objects(s->max), GFP_KERNEL);
+> > +
+> > +	if (!map)
+> > +		return;
+>
+> What would happen if we are trying to allocate from the slab that is
+> being shut down? And shouldn't the allocation be conditional (i.e.,
+> only when CONFIG_SLUB_DEBUG=y)?
 
-What you have written strongly indicates that either you think the word
-"idempotent" means something different from its actual meaning or else
-you are misusing the word in a very confusing way.
+Kmalloc slabs are never shut down.
 
-Your text seems to say that two operations are idempotent if they have 
-the same effect.  Compare that to the definition from Wikipedia (not 
-the best in the world, perhaps, but adequate for this discussion):
+The allocation does not hurt and CONFIG_SLUB_DEBUG is on in most
+configurations.
 
-	Idempotence is the property of certain operations in
-	mathematics and computer science whereby they can be applied
-	multiple times without changing the result beyond the initial
-	application.
-
-For example, writing 5 to x is idempotent because performing that write
-multiple times will have the same result as performing it only once.
-Likewise for any write to normal memory.
-
-Therefore talking about idempotent writes as somehow being distinct 
-from other writes does not make sense.  Nor does it make sense to say 
-"Two writes to normal memory are *not* idempotent if they write
-different values", because idempotence is a property of individual 
-operations, not of pairs of operations.
-
-You should use a different word, because what you mean is different 
-from what "idempotent" actually means.
-
-> But the point of WRITE_IDEMPOTENT() is that it *always* writes the
-> same value, so it doesn't matter if two different writers race on it.
-> 
-> So it really is about being idempotent.
-
-Okay, I agree that I did completely miss the point of what you
-originally meant.  But what you meant wasn't "being idempotent".
-
-> > A better name would be "write-if-different" or "write-if-changed"
-> 
-> No.
-> 
-> Again,  you're totally missing the point.
-> 
-> It's not about "write-if-different".
-> 
-> It's about idempotent writes.
-
-Assuming you really are talking about writes (presumably in different
-threads) that store the same value to the same location: Yes, two such
-writes do not in practice race with each other -- even though they may
-satisfy the formal definition of a data race.
-
-On the other hand, they may each race with other accesses.
-
-> But if you do know that all the possible racing writes are idempotent,
-> then AS A POSSIBLE CACHE OPTIMIZATION, you can then say "only do this
-> write if somebody else didn't already do it".
-
-In fact, you can _always_ perform that possible optimization.  Whether
-it will be worthwhile is a separate matter...
-
-> But that's a side effect of being idempotent, not the basic rule! And
-> it's not necessarily obviously an optimization at all, because the
-> cacheline may already be dirty, and checking the old value and having
-> a conditional on it may be much more expensive than just writing the
-> new value./
-
-Agreed.
-
-> The point is that certain writes DO NOT CARE ABOUT ORDERING, because
-> they may be setting a sticky flag (or stickily clearing a flag, as in
-> this case).  The ordering doesn't matter, because the operation is
-> idempotent.
-
-Ah, here you use the word correctly.
-
-> That's what "idempotent" means. You can do it once, or a hundred
-> times, and the end result is the same (but is different from not doing
-> it at all).
-
-Precisely the point I make above.
-
-> And no, not all writes are idempotent. That's just crazy talk. Writes
-> have values.
-
-By "writes have values", do you mean that writes store values?  Of
-course they do.  But it is clear from what you wrote just above that
-all writes _are_ idempotent, because doing a write once or a hundred
-times will yield the same end result.
-
-On a more productive note, do you think we should change the LKMM so 
-that it won't consider two writes to race with each other if they store 
-the same value?
-
-Alan Stern
 
