@@ -2,110 +2,344 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D44EC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2174DC17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55278214E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:21:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WMLHZ2Pk"
+	by mail.kernel.org (Postfix) with ESMTP id E9A682075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 17:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573320919;
+	bh=gL/KQPz+gQmcS/VMXT/LpaDh+/VadbWGI073t1v+E3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WYpSBc4ZsRaf5cX/naqx5mI+4C1F2TqTfjEgmKt5yp9sTF2byCUsxZr5+sMBtKBE2
+	 BAskS6GGZS2TzPSvLZKqs/uggH2az/HS0q93wjNwUuFE0mbHFtb+m5QqwjDo+Ypxz+
+	 KtWq3GAA8gb0DliLLqk7z1da5am9MgGwcrAfW/cU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfKIRVv (ORCPT
+        id S1726530AbfKIRfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 12:21:51 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:58318 "EHLO vps0.lunn.ch"
+        Sat, 9 Nov 2019 12:35:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbfKIRVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 12:21:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=GnBQ82YlwA0ID38IFrxIGR1cO4p7JxsUcnjCyBe4x6E=; b=WMLHZ2PkZVx00hZyvDfl5UIP9s
-        gxOZwLATHW98FpyGk4aPz/fdyyErcYH6+PsWU9Tvl96ExhmGlT5yQgcO3HNlC8WAjmgDTVuz2JJL+
-        0k+cYrj8jVYxbCpGO/3yPXL3w68p1vm4H2Of5dZz/8GRYVTfN3y1LjhbqcdCg4LSM9z8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iTUQf-0003Ct-CI; Sat, 09 Nov 2019 18:21:41 +0100
-Date:   Sat, 9 Nov 2019 18:21:41 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
-Message-ID: <20191109172141.GL22978@lunn.ch>
-References: <20191109105642.30700-1-olteanv@gmail.com>
- <20191109150953.GJ22978@lunn.ch>
- <CA+h21hrqczuOhTzWFZKX0XvgjgTzHT=3AdCPvO_eSabOzA3OCQ@mail.gmail.com>
+        id S1726181AbfKIRfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 12:35:17 -0500
+Received: from localhost (unknown [106.51.111.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E5C214E0;
+        Sat,  9 Nov 2019 17:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573320916;
+        bh=gL/KQPz+gQmcS/VMXT/LpaDh+/VadbWGI073t1v+E3I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vtSxM+2lpCf6P3un7pa5zq5Oh6YK7IdtYz1sAtvifBADJaMmZilFPtrKa/zBiIVKJ
+         oQ730Qa7WjFulOU00pyCFzbpAmdTmSG3rUOI47Mo8IstZFOoKqp5s65NGyy4LHU9Hy
+         0M5hlFXnWVo7VVVrqjWFFZ3J+NbHNTtx/wjSF3kA=
+Date:   Sat, 9 Nov 2019 23:05:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 3/5] dmaengine: plx-dma: Introduce PLX DMA engine PCI
+ driver skeleton
+Message-ID: <20191109173510.GG952516@vkoul-mobl>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-4-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+h21hrqczuOhTzWFZKX0XvgjgTzHT=3AdCPvO_eSabOzA3OCQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191022214616.7943-4-logang@deltatee.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 09, 2019 at 05:16:48PM +0200, Vladimir Oltean wrote:
-> On Saturday, 9 November 2019, Andrew Lunn <andrew@lunn.ch> wrote:
-> > On Sat, Nov 09, 2019 at 12:56:42PM +0200, Vladimir Oltean wrote:
-> >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
-> >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
-> >>
-> >> The interrupts are active low, but the GICv2 controller does not support
-> >> active-low and falling-edge interrupts, so the only mode it can be
-> >> configured in is rising-edge.
-> >
-> > Hi Vladimir
-> >
-> > So how does this work? The rising edge would occur after the interrupt
-> > handler has completed? What triggers the interrupt handler?
-> >
-> >         Andrew
-> >
+On 22-10-19, 15:46, Logan Gunthorpe wrote:
+> Some PLX Switches can expose DMA engines via extra PCI functions
+> on the upstream port. Each function will have one DMA channel.
 > 
-> Hi Andrew,
+> This patch is just the core PCI driver skeleton and dma
+> engine registration.
 > 
-> I hope I am not terribly confused about this. I thought I am telling the
-> interrupt controller to raise an IRQ as a result of the low-to-high transition
-> of the electrical signal. Experimentation sure seems to agree with me. So the
-> IRQ is generated immediately _after_ the PHY has left the line in open drain
-> and it got pulled up to Vdd.
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  MAINTAINERS           |   5 +
+>  drivers/dma/Kconfig   |   9 ++
+>  drivers/dma/Makefile  |   1 +
+>  drivers/dma/plx_dma.c | 209 ++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 224 insertions(+)
+>  create mode 100644 drivers/dma/plx_dma.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e51a68bf8ca8..07edc1ead75d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12952,6 +12952,11 @@ S:	Maintained
+>  F:	drivers/iio/chemical/pms7003.c
+>  F:	Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+>  
+> +PLX DMA DRIVER
+> +M:	Logan Gunthorpe <logang@deltatee.com>
+> +S:	Maintained
+> +F:	drivers/dma/plx_dma.c
+> +
+>  PMBUS HARDWARE MONITORING DRIVERS
+>  M:	Guenter Roeck <linux@roeck-us.net>
+>  L:	linux-hwmon@vger.kernel.org
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 7af874b69ffb..156f6e8f61f1 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -477,6 +477,15 @@ config PXA_DMA
+>  	  16 to 32 channels for peripheral to memory or memory to memory
+>  	  transfers.
+>  
+> +config PLX_DMA
+> +	tristate "PLX ExpressLane PEX Switch DMA Engine Support"
+> +	depends on PCI
+> +	select DMA_ENGINE
+> +	help
+> +	  Some PLX ExpressLane PCI Switches support additional DMA engines.
+> +	  These are exposed via extra functions on the switch's
+> +	  upstream port. Each function exposes one DMA channel.
+> +
+>  config SIRF_DMA
+>  	tristate "CSR SiRFprimaII/SiRFmarco DMA support"
+>  	depends on ARCH_SIRF
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index f5ce8665e944..ce03135c47fd 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -57,6 +57,7 @@ obj-$(CONFIG_NBPFAXI_DMA) += nbpfaxi.o
+>  obj-$(CONFIG_OWL_DMA) += owl-dma.o
+>  obj-$(CONFIG_PCH_DMA) += pch_dma.o
+>  obj-$(CONFIG_PL330_DMA) += pl330.o
+> +obj-$(CONFIG_PLX_DMA) += plx_dma.o
+>  obj-$(CONFIG_PPC_BESTCOMM) += bestcomm/
+>  obj-$(CONFIG_PXA_DMA) += pxa_dma.o
+>  obj-$(CONFIG_RENESAS_DMA) += sh/
+> diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
+> new file mode 100644
+> index 000000000000..8668dad790b6
+> --- /dev/null
+> +++ b/drivers/dma/plx_dma.c
+> @@ -0,0 +1,209 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Microsemi Switchtec(tm) PCIe Management Driver
+> + * Copyright (c) 2019, Logan Gunthorpe <logang@deltatee.com>
+> + * Copyright (c) 2019, GigaIO Networks, Inc
+> + */
+> +
+> +#include "dmaengine.h"
+> +
+> +#include <linux/dmaengine.h>
+> +#include <linux/kref.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +
+> +MODULE_DESCRIPTION("PLX ExpressLane PEX PCI Switch DMA Engine");
+> +MODULE_VERSION("0.1");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Logan Gunthorpe");
+> +
+> +struct plx_dma_dev {
+> +	struct dma_device dma_dev;
+> +	struct dma_chan dma_chan;
+> +	void __iomem *bar;
+> +
+> +	struct kref ref;
+> +	struct work_struct release_work;
+> +};
+> +
+> +static struct plx_dma_dev *chan_to_plx_dma_dev(struct dma_chan *c)
+> +{
+> +	return container_of(c, struct plx_dma_dev, dma_chan);
+> +}
+> +
+> +static irqreturn_t plx_dma_isr(int irq, void *devid)
+> +{
+> +	return IRQ_HANDLED;
 
-Hi Vladimir
+??
 
-                       t1                    t2
+> +}
+> +
+> +static void plx_dma_release_work(struct work_struct *work)
+> +{
+> +	struct plx_dma_dev *plxdev = container_of(work, struct plx_dma_dev,
+> +						  release_work);
+> +
+> +	dma_async_device_unregister(&plxdev->dma_dev);
+> +	put_device(plxdev->dma_dev.dev);
+> +	kfree(plxdev);
+> +}
+> +
+> +static void plx_dma_release(struct kref *ref)
+> +{
+> +	struct plx_dma_dev *plxdev = container_of(ref, struct plx_dma_dev, ref);
+> +
+> +	/*
+> +	 * The dmaengine reference counting and locking is a bit of a
+> +	 * mess so we have to work around it a bit here. We might put
+> +	 * the reference while the dmaengine holds the dma_list_mutex
+> +	 * which means we can't call dma_async_device_unregister() directly
+> +	 * here and it must be delayed.
 
-     ------------------\                     /----------------
-                        \-------------------/
+why is that, i have not heard any complaints about locking, can you
+elaborate on why you need to do this?
 
-The interrupt output is active low. So it is high by default. At time
-t1 something happens, say the link is established. The interrupt
-becomes active, we have a failing edge. We want the interrupt
-controller to fire. Lets say it does. The interrupt handler runs, and
-clears the interrupt cause. This is at time t2. We then get a rising
-edge and the PHY releases the interrupt, and the level returns to
-high.
+> +	 */
+> +	schedule_work(&plxdev->release_work);
+> +}
+> +
+> +static void plx_dma_put(struct plx_dma_dev *plxdev)
+> +{
+> +	kref_put(&plxdev->ref, plx_dma_release);
+> +}
+> +
+> +static int plx_dma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
+> +
+> +	kref_get(&plxdev->ref);
 
-So how does this work if you have the interrupt controller triggering
-on a rising edge? The edge won't rise until the interrupt handler
-finishes its work.
+why do you need to do this?
 
-	 Andrew
+> +
+> +	return 0;
+> +}
+> +
+> +static void plx_dma_free_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
+> +
+> +	plx_dma_put(plxdev);
+> +}
+> +
+> +static int plx_dma_create(struct pci_dev *pdev)
+> +{
+> +	struct plx_dma_dev *plxdev;
+> +	struct dma_device *dma;
+> +	struct dma_chan *chan;
+> +	int rc;
+> +
+> +	plxdev = kzalloc(sizeof(*plxdev), GFP_KERNEL);
+> +	if (!plxdev)
+> +		return -ENOMEM;
+> +
+> +	rc = request_irq(pci_irq_vector(pdev, 0), plx_dma_isr, 0,
+> +			 KBUILD_MODNAME, plxdev);
+> +	if (rc) {
+> +		kfree(plxdev);
+> +		return rc;
+> +	}
+> +
+> +	kref_init(&plxdev->ref);
+> +	INIT_WORK(&plxdev->release_work, plx_dma_release_work);
+> +
+> +	plxdev->bar = pcim_iomap_table(pdev)[0];
+> +
+> +	dma = &plxdev->dma_dev;
+> +	dma->chancnt = 1;
+> +	INIT_LIST_HEAD(&dma->channels);
+> +	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
+> +	dma->dev = get_device(&pdev->dev);
+> +
+> +	dma->device_alloc_chan_resources = plx_dma_alloc_chan_resources;
+> +	dma->device_free_chan_resources = plx_dma_free_chan_resources;
+> +
+> +	chan = &plxdev->dma_chan;
+> +	chan->device = dma;
+> +	dma_cookie_init(chan);
+> +	list_add_tail(&chan->device_node, &dma->channels);
+> +
+> +	rc = dma_async_device_register(dma);
+> +	if (rc) {
+> +		pci_err(pdev, "Failed to register dma device: %d\n", rc);
+> +		free_irq(pci_irq_vector(pdev, 0),  plxdev);
+> +		return rc;
+> +	}
+> +
+> +	pci_set_drvdata(pdev, plxdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int plx_dma_probe(struct pci_dev *pdev,
+> +			 const struct pci_device_id *id)
+> +{
+> +	int rc;
+> +
+> +	rc = pcim_enable_device(pdev);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(48));
+> +	if (rc)
+> +		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(48));
+> +	if (rc)
+> +		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = pcim_iomap_regions(pdev, 1, KBUILD_MODNAME);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
+> +	if (rc <= 0)
+> +		return rc;
+> +
+> +	pci_set_master(pdev);
+> +
+> +	rc = plx_dma_create(pdev);
+> +	if (rc)
+> +		goto err_free_irq_vectors;
+> +
+> +	pci_info(pdev, "PLX DMA Channel Registered\n");
+> +
+> +	return 0;
+> +
+> +err_free_irq_vectors:
+> +	pci_free_irq_vectors(pdev);
+> +	return rc;
+> +}
+> +
+> +static void plx_dma_remove(struct pci_dev *pdev)
+> +{
+> +	struct plx_dma_dev *plxdev = pci_get_drvdata(pdev);
+> +
+> +	free_irq(pci_irq_vector(pdev, 0),  plxdev);
+> +
+> +	plxdev->bar = NULL;
+> +	plx_dma_put(plxdev);
+> +
+> +	pci_free_irq_vectors(pdev);
+> +}
+> +
+> +static const struct pci_device_id plx_dma_pci_tbl[] = {
+> +	{
+> +		.vendor		= PCI_VENDOR_ID_PLX,
+> +		.device		= 0x87D0,
+> +		.subvendor	= PCI_ANY_ID,
+> +		.subdevice	= PCI_ANY_ID,
+> +		.class		= PCI_CLASS_SYSTEM_OTHER << 8,
 
-   
+can you explain this
+
+> +		.class_mask	= 0xFFFFFFFF,
+> +	},
+
+-- 
+~Vinod
