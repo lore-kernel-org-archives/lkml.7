@@ -2,165 +2,136 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6AAC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F61C17443
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A2721924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E808121882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Iw40WaYp"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="F/Doc6ae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfKIJGN (ORCPT
+        id S1726296AbfKIJIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 04:06:13 -0500
-Received: from mout.web.de ([212.227.15.4]:60183 "EHLO mout.web.de"
+        Sat, 9 Nov 2019 04:08:36 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:37090 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbfKIJGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 04:06:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573290365;
-        bh=HJqqvOPiLrBZhZlGpdiUIZoAA6i9aylcFpOm0pxa0y4=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=Iw40WaYpq+WCmGktF6ar3LpEFcdcS+VItZXzCAJUVpmQQXMALz11LOan9VIG5M2Sv
-         LMZgB6syYfvypKUU5+o01/pah7MC4SgrH3pdlX1z3t904rOpppfOJa6P0cq3OtnzeB
-         sIDbS/P7wHzm1OzN+6/ZaTVHhXyzwJCZwPijPHw8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.82.67]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MCZTG-1ibePu3Pms-009NIN; Sat, 09
- Nov 2019 10:06:04 +0100
-Subject: [PATCH 3/3] fsl/fman: Return directly after a failed devm_kzalloc()
- in mac_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <132e8369-c4da-249f-76b8-834e394dc6d5@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <8ffc16a2-62cc-f948-e11b-55bae1d6aae4@web.de>
-Date:   Sat, 9 Nov 2019 10:06:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726136AbfKIJIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 04:08:36 -0500
+Received: from zn.tnic (p200300EC2F1EA7009D7000FE00A4E362.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:a700:9d70:fe:a4:e362])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3D52C1EC0716;
+        Sat,  9 Nov 2019 10:08:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573290514;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=No8b8en5ogzJh4B5ENDF8gmhuPMql4+9x8/mZNC194c=;
+        b=F/Doc6ae6PZ+fX5F4GB/cGgnirsztA3mK7rp8bTmxXmu21kAfTH+bOqCD+hliwndAlb/6X
+        wmdy1J793ES47X29MsutOWd0FQojmjuubtFMh4Tx9dTmJobf4CewQnIDoM1DKobMR1orEL
+        JgUkuEd86etFPnNlOvVYYU7K2g6d+s8=
+Date:   Sat, 9 Nov 2019 10:08:29 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] EDAC/amd64: Get rid of the ECC disabled long message
+Message-ID: <20191109090829.GA2699@zn.tnic>
+References: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
+ <20191106160607.GC28380@zn.tnic>
+ <SN6PR12MB26398D9E617DF8C0ABE0252CF8790@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191106195417.GF28380@zn.tnic>
+ <20191107103857.GC19501@zn.tnic>
+ <SN6PR12MB263984026F57EC7F3B33B2BFF8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191107154006.GF19501@zn.tnic>
+ <SN6PR12MB263925E6F18C3EDC8D398932F8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191107193429.GI19501@zn.tnic>
+ <SN6PR12MB26395B751A59D86EFF3A77EBF8780@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <132e8369-c4da-249f-76b8-834e394dc6d5@web.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eLIXJeDSxsn/QQdSB2uFUJVZ6LS8AYKedpK+I/+HDllWZmjgIqu
- MgBFt51wz25TKWTP5yGGAfPt7QWFjXSY4qx6MICNpkBW6vuVjiveWVJhw+whrVDsk9hnjWL
- pJpxX+iHNhak5SaYci5QxoKzL37Q08VcvxVh8tL5oh4kEM4YJaWtjTaEmyA5/7OvRS/WS9e
- PTsVi/3VLXDugPOJ39Ngw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZMs4svgeo8Q=:JeiHgeqUkIyjqk+cjSLHik
- P8w1zMdyPDHMLh/ysyUhA6Bgui8xDi1fvzHHS4hLT7CqoHsKxCDyGTUftVVjFJtWnF8G9hdP8
- 7MVv5zvkArClvN75IP4t+rw5Y1bE+eclxqDdeExiN+XFvCJHLCxyrjlUaiCgDdsSV/s7r0T3J
- vnf7GugR2Yeamx2Uo784CtZgsTMd8k9EIAYEZTgLaYN0/LFtJaxKvg/24l/kOnSzsB8/0fkzZ
- +5BFRWI7mK14MfiFhjfaMAp5QHvoVhNYPKxcWCKmpVE8mfPReGY3dV1rxenfbWvMhG4I7iVSc
- NG/CDzMhhnIrKDNlLOnmNmnpcbMu4JHFEgP4D+MWOxReSd0QcItDUyxXglpr2zTp6jK5hfxpo
- nbAE2aiDr5EEKrKLTpwD0530AiAawqZPJwsta7PPDfelO+S20CIkx3tFsPWbr+rBNtFY06gSA
- LrPQBHhD4vn9soc0Eyl77sV2gLXlCncaKLcqWsi3chCHqEQJol/ilvMGUuRjN2DGN4hd/h9DU
- PgqUjogKdzOJKE6dM160vkuFrt2ElSCvWlr8aiwTMyq0MW7+5sKBPdePFR9zo4PGY4brSWtHt
- V5yMvqkdlTwB55BBNRUu4ex4JxfKt0t+xL6RRwb2CdDOGydkMxFH9Qa4WGesz9FkVeABFAPCR
- nyCacuqbmW8ZCUbGNEHD8CNEvXfHjRPMVBbNK7eFXCGc0iU9omYY8dauBlNwSxAzIJ73PhANo
- 1rDoNORchiTFtv0KHVM+0yK/8rgiUPS4Gsmi92cMc8bI0/bi2PZfnSIKxqhcaJtiyTJKjhqtS
- KPqDVzcmzVcGvbpAECBe89UTrxhIbtDI3zuUl52TS1SWE9KDbgxQZBvFGcVvguWz31+aIRyzi
- r1XSPZMy4rq+QHN7/MtlqhxlQ/9cnOsZQYXTd34nGvnNuxH2iZS0ewzppZOkekEakibBKOZXP
- wVD+xJn3U/yR/uRP25XvXiFqUeiErCxXDgazvLTdghZGi8AfJ+YuKMO/Yy4zVcUSVl2kz1uiG
- rNhX6m4rTt2mchmqli7tzfV1whPwEHa2cu+FxhHm6lIaqsBlt55jo+2Knpmx6ZrDCW57vYoVb
- NpV6nzX35i9Ttt799i+8FACwH/o9CLZ3tP9MzaWJ2cENq2VB4HsuhixW1Bt+FDaT6q4ihdnHi
- BMf5G7D52Bd4u2VlmpfBu0eH3cIsDDKbZQDqQUrtd7RC7/LNmjfGPEFfz/05tUtp8IHUgLN8X
- geMewjKppsR6/nQM3EtaCnU0pVuC6FGtCcuCkTOZ1Cqy8wpvBIBj78oqmbyc=
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB26395B751A59D86EFF3A77EBF8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 9 Nov 2019 09:26:12 +0100
+Ok, I've queued this:
 
-Return directly after a call of the function =E2=80=9Cdevm_kzalloc=E2=80=
-=9D failed
-at the beginning.
+---
+From: Borislav Petkov <bp@suse.de>
+Date: Sat, 9 Nov 2019 10:00:54 +0100
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/net/ethernet/freescale/fman/mac.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+This message keeps flooding dmesg on boxes where ECC is disabled or the
+DIMMs do not support ECC but the module gets auto-probed. What's even
+worse is that autoprobing happens on every CPU due to the CPU-family
+matching the driver does and uevent being generated for each CPU device.
 
-diff --git a/drivers/net/ethernet/freescale/fman/mac.c b/drivers/net/ether=
-net/freescale/fman/mac.c
-index 7fbd7cc24ede..75614e2ebda3 100644
-=2D-- a/drivers/net/ethernet/freescale/fman/mac.c
-+++ b/drivers/net/ethernet/freescale/fman/mac.c
-@@ -614,15 +614,12 @@ static int mac_probe(struct platform_device *_of_dev=
-)
- 	mac_node =3D dev->of_node;
+What is more, this message is becoming even more useless on newer
+systems where forcing ECC is not recommended and it should be done in
+the BIOS so the BIOS can do all the necessary work, i.e., just setting a
+bit in an MSR is not enough anymore.
 
- 	mac_dev =3D devm_kzalloc(dev, sizeof(*mac_dev), GFP_KERNEL);
--	if (!mac_dev) {
--		err =3D -ENOMEM;
--		goto _return;
+So get rid of it.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: linux-edac@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191106160607.GC28380@zn.tnic
+---
+ drivers/edac/amd64_edac.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 3aeb5173e200..428ce98f6776 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3188,18 +3188,6 @@ static void restore_ecc_error_reporting(struct ecc_settings *s, u16 nid,
+ 		amd64_warn("Error restoring NB MCGCTL settings!\n");
+ }
+ 
+-/*
+- * EDAC requires that the BIOS have ECC enabled before
+- * taking over the processing of ECC errors. A command line
+- * option allows to force-enable hardware ECC later in
+- * enable_ecc_error_reporting().
+- */
+-static const char *ecc_msg =
+-	"ECC disabled in the BIOS or no ECC capability, module will not load.\n"
+-	" Either enable ECC checking or force module loading by setting "
+-	"'ecc_enable_override'.\n"
+-	" (Note that use of the override may cause unknown side effects.)\n";
+-
+ static bool ecc_enabled(struct amd64_pvt *pvt)
+ {
+ 	u16 nid = pvt->mc_node_id;
+@@ -3246,11 +3234,10 @@ static bool ecc_enabled(struct amd64_pvt *pvt)
+ 	amd64_info("Node %d: DRAM ECC %s.\n",
+ 		   nid, (ecc_en ? "enabled" : "disabled"));
+ 
+-	if (!ecc_en || !nb_mce_en) {
+-		amd64_info("%s", ecc_msg);
++	if (!ecc_en || !nb_mce_en)
+ 		return false;
 -	}
-+	if (!mac_dev)
-+		return -ENOMEM;
-+
- 	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv) {
--		err =3D -ENOMEM;
--		goto _return;
--	}
-+	if (!priv)
-+		return -ENOMEM;
+-	return true;
++	else
++		return true;
+ }
+ 
+ static inline void
+-- 
+2.21.0
 
- 	/* Save private information */
- 	mac_dev->priv =3D priv;
-=2D-
-2.24.0
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
