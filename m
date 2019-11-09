@@ -2,68 +2,107 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8913C17441
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75BFC17441
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6B420865
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573266906;
-	bh=ZnfK/xdvUd4/XUscNHvzylDj0cqnh+/IIfsSY8oJja8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=EjU8Qnl8GtKW+h9KxnC18sWU54rJmYikeupgt1GyUkLGm31KH8QYDJdRqgqkxGlbC
-	 /P7eRa43kDcwSCJrGF9c4gGaV/8MUow5YT0VWbENP7yV4CcwPR6dldZD6DiJ8Eygsu
-	 ktA3UCfqP9QbFOK9dDzxBdBXPRd50a/yCDJb1bVI=
+	by mail.kernel.org (Postfix) with ESMTP id 7560E20865
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NRtazlfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfKICfF (ORCPT
+        id S1726405AbfKICmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 21:35:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfKICfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 21:35:05 -0500
-Subject: Re: [GIT] Networking
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573266904;
-        bh=ZnfK/xdvUd4/XUscNHvzylDj0cqnh+/IIfsSY8oJja8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xFPZjqNURR+/wYdQsZQvl5jwEX7fJqlLuplVonjrLq30eUaLywiG1WcgYSRs/DnsI
-         YeuspYUSkn8vpWPfs1UAstM0JdEtYSDkGyBibfEkWclMurncoXNeYN2lHogg03FQQb
-         h5RRJ8bl492xEvX9szmLMI9xFN/pwTxqWpwoJR/s=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191108.173432.1139057558916119461.davem@davemloft.net>
-References: <20191108.173432.1139057558916119461.davem@davemloft.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191108.173432.1139057558916119461.davem@davemloft.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
- refs/heads/master
-X-PR-Tracked-Commit-Id: a2582cdc32f071422e0197a6c59bd1235b426ce2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0058b0a506e40d9a2c62015fe92eb64a44d78cd9
-Message-Id: <157326690465.18517.1376695479110349158.pr-tracker-bot@kernel.org>
-Date:   Sat, 09 Nov 2019 02:35:04 +0000
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 8 Nov 2019 21:42:39 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34010 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfKICmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 21:42:39 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n13so6406402pff.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 18:42:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z3aOUzy6rUzyL+A22ql+voMdR9JLNJalZQcTYr1824w=;
+        b=NRtazlfidpLzrbXKDkCOE6NaO6GOLX5Lh6Mm7Pvv32Q3hQv5PMbZLh7Ac92oDhosFR
+         /1zBLFNCf7wGnzAQyXp/pqUR/AikPgmQKcIPZVSGbHhAjK+UDMKln89bNSQVS85ACJJE
+         ikbdmKqeIuQvukcaxMNkKR9ZU8ZRzZeoxkmvGNv/ubqJNkAPnjUUWwNe91owFiC/OzSO
+         hmSQwuKmmDzAekKCN3hKX4nzPlBPlzydDEr9FeFQtpqj+mVR5hOVCaY3fxzLKbfuUaz9
+         fFqsVOa1BH65aTRWqQwStHrv5OsMNXXlVRCaJ+Z/+azMJmnFR9VWisr6AX+uJEn57jtN
+         Gyvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z3aOUzy6rUzyL+A22ql+voMdR9JLNJalZQcTYr1824w=;
+        b=g3i0tumJuLYO0rdCojm3U8Eh1OpFVuVywbNaZbWV2uOqPBHFfgTMfsBuodTyp7hAm2
+         +PLS97If+9IICUVAWcvbepO0PD1T7fhMMn4BPZD6u62wWz7JfQNgtWa1jvE2fBDRUWSL
+         bODqx49uyf04ELLE0rD5TnP3h8Vm/t4ztkMozGkVgc2iICCesS3vnAXEOacRZiGI9A0/
+         VVkiWtXjtbmw6g+UEqJpvoO/Q7AD+0wxDzxj+1+VTDZ3KpTIfDN6Q4SvnLH2q/6bkeR3
+         bVdDFclMwX2NYyM6A3nVVOhxsPbSQe/FtGEriFb0AXnS7Ucf3VVSYHa0K7Znv2iG2DhJ
+         MOKw==
+X-Gm-Message-State: APjAAAXM9bXU4CJ/kmnZloFY31yPzdsDETan4bvjpnrmZQ0UgioJ/Tbh
+        IWgzV1/0OVq3GdTVyQKIkjk/xQ==
+X-Google-Smtp-Source: APXvYqxbTMEPmg4n9oNIpZHyLmp21Sp2dvJPnoo+1J59q3v0NVek1OR1AH8jXhKgG7Lx4ATWe0bCeg==
+X-Received: by 2002:a63:e249:: with SMTP id y9mr15582281pgj.383.1573267358334;
+        Fri, 08 Nov 2019 18:42:38 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u20sm8436966pgo.50.2019.11.08.18.42.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 18:42:37 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Vinod Koul <vkoul@kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm SDM845 display and gpu clocks
+Date:   Fri,  8 Nov 2019 18:42:34 -0800
+Message-Id: <20191109024234.1757452-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 08 Nov 2019 17:34:32 -0800 (PST):
+Enable the drivers for the display and gpu clock controllers on Qualcomm
+SDM845, needed in order to get these features working. These drivers
+provides power-domains and can as such not be compiled as modules.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0058b0a506e40d9a2c62015fe92eb64a44d78cd9
-
-Thank you!
-
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 7fa92defb964..7fd999be3de3 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -726,6 +726,8 @@ CONFIG_MSM_MMCC_8996=y
+ CONFIG_MSM_GCC_8998=y
+ CONFIG_QCS_GCC_404=y
+ CONFIG_SDM_GCC_845=y
++CONFIG_SDM_GPUCC_845=y
++CONFIG_SDM_DISPCC_845=y
+ CONFIG_SM_GCC_8150=y
+ CONFIG_HWSPINLOCK=y
+ CONFIG_HWSPINLOCK_QCOM=y
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.23.0
+
