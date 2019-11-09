@@ -7,69 +7,67 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01799C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0916CC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52CD21882
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82F221882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZzFmB7sQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g/eGJl9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfKITSA (ORCPT
+        id S1726743AbfKITR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 14:18:00 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46508 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfKITRx (ORCPT
+        Sat, 9 Nov 2019 14:17:58 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40295 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfKITRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 14:17:53 -0500
-Received: by mail-pg1-f193.google.com with SMTP id r18so6290698pgu.13
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 11:17:53 -0800 (PST)
+        Sat, 9 Nov 2019 14:17:54 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 15so6320227pgt.7
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 11:17:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FDlNx6EGMrp3vN/hMVd1kyT0CxIKEbIPYjtFrXlWFSw=;
-        b=ZzFmB7sQK3gNmFEeDI9qpvLvJ1+N05YxWvEuumFV/BcGrWe9iFzRin5aqvjGTKaR9P
-         jqm9KQ+kCcE6UAOTUuZCEzJ1Y28Zql+YlERBbd4b1VaF/hxXwZxAYXfL49v/4yFpClf7
-         JONMJc6wtb1wy2WdlfJr4HYyIBX2UU49UcKYs=
+        bh=TY/VtRKwYYhLwNyDqkkRR3WLEh0rigRGo+K8ilv6++I=;
+        b=g/eGJl9U1jxbmYciVtsfJlQad5WJ9yjfHBla5ZFyS8bkdypSn6QJNcS+QzONHVDmxz
+         c3bkKkAA9KmJyZdaBb/uS1OAnpIVOPuWkOHCwaNST4/PMCibEJWbUj2oec78TJVoaXAh
+         ZbYGWvn9nzwcN52NfDz5SD0MvWzK4S78iTyQI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FDlNx6EGMrp3vN/hMVd1kyT0CxIKEbIPYjtFrXlWFSw=;
-        b=qQYLzZKVLcA+EnHmRa0PRxsSF9WIqOz51p2Y7tsI4iRWuifqfigQ0xQO8ZRUbA8mf8
-         ZKBwCDC4z+fObzSvB9N057wkdi+q/DR4OM927jEwN4XHKXJV8qJy/nOGxt1R43DTgZL3
-         o6Tvp1eusRUcScVL035c0Pe9BnuqkyABrfsjyrc3jQ5Ti69/2cftOvTlbr2E9zPg+hFW
-         wAola9VSf4PuE0ITmECku0EwnnKQGNz+vPbPRFdunBbRWQG86h6SxDzs1HaDi+Gv2ksG
-         NUMlWXFMGBRWI4cMPm2CSyagDeH2/ERxrXrRGj5wcsy12E4NgFS/edehneap25mNi1Ja
-         5f3A==
-X-Gm-Message-State: APjAAAW+WP/NZ2xptPpq/nacVFnjOyazrqivmrRVAqoHnQriyn+QyGQo
-        AcdVmCYOSpulaotRmQBBHUN9aA==
-X-Google-Smtp-Source: APXvYqylPzIZ+Djw1JoI0Ai9UaxOOYX4sETzbck6F8sybWeqW/bp7Rd3HddEPdVW3U7hfLf/l1vWvw==
-X-Received: by 2002:a63:7c10:: with SMTP id x16mr19430535pgc.176.1573327072998;
-        Sat, 09 Nov 2019 11:17:52 -0800 (PST)
+        bh=TY/VtRKwYYhLwNyDqkkRR3WLEh0rigRGo+K8ilv6++I=;
+        b=Eca2NgC9Fc0kFJVWQI1/WrChMC2yWvZeXt0nNCH0bGiVmDtXcdfPYUFUFEuGW3Q98n
+         SZ0KAOjpAv4Bkl1gtTe7G1JZkf5HhTBjQzk+wudKxGvWFgldMnUp//M5mS1c4ht0SeuW
+         Is1CrAi50Z83xLzw4VIpkByGF1RHZUZq7PJ+ebirend1nmdJXtRbuzoKN3m9ShrJpwho
+         jhiMIRUVTevgT4Mibu7q4/6OPocsSLwkxjGXVpOKTlIrwcds6t3g2LPYk/AtmuHo+Rie
+         +IPiXSFBuNc3EB6Uq4qC1bjx30CJ4Hd/VEl+SnGD5qasB9mURxeIlkmiPPq/xJPjH0bj
+         FeFg==
+X-Gm-Message-State: APjAAAVsMdNXuKsvS7WbNuGNkq/8sa2GZyy4qyPG/zS7ANU5/4oyTtT2
+        s8Wkm1QvIS9valkb7g6wuCnl5Q==
+X-Google-Smtp-Source: APXvYqwLoettSe3c6USEi+mt/ICgOC1tLDB2bnaxht2vYq9Nq+Ctfo+iismzUSyrS1z789xLf+LMZA==
+X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr22462463pjr.138.1573327074178;
+        Sat, 09 Nov 2019 11:17:54 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i11sm9193577pgd.7.2019.11.09.11.17.52
+        by smtp.gmail.com with ESMTPSA id i11sm9193577pgd.7.2019.11.09.11.17.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2019 11:17:52 -0800 (PST)
+        Sat, 09 Nov 2019 11:17:53 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Paul Burton <paul.burton@mips.com>,
         Jason Wessel <jason.wessel@windriver.com>,
         Daniel Thompson <daniel.thompson@linaro.org>
 Cc:     qiaochong@loongson.cn, kgdb-bugreport@lists.sourceforge.net,
         ralf@linux-mips.org, Douglas Anderson <dianders@chromium.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Will Deacon <will@kernel.org>,
         Chuhong Yuan <hslester96@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Prarit Bhargava <prarit@redhat.com>,
         Nicholas Mc Guire <hofrat@osadl.org>,
         Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4/5] kdb: Gid rid of implicit setting of the current task / regs
-Date:   Sat,  9 Nov 2019 11:16:43 -0800
-Message-Id: <20191109111624.4.Ibc3d982bbeb9e46872d43973ba808cd4c79537c7@changeid>
+Subject: [PATCH 5/5] kdb: Get rid of confusing diag msg from "rd" if current task has no regs
+Date:   Sat,  9 Nov 2019 11:16:44 -0800
+Message-Id: <20191109111624.5.I121f4c6f0c19266200bf6ef003de78841e5bfc3d@changeid>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 In-Reply-To: <20191109191644.191766-1-dianders@chromium.org>
 References: <20191109191644.191766-1-dianders@chromium.org>
@@ -80,99 +78,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some (but not all?) of the kdb backtrace paths would cause the
-kdb_current_task and kdb_current_regs to remain changed.  As discussed
-in a review of a previous patch [1], this doesn't seem intuitive, so
-let's fix that.
+If you switch to a sleeping task with the "pid" command and then type
+"rd", kdb tells you this:
 
-...but, it turns out that there's actually no longer any reason to set
-the current task / current regs while backtracing anymore anyway.  As
-of commit 2277b492582d ("kdb: Fix stack crawling on 'running' CPUs
-that aren't the master") if we're backtracing on a task running on a
-CPU we ask that CPU to do the backtrace itself.  Linux can do that
-without anything fancy.  If we're doing backtrace on a sleeping task
-we can also do that fine without updating globals.  So this patch
-mostly just turns into deleting a bunch of code.
+  No current kdb registers.  You may need to select another task
+  diag: -17: Invalid register name
 
-[1] https://lore.kernel.org/r/20191010150735.dhrj3pbjgmjrdpwr@holly.lan
+The first message makes sense, but not the second.  Fix it by just
+returning 0 after commands accessing the current registers finish if
+we've already printed the "No current kdb registers" error.
+
+While fixing kdb_rd(), change the function to use "if" rather than
+"ifdef".  It cleans the function up a bit and any modern compiler will
+have no trouble handling still producing good code.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- kernel/debug/kdb/kdb_bt.c      | 8 +-------
- kernel/debug/kdb/kdb_main.c    | 2 +-
- kernel/debug/kdb/kdb_private.h | 1 -
- 3 files changed, 2 insertions(+), 9 deletions(-)
+ kernel/debug/kdb/kdb_main.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
-index 4af48ac53625..3de0cc780c16 100644
---- a/kernel/debug/kdb/kdb_bt.c
-+++ b/kernel/debug/kdb/kdb_bt.c
-@@ -119,7 +119,6 @@ kdb_bt_cpu(unsigned long cpu)
- 		return;
- 	}
- 
--	kdb_set_current_task(kdb_tsk);
- 	kdb_bt1(kdb_tsk, ~0UL, false);
- }
- 
-@@ -166,10 +165,8 @@ kdb_bt(int argc, const char **argv)
- 		if (diag)
- 			return diag;
- 		p = find_task_by_pid_ns(pid, &init_pid_ns);
--		if (p) {
--			kdb_set_current_task(p);
-+		if (p)
- 			return kdb_bt1(p, ~0UL, false);
--		}
- 		kdb_printf("No process with pid == %ld found\n", pid);
- 		return 0;
- 	} else if (strcmp(argv[0], "btt") == 0) {
-@@ -178,11 +175,9 @@ kdb_bt(int argc, const char **argv)
- 		diag = kdbgetularg((char *)argv[1], &addr);
- 		if (diag)
- 			return diag;
--		kdb_set_current_task((struct task_struct *)addr);
- 		return kdb_bt1((struct task_struct *)addr, ~0UL, false);
- 	} else if (strcmp(argv[0], "btc") == 0) {
- 		unsigned long cpu = ~0;
--		struct task_struct *save_current_task = kdb_current_task;
- 		if (argc > 1)
- 			return KDB_ARGCOUNT;
- 		if (argc == 1) {
-@@ -204,7 +199,6 @@ kdb_bt(int argc, const char **argv)
- 				kdb_bt_cpu(cpu);
- 				touch_nmi_watchdog();
- 			}
--			kdb_set_current_task(save_current_task);
- 		}
- 		return 0;
- 	} else {
 diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index 4d44b3746836..ba12e9f4661e 100644
+index ba12e9f4661e..b22292b649c4 100644
 --- a/kernel/debug/kdb/kdb_main.c
 +++ b/kernel/debug/kdb/kdb_main.c
-@@ -1138,7 +1138,7 @@ static void kdb_dumpregs(struct pt_regs *regs)
- 	console_loglevel = old_lvl;
+@@ -543,9 +543,8 @@ int kdbgetaddrarg(int argc, const char **argv, int *nextarg,
+ 		if (diag)
+ 			return diag;
+ 	} else if (symname[0] == '%') {
+-		diag = kdb_check_regs();
+-		if (diag)
+-			return diag;
++		if (kdb_check_regs())
++			return 0;
+ 		/* Implement register values with % at a later time as it is
+ 		 * arch optional.
+ 		 */
+@@ -1836,8 +1835,7 @@ static int kdb_go(int argc, const char **argv)
+  */
+ static int kdb_rd(int argc, const char **argv)
+ {
+-	int len = kdb_check_regs();
+-#if DBG_MAX_REG_NUM > 0
++	int len = 0;
+ 	int i;
+ 	char *rname;
+ 	int rsize;
+@@ -1846,8 +1844,14 @@ static int kdb_rd(int argc, const char **argv)
+ 	u16 reg16;
+ 	u8 reg8;
+ 
+-	if (len)
+-		return len;
++	if (kdb_check_regs())
++		return 0;
++
++	/* Fallback to Linux showregs() if we don't have DBG_MAX_REG_NUM */
++	if (DBG_MAX_REG_NUM <= 0) {
++		kdb_dumpregs(kdb_current_regs);
++		return 0;
++	}
+ 
+ 	for (i = 0; i < DBG_MAX_REG_NUM; i++) {
+ 		rsize = dbg_reg_def[i].size * 2;
+@@ -1889,12 +1893,7 @@ static int kdb_rd(int argc, const char **argv)
+ 		}
+ 	}
+ 	kdb_printf("\n");
+-#else
+-	if (len)
+-		return len;
+ 
+-	kdb_dumpregs(kdb_current_regs);
+-#endif
+ 	return 0;
  }
  
--void kdb_set_current_task(struct task_struct *p)
-+static void kdb_set_current_task(struct task_struct *p)
- {
- 	kdb_current_task = p;
+@@ -1928,9 +1927,8 @@ static int kdb_rm(int argc, const char **argv)
+ 	if (diag)
+ 		return diag;
  
-diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
-index e829b22f3946..2e296e4a234c 100644
---- a/kernel/debug/kdb/kdb_private.h
-+++ b/kernel/debug/kdb/kdb_private.h
-@@ -240,7 +240,6 @@ extern void *debug_kmalloc(size_t size, gfp_t flags);
- extern void debug_kfree(void *);
- extern void debug_kusage(void);
+-	diag = kdb_check_regs();
+-	if (diag)
+-		return diag;
++	if (kdb_check_regs())
++		return 0;
  
--extern void kdb_set_current_task(struct task_struct *);
- extern struct task_struct *kdb_current_task;
- extern struct pt_regs *kdb_current_regs;
- 
+ 	diag = KDB_BADREG;
+ 	for (i = 0; i < DBG_MAX_REG_NUM; i++) {
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
