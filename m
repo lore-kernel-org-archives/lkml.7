@@ -2,122 +2,153 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C48C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9162FC17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA7720865
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E6421019
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="Qgf10WbI"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xi6zg9bQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfKIB5y (ORCPT
+        id S1726462AbfKICA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 20:57:54 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36332 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfKIB5y (ORCPT
+        Fri, 8 Nov 2019 21:00:59 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39382 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfKICA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 20:57:54 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r10so9071454wrx.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 17:57:52 -0800 (PST)
+        Fri, 8 Nov 2019 21:00:58 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so6979780oif.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 18:00:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=uVn2qkTljl+tTRkQyCgOVZ3dMV2RafY7lkEdIbVUGTM=;
-        b=Qgf10WbIkEM/xHV5iRuiTZScuq9g/a64Sct14/6j+oWydq2mqwGZ31DKcJdoacJXxa
-         cP/qfgfvCarIK2onx1Fp4953agNP4vG1Fcfk3Aa5uGTMVI2DOqTBO4zl7YCu/GIW6CjS
-         /QSr4s8nnzPv1IoC46N3YgL/ijFoR0V+tmxTrc3Tb2/gUptaxR43RQQkMkKRH+Dfd1C6
-         onT/WZW+kXwgpKfTFk5Jkud5vvMqVgPERy4CnxmIMCaR/Gh5ZoM6tNYoC5phTtR36Avc
-         zsYSbvWViWWoN4YbpQwym9ukobb2sX4yealHesd6w1cd2xWeuIp1qyXEjZIbnRO3MQpT
-         LaCg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CMB5JpKwIq6S9PN7vvpe5VBnbdzeo3jW3I3cqODAscQ=;
+        b=xi6zg9bQ0lHizHa87ygqX+qHqSdrFuEi4KcpTdAJ0Y9WXNEF4W0XNWCa/V5JZgIHwR
+         EDe8LdE4gbvHrM2W5CXoHOBFd30nN1QbrGjHz/KrKn+qXidbyuaIIjTmrGy57pxcOoik
+         u1D3HxJ8YWfEv0OqS8d0CX5jL1xcbyNQxEEd3nC3HIlDzf0OuMTAMjTwYFMOEuEy1Z+g
+         I41Sl+6KLFxzaT49rj/EQhObdyEQG1p380oOGciQxj16F07Zv6EDL0WQrzU84Z1USW1c
+         QyEJqcH89E+RXdq5JjS5yoxl6tQYcvH+xa6gqu6ziiQmcxkiUNtiiXpzLT1afcf1Hcwt
+         2YdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=uVn2qkTljl+tTRkQyCgOVZ3dMV2RafY7lkEdIbVUGTM=;
-        b=njhGZln3IlhzikcPYMC9DxeUY9Fkq9P0HZREeaaa0nG6AhN0tgpQh3QiwI/YbHws7Y
-         TNKy7NAZcihce5E/A8GyM5ZR0cIRMbHjo4wimhqlaYIxVsZYu7YpLSMx3qzCCEIXFgaa
-         AKBDmdE9guoF2ViRF+LtXWqwbTYYp/jt2qDGQXsI3vVS3JDubFxo1E5zTdmIEgZqP+Gm
-         D2jZUokq1arJaqqibvjt6pDXM4jmWdpSbz95EAAle4q/sjKoY9P55ewNM2V6zqTJwJ2u
-         7yct1ElAwM4RQ9tXjhHH6/u3G37pols0IGNkEz0Geii6RJYVFkphFjNMcV1IzmO9ai3s
-         ziZQ==
-X-Gm-Message-State: APjAAAVZKmtAICqszSSVZaM9x+WPSoX1Yh+4T9cY5qrObA1+VlFjj+PG
-        KXENS2PsW64eZwY142zq68tcgg==
-X-Google-Smtp-Source: APXvYqwcw4ZifV/oofafu6IRbacOTH+cEGSv0kN1zmRBGAirapoPWw/07jlUDOYgWvwTl4hI1RJjvw==
-X-Received: by 2002:adf:e5c5:: with SMTP id a5mr11527422wrn.103.1573264672178;
-        Fri, 08 Nov 2019 17:57:52 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id j66sm6835529wma.19.2019.11.08.17.57.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 17:57:51 -0800 (PST)
-Message-ID: <5dc61d1f.1c69fb81.22380.3936@mx.google.com>
-Date:   Fri, 08 Nov 2019 17:57:51 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CMB5JpKwIq6S9PN7vvpe5VBnbdzeo3jW3I3cqODAscQ=;
+        b=GCAlWWSvmcJGOFa+wcngHJK/rBu1AdBeGi+gzyM48ZfvtI9ao54SmgHs0hjiwS6Vxp
+         27aAqZWQ/bhsAFK0aBeUGdLDEConfbBPLHnQRHF561sRFE2x5I1LReWo3/NLmVmMlsDw
+         rckPUtsyDABWXSook+6RFuN4KnJDFxuQqCiHsjOHw9cjhQ9Qvb/Cfs5GcTf44b9YUAHt
+         c0lrFSSvOzruRA9WkVQeyA9/scOeNLfbbXcptho1Pw9zpUnkT0nXznQewW8htwmYrI0T
+         Vj77t1QiL1RMPYhYUEbvEmwwLX1uiIkWA1ybTthOL+NorE/WjyqpBCXPVxzSNYPXnZCD
+         4yRA==
+X-Gm-Message-State: APjAAAU1eJl/j55k1fB7uFFf+qzrABRDeDZZy2FqiXPOdVoVEBrbmLhh
+        B0OjiCwHdGlodgetH7ZhD8j4qpz+GW0ziniVHlzmAg==
+X-Google-Smtp-Source: APXvYqxbOAODZRmObVlkB1fFi8tbZoBup8I2xNiMTryRx94QSzzOKknAk0ruAKgUXiqvkpyg0rBnaBT3Cym0nNLt/Wk=
+X-Received: by 2002:aca:55c1:: with SMTP id j184mr13409516oib.105.1573264857672;
+ Fri, 08 Nov 2019 18:00:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.14.152-63-g2cfe0b7bdeef
-In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
-References: <20191108174719.228826381@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/62] 4.14.153-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+References: <20191106170727.14457-2-sean.j.christopherson@intel.com>
+ <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
+ <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com> <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
+ <20191106233913.GC21617@linux.intel.com> <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
+ <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
+ <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com> <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
+ <20191107155846.GA7760@linux.intel.com> <20191109014323.GB8254@linux.intel.com>
+In-Reply-To: <20191109014323.GB8254@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 8 Nov 2019 18:00:46 -0800
+Message-ID: <CAPcyv4hAY_OfExNP+_067Syh9kZAapppNwKZemVROfxgbDLLYQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 110 boots: 0 failed, 103 passed with 7 offline=
- (v4.14.152-63-g2cfe0b7bdeef)
+On Fri, Nov 8, 2019 at 5:43 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Thu, Nov 07, 2019 at 07:58:46AM -0800, Sean Christopherson wrote:
+> > On Thu, Nov 07, 2019 at 07:36:45AM -0800, Dan Williams wrote:
+> > > On Thu, Nov 7, 2019 at 3:12 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> > > >
+> > > > On 07/11/19 06:48, Dan Williams wrote:
+> > > > >> How do mmu notifiers get held off by page references and does that
+> > > > >> machinery work with ZONE_DEVICE? Why is this not a concern for the
+> > > > >> VM_IO and VM_PFNMAP case?
+> > > > > Put another way, I see no protection against truncate/invalidate
+> > > > > afforded by a page pin. If you need guarantees that the page remains
+> > > > > valid in the VMA until KVM can install a mmu notifier that needs to
+> > > > > happen under the mmap_sem as far as I can see. Otherwise gup just
+> > > > > weakly asserts "this pinned page was valid in this vma at one point in
+> > > > > time".
+> > > >
+> > > > The MMU notifier is installed before gup, so any invalidation will be
+> > > > preceded by a call to the MMU notifier.  In turn,
+> > > > invalidate_range_start/end is called with mmap_sem held so there should
+> > > > be no race.
+> > > >
+> > > > However, as Sean mentioned, early put_page of ZONE_DEVICE pages would be
+> > > > racy, because we need to keep the reference between the gup and the last
+> > > > time we use the corresponding struct page.
+> > >
+> > > If KVM is establishing the mmu_notifier before gup then there is
+> > > nothing left to do with that ZONE_DEVICE page, so I'm struggling to
+> > > see what further qualification of kvm_is_reserved_pfn() buys the
+> > > implementation.
+> >
+> > Insertion into KVM's secondary MMU is mutually exclusive with an invalidate
+> > from the mmu_notifier.  KVM holds a reference to the to-be-inserted page
+> > until the page has been inserted, which ensures that the page is pinned and
+> > thus won't be invalidated until after the page is inserted.  This prevents
+> > an invalidate from racing with insertion.  Dropping the reference
+> > immediately after gup() would allow the invalidate to run prior to the page
+> > being inserted, and so KVM would map the stale PFN into the guest's page
+> > tables after it was invalidated in the host.
+>
+> My previous analysis is wrong, although I did sort of come to the right
+> conclusion.
+>
+> The part that's wrong is that KVM does not rely on pinning a page/pfn when
+> installing the pfn into its secondary MMU (guest page tables).  Instead,
+> KVM keeps track of mmu_notifier invalidate requests and cancels insertion
+> if an invalidate occured at any point between the start of hva_to_pfn(),
+> i.e. the get_user_pages() call, and acquiring KVM's mmu lock (which must
+> also be grabbed by mmu_notifier invalidate).  So for any pfn, regardless
+> of whether it's backed by a struct page, KVM inserts a pfn if and only if
+> it is guaranteed to get an mmu_notifier invalidate for the pfn (and isn't
+> already invalidated).
+>
+> In the page fault flow, KVM doesn't care whether or not the pfn remains
+> valid in the associated vma.  In other words, Dan's idea of immediately
+> doing put_page() on ZONE_DEVICE pages would work for *page faults*...
+>
+> ...but not for all the other flows where KVM uses gfn_to_pfn(), and thus
+> get_user_pages().  When accessing entire pages of guest memory, e.g. for
+> nested virtualization, KVM gets the page associated with a gfn, maps it
+> with kmap() to get a kernel address and keeps the mapping/page until it's
+> done reading/writing the page.  Immediately putting ZONE_DEVICE pages
+> would result in use-after-free scenarios for these flows.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.152-63-g2cfe0b7bdeef/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.152-63-g2cfe0b7bdeef/
-
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.152-63-g2cfe0b7bdeef
-Git Commit: 2cfe0b7bdeef09a0ffe2895928288ebca332b8be
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 61 unique boards, 21 SoC families, 13 builds out of 201
-
-Offline Platforms:
-
-arm:
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+Thanks for this clarification. I do want to put out though that
+ZONE_DEVICE pages go idle, they don't get freed. As long as KVM drops
+its usage on invalidate it's perfectly fine for KVM to operate on idle
+ZONE_DEVICE pages. The common case is that ZONE_DEVICE pages are
+accessed and mapped while idle. Only direct-I/O temporarily marks them
+busy to synchronize with invalidate. KVM obviates that need by
+coordinating with mmu-notifiers instead.
