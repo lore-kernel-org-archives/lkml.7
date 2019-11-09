@@ -2,56 +2,91 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3973CC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9D2C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DAC207FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45EB9207FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfKILDV (ORCPT
+        id S1726394AbfKILII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 06:03:21 -0500
-Received: from mga14.intel.com ([192.55.52.115]:39937 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfKILDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 06:03:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Nov 2019 03:03:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,285,1569308400"; 
-   d="scan'208";a="286726655"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
-  by orsmga001.jf.intel.com with ESMTP; 09 Nov 2019 03:03:18 -0800
-Date:   Sat, 9 Nov 2019 19:09:53 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>, kbuild-all@lists.01.org,
-        lkp@lists.01.org
-Subject: [0-Day CI notification] the service will be paused on Nov 10 (1 PM
- to 11 PM, PRC time) for lab construction
-Message-ID: <20191109110953.GA17040@intel.com>
+        Sat, 9 Nov 2019 06:08:08 -0500
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:52289 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726143AbfKILII (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 06:08:08 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id TOb3iwTk7PMT8TOb6iPBE6; Sat, 09 Nov 2019 12:08:05 +0100
+Subject: Re: [PATCH] media: rockchip/rga: fix potential use after free
+To:     Pan Bian <bianpan2016@163.com>, Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1572969354-8967-1-git-send-email-bianpan2016@163.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <e89f6a90-4899-0945-e11a-67be6a28e7c0@xs4all.nl>
+Date:   Sat, 9 Nov 2019 12:08:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1572969354-8967-1-git-send-email-bianpan2016@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAEIQNDj0MrkNwMDONLTaAveOQTV90nc/m7292hp5RhbHodvPvVOF7YABtpCI5/hudEn1y22ZqA+1Zv8Q5vySCxJngJ6HhmqrH0G4Pbt7P+WOd0lz5Y4
+ 63/JBeAViow65qolHk+fGi3DH5TAgkFqMuZyXAoygqjBxjI/S2NCX4SYVCL5wvIpNseOd29oQlXoTF6BPxGwODycBm/YXesDN/5rRDPxhPSdkdkx6ze4KaX/
+ rIRLjaZ0DUHD0Q5blMv6aM+rE2gn/llYsl1ETROOdfA3aHM7GZ/aBax1Vb5CFJfB/rFttkCOqDlGu0X+fH53RGgAg4cza3jzMzgoxrlYQ+9534j/mKlg7JcY
+ X5BUCQK0PuMiecZaAZ4JadtiuegxK/ePgPiemh52wAr2qxgako0xpEPjqnh2HHDBtVfIUhF5tV0O+mDwtS3ikCxbAjMRyQUywTz2KwIoccd+y/+sjuoIwD+3
+ MfVUAq0p1Ft5fY6e
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all, this is Philip who maintains the 0-Day CI test service.
-Thanks for anyone who subscribes to the service. We will have a
-lab power construction tomorrow, thus need to pause the service
-for 10 hours, at PRC time Nov 10 (from 1 PM to 11 PM)
+On 11/5/19 4:55 PM, Pan Bian wrote:
+> The variable vga->vfd is an alias for vfd. Therefore, releasing vfd and
+> then unregister vga->vfd will lead to a use after free bug. In fact, the
+> free operation and the unregister operation are reversed.
+> 
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> ---
+>  drivers/media/platform/rockchip/rga/rga.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/platform/rockchip/rga/rga.c
+> index e9ff12b6b5bb..613b868fce33 100644
+> --- a/drivers/media/platform/rockchip/rga/rga.c
+> +++ b/drivers/media/platform/rockchip/rga/rga.c
+> @@ -901,9 +901,9 @@ static int rga_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  rel_vdev:
+> -	video_device_release(vfd);
+> -unreg_video_dev:
+>  	video_unregister_device(rga->vfd);
+> +unreg_video_dev:
+> +	video_device_release(vfd);
+>  unreg_v4l2_dev:
+>  	v4l2_device_unregister(&rga->v4l2_dev);
+>  err_put_clk:
+> 
 
-Sorry for any inconvenience caused by this, we will recover the
-service to be online as early as possible.
+This isn't right, you need to update the goto labels as well.
 
-Thanks
+With this change unreg_video_dev releases the vdev, while rel_vdev
+unregisters it. Very confusing.
 
+I'd also rename unreg_video_dev to unreg_vdev to be consistent with
+rel_vdev.
+
+Regards,
+
+	Hans
