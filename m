@@ -2,294 +2,301 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F82C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF485C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 13:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7485F21848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B882077C
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 13:06:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qf9JEU4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfKIM7y (ORCPT
+        id S1726530AbfKINGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 07:59:54 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:49947 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfKIM7y (ORCPT
+        Sat, 9 Nov 2019 08:06:35 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36422 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfKINGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 07:59:54 -0500
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id B6C9A240004;
-        Sat,  9 Nov 2019 12:59:49 +0000 (UTC)
-Date:   Sat, 9 Nov 2019 13:59:49 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, hverkuil-cisco@xs4all.nl, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 2/3] media: cedrus: Fix H264 4k support
-Message-ID: <20191109125949.GC845368@aptenodytes>
-References: <20191106210538.3474-1-jernej.skrabec@siol.net>
- <20191106210538.3474-3-jernej.skrabec@siol.net>
+        Sat, 9 Nov 2019 08:06:34 -0500
+Received: by mail-pf1-f196.google.com with SMTP id v19so7036045pfm.3;
+        Sat, 09 Nov 2019 05:06:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=32W9Tjji9DSY3yO5LdGQix32cQY0Jx1iD0Y1MTTBc48=;
+        b=Qf9JEU4fXjNhn+vD6QAkYh3765EIatNSJKNMZyfsx5yTkt1DwyIz1D6g0yPCxfZNSr
+         RLU1D6Fosqrjzqr6FV4W3kG6SOGhXNp1/y9G3qmIweY3m1W99rpc5YLDVmIFzHecdKge
+         1tUVIUjtozzqUAKVNxJ63k7ry8JMMYcWwIHY789LmSBy/7sfJgIAP/U6T6kC8lZqZEiz
+         AY1ckE9nEBq9PmW6ST0oUy1U4Vp4qsk0VwABtZxlwzWQBffqtECYotR5YreGOoJUAhB/
+         wTilVaHCR6E+cbohYEx/gUrEAqKHGDXb0PeWF2i/t6KszxAwaxABDNmYmueX9A17yAj4
+         LxiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=32W9Tjji9DSY3yO5LdGQix32cQY0Jx1iD0Y1MTTBc48=;
+        b=k4Z0OOG5RJeY4y8Dg2wK/Nob9N5sZp0nACKpEAOxMgvD7uY5iEw9KxDNpmu9XjH+a1
+         qcFOXIQmZj9DYbV0pxa70FTtgIu6IlABnNRtpMpu/h69n6QJX+RBv3LuP4LfGJx4kgrf
+         S+ylI3G6C3TP+ccAYffxQ3GmEfBxneROxT012STurrgZVBPnKwe4WkNaD1Zru/bBa+0y
+         r92X2HRd7fXMZwdq/FT6a/Wmhs4yjgf5ABMlZYZ2+myTv4TCMdKjs9UXLEvRwUzAMA09
+         WKerviRvaf4e3QtO+hwEKe1y+Me+eyO/eKMh80iua15UtDGMVOW8KFawGSp/cQW277Pm
+         GKaw==
+X-Gm-Message-State: APjAAAXmk9tP8Ly7Pk/plzHxJzCy32afBZ6wShfzd34+cPTsCo8e7Ff+
+        n2GIKMbKMeMfeTgdL8pZqAw=
+X-Google-Smtp-Source: APXvYqzX7cH+G65tjKCNHDWkZwu4vygIa3mrVRlUMbgJmYQoY3j3sAk/snqFLE7ET0mUSfjprSadRA==
+X-Received: by 2002:a62:fcd2:: with SMTP id e201mr364180pfh.52.1573304793261;
+        Sat, 09 Nov 2019 05:06:33 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:1392:8370:2ee7:33a6:a48c:39ea])
+        by smtp.gmail.com with ESMTPSA id c12sm11019799pfp.67.2019.11.09.05.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Nov 2019 05:06:32 -0800 (PST)
+Message-ID: <cd9dbb3704d0a39a161c3e4df8fcd9f84bbc5b03.camel@gmail.com>
+Subject: Re: [PATCH][RESEND] docs: filesystems: sysfs: convert sysfs.txt to
+ reST
+From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        christian@brauner.io, neilb@suse.com, willy@infradead.org,
+        tobin@kernel.org, stefanha@redhat.com, hofrat@osadl.org,
+        gregkh@linuxfoundation.org, jeffrey.t.kirsher@intel.com,
+        linux-doc@vger.kernel.org, skhan@linuxfoundation.org,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>
+Date:   Sat, 09 Nov 2019 18:36:16 +0530
+In-Reply-To: <20191107120455.29a4c155@lwn.net>
+References: <20191105071846.GA28727@localhost.localdomain>
+         <20191107120455.29a4c155@lwn.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
-Content-Disposition: inline
-In-Reply-To: <20191106210538.3474-3-jernej.skrabec@siol.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2019-11-07 at 12:04 -0700, Jonathan Corbet wrote:
+> On Tue, 5 Nov 2019 12:48:46 +0530
+> Jaskaran Singh <jaskaransingh7654321@gmail.com> wrote:
+> 
+> > This patch converts sysfs.txt to sysfs.rst, and adds a
+> > corresponding
+> > entry in index.rst.
+> > 
+> > Most of the whitespacing and indentation is kept similar to the
+> > original document.
+> > 
+> > Changes to the original document include:
+> > 
+> >  - Adding an authors statement in the header.
+> >  - Replacing the underscores in the title with asterisks. This is
+> > so
+> >    that the "The" in the title appears in italics in HTML.
+> >  - Replacing the tilde (~) headings with equal signs, for reST
+> > section
+> >    headings.
+> >  - List out the helper macros with backquotes and corresponding
+> > description
+> >    on the next line.
+> >  - Placing C code and shell code in reST code blocks, with an
+> > indentation
+> >    of an 8 length tab.
+> > 
+> > Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
+> 
+> Thanks for working to improve the documentation.  There are some
+> problems
+> here, none of which are your creation, but I would sure like to
+> resolve
+> them while working with this document.
+> 
+> The first of these is that Documentation/filesystems is really the
+> wrong
+> place for this file - it's covering the internal API for subsystems
+> that
+> want to create entries in sysfs.  IMO, it belongs in either the
+> driver-API
+> manual or the core-API manual - probably the latter.
+> 
+> >  Documentation/filesystems/index.rst           |   1 +
+> >  .../filesystems/{sysfs.txt => sysfs.rst}      | 323 ++++++++++--
+> > ------
+> >  2 files changed, 189 insertions(+), 135 deletions(-)
+> >  rename Documentation/filesystems/{sysfs.txt => sysfs.rst} (60%)
+> > 
+> > diff --git a/Documentation/filesystems/index.rst
+> > b/Documentation/filesystems/index.rst
+> > index 2c3a9f761205..18b5ea780b9b 100644
+> > --- a/Documentation/filesystems/index.rst
+> > +++ b/Documentation/filesystems/index.rst
+> > @@ -46,4 +46,5 @@ Documentation for filesystem implementations.
+> >  .. toctree::
+> >     :maxdepth: 2
+> >  
+> > +   sysfs
+> >     virtiofs
+> > diff --git a/Documentation/filesystems/sysfs.txt
+> > b/Documentation/filesystems/sysfs.rst
+> > similarity index 60%
+> > rename from Documentation/filesystems/sysfs.txt
+> > rename to Documentation/filesystems/sysfs.rst
+> > index ddf15b1b0d5a..de0de5869323 100644
+> > --- a/Documentation/filesystems/sysfs.txt
+> > +++ b/Documentation/filesystems/sysfs.rst
+> > @@ -1,15 +1,18 @@
+> > +======================================================
+> > +sysfs - *The* filesystem for exporting kernel objects.
+> > +======================================================
+> >  
+> > -sysfs - _The_ filesystem for exporting kernel objects. 
+> 
+> Nits: We can really just drop emphasis like that, it doesn't really
+> help
+> anybody.  Also the period can go on section headers.
+> 
+> > +Authors:
+> >  
+> > -Patrick Mochel	<mochel@osdl.org>
+> > -Mike Murphy <mamurph@cs.clemson.edu>
+> > +- Patrick Mochel	<mochel@osdl.org>
+> > +- Mike Murphy   	<mamurph@cs.clemson.edu>
+> 
+> I would be absolutely amazed if either of those email addresses works
+> at
+> this point.  I'd take them out.
+> 
+> > -Revised:    16 August 2011
+> > -Original:   10 January 2003
+> > +| Revised:    16 August 2011
+> > +| Original:   10 January 2003
+> 
+> Dates like that are a red flag.  See below.
+> 
+> >  What it is:
+> > -~~~~~~~~~~~
+> > +===========
+> >  
+> >  sysfs is a ram-based filesystem initially based on ramfs. It
+> > provides
+> >  a means to export kernel data structures, their attributes, and
+> > the 
+> > @@ -21,16 +24,18 @@ interface.
+> >  
+> >  
+> >  Using sysfs
+> > -~~~~~~~~~~~
+> > +===========
+> >  
+> >  sysfs is always compiled in if CONFIG_SYSFS is defined. You can
+> > access
+> >  it by doing:
+> >  
+> > -    mount -t sysfs sysfs /sys 
+> > +.. code-block:: sh
+> > +
+> > +	mount -t sysfs sysfs /sys
+> 
+> In the spirit of minimal markup, I'd do the above as:
+> 
+>    it by doing::
+> 
+> 	mount -t sysfs sysfs /sys
+> 
+> But then I know that others are much more fond of .. code-block and
+> syntax
+> highlighting than I am.
+> 
+> >  Directory Creation
+> > -~~~~~~~~~~~~~~~~~~
+> > +==================
+> >  
+> >  For every kobject that is registered with the system, a directory
+> > is
+> >  created for it in sysfs. That directory is created as a
+> > subdirectory
+> > @@ -48,7 +53,7 @@ only modified directly by the function
+> > sysfs_schedule_callback().
+> >  
+> >  
+> >  Attributes
+> > -~~~~~~~~~~
+> > +==========
+> >  
+> >  Attributes can be exported for kobjects in the form of regular
+> > files in
+> >  the filesystem. Sysfs forwards file I/O operations to methods
+> > defined
+> > @@ -67,15 +72,16 @@ you publicly humiliated and your code rewritten
+> > without notice.
+> >  
+> >  An attribute definition is simply:
+> >  
+> > -struct attribute {
+> > -        char                    * name;
+> > -        struct module		*owner;
+> > -        umode_t                 mode;
+> > -};
+> > +.. code-block:: c
+> >  
+> > +	struct attribute {
+> > +		char                    * name;
+> > +		struct module		*owner;
+> > +		umode_t                 mode;
+> > +	};
+> 
+> Here is where we go pretty far off the rails.  If you go looking in
+> include/linux/sysfs.h, the actual definition of this structure is:
+> 
+> struct attribute {
+> 	const char		*name;
+> 	umode_t			mode;
+> #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> 	bool			ignore_lockdep:1;
+> 	struct lock_class_key	*key;
+> 	struct lock_class_key	skey;
+> #endif
+> };
+> 
+> Most notably, the owner field went away quite some time ago.
+> 
+> Documentation like this is not really useful to anybody; once a
+> reader
+> realizes it doesn't describe current reality, they will justifiably
+> disregard it.  This isn't your fault, of course, but converting
+> something
+> like this to RST gives the illusion that it has been updated, when
+> that is
+> very much not the case.
+> 
+> At a bare minimum, an effort like this needs to put a big flashing
+> warning
+> at the top of the file.  But it would be soooooo much better to
+> actually
+> update the content as well.
+> 
+> The best way to do that would be to annotate the source with proper
+> kerneldoc comments, then pull them into the documentation rather than
+> repeating the information here.  Is there any chance you might be up
+> for
+> taking on a task like this?
+> 
 
---Y5rl02BVI9TCfPar
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jenrej,
-
-On Wed 06 Nov 19, 22:05, Jernej Skrabec wrote:
-> H264 decoder needs additional or bigger buffers in order to decode 4k
-> videos.
-
-Thanks for the changes, looks good to me!
-
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Sure! I'll send the documentation patch(es) followed by a v2 for this
+patch.
 
 Cheers,
+Jaskaran.
 
-Paul
 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus.h   |  7 ++
->  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 91 +++++++++++++++++--
->  .../staging/media/sunxi/cedrus/cedrus_regs.h  | 11 +++
->  3 files changed, 101 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
-g/media/sunxi/cedrus/cedrus.h
-> index c45fb9a7ad07..96765555ab8a 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> @@ -116,8 +116,15 @@ struct cedrus_ctx {
->  			ssize_t		mv_col_buf_size;
->  			void		*pic_info_buf;
->  			dma_addr_t	pic_info_buf_dma;
-> +			ssize_t		pic_info_buf_size;
->  			void		*neighbor_info_buf;
->  			dma_addr_t	neighbor_info_buf_dma;
-> +			void		*deblk_buf;
-> +			dma_addr_t	deblk_buf_dma;
-> +			ssize_t		deblk_buf_size;
-> +			void		*intra_pred_buf;
-> +			dma_addr_t	intra_pred_buf_dma;
-> +			ssize_t		intra_pred_buf_size;
->  		} h264;
->  		struct {
->  			void		*mv_col_buf;
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h264.c
-> index d2c854ecdf15..ab83a6f1f921 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> @@ -39,7 +39,7 @@ struct cedrus_h264_sram_ref_pic {
->  #define CEDRUS_H264_FRAME_NUM		18
-> =20
->  #define CEDRUS_NEIGHBOR_INFO_BUF_SIZE	(16 * SZ_1K)
-> -#define CEDRUS_PIC_INFO_BUF_SIZE	(128 * SZ_1K)
-> +#define CEDRUS_MIN_PIC_INFO_BUF_SIZE       (130 * SZ_1K)
-> =20
->  static void cedrus_h264_write_sram(struct cedrus_dev *dev,
->  				   enum cedrus_h264_sram_off off,
-> @@ -342,6 +342,20 @@ static void cedrus_set_params(struct cedrus_ctx *ctx,
->  		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
->  		     VE_H264_VLD_ADDR_LAST);
-> =20
-> +	if (ctx->src_fmt.width > 2048) {
-> +		cedrus_write(dev, VE_BUF_CTRL,
-> +			     VE_BUF_CTRL_INTRAPRED_MIXED_RAM |
-> +			     VE_BUF_CTRL_DBLK_MIXED_RAM);
-> +		cedrus_write(dev, VE_DBLK_DRAM_BUF_ADDR,
-> +			     ctx->codec.h264.deblk_buf_dma);
-> +		cedrus_write(dev, VE_INTRAPRED_DRAM_BUF_ADDR,
-> +			     ctx->codec.h264.intra_pred_buf_dma);
-> +	} else {
-> +		cedrus_write(dev, VE_BUF_CTRL,
-> +			     VE_BUF_CTRL_INTRAPRED_INT_SRAM |
-> +			     VE_BUF_CTRL_DBLK_INT_SRAM);
-> +	}
-> +
->  	/*
->  	 * FIXME: Since the bitstream parsing is done in software, and
->  	 * in userspace, this shouldn't be needed anymore. But it
-> @@ -502,18 +516,30 @@ static void cedrus_h264_setup(struct cedrus_ctx *ct=
-x,
->  static int cedrus_h264_start(struct cedrus_ctx *ctx)
->  {
->  	struct cedrus_dev *dev =3D ctx->dev;
-> +	unsigned int pic_info_size;
->  	unsigned int field_size;
->  	unsigned int mv_col_size;
->  	int ret;
-> =20
-> +	/* Formula for picture buffer size is taken from CedarX source. */
-> +
-> +	if (ctx->src_fmt.width > 2048)
-> +		pic_info_size =3D CEDRUS_H264_FRAME_NUM * 0x4000;
-> +	else
-> +		pic_info_size =3D CEDRUS_H264_FRAME_NUM * 0x1000;
-> +
->  	/*
-> -	 * FIXME: It seems that the H6 cedarX code is using a formula
-> -	 * here based on the size of the frame, while all the older
-> -	 * code is using a fixed size, so that might need to be
-> -	 * changed at some point.
-> +	 * FIXME: If V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY is set,
-> +	 * there is no need to multiply by 2.
->  	 */
-> +	pic_info_size +=3D ctx->src_fmt.height * 2 * 64;
-> +
-> +	if (pic_info_size < CEDRUS_MIN_PIC_INFO_BUF_SIZE)
-> +		pic_info_size =3D CEDRUS_MIN_PIC_INFO_BUF_SIZE;
-> +
-> +	ctx->codec.h264.pic_info_buf_size =3D pic_info_size;
->  	ctx->codec.h264.pic_info_buf =3D
-> -		dma_alloc_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-> +		dma_alloc_coherent(dev->dev, ctx->codec.h264.pic_info_buf_size,
->  				   &ctx->codec.h264.pic_info_buf_dma,
->  				   GFP_KERNEL);
->  	if (!ctx->codec.h264.pic_info_buf)
-> @@ -566,15 +592,56 @@ static int cedrus_h264_start(struct cedrus_ctx *ctx)
->  		goto err_neighbor_buf;
->  	}
-> =20
-> +	if (ctx->src_fmt.width > 2048) {
-> +		/*
-> +		 * Formulas for deblock and intra prediction buffer sizes
-> +		 * are taken from CedarX source.
-> +		 */
-> +
-> +		ctx->codec.h264.deblk_buf_size =3D
-> +			ALIGN(ctx->src_fmt.width, 32) * 12;
-> +		ctx->codec.h264.deblk_buf =3D
-> +			dma_alloc_coherent(dev->dev,
-> +					   ctx->codec.h264.deblk_buf_size,
-> +					   &ctx->codec.h264.deblk_buf_dma,
-> +					   GFP_KERNEL);
-> +		if (!ctx->codec.h264.deblk_buf) {
-> +			ret =3D -ENOMEM;
-> +			goto err_mv_col_buf;
-> +		}
-> +
-> +		ctx->codec.h264.intra_pred_buf_size =3D
-> +			ALIGN(ctx->src_fmt.width, 64) * 5;
-> +		ctx->codec.h264.intra_pred_buf =3D
-> +			dma_alloc_coherent(dev->dev,
-> +					   ctx->codec.h264.intra_pred_buf_size,
-> +					   &ctx->codec.h264.intra_pred_buf_dma,
-> +					   GFP_KERNEL);
-> +		if (!ctx->codec.h264.intra_pred_buf) {
-> +			ret =3D -ENOMEM;
-> +			goto err_deblk_buf;
-> +		}
-> +	}
-> +
->  	return 0;
-> =20
-> +err_deblk_buf:
-> +	dma_free_coherent(dev->dev, ctx->codec.h264.deblk_buf_size,
-> +			  ctx->codec.h264.deblk_buf,
-> +			  ctx->codec.h264.deblk_buf_dma);
-> +
-> +err_mv_col_buf:
-> +	dma_free_coherent(dev->dev, ctx->codec.h264.mv_col_buf_size,
-> +			  ctx->codec.h264.mv_col_buf,
-> +			  ctx->codec.h264.mv_col_buf_dma);
-> +
->  err_neighbor_buf:
->  	dma_free_coherent(dev->dev, CEDRUS_NEIGHBOR_INFO_BUF_SIZE,
->  			  ctx->codec.h264.neighbor_info_buf,
->  			  ctx->codec.h264.neighbor_info_buf_dma);
-> =20
->  err_pic_buf:
-> -	dma_free_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-> +	dma_free_coherent(dev->dev, ctx->codec.h264.pic_info_buf_size,
->  			  ctx->codec.h264.pic_info_buf,
->  			  ctx->codec.h264.pic_info_buf_dma);
->  	return ret;
-> @@ -590,9 +657,17 @@ static void cedrus_h264_stop(struct cedrus_ctx *ctx)
->  	dma_free_coherent(dev->dev, CEDRUS_NEIGHBOR_INFO_BUF_SIZE,
->  			  ctx->codec.h264.neighbor_info_buf,
->  			  ctx->codec.h264.neighbor_info_buf_dma);
-> -	dma_free_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-> +	dma_free_coherent(dev->dev, ctx->codec.h264.pic_info_buf_size,
->  			  ctx->codec.h264.pic_info_buf,
->  			  ctx->codec.h264.pic_info_buf_dma);
-> +	if (ctx->codec.h264.deblk_buf_size)
-> +		dma_free_coherent(dev->dev, ctx->codec.h264.deblk_buf_size,
-> +				  ctx->codec.h264.deblk_buf,
-> +				  ctx->codec.h264.deblk_buf_dma);
-> +	if (ctx->codec.h264.intra_pred_buf_size)
-> +		dma_free_coherent(dev->dev, ctx->codec.h264.intra_pred_buf_size,
-> +				  ctx->codec.h264.intra_pred_buf,
-> +				  ctx->codec.h264.intra_pred_buf_dma);
->  }
-> =20
->  static void cedrus_h264_trigger(struct cedrus_ctx *ctx)
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_regs.h
-> index ace3d49fcd82..7beb03d3bb39 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> @@ -46,6 +46,17 @@
->  #define VE_MODE_DEC_H264			(0x01 << 0)
->  #define VE_MODE_DEC_MPEG			(0x00 << 0)
-> =20
-> +#define VE_BUF_CTRL				0x50
-> +
-> +#define VE_BUF_CTRL_INTRAPRED_EXT_RAM		(0x02 << 2)
-> +#define VE_BUF_CTRL_INTRAPRED_MIXED_RAM		(0x01 << 2)
-> +#define VE_BUF_CTRL_INTRAPRED_INT_SRAM		(0x00 << 2)
-> +#define VE_BUF_CTRL_DBLK_EXT_RAM		(0x02 << 0)
-> +#define VE_BUF_CTRL_DBLK_MIXED_RAM		(0x01 << 0)
-> +#define VE_BUF_CTRL_DBLK_INT_SRAM		(0x00 << 0)
-> +
-> +#define VE_DBLK_DRAM_BUF_ADDR			0x54
-> +#define VE_INTRAPRED_DRAM_BUF_ADDR		0x58
->  #define VE_PRIMARY_CHROMA_BUF_LEN		0xc4
->  #define VE_PRIMARY_FB_LINE_STRIDE		0xc8
-> =20
-> --=20
-> 2.24.0
->=20
+> Thanks,
+> 
+> jon
+> 
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---Y5rl02BVI9TCfPar
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3GuEUACgkQ3cLmz3+f
-v9FbwAf9FsyMnR+21TKS8wr5rU3EEcwwQNJqPtczR+akZcSA4MKNGtXclblYTewX
-GF58C8HGeKVylE8eLJWj7qo6DK8tLGPWHvc1QL0hWSvkxrpf+aMYpCdgVpOZXqES
-YIrpJjD9D2G40M3Hdxgal1XILEsfscQM7VkRoFaRlb0dXd/PEogr/MO19K0ypl3c
-5Sy1jNjdCvBEtlSFfC5/IQpN3lX/3c8DLx63EZgbaDfQCSy5Xh/sJsVNohTdPc5i
-gAzwMeLmEkveNiJ14XYXtuCW+njW2vp87PAC4VD/ijmaWU99PzoRSSXL4DT+cjLd
-ErxvAj2UfPj+MW4IwJOPqMKrmlwrqg==
-=9LW5
------END PGP SIGNATURE-----
-
---Y5rl02BVI9TCfPar--
