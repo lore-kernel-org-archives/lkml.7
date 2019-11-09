@@ -2,122 +2,77 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFD3C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCE0C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56D6214E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0B6+Ie/"
+	by mail.kernel.org (Postfix) with ESMTP id 0E61321848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfKIPrC (ORCPT
+        id S1726399AbfKIPt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 10:47:02 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37755 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfKIPrB (ORCPT
+        Sat, 9 Nov 2019 10:49:26 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:37689 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfKIPt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 10:47:01 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b20so6724487lfp.4;
-        Sat, 09 Nov 2019 07:47:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X2MNWyYxDIwl5/Y9DLOD0SRUpFh0800mLWYZQrn0cFw=;
-        b=O0B6+Ie/CO8H2I8KqlKT5A11S9gWLbnRbEKHRPQjq9M4dQwy9khnxFG2rp1S5wnWYr
-         bjagMxx1Sg20hb85dtRGpUTZjYlvKbl+uPMQiqZYuhms8+KHBy7kgHmcOE+Yy8ySRUhW
-         RODFrqLNTx6Wc0Ui3Ae1eH++IwrCqpbVyYe9mE1Dg2S/atkh9NZEmYyJkMRRFWXSJtMl
-         JgW5qcPxDSeglcyoeAc2vvg9vcYZlpS+r7pexwuvmArzoUXclK2iYFlwrGlomXiYe2fE
-         NF6ru+eceDaHO60BUmSKnffAZz6VI8jDDHsiaKYRZolEpD2HpbLGcWDf9HrEAD7EIrpz
-         sTow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X2MNWyYxDIwl5/Y9DLOD0SRUpFh0800mLWYZQrn0cFw=;
-        b=qQTSgyJJcClVVA7bC/UcT8CwEew10NVgqtT5RYFh7/PgWN7liMV6HEvUBM7Vn5lAVQ
-         UCHhcXPfx11w5vCrML75X4dHyQzcdWSZ8jCXrlQaFatL8/eGamZozPMCqxQj5V4Z4y94
-         4yPVgOFEPVr9oqOiu4mhy896a3r7M+zQe29jvP7YUTpGPuqTb8QLO4leMMaM+1YI4OYH
-         9qhqpwmCH8Q0jqUPatA4Kxjoo7D0SL8fU1GzrQhHGvrzkyKqXlDTHKyr4gt0IZdSOhl3
-         TEYti+xhVIbnbsPxjAMzm2hHQVR/GQj8lbVA/YREKyXeeByKavI10QRuWBVQC8NmCUiM
-         tlbw==
-X-Gm-Message-State: APjAAAVs2KVSre5o/6aGZF+ft7lXRcRMVXwzsSAgyvWvz2PzbQguIwun
-        wm1mHHZQVaQVpu+ZEdLXQUA=
-X-Google-Smtp-Source: APXvYqw7Wc2SqEr14zEtA4gEhuGkHtPnDY8WzisxoCQksCKTowyLt6PBdISKi9DqX1DMkNxmCsHwDA==
-X-Received: by 2002:a19:4909:: with SMTP id w9mr9975308lfa.174.1573314419271;
-        Sat, 09 Nov 2019 07:46:59 -0800 (PST)
-Received: from localhost.localdomain ([188.243.226.168])
-        by smtp.gmail.com with ESMTPSA id g21sm4141987ljh.2.2019.11.09.07.46.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2019 07:46:58 -0800 (PST)
-From:   Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Subject: [PATCH] rtc: tps65910: allow using RTC without alarm interrupt
-Date:   Sat,  9 Nov 2019 18:46:52 +0300
-Message-Id: <20191109154652.7419-1-andrej.skvortzov@gmail.com>
+        Sat, 9 Nov 2019 10:49:26 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iTSzK-00027O-63; Sat, 09 Nov 2019 15:49:22 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Charlene Liu <Charlene.Liu@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/display: remove duplicated comparison expression
+Date:   Sat,  9 Nov 2019 15:49:21 +0000
+Message-Id: <20191109154921.223093-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
----
- drivers/rtc/rtc-tps65910.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+From: Colin Ian King <colin.king@canonical.com>
 
-diff --git a/drivers/rtc/rtc-tps65910.c b/drivers/rtc/rtc-tps65910.c
-index 2c0467a9e717..aa3a001ef413 100644
---- a/drivers/rtc/rtc-tps65910.c
-+++ b/drivers/rtc/rtc-tps65910.c
-@@ -361,6 +361,13 @@ static const struct rtc_class_ops tps65910_rtc_ops = {
- 	.set_offset	= tps65910_set_offset,
- };
- 
-+static const struct rtc_class_ops tps65910_rtc_ops_noirq = {
-+	.read_time	= tps65910_rtc_read_time,
-+	.set_time	= tps65910_rtc_set_time,
-+	.read_offset	= tps65910_read_offset,
-+	.set_offset	= tps65910_set_offset,
-+};
-+
- static int tps65910_rtc_probe(struct platform_device *pdev)
- {
- 	struct tps65910 *tps65910 = NULL;
-@@ -415,13 +422,17 @@ static int tps65910_rtc_probe(struct platform_device *pdev)
- 		tps65910_rtc_interrupt, IRQF_TRIGGER_LOW,
- 		dev_name(&pdev->dev), &pdev->dev);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "IRQ is not free.\n");
--		return ret;
-+		dev_err(&pdev->dev, "request IRQ:%d failed, err = %d\n",
-+			 irq, ret);
-+		irq = -1;
+There is comparison expression that is duplicated and hence one
+of the expressions can be removed.  Remove it.
+
+Addresses-Coverity: ("Same on both sides")
+Fixes: 12e2b2d4c65f ("drm/amd/display: add dcc programming for dual plane")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 1fdba13b3d0f..1fa255e077d0 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1491,7 +1491,6 @@ static enum surface_update_type get_plane_info_update_type(const struct dc_surfa
  	}
- 	tps_rtc->irq = irq;
--	device_set_wakeup_capable(&pdev->dev, 1);
-+	if (irq != -1) {
-+		device_set_wakeup_capable(&pdev->dev, 1);
-+		tps_rtc->rtc->ops = &tps65910_rtc_ops;
-+	} else
-+		tps_rtc->rtc->ops = &tps65910_rtc_ops_noirq;
  
--	tps_rtc->rtc->ops = &tps65910_rtc_ops;
- 	tps_rtc->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
- 	tps_rtc->rtc->range_max = RTC_TIMESTAMP_END_2099;
- 
+ 	if (u->plane_info->plane_size.surface_pitch != u->surface->plane_size.surface_pitch
+-			|| u->plane_info->plane_size.surface_pitch != u->surface->plane_size.surface_pitch
+ 			|| u->plane_info->plane_size.chroma_pitch != u->surface->plane_size.chroma_pitch) {
+ 		update_flags->bits.plane_size_change = 1;
+ 		elevate_update_type(&update_type, UPDATE_TYPE_MED);
 -- 
 2.20.1
 
