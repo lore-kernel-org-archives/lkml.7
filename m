@@ -2,106 +2,85 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F91CC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799E0C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B562207FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43FF0214E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 18:45:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGh3WLA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfKIS0F (ORCPT
+        id S1726424AbfKISor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 13:26:05 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:36720 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfKIS0F (ORCPT
+        Sat, 9 Nov 2019 13:44:47 -0500
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:46607 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfKISoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 13:26:05 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iTVQv-00051B-Km; Sat, 09 Nov 2019 18:26:01 +0000
-Date:   Sat, 9 Nov 2019 18:26:01 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wugyuan@cn.ibm.com, Jeff Layton <jlayton@kernel.org>,
-        hsiangkao@aol.com, Jan Kara <jack@suse.cz>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH][RFC] race in exportfs_decode_fh()
-Message-ID: <20191109182601.GW26530@ZenIV.linux.org.uk>
-References: <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
- <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk>
- <20191102172229.GT20975@paulmck-ThinkPad-P72>
- <20191102180842.GN26530@ZenIV.linux.org.uk>
- <20191109031333.GA8566@ZenIV.linux.org.uk>
- <CAHk-=wg9e5PDG-y-j6uryc0RCbfZ36yB0a8qBb2hCWNrH4r_3g@mail.gmail.com>
+        Sat, 9 Nov 2019 13:44:46 -0500
+Received: by mail-wr1-f45.google.com with SMTP id b3so10446938wrs.13
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 10:44:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=4XI1X85wLVzP/SrohCDsY8Ew06poMLmDa6mRwgBF9Dw=;
+        b=UGh3WLA4/FFSWy1DOkfxzZ2Vr8RzGE9s4D8t0HYzUs4MplEI/CF6V5BrEsAB6wwR3Y
+         fYlK+IwMc70dU9xz8nUW2+FLqvPVGSIUx2L8QxVyNUaFQb3s4e9sZf+QXFHVM9e1xcBV
+         8qQklAOVTXh9pu5CXQG2GOuKC8L8jnhld/OZZx9nSZeAJiTI5ZWmcAJ8EVju6wmJMJjb
+         v+jS7/uToRUK3F3UajUM6+lovqbjkWQuBtyDXbTj19I8EAfsUa0b8SaO98codT5iNM0N
+         jfcGEPdHMVkP1m440anr4jbipVfBHT2mCQs9T7Qrz9BpgtXLRSPg48yKO5PbsvHAdrxS
+         jeKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4XI1X85wLVzP/SrohCDsY8Ew06poMLmDa6mRwgBF9Dw=;
+        b=dAniTLMdXGiNYTLsWrJFiI5znppY7s/PCAJMPDoi+bMZhudPpgaB+JNlZGbxiZa1QW
+         UQBF7uQc9yDt6/fKE8mQ6P1pYWJIpmkGF0dYucMdN13U1nqEMev34sPEFPo1rOwjWiBV
+         izDcPLsPCoSLey+QEN1sU1UJ+BdH61pK9eQ9mCfqkzK5k7M8X3LLXe7MzfeMKRDFg8a4
+         RoxO32/R4CR7FGbCW+CkhsFYnk2sa8Rp6U51HDtm8uNVKGfevyrkkJnrUSnRgbdbJPVG
+         KddMhj4xoLTKMivE5b/FAfJZJJeVJA0dqUFVU+HpSKyR+zqxhaEzOWtOcSw1vIxGkJdH
+         qLlw==
+X-Gm-Message-State: APjAAAXjqUROQW+SxcIU0AVqRuqy24CjZrn6BBYvbaqaqZndT/nUlBi2
+        guzcZy86w1w2kEzeYXQbGw==
+X-Google-Smtp-Source: APXvYqzv32EA1qkivhRH6rX7beyDR0RoTDaST3JRt0IsupMyx0C8u9NjxXcLpyYy9nT1yeZY30bkhQ==
+X-Received: by 2002:adf:ebd2:: with SMTP id v18mr13239145wrn.71.1573325084384;
+        Sat, 09 Nov 2019 10:44:44 -0800 (PST)
+Received: from avx2 ([46.53.254.55])
+        by smtp.gmail.com with ESMTPSA id j10sm4456103wrx.30.2019.11.09.10.44.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 Nov 2019 10:44:43 -0800 (PST)
+Date:   Sat, 9 Nov 2019 21:44:41 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     pbonzini@redhat.com, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: "statsfs" API design
+Message-ID: <20191109184441.GA5092@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg9e5PDG-y-j6uryc0RCbfZ36yB0a8qBb2hCWNrH4r_3g@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 09, 2019 at 08:55:38AM -0800, Linus Torvalds wrote:
-> On Fri, Nov 8, 2019 at 7:13 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > We have derived the parent from fhandle, we have a disconnected dentry for child,
-> > we go look for the name.  We even find it.  Now, we want to look it up.  And
-> > some bastard goes and unlinks it, just as we are trying to lock the parent.
-> > We do a lookup, and get a negative dentry.  Then we unlock the parent... and
-> > some other bastard does e.g. mkdir with the same name.  OK, nresult->d_inode
-> > is not NULL (anymore).  It has fuck-all to do with the original fhandle
-> > (different inumber, etc.) but we happily accept it.
-> 
-> No arguments with your patch, although I doubt that this case has
-> actually ever happened in practice ;)
+> statsfs is a proposal for a new Linux kernel synthetic filesystem,
+> to be mounted in /sys/kernel/stats
 
-Frankly, by this point I'm rather tempted to introduce new sparse annotation for
-dentries - "might not be positive".  The thing is, there are four cases when
-->d_inode is guaranteed to be stable:
-	1) nobody else has seen that dentry; that includes in-lookup ones - they
-can be found in in-lookup hash by d_alloc_parallel(), but it'll wait until they
-cease to be in-lookup.
-	2) ->d_lock is held
-	3) pinned positive
-	4) pinned, parent held at least shared
-Anything else can have ->d_inode changed by another thread.  And class 3 is by
-far the most common.  As the matter of fact, most of dentry pointers in the
-system (as opposed to (h)lists traversing dentries) are such.
+I think /proc experiment teaches pretty convincingly that dressing
+things into a filesystem can be done but ultimately is a stupid idea.
+It adds so much overhead for small-to-medium systems.
 
-For obvious reasons we have shitloads of ->d_inode accesses; I'd been going
-through a tree-wide audit of those and doing that manually is bloody unpleasant.
-And we do have races in that area - the one above is the latest I'd caught;
-there had been more and I'm fairly sure that it's not the last.
+> The first user of statsfs would be KVM, which is currently exposing
+> its stats in debugfs
 
-Redoing that kind of audit every once in a while is something I wouldn't
-wish on anyone; it would be nice to use sparse to narrow the field.  Note
-that simply checking ->d_inode (or ->d_flags) is not enough unless we
-know them to be stable.  E.g. callers of lookup_one_len_unlocked() tend
-to be racy exactly because of such tests.  I'm going to add
-lookup_positive_unlocked() that would return ERR_PTR(-ENOENT) on
-negatives and convert the callers - with one exception they treat
-negatives the same way they would treat ERR_PTR(-ENOENT) and their
-tests are racy.  I'd rather have sufficient barriers done in one common
-helper, instead of trying to add them in 11 places and hope that new
-users won't fuck it up...
+> Google has KVM patches to gather statistics in a binary format
 
-I'm still not sure what's the best way to do the annotations - propagation
-is not a big deal, but expressing the transitions and checking that
-maybe-negative ones are not misused is trickier.  The last part can
-be actually left to manual audit - annotations would already reduce
-the search area big way.  A not too ugly way to say that now this dentry
-is known to be non-negative, OTOH...  I want to finish the audit and
-take a good look at the list of places where such transitions happen.
+Which is a right thing to do.
