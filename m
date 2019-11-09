@@ -2,158 +2,71 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F37C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA662C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3604E21848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5E2214E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfKIKkf (ORCPT
+        id S1726399AbfKIKoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:40:35 -0500
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:41953 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbfKIKke (ORCPT
+        Sat, 9 Nov 2019 05:44:46 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:54347 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726143AbfKIKoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 05:40:34 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id TOAEiwNaYPMT8TOAIiP8zJ; Sat, 09 Nov 2019 11:40:32 +0100
-Subject: Re: [PATCH v2 0/4] Enable Hantro G1 post-processor
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        kernel@collabora.com,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191003190833.29046-1-ezequiel@collabora.com>
- <CAAFQd5BgwDrc5Jy+EAnC91184aGJiuSkg2jMqOnAEHHfReoLgw@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <0b12f376-385b-0f68-abe1-1a0a21bb5a48@xs4all.nl>
-Date:   Sat, 9 Nov 2019 11:40:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 9 Nov 2019 05:44:46 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0ThZOX0i_1573296282;
+Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0ThZOX0i_1573296282)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 09 Nov 2019 18:44:42 +0800
+From:   Tony Lu <tonylu@linux.alibaba.com>
+To:     edumazet@google.com, rostedt@goodmis.org, mingo@redhat.com
+Cc:     laoar.shao@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] tcp: remove redundant new line from tcp_event_sk_skb
+Date:   Sat,  9 Nov 2019 18:43:06 +0800
+Message-Id: <20191109104305.92898-1-tonylu@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5BgwDrc5Jy+EAnC91184aGJiuSkg2jMqOnAEHHfReoLgw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEJ6CSxksz+D+FP+ZCJyZvVhgJHVZpbXw5vrSx3CeSF4erz7Y7YkVXDkoEOgj8xrSpDO19K39ZuvzaL8n75L72OwcUA7e9evnGA9VRyJUP704ZLzkr7w
- aFj6qw4Zn+ab3qUDQkvda6pmwxlOQT+9i5CludbEZzNqtwlmxxSemHhDXry2I/4x0Jc2qTq5hyFlzybL+iyyn0C+wJrOPtm30vdjlYZvznJLUl6BxNz7mcR2
- uzbUNarRpcyWL41diJI4kvM3Ks2UER7FRIE/Z03VvgBaKQj8QSuGZe74yFniwkV0kqWGLU5tWR2fAqlRj53rUb+EEnbiPdump89TngqWtnxu2EZX4uhimJRu
- aBkV8K+Wt1tAc3sQxlDOcbijjsWfsAf1WpMcPF5fzfOenNbIlNLVcxLgCs4tP7wT8DPcZXs3OpbJnkgL5kfGv+CRGqzaT+MVveuxkMce8ZMeJen8Hs2gGXHH
- UD60inxATXPv2uqOqNJrJx8Jmc9LLrqsC/zwWb9owftAHJ/o5kvwRU4wk7U=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 8:07 AM, Tomasz Figa wrote:
-> Hi Ezequiel,
-> 
-> On Fri, Oct 4, 2019 at 4:09 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->>
->> Hi all,
->>
->> The Hantro G1 VPU post-processor block can be pipelined with
->> the decoder hardware, allowing to perform operations such as
->> color conversion, scaling, rotation, cropping, among others.
->>
->> When the post-processor is enabled, the decoder hardware
->> gets its own set of NV12 buffers (the native decoder format),
->> and the post-processor is the owner of the CAPTURE buffers.
->>
->> This allows the application get processed
->> (scaled, converted, etc) buffers, completely transparently.
->>
->> This feature is implemented by exposing the post-processed pixel
->> formats on ENUM_FMT. When the application sets a pixel format
->> other than NV12, and if the post-processor is MC-linked,
->> the driver will make use of it, transparently.
->>
->> On this v2, the media controller API is now required
->> to "enable" (aka link, in topology jargon) the post-processor.
->> Therefore, applications now have to explicitly request this feature.
->>
->> For instance, the post-processor is enabled using the media-ctl
->> tool:
->>
->> media-ctl -l "'decoder':1 -> 'rockchip,rk3288-vpu-dec':0[0]"
->> media-ctl -l "'postproc':1 -> 'rockchip,rk3288-vpu-dec':0[1]"
->>
->> v4l2-ctl -d 1 --list-formats
->> ioctl: VIDIOC_ENUM_FMT
->>         Type: Video Capture Multiplanar
->>
->>         [0]: 'NV12' (Y/CbCr 4:2:0)
->>         [1]: 'YUYV' (YUYV 4:2:2)
->>
->> Patches 1 and 2 are simply cleanups needed to easier integrate the
->> post-processor. Patch 2 is a bit invasive, but it's a step
->> forward towards merging the implementation for RK3399 and RK3288.
->>
->> Patch 3 re-works the media-topology, making the decoder
->> a v4l2_subdevice, instead of a bare entity. This allows
->> to introduce a more accurate of the decoder+post-processor complex.
->>
->> Patch 4 introduces the post-processing support.
->>
->> This is tested on RK3288 platforms with MPEG-2, VP8 and
->> H264 streams, decoding to YUY2 surfaces. For now, this series
->> is only adding support for NV12-to-YUY2 conversion.
->>
->> The design and implementation is quite different from v1:
->>
->> * The decoder->post-processor topology is now exposed
->>   explicitly and applications need to configure the pipeline.
->>   By default, the decoder is enabled and the post-processor
->>   is disabled.
->>
-> 
-> First of all, thanks for working on this. While from Chromium point of
-> view there isn't any practical use case for this feature, it could
-> possibly be valuable for some other platforms.
-> 
-> I still see a problem with the current design. Mem-to-mem decoders are
-> commonly used in a multi-instance fashion, but media topology is
-> global. That means that when having two applications on the system
-> decoding their own videos, one might be stepping on the other by
-> changing the topology.
-> 
-> I believe that if we want this to be really usable, we would need to
-> make the media topology per instance, but that's a significant change
-> to the media subsystem. Maybe we could pursue the other options I
-> suggested in the previous revision instead, like ordering the formats
-> returned by enum_fmt by native first and adding format flags that
-> would tell the userspace that the format can have some performance
-> and/or power penalty?
+This removes '\n' from trace event class tcp_event_sk_skb to avoid
+redundant new blank line and make output compact.
 
-I discussed this with Ezequiel in Lyon, and my preference is also to
-not rely on the media controller, but instead order the formats with
-the native formats first, followed by the formats that need this additional
-processing step. A format flag can be added, but I feel that it is better
-to wait with that until it is clear that there is a real need for it.
+Fixes: af4325ecc24f ("tcp: expose sk_state in tcp_retransmit_skb tracepoint")
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
+---
+v1->v2:
+- append Fixes tag
+---
+ include/trace/events/tcp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It would be good to document in the ENUM_FMT ioctl that formats that
-require additional processing are at the end of the format list.
-
-Ezequiel, I'm marking this series as "Changes Requested" in patchwork.
-
-Regards,
-
-	Hans
-
-> 
-> Best regards,
-> Tomasz
-> 
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 2bc9960a31aa..cf97f6339acb 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+ 			      sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
+ 	),
+ 
+-	TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s\n",
++	TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
+ 		  __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
+ 		  __entry->saddr_v6, __entry->daddr_v6,
+ 		  show_tcp_state_name(__entry->state))
+-- 
+2.24.0
 
