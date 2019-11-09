@@ -2,113 +2,115 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23E0C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A75DC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93451207FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4040721924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="ksE1U0tZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfmDrMNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfKIKrI (ORCPT
+        id S1726372AbfKIK5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:47:08 -0500
-Received: from www.linux-watchdog.org ([185.87.125.42]:42220 "EHLO
-        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfKIKrI (ORCPT
+        Sat, 9 Nov 2019 05:57:00 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34062 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfKIK47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 05:47:08 -0500
-X-Greylist: delayed 476 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 Nov 2019 05:47:07 EST
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-        id B130140204; Sat,  9 Nov 2019 10:54:43 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org B130140204
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-        s=odk20180602; t=1573293283;
-        bh=JzQx7YpNmpxma75B7LPm6zaJOGPNcTDGsH5LTJkoSnA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ksE1U0tZBYAX8bJb5Rq3vBibSUYcDahJ22nhZPcAoJnJaQwPZdyug7mibTFrLpU1h
-         1uFA7kGR4+satPBRQFCJivIiTjXPei+zI1GeDHlxmV2pvbYmGgnwfNiZ7eiGC2tKmn
-         dRJ8DpY/RA9EqXTyntUeR0rG3xEl6duzKXIdoxMg=
-Date:   Sat, 9 Nov 2019 10:54:43 +0100
-From:   Wim Van Sebroeck <wim@linux-watchdog.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [GIT PULL REQUEST] watchdog - v5.4-rc7 Fixes
-Message-ID: <20191109095443.GA21465@www.linux-watchdog.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
+        Sat, 9 Nov 2019 05:56:59 -0500
+Received: by mail-wm1-f68.google.com with SMTP id v3so9172406wmh.1;
+        Sat, 09 Nov 2019 02:56:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JHLfdo8EDYpxKc5h1UVzYd5rkwgO5xInaju1os9b+ho=;
+        b=SfmDrMNFhZrsAWXRX9Nk5Koc/lkJ6XYxu32hCyrsCin2aAcMyn0oie0m+oobQbQ74W
+         9YhqazEroPzLtEjVmTQD7BcMEaaaXl795pYJp9bme3oBttWkPqXjrm9SE43wmJDyFu11
+         o1VT3TOucgjsyqvcDOwOVZWq3C5Wu21rNAmN4vCC/fYG8MbRGMhMZYs4EZKa2OWO2o2q
+         F7jhzABV386Zk9F4v4LFklNGpqqE7GUs/55ny5MeUh8ABfp85taeVVfAdskUG8+53NZ0
+         RtGWo1z1VPJB5JoCJ4N25e3toiXE0LjsNte7cSPp4tX5oTFuFFGiUfGXsboDvYYDGuBo
+         ITKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JHLfdo8EDYpxKc5h1UVzYd5rkwgO5xInaju1os9b+ho=;
+        b=nMRco2rPBf1vDw5xYAKKDAW3snMBpXJFJzeTSE43EjALWI1qF5fLqcjf5b0gwbar4U
+         CwqkoLpIb+cbygheZLVVwvopCq8xLTl2MzIbJz/GgHJVZ0bzZtN1LecIxLmO2cXfiNKY
+         vxqxeAsUiiWbiZcTPPwu8pjTnWCi+mf1Z/YXfPAZ/fhT5lxl7mttk0KMk+cz2MUA5qeB
+         Z2ucJgkUPQD4bbJfmwaJLBcEzEwkMJAazYtA4NAwtRFz8k+qP66aXqDoYNmJqxWKFkhz
+         CEEC7OPBe0FZN2YJIPjAVHPYYd+TtxP9hHv0S55fVM4MnU3LB1grEt/xmjeA3rs+bX1V
+         nzjQ==
+X-Gm-Message-State: APjAAAWEaOsfZlZn7TcXjYQK9tmqCvdyOQLLlQVdjuNHXSru2x0Ahsaa
+        nRglxZWfvRfwtdej2bOYUWQ=
+X-Google-Smtp-Source: APXvYqxhXAZg/XDWVA2jUZjEBESbC0l9FJaojQQtz3TAEVdRDHSDneX5AN2Bqc3wy8oUC8OTUHaU8A==
+X-Received: by 2002:a1c:6146:: with SMTP id v67mr12605556wmb.102.1573297017263;
+        Sat, 09 Nov 2019 02:56:57 -0800 (PST)
+Received: from localhost.localdomain ([86.121.29.241])
+        by smtp.gmail.com with ESMTPSA id l10sm14846296wrg.90.2019.11.09.02.56.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Nov 2019 02:56:56 -0800 (PST)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     shawnguo@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+Date:   Sat,  9 Nov 2019 12:56:42 +0200
+Message-Id: <20191109105642.30700-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+have interrupt lines connected to the shared IRQ2_B LS1021A pin.
 
-Please pull the watchdog fixes for v5.4-rc7.
+The interrupts are active low, but the GICv2 controller does not support
+active-low and falling-edge interrupts, so the only mode it can be
+configured in is rising-edge.
 
-This series contains:
-* cpwd: fix build regression
-* pm8916_wdt: fix pretimeout registration flow
-* meson: Fix the wrong value of left time
-* imx_sc_wdt: Pretimeout should follow SCU firmware format
-* bd70528: Add MODULE_ALIAS to allow module auto loading
+The interrupt number was obtained by subtracting 32 from the listed
+interrupt ID from LS1021ARM.pdf Table 5-1. Interrupt assignments.
 
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9:
+Switching to interrupts offloads the PHY library from the task of
+polling the MDIO status and AN registers (1, 4, 5) every second.
 
-  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+Unfortunately, the BCM5464R quad PHY connected to the switch does not
+appear to have an interrupt line routed to the SoC.
 
-are available in the git repository at:
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+---
+ arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.4-rc7
-
-for you to fetch changes up to 81363f248aecd2b5f10547af268a4dfaf8963489:
-
-  watchdog: bd70528: Add MODULE_ALIAS to allow module auto loading (2019-11-05 16:58:12 +0100)
-
-----------------------------------------------------------------
-linux-watchdog 5.4-rc7 tag
-
-----------------------------------------------------------------
-Anson Huang (1):
-      watchdog: imx_sc_wdt: Pretimeout should follow SCU firmware format
-
-Arnd Bergmann (1):
-      watchdog: cpwd: fix build regression
-
-Jorge Ramirez-Ortiz (1):
-      watchdog: pm8916_wdt: fix pretimeout registration flow
-
-Matti Vaittinen (1):
-      watchdog: bd70528: Add MODULE_ALIAS to allow module auto loading
-
-Xingyu Chen (1):
-      watchdog: meson: Fix the wrong value of left time
-
- drivers/watchdog/bd70528_wdt.c    |  1 +
- drivers/watchdog/cpwd.c           |  8 +++++++-
- drivers/watchdog/imx_sc_wdt.c     |  8 +++++++-
- drivers/watchdog/meson_gxbb_wdt.c |  4 ++--
- drivers/watchdog/pm8916_wdt.c     | 15 +++++++++++----
- 5 files changed, 28 insertions(+), 8 deletions(-)
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
+diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+index 5b7689094b70..4532b2bd3fd1 100644
+--- a/arch/arm/boot/dts/ls1021a-tsn.dts
++++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+@@ -203,11 +203,15 @@
+ 	/* AR8031 */
+ 	sgmii_phy1: ethernet-phy@1 {
+ 		reg = <0x1>;
++		/* SGMII1_PHY_INT_B: connected to IRQ2, active low */
++		interrupts = <GIC_SPI 165 IRQ_TYPE_EDGE_RISING>;
+ 	};
+ 
+ 	/* AR8031 */
+ 	sgmii_phy2: ethernet-phy@2 {
+ 		reg = <0x2>;
++		/* SGMII2_PHY_INT_B: connected to IRQ2, active low */
++		interrupts = <GIC_SPI 165 IRQ_TYPE_EDGE_RISING>;
+ 	};
+ 
+ 	/* BCM5464 quad PHY */
+-- 
+2.17.1
 
