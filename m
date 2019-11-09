@@ -2,85 +2,113 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB0AC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 08:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0A9C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 08:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB00921848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 08:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC0521848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 08:09:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EYdZbBZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfKIIIN (ORCPT
+        id S1726610AbfKIIJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 03:08:13 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42444 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726267AbfKIIIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 03:08:12 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B6BAE3EF9E53F500D491;
-        Sat,  9 Nov 2019 16:08:10 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 9 Nov 2019
- 16:08:00 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] KVM: MMIO: get rid of odd out_err label in kvm_coalesced_mmio_init
-Date:   Sat, 9 Nov 2019 16:08:20 +0800
-Message-ID: <1573286900-19041-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 9 Nov 2019 03:09:57 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44245 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfKIIJ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 03:09:57 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q26so6674487pfn.11;
+        Sat, 09 Nov 2019 00:09:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c0AkCz+ons60KF3Basu+r9e0WFH/NQCt67/Tcitib7o=;
+        b=EYdZbBZEJ6QnLJLTDb8UPk3rQWSaDm9RyNhSguPvwNe1l6TAepI2uWZPNPwH14R4gk
+         nyxnEX6DOnUcklNh4uccNfH/usHsraepcOWcODbFXlk/mnpQZPKHrWAc3zjMOE/c9u58
+         OQM+pI7NVIjT1c6V71+4OnvirdmEYTFeI9e04eR0zu01MSrc67c+Kgvi7RgDkmRmLfYR
+         +btFjaml5jP0sXZxAh25xohZzvBfLIQzZJ47FbHEePPPxfTPGWaSLOKqpTapaDqRb66T
+         THHTCwxKiPH15VncMsjTC/qs67fmXx0gJfNn6RD7tD7TSe6LkTD60xJFhJJdaVWDLtal
+         N2eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c0AkCz+ons60KF3Basu+r9e0WFH/NQCt67/Tcitib7o=;
+        b=LSrux7DB0b1g7K/Nokx43L2djQC/s4jJ4pTMQCErg8srHQxwbFZVBQLm4yrTwVRrdN
+         BIjY2ksuKxzUTV7WmqbN6/tlcDE1L3hb1EgBtIfymNjXDk55yH6A1rE2yF8yMQmKAOIj
+         GFays9CVXq+YKVB94Jsq92n79x+2BHetmOoiayan9cw0hcbPUCfFCyFZqfBib8hqd5AX
+         SuDNwVrr5ujEQiztkgwTspepw+/mc6SpAyfBqPog0+8mxUuGABa+N1/eyYIwuL8LTbrr
+         w61lzr3HSwtbhpNZhHWDesn/pXdaAToN8CKU06w+8Re41jZYVvO1rrmN04KVGivYdduM
+         ZBGQ==
+X-Gm-Message-State: APjAAAXJgjVSqsaRYBuZCRS79dP2jHXxVgLwb1/rNcmIgfr3FmW5Cxxw
+        GE6EbMu9yFiKI5aHr3xN0sEsKfVELHQ=
+X-Google-Smtp-Source: APXvYqxzY/DL9rM6SfcD+4ow3nbBR4KyVY6j8DGNdrb345k8GNjqK6yfgTyA86TspPW77PvK3sXNmA==
+X-Received: by 2002:a63:5c21:: with SMTP id q33mr17660246pgb.61.1573286996321;
+        Sat, 09 Nov 2019 00:09:56 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id q13sm7799715pjq.0.2019.11.09.00.09.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Nov 2019 00:09:55 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] spi: pxa2xx: Add missed security checks
+Date:   Sat,  9 Nov 2019 16:09:43 +0800
+Message-Id: <20191109080943.30428-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+platform_get_irq.
+Add checks for them to fix the bugs.
 
-The out_err label and var ret is unnecessary, clean them up.
+Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
+So we cannot use _optional() for devm_clk_get and platform_get_irq.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- virt/kvm/coalesced_mmio.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Changes in v2:
+  - Modify commit message.
 
-diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-index 8ffd07e2a160..00c747dbc82e 100644
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -110,14 +110,11 @@ static const struct kvm_io_device_ops coalesced_mmio_ops = {
- int kvm_coalesced_mmio_init(struct kvm *kvm)
- {
- 	struct page *page;
--	int ret;
+ drivers/spi/spi-pxa2xx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index bb6a14d1ab0f..2e73d75a6ac5 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1565,7 +1565,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ #endif
  
--	ret = -ENOMEM;
- 	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
- 	if (!page)
--		goto out_err;
-+		return -ENOMEM;
- 
--	ret = 0;
- 	kvm->coalesced_mmio_ring = page_address(page);
- 
- 	/*
-@@ -128,8 +125,7 @@ int kvm_coalesced_mmio_init(struct kvm *kvm)
- 	spin_lock_init(&kvm->ring_lock);
- 	INIT_LIST_HEAD(&kvm->coalesced_zones);
- 
--out_err:
--	return ret;
-+	return 0;
- }
- 
- void kvm_coalesced_mmio_free(struct kvm *kvm)
+ 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(ssp->clk))
++		return NULL;
++
+ 	ssp->irq = platform_get_irq(pdev, 0);
++	if (ssp->irq < 0)
++		return NULL;
++
+ 	ssp->type = type;
+ 	ssp->pdev = pdev;
+ 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
 -- 
-2.19.1
+2.23.0
 
