@@ -7,62 +7,69 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FA5C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01799C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B54021924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52CD21882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LI5ozv1f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZzFmB7sQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfKITRz (ORCPT
+        id S1726778AbfKITSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 14:17:55 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39755 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfKITRv (ORCPT
+        Sat, 9 Nov 2019 14:18:00 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46508 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfKITRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 14:17:51 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x28so7382918pfo.6
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 11:17:50 -0800 (PST)
+        Sat, 9 Nov 2019 14:17:53 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r18so6290698pgu.13
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 11:17:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mXFzTIQULMmuTDmTZ6dVKohz/gl+dRtj6ccr6Op88KM=;
-        b=LI5ozv1fTxbjr7x/dcDUh1mB2Iwxyf2fpfKuXvFQulIkd9YYm2IU8paiccu3EotNtk
-         wDJqmbFshW43M/V4r+iGHGDG6uw/mJwvq0g2eyrCfenSMsNd3qcwuHmUVNq/PlOW7tvy
-         1pLLqJgWNfjC/p5racDr1lFjxnY0r9jZw5HQE=
+        bh=FDlNx6EGMrp3vN/hMVd1kyT0CxIKEbIPYjtFrXlWFSw=;
+        b=ZzFmB7sQK3gNmFEeDI9qpvLvJ1+N05YxWvEuumFV/BcGrWe9iFzRin5aqvjGTKaR9P
+         jqm9KQ+kCcE6UAOTUuZCEzJ1Y28Zql+YlERBbd4b1VaF/hxXwZxAYXfL49v/4yFpClf7
+         JONMJc6wtb1wy2WdlfJr4HYyIBX2UU49UcKYs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mXFzTIQULMmuTDmTZ6dVKohz/gl+dRtj6ccr6Op88KM=;
-        b=PaEqFLodY4HruKJzaULC0CSG5rC8mag4GtrFxeQnhK1CZgrMwLo1gFK+BbX0z11aWE
-         qar59IriJ3QGFpYIYMU/xCjOrlmihYXxUxMskReyzhu8pysRVaLtXTL8amE4KIJIjdvF
-         4AB2756hzfxkBcExLaPQollVGEBFibBSQ+tlUOjtAP0r99hYEiExgo3Sq0N7jTMjZpLO
-         3Hb7memwbZxKg8uJldJ/jaIF6Npki/t0DOtPkrcXqAS7EHLvpcbsMp3VcB/vpaK12n+I
-         lZxjxO65E7szvgqGlYBX64nhnxhg2/2Mkn4ZdQrIQawYTWSCayynZ5L3nHksH0MeL67R
-         fZvQ==
-X-Gm-Message-State: APjAAAXdehiZAWy0eYHIorU5mnzTZpMXHA9hvHZHbeSAJALiR8X7p2WK
-        l9sNs+AW+EqxoDuXQBRlT41pnA==
-X-Google-Smtp-Source: APXvYqyJ/5A4gHEs+sAnhcIJcA/HukdqC84S1VJK0RNlrtJ8DJl9XngaqApx43e536fdHhCsG/SlEA==
-X-Received: by 2002:a63:ec4b:: with SMTP id r11mr19367156pgj.147.1573327070394;
-        Sat, 09 Nov 2019 11:17:50 -0800 (PST)
+        bh=FDlNx6EGMrp3vN/hMVd1kyT0CxIKEbIPYjtFrXlWFSw=;
+        b=qQYLzZKVLcA+EnHmRa0PRxsSF9WIqOz51p2Y7tsI4iRWuifqfigQ0xQO8ZRUbA8mf8
+         ZKBwCDC4z+fObzSvB9N057wkdi+q/DR4OM927jEwN4XHKXJV8qJy/nOGxt1R43DTgZL3
+         o6Tvp1eusRUcScVL035c0Pe9BnuqkyABrfsjyrc3jQ5Ti69/2cftOvTlbr2E9zPg+hFW
+         wAola9VSf4PuE0ITmECku0EwnnKQGNz+vPbPRFdunBbRWQG86h6SxDzs1HaDi+Gv2ksG
+         NUMlWXFMGBRWI4cMPm2CSyagDeH2/ERxrXrRGj5wcsy12E4NgFS/edehneap25mNi1Ja
+         5f3A==
+X-Gm-Message-State: APjAAAW+WP/NZ2xptPpq/nacVFnjOyazrqivmrRVAqoHnQriyn+QyGQo
+        AcdVmCYOSpulaotRmQBBHUN9aA==
+X-Google-Smtp-Source: APXvYqylPzIZ+Djw1JoI0Ai9UaxOOYX4sETzbck6F8sybWeqW/bp7Rd3HddEPdVW3U7hfLf/l1vWvw==
+X-Received: by 2002:a63:7c10:: with SMTP id x16mr19430535pgc.176.1573327072998;
+        Sat, 09 Nov 2019 11:17:52 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i11sm9193577pgd.7.2019.11.09.11.17.49
+        by smtp.gmail.com with ESMTPSA id i11sm9193577pgd.7.2019.11.09.11.17.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2019 11:17:49 -0800 (PST)
+        Sat, 09 Nov 2019 11:17:52 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Paul Burton <paul.burton@mips.com>,
         Jason Wessel <jason.wessel@windriver.com>,
         Daniel Thompson <daniel.thompson@linaro.org>
 Cc:     qiaochong@loongson.cn, kgdb-bugreport@lists.sourceforge.net,
         ralf@linux-mips.org, Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH 2/5] kdb: kdb_current_regs should be private
-Date:   Sat,  9 Nov 2019 11:16:41 -0800
-Message-Id: <20191109111623.2.Iadbfb484e90b557cc4b5ac9890bfca732cd99d77@changeid>
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Will Deacon <will@kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4/5] kdb: Gid rid of implicit setting of the current task / regs
+Date:   Sat,  9 Nov 2019 11:16:43 -0800
+Message-Id: <20191109111624.4.Ibc3d982bbeb9e46872d43973ba808cd4c79537c7@changeid>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 In-Reply-To: <20191109191644.191766-1-dianders@chromium.org>
 References: <20191109191644.191766-1-dianders@chromium.org>
@@ -73,42 +80,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of the patch ("MIPS: kdb: Remove old workaround for backtracing on
-other CPUs") there is no reason for kdb_current_regs to be in the
-public "kdb.h".  Let's move it next to kdb_current_task.
+Some (but not all?) of the kdb backtrace paths would cause the
+kdb_current_task and kdb_current_regs to remain changed.  As discussed
+in a review of a previous patch [1], this doesn't seem intuitive, so
+let's fix that.
+
+...but, it turns out that there's actually no longer any reason to set
+the current task / current regs while backtracing anymore anyway.  As
+of commit 2277b492582d ("kdb: Fix stack crawling on 'running' CPUs
+that aren't the master") if we're backtracing on a task running on a
+CPU we ask that CPU to do the backtrace itself.  Linux can do that
+without anything fancy.  If we're doing backtrace on a sleeping task
+we can also do that fine without updating globals.  So this patch
+mostly just turns into deleting a bunch of code.
+
+[1] https://lore.kernel.org/r/20191010150735.dhrj3pbjgmjrdpwr@holly.lan
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- include/linux/kdb.h            | 2 --
- kernel/debug/kdb/kdb_private.h | 1 +
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ kernel/debug/kdb/kdb_bt.c      | 8 +-------
+ kernel/debug/kdb/kdb_main.c    | 2 +-
+ kernel/debug/kdb/kdb_private.h | 1 -
+ 3 files changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/kdb.h b/include/linux/kdb.h
-index 68bd88223417..24cd447659e0 100644
---- a/include/linux/kdb.h
-+++ b/include/linux/kdb.h
-@@ -183,8 +183,6 @@ int kdb_process_cpu(const struct task_struct *p)
- 	return cpu;
+diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
+index 4af48ac53625..3de0cc780c16 100644
+--- a/kernel/debug/kdb/kdb_bt.c
++++ b/kernel/debug/kdb/kdb_bt.c
+@@ -119,7 +119,6 @@ kdb_bt_cpu(unsigned long cpu)
+ 		return;
+ 	}
+ 
+-	kdb_set_current_task(kdb_tsk);
+ 	kdb_bt1(kdb_tsk, ~0UL, false);
  }
  
--/* kdb access to register set for stack dumping */
--extern struct pt_regs *kdb_current_regs;
- #ifdef CONFIG_KALLSYMS
- extern const char *kdb_walk_kallsyms(loff_t *pos);
- #else /* ! CONFIG_KALLSYMS */
+@@ -166,10 +165,8 @@ kdb_bt(int argc, const char **argv)
+ 		if (diag)
+ 			return diag;
+ 		p = find_task_by_pid_ns(pid, &init_pid_ns);
+-		if (p) {
+-			kdb_set_current_task(p);
++		if (p)
+ 			return kdb_bt1(p, ~0UL, false);
+-		}
+ 		kdb_printf("No process with pid == %ld found\n", pid);
+ 		return 0;
+ 	} else if (strcmp(argv[0], "btt") == 0) {
+@@ -178,11 +175,9 @@ kdb_bt(int argc, const char **argv)
+ 		diag = kdbgetularg((char *)argv[1], &addr);
+ 		if (diag)
+ 			return diag;
+-		kdb_set_current_task((struct task_struct *)addr);
+ 		return kdb_bt1((struct task_struct *)addr, ~0UL, false);
+ 	} else if (strcmp(argv[0], "btc") == 0) {
+ 		unsigned long cpu = ~0;
+-		struct task_struct *save_current_task = kdb_current_task;
+ 		if (argc > 1)
+ 			return KDB_ARGCOUNT;
+ 		if (argc == 1) {
+@@ -204,7 +199,6 @@ kdb_bt(int argc, const char **argv)
+ 				kdb_bt_cpu(cpu);
+ 				touch_nmi_watchdog();
+ 			}
+-			kdb_set_current_task(save_current_task);
+ 		}
+ 		return 0;
+ 	} else {
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 4d44b3746836..ba12e9f4661e 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -1138,7 +1138,7 @@ static void kdb_dumpregs(struct pt_regs *regs)
+ 	console_loglevel = old_lvl;
+ }
+ 
+-void kdb_set_current_task(struct task_struct *p)
++static void kdb_set_current_task(struct task_struct *p)
+ {
+ 	kdb_current_task = p;
+ 
 diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
-index 55d052061ef9..e829b22f3946 100644
+index e829b22f3946..2e296e4a234c 100644
 --- a/kernel/debug/kdb/kdb_private.h
 +++ b/kernel/debug/kdb/kdb_private.h
-@@ -242,6 +242,7 @@ extern void debug_kusage(void);
+@@ -240,7 +240,6 @@ extern void *debug_kmalloc(size_t size, gfp_t flags);
+ extern void debug_kfree(void *);
+ extern void debug_kusage(void);
  
- extern void kdb_set_current_task(struct task_struct *);
+-extern void kdb_set_current_task(struct task_struct *);
  extern struct task_struct *kdb_current_task;
-+extern struct pt_regs *kdb_current_regs;
+ extern struct pt_regs *kdb_current_regs;
  
- #ifdef CONFIG_KDB_KEYBOARD
- extern void kdb_kbd_cleanup_state(void);
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
