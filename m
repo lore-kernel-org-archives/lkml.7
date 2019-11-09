@@ -2,118 +2,105 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DA6C17446
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB9C17443
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75C621D7B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181F521924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:06:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lYQBPpkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfKIVDJ (ORCPT
+        id S1726612AbfKIVGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 16:03:09 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:34273 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfKIVDJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 16:03:09 -0500
-Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N5VTm-1hrmS02jko-016stv; Sat, 09 Nov 2019 22:03:06 +0100
-Received: by mail-qv1-f45.google.com with SMTP id w11so3519335qvu.13;
-        Sat, 09 Nov 2019 13:03:06 -0800 (PST)
-X-Gm-Message-State: APjAAAV2k8JvymMxplEpZ4LWlhRJ12lcRL5DPKRX91lIzt3uALcIcpi0
-        St2XKjMdDm8nFqDWlv08kWalMFSW0AXhnL8fwMw=
-X-Google-Smtp-Source: APXvYqzVWdaWa9r60I/4Z9hpe05+E921xzLR8H/PZkF7j6E78aa0x1vFwmnnWC69tXfwFmEaoi/5dhGDrttFdJdYruM=
-X-Received: by 2002:a0c:fde8:: with SMTP id m8mr16974889qvu.4.1573333385442;
- Sat, 09 Nov 2019 13:03:05 -0800 (PST)
+        Sat, 9 Nov 2019 16:06:06 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:58498 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbfKIVGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 16:06:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AeGy6oWAVhpsj0BuOFBbXLEEpIX0zbaOX8ktv7sw73c=; b=lYQBPpkdLtKmSRGPLw1rP6Sksg
+        5cbWGNaNDZmJvgYtA1Bu3BaWCIDw5+TcbSLT/PtHyDpdwR0UwQB3Qq9itkCuBTffpi4ZXU7qGEbsB
+        Gjb8s+Mps3XmVAbR9KR4IuqePkrcPpDIDNG/PnJJLfFTYw8Vj3qY5wZuv6erEbfcpD0g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iTXvZ-0003tj-MJ; Sat, 09 Nov 2019 22:05:49 +0100
+Date:   Sat, 9 Nov 2019 22:05:49 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexander Stein <alexander.stein@mailbox.org>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, shawnguo@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+Message-ID: <20191109210549.GB12999@lunn.ch>
+References: <20191109105642.30700-1-olteanv@gmail.com>
+ <20191109150953.GJ22978@lunn.ch>
+ <CA+h21hoqkE2D03BHrFeU+STbK8pStRRFu+x7+9j2nwFf+EHJNg@mail.gmail.com>
+ <393335751.FoSYQk3TTC@kongar>
 MIME-Version: 1.0
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
- <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com>
-In-Reply-To: <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 9 Nov 2019 22:02:49 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
-Message-ID: <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
-Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Gl1fFRfO9j2DtrAd5m3vLUZBvw9/Qo04K69D9QBhEGuOD3kC6Ny
- oJrNEFUAUBLNcpyJd2NO/dlDsQfw9Sx0x1h/mb2qXrr25t9QyHsazOvrdCPsRHKjBDxl844
- lLTq5Rdq8mkxH+Z5ZBX6DsSnrGRaVSmGFaY66BoLJi6JMnwp6zjC0bGDz5RmAJpWHhSHKhu
- gn5MdMPpuQPw6FkLwB1lQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ut+WqSDbMvI=:qi5JdruNp2M1RiCv44NEpL
- NClrdIpdVHDSulBhWPNKUy5IgZNyGwnR20PN7pXrApDtHKovD3EfNtslqN2/jYr0B4eH9CzcT
- y8YjI8eky82YrPxm2jMwRPZ2QNpsH/u4qYD7SexAYPhURFPANKx8/4bFv22KMM0/N2c8/mHBA
- fOqyMWHyPAJgejXwt57yHWDgKcz3wHziYlErVJXitZo/FsMFSrK24BCEsphqkKorbuQ3pgay6
- wgrj0V1NFXlgSCS5GNu/uoarBsn2vISyJ8RBc72IJUWSdVVvvappxtPKl3NW1NA6PQ2F104uo
- GwNyeos9tJ7IDP7PSf5IOvP6U4n2tafCh8rHVFLNUhz3WUcOcUEpmZXRM8lGc48bvIXTXT+zr
- P6jlJ9DxeY4gas5oxVmABJiEnrCLNPmRz/dAGf+BBabZAdAC7OhCVQCFGSPE13h39/j5xPGfR
- u4mfQSoyPwZ4hT9tGgADLv1ljE3Hzw5PSCJLyhUmKwanoqhfDm0hcYB78ulb00rr4ngBXfb25
- MVeAwHfhHQ5uoM9SC1tqjiWNF5yh2tgHrOiYPisTVqqgSHrbnpIUEjUblJygy5U+FHGGXD27S
- 0F/QqLs3FYOuLOfun6Pz7nOvRrCZX448Ir0R7aEfg4TTaQ/n4MVRHRGLMgemP2gzHn8Vh4j2K
- xKn5811CPZA/NanWNOOOyYH3kaBJJn3U6uPobs4iAd8yEstZKL6jdlscaR9s67gQwGIatJl2v
- eKUIcMGGY3kjGOBcWQBdYQU8V6YGTxP5LfQtRgGXm6egfA06cbOEXWvToPTG+jd+vt27lTqec
- A/vGneTmMHiJeyUb5ydqIrgU49cdvLQmEGh6XC54TqVfC+HJOWn7fNSOv66cZONFJ6mF8FX0V
- UmGEuS8UyAaAWkjhy4Vw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <393335751.FoSYQk3TTC@kongar>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 9, 2019 at 2:43 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+On Sat, Nov 09, 2019 at 08:52:54PM +0100, Alexander Stein wrote:
+>  On Saturday, November 9, 2019, 4:21:51 PM CET Vladimir Oltean wrote:
+> > On 09/11/2019, Andrew Lunn <andrew@lunn.ch> wrote:
+> > > On Sat, Nov 09, 2019 at 12:56:42PM +0200, Vladimir Oltean wrote:
+> > >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+> > >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+> > >>
+> > >> The interrupts are active low, but the GICv2 controller does not support
+> > >> active-low and falling-edge interrupts, so the only mode it can be
+> > >> configured in is rising-edge.
+> > >
+> > > Hi Vladimir
+> > >
+> > > So how does this work? The rising edge would occur after the interrupt
+> > > handler has completed? What triggers the interrupt handler?
+> > >
+> > > 	Andrew
+> > >
+> > 
+> > Hi Andrew,
+> > 
+> > I hope I am not terribly confused about this. I thought I am telling
+> > the interrupt controller to raise an IRQ as a result of the
+> > low-to-high transition of the electrical signal. Experimentation sure
+> > seems to agree with me. So the IRQ is generated immediately _after_
+> > the PHY has left the line in open drain and it got pulled up to Vdd.
+> 
 
-> > -struct itimerval;
-> > -extern int do_setitimer(int which, struct itimerval *value,
-> > -                       struct itimerval *ovalue);
-> > -extern int do_getitimer(int which, struct itimerval *value);
-> > +#ifdef CONFIG_POSIX_TIMERS
-> > +extern void clear_itimer(void);
-> > +#else
-> > +static inline void clear_itimer(void) {}
-> > +#endif
-> >
+> It is correct GIC only supports raising edge and active-high. The
+> IRQ[0:5] on ls1021a are a bit special though.  They not directly
+> connected to GIC, but there is an optional inverter, enabled by
+> default.
 
-> > @@ -249,6 +249,17 @@ int do_setitimer(int which, struct itimerval *value, struct itimerval *ovalue)
-> >         return 0;
-> >  }
-> >
-> > +#ifdef CONFIG_SECURITY_SELINUX
->
-> Did you mean "#ifdef CONFIG_POSIX_TIMERS" here to match the header?
+Ah, O.K. So configuring for a rising edge is actually giving a falling
+edge. Which is why it works.
 
-No, this part is intentional, CONFIG_POSIX_TIMERS already controls
-whether itimer.c is
-compiled in the first place, but this function is only needed when called from
-the selinux driver.
+Actually supporting this correctly is going a cause some pain. I
+wonder how many DT files currently say rising/active high, when in
+fact falling/active low is actually being used? And when the IRQ
+controller really does support active low and falling, things brake?
 
-> > -               }
-> > +               if (IS_ENABLED(CONFIG_POSIX_TIMERS))
-> > +                       clear_itimer();
->
-> Since you already define a no-op fallback for the case of
-> !IS_ENABLED(CONFIG_POSIX_TIMERS) in time.h, why not simply call
-> clear_itimer() unconditionally?
+Vladimir, since this is a shared interrupt, you really should use
+active low here. Maybe the first step is to get control of the
+inverter, and define a DT binding which is not going to break
+backwards compatibility. And then wire up this interrupt.
 
-Ah right, that was indeed my plan here when I changed the declaration
-in the header, I just forgot to remove the if(). Fixed now.
-
-Thanks for the review!
-
-      Arnd
+	  Andrew
