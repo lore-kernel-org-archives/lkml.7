@@ -2,267 +2,348 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B80C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A7FC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF9A21924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3384521882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KD54TrJu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wU/9lGbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfKIJD0 (ORCPT
+        id S1726556AbfKIJEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 04:03:26 -0500
-Received: from mout.web.de ([212.227.15.4]:33809 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfKIJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 04:03:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573290197;
-        bh=qoIQImRdmD44LsZ6ub5WyhVN02SxMTzaAmh82B3FbiQ=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=KD54TrJuFUMbOY4o01necvCS3Jz4zylZAHVYsSzc2AJY9D0KKZh5bHhIt+BRLICn5
-         JQxkmGGlZ31Bk49lGHGP+WCJr94YoqXQZjWR3LJntT/Fy9whju4N+wat0BmCPZjP3M
-         wooicXx+UapWia9jjXzgAKgW0tzMR2npnNjQTOQU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.82.67]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M6Dve-1hiZkl0830-00y828; Sat, 09
- Nov 2019 10:03:17 +0100
-Subject: [PATCH 2/3] fsl/fman: Use common error handling code in mac_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <132e8369-c4da-249f-76b8-834e394dc6d5@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <8af4d161-cf85-b40f-6cc1-7ccf6d505918@web.de>
-Date:   Sat, 9 Nov 2019 10:03:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sat, 9 Nov 2019 04:04:37 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37066 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfKIJEg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 04:04:36 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA994OLn038721;
+        Sat, 9 Nov 2019 03:04:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573290264;
+        bh=MS0ZJR89aYLynPojaKgN//CmOPNVtiUcDOuCsT7RzzI=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=wU/9lGbrqiFLpquGXlIICAYtvFzeaAtgCzAveTzoJSaCWoK7ooOP4qRjVtd8m1ike
+         2+MIkKRHsfQJ/+KB1xiZKTm7R+/4fKKH/1LUKkS6c9/f52sLmqur7OVDgw1EO9XTfG
+         emwm0U+wHI6HhFfLLUL3i7JImVn9Kzp8YPmAdedY=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA994OgB106706;
+        Sat, 9 Nov 2019 03:04:24 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 9 Nov
+ 2019 03:04:24 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sat, 9 Nov 2019 03:04:23 -0600
+Received: from [10.250.132.49] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA994Kv5086632;
+        Sat, 9 Nov 2019 03:04:21 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v5 2/6] mtd: spi-nor: Rework the disabling of block write
+ protection
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20191107084135.22122-1-tudor.ambarus@microchip.com>
+ <20191107084135.22122-3-tudor.ambarus@microchip.com>
+Message-ID: <ddf792f8-ea2a-2659-2e9c-d6d94eb5168d@ti.com>
+Date:   Sat, 9 Nov 2019 14:34:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <132e8369-c4da-249f-76b8-834e394dc6d5@web.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191107084135.22122-3-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4ifrebuGtQEnat8+4sGV6OJL8On2wzvwy92TxOtI89YYT+2OM/2
- v89WSktNRUYt4BVGwP6MHHz/MPglNojWC8Xy8Xy0NidQM1wa+iQpA3HthN9WJqg0Jl7yakY
- Gj5042adq20Emlm/539xrKh0NxQI6GmESKdPH4rgaZ6oEcJ5vmKNebnRAxFs6LyFNTLcwe9
- dAZAxyq8xFqaKdNXwKHxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UJRVT5At2G8=:OSqbbWdF15C4JMCF4hN0mC
- fe5Yy8W97SrYl3Kk7rWfc4Robm9eOFHz+Y1voo1uZX9BeQXJp537uU5Ytmx3tgUAaNGERnF+b
- 5VN+AoxEMozndEFtu9Tt6F5RiPs5PFMJNrwcoKTheU3gE5Vbmu4DYScCqTNZRtEoczW69qcGw
- SmhDC2LY99KkTlFzp30oer0rwywUEtiDPxWAhku8fsBjsqeiAgGg9+NQM+GVpCPWJ6486/Idq
- Ghf+ImL124D1Nn0FevXylsLIUGYYutyzUZ/UHvw04NeGVi0RoW7/tUlY4AGvxgbJ/0pTNTqCv
- x/6GjozzvtLBpInxT1dqEx7s/woKZh8K9BqL94piMHDGTg8/9SOVT7i8sxoAnIUlflIWs3oqo
- NkzqfuYMcU1lUpbRQSoKxbV1HhwgtvlfKj7BS/TE6EuY2ZIugjohW4FCzrs+nU0rrnIclwn2M
- wUID8KACN4eosYOI73BLP9/qrYPgnhZ8ipE/7zj9pcpyZGfG1lofwlygkAZgL0XicdAeDXdGQ
- 0DnHTe+euRLIzJ16RsLGW3P3tqBxi7Bkoi/zplrq6n4ACNUROhJNya0DxByDeYE8nqrm9JZYh
- N9cc8c7JcZrMDoTfyLo8z2KN8kO7RJTsXrFu2zk+9vDcuRA/X40icTj9zci3UQ/Sq0ypLE02L
- siWG4nkOkKp9Fo0X/E1o0Et9/T1Un3CmCwpTMTb+jWlFJt8tTjUdu/iw9DQb1jut79npplRBP
- yWUaSR/DRv6B9qWcR29HIyYmItfJzB9DfWYRZf4ufZavDPr6lKWQnrIq6X6esqBRcKvDu6hUy
- LHl9R6QS7p1BGdNq9H6GTnQLyke1o5womdq1RWAIKnvDa6BvtigMBwUGwfNLuCbnLTxyCUYqn
- FiOdwK3IcfCwiuHD+LurAs1ET1BrDVoPnEQMtrNJfSiet7CfQxYdzZ8nzltBg4MyH5zLsq45A
- Z3hsZNhq1FFyLK9BcaExgPEN8lu7JbD1kvAEm0rUxHZwiPiRkZ9thjkPjKLLPcdmVGc88MUg8
- g7MbklYPf7OzcQVcucdyCNs1dsHfULaZIQ/lc4pNTuZkndngFUR+BT4rtII2HjtmO2t+QpZvW
- 4vuwCDAYqtW/lH0xvTSVUTIUtBlu1VluABIF/74r9RzoEbMp3NRPxaG1I3b4HWeeg8hZbYdek
- JlRZrfSs8mky1xJOZrBt1g089v+JE8PGxgqL9MPydOEn7XdbNcW+/5WL4MfgLnnsealloOkkZ
- ifUQDoSRWh4wp4YWgEPYRVMX7/x12k+BKpptaoMT3d2KU5ynzyt5COjSsQhU=
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 9 Nov 2019 09:13:01 +0100
 
-Adjust jump targets so that exception handling code can be better reused
-at the end of this function.
 
-This issue was detected by using the Coccinelle software.
+On 07-Nov-19 2:11 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> spi_nor_unlock() unlocks blocks of memory or the entire flash memory
+> array, if requested. clear_sr_bp() unlocks the entire flash memory
+> array at boot time. This calls for some unification, clear_sr_bp() is
+> just an optimization for the case when the unlock request covers the
+> entire flash size.
+> 
+> Get rid of clear_sr_bp() and introduce spi_nor_unlock_all(), which is
+> just a call to spi_nor_unlock() for the entire flash memory array.
+> This fixes a bug that was present in spi_nor_spansion_clear_sr_bp().
+> When the QE bit was zero, we used the Write Status (01h) command with
+> one data byte, which might cleared the Status Register 2. We now always
+> use the Write Status (01h) command with two data bytes when
+> SNOR_F_HAS_16BIT_SR is set, to avoid clearing the Status Register 2.
+> 
+> The SNOR_F_NO_READ_CR case is treated as well. When the flash doesn't
+> support the CR Read command, we make an assumption about the value of
+> the QE bit. In spi_nor_init(), call spi_nor_quad_enable() first, then
+> spi_nor_unlock_all(), so that at the spi_nor_unlock_all() time we can
+> be sure the QE bit has value one, because of the previous call to
+> spi_nor_quad_enable().
+> 
+> Get rid of the MFR handling and implement specific manufacturer
+> default_init() fixup hooks.
+> 
+> Note that this changes a bit the logic for the SNOR_MFR_ATMEL,
+> SNOR_MFR_INTEL and SNOR_MFR_SST cases. Before this patch, the Atmel,
+> Intel and SST chips did not set the locking ops, but unlocked the entire
+> flash at boot time, while now they are setting the locking ops to
+> stm_locking_ops. This should work, since the the disable of the block
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/net/ethernet/freescale/fman/mac.c | 42 ++++++++++++-----------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+Nit: s/the the/the
 
-diff --git a/drivers/net/ethernet/freescale/fman/mac.c b/drivers/net/ether=
-net/freescale/fman/mac.c
-index e0680257532c..7fbd7cc24ede 100644
-=2D-- a/drivers/net/ethernet/freescale/fman/mac.c
-+++ b/drivers/net/ethernet/freescale/fman/mac.c
-@@ -659,16 +659,14 @@ static int mac_probe(struct platform_device *_of_dev=
-)
- 	of_dev =3D of_find_device_by_node(dev_node);
- 	if (!of_dev) {
- 		dev_err(dev, "of_find_device_by_node(%pOF) failed\n", dev_node);
--		err =3D -EINVAL;
--		goto _return_of_node_put;
-+		goto _e_inval_put_node;
- 	}
+> protection at the boot time used the same Status Register bits to unlock
+> the flash, as in the stm_locking_ops case.
+> 
+> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
 
- 	/* Get the FMan cell-index */
- 	err =3D of_property_read_u32(dev_node, "cell-index", &val);
- 	if (err) {
- 		dev_err(dev, "failed to read cell-index for %pOF\n", dev_node);
--		err =3D -EINVAL;
--		goto _put_device;
-+		goto _e_inval_put_device;
- 	}
- 	/* cell-index 0 =3D> FMan id 1 */
- 	fman_id =3D (u8)(val + 1);
-@@ -717,8 +715,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 	err =3D of_property_read_u32(mac_node, "cell-index", &val);
- 	if (err) {
- 		dev_err(dev, "failed to read cell-index for %pOF\n", mac_node);
--		err =3D -EINVAL;
--		goto _put_parent_device;
-+		goto _e_inval_put_parent_device;
- 	}
- 	priv->cell_index =3D (u8)val;
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-@@ -726,8 +723,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 	mac_addr =3D of_get_mac_address(mac_node);
- 	if (IS_ERR(mac_addr)) {
- 		dev_err(dev, "of_get_mac_address(%pOF) failed\n", mac_node);
--		err =3D -EINVAL;
--		goto _put_parent_device;
-+		goto _e_inval_put_parent_device;
- 	}
- 	ether_addr_copy(mac_dev->addr, mac_addr);
+Regards
+Vignesh
 
-@@ -743,8 +739,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 	if (nph !=3D ARRAY_SIZE(mac_dev->port)) {
- 		dev_err(dev, "Not supported number of fman-ports handles of mac node %p=
-OF from device tree\n",
- 			mac_node);
--		err =3D -EINVAL;
--		goto _put_parent_device;
-+		goto _e_inval_put_parent_device;
- 	}
-
- 	for (i =3D 0; i < ARRAY_SIZE(mac_dev->port); i++) {
-@@ -753,24 +748,21 @@ static int mac_probe(struct platform_device *_of_dev=
-)
- 		if (!dev_node) {
- 			dev_err(dev, "of_parse_phandle(%pOF, fsl,fman-ports) failed\n",
- 				mac_node);
--			err =3D -EINVAL;
--			goto _return_of_node_put;
-+			goto _e_inval_put_node;
- 		}
-
- 		of_dev =3D of_find_device_by_node(dev_node);
- 		if (!of_dev) {
- 			dev_err(dev, "of_find_device_by_node(%pOF) failed\n",
- 				dev_node);
--			err =3D -EINVAL;
--			goto _return_of_node_put;
-+			goto _e_inval_put_node;
- 		}
-
- 		mac_dev->port[i] =3D fman_port_bind(&of_dev->dev);
- 		if (!mac_dev->port[i]) {
- 			dev_err(dev, "dev_get_drvdata(%pOF) failed\n",
- 				dev_node);
--			err =3D -EINVAL;
--			goto _put_device;
-+			goto _e_inval_put_device;
- 		}
- 		of_node_put(dev_node);
- 	}
-@@ -821,8 +813,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 		phy =3D of_phy_find_device(mac_dev->phy_node);
- 		if (!phy) {
- 			err =3D -EINVAL;
--			of_node_put(mac_dev->phy_node);
--			goto _return_of_get_parent;
-+			goto _put_phy_node;
- 		}
-
- 		priv->fixed_link->link =3D phy->link;
-@@ -837,8 +828,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 	err =3D mac_dev->init(mac_dev);
- 	if (err < 0) {
- 		dev_err(dev, "mac_dev->init() =3D %d\n", err);
--		of_node_put(mac_dev->phy_node);
--		goto _return_of_get_parent;
-+		goto _put_phy_node;
- 	}
-
- 	/* pause frame autonegotiation enabled */
-@@ -866,10 +856,22 @@ static int mac_probe(struct platform_device *_of_dev=
-)
-
- 	goto _return;
-
-+_put_phy_node:
-+	of_node_put(mac_dev->phy_node);
-+	goto _return_of_get_parent;
-+
-+_e_inval_put_node:
-+	err =3D -EINVAL;
-+	goto _return_of_node_put;
-+
-+_e_inval_put_parent_device:
-+	err =3D -EINVAL;
- _put_parent_device:
- 	put_device(&of_dev->dev);
- 	goto _return_of_get_parent;
-
-+_e_inval_put_device:
-+	err =3D -EINVAL;
- _put_device:
- 	put_device(&of_dev->dev);
- _return_of_node_put:
-=2D-
-2.24.0
-
+>  drivers/mtd/spi-nor/spi-nor.c | 140 +++++++++++++++---------------------------
+>  include/linux/mtd/spi-nor.h   |   3 -
+>  2 files changed, 50 insertions(+), 93 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index d696334f25f0..06aac894ee6d 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2185,74 +2185,6 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>  	return 0;
+>  }
+>  
+> -/**
+> - * spi_nor_clear_sr_bp() - clear the Status Register Block Protection bits.
+> - * @nor:        pointer to a 'struct spi_nor'
+> - *
+> - * Read-modify-write function that clears the Block Protection bits from the
+> - * Status Register without affecting other bits.
+> - *
+> - * Return: 0 on success, -errno otherwise.
+> - */
+> -static int spi_nor_clear_sr_bp(struct spi_nor *nor)
+> -{
+> -	int ret;
+> -	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+> -
+> -	ret = spi_nor_read_sr(nor, nor->bouncebuf);
+> -	if (ret)
+> -		return ret;
+> -
+> -	nor->bouncebuf[0] &= ~mask;
+> -
+> -	return spi_nor_write_sr(nor, nor->bouncebuf, 1);
+> -}
+> -
+> -/**
+> - * spi_nor_spansion_clear_sr_bp() - clear the Status Register Block Protection
+> - * bits on spansion flashes.
+> - * @nor:        pointer to a 'struct spi_nor'
+> - *
+> - * Read-modify-write function that clears the Block Protection bits from the
+> - * Status Register without affecting other bits. The function is tightly
+> - * coupled with the spansion_read_cr_quad_enable() function. Both assume that
+> - * the Write Register with 16 bits, together with the Read Configuration
+> - * Register (35h) instructions are supported.
+> - *
+> - * Return: 0 on success, -errno otherwise.
+> - */
+> -static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
+> -{
+> -	int ret;
+> -	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+> -	u8 *sr_cr =  nor->bouncebuf;
+> -
+> -	/* Check current Quad Enable bit value. */
+> -	ret = spi_nor_read_cr(nor, &sr_cr[1]);
+> -	if (ret)
+> -		return ret;
+> -
+> -	/*
+> -	 * When the configuration register Quad Enable bit is one, only the
+> -	 * Write Status (01h) command with two data bytes may be used.
+> -	 */
+> -	if (sr_cr[1] & CR_QUAD_EN_SPAN) {
+> -		ret = spi_nor_read_sr(nor, sr_cr);
+> -		if (ret)
+> -			return ret;
+> -
+> -		sr_cr[0] &= ~mask;
+> -
+> -		return spi_nor_write_sr(nor, sr_cr, 2);
+> -	}
+> -
+> -	/*
+> -	 * If the Quad Enable bit is zero, use the Write Status (01h) command
+> -	 * with one data byte.
+> -	 */
+> -	return spi_nor_clear_sr_bp(nor);
+> -}
+> -
+>  /* Used when the "_ext_id" is two bytes at most */
+>  #define INFO(_jedec_id, _ext_id, _sector_size, _n_sectors, _flags)	\
+>  		.id = {							\
+> @@ -4634,12 +4566,27 @@ static int spi_nor_setup(struct spi_nor *nor,
+>  	return nor->params.setup(nor, hwcaps);
+>  }
+>  
+> +static void atmel_set_default_init(struct spi_nor *nor)
+> +{
+> +	nor->flags |= SNOR_F_HAS_LOCK;
+> +}
+> +
+> +static void intel_set_default_init(struct spi_nor *nor)
+> +{
+> +	nor->flags |= SNOR_F_HAS_LOCK;
+> +}
+> +
+>  static void macronix_set_default_init(struct spi_nor *nor)
+>  {
+>  	nor->params.quad_enable = macronix_quad_enable;
+>  	nor->params.set_4byte = macronix_set_4byte;
+>  }
+>  
+> +static void sst_set_default_init(struct spi_nor *nor)
+> +{
+> +	nor->flags |= SNOR_F_HAS_LOCK;
+> +}
+> +
+>  static void st_micron_set_default_init(struct spi_nor *nor)
+>  {
+>  	nor->flags |= SNOR_F_HAS_LOCK;
+> @@ -4661,6 +4608,14 @@ static void spi_nor_manufacturer_init_params(struct spi_nor *nor)
+>  {
+>  	/* Init flash parameters based on MFR */
+>  	switch (JEDEC_MFR(nor->info)) {
+> +	case SNOR_MFR_ATMEL:
+> +		atmel_set_default_init(nor);
+> +		break;
+> +
+> +	case SNOR_MFR_INTEL:
+> +		intel_set_default_init(nor);
+> +		break;
+> +
+>  	case SNOR_MFR_MACRONIX:
+>  		macronix_set_default_init(nor);
+>  		break;
+> @@ -4670,6 +4625,10 @@ static void spi_nor_manufacturer_init_params(struct spi_nor *nor)
+>  		st_micron_set_default_init(nor);
+>  		break;
+>  
+> +	case SNOR_MFR_SST:
+> +		sst_set_default_init(nor);
+> +		break;
+> +
+>  	case SNOR_MFR_WINBOND:
+>  		winbond_set_default_init(nor);
+>  		break;
+> @@ -4930,21 +4889,26 @@ static int spi_nor_quad_enable(struct spi_nor *nor)
+>  	return nor->params.quad_enable(nor);
+>  }
+>  
+> -static int spi_nor_init(struct spi_nor *nor)
+> +/**
+> + * spi_nor_unlock_all() - Unlocks the entire flash memory array.
+> + * @nor:	pointer to a 'struct spi_nor'.
+> + *
+> + * Some SPI NOR flashes are write protected by default after a power-on reset
+> + * cycle, in order to avoid inadvertent writes during power-up. Backward
+> + * compatibility imposes to unlock the entire flash memory array at power-up
+> + * by default.
+> + */
+> +static int spi_nor_unlock_all(struct spi_nor *nor)
+>  {
+> -	int err;
+> +	if (nor->flags & SNOR_F_HAS_LOCK)
+> +		return spi_nor_unlock(&nor->mtd, 0, nor->params.size);
+>  
+> -	if (nor->clear_sr_bp) {
+> -		if (nor->params.quad_enable == spansion_read_cr_quad_enable)
+> -			nor->clear_sr_bp = spi_nor_spansion_clear_sr_bp;
+> +	return 0;
+> +}
+>  
+> -		err = nor->clear_sr_bp(nor);
+> -		if (err) {
+> -			dev_dbg(nor->dev,
+> -				"fail to clear block protection bits\n");
+> -			return err;
+> -		}
+> -	}
+> +static int spi_nor_init(struct spi_nor *nor)
+> +{
+> +	int err;
+>  
+>  	err = spi_nor_quad_enable(nor);
+>  	if (err) {
+> @@ -4952,6 +4916,12 @@ static int spi_nor_init(struct spi_nor *nor)
+>  		return err;
+>  	}
+>  
+> +	err = spi_nor_unlock_all(nor);
+> +	if (err) {
+> +		dev_dbg(nor->dev, "Failed to unlock the entire flash memory array\n");
+> +		return err;
+> +	}
+> +
+>  	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES)) {
+>  		/*
+>  		 * If the RESET# pin isn't hooked up properly, or the system
+> @@ -5134,16 +5104,6 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  	if (info->flags & SPI_NOR_HAS_LOCK)
+>  		nor->flags |= SNOR_F_HAS_LOCK;
+>  
+> -	/*
+> -	 * Atmel, SST, Intel/Numonyx, and others serial NOR tend to power up
+> -	 * with the software protection bits set.
+> -	 */
+> -	if (JEDEC_MFR(nor->info) == SNOR_MFR_ATMEL ||
+> -	    JEDEC_MFR(nor->info) == SNOR_MFR_INTEL ||
+> -	    JEDEC_MFR(nor->info) == SNOR_MFR_SST ||
+> -	    nor->info->flags & SPI_NOR_HAS_LOCK)
+> -		nor->clear_sr_bp = spi_nor_clear_sr_bp;
+> -
+>  	/* Init flash parameters based on flash_info struct and SFDP */
+>  	spi_nor_init_params(nor);
+>  
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index d6ec55cc6d97..11daecc5a83d 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -581,8 +581,6 @@ struct flash_info;
+>   * @write_proto:	the SPI protocol for write operations
+>   * @reg_proto		the SPI protocol for read_reg/write_reg/erase operations
+>   * @controller_ops:	SPI NOR controller driver specific operations.
+> - * @clear_sr_bp:	[FLASH-SPECIFIC] clears the Block Protection Bits from
+> - *			the SPI NOR Status Register.
+>   * @params:		[FLASH-SPECIFIC] SPI-NOR flash parameters and settings.
+>   *                      The structure includes legacy flash parameters and
+>   *                      settings that can be overwritten by the spi_nor_fixups
+> @@ -611,7 +609,6 @@ struct spi_nor {
+>  
+>  	const struct spi_nor_controller_ops *controller_ops;
+>  
+> -	int (*clear_sr_bp)(struct spi_nor *nor);
+>  	struct spi_nor_flash_parameter params;
+>  
+>  	void *priv;
+> 
