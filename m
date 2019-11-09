@@ -2,178 +2,151 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F562C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CC5C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 04:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF6C207FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BA520865
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 04:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9p3eCxp"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MzM8LadG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfKIDrV (ORCPT
+        id S1726399AbfKID7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 22:47:21 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46879 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfKIDrV (ORCPT
+        Fri, 8 Nov 2019 22:59:04 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34839 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfKID7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 22:47:21 -0500
-Received: by mail-io1-f66.google.com with SMTP id c6so8508990ioo.13;
-        Fri, 08 Nov 2019 19:47:20 -0800 (PST)
+        Fri, 8 Nov 2019 22:59:04 -0500
+Received: by mail-qk1-f196.google.com with SMTP id i19so6943266qki.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 19:59:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h2SQyHk4OQR7AxFi3CbCcGVXnvbVftYqGAUdD/StU5o=;
-        b=E9p3eCxp1KAq1fkVs/GTTwxsf0/Mf9rqaiKFftUMTZERrn6nwEly3asPys28sFAjUM
-         gIuBZQzvWryeMWSz1DCLueQfdeSIo64XWS7zg6hIjLJLYgT/LZDRohX65EvZPQcuRTa9
-         xh0H/ZrZbPN6wSv1JhPkZnwgCJA8Z+vRPdjlHP3NtPpqoQIa18juliZxgmRF2H7m1Hw3
-         fzRC8V/5NB1NA0Z38kncafhzpIDQXiDWymwx98gjd41zzZVP/s3JCdEtFEE+dKpU8wBL
-         SvkMwwdfAMVUc/coMpKRy1F9+laPDaFusZMeOlWGv4yuYDtDV3CZ5lMqqi6ZyZojWDh7
-         xRHg==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aROgLuqmyQMn6bQ3dkRZULLKhNypYtMoFctyPNExrr8=;
+        b=MzM8LadGws9kVWYfucgsQOARwUxQ0v14BoSsETtO0VfLCIibmC6dR1dP87tTDPKUlk
+         eFNhdrVFtqdad+YCvvDGiAsYzWVzJJMTyxPB0AKHXvN9sOY31st+DBlz8wjty9Xlp2jH
+         wOPof/LWVH3M5TRHLjS+87Dj7v/tEvyjOcTesEAWFG/UKvVCZ1/WcHgPO8LHBTv1D78c
+         Sr+8omFbTtQ6peGcGzTjT8JTlgBT/X6PtdNUC9uJw9QGuAU22ygXn2BQ8peVT1OWcOP0
+         r419pcS9pTK7zB9DkuWTSQ9I+6gpnGesLFFEWKxTg7jekKuxHy/ca1BNweLNWjPBNXN2
+         fXRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h2SQyHk4OQR7AxFi3CbCcGVXnvbVftYqGAUdD/StU5o=;
-        b=ByL1oQhnos1NUPRWggM9QB+ir1lrk3UzUgGVJDrk1d0RnNFGTzoGNSnKyRJ7CaX9G6
-         m5w7iodzj47HhY29aeYIBj7GfFgvKXeSs22K/k4JjLKv3L1uPhCQkUL75OAgA2xUu8DA
-         t/Z7PvOivf+9LDspPtWLMQuBRrOodDVOl8LmkOq18Hfw9ksZfq9W98q92xo5X+Tm/kLO
-         zYOExp0PMtzn0br6b92o3d8KDLrwWftIzZDfMlX0IxCcDjgZIGjUhpH1wgiT0SY2ekBr
-         0NxD2sAKwhEz/zakZpnjuadkzkBZS8dtIIsXUVT/5iFMLaFU74hlDWndrKCvN6lrDVbx
-         j+3Q==
-X-Gm-Message-State: APjAAAXPgcVWDZuMuvRgBTX1ZZDM8wAEQr7DOWalg18/hsAMPlfTKIpx
-        P/fsL4CwEb6z90sdiDdcl9alrKF1Rcp+v3aZVweCyQ==
-X-Google-Smtp-Source: APXvYqy+aE7LG6DaM3sK816nVMFNM+1dgmSai5gO5QCnC92d4dMrDobegUoGx6PPNR1WC4EE7RxmeCpZO1flaSpz0Do=
-X-Received: by 2002:a02:6a24:: with SMTP id l36mr14717803jac.46.1573271239729;
- Fri, 08 Nov 2019 19:47:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20191108212840.13586-1-stephan@gerhold.net> <CAOCk7No7r6Frdu8jSbdBCroXeF+HY=kqEQoJnK0HbkyjLse5Rg@mail.gmail.com>
- <20191108234654.GA997@gerhold.net>
-In-Reply-To: <20191108234654.GA997@gerhold.net>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 8 Nov 2019 20:47:08 -0700
-Message-ID: <CAOCk7NqvidvNrYKm-iCw6g6wM9NOaa17nqq75W1nQdPBDhijig@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH] drm/msm/dsi: Delay drm_panel_enable() until dsi_mgr_bridge_enable()
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Jasper Korten <jja2000@gmail.com>, David Airlie <airlied@linux.ie>,
-        Sean Paul <sean@poorly.run>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Hai Li <hali@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aROgLuqmyQMn6bQ3dkRZULLKhNypYtMoFctyPNExrr8=;
+        b=JPEL4wuWDW87YyL2KOuKJBu2i37QgLwlt44tGN8XoahTEMT3exSoghunfFk2vv19EO
+         cbl6vBtca7jvDc6bINDiSXnR0MSAfCFFOM9RvfJmQdM6h5wkgwnZ5aV0y+nfBL8yErSt
+         sWaui9dPU+7EhsUADUFv0RW9fps5Bahyeu3eM6w0kT1XycDrtgZ199X0+xgSKG90bjFh
+         Dua/4OLJZAeR+asVDOiy2N/GGKh+GKpW0Ktjo2CXDQB3gTSSBxzhObKPQNGEFYlU9ddN
+         wJrc1MV/w3ZiyZbyL6wVLMB5T7PIRK3wmKvFsH96yyY7S+wGdn/lDqfvpmecwQSoE5Jn
+         p2GA==
+X-Gm-Message-State: APjAAAU5YHynhnjlbOu9ZQYn5hzDb4/+64io9MpJT3dKgfNqgo661Fi7
+        u3csRxmV2mz8olmihek1s4gyVw==
+X-Google-Smtp-Source: APXvYqyJm/ueJQ86ESZKiEi2O0iWVfky5nDFQUUmL2RhwXagjqCuRNkA+VM2ExLU3ZBV76dbCqvABg==
+X-Received: by 2002:a05:620a:a0e:: with SMTP id i14mr355330qka.3.1573271943010;
+        Fri, 08 Nov 2019 19:59:03 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x65sm4183104qkd.15.2019.11.08.19.59.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Nov 2019 19:59:02 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v2 1/1] iommu/vt-d: Add Kconfig option to enable/disable
+ scalable mode
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20191109034039.27964-1-baolu.lu@linux.intel.com>
+Date:   Fri, 8 Nov 2019 22:59:01 -0500
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, kevin.tian@intel.com,
+        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A85B5322-5DED-4E58-B3BC-4DA3783BB8A6@lca.pw>
+References: <20191109034039.27964-1-baolu.lu@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 4:47 PM Stephan Gerhold <stephan@gerhold.net> wrote:
->
-> On Fri, Nov 08, 2019 at 03:12:28PM -0700, Jeffrey Hugo wrote:
-> > On Fri, Nov 8, 2019 at 2:29 PM Stephan Gerhold <stephan@gerhold.net> wrote:
-> > >
-> > > At the moment, the MSM DSI driver calls drm_panel_enable() rather early
-> > > from the DSI bridge pre_enable() function. At this point, the encoder
-> > > (e.g. MDP5) is not enabled, so we have not started transmitting
-> > > video data.
-> > >
-> > > However, the drm_panel_funcs documentation states that enable()
-> > > should be called on the panel *after* video data is being transmitted:
-> > >
-> > >   The .prepare() function is typically called before the display controller
-> > >   starts to transmit video data. [...] After the display controller has
-> > >   started transmitting video data, it's safe to call the .enable() function.
-> > >   This will typically enable the backlight to make the image on screen visible.
-> > >
-> > > Calling drm_panel_enable() too early causes problems for some panels:
-> > > The TFT LCD panel used in the Samsung Galaxy Tab A 9.7 (2015) (APQ8016)
-> > > uses the MIPI_DCS_SET_DISPLAY_BRIGHTNESS command to control
-> > > backlight/brightness of the screen. The enable sequence is therefore:
-> > >
-> > >   drm_panel_enable()
-> > >     drm_panel_funcs.enable():
-> > >       backlight_enable()
-> > >         backlight_ops.update_status():
-> > >           mipi_dsi_dcs_set_display_brightness(dsi, bl->props.brightness);
-> > >
-> > > The panel seems to silently ignore the MIPI_DCS_SET_DISPLAY_BRIGHTNESS
-> > > command if it is sent too early. This prevents setting the initial brightness,
-> > > causing the display to be enabled with minimum brightness instead.
-> > > Adding various delays in the panel initialization code does not result
-> > > in any difference.
-> > >
-> > > On the other hand, moving drm_panel_enable() to dsi_mgr_bridge_enable()
-> > > fixes the problem, indicating that the panel requires the video stream
-> > > to be active before the brightness command is accepted.
-> > >
-> > > Therefore: Move drm_panel_enable() to dsi_mgr_bridge_enable() to
-> > > delay calling it until video data is being transmitted.
-> > >
-> > > Move drm_panel_disable() to dsi_mgr_bridge_disable() for similar reasons.
-> > > (This is not strictly required for the panel affected above...)
-> > >
-> > > Tested-by: Jasper Korten <jja2000@gmail.com>
-> > > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > > ---
-> > > Since this is a core change I thought it would be better to send this
-> > > early. I believe Jasper still wants to finish some other changes before
-> > > submitting the initial device tree for the Samsung Galaxy Tab A 9.7 (2015). ;)
-> > >
-> > > I also tested it on msm8916-samsung-a5u-eur, its display is working fine
-> > > with or without this patch.
-> >
-> > Nack, please.  I was curious so I threw this on the Lenovo Miix 630
-> > laptop.  I don't get a display back with this patch.  I'll try to
-> > figure out why, but currently I can't get into the machine.
->
-> Thanks for testing the patch! Let's try to figure that out...
->
-> I'm a bit confused, but this might be because I'm not very familiar with
-> the MSM8998 laptops. It does not seem to have display in mainline yet,
-> so do you have a link to all the patches you are using at the moment?
 
-The mdp5 support is there.  Some of the dependencies have dragged out.
-I'd have to make sense of my development tree as to what is relevant.
->
-> Judging from the patches I was able to find, the Lenovo Miix 630 is
-> using a DSI to eDP bridge.
-> Isn't the panel managed by the bridge driver in that case?
 
-It uses the TI SN65 bridge.
+> On Nov 8, 2019, at 10:40 PM, Lu Baolu <baolu.lu@linux.intel.com> =
+wrote:
+>=20
+> This adds Kconfig option INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+> to make it easier for distributions to enable or disable the
+> Intel IOMMU scalable mode by default during kernel build.
+>=20
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+> drivers/iommu/Kconfig       | 9 +++++++++
+> drivers/iommu/intel-iommu.c | 7 ++++++-
+> 2 files changed, 15 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index e3842eabcfdd..fbdf3fd291d9 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -242,6 +242,15 @@ config INTEL_IOMMU_FLOPPY_WA
+> 	  workaround will setup a 1:1 mapping for the first
+> 	  16MiB to make floppy (an ISA device) work.
+>=20
+> +config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+> +	prompt "Enable Intel IOMMU scalable mode by default"
+> +	depends on INTEL_IOMMU
+> +	help
+> +	  Selecting this option will enable the scalable mode if
+> +	  hardware presents the capability. If this option is not
+> +	  selected, scalable mode support could also be enabled
+> +	  by passing intel_iommu=3Dsm_on to the kernel.
 
->
-> struct msm_dsi contains:
->         /*
->          * panel/external_bridge connected to dsi bridge output, only one of the
->          * two can be valid at a time
->          */
->         struct drm_panel *panel;
->         struct drm_bridge *external_bridge;
->
-> So if you have "external_bridge" set in your case, "panel" should be NULL.
-> I have only moved code that uses msm_dsi->panel, so my patch really
-> shouldn't make any difference for you.
->
-> Am I confusing something here?
 
-I don't think panel is null in my case.  I need to trace a few things
-through to be sure.
+Maybe a sentence or two to describe what the scalable mode is in =
+layman's
+terms could be useful, so developers don=E2=80=99t need to search around =
+for the
+Kconfig selection?
 
-Taking a quick look at the datasheet for the bridge, I suspect that
-operations are occurring in the enable() phase of the bridge, that
-need to occur before video data is transmitted.  Based on your
-analysis in the commit message, I suspect these operations need to be
-moved to pre_enable().
+> +
+> config IRQ_REMAP
+> 	bool "Support for Interrupt Remapping"
+> 	depends on X86_64 && X86_IO_APIC && PCI_MSI && ACPI
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 6db6d969e31c..6051fe790c61 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -355,9 +355,14 @@ static phys_addr_t =
+intel_iommu_iova_to_phys(struct iommu_domain *domain,
+> int dmar_disabled =3D 0;
+> #else
+> int dmar_disabled =3D 1;
+> -#endif /*CONFIG_INTEL_IOMMU_DEFAULT_ON*/
+> +#endif /* CONFIG_INTEL_IOMMU_DEFAULT_ON */
+>=20
+> +#ifdef INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+> +int intel_iommu_sm =3D 1;
+> +#else
+> int intel_iommu_sm;
+> +#endif /* INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
+> +
+> int intel_iommu_enabled =3D 0;
+> EXPORT_SYMBOL_GPL(intel_iommu_enabled);
+>=20
+> --=20
+> 2.17.1
+>=20
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-I'm hoping to gather more data this weekend, which will hopefully
-identify what we need to do to move this forward without causing
-regressions.
