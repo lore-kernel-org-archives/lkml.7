@@ -2,74 +2,99 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE42BC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CA2C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5D3215EA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:03:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RCAYa6kD"
+	by mail.kernel.org (Postfix) with ESMTP id 9A3B9215EA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfKITDi (ORCPT
+        id S1726569AbfKITEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 14:03:38 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34719 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfKITDi (ORCPT
+        Sat, 9 Nov 2019 14:04:36 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47282 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfKITEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 14:03:38 -0500
-Received: by mail-il1-f194.google.com with SMTP id p6so8153479ilp.1;
-        Sat, 09 Nov 2019 11:03:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m3uHaDtX3ciBcivMZkabAXv4IXjFfi/2JONmJEnyS4M=;
-        b=RCAYa6kDMEf/AeTD8Nl6PkaEchhfOa75CoD+JNUUk5NFr32qGnt/60EF2p4d0qfHXc
-         7J2h3624bHpfa8ny+/zFhT4UDKyJ9Ns0r33h0ihLOUDd1/g2aLQjR2Ikl5NfzEV5rs9M
-         YaJtV0PnLlnNq9aM8Njk8+o5e81nr4js8o1XTRfoY22U5PagUjym+3iabkGkIhgWhlCx
-         OsiFHtAriIEsVOKZuEPDPKg5gUbq6jFRA4yqU/w1fmyVAKczKo6bPkGI4gYdmXPiUrMH
-         25QfbLt8XKOnCzXaliR0vOVPeRRQ7LzsOEg+MQ3ks1T5UmD0HCAxCtbPdGS6xinHocxa
-         n5PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m3uHaDtX3ciBcivMZkabAXv4IXjFfi/2JONmJEnyS4M=;
-        b=ce6UfIY0WIcQSDie3LRTfLLPzY9EvjgOLtTWb4Xk+w3QxzQVwpJ5fH+Mmz/nX82w1m
-         /WztH/Guz5xpQT12ZXv591K7dE5DzqOGlipyTc70yYBCY0OJvgceCkCvcY54Johw/U8c
-         q3MZ6xOz9lx3OZWBZPybPX0ED5/HqGxNEH7FxSnVLGr2ivdNG6CwSLtQPdDYxMrzgVtP
-         497XR36/tFOJKX87AFEBrQF/wNd4UIXO//jCFKG/tuvWtJfZ8NiO90ED5E8PLAA/57XK
-         oaTZAHC0RiG3CNjVnU2VbL9WVG+craAvDIxJHREVeGPeytBH3Bw8pv2sNaF1lxqgBbwb
-         BcRw==
-X-Gm-Message-State: APjAAAWscmzdovbgniHKgEV6A3E4TbwIgYrsbtEcnwUCAmnzawm/kqiA
-        Yd/4Wdv0+D25NMoW9Mzzg+OYupV/mWg8kwScL5s=
-X-Google-Smtp-Source: APXvYqwLdQBgG/eiU+syj+zmlngIAnifD4FCbVu6rau6qyJbKLCYEZtAQ3RATTBj6ml3CSIhCOohWn5rvOvE/NAdcJI=
-X-Received: by 2002:a92:c888:: with SMTP id w8mr20267021ilo.153.1573326217272;
- Sat, 09 Nov 2019 11:03:37 -0800 (PST)
+        Sat, 9 Nov 2019 14:04:36 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1E1B928E979;
+        Sat,  9 Nov 2019 19:04:34 +0000 (GMT)
+Date:   Sat, 9 Nov 2019 20:04:30 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/5] media: hantro: Use output buffer width and
+ height for H264 decoding
+Message-ID: <20191109200430.30367d27@collabora.com>
+In-Reply-To: <HE1PR06MB4011E69C56DA82EAB9ECEAEEAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB4011EDD5F2686A05BC35F61CAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
+        <20191106223408.2176-1-jonas@kwiboo.se>
+        <HE1PR06MB4011E69C56DA82EAB9ECEAEEAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-4-arnd@arndb.de>
-In-Reply-To: <20191108211323.1806194-4-arnd@arndb.de>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Sat, 9 Nov 2019 11:03:25 -0800
-Message-ID: <CABeXuvpgQA8SgW-r+jB70=yuV5hes0r0q7idX5wYzjEL=jTjfA@mail.gmail.com>
-Subject: Re: [PATCH 13/23] y2038: socket: remove timespec reference in timestamping
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Network Devel Mailing List <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Deepa Dinamani <deepa.kernel@gmail.com>
+On Wed, 6 Nov 2019 22:34:22 +0000
+Jonas Karlman <jonas@kwiboo.se> wrote:
+
+> Calculations for motion vector buffer offset is based on width and height
+> from the configured output format, lets use the same values for macroblock
+> width and height hw regs.
+
+Still don't see what was the problem with
+sps->pic_{width,height}_in_mbs_minus1, but okay.
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+> 
+> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+
+Is this really fixing a bug? Do you have cases where
+->pic_{width,height}_in_mbs_minus1 and
+MB_{WIDTH,HEIGHT}(src_fmt.{width,height}) do not match?
+
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+> Changes in v3:
+>   - change to use src_fmt instead of dst_fmt (Boris)
+> Changes in v2:
+>   - new patch split from "media: hantro: Fix H264 motion vector buffer offset"
+> ---
+>  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> index 30d977c3d529..27d40d8d3728 100644
+> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> @@ -51,8 +51,8 @@ static void set_params(struct hantro_ctx *ctx)
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL0);
+>  
+>  	/* Decoder control register 1. */
+> -	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(sps->pic_width_in_mbs_minus1 + 1) |
+> -	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(sps->pic_height_in_map_units_minus1 + 1) |
+> +	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(MB_WIDTH(ctx->src_fmt.width)) |
+> +	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(MB_HEIGHT(ctx->src_fmt.height)) |
+>  	      G1_REG_DEC_CTRL1_REF_FRAMES(sps->max_num_ref_frames);
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL1);
+>  
+
