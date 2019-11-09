@@ -2,130 +2,210 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F455C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2950DC17443
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360D221924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573300526;
-	bh=z1soBy9NAqy5/dz3HxjryiA+YZGAJ0h1B0pagTmu464=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=isEUUfD6U+1yQ5uQx+tuI5ZtWEZvE9PZPDV9ZLeqkI25JUbFDHlH/ZnDY5njlXxWA
-	 DaGd06+Afjz0H1qVUhgVEVQLmHP+jR07l9pJxxWM8UQlu8u0ImPbutFjR9xgC802ss
-	 zroFHeIx31Zz/qX0EBXtiRnR7N/+be8GL/GnyX3E=
+	by mail.kernel.org (Postfix) with ESMTP id EA26F21882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="CYwDY/It"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfKILzZ (ORCPT
+        id S1726399AbfKIMCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 06:55:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbfKILzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 06:55:25 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A4C5207FF;
-        Sat,  9 Nov 2019 11:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573300524;
-        bh=z1soBy9NAqy5/dz3HxjryiA+YZGAJ0h1B0pagTmu464=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uhhq63ibHSgSl5sZkm+gJvHyv1VcRofdyHSqUTdn24ZNAAgQODeVpS/TeJENLcRAl
-         UtjcoLZZ8ZWgnCn8u2ZJcCvwM8GpjIL0cOHsIHVU2XMXEPIfvm2KDQpHYFwYbBQJqj
-         L7Vf81LSVn+HFxcNaNMgTJPWgzWkyjPARSjxJVnE=
-Date:   Sat, 9 Nov 2019 11:55:19 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexander Stein <alexander.stein@systec-electronic.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] iio: core: Fix fractional format generation
-Message-ID: <20191109115519.14ba0bdc@archlinux>
-In-Reply-To: <4116142.9TFg0imz4M@ws-140106>
-References: <20190822060607.25339-1-alexander.stein@systec-electronic.com>
-        <4116142.9TFg0imz4M@ws-140106>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 9 Nov 2019 07:02:13 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:28101 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfKIMCM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 07:02:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573300928;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=OXuWTUa9HyzI1fpeQhlGNaQc3nmqlPVWS79Yvpaw+rg=;
+        b=CYwDY/ItmdF3eb00ecsNSUjE8uweOtFMzymjBPyyxLRM7mhhxzzZLvWQuxRlqJHk7R
+        YnrvO2+YObFVVCEcgrHS76IcYrObb8vT2aLMb3WNZz7ahnTTlZnXaD5IKADjb/rXVvRT
+        +CXXGTYtI+jMHiZM13aoohdaNvrwcrRqAvMb22NVaH+cSJ5IzGWMUf2N75VuiQAm6LoG
+        nFahe7lQ34C/NYvtDiphUZHenGF5v6OU3A8EL9lI4T4EPWmB6cHeb1MX9AdjhY4RZBkV
+        eP4gYO+07dgY4kFQbPrLS23lzYNVgySbY0QxGmymjKyhOgY/tcP1RNorfr2RVVyc0ZmO
+        jfEQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJL0fVgscA="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vA9C22uwK
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sat, 9 Nov 2019 13:02:02 +0100 (CET)
+Date:   Sat, 9 Nov 2019 13:01:56 +0100
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Jasper Korten <jja2000@gmail.com>, David Airlie <airlied@linux.ie>,
+        Sean Paul <sean@poorly.run>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Hai Li <hali@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH] drm/msm/dsi: Delay drm_panel_enable() until
+ dsi_mgr_bridge_enable()
+Message-ID: <20191109120156.GA981@gerhold.net>
+References: <20191108212840.13586-1-stephan@gerhold.net>
+ <CAOCk7No7r6Frdu8jSbdBCroXeF+HY=kqEQoJnK0HbkyjLse5Rg@mail.gmail.com>
+ <20191108234654.GA997@gerhold.net>
+ <CAOCk7NqvidvNrYKm-iCw6g6wM9NOaa17nqq75W1nQdPBDhijig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NqvidvNrYKm-iCw6g6wM9NOaa17nqq75W1nQdPBDhijig@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Nov 2019 14:54:52 +0100
-Alexander Stein <alexander.stein@systec-electronic.com> wrote:
-
-> Gentle ping
+On Fri, Nov 08, 2019 at 08:47:08PM -0700, Jeffrey Hugo wrote:
+> On Fri, Nov 8, 2019 at 4:47 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> >
+> > On Fri, Nov 08, 2019 at 03:12:28PM -0700, Jeffrey Hugo wrote:
+> > > On Fri, Nov 8, 2019 at 2:29 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> > > >
+> > > > At the moment, the MSM DSI driver calls drm_panel_enable() rather early
+> > > > from the DSI bridge pre_enable() function. At this point, the encoder
+> > > > (e.g. MDP5) is not enabled, so we have not started transmitting
+> > > > video data.
+> > > >
+> > > > However, the drm_panel_funcs documentation states that enable()
+> > > > should be called on the panel *after* video data is being transmitted:
+> > > >
+> > > >   The .prepare() function is typically called before the display controller
+> > > >   starts to transmit video data. [...] After the display controller has
+> > > >   started transmitting video data, it's safe to call the .enable() function.
+> > > >   This will typically enable the backlight to make the image on screen visible.
+> > > >
+> > > > Calling drm_panel_enable() too early causes problems for some panels:
+> > > > The TFT LCD panel used in the Samsung Galaxy Tab A 9.7 (2015) (APQ8016)
+> > > > uses the MIPI_DCS_SET_DISPLAY_BRIGHTNESS command to control
+> > > > backlight/brightness of the screen. The enable sequence is therefore:
+> > > >
+> > > >   drm_panel_enable()
+> > > >     drm_panel_funcs.enable():
+> > > >       backlight_enable()
+> > > >         backlight_ops.update_status():
+> > > >           mipi_dsi_dcs_set_display_brightness(dsi, bl->props.brightness);
+> > > >
+> > > > The panel seems to silently ignore the MIPI_DCS_SET_DISPLAY_BRIGHTNESS
+> > > > command if it is sent too early. This prevents setting the initial brightness,
+> > > > causing the display to be enabled with minimum brightness instead.
+> > > > Adding various delays in the panel initialization code does not result
+> > > > in any difference.
+> > > >
+> > > > On the other hand, moving drm_panel_enable() to dsi_mgr_bridge_enable()
+> > > > fixes the problem, indicating that the panel requires the video stream
+> > > > to be active before the brightness command is accepted.
+> > > >
+> > > > Therefore: Move drm_panel_enable() to dsi_mgr_bridge_enable() to
+> > > > delay calling it until video data is being transmitted.
+> > > >
+> > > > Move drm_panel_disable() to dsi_mgr_bridge_disable() for similar reasons.
+> > > > (This is not strictly required for the panel affected above...)
+> > > >
+> > > > Tested-by: Jasper Korten <jja2000@gmail.com>
+> > > > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> > > > ---
+> > > > Since this is a core change I thought it would be better to send this
+> > > > early. I believe Jasper still wants to finish some other changes before
+> > > > submitting the initial device tree for the Samsung Galaxy Tab A 9.7 (2015). ;)
+> > > >
+> > > > I also tested it on msm8916-samsung-a5u-eur, its display is working fine
+> > > > with or without this patch.
+> > >
+> > > Nack, please.  I was curious so I threw this on the Lenovo Miix 630
+> > > laptop.  I don't get a display back with this patch.  I'll try to
+> > > figure out why, but currently I can't get into the machine.
+> >
+> > Thanks for testing the patch! Let's try to figure that out...
+> >
+> > I'm a bit confused, but this might be because I'm not very familiar with
+> > the MSM8998 laptops. It does not seem to have display in mainline yet,
+> > so do you have a link to all the patches you are using at the moment?
 > 
-> On Thursday, August 22, 2019, 8:06:07 AM CET Alexander Stein wrote:
-> > In case the result is -0.3252 tmp0 is 0 after the div_s64_rem, so tmp0 is
-> > non-negative which results in an output of 0.3252.
-> > Fix this by explicitly handling the negative sign ourselves.
-> > 
-> > Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
+> The mdp5 support is there.  Some of the dependencies have dragged out.
+> I'd have to make sense of my development tree as to what is relevant.
 
-Apologies. I'd missed this v2 entirely for some reason.
+A dump of all the patches (whether still relevant or not) would be
+helpful too. Actually I was mostly looking for the device tree part to
+see which components are involved.
 
-It looks correct to me, but as Lars had inputs on v1...
-
-Lars, could you take a quick look at this v2 and give an ack if
-you are happy with it.
-
-Thanks,
-
-Jonathan
-
-> > ---
-> > Changes in v2:
-> > * Support vals[0] >= and vals[1] < 0 in IIO_VAL_FRACTIONAL
-> > * Note: IIO_VAL_FRACTIONAL is untested, as I lack hardware
-> > * Note2: Currently IIO_VAL_FRACTIONAL is only called with vals[1] from
-> >          in-kernel drivers AFAICS
-> > 
-> >  drivers/iio/industrialio-core.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> > index 245b5844028d..247338142c87 100644
-> > --- a/drivers/iio/industrialio-core.c
-> > +++ b/drivers/iio/industrialio-core.c
-> > @@ -568,6 +568,7 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
-> >  {
-> >  	unsigned long long tmp;
-> >  	int tmp0, tmp1;
-> > +	char *sign;
-> >  	bool scale_db = false;
-> >  
-> >  	switch (type) {
-> > @@ -593,11 +594,17 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
-> >  		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
-> >  		tmp1 = vals[1];
-> >  		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
-> > -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
-> > +		if (vals[1] < 0) {
-> > +			sign = vals[0] >= 0 ? "-" : "";
-> > +		} else {
-> > +			sign = vals[0] < 0 ? "-" : "";
-> > +		}
-> > +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
-> >  	case IIO_VAL_FRACTIONAL_LOG2:
-> > +		sign = vals[0] < 0 ? "-" : "";
-> >  		tmp = shift_right((s64)vals[0] * 1000000000LL, vals[1]);
-> >  		tmp0 = (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
-> > -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
-> > +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
-> >  	case IIO_VAL_INT_MULTIPLE:
-> >  	{
-> >  		int i;
-> >   
+> >
+> > Judging from the patches I was able to find, the Lenovo Miix 630 is
+> > using a DSI to eDP bridge.
+> > Isn't the panel managed by the bridge driver in that case?
 > 
+> It uses the TI SN65 bridge.
 > 
 
+It is covered by the ti-sn65dsi86 driver I assume?
+
+> >
+> > struct msm_dsi contains:
+> >         /*
+> >          * panel/external_bridge connected to dsi bridge output, only one of the
+> >          * two can be valid at a time
+> >          */
+> >         struct drm_panel *panel;
+> >         struct drm_bridge *external_bridge;
+> >
+> > So if you have "external_bridge" set in your case, "panel" should be NULL.
+> > I have only moved code that uses msm_dsi->panel, so my patch really
+> > shouldn't make any difference for you.
+> >
+> > Am I confusing something here?
+> 
+> I don't think panel is null in my case.  I need to trace a few things
+> through to be sure.
+> 
+
+ti-sn65dsi86.c contains:
+
+static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+{
+	/* ... */
+	drm_panel_enable(pdata->panel);
+}
+
+static void ti_sn_bridge_pre_enable(struct drm_bridge *bridge)
+{
+	/* ... */
+	drm_panel_prepare(pdata->panel);
+}
+
+So it does indeed manage the panel for you. If msm_dsi->panel is not
+NULL for you it would mean that your panel is managed by two drivers
+at the same time.
+
+(Also note how it calls drm_panel_enable() in enable() instead of
+pre_enable(). This is exactly the change my patch does for the case
+when the panel is managed by the MSM driver...)
+
+> Taking a quick look at the datasheet for the bridge, I suspect that
+> operations are occurring in the enable() phase of the bridge, that
+> need to occur before video data is transmitted.  Based on your
+> analysis in the commit message, I suspect these operations need to be
+> moved to pre_enable().
+> 
+
+I'm still confused how my patch makes any difference for you.
+The enable sequence should be exactly the same as before.
+
+> I'm hoping to gather more data this weekend, which will hopefully
+> identify what we need to do to move this forward without causing
+> regressions.
+
+Looking forward to it, thanks!
