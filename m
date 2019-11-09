@@ -6,81 +6,151 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB36C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9BDC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD2B21882
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2776121848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfKIJhk (ORCPT
+        id S1726320AbfKIJqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 04:37:40 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6173 "EHLO huawei.com"
+        Sat, 9 Nov 2019 04:46:43 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5755 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726143AbfKIJhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 04:37:40 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 90CE4619E8C40F4C68F4;
-        Sat,  9 Nov 2019 17:37:37 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 9 Nov 2019
- 17:37:27 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <Bhawanpreet.Lakha@amd.com>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/amd/display: remove set but not used variable 'ds_port'
-Date:   Sat, 9 Nov 2019 17:37:25 +0800
-Message-ID: <20191109093725.42364-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726143AbfKIJqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 04:46:42 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 39E474CDAB06F0AC8E99;
+        Sat,  9 Nov 2019 17:46:39 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 9 Nov 2019
+ 17:46:28 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
+        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>
+CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+Subject: [PATCH] KVM: APIC: add helper func to remove duplicate code in kvm_pv_send_ipi
+Date:   Sat, 9 Nov 2019 17:46:49 +0800
+Message-ID: <1573292809-18181-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
+X-Originating-IP: [10.175.105.18]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c: In function dp_wa_power_up_0010FA:
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c:2320:35: warning:
- variable ds_port set but not used [-Wunused-but-set-variable]
+There are some duplicate code in kvm_pv_send_ipi when deal with ipi
+bitmap. Add helper func to remove it, and eliminate odd out label,
+get rid of unnecessary kvm_lapic_irq field init and so on.
 
-It is never used, so can be removed.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/kvm/lapic.c | 65 ++++++++++++++++++++------------------------
+ 1 file changed, 29 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 65de32f..b814b74 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2910,7 +2910,6 @@ static void dp_wa_power_up_0010FA(struct dc_link *link, uint8_t *dpcd_data,
- 		int length)
- {
- 	int retry = 0;
--	union dp_downstream_port_present ds_port = { 0 };
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index b29d00b661ff..2f8f10103f5f 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -557,60 +557,53 @@ int kvm_apic_set_irq(struct kvm_vcpu *vcpu, struct kvm_lapic_irq *irq,
+ 			irq->level, irq->trig_mode, dest_map);
+ }
  
- 	if (!link->dpcd_caps.dpcd_rev.raw) {
- 		do {
-@@ -2923,9 +2922,6 @@ static void dp_wa_power_up_0010FA(struct dc_link *link, uint8_t *dpcd_data,
- 		} while (retry++ < 4 && !link->dpcd_caps.dpcd_rev.raw);
++static int __pv_send_ipi(unsigned long *ipi_bitmap, struct kvm_apic_map *map,
++			 struct kvm_lapic_irq *irq, u32 min)
++{
++	int i, count = 0;
++	struct kvm_vcpu *vcpu;
++
++	if (min > map->max_apic_id)
++		return 0;
++
++	for_each_set_bit(i, ipi_bitmap,
++		min((u32)BITS_PER_LONG, (map->max_apic_id - min + 1))) {
++		if (map->phys_map[min + i]) {
++			vcpu = map->phys_map[min + i]->vcpu;
++			count += kvm_apic_set_irq(vcpu, irq, NULL);
++		}
++	}
++
++	return count;
++}
++
+ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
+ 		    unsigned long ipi_bitmap_high, u32 min,
+ 		    unsigned long icr, int op_64_bit)
+ {
+-	int i;
+ 	struct kvm_apic_map *map;
+-	struct kvm_vcpu *vcpu;
+ 	struct kvm_lapic_irq irq = {0};
+ 	int cluster_size = op_64_bit ? 64 : 32;
+-	int count = 0;
++	int count;
++
++	if (icr & (APIC_DEST_MASK | APIC_SHORT_MASK))
++		return -KVM_EINVAL;
+ 
+ 	irq.vector = icr & APIC_VECTOR_MASK;
+ 	irq.delivery_mode = icr & APIC_MODE_MASK;
+ 	irq.level = (icr & APIC_INT_ASSERT) != 0;
+ 	irq.trig_mode = icr & APIC_INT_LEVELTRIG;
+ 
+-	if (icr & APIC_DEST_MASK)
+-		return -KVM_EINVAL;
+-	if (icr & APIC_SHORT_MASK)
+-		return -KVM_EINVAL;
+-
+ 	rcu_read_lock();
+ 	map = rcu_dereference(kvm->arch.apic_map);
+ 
+-	if (unlikely(!map)) {
+-		count = -EOPNOTSUPP;
+-		goto out;
++	count = -EOPNOTSUPP;
++	if (likely(map)) {
++		count = __pv_send_ipi(&ipi_bitmap_low, map, &irq, min);
++		min += cluster_size;
++		count += __pv_send_ipi(&ipi_bitmap_high, map, &irq, min);
  	}
  
--	ds_port.byte = dpcd_data[DP_DOWNSTREAMPORT_PRESENT -
--				 DP_DPCD_REV];
+-	if (min > map->max_apic_id)
+-		goto out;
+-	/* Bits above cluster_size are masked in the caller.  */
+-	for_each_set_bit(i, &ipi_bitmap_low,
+-		min((u32)BITS_PER_LONG, (map->max_apic_id - min + 1))) {
+-		if (map->phys_map[min + i]) {
+-			vcpu = map->phys_map[min + i]->vcpu;
+-			count += kvm_apic_set_irq(vcpu, &irq, NULL);
+-		}
+-	}
 -
- 	if (link->dpcd_caps.dongle_type == DISPLAY_DONGLE_DP_VGA_CONVERTER) {
- 		switch (link->dpcd_caps.branch_dev_id) {
- 		/* 0010FA active dongles (DP-VGA, DP-DLDVI converters) power down
+-	min += cluster_size;
+-
+-	if (min > map->max_apic_id)
+-		goto out;
+-
+-	for_each_set_bit(i, &ipi_bitmap_high,
+-		min((u32)BITS_PER_LONG, (map->max_apic_id - min + 1))) {
+-		if (map->phys_map[min + i]) {
+-			vcpu = map->phys_map[min + i]->vcpu;
+-			count += kvm_apic_set_irq(vcpu, &irq, NULL);
+-		}
+-	}
+-
+-out:
+ 	rcu_read_unlock();
+ 	return count;
+ }
 -- 
-2.7.4
-
+2.19.1
 
