@@ -2,104 +2,141 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED52C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2B1C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A613F20865
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F8C20650
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:31:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Sx+HneNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfKIDTj (ORCPT
+        id S1726373AbfKIDbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 22:19:39 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46000 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726019AbfKIDTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 22:19:39 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ABAD68DB13AE377A856F;
-        Sat,  9 Nov 2019 11:19:36 +0800 (CST)
-Received: from [127.0.0.1] (10.65.95.32) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 9 Nov 2019
- 11:19:30 +0800
-Subject: Re: [QUESTION]perf stat: comment of miss ratio
-To:     Andi Kleen <ak@linux.intel.com>
-References: <F57F094935A66448B135517D3F6EA397F35063@DGGEMA504-MBS.china.huawei.com>
- <20191109024754.GA573472@tassilo.jf.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        huangdaode <huangdaode@hisilicon.com>,
-        linyunsheng <linyunsheng@huawei.com>,
-        John Garry <john.garry@huawei.com>
-From:   Qi Liu <liuqi115@hisilicon.com>
-Message-ID: <b7e93eb7-2ef9-1448-c4ca-7495bc934b32@hisilicon.com>
-Date:   Sat, 9 Nov 2019 11:19:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Fri, 8 Nov 2019 22:31:49 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:35601 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfKIDbs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 22:31:48 -0500
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xA93VZJr005710;
+        Sat, 9 Nov 2019 12:31:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xA93VZJr005710
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573270296;
+        bh=6OHje3sJ3IH4vfH9hJBC9ocohmUm5nws/CQJC/szrJQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Sx+HneNN8cr5CBKlq9ynCzBxH8/Mo1voqRskEijABmx2mUDJM3GEUf8RqIbrCSwcX
+         LuG8PlfCEQWsPXk7isXAxwea9nyV3hgP079wAoDzZ/tVArTyQ1hZj/Wgj4Jcx4CcOI
+         Vbs/2Be3VF2fqdwlnyRYreiKgS4VGuFa9QYeKVj2UHX76aPuHp0I/FVF/CJ+JcUOo9
+         DYBNk+Cwkn0gCPfok+ZHdxC+oxVpt4sf9vDPT5/yWw59e44DXFwPu9w/iI2hmRh4w/
+         4HibnS6QxbJjXYpx1s2Z3IZCS/cY0QdyC/zh3e5JEbQcZ3RTj8GStiL3RokZz9FK44
+         7+bGB6s2Pvv6Q==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id k19so1979609vke.10;
+        Fri, 08 Nov 2019 19:31:36 -0800 (PST)
+X-Gm-Message-State: APjAAAUjgLUpWOx5dcbWQZchYLRF6ohSYw6vXD1QtsfJ6YQpaQFP55jo
+        zcr7lYyAKDVVpqtOPBLD57N6yTKR3N2o+r1zNe4=
+X-Google-Smtp-Source: APXvYqwn1k0Py2w8hdwvLc/AH0HjvRnF/eQ3fqI+Dv0e7f7OFpcw5uDcnzNWwC/AykME9yoPfKDpIJ4V0MmplWRv1Sc=
+X-Received: by 2002:a1f:7387:: with SMTP id o129mr10392097vkc.73.1573270294578;
+ Fri, 08 Nov 2019 19:31:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191109024754.GA573472@tassilo.jf.intel.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.95.32]
-X-CFilter-Loop: Reflected
+References: <20191104230001.27774-1-aarcange@redhat.com> <20191104230001.27774-4-aarcange@redhat.com>
+ <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com> <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
+ <20191105135414.GA30717@redhat.com> <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
+ <20191105145651.GD30717@redhat.com> <ab18744b-afc7-75d4-b5f3-e77e9aae41a6@redhat.com>
+ <20191108135631.GA22507@linux-8ccs> <b77283e5-a4bc-1849-fbfa-27741ab2dbd5@redhat.com>
+In-Reply-To: <b77283e5-a4bc-1849-fbfa-27741ab2dbd5@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 9 Nov 2019 12:30:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQnLBDPEW_EWGxoqF6UOb2V2tH+R6f3HuSnwujJvjY=bw@mail.gmail.com>
+Message-ID: <CAK7LNAQnLBDPEW_EWGxoqF6UOb2V2tH+R6f3HuSnwujJvjY=bw@mail.gmail.com>
+Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+(+CC: Lucas De Marchi, the kmod maintainer)
+
+On Sat, Nov 9, 2019 at 4:51 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 08/11/19 14:56, Jessica Yu wrote:
+> > And I am
+> > not sure what Masahiro (who takes care of all things kbuild-related)
+> > thinks of this idea. But before implementing all this, is there
+> > absolutely no way around having the duplicated exported symbols? (e.g.,
+> > could the modules be configured/built in a mutally exclusive way? I'm
+> > lacking the context from the rest of the thread, so not sure which are
+> > the problematic modules.)
+
+I do not think having a white-list in the modpost
+is maintainable.
+
+>
+> The problematic modules are kvm_intel and kvm_amd, so we cannot build
+> them in a mutually exclusive way (but we know it won't make sense to
+> load both).  We will have to build only one of them when built into
+> vmlinux, but the module case must support building both.
+>
+> Currently we put the common symbols in kvm.ko, and kvm.ko acts as a kind
+> of "library" for kvm_intel.ko and kvm_amd.ko.  The problem is that
+> kvm_intel.ko and kvm_amd.ko currently pass a large array of function
+> pointers to kvm.ko, and Andrea measured a substantial performance
+> penalty from retpolines when kvm.ko calls back through those pointers.
+>
+> Therefore he would like to remove kvm.ko, and that would result in
+> symbols exported from two modules.
+
+If this is a general demand, I think we can relax
+the 'exported twice' warning; we can show the warning
+only when the previous export is from vmlinux.
 
 
-On 2019/11/9 10:47, Andi Kleen wrote:
->>    Relevant code is checked to make sure that the ratio is calculated by
->>
->>    L1-dcache-load-misses/L1-dcache-loads, data "7.58%=30249/399189*100%" also
->>
->>    proves this conclusion.
->>
->>    So, I'm not sure why we use "of all L1-dcache hits" here to describe miss
->>    ratio,
-> 
-> Yes you're right it should be "of all L1-dcache accesses"
-> 
-> Please send a patch to fix the string and also check if this isn't wrong with some other
-> ratio too.
-> 
-> -Andi
-> 
-> .
-> 
-Hi Andi:
-Thanks for your reply firstly.
-I check the code and find that "of all...hits" is also used to describe miss ratio of
-L1-icache, dTLB cache, iTLB cache, LL-cache. Relevant code as follow:
-
-stat-shadow.c:509:      out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
-stat-shadow.c:530:      out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
-stat-shadow.c:550:      out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
-stat-shadow.c:570:      out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
-stat-shadow.c:590:      out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
-stat-shadow.c:875:                      print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
-stat-shadow.c:885:                      print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
-stat-shadow.c:895:                      print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
-stat-shadow.c:905:                      print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
-stat-shadow.c:915:                      print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
-
-So, may I send a patch to fix all these strings?
-
-Thanks,
-liuqi
+However, I am not sure how the module dependency
+should be handled when the same symbol is exported
+from multiple modules.
 
 
+Let's say the same symbol is exported from foo.ko and bar.ko
+and foo.ko appears first in modules.order .
+In this case, I think the foo.ko should be considered to have a higher
+priority than bar.ko
+The modpost records MODULE_INFO(depends, foo.ko) correctly,
+but modules.{dep, symbols} do not seem to reflect that.
+Maybe, depmod does not take multiple-export into consideration ??
+
+If we change this, I want this working consistently.
+
+
+Masahiro Yamada
+
+
+
+
+> I suppose we could use code patching mechanism to avoid the retpolines.
+>  Andrea, what do you think about that?  That would have the advantage
+> that we won't have to remove kvm_x86_ops. :)
+>
+> Thanks,
+>
+> Paolo
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
