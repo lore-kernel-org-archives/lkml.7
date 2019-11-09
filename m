@@ -2,102 +2,79 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5766AC17444
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04D6C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27CEC2196F
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:36:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2atN5xy"
+	by mail.kernel.org (Postfix) with ESMTP id 94CF721882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 11:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfKILgl (ORCPT
+        id S1726399AbfKILju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 06:36:41 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38236 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfKILgl (ORCPT
+        Sat, 9 Nov 2019 06:39:50 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:34293 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726146AbfKILju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 06:36:41 -0500
-Received: by mail-pf1-f193.google.com with SMTP id c13so6916472pfp.5;
-        Sat, 09 Nov 2019 03:36:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IySrLInNHpGtXZb/RlBk37czseGukluRznzmeXhsOUw=;
-        b=c2atN5xyWK5ZrlenspGo0BGSReIDH9DVJ0qGXWoIw/Bm3pvXnC33rk7wgsIK7ihu27
-         BbZNVY/5xvmfG9ORUr7R2H7G/kg/mByqtzEZenb+y5IyWK7Dz0JNDFLp9SDNZ0x5gQBs
-         TYg1iliRzD1GZTQMK42JzI0kopIAktzxaEGRIz2MhvtG6vAPAiBNZ+Tgel2pg7sTQgg5
-         wfzAbCXpDOKScJMYAWbIb9rv3vb23qePDLLtkh6V8hzLi4XRSJve9cD5nc0YpBfDdG0w
-         DEaWOkd32D5H+W2mJE0qqC/+T2qu07dtAqrYKuq0fAiREiTnvq3rhuJjYUKWa70pmEKk
-         26pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IySrLInNHpGtXZb/RlBk37czseGukluRznzmeXhsOUw=;
-        b=f02AnQ1Is0WeQV19TdyLQTwRIwVjuVJ0ZVgzRCVIv2Oz3NJEofG2CPotgDcTRr/GKY
-         P0rzoSSueT6+mIGY9vmNLVhwz21HCps5FaThyObvRrgeF7dUTF7dWr+yVjZUszuf7Tde
-         xXBaJzTUQpLH1uEO5uv7dPFiMx5ilF/1HbJ+p6dBr+ksd3wPJ+UY7wyhVp4F5CYsTNsj
-         kMyZJTWVsVgwgtDaPmHUn3GEjUHQk8bfD43UZruwBjFJyiEHZwlWN87Pv0vH+dnV1Utz
-         9gQw9W1h7ygbvA2ruOVwCLfJEiQ8ghR9/Gm9zMPQJJobCBi9i1e6VkAzDKMEbHR+UR8m
-         YICA==
-X-Gm-Message-State: APjAAAW7sDptdX/Jl6amG1yqJrSwKoE2mK6UP7wkLfr8mADAylHTWHdw
-        1t5flQSKavjZHntYIPxZaHA=
-X-Google-Smtp-Source: APXvYqyThD6xef7t/WXPB/lRjTcr8wjUSnUYFWVHKkgpQuccnZB0IobwOMDFpgZ+Q3do3iYXTVbMgA==
-X-Received: by 2002:a63:c103:: with SMTP id w3mr17766224pgf.275.1573299400205;
-        Sat, 09 Nov 2019 03:36:40 -0800 (PST)
-Received: from localhost.localdomain ([103.82.150.242])
-        by smtp.gmail.com with ESMTPSA id j126sm10757713pfg.4.2019.11.09.03.36.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2019 03:36:39 -0800 (PST)
-From:   Satendra Singh Thakur <sst2005@gmail.com>
-Cc:     Satendra Singh Thakur <sst2005@gmail.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] dmaengine: zx: remove: removed dmam_pool_destroy
-Date:   Sat,  9 Nov 2019 17:06:09 +0530
-Message-Id: <20191109113609.6159-1-sst2005@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191105165855.GC952516@vkoul-mobl>
-References: <20191105165855.GC952516@vkoul-mobl>
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 9 Nov 2019 06:39:50 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id TP5kiwap4PMT8TP5niPDcx; Sat, 09 Nov 2019 12:39:48 +0100
+Subject: Re: [PATCH] media:usb:cpia2: Properly check framebuffer mmap offsets
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Omer Shalev <omerdeshalev@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191108215038.59170-1-omerdeshalev@gmail.com>
+ <20191108204949.GA1277001@kroah.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a1c55e7d-4710-70e9-f4d0-8fc155197f07@xs4all.nl>
+Date:   Sat, 9 Nov 2019 12:39:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191108204949.GA1277001@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNAeKckKDRAZWl52xYYip05gsvA0m/eTA2Ae9CdaDm8OEnv7tiZbBlho0EmZRCVrcxlSEjXi5AZT2PF+bk0hXDYCQbNPr8Ws4Gg9Z6JGXgGVjcp+6hXC
+ l3sQW6V9d8gxaloV2xX76pjm0Fee6MKjnnFn7+KnM9A+lqrc8LeksfmGAO9hB9IOv81nBJAh+9zJrjVpmTeHXfL6mAOHVh0C+4uxEb/2akxj+CgVWQd3rKHJ
+ YV63xfKqufxTe18e1vlGKhPuV0AxHKXCdNHq3Fmf1rqvL0ax/UYORhm9tCxCI0hg2UM+KJ6lFSMKSbKYCAm2gznHObJZeVkErrBpiz95QT1YG46YY9YyeFaY
+ 0YmbCh16mNBsRXN/dBgHawYJotU6d3TiCv7KQmYdLCydW2BAEg63p/SMatHse8Annyo9+TWYSgPLpDbfXmlKp3NlyXxqgM65NcX9mxM30Ff2OZxMyTk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the probe method dmam_pool_create is used. Therefore, there is no
-need to explicitly call dmam_pool_destroy in remove method as this
-will be automatically taken care by devres
+Hi Greg,
 
-Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
----
- v1: modified the subject line with new tags
+On 11/8/19 9:49 PM, Greg Kroah-Hartman wrote:
+> On Fri, Nov 08, 2019 at 09:50:36PM +0000, Omer Shalev wrote:
+>> The cpai2 driver's mmap implementation wasn't properly check for all
+>> possible offset values. Given a huge offset value , the calculation
+>> start_offset + size can wrap around to a low value and pass the check
+> 
+> I thought we checked that in the core of the kernel now, to keep all
+> drivers from not having to do this type of thing (as they obviously all
+> forgot to.)  Why is this still needed here as well?
 
- drivers/dma/zx_dma.c | 1 -
- 1 file changed, 1 deletion(-)
+Where is that checked in the core? I couldn't find anything, but I might
+have been looking in the wrong place.
 
-diff --git a/drivers/dma/zx_dma.c b/drivers/dma/zx_dma.c
-index 9f4436f7c914..7e4e457ac6d5 100644
---- a/drivers/dma/zx_dma.c
-+++ b/drivers/dma/zx_dma.c
-@@ -894,7 +894,6 @@ static int zx_dma_remove(struct platform_device *op)
- 		list_del(&c->vc.chan.device_node);
- 	}
- 	clk_disable_unprepare(d->clk);
--	dmam_pool_destroy(d->pool);
- 
- 	return 0;
- }
--- 
-2.17.1
+Regards,
+
+	Hans
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
