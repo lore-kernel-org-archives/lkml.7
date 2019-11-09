@@ -2,88 +2,94 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A6BC17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4FAC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E477E207FA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BB721019
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfKIOtW (ORCPT
+        id S1726462AbfKIPHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 09:49:22 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:56149 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfKIOtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 09:49:22 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id D6E31101C01C0;
-        Sat,  9 Nov 2019 15:49:19 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 937602F7319; Sat,  9 Nov 2019 15:49:19 +0100 (CET)
-Date:   Sat, 9 Nov 2019 15:49:19 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191109144919.a2whrvyih4k4fu42@wunner.de>
-References: <20191107121847.24781-1-mika.westerberg@linux.intel.com>
- <20191107121847.24781-3-mika.westerberg@linux.intel.com>
+        Sat, 9 Nov 2019 10:07:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40648 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726282AbfKIPHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 10:07:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 431F7AC37;
+        Sat,  9 Nov 2019 15:07:16 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 9B555DA7E8; Sat,  9 Nov 2019 16:07:21 +0100 (CET)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.4-rc7
+Date:   Sat,  9 Nov 2019 16:07:16 +0100
+Message-Id: <cover.1573307154.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107121847.24781-3-mika.westerberg@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 03:18:47PM +0300, Mika Westerberg wrote:
-> +static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
-> +{
-> +	const struct pci_dev *pdev;
-> +	int min_delay = 100;
-> +	int max_delay = 0;
-> +
-> +	list_for_each_entry(pdev, &bus->devices, bus_list) {
-> +		if (pdev->d3cold_delay < min_delay)
-> +			min_delay = pdev->d3cold_delay;
-> +		if (pdev->d3cold_delay > max_delay)
-> +			max_delay = pdev->d3cold_delay;
-> +	}
+Hi,
 
-You need to hold pci_bus_sem when accessing the devices list.
+there are a few regressions and fixes for stable. Please pull, thanks.
 
+Regressions:
 
-> +	if (!dev->subordinate || list_empty(&dev->subordinate->devices))
-> +		return;
+- fix a race leading to metadata space leak after task received a signal
 
-Same here.
+- un-deprecate 2 ioctls, marked as deprecated by mistake
 
+Fixes:
 
-> +	child = list_first_entry(&dev->subordinate->devices, struct pci_dev,
-> +				 bus_list);
+- fix limit check for number of devices during chunk allocation
 
-And again.
+- fix a race due to double evaluation of i_size_read inside max() macro,
+  can cause a crash
 
+- remove wrong device id check in tree-checker
 
-Thanks,
+----------------------------------------------------------------
+The following changes since commit ba0b084ac309283db6e329785c1dc4f45fdbd379:
 
-Lukas
+  Btrfs: check for the full sync flag while holding the inode lock during fsync (2019-10-17 20:36:02 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.4-rc6-tag
+
+for you to fetch changes up to a5009d3a318e9f02ddc9aa3d55e2c64d6285c4b9:
+
+  btrfs: un-deprecate ioctls START_SYNC and WAIT_SYNC (2019-11-04 21:42:01 +0100)
+
+----------------------------------------------------------------
+David Sterba (1):
+      btrfs: un-deprecate ioctls START_SYNC and WAIT_SYNC
+
+Filipe Manana (1):
+      Btrfs: fix race leading to metadata space leak after task received signal
+
+Josef Bacik (1):
+      btrfs: save i_size to avoid double evaluation of i_size_read in compress_file_range
+
+Qu Wenruo (2):
+      btrfs: Consider system chunk array size for new SYSTEM chunks
+      btrfs: tree-checker: Fix wrong check on max devid
+
+ fs/btrfs/inode.c        | 15 ++++++++++++++-
+ fs/btrfs/ioctl.c        |  6 ------
+ fs/btrfs/space-info.c   | 21 +++++++++++++++++++++
+ fs/btrfs/tree-checker.c |  8 --------
+ fs/btrfs/volumes.c      |  1 +
+ 5 files changed, 36 insertions(+), 15 deletions(-)
