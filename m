@@ -2,151 +2,132 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDB2C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813BBC17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08C7207FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BC62085B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="MUH40SXX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pms9Fk0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfKIXFa (ORCPT
+        id S1726651AbfKIXHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 18:05:30 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39284 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfKIXFa (ORCPT
+        Sat, 9 Nov 2019 18:07:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29035 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726470AbfKIXHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 18:05:30 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x28so7577661pfo.6
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 15:05:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=dirWlcLXMWe4DBJFlhecKvrzQebSxo/FvEC+4dhxwKo=;
-        b=MUH40SXXiPqYO6J2DJEs7PwCT3R9HKOCxq1wGj4LxBXEYM2tJsthus8hybdFVP2N4s
-         JrZhtBYV8v3Yrxp2Xz0307K4Dvn6rwC+LNd6PqSi/ly55v/rXnhwZ5FvUS7+MLFAlTBu
-         fIOiXEYyXjNk46oW3WH12DzNfYusV/J7tc7kVSfRrJjvX02+5hQ7f/zd6eFQ38hEqkH/
-         NHhOqOxBAcq/eEqIkUwO9w6v0nL12nDN7B6V2G+Rc2em6jAtDipPEWZPKBFjgN8oZMrl
-         rjn1sDa5d0ZbDtulAff0lT5anwAgnfPDUWL3+QMXWQFHJH3auzM8ajqkANw6Eld2ySVO
-         vMdQ==
+        Sat, 9 Nov 2019 18:07:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573340855;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nM/QlBuwgFsk9POi3L9W4gfZTnhffjaZ1rya0qjcHXg=;
+        b=Pms9Fk0TkPDCeYYTUEEbcYQoS7EIvFQDPsLwIFl5ub/ZTa7r8ZINHDsIeKPcgUy1de7sgZ
+        cxCmzRqyBrAFliYSYqyhS2fXd3/DO6KR//khogZfZ72W58wNpItvAb/U9ix+zL6SasILwe
+        dIsJnuJ9CWxV1b7TB722qAKvaWJQ5uo=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-lzRiNWsXMBKiC2ItYrSv1g-1; Sat, 09 Nov 2019 18:07:32 -0500
+Received: by mail-ot1-f69.google.com with SMTP id 88so8268567ots.1
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 15:07:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=dirWlcLXMWe4DBJFlhecKvrzQebSxo/FvEC+4dhxwKo=;
-        b=Znu9O8bH2qux8zQ6xMdSrGjDjPAkvj8Rt5VVUcQ9EftUXcdHYo8oxDqyWPyIFOS+bV
-         Bxc/2IFRmpvyUnEDnjT3iqRY2lv4tPGrxqVny3pKU412uGKF6zy2/Xt85fujgncc3lm/
-         30qs6Yqsj5lEd1vjzePKSC+P+8iQdxLYqdmueZtCZpgOidR2VcfNlURkvAVA4+pY2YlI
-         ICQF7W0W0slF3/Ycn9DM2PzI/gxxDXpAeZrVNqvTMYyGBK5SofBxPHPhLwKqnxcruf67
-         LyfcKypJm5moPbagUTTDOUiRZKQq9GyvJaPT1yulSkfUXGWbE7o1WOcJngPNKZ96bzZO
-         gCmw==
-X-Gm-Message-State: APjAAAUgxxnIlNuB4fqmMh6YYaSIi7dAqAJEYFOs/miPjIZULJx+rGoP
-        P2DdvMFo9MFizfB/4QwY42EuMQ==
-X-Google-Smtp-Source: APXvYqydfzMdW+XGC8XiXFGzeGQvDbPZAp7+qG1LcX1F/4qpg1fQnSwlnhv4MEQrG7+7nFgozJR6Dg==
-X-Received: by 2002:a63:644:: with SMTP id 65mr12050858pgg.306.1573340728005;
-        Sat, 09 Nov 2019 15:05:28 -0800 (PST)
-Received: from debian ([122.174.231.44])
-        by smtp.gmail.com with ESMTPSA id i123sm16325565pfe.145.2019.11.09.15.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2019 15:05:27 -0800 (PST)
-Date:   Sun, 10 Nov 2019 04:35:20 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     davem@davemloft.net, willemb@google.com, xiyou.wangcong@gmail.com,
-        fw@strlen.de, jakub.kicinski@netronome.com,
-        john.hurley@netronome.com, pabeni@redhat.com, brouer@redhat.com,
-        bigeasy@linutronix.de, jonathan.lemon@gmail.com,
-        edumazet@google.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: objtool: skb_push.cold()+0x15: unreachable instruction
-Message-ID: <20191109230520.GA22258@debian>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=joVZUMPvUOgWVUGh3XNj6yKcnBUM0ZIbNDOvlvl0Y3s=;
+        b=j05h+X8K6VOLQTNY0xdYbKOAu447yfKwCiZlq7kJi0/X5N7jXtLH175IwCPmwSjL+c
+         FoKpEv8iOzyAiFEAxP9dv8IwA7Ndzo8G+0SF/1JvLq6/pHbnmmvJW18cGybcf/7lJ/7a
+         K5LlWQOQvQoXxcr9K2uCgyjjUiFMDA5Cb/LHyT2icW8AwHnfqlCkw4+TaJi9F3PSx/dd
+         8TjVCBIlEJPzAlWM/qrWIfosMdydzfc++Yvdyj0G9QSp11v+YQOHX30ABorCjmSQLmlD
+         MtnIwVs+26PmoBc+GeYKyZYEt8BKTMBY5bMNqBy4wNDy5UggdKGf1W88E/47S46NkFh4
+         nJAA==
+X-Gm-Message-State: APjAAAV6zaKtPP3XKYEuGTYlYGUw70Lskm7BqbBOF7ALKFJmtWRQzkOT
+        9bUYvQMCYCwGWeh0hAUvQmkmZg2jyynEYSkULUey1EfSkx33hDVrZryqmNwCc+2YuBeeLAdujc2
+        XbzHQSTF/a9cCjlc/arfh7ht1UkwY9DhPOdoY/zrR
+X-Received: by 2002:aca:ecd0:: with SMTP id k199mr17121164oih.166.1573340851730;
+        Sat, 09 Nov 2019 15:07:31 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxPG+slhOAaUZlQmRXbIknpOfUNqhnDz7x+YaHmJ0gB074zuMPBX0TM8nkmK+qgiZAPAXBiBhxHkEnU0Z4aVdA=
+X-Received: by 2002:aca:ecd0:: with SMTP id k199mr17121146oih.166.1573340851438;
+ Sat, 09 Nov 2019 15:07:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
+ <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com> <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Sun, 10 Nov 2019 00:07:20 +0100
+Message-ID: <CAFqZXNsp3JxqW-ahCvtiZBECX5PWonpzMRK0MOn=6a28WzF4cA@mail.gmail.com>
+Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        SElinux list <selinux@vger.kernel.org>
+X-MC-Unique: lzRiNWsXMBKiC2ItYrSv1g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hello,
+On Sat, Nov 9, 2019 at 10:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sat, Nov 9, 2019 at 2:43 PM Ondrej Mosnacek <omosnace@redhat.com> wrot=
+e:
+>
+> > > -struct itimerval;
+> > > -extern int do_setitimer(int which, struct itimerval *value,
+> > > -                       struct itimerval *ovalue);
+> > > -extern int do_getitimer(int which, struct itimerval *value);
+> > > +#ifdef CONFIG_POSIX_TIMERS
+> > > +extern void clear_itimer(void);
+> > > +#else
+> > > +static inline void clear_itimer(void) {}
+> > > +#endif
+> > >
+>
+> > > @@ -249,6 +249,17 @@ int do_setitimer(int which, struct itimerval *va=
+lue, struct itimerval *ovalue)
+> > >         return 0;
+> > >  }
+> > >
+> > > +#ifdef CONFIG_SECURITY_SELINUX
+> >
+> > Did you mean "#ifdef CONFIG_POSIX_TIMERS" here to match the header?
+>
+> No, this part is intentional, CONFIG_POSIX_TIMERS already controls
+> whether itimer.c is
+> compiled in the first place, but this function is only needed when called=
+ from
+> the selinux driver.
 
-i got a warning during kernel compilation.
+All right, but you declare the function in time.h even if
+CONFIG_SECURITY_SELINUX is not enabled... it is kind of awkward when
+it can happen that the function is declared but not defined anywhere
+(even if it shouldn't be used by new users). Maybe you could at least
+put the header declaration/definition inside #ifdef
+CONFIG_SECURITY_SELINUX as well so it is clear that this function is
+intended for SELinux only?
 
-net/core/skbuff.o: warning: objtool: skb_push.cold()+0x15: unreachable instruction
+--=20
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
 
-related clips...
-
---------------------x----------------x---------------------
-
-(gdb) l skb_push.cold
-1880	void *skb_push(struct sk_buff *skb, unsigned int len)
-1881	{
-1882		skb->data -= len;
-1883		skb->len  += len;
-1884		if (unlikely(skb->data < skb->head))
-1885			skb_under_panic(skb, len, __builtin_return_address(0));
-1886		return skb->data;
-1887	}
-1888	EXPORT_SYMBOL(skb_push);
-1889	
-(gdb) l *0xffffffff815ffc8e
-0xffffffff815ffc8e is in skb_push (net/core/skbuff.c:1885).
-1880	void *skb_push(struct sk_buff *skb, unsigned int len)
-1881	{
-1882		skb->data -= len;
-1883		skb->len  += len;
-1884		if (unlikely(skb->data < skb->head))
-1885			skb_under_panic(skb, len, __builtin_return_address(0));
-1886		return skb->data;
-1887	}
-1888	EXPORT_SYMBOL(skb_push);
-1889	
-(gdb)
-
-------------------x-----------------------x------------------------------------
-
-$uname -a
-Linux debian 5.4.0-rc1+ #1 SMP Sat Nov 9 21:29:48 IST 2019 x86_64 GNU/Linux
-$
-
-this kernel is from linux-kselftest tree
-
----------------------------x-------------x------------------------------
-
-$gcc --version
-gcc (Debian 9.2.1-14) 9.2.1 20191025
-Copyright (C) 2019 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
--------------------------x-------------------x-----------------------------
-
-Linux debian 5.4.0-rc1+ #1 SMP Sat Nov 9 21:29:48 IST 2019 x86_64 GNU/Linux
-
-GNU Make            	4.2.1
-Binutils            	2.33.1
-Util-linux          	2.33.1
-Mount               	2.33.1
-Linux C Library     	2.29
-Dynamic linker (ldd)	2.29
-Procps              	3.3.15
-Kbd                 	2.0.4
-Console-tools       	2.0.4
-Sh-utils            	8.30
-Udev                	241
-
--------------------------------x-----------------x----------------------------
-
-
-
-
---
-software engineer
-rajagiri school of engineering and technology
