@@ -2,70 +2,70 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11D3C17441
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A31C17442
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31762084D
+	by mail.kernel.org (Postfix) with ESMTP id DDC63215EA
 	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFZtI7nA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vBtJh5iZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbfKIAkk (ORCPT
+        id S1730614AbfKIAkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 19:40:40 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38261 "EHLO
+        Fri, 8 Nov 2019 19:40:41 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42478 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729623AbfKIAkj (ORCPT
+        with ESMTP id S1730154AbfKIAkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 19:40:39 -0500
-Received: by mail-pf1-f195.google.com with SMTP id c13so6147743pfp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 16:40:39 -0800 (PST)
+        Fri, 8 Nov 2019 19:40:41 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so6128684pfh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 16:40:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4W4ty972DPX71Iw49mefl5BsapRNw/bFopLDHz4kFy0=;
-        b=CFZtI7nAK1OzKUd0yQ8Ucz4zhcGHsvZXBa7pbCuF3Iw5ce+GN2RnxFaThLYdKjRr4N
-         VUOWWPrciOcC6LB7ds6ZMWBV41BBKZCFw/huTrjo8WUNmqrA3hb8h+mdz9ssZnetIUJM
-         W4TiVcCV5GVpmG2UJyCQhCOjLVGjLURU/WRYkl/Rf3eKyi0FcppC8jK7UFj4WqgslSPZ
-         yvIKApcRA0PtNPP6198Oph7PibWznozNKCdeQWC/BD6ZgH3SRSH1RIKKudkonFZyP3gr
-         N3zFICoIEtiVzPwzU8ablbXLkEPWGFrH05XlWnxra9TmzATq5qEUzYh5zABljevOW8mW
-         uOMw==
+        bh=705HB2azoG200nwS3o3zO3rtDYqxCRBnG4hOOCQq8EM=;
+        b=vBtJh5iZty4ax9mbgk+Lt9/4w+HA8JQ8hKBUrXr3gdOy84AhmP8L4Ltjt+B3mrqM4x
+         WViU03gq39CuEruIjdcPij9fd0OMEGBpGV58E8SVMW+xZv5Ozklur6FJI0JTcqs9VZQQ
+         ra7XVIIKa9KXR9/g5uIAav0qS41V9/dwBscejKuHM5cd5i7KTUXIa7yzA+jmtR4Jazfh
+         UqoE4mdJLnhjSIvuTvJS99sTo6C5vaD/9HHUgJkQfDRxqEr4b6k0r9VpS9Ect6Id3LPy
+         DjAOf5XHZskq3Sp8nzUKAOmbOQNd5zccJVRbegg+zM/IUPKAQx6hCgqcbFZA1zIhV7xb
+         zP2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4W4ty972DPX71Iw49mefl5BsapRNw/bFopLDHz4kFy0=;
-        b=Igod96IkbyVdgDhZ0eJC9Nt11IVCsxG0dqMK/3Nwt7WMiOMev+Q6jMx0BJ3kuz03Uq
-         h5mtMTSFJeTUPZv8MvDAaNTlRUKVAp5iBk9rFef2YahaLuaEcMyjoTTplrKY9CljFuQS
-         +GqR66xJDG9jcA6yfOdjZjt9WLRdt5y5OfgiRAgBhdswcPTv9Wkky81Vt0AGBAA7ai3h
-         XBF13uGuLOZwer6QxAdFZ/aMczILdplTX6d2cJ1alDnDJqzyMbVSpUT5Pz/S6d1Pw1U8
-         JF1207Qb3zIrqnNm89+cHZl5eLEG6UUsAjOpu4ORlr9Nae38LEm9CjDiGvmKEUYl+C8g
-         Cckg==
-X-Gm-Message-State: APjAAAU0zZhIr1kMQ76IdIBHF4oT5PE28P+esv6EbDHq7vJFEuOn3JRb
-        /bO6S/JH7yFZsSOKEfF5+JXezA==
-X-Google-Smtp-Source: APXvYqx0C+iEkKIhWXyZR6uOecRU7twFYsNFXJH7rLx50NuekjzW7BE1mUO7lWsusLd1uAfena1VOw==
-X-Received: by 2002:a63:5511:: with SMTP id j17mr4827052pgb.70.1573260038698;
-        Fri, 08 Nov 2019 16:40:38 -0800 (PST)
+        bh=705HB2azoG200nwS3o3zO3rtDYqxCRBnG4hOOCQq8EM=;
+        b=P/GvZcbRZ1AyzpdCnGU9N98wXlk4Fkck3JcmeqsPhiC+3CaCHxzW2OZfqPV0Pwy40X
+         52GbrFGbYftlthDJVcmp8mQIBvxQpaTGGyyPECUmruPaywH2zDhu/7EyzF/64FhXnWrs
+         ILmxmpQyQCzLCbkk+SpvTENDi/zDhqj8Ll+waqNumsQe8GTf0QXdaQbfVKBGAtgZFH7A
+         4TSes8MBT8/tqOUMU68JzvFLZqcY/0RUPcsnabePsI59Bf3JtD1Xzzt3wDOFokANgQO6
+         sx2FMRtK6Gk4ooQVigbu11QPsxsE0l2GPjiphngyGy9IfeDKCSWWNcc1CZJ5+UsDxQGs
+         LDwA==
+X-Gm-Message-State: APjAAAUazjbcST9RhYaxPPbWuiyi8Qsgu38t0dl8M7T90gFHYImI50ty
+        jAakUiu9S30QvPk92Ql666xHwA==
+X-Google-Smtp-Source: APXvYqwplgsd9NKexroKKfh0xLnRA4IYQ8y4EtnaHnQJoQHbtj18y/kjZD5tBU0IFEqUvlf9P4cfwQ==
+X-Received: by 2002:a63:f441:: with SMTP id p1mr15349274pgk.362.1573260040059;
+        Fri, 08 Nov 2019 16:40:40 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y36sm6681461pgk.66.2019.11.08.16.40.37
+        by smtp.gmail.com with ESMTPSA id y36sm6681461pgk.66.2019.11.08.16.40.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 16:40:38 -0800 (PST)
+        Fri, 08 Nov 2019 16:40:39 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH v2 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss region on shutdown
-Date:   Fri,  8 Nov 2019 16:40:32 -0800
-Message-Id: <20191109004033.1496871-2-bjorn.andersson@linaro.org>
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2 2/2] remoteproc: qcom_q6v5_mss: Validate each segment during loading
+Date:   Fri,  8 Nov 2019 16:40:33 -0800
+Message-Id: <20191109004033.1496871-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191109004033.1496871-1-bjorn.andersson@linaro.org>
 References: <20191109004033.1496871-1-bjorn.andersson@linaro.org>
@@ -76,75 +76,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to reclaim mpss memory while the mba is not running causes the
-system to crash on devices with security fuses blown, so leave it
-assigned to the remote on shutdown and recover it on a subsequent boot.
+The code used to sync with the MBA after each segment loaded and this is
+still what's done downstream. So reduce the delta towards downstream by
+switching to a model where the content is iteratively validated.
 
-Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
-Cc: stable@vger.kernel.org
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
-- Assign memory back to Linux in coredump case
+- Picked up Jeff's r-b and t-b
 
- drivers/remoteproc/qcom_q6v5_mss.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c | 76 ++++++++++++++++++++----------
+ 1 file changed, 51 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index de919f2e8b94..efab574b2e12 100644
+index efab574b2e12..914d5546e1cf 100644
 --- a/drivers/remoteproc/qcom_q6v5_mss.c
 +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -875,11 +875,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
- 		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+@@ -358,23 +358,29 @@ static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
+ }
+ 
+ static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
+-				   bool remote_owner, phys_addr_t addr,
++				   bool local, bool remote, phys_addr_t addr,
+ 				   size_t size)
+ {
+-	struct qcom_scm_vmperm next;
++	struct qcom_scm_vmperm next[2];
++	int perms = 0;
+ 
+ 	if (!qproc->need_mem_protection)
+ 		return 0;
+-	if (remote_owner && *current_perm == BIT(QCOM_SCM_VMID_MSS_MSA))
+-		return 0;
+-	if (!remote_owner && *current_perm == BIT(QCOM_SCM_VMID_HLOS))
+-		return 0;
+ 
+-	next.vmid = remote_owner ? QCOM_SCM_VMID_MSS_MSA : QCOM_SCM_VMID_HLOS;
+-	next.perm = remote_owner ? QCOM_SCM_PERM_RW : QCOM_SCM_PERM_RWX;
++	if (local) {
++		next[perms].vmid = QCOM_SCM_VMID_HLOS;
++		next[perms].perm = QCOM_SCM_PERM_RWX;
++		perms++;
++	}
++
++	if (remote) {
++		next[perms].vmid = QCOM_SCM_VMID_MSS_MSA;
++		next[perms].perm = QCOM_SCM_PERM_RW;
++		perms++;
++	}
+ 
+ 	return qcom_scm_assign_mem(addr, ALIGN(size, SZ_4K),
+-				   current_perm, &next, 1);
++				   current_perm, next, perms);
+ }
+ 
+ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
+@@ -681,7 +687,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
+ 
+ 	/* Hypervisor mapping to access metadata by modem */
+ 	mdata_perm = BIT(QCOM_SCM_VMID_HLOS);
+-	ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, phys, size);
++	ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, true, phys, size);
+ 	if (ret) {
+ 		dev_err(qproc->dev,
+ 			"assigning Q6 access to metadata failed: %d\n", ret);
+@@ -699,7 +705,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
+ 		dev_err(qproc->dev, "MPSS header authentication failed: %d\n", ret);
+ 
+ 	/* Metadata authentication done, remove modem access */
+-	xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, phys, size);
++	xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, false, phys, size);
+ 	if (xferop_ret)
+ 		dev_warn(qproc->dev,
+ 			 "mdt buffer not reclaimed system may become unstable\n");
+@@ -786,7 +792,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
  	}
  
--	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
--				      false, qproc->mpss_phys,
--				      qproc->mpss_size);
--	WARN_ON(ret);
--
- 	q6v5_reset_assert(qproc);
+ 	/* Assign MBA image access in DDR to q6 */
+-	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
++	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false, true,
+ 				      qproc->mba_phys, qproc->mba_size);
+ 	if (ret) {
+ 		dev_err(qproc->dev,
+@@ -820,8 +826,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+ 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
  
- 	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
-@@ -969,6 +964,10 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 			max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
+ reclaim_mba:
+-	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
+-						qproc->mba_phys,
++	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
++						false, qproc->mba_phys,
+ 						qproc->mba_size);
+ 	if (xfermemop_ret) {
+ 		dev_err(qproc->dev,
+@@ -888,7 +894,7 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
+ 	/* In case of failure or coredump scenario where reclaiming MBA memory
+ 	 * could not happen reclaim it here.
+ 	 */
+-	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
++	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true, false,
+ 				      qproc->mba_phys,
+ 				      qproc->mba_size);
+ 	WARN_ON(ret);
+@@ -915,6 +921,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 	phys_addr_t boot_addr;
+ 	phys_addr_t min_addr = PHYS_ADDR_MAX;
+ 	phys_addr_t max_addr = 0;
++	u32 code_length;
+ 	bool relocate = false;
+ 	char *fw_name;
+ 	size_t fw_name_len;
+@@ -965,9 +972,19 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
  	}
  
-+	/* Try to reset ownership back to Linux */
-+	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-+				qproc->mpss_phys, qproc->mpss_size);
+ 	/* Try to reset ownership back to Linux */
+-	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
++	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, false,
+ 				qproc->mpss_phys, qproc->mpss_size);
+ 
++	/* Share ownership between Linux and MSS, during segment loading */
++	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, true,
++				      qproc->mpss_phys, qproc->mpss_size);
++	if (ret) {
++		dev_err(qproc->dev,
++			"assigning Q6 access to mpss memory failed: %d\n", ret);
++		ret = -EAGAIN;
++		goto release_firmware;
++	}
 +
  	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
  	qproc->mpss_reloc = mpss_reloc;
  	/* Load firmware segments */
-@@ -1058,9 +1057,14 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
- 	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+@@ -1016,10 +1033,24 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			       phdr->p_memsz - phdr->p_filesz);
+ 		}
+ 		size += phdr->p_memsz;
++
++		code_length = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
++		if (!code_length) {
++			boot_addr = relocate ? qproc->mpss_phys : min_addr;
++			writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
++			writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
++		}
++		writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
++
++		ret = readl(qproc->rmb_base + RMB_MBA_STATUS_REG);
++		if (ret < 0) {
++			dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
++			goto release_firmware;
++		}
+ 	}
  
- 	/* Unlock mba before copying segments */
--	if (!qproc->dump_mba_loaded)
-+	if (!qproc->dump_mba_loaded) {
+ 	/* Transfer ownership of modem ddr region to q6 */
+-	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true,
++	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false, true,
+ 				      qproc->mpss_phys, qproc->mpss_size);
+ 	if (ret) {
+ 		dev_err(qproc->dev,
+@@ -1028,11 +1059,6 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 		goto release_firmware;
+ 	}
+ 
+-	boot_addr = relocate ? qproc->mpss_phys : min_addr;
+-	writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
+-	writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
+-	writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+-
+ 	ret = q6v5_rmb_mba_wait(qproc, RMB_MBA_AUTH_COMPLETE, 10000);
+ 	if (ret == -ETIMEDOUT)
+ 		dev_err(qproc->dev, "MPSS authentication timed out\n");
+@@ -1061,7 +1087,7 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
  		ret = q6v5_mba_load(qproc);
  
-+		/* Try to reset ownership back to Linux */
-+		q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-+					qproc->mpss_phys, qproc->mpss_size);
-+	}
-+
- 	if (!ptr || ret)
- 		memset(dest, 0xff, segment->size);
- 	else
-@@ -1111,10 +1115,6 @@ static int q6v5_start(struct rproc *rproc)
- 	return 0;
+ 		/* Try to reset ownership back to Linux */
+-		q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
++		q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, false,
+ 					qproc->mpss_phys, qproc->mpss_size);
+ 	}
  
- reclaim_mpss:
--	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
--						false, qproc->mpss_phys,
--						qproc->mpss_size);
--	WARN_ON(xfermemop_ret);
- 	q6v5_mba_reclaim(qproc);
+@@ -1101,8 +1127,8 @@ static int q6v5_start(struct rproc *rproc)
+ 		goto reclaim_mpss;
+ 	}
  
- 	return ret;
+-	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
+-						qproc->mba_phys,
++	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
++						false, qproc->mba_phys,
+ 						qproc->mba_size);
+ 	if (xfermemop_ret)
+ 		dev_err(qproc->dev,
 -- 
 2.23.0
 
