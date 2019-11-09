@@ -7,63 +7,68 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BE4C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC71AC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B4121D7B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9193D21924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmMZ4LJq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ky8i6DH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfKITDM (ORCPT
+        id S1726888AbfKITDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 14:03:12 -0500
-Received: from mail-io1-f41.google.com ([209.85.166.41]:45699 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfKITDM (ORCPT
+        Sat, 9 Nov 2019 14:03:31 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33826 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfKITDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 14:03:12 -0500
-Received: by mail-io1-f41.google.com with SMTP id v17so8835946iol.12;
-        Sat, 09 Nov 2019 11:03:10 -0800 (PST)
+        Sat, 9 Nov 2019 14:03:30 -0500
+Received: by mail-io1-f65.google.com with SMTP id q83so9944649iod.1;
+        Sat, 09 Nov 2019 11:03:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
         bh=m3uHaDtX3ciBcivMZkabAXv4IXjFfi/2JONmJEnyS4M=;
-        b=NmMZ4LJqCxJPLeBf6xArQxQsQO6ErVQt2cCjY8KBFH4G67+l3Rs9BQIoSxg0+jGZtn
-         S9PimTEifbhD9esyvMAgH/B33bLdrdoMROuDwjFBhgRDNajMMGdb67tVcudkmgcx8Dqy
-         zachBRRJJISEetvgkXiqXaI8qJNKV23z7IumoNOVt7O9FMOCfztm7MymFqSD4c2Ohy2I
-         J1r8FLE9KhgngxCjl1lJdYbJAElwYiC3ZQzC7BCV7kx7CQ9raZYyYyljUD+ab3H7Aj3m
-         qrUJZa/TcDLFaMnGY87hfRTVfuYj2lZws/nAdAoBwPKSyp/VqU3v31/4pCCTIHLRS8NG
-         S7sA==
+        b=Ky8i6DH02Cw8Up3tbmxnMON4rbULPGXfpUOWLgdMN8R4toBX7AL1N6gYAfgf3dXUZW
+         40oMJvowRdvhLhD45R9khEk2Y37CWr5cChz32DrSXzu6F3FNqnU1xgtVJpC39SwPKGjA
+         8pS2HOuFiMKwGvfHU9dImHd8NmxjI2ilFvLARxpb+LNnwfC2Mr+eiySuHm03gKvRaCb2
+         20nnUQeZKLYraR+zn3pNbQM2JepvKHuRHuWjt2171ziMIQ9nhD0INJ4yaCS91EgBuKCS
+         JMSZO1a08fkyA8OfElmaTLUEsdWdn8LzPTxK5jkvFLoVY1lvg+UKkl8OXLjGm+QPDGRt
+         d6Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
         bh=m3uHaDtX3ciBcivMZkabAXv4IXjFfi/2JONmJEnyS4M=;
-        b=amu6kEw5DKbSdY97vKb68SCG2cboNv6165XkKa1f6jrU0W8xMrfJdOxY+hkXQgJalr
-         kUWWl1FnSml14uUNi1t1R5B/IH8VqOtL6n8n/CGOVp+dwj4X1R3Mnrwq9uZT4KgWbUVO
-         WGp9gIzMVi2yfBCD/FCIvEUG/sxLAtqJAAP/7gqIuutZsO4udFNhNjZ1EV0QEw+aZXrv
-         dsZy2WVAFTiojrqTL7X1EKterIf7lch4anhRBB0QqSfNBV6Ru9u7B2IwNOl8ML6wtaDc
-         beZv7a4GuFY1L4FZ9gLjtKHqmvbuPnGXRW/T0R4PbvQ+eHGJFte8BYVj0UqZVPlNWO5y
-         WdOw==
-X-Gm-Message-State: APjAAAUEFBY4nT06rbOlpPkX5dDYg7EGX92ce7ZhJ/Pb3qtBPM5Kzcxd
-        627SDKal3Y6eBUwM6HzIw0H/T9HfQTp89uwUXcr5Zg==
-X-Google-Smtp-Source: APXvYqysSrZ72Erb5fCqguE49DVsPOHz3DVQqqKIfKDGobud5hSXqtOseYG12YY1l4VIkPrWU6fShOm+jo8x57PN2XQ=
-X-Received: by 2002:a02:694e:: with SMTP id e75mr17973550jac.85.1573326190136;
- Sat, 09 Nov 2019 11:03:10 -0800 (PST)
+        b=kOk7k9JteLvgNOHs1Ha6LbpkaRBn4xjqe+fwy36FRpBNrHqFCBVxyWXboUlL59CHE2
+         yZxnHJVtanVg0KGGE/I/yGzX2OOhCjNraffU0uECo6V53+gsIak/WWvlKFKcl6cZM836
+         6J06UqR7NtgemlsTKj9wWf/Z3SLB+z+N56fkdH8YVHxYxbEkg+iUHuw7t3zMfUC7BZla
+         85DNow8Vn6Z0+z3wjVBouJYZvs/xjnq1mbJZ2mL3S1Z5jIBTtuc/Z1TixUTCzo5iVXZK
+         ct5juRE74MUgA7QOoVkOk3fAjvsUHgZou5hw6bvGSvJqWy+ZfmNkVIdunLmDx7pR4NYX
+         PEBw==
+X-Gm-Message-State: APjAAAXHVX3MV9ntJCHc9+t3acc4VNHOJs4l0XlMKWcn8+d8XLVjI1b0
+        DhAIq4bwBK5hcrMbv9YWRcqQM71PsWgnF6au/tI=
+X-Google-Smtp-Source: APXvYqxIP+MENNIHntME/L9refFirwkXlKLfA02jS2BqkMzkPUV7GBZjAKJYpHN5spmlDkqXwwNHtidXZGgsmW6XKZs=
+X-Received: by 2002:a6b:3c04:: with SMTP id k4mr8523933iob.110.1573326209665;
+ Sat, 09 Nov 2019 11:03:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108210824.1534248-2-arnd@arndb.de>
-In-Reply-To: <20191108210824.1534248-2-arnd@arndb.de>
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-1-arnd@arndb.de>
+In-Reply-To: <20191108211323.1806194-1-arnd@arndb.de>
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Sat, 9 Nov 2019 11:02:58 -0800
-Message-ID: <CABeXuvp7ZR4kdUOUZEKcMnQP2qHNyNzbhZ9UoM2r4wp+C7xoZQ@mail.gmail.com>
-Subject: Re: [PATCH 02/23] y2038: add __kernel_old_timespec and __kernel_old_time_t
+Date:   Sat, 9 Nov 2019 11:03:18 -0800
+Message-ID: <CABeXuvrqnKtJBJHC+SQ+f1b395Jh8DO4GDweME4eNKrX6LFfxg@mail.gmail.com>
+Subject: Re: [PATCH 10/23] y2038: uapi: change __kernel_time_t to __kernel_old_time_t
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arch <linux-arch@vger.kernel.org>
+        Stephen Boyd <sboyd@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
