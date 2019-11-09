@@ -2,95 +2,122 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63529C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFD3C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353E0207FA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56D6214E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZkaO7df"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0B6+Ie/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfKIPlj (ORCPT
+        id S1726320AbfKIPrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 10:41:39 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41181 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfKIPli (ORCPT
+        Sat, 9 Nov 2019 10:47:02 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37755 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfKIPrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 10:41:38 -0500
-Received: by mail-pg1-f196.google.com with SMTP id h4so6116504pgv.8;
-        Sat, 09 Nov 2019 07:41:38 -0800 (PST)
+        Sat, 9 Nov 2019 10:47:01 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b20so6724487lfp.4;
+        Sat, 09 Nov 2019 07:47:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5HpX5PwNsqHJHqGmeUKyTd3WOTik2ZjBcG7P7nV31DU=;
-        b=BZkaO7df1z2/35NLcEIZoK2CXwGfFEl4qcSQ9TeNUf3zQuAovUpOrgQ57MQPZ3DGcU
-         2KFg//+jzASDaL4f7vAZ9vhUzqNarYL2EvIqrgm86NrgVlDWijutCbevVpWP9jG+TBNn
-         Ru6bb5bgCmdaXymtagUjS1dx7m9ne/L7m2Ty47JW5O3rHEA75GPVx4x5N6j99RSupo4q
-         0IvJp/JL3UYsfzHvt8SByC1TZpDncRqQdo980n9f2ylTyEv46IwM0coQyXACTdWQLk5W
-         9rKZdZGR8GT7NVXvnqCr8fuSiVXx33u4KV9Qj3YKCk4h3HwnjL/SmvqKtKdWizCPjAhL
-         qPiQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X2MNWyYxDIwl5/Y9DLOD0SRUpFh0800mLWYZQrn0cFw=;
+        b=O0B6+Ie/CO8H2I8KqlKT5A11S9gWLbnRbEKHRPQjq9M4dQwy9khnxFG2rp1S5wnWYr
+         bjagMxx1Sg20hb85dtRGpUTZjYlvKbl+uPMQiqZYuhms8+KHBy7kgHmcOE+Yy8ySRUhW
+         RODFrqLNTx6Wc0Ui3Ae1eH++IwrCqpbVyYe9mE1Dg2S/atkh9NZEmYyJkMRRFWXSJtMl
+         JgW5qcPxDSeglcyoeAc2vvg9vcYZlpS+r7pexwuvmArzoUXclK2iYFlwrGlomXiYe2fE
+         NF6ru+eceDaHO60BUmSKnffAZz6VI8jDDHsiaKYRZolEpD2HpbLGcWDf9HrEAD7EIrpz
+         sTow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5HpX5PwNsqHJHqGmeUKyTd3WOTik2ZjBcG7P7nV31DU=;
-        b=dBcfdOV+npQqYErvB7eSAsZ/2O3fj450TQlsTCrtUynG/VRWrsp2XU+UcWVV36H/NS
-         tDFo9kItCz/TQWBEbAOZkmh5Ff2tzS7VytmKpBgdvz7S+L+08kGvn8ywD45ZglmzbKZt
-         lWF/aGUNeWnQfZUfNISYxZ2Rl8JyJgZMzGjgoCLqbIKf7A8W28fu6D/Nq46kLnktgXjK
-         UwiktjZbO5+ReoANPmEiKZVwpqz9EZw7ZlY40qw2/j2JBo7qv0GVR58rvC/11I+AB+7J
-         R6QaNYyyAiCi1wnGM5/9aMOVQt8xT6TGBEquM7f60JN+p2fIwFXTeEG9Rc74fuIdVkKb
-         R3Tg==
-X-Gm-Message-State: APjAAAUCrGEzWJT9Sucyi9F2y+FZIUQjJ7Z6Ct+fbwuZ02L4n8DBEA0x
-        EduB1XS7baheAwKLFDuDzJF792sp
-X-Google-Smtp-Source: APXvYqze3JiZlrbs0eNxxf79Q7yAxedbUMy9cRq9tJL1s8XpeLYk4V2PpiLhn5Jx5x5kYoHHDhM2xw==
-X-Received: by 2002:a63:c849:: with SMTP id l9mr2954841pgi.330.1573314097906;
-        Sat, 09 Nov 2019 07:41:37 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x29sm11219232pfj.131.2019.11.09.07.41.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 Nov 2019 07:41:37 -0800 (PST)
-Subject: Re: [PATCH 5.3 000/140] 5.3.10-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191108174900.189064908@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <d7a6de48-3022-bdc4-8a94-941a2f8fd38f@roeck-us.net>
-Date:   Sat, 9 Nov 2019 07:41:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=X2MNWyYxDIwl5/Y9DLOD0SRUpFh0800mLWYZQrn0cFw=;
+        b=qQTSgyJJcClVVA7bC/UcT8CwEew10NVgqtT5RYFh7/PgWN7liMV6HEvUBM7Vn5lAVQ
+         UCHhcXPfx11w5vCrML75X4dHyQzcdWSZ8jCXrlQaFatL8/eGamZozPMCqxQj5V4Z4y94
+         4yPVgOFEPVr9oqOiu4mhy896a3r7M+zQe29jvP7YUTpGPuqTb8QLO4leMMaM+1YI4OYH
+         9qhqpwmCH8Q0jqUPatA4Kxjoo7D0SL8fU1GzrQhHGvrzkyKqXlDTHKyr4gt0IZdSOhl3
+         TEYti+xhVIbnbsPxjAMzm2hHQVR/GQj8lbVA/YREKyXeeByKavI10QRuWBVQC8NmCUiM
+         tlbw==
+X-Gm-Message-State: APjAAAVs2KVSre5o/6aGZF+ft7lXRcRMVXwzsSAgyvWvz2PzbQguIwun
+        wm1mHHZQVaQVpu+ZEdLXQUA=
+X-Google-Smtp-Source: APXvYqw7Wc2SqEr14zEtA4gEhuGkHtPnDY8WzisxoCQksCKTowyLt6PBdISKi9DqX1DMkNxmCsHwDA==
+X-Received: by 2002:a19:4909:: with SMTP id w9mr9975308lfa.174.1573314419271;
+        Sat, 09 Nov 2019 07:46:59 -0800 (PST)
+Received: from localhost.localdomain ([188.243.226.168])
+        by smtp.gmail.com with ESMTPSA id g21sm4141987ljh.2.2019.11.09.07.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Nov 2019 07:46:58 -0800 (PST)
+From:   Andrey Skvortsov <andrej.skvortzov@gmail.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Subject: [PATCH] rtc: tps65910: allow using RTC without alarm interrupt
+Date:   Sat,  9 Nov 2019 18:46:52 +0300
+Message-Id: <20191109154652.7419-1-andrej.skvortzov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/8/19 10:48 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.10 release.
-> There are 140 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun 10 Nov 2019 05:42:11 PM UTC.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 391 pass: 391 fail: 0
+Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+---
+ drivers/rtc/rtc-tps65910.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-Guenter
+diff --git a/drivers/rtc/rtc-tps65910.c b/drivers/rtc/rtc-tps65910.c
+index 2c0467a9e717..aa3a001ef413 100644
+--- a/drivers/rtc/rtc-tps65910.c
++++ b/drivers/rtc/rtc-tps65910.c
+@@ -361,6 +361,13 @@ static const struct rtc_class_ops tps65910_rtc_ops = {
+ 	.set_offset	= tps65910_set_offset,
+ };
+ 
++static const struct rtc_class_ops tps65910_rtc_ops_noirq = {
++	.read_time	= tps65910_rtc_read_time,
++	.set_time	= tps65910_rtc_set_time,
++	.read_offset	= tps65910_read_offset,
++	.set_offset	= tps65910_set_offset,
++};
++
+ static int tps65910_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct tps65910 *tps65910 = NULL;
+@@ -415,13 +422,17 @@ static int tps65910_rtc_probe(struct platform_device *pdev)
+ 		tps65910_rtc_interrupt, IRQF_TRIGGER_LOW,
+ 		dev_name(&pdev->dev), &pdev->dev);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "IRQ is not free.\n");
+-		return ret;
++		dev_err(&pdev->dev, "request IRQ:%d failed, err = %d\n",
++			 irq, ret);
++		irq = -1;
+ 	}
+ 	tps_rtc->irq = irq;
+-	device_set_wakeup_capable(&pdev->dev, 1);
++	if (irq != -1) {
++		device_set_wakeup_capable(&pdev->dev, 1);
++		tps_rtc->rtc->ops = &tps65910_rtc_ops;
++	} else
++		tps_rtc->rtc->ops = &tps65910_rtc_ops_noirq;
+ 
+-	tps_rtc->rtc->ops = &tps65910_rtc_ops;
+ 	tps_rtc->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
+ 	tps_rtc->rtc->range_max = RTC_TIMESTAMP_END_2099;
+ 
+-- 
+2.20.1
+
