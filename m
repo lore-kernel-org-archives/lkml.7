@@ -2,83 +2,151 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E02C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08297C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F90E215EA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:10:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzQb2szx"
+	by mail.kernel.org (Postfix) with ESMTP id DBEA120869
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 19:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfKITKM (ORCPT
+        id S1726457AbfKITNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 14:10:12 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46427 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfKITKL (ORCPT
+        Sat, 9 Nov 2019 14:13:39 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47328 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfKITNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 14:10:11 -0500
-Received: by mail-io1-f68.google.com with SMTP id c6so9886089ioo.13;
-        Sat, 09 Nov 2019 11:10:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m3uHaDtX3ciBcivMZkabAXv4IXjFfi/2JONmJEnyS4M=;
-        b=OzQb2szxIOCMkG7rpfV7iXzqQ4zN4waKC8TIK07OVor9Nkn/w6S5TD3VPil6TGism5
-         N7sxi6TFacDj8wDuXvqUKN0e/a2okRozjUaav/IZaFAFADsYQBWI9yKA3Jbz9kCavgrD
-         mu7xIHK4ip6j9erJ3VRgFN53eJWqyGToD4+u2BvFhIUJixFLpx+5hKb8d6dBVne6WngW
-         w380DqebBQySGHVYeDMJpAJkgX1xOD0KxLOXh0+yovMZk9BBH9/bbIe4DDdIA8STfz59
-         sLeil7/LYCTR53E6bByKg5V3bGq82Yjce99r2hBDEu+4+7qkLhLnGs9xB8V09whZIYA+
-         k5Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m3uHaDtX3ciBcivMZkabAXv4IXjFfi/2JONmJEnyS4M=;
-        b=B4y82udQeWwPcjvHhe2Rx66lk1w959KLnuAJghuq9/PjXisUjwuaQyIEYFzbkUvZ8+
-         xC+BDTwgZqZIVnB98g7c7Zl1gvlGsiubcWKDse/0vWK+G4EffYIYdNMGmccgksMT/bn6
-         gznAQ1n/okWFfW0yGlzL7joowf+U0RsARLKMplWUe7mAdsnR2nyE+b2/6jL6Kh+lUMeo
-         /zR0MYILw/gt0qTtXCuBYsgl5ke1i7y1tke7wStf9qsZishB+vh3ji5P84WLSPNgz8Fi
-         i9czLbkBwYsuCIBrKJmrTGPNaQp885vJ5FGkU1oiby4vjMefeULG/aqPZVRzCR+22kh6
-         Zbgw==
-X-Gm-Message-State: APjAAAXQDdt5rd/YuJKnec30+gl6mE/VhJpUKO5WE4jXaSMcYIIn++FG
-        /LS2IRtuE1tC4EB9GByBeCfG3FN6kNK4DEUuPVY=
-X-Google-Smtp-Source: APXvYqyCcuNQztMPdKAwb9hw9bvQ+cvwApp4ySFAb9AH82h57COZOkZtMCvC2QTO/tDHbKmfFTj/6EewefH4XbTyU5o=
-X-Received: by 2002:a5e:da45:: with SMTP id o5mr17159702iop.265.1573326610808;
- Sat, 09 Nov 2019 11:10:10 -0800 (PST)
+        Sat, 9 Nov 2019 14:13:38 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BD13D28E979;
+        Sat,  9 Nov 2019 19:13:35 +0000 (GMT)
+Date:   Sat, 9 Nov 2019 20:13:33 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 for 5.4 1/4] media: hantro: Fix s_fmt for dynamic
+ resolution changes
+Message-ID: <20191109201333.4dc63e0e@collabora.com>
+In-Reply-To: <92cba217-4f14-a397-2ae5-8797cc931703@xs4all.nl>
+References: <20191007174505.10681-1-ezequiel@collabora.com>
+        <20191007174505.10681-2-ezequiel@collabora.com>
+        <20191108111950.717db5ce@collabora.com>
+        <92cba217-4f14-a397-2ae5-8797cc931703@xs4all.nl>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20191108213257.3097633-1-arnd@arndb.de> <20191108213257.3097633-4-arnd@arndb.de>
-In-Reply-To: <20191108213257.3097633-4-arnd@arndb.de>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Sat, 9 Nov 2019 11:09:58 -0800
-Message-ID: <CABeXuvpCejkkjT80U9pywkV6FnO5rxk4rZzpmAEnUdwmzBN0Og@mail.gmail.com>
-Subject: Re: [PATCH 03/16] net: sock: use __kernel_old_timespec instead of timespec
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Pedro Tammela <pctammela@gmail.com>,
-        Linux Network Devel Mailing List <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Deepa Dinamani <deepa.kernel@gmail.com>
+On Sat, 9 Nov 2019 13:25:18 +0100
+Hans Verkuil <hverkuil@xs4all.nl> wrote:
+
+> On 11/8/19 11:19 AM, Boris Brezillon wrote:
+> > On Mon,  7 Oct 2019 14:45:02 -0300
+> > Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> >   
+> >> Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> >> changed the conditions under S_FMT was allowed for OUTPUT
+> >> CAPTURE buffers.
+> >>
+> >> However, and according to the mem-to-mem stateless decoder specification,
+> >> in order to support dynamic resolution changes, S_FMT should be allowed
+> >> even if OUTPUT buffers have been allocated.
+> >>
+> >> Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
+> >> modification, provided the pixel format stays the same.
+> >>
+> >> Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
+> >>
+> >> Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> >> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> >> --
+> >> v2:
+> >> * Call try_fmt_out before using the format,
+> >>   pointed out by Philipp.
+> >>
+> >>  drivers/staging/media/hantro/hantro_v4l2.c | 28 +++++++++++++++-------
+> >>  1 file changed, 19 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
+> >> index 3dae52abb96c..586d243cc3cc 100644
+> >> --- a/drivers/staging/media/hantro/hantro_v4l2.c
+> >> +++ b/drivers/staging/media/hantro/hantro_v4l2.c
+> >> @@ -367,19 +367,26 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+> >>  {
+> >>  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+> >>  	struct hantro_ctx *ctx = fh_to_ctx(priv);
+> >> +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> >>  	const struct hantro_fmt *formats;
+> >>  	unsigned int num_fmts;
+> >> -	struct vb2_queue *vq;
+> >>  	int ret;
+> >>  
+> >> -	/* Change not allowed if queue is busy. */
+> >> -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> >> -	if (vb2_is_busy(vq))
+> >> -		return -EBUSY;
+> >> +	ret = vidioc_try_fmt_out_mplane(file, priv, f);
+> >> +	if (ret)
+> >> +		return ret;
+> >>  
+> >>  	if (!hantro_is_encoder_ctx(ctx)) {
+> >>  		struct vb2_queue *peer_vq;
+> >>  
+> >> +		/*
+> >> +		 * In other to support dynamic resolution change,  
+> > 
+> > 		      ^ order
+> >   
+> >> +		 * the decoder admits a resolution change, as long
+> >> +		 * as the pixelformat remains. Can't be done if streaming.
+> >> +		 */
+> >> +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
+> >> +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
+> >> +			return -EBUSY;  
+> > 
+> > Sorry to chime in only now, but I'm currently looking at the VP9 spec
+> > and it seems the resolution is allowed to change dynamically [1] (I
+> > guess the same applies to VP8). IIU the spec correctly, coded frames
+> > using the new resolution can reference decoded frames using the old
+> > one (can be higher or lower res BTW). If we force a streamoff to change
+> > the resolution (as seems to be the case here), we'll lose those ref
+> > frames (see the hantro_return_bufs() in stop streaming), right?
+> > Hans, Tomasz, any idea how this dynamic resolution change could/should
+> > be supported?  
+> 
+> As Tomasz also mentioned, supporting this is much more work, and probably
+> requires new streaming ioctls.
+> 
+> In the meantime I think this patch is fine (with the typo fixed, I can do
+> that), so is it OK if I merge this?
+
+Sure, go ahead, here's my
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+in case you haven't applied the patch already.
+
+Oh, BTW, it wasn't clear in my previous reply, but I didn't intend to
+block this patch with my VP9 concerns. My only motivation was to start
+a discussion on how to solve my specific issue ;-).
