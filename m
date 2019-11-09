@@ -2,182 +2,246 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF20C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BECFC17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7548B20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:44:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klj75VtA"
+	by mail.kernel.org (Postfix) with ESMTP id 110E720B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573347416;
+	bh=BUdFQb1kZQPx4ojrvJZEsGbT37KVn2Olmo5PxzNJ0ts=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=I8lGbfBXlUCokZZzcICIq6E+N4/djbn0XsKFtRS07PemLUuXPBA2bKbc2sjm5pHnp
+	 jK2PdsaDlU9eOsATrDfsddy9GUTRIAplaXmMbt5toUOUT0rYnvBIdcVQb0oYTb2M2x
+	 WIKQb0JMsE91jVDe7j945KxqHyev9ihXyqnTdxAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfKJAoU (ORCPT
+        id S1726587AbfKJA42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 19:44:20 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33301 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfKJAoU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 19:44:20 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a17so9362513wmb.0;
-        Sat, 09 Nov 2019 16:44:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hxpVc6VloLtI21c23qGZC1El6cBTlpdM4jZz6yMTkmA=;
-        b=klj75VtANyXUMxZErrb+Mrj6v8k+DtfwnCvpdajSa7kRe7jaiH6o6gMQsX9pS3gDy6
-         i0HB/SHbrlpjZCS0bRAXKCLDoqcd+gXCTvS5zn/Ag1RkVgcfXjGlzRn8nI44Xw51J8HW
-         dARN/2sPEW8/up0yAVe66llPjlu2f5I0XEnlr6zi738ichmXj/zgamVaCQAQ4xfK8spi
-         1Uv8tBX4Kke00rVka2a9RHAfYDYuLtnXuhNn98UEYjyr3XpwDV/K/aW5CC6I9CUMyP+2
-         5j0xp5iuYduQCTmUQ4hcVOOw6DvMTOnsVyzeIgs8e4PNs0qOpUlf9FSyBX5U/rQyQQJ4
-         MWmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hxpVc6VloLtI21c23qGZC1El6cBTlpdM4jZz6yMTkmA=;
-        b=BbN2jxCsSdsyBCMqagtYl6x8vggGyD7wp0R9olvpej+CTRLeAnSkDgIo5KXD7cjduy
-         NqxFacF+2dH0+l4nkT//Sh4BNwvZgIKKhFQSqv291V/2hUoVRYG5aYVck6tSoq1osDSo
-         qYszmjrVzVe/j6xWja0E6uCoxtqiqFLbSDJMgIJF816Sc6rMq3SUs4z/e6I826y/P5xU
-         eIun9VPiVePscnZ8I0fR8tD1sXZCIqmG1X7j3tHT9fS9iKxdp/F9e4WFPCL6C5cOlii3
-         +n600T9rY1shEna942it5yeukNGiHXLytKODlTRI8T0GzhhBMdQelDo0CpUKIzEIWA1z
-         VvEg==
-X-Gm-Message-State: APjAAAU5qNn5rimAEswCb1+/HIGWBG0vOEdL9rvDkGbhD8MdsX5VeF6b
-        lqP8S1Z56sM8OX683OpaR6bvfE4I
-X-Google-Smtp-Source: APXvYqwCGkgs1w71x4U/Gfuc46BuGATIUbwMW2VpkWaVLv+PUFVhtG87xExa7Hyl1Tk7My+8JCmGcQ==
-X-Received: by 2002:a7b:c0c3:: with SMTP id s3mr13941059wmh.20.1573346656935;
-        Sat, 09 Nov 2019 16:44:16 -0800 (PST)
-Received: from debian (host-78-144-219-162.as13285.net. [78.144.219.162])
-        by smtp.gmail.com with ESMTPSA id l10sm18361739wrg.90.2019.11.09.16.44.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 09 Nov 2019 16:44:15 -0800 (PST)
-Date:   Sun, 10 Nov 2019 00:44:13 +0000
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Subject: Re: libtraceevent installing in wrong folder
-Message-ID: <20191110004413.6pnyivofpjdvwj6b@debian>
-References: <20191108161157.g5aadocnfvragqb2@debian>
- <20191108120548.4118879a@gandalf.local.home>
+        Sat, 9 Nov 2019 19:56:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbfKJA41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 19:56:27 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [216.9.110.3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E38220B7C;
+        Sun, 10 Nov 2019 00:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573347386;
+        bh=BUdFQb1kZQPx4ojrvJZEsGbT37KVn2Olmo5PxzNJ0ts=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=CkiMgTTcMrqVeCCUu1Ej0COoXnMBxb150kdeBXTLRvzn0Ww6G59cnIxi9rEeKYYFr
+         GlydRKlKIdFq+qyHJ6m8cSCaeoxHvoAB/mk3P5WrSiCYTgfeIPoAbwnOBCrDdtnHt5
+         hQu8wfiCv2tV7iKzEDcUQ/6lr/mTlc9bwQ1GD02w=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id BE053352280C; Sat,  9 Nov 2019 10:53:36 -0800 (PST)
+Date:   Sat, 9 Nov 2019 10:53:36 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Subject: Re: [PATCH 1/2] list: add hlist_unhashed_lockless()
+Message-ID: <20191109185336.GA19013@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191107193738.195914-1-edumazet@google.com>
+ <20191108192448.GB20975@paulmck-ThinkPad-P72>
+ <CANn89iKNLESN7U7BtyzkC6WLVn__Hm727A5cRm6PDuzG5+E4vA@mail.gmail.com>
+ <20191108234224.GF20975@paulmck-ThinkPad-P72>
+ <CANn89iJsh5X4k2SsT0iNdRJPs4k2Hun3EJak1iomcKahmEJJwg@mail.gmail.com>
+ <20191109175440.GJ20975@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ldmoq22qh3rkwm2q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108120548.4118879a@gandalf.local.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191109175440.GJ20975@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ldmoq22qh3rkwm2q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Nov 08, 2019 at 12:05:48PM -0500, Steven Rostedt wrote:
-> 
-> [ I also added linux-trace-devel, but it was good to Cc LKML too ]
-> 
-> On Fri, 8 Nov 2019 16:11:57 +0000
-> Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
-> 
-> > Hi Steve,
+On Sat, Nov 09, 2019 at 09:54:40AM -0800, Paul E. McKenney wrote:
+> On Fri, Nov 08, 2019 at 07:15:16PM -0800, Eric Dumazet wrote:
+> > On Fri, Nov 8, 2019 at 3:42 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > On Fri, Nov 08, 2019 at 12:17:49PM -0800, Eric Dumazet wrote:
+> > > > On Fri, Nov 8, 2019 at 11:24 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, Nov 07, 2019 at 11:37:37AM -0800, Eric Dumazet wrote:
+> > > > > > We would like to use hlist_unhashed() from timer_pending(),
+> > > > > > which runs without protection of a lock.
+> > > > > >
+> > > > > > Note that other callers might also want to use this variant.
+> > > > > >
+> > > > > > Instead of forcing a READ_ONCE() for all hlist_unhashed()
+> > > > > > callers, add a new helper with an explicit _lockless suffix
+> > > > > > in the name to better document what is going on.
+> > > > > >
+> > > > > > Also add various WRITE_ONCE() in __hlist_del(), hlist_add_head()
+> > > > > > and hlist_add_before()/hlist_add_behind() to pair with
+> > > > > > the READ_ONCE().
+> > > > > >
+> > > > > > Signed-off-by: Eric Dumazet <edumazet@google.com>
+> > > > > > Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> > > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > >
+> > > > > I have queued this, but if you prefer it go some other way:
+> > > > >
+> > > > > Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > >
+> > > > > But shouldn't the uses in include/linux/rculist.h also be converted
+> > > > > into the patch below?  If so, I will squash the following into your
+> > > > > patch.
+> > > > >
+> > > > >                                                 Thanx, Paul
+> > > > >
+> > > > > ------------------------------------------------------------------------
+> > > >
+> > > > Agreed, thanks for the addition of this Paul.
+> > >
+> > > Very good, squashed and pushed, thank you!
+> > >
 > > 
-> > I tried to install libtraceevent. and I used the command:
-> > "make DESTDIR=/home/sudip/test prefix=/usr install" from tool/lib/traceevent
+> > I have another KCSAN report of a bug that will force us to use
+> > hlist_unhashed_lockless() from sk_unhashed()
 > > 
-
-<snip>
-
+> > (Meaning we also need to add some WRITE_ONCE() annotations to
+> > include/linux/list_nulls.h )
 > > 
-> > I am seeing two problems:
-> > 1) It created another home/sudip/test folder inside /home/sudip/test and
-> > the header files are installed in /home/sudip/test/home/sudip/test/usr/include folder.
-> > They should have been in /home/sudip/test/usr/include.
+> > BUG: KCSAN: data-race in inet_unhash / inet_unhash
 > > 
-> > 2) I used prefix=/usr but the 'pkgconfig' still went to /usr/local
+> > write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
+> >  __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
+> >  hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
+> >  __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
+> >  inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
+> >  tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+> >  tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+> >  tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+> >  tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+> >  tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+> >  tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+> >  call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+> >  expire_timers kernel/time/timer.c:1449 [inline]
+> >  __run_timers kernel/time/timer.c:1773 [inline]
+> >  __run_timers kernel/time/timer.c:1740 [inline]
+> >  run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+> >  __do_softirq+0x115/0x33f kernel/softirq.c:292
+> >  invoke_softirq kernel/softirq.c:373 [inline]
+> >  irq_exit+0xbb/0xe0 kernel/softirq.c:413
+> >  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+> >  smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+> >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+> >  native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+> >  arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+> >  default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+> >  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+> >  do_idle+0x1af/0x280 kernel/sched/idle.c:263
+> >  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+> >  start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
+> >  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
 > > 
-> > Did I do something wrong?
+> > read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
+> >  sk_unhashed include/net/sock.h:607 [inline]
+> >  inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
+> >  tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+> >  tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+> >  tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+> >  tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+> >  tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+> >  tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+> >  call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+> >  expire_timers kernel/time/timer.c:1449 [inline]
+> >  __run_timers kernel/time/timer.c:1773 [inline]
+> >  __run_timers kernel/time/timer.c:1740 [inline]
+> >  run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+> >  __do_softirq+0x115/0x33f kernel/softirq.c:292
+> >  invoke_softirq kernel/softirq.c:373 [inline]
+> >  irq_exit+0xbb/0xe0 kernel/softirq.c:413
+> >  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+> >  smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+> >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+> >  native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+> >  arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+> >  default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+> >  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+> >  do_idle+0x1af/0x280 kernel/sched/idle.c:263
+> >  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+> >  rest_init+0xec/0xf6 init/main.c:452
+> >  arch_call_rest_init+0x17/0x37
+> >  start_kernel+0x838/0x85e init/main.c:786
+> >  x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+> >  x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+> >  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+> > 
+> > Reported by Kernel Concurrency Sanitizer on:
+> > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine,
+> > BIOS Google 01/01/2011
 > 
-> No, but you showed that the installation part is poorly tested. I
-> mostly tested just the code from trace-cmd, and even the installation
-> paths from that repo. I should have tested the kernel repo as well, but
-> failed to do this.
-> 
-> Thanks for reporting, I need to take a look, or if you want to have a go
-> at it, that would be great too :-)
+> Like this?
 
-Attached is a patch for the wrong installation of header files.
-For the pkgconfig, the problem is at:
-pkgconfig_dir ?= $(word 1,$(shell $(PKG_CONFIG)                 \
-                        --variable pc_path pkg-config | tr ":" " "))
+Hmmm...  Do you also need this?
 
-This is checking 'pc_path' which is the search path used by pkg-config
-and then its taking the first path from that list and using in pkgconfig_dir,
-which can be wrong.
-A reliable way to get the pkg-config location is if I use:
+						Thanx, Paul
 
-pkg=$(pkg-config --list-all | head -1 | cut -d ' ' -f 1)
-pkg-config --variable=pcfiledir $pkg
+------------------------------------------------------------------------
 
-But I will need to see how I can use this in a Makefile, will send this
-patch later, or if you can find a better way before me that will be great.
+commit cf78c8772c9dc26a36c0e5eae1262cc396bbfb3f
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Sat Nov 9 10:45:47 2019 -0800
 
---
-Regards
-Sudip
+    rcu: Add a hlist_nulls_unhashed_lockless() function
+    
+    This commit adds an hlist_nulls_unhashed_lockless() to allow lockless
+    checking for whether or note an hlist_nulls_node is hashed or not.
+    While in the area, this commit also adds a docbook comment to the existing
+    hlist_nulls_unhashed() function.
+    
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
---ldmoq22qh3rkwm2q
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-libtraceevent-fix-header-installation.patch"
-
-From 1ff159997d1dd299bb0e612baeb573aac45eac03 Mon Sep 17 00:00:00 2001
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date: Sat, 9 Nov 2019 23:33:54 +0000
-Subject: [PATCH] libtraceevent: fix header installation
-
-When we passed some location in DESTDIR, install_headers called
-do_install with DESTDIR as part of the second argument. But do_install
-is again using '$(DESTDIR_SQ)$2', so as a result the headers were
-installed in a location $DESTDIR/$DESTDIR. In my testing I passed
-DESTDIR=/home/sudip/test and the headers were installed in:
-/home/sudip/test/home/sudip/test/usr/include/traceevent.
-Lets remove DESTDIR from the second argument of do_install so that the
-headers are installed in the correct location.
-
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- tools/lib/traceevent/Makefile | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 5315f3787f8d..cbb429f55062 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -232,10 +232,10 @@ install_pkgconfig:
+diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
+index 1ecd356..fa6e847 100644
+--- a/include/linux/list_nulls.h
++++ b/include/linux/list_nulls.h
+@@ -56,11 +56,33 @@ static inline unsigned long get_nulls_value(const struct hlist_nulls_node *ptr)
+ 	return ((unsigned long)ptr) >> 1;
+ }
  
- install_headers:
- 	$(call QUIET_INSTALL, headers) \
--		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
--		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
--		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
--		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
-+		$(call do_install,event-parse.h,$(includedir_SQ),644); \
-+		$(call do_install,event-utils.h,$(includedir_SQ),644); \
-+		$(call do_install,trace-seq.h,$(includedir_SQ),644); \
-+		$(call do_install,kbuffer.h,$(includedir_SQ),644)
++/**
++ * hlist_nulls_unhashed - Has node been removed and reinitialized?
++ * @h: Node to be checked
++ *
++ * Not that not all removal functions will leave a node in unhashed state.
++ * For example, hlist_del_init_rcu() leaves the node in unhashed state,
++ * but hlist_nulls_del() does not.
++ */
+ static inline int hlist_nulls_unhashed(const struct hlist_nulls_node *h)
+ {
+ 	return !h->pprev;
+ }
  
- install: install_lib
- 
--- 
-2.11.0
-
-
---ldmoq22qh3rkwm2q--
++/**
++ * hlist_nulls_unhashed_lockless - Has node been removed and reinitialized?
++ * @h: Node to be checked
++ *
++ * Not that not all removal functions will leave a node in unhashed state.
++ * For example, hlist_del_init_rcu() leaves the node in unhashed state,
++ * but hlist_nulls_del() does not.  Unlike hlist_nulls_unhashed(), this
++ * function may be used locklessly.
++ */
++static inline int hlist_nulls_unhashed_lockless(const struct hlist_nulls_node *h)
++{
++	return !READ_ONCE(h->pprev);
++}
++
+ static inline int hlist_nulls_empty(const struct hlist_nulls_head *h)
+ {
+ 	return is_a_nulls(READ_ONCE(h->first));
