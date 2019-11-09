@@ -2,199 +2,96 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3368C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10E7C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F95B2077C
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:29:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="f6C0TwCP"
+	by mail.kernel.org (Postfix) with ESMTP id CCE3921924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfKIM3A (ORCPT
+        id S1726424AbfKIMdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 07:29:00 -0500
-Received: from mout.web.de ([212.227.15.14]:46267 "EHLO mout.web.de"
+        Sat, 9 Nov 2019 07:33:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfKIM3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 07:29:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573302415;
-        bh=AQ/eXQhL7XKePKt3K1mFZFA8OiMhHng6QZbb0QmtvZc=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=f6C0TwCPIagB6oP1X11xxVjSTpgd9wv0Sg8oG4+0JQT/cKEg9pKCn+YM03FfKy11S
-         12//UomNSo6g/rIWTzmdvCpNQntbytu2O/9K0eHfGms+vAsbjFLcxRcLEmj0BkKUls
-         AbozWfrv0jiWV1nwr+CkmQ7prnDvA+8AARUVb9zc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.82.67]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LjrU9-1hwZ313JYP-00bsMQ; Sat, 09
- Nov 2019 13:26:54 +0100
-To:     linux-pwm@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] pwm: omap-dmtimer: Add missing put_device() call in
- pwm_omap_dmtimer_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Grant Erickson <marathon96@gmail.com>,
-        Joachim Eastwood <manabian@gmail.com>,
-        Neil Brown <neilb@suse.de>, Wen Yang <wen.yang99@zte.com.cn>
-Message-ID: <fd7a56e4-2a35-a6c4-e5bd-1e53a6c48687@web.de>
-Date:   Sat, 9 Nov 2019 13:26:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726219AbfKIMdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 07:33:13 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA3421882;
+        Sat,  9 Nov 2019 12:33:11 +0000 (UTC)
+Date:   Sat, 9 Nov 2019 07:33:10 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH 03/10] ftrace: Add register_ftrace_direct()
+Message-ID: <20191109073310.6a7a16f2@gandalf.local.home>
+In-Reply-To: <20191109022907.6zzo6orhxpt5n2sv@ast-mbp.dhcp.thefacebook.com>
+References: <20191108212834.594904349@goodmis.org>
+        <20191108213450.032003836@goodmis.org>
+        <20191109022907.6zzo6orhxpt5n2sv@ast-mbp.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yu7LEgpvRSuXya5WnRjWw4eoR0eWF6NU212zZeHtdsg7K8WH6M6
- cbmJ9PHfP7iT7zt7SnLrzMQYzxULIW1COc2593KKAySIVuwA3/7WcKSeegE0Y5v0/97CcJp
- cXyiHEptIdBGq2wDMLd8AWKaXhK2JxY0Jql18rdK4Dg41F6+RyySCT90I1nlazvmwrsWzg6
- FRYG1nFkah5/jH9ikERww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gxkprVtV6u4=:Cbu6CSJE9DquIpYdmSps+K
- tDg6EPoWQHm11nhGF8fKPxm4b1yfV2YsePzUimZ8tkGHXW9mto/eJEY4i6y+ToQZ2z2VrdEXG
- +qljeuvgX+IQdcVPeqKb13tMRSxn0ochCsnF3OpR0S/bMCWsFgaQwi06lAExWowUg/jmLiAhd
- VhkZs6k6cEvq4cEn6IYFYFbEuYJSA8JOHRBmbGYeSvOBFiKBkdt8YDeUlGnZGz1OcEqc/4q5C
- JzB2Kbt8XtcnIcRXvrj4gLfNYrLmBFCEMo9b9KJD3zwCWqsh70dSg9Qcy9A5jN2zjeNyGVTli
- E1+VRi1qqww0+Z5R/IU/SyL515Tv149K9BzezU18AgktBlJWQm29ncsPesRAJVoYHQ+QAi4py
- +PeHC/jyZfkeGG/q9l5WILQh5ERjbnJ6reS1WbnW13O1XqyyWbef3AVfJhEb/la2CzsZhRCib
- IUNxeMXOILVGfOKpkqfML/o2JdLIr+DQAoCC0N7jexItlXfge3fPtIbog6SXrscC1QKxygqyM
- I2HDwlXtsEAfqjkG0gdgxx2aBZmel6Jo1HgtZXgRLIb0zhztThYEGFOJLVX+wvRqQU69f6jsp
- IZbfaEoSVLdC7aYBe74OhzDVSqmIbpxyL9dmeEJlpsQwPQCTnkIPWSaea0B5D7R25+hjA9s6s
- T++jjJYMHIJ9T0Kp3xd7D9icocacJ4bNqxNhv4jydh8ZSckkcW9/nKPfJ8BgQJr+wwjEUGUuk
- ArUxzCqxmNFOCYksn96kPDeAeNK1gTpqvSKmVjmPFmllrZ0m1fsAi4msozLP1YgqFa4mP8V/D
- Ifg8gEo3jlKD3AbYDH+Tu53Gbs2wfyJBhH+VLKOseWpNre6SAlFUqey+tZ36LTwiJcjWxxGXc
- rUc8/wxHw4ZyladEfhUqw6hMzqk0sGD9OeYoNVWzSrjiZiJueOaK3mm3iPo5nA15lVJxW9bTv
- M9iQ2XEiQT4J8GbdgJwnx4/en+nPABXPopkhR4Dckim/WBS6MFds/IslInRjx+4T6oRgR6Atq
- fPBEUniu2bz5ZDsFhBw4V3iIb6S1a88ls6F+q3z3juSjNW0sbOY75wMwARklr9rULau9s6alY
- 0SJl4/E9hojWMkc4n6syui1IQzJWKE7O+lS/2yOS7ChX3kivfMpSKxswF2MN7YVrBX1TdDOpO
- 6mzHghZP4rLGjy7lBftbTtVKoWB0nKJQNsmFh3lBXLrFJa4aEV//UpjPuikJIYEUYs/e4EIaG
- SxHoha0bdQFGbFxZjsWr3NYpSnjp9vf9VUTXgT7a4a8jnR0VupQNQw9vvHoU=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 9 Nov 2019 13:09:42 +0100
+On Fri, 8 Nov 2019 18:29:09 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-A coccicheck run provided information like the following.
+> Is there a way to do a replacement of direct call?
 
-drivers/pwm/pwm-omap-dmtimer.c:304:2-8: ERROR: missing put_device;
-call of_find_device_by_node on line 255, but without a corresponding
-object release within this function.
+I'm curious to what the use case would be. The direct call added would
+still need to be a trampoline, as the parameters need to be saved
+before calling any other code, and then restored before going back to
+the traced function. Couldn't you do a text poke on that trampoline to
+change what gets called?
 
-Generated by: scripts/coccinelle/free/put_device.cocci
+> If I use unregister(old)+register(new) some events will be missed.
 
-Thus add jump targets to fix the exception handling for this
-function implementation.
+> If I use register(new)+unregister(old) for short period of time both new and
 
-Fixes: b7290cf6ff7869ec12070aa146c370728cab62c2 ("pwm: pwm-omap-dmtimer: A=
-dapt driver to utilize dmtimer pdata ops")
-Fixes: 6604c6556db9e41c85f2839f66bd9d617bcf9f87 ("pwm: Add PWM driver for =
-OMAP using dual-mode timers")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/pwm/pwm-omap-dmtimer.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+Actually, as we only allow a single direct call to be added at any time,
+the register(new) would fail if there was already an old at the
+location.
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer=
-.c
-index 00772fc53490..958854213786 100644
-=2D-- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -301,12 +301,13 @@ static int pwm_omap_dmtimer_probe(struct platform_de=
-vice *pdev)
- put:
- 	of_node_put(timer);
- 	if (ret < 0)
--		return ret;
-+		goto check_timer_pdev;
+> old will be triggering on all cpus which will likely confuse bpf tracing.
+> Something like modify_ftrace_direct() should solve it. It's still racy. In a
+> sense that some cpus will be executing old while other cpus will be executing
+> new, but per-cpu there will be no double accounting. How difficult would be
+> to add such feature?
 
- 	omap =3D devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
- 	if (!omap) {
- 		pdata->free(dm_timer);
--		return -ENOMEM;
-+		ret =3D -ENOMEM;
-+		goto put_device;
- 	}
+All this said, it would actually be pretty trivial to implement this,
+as when another ftrace_ops is attached to the direct call location, it
+falls back to the direct helper. To implement a modify_ftrace_direct(),
+all that would be needed to do is to:
 
- 	omap->pdata =3D pdata;
-@@ -340,12 +341,19 @@ static int pwm_omap_dmtimer_probe(struct platform_de=
-vice *pdev)
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM\n");
- 		omap->pdata->free(omap->dm_timer);
--		return ret;
-+		goto put_device;
- 	}
+1) Attached a ftrace_ops stub to the same function that has the direct
+caller, that will cause ftrace to got to the loop routine, and the
+direct helper would then define what gets called by what what
+registered in the direct_functions array.
 
- 	platform_set_drvdata(pdev, omap);
+2) Change what gets called in the direct_functions array, and at that
+moment, the helper function would be using that. May require syncing
+CPUs to get all CPUs seeing the same thing.
 
- 	return 0;
-+
-+check_timer_pdev:
-+	if (timer_pdev)
-+put_device:
-+		put_device(&timer_pdev->dev);
-+
-+	return ret;
- }
+3) Remove the ftrace_ops stub, which would put back the direct caller
+in the fentry location, but this time with the new function.
 
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
-=2D-
-2.24.0
-
+-- Steve
