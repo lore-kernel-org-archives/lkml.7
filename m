@@ -2,137 +2,239 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2378C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB592C17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8411214DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BA620865
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hSU2uBLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfKIBnY (ORCPT
+        id S1726146AbfKIBry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 20:43:24 -0500
-Received: from mga14.intel.com ([192.55.52.115]:12966 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbfKIBnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 20:43:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 17:43:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
-   d="scan'208";a="354259794"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga004.jf.intel.com with ESMTP; 08 Nov 2019 17:43:23 -0800
-Date:   Fri, 8 Nov 2019 17:43:23 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
- reserved
-Message-ID: <20191109014323.GB8254@linux.intel.com>
-References: <20191106170727.14457-2-sean.j.christopherson@intel.com>
- <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
- <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
- <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
- <20191106233913.GC21617@linux.intel.com>
- <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
- <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
- <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
- <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
- <20191107155846.GA7760@linux.intel.com>
+        Fri, 8 Nov 2019 20:47:54 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:41140 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfKIBry (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 20:47:54 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA91kwIF161899;
+        Sat, 9 Nov 2019 01:47:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ references : message-id : date : mime-version : in-reply-to : content-type
+ : content-transfer-encoding; s=corp-2019-08-05;
+ bh=RDaArW/XqS52bxXI2GDucXkCgk42HxOuT5sk7BxFnA0=;
+ b=hSU2uBLNtTUdrhIczXBD4Ao5A7MxQNv+v6hDSuE3JmNU2P4bQbtSSeHvXycKmoyqXrKG
+ TgkHsdG/sjg3bIpHzY97Ez+cadRcOsrqH5ikekwNxSNGuY4qUGf5tNB4StM4NCgvch++
+ KbpptL4lXD2skCuw+ta7VaXOUmE0RQjo8DSgNHtaNMmZEgt2WjiDMV12EBZlX5ZvRql9
+ +4u3sH8acPObm6jT2Wblnv/J64bkm1+FU8YS+eoHcW9HPDVH1rPFs0gNrNRh4N4Mq6EG
+ F3ZTZ5XcOobAHVQ2D2MD8eegrsJMfBBWMqm+SZKKdbasbKrM3/aT9XDXkWSQys5VzHwC Vg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2w5hgwra47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 09 Nov 2019 01:47:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA91hjdM193643;
+        Sat, 9 Nov 2019 01:47:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2w5kh3t316-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 09 Nov 2019 01:47:14 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA91l7SI029014;
+        Sat, 9 Nov 2019 01:47:08 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 Nov 2019 17:47:07 -0800
+Subject: Re: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+References: <20191107190628.22667-1-longman@redhat.com>
+ <20191107195441.GF11823@bombadil.infradead.org>
+ <ed46ef09-7766-eb80-a4ad-4c72d8dba188@oracle.com>
+ <20191108020456.sulyjskhq3s5zcaa@linux-p48b>
+ <ea057d15-5205-9992-af95-b2727df577c4@oracle.com>
+Message-ID: <5059733e-95aa-2c9e-6f5d-4f45f6a130b3@oracle.com>
+Date:   Fri, 8 Nov 2019 17:47:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107155846.GA7760@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <ea057d15-5205-9992-af95-b2727df577c4@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9435 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911090014
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9435 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911090014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 07:58:46AM -0800, Sean Christopherson wrote:
-> On Thu, Nov 07, 2019 at 07:36:45AM -0800, Dan Williams wrote:
-> > On Thu, Nov 7, 2019 at 3:12 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> > >
-> > > On 07/11/19 06:48, Dan Williams wrote:
-> > > >> How do mmu notifiers get held off by page references and does that
-> > > >> machinery work with ZONE_DEVICE? Why is this not a concern for the
-> > > >> VM_IO and VM_PFNMAP case?
-> > > > Put another way, I see no protection against truncate/invalidate
-> > > > afforded by a page pin. If you need guarantees that the page remains
-> > > > valid in the VMA until KVM can install a mmu notifier that needs to
-> > > > happen under the mmap_sem as far as I can see. Otherwise gup just
-> > > > weakly asserts "this pinned page was valid in this vma at one point in
-> > > > time".
-> > >
-> > > The MMU notifier is installed before gup, so any invalidation will be
-> > > preceded by a call to the MMU notifier.  In turn,
-> > > invalidate_range_start/end is called with mmap_sem held so there should
-> > > be no race.
-> > >
-> > > However, as Sean mentioned, early put_page of ZONE_DEVICE pages would be
-> > > racy, because we need to keep the reference between the gup and the last
-> > > time we use the corresponding struct page.
-> > 
-> > If KVM is establishing the mmu_notifier before gup then there is
-> > nothing left to do with that ZONE_DEVICE page, so I'm struggling to
-> > see what further qualification of kvm_is_reserved_pfn() buys the
-> > implementation.
+On 11/8/19 11:10 AM, Mike Kravetz wrote:
+> On 11/7/19 6:04 PM, Davidlohr Bueso wrote:
+>> On Thu, 07 Nov 2019, Mike Kravetz wrote:
+>>
+>>> Note that huge_pmd_share now increments the page count with the semaphore
+>>> held just in read mode.  It is OK to do increments in parallel without
+>>> synchronization.  However, we don't want anyone else changing the count
+>>> while that check in huge_pmd_unshare is happening.  Hence, the need for
+>>> taking the semaphore in write mode.
+>>
+>> This would be a nice addition to the changelog methinks.
 > 
-> Insertion into KVM's secondary MMU is mutually exclusive with an invalidate
-> from the mmu_notifier.  KVM holds a reference to the to-be-inserted page
-> until the page has been inserted, which ensures that the page is pinned and
-> thus won't be invalidated until after the page is inserted.  This prevents
-> an invalidate from racing with insertion.  Dropping the reference
-> immediately after gup() would allow the invalidate to run prior to the page
-> being inserted, and so KVM would map the stale PFN into the guest's page
-> tables after it was invalidated in the host.
+> Last night I remembered there is one place where we currently take
+> i_mmap_rwsem in read mode and potentially call huge_pmd_unshare.  That
+> is in try_to_unmap_one.  Yes, there is a potential race here today.
 
-My previous analysis is wrong, although I did sort of come to the right
-conclusion.
+Actually there is no race there today.  Callers to huge_pmd_unshare
+hold the page table lock.  So, this synchronizes those unshare calls
+from  page migration and page poisoning.
 
-The part that's wrong is that KVM does not rely on pinning a page/pfn when
-installing the pfn into its secondary MMU (guest page tables).  Instead,
-KVM keeps track of mmu_notifier invalidate requests and cancels insertion
-if an invalidate occured at any point between the start of hva_to_pfn(),
-i.e. the get_user_pages() call, and acquiring KVM's mmu lock (which must
-also be grabbed by mmu_notifier invalidate).  So for any pfn, regardless
-of whether it's backed by a struct page, KVM inserts a pfn if and only if
-it is guaranteed to get an mmu_notifier invalidate for the pfn (and isn't
-already invalidated).
+> But that race is somewhat contained as you need two threads doing some
+> combination of page migration and page poisoning to race.  This change
+> now allows migration or poisoning to race with page fault.  I would
+> really prefer if we do not open up the race window in this manner.
 
-In the page fault flow, KVM doesn't care whether or not the pfn remains
-valid in the associated vma.  In other words, Dan's idea of immediately
-doing put_page() on ZONE_DEVICE pages would work for *page faults*...
+But, we do open a race window by changing huge_pmd_share to take the
+i_mmap_rwsem in read mode as in the original patch.  
 
-...but not for all the other flows where KVM uses gfn_to_pfn(), and thus
-get_user_pages().  When accessing entire pages of guest memory, e.g. for
-nested virtualization, KVM gets the page associated with a gfn, maps it
-with kmap() to get a kernel address and keeps the mapping/page until it's
-done reading/writing the page.  Immediately putting ZONE_DEVICE pages
-would result in use-after-free scenarios for these flows.
+Here is the additional code needed to take the semaphore in write mode
+for the huge_pmd_unshare calls via try_to_unmap_one.  We would need to
+combine this with Longman's patch.  Please take a look and provide feedback.
+Some of the changes are subtle, especially the exception for MAP_PRIVATE
+mappings, but I tried to add sufficient comments.
 
-For non-page pfns, KVM explicitly memremap()'s the pfn and again keeps the
-mapping until it's done accessing guest memory.
+From 21735818a520705c8573b8d543b8f91aa187bd5d Mon Sep 17 00:00:00 2001
+From: Mike Kravetz <mike.kravetz@oracle.com>
+Date: Fri, 8 Nov 2019 17:25:37 -0800
+Subject: [PATCH] Changes needed for taking i_mmap_rwsem in write mode before
+ call to huge_pmd_unshare in try_to_unmap_one.
 
-The above is nicely encapsulated in kvm_vcpu_map(), added by KarimAllah in
-commit e45adf665a53 ("KVM: Introduce a new guest mapping API").
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+---
+ mm/hugetlb.c        |  9 ++++++++-
+ mm/memory-failure.c | 28 +++++++++++++++++++++++++++-
+ mm/migrate.c        | 27 +++++++++++++++++++++++++--
+ 3 files changed, 60 insertions(+), 4 deletions(-)
 
-For the hva_to_pfn_remapped() -> kvm_get_pfn() case, I think the page
-fault flow is in good shape by way of the mmu_notifier sequencing.  The
-kvm_get_pfn() call might temporarily keep a page alive, but it shouldn't
-break anything (I think).  Not sure about kvm_vcpu_map()...
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index f78891f92765..73d9136549a5 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4883,7 +4883,14 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
+  * indicated by page_count > 1, unmap is achieved by clearing pud and
+  * decrementing the ref count. If count == 1, the pte page is not shared.
+  *
+- * called with page table lock held.
++ * Must be called while holding page table lock.
++ * In general, the caller should also hold the i_mmap_rwsem in write mode.
++ * This is to prevent races with page faults calling huge_pmd_share which
++ * will not be holding the page table lock, but will be holding i_mmap_rwsem
++ * in read mode.  It is possible to call without holding i_mmap_rwsem in
++ * write mode if the caller KNOWS the page table is associated with a private
++ * mapping.  This is because private mappings can not share PMDs and can
++ * not race with huge_pmd_share calls during page faults.
+  *
+  * returns: 1 successfully unmapped a shared pte page
+  *	    0 the underlying pte page is not shared, or it is the last user
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 3151c87dff73..8f52b22cf71b 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1030,7 +1030,33 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
+ 	if (kill)
+ 		collect_procs(hpage, &tokill, flags & MF_ACTION_REQUIRED);
+ 
+-	unmap_success = try_to_unmap(hpage, ttu);
++	if (!PageHuge(hpage)) {
++		unmap_success = try_to_unmap(hpage, ttu);
++	} else {
++		mapping = page_mapping(hpage);
++		if (mapping) {
++			/*
++			 * For hugetlb pages, try_to_unmap could potentially
++			 * call huge_pmd_unshare.  Because of this, take
++			 * semaphore in write mode here and set TTU_RMAP_LOCKED
++			 * to indicate we have taken the lock at this higher
++			 * level.
++			 */
++			i_mmap_lock_write(mapping);
++			unmap_success = try_to_unmap(hpage,
++							ttu|TTU_RMAP_LOCKED);
++			i_mmap_unlock_write(mapping);
++		} else {
++			/*
++			 * !mapping implies a MAP_PRIVATE huge page mapping.
++			 * Since PMDs will never be shared in a private
++			 * mapping, it is safe to let huge_pmd_unshare be
++			 * called with the semaphore in read mode.
++			 */
++			unmap_success = try_to_unmap(hpage, ttu);
++		}
++	}
++
+ 	if (!unmap_success)
+ 		pr_err("Memory failure: %#lx: failed to unmap page (mapcount=%d)\n",
+ 		       pfn, page_mapcount(hpage));
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 4fe45d1428c8..9cae5a4f1e48 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1333,8 +1333,31 @@ static int unmap_and_move_huge_page(new_page_t get_new_page,
+ 		goto put_anon;
+ 
+ 	if (page_mapped(hpage)) {
+-		try_to_unmap(hpage,
+-			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
++		struct address_space *mapping = page_mapping(hpage);
++
++		if (mapping) {
++			/*
++			 * try_to_unmap could potentially call huge_pmd_unshare.
++			 * Because of this, take semaphore in write mode here
++			 * and set TTU_RMAP_LOCKED to indicate we have taken
++			 * the lock at this higher level.
++			 */
++			i_mmap_lock_write(mapping);
++			try_to_unmap(hpage,
++				TTU_MIGRATION|TTU_IGNORE_MLOCK|
++				TTU_IGNORE_ACCESS|TTU_RMAP_LOCKED);
++			i_mmap_unlock_write(mapping);
++		} else {
++			/*
++			 * !mapping implies a MAP_PRIVATE huge page mapping.
++			 * Since PMDs will never be shared in a private
++			 * mapping, it is safe to let huge_pmd_unshare be
++			 * called with the semaphore in read mode.
++			 */
++			try_to_unmap(hpage,
++				TTU_MIGRATION|TTU_IGNORE_MLOCK|
++				TTU_IGNORE_ACCESS);
++		}
+ 		page_was_mapped = 1;
+ 	}
+ 
+-- 
+2.23.0
+
