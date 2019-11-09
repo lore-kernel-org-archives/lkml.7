@@ -2,116 +2,86 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12607C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FFFC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6BBF20869
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09272196F
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfKIO0n (ORCPT
+        id S1726462AbfKIOcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 09:26:43 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36338 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfKIO0m (ORCPT
+        Sat, 9 Nov 2019 09:32:02 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:51323 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfKIOcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 09:26:42 -0500
-Received: by mail-ot1-f66.google.com with SMTP id f10so7714142oto.3;
-        Sat, 09 Nov 2019 06:26:41 -0800 (PST)
+        Sat, 9 Nov 2019 09:32:02 -0500
+Received: by mail-io1-f70.google.com with SMTP id v14so8424026iob.18
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 06:32:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fkse6mn+BlbyKaVzVIbzg4CVFkjF596d7A0VyrrgtRU=;
-        b=nFyS+o87e/FWAnmqpwZbiiJKxtutgLkNwjvAongX5FrQROqYIVKJZi6ZoDP2MpigxA
-         RMsRWqhc3CrR6z+KJXTLgmSc3XMo8R1lQ/+0kllXkbccPZ2cov+u0vHO6Vbfn+V603nl
-         NNvlAOrhucViLbbjytXef50v6YCiNofD8byUwYKM5YCs7Jrq2yL+FBIJiLVK9PqlOnM3
-         44EEsGJLBmgkvZ5T6N/VD39CFIXfmqPb/ZpZeJ5abEEDBlILhf2xuH1G89h+JbRSJqck
-         7wp/NGYXT5SvoUB09whkYX4aPMoG6OEEpyeMlIe1xjC/UfUk1gu9z7Xkfp5o4F7qd/dt
-         NVHA==
-X-Gm-Message-State: APjAAAVaU0w9iSJnEC4kFcFRbqDvMr6K5T9fxaWyUWbbVh6JX9JfTHmQ
-        Tq5/QEJ8wPeUNOsQqpTAkV4khR4AuLn9a90bHr8=
-X-Google-Smtp-Source: APXvYqwpjgCj+NHQWmmo7wlASzZaObwnisMuzQQ68HgJW5L0F4ZE2XkJ/WLy2vxRTaOAABifbqXLM9wt0RfHZ30Isk4=
-X-Received: by 2002:a9d:422:: with SMTP id 31mr13203157otc.107.1573309600743;
- Sat, 09 Nov 2019 06:26:40 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=JZi5tkp/gckqrQSG8tYsCT0DyycZxwi5ufMcg5DoU5o=;
+        b=IrIZsa5QBtHNOphFV7mlc4mrxrhX680skJgGJNdZSXaRY3rtucuHZMRdpYtB11c9Xh
+         ObXe5TspVwgLs+VEViuFLOmBeIHq/Qsdv50TMTJdV5jMoCDqtTRpwSMX0080RGE0JUOF
+         CgVRn6CsUSq0Q3ccaolfNJwjCJNFtL4wuuLTCxq3RIwuwu1P0sUNgRBPB2yg1OqEU2Ml
+         UZcyiArankqgeF7D1qUMCJJ5KmJhGRMgay8TMjncwVGH3anfk3t+NFRvIkWGoYwatki3
+         PTrNn3lA1wmnLj+t/AX6TyvQl5mtAxfq7+YOyUOBuZQg5cuuc/EoCHTsiwE51M7NvKRZ
+         2nHg==
+X-Gm-Message-State: APjAAAWiYhseS3LP9s2rFltRxB3RvwZAH4I36ZF5DbNEghbP6csFxx9x
+        g0ZejXH762dBSwmPU0AfJSvZ2VCzFzyPS9B4E7JgrF6Je5Ck
+X-Google-Smtp-Source: APXvYqyoeCdf8LV4IECaLdOHYImFqe90Hff/exUBRMytawJCGLHrKdaUiBLrWfSr7NsrTpsl73JiShExe8f7ksVJLj1e/jt5f1X9
 MIME-Version: 1.0
-References: <1572938135-31886-1-git-send-email-rppt@kernel.org>
- <1572938135-31886-6-git-send-email-rppt@kernel.org> <20191108113917.a9c6ebb8373cc95fd684b734@linux-foundation.org>
-In-Reply-To: <20191108113917.a9c6ebb8373cc95fd684b734@linux-foundation.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 9 Nov 2019 15:26:29 +0100
-Message-ID: <CAMuHMdXdoFSVno4WT=F6Q1UwEaZ6AQJmhNUqPpYHJm6uh165iw@mail.gmail.com>
-Subject: Re: [PATCH v4 05/13] m68k: mm: use pgtable-nopXd instead of 4level-fixup
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mike Rapoport <rppt@kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-um@lists.infradead.org,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:7847:: with SMTP id h7mr16503562iop.141.1573309921226;
+ Sat, 09 Nov 2019 06:32:01 -0800 (PST)
+Date:   Sat, 09 Nov 2019 06:32:01 -0800
+In-Reply-To: <0000000000002b42040573b8495a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f9fb820596eac28b@google.com>
+Subject: Re: WARNING: refcount bug in igmp_start_timer
+From:   syzbot <syzbot+e28037ac1c96d2a86e89@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, ap420073@gmail.com, ast@kernel.org,
+        benjamin.gaignard@linaro.org, cmetcalf@ezchip.com,
+        daniel.vetter@ffwll.ch, daniel.vetter@intel.com,
+        daniel@iogearbox.net, davem@davemloft.net, ecree@solarflare.com,
+        edumazet@google.com, f.fainelli@gmail.com, idosch@mellanox.com,
+        jiri@mellanox.com, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, mcroce@redhat.com,
+        netdev@vger.kernel.org, pabeni@redhat.com,
+        paulmck@linux.vnet.ibm.com, peterz@infradead.org,
+        petrm@mellanox.com, sd@queasysnail.net, stephen@networkplumber.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vincent.abriou@st.com, xiangxia.m.yue@gmail.com,
+        xiyou.wangcong@gmail.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+syzbot suspects this bug was fixed by commit:
 
-On Fri, Nov 8, 2019 at 8:39 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Tue,  5 Nov 2019 09:15:27 +0200 Mike Rapoport <rppt@kernel.org> wrote:
-> > m68k has two or three levels of page tables and can use appropriate
-> > pgtable-nopXd and folding of the upper layers.
-> >
-> > Replace usage of include/asm-generic/4level-fixup.h and explicit
-> > definitions of __PAGETABLE_PxD_FOLDED in m68k with
-> > include/asm-generic/pgtable-nopmd.h for two-level configurations and with
-> > include/asm-generic/pgtable-nopud.h for three-lelve configurations and
-> > adjust page table manipulation macros and functions accordingly.
->
-> This one was messed up by linux-next changes in arch/m68k/mm/kmap.c.
-> Can you please take a look?
+commit 323ebb61e32b478e2432c5a3cbf9e2ca678a9609
+Author: Edward Cree <ecree@solarflare.com>
+Date:   Tue Aug 6 13:53:55 2019 +0000
 
-You mean due to the rename and move of __iounmap() to __free_io_area()
-in commit aa3a1664285d0bec ("m68k: rename __iounmap and mark it static")?
+     net: use listified RX for handling GRO_NORMAL skbs
 
-Commit 42d6c83d6180f800 ("m68k: mm: use pgtable-nopXd instead of
-4level-fixup") in next-20191108 looks good to me.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a5452ce00000
+start commit:   ae596de1 Compiler Attributes: naked can be shared
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa12be50bca08d8
+dashboard link: https://syzkaller.appspot.com/bug?extid=e28037ac1c96d2a86e89
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=178537da400000
 
-Gr{oetje,eeting}s,
+If the result looks correct, please mark the bug fixed by replying with:
 
-                        Geert
+#syz fix: net: use listified RX for handling GRO_NORMAL skbs
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
