@@ -2,168 +2,114 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18174C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5621C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80A821882
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573304198;
-	bh=ruOl9OKhH8I+jv/Zqo/kN3RszLAM0zMoLnCEwtHAnoM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=STkz24z2+OD6Wh6EWTQOYL8h+SSgvZFRT04MJn+aAOm3Uz/DemxoYDRkSvlpqxBfQ
-	 54SXfYU3d33iyq1fqMXbd5PgeT/Y09bXwnByhE6nzEhpFTRdm9NK+PoeXzG9tfrqoB
-	 CAHhos9s4Y3nk7UNJHaVZOqVZrkSvczCHmgMJOhY=
+	by mail.kernel.org (Postfix) with ESMTP id B068C21848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfKIM4h (ORCPT
+        id S1726492AbfKIM5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 07:56:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfKIM4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 07:56:36 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A9B321848;
-        Sat,  9 Nov 2019 12:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573304195;
-        bh=ruOl9OKhH8I+jv/Zqo/kN3RszLAM0zMoLnCEwtHAnoM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mKxw6pj/wW4yKKVBwgAU5QBYv3LPXWzIBZ2e0t7RS7q1CKQ674TMte/wZ2MJLvSKz
-         fSo7zy+1/xOlqHiSNSOI2jxHrgAOvlHaC5FOriOn/9NoNEBOkvRl0IR+qTL4mBV0rm
-         d+oXOBNY+aNwPh6zbT4WZeDmxa65CQsBfswtekj4=
-Date:   Sat, 9 Nov 2019 12:56:29 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Rodrigo Carvalho <rodrigorsdc@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v3] dt-bindings: iio: accel: add binding documentation
- for ADIS16240
-Message-ID: <20191109125629.71b8d3e6@archlinux>
-In-Reply-To: <20191105201932.GA24515@bogus>
-References: <20191101000301.12901-1-rodrigorsdc@gmail.com>
-        <20191105201932.GA24515@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 9 Nov 2019 07:57:02 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35277 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfKIM5B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 07:57:01 -0500
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 72DDFFF806;
+        Sat,  9 Nov 2019 12:56:57 +0000 (UTC)
+Date:   Sat, 9 Nov 2019 13:56:57 +0100
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Stefan Monnier <monnier@iro.umontreal.ca>
+Cc:     linux-sunxi@googlegroups.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [linux-sunxi] Re: [PATCH 1/3] media: cedrus: Properly signal
+ size in mode register
+Message-ID: <20191109125657.GB845368@aptenodytes>
+References: <20191026074959.1073512-1-jernej.skrabec@siol.net>
+ <20191026074959.1073512-2-jernej.skrabec@siol.net>
+ <20191104100228.GD502900@aptenodytes>
+ <7309638.L6IRxaGt1L@jernej-laptop>
+ <20191105081034.GC584930@aptenodytes>
+ <jwv1ruj7on7.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
+Content-Disposition: inline
+In-Reply-To: <jwv1ruj7on7.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 14:19:32 -0600
-Rob Herring <robh@kernel.org> wrote:
 
-> On Thu, Oct 31, 2019 at 09:03:01PM -0300, Rodrigo Carvalho wrote:
-> > This patch add device tree binding documentation for ADIS16240.
-> > 
-> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
-> > ---
-> > V3:
-> >    - Remove spi-cpol and spi-cpha field. They don't seem necessary  
-> 
-> Not necessary to document or use? The latter requires the former.
-> 
-> If your device only supports one timing mode, then you don't need them 
-> because it should be implied and the driver can just tell the SPI 
-> subsystem what mode it requires. If the device can support multiple 
-> timing modes, then you should document that you are using the 
-> properties.
-The diagram in the datasheet is less than clear and the driver doesn't
-currently enforce anything.
+--gatW/ieO32f1wygP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks like clock is high when in active and fall so CPOL, as per
-SPI docs though this might not matter...
+Hi Stefan,
 
-Sampling on rising edge (that's the bit that is unclear) so CPHA,
-but the timing is such that you can probably get away with not
-setting that.
+On Thu 07 Nov 19, 09:24, Stefan Monnier wrote:
+> > Do you know if we have a way to report some estimation of the maximum s=
+upported
+> > fps to userspace? It would be useful to let userspace decide whether it=
+'s a
+> > better fit than software decoding.
+>=20
+> Even if the fps ends up too low for the player's taste, I can't imagine
+> why software decoding would be preferable: it seems it could be only
+> even (substantially) slower.  Or are there speed-up options in software
+> decoding not available in hardware decoding (such as playing only every
+> N'th frame, maybe?).
 
-As Rob said, makes sense for driver to enforce the documented correct
-mode and not have anything in the binding.  We should probably audit
-all drivers for this at somepoint and drop the binding requirements
-for ones that have only one supported mode.
+This may be true for the Allwinner case as we know it today but not true in
+general. It could happen that the CPU is perfectly able to decode as fast a=
+s or
+faster than the hardware implementation, but userspace would still try to u=
+se
+hardware video decoding when it can provide good enough performance so that=
+ the
+CPU can do other things in the meantime.
 
-Jonathan 
-> 
-> >  .../bindings/iio/accel/adi,adis16240.yaml     | 51 +++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > new file mode 100644
-> > index 000000000000..9a4cd12c4818
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > @@ -0,0 +1,51 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ADIS16240 Programmable Impact Sensor and Recorder driver
-> > +
-> > +maintainers:
-> > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > +
-> > +description: |
-> > +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
-> > +  SPI interface.
-> > +    https://www.analog.com/en/products/adis16240.html
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,adis16240
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    spi0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        /* Example for a SPI device node */
-> > +        accelerometer@0 {
-> > +            compatible = "adi,adis16240";
-> > +            reg = <0>;
-> > +            spi-max-frequency = <2500000>;
-> > +            spi-cpol;
-> > +            spi-cpha;
-> > +            interrupt-parent = <&gpio0>;
-> > +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> > +        };
-> > +    };
-> > -- 
-> > 2.23.0
-> >   
+Having a good idea of the expected performance is important for userspace to
+make this kind of policy decision.
 
+This is kind of a common misconception that hardware offloading always impl=
+ies
+a performance improvment. In our cases where the CPU is a bottleneck, it is
+more often true than not, but this is by far not true in general.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--gatW/ieO32f1wygP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3Gt5gACgkQ3cLmz3+f
+v9G+SQf/VkRK362zU+fWkU5EBkELTY0Sc9p6L4QbI9EJuQxHG4d6HimlPe7D2d8N
+QVMKBoyL5Sy1bH02gwOwdqiCDWLdJRhLVqT0utO102Hl0kTA4///BZPXhPg+9eLX
+Uw/gQA7tXTMH2qeT+VcP8DjcB9GKpFw4o5gpwDG1d/UE+hPBfKvqtI4zhh/GFz/l
+FfXxD/SrAlDzjJQiHjxVGWSuqXn7GI/zoxV9r/A13WT1axiLgXt96RtiMZuIXg+4
+FIS3K0LKB92gNA/eQYbwPCQjtrumoTA6r32t/zNzPDIRNE5J+fN53iSpcpB4pJfP
+41eUPKEtTNQyum2cmUj3e50dl3+wWQ==
+=/o/m
+-----END PGP SIGNATURE-----
+
+--gatW/ieO32f1wygP--
