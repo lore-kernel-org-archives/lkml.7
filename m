@@ -8,38 +8,38 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C17C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476B5C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E71F21882
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0673D21882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 09:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="EqdzMrcc"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KD54TrJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfKIJAw (ORCPT
+        id S1726515AbfKIJDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 04:00:52 -0500
-Received: from mout.web.de ([212.227.15.14]:58839 "EHLO mout.web.de"
+        Sat, 9 Nov 2019 04:03:24 -0500
+Received: from mout.web.de ([212.227.15.14]:55171 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfKIJAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 04:00:52 -0500
+        id S1726143AbfKIJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 04:03:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573290031;
-        bh=G5WT9018vUhaMGJJGfBWCHGF4o3V3lUzPY8ENWHnJlY=;
+        s=dbaedf251592; t=1573290197;
+        bh=qoIQImRdmD44LsZ6ub5WyhVN02SxMTzaAmh82B3FbiQ=;
         h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=EqdzMrcc7UrofWYjNYJ4Bzm1gN9iafDRxHnhhYn/5EiXp6FjeY1pz+bq3936wtBGf
-         JouVkCsPX7c418nzVzuz50VtN2OMnaN6JPIwY+7FidxTzLQ6f34qUzfLyk+FQfEiJU
-         KAldSQpUdGxs4ysgKVBj5orAcb0RbKxcLQG7y3iY=
+        b=KD54TrJuFUMbOY4o01necvCS3Jz4zylZAHVYsSzc2AJY9D0KKZh5bHhIt+BRLICn5
+         JQxkmGGlZ31Bk49lGHGP+WCJr94YoqXQZjWR3LJntT/Fy9whju4N+wat0BmCPZjP3M
+         wooicXx+UapWia9jjXzgAKgW0tzMR2npnNjQTOQU=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.82.67]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LZeou-1i3yXD1qrE-00lYd6; Sat, 09
- Nov 2019 10:00:31 +0100
-Subject: [PATCH 1/3] fsl/fman: Add missing put_device() calls in mac_probe()
+Received: from [192.168.1.2] ([2.243.82.67]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M0f1C-1hd3yk3UMQ-00uqJg; Sat, 09
+ Nov 2019 10:03:16 +0100
+Subject: [PATCH 2/3] fsl/fman: Use common error handling code in mac_probe()
 From:   Markus Elfring <Markus.Elfring@web.de>
 To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
         Madalin Bucur <madalin.bucur@nxp.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>
+        kernel-janitors@vger.kernel.org
 References: <132e8369-c4da-249f-76b8-834e394dc6d5@web.de>
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -84,8 +84,8 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <63d9c06f-7cb8-1c44-1666-12d31f937a31@web.de>
-Date:   Sat, 9 Nov 2019 10:00:27 +0100
+Message-ID: <38159f52-81a1-8ece-076f-da66180f4d5e@web.de>
+Date:   Sat, 9 Nov 2019 10:03:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
@@ -93,177 +93,176 @@ In-Reply-To: <132e8369-c4da-249f-76b8-834e394dc6d5@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xzhhk4lZZNRZTh8k0ifOtUV1H/0l3CWU6fPrk6f+PmH5pm6rt9r
- J8EdPhE+wmNN/8q6edLQyRLTQ4Wpqs1Q5lr4wczoEu5cVKqnsOp7i+XuILO/83WOUo790if
- zwvayXCOvGpjcWEiT6FZfta2xVs89z2SzU7RT8hR8xDlvqgu4ZIwibK+8YfEtdv3egjMABn
- bk5BMnhGqARaatDlXs28A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:98jtglzuN88=:7ap2bALMRyoUcvhsplkDNY
- OC4hfxHTa2L5M85Uy0nbJlDT6N6/BP2z+J9c8hW9ZknpEJJLOZdd8Fe6fPhtLmbMxTiPZo6rk
- nyBlhNKdzCmgWsROS3YHz2LADMIniB0aXdQm0hjFi5yVEaZWtirPoDEsgqHPWb89BNsu7r2t3
- 6jXVKip4LNgldr99nPq7g0+xQUiHetRcEguxdlp6lDzX3XNJmhH5ZJ4lqCCLyO9LtyhbxJhLU
- YEWTkLWZAJvnaXdXA2rs5ZEP2rfm3srQjo8N57WBqFO+1ICHWeHUOeSuMvK2WwkSTAvxJ7N02
- zTCrr6FXMALxy+HLGKPmNBjlmtKdl7CJ359BqcQFc3AhDhferMOGEeL3SQQhs7JmwD5X0vPoa
- vjRha8pR0jVxz0OvfrDkGJcgTQWjWJgWFFfTTaXw3uJqvHDlJrHI105PFeQnhKxq/D+QZ7G7t
- +TfvQT5C6UQPq/dd5VXYUeH8yciZ022lRjneEewwzCx0/1PIikUicH+/od+MZNws6mMj8e8I8
- Y/bHP57Iov3071FCTU3C5pTwKXNS+wJPHc6N/wRZvXohvXlqjSQkz8lJkkwOxSrQKpQGb2IBW
- EanR6IVM/Pxz8XdSe2g/ibrprKRioIpn2075JXehLMI06AKpvvR/ASCeqBUjylE0BwiBuuisb
- 0NBkB6hWciFLLte2bHNUklSwol3YhdXePQ09RCT/TnCV8KxCZw37y+Esj62zK+oo9RR16rsgm
- 0gYIiNGqsfzKQZRioGMPbA+ttbUeTJleqE4frlbSvCer6kGJQPe08JumeMQ0dcdeJU8d30SLW
- EFd5cP2VmblLwxnmfGoktmgZuR2+ujVp84DWPvMJz+P+Qx1HVTjvA+c31TEj2lTlPaWHxXnKv
- 6eOq9QOn7WKtzBdjoqeDH38uq6nIRukfmpJnl15kc9RGvYDTnCh07MCPOGyKYtEniWSGL424b
- 75jamyN0W8L8StqLXVaWCQU1rEoD0/2dQzzwY+rS9v4wb3Q6L2wTKCJMyQVtc7mIH62yczGbd
- Bnmsq6RNjbWKehpwjNhO1QD/4JR+vn8cNIDBtrVAl9RxbVLrC4eKQeZWntrH+YmxbiFnxSrHl
- vqp2m4TEJZ3EeJg8PbdEQxa/S8xMZPuG8uZ0koAwCfryjKfAFfHY5ZdPlc0oix2UwET1iwq2B
- vqFIXpXzQYna+FJ2DF1OK/a7vwig13cLUTOgH7qKYdzeN2RTZMFUauGxyg5170N+kCgTsYZX2
- ulUw7Z9B3MG7j2Tu4ttJC5kjDgD1IwnBs7GPhAO6qwhz4Hp20Q9lZcckRqhM=
+X-Provags-ID: V03:K1:5QjZZUF/uEC5ha8UFxSqCFcACX950kwsosWqC4ZkjAORgg/6rnK
+ 5GCF7hefvFU13OJG6Sw+kzPpSnyQP+b/eYREkmNy0IWZdbh55bY0ZyudP0CNc1hx9odK7+R
+ Anu5K+OnPha8xpVry43ehXE2kHZud6Wng3gdh9k7on1LGs0k5uHLD88J9YcIXFsj1zbP/fv
+ mQgMFQ+MuIFTa9FDAj+HA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qlQGOrf0uCA=:15IgdzL/4mrHeQXKdvyPyg
+ nEjHDrk0oVstuA2uvcjO+VywMh2hGr4Pd+XF1ZkHMah9em4sWAiLQcyBimPFD7kLmKmDoheIS
+ OHqhD6whqLEFdYrX5XlFCZavEi6VLeMsxf+QFAhR85nRJEsY+If7NsKeoiXY4yYQF6ZTTBU06
+ ov/zdZGEifyI5s7V3PBYAjR2M8O+sw5J3aItBNE1EGanbYwMQ/gh/I0UPvbV72ujOnen232FW
+ noDY7VU6un8kB2KJKtghDXOVPU1NpOoNZ0GPmd0BqFk3ZU19A+A40NpLpZ5x4BO3WGsHf4ASQ
+ YLkhbEnQVJw0Jjm0xvtBmdOY7DBNO4KOmfFS66aThw5qMUQHyUMyZOKbcdc9J5Ili0gewIllZ
+ 9MjAu+8exvwdtsfgcL6mhuFvqCUNQQo4HFK4T7g+ODRQbH3Se/VuiNHf8QX1G73w+DFDACLJV
+ EZ4+HxRz33WjHjz2V+j4kGDfjp7pMBBOEDoVi6yZQfR0IRhG2cbgcXJeHIxwR0429ceDA5e78
+ 9am6VVBR/Buh6HkE6JdObCbiVqn8Ey4Si/Oy0Z/PXZ0jV445/z39803micoLAENd8UK0A+hC+
+ 53rzAaPswuTLqERh3JtAXZKgDfzY0PUR5/20s9UEdQYUby3gRO1m34xRviC7PkyoyDIf3HEib
+ 2lfmPLYzCaOMGlJsdhp9/ngVx2jwRBatjI6sqmqtLUoyW9oSP9IAicHsvMkuaxAECeM4d0Evh
+ fIGlG734+Ajwmr1EgI2nRKrCS9VzLhVl8q1uMvZh8uLZvPSM/l5uFF/ndsecnfV3+AimA8JJt
+ 5oT9H9oc7sU2C/9+iVnO7sK+hef2uOYIUdKy8H+wnEtECZbqV/per6Ku/KBG2DQBup7unOrkn
+ l5hwS4v0H8EcU3Y6IWABGPPylDhnP+/T1vJ4N9Zzv1ke3GKFnZkIUgW2gMVuL9thBJEsI7mzc
+ GUbqJHhUOOs1inq9rzzbWU0VbX6MKfaoT3bOXfiLSGQtFV5lyr4pXgt07T8vysF7bBy5Elxow
+ MQQjoxEDyQGdERvav8JjezivHp0pg/LIWtrZOuYNdTKlBx7ZNg11WmTfuh2rQRbQXGMJ+zjQi
+ ZRekQnh+gyhajzt1pPV5D2I+0NsZBTCX79AKvXjKpInbVtMX2/3WFwBwGkBIXZWs5fDHjrpy9
+ c13lryo5qybk1VOMYZh49WeHNOkZL2q22hsZdrmSOM+H1uinGATaOY9/GdkUZNNB1H8n/+3PB
+ h93crA5osxziKxR5LE2VibDFyI2FX1wBUPhbULgKDg43vbL7tvKE8jlp4fC4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 9 Nov 2019 08:14:35 +0100
+Date: Sat, 9 Nov 2019 09:13:01 +0100
 
-A coccicheck run provided information like the following.
+Adjust jump targets so that exception handling code can be better reused
+at the end of this function.
 
-drivers/net/ethernet/freescale/fman/mac.c:874:1-7: ERROR: missing put_devi=
-ce;
-call of_find_device_by_node on line 659, but without a corresponding
-object release within this function.
-drivers/net/ethernet/freescale/fman/mac.c:874:1-7: ERROR: missing put_devi=
-ce;
-call of_find_device_by_node on line 760, but without a corresponding
-object release within this function.
+This issue was detected by using the Coccinelle software.
 
-Generated by: scripts/coccinelle/free/put_device.cocci
-
-Thus adjust jump targets to fix the exception handling for this
-function implementation.
-
-Fixes: 3933961682a30ae7d405cda344c040a129fea422 ("fsl/fman: Add FMan MAC d=
-river")
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 =2D--
- drivers/net/ethernet/freescale/fman/mac.c | 28 ++++++++++++++---------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/freescale/fman/mac.c | 42 ++++++++++++-----------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/net/ethernet/freescale/fman/mac.c b/drivers/net/ether=
 net/freescale/fman/mac.c
-index f0806ace1ae2..e0680257532c 100644
+index e0680257532c..7fbd7cc24ede 100644
 =2D-- a/drivers/net/ethernet/freescale/fman/mac.c
 +++ b/drivers/net/ethernet/freescale/fman/mac.c
-@@ -668,7 +668,7 @@ static int mac_probe(struct platform_device *_of_dev)
+@@ -659,16 +659,14 @@ static int mac_probe(struct platform_device *_of_dev=
+)
+ 	of_dev =3D of_find_device_by_node(dev_node);
+ 	if (!of_dev) {
+ 		dev_err(dev, "of_find_device_by_node(%pOF) failed\n", dev_node);
+-		err =3D -EINVAL;
+-		goto _return_of_node_put;
++		goto _e_inval_put_node;
+ 	}
+
+ 	/* Get the FMan cell-index */
+ 	err =3D of_property_read_u32(dev_node, "cell-index", &val);
  	if (err) {
  		dev_err(dev, "failed to read cell-index for %pOF\n", dev_node);
- 		err =3D -EINVAL;
--		goto _return_of_node_put;
-+		goto _put_device;
+-		err =3D -EINVAL;
+-		goto _put_device;
++		goto _e_inval_put_device;
  	}
  	/* cell-index 0 =3D> FMan id 1 */
  	fman_id =3D (u8)(val + 1);
-@@ -677,7 +677,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 	if (!priv->fman) {
- 		dev_err(dev, "fman_bind(%pOF) failed\n", dev_node);
- 		err =3D -ENODEV;
--		goto _return_of_node_put;
-+		goto _put_device;
- 	}
-
- 	of_node_put(dev_node);
-@@ -687,7 +687,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 	if (err < 0) {
- 		dev_err(dev, "of_address_to_resource(%pOF) =3D %d\n",
- 			mac_node, err);
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
- 	}
-
- 	mac_dev->res =3D __devm_request_region(dev,
-@@ -697,7 +697,7 @@ static int mac_probe(struct platform_device *_of_dev)
- 	if (!mac_dev->res) {
- 		dev_err(dev, "__devm_request_mem_region(mac) failed\n");
- 		err =3D -EBUSY;
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
- 	}
-
- 	priv->vaddr =3D devm_ioremap(dev, mac_dev->res->start,
-@@ -705,12 +705,12 @@ static int mac_probe(struct platform_device *_of_dev=
-)
- 	if (!priv->vaddr) {
- 		dev_err(dev, "devm_ioremap() failed\n");
- 		err =3D -EIO;
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
- 	}
-
- 	if (!of_device_is_available(mac_node)) {
- 		err =3D -ENODEV;
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
- 	}
-
- 	/* Get the cell-index */
-@@ -718,7 +718,7 @@ static int mac_probe(struct platform_device *_of_dev)
+@@ -717,8 +715,7 @@ static int mac_probe(struct platform_device *_of_dev)
+ 	err =3D of_property_read_u32(mac_node, "cell-index", &val);
  	if (err) {
  		dev_err(dev, "failed to read cell-index for %pOF\n", mac_node);
- 		err =3D -EINVAL;
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
+-		err =3D -EINVAL;
+-		goto _put_parent_device;
++		goto _e_inval_put_parent_device;
  	}
  	priv->cell_index =3D (u8)val;
 
-@@ -727,7 +727,7 @@ static int mac_probe(struct platform_device *_of_dev)
+@@ -726,8 +723,7 @@ static int mac_probe(struct platform_device *_of_dev)
+ 	mac_addr =3D of_get_mac_address(mac_node);
  	if (IS_ERR(mac_addr)) {
  		dev_err(dev, "of_get_mac_address(%pOF) failed\n", mac_node);
- 		err =3D -EINVAL;
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
+-		err =3D -EINVAL;
+-		goto _put_parent_device;
++		goto _e_inval_put_parent_device;
  	}
  	ether_addr_copy(mac_dev->addr, mac_addr);
 
-@@ -737,14 +737,14 @@ static int mac_probe(struct platform_device *_of_dev=
-)
- 		dev_err(dev, "of_count_phandle_with_args(%pOF, fsl,fman-ports) failed\n=
-",
- 			mac_node);
- 		err =3D nph;
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
- 	}
-
+@@ -743,8 +739,7 @@ static int mac_probe(struct platform_device *_of_dev)
  	if (nph !=3D ARRAY_SIZE(mac_dev->port)) {
  		dev_err(dev, "Not supported number of fman-ports handles of mac node %p=
 OF from device tree\n",
  			mac_node);
- 		err =3D -EINVAL;
--		goto _return_of_get_parent;
-+		goto _put_parent_device;
+-		err =3D -EINVAL;
+-		goto _put_parent_device;
++		goto _e_inval_put_parent_device;
  	}
 
  	for (i =3D 0; i < ARRAY_SIZE(mac_dev->port); i++) {
-@@ -770,7 +770,7 @@ static int mac_probe(struct platform_device *_of_dev)
+@@ -753,24 +748,21 @@ static int mac_probe(struct platform_device *_of_dev=
+)
+ 		if (!dev_node) {
+ 			dev_err(dev, "of_parse_phandle(%pOF, fsl,fman-ports) failed\n",
+ 				mac_node);
+-			err =3D -EINVAL;
+-			goto _return_of_node_put;
++			goto _e_inval_put_node;
+ 		}
+
+ 		of_dev =3D of_find_device_by_node(dev_node);
+ 		if (!of_dev) {
+ 			dev_err(dev, "of_find_device_by_node(%pOF) failed\n",
+ 				dev_node);
+-			err =3D -EINVAL;
+-			goto _return_of_node_put;
++			goto _e_inval_put_node;
+ 		}
+
+ 		mac_dev->port[i] =3D fman_port_bind(&of_dev->dev);
+ 		if (!mac_dev->port[i]) {
  			dev_err(dev, "dev_get_drvdata(%pOF) failed\n",
  				dev_node);
- 			err =3D -EINVAL;
--			goto _return_of_node_put;
-+			goto _put_device;
+-			err =3D -EINVAL;
+-			goto _put_device;
++			goto _e_inval_put_device;
  		}
  		of_node_put(dev_node);
  	}
-@@ -866,6 +866,12 @@ static int mac_probe(struct platform_device *_of_dev)
+@@ -821,8 +813,7 @@ static int mac_probe(struct platform_device *_of_dev)
+ 		phy =3D of_phy_find_device(mac_dev->phy_node);
+ 		if (!phy) {
+ 			err =3D -EINVAL;
+-			of_node_put(mac_dev->phy_node);
+-			goto _return_of_get_parent;
++			goto _put_phy_node;
+ 		}
+
+ 		priv->fixed_link->link =3D phy->link;
+@@ -837,8 +828,7 @@ static int mac_probe(struct platform_device *_of_dev)
+ 	err =3D mac_dev->init(mac_dev);
+ 	if (err < 0) {
+ 		dev_err(dev, "mac_dev->init() =3D %d\n", err);
+-		of_node_put(mac_dev->phy_node);
+-		goto _return_of_get_parent;
++		goto _put_phy_node;
+ 	}
+
+ 	/* pause frame autonegotiation enabled */
+@@ -866,10 +856,22 @@ static int mac_probe(struct platform_device *_of_dev=
+)
 
  	goto _return;
 
-+_put_parent_device:
-+	put_device(&of_dev->dev);
++_put_phy_node:
++	of_node_put(mac_dev->phy_node);
 +	goto _return_of_get_parent;
 +
-+_put_device:
-+	put_device(&of_dev->dev);
++_e_inval_put_node:
++	err =3D -EINVAL;
++	goto _return_of_node_put;
++
++_e_inval_put_parent_device:
++	err =3D -EINVAL;
+ _put_parent_device:
+ 	put_device(&of_dev->dev);
+ 	goto _return_of_get_parent;
+
++_e_inval_put_device:
++	err =3D -EINVAL;
+ _put_device:
+ 	put_device(&of_dev->dev);
  _return_of_node_put:
- 	of_node_put(dev_node);
- _return_of_get_parent:
 =2D-
 2.24.0
 
