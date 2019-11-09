@@ -2,272 +2,204 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A31C17442
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14919C17442
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC63215EA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F662084D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vBtJh5iZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpNhnpOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfKIAkl (ORCPT
+        id S1730951AbfKIAkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 19:40:41 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42478 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730154AbfKIAkl (ORCPT
+        Fri, 8 Nov 2019 19:40:55 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42094 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730154AbfKIAky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 19:40:41 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s5so6128684pfh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 16:40:40 -0800 (PST)
+        Fri, 8 Nov 2019 19:40:54 -0500
+Received: by mail-oi1-f193.google.com with SMTP id i185so6865257oif.9
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 16:40:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=705HB2azoG200nwS3o3zO3rtDYqxCRBnG4hOOCQq8EM=;
-        b=vBtJh5iZty4ax9mbgk+Lt9/4w+HA8JQ8hKBUrXr3gdOy84AhmP8L4Ltjt+B3mrqM4x
-         WViU03gq39CuEruIjdcPij9fd0OMEGBpGV58E8SVMW+xZv5Ozklur6FJI0JTcqs9VZQQ
-         ra7XVIIKa9KXR9/g5uIAav0qS41V9/dwBscejKuHM5cd5i7KTUXIa7yzA+jmtR4Jazfh
-         UqoE4mdJLnhjSIvuTvJS99sTo6C5vaD/9HHUgJkQfDRxqEr4b6k0r9VpS9Ect6Id3LPy
-         DjAOf5XHZskq3Sp8nzUKAOmbOQNd5zccJVRbegg+zM/IUPKAQx6hCgqcbFZA1zIhV7xb
-         zP2A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KTO0G4yUHoQ2566+748dLq9N6XJTos6t1RKXW6iu8LY=;
+        b=KpNhnpOOa3qcfcHYXInuUVl0BAw8G0yyb4KfBM4SGSMaep5qbx/BvvcVNeLHgEyBuC
+         cgq33G3YWscje+Ru56drwaaKZWAW1jJUAjWmEKUtdcK57zh5NbvjHm+3gMGtJKviD2ZE
+         eXNb93Lq1q5GlDhkbP+563K4M2Wsnp8rNd8djXnQNH9RDp4pkGqu/3Am8RgK5j1I69yy
+         +Litcz+iepJW5TharNy4btNYoPFeDFV0Cc/xxio5krZ4aZT96fmk5Wby1hZdngw2JOkW
+         o5P41KAZnj7z/2wPIG9444KEbw5XFqdx8u1iF2nN9H4eAqD31DOkMEzE+E0ZkYbZDdjQ
+         1ldA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=705HB2azoG200nwS3o3zO3rtDYqxCRBnG4hOOCQq8EM=;
-        b=P/GvZcbRZ1AyzpdCnGU9N98wXlk4Fkck3JcmeqsPhiC+3CaCHxzW2OZfqPV0Pwy40X
-         52GbrFGbYftlthDJVcmp8mQIBvxQpaTGGyyPECUmruPaywH2zDhu/7EyzF/64FhXnWrs
-         ILmxmpQyQCzLCbkk+SpvTENDi/zDhqj8Ll+waqNumsQe8GTf0QXdaQbfVKBGAtgZFH7A
-         4TSes8MBT8/tqOUMU68JzvFLZqcY/0RUPcsnabePsI59Bf3JtD1Xzzt3wDOFokANgQO6
-         sx2FMRtK6Gk4ooQVigbu11QPsxsE0l2GPjiphngyGy9IfeDKCSWWNcc1CZJ5+UsDxQGs
-         LDwA==
-X-Gm-Message-State: APjAAAUazjbcST9RhYaxPPbWuiyi8Qsgu38t0dl8M7T90gFHYImI50ty
-        jAakUiu9S30QvPk92Ql666xHwA==
-X-Google-Smtp-Source: APXvYqwplgsd9NKexroKKfh0xLnRA4IYQ8y4EtnaHnQJoQHbtj18y/kjZD5tBU0IFEqUvlf9P4cfwQ==
-X-Received: by 2002:a63:f441:: with SMTP id p1mr15349274pgk.362.1573260040059;
-        Fri, 08 Nov 2019 16:40:40 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y36sm6681461pgk.66.2019.11.08.16.40.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 16:40:39 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2 2/2] remoteproc: qcom_q6v5_mss: Validate each segment during loading
-Date:   Fri,  8 Nov 2019 16:40:33 -0800
-Message-Id: <20191109004033.1496871-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191109004033.1496871-1-bjorn.andersson@linaro.org>
-References: <20191109004033.1496871-1-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KTO0G4yUHoQ2566+748dLq9N6XJTos6t1RKXW6iu8LY=;
+        b=JkryrvCPfeTOsI688Bd9oSEcuEBfw4U0IGn7OMzeoTUOvq2+dx4KwPfAeuTcKRSNBk
+         Un0aOh+DIxc6YUJihHLacLjMZRVgcXu50AIjAtHPIMw8C1oiKtvpY6FI/2p/ZZsHb+Xh
+         VpQ99Gj5aFY1Ej8VuEItlfvhkfcfc2VaECGYKn+nPysA7PkEuEAeF4MxHpm/YJg2e+FE
+         yO3/dcDjKyqDPKYc7oDucJkdF5mPR7IILT3FskIAjhyyOkHJcGveIBkKFYOMmEV3ob19
+         6lhRwd17zrTPWSTrKyzzAu7sCq0Su9WgqXpm7qLAcfA6HMaOhdRQg5SsfKBBmOxeXL94
+         C+FA==
+X-Gm-Message-State: APjAAAUhJULbpkelbuaruogc1h3HQnSIpslTUY0a+T9eJ/NoVi2A2XuQ
+        ci4a5P9AgA8U6oSmQo85nIup9ep0yL1BPaNJRAYdtqhe
+X-Google-Smtp-Source: APXvYqzFG4ayJA9m/ZjeTPbIRTox5oAFY8AlkPBKYOaQszMhW9xvB2UIU21h0S1SiA5tbcofbulCmZpIu3gQ/Lkn4fE=
+X-Received: by 2002:aca:1101:: with SMTP id 1mr12894333oir.103.1573260052966;
+ Fri, 08 Nov 2019 16:40:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191030013701.39647-1-almasrymina@google.com>
+ <20191030013701.39647-2-almasrymina@google.com> <9e10c273-f0ab-4173-570e-26c314b989fb@oracle.com>
+ <CAHS8izMMK2cQMSmnteXA7YTFp2ZoZEm5kUwf8=+6nA+BC49XAQ@mail.gmail.com> <3f30658c-0e3d-7d5c-4de9-1526b9bac3ce@oracle.com>
+In-Reply-To: <3f30658c-0e3d-7d5c-4de9-1526b9bac3ce@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Fri, 8 Nov 2019 16:40:42 -0800
+Message-ID: <CAHS8izNgRZxJKgOfAkDAG9j_=TB=2v0hQyYpQQKCf8xb3rQkVg@mail.gmail.com>
+Subject: Re: [PATCH v8 2/9] hugetlb_cgroup: add interface for charge/uncharge
+ hugetlb reservations
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     shuah <shuah@kernel.org>, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code used to sync with the MBA after each segment loaded and this is
-still what's done downstream. So reduce the delta towards downstream by
-switching to a model where the content is iteratively validated.
+On Fri, Nov 8, 2019 at 4:01 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 11/8/19 3:48 PM, Mina Almasry wrote:
+> > On Thu, Nov 7, 2019 at 4:57 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >>
+> >> On 10/29/19 6:36 PM, Mina Almasry wrote:
+> >>> @@ -22,27 +22,35 @@ struct hugetlb_cgroup;
+> >>>   * Minimum page order trackable by hugetlb cgroup.
+> >>>   * At least 3 pages are necessary for all the tracking information.
+> >>>   */
+> >>> -#define HUGETLB_CGROUP_MIN_ORDER     2
+> >>> +#define HUGETLB_CGROUP_MIN_ORDER 3
+> >>
+> >> Correct me if misremembering, but I think the reson you changed this was
+> >> so that you could use page[3].private.  Correct?
+> >> In that case isn't page[3] the last page of an order 2 allocation?
+> >> If my understanding is correct, then leave HUGETLB_CGROUP_MIN_ORDER as is
+> >> and update the preceding comment to say that at least 4 pages are necessary.
+> >>
+> >
+> > Yes, I just misunderstood what MIN_ORDER means. I'll revert the code change.
+>
+> But, do update the comment please.
+>
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Will do.
 
-Changes since v1:
-- Picked up Jeff's r-b and t-b
+> <snip>
+> >>> @@ -85,18 +89,32 @@ static void hugetlb_cgroup_init(struct hugetlb_cgroup *h_cgroup,
+> >>>       int idx;
+> >>>
+> >>>       for (idx = 0; idx < HUGE_MAX_HSTATE; idx++) {
+> >>> -             struct page_counter *counter = &h_cgroup->hugepage[idx];
+> >>>               struct page_counter *parent = NULL;
+> >>
+> >> Should we perhaps rename 'parent' to 'fault_parent' to be consistent?
+> >
+> > Yes that makes sense; will do.
+> >
+> >> That makes me think if perhaps the naming in the previous patch should
+> >> be more explicit.  Make the existing names explicitly contin 'fault' as
+> >> the new names contain 'reservation'.
+> >> Just a thought.
+> >>
+> >
+> > You mean change the names of the actual user-facing files? I'm all for
+> > better names but that would break existing users that read/write the
+> > hugetlb_cgroup.2MB.usage_in_bytes/limit_in_bytes users, and so I would
+> > assume is a no-go.
+> >
+>
+> I was thinking about internal variables/definitions such as:
+>
+> +enum {
+> + /* Tracks hugetlb memory faulted in. */
+> + HUGETLB_RES_USAGE,
+> + /* Tracks hugetlb memory reserved. */
+> + HUGETLB_RES_RESERVATION_USAGE,
+> + /* Limit for hugetlb memory faulted in. */
+> + HUGETLB_RES_LIMIT,
+> + /* Limit for hugetlb memory reserved. */
+> + HUGETLB_RES_RESERVATION_LIMIT,
+> + /* Max usage for hugetlb memory faulted in. */
+> + HUGETLB_RES_MAX_USAGE,
+> + /* Max usage for hugetlb memory reserved. */
+> + HUGETLB_RES_RESERVATION_MAX_USAGE,
+> + /* Faulted memory accounting fail count. */
+> + HUGETLB_RES_FAILCNT,
+> + /* Reserved memory accounting fail count. */
+> + HUGETLB_RES_RESERVATION_FAILCNT,
+> + HUGETLB_RES_NULL,
+> + HUGETLB_RES_MAX,
+> +};
+>
+> But, I guess the existing definitions (such as HUGETLB_RES_LIMIT) correspond
+> closely to the externally visible name.  In that case, you should leave them
+> as is and ignore my comment.
+>
+> <ship>
+> >>> @@ -126,6 +144,26 @@ static void hugetlb_cgroup_css_free(struct cgroup_subsys_state *css)
+> >>>       kfree(h_cgroup);
+> >>>  }
+> >>>
+> >>> +static void hugetlb_cgroup_move_parent_reservation(int idx,
+> >>> +                                                struct hugetlb_cgroup *h_cg)
+> >>> +{
+> >>> +     struct hugetlb_cgroup *parent = parent_hugetlb_cgroup(h_cg);
+> >>> +
+> >>> +     /* Move the reservation counters. */
+> >>> +     if (!parent_hugetlb_cgroup(h_cg)) {
+> >>> +             parent = root_h_cgroup;
+> >>> +             /* root has no limit */
+> >>> +             page_counter_charge(
+> >>> +                     &root_h_cgroup->reserved_hugepage[idx],
+> >>> +                     page_counter_read(
+> >>> +                             hugetlb_cgroup_get_counter(h_cg, idx, true)));
+> >>> +     }
+> >>> +
+> >>> +     /* Take the pages off the local counter */
+> >>> +     page_counter_cancel(
+> >>> +             hugetlb_cgroup_get_counter(h_cg, idx, true),
+> >>> +             page_counter_read(hugetlb_cgroup_get_counter(h_cg, idx, true)));
+> >>> +}
+> >>
+> >> I know next to nothing about cgroups and am just comparing this to the
+> >> existing hugetlb_cgroup_move_parent() routine.  hugetlb_cgroup_move_parent
+> >> updates the cgroup pointer in each page being moved.  Do we need to do
+> >> something similar for reservations being moved (move pointer in reservation)?
+> >>
+> >
+> > Oh, good catch. Yes I need to be doing that. I should probably
+> > consolidate those routines so the code doesn't miss things like this.
+>
+> This might get a bit ugly/complicated?  Seems like you will need to examine
+> all hugetlbfs inodes and vma's mapping those inodes.
+>
 
- drivers/remoteproc/qcom_q6v5_mss.c | 76 ++++++++++++++++++++----------
- 1 file changed, 51 insertions(+), 25 deletions(-)
+Hmm yes on closer look it does seem like this is not straightforward.
+I'll write a test that does this reparenting so I can start running
+into the issue and poke for solutions. Off the top of my head, I think
+maybe we can just not reparent the hugetlb reservations - the
+hugetlb_cgroup stays alive until all its memory is uncharged. That
+shouldn't be too bad. Today, I think memcg doesn't reparent memory
+when it gets offlined.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index efab574b2e12..914d5546e1cf 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -358,23 +358,29 @@ static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
- }
- 
- static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
--				   bool remote_owner, phys_addr_t addr,
-+				   bool local, bool remote, phys_addr_t addr,
- 				   size_t size)
- {
--	struct qcom_scm_vmperm next;
-+	struct qcom_scm_vmperm next[2];
-+	int perms = 0;
- 
- 	if (!qproc->need_mem_protection)
- 		return 0;
--	if (remote_owner && *current_perm == BIT(QCOM_SCM_VMID_MSS_MSA))
--		return 0;
--	if (!remote_owner && *current_perm == BIT(QCOM_SCM_VMID_HLOS))
--		return 0;
- 
--	next.vmid = remote_owner ? QCOM_SCM_VMID_MSS_MSA : QCOM_SCM_VMID_HLOS;
--	next.perm = remote_owner ? QCOM_SCM_PERM_RW : QCOM_SCM_PERM_RWX;
-+	if (local) {
-+		next[perms].vmid = QCOM_SCM_VMID_HLOS;
-+		next[perms].perm = QCOM_SCM_PERM_RWX;
-+		perms++;
-+	}
-+
-+	if (remote) {
-+		next[perms].vmid = QCOM_SCM_VMID_MSS_MSA;
-+		next[perms].perm = QCOM_SCM_PERM_RW;
-+		perms++;
-+	}
- 
- 	return qcom_scm_assign_mem(addr, ALIGN(size, SZ_4K),
--				   current_perm, &next, 1);
-+				   current_perm, next, perms);
- }
- 
- static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
-@@ -681,7 +687,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
- 
- 	/* Hypervisor mapping to access metadata by modem */
- 	mdata_perm = BIT(QCOM_SCM_VMID_HLOS);
--	ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, phys, size);
-+	ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, true, phys, size);
- 	if (ret) {
- 		dev_err(qproc->dev,
- 			"assigning Q6 access to metadata failed: %d\n", ret);
-@@ -699,7 +705,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
- 		dev_err(qproc->dev, "MPSS header authentication failed: %d\n", ret);
- 
- 	/* Metadata authentication done, remove modem access */
--	xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, phys, size);
-+	xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, false, phys, size);
- 	if (xferop_ret)
- 		dev_warn(qproc->dev,
- 			 "mdt buffer not reclaimed system may become unstable\n");
-@@ -786,7 +792,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
- 	}
- 
- 	/* Assign MBA image access in DDR to q6 */
--	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
-+	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false, true,
- 				      qproc->mba_phys, qproc->mba_size);
- 	if (ret) {
- 		dev_err(qproc->dev,
-@@ -820,8 +826,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
- 
- reclaim_mba:
--	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
--						qproc->mba_phys,
-+	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
-+						false, qproc->mba_phys,
- 						qproc->mba_size);
- 	if (xfermemop_ret) {
- 		dev_err(qproc->dev,
-@@ -888,7 +894,7 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
- 	/* In case of failure or coredump scenario where reclaiming MBA memory
- 	 * could not happen reclaim it here.
- 	 */
--	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
-+	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true, false,
- 				      qproc->mba_phys,
- 				      qproc->mba_size);
- 	WARN_ON(ret);
-@@ -915,6 +921,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 	phys_addr_t boot_addr;
- 	phys_addr_t min_addr = PHYS_ADDR_MAX;
- 	phys_addr_t max_addr = 0;
-+	u32 code_length;
- 	bool relocate = false;
- 	char *fw_name;
- 	size_t fw_name_len;
-@@ -965,9 +972,19 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 	}
- 
- 	/* Try to reset ownership back to Linux */
--	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-+	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, false,
- 				qproc->mpss_phys, qproc->mpss_size);
- 
-+	/* Share ownership between Linux and MSS, during segment loading */
-+	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, true,
-+				      qproc->mpss_phys, qproc->mpss_size);
-+	if (ret) {
-+		dev_err(qproc->dev,
-+			"assigning Q6 access to mpss memory failed: %d\n", ret);
-+		ret = -EAGAIN;
-+		goto release_firmware;
-+	}
-+
- 	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
- 	qproc->mpss_reloc = mpss_reloc;
- 	/* Load firmware segments */
-@@ -1016,10 +1033,24 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 			       phdr->p_memsz - phdr->p_filesz);
- 		}
- 		size += phdr->p_memsz;
-+
-+		code_length = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-+		if (!code_length) {
-+			boot_addr = relocate ? qproc->mpss_phys : min_addr;
-+			writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
-+			writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
-+		}
-+		writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-+
-+		ret = readl(qproc->rmb_base + RMB_MBA_STATUS_REG);
-+		if (ret < 0) {
-+			dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
-+			goto release_firmware;
-+		}
- 	}
- 
- 	/* Transfer ownership of modem ddr region to q6 */
--	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true,
-+	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false, true,
- 				      qproc->mpss_phys, qproc->mpss_size);
- 	if (ret) {
- 		dev_err(qproc->dev,
-@@ -1028,11 +1059,6 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 		goto release_firmware;
- 	}
- 
--	boot_addr = relocate ? qproc->mpss_phys : min_addr;
--	writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
--	writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
--	writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
--
- 	ret = q6v5_rmb_mba_wait(qproc, RMB_MBA_AUTH_COMPLETE, 10000);
- 	if (ret == -ETIMEDOUT)
- 		dev_err(qproc->dev, "MPSS authentication timed out\n");
-@@ -1061,7 +1087,7 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
- 		ret = q6v5_mba_load(qproc);
- 
- 		/* Try to reset ownership back to Linux */
--		q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-+		q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, false,
- 					qproc->mpss_phys, qproc->mpss_size);
- 	}
- 
-@@ -1101,8 +1127,8 @@ static int q6v5_start(struct rproc *rproc)
- 		goto reclaim_mpss;
- 	}
- 
--	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
--						qproc->mba_phys,
-+	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
-+						false, qproc->mba_phys,
- 						qproc->mba_size);
- 	if (xfermemop_ret)
- 		dev_err(qproc->dev,
--- 
-2.23.0
+I'll poke at this a bit and come back with suggestions, you may want
+to hold off reviewing the rest of the patches until then.
 
+> --
+> Mike Kravetz
