@@ -2,196 +2,123 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49F5C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77534C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8434121848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE4321848
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 12:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfKIMSF (ORCPT
+        id S1726478AbfKIMXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 07:18:05 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:60171 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726374AbfKIMSF (ORCPT
+        Sat, 9 Nov 2019 07:23:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5524 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726281AbfKIMXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 07:18:05 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id TPgliwjdHPMT8TPgoiPHDu; Sat, 09 Nov 2019 13:18:03 +0100
-Subject: Re: [PATCH v2 for 5.4 1/4] media: hantro: Fix s_fmt for dynamic
- resolution changes
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-References: <20191007174505.10681-1-ezequiel@collabora.com>
- <20191007174505.10681-2-ezequiel@collabora.com>
- <20191108111950.717db5ce@collabora.com>
- <CAAFQd5DiAnP5pc4SoPV3aDM7k71wYmPtAHzN7thquf47EOioHw@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <64b62284-ec32-41f4-21cb-883c1ee293e4@xs4all.nl>
-Date:   Sat, 9 Nov 2019 13:17:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAAFQd5DiAnP5pc4SoPV3aDM7k71wYmPtAHzN7thquf47EOioHw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfM/1PjcWtzrcPF6jTGFZRWWxxyB++4M0JKfQwTihar4cCrJwqprAeEwDvyGobuvdyWqWveLOb8MyhPoGGDDA6ark21iEDnowfD5iTMsx1lhIxM/c3dpY
- 7Ix3Fzv7KabSYU0zxTruZD9q84RNlGjSc5dQ/YmGvmJhrcA3DeTnjLjGmzAyNRN7s2UJFReO381NgGs3urLcIHjb9CbUk6qN/z2JGLi14ghPvbvU0wWvc/CL
- +J2LKziz3gGfu3KwOblTjAXdqxpGqfQlPs6YnGgEtNqx0XfcMWXd+by6E3KKL7zmdO2rBrtoN8Rvttl2WJ7Y+5gNwCHYPWaEXYgvMlHlr3hbilRj/hEDkWtg
- KvnaWe0OpASyQgcrXDJbnt7EMAJsdW+D6BL6vTtPWQ+EhxNQnZZzT1qRdtNb6i7DkChSvJQmPVIABIUpyoH78K5ci7Chr5OAGpcttKCXYrxwXX9/nDd+o7lO
- iA1rQ2oPXRE/Y5Gfog81cH0f2J19DcyaIaScoKM/doSIoBwsnjTqrXD2BNFj8ntyBkSbUmiKuRv0NXsQOWvSkiDWnTzyfxI3KyDkSIc0NOVGOLzTH8nm5esN
- IzxQn5J31v8uOiJ71GMk5kwTdjxKPWZJtRAZLm9FfyWWiGNnjnSPRre49EPndabf3iQ=
+        Sat, 9 Nov 2019 07:23:54 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA9C6bEa098521
+        for <linux-kernel@vger.kernel.org>; Sat, 9 Nov 2019 07:23:53 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w5q7g91yr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 07:23:53 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Sat, 9 Nov 2019 12:23:51 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 9 Nov 2019 12:23:49 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA9CNmOj42598576
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 9 Nov 2019 12:23:48 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58DEEA404D;
+        Sat,  9 Nov 2019 12:23:48 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C42DA4040;
+        Sat,  9 Nov 2019 12:23:46 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.73.97])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  9 Nov 2019 12:23:46 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH v3 0/4] reorganize and add FADump sysfs files
+Date:   Sat,  9 Nov 2019 17:53:35 +0530
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 19110912-0016-0000-0000-000002C229B2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110912-0017-0000-0000-00003323B3F6
+Message-Id: <20191109122339.20484-1-sourabhjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-09_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=817 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911090131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/8/19 12:52 PM, Tomasz Figa wrote:
-> On Fri, Nov 8, 2019 at 7:20 PM Boris Brezillon
-> <boris.brezillon@collabora.com> wrote:
->>
->> On Mon,  7 Oct 2019 14:45:02 -0300
->> Ezequiel Garcia <ezequiel@collabora.com> wrote:
->>
->>> Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
->>> changed the conditions under S_FMT was allowed for OUTPUT
->>> CAPTURE buffers.
->>>
->>> However, and according to the mem-to-mem stateless decoder specification,
->>> in order to support dynamic resolution changes, S_FMT should be allowed
->>> even if OUTPUT buffers have been allocated.
->>>
->>> Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
->>> modification, provided the pixel format stays the same.
->>>
->>> Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
->>>
->>> Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
->>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
->>> --
->>> v2:
->>> * Call try_fmt_out before using the format,
->>>   pointed out by Philipp.
->>>
->>>  drivers/staging/media/hantro/hantro_v4l2.c | 28 +++++++++++++++-------
->>>  1 file changed, 19 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
->>> index 3dae52abb96c..586d243cc3cc 100644
->>> --- a/drivers/staging/media/hantro/hantro_v4l2.c
->>> +++ b/drivers/staging/media/hantro/hantro_v4l2.c
->>> @@ -367,19 +367,26 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->>>  {
->>>       struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
->>>       struct hantro_ctx *ctx = fh_to_ctx(priv);
->>> +     struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
->>>       const struct hantro_fmt *formats;
->>>       unsigned int num_fmts;
->>> -     struct vb2_queue *vq;
->>>       int ret;
->>>
->>> -     /* Change not allowed if queue is busy. */
->>> -     vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
->>> -     if (vb2_is_busy(vq))
->>> -             return -EBUSY;
->>> +     ret = vidioc_try_fmt_out_mplane(file, priv, f);
->>> +     if (ret)
->>> +             return ret;
->>>
->>>       if (!hantro_is_encoder_ctx(ctx)) {
->>>               struct vb2_queue *peer_vq;
->>>
->>> +             /*
->>> +              * In other to support dynamic resolution change,
->>
->>                       ^ order
->>
->>> +              * the decoder admits a resolution change, as long
->>> +              * as the pixelformat remains. Can't be done if streaming.
->>> +              */
->>> +             if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
->>> +                 pix_mp->pixelformat != ctx->src_fmt.pixelformat))
->>> +                     return -EBUSY;
->>
->> Sorry to chime in only now, but I'm currently looking at the VP9 spec
->> and it seems the resolution is allowed to change dynamically [1] (I
->> guess the same applies to VP8). IIU the spec correctly, coded frames
->> using the new resolution can reference decoded frames using the old
->> one (can be higher or lower res BTW). If we force a streamoff to change
->> the resolution (as seems to be the case here), we'll lose those ref
->> frames (see the hantro_return_bufs() in stop streaming), right?
->> Hans, Tomasz, any idea how this dynamic resolution change could/should
->> be supported?
-> 
-> The same problem applies to stateful decoders as well. This is an
-> inherent limitation of the current V4L2 API. To handle this kind of
-> streams we would have to make the format a per-buffer parameter,
-> rather than per-queue as it is defined currently.
+Currently, FADump sysfs files are present inside /sys/kernel directory.
+But as the number of FADump sysfs file increases it is not a good idea to
+push all of them in /sys/kernel directory. It is better to have separate
+directory to keep all the FADump sysfs files.
 
-This would be interesting to implement in new streaming ioctls.
+The patch series reorganizes the FADump sysfs files and avail all the
+existing FADump sysfs files present inside /sys/kernel into a new
+directory /sys/kernel/fadump. Currently, all the FADump sysfs files
+are replicated into a new directory to maintain the backward compatibility
+and will eventually get removed in future. In addition to this a new FADump
+sys interface is added to get the amount of memory reserved by FADump for
+saving the crash dump.
 
-There are more reasons besides codec support why you would want that
-(i.e. a resolution change on an HDMI input). It's kind of supported
-since you can allocate larger buffers than needed for the current format,
-but currently there is no way to see when a new resolution is received.
+Changelog:
 
-Related to this is the fact that while you can add new buffers on the
-fly (CREATE_BUFS), you can't delete unused buffers. Also, the max number
-of buffers (32) is too small for some of the more advanced scenarios.
+v1->v2:
+ - Move fadump_release_opalcore sysfs to FADump Kobject instead of
+   replicating.
+ - Changed the patch order 1,2,3,4 -> 2,1,3,4 (First add the ABI doc for
+   exisiting sysfs file then replicate them under FADump kobject).
 
-This really needs to be addressed as well in new streaming ioctls.
+v2->v3:
+ - Remove the fadump_ prefix from replicated FADump sysfs file names.
 
-Regards,
+Sourabh Jain (4):
+  Documentation/ABI: add ABI documentation for /sys/kernel/fadump_*
+  powerpc/fadump: reorganize /sys/kernel/fadump_* sysfs files
+  Documentation/ABI: mark /sys/kernel/fadump_* sysfs files deprecated
+  powerpc/fadump: sysfs for fadump memory reservation
 
-	Hans
+ .../ABI/obsolete/sysfs-kernel-fadump_enabled  | 10 ++++
+ .../obsolete/sysfs-kernel-fadump_registered   | 11 ++++
+ .../obsolete/sysfs-kernel-fadump_release_mem  | 11 ++++
+ .../sysfs-kernel-fadump_release_opalcore      |  9 ++++
+ Documentation/ABI/testing/sysfs-kernel-fadump | 48 +++++++++++++++++
+ .../powerpc/firmware-assisted-dump.rst        | 20 ++++++-
+ arch/powerpc/kernel/fadump.c                  | 53 +++++++++++++++++++
+ arch/powerpc/platforms/powernv/opal-core.c    | 10 ++--
+ 8 files changed, 167 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
+ create mode 100644 Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
 
-> 
-> Best regards,
-> Tomasz
-> 
->>
->>>               /*
->>>                * Since format change on the OUTPUT queue will reset
->>>                * the CAPTURE queue, we can't allow doing so
->>> @@ -389,12 +396,15 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->>>                                         V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->>>               if (vb2_is_busy(peer_vq))
->>>                       return -EBUSY;
->>> +     } else {
->>> +             /*
->>> +              * The encoder doesn't admit a format change if
->>> +              * there are OUTPUT buffers allocated.
->>> +              */
->>> +             if (vb2_is_busy(vq))
->>> +                     return -EBUSY;
->>>       }
->>>
->>> -     ret = vidioc_try_fmt_out_mplane(file, priv, f);
->>> -     if (ret)
->>> -             return ret;
->>> -
->>>       formats = hantro_get_formats(ctx, &num_fmts);
->>>       ctx->vpu_src_fmt = hantro_find_format(formats, num_fmts,
->>>                                             pix_mp->pixelformat);
->>
->> [1] Section "5.16 Reference frame scaling" of
->>     https://storage.googleapis.com/downloads.webmproject.org/docs/vp9/vp9-bitstream-specification-v0.6-20160331-draft.pdf
+-- 
+2.17.2
 
