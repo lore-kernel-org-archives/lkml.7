@@ -2,90 +2,95 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED988C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2433C17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C797D21848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA9621924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573295862;
+	bh=YDpiMkaLtjbG8cMf8qmhNnEFosJd+sgFBaV17ymrt0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mjL90uHTPzxqug0f2n7LXeiab6a4Ph4u97RNWBw3U4RRJTa36f5FSBWTQygPd3R2j
+	 AOF6JTvoD71SwdQET2/9u2MUaOeExpXtoSSK5cw6LYGBNHB1N3rzMosEkGgp1EZqEJ
+	 /7L+g4sn/+QmmtpTsLxeJGKadvSkXKK1bwzqoIW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfKIKeL (ORCPT
+        id S1726349AbfKIKhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:34:11 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:55704 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726145AbfKIKeL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 05:34:11 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0ThZCqFZ_1573295647;
-Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0ThZCqFZ_1573295647)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 09 Nov 2019 18:34:07 +0800
-Date:   Sat, 9 Nov 2019 18:34:07 +0800
-From:   Tony Lu <tonylu@linux.alibaba.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     edumazet@google.com, rostedt@goodmis.org, mingo@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] tcp: remove redundant new line from tcp_event_sk_skb
-Message-ID: <20191109103407.GA61998@TonyMac-Alibaba>
-Reply-To: Tony Lu <tonylu@linux.alibaba.com>
-References: <20191108095007.26187-1-tonylu@linux.alibaba.com>
- <795f4bb1-b40e-1745-0df4-6e55d80d5272@gmail.com>
+        Sat, 9 Nov 2019 05:37:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbfKIKhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 05:37:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C03621848;
+        Sat,  9 Nov 2019 10:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573295860;
+        bh=YDpiMkaLtjbG8cMf8qmhNnEFosJd+sgFBaV17ymrt0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uuHmn0zzJmND8Wa46XUoj0dzPNGSnqeARyfA/Wz6j0NAQioUG3OGMWdFx2HsYH1Qf
+         rK2k5XmRNYLJzrxgUHsZUVqE2KOqrKYeDonu2PtE6idY6N+7/Jp27H0G6ZIVnqsig+
+         adixqzEpYEsr0mFE6kJlXZEobx7aiRJpgiurGjQ8=
+Date:   Sat, 9 Nov 2019 11:37:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.3 000/140] 5.3.10-stable review
+Message-ID: <20191109103736.GA1303186@kroah.com>
+References: <20191108174900.189064908@linuxfoundation.org>
+ <CA+G9fYs_+meFv_Jbdon_Q_MoPvSB6qhv1sWM0Nr56oxSdbT8oQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <795f4bb1-b40e-1745-0df4-6e55d80d5272@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYs_+meFv_Jbdon_Q_MoPvSB6qhv1sWM0Nr56oxSdbT8oQ@mail.gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your comments, I am going to append the tag.
+On Sat, Nov 09, 2019 at 03:53:02PM +0530, Naresh Kamboju wrote:
+> On Sat, 9 Nov 2019 at 00:35, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.3.10 release.
+> > There are 140 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sun 10 Nov 2019 05:42:11 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.10-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Cheers,
-Tony Lu
+Wonderful, thanks for testing all of these and letting me know.
 
-On Fri, Nov 08, 2019 at 04:22:19AM -0800, Eric Dumazet wrote:
-> 
-> 
-> On 11/8/19 1:50 AM, Tony Lu wrote:
-> > This removes '\n' from trace event class tcp_event_sk_skb to avoid
-> > redundant new blank line and make output compact.
-> > 
-> > Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
-> > ---
-> >  include/trace/events/tcp.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-> > index 2bc9960a31aa..cf97f6339acb 100644
-> > --- a/include/trace/events/tcp.h
-> > +++ b/include/trace/events/tcp.h
-> > @@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-> >  			      sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-> >  	),
-> >  
-> > -	TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s\n",
-> > +	TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
-> >  		  __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
-> >  		  __entry->saddr_v6, __entry->daddr_v6,
-> >  		  show_tcp_state_name(__entry->state))
-> > 
-> 
-> This seems good to me. Only few comments :
-> 
-> I would add a
-> 
-> Fixes: af4325ecc24f ("tcp: expose sk_state in tcp_retransmit_skb tracepoint")
-> 
-> And also CC (I just did in this reply) the author of the above patch to make sure nothing unexpected happens.
-> 
-> Thanks.
-> 
-> Reviewed-by: Eric Dumazet <edumazet@google.com>
+greg k-h
