@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89910C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90EC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564B621882
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C6621924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 15:16:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oXtfFl+e"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pGyviDSr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfKIPQu (ORCPT
+        id S1727124AbfKIPQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 10:16:50 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44136 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfKIPQr (ORCPT
+        Sat, 9 Nov 2019 10:16:55 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39658 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfKIPQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 10:16:47 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA9FGeN3130699;
-        Sat, 9 Nov 2019 09:16:40 -0600
+        Sat, 9 Nov 2019 10:16:53 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA9FGi2s067241;
+        Sat, 9 Nov 2019 09:16:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573312600;
-        bh=vdo8c+BrXUD51Y2Gd1dd7mJVDNfc2hxqGO27y13aOhk=;
+        s=ti-com-17Q1; t=1573312604;
+        bh=s4J4IgRw4lvHy5fWciYrXJnDBwlJ+T+Si7BcGvg/okc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oXtfFl+eAFWjuyNt5OrAeT4B/AH0wWqDrRGtuaqj2hzVB5v0ttnqXRI8wMtpTR3mv
-         LU7lBHEFHav/NfChz1MT1BCBT0c2/M0BSrOlX5lY6BgD/19fiLl2BtVh3kOgYjcjWH
-         a2Hd0qfX3BRCTTUpn07bR7lcFxLNdcE/yZTO9VhE=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA9FGeLU097865
+        b=pGyviDSrN21Kj9R2Kl0BSNV+2vyco5rbNrI/PqbTKzoBPJe+l2Obbx2e51ROXrpK0
+         WPG8mlnxr3CFYOfQIW9oyW3HZaJc6dkJa5xj+4ReYx69sg6l0KY6AEgcsi/tqEt1u+
+         5A8N/iN0yTDbkksqVlUtNhdNwnf/mIkku7cVGavU=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA9FGiNx130252
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 9 Nov 2019 09:16:40 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+        Sat, 9 Nov 2019 09:16:44 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 9 Nov
- 2019 09:16:24 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 09:16:44 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sat, 9 Nov 2019 09:16:40 -0600
+ Frontend Transport; Sat, 9 Nov 2019 09:16:28 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA9FGdW6061572;
-        Sat, 9 Nov 2019 09:16:39 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA9FGhF2025778;
+        Sat, 9 Nov 2019 09:16:43 -0600
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Florian Fainelli <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -61,9 +61,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
         Ivan Vecera <ivecera@redhat.com>,
         Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v6 net-next 10/13] Documentation: networking: add cpsw switchdev based driver documentation
-Date:   Sat, 9 Nov 2019 17:15:22 +0200
-Message-ID: <20191109151525.18651-11-grygorii.strashko@ti.com>
+Subject: [PATCH v6 net-next 12/13] ARM: dts: am571x-idk: enable for new cpsw switch dev driver
+Date:   Sat, 9 Nov 2019 17:15:24 +0200
+Message-ID: <20191109151525.18651-13-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191109151525.18651-1-grygorii.strashko@ti.com>
 References: <20191109151525.18651-1-grygorii.strashko@ti.com>
@@ -75,252 +75,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Add DT nodes for new cpsw switchdev driver for am571x-idk board for now to
+enable testing of the new solution.
 
-A new cpsw dirver based on switchdev was added. Add documentation about
-basic configuration and future features
-
-Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- .../device_drivers/ti/cpsw_switchdev.txt      | 210 ++++++++++++++++++
- .../devlink-params-ti-cpsw-switch.txt         |  10 +
- 2 files changed, 220 insertions(+)
- create mode 100644 Documentation/networking/device_drivers/ti/cpsw_switchdev.txt
- create mode 100644 Documentation/networking/devlink-params-ti-cpsw-switch.txt
+ arch/arm/boot/dts/am571x-idk.dts         | 27 ++++++++++++++++++++++++
+ arch/arm/boot/dts/am572x-idk.dts         |  5 +++++
+ arch/arm/boot/dts/am574x-idk.dts         |  5 +++++
+ arch/arm/boot/dts/am57xx-idk-common.dtsi |  5 -----
+ 4 files changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/networking/device_drivers/ti/cpsw_switchdev.txt b/Documentation/networking/device_drivers/ti/cpsw_switchdev.txt
-new file mode 100644
-index 000000000000..ba1112f383f0
---- /dev/null
-+++ b/Documentation/networking/device_drivers/ti/cpsw_switchdev.txt
-@@ -0,0 +1,210 @@
-+* Texas Instruments CPSW switchdev based ethernet driver 2.0
+diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
+index 0aaacea1d887..820ce3b60bb6 100644
+--- a/arch/arm/boot/dts/am571x-idk.dts
++++ b/arch/arm/boot/dts/am571x-idk.dts
+@@ -186,3 +186,30 @@
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_rev20 &mmc2_iodelay_ddr_conf>;
+ };
 +
-+- Port renaming
-+On older udev versions renaming of ethX to swXpY will not be automatically
-+supported
-+In order to rename via udev:
-+ip -d link show dev sw0p1 | grep switchid
++&mac_sw {
++	pinctrl-names = "default", "sleep";
++	status = "okay";
++};
 +
-+SUBSYSTEM=="net", ACTION=="add", ATTR{phys_switch_id}==<switchid>, \
-+        ATTR{phys_port_name}!="", NAME="sw0$attr{phys_port_name}"
++&cpsw_port1 {
++	phy-handle = <&ethphy0_sw>;
++	phy-mode = "rgmii";
++	ti,dual-emac-pvid = <1>;
++};
 +
++&cpsw_port2 {
++	phy-handle = <&ethphy1_sw>;
++	phy-mode = "rgmii";
++	ti,dual-emac-pvid = <2>;
++};
 +
-+====================
-+# Dual mac mode
-+====================
-+- The new (cpsw_new.c) driver is operating in dual-emac mode by default, thus
-+working as 2 individual network interfaces. Main differences from legacy CPSW
-+driver are:
-+ - optimized promiscuous mode: The P0_UNI_FLOOD (both ports) is enabled in
-+addition to ALLMULTI (current port) instead of ALE_BYPASS.
-+So, Ports in promiscuous mode will keep possibility of mcast and vlan filtering,
-+which is provides significant benefits when ports are joined to the same bridge,
-+but without enabling "switch" mode, or to different bridges.
-+ - learning disabled on ports as it make not too much sense for
-+   segregated ports - no forwarding in HW.
-+ - enabled basic support for devlink.
++&davinci_mdio_sw {
++	ethphy0_sw: ethernet-phy@0 {
++		reg = <0>;
++	};
 +
-+	devlink dev show
-+		platform/48484000.switch
++	ethphy1_sw: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
+diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
+index ea1c119feaa5..c3d966904d64 100644
+--- a/arch/arm/boot/dts/am572x-idk.dts
++++ b/arch/arm/boot/dts/am572x-idk.dts
+@@ -27,3 +27,8 @@
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_rev20>;
+ };
 +
-+	devlink dev param show
-+	platform/48484000.switch:
-+	name switch_mode type driver-specific
-+	values:
-+		cmode runtime value false
-+	name ale_bypass type driver-specific
-+	values:
-+		cmode runtime value false
++&mac {
++	status = "okay";
++	dual_emac;
++};
+diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
+index 7935d70874ce..fa0088025b2c 100644
+--- a/arch/arm/boot/dts/am574x-idk.dts
++++ b/arch/arm/boot/dts/am574x-idk.dts
+@@ -35,3 +35,8 @@
+ 	pinctrl-1 = <&mmc2_pins_default>;
+ 	pinctrl-2 = <&mmc2_pins_default>;
+ };
 +
-+Devlink configuration parameters
-+====================
-+See Documentation/networking/devlink-params-ti-cpsw-switch.txt
-+
-+====================
-+# Bridging in dual mac mode
-+====================
-+The dual_mac mode requires two vids to be reserved for internal purposes,
-+which, by default, equal CPSW Port numbers. As result, bridge has to be
-+configured in vlan unaware mode or default_pvid has to be adjusted.
-+
-+	ip link add name br0 type bridge
-+	ip link set dev br0 type bridge vlan_filtering 0
-+	echo 0 > /sys/class/net/br0/bridge/default_pvid
-+	ip link set dev sw0p1 master br0
-+	ip link set dev sw0p2 master br0
-+ - or -
-+	ip link add name br0 type bridge
-+	ip link set dev br0 type bridge vlan_filtering 0
-+	echo 100 > /sys/class/net/br0/bridge/default_pvid
-+	ip link set dev br0 type bridge vlan_filtering 1
-+	ip link set dev sw0p1 master br0
-+	ip link set dev sw0p2 master br0
-+
-+====================
-+# Enabling "switch"
-+====================
-+The Switch mode can be enabled by configuring devlink driver parameter
-+"switch_mode" to 1/true:
-+	devlink dev param set platform/48484000.switch \
-+	name switch_mode value 1 cmode runtime
-+
-+This can be done regardless of the state of Port's netdev devices - UP/DOWN, but
-+Port's netdev devices have to be in UP before joining to the bridge to avoid
-+overwriting of bridge configuration as CPSW switch driver copletly reloads its
-+configuration when first Port changes its state to UP.
-+
-+When the both interfaces joined the bridge - CPSW switch driver will enable
-+marking packets with offload_fwd_mark flag unless "ale_bypass=0"
-+
-+All configuration is implemented via switchdev API.
-+
-+====================
-+# Bridge setup
-+====================
-+	devlink dev param set platform/48484000.switch \
-+	name switch_mode value 1 cmode runtime
-+
-+	ip link add name br0 type bridge
-+	ip link set dev br0 type bridge ageing_time 1000
-+	ip link set dev sw0p1 up
-+	ip link set dev sw0p2 up
-+	ip link set dev sw0p1 master br0
-+	ip link set dev sw0p2 master br0
-+	[*] bridge vlan add dev br0 vid 1 pvid untagged self
-+
-+[*] if vlan_filtering=1. where default_pvid=1
-+
-+=================
-+# On/off STP
-+=================
-+ip link set dev BRDEV type bridge stp_state 1/0
-+
-+Note. Steps [*] are mandatory.
-+
-+====================
-+# VLAN configuration
-+====================
-+bridge vlan add dev br0 vid 1 pvid untagged self <---- add cpu port to VLAN 1
-+
-+Note. This step is mandatory for bridge/default_pvid.
-+
-+=================
-+# Add extra VLANs
-+=================
-+ 1. untagged:
-+    bridge vlan add dev sw0p1 vid 100 pvid untagged master
-+    bridge vlan add dev sw0p2 vid 100 pvid untagged master
-+    bridge vlan add dev br0 vid 100 pvid untagged self <---- Add cpu port to VLAN100
-+
-+ 2. tagged:
-+    bridge vlan add dev sw0p1 vid 100 master
-+    bridge vlan add dev sw0p2 vid 100 master
-+    bridge vlan add dev br0 vid 100 pvid tagged self <---- Add cpu port to VLAN100
-+
-+====
-+FDBs
-+====
-+FDBs are automatically added on the appropriate switch port upon detection
-+
-+Manually adding FDBs:
-+bridge fdb add aa:bb:cc:dd:ee:ff dev sw0p1 master vlan 100
-+bridge fdb add aa:bb:cc:dd:ee:fe dev sw0p2 master <---- Add on all VLANs
-+
-+====
-+MDBs
-+====
-+MDBs are automatically added on the appropriate switch port upon detection
-+
-+Manually adding MDBs:
-+bridge mdb add dev br0 port sw0p1 grp 239.1.1.1 permanent vid 100
-+bridge mdb add dev br0 port sw0p1 grp 239.1.1.1 permanent <---- Add on all VLANs
-+
-+==================
-+Multicast flooding
-+==================
-+CPU port mcast_flooding is always on
-+
-+Turning flooding on/off on swithch ports:
-+bridge link set dev sw0p1 mcast_flood on/off
-+
-+==================
-+Access and Trunk port
-+==================
-+ bridge vlan add dev sw0p1 vid 100 pvid untagged master
-+ bridge vlan add dev sw0p2 vid 100 master
-+
-+
-+ bridge vlan add dev br0 vid 100 self
-+ ip link add link br0 name br0.100 type vlan id 100
-+
-+ Note. Setting PVID on Bridge device itself working only for
-+ default VLAN (default_pvid).
-+
-+=====================
-+ NFS
-+=====================
-+The only way for NFS to work is by chrooting to a minimal environment when
-+switch configuration that will affect connectivity is needed.
-+Assuming you are booting NFS with eth1 interface(the script is hacky and
-+it's just there to prove NFS is doable).
-+
-+setup.sh:
-+#!/bin/sh
-+mkdir proc
-+mount -t proc none /proc
-+ifconfig br0  > /dev/null
-+if [ $? -ne 0 ]; then
-+        echo "Setting up bridge"
-+        ip link add name br0 type bridge
-+        ip link set dev br0 type bridge ageing_time 1000
-+        ip link set dev br0 type bridge vlan_filtering 1
-+
-+        ip link set eth1 down
-+        ip link set eth1 name sw0p1
-+        ip link set dev sw0p1 up
-+        ip link set dev sw0p2 up
-+        ip link set dev sw0p2 master br0
-+        ip link set dev sw0p1 master br0
-+        bridge vlan add dev br0 vid 1 pvid untagged self
-+        ifconfig sw0p1 0.0.0.0
-+        udhchc -i br0
-+fi
-+umount /proc
-+
-+run_nfs.sh:
-+#!/bin/sh
-+mkdir /tmp/root/bin -p
-+mkdir /tmp/root/lib -p
-+
-+cp -r /lib/ /tmp/root/
-+cp -r /bin/ /tmp/root/
-+cp /sbin/ip /tmp/root/bin
-+cp /sbin/bridge /tmp/root/bin
-+cp /sbin/ifconfig /tmp/root/bin
-+cp /sbin/udhcpc /tmp/root/bin
-+cp /path/to/setup.sh /tmp/root/bin
-+chroot /tmp/root/ busybox sh /bin/setup.sh
-+
-+run ./run_nfs.sh
-+
-diff --git a/Documentation/networking/devlink-params-ti-cpsw-switch.txt b/Documentation/networking/devlink-params-ti-cpsw-switch.txt
-new file mode 100644
-index 000000000000..4037458499f7
---- /dev/null
-+++ b/Documentation/networking/devlink-params-ti-cpsw-switch.txt
-@@ -0,0 +1,10 @@
-+ale_bypass	[DEVICE, DRIVER-SPECIFIC]
-+		Allows to enable ALE_CONTROL(4).BYPASS mode for debug purposes.
-+		All packets will be sent to the Host port only if enabled.
-+		Type: bool
-+		Configuration mode: runtime
-+
-+switch_mode	[DEVICE, DRIVER-SPECIFIC]
-+		Enable switch mode
-+		Type: bool
-+		Configuration mode: runtime
++&mac {
++	status = "okay";
++	dual_emac;
++};
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index 423855a2a2d6..398721c7201c 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -363,11 +363,6 @@
+ 	ext-clk-src;
+ };
+ 
+-&mac {
+-	status = "okay";
+-	dual_emac;
+-};
+-
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+ 	phy-mode = "rgmii";
 -- 
 2.17.1
 
