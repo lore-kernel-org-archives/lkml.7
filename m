@@ -6,130 +6,71 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D34C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD65C17443
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A9921924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F81221924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a/dnkGGX"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L5gnkNur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfKIKJa (ORCPT
+        id S1726462AbfKIKLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:09:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45658 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726275AbfKIKJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 05:09:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573294166;
+        Sat, 9 Nov 2019 05:11:52 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:45458 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfKIKLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 05:11:51 -0500
+Received: from zn.tnic (p200300EC2F1EA7009D7000FE00A4E362.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:a700:9d70:fe:a4:e362])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B4651EC0CF8;
+        Sat,  9 Nov 2019 11:11:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573294310;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=COvRkfB7QtwqnVTHt3MVS0PoIAM0aB4odeSnRONVuV8=;
-        b=a/dnkGGXeDohiETrWs6K8iDPIyzoUiDM9EwW51XGixdyOVzS6OMbbL/0rT+QCc0uav8fdM
-        aiYC/eUo+0buaZbqUkmlDvfkvsfFDbkFzfC6KJpRPXhWNA9CNYgBCnwQt5vvUTpQu9nMOr
-        ejQvUzMWd1k7lqS++fo6XLXHMfUJTpM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-Hi_ndLc_MxiC1ic0MmTclQ-1; Sat, 09 Nov 2019 05:09:24 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCE591800D7D;
-        Sat,  9 Nov 2019 10:09:22 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F31EA5D9E2;
-        Sat,  9 Nov 2019 10:09:09 +0000 (UTC)
-Date:   Sat, 9 Nov 2019 18:09:03 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Andrea Vai <andrea.vai@unipv.it>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-Message-ID: <20191109100903.GA7696@ming.t460p>
-References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
- <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
- <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it>
- <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
- <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
- <BYAPR04MB5816ECD4302AD94338CB9072E77B0@BYAPR04MB5816.namprd04.prod.outlook.com>
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=CEeCWf0z3WtnIkSC44XBMnqQMurafw1H0plYSfhYdq8=;
+        b=L5gnkNurZg5cHgNIseSlKsSAylSnAu1CiZd/KSyUyrKZF7HsISpeP8mukqZUbLaJjlwHxW
+        8FwX8tgU5+DxxpqchFAjdNUwgZlkd0/wivPMEi13wzS8Gf1Fe7jp6I3e9/sFlnLMhHo3Zb
+        2OGHLAcLqFnSia9sYa51PtDP8bPjSlY=
+Date:   Sat, 9 Nov 2019 11:11:46 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 05/20] EDAC, mc: Remove needless zero string
+ termination
+Message-ID: <20191109101146.GB2699@zn.tnic>
+References: <20191106093239.25517-1-rrichter@marvell.com>
+ <20191106093239.25517-6-rrichter@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR04MB5816ECD4302AD94338CB9072E77B0@BYAPR04MB5816.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: Hi_ndLc_MxiC1ic0MmTclQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20191106093239.25517-6-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 08:42:53AM +0000, Damien Le Moal wrote:
-> On 2019/11/08 4:00, Andrea Vai wrote:
-> > [Sorry for the duplicate message, it didn't reach the lists due to
-> > html formatting]
-> > Il giorno gio 7 nov 2019 alle ore 08:54 Damien Le Moal
-> > <Damien.LeMoal@wdc.com> ha scritto:
-> >>
-> >> On 2019/11/07 16:04, Andrea Vai wrote:
-> >>> Il giorno mer, 06/11/2019 alle 22.13 +0000, Damien Le Moal ha scritto=
-:
-> >>>>
-> >>>>
-> >>>> Please simply try your write tests after doing this:
-> >>>>
-> >>>> echo mq-deadline > /sys/block/<name of your USB
-> >>>> disk>/queue/scheduler
-> >>>>
-> >>>> And confirm that mq-deadline is selected with:
-> >>>>
-> >>>> cat /sys/block/<name of your USB disk>/queue/scheduler
-> >>>> [mq-deadline] kyber bfq none
-> >>>
-> >>> ok, which kernel should I test with this: the fresh git cloned, or th=
-e
-> >>> one just patched with Alan's patch, or doesn't matter which one?
-> >>
-> >> Probably all of them to see if there are any differences.
-> >=20
-> > with both kernels, the output of
-> > cat /sys/block/sdh/queue/schedule
-> >=20
-> > already contains [mq-deadline]: is it correct to assume that the echo
-> > command and the subsequent testing is useless? What to do now?
->=20
-> Probably, yes. Have you obtained a blktrace of the workload during these
-> tests ? Any significant difference in the IO pattern (IO size and
-> randomness) and IO timing (any device idle time where the device has no
-> command to process) ? Asking because the problem may be above the block
-> layer, with the file system for instance.
+On Wed, Nov 06, 2019 at 09:33:11AM +0000, Robert Richter wrote:
+> Since this is a string already and strlen() has been used to advance
+> the pointer, the end of the buffer is already zero terminated. Remove
+> the needless zero string termination.
 
-You may get the IO pattern via the previous trace=20
+Changed that to:
 
-https://lore.kernel.org/linux-usb/20190710024439.GA2621@ming.t460p/
+"The e string to which this is pointing to has already been cleared
+earlier in the function so remove the needless zero string termination."
 
-IMO, if it is related write order, one possibility could be that
-the queue lock is killed in .make_request_fn().
+-- 
+Regards/Gruss,
+    Boris.
 
-
-Thanks,
-Ming
-
+https://people.kernel.org/tglx/notes-about-netiquette
