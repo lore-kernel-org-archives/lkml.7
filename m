@@ -2,175 +2,113 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFEEC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23E0C17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5062207FF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93451207FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e7dFTkkr"
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="ksE1U0tZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfKIKqQ (ORCPT
+        id S1726470AbfKIKrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:46:16 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33556 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfKIKqP (ORCPT
+        Sat, 9 Nov 2019 05:47:08 -0500
+Received: from www.linux-watchdog.org ([185.87.125.42]:42220 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbfKIKrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 05:46:15 -0500
-Received: by mail-lf1-f67.google.com with SMTP id d6so6006790lfc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 02:46:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4UwkKgL7QHQVRwe8tvh/dFC6LdCmbrhTK7UqRShgUPQ=;
-        b=e7dFTkkrBmCNdqF34d3iiK+gKWmRcXrK3NLTHt7WA2A/4stvOk92DcsKTWQnlM8ghZ
-         DKAtSzTeD+oCRPuxYaPHwJPQyF0nzCGnW+dw7AZs/CSHeicTMVJ6RJWW7Gi7/knY0Drs
-         OobmXQ+7LaC4uhim+ekj29puE4niKdhy1uAXKdDGJajG7P07xsQJ7r6No2uOgRJ/YMA+
-         K49zXF5nzzMX66VD6yOwAXY21qg8tNayAj0G8ng2xOjX0JSK2XhfpJNE7ObF6wY3UIGm
-         fB7OxBk5/26kJcV52AFy1nkUpVMZAhGHx/JlDE+18pr6TTBZJDeID8JD5Mdg5MfpRosW
-         ZQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4UwkKgL7QHQVRwe8tvh/dFC6LdCmbrhTK7UqRShgUPQ=;
-        b=T6vgcMuYxhCu4Z88VmgSni4C5amNQEDCJOWje+DpC2uK7GT2NB9oAcRvecJRq2qUD4
-         uEmkQplV+f7iTRGKHNDVqOpSfJ4emZ+dbuWWLgh7WDyJuN5EXbB6/oI3/hVwe7SlnYJv
-         Tsn9uQSgEh5oP8MO4mRKUu8hSoNi+SUg8KvUn14GIaUlaMMfaHWQXnVy0EnGFhORTmfF
-         0kUndy3U93EmhAADsX/rH7Hen4dd3zeBMFOF1DLnS2g/79UQHpec0p8oHuDxZQ7j92bF
-         xFHJKO44eePMGgX7608jzl1KYCQYqGGmEtZ0SfKmHrHJeIUSFz1+z8vOzJisq6aBm4FN
-         fuEg==
-X-Gm-Message-State: APjAAAXdCbY94wA+WtL8pH02c+LfD+cN/aM/nKUSNop0rFYrWMdIt9W0
-        c/S/hsejHITjTu2Ri1TVsfY5uiYuejZSvxLufEhzHCcMnYA=
-X-Google-Smtp-Source: APXvYqy8nrExtm1/Qbhy0rr4pbYil/M9IUBSELB1eZbXd1ciGmc44Al5QRBBsGEqbKTjAv6T7iYZXZWqfE4PLtwXtAM=
-X-Received: by 2002:a19:9116:: with SMTP id t22mr9058262lfd.99.1573296371865;
- Sat, 09 Nov 2019 02:46:11 -0800 (PST)
+        Sat, 9 Nov 2019 05:47:08 -0500
+X-Greylist: delayed 476 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 Nov 2019 05:47:07 EST
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id B130140204; Sat,  9 Nov 2019 10:54:43 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org B130140204
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1573293283;
+        bh=JzQx7YpNmpxma75B7LPm6zaJOGPNcTDGsH5LTJkoSnA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ksE1U0tZBYAX8bJb5Rq3vBibSUYcDahJ22nhZPcAoJnJaQwPZdyug7mibTFrLpU1h
+         1uFA7kGR4+satPBRQFCJivIiTjXPei+zI1GeDHlxmV2pvbYmGgnwfNiZ7eiGC2tKmn
+         dRJ8DpY/RA9EqXTyntUeR0rG3xEl6duzKXIdoxMg=
+Date:   Sat, 9 Nov 2019 10:54:43 +0100
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [GIT PULL REQUEST] watchdog - v5.4-rc7 Fixes
+Message-ID: <20191109095443.GA21465@www.linux-watchdog.org>
 MIME-Version: 1.0
-References: <20191108174745.495640141@linuxfoundation.org>
-In-Reply-To: <20191108174745.495640141@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 9 Nov 2019 16:16:00 +0530
-Message-ID: <CA+G9fYsKOjK68DUwCyJUctmqq1GENvN_ugN6Dn+G5Np3WSXydQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/79] 4.19.83-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 Nov 2019 at 00:32, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.83 release.
-> There are 79 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun 10 Nov 2019 05:42:11 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.83-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Linus,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Please pull the watchdog fixes for v5.4-rc7.
 
-Summary
-------------------------------------------------------------------------
+This series contains:
+* cpwd: fix build regression
+* pm8916_wdt: fix pretimeout registration flow
+* meson: Fix the wrong value of left time
+* imx_sc_wdt: Pretimeout should follow SCU firmware format
+* bd70528: Add MODULE_ALIAS to allow module auto loading
 
-kernel: 4.19.83-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: b56f5a59d51ac99b2c9af3df39a0a7a573053bcc
-git describe: v4.19.82-80-gb56f5a59d51a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.82-80-gb56f5a59d51a
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9:
 
-No regressions (compared to build v4.19.82-80-g54bd90285427)
+  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
 
-No fixes (compared to build v4.19.82-80-g54bd90285427)
+are available in the git repository at:
 
-Ran 23927 total tests in the following environments and test suites.
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.4-rc7
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
+for you to fetch changes up to 81363f248aecd2b5f10547af268a4dfaf8963489:
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
+  watchdog: bd70528: Add MODULE_ALIAS to allow module auto loading (2019-11-05 16:58:12 +0100)
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+----------------------------------------------------------------
+linux-watchdog 5.4-rc7 tag
+
+----------------------------------------------------------------
+Anson Huang (1):
+      watchdog: imx_sc_wdt: Pretimeout should follow SCU firmware format
+
+Arnd Bergmann (1):
+      watchdog: cpwd: fix build regression
+
+Jorge Ramirez-Ortiz (1):
+      watchdog: pm8916_wdt: fix pretimeout registration flow
+
+Matti Vaittinen (1):
+      watchdog: bd70528: Add MODULE_ALIAS to allow module auto loading
+
+Xingyu Chen (1):
+      watchdog: meson: Fix the wrong value of left time
+
+ drivers/watchdog/bd70528_wdt.c    |  1 +
+ drivers/watchdog/cpwd.c           |  8 +++++++-
+ drivers/watchdog/imx_sc_wdt.c     |  8 +++++++-
+ drivers/watchdog/meson_gxbb_wdt.c |  4 ++--
+ drivers/watchdog/pm8916_wdt.c     | 15 +++++++++++----
+ 5 files changed, 28 insertions(+), 8 deletions(-)
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
+
