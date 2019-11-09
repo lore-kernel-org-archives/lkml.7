@@ -2,59 +2,219 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88958C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 13:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0696C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 13:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFD021882
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 13:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C3F21924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 13:43:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AGwkpKy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfKINnR (ORCPT
+        id S1726569AbfKINnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 08:43:17 -0500
-Received: from hn.kd.ny.adsl ([42.231.162.229]:4478 "HELO zoosbook.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1726289AbfKINnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 08:43:16 -0500
-Received: from unknown (HELO public.micromail.com.au) (Sat, 09 Nov 2019 14:31:03 +0100)
-        by mail.webhostings4u.com with LOCAL; Sat, 09 Nov 2019 14:31:03 +0100
-Message-ID: <99B118DE.38D23EC0@zoosbook.com>
-Date:   Sat, 09 Nov 2019 14:24:06 +0100
-Reply-To: "zoosbook.com" <admin@zoosbook.com>
-From:   "zoosbook.com" <admin@zoosbook.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.8.1.12) Gecko/20080213 Thunderbird/2.0.0.12
+        Sat, 9 Nov 2019 08:43:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41234 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726515AbfKINnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 08:43:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573307000;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Up5s8EpS5D7kkDC57nzXWxivAHhovvLoHXVf8DG9Twg=;
+        b=AGwkpKy10cWBahJwoKjimnQ03tjfmgC8Q09mcJ9gXz9dZ0rraqjtHLuTbMyUdI+6edl9TP
+        mtgf1mWF/uTGlEI9mc+B6xwW2wczoTs6phpRs0NGMYCXt3wilVOgQVkBZP2+UKWL2CkCCU
+        TDUfgqgUCQ4u+9yUoX+NCWwQmgTAzyQ=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-dZppz_hZOXeIycl2SWQtyw-1; Sat, 09 Nov 2019 08:43:18 -0500
+Received: by mail-ot1-f72.google.com with SMTP id y65so7256470ota.18
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 05:43:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mEmiWvgrHzBy2uEipunGX3PtOc+nxMNrW4xVu/URLUE=;
+        b=BHlMxjdWQuNX5wYxrQkhZtGux/ZPWkiQ3/aTy0VmmiZZmFGR4N2XO88yBCsMj1uFIj
+         AurWXrSwG1W1+rQnbvKbBK3ORl5hsyQG8LivKqvCN8H/4C8BQiHUn6kbVuZ+jKENBHFp
+         +h7mAB0VAeyqJ/ZyjcJCuFke/t5zDpi5QNpSLZJXw02llgKKSZkl9kUwA2puqbG9sWwr
+         kxKP6tBy4Dbhmuxk/GJ2UoqZ4eSB+w9PJh2FEXka0BZWR5VQPPEKOHVzsoT2oMg0He8D
+         W6prnnGIUtWFOQFylaDDWlIMBiFKqJ7Rs8ZzvQeV9u3KlOgk9NYCz57wJgutqm6eaHaH
+         KETw==
+X-Gm-Message-State: APjAAAUIR49MBy4xFG0AdBDokEnEqa1aLoQlwmSQFK6zG/GqBsQCXO3l
+        yxxePwb6AieSbhLNHtt9fzumwQ0uARA1p6hMvVfptTAjpYxIaSLDXMzvt27yk/VaVvpNv4/e0Jl
+        zhzQIvCvchhpg50plrXD9/LyC7P9AhBXnPuwllNyr
+X-Received: by 2002:aca:7595:: with SMTP id q143mr15605498oic.103.1573306997654;
+        Sat, 09 Nov 2019 05:43:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxEAIKoO0PorChSjh8mXo4pFYXDvotABIq5sy0WipLpRcgXKIuI7ufDvUrW9RgtQJB61KjLDtlqvynXSHfenbE=
+X-Received: by 2002:aca:7595:: with SMTP id q143mr15605470oic.103.1573306997218;
+ Sat, 09 Nov 2019 05:43:17 -0800 (PST)
 MIME-Version: 1.0
-To:     <linux-assembly@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-msdos@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-Subject: FREE Bestiality Social Network
-Content-Type: text/plain;
-        charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
+In-Reply-To: <20191108211323.1806194-11-arnd@arndb.de>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Sat, 9 Nov 2019 14:43:06 +0100
+Message-ID: <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com>
+Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        SElinux list <selinux@vger.kernel.org>
+X-MC-Unique: dZppz_hZOXeIycl2SWQtyw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, 
+On Fri, Nov 8, 2019 at 10:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> Preparing for a change to the itimer internals, stop using the
+> do_setitimer() symbol and instead use a new higher-level interface.
+>
+> The do_getitimer()/do_setitimer functions can now be made static,
+> allowing the compiler to potentially produce better object code.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/linux/time.h     |  9 +++++----
+>  kernel/time/itimer.c     | 15 +++++++++++++--
+>  security/selinux/hooks.c | 10 +++-------
+>  3 files changed, 21 insertions(+), 13 deletions(-)
+>
+> diff --git a/include/linux/time.h b/include/linux/time.h
+> index 27d83fd2ae61..0760a4f5a15c 100644
+> --- a/include/linux/time.h
+> +++ b/include/linux/time.h
+> @@ -35,10 +35,11 @@ extern time64_t mktime64(const unsigned int year, con=
+st unsigned int mon,
+>  extern u32 (*arch_gettimeoffset)(void);
+>  #endif
+>
+> -struct itimerval;
+> -extern int do_setitimer(int which, struct itimerval *value,
+> -                       struct itimerval *ovalue);
+> -extern int do_getitimer(int which, struct itimerval *value);
+> +#ifdef CONFIG_POSIX_TIMERS
+> +extern void clear_itimer(void);
+> +#else
+> +static inline void clear_itimer(void) {}
+> +#endif
+>
+>  extern long do_utimes(int dfd, const char __user *filename, struct times=
+pec64 *times, int flags);
+>
+> diff --git a/kernel/time/itimer.c b/kernel/time/itimer.c
+> index 4664c6addf69..ce9cd19ce72e 100644
+> --- a/kernel/time/itimer.c
+> +++ b/kernel/time/itimer.c
+> @@ -73,7 +73,7 @@ static void get_cpu_itimer(struct task_struct *tsk, uns=
+igned int clock_id,
+>         value->it_interval =3D ns_to_timeval(interval);
+>  }
+>
+> -int do_getitimer(int which, struct itimerval *value)
+> +static int do_getitimer(int which, struct itimerval *value)
+>  {
+>         struct task_struct *tsk =3D current;
+>
+> @@ -197,7 +197,7 @@ static void set_cpu_itimer(struct task_struct *tsk, u=
+nsigned int clock_id,
+>  #define timeval_valid(t) \
+>         (((t)->tv_sec >=3D 0) && (((unsigned long) (t)->tv_usec) < USEC_P=
+ER_SEC))
+>
+> -int do_setitimer(int which, struct itimerval *value, struct itimerval *o=
+value)
+> +static int do_setitimer(int which, struct itimerval *value, struct itime=
+rval *ovalue)
+>  {
+>         struct task_struct *tsk =3D current;
+>         struct hrtimer *timer;
+> @@ -249,6 +249,17 @@ int do_setitimer(int which, struct itimerval *value,=
+ struct itimerval *ovalue)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_SECURITY_SELINUX
 
-Bestiality Social Networking Platform. With pictures, videos and friend
-about bestiality and zoophilia porn. 
-Here you can meet and talk with people that love zoo sex.
+Did you mean "#ifdef CONFIG_POSIX_TIMERS" here to match the header?
 
-Register for a free account with us today
-https://www.zoosbook.com/register
+> +void clear_itimer(void)
+> +{
+> +       struct itimerval v =3D {};
+> +       int i;
+> +
+> +       for (i =3D 0; i < 3; i++)
+> +               do_setitimer(i, &v, NULL);
+> +}
+> +#endif
+> +
+>  #ifdef __ARCH_WANT_SYS_ALARM
+>
+>  /**
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 9625b99e677f..c3f2e89acb87 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -2549,9 +2549,8 @@ static void selinux_bprm_committing_creds(struct li=
+nux_binprm *bprm)
+>  static void selinux_bprm_committed_creds(struct linux_binprm *bprm)
+>  {
+>         const struct task_security_struct *tsec =3D selinux_cred(current_=
+cred());
+> -       struct itimerval itimer;
+>         u32 osid, sid;
+> -       int rc, i;
+> +       int rc;
+>
+>         osid =3D tsec->osid;
+>         sid =3D tsec->sid;
+> @@ -2569,11 +2568,8 @@ static void selinux_bprm_committed_creds(struct li=
+nux_binprm *bprm)
+>         rc =3D avc_has_perm(&selinux_state,
+>                           osid, sid, SECCLASS_PROCESS, PROCESS__SIGINH, N=
+ULL);
+>         if (rc) {
+> -               if (IS_ENABLED(CONFIG_POSIX_TIMERS)) {
+> -                       memset(&itimer, 0, sizeof itimer);
+> -                       for (i =3D 0; i < 3; i++)
+> -                               do_setitimer(i, &itimer, NULL);
+> -               }
+> +               if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+> +                       clear_itimer();
 
-Let your animalic thoughts get alive.
+Since you already define a no-op fallback for the case of
+!IS_ENABLED(CONFIG_POSIX_TIMERS) in time.h, why not simply call
+clear_itimer() unconditionally?
 
-Help us build a good reputation, remember all that we offer is free, be
-fair to us
-https://www.trustpilot.com/review/zoosbook.com
+>                 spin_lock_irq(&current->sighand->siglock);
+>                 if (!fatal_signal_pending(current)) {
+>                         flush_sigqueue(&current->pending);
+> --
+> 2.20.0
+>
 
-
-See you inside
-
+--=20
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
 
