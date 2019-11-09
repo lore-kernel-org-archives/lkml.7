@@ -2,132 +2,158 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813BBC17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28258C17443
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BC62085B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pms9Fk0T"
+	by mail.kernel.org (Postfix) with ESMTP id 053B4207FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 23:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfKIXHh (ORCPT
+        id S1726702AbfKIXIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 18:07:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29035 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726470AbfKIXHg (ORCPT
+        Sat, 9 Nov 2019 18:08:25 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:54221 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726591AbfKIXIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 18:07:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573340855;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nM/QlBuwgFsk9POi3L9W4gfZTnhffjaZ1rya0qjcHXg=;
-        b=Pms9Fk0TkPDCeYYTUEEbcYQoS7EIvFQDPsLwIFl5ub/ZTa7r8ZINHDsIeKPcgUy1de7sgZ
-        cxCmzRqyBrAFliYSYqyhS2fXd3/DO6KR//khogZfZ72W58wNpItvAb/U9ix+zL6SasILwe
-        dIsJnuJ9CWxV1b7TB722qAKvaWJQ5uo=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-lzRiNWsXMBKiC2ItYrSv1g-1; Sat, 09 Nov 2019 18:07:32 -0500
-Received: by mail-ot1-f69.google.com with SMTP id 88so8268567ots.1
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 15:07:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=joVZUMPvUOgWVUGh3XNj6yKcnBUM0ZIbNDOvlvl0Y3s=;
-        b=j05h+X8K6VOLQTNY0xdYbKOAu447yfKwCiZlq7kJi0/X5N7jXtLH175IwCPmwSjL+c
-         FoKpEv8iOzyAiFEAxP9dv8IwA7Ndzo8G+0SF/1JvLq6/pHbnmmvJW18cGybcf/7lJ/7a
-         K5LlWQOQvQoXxcr9K2uCgyjjUiFMDA5Cb/LHyT2icW8AwHnfqlCkw4+TaJi9F3PSx/dd
-         8TjVCBIlEJPzAlWM/qrWIfosMdydzfc++Yvdyj0G9QSp11v+YQOHX30ABorCjmSQLmlD
-         MtnIwVs+26PmoBc+GeYKyZYEt8BKTMBY5bMNqBy4wNDy5UggdKGf1W88E/47S46NkFh4
-         nJAA==
-X-Gm-Message-State: APjAAAV6zaKtPP3XKYEuGTYlYGUw70Lskm7BqbBOF7ALKFJmtWRQzkOT
-        9bUYvQMCYCwGWeh0hAUvQmkmZg2jyynEYSkULUey1EfSkx33hDVrZryqmNwCc+2YuBeeLAdujc2
-        XbzHQSTF/a9cCjlc/arfh7ht1UkwY9DhPOdoY/zrR
-X-Received: by 2002:aca:ecd0:: with SMTP id k199mr17121164oih.166.1573340851730;
-        Sat, 09 Nov 2019 15:07:31 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxPG+slhOAaUZlQmRXbIknpOfUNqhnDz7x+YaHmJ0gB074zuMPBX0TM8nkmK+qgiZAPAXBiBhxHkEnU0Z4aVdA=
-X-Received: by 2002:aca:ecd0:: with SMTP id k199mr17121146oih.166.1573340851438;
- Sat, 09 Nov 2019 15:07:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
- <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com> <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Sun, 10 Nov 2019 00:07:20 +0100
-Message-ID: <CAFqZXNsp3JxqW-ahCvtiZBECX5PWonpzMRK0MOn=6a28WzF4cA@mail.gmail.com>
-Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sat, 9 Nov 2019 18:08:25 -0500
+Received: (qmail 31724 invoked by uid 500); 9 Nov 2019 18:08:24 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 9 Nov 2019 18:08:24 -0500
+Date:   Sat, 9 Nov 2019 18:08:24 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Marco Elver <elver@google.com>, Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        SElinux list <selinux@vger.kernel.org>
-X-MC-Unique: lzRiNWsXMBKiC2ItYrSv1g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+In-Reply-To: <CAHk-=wgu-QXU83ai4XBnh7JJUo2NBW41XhLWf=7wrydR4=ZP0g@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1911091708150.29750-100000@netrider.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 9, 2019 at 10:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Sat, Nov 9, 2019 at 2:43 PM Ondrej Mosnacek <omosnace@redhat.com> wrot=
-e:
->
-> > > -struct itimerval;
-> > > -extern int do_setitimer(int which, struct itimerval *value,
-> > > -                       struct itimerval *ovalue);
-> > > -extern int do_getitimer(int which, struct itimerval *value);
-> > > +#ifdef CONFIG_POSIX_TIMERS
-> > > +extern void clear_itimer(void);
-> > > +#else
-> > > +static inline void clear_itimer(void) {}
-> > > +#endif
-> > >
->
-> > > @@ -249,6 +249,17 @@ int do_setitimer(int which, struct itimerval *va=
-lue, struct itimerval *ovalue)
-> > >         return 0;
-> > >  }
-> > >
-> > > +#ifdef CONFIG_SECURITY_SELINUX
+On Fri, 8 Nov 2019, Linus Torvalds wrote:
+
+> On Fri, Nov 8, 2019 at 1:57 PM Alan Stern <stern@rowland.harvard.edu> wrote:
 > >
-> > Did you mean "#ifdef CONFIG_POSIX_TIMERS" here to match the header?
->
-> No, this part is intentional, CONFIG_POSIX_TIMERS already controls
-> whether itimer.c is
-> compiled in the first place, but this function is only needed when called=
- from
-> the selinux driver.
+> > Can we please agree to call these writes something other than
+> > "idempotent"?  After all, any write to normal memory is idempotent in
+> > the sense that doing it twice has the same effect as doing it once
+> > (ignoring possible races, of course).
+> 
+> No!
+> 
+> You're completely missing the point.
+> 
+> Two writes to normal memory are *not* idempotent if they write
+> different values. The ordering very much matters, and it's racy and a
+> tool should complain.
 
-All right, but you declare the function in time.h even if
-CONFIG_SECURITY_SELINUX is not enabled... it is kind of awkward when
-it can happen that the function is declared but not defined anywhere
-(even if it shouldn't be used by new users). Maybe you could at least
-put the header declaration/definition inside #ifdef
-CONFIG_SECURITY_SELINUX as well so it is clear that this function is
-intended for SELinux only?
+What you have written strongly indicates that either you think the word
+"idempotent" means something different from its actual meaning or else
+you are misusing the word in a very confusing way.
 
---=20
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+Your text seems to say that two operations are idempotent if they have 
+the same effect.  Compare that to the definition from Wikipedia (not 
+the best in the world, perhaps, but adequate for this discussion):
+
+	Idempotence is the property of certain operations in
+	mathematics and computer science whereby they can be applied
+	multiple times without changing the result beyond the initial
+	application.
+
+For example, writing 5 to x is idempotent because performing that write
+multiple times will have the same result as performing it only once.
+Likewise for any write to normal memory.
+
+Therefore talking about idempotent writes as somehow being distinct 
+from other writes does not make sense.  Nor does it make sense to say 
+"Two writes to normal memory are *not* idempotent if they write
+different values", because idempotence is a property of individual 
+operations, not of pairs of operations.
+
+You should use a different word, because what you mean is different 
+from what "idempotent" actually means.
+
+> But the point of WRITE_IDEMPOTENT() is that it *always* writes the
+> same value, so it doesn't matter if two different writers race on it.
+> 
+> So it really is about being idempotent.
+
+Okay, I agree that I did completely miss the point of what you
+originally meant.  But what you meant wasn't "being idempotent".
+
+> > A better name would be "write-if-different" or "write-if-changed"
+> 
+> No.
+> 
+> Again,  you're totally missing the point.
+> 
+> It's not about "write-if-different".
+> 
+> It's about idempotent writes.
+
+Assuming you really are talking about writes (presumably in different
+threads) that store the same value to the same location: Yes, two such
+writes do not in practice race with each other -- even though they may
+satisfy the formal definition of a data race.
+
+On the other hand, they may each race with other accesses.
+
+> But if you do know that all the possible racing writes are idempotent,
+> then AS A POSSIBLE CACHE OPTIMIZATION, you can then say "only do this
+> write if somebody else didn't already do it".
+
+In fact, you can _always_ perform that possible optimization.  Whether
+it will be worthwhile is a separate matter...
+
+> But that's a side effect of being idempotent, not the basic rule! And
+> it's not necessarily obviously an optimization at all, because the
+> cacheline may already be dirty, and checking the old value and having
+> a conditional on it may be much more expensive than just writing the
+> new value./
+
+Agreed.
+
+> The point is that certain writes DO NOT CARE ABOUT ORDERING, because
+> they may be setting a sticky flag (or stickily clearing a flag, as in
+> this case).  The ordering doesn't matter, because the operation is
+> idempotent.
+
+Ah, here you use the word correctly.
+
+> That's what "idempotent" means. You can do it once, or a hundred
+> times, and the end result is the same (but is different from not doing
+> it at all).
+
+Precisely the point I make above.
+
+> And no, not all writes are idempotent. That's just crazy talk. Writes
+> have values.
+
+By "writes have values", do you mean that writes store values?  Of
+course they do.  But it is clear from what you wrote just above that
+all writes _are_ idempotent, because doing a write once or a hundred
+times will yield the same end result.
+
+On a more productive note, do you think we should change the LKMM so 
+that it won't consider two writes to race with each other if they store 
+the same value?
+
+Alan Stern
 
