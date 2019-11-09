@@ -2,148 +2,162 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D83C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 06:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BF1C17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 06:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9B621D82
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 06:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFttT4TH"
+	by mail.kernel.org (Postfix) with ESMTP id 9B5B921924
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 06:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573282417;
+	bh=gI7K6Y4VDN8HX2L2f1LVi3Kp5/2nU5WVO5P6Q+Ml6Iw=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=mJbGothKZBah3AAFz0qAvxBtD9iuYkfrKrzZ4d0grXPSRpJQG/Dbudb/IK92ZbEzu
+	 WeBaNIjQ/MRp46jqmzQy+DQmgkQBnD8k1uAUZqBBUCpjbzEwQUENT+vV14N4izx3A1
+	 9TZ/nSTxTh7CED8UPVC8RIMBOQmeWQtp47siiqYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfKIGiI (ORCPT
+        id S1726267AbfKIGxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 01:38:08 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41434 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfKIGiI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 01:38:08 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 94so7143778oty.8;
-        Fri, 08 Nov 2019 22:38:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3p9u/rgJKjdWlnTta3AnL5lSarpdkzH2Rhh1WsuSRDc=;
-        b=MFttT4THlZtozWagsc4+QSdNgHFKOkE1ZvGLdF6W7gspneIg6f9AsPW9JHNXOII2bh
-         6JkuvCZtDIWbeS7jWvfx0FtAkkgm6osAjXTdTDNE6Oe3pWr0zmOyc9wcz+aJ3x59NbAi
-         SwZCt7xs99GAh68RIQ/yS2Ei0W6ECnegR8/TboEYn5hKJgKXRK8L4ifgb/EmMuLNtcl/
-         B0FDefzSfqEnkZyR7Q1CAiZa8v81NS2sDn0YmADNCQZ5gHqkuuVmd3itEdcFjV6lWgwN
-         wpyaGvHhrw0srKWN9dztuFw2LPthPFTME0XPDL0m1gQpE7+c7mDbtNP8NMr5d458iIW7
-         CwUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3p9u/rgJKjdWlnTta3AnL5lSarpdkzH2Rhh1WsuSRDc=;
-        b=f6XWtyUMo8Gg9Mi+7MCVvaRcYecsFJB1IjU45WWqPF8K0g6v7YMETNo9v1pVkQFSfe
-         Eivnve1I5w9woXlzlabkBnxJA1jVfmCaNmMHmXmDFlAAnkqUBwd5IGdf65bMqkvkgRAw
-         lJavch0VO0Ws0VKbqTLji7GzfKy51zkIuaRHqnpDFxEevZfsj765pCtRm2u6sWDjn6ea
-         CN0ZlWw3ewdVS2EFpzL0k7u4AlgSyBgjgKwhf6BC1RrN3FGPp62lQuZSUfF66IZVVWqc
-         WnWku+ToKZCA9TwpyV51T9Z4L0gQINvBhKfGclRqu6MSSKIkPsAlIOm4YtN7VKRm3OJt
-         q3Vg==
-X-Gm-Message-State: APjAAAVI/TbSwN9UZeiKKq8a46YRtZKXbcdo4q8IEiHgy41oJ7efYsbt
-        B4J3blTV8a0mylUBPVqLFllcbLpgyYt/9GIP7AE=
-X-Google-Smtp-Source: APXvYqxdBeoDNGbfL+9tGNN8sgRNd1dCEsZrG0MBuTCVqIMx/mOlOpFLie0rSvHapyosbh89Nvj/M01mflEPNxflAaQ=
-X-Received: by 2002:a9d:313:: with SMTP id 19mr3033692otv.197.1573281485657;
- Fri, 08 Nov 2019 22:38:05 -0800 (PST)
+        Sat, 9 Nov 2019 01:53:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbfKIGxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 01:53:36 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64A03214E0;
+        Sat,  9 Nov 2019 06:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573282414;
+        bh=gI7K6Y4VDN8HX2L2f1LVi3Kp5/2nU5WVO5P6Q+Ml6Iw=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=ZcJWDTlyTfPyHRnr7agTyoD/fRqWGcdidHh0pajxmpvSbudKtdH13pmhnFOJM2hV9
+         Uj2iioRsQZh/3/BU85tfh3HqOWTygIUqpqKSIw+5JPH0FxxCIMmFCBSZslVdILe6qN
+         GAZ59v7RtqCLPJyjMUzWKk1rAIop/gSYL6o3Zsew=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191021085140.14030-1-zhuguangqing83@gmail.com> <2538968.KVf98yYfh7@kreacher>
-In-Reply-To: <2538968.KVf98yYfh7@kreacher>
-From:   guangqing zhu <zhuguangqing83@gmail.com>
-Date:   Sat, 9 Nov 2019 14:37:54 +0800
-Message-ID: <CAGRspPPz2g8GJrF9ZhUeCZnN2K0pZCg4SDiG3hHVV8R0Ub8QXA@mail.gmail.com>
-Subject: Re: [PATCH] PM/wakeup: Add print_wakeup_sour_stats(m, &deleted_ws)
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     gregkh@linuxfoundation.org, pavel@ucw.cz, len.brown@intel.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhuguangqing <zhuguangqing@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191109014151.yd2untpgnuinermj@earth.universe>
+References: <20191108170135.9053-1-sebastian.reichel@collabora.com> <20191108175329.GH216543@piout.net> <20191108223415.dio3pwkf24jfs5o4@earth.universe> <20191109002449.534B6207FA@mail.kernel.org> <20191109014151.yd2untpgnuinermj@earth.universe>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [RFCv1] rtc: m41t80: disable clock provider support
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 22:53:33 -0800
+Message-Id: <20191109065334.64A03214E0@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rafael J. Wysocki <rjw@rjwysocki.net> =E4=BA=8E2019=E5=B9=B411=E6=9C=888=E6=
-=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=887:34=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Monday, October 21, 2019 10:51:40 AM CET zhuguangqing83@gmail.com wrot=
-e:
-> > From: zhuguangqing <zhuguangqing@xiaomi.com>
-> >
-> > After commit 00ee22c28915 (PM / wakeup: Use seq_open()
-> > to show wakeup stats), print_wakeup_source_stats(m, &deleted_ws)
-> > is deleted in function wakeup_sources_stats_seq_show().
-> >
-> > Because deleted_ws is one of wakeup sources, so it should
-> > also be showed. This patch add it to the end of all other
-> > wakeup sources.
-> >
-> > Signed-off-by: zhuguangqing <zhuguangqing@xiaomi.com>
-> > ---
-> >  drivers/base/power/wakeup.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> > index 5817b51d2b15..29e9434ccaaa 100644
-> > --- a/drivers/base/power/wakeup.c
-> > +++ b/drivers/base/power/wakeup.c
-> > @@ -1071,6 +1071,9 @@ static void *wakeup_sources_stats_seq_next(struct=
- seq_file *m,
-> >               break;
-> >       }
-> >
-> > +     if (&ws->entry =3D=3D &wakeup_sources)
-> > +             print_wakeup_source_stats(m, &deleted_ws);
-> > +
->
-> That would be when NULL is about to be returned, right?
->
-> Why not to check for !next_ws instead, then?
->
+Quoting Sebastian Reichel (2019-11-08 17:41:51)
+> Hi,
+>=20
+> On Fri, Nov 08, 2019 at 04:24:48PM -0800, Stephen Boyd wrote:
+> > Quoting Sebastian Reichel (2019-11-08 14:34:15)
+> > > On Fri, Nov 08, 2019 at 06:53:29PM +0100, Alexandre Belloni wrote:
+> > > > On 08/11/2019 18:01:35+0100, Sebastian Reichel wrote:
+> > > > > Congatec's QMX6 system on module (SoM) uses a m41t62 as RTC. The
+> > > > > modules SQW clock output defaults to 32768 Hz. This behaviour is
+> > > > > used to provide the i.MX6 CKIL clock. Once the RTC driver is prob=
+ed,
+> > > > > the clock is disabled and all i.MX6 functionality depending on
+> > > > > the 32 KHz clock have undefined behaviour (e.g. the hardware watc=
+hdog
+> > > > > run to fast or slow).
+> > > > >=20
+> > > > > The normal solution would be to properly describe the clock tree
+> > > > > in DT, but from the kernel's perspective this is a chicken-and-egg
+> > > > > problem: CKIL is required very early, but the clock is only provi=
+ded
+> > > > > after the I2C RTC has been probed.
+> > > > >=20
+> > > > > Technically everything is fine by not touching anything, so this
+> > > > > works around the issue by disabling the clock handling from the
+> > > > > RTC driver. I guess the proper solution would be to simply mark t=
+he
+> > > > > clock as always-enabled, but this does not seem to be supported by
+> > > > > the clock framework.
+> > > > >=20
+> > > >=20
+> > > > You need to have a consumer so this clock is not disabled by the CCF
+> > > > after seeing nobody uses it.
+> > >=20
+> > > That's why I was wondering if we can have something like regulator's
+> > > always-enabled for clocks.
+> >=20
+> > There's a flag CLK_IS_CRITICAL that providers can set.
+>=20
+> Thanks, that is what I was looking for.
+> Is there a DT binding to set that flag for a clock?
+>=20
 
-Yes, that would be when NULL is about to be returned, so check for
-!next_ws instead is ok,
-and it's more suitable.
+No.
 
-> Moreover, why to call print_wakeup_source_stats() directly instead of ret=
-urning
-> &deleted_ws?
->
-> Also it looks like you need a similar change in wakeup_sources_stats_seq_=
-start(),
-> in case n is greater than the number of list entries, don't you?
->
+> > > > If you need it early, you can have a look at rtc-sun6i.c but I
+> > > > would like that to not become a recurrent pattern, especially for
+> > > > discrete RTCs.
+> > >=20
+> > > I don't just need it early. The issue is, that CKIL is the 32khz
+> > > low frequency clock fed into the i.MX6. It is initialized by the
+> > > clock manager, so I need it before any of the SoC clocks are
+> > > registered. Without the SoC clocks, the I2C bus cannot be probed
+> > > and thus the RTC driver cannot be probed.
+> > >=20
+> >=20
+> > Is this the chicken-egg scenario? I read this thread but I can't follow
+> > along with what the problem is. Sorry.
+>=20
+> Yes. The board has an I2C based RTC (m41t62), which provides a programmab=
+le 1
+> Hz to 32 kHz square wave (SQW) output defaulting to 32 kHz. The board des=
+igners
+> connected the RTC's SQW output to the i.MX6 CKIL clock input instead of a=
+dding
+> another oscillator. The i.MX6 CCM acquires that clock in imx6q_clocks_ini=
+t()
+> (and assumes it is a fixed clock):
+>=20
+> hws[IMX6QDL_CLK_CKIL] =3D imx6q_obtain_fixed_clk_hw(ccm_node, "ckil", 0);
 
-There are three reasons that I think calling
-print_wakeup_source_stats() directly is better.
-1, Although deleted_ws is a wakeup_source, it is not in
-LIST_HEAD(wakeup_sources), it's
-a special wakeup_source. The intial design (before commit
-00ee22c28915) is also using two
-seperated print_wakeup_source_stats() for LIST_HEAD(wakeup_sources)
-and deleted_ws.
-2, If returning &deleted_ws, then wakeup_sources_stats_seq_show() and
-wakeup_sources_stats_seq_next() will run one more time.
-3, If ++(*pos); in wakeup_sources_stats_seq_next() runs one more time, then=
- n in
-wakeup_sources_stats_seq_start() may be greater than the number of list ent=
-ries,
-and it needs some more change.
+Who uses the IMX6QDL_CLK_CKIL though? Grep on kernel sources shows me
+nothing.
 
-Thanks for your comments.
+>=20
+> Changing this to reference the RTC SQW results in the chicken-egg scenari=
+o. It
+> would mean, that imx6q_clocks_init() cannot complete without the RTC driv=
+er, but
+> the RTC cannot probe without the I2C bus driver and the I2C bus driver ne=
+eds some
+> clocks from the i.MX6.
+>=20
+> I think adding the clock-is-critical flag is the best solution for
+> this setup, but on most boards the RTC SQW clock is not critical and
+> should be disabled. Did I miss a DT flag, that can be added on the
+> specific board?
+>=20
 
-> >       return next_ws;
-> >  }
-> >
-> >
->
->
->
->
+The clk framework can unwind this problem for you. It lazily evaluates
+parents so that clk controllers can probe without needing all their
+parent clks to exist yet.
+
+The clocks in i.MX6 can be registered first and some of those can be
+left "orphaned". Then the i2c driver can probe and get the i2c clks it
+needs from the i.MX6 driver and use them because their path to the root
+is registered. The i2c driver can then probe the RTC which provides the
+CLK_CKIL parent.
+
+Does something go wrong, or you're just concerned that it might not
+work?
+
