@@ -2,75 +2,175 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD65C17443
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB70C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F81221924
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED7C21882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:19:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L5gnkNur"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ewREG9XA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfKIKLw (ORCPT
+        id S1726307AbfKIKS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:11:52 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:45458 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfKIKLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 05:11:51 -0500
-Received: from zn.tnic (p200300EC2F1EA7009D7000FE00A4E362.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:a700:9d70:fe:a4:e362])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B4651EC0CF8;
-        Sat,  9 Nov 2019 11:11:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573294310;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=CEeCWf0z3WtnIkSC44XBMnqQMurafw1H0plYSfhYdq8=;
-        b=L5gnkNurZg5cHgNIseSlKsSAylSnAu1CiZd/KSyUyrKZF7HsISpeP8mukqZUbLaJjlwHxW
-        8FwX8tgU5+DxxpqchFAjdNUwgZlkd0/wivPMEi13wzS8Gf1Fe7jp6I3e9/sFlnLMhHo3Zb
-        2OGHLAcLqFnSia9sYa51PtDP8bPjSlY=
-Date:   Sat, 9 Nov 2019 11:11:46 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 05/20] EDAC, mc: Remove needless zero string
- termination
-Message-ID: <20191109101146.GB2699@zn.tnic>
-References: <20191106093239.25517-1-rrichter@marvell.com>
- <20191106093239.25517-6-rrichter@marvell.com>
+        Sat, 9 Nov 2019 05:18:26 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42629 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfKIKSZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 05:18:25 -0500
+Received: by mail-lf1-f65.google.com with SMTP id z12so6347302lfj.9
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 02:18:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3+NVeki4QXRmDvfiyIJYr4zxCjUPoykqmFp2TiLzguE=;
+        b=ewREG9XAwS8dZ0Fb0/yOMrj45G18VDDKEaOp9uJdjG7DEtzETwUV37lsiOk/3SNWE2
+         rWJnUANbMC1rcBtVnXTiIxdfbG3gZrCsjpYvupeaG01cwZtLQIL388Hvje5JonieUoco
+         JdxOZebtT7eiw69lVDpgKxWXytxn9OKEKwKk/rEbDxCUsMEo8TPZpa0fTcTehsCa+xnF
+         7Irbq/atCIKMX8PF2G5mMEjLaPi4iJpbFVrK4ZFiWZjSuPCOvLHaeDC1KO9Iwc0whcL6
+         KaGcIKIAsg/lzJkmzaAr7XvbBs7IIyhaYGrVJ2USF2LD1bHu88645tFOnpUvkOGPHijC
+         s+CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3+NVeki4QXRmDvfiyIJYr4zxCjUPoykqmFp2TiLzguE=;
+        b=OXwyt2CJx3v2WmBOk6Zh6ueD6F1W1LdKytgJHjtHJdYQuDy0ae/hODCNYnrmA3MFGH
+         ddO3fdHz1CtjeKuMSp53hssM+wYGVWxI5QJgh5FWVvz+IFPk6br7i3vDOOdBbu7Auu08
+         WJYcEQx8fwmmt35ku/oqFRO3iWOSy55tLUkgzDdf1aV9C3S2WLHIULHPlmwsQwRtvuun
+         hqGzSvXcWOENaciD/wwY9DVZUuMIK7GUfMpGD2oyK0p0LfhQpa+iyGRj1hN3WrHabF/q
+         78qZ4bt0uq3s4ZUmVICGWhneFwUwvP557nOodhMdDxwTjwt1oQxfPgQ89y1Ba9nysXel
+         qAPQ==
+X-Gm-Message-State: APjAAAVgbPOs5Ve4nzqrjPrfQVc/DRk/+Vjkqs30cVk/hzMCpx6EUb60
+        Jldx0zG346N/CjlWta+zogTqONOUp4GzsemcjMeESQ==
+X-Google-Smtp-Source: APXvYqxlvJl8p0NKPpcuBR2RXsokC7co92PAr1AcJelUWSbW2X/KCWZYEG27Sw7t2tlQx1DzP8uGcrlUbo7FvcXJhkg=
+X-Received: by 2002:a19:9116:: with SMTP id t22mr9004218lfd.99.1573294703965;
+ Sat, 09 Nov 2019 02:18:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191106093239.25517-6-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191108174618.266472504@linuxfoundation.org>
+In-Reply-To: <20191108174618.266472504@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 9 Nov 2019 15:48:12 +0530
+Message-ID: <CA+G9fYuBnNRP9Y_6ed=HtKZNpnGARn0=VWKOp4Ehg-f=fvnbTA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/34] 4.9.200-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 09:33:11AM +0000, Robert Richter wrote:
-> Since this is a string already and strlen() has been used to advance
-> the pointer, the end of the buffer is already zero terminated. Remove
-> the needless zero string termination.
+On Sat, 9 Nov 2019 at 00:26, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.200 release.
+> There are 34 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun 10 Nov 2019 05:42:11 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.200-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Changed that to:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-"The e string to which this is pointing to has already been cleared
-earlier in the function so remove the needless zero string termination."
+Summary
+------------------------------------------------------------------------
 
--- 
-Regards/Gruss,
-    Boris.
+kernel: 4.9.200-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: e0ad85ece3979aa8efb65ef7e22c924cd63dc859
+git describe: v4.9.199-35-ge0ad85ece397
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.199-35-ge0ad85ece397
 
-https://people.kernel.org/tglx/notes-about-netiquette
+No regressions (compared to build v4.9.199)
+
+No fixes (compared to build v4.9.199)
+
+Ran 23538 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kselftest
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
