@@ -2,108 +2,50 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172DCC17442
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170C2C17441
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20B321019
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573259092;
-	bh=klckC3nMZu9Tgu8dkxJR6JAVXobhhbXuXfjC0v42SQM=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=xgWHRKMs4ST21t7yRYv5rK/zHQfy+cIpH5hlXAivLb7/YqWXa4xeDUEGvaKBvvprZ
-	 xKIzREK31tIW6wvc7fPqTcIGVas4GIOAZnvB76/aASxuCepnRyyl7BPLjWJ/7kU9PE
-	 LvZZXBWvYeM104K7D900uIoqNCyNu3S3Ici/emUk=
+	by mail.kernel.org (Postfix) with ESMTP id D9305207FA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 00:29:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfKIAYu (ORCPT
+        id S1727558AbfKIA3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 19:24:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfKIAYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 19:24:50 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 534B6207FA;
-        Sat,  9 Nov 2019 00:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573259089;
-        bh=klckC3nMZu9Tgu8dkxJR6JAVXobhhbXuXfjC0v42SQM=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=tkfqe502Z4S3cKlPYgNn80a0C9Y3eGvoHu0su3zzRnQX2ZEX5+w05wCgctS60/oAX
-         alLQtaKpWH/TYxjyuVjlrQ6W2rMNnVUNc34HLcpDqIjq/ReRc0HFwGAEMy8KLYrJvR
-         yet1BKT3Kh4WJONmgPjEzWbdasgGn7z8Xtl072yQ=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 8 Nov 2019 19:29:47 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:41372 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfKIA3r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 19:29:47 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 1A6162A2CF;
+        Fri,  8 Nov 2019 19:29:34 -0500 (EST)
+Date:   Sat, 9 Nov 2019 11:29:35 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     kernel test robot <lkp@intel.com>
+cc:     Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org
+Subject: Re: [scsi] 9393c8de62: Initramfs_unpacking_failed
+In-Reply-To: <20191108072255.GX29418@shao2-debian>
+Message-ID: <alpine.LNX.2.21.1.1911091123280.9@nippy.intranet>
+References: <20191108072255.GX29418@shao2-debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191108223415.dio3pwkf24jfs5o4@earth.universe>
-References: <20191108170135.9053-1-sebastian.reichel@collabora.com> <20191108175329.GH216543@piout.net> <20191108223415.dio3pwkf24jfs5o4@earth.universe>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [RFCv1] rtc: m41t80: disable clock provider support
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 16:24:48 -0800
-Message-Id: <20191109002449.534B6207FA@mail.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sebastian Reichel (2019-11-08 14:34:15)
-> Hi,
->=20
-> On Fri, Nov 08, 2019 at 06:53:29PM +0100, Alexandre Belloni wrote:
-> > On 08/11/2019 18:01:35+0100, Sebastian Reichel wrote:
-> > > Congatec's QMX6 system on module (SoM) uses a m41t62 as RTC. The
-> > > modules SQW clock output defaults to 32768 Hz. This behaviour is
-> > > used to provide the i.MX6 CKIL clock. Once the RTC driver is probed,
-> > > the clock is disabled and all i.MX6 functionality depending on
-> > > the 32 KHz clock have undefined behaviour (e.g. the hardware watchdog
-> > > run to fast or slow).
-> > >=20
-> > > The normal solution would be to properly describe the clock tree
-> > > in DT, but from the kernel's perspective this is a chicken-and-egg
-> > > problem: CKIL is required very early, but the clock is only provided
-> > > after the I2C RTC has been probed.
-> > >=20
-> > > Technically everything is fine by not touching anything, so this
-> > > works around the issue by disabling the clock handling from the
-> > > RTC driver. I guess the proper solution would be to simply mark the
-> > > clock as always-enabled, but this does not seem to be supported by
-> > > the clock framework.
-> > >=20
-> >=20
-> > You need to have a consumer so this clock is not disabled by the CCF
-> > after seeing nobody uses it.
->=20
-> That's why I was wondering if we can have something like regulator's
-> always-enabled for clocks.
 
-There's a flag CLK_IS_CRITICAL that providers can set.
+> ...
+> [    1.278970] Trying to unpack rootfs image as initramfs...
+> [    4.011404] Initramfs unpacking failed: broken padding
 
->=20
-> > If you need it early, you can have a look at rtc-sun6i.c but I
-> > would like that to not become a recurrent pattern, especially for
-> > discrete RTCs.
->=20
-> I don't just need it early. The issue is, that CKIL is the 32khz
-> low frequency clock fed into the i.MX6. It is initialized by the
-> clock manager, so I need it before any of the SoC clocks are
-> registered. Without the SoC clocks, the I2C bus cannot be probed
-> and thus the RTC driver cannot be probed.
->=20
+Was this test failure unrelated to commit 9393c8de62?
 
-Is this the chicken-egg scenario? I read this thread but I can't follow
-along with what the problem is. Sorry.
-
+-- 
