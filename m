@@ -2,175 +2,105 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B680C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0906C17443
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD7021882
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7704021882
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 10:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrELLCHc"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="S/ZuoxHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfKIKTu (ORCPT
+        id S1726424AbfKIKVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:19:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41694 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfKIKTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 05:19:49 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m9so8764434ljh.8
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 02:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=d/0JlyrEpPvo/xoV0YwoV0VmVUtNnEukhtJsbTY0DpA=;
-        b=xrELLCHc/M1mdN1miGBp2oSiEtdZHN9UcZTnMMyGnd1unL2120/UCqPo8LwU2LPGNO
-         ORLbz6poh/gcSnjSPiFdJ639WIMLb8gEYTfATggWa7nNQKnW7PTWZISwOEwqPDvGOoPh
-         MhztC8PmOCdj3NAs75W2wZGxhIxrx0GStd7uj6N3U2mvb/VuDJBhsasR9s27j4pPUIFZ
-         cKxaKd+ujOpS5CRaFNDEQOXcIdliZt0MmVXVoQLnpFraGBHnQdFE4hZvBUAA5BDhRhyN
-         MsC5c186nh/V/Y8iKXTUOgEVQWzliPM6ce1VimVSoMPS9pTC3EKuxrh3jlhfRHe3QVBs
-         GB0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=d/0JlyrEpPvo/xoV0YwoV0VmVUtNnEukhtJsbTY0DpA=;
-        b=fdWEWf7TWLGc4VMHWIGyD2v4WPULXdNW2poY6tXLXMC9ogHam8CNXp633gRa9MLIEX
-         Dqppxpw6vBBI+IMDL7YJdlwKzatjyEwMFjR7/BDakJRWxDr8GKbtMxlKIsaCgbg3t3mI
-         rDJY/9IvFJkJ8MLoykJlxFbH8sJDc+xqHv2KSLjTsCKPh/cijYoCgWLIroXTU2dwbjDi
-         6TNa4EG8N4KfPZvWX7TmqJ0rD+Ok8pk/rhcnsz67uFffbg0Ni7xlh67k2qN0fEPQCIUd
-         RmhNBczBrF5AJ+V7aujE7wCetPFvr9N96jqQJEMSDg+jRKsNbs6a+91o4rCSL2K0O+Ua
-         VRVA==
-X-Gm-Message-State: APjAAAUEyJMhjHwpGVmALL9x4MGFMB8XKxIWr3P9rR2cik2T6DMzlKdM
-        pIBaA3SvtPB5ubu/hZD2lZLniMRAo8yQQCoAxa/u5A==
-X-Google-Smtp-Source: APXvYqxIwSNlXc1CjOxGiiF8OU9289cYxeDYclnVUyEks7SA/GIvsOU423VvMXa0CNTHeXMuePnVXW8UYQQZ4BC0exE=
-X-Received: by 2002:a2e:888a:: with SMTP id k10mr9865086lji.195.1573294785910;
- Sat, 09 Nov 2019 02:19:45 -0800 (PST)
+        Sat, 9 Nov 2019 05:21:32 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46810 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbfKIKVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 05:21:32 -0500
+Received: from zn.tnic (p200300EC2F1EA70018ABFAC8D0403DA5.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:a700:18ab:fac8:d040:3da5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9CF101EC0D0F;
+        Sat,  9 Nov 2019 11:21:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573294886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=MyC6e9vomysMP7lwrjTJBZVkQlL0RL+jwPk7ArLmGqo=;
+        b=S/ZuoxHqssosqiAVZspsuqbnYPsyDb8FAdpJFKG0gOf3cehu/b631AvidW6VeFtGO7fDgn
+        9/KmYMRmKZJtACGLvC+ephPtd29rCJXthG+HcyaLPjRLxg69tPwizfWflHklJ5NtWDE+YU
+        9DcT3QcJTZjUeNwZ8nuZqz4FAqCy7to=
+Date:   Sat, 9 Nov 2019 11:21:27 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v2 07/20] EDAC, mc: Rename iterator variable to idx
+Message-ID: <20191109102127.GC2699@zn.tnic>
+References: <20191106093239.25517-1-rrichter@marvell.com>
+ <20191106093239.25517-8-rrichter@marvell.com>
 MIME-Version: 1.0
-References: <20191108174719.228826381@linuxfoundation.org>
-In-Reply-To: <20191108174719.228826381@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 9 Nov 2019 15:49:34 +0530
-Message-ID: <CA+G9fYt6=xJ9q5x_VHjfEOPDjM3xof-MDnMX58HcBMj5=tuLBQ@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/62] 4.14.153-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191106093239.25517-8-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 Nov 2019 at 00:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.153 release.
-> There are 62 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun 10 Nov 2019 05:42:11 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.153-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, Nov 06, 2019 at 09:33:16AM +0000, Robert Richter wrote:
+> Rename iterator variable to idx. The name is more handy, esp. when
+> searching it in the code.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  drivers/edac/edac_mc.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 3dc1c5afabce..f76252b7a787 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -330,14 +330,14 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
+>  	 * Calculate the total amount of dimms and csrows/cschannels while
+>  	 * in the old API emulation mode
+>  	 */
+> -	for (i = 0; i < n_layers; i++) {
+> -		tot_dimms *= layers[i].size;
+> -		if (layers[i].is_virt_csrow)
+> -			tot_csrows *= layers[i].size;
+> +	for (idx = 0; idx < n_layers; idx++) {
+> +		tot_dimms *= layers[idx].size;
+> +		if (layers[idx].is_virt_csrow)
+> +			tot_csrows *= layers[idx].size;
+>  		else
+> -			tot_channels *= layers[i].size;
+> +			tot_channels *= layers[idx].size;
+>  
+> -		if (layers[i].type == EDAC_MC_LAYER_CHIP_SELECT)
+> +		if (layers[idx].type == EDAC_MC_LAYER_CHIP_SELECT)
+>  			per_rank = true;
+>  	}
+>  
+> -- 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Merging that one with 2/20 where you already are converting to "idx" in
+the same function.
 
-Summary
-------------------------------------------------------------------------
+-- 
+Regards/Gruss,
+    Boris.
 
-kernel: 4.14.153-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 2cfe0b7bdeef09a0ffe2895928288ebca332b8be
-git describe: v4.14.152-63-g2cfe0b7bdeef
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.152-63-g2cfe0b7bdeef
-
-
-No regressions (compared to build v4.14.152)
-
-No fixes (compared to build v4.14.152)
-
-Ran 24212 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-dio-tests
-* ltp-io-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+https://people.kernel.org/tglx/notes-about-netiquette
