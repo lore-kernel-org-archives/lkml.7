@@ -2,156 +2,137 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4627C17442
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2378C17440
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF224214DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8411214DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 01:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfKIBl5 (ORCPT
+        id S1726373AbfKIBnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 20:41:57 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41714 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfKIBl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 20:41:57 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id D688D284D33
-Received: by earth.universe (Postfix, from userid 1000)
-        id 0597E3C0C78; Sat,  9 Nov 2019 02:41:52 +0100 (CET)
-Date:   Sat, 9 Nov 2019 02:41:51 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [RFCv1] rtc: m41t80: disable clock provider support
-Message-ID: <20191109014151.yd2untpgnuinermj@earth.universe>
-References: <20191108170135.9053-1-sebastian.reichel@collabora.com>
- <20191108175329.GH216543@piout.net>
- <20191108223415.dio3pwkf24jfs5o4@earth.universe>
- <20191109002449.534B6207FA@mail.kernel.org>
+        Fri, 8 Nov 2019 20:43:24 -0500
+Received: from mga14.intel.com ([192.55.52.115]:12966 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbfKIBnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 20:43:24 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 17:43:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
+   d="scan'208";a="354259794"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga004.jf.intel.com with ESMTP; 08 Nov 2019 17:43:23 -0800
+Date:   Fri, 8 Nov 2019 17:43:23 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+Message-ID: <20191109014323.GB8254@linux.intel.com>
+References: <20191106170727.14457-2-sean.j.christopherson@intel.com>
+ <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
+ <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+ <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
+ <20191106233913.GC21617@linux.intel.com>
+ <CAPcyv4jysxEu54XK2kUYnvTqUL7zf2fJvv7jWRR=P4Shy+3bOQ@mail.gmail.com>
+ <CAPcyv4i3M18V9Gmx3x7Ad12VjXbq94NsaUG9o71j59mG9-6H9Q@mail.gmail.com>
+ <0db7c328-1543-55db-bc02-c589deb3db22@redhat.com>
+ <CAPcyv4gMu547patcROaqBqbwxut5au-WyE_M=XsKxyCLbLXHTg@mail.gmail.com>
+ <20191107155846.GA7760@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hvzbjabz4wumpn23"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191109002449.534B6207FA@mail.kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191107155846.GA7760@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 07, 2019 at 07:58:46AM -0800, Sean Christopherson wrote:
+> On Thu, Nov 07, 2019 at 07:36:45AM -0800, Dan Williams wrote:
+> > On Thu, Nov 7, 2019 at 3:12 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> > >
+> > > On 07/11/19 06:48, Dan Williams wrote:
+> > > >> How do mmu notifiers get held off by page references and does that
+> > > >> machinery work with ZONE_DEVICE? Why is this not a concern for the
+> > > >> VM_IO and VM_PFNMAP case?
+> > > > Put another way, I see no protection against truncate/invalidate
+> > > > afforded by a page pin. If you need guarantees that the page remains
+> > > > valid in the VMA until KVM can install a mmu notifier that needs to
+> > > > happen under the mmap_sem as far as I can see. Otherwise gup just
+> > > > weakly asserts "this pinned page was valid in this vma at one point in
+> > > > time".
+> > >
+> > > The MMU notifier is installed before gup, so any invalidation will be
+> > > preceded by a call to the MMU notifier.  In turn,
+> > > invalidate_range_start/end is called with mmap_sem held so there should
+> > > be no race.
+> > >
+> > > However, as Sean mentioned, early put_page of ZONE_DEVICE pages would be
+> > > racy, because we need to keep the reference between the gup and the last
+> > > time we use the corresponding struct page.
+> > 
+> > If KVM is establishing the mmu_notifier before gup then there is
+> > nothing left to do with that ZONE_DEVICE page, so I'm struggling to
+> > see what further qualification of kvm_is_reserved_pfn() buys the
+> > implementation.
+> 
+> Insertion into KVM's secondary MMU is mutually exclusive with an invalidate
+> from the mmu_notifier.  KVM holds a reference to the to-be-inserted page
+> until the page has been inserted, which ensures that the page is pinned and
+> thus won't be invalidated until after the page is inserted.  This prevents
+> an invalidate from racing with insertion.  Dropping the reference
+> immediately after gup() would allow the invalidate to run prior to the page
+> being inserted, and so KVM would map the stale PFN into the guest's page
+> tables after it was invalidated in the host.
 
---hvzbjabz4wumpn23
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My previous analysis is wrong, although I did sort of come to the right
+conclusion.
 
-Hi,
+The part that's wrong is that KVM does not rely on pinning a page/pfn when
+installing the pfn into its secondary MMU (guest page tables).  Instead,
+KVM keeps track of mmu_notifier invalidate requests and cancels insertion
+if an invalidate occured at any point between the start of hva_to_pfn(),
+i.e. the get_user_pages() call, and acquiring KVM's mmu lock (which must
+also be grabbed by mmu_notifier invalidate).  So for any pfn, regardless
+of whether it's backed by a struct page, KVM inserts a pfn if and only if
+it is guaranteed to get an mmu_notifier invalidate for the pfn (and isn't
+already invalidated).
 
-On Fri, Nov 08, 2019 at 04:24:48PM -0800, Stephen Boyd wrote:
-> Quoting Sebastian Reichel (2019-11-08 14:34:15)
-> > On Fri, Nov 08, 2019 at 06:53:29PM +0100, Alexandre Belloni wrote:
-> > > On 08/11/2019 18:01:35+0100, Sebastian Reichel wrote:
-> > > > Congatec's QMX6 system on module (SoM) uses a m41t62 as RTC. The
-> > > > modules SQW clock output defaults to 32768 Hz. This behaviour is
-> > > > used to provide the i.MX6 CKIL clock. Once the RTC driver is probed,
-> > > > the clock is disabled and all i.MX6 functionality depending on
-> > > > the 32 KHz clock have undefined behaviour (e.g. the hardware watchd=
-og
-> > > > run to fast or slow).
-> > > >=20
-> > > > The normal solution would be to properly describe the clock tree
-> > > > in DT, but from the kernel's perspective this is a chicken-and-egg
-> > > > problem: CKIL is required very early, but the clock is only provided
-> > > > after the I2C RTC has been probed.
-> > > >=20
-> > > > Technically everything is fine by not touching anything, so this
-> > > > works around the issue by disabling the clock handling from the
-> > > > RTC driver. I guess the proper solution would be to simply mark the
-> > > > clock as always-enabled, but this does not seem to be supported by
-> > > > the clock framework.
-> > > >=20
-> > >=20
-> > > You need to have a consumer so this clock is not disabled by the CCF
-> > > after seeing nobody uses it.
-> >=20
-> > That's why I was wondering if we can have something like regulator's
-> > always-enabled for clocks.
->=20
-> There's a flag CLK_IS_CRITICAL that providers can set.
+In the page fault flow, KVM doesn't care whether or not the pfn remains
+valid in the associated vma.  In other words, Dan's idea of immediately
+doing put_page() on ZONE_DEVICE pages would work for *page faults*...
 
-Thanks, that is what I was looking for.
-Is there a DT binding to set that flag for a clock?
+...but not for all the other flows where KVM uses gfn_to_pfn(), and thus
+get_user_pages().  When accessing entire pages of guest memory, e.g. for
+nested virtualization, KVM gets the page associated with a gfn, maps it
+with kmap() to get a kernel address and keeps the mapping/page until it's
+done reading/writing the page.  Immediately putting ZONE_DEVICE pages
+would result in use-after-free scenarios for these flows.
 
-> > > If you need it early, you can have a look at rtc-sun6i.c but I
-> > > would like that to not become a recurrent pattern, especially for
-> > > discrete RTCs.
-> >=20
-> > I don't just need it early. The issue is, that CKIL is the 32khz
-> > low frequency clock fed into the i.MX6. It is initialized by the
-> > clock manager, so I need it before any of the SoC clocks are
-> > registered. Without the SoC clocks, the I2C bus cannot be probed
-> > and thus the RTC driver cannot be probed.
-> >=20
->=20
-> Is this the chicken-egg scenario? I read this thread but I can't follow
-> along with what the problem is. Sorry.
+For non-page pfns, KVM explicitly memremap()'s the pfn and again keeps the
+mapping until it's done accessing guest memory.
 
-Yes. The board has an I2C based RTC (m41t62), which provides a programmable=
- 1
-Hz to 32 kHz square wave (SQW) output defaulting to 32 kHz. The board desig=
-ners
-connected the RTC's SQW output to the i.MX6 CKIL clock input instead of add=
-ing
-another oscillator. The i.MX6 CCM acquires that clock in imx6q_clocks_init()
-(and assumes it is a fixed clock):
+The above is nicely encapsulated in kvm_vcpu_map(), added by KarimAllah in
+commit e45adf665a53 ("KVM: Introduce a new guest mapping API").
 
-hws[IMX6QDL_CLK_CKIL] =3D imx6q_obtain_fixed_clk_hw(ccm_node, "ckil", 0);
-
-Changing this to reference the RTC SQW results in the chicken-egg scenario.=
- It
-would mean, that imx6q_clocks_init() cannot complete without the RTC driver=
-, but
-the RTC cannot probe without the I2C bus driver and the I2C bus driver need=
-s some
-clocks from the i.MX6.
-
-I think adding the clock-is-critical flag is the best solution for
-this setup, but on most boards the RTC SQW clock is not critical and
-should be disabled. Did I miss a DT flag, that can be added on the
-specific board?
-
--- Sebastian
-
---hvzbjabz4wumpn23
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3GGVwACgkQ2O7X88g7
-+ppDqQ//XhiZw7RmDRZYK6qb1dM4jV8U5hCdveaGEu7RsSe2S2dTOkPC7rN+O/jD
-AkFg7ZG2Ao9oEdC75vAeEeqBrEWKQDtmWk/fCab7ZPQFUMhwlEy7XZ9wZpLl++yu
-zkjpF9fBKGnrsVpEoL9Ip7nZjx2Z5pega11gyRTq5f7BlrMXOuNjzvsDzgKs5dhl
-PRM16/J/Pu24lTYS7QZPhgS3lENoYZi+by3YvvparXBxUrbCdVgzfV2kz+Lci+45
-UEJ+GBmInJqe3Asxt3zBFFkPlu8SAcCE9jUsd+Gge4yRWqtjetYRXS18qZNRYj4q
-YuXgOGCwvGJ6JOHwgnJ7607fBptt4+ItbG+aYpHWYEvzKP4Ydlgf2+r6uUfkYwka
-4kvBVrvSbBybaaAl+Ss4pdFK7kvQyvbLdFSTjz5EBmpjUIdrLvJmNGcE8KqpvDFS
-vTlopVMpEsd5Qrvp/RI8Lt69Sipi0CX2IM4vt1L+0hEd5KU0JEiNfFwioqySovYy
-vHyuu1mAXWPmgXxWoH01PCCBa6TiW1HcgLfv504QIvT0ppgD4NQ3Dx5cKR9VcQB1
-l3fmaTlWwVclTB8Je8rOKKXokuThjBDqVkwRoL9Z79DzusGd4jDR8yNLExNf6/47
-s/8UR++M+iSUH5GkyLMkLG9kWb5A5yMJSNpuo7S2/5d8XQONfx4=
-=Dx13
------END PGP SIGNATURE-----
-
---hvzbjabz4wumpn23--
+For the hva_to_pfn_remapped() -> kvm_get_pfn() case, I think the page
+fault flow is in good shape by way of the mmu_notifier sequencing.  The
+kvm_get_pfn() call might temporarily keep a page alive, but it shouldn't
+break anything (I think).  Not sure about kvm_vcpu_map()...
