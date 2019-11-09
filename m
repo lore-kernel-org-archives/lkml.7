@@ -8,61 +8,63 @@ X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AB0C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676EDC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120DB21848
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38875218AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 07:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbrarZ+g"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ts2HKlm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfKIHyx (ORCPT
+        id S1726520AbfKIHzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 02:54:53 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42244 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfKIHyw (ORCPT
+        Sat, 9 Nov 2019 02:55:08 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45239 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfKIHzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 02:54:52 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s5so6672858pfh.9;
-        Fri, 08 Nov 2019 23:54:50 -0800 (PST)
+        Sat, 9 Nov 2019 02:55:07 -0500
+Received: by mail-pf1-f193.google.com with SMTP id z4so6653283pfn.12;
+        Fri, 08 Nov 2019 23:55:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mPCx3dt7L4+Sxa/DONQDeDjnRO2fk5CH6fIAfPKIeKc=;
-        b=KbrarZ+gxlm7i0YuQGmtJ81SHX9O5b/1yDzZtgV+pdISRlreEmG0aoicooHkdyvqqe
-         fVLvAobTgvH2KGj5IuTy5SYye47NwZuqBOt2/LcMIPfxitRfvTM8zR9Nx0mSW1q1CZlN
-         s+qbJCuboexsaaGs6mz/9QIBDS2wez33YgimC9U11AYJyn2RcSB9hNXLPy2MuEomL7Pk
-         fPmrqiHJcrnkYVHiTMK7J4diAvj+v0p+rPVeL0lJ4MoF/VZG3Cdz1JB/onXqL7gcjmu+
-         C+I1j9pNNNKP+uuTQB2FsHoHMgFGDk+KtFTmQQchoZNiuO1QcBXNrJL02Z6SjdifRbk8
-         nnkQ==
+        bh=8W/ccs4K6JLyRSHC0w4jHHqe3aaM7BqlOGhm85RSpKQ=;
+        b=ts2HKlm3K87ZbGksWlPcPsJ4QzLLELtYF8GQLUSvelNwK7bWI7JaSpHmJcE49Q4e3P
+         osVqxUO21B3uhDZTbhGI3NNfKG2o/qv2YYH6t/S8Omto0he78smvgi5/cSUoI65ccOUh
+         LOinOIccc2sG9kMQ80NC6XiowwjdMKrTminAt8GoaIs8Q7rG0LHHlugPn669FEECykYV
+         XAQTdRPlOEOe+Ps8dbkO18Yi3HMNyN66miGW7t6OyQDEb1l68r2S1GtHUqH0p1L0d0de
+         sBbv6inF33jCSc3zNLbQPFkidPXRDq7j85Dv0PN0/3iALLjrW5jD9Lff+Sz8xnH6Mi2d
+         SFIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mPCx3dt7L4+Sxa/DONQDeDjnRO2fk5CH6fIAfPKIeKc=;
-        b=MHNQu1VSHGIHu0Ul2k/Ha2tA4/rJN0xyaaAv33wjgVYCOKBQFohEjME8sGkg1BaOic
-         uACQe/eJMNhPfJTgXNoTz+fCwY/XR9JTki01y8o/kEGYHINcFx5QJgt74MaAWd4il79B
-         hj61k9hV4Pyvyg1v0wpwGy0BMlpI7Tw/aqXUU2JqsQ7oFiCT9vQ+0vM3dM9SbTTUcd2D
-         5+B3XU7uLxd2ESFehHFUaq8J/wtlWdD27bpK2IsJje6Up645O787OByFrYAZvWkO2xn6
-         R7nXnKVIgubEQRV3euwHucsNLwHf8reTXd3QIzeGQt0tE1q2ZnU1iAwiv0MLMEQjA4ts
-         Mo7A==
-X-Gm-Message-State: APjAAAWBCZ7QuK1WHHx1Q02jnXKgARM/21ggUBWF1/oAAP9OcnWxjONn
-        KTG3EpCabZ10WVUahCcQzh9n4SyZquY=
-X-Google-Smtp-Source: APXvYqy6YdxmnmcE9nVX3RhpoK0vXri5Kvx3RRsLnR2KBi9MSQBuZQTpefBVjzP3I0FiP4CI7JuXAQ==
-X-Received: by 2002:a63:2151:: with SMTP id s17mr4595981pgm.46.1573286090104;
-        Fri, 08 Nov 2019 23:54:50 -0800 (PST)
+        bh=8W/ccs4K6JLyRSHC0w4jHHqe3aaM7BqlOGhm85RSpKQ=;
+        b=nkpu0I1Yt7AlwAliYGrP5nGkQpapfz/STc4T3GDgquoXCYU5kEFTbSIc/t4azOFuBX
+         D/jeoTEu1++VmcSzP/kTFc1eT/M3pJ+XcASJufGyFr1L2DqFFlhzgMR6eT+GmdG4MOny
+         0DsXhYwq1ASGXDfaQUKnnF2EjwP+q3DDIF1rhpxwI/nJG/2JvZIvjuBpE0JEpOES6a7l
+         3EIOwF9FPOMKv49ue7XoOCpvrh2LP8ihFmE1a8mL5vKuziz2cmq3ZIuDZh1REq0nHp0m
+         exdakIdPtSHyMTTRdgECNIrxLLvYmO5TcToyxAZbq4hMwIwohwUC++C6GTm9rmOJnrEx
+         PDNg==
+X-Gm-Message-State: APjAAAXgIrs//tGsUBBlB7BK++KtTH5y4tc9lj3Mose/D6wpQWCUx6oQ
+        XJIhK9IB6yTA1baIGrPhrBk=
+X-Google-Smtp-Source: APXvYqzvIkEr+0McIp2ku2FoqIhKkDVz4iWr5q9gGRq6TtKEG/suLMgsx+PpnJIKRMOwA/F3YlZAhg==
+X-Received: by 2002:a65:6098:: with SMTP id t24mr13477929pgu.95.1573286106695;
+        Fri, 08 Nov 2019 23:55:06 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id y22sm8914091pfn.6.2019.11.08.23.54.46
+        by smtp.gmail.com with ESMTPSA id p16sm9531415pfn.171.2019.11.08.23.55.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 23:54:49 -0800 (PST)
+        Fri, 08 Nov 2019 23:55:06 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] i2c: ismt: Add missed pci_release_region
-Date:   Sat,  9 Nov 2019 15:54:35 +0800
-Message-Id: <20191109075435.29871-1-hslester96@gmail.com>
+Subject: [PATCH] media: si470x-i2c: add missed operations in remove
+Date:   Sat,  9 Nov 2019 15:54:57 +0800
+Message-Id: <20191109075457.29930-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,27 +74,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ismt_remove forgets to call pci_release_region when remove.
-Add the call to fix it.
+The driver misses calling v4l2_ctrl_handler_free and
+v4l2_device_unregister in remove like what is done in probe failure.
+Add the calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/i2c/busses/i2c-ismt.c | 2 ++
+ drivers/media/radio/si470x/radio-si470x-i2c.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-ismt.c b/drivers/i2c/busses/i2c-ismt.c
-index 2f95e25a10f7..c393e629cac3 100644
---- a/drivers/i2c/busses/i2c-ismt.c
-+++ b/drivers/i2c/busses/i2c-ismt.c
-@@ -943,6 +943,8 @@ static void ismt_remove(struct pci_dev *pdev)
- 	struct ismt_priv *priv = pci_get_drvdata(pdev);
+diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
+index 7541698a0be1..f491420d7b53 100644
+--- a/drivers/media/radio/si470x/radio-si470x-i2c.c
++++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
+@@ -482,6 +482,8 @@ static int si470x_i2c_remove(struct i2c_client *client)
+ 	if (radio->gpio_reset)
+ 		gpiod_set_value(radio->gpio_reset, 0);
  
- 	i2c_del_adapter(&priv->adapter);
-+
-+	pci_release_region(pdev, SMBBAR);
++	v4l2_ctrl_handler_free(&radio->hdl);
++	v4l2_device_unregister(&radio->v4l2_dev);
+ 	return 0;
  }
  
- static struct pci_driver ismt_driver = {
 -- 
 2.23.0
 
