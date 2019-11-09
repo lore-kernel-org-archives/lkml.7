@@ -2,107 +2,86 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75BFC17441
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5FDC17441
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7560E20865
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NRtazlfi"
+	by mail.kernel.org (Postfix) with ESMTP id E150E20865
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfKICmj (ORCPT
+        id S1726559AbfKICpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 21:42:39 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34010 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfKICmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 21:42:39 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n13so6406402pff.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Nov 2019 18:42:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z3aOUzy6rUzyL+A22ql+voMdR9JLNJalZQcTYr1824w=;
-        b=NRtazlfidpLzrbXKDkCOE6NaO6GOLX5Lh6Mm7Pvv32Q3hQv5PMbZLh7Ac92oDhosFR
-         /1zBLFNCf7wGnzAQyXp/pqUR/AikPgmQKcIPZVSGbHhAjK+UDMKln89bNSQVS85ACJJE
-         ikbdmKqeIuQvukcaxMNkKR9ZU8ZRzZeoxkmvGNv/ubqJNkAPnjUUWwNe91owFiC/OzSO
-         hmSQwuKmmDzAekKCN3hKX4nzPlBPlzydDEr9FeFQtpqj+mVR5hOVCaY3fxzLKbfuUaz9
-         fFqsVOa1BH65aTRWqQwStHrv5OsMNXXlVRCaJ+Z/+azMJmnFR9VWisr6AX+uJEn57jtN
-         Gyvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z3aOUzy6rUzyL+A22ql+voMdR9JLNJalZQcTYr1824w=;
-        b=g3i0tumJuLYO0rdCojm3U8Eh1OpFVuVywbNaZbWV2uOqPBHFfgTMfsBuodTyp7hAm2
-         +PLS97If+9IICUVAWcvbepO0PD1T7fhMMn4BPZD6u62wWz7JfQNgtWa1jvE2fBDRUWSL
-         bODqx49uyf04ELLE0rD5TnP3h8Vm/t4ztkMozGkVgc2iICCesS3vnAXEOacRZiGI9A0/
-         VVkiWtXjtbmw6g+UEqJpvoO/Q7AD+0wxDzxj+1+VTDZ3KpTIfDN6Q4SvnLH2q/6bkeR3
-         bVdDFclMwX2NYyM6A3nVVOhxsPbSQe/FtGEriFb0AXnS7Ucf3VVSYHa0K7Znv2iG2DhJ
-         MOKw==
-X-Gm-Message-State: APjAAAXM9bXU4CJ/kmnZloFY31yPzdsDETan4bvjpnrmZQ0UgioJ/Tbh
-        IWgzV1/0OVq3GdTVyQKIkjk/xQ==
-X-Google-Smtp-Source: APXvYqxbTMEPmg4n9oNIpZHyLmp21Sp2dvJPnoo+1J59q3v0NVek1OR1AH8jXhKgG7Lx4ATWe0bCeg==
-X-Received: by 2002:a63:e249:: with SMTP id y9mr15582281pgj.383.1573267358334;
-        Fri, 08 Nov 2019 18:42:38 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u20sm8436966pgo.50.2019.11.08.18.42.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 18:42:37 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Vinod Koul <vkoul@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm SDM845 display and gpu clocks
-Date:   Fri,  8 Nov 2019 18:42:34 -0800
-Message-Id: <20191109024234.1757452-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Fri, 8 Nov 2019 21:45:06 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5749 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726061AbfKICpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 21:45:06 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 07A4A3D3DC3141E17821;
+        Sat,  9 Nov 2019 10:45:04 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 9 Nov 2019 10:44:58 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxime Ripard <mripard@kernel.org>,
+        "Chen-Yu Tsai" <wens@csie.org>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] crypto: sun8i-ss - Fix memdup.cocci warnings
+Date:   Sat, 9 Nov 2019 02:44:03 +0000
+Message-ID: <20191109024403.47106-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the drivers for the display and gpu clock controllers on Qualcomm
-SDM845, needed in order to get these features working. These drivers
-provides power-domains and can as such not be compiled as modules.
+Use kmemdup rather than duplicating its implementation
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 7fa92defb964..7fd999be3de3 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -726,6 +726,8 @@ CONFIG_MSM_MMCC_8996=y
- CONFIG_MSM_GCC_8998=y
- CONFIG_QCS_GCC_404=y
- CONFIG_SDM_GCC_845=y
-+CONFIG_SDM_GPUCC_845=y
-+CONFIG_SDM_DISPCC_845=y
- CONFIG_SM_GCC_8150=y
- CONFIG_HWSPINLOCK=y
- CONFIG_HWSPINLOCK_QCOM=y
--- 
-2.23.0
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index f0e7c1e12da6..b6e7c346c3ae 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -396,10 +396,9 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		kfree(op->key);
+ 	}
+ 	op->keylen = keylen;
+-	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
++	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+ 	if (!op->key)
+ 		return -ENOMEM;
+-	memcpy(op->key, key, keylen);
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+@@ -422,10 +421,9 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		kfree(op->key);
+ 	}
+ 	op->keylen = keylen;
+-	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
++	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+ 	if (!op->key)
+ 		return -ENOMEM;
+-	memcpy(op->key, key, keylen);
+ 
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+
+
 
