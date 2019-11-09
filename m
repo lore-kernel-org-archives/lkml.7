@@ -2,111 +2,131 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91405C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECDCC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C61420869
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146A72075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 21:37:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXCDad10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfKIV0d (ORCPT
+        id S1726610AbfKIVhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 16:26:33 -0500
-Received: from sauhun.de ([88.99.104.3]:47938 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbfKIV0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 16:26:32 -0500
-Received: from localhost (p54B337EF.dip0.t-ipconnect.de [84.179.55.239])
-        by pokefinder.org (Postfix) with ESMTPSA id C8F952C04F2;
-        Sat,  9 Nov 2019 22:26:28 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        linux-renesas-soc@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH] i2c: remove helpers for ref-counting clients
-Date:   Sat,  9 Nov 2019 22:26:15 +0100
-Message-Id: <20191109212615.9254-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 9 Nov 2019 16:37:37 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36150 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfKIVhg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 16:37:36 -0500
+Received: by mail-ed1-f66.google.com with SMTP id f7so8957833edq.3;
+        Sat, 09 Nov 2019 13:37:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v2rlUqcAtuAl3VsuUjT6IuOByjI2GD6fMPEYr5wAeuI=;
+        b=TXCDad10SMV/uwl8/+qe0SREn2XQsQqXQR3prsAxoLCFxxeqergAC9f9+2CJugiARs
+         JHVgCjM7DXZeQCW5gmyskvM0m8NZdblM3ykJXvnVPmMD0LwK4Iip9DDJzonBJkB7OGkl
+         qYG3yieHrxhPpc+Q1++skFFogVH6YCgtMLmXjATUzLidIJQiCJIoT+ZHgKO2fEbFJw3Q
+         bKJ5rQj+fAmcXT7o8Gm48+xCbSTF3nZC/18xIc3Ragm/BfIW95MRvYPprzjgiE71ePM4
+         sZI30DpBqceE/YH3mefCaLbP77XL7hGwFNpq4QX14kklNoFoFDhUOKistffPik5vxan7
+         fe4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v2rlUqcAtuAl3VsuUjT6IuOByjI2GD6fMPEYr5wAeuI=;
+        b=K+AbQP5JjIX12l30JKtwlJzmD5qtlnMTtIJoV4qX1rDVGn9G/PqaRAZ9LLA5nHFQ/S
+         0Wu/iWkD0JTQvi2sHJXx+VfMPGttOJfwo8FRmDsz7wBjTWQ1dzFt/PLU5tplFkAaEc2B
+         NL/6a+mMfieD1MEUYvSZCsnfr3vv54eU6hww4R+ZL3/l11EpPEXrJ6kMF63ORk+gOGuK
+         JRa16MGS1kmdoZzKs9Gqshe5z44uWDHQlOudzgJOUQMUQSK1ydjG6jBiEo+k168A06OE
+         qli9E8wTH3IBl3J/atfvAy0+tIz7IpweE/f76tL/j1Dh+kdeuOBJsYpqfF9fQEzWH9uw
+         lh/Q==
+X-Gm-Message-State: APjAAAWYhjloE2LdlSpqbrrKw+9JgLg44wAtnDoHXzmuDtZ+qB8sT3E/
+        hPpR7F93HC9MraenXm0KBpoNTQLYnXzZ0tX24yc=
+X-Google-Smtp-Source: APXvYqz9fVCFirGSrnpJPZ/fGN+Vp1m8kWf/gR7wl8YC+sQC1r3wJYxUYLIziw0nTEibrT8sz6mJqeFEXn/GXtoUx4U=
+X-Received: by 2002:a50:b63b:: with SMTP id b56mr18152663ede.165.1573335453236;
+ Sat, 09 Nov 2019 13:37:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191109105642.30700-1-olteanv@gmail.com> <20191109150953.GJ22978@lunn.ch>
+ <CA+h21hoqkE2D03BHrFeU+STbK8pStRRFu+x7+9j2nwFf+EHJNg@mail.gmail.com>
+ <393335751.FoSYQk3TTC@kongar> <20191109210549.GB12999@lunn.ch>
+In-Reply-To: <20191109210549.GB12999@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sat, 9 Nov 2019 23:37:22 +0200
+Message-ID: <CA+h21hqU2bW82Q5jReEhsP6fhLTEgpcXuyU3EsdKFOgNrogoTQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Alexander Stein <alexander.stein@mailbox.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no in-tree users of these helpers anymore, and there
-shouldn't. Most use cases went away once the driver model started to
-refcount for us. There have been users like the media subsystem, but
-they all switched to better refcounting methods meanwhile. Media did
-this in 2008. Last user (IPMI) left 2018. Remove this cruft.
+On Sat, 9 Nov 2019 at 23:05, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Sat, Nov 09, 2019 at 08:52:54PM +0100, Alexander Stein wrote:
+> >  On Saturday, November 9, 2019, 4:21:51 PM CET Vladimir Oltean wrote:
+> > > On 09/11/2019, Andrew Lunn <andrew@lunn.ch> wrote:
+> > > > On Sat, Nov 09, 2019 at 12:56:42PM +0200, Vladimir Oltean wrote:
+> > > >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+> > > >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+> > > >>
+> > > >> The interrupts are active low, but the GICv2 controller does not support
+> > > >> active-low and falling-edge interrupts, so the only mode it can be
+> > > >> configured in is rising-edge.
+> > > >
+> > > > Hi Vladimir
+> > > >
+> > > > So how does this work? The rising edge would occur after the interrupt
+> > > > handler has completed? What triggers the interrupt handler?
+> > > >
+> > > >   Andrew
+> > > >
+> > >
+> > > Hi Andrew,
+> > >
+> > > I hope I am not terribly confused about this. I thought I am telling
+> > > the interrupt controller to raise an IRQ as a result of the
+> > > low-to-high transition of the electrical signal. Experimentation sure
+> > > seems to agree with me. So the IRQ is generated immediately _after_
+> > > the PHY has left the line in open drain and it got pulled up to Vdd.
+> >
+>
+> > It is correct GIC only supports raising edge and active-high. The
+> > IRQ[0:5] on ls1021a are a bit special though.  They not directly
+> > connected to GIC, but there is an optional inverter, enabled by
+> > default.
+>
+> Ah, O.K. So configuring for a rising edge is actually giving a falling
+> edge. Which is why it works.
+>
+> Actually supporting this correctly is going a cause some pain. I
+> wonder how many DT files currently say rising/active high, when in
+> fact falling/active low is actually being used? And when the IRQ
+> controller really does support active low and falling, things brake?
+>
+> Vladimir, since this is a shared interrupt, you really should use
+> active low here. Maybe the first step is to get control of the
+> inverter, and define a DT binding which is not going to break
+> backwards compatibility. And then wire up this interrupt.
+>
+>           Andrew
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/i2c/i2c-core-base.c | 32 --------------------------------
- include/linux/i2c.h         |  3 ---
- 2 files changed, 35 deletions(-)
+Oh, ok, this is what you mean, thanks Alexander for the clarification.
+This sure escalated quickly and is going to keep me busy for a while.
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 9c55d24c7a30..5a44a92ed1fb 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -1743,38 +1743,6 @@ EXPORT_SYMBOL(i2c_del_driver);
- 
- /* ------------------------------------------------------------------------- */
- 
--/**
-- * i2c_use_client - increments the reference count of the i2c client structure
-- * @client: the client being referenced
-- *
-- * Each live reference to a client should be refcounted. The driver model does
-- * that automatically as part of driver binding, so that most drivers don't
-- * need to do this explicitly: they hold a reference until they're unbound
-- * from the device.
-- *
-- * A pointer to the client with the incremented reference counter is returned.
-- */
--struct i2c_client *i2c_use_client(struct i2c_client *client)
--{
--	if (client && get_device(&client->dev))
--		return client;
--	return NULL;
--}
--EXPORT_SYMBOL(i2c_use_client);
--
--/**
-- * i2c_release_client - release a use of the i2c client structure
-- * @client: the client being no longer referenced
-- *
-- * Must be called when a user of a client is finished with it.
-- */
--void i2c_release_client(struct i2c_client *client)
--{
--	if (client)
--		put_device(&client->dev);
--}
--EXPORT_SYMBOL(i2c_release_client);
--
- struct i2c_cmd_arg {
- 	unsigned	cmd;
- 	void		*arg;
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 8f512b992acd..23583f76c6dc 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -861,9 +861,6 @@ static inline bool i2c_client_has_driver(struct i2c_client *client)
- 	return !IS_ERR_OR_NULL(client) && client->dev.driver;
- }
- 
--extern struct i2c_client *i2c_use_client(struct i2c_client *client);
--extern void i2c_release_client(struct i2c_client *client);
--
- /* call the i2c_client->command() of all attached clients with
-  * the given arguments */
- extern void i2c_clients_command(struct i2c_adapter *adap,
--- 
-2.20.1
-
+-Vladimir
