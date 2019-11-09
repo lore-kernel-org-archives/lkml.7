@@ -2,109 +2,116 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6C2C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12607C17443
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E27B20869
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="15hRcZka"
+	by mail.kernel.org (Postfix) with ESMTP id E6BBF20869
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 14:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfKIOYk (ORCPT
+        id S1726565AbfKIO0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 09:24:40 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:28350 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfKIOYk (ORCPT
+        Sat, 9 Nov 2019 09:26:43 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36338 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfKIO0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 09:24:40 -0500
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id xA9EOQ29020824;
-        Sat, 9 Nov 2019 23:24:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xA9EOQ29020824
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573309467;
-        bh=we+lWwQKgiRWTuKBGrRbQkLgZvihSe+fisYez56gxuA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=15hRcZka3kIGQ2ELqjKXhpN+kEUoi45ySQ3QfWoN1dL/YNtDMUlQQfaTbo36YXZWU
-         jJ1/q+iB9jSGKKJ37iZgmuvAXFtkdEOjOcBNF1xEp+17uKR0XfpmVvPN6MRu/9pAyl
-         t4MYD9Rb+idCR7NN8jjrKlkTOOgudDLGsTUg6mqrALcAMREyQozQ71XVow2JJ3/Pay
-         doabGTNqvm+mTvBobWBO6a7oJyJ8iDcOkpD6mUGLcZFwsLCc9ViZjNZMItaCW21MLA
-         C71nGKKzmnV/FO1AYl9CCA5AiglbsrNZAI5+7ChwU4lEgM34ZV4aFyhd1rPWqIwVXv
-         Z3Aa3tXw5hvOA==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id b184so5815631vsc.5;
-        Sat, 09 Nov 2019 06:24:26 -0800 (PST)
-X-Gm-Message-State: APjAAAVhTKgOrY7Z2cR8j9ia1cL2YrwVVnQ/UODfVLGugWElVNzHE16I
-        W3kmzHerohQOLGKX7U2JcTYfN9isgrveEhgAhS0=
-X-Google-Smtp-Source: APXvYqz9jnMycilN1M14eemMTFyNvlE61uJArpoC4cDJCpFnhpepDXDcpFtIaiDigbtXLlgGoQzeaLY/bF14gNt2dXI=
-X-Received: by 2002:a67:2d08:: with SMTP id t8mr13089811vst.155.1573309465580;
- Sat, 09 Nov 2019 06:24:25 -0800 (PST)
+        Sat, 9 Nov 2019 09:26:42 -0500
+Received: by mail-ot1-f66.google.com with SMTP id f10so7714142oto.3;
+        Sat, 09 Nov 2019 06:26:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fkse6mn+BlbyKaVzVIbzg4CVFkjF596d7A0VyrrgtRU=;
+        b=nFyS+o87e/FWAnmqpwZbiiJKxtutgLkNwjvAongX5FrQROqYIVKJZi6ZoDP2MpigxA
+         RMsRWqhc3CrR6z+KJXTLgmSc3XMo8R1lQ/+0kllXkbccPZ2cov+u0vHO6Vbfn+V603nl
+         NNvlAOrhucViLbbjytXef50v6YCiNofD8byUwYKM5YCs7Jrq2yL+FBIJiLVK9PqlOnM3
+         44EEsGJLBmgkvZ5T6N/VD39CFIXfmqPb/ZpZeJ5abEEDBlILhf2xuH1G89h+JbRSJqck
+         7wp/NGYXT5SvoUB09whkYX4aPMoG6OEEpyeMlIe1xjC/UfUk1gu9z7Xkfp5o4F7qd/dt
+         NVHA==
+X-Gm-Message-State: APjAAAVaU0w9iSJnEC4kFcFRbqDvMr6K5T9fxaWyUWbbVh6JX9JfTHmQ
+        Tq5/QEJ8wPeUNOsQqpTAkV4khR4AuLn9a90bHr8=
+X-Google-Smtp-Source: APXvYqwpjgCj+NHQWmmo7wlASzZaObwnisMuzQQ68HgJW5L0F4ZE2XkJ/WLy2vxRTaOAABifbqXLM9wt0RfHZ30Isk4=
+X-Received: by 2002:a9d:422:: with SMTP id 31mr13203157otc.107.1573309600743;
+ Sat, 09 Nov 2019 06:26:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20191109121216.61381-1-luc.vanoostenryck@gmail.com>
-In-Reply-To: <20191109121216.61381-1-luc.vanoostenryck@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 9 Nov 2019 23:23:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQops2qF9Ljf+1xg8SKif89mLrjfaKosWrCbfMCzfwnOA@mail.gmail.com>
-Message-ID: <CAK7LNAQops2qF9Ljf+1xg8SKif89mLrjfaKosWrCbfMCzfwnOA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: tell sparse about the $ARCH
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+References: <1572938135-31886-1-git-send-email-rppt@kernel.org>
+ <1572938135-31886-6-git-send-email-rppt@kernel.org> <20191108113917.a9c6ebb8373cc95fd684b734@linux-foundation.org>
+In-Reply-To: <20191108113917.a9c6ebb8373cc95fd684b734@linux-foundation.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 9 Nov 2019 15:26:29 +0100
+Message-ID: <CAMuHMdXdoFSVno4WT=F6Q1UwEaZ6AQJmhNUqPpYHJm6uh165iw@mail.gmail.com>
+Subject: Re: [PATCH v4 05/13] m68k: mm: use pgtable-nopXd instead of 4level-fixup
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mike Rapoport <rppt@kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
+        Richard Weinberger <richard@nod.at>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-um@lists.infradead.org,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 9, 2019 at 9:12 PM Luc Van Oostenryck
-<luc.vanoostenryck@gmail.com> wrote:
->
-> Sparse uses the same executable for all archs and uses flags
-> like -m64, -mbig-endian or -D__arm__ for arch-specific parameters.
-> But Sparse also uses value from the host machine used to build
-> Sparse as default value for the target machine.
->
-> This works, of course, well for native build but can create
-> problems when cross-compiling, like defining both '__i386__'
-> and '__arm__' when cross-compiling for arm on a x86-64 machine.
->
-> Fix this by explicitely telling sparse the target architecture.
->
-> Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> ---
+Hi Andrew,
 
-Applied to linux-kbuild. Thanks.
-
-
->  Makefile | 3 +++
->  1 file changed, 3 insertions(+)
+On Fri, Nov 8, 2019 at 8:39 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Tue,  5 Nov 2019 09:15:27 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+> > m68k has two or three levels of page tables and can use appropriate
+> > pgtable-nopXd and folding of the upper layers.
+> >
+> > Replace usage of include/asm-generic/4level-fixup.h and explicit
+> > definitions of __PAGETABLE_PxD_FOLDED in m68k with
+> > include/asm-generic/pgtable-nopmd.h for two-level configurations and with
+> > include/asm-generic/pgtable-nopud.h for three-lelve configurations and
+> > adjust page table manipulation macros and functions accordingly.
 >
-> diff --git a/Makefile b/Makefile
-> index 6f54f2f95743..05a8906dde63 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -937,6 +937,9 @@ ifeq ($(CONFIG_RELR),y)
->  LDFLAGS_vmlinux        += --pack-dyn-relocs=relr
->  endif
->
-> +# make the checker run with the right architecture
-> +CHECKFLAGS += --arch=$(ARCH)
-> +
->  # insure the checker run with the right endianness
->  CHECKFLAGS += $(if $(CONFIG_CPU_BIG_ENDIAN),-mbig-endian,-mlittle-endian)
->
-> --
-> 2.24.0
->
+> This one was messed up by linux-next changes in arch/m68k/mm/kmap.c.
+> Can you please take a look?
 
+You mean due to the rename and move of __iounmap() to __free_io_area()
+in commit aa3a1664285d0bec ("m68k: rename __iounmap and mark it static")?
 
--- 
-Best Regards
-Masahiro Yamada
+Commit 42d6c83d6180f800 ("m68k: mm: use pgtable-nopXd instead of
+4level-fixup") in next-20191108 looks good to me.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
