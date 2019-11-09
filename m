@@ -2,78 +2,151 @@ Return-Path: <SRS0=HJxx=ZB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19762C17440
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EACCC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E986421019
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 02:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641AE207FF
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Nov 2019 03:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfKICrz (ORCPT
+        id S1726296AbfKIDNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Nov 2019 21:47:55 -0500
-Received: from mga04.intel.com ([192.55.52.120]:42457 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfKICrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Nov 2019 21:47:55 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 18:47:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
-   d="scan'208";a="201515057"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Nov 2019 18:47:54 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 44A8A300E00; Fri,  8 Nov 2019 18:47:54 -0800 (PST)
-Date:   Fri, 8 Nov 2019 18:47:54 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     "liuqi (BA)" <liuqi115@hisilicon.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        huangdaode <huangdaode@hisilicon.com>,
-        linyunsheng <linyunsheng@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [QUESTION]perf stat: comment of miss ratio
-Message-ID: <20191109024754.GA573472@tassilo.jf.intel.com>
-References: <F57F094935A66448B135517D3F6EA397F35063@DGGEMA504-MBS.china.huawei.com>
+        Fri, 8 Nov 2019 22:13:38 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:53944 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfKIDNi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Nov 2019 22:13:38 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iTHBt-0002yX-6B; Sat, 09 Nov 2019 03:13:33 +0000
+Date:   Sat, 9 Nov 2019 03:13:33 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH][RFC] race in exportfs_decode_fh()
+Message-ID: <20191109031333.GA8566@ZenIV.linux.org.uk>
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+ <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+ <20191022143736.GX26530@ZenIV.linux.org.uk>
+ <20191022201131.GZ26530@ZenIV.linux.org.uk>
+ <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
+ <20191101234622.GM26530@ZenIV.linux.org.uk>
+ <20191102172229.GT20975@paulmck-ThinkPad-P72>
+ <20191102180842.GN26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <F57F094935A66448B135517D3F6EA397F35063@DGGEMA504-MBS.china.huawei.com>
+In-Reply-To: <20191102180842.GN26530@ZenIV.linux.org.uk>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->    Relevant code is checked to make sure that the ratio is calculated by
-> 
->    L1-dcache-load-misses/L1-dcache-loads, data "7.58%=30249/399189*100%" also
-> 
->    proves this conclusion.
-> 
->    So, I'm not sure why we use "of all L1-dcache hits" here to describe miss
->    ratio,
+On Sat, Nov 02, 2019 at 06:08:42PM +0000, Al Viro wrote:
 
-Yes you're right it should be "of all L1-dcache accesses"
+> It is converging to a reasonably small and understandable surface, actually,
+> most of that being in core pathname resolution.  Two big piles of nightmares
+> left to review - overlayfs and (somewhat surprisingly) setxattr call chains,
+> the latter due to IMA/EVM/LSM insanity...
 
-Please send a patch to fix the string and also check if this isn't wrong with some other
-ratio too.
+Oh, lovely - in exportfs_decode_fh() we have this:
+                err = exportfs_get_name(mnt, target_dir, nbuf, result);
+                if (!err) {
+                        inode_lock(target_dir->d_inode);
+                        nresult = lookup_one_len(nbuf, target_dir,
+                                                 strlen(nbuf));
+                        inode_unlock(target_dir->d_inode);
+                        if (!IS_ERR(nresult)) {
+                                if (nresult->d_inode) {
+                                        dput(result);
+                                        result = nresult;
+                                } else
+                                        dput(nresult);
+                        }
+                }
+We have derived the parent from fhandle, we have a disconnected dentry for child,
+we go look for the name.  We even find it.  Now, we want to look it up.  And
+some bastard goes and unlinks it, just as we are trying to lock the parent.
+We do a lookup, and get a negative dentry.  Then we unlock the parent... and
+some other bastard does e.g. mkdir with the same name.  OK, nresult->d_inode
+is not NULL (anymore).  It has fuck-all to do with the original fhandle
+(different inumber, etc.) but we happily accept it.
 
--Andi
+Even better, we have no barriers between our check and nresult becoming positive.
+IOW, having observed non-NULL ->d_inode doesn't give us enough - e.g. we might
+still see the old ->d_flags value, from back when ->d_inode used to be NULL.
+On something like alpha we also have no promises that we'll observe anything
+about the fields of nresult->d_inode, but ->d_flags alone is enough for fun.
+The callers can't e.g. expect d_is_reg() et.al. to match the reality.
+
+This is obviously bogus.  And the fix is obvious: check that nresult->d_inode is
+equal to result->d_inode before unlocking the parent.  Note that we'd *already* had
+the original result and all of its aliases rejected by the 'acceptable' predicate,
+so if nresult doesn't supply us a better alias, we are SOL.
+
+Does anyone see objections to the following patch?  Christoph, that seems to
+be your code; am I missing something subtle here?  AFAICS, that goes back to
+2007 or so...
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+index 09bc68708d28..2dd55b172d57 100644
+--- a/fs/exportfs/expfs.c
++++ b/fs/exportfs/expfs.c
+@@ -519,26 +519,33 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
+ 		 * inode is actually connected to the parent.
+ 		 */
+ 		err = exportfs_get_name(mnt, target_dir, nbuf, result);
+-		if (!err) {
+-			inode_lock(target_dir->d_inode);
+-			nresult = lookup_one_len(nbuf, target_dir,
+-						 strlen(nbuf));
+-			inode_unlock(target_dir->d_inode);
+-			if (!IS_ERR(nresult)) {
+-				if (nresult->d_inode) {
+-					dput(result);
+-					result = nresult;
+-				} else
+-					dput(nresult);
+-			}
++		if (err) {
++			dput(target_dir);
++			goto err_result;
+ 		}
+ 
++		inode_lock(target_dir->d_inode);
++		nresult = lookup_one_len(nbuf, target_dir, strlen(nbuf));
++		if (!IS_ERR(nresult)) {
++			if (unlikely(nresult->d_inode != result->d_inode)) {
++				dput(nresult);
++				nresult = ERR_PTR(-ESTALE);
++			}
++		}
++		inode_unlock(target_dir->d_inode);
+ 		/*
+ 		 * At this point we are done with the parent, but it's pinned
+ 		 * by the child dentry anyway.
+ 		 */
+ 		dput(target_dir);
+ 
++		if (IS_ERR(nresult)) {
++			err = PTR_ERR(nresult);
++			goto err_result;
++		}
++		dput(result);
++		result = nresult;
++
+ 		/*
+ 		 * And finally make sure the dentry is actually acceptable
+ 		 * to NFSD.
