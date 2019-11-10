@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31110C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A5EC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D67208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CED521850
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355114;
-	bh=vnr3Sy8Jmq307F6C2GaYr0l6aMOTYS/fpTivtZzlBfg=;
+	s=default; t=1573355119;
+	bh=h/3lyAH75L97O26Qlz9BevbzGQLjmYZBXgPyGEqU2pU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lUqQShyJfQXhhONjP4VLmHaqfv84CBXqIa53ig9WaWKrlbHh+qO7OR2F+9HvxCsJg
-	 NcPTGrD+dsl9OB7TdOTdezQ0bLkpGx/yjXorvm5jC82+O5hyEOgxPhwvBH6Jc4eAYG
-	 2pCVfJYPrL2HDg5UwpY1CdT42yRRtV+ZH4O10Ezw=
+	b=YZxImGnV7/htrcNpMI7oQF593P2clMaBEADLwVGJjUuMS+xIXswQXiYIHn7cDM4pW
+	 jmtxaqiVKmej5+RLaYgB0P13csb5HG1yYZtd9G6UJgtZOVateylkrlXFwGat5QgNK3
+	 VnaCp8o67a3hRX+akQPU3X05mAafdYVgfQg0RJSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfKJCqj (ORCPT
+        id S1729536AbfKJDFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:46:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49678 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:05:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729025AbfKJCqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:46:20 -0500
+        id S1729100AbfKJCqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CFEC21D7E;
-        Sun, 10 Nov 2019 02:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45BD821850;
+        Sun, 10 Nov 2019 02:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353979;
-        bh=vnr3Sy8Jmq307F6C2GaYr0l6aMOTYS/fpTivtZzlBfg=;
+        s=default; t=1573353997;
+        bh=h/3lyAH75L97O26Qlz9BevbzGQLjmYZBXgPyGEqU2pU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cK6Sv1x12IkAyhQfVAcyhAO9ktrvY1UcuRA3gODSVyfz1jkyetLlaq4YXH1PZjvzZ
-         tZDm6XAYHxyloD1YASdBtxuQFpadQnf4PKuLkBKpFopyf5nplfVCI1oYL/lBQZ1lz9
-         9HzRqJ0Hs5TsXZQ1CxiHqfdEsG5RoDJXIhneQbkI=
+        b=zhR2d7sZC5jYk79e9Z8ADBy/MWuisZYpe6mPVWhFrcyDXUxrML0HZDvTtEGBYNaTB
+         lLBmbeSNnr7akiw08jr76It35K6nuY8HrmUjNHTNV0a+f6pUY212H3zUf2KY1S7xSc
+         OSmbfufGRO6i2H8R+5Oow6zdHeyA7fFAHaL+T4hY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
+Cc:     Jian Shen <shenjian15@huawei.com>, Peng Li <lipeng321@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 021/109] net: broadcom: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:44:13 -0500
-Message-Id: <20191110024541.31567-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 025/109] net: hns3: Fix parameter type for q_id in hclge_tm_q_to_qs_map_cfg()
+Date:   Sat,  9 Nov 2019 21:44:17 -0500
+Message-Id: <20191110024541.31567-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -59,67 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
+[ Upstream commit 32c7fbc8ffd752c6aa05d2dd7c13b0f0aa00ddaa ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+So far all the places calling hclge_tm_q_to_qs_map_cfg() are assigning
+an u16 type value to "q_id", and in the processing of
+hclge_tm_q_to_qs_map_cfg(), it also converts the "q_id" to le16.
 
-Found by coccinelle.
+The max tqp number for pf can be more than 256, we should use "u16" to
+store the queue id, instead of "u8", which may cause data lost.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
- drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-index 68470c7c630a8..35eb0119b0151 100644
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-@@ -571,12 +571,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
- /*
-  * tx request callback
-  */
--static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct bcm_enet_priv *priv;
- 	struct bcm_enet_desc *desc;
- 	u32 len_stat;
--	int ret;
-+	netdev_tx_t ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index 55228b91d80b6..3799cb2548ce6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -200,7 +200,7 @@ static int hclge_tm_qs_to_pri_map_cfg(struct hclge_dev *hdev,
+ }
  
- 	priv = netdev_priv(dev);
- 
-diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
-index ecdef42f0ae63..00230fe097d94 100644
---- a/drivers/net/ethernet/broadcom/sb1250-mac.c
-+++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
-@@ -299,7 +299,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
- static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
- static uint64_t sbmac_addr2reg(unsigned char *ptr);
- static irqreturn_t sbmac_intr(int irq, void *dev_instance);
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
- static void sbmac_setmulti(struct sbmac_softc *sc);
- static int sbmac_init(struct platform_device *pldev, long long base);
- static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
-@@ -2028,7 +2028,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
-  *  Return value:
-  *  	   nothing
-  ********************************************************************* */
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
+ static int hclge_tm_q_to_qs_map_cfg(struct hclge_dev *hdev,
+-				    u8 q_id, u16 qs_id)
++				    u16 q_id, u16 qs_id)
  {
- 	struct sbmac_softc *sc = netdev_priv(dev);
- 	unsigned long flags;
+ 	struct hclge_nq_to_qs_link_cmd *map;
+ 	struct hclge_desc desc;
 -- 
 2.20.1
 
