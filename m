@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A60C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EF0C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E862321924
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E103222C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353689;
-	bh=HJKuEjihpRVj7ywHu4OgY4KZpDHLxi5jwLvtGXQc/Vg=;
+	s=default; t=1573353694;
+	bh=tXpvznd+oBOZN2eCbwim3PFiLXJbR9UB2tAzNx1l3vY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ug37//Hf+Lg03/dicv56oOfzQFjvdz/40BUCAftePYKlb/geLAYa8SFn4h8lM7gbL
-	 TyCoOtqG8z9LFltvo8QLrT91p/YjiOXzmQZrQ9TrlMd5aDySuQx99pH3ukwxhkgdD0
-	 IvoCiC9OPx3Dzu/3mPcC/zX/Vkn1UhnQ4BuRVUto=
+	b=HB8XeqUPn/AnZUFlShRIqfkXy8owjktFnrheWVz60HndfqfsC2mRg9t5fmVm90pSS
+	 FrvglOAMu03h143Qs1LMJ4Kl+7syf0w02MsjHV+Unfdr2W8BqgUEg0rlYTN9B5ZpHt
+	 LDMu7l5tuLgd1pCMoOJHrTbsD6xDEyEQSktLzLCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfKJCl1 (ORCPT
+        id S1727478AbfKJClc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfKJClG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:06 -0500
+        id S1727279AbfKJClL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35165215EA;
-        Sun, 10 Nov 2019 02:41:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8262E21019;
+        Sun, 10 Nov 2019 02:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353665;
-        bh=HJKuEjihpRVj7ywHu4OgY4KZpDHLxi5jwLvtGXQc/Vg=;
+        s=default; t=1573353670;
+        bh=tXpvznd+oBOZN2eCbwim3PFiLXJbR9UB2tAzNx1l3vY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPq1D2byhuaeHGanpu8k3tW43mw4ojjDy3Fk/oVykLfqcd94rPnB6DARMck6S0qoI
-         BhRko8QC9sqoO2XyGo3vx5/bZgJZLqRj94jfj0LWoL0w6YfRkfOhg0wm6VOqOU8g4m
-         Ic8lIXmO+a+lpmKyG6Uz787DFb0MGuP2jHrwY2K4=
+        b=DndFncJe+wcKkYO5SVNKHXJTqDGpf1JX7gTBOf0zZ6gATDmSgsMnVvxEhQ5dHvPCM
+         4x/RkdE1MpZq8UGrGYPAP2cFg4G/WA0FaiF12fGwdZQEnFCQZcjOeebCQZy23oEykq
+         gYwuuNsGXJPLa42lrskjU4ZQPVellkGRaaLgNcv8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 035/191] of/unittest: Fix I2C bus unit-address error
-Date:   Sat,  9 Nov 2019 21:37:37 -0500
-Message-Id: <20191110024013.29782-35-sashal@kernel.org>
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 036/191] libfdt: Ensure INT_MAX is defined in libfdt_env.h
+Date:   Sat,  9 Nov 2019 21:37:38 -0500
+Message-Id: <20191110024013.29782-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,52 +65,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 62287dce5d0ee207b6a09a0a1abd06b61cee1094 ]
+[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
 
-dtc has new checks for I2C buses. Fix the warnings in unit-addresses in
-the unittests.
+The next update of libfdt has a new dependency on INT_MAX. Update the
+instances of libfdt_env.h in the kernel to either include the necessary
+header with the definition or define it locally.
 
-drivers/of/unittest-data/testcases.dtb: Warning (i2c_bus_reg): /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest14/i2c@0/test-mux-dev: I2C bus unit address format error, expected "20"
-drivers/of/unittest-data/overlay_15.dtb: Warning (i2c_bus_reg): /fragment@0/__overlay__/test-unittest15/i2c@0/test-mux-dev: I2C bus unit address format error, expected "20"
-
-Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/unittest-data/overlay_15.dts     | 4 ++--
- drivers/of/unittest-data/tests-overlay.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/compressed/libfdt_env.h | 2 ++
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/of/unittest-data/overlay_15.dts b/drivers/of/unittest-data/overlay_15.dts
-index b98f2514df4b3..5728490474f6b 100644
---- a/drivers/of/unittest-data/overlay_15.dts
-+++ b/drivers/of/unittest-data/overlay_15.dts
-@@ -20,8 +20,8 @@
- 			#size-cells = <0>;
- 			reg = <0>;
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 07437816e0986..b36c0289a308e 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -6,6 +6,8 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
  
--			test-mux-dev {
--				reg = <32>;
-+			test-mux-dev@20 {
-+				reg = <0x20>;
- 				compatible = "unittest-i2c-dev";
- 				status = "okay";
- 			};
-diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
-index 25cf397b8f6b6..4ea024d908ee2 100644
---- a/drivers/of/unittest-data/tests-overlay.dtsi
-+++ b/drivers/of/unittest-data/tests-overlay.dtsi
-@@ -103,8 +103,8 @@
- 							#size-cells = <0>;
- 							reg = <0>;
++#define INT_MAX			((int)(~0U>>1))
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 2a0c8b1bf1479..2abc8e83b95e9 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <types.h>
+ #include <string.h>
  
--							test-mux-dev {
--								reg = <32>;
-+							test-mux-dev@20 {
-+								reg = <0x20>;
- 								compatible = "unittest-i2c-dev";
- 								status = "okay";
- 							};
++#define INT_MAX			((int)(~0U>>1))
++
+ #include "of.h"
+ 
+ typedef unsigned long uintptr_t;
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index c6ac1fe7ec68a..edb0f0c309044 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -2,6 +2,7 @@
+ #ifndef LIBFDT_ENV_H
+ #define LIBFDT_ENV_H
+ 
++#include <linux/kernel.h>	/* For INT_MAX */
+ #include <linux/string.h>
+ 
+ #include <asm/byteorder.h>
 -- 
 2.20.1
 
