@@ -2,56 +2,58 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9CFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BE9C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFCE215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DAD215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355467;
-	bh=xENR2AaiEfWkN6Km5PuyW8kbJnUTaYWcZGTo1g0onRc=;
+	s=default; t=1573355473;
+	bh=k8d5s75KhVKjgm3jmwxPY/yUWZ6JYWL1KLUdROsgTKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gl9avDNafdxY1gG7CZyDyJW29qmp0nQCN0WZCfrh+4oQgbcgZj0XuSVJ7Etsk2z7G
-	 9O7H2oIN2VuvXEADWU2TCmjA67aIcbCUdVerc4AADjpxgOa2g9rdJsD/o7ShjqV9Ws
-	 kFpGNZZAnfbBTjvwOc6BUqXdhO1lD7NFDHkRzfPU=
+	b=Eov8oeyl5kCsZ0ZDSp0cLAbl74t5gitICAkK/IIcvR0DZ+ZU9lNdsuddQDNajf7jQ
+	 o//Oq3x9CemeeQ19CQCyGprxm7Hqb75iC3cxqrZuxgI43M/1CP7AQ6Ttq9kRJVhA5v
+	 g6J7MBSa3/wYsBDDCgg6ZloInSFUfPEuVKQ6bJhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfKJDLG (ORCPT
+        id S1727637AbfKJDLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:11:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:11:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbfKJCnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:49 -0500
+        id S1728370AbfKJCnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD2B215EA;
-        Sun, 10 Nov 2019 02:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7574721D7B;
+        Sun, 10 Nov 2019 02:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353828;
-        bh=xENR2AaiEfWkN6Km5PuyW8kbJnUTaYWcZGTo1g0onRc=;
+        s=default; t=1573353826;
+        bh=k8d5s75KhVKjgm3jmwxPY/yUWZ6JYWL1KLUdROsgTKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QL2g8vdo+q2XFCCaUCV1PmcTOAU89Ncy4XncjyUXMkZ0rVmnXT4S87L0sno+nmlrp
-         pSJ2mxhFhth+4p6Xgf+6vfaWxqPGIBH4WX0qJcwFzAh9zyquxDs/h5sa9IOFiZNJBt
-         Iy3SITb34zVg2uqF060ROJmbbz3xd5TX+FnSjY+w=
+        b=oBFCzOlU5Oy0BIs3wHD26wK8HQoHyyOvvo6qzJd31uUimX4dhLXGsjwPBccIoxxwH
+         zrLcLBvXw8jFPXY/ap21671StgOzbpC8yJkKy1gpB0IPvjhEiXucHemAhU2/VtnlTd
+         LPUkcbdLyG08zhB5L3I6jkPbxB+q8euW7Sgr7Xco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 123/191] vmbus: keep pointer to ring buffer page
-Date:   Sat,  9 Nov 2019 21:39:05 -0500
-Message-Id: <20191110024013.29782-123-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 121/191] misc: kgdbts: Fix restrict error
+Date:   Sat,  9 Nov 2019 21:39:03 -0500
+Message-Id: <20191110024013.29782-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,127 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Hemminger <stephen@networkplumber.org>
+From: Laura Abbott <labbott@redhat.com>
 
-[ Upstream commit 52a42c2a90226dc61c99bbd0cb096deeb52c334b ]
+[ Upstream commit fa0218ef733e6f247a1a3986e3eb12460064ac77 ]
 
-Avoid going from struct page to virt address (and back) by just
-keeping pointer to the allocated pages instead of virt address.
+kgdbts current fails when compiled with restrict:
 
-Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+drivers/misc/kgdbts.c: In function ‘configure_kgdbts’:
+drivers/misc/kgdbts.c:1070:2: error: ‘strcpy’ source argument is the same as destination [-Werror=restrict]
+  strcpy(config, opt);
+  ^~~~~~~~~~~~~~~~~~~
+
+As the error says, config is being used in both the source and destination.
+Refactor the code to avoid the extra copy and put the parsing closer to
+the actual location.
+
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/channel.c         | 20 +++++++++-----------
- drivers/uio/uio_hv_generic.c |  5 +++--
- include/linux/hyperv.h       |  2 +-
- 3 files changed, 13 insertions(+), 14 deletions(-)
+ drivers/misc/kgdbts.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index fdb0f832fadef..5e515533e9cdb 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -91,11 +91,14 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
- 	unsigned long flags;
- 	int ret, err = 0;
- 	struct page *page;
-+	unsigned int order;
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index eb4d90b7d99e1..8b01257783dd8 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -985,6 +985,12 @@ static void kgdbts_run_tests(void)
+ 	int nmi_sleep = 0;
+ 	int i;
  
- 	if (send_ringbuffer_size % PAGE_SIZE ||
- 	    recv_ringbuffer_size % PAGE_SIZE)
- 		return -EINVAL;
- 
-+	order = get_order(send_ringbuffer_size + recv_ringbuffer_size);
++	verbose = 0;
++	if (strstr(config, "V1"))
++		verbose = 1;
++	if (strstr(config, "V2"))
++		verbose = 2;
 +
- 	spin_lock_irqsave(&newchannel->lock, flags);
- 	if (newchannel->state == CHANNEL_OPEN_STATE) {
- 		newchannel->state = CHANNEL_OPENING_STATE;
-@@ -110,21 +113,17 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
- 
- 	/* Allocate the ring buffer */
- 	page = alloc_pages_node(cpu_to_node(newchannel->target_cpu),
--				GFP_KERNEL|__GFP_ZERO,
--				get_order(send_ringbuffer_size +
--				recv_ringbuffer_size));
-+				GFP_KERNEL|__GFP_ZERO, order);
- 
- 	if (!page)
--		page = alloc_pages(GFP_KERNEL|__GFP_ZERO,
--				   get_order(send_ringbuffer_size +
--					     recv_ringbuffer_size));
-+		page = alloc_pages(GFP_KERNEL|__GFP_ZERO, order);
- 
- 	if (!page) {
- 		err = -ENOMEM;
- 		goto error_set_chnstate;
+ 	ptr = strchr(config, 'F');
+ 	if (ptr)
+ 		fork_test = simple_strtol(ptr + 1, NULL, 10);
+@@ -1068,13 +1074,6 @@ static int kgdbts_option_setup(char *opt)
+ 		return -ENOSPC;
  	}
- 
--	newchannel->ringbuffer_pages = page_address(page);
-+	newchannel->ringbuffer_page = page;
- 	newchannel->ringbuffer_pagecount = (send_ringbuffer_size +
- 					   recv_ringbuffer_size) >> PAGE_SHIFT;
- 
-@@ -239,8 +238,7 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
- error_free_pages:
- 	hv_ringbuffer_cleanup(&newchannel->outbound);
- 	hv_ringbuffer_cleanup(&newchannel->inbound);
--	__free_pages(page,
--		     get_order(send_ringbuffer_size + recv_ringbuffer_size));
-+	__free_pages(page, order);
- error_set_chnstate:
- 	newchannel->state = CHANNEL_OPEN_STATE;
- 	return err;
-@@ -666,8 +664,8 @@ static int vmbus_close_internal(struct vmbus_channel *channel)
- 	hv_ringbuffer_cleanup(&channel->outbound);
- 	hv_ringbuffer_cleanup(&channel->inbound);
- 
--	free_pages((unsigned long)channel->ringbuffer_pages,
--		get_order(channel->ringbuffer_pagecount * PAGE_SIZE));
-+	__free_pages(channel->ringbuffer_page,
-+		     get_order(channel->ringbuffer_pagecount << PAGE_SHIFT));
- 
- out:
- 	return ret;
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index e401be8321ab5..170fa1f8f00e0 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -131,11 +131,12 @@ static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
- 		= container_of(kobj, struct vmbus_channel, kobj);
- 	struct hv_device *dev = channel->primary_channel->device_obj;
- 	u16 q_idx = channel->offermsg.offer.sub_channel_index;
-+	void *ring_buffer = page_address(channel->ringbuffer_page);
- 
- 	dev_dbg(&dev->device, "mmap channel %u pages %#lx at %#lx\n",
- 		q_idx, vma_pages(vma), vma->vm_pgoff);
- 
--	return vm_iomap_memory(vma, virt_to_phys(channel->ringbuffer_pages),
-+	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
- 			       channel->ringbuffer_pagecount << PAGE_SHIFT);
+ 	strcpy(config, opt);
+-
+-	verbose = 0;
+-	if (strstr(config, "V1"))
+-		verbose = 1;
+-	if (strstr(config, "V2"))
+-		verbose = 2;
+-
+ 	return 0;
  }
  
-@@ -224,7 +225,7 @@ hv_uio_probe(struct hv_device *dev,
- 	/* mem resources */
- 	pdata->info.mem[TXRX_RING_MAP].name = "txrx_rings";
- 	pdata->info.mem[TXRX_RING_MAP].addr
--		= (uintptr_t)dev->channel->ringbuffer_pages;
-+		= (uintptr_t)page_address(dev->channel->ringbuffer_page);
- 	pdata->info.mem[TXRX_RING_MAP].size
- 		= dev->channel->ringbuffer_pagecount << PAGE_SHIFT;
- 	pdata->info.mem[TXRX_RING_MAP].memtype = UIO_MEM_LOGICAL;
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index bbde887ed3931..c43e694fef7dd 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -739,7 +739,7 @@ struct vmbus_channel {
- 	u32 ringbuffer_gpadlhandle;
+@@ -1086,9 +1085,6 @@ static int configure_kgdbts(void)
  
- 	/* Allocated memory for ring buffer */
--	void *ringbuffer_pages;
-+	struct page *ringbuffer_page;
- 	u32 ringbuffer_pagecount;
- 	struct hv_ring_buffer_info outbound;	/* send to parent */
- 	struct hv_ring_buffer_info inbound;	/* receive from parent */
+ 	if (!strlen(config) || isspace(config[0]))
+ 		goto noconfig;
+-	err = kgdbts_option_setup(config);
+-	if (err)
+-		goto noconfig;
+ 
+ 	final_ack = 0;
+ 	run_plant_and_detach_test(1);
 -- 
 2.20.1
 
