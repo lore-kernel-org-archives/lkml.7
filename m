@@ -5,28 +5,28 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729D1C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175DBC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FE82080F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B672080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfKJQdU (ORCPT
+        id S1727108AbfKJQdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:33:20 -0500
+        Sun, 10 Nov 2019 11:33:24 -0500
 Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:44397 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726832AbfKJQdT (ORCPT
+        with ESMTP id S1726832AbfKJQdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:33:19 -0500
+        Sun, 10 Nov 2019 11:33:22 -0500
 X-Greylist: delayed 642 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 Nov 2019 11:33:15 EST
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xAAGMNgb013906;
-        Sun, 10 Nov 2019 18:22:23 +0200
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xAAGMOMJ013909;
+        Sun, 10 Nov 2019 18:22:24 +0200
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 9E0C560275; Sun, 10 Nov 2019 18:22:23 +0200 (IST)
+        id 463C560275; Sun, 10 Nov 2019 18:22:24 +0200 (IST)
 From:   amirmizi6@gmail.com
 To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
         oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
@@ -38,9 +38,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
         oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
         amir.mizinski@nuvoton.com, Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v1 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
-Date:   Sun, 10 Nov 2019 18:21:35 +0200
-Message-Id: <20191110162137.230913-4-amirmizi6@gmail.com>
+Subject: [PATCH v1 4/5] dt-bindings: tpm: Add the TPM TIS I2C device tree binding documentaion
+Date:   Sun, 10 Nov 2019 18:21:36 +0200
+Message-Id: <20191110162137.230913-5-amirmizi6@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191110162137.230913-1-amirmizi6@gmail.com>
 References: <20191110162137.230913-1-amirmizi6@gmail.com>
@@ -53,40 +53,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amir Mizinski <amirmizi6@gmail.com>
 
-using this function while read/write data resulted in aborted operation.
-after investigating according to TCG TPM Profile (PTP) Specifications,
-i found cancel should happen only if TPM_STS.commandReady bit is lit
-and couldn't find a case when the current condition is valid.
-also only cmdReady bit need to be compared instead of the full lower status register byte.
+this file aim at documenting TPM TIS I2C related dt-bindings for the I2C PTP based Physical TPM.
 
 Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 ---
- drivers/char/tpm/tpm_tis_core.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ .../bindings/security/tpm/tpm_tis_i2c.txt          | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index ce7f8a1..9016f06 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -627,17 +627,7 @@ static int probe_itpm(struct tpm_chip *chip)
- 
- static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
- {
--	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
--
--	switch (priv->manufacturer_id) {
--	case TPM_VID_WINBOND:
--		return ((status == TPM_STS_VALID) ||
--			(status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
--	case TPM_VID_STM:
--		return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
--	default:
--		return (status == TPM_STS_COMMAND_READY);
--	}
-+	return ((status & TPM_STS_COMMAND_READY) == TPM_STS_COMMAND_READY);
- }
- 
- static irqreturn_t tis_int_handler(int dummy, void *dev_id)
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
+new file mode 100644
+index 0000000..7d5a69e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
+@@ -0,0 +1,24 @@
++* Device Tree Bindings for I2C PTP based Trusted Platform Module(TPM)
++
++The TCG defines hardware protocol, registers and interface (based
++on the TPM Interface Specification) for accessing TPM devices
++implemented with an I2C interface.
++
++Refer to the 'I2C Interface Definition' section in 'TCG PC Client
++PlatformTPMProfile(PTP) Specification' publication for specification.
++
++Required properties:
++
++- compatible     : Should be "tcg,tpm_tis-i2c"
++- reg            : Address on the bus
++- tpm-pirq       : Input gpio pin, used for host interrupts
++
++Example (for Raspberry Pie 3 Board with Nuvoton's NPCT75X (2.0)
++-------------------------------------------------------------------
++
++tpm_tis-i2c: tpm_tis-i2c@2e {
++
++       compatible = "tcg,tpm_tis-i2c";
++       reg = <0x2e>;
++       tpm-pirq = <&gpio 24 GPIO_ACTIVE_HIGH>;
++};
 -- 
 2.7.4
 
