@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748BAC17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179C8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480D821D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48B321924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353820;
-	bh=XSc49gLZDnT5iD6+dqt3KN9TjzN4HO4lpDf5yK9KBYU=;
+	s=default; t=1573353825;
+	bh=isimNGV8EFFjgRGHPfCqxbiGejExCGEYIzUjW3Qx7LU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jviyFhbaPXoYkwdN5I1jmmLw7C0QO/1xaZOXJzvQzieZlqgYA9ZyzMSIZFmzt8Idj
-	 PNj5pQHctqLY5phxU0iQUZc8c2UjLlSeu58qPZ9z6gdRQjNoq/nyNW1XvhaWzjCjvl
-	 vWGU4JL5b8XdO7Z4vgLkXUJd9CTtK+7PP69kYJIE=
+	b=wu1yUENaQ4VT668G52ICEJEehzcAt7tpMWyctgQ4cmqNQm0a1PwrtDCyQaqbsPUzm
+	 Icp6VXfBDWZ1cD+xiD3eArcUsu4bNUjAQk4KY+pxvy2/dlbnjCdMdh4ncM5lhDC0wK
+	 HU7zXj3XyDp/ln+HN0Z1V9dYKqoeJX6tzpDgS5wQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfKJCni (ORCPT
+        id S1728413AbfKJCno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41686 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbfKJCna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:30 -0500
+        id S1728370AbfKJCni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98D7521019;
-        Sun, 10 Nov 2019 02:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ABF821D7E;
+        Sun, 10 Nov 2019 02:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353810;
-        bh=XSc49gLZDnT5iD6+dqt3KN9TjzN4HO4lpDf5yK9KBYU=;
+        s=default; t=1573353816;
+        bh=isimNGV8EFFjgRGHPfCqxbiGejExCGEYIzUjW3Qx7LU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVa1tLuWes5ktaKsAqk+CkI6+ncm4uIw7lAScbzy1kKOf4v5yhY+rJUBlk6ZG9nEw
-         6kFDi4WDdi8wZfC/K2Vm9BfzOGF7f14bhG2qbQf8g2GZqRgHS+ovgD4Y7WlLN+1NWQ
-         0nW+pgbOjDNn0HktBFG7EYVHwrOUp8Gz1tSu5XVk=
+        b=Hv+HQ5MWFxQknIki2nTZYiJrDS/uIFZl7aKPHPr7jOzkGg94YtWJm9mYmigppi9Jy
+         cYNqoAut5QFPOZPdhztDspyWMXvt5AQT6BJ1gB4TZqMUai9JUpnqagBoiETBxEWs8d
+         AUJEuYINy02wqBXkKXOH37E4YL6waytw8JTbGZ0w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 106/191] phy: phy-twl4030-usb: fix denied runtime access
-Date:   Sat,  9 Nov 2019 21:38:48 -0500
-Message-Id: <20191110024013.29782-106-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 112/191] coresight: perf: Fix per cpu path management
+Date:   Sat,  9 Nov 2019 21:38:54 -0500
+Message-Id: <20191110024013.29782-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,79 +60,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 6c7103aa026094a4ee2c2708ec6977a6dfc5331d ]
+[ Upstream commit 5ecabe4a76e8cdb61fa3e24862d9ca240a1c4ddf ]
 
-When runtime is not enabled, pm_runtime_get_sync() returns -EACCESS,
-the counter will be incremented but the resume callback not called,
-so enumeration and charging will not start properly.
-To avoid that happen, disable irq on suspend and recheck on resume.
+We create a coresight trace path for each online CPU when
+we start the event. We rely on the number of online CPUs
+and then go on to allocate an array matching the "number of
+online CPUs" for holding the path and then uses normal
+CPU id as the index to the array. This is problematic as
+we could have some offline CPUs causing us to access beyond
+the actual array size (e.g, on a dual SMP system, if CPU0 is
+offline, CPU1 could be really accessing beyond the array).
+The solution is to switch to per-cpu array for holding the path.
 
-Practically this happens when the device is woken up from suspend by
-plugging in usb.
-
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/ti/phy-twl4030-usb.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ .../hwtracing/coresight/coresight-etm-perf.c  | 55 ++++++++++++++-----
+ 1 file changed, 40 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-twl4030-usb.c b/drivers/phy/ti/phy-twl4030-usb.c
-index a44680d64f9b4..c267afb68f077 100644
---- a/drivers/phy/ti/phy-twl4030-usb.c
-+++ b/drivers/phy/ti/phy-twl4030-usb.c
-@@ -144,6 +144,7 @@
- #define PMBR1				0x0D
- #define GPIO_USB_4PIN_ULPI_2430C	(3 << 0)
- 
-+static irqreturn_t twl4030_usb_irq(int irq, void *_twl);
- /*
-  * If VBUS is valid or ID is ground, then we know a
-  * cable is present and we need to be runtime-enabled
-@@ -395,6 +396,33 @@ static void __twl4030_phy_power(struct twl4030_usb *twl, int on)
- 	WARN_ON(twl4030_usb_write_verify(twl, PHY_PWR_CTRL, pwr) < 0);
- }
- 
-+static int __maybe_unused twl4030_usb_suspend(struct device *dev)
-+{
-+	struct twl4030_usb *twl = dev_get_drvdata(dev);
-+
-+	/*
-+	 * we need enabled runtime on resume,
-+	 * so turn irq off here, so we do not get it early
-+	 * note: wakeup on usb plug works independently of this
-+	 */
-+	dev_dbg(twl->dev, "%s\n", __func__);
-+	disable_irq(twl->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused twl4030_usb_resume(struct device *dev)
-+{
-+	struct twl4030_usb *twl = dev_get_drvdata(dev);
-+
-+	dev_dbg(twl->dev, "%s\n", __func__);
-+	enable_irq(twl->irq);
-+	/* check whether cable status changed */
-+	twl4030_usb_irq(0, twl);
-+
-+	return 0;
-+}
-+
- static int __maybe_unused twl4030_usb_runtime_suspend(struct device *dev)
- {
- 	struct twl4030_usb *twl = dev_get_drvdata(dev);
-@@ -655,6 +683,7 @@ static const struct phy_ops ops = {
- static const struct dev_pm_ops twl4030_usb_pm_ops = {
- 	SET_RUNTIME_PM_OPS(twl4030_usb_runtime_suspend,
- 			   twl4030_usb_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(twl4030_usb_suspend, twl4030_usb_resume)
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 0f5e03e4df22c..4b53d55788a07 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -12,6 +12,7 @@
+ #include <linux/mm.h>
+ #include <linux/init.h>
+ #include <linux/perf_event.h>
++#include <linux/percpu-defs.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
+@@ -33,7 +34,7 @@ struct etm_event_data {
+ 	struct work_struct work;
+ 	cpumask_t mask;
+ 	void *snk_config;
+-	struct list_head **path;
++	struct list_head * __percpu *path;
  };
  
- static int twl4030_usb_probe(struct platform_device *pdev)
+ static DEFINE_PER_CPU(struct perf_output_handle, ctx_handle);
+@@ -61,6 +62,18 @@ static const struct attribute_group *etm_pmu_attr_groups[] = {
+ 	NULL,
+ };
+ 
++static inline struct list_head **
++etm_event_cpu_path_ptr(struct etm_event_data *data, int cpu)
++{
++	return per_cpu_ptr(data->path, cpu);
++}
++
++static inline struct list_head *
++etm_event_cpu_path(struct etm_event_data *data, int cpu)
++{
++	return *etm_event_cpu_path_ptr(data, cpu);
++}
++
+ static void etm_event_read(struct perf_event *event) {}
+ 
+ static int etm_addr_filters_alloc(struct perf_event *event)
+@@ -120,23 +133,26 @@ static void free_event_data(struct work_struct *work)
+ 	 */
+ 	if (event_data->snk_config) {
+ 		cpu = cpumask_first(mask);
+-		sink = coresight_get_sink(event_data->path[cpu]);
++		sink = coresight_get_sink(etm_event_cpu_path(event_data, cpu));
+ 		if (sink_ops(sink)->free_buffer)
+ 			sink_ops(sink)->free_buffer(event_data->snk_config);
+ 	}
+ 
+ 	for_each_cpu(cpu, mask) {
+-		if (!(IS_ERR_OR_NULL(event_data->path[cpu])))
+-			coresight_release_path(event_data->path[cpu]);
++		struct list_head **ppath;
++
++		ppath = etm_event_cpu_path_ptr(event_data, cpu);
++		if (!(IS_ERR_OR_NULL(*ppath)))
++			coresight_release_path(*ppath);
++		*ppath = NULL;
+ 	}
+ 
+-	kfree(event_data->path);
++	free_percpu(event_data->path);
+ 	kfree(event_data);
+ }
+ 
+ static void *alloc_event_data(int cpu)
+ {
+-	int size;
+ 	cpumask_t *mask;
+ 	struct etm_event_data *event_data;
+ 
+@@ -147,7 +163,6 @@ static void *alloc_event_data(int cpu)
+ 
+ 	/* Make sure nothing disappears under us */
+ 	get_online_cpus();
+-	size = num_online_cpus();
+ 
+ 	mask = &event_data->mask;
+ 	if (cpu != -1)
+@@ -164,8 +179,8 @@ static void *alloc_event_data(int cpu)
+ 	 * unused memory when dealing with single CPU trace scenarios is small
+ 	 * compared to the cost of searching through an optimized array.
+ 	 */
+-	event_data->path = kcalloc(size,
+-				   sizeof(struct list_head *), GFP_KERNEL);
++	event_data->path = alloc_percpu(struct list_head *);
++
+ 	if (!event_data->path) {
+ 		kfree(event_data);
+ 		return NULL;
+@@ -213,6 +228,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 
+ 	/* Setup the path for each CPU in a trace session */
+ 	for_each_cpu(cpu, mask) {
++		struct list_head *path;
+ 		struct coresight_device *csdev;
+ 
+ 		csdev = per_cpu(csdev_src, cpu);
+@@ -224,9 +240,11 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 		 * list of devices from source to sink that can be
+ 		 * referenced later when the path is actually needed.
+ 		 */
+-		event_data->path[cpu] = coresight_build_path(csdev, sink);
+-		if (IS_ERR(event_data->path[cpu]))
++		path = coresight_build_path(csdev, sink);
++		if (IS_ERR(path))
+ 			goto err;
++
++		*etm_event_cpu_path_ptr(event_data, cpu) = path;
+ 	}
+ 
+ 	if (!sink_ops(sink)->alloc_buffer)
+@@ -255,6 +273,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	struct etm_event_data *event_data;
+ 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
+ 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
++	struct list_head *path;
+ 
+ 	if (!csdev)
+ 		goto fail;
+@@ -267,8 +286,9 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	if (!event_data)
+ 		goto fail;
+ 
++	path = etm_event_cpu_path(event_data, cpu);
+ 	/* We need a sink, no need to continue without one */
+-	sink = coresight_get_sink(event_data->path[cpu]);
++	sink = coresight_get_sink(path);
+ 	if (WARN_ON_ONCE(!sink || !sink_ops(sink)->set_buffer))
+ 		goto fail_end_stop;
+ 
+@@ -278,7 +298,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 		goto fail_end_stop;
+ 
+ 	/* Nothing will happen without a path */
+-	if (coresight_enable_path(event_data->path[cpu], CS_MODE_PERF))
++	if (coresight_enable_path(path, CS_MODE_PERF))
+ 		goto fail_end_stop;
+ 
+ 	/* Tell the perf core the event is alive */
+@@ -306,6 +326,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+ 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
+ 	struct etm_event_data *event_data = perf_get_aux(handle);
++	struct list_head *path;
+ 
+ 	if (event->hw.state == PERF_HES_STOPPED)
+ 		return;
+@@ -313,7 +334,11 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	if (!csdev)
+ 		return;
+ 
+-	sink = coresight_get_sink(event_data->path[cpu]);
++	path = etm_event_cpu_path(event_data, cpu);
++	if (!path)
++		return;
++
++	sink = coresight_get_sink(path);
+ 	if (!sink)
+ 		return;
+ 
+@@ -344,7 +369,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	}
+ 
+ 	/* Disabling the path make its elements available to other sessions */
+-	coresight_disable_path(event_data->path[cpu]);
++	coresight_disable_path(path);
+ }
+ 
+ static int etm_event_add(struct perf_event *event, int mode)
 -- 
 2.20.1
 
