@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B3BC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603EDC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000F721848
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC3821655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353813;
-	bh=2enzXx7lcGEUB/VfRd3pDz675b+yj6Xt/n4BUBuGZ00=;
+	s=default; t=1573353817;
+	bh=suy9kcpXlrTjYytryumXlkz3d++3xYNnQeFYcINn9Dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zuG7XCXmwEbo94loSE4DNscjURt/9wW4809znuUapR27jAB4gYUI66JfwtueKYIGJ
-	 hgqrONIRvfaaNdEVp78dFiakG4t39EhRJW5tACgK0SjEshGY/3kaUura6lFMZVc8AS
-	 lt5r5R5AYhmCAM5M73Ntu2aap4pjsh1zngLzzHYY=
+	b=UzHQlS1tcluWn0d+Bkfs4F7d/Nh50iwYJyrgWmVJ5azMmxKWj60hYSu7tt1h+ptL9
+	 m+7PapQpUteKOvACwwIFkYtrDKUCzAMJb7yFG4blAL1WmwKLXKFDegkt/9I6wuAALH
+	 bhQFQimMzGzUWuouskzr2W/cHxiDeBaZbyiBk+s4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfKJCnc (ORCPT
+        id S1728363AbfKJCnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfKJCn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:28 -0500
+        id S1728324AbfKJCn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711B421882;
-        Sun, 10 Nov 2019 02:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7365721019;
+        Sun, 10 Nov 2019 02:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353808;
-        bh=2enzXx7lcGEUB/VfRd3pDz675b+yj6Xt/n4BUBuGZ00=;
+        s=default; t=1573353807;
+        bh=suy9kcpXlrTjYytryumXlkz3d++3xYNnQeFYcINn9Dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btd9Y6OdlC0+lxy/F58LWhj3bqBK67H6Vv/vuOFIoDcJN8ZbQrotLuwFv+XeioNe3
-         81Wi6DHxjkGvtfqPQeJLdT7GdIhGj9E9LtY6gY402pXZV9iPB1Fr/XB/thqsxwfqHI
-         4KHRmix5fmjlGTManY1pZUKH/NX18kSLMQ8+OMC4=
+        b=jR1YSdO18qQtgCqefGgRBX/DDknUB/Uion+saPm7m5jrKAnmzD+zVWmeyPnkdnkk4
+         hB/HibkGLh2mtFHGMxDm4Jx9649LSBNjQReJAvy2GukQbInz8ujX78TV0oY0ay7+gx
+         dI7MgAfqeyJKHqH1c9VX8b+QStXkrmw9ctaYFNdc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 105/191] phy: renesas: rcar-gen3-usb2: fix vbus_ctrl for role sysfs
-Date:   Sat,  9 Nov 2019 21:38:47 -0500
-Message-Id: <20191110024013.29782-105-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 104/191] phy: brcm-sata: allow PHY_BRCM_SATA driver to be built for DSL SoCs
+Date:   Sat,  9 Nov 2019 21:38:46 -0500
+Message-Id: <20191110024013.29782-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,39 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 09938ea9d136243e8d1fed6d4d7a257764f28f6d ]
+[ Upstream commit 26728df4b254ae06247726a9a6e64823e39ac504 ]
 
-This patch fixes and issue that the vbus_ctrl is disabled by
-rcar_gen3_init_from_a_peri_to_a_host(), so a usb host cannot
-supply the vbus.
+Broadcom ARM-based DSL SoCs (BCM63xx product line) have the same
+Broadcom SATA PHY that other SoCs are using, make it possible to select
+that driver on these platforms.
 
-Note that this condition will exit when the otg irq happens
-even if we don't apply this patch.
-
-Fixes: 9bb86777fb71 ("phy: rcar-gen3-usb2: add sysfs for usb role swap")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/broadcom/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 6fb2b69695905..d22b1ec2e58c7 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -199,7 +199,7 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
- 	val = readl(usb2_base + USB2_OBINTEN);
- 	writel(val & ~USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
+diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
+index 8786a9674471d..aa917a61071db 100644
+--- a/drivers/phy/broadcom/Kconfig
++++ b/drivers/phy/broadcom/Kconfig
+@@ -60,7 +60,8 @@ config PHY_NS2_USB_DRD
  
--	rcar_gen3_enable_vbus_ctrl(ch, 0);
-+	rcar_gen3_enable_vbus_ctrl(ch, 1);
- 	rcar_gen3_init_for_host(ch);
- 
- 	writel(val | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
+ config PHY_BRCM_SATA
+ 	tristate "Broadcom SATA PHY driver"
+-	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || COMPILE_TEST
++	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || \
++		   ARCH_BCM_63XX || COMPILE_TEST
+ 	depends on OF
+ 	select GENERIC_PHY
+ 	default ARCH_BCM_IPROC
 -- 
 2.20.1
 
