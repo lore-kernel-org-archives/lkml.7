@@ -2,70 +2,166 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D2BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0735C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 23:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57961206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915C8206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 23:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfKJW7V (ORCPT
+        id S1726770AbfKJXoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 17:59:21 -0500
-Received: from mleia.com ([178.79.152.223]:57924 "EHLO mail.mleia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726610AbfKJW7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 17:59:20 -0500
-X-Greylist: delayed 355 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 Nov 2019 17:59:19 EST
-Received: from mail.mleia.com (localhost [127.0.0.1])
-        by mail.mleia.com (Postfix) with ESMTP id 8AC713AE374;
-        Sun, 10 Nov 2019 22:53:23 +0000 (UTC)
-Subject: Re: [PATCH] usb: gadget: udc: lpc32xx: don't dereference ep until it
- has been null checked
-To:     Colin King <colin.king@canonical.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Roland Stigge <stigge@antcom.de>,
-        Arnd Bergmann <arnd@arndb.de>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191110221413.22321-1-colin.king@canonical.com>
-From:   Vladimir Zapolskiy <vz@mleia.com>
-Message-ID: <0e5105e3-768e-c8eb-dd73-d097bb7edfb2@mleia.com>
-Date:   Mon, 11 Nov 2019 00:53:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Sun, 10 Nov 2019 18:44:11 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:42774 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbfKJXoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 18:44:11 -0500
+Received: by mail-io1-f70.google.com with SMTP id w1so12130485ioj.9
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 15:44:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=mQkvXa5UwiKwX7Ee0D6VQirlDEkappHc40K5MNYp5sw=;
+        b=h/jw/5GKqEeO53lLpaW+JnaBBuoI6n3cQaK91UEty2eaO4ou3JUwvknEb8YDYsS1Ct
+         eMhmN59qEwj8EjnTwF66PhCkU4F7G9RR5r3n6yUJYNePjErC4UKcSwfS9k5hZsUUNBI2
+         3wdeQ0c+AdO5Ep2oLWhaTNzWLkaBedeIbNtPJBIGFXWiwxz95yPN3IukSEXQyrO6QrG+
+         C2NwxVHPQ5rhMA5d7gqUV8QECpNWAWbDqPIhTBUBsBLSF15/dGdCZowA6KMb116DHOR7
+         JDgYrqf9Ro27wwr0RyPjejjYApDg5WglOzok/JOp7MTxvg9lw7zgT5LRnch9cdGuFqqP
+         sVyQ==
+X-Gm-Message-State: APjAAAU5InAgfB7j0pdJlhc/0JzmPH3CEm0cwO5tcunjXwir6DZQHldD
+        G54VCrps4lgMv+sIg/tjCzNFe8RbKAkVPNhhIegSW38C9Bsq
+X-Google-Smtp-Source: APXvYqx+BIbdaoKD4C5K1UbHnHG7i9QU2I0+3Tx0qR+dwRWdkXXNrj26PIqIbQtxxe2lNzBe3N3ROx6uptaSdt0deXIMz/je2yJe
 MIME-Version: 1.0
-In-Reply-To: <20191110221413.22321-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20191110_225323_591453_2C3ACE0D 
-X-CRM114-Status: UNSURE (   7.74  )
-X-CRM114-Notice: Please train this message. 
+X-Received: by 2002:a92:1dc6:: with SMTP id g67mr25717512ile.182.1573429450098;
+ Sun, 10 Nov 2019 15:44:10 -0800 (PST)
+Date:   Sun, 10 Nov 2019 15:44:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000073d3a70597069799@google.com>
+Subject: general protection fault in ext4_writepages
+From:   syzbot <syzbot+9567fda428fba259deba@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, riteshh@linux.ibm.com,
+        syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/11/2019 12:14 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The pointer ep is currently being dereferenced when initializing pointer
-> udc before ep is being null checked.  Fix this by only dereferencing
-> ep after it has been null checked.
-> 
-> Addresses-Coverity: ("Dereference before null check")
-> Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Hello,
 
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+syzbot found the following crash on:
 
---
-Best wishes,
-Vladimir
+HEAD commit:    dcd34bd2 Add linux-next specific files for 20191106
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a0a4fce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
+dashboard link: https://syzkaller.appspot.com/bug?extid=9567fda428fba259deba
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1645c42ce00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1108a23ae00000
+
+The bug was bisected to:
+
+commit c8cc88163f40df39e50cda63ac361631864b453e
+Author: Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Wed Oct 16 07:37:10 2019 +0000
+
+     ext4: Add support for blocksize < pagesize in dioread_nolock
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1044c6b4e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1244c6b4e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1444c6b4e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9567fda428fba259deba@syzkaller.appspotmail.com
+Fixes: c8cc88163f40 ("ext4: Add support for blocksize < pagesize in  
+dioread_nolock")
+
+RDX: 0000000000000000 RSI: 0000000100000003 RDI: 0000000000000003
+RBP: 0000000000000004 R08: 0000000000000001 R09: 00007fffd7a50033
+R10: 0000000028120001 R11: 0000000000000246 R12: 0000000000401ef0
+R13: 0000000000401f80 R14: 0000000000000000 R15: 0000000000000000
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8639 Comm: syz-executor031 Not tainted 5.4.0-rc6-next-20191106  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:mpage_map_and_submit_extent fs/ext4/inode.c:2557 [inline]
+RIP: 0010:ext4_writepages+0x17b4/0x2e80 fs/ext4/inode.c:2911
+Code: ff ff e8 1f cf b0 ff 48 8b 85 30 fe ff ff 48 8b 8d 00 fe ff ff 48 8d  
+78 10 48 89 fa 48 c1 ea 03 0f b6 89 c2 00 00 00 48 d3 e3 <42> 80 3c 2a 00  
+0f 85 03 16 00 00 48 89 58 10 48 c7 c0 08 ad c4 89
+RSP: 0018:ffff88808bf77890 EFLAGS: 00010206
+RAX: fffffffffffffff4 RBX: 00000000007ff000 RCX: 000000000000000c
+RDX: 0000000000000000 RSI: ffffffff820534cd RDI: 0000000000000004
+RBP: ffff88808bf77ac0 R08: 0000000000000000 R09: ffffed1015d06b7d
+R10: ffffed1015d06b7c R11: ffff8880ae835be3 R12: 0000000000000000
+R13: dffffc0000000000 R14: 00000000000007ff R15: ffff888086499488
+FS:  0000000001162880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000009366b000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  ? 0xffffffff81000000
+  do_writepages+0xfa/0x2a0 mm/page-writeback.c:2344
+  __filemap_fdatawrite_range+0x2bc/0x3b0 mm/filemap.c:421
+  filemap_write_and_wait_range mm/filemap.c:681 [inline]
+  filemap_write_and_wait_range+0xfc/0x1d0 mm/filemap.c:675
+  ext4_punch_hole+0x27d/0x1320 fs/ext4/inode.c:4314
+  ext4_fallocate+0x419/0x2470 fs/ext4/extents.c:4889
+  vfs_fallocate+0x4aa/0xa50 fs/open.c:309
+  ksys_fallocate+0x58/0xa0 fs/open.c:332
+  __do_sys_fallocate fs/open.c:340 [inline]
+  __se_sys_fallocate fs/open.c:338 [inline]
+  __x64_sys_fallocate+0x97/0xf0 fs/open.c:338
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440609
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffd7a50c58 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
+RAX: ffffffffffffffda RBX: 00007fffd7a50c60 RCX: 0000000000440609
+RDX: 0000000000000000 RSI: 0000000100000003 RDI: 0000000000000003
+RBP: 0000000000000004 R08: 0000000000000001 R09: 00007fffd7a50033
+R10: 0000000028120001 R11: 0000000000000246 R12: 0000000000401ef0
+R13: 0000000000401f80 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 0ee46d2ea32148f5 ]---
+RIP: 0010:mpage_map_and_submit_extent fs/ext4/inode.c:2557 [inline]
+RIP: 0010:ext4_writepages+0x17b4/0x2e80 fs/ext4/inode.c:2911
+Code: ff ff e8 1f cf b0 ff 48 8b 85 30 fe ff ff 48 8b 8d 00 fe ff ff 48 8d  
+78 10 48 89 fa 48 c1 ea 03 0f b6 89 c2 00 00 00 48 d3 e3 <42> 80 3c 2a 00  
+0f 85 03 16 00 00 48 89 58 10 48 c7 c0 08 ad c4 89
+RSP: 0018:ffff88808bf77890 EFLAGS: 00010206
+RAX: fffffffffffffff4 RBX: 00000000007ff000 RCX: 000000000000000c
+RDX: 0000000000000000 RSI: ffffffff820534cd RDI: 0000000000000004
+RBP: ffff88808bf77ac0 R08: 0000000000000000 R09: ffffed1015d06b7d
+R10: ffffed1015d06b7c R11: ffff8880ae835be3 R12: 0000000000000000
+R13: dffffc0000000000 R14: 00000000000007ff R15: ffff888086499488
+FS:  0000000001162880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000009366b000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
