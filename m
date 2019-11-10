@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED6BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37863C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F0D21655
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B89E215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355748;
-	bh=SXNKvy0fhdk/59LQap0bFKFWEbNXfleA9TbgtbVruJo=;
+	s=default; t=1573355759;
+	bh=6rLXOOpyhENEwIWRMZg72JBdXNe4tH+Hrc/ZYftRZBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cB2lrlpBePYrhj0o3ibfqTACwkAcQljJjpFdE2ai52aIfYiKe8x2RvEdpfRQAKOZS
-	 hfcTCD/2GlRP2vEnXl8fZELG5ov+jEeNN1NuNPG/+ILwHk0UR7xQ1NNCqKVxJcVoAZ
-	 xNHZdTRFU33XFwyyX0nVQI7KL8Ac01gv5HMjGUyo=
+	b=YXkNdeiHP+9+k3sS2znTVosV8O2FiGwTsp/ek3IK02LQDPUgtmjoDIElKCTs+KUYh
+	 QpcHJctpbLyCLo138CQRaf+PKAK3jx9oxqY1tuD3D1fxNq637flyeTrcR9/4rvxDb1
+	 cg4bTL7Hj/dbGKKk5OfeYAw5Xjz1QvsoIRyCrX+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfKJClX (ORCPT
+        id S1728055AbfKJDP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34370 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:15:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfKJCkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:51 -0500
+        id S1727302AbfKJClN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2409321019;
-        Sun, 10 Nov 2019 02:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E907821850;
+        Sun, 10 Nov 2019 02:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353650;
-        bh=SXNKvy0fhdk/59LQap0bFKFWEbNXfleA9TbgtbVruJo=;
+        s=default; t=1573353672;
+        bh=6rLXOOpyhENEwIWRMZg72JBdXNe4tH+Hrc/ZYftRZBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUgvQYh+fuRLDOri81VJlLlITr8Ko/e1d5ZKURvdnBHMuXmOn7RvmNbj0Hu8+6z98
-         uw7EmyknBukMbHmZdJuqng9pMphRqAXplgUOLnaaLZPnZ/RCIu66vKU6/td88FDv2S
-         2/tSRyoW14r3C6+4xh7yT7cYUD0ZziPviZ8rjhqg=
+        b=dyQecCYNxowagmHGSDkEKKm5wLO5zKsLbOsrwoa/W/kZ3DdChFH4f3fqiKtW8XGlO
+         y+Gn0F14abKhdyGyUiBh5EzhEzYUOQBSEjy/FF6rgICqWAaCv4FWN1XHlXJYOJ2D6z
+         AFVbGT7ct2MiE6E6bHU7IuZfqCXoI967PuHZMrtE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Breno Leitao <leitao@debian.org>,
-        Gustavo Romero <gromero@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 027/191] selftests/powerpc: Do not fail with reschedule
-Date:   Sat,  9 Nov 2019 21:37:29 -0500
-Message-Id: <20191110024013.29782-27-sashal@kernel.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 038/191] power: supply: twl4030_charger: disable eoc interrupt on linear charge
+Date:   Sat,  9 Nov 2019 21:37:40 -0500
+Message-Id: <20191110024013.29782-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,81 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Breno Leitao <leitao@debian.org>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 44d947eff19d64384efc06069509db7a0a1103b0 ]
+[ Upstream commit 079cdff3d0a09c5da10ae1be35def7a116776328 ]
 
-There are cases where the test is not expecting to have the transaction
-aborted, but, the test process might have been rescheduled, either in the
-OS level or by KVM (if it is running on a KVM guest machine). The process
-reschedule will cause a treclaim/recheckpoint which will cause the
-transaction to doom, aborting the transaction as soon as the process is
-rescheduled back to the CPU. This might cause the test to fail, but this is
-not a failure in essence.
+This avoids getting woken up from suspend after power interruptions
+when the bci wrongly thinks the battery is full just because
+of input current going low because of low input power
 
-If that is the case, TEXASR[FC] is indicated with either
-TM_CAUSE_RESCHEDULE or TM_CAUSE_KVM_RESCHEDULE for KVM interruptions.
-
-In this scenario, ignore these two failures and avoid the whole test to
-return failure.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Gustavo Romero <gromero@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/tm/tm-unavailable.c | 9 ++++++---
- tools/testing/selftests/powerpc/tm/tm.h             | 9 +++++++++
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/power/supply/twl4030_charger.c | 27 +++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/tm/tm-unavailable.c b/tools/testing/selftests/powerpc/tm/tm-unavailable.c
-index 156c8e750259b..09894f4ff62e6 100644
---- a/tools/testing/selftests/powerpc/tm/tm-unavailable.c
-+++ b/tools/testing/selftests/powerpc/tm/tm-unavailable.c
-@@ -236,7 +236,8 @@ void *tm_una_ping(void *input)
- 	}
- 
- 	/* Check if we were not expecting a failure and a it occurred. */
--	if (!expecting_failure() && is_failure(cr_)) {
-+	if (!expecting_failure() && is_failure(cr_) &&
-+	    !failure_is_reschedule()) {
- 		printf("\n\tUnexpected transaction failure 0x%02lx\n\t",
- 			failure_code());
- 		return (void *) -1;
-@@ -244,9 +245,11 @@ void *tm_una_ping(void *input)
- 
- 	/*
- 	 * Check if TM failed due to the cause we were expecting. 0xda is a
--	 * TM_CAUSE_FAC_UNAV cause, otherwise it's an unexpected cause.
-+	 * TM_CAUSE_FAC_UNAV cause, otherwise it's an unexpected cause, unless
-+	 * it was caused by a reschedule.
- 	 */
--	if (is_failure(cr_) && !failure_is_unavailable()) {
-+	if (is_failure(cr_) && !failure_is_unavailable() &&
-+	    !failure_is_reschedule()) {
- 		printf("\n\tUnexpected failure cause 0x%02lx\n\t",
- 			failure_code());
- 		return (void *) -1;
-diff --git a/tools/testing/selftests/powerpc/tm/tm.h b/tools/testing/selftests/powerpc/tm/tm.h
-index df4204247d45c..5518b1d4ef8b2 100644
---- a/tools/testing/selftests/powerpc/tm/tm.h
-+++ b/tools/testing/selftests/powerpc/tm/tm.h
-@@ -52,6 +52,15 @@ static inline bool failure_is_unavailable(void)
- 	return (failure_code() & TM_CAUSE_FAC_UNAV) == TM_CAUSE_FAC_UNAV;
- }
- 
-+static inline bool failure_is_reschedule(void)
-+{
-+	if ((failure_code() & TM_CAUSE_RESCHED) == TM_CAUSE_RESCHED ||
-+	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED)
-+		return true;
-+
-+	return false;
-+}
-+
- static inline bool failure_is_nesting(void)
+diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
+index adcaa0a10a6f4..0e202d4273fb6 100644
+--- a/drivers/power/supply/twl4030_charger.c
++++ b/drivers/power/supply/twl4030_charger.c
+@@ -440,6 +440,7 @@ static void twl4030_current_worker(struct work_struct *data)
+ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
  {
- 	return (__builtin_get_texasru() & 0x400000);
+ 	int ret;
++	u32 reg;
+ 
+ 	if (bci->usb_mode == CHARGE_OFF)
+ 		enable = false;
+@@ -453,14 +454,38 @@ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
+ 			bci->usb_enabled = 1;
+ 		}
+ 
+-		if (bci->usb_mode == CHARGE_AUTO)
++		if (bci->usb_mode == CHARGE_AUTO) {
++			/* Enable interrupts now. */
++			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_ICHGEOC |
++					TWL4030_TBATOR2 | TWL4030_TBATOR1 |
++					TWL4030_BATSTS);
++			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
++				       TWL4030_INTERRUPTS_BCIIMR1A);
++			if (ret < 0) {
++				dev_err(bci->dev,
++					"failed to unmask interrupts: %d\n",
++					ret);
++				return ret;
++			}
+ 			/* forcing the field BCIAUTOUSB (BOOT_BCI[1]) to 1 */
+ 			ret = twl4030_clear_set_boot_bci(0, TWL4030_BCIAUTOUSB);
++		}
+ 
+ 		/* forcing USBFASTMCHG(BCIMFSTS4[2]) to 1 */
+ 		ret = twl4030_clear_set(TWL_MODULE_MAIN_CHARGE, 0,
+ 			TWL4030_USBFASTMCHG, TWL4030_BCIMFSTS4);
+ 		if (bci->usb_mode == CHARGE_LINEAR) {
++			/* Enable interrupts now. */
++			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_TBATOR2 |
++					TWL4030_TBATOR1 | TWL4030_BATSTS);
++			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
++				       TWL4030_INTERRUPTS_BCIIMR1A);
++			if (ret < 0) {
++				dev_err(bci->dev,
++					"failed to unmask interrupts: %d\n",
++					ret);
++				return ret;
++			}
+ 			twl4030_clear_set_boot_bci(TWL4030_BCIAUTOAC|TWL4030_CVENAC, 0);
+ 			/* Watch dog key: WOVF acknowledge */
+ 			ret = twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE, 0x33,
 -- 
 2.20.1
 
