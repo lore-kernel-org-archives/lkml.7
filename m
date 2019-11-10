@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C09C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C475C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1AD208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1461208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355163;
-	bh=srycieWXSGszwVJ8ASQMK8t1Lxk8Er2ie0ADMyYiDBU=;
+	s=default; t=1573355168;
+	bh=QJJHtwudMUdjrvEkEKhASbB4r4PZp0YPBCLBKA/Tqo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qnTHQIgMktexd3Z86to8qT9rpPCXdiGLndat8h0rFgUo5TmpBNPpkYzI/I3/3pOXQ
-	 6J+MNoZVzh6hQnrYaiXoq39NMaPhb8L/i4Zuuy/CQIUh27LSBtby+0b/28JcnF14bH
-	 V15teDFMf+XLMekKaMZ8CuBHkPEKhxeYCXk9pvlA=
+	b=pEInXQcYUASOme173sS9TEQj37bjRTvJzouwckeA356hCSvFHVKjnAPVqmjgR/QL+
+	 +B9ChWSnU2GZHT7MyktR6648ymqNEEf7kI3AtROjLGFwBIFCHfcmvSMuXmjxttCUE6
+	 RPLE50kCZmLx2iamujKqIMKs9pvg5N4OHnNYwww8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfKJCqM (ORCPT
+        id S1728590AbfKJDGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:46:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47982 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:06:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728913AbfKJCpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:47 -0500
+        id S1728991AbfKJCqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A752D21850;
-        Sun, 10 Nov 2019 02:45:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA66421D7E;
+        Sun, 10 Nov 2019 02:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353946;
-        bh=srycieWXSGszwVJ8ASQMK8t1Lxk8Er2ie0ADMyYiDBU=;
+        s=default; t=1573353970;
+        bh=QJJHtwudMUdjrvEkEKhASbB4r4PZp0YPBCLBKA/Tqo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sG5rDt7uJYHMnS+fkf34ybJdZdjo8Ml+IMX9Il5bk/D0bRE3tf53w77b1EGnYljwB
-         JgapFapLnTBKSHL8uRVnCGXF/0+UKIQzNjYhFr56hD4QimSZLxi5ej6GucXRYhb15E
-         tqJP0aCvTntj4ngv6QiaE1Ctod38eqPXDDd5mTDE=
+        b=puR0aN+pi2uSbGjwqCNps7QOa5QiIpBf62SGglhOVDDQx+b3CXx7QFOYSK3gUOSno
+         X2hUGztopCbNUn5b39YlRbehBtZL+BP9g0qms85OvIzAc2GtsgqQvfYChocwi1x8x3
+         XbOUCovcUsyTz3lHYQwFqqJ9tPudkue7//mnIAug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 004/109] serial: samsung: Enable baud clock for UART reset procedure in resume
-Date:   Sat,  9 Nov 2019 21:43:56 -0500
-Message-Id: <20191110024541.31567-4-sashal@kernel.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 018/109] power: supply: twl4030_charger: disable eoc interrupt on linear charge
+Date:   Sat,  9 Nov 2019 21:44:10 -0500
+Message-Id: <20191110024541.31567-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,50 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 1ff3652bc7111df26b5807037f624be294cf69d5 ]
+[ Upstream commit 079cdff3d0a09c5da10ae1be35def7a116776328 ]
 
-Ensure that the baud clock is also enabled for UART register writes in
-driver resume. On Exynos5433 SoC this is needed to avoid external abort
-issue.
+This avoids getting woken up from suspend after power interruptions
+when the bci wrongly thinks the battery is full just because
+of input current going low because of low input power
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/samsung.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/power/supply/twl4030_charger.c | 27 +++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-index f4b8e4e17a868..808373d4e37a6 100644
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -1922,7 +1922,11 @@ static int s3c24xx_serial_resume(struct device *dev)
+diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
+index d3cba954bab54..b20491016b1e4 100644
+--- a/drivers/power/supply/twl4030_charger.c
++++ b/drivers/power/supply/twl4030_charger.c
+@@ -440,6 +440,7 @@ static void twl4030_current_worker(struct work_struct *data)
+ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
+ {
+ 	int ret;
++	u32 reg;
  
- 	if (port) {
- 		clk_prepare_enable(ourport->clk);
-+		if (!IS_ERR(ourport->baudclk))
-+			clk_prepare_enable(ourport->baudclk);
- 		s3c24xx_serial_resetport(port, s3c24xx_port_to_cfg(port));
-+		if (!IS_ERR(ourport->baudclk))
-+			clk_disable_unprepare(ourport->baudclk);
- 		clk_disable_unprepare(ourport->clk);
- 
- 		uart_resume_port(&s3c24xx_uart_drv, port);
-@@ -1945,7 +1949,11 @@ static int s3c24xx_serial_resume_noirq(struct device *dev)
- 			if (rx_enabled(port))
- 				uintm &= ~S3C64XX_UINTM_RXD_MSK;
- 			clk_prepare_enable(ourport->clk);
-+			if (!IS_ERR(ourport->baudclk))
-+				clk_prepare_enable(ourport->baudclk);
- 			wr_regl(port, S3C64XX_UINTM, uintm);
-+			if (!IS_ERR(ourport->baudclk))
-+				clk_disable_unprepare(ourport->baudclk);
- 			clk_disable_unprepare(ourport->clk);
+ 	if (bci->usb_mode == CHARGE_OFF)
+ 		enable = false;
+@@ -453,14 +454,38 @@ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
+ 			bci->usb_enabled = 1;
  		}
- 	}
+ 
+-		if (bci->usb_mode == CHARGE_AUTO)
++		if (bci->usb_mode == CHARGE_AUTO) {
++			/* Enable interrupts now. */
++			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_ICHGEOC |
++					TWL4030_TBATOR2 | TWL4030_TBATOR1 |
++					TWL4030_BATSTS);
++			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
++				       TWL4030_INTERRUPTS_BCIIMR1A);
++			if (ret < 0) {
++				dev_err(bci->dev,
++					"failed to unmask interrupts: %d\n",
++					ret);
++				return ret;
++			}
+ 			/* forcing the field BCIAUTOUSB (BOOT_BCI[1]) to 1 */
+ 			ret = twl4030_clear_set_boot_bci(0, TWL4030_BCIAUTOUSB);
++		}
+ 
+ 		/* forcing USBFASTMCHG(BCIMFSTS4[2]) to 1 */
+ 		ret = twl4030_clear_set(TWL_MODULE_MAIN_CHARGE, 0,
+ 			TWL4030_USBFASTMCHG, TWL4030_BCIMFSTS4);
+ 		if (bci->usb_mode == CHARGE_LINEAR) {
++			/* Enable interrupts now. */
++			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_TBATOR2 |
++					TWL4030_TBATOR1 | TWL4030_BATSTS);
++			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
++				       TWL4030_INTERRUPTS_BCIIMR1A);
++			if (ret < 0) {
++				dev_err(bci->dev,
++					"failed to unmask interrupts: %d\n",
++					ret);
++				return ret;
++			}
+ 			twl4030_clear_set_boot_bci(TWL4030_BCIAUTOAC|TWL4030_CVENAC, 0);
+ 			/* Watch dog key: WOVF acknowledge */
+ 			ret = twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE, 0x33,
 -- 
 2.20.1
 
