@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EF0C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D02AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E103222C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD83C21850
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353694;
-	bh=tXpvznd+oBOZN2eCbwim3PFiLXJbR9UB2tAzNx1l3vY=;
+	s=default; t=1573353698;
+	bh=JAbrtaSL+QK41Axroq+rf9albIjpZv9Etw0phcmZYG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HB8XeqUPn/AnZUFlShRIqfkXy8owjktFnrheWVz60HndfqfsC2mRg9t5fmVm90pSS
-	 FrvglOAMu03h143Qs1LMJ4Kl+7syf0w02MsjHV+Unfdr2W8BqgUEg0rlYTN9B5ZpHt
-	 LDMu7l5tuLgd1pCMoOJHrTbsD6xDEyEQSktLzLCg=
+	b=KaY27foeDN0x+ZCNYN0rvoUxKTRDsmAzW2D000joyJPMg39DjjnCUBlx1YYRtVVUG
+	 YD79njyEYazeL90u6mTogOsC2VrmnxX6LxfXmFetM2+hT2JAFok9TaCEH+gTrmSa6o
+	 DkMbzqTjrymktbgUdQ24meI7lTgMiNTm0cCE1tqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfKJClc (ORCPT
+        id S1727514AbfKJClh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35150 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfKJClL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:11 -0500
+        id S1727344AbfKJClU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8262E21019;
-        Sun, 10 Nov 2019 02:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 708DD214E0;
+        Sun, 10 Nov 2019 02:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353670;
-        bh=tXpvznd+oBOZN2eCbwim3PFiLXJbR9UB2tAzNx1l3vY=;
+        s=default; t=1573353679;
+        bh=JAbrtaSL+QK41Axroq+rf9albIjpZv9Etw0phcmZYG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DndFncJe+wcKkYO5SVNKHXJTqDGpf1JX7gTBOf0zZ6gATDmSgsMnVvxEhQ5dHvPCM
-         4x/RkdE1MpZq8UGrGYPAP2cFg4G/WA0FaiF12fGwdZQEnFCQZcjOeebCQZy23oEykq
-         gYwuuNsGXJPLa42lrskjU4ZQPVellkGRaaLgNcv8=
+        b=MDd03eYJ6ETMTDZaGSOdHijULjJf1R7U5kuD7/dCRewrFHIar9ftklsJu3/YJSCkj
+         EifKxuLIWvDNL/JhUaT8fa/3ZwibOGDXhe2ToqnrX+fuqkr/UbqEqRs8DQfcJH9ho3
+         9jDH4foOZOw8KcSQyI7tIl5CaEVKGTA8EzzaTX28=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 036/191] libfdt: Ensure INT_MAX is defined in libfdt_env.h
-Date:   Sat,  9 Nov 2019 21:37:38 -0500
-Message-Id: <20191110024013.29782-36-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 040/191] net: marvell: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:37:42 -0500
+Message-Id: <20191110024013.29782-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -63,66 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
+[ Upstream commit f03508ce3f9650148262c176e0178413e16c902b ]
 
-The next update of libfdt has a new dependency on INT_MAX. Update the
-instances of libfdt_env.h in the kernel to either include the necessary
-header with the definition or define it locally.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/libfdt_env.h | 2 ++
- arch/powerpc/boot/libfdt_env.h        | 2 ++
- include/linux/libfdt_env.h            | 1 +
- 3 files changed, 5 insertions(+)
+ drivers/net/ethernet/marvell/mvneta.c           | 2 +-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 +-
+ drivers/net/ethernet/marvell/pxa168_eth.c       | 3 ++-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-index 07437816e0986..b36c0289a308e 100644
---- a/arch/arm/boot/compressed/libfdt_env.h
-+++ b/arch/arm/boot/compressed/libfdt_env.h
-@@ -6,6 +6,8 @@
- #include <linux/string.h>
- #include <asm/byteorder.h>
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 28762314353f9..4313bbb2396f4 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -2394,7 +2394,7 @@ static int mvneta_tx_frag_process(struct mvneta_port *pp, struct sk_buff *skb,
+ }
  
-+#define INT_MAX			((int)(~0U>>1))
-+
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
- typedef __be64 fdt64_t;
-diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-index 2a0c8b1bf1479..2abc8e83b95e9 100644
---- a/arch/powerpc/boot/libfdt_env.h
-+++ b/arch/powerpc/boot/libfdt_env.h
-@@ -5,6 +5,8 @@
- #include <types.h>
- #include <string.h>
+ /* Main tx processing */
+-static int mvneta_tx(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t mvneta_tx(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct mvneta_port *pp = netdev_priv(dev);
+ 	u16 txq_id = skb_get_queue_mapping(skb);
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 29f1260535325..1cc0e8fda4d5e 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -2901,7 +2901,7 @@ static int mvpp2_tx_tso(struct sk_buff *skb, struct net_device *dev,
+ }
  
-+#define INT_MAX			((int)(~0U>>1))
-+
- #include "of.h"
+ /* Main tx processing */
+-static int mvpp2_tx(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t mvpp2_tx(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct mvpp2_port *port = netdev_priv(dev);
+ 	struct mvpp2_tx_queue *txq, *aggr_txq;
+diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
+index 3a9730612a704..ff2fea0f8b751 100644
+--- a/drivers/net/ethernet/marvell/pxa168_eth.c
++++ b/drivers/net/ethernet/marvell/pxa168_eth.c
+@@ -1260,7 +1260,8 @@ static int pxa168_rx_poll(struct napi_struct *napi, int budget)
+ 	return work_done;
+ }
  
- typedef unsigned long uintptr_t;
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-index c6ac1fe7ec68a..edb0f0c309044 100644
---- a/include/linux/libfdt_env.h
-+++ b/include/linux/libfdt_env.h
-@@ -2,6 +2,7 @@
- #ifndef LIBFDT_ENV_H
- #define LIBFDT_ENV_H
- 
-+#include <linux/kernel.h>	/* For INT_MAX */
- #include <linux/string.h>
- 
- #include <asm/byteorder.h>
+-static int pxa168_eth_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++pxa168_eth_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct pxa168_eth_private *pep = netdev_priv(dev);
+ 	struct net_device_stats *stats = &dev->stats;
 -- 
 2.20.1
 
