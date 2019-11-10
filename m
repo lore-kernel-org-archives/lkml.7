@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCECC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C0FC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C18B206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E704206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354306;
-	bh=mktJUJG+D5qRijgSuyvrIPcvNzAZZljrj2EAqWnisME=;
+	s=default; t=1573354311;
+	bh=p1cyHIedRQqK6U9Lz5uiDfkPk+kHGylhTLzoBO+cBgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LocIxiVvFU8CFsrUcMsWLVNW/vGc+VPva4+4+wlB0rbxfrVWImuyYYaojvkVcf8kC
-	 445y/ORhqZa6c8TD1J0KWxJKw5646H53PoU3XsRQpm4c1EjcZkcK/zp+TPmjdO5lS1
-	 SQ2ubIcDVOAq+PPs9kW5KdfX/JdMz+d++rFnY6u0=
+	b=Rp+CplNg5dsh6ly+X/gPQwzCu6zshxhKkJ76ss/MCuuQhk0D5ylonSfFT96tAD27P
+	 MKPuWdHG0wwopl7weZiRKF6h9BD8W7m84Osn1X+tBjZvCUJ3JH+A8nyrHmPQHjSnZ/
+	 Ddde1l6He4lJfWK57fxb4+6bCp+W0+jBacFFSqJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbfKJCvp (ORCPT
+        id S1730069AbfKJCvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36002 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbfKJCvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:51:25 -0500
+        id S1728581AbfKJCvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:51:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A32DF225AD;
-        Sun, 10 Nov 2019 02:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AC6122581;
+        Sun, 10 Nov 2019 02:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354285;
-        bh=mktJUJG+D5qRijgSuyvrIPcvNzAZZljrj2EAqWnisME=;
+        s=default; t=1573354295;
+        bh=p1cyHIedRQqK6U9Lz5uiDfkPk+kHGylhTLzoBO+cBgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pe9JaCpcEZ3lnSG3QTongRXiLW0m+SeLzdEjUqm4ZoXZt8mZD5jq/WbnSu95JVrjc
-         3O+VXmnalzAzUnSEksQAU3YoWNIA+wCFE4ywOz9NbhqVGYokA4h9p6c0xuCvVM52Ww
-         dYCgC/0YRICxYM75kGckvQ2hNdtR9WCkdp/2MfdE=
+        b=Bn/K96davCmdA1uDWMI3kpBaOUWWAAXbepsZzItBNcQMX3CWyecOG7iU9NKLdid0M
+         JJsaTN2YMN2Y8SXxd7ooM2ke5AY639PCWwUQeffRaCUsnaq9vYJ0sTna8o6uw3qe/D
+         5IGw3hyLAvLeDkvkfLmKDfSNFH7KEtX0deZ08tpw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Pepper <joel.pepper@rwth-aachen.de>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 27/40] usb: gadget: uvc: configfs: Prevent format changes after linking header
-Date:   Sat,  9 Nov 2019 21:50:19 -0500
-Message-Id: <20191110025032.827-27-sashal@kernel.org>
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 34/40] ARM: dts: tegra30: fix xcvr-setup-use-fuses
+Date:   Sat,  9 Nov 2019 21:50:26 -0500
+Message-Id: <20191110025032.827-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
@@ -60,44 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Pepper <joel.pepper@rwth-aachen.de>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit cb2200f7af8341aaf0c6abd7ba37e4c667c41639 ]
+[ Upstream commit 564706f65cda3de52b09e51feb423a43940fe661 ]
 
-While checks are in place to avoid attributes and children of a format
-being manipulated after the format is linked into the streaming header,
-the linked flag was never actually set, invalidating the protections.
-Update the flag as appropriate in the header link calls.
+There was a dot instead of a comma. Fix this.
 
-Signed-off-by: Joel Pepper <joel.pepper@rwth-aachen.de>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_configfs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/tegra30.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
-index 74df80a25b469..a49ff1f5c0f93 100644
---- a/drivers/usb/gadget/function/uvc_configfs.c
-+++ b/drivers/usb/gadget/function/uvc_configfs.c
-@@ -807,6 +807,7 @@ static int uvcg_streaming_header_allow_link(struct config_item *src,
- 	format_ptr->fmt = target_fmt;
- 	list_add_tail(&format_ptr->entry, &src_hdr->formats);
- 	++src_hdr->num_fmt;
-+	++target_fmt->linked;
- 
- out:
- 	mutex_unlock(&opts->lock);
-@@ -845,6 +846,8 @@ static int uvcg_streaming_header_drop_link(struct config_item *src,
- 			break;
- 		}
- 
-+	--target_fmt->linked;
-+
- out:
- 	mutex_unlock(&opts->lock);
- 	mutex_unlock(su_mutex);
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index 313e260529a31..e8f5a55c4b954 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -823,7 +823,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <1>;
+ 		nvidia,xcvr-lsrslew = <1>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -860,7 +860,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -896,7 +896,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
 -- 
 2.20.1
 
