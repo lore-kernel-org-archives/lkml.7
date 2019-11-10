@@ -2,96 +2,159 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2144C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74A1C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758F62075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD85206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VLhVfkZs"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="qysljIsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfKJWJe (ORCPT
+        id S1726692AbfKJWM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 17:09:34 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59077 "EHLO ozlabs.org"
+        Sun, 10 Nov 2019 17:12:28 -0500
+Received: from cmta18.telus.net ([209.171.16.91]:41637 "EHLO cmta18.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfKJWJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 17:09:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47B7TR20Kgz9sPc;
-        Mon, 11 Nov 2019 09:09:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573423771;
-        bh=Cv6z+i429pmCjXeqpUNY4ZeWKmN6N+qlc45P2WoyOWU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VLhVfkZs7Eff6ZEjFo/mHKqqIh5Zbc/VwQyJWYdkMQsVLo1NktLrJyf+8PGuh3/nj
-         q86z9Xn34RQEJ6ooFM0LPJcY37QU5ltrI1x03YJjpYrQJfL/+XDXFpF7SB9uOD13sL
-         XAvdFDzrA80PX3e5ZNZx74zn7SPQWQOIIc3HUSfDRGqlc43324rY6IVqO5tWWxWdQQ
-         cDfPx1Ky5SqgPwwAGtg+1Y4uDPuaVdcq8GulL3Io9DajonmCQ8HK0MEB3GS7kiqmYb
-         5rZue05VzG1Knu8vgojz6lWoKT92FCDalik5bQGfyNJD9VrMvMLOWaSRnj+Xjf8B5U
-         Vr3reKF5dvKMA==
-Date:   Mon, 11 Nov 2019 09:09:17 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the vfs-fixes tree
-Message-ID: <20191111090917.0203cb82@canb.auug.org.au>
+        id S1726610AbfKJWM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 17:12:27 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id TvRWirqe6gu2QTvRXi1s2y; Sun, 10 Nov 2019 15:12:26 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1573423946; bh=IrRWFJPtSY5HkxRVhwzCCdZhBAFSSPGzUo2j4mUPGsI=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=qysljIsdmzUuSAgbxrVP75GtZM6kacP8nwrLnvDzybpdY6rpoeo+62xcfZWeH26CK
+         YBcIdjr7KO7MwkksOeOikAxtF00/Dmsvv+7jpdGyzwgUAkeHprxuI4k+RmBpmC0dEt
+         U2hcYJhKDHGSZXdMdoc+nlVhDYW65DUjn0gFS8dQVxoGh3jTuRNQ+MGco5aoClerg2
+         SyBtpe8PASDYgc8cwYoB0/RGRhmrDyA0kK08BNq+M+ST9gS+lF+wbCwRAN3v227ovf
+         yYiQ8cGfOq1dQ9HOR4O1qrAqWtengvCdocVB2e0MVn0XRFWLnE+7OnWHYNLbYLr5vT
+         xvt+2tUWFgghA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=QIcWuTDL c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=FGbulvE0AAAA:8 a=aatUQebYAAAA:8 a=fMCjhIpa8ESE6kpPSzQA:9
+ a=CjuIK1q_8ugA:10 a=svzTaB3SJmTkU8mK-ULk:22 a=7715FyvI7WU-l6oqrZBK:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <10494959.bKODIZ00nm@kreacher> <000a01d59656$99798710$cc6c9530$@net> <CAJZ5v0gZDJ2=PiiGw2mcCcVKBM2OyM1G9nRvJ+iWLFUQcXqZuw@mail.gmail.com> <6163696.37NBKbymtj@kreacher> <000b01d597f2$06403a50$12c0aef0$@net>
+In-Reply-To: <000b01d597f2$06403a50$12c0aef0$@net>
+Subject: RE: [PATCH v2] cpuidle: Use nanoseconds as the unit of time
+Date:   Sun, 10 Nov 2019 14:12:20 -0800
+Message-ID: <002301d59813$ee18c920$ca4a5b60$@net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kJsyl2GzuYj7XNgOOmgIbP.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdWX66lAJM+ky/tcQb2CPZRo9UbwKwABGLggAANCZjA=
+X-CMAE-Envelope: MS4wfOj3gSvmO4SETXWeUa2DWHF24GPWtkFUi+fSgvv0SMd3WPRbh/sK9lzWimKyv8SxMUTqhBaqusQoM7BDxrrZmX0DBfdxP5c5rkZEDHX7w0gx0ajT+QO2
+ IaDI+3N47SiNiVGBo4lWB6P6qAv9dqUuo9HC1W8VjvZzcnbZUbHhWVVlW1iJk9/aHOKpyOCHrtqybF13xuLN0qMwqLTUnSMdrCrYu2LEIp5MPUI7kwB6Zjig
+ wYGtcqvkeevxCVReGEt4qTGoHQszuZ93cb3Et02itCRkr5vd/Qpx8bkENWi0xVqOzU5pbN2ghgjqk/qegzvXz/woJh8F3bjX5bL9qEu8Gx8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kJsyl2GzuYj7XNgOOmgIbP.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019.11.10 10:10 Doug Smythies wrote:
+> On 2019.11.10 09:24 Rafael J. Wysocki wrote:
+>> On Sunday, November 10, 2019 5:48:21 PM CET Rafael J. Wysocki wrote:
+>>
+>> I have found a bug, which should be addressed by the patch below.
+>>
+>> If it still doesn't reduce the discrepancy, we'll need to look further.
+>>
+>> ---
+>> drivers/cpuidle/governors/menu.c |    4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> Index: linux-pm/drivers/cpuidle/governors/menu.c
+>> ===================================================================
+>> --- linux-pm.orig/drivers/cpuidle/governors/menu.c
+>> +++ linux-pm/drivers/cpuidle/governors/menu.c
+>> @@ -516,8 +516,8 @@ static void menu_update(struct cpuidle_d
+>> 	new_factor -= new_factor / DECAY;
+>> 
+>> 	if (data->next_timer_ns > 0 && measured_ns < MAX_INTERESTING)
+>> -		new_factor += RESOLUTION * div64_u64(measured_ns,
+>> -						     data->next_timer_ns);
+>> +		new_factor += div64_u64(RESOLUTION * measured_ns,
+>> +					data->next_timer_ns);
+>> 	else
+>> 		/*
+>> 		 * we were idle so long that we count it as a perfect
+>
+> Yes, that was the exact bit of code I focused on yesterday.
+> However, my attempt to fix was different, and made no difference,
+> with the new graph being exactly on top of the old bad one.
+> I had defined new_factor as u64 and RESOLUTION as ULL.
 
-Hi all,
+Your patch does fix the problem.
+I now also understand why my attempt did not.
 
-In commit
+New data added to previous graphs. For those that don't
+want to go to the graphs, the nanosecond menu graphs are now
+almost identical to the microsecond based one.
 
-  bcf0d9d4b769 ("ecryptfs: fix unlink and rmdir in face of underlying fs mo=
-difications")
+http://www.smythies.com/~doug/linux/idle/nano-second-conversion/sweep/index.html
 
-Fixes tag
+Legend:
+teo-base : linux-next 2019.11.07
+menu-base: linux-next 2019.11.07
+teo-v2   : linux-next 2019.11.07 + cpuidle: Consolidate disabled state checks + this v2
+menu-v2  : linux-next 2019.11.07 + cpuidle: Consolidate disabled state checks + this v2
+rjw1     : menu-v2 + above patch.
 
-  Fixes: 74dd7c97ea2 "ecryptfs_rename(): verify that lower dentries are sti=
-ll OK after lock_rename()"
+Acked-by and tested-by Doug Smythies <dsmythies@telus.net>
 
-has these problem(s):
+Disclaimer: Only teo and menu, not ladder or haltpoll governors.
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
+Additional suggestions:
 
---=20
-Cheers,
-Stephen Rothwell
+Header comments:
 
---Sig_/kJsyl2GzuYj7XNgOOmgIbP.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> microseconds provided by drivers.  In addition to that, change
+> cpuidle_governor_latency_req() to return the idle state exit
+> latency constraint in nanoseconds.
 
------BEGIN PGP SIGNATURE-----
+Suggest:
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3Iio0ACgkQAVBC80lX
-0GyAIQf+ODtJOklQGHdIbk2I33vNr9uuYoT+GNpqjJlI1yTi+EgeZiRf71e+AJt6
-ik0dnr6gdjPBAPo2u8CQVYncJgxHHre748zWvwj8xNlnYUhu/nfSDNUI/MRAhM6Q
-SxWh27Cs/ixpucWioJRO67lM4J8xoBIdb3pMgoXcoFTFznMT5ZzReglexhT+EGZr
-AMihw4YQPtcaTaiUPx35aDcXWSM8kmfXhOG3lyZGLtv8015KsYzbobIqvwihwpB9
-3/q85fq5nSZN0uwM4o5u4B89IPz7BlWdaM6cFDfwsjG8POM3PeWzXM5MjJ6PbBY2
-Oi4ONw2ARk4sjsXjadqjd6Evx6oFGw==
-=gbwi
------END PGP SIGNATURE-----
+microseconds provided by drivers.  Additionally, change
+cpuidle_governor_latency_req() to return the idle state exit
+latency constraint in nanoseconds.
 
---Sig_/kJsyl2GzuYj7XNgOOmgIbP.--
+> With that, meeasure idle state residency (last_residency_ns in
+             ^^^^^^^^
+Suggest:
+
+Also measure idle state residency (last_residency_ns in
+
+Code:
+Suggest deletion of this note:
+
+/*
+ * Please note when changing the tuning values:
+ * If (MAX_INTERESTING-1) * RESOLUTION > UINT_MAX, the result of
+ * a scaling operation multiplication may overflow on 32 bit platforms.
+ * In that case, #define RESOLUTION as ULL to get 64 bit result:
+ * #define RESOLUTION 1024ULL
+ *
+ * The default values do not overflow.
+ */
+
+Because you have managed the extra bit requirements as part of the patch.
+
+... Doug
+
+
