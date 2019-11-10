@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9A6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9C0C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5591E22583
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E3B225AD
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354164;
-	bh=aWofwJeWpxwS6+qAbmbHw1x1nW7QtzDT+V0bVeTLywY=;
+	s=default; t=1573354170;
+	bh=hdjgwnbCXaX75t0UDxSR3kAVZIU9Y421d0mh+DbJK0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UREjMYrA6JUooO7uyj+ljRa65sfR5xd5oWx1PKPChWwRea5jw8nd1c16fs1TOXAc2
-	 b5LlpjK3Gownqx1fR8SsK1TG7W97Pw/9tG9Vvz8/z3xNwDGTctLntOHzUwHUHk6/+t
-	 9E4T4F8byYtz81aYh8XM3HG9D9mmR6ukUNXtES24=
+	b=xVwTLAwJFMua0zQPPq92E5+LACV7dfTWJya//gsBsq0R93n8uv0bv0aTXdyxObXVq
+	 WpNA2kLmqjcbkN/4vcZiQ0TJufizEbyZGJSNuEacAdBE8s/GHlvp9+QIZ4P6CLR007
+	 1c0BWp+FgjcLwvB922z72Qx8dFe7tr4nCcNrX+ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfKJCtX (ORCPT
+        id S1729453AbfKJCt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:49:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57588 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:49:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbfKJCtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:05 -0500
+        id S1728520AbfKJCtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D35A22582;
-        Sun, 10 Nov 2019 02:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D2D6225AD;
+        Sun, 10 Nov 2019 02:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354145;
-        bh=aWofwJeWpxwS6+qAbmbHw1x1nW7QtzDT+V0bVeTLywY=;
+        s=default; t=1573354158;
+        bh=hdjgwnbCXaX75t0UDxSR3kAVZIU9Y421d0mh+DbJK0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2QIYHfwY4PfhzIRR5XCD8uH6lMdwBR/0i9q7uuqA68OQQDqJoTWDgCuaUsL3eqD7
-         wV9CNQ5hYV81cITtbLgAelkfovVA1Rk3EkJnEWvw5dNYyscGJBbSV6rKost2zW5ocF
-         FdDh1cCKbiAdjgTAT1hqaRKMHX6bnHX17UcKpBSc=
+        b=GLkvVpWxcHSuIfpPspY/JzQfQRr/z8U/wEgci0ehaOdIjcyqCpRdnIabsujTNyjXE
+         y8F6Oq8lucfv4iIqB83G0Jpv4gZ6/xcWcCPpc1Hz3y5IGwLV1Pnr0UAorWzP9MYsy+
+         yfj7e22BIcXWXvaR7O/GVHyAbqfE2RmSpbDWkokk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 11/66] net: toshiba: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:47:50 -0500
-Message-Id: <20191110024846.32598-11-sashal@kernel.org>
+Cc:     Nicolas Adell <nicolas.adell@actia.fr>,
+        Peter Chen <peter.chen@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/66] usb: chipidea: imx: enable OTG overcurrent in case USB subsystem is already started
+Date:   Sat,  9 Nov 2019 21:47:54 -0500
+Message-Id: <20191110024846.32598-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -60,96 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Nicolas Adell <nicolas.adell@actia.fr>
 
-[ Upstream commit bacade822524e02f662d88f784d2ae821a5546fb ]
+[ Upstream commit 1dedbdf2bbb1ede8d96f35f9845ecae179dc1988 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+When initializing the USB subsystem before starting the kernel,
+OTG overcurrent detection is disabled. In case the OTG polarity of
+overcurrent is low active, the overcurrent detection is never enabled
+again and events cannot be reported as expected. Because imx usb
+overcurrent polarity is low active by default, only detection needs
+to be enable in usbmisc init function.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicolas Adell <nicolas.adell@actia.fr>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/toshiba/ps3_gelic_net.c | 4 ++--
- drivers/net/ethernet/toshiba/ps3_gelic_net.h | 2 +-
- drivers/net/ethernet/toshiba/spider_net.c    | 4 ++--
- drivers/net/ethernet/toshiba/tc35815.c       | 6 ++++--
- 4 files changed, 9 insertions(+), 7 deletions(-)
+ drivers/usb/chipidea/usbmisc_imx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.c b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-index 272f2b1cb7add..34f8437955310 100644
---- a/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-+++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-@@ -845,9 +845,9 @@ static int gelic_card_kick_txdma(struct gelic_card *card,
-  * @skb: packet to send out
-  * @netdev: interface device structure
-  *
-- * returns 0 on success, <0 on failure
-+ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
-  */
--int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
-+netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	struct gelic_card *card = netdev_card(netdev);
- 	struct gelic_descr *descr;
-diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.h b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-index 8505196be9f52..d123644bd720b 100644
---- a/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-+++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-@@ -370,7 +370,7 @@ void gelic_card_up(struct gelic_card *card);
- void gelic_card_down(struct gelic_card *card);
- int gelic_net_open(struct net_device *netdev);
- int gelic_net_stop(struct net_device *netdev);
--int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
-+netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
- void gelic_net_set_multi(struct net_device *netdev);
- void gelic_net_tx_timeout(struct net_device *netdev);
- int gelic_net_change_mtu(struct net_device *netdev, int new_mtu);
-diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-index 36a6e8b54d941..1085987946212 100644
---- a/drivers/net/ethernet/toshiba/spider_net.c
-+++ b/drivers/net/ethernet/toshiba/spider_net.c
-@@ -880,9 +880,9 @@ spider_net_kick_tx_dma(struct spider_net_card *card)
-  * @skb: packet to send out
-  * @netdev: interface device structure
-  *
-- * returns 0 on success, !0 on failure
-+ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
-  */
--static int
-+static netdev_tx_t
- spider_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	int cnt;
-diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
-index 47ebac456ae57..9b84ee736fdc1 100644
---- a/drivers/net/ethernet/toshiba/tc35815.c
-+++ b/drivers/net/ethernet/toshiba/tc35815.c
-@@ -474,7 +474,8 @@ static void free_rxbuf_skb(struct pci_dev *hwdev, struct sk_buff *skb, dma_addr_
- /* Index to functions, as function prototypes. */
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+index 20d02a5e418d9..c6577f489d0f6 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -273,6 +273,8 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
+ 	} else if (data->oc_polarity == 1) {
+ 		/* High active */
+ 		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
++	} else {
++		reg &= ~(MX6_BM_OVER_CUR_DIS);
+ 	}
+ 	writel(reg, usbmisc->base + data->index * 4);
  
- static int	tc35815_open(struct net_device *dev);
--static int	tc35815_send_packet(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t	tc35815_send_packet(struct sk_buff *skb,
-+					    struct net_device *dev);
- static irqreturn_t	tc35815_interrupt(int irq, void *dev_id);
- static int	tc35815_rx(struct net_device *dev, int limit);
- static int	tc35815_poll(struct napi_struct *napi, int budget);
-@@ -1249,7 +1250,8 @@ tc35815_open(struct net_device *dev)
-  * invariant will hold if you make sure that the netif_*_queue()
-  * calls are done at the proper times.
-  */
--static int tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct tc35815_local *lp = netdev_priv(dev);
- 	struct TxFD *txfd;
 -- 
 2.20.1
 
