@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B0DC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5126BC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551F521D82
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2576E21655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353925;
-	bh=yN32PYfjsyUrcNe1jxL8v16H/2fHGlbsjA34/dPKFko=;
+	s=default; t=1573353928;
+	bh=YUdWJefQqbJCfgysInUFfykhGjVrzLCnQMM6zBJYnkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VIXPpIn05K8RMvVoNoeP+SA7SYCXW6SiEKfXVBUv0/096OSICk/oGcjHo94Bd7lIM
-	 Z9nsix1N/qKOMHsI+zaZDIrv37+z8Zt3bpx/6gVPBzLr+/U1TcFjq1d+UCC4K9fYW5
-	 44YTmpn+YrpfkqRTFlq0WRTl3oq8F6jsjt5hkhAg=
+	b=GPiGIxzPmmBqRScdifWr9L7z8MERDEyYt9i1e1t5DzO5I5Vr5TuggA4vEYFdHsXlN
+	 JNZWX1nPpMqcwBolB4YqLmG3l9/t8YbYXDmAnywg+1iyu60Un4fbcyPsZDmSdQA0Rk
+	 E1NR74sdqBK+SyuXRtJVXBE5v2Tuhmz5ZtMihf5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfKJCpX (ORCPT
+        id S1728821AbfKJCp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44840 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727668AbfKJCou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:50 -0500
+        id S1728656AbfKJCos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D4421655;
-        Sun, 10 Nov 2019 02:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7ACF215EA;
+        Sun, 10 Nov 2019 02:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353889;
-        bh=yN32PYfjsyUrcNe1jxL8v16H/2fHGlbsjA34/dPKFko=;
+        s=default; t=1573353887;
+        bh=YUdWJefQqbJCfgysInUFfykhGjVrzLCnQMM6zBJYnkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2kEZbDvG2YsQ8CZNygGSJ5hIZ48/g7dQKZ+a+KBcIcQQT+kAsyXcL9cpeoJMrcro
-         kn4IPu8u6IWfOUrUgt1NK5pp6OvVZITW7vomqSSwBDj2A0b97Fiqr6+kpxx3U7b96V
-         L/GVqwupyx7+92cknUxTqVm6auZfGMMttc12d6vU=
+        b=Vxhm1GP9BfqhIBPvV1WvFlw0B4k5wW2RadfUv2SIIKmBmUCwKMQERhAqdbTpuI4k1
+         0xHgC3Ik8FKG/jkNBaWjJ6k9MG0lXXetLjz2m5XZY+Clmqylgld5A/6aKveu0lRLpK
+         w6GDzp7Qu+99AP2acQoZrZ4UILbWzYpBOokHikAA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
+Cc:     Erel Geron <erelx.geron@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 162/191] iwlwifi: pcie: read correct prph address for newer devices
-Date:   Sat,  9 Nov 2019 21:39:44 -0500
-Message-Id: <20191110024013.29782-162-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 161/191] iwlwifi: fix non_shared_ant for 22000 devices
+Date:   Sat,  9 Nov 2019 21:39:43 -0500
+Message-Id: <20191110024013.29782-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,58 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Erel Geron <erelx.geron@intel.com>
 
-[ Upstream commit 84fb372c892e231e9a2ffdaa5c2df52d94aa536c ]
+[ Upstream commit a40287727d9b737e183959fd31a4e0c55f312853 ]
 
-For newer devices we have higher range of periphery
-addresses. Currently it is masked out, so we end up
-reading another address.
+The non-shared antenna was wrong for 22000 device series.
+Fix it to ANT_B for correct antenna preference by coex in MVM driver.
 
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: e34d975e40ff ("iwlwifi: Add a000 HW family support")
+Signed-off-by: Erel Geron <erelx.geron@intel.com>
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/cfg/22000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 7d319b6863feb..954f932e9c88e 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -1830,18 +1830,30 @@ static u32 iwl_trans_pcie_read32(struct iwl_trans *trans, u32 ofs)
- 	return readl(IWL_TRANS_GET_PCIE_TRANS(trans)->hw_base + ofs);
- }
- 
-+static u32 iwl_trans_pcie_prph_msk(struct iwl_trans *trans)
-+{
-+	if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_22560)
-+		return 0x00FFFFFF;
-+	else
-+		return 0x000FFFFF;
-+}
-+
- static u32 iwl_trans_pcie_read_prph(struct iwl_trans *trans, u32 reg)
- {
-+	u32 mask = iwl_trans_pcie_prph_msk(trans);
-+
- 	iwl_trans_pcie_write32(trans, HBUS_TARG_PRPH_RADDR,
--			       ((reg & 0x000FFFFF) | (3 << 24)));
-+			       ((reg & mask) | (3 << 24)));
- 	return iwl_trans_pcie_read32(trans, HBUS_TARG_PRPH_RDAT);
- }
- 
- static void iwl_trans_pcie_write_prph(struct iwl_trans *trans, u32 addr,
- 				      u32 val)
- {
-+	u32 mask = iwl_trans_pcie_prph_msk(trans);
-+
- 	iwl_trans_pcie_write32(trans, HBUS_TARG_PRPH_WADDR,
--			       ((addr & 0x000FFFFF) | (3 << 24)));
-+			       ((addr & mask) | (3 << 24)));
- 	iwl_trans_pcie_write32(trans, HBUS_TARG_PRPH_WDAT, val);
- }
- 
+diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+index b4347806a59ed..a0de61aa0feff 100644
+--- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
++++ b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+@@ -143,7 +143,7 @@ static const struct iwl_ht_params iwl_22000_ht_params = {
+ 	.ucode_api_min = IWL_22000_UCODE_API_MIN,			\
+ 	.led_mode = IWL_LED_RF_STATE,					\
+ 	.nvm_hw_section_num = NVM_HW_SECTION_NUM_FAMILY_22000,		\
+-	.non_shared_ant = ANT_A,					\
++	.non_shared_ant = ANT_B,					\
+ 	.dccm_offset = IWL_22000_DCCM_OFFSET,				\
+ 	.dccm_len = IWL_22000_DCCM_LEN,					\
+ 	.dccm2_offset = IWL_22000_DCCM2_OFFSET,				\
 -- 
 2.20.1
 
