@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F83C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1624C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2990C21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E33214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354653;
-	bh=kTWHcQgmOh92E8ZW7W0vJ+QVMthQ0RSoHstpcaD/z3M=;
+	s=default; t=1573354656;
+	bh=XnRIcdZVlp6No/mC06k2e6r9GyXH2JlTE8agqW0ry2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UT9qqcF5vXYwH31E3zJjmaxKy5k65KiCgPIqCViPGjY0H0YlyBzugKGsAIsSiyjjz
-	 Fr7ID5A9txmZTmTeoAJJg6eXF768y/+J6jpVCYCjTxJHgexrxyVhchoaRo+ZyxTn6b
-	 0UymEsuKrndz4Rc5S2Hx80HTzEqwdkt272YEM32Q=
+	b=QPr4kEEAYiUmzyuOluQ2CSsf95CKn08CofF8HpRshKdsXszIzWzlFXmIMTk8W+dh9
+	 hLxP/zIeuycGq0pFbVI0Ioocg2bq6vMpXJ4OWTVaCme8XzXo3SySOqo0rd2iiAqKqf
+	 i3fp6u5oAMiQMfY8Ol2mvCvimunDsc22tUT2kCls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfKJC4s (ORCPT
+        id S1729067AbfKJC5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:56:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:57:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728932AbfKJC4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:56:45 -0500
+        id S1729439AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A22222085B;
-        Sun, 10 Nov 2019 02:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B42224A1;
+        Sun, 10 Nov 2019 02:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354046;
-        bh=kTWHcQgmOh92E8ZW7W0vJ+QVMthQ0RSoHstpcaD/z3M=;
+        s=default; t=1573354089;
+        bh=XnRIcdZVlp6No/mC06k2e6r9GyXH2JlTE8agqW0ry2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKNe0NPTUrTBnn3MaVEVmGsAxC7dKAu+wD3VkwR1+tNfdRDW2AQ6aIFcoS0IdqVz0
-         tMl3v12mo+OKlfNY+ftWNiRb/LnG1us/m7XihRxBYcc2tGRYZYytZ+H1jde0jVOucL
-         Gd/QpOgJg88CFuD7kWwAhRKDa6kv9XALX7az5W2c=
+        b=IpKpujuGz23sL4v2yY4XKsg/TLIWLb8uBEn65eT82kAm5UP1/SajJK2xTPXHxbIBr
+         SEvIUgdZdlb9dbZ/rheejE5aJzbqfnAtIYtw9+Gcc/QJZmdncZlmw0KxQLRnA9KArd
+         ZI71tupIo8I3UOtmDGfPGbdSdhvXdD6IzkKBjs9c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 057/109] phy: brcm-sata: allow PHY_BRCM_SATA driver to be built for DSL SoCs
-Date:   Sat,  9 Nov 2019 21:44:49 -0500
-Message-Id: <20191110024541.31567-57-sashal@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
+        Olaf Aepfle <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Marcelo Cerri <marcelo.cerri@canonical.com>,
+        Josh Poulson <jopoulso@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 085/109] x86/hyperv: Suppress "PCI: Fatal: No config space access function found"
+Date:   Sat,  9 Nov 2019 21:45:17 -0500
+Message-Id: <20191110024541.31567-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -59,35 +71,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 26728df4b254ae06247726a9a6e64823e39ac504 ]
+[ Upstream commit 2f285f46240d67060061d153786740d4df53cd78 ]
 
-Broadcom ARM-based DSL SoCs (BCM63xx product line) have the same
-Broadcom SATA PHY that other SoCs are using, make it possible to select
-that driver on these platforms.
+A Generation-2 Linux VM on Hyper-V doesn't have the legacy PCI bus, and
+users always see the scary warning, which is actually harmless.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Suppress it.
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: KY Srinivasan <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>
+Cc: Olaf Aepfle <olaf@aepfle.de>
+Cc: Andy Whitcroft <apw@canonical.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Marcelo Cerri <marcelo.cerri@canonical.com>
+Cc: Josh Poulson <jopoulso@microsoft.com>
+Link: https://lkml.kernel.org/r/ <KU1P153MB0166D977DC930996C4BF538ABF1D0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/broadcom/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
-index 64fc59c3ae6d9..181b8fde2bfe6 100644
---- a/drivers/phy/broadcom/Kconfig
-+++ b/drivers/phy/broadcom/Kconfig
-@@ -60,7 +60,8 @@ config PHY_NS2_USB_DRD
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 2e9d58cc371e6..2653b7b25d176 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -17,6 +17,7 @@
+  *
+  */
  
- config PHY_BRCM_SATA
- 	tristate "Broadcom SATA PHY driver"
--	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || \
-+		   ARCH_BCM_63XX || COMPILE_TEST
- 	depends on OF
- 	select GENERIC_PHY
- 	default ARCH_BCM_IPROC
++#include <linux/efi.h>
+ #include <linux/types.h>
+ #include <asm/hypervisor.h>
+ #include <asm/hyperv.h>
+@@ -101,6 +102,22 @@ static int hv_cpu_init(unsigned int cpu)
+ 	return 0;
+ }
+ 
++static int __init hv_pci_init(void)
++{
++	int gen2vm = efi_enabled(EFI_BOOT);
++
++	/*
++	 * For Generation-2 VM, we exit from pci_arch_init() by returning 0.
++	 * The purpose is to suppress the harmless warning:
++	 * "PCI: Fatal: No config space access function found"
++	 */
++	if (gen2vm)
++		return 0;
++
++	/* For Generation-1 VM, we'll proceed in pci_arch_init().  */
++	return 1;
++}
++
+ /*
+  * This function is to be invoked early in the boot sequence after the
+  * hypervisor has been detected.
+@@ -154,6 +171,8 @@ void hyperv_init(void)
+ 
+ 	hyper_alloc_mmu();
+ 
++	x86_init.pci.arch_init = hv_pci_init;
++
+ 	/*
+ 	 * Register Hyper-V specific clocksource.
+ 	 */
 -- 
 2.20.1
 
