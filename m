@@ -2,52 +2,51 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6EBC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFABAC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04A221924
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC93E21924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355646;
-	bh=fMAtgmI930Z8gUhddQonnfxS9dGC3YaYHi8d80VubaY=;
+	s=default; t=1573355649;
+	bh=WcxXUNBUSv0CfufluOGxMfubxgccM0aLRAa4a4l2zR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQ1DcEcuJpiZ7n+cvgErzm17b2ifyklOIjvhpTN2XBMKHwUfHqyDl3DREYzSNxmwb
-	 YThml2z51ss2L+USwmt81HeXt38CnDXPKim24kTzOtXcwQo2405bu6O/NADxmtioO6
-	 AHtFJ7TnqLl7AvsRheSHnKNywCtmZK53GVT50H3A=
+	b=Ie5YDWzA9wj9VCQIkmgE7hVhEm5wmJIgaFvWCf9siv3eej3l5zR9CsLVQcmKax7E/
+	 mBi815HqzI3SZS1Mjov/MSvqCW/UcQUMA4VVHUQUqQ5fcf3iIHZu1M+G3S3BSwm8gG
+	 xsdNhwjr4u9j4onX8Iym6L5KbZHzTGD9yNWkdos0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbfKJDOF (ORCPT
+        id S1727904AbfKJCmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:14:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbfKJCme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:34 -0500
+        id S1727864AbfKJCm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECAE221850;
-        Sun, 10 Nov 2019 02:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C57F21924;
+        Sun, 10 Nov 2019 02:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353753;
-        bh=fMAtgmI930Z8gUhddQonnfxS9dGC3YaYHi8d80VubaY=;
+        s=default; t=1573353748;
+        bh=WcxXUNBUSv0CfufluOGxMfubxgccM0aLRAa4a4l2zR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iT7uIdoTUGWNNerBq14UUNWZjckRdPz5m8LnLNF3WkAbvYf9GHE/PTlF5Xln8s8oG
-         SJlq309R9UKfjxOg8AuCC0wA0cBaDTxV9Ximg6WxAdqCG+TELgfwnivKzqIyrnn86j
-         JB/hiVKahe+IYpWIA8ZPUet/jo6jmDTJx+eB8mWo=
+        b=AvB5/bTFEJ3NIita8ZjU2u9T9mu2E9GbSjLsePvGDk1+gxxTG8DNHUoGkvz5mrYep
+         9EgskcdnVWjU75doBiIX4IMvcvxh2ouMzWJjyyJxPyMjdQEX5ZWCD3I9JzNUBysyqw
+         FXuprZF4kizDI5fXKp6VN/kcEahlU8W1337u8mOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 069/191] spi: pic32: Use proper enum in dmaengine_prep_slave_rg
-Date:   Sat,  9 Nov 2019 21:38:11 -0500
-Message-Id: <20191110024013.29782-69-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>, Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 064/191] f2fs: avoid infinite loop in f2fs_alloc_nid
+Date:   Sat,  9 Nov 2019 21:38:06 -0500
+Message-Id: <20191110024013.29782-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,57 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 8cfde7847d5ed0bb77bace41519572963e43cd17 ]
+[ Upstream commit f84262b0862d43b71b3e80a036cdd9d82e620367 ]
 
-Clang warns when one enumerated type is converted implicitly to another:
+If we have an error in f2fs_build_free_nids, we're able to fall into a loop
+to find free nids.
 
-drivers/spi/spi-pic32.c:323:8: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-                                          DMA_FROM_DEVICE,
-                                          ^~~~~~~~~~~~~~~
-drivers/spi/spi-pic32.c:333:8: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-                                          DMA_TO_DEVICE,
-                                          ^~~~~~~~~~~~~
-2 warnings generated.
-
-Use the proper enums from dma_transfer_direction (DMA_FROM_DEVICE =
-DMA_DEV_TO_MEM = 2, DMA_TO_DEVICE = DMA_MEM_TO_DEV = 1) to satify Clang.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/159
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Chao Yu <chao@kernel.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pic32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/node.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-pic32.c b/drivers/spi/spi-pic32.c
-index f8a45af1fa9f2..288002f6c613e 100644
---- a/drivers/spi/spi-pic32.c
-+++ b/drivers/spi/spi-pic32.c
-@@ -320,7 +320,7 @@ static int pic32_spi_dma_transfer(struct pic32_spi *pic32s,
- 	desc_rx = dmaengine_prep_slave_sg(master->dma_rx,
- 					  xfer->rx_sg.sgl,
- 					  xfer->rx_sg.nents,
--					  DMA_FROM_DEVICE,
-+					  DMA_DEV_TO_MEM,
- 					  DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc_rx) {
- 		ret = -EINVAL;
-@@ -330,7 +330,7 @@ static int pic32_spi_dma_transfer(struct pic32_spi *pic32s,
- 	desc_tx = dmaengine_prep_slave_sg(master->dma_tx,
- 					  xfer->tx_sg.sgl,
- 					  xfer->tx_sg.nents,
--					  DMA_TO_DEVICE,
-+					  DMA_MEM_TO_DEV,
- 					  DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc_tx) {
- 		ret = -EINVAL;
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index aa8f19e1bdb3d..e5d474681471c 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2367,8 +2367,9 @@ bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid)
+ 	spin_unlock(&nm_i->nid_list_lock);
+ 
+ 	/* Let's scan nat pages and its caches to get free nids */
+-	f2fs_build_free_nids(sbi, true, false);
+-	goto retry;
++	if (!f2fs_build_free_nids(sbi, true, false))
++		goto retry;
++	return false;
+ }
+ 
+ /*
 -- 
 2.20.1
 
