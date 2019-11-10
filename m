@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A4FC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4697DC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966EB215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8F421850
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355356;
-	bh=yJKOytNiRp6mynj2eZgoh5EtBSLaCklidigKKkpoB9k=;
+	s=default; t=1573355362;
+	bh=wOI/QU4y8qLszeihRbu28akQEhXLJhHGcVOEfMMH57o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvqAHU9+7aCYHNP2LmiXwz3ORCa/Vi/HdM8Ts7fHsAPpRjk7qAhIXUbqvrPPYZRcS
-	 NUkYeXEiqwTG3szr149mIPdv7z3rhQwWtiRaUqFfx84xPioohdEd3ku15ouqudveo3
-	 D0CbmEJ88vqXBmOn+1Zb5+v8TRLjQJ/tui4OKjqY=
+	b=AsJdFxjHGD38j0Sbj+oOBaW4JtuA5pLi64iW4IZ+7M95IWkV2CRGHUWpcP/pgw0bJ
+	 Lnq+yOclwhwpXiDlN2E7Sjv9nDV53UrwuetVgjmvfCPjwQKeM7T9c1vIs8QGwTHJQi
+	 5UK4O8lk5v6ttA4WoLCfIPnaaMuGfe2nx2KKq44s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbfKJDJO (ORCPT
+        id S1728615AbfKJCoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:09:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbfKJCol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:41 -0500
+        id S1728495AbfKJCoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80CC4215EA;
-        Sun, 10 Nov 2019 02:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2326F21655;
+        Sun, 10 Nov 2019 02:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353880;
-        bh=yJKOytNiRp6mynj2eZgoh5EtBSLaCklidigKKkpoB9k=;
+        s=default; t=1573353853;
+        bh=wOI/QU4y8qLszeihRbu28akQEhXLJhHGcVOEfMMH57o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cf+tH+gv2nFWIFeQ2gkfxethrtLgzwf3NP+10AzIJqiKY1xH4DR17JR9pV5nwNOVo
-         yVF+ITGCeyYnZNU5O7KOF2plGwR6f6pdknFlEH2cAdBugWeC0rsDZ18vus1snUHTQ/
-         hEowB1HChVgGm7XxHQE4TcjU7oEoeAMpzvgjLo34=
+        b=fLXqx1SqkC+mZKRDTpOyWXggLTmJ2GFEOy9ksbe/mJPqx0F6M0DAxRm/QzwGkLkEb
+         WguJFMWAyztco2x/w/wU32+EuCe0Y5OvdSj81on/e40CQ3cfcLsULfE9v/364PYiuy
+         jl8HElC4qdInaenxG7QCK98/NZO8Gu0JUCDflBkw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Manszewski <c.manszewski@samsung.com>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 157/191] crypto: s5p-sss: Fix race in error handling
-Date:   Sat,  9 Nov 2019 21:39:39 -0500
-Message-Id: <20191110024013.29782-157-sashal@kernel.org>
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 138/191] ARM: dts: tegra20: restore address order
+Date:   Sat,  9 Nov 2019 21:39:20 -0500
+Message-Id: <20191110024013.29782-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -62,85 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Manszewski <c.manszewski@samsung.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit 5842cd44786055231b233ed5ed98cdb63ffb7db3 ]
+[ Upstream commit 8188391c127ea34d66f37eda6755d0acb51dc600 ]
 
-Remove a race condition introduced by error path in functions:
-s5p_aes_interrupt and s5p_aes_crypt_start. Setting the busy field of
-struct s5p_aes_dev to false made it possible for s5p_tasklet_cb to
-change the req field, before s5p_aes_complete was called.
+Commit 6c468f109884 ("ARM: dts: tegra: add Tegra20 NAND flash
+controller node") introduced the nand-controller node. However, it got
+added at the wrong spot not honoring the address order. Fix this.
 
-Change the first parameter of s5p_aes_complete to struct
-ablkcipher_request. Before spin_unlock, make a copy of the currently
-handled request, to ensure s5p_aes_complete function call with the
-correct request.
-
-Signed-off-by: Christoph Manszewski <c.manszewski@samsung.com>
-Acked-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/s5p-sss.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/tegra20.dtsi | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-index faa282074e5aa..9021ad9df0c45 100644
---- a/drivers/crypto/s5p-sss.c
-+++ b/drivers/crypto/s5p-sss.c
-@@ -475,9 +475,9 @@ static void s5p_sg_done(struct s5p_aes_dev *dev)
- }
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 15b73bd377f04..80854f7de765c 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -419,19 +419,6 @@
+ 		status = "disabled";
+ 	};
  
- /* Calls the completion. Cannot be called with dev->lock hold. */
--static void s5p_aes_complete(struct s5p_aes_dev *dev, int err)
-+static void s5p_aes_complete(struct ablkcipher_request *req, int err)
- {
--	dev->req->base.complete(&dev->req->base, err);
-+	req->base.complete(&req->base, err);
- }
+-	gmi@70009000 {
+-		compatible = "nvidia,tegra20-gmi";
+-		reg = <0x70009000 0x1000>;
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges = <0 0 0xd0000000 0xfffffff>;
+-		clocks = <&tegra_car TEGRA20_CLK_NOR>;
+-		clock-names = "gmi";
+-		resets = <&tegra_car 42>;
+-		reset-names = "gmi";
+-		status = "disabled";
+-	};
+-
+ 	nand-controller@70008000 {
+ 		compatible = "nvidia,tegra20-nand";
+ 		reg = <0x70008000 0x100>;
+@@ -447,6 +434,19 @@
+ 		status = "disabled";
+ 	};
  
- static void s5p_unset_outdata(struct s5p_aes_dev *dev)
-@@ -655,6 +655,7 @@ static irqreturn_t s5p_aes_interrupt(int irq, void *dev_id)
- {
- 	struct platform_device *pdev = dev_id;
- 	struct s5p_aes_dev *dev = platform_get_drvdata(pdev);
-+	struct ablkcipher_request *req;
- 	int err_dma_tx = 0;
- 	int err_dma_rx = 0;
- 	int err_dma_hx = 0;
-@@ -727,7 +728,7 @@ static irqreturn_t s5p_aes_interrupt(int irq, void *dev_id)
- 
- 		spin_unlock_irqrestore(&dev->lock, flags);
- 
--		s5p_aes_complete(dev, 0);
-+		s5p_aes_complete(dev->req, 0);
- 		/* Device is still busy */
- 		tasklet_schedule(&dev->tasklet);
- 	} else {
-@@ -752,11 +753,12 @@ static irqreturn_t s5p_aes_interrupt(int irq, void *dev_id)
- error:
- 	s5p_sg_done(dev);
- 	dev->busy = false;
-+	req = dev->req;
- 	if (err_dma_hx == 1)
- 		s5p_set_dma_hashdata(dev, dev->hash_sg_iter);
- 
- 	spin_unlock_irqrestore(&dev->lock, flags);
--	s5p_aes_complete(dev, err);
-+	s5p_aes_complete(req, err);
- 
- hash_irq_end:
- 	/*
-@@ -1983,7 +1985,7 @@ static void s5p_aes_crypt_start(struct s5p_aes_dev *dev, unsigned long mode)
- 	s5p_sg_done(dev);
- 	dev->busy = false;
- 	spin_unlock_irqrestore(&dev->lock, flags);
--	s5p_aes_complete(dev, err);
-+	s5p_aes_complete(req, err);
- }
- 
- static void s5p_tasklet_cb(unsigned long data)
++	gmi@70009000 {
++		compatible = "nvidia,tegra20-gmi";
++		reg = <0x70009000 0x1000>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0 0 0xd0000000 0xfffffff>;
++		clocks = <&tegra_car TEGRA20_CLK_NOR>;
++		clock-names = "gmi";
++		resets = <&tegra_car 42>;
++		reset-names = "gmi";
++		status = "disabled";
++	};
++
+ 	pwm: pwm@7000a000 {
+ 		compatible = "nvidia,tegra20-pwm";
+ 		reg = <0x7000a000 0x100>;
 -- 
 2.20.1
 
