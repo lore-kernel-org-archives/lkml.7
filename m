@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD59DC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3309AC17444
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11A020818
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0349720818
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uaO3/rC0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="unsswc4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfKJVzl (ORCPT
+        id S1727296AbfKJVzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 16:55:41 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38830 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfKJVzk (ORCPT
+        Sun, 10 Nov 2019 16:55:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46017 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfKJVzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 16:55:40 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z19so11306567wmk.3
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 13:55:39 -0800 (PST)
+        Sun, 10 Nov 2019 16:55:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z10so7239164wrs.12
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 13:55:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2JxfIEcfcxkTnQ/bobYtLVeCuySIY9RZYQQJTed7N8c=;
-        b=uaO3/rC0vxx2c8bxKvu8vHWU5QU8Rh2Q+7am4NqYkMDDSSYNUr21EupkOXlWVFDzJC
-         IN3IWPORO4pHucXs39MoqM07+bijAJ6zhbm6sFOEWGUvQgTcndnsEHBD6pFINuiClV79
-         TliQUJtG00ArcgBV1D7sme+UBu4q5wl2MdbdOklojgVuSP/wvH5WJC01ksnBX2J8fYJh
-         pyIq5axjPEB/LpW3Tw8uAIeVeqhsJpFFaBy16ItGt0Cj+gihzD6QqF22fXhliiBiFqFv
-         aTc+MDV9sjDbQp+DDcqtBCfxOR7YYrBX9yyEo5Is01Rz3xbqUSCeId8V6JnbBsSBU+hP
-         xHvw==
+        bh=1CBPj0l9y0fENT8CQAZ8Sxb6xyW2IVfDyd8rFCJnCjc=;
+        b=unsswc4y+m+psOhrMNO1v3FEvI11RfVPV8h8uXqJirtnf6l7E+HYAAZKlchxeH5OHG
+         v5n5dIb/Vi8ThATAWp5ZG6djKq8AxIMI7IJFRwUNkqlVLug5qbE3g6L2jzEArDGp5+N7
+         /iby8totvBXDw68Aav7fDf1VWYjWE5X0uMoy3adQoyBYDMQvUYyr8ilkg2aEa1W0UR86
+         QgrsKZxB7mfhX4ldvr3ER0nwv68ZpqhZ/XYQYYiBV8FzxuyJi5UEwCde2SXFzEtmfJlY
+         Sv696HxKI/VcpJW7jiCAG0/0a1UIKKiFxvab9EcVBVIZsX0OGwExCA3DsZ26/IHStfob
+         oaag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2JxfIEcfcxkTnQ/bobYtLVeCuySIY9RZYQQJTed7N8c=;
-        b=f2dki6ZioCBgu9eqtOrl5v4riHjkun4vD9t3RZkYTNmXHRpFfskHghwe8ZBRA6lBzI
-         BPjuwPmNsmpVkxkNeQN0IqYp+XZLzALXMMo0syPDMaptQf8XNAcyZgpBuepq6XdjpYPs
-         FZJfilrmXFLvKhlShbr4J7zasfO36QfN+DG/PVZHq0U8TeGBzYNhiURlZxH7cHBh89E0
-         3jDxlXyOd7AEZGEbqXX9UQ9bvjaMtJlAtPYUnkmpAeN8vKc9s6u4ihqQntz7xSW282PU
-         3EAw83aS4v8dwcK9pV60GP9TjVmi4kbLPooCdA+RMa1/mCgKOcTDZ9MqOTZGqYTLm0vq
-         NMLw==
-X-Gm-Message-State: APjAAAWjRRzzMWxbZ1Xuy5Zrq8/ytufilkopINXtfaJv8cZTh742KmSn
-        H9KJKJRm4k1bT6KWm/fPF95+MZQhDcg=
-X-Google-Smtp-Source: APXvYqyZhEXV/U/P8+DjWlah2oQ2KiFiiQ/Rkr6DCDIggo/2jenuG7dW1iTu5nrPCHSDyNEecKaT7g==
-X-Received: by 2002:a1c:f415:: with SMTP id z21mr18061663wma.140.1573422937977;
-        Sun, 10 Nov 2019 13:55:37 -0800 (PST)
+        bh=1CBPj0l9y0fENT8CQAZ8Sxb6xyW2IVfDyd8rFCJnCjc=;
+        b=O1ZLH7IrKmB2vCPnbvnaFWMgBwiCnNhEUOnbihCc/wStwLEJXyane+pFQ5DgQEoOra
+         aMlP8jFdLEeA+E88G5pJdYttfcVRAviVDj6a1gMc9fZdEtZ9JDFh0lCTmrXcN18AI8c7
+         svMLTp5SdlbCSJVHsW8NUkvzIatwHqVJWYOUbtVI37VhvODuHE6UmBLrEVnBIOoo3Ixj
+         TH+7L3u2+SktDFCHAbuenmtKxzq9hw1oDOM6xQJ73GCnGeeUx9U1mC1OaAEqhZstgqLC
+         G7Ghl88/iEzc/Tae8df0ReVYZonU2AdyjIBpeeaFmBxPTLMBvP/y11SrVEDmB+fiOCKn
+         PUEA==
+X-Gm-Message-State: APjAAAWpTsOa4E2xCEdABJnSvrXn/JNOAkHZZBP+NUw4Dp0fJqf2QfAi
+        vtOZaTGPcUQzNJAkWJ4JdHEfJmKm0j4=
+X-Google-Smtp-Source: APXvYqz5xd65AN5s42jlSj1PI0iPPQm3THltyvoGThKLn8R1PvFxoH3s0hTEsiiWLZZT0iDTJDXYRg==
+X-Received: by 2002:adf:c50a:: with SMTP id q10mr19173282wrf.374.1573422940172;
+        Sun, 10 Nov 2019 13:55:40 -0800 (PST)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id d11sm14555824wrn.28.2019.11.10.13.55.36
+        by smtp.gmail.com with ESMTPSA id d11sm14555824wrn.28.2019.11.10.13.55.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Nov 2019 13:55:37 -0800 (PST)
+        Sun, 10 Nov 2019 13:55:39 -0800 (PST)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai
 Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 3/6] habanalabs: set ETR as non-secured
-Date:   Sun, 10 Nov 2019 23:55:30 +0200
-Message-Id: <20191110215533.754-3-oded.gabbay@gmail.com>
+Subject: [PATCH 5/6] habanalabs: don't print error when queues are full
+Date:   Sun, 10 Nov 2019 23:55:32 +0200
+Message-Id: <20191110215533.754-5-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191110215533.754-1-oded.gabbay@gmail.com>
 References: <20191110215533.754-1-oded.gabbay@gmail.com>
@@ -71,48 +71,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ETR should always be non-secured as it is used by the users to record
-profiling/trace data.
+If the queues are full and we return -EAGAIN to the user, there is no need
+to print an error, as that case isn't an error and the user is expected to
+re-submit the work.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya_coresight.c              | 4 +++-
- drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/command_submission.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya_coresight.c b/drivers/misc/habanalabs/goya/goya_coresight.c
-index 16bcd60b111f..c1ee6e2b5dff 100644
---- a/drivers/misc/habanalabs/goya/goya_coresight.c
-+++ b/drivers/misc/habanalabs/goya/goya_coresight.c
-@@ -8,6 +8,7 @@
- #include "goyaP.h"
- #include "include/goya/goya_coresight.h"
- #include "include/goya/asic_reg/goya_regs.h"
-+#include "include/goya/asic_reg/goya_masks.h"
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+index 776ddafc47fb..8850f475a413 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -626,9 +626,10 @@ static int _hl_cs_ioctl(struct hl_fpriv *hpriv, void __user *chunks,
  
- #include <uapi/misc/habanalabs.h>
+ 	rc = hl_hw_queue_schedule_cs(cs);
+ 	if (rc) {
+-		dev_err(hdev->dev,
+-			"Failed to submit CS %d.%llu to H/W queues, error %d\n",
+-			cs->ctx->asid, cs->sequence, rc);
++		if (rc != -EAGAIN)
++			dev_err(hdev->dev,
++				"Failed to submit CS %d.%llu to H/W queues, error %d\n",
++				cs->ctx->asid, cs->sequence, rc);
+ 		goto free_cs_object;
+ 	}
  
-@@ -425,7 +426,8 @@ static int goya_config_etr(struct hl_device *hdev,
- 		WREG32(mmPSOC_ETR_BUFWM, 0x3FFC);
- 		WREG32(mmPSOC_ETR_RSZ, input->buffer_size);
- 		WREG32(mmPSOC_ETR_MODE, input->sink_mode);
--		WREG32(mmPSOC_ETR_AXICTL, 0x700);
-+		WREG32(mmPSOC_ETR_AXICTL,
-+				0x700 | PSOC_ETR_AXICTL_PROTCTRLBIT1_SHIFT);
- 		WREG32(mmPSOC_ETR_DBALO,
- 				lower_32_bits(input->buffer_address));
- 		WREG32(mmPSOC_ETR_DBAHI,
-diff --git a/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h b/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h
-index 8618891d5afa..3c44ef3a23ed 100644
---- a/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h
-+++ b/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h
-@@ -260,4 +260,6 @@
- #define DMA_QM_3_GLBL_CFG1_DMA_STOP_SHIFT DMA_QM_0_GLBL_CFG1_DMA_STOP_SHIFT
- #define DMA_QM_4_GLBL_CFG1_DMA_STOP_SHIFT DMA_QM_0_GLBL_CFG1_DMA_STOP_SHIFT
- 
-+#define PSOC_ETR_AXICTL_PROTCTRLBIT1_SHIFT                           1
-+
- #endif /* ASIC_REG_GOYA_MASKS_H_ */
 -- 
 2.17.1
 
