@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E931BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43912C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8F0208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170412196E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355640;
-	bh=9vHTsqmnu+cuuI3EJ+XhZIbw+Rq+l0wS6KturhsKzNY=;
+	s=default; t=1573355642;
+	bh=WlfZxGvFtSLI+pDvBdYGRlWued5mo0mUhIgQQNCXeqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=POKQWldw0rOwDn8Lj/MLF48ynjYXx3Lotok3wyKzGLwofYHniqdkivA6M5OZ9TLwq
-	 bsLg9cCuzNFTQRP5pDZ1FmQgwhFIjzCOW/N0AEuVE+s6DA5b0ydzzuMwjF0ItVUqPg
-	 fo0FeOTTXQ4cnaxUuKYK9b+hI+Tne5nCDFaP1Clg=
+	b=IYa5BXAIwkAlCj0jUL0ka2on4jsI9ydjO6Voci5EVK78JbqHCXnV7EosKQ6Lfd1mr
+	 TplaWi4F5+t4ZdWa5OZMr9fNFNk6usqPbBeGGz4OLqo9rEO6G4upNXoWKO4v67B66E
+	 xtiwgP2CYrLqmx8b2UBwEVO3FD0C/yUiUJhCoNm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfKJDN7 (ORCPT
+        id S1727917AbfKJCmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:13:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38912 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbfKJCmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:38 -0500
+        id S1727870AbfKJCm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A2CA21850;
-        Sun, 10 Nov 2019 02:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEFF5214E0;
+        Sun, 10 Nov 2019 02:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353757;
-        bh=9vHTsqmnu+cuuI3EJ+XhZIbw+Rq+l0wS6KturhsKzNY=;
+        s=default; t=1573353749;
+        bh=WlfZxGvFtSLI+pDvBdYGRlWued5mo0mUhIgQQNCXeqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EK7OGkIaJejCgEQbokUG+pfZ5pIMWWTibpfXO7qrpUSQ8wdAaEkYyg0U3c7w2mWjg
-         Mur4B+9Ne45n5YK0P60pvlX/FNlQ71rNRYYyYeBR1yqYsFHXpMmQx5zGCYZpVy3Sl3
-         VYNSpcsEN8GWtCGqEXA8bcLS0HKmuFYJktSG/Weo=
+        b=QPn3WViVcnS+QtD7yxdGqBcrqqJKQL2bNe2arfBuIRlCI9CwZHwlgX5kVVa9+Jsyp
+         szF0xl3xIVMha+bNVbArT3SOcHosrJPhxVE7nqaXIDFr5mBo7YOPFC+EnpJuOpYD6E
+         WVhMniM12gs/RmC2pX+/8cCW3LBeeyYxpW6Op7Ck=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan@agner.ch>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 071/191] cpufeature: avoid warning when compiling with clang
-Date:   Sat,  9 Nov 2019 21:38:13 -0500
-Message-Id: <20191110024013.29782-71-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 065/191] f2fs: fix to recover inode's uid/gid during POR
+Date:   Sat,  9 Nov 2019 21:38:07 -0500
+Message-Id: <20191110024013.29782-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,44 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit c785896b21dd8e156326ff660050b0074d3431df ]
+[ Upstream commit dc4cd1257c86451cec3e8e352cc376348e4f4af4 ]
 
-The table id (second) argument to MODULE_DEVICE_TABLE is often
-referenced otherwise. This is not the case for CPU features. This
-leads to warnings when building the kernel with Clang:
-  arch/arm/crypto/aes-ce-glue.c:450:1: warning: variable
-    'cpu_feature_match_AES' is not needed and will not be emitted
-    [-Wunneeded-internal-declaration]
-  module_cpu_feature_match(AES, aes_init);
-  ^
+Step to reproduce this bug:
+1. logon as root
+2. mount -t f2fs /dev/sdd /mnt;
+3. touch /mnt/file;
+4. chown system /mnt/file; chgrp system /mnt/file;
+5. xfs_io -f /mnt/file -c "fsync";
+6. godown /mnt;
+7. umount /mnt;
+8. mount -t f2fs /dev/sdd /mnt;
 
-Avoid warnings by using __maybe_unused, similar to commit 1f318a8bafcf
-("modules: mark __inittest/__exittest as __maybe_unused").
+After step 8) we will expect file's uid/gid are all system, but during
+recovery, these two fields were not been recovered, fix it.
 
-Fixes: 67bad2fdb754 ("cpu: add generic support for CPU feature based module autoloading")
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cpufeature.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/recovery.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/cpufeature.h b/include/linux/cpufeature.h
-index 986c06c88d814..84d3c81b59781 100644
---- a/include/linux/cpufeature.h
-+++ b/include/linux/cpufeature.h
-@@ -45,7 +45,7 @@
-  * 'asm/cpufeature.h' of your favorite architecture.
-  */
- #define module_cpu_feature_match(x, __initfunc)			\
--static struct cpu_feature const cpu_feature_match_ ## x[] =	\
-+static struct cpu_feature const __maybe_unused cpu_feature_match_ ## x[] = \
- 	{ { .feature = cpu_feature(x) }, { } };			\
- MODULE_DEVICE_TABLE(cpu, cpu_feature_match_ ## x);		\
- 								\
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 2c3be4c3c626f..2c5d2c25d37e3 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -216,6 +216,8 @@ static void recover_inode(struct inode *inode, struct page *page)
+ 	char *name;
+ 
+ 	inode->i_mode = le16_to_cpu(raw->i_mode);
++	i_uid_write(inode, le32_to_cpu(raw->i_uid));
++	i_gid_write(inode, le32_to_cpu(raw->i_gid));
+ 	f2fs_i_size_write(inode, le64_to_cpu(raw->i_size));
+ 	inode->i_atime.tv_sec = le64_to_cpu(raw->i_atime);
+ 	inode->i_ctime.tv_sec = le64_to_cpu(raw->i_ctime);
 -- 
 2.20.1
 
