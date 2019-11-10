@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334C1C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF61C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A73821850
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96E821655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353620;
-	bh=n6QzZCLFvjcRY9Gen25EumCUyRvB0LU/DHo9DES47YM=;
+	s=default; t=1573353624;
+	bh=Qd/xuIspfGELkLAKANspg6whBWC/YOasqt+zS66jQBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wtq2cXZVeS3LTU9C7NNTwFGiPbztvFEzdjK5jm4SAPb+j0P80XtzPJ/dSQKJ2H1Cp
-	 6Vh4sSIJkapPggW0kTM0+MIUoQHj5Kx0zSSUd7VKWVLTbVWh3ZuQhjGC16RSt9Xrh7
-	 ukt6uFyPUAEIqhG18J8SYTDAE6/IoN2M2rhDneeM=
+	b=unPyVvOzinc6t4myyvHptodb/D0MUQeNbnPSAwdkBuT0CFD3Lc29t7EV/92BC2wd9
+	 Cyv63BXP48obj3MPDgu31XzXttK5sb9iFkptzNbB2p/nJraMQv6Iq/lB/ZOZhMkvrl
+	 wnYRJ9pF2QO4J6bYYPzTagmFrkBdHrLRiESjWCdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfKJCkS (ORCPT
+        id S1726770AbfKJCkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:40:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:40:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfKJCkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:17 -0500
+        id S1726710AbfKJCkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92F09215EA;
-        Sun, 10 Nov 2019 02:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38349215EA;
+        Sun, 10 Nov 2019 02:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353616;
-        bh=n6QzZCLFvjcRY9Gen25EumCUyRvB0LU/DHo9DES47YM=;
+        s=default; t=1573353619;
+        bh=Qd/xuIspfGELkLAKANspg6whBWC/YOasqt+zS66jQBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pi0n4BajtpIb7SSxlRmgcWS51MIdrvHcq/VQJg04cY1HH1mJQSd5i6pnVm2bCGoh+
-         WO7MiuG71X4rr2zeodXj+fUJmonWLiSEMkwoFwpz+6zGMEEbEpLuo6wLTjUHpZI683
-         H4NNc2eGdmHMKseoxyDSi2KXTmCqGz+pdm0IJlyM=
+        b=1NZQ+jghsGmpfCudcqoFlAHpiTTqmi5bk/Mhl9o3HYrORMHrGX6N0Tv99niDIBjHi
+         guyOSW7nKh7pEVq+C0RB48Z5UNd5wZ6Z4xecIWnWlyISgm5rcnfC6J4bDye0fAEI15
+         Jc9VAuMZMHY0Hl1Utu3c//2PVWUkhaxpEDexztgA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 002/191] s390/qeth: invoke softirqs after napi_schedule()
-Date:   Sat,  9 Nov 2019 21:37:04 -0500
-Message-Id: <20191110024013.29782-2-sashal@kernel.org>
+Cc:     Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 004/191] media: vsp1: Fix YCbCr planar formats pitch calculation
+Date:   Sat,  9 Nov 2019 21:37:06 -0500
+Message-Id: <20191110024013.29782-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,60 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
 
-[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
+[ Upstream commit 9b2798d5b71c50f64c41a40f0cbcae47c3fbd067 ]
 
-Calling napi_schedule() from process context does not ensure that the
-NET_RX softirq is run in a timely fashion. So trigger it manually.
+YCbCr planar formats can have different pitch values for the luma and
+chroma planes. This isn't taken into account in the driver. Fix it.
 
-This is no big issue with current code. A call to ndo_open() is usually
-followed by a ndo_set_rx_mode() call, and for qeth this contains a
-spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
-early.
-Nevertheless it's best to not depend on this behaviour, and just fix
-the issue at its source like all other drivers do. For instance see
-commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
+Based on a BSP patch from Koji Matsuoka <koji.matsuoka.xm@renesas.com>.
 
-Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7863ac504bc5 ("drm: rcar-du: Add tri-planar memory formats support")
+[Updated documentation of the struct vsp1_du_atomic_config pitch field]
+
+Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 3 +++
- drivers/s390/net/qeth_l3_main.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/media/platform/vsp1/vsp1_drm.c | 11 ++++++++++-
+ include/media/vsp1.h                   |  2 +-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index c1c35eccd5b65..95669d47c389e 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -789,7 +789,10 @@ static int __qeth_l2_open(struct net_device *dev)
+diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
+index b9c0f695d002b..8d86f618ec776 100644
+--- a/drivers/media/platform/vsp1/vsp1_drm.c
++++ b/drivers/media/platform/vsp1/vsp1_drm.c
+@@ -770,6 +770,7 @@ int vsp1_du_atomic_update(struct device *dev, unsigned int pipe_index,
+ 	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+ 	struct vsp1_drm_pipeline *drm_pipe = &vsp1->drm->pipe[pipe_index];
+ 	const struct vsp1_format_info *fmtinfo;
++	unsigned int chroma_hsub;
+ 	struct vsp1_rwpf *rpf;
  
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 9c5e801b3f6cb..52e0ae4dc7241 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -2414,7 +2414,10 @@ static int __qeth_l3_open(struct net_device *dev)
+ 	if (rpf_index >= vsp1->info->rpf_count)
+@@ -810,10 +811,18 @@ int vsp1_du_atomic_update(struct device *dev, unsigned int pipe_index,
+ 		return -EINVAL;
+ 	}
  
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
++	/*
++	 * Only formats with three planes can affect the chroma planes pitch.
++	 * All formats with two planes have a horizontal subsampling value of 2,
++	 * but combine U and V in a single chroma plane, which thus results in
++	 * the luma plane and chroma plane having the same pitch.
++	 */
++	chroma_hsub = (fmtinfo->planes == 3) ? fmtinfo->hsub : 1;
++
+ 	rpf->fmtinfo = fmtinfo;
+ 	rpf->format.num_planes = fmtinfo->planes;
+ 	rpf->format.plane_fmt[0].bytesperline = cfg->pitch;
+-	rpf->format.plane_fmt[1].bytesperline = cfg->pitch;
++	rpf->format.plane_fmt[1].bytesperline = cfg->pitch / chroma_hsub;
+ 	rpf->alpha = cfg->alpha;
+ 
+ 	rpf->mem.addr[0] = cfg->mem[0];
+diff --git a/include/media/vsp1.h b/include/media/vsp1.h
+index 3093b9cb9067e..5b383d01c84a0 100644
+--- a/include/media/vsp1.h
++++ b/include/media/vsp1.h
+@@ -46,7 +46,7 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+ /**
+  * struct vsp1_du_atomic_config - VSP atomic configuration parameters
+  * @pixelformat: plane pixel format (V4L2 4CC)
+- * @pitch: line pitch in bytes, for all planes
++ * @pitch: line pitch in bytes for the first plane
+  * @mem: DMA memory address for each plane of the frame buffer
+  * @src: source rectangle in the frame buffer (integer coordinates)
+  * @dst: destination rectangle on the display (integer coordinates)
 -- 
 2.20.1
 
