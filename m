@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7241BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DECC17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E1122595
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47FE22790
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354266;
-	bh=f2b0CWoNoQ9ioQs7219fTotOnawLUs/soilupI9ggGI=;
+	s=default; t=1573354270;
+	bh=lUApIQgyqmtoaBWAhlKzMgO5iOXa89CIZ9PudXst4ZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R85lChKlvy9fHM5OcdG69lY0bu/B7Gvywvh2MxRNcqqDy1PvngoUgGQddLSeoCEcX
-	 NbBzoT5IpogSCHwt9cP4Uw96Kn0lsqWq18DbfMAEI07We2firKJR2qXmE4kNtpphyA
-	 ejbI13sA/LvJxlO2BSSBiS0soGKyPcvEVhAUcRg0=
+	b=cOA8jPfrBWEl4gFXPEXG3aFvBfV61PHmmCgIZq+RBJZq//juKvZY06x4B83LEaiCA
+	 mfP27HOfl0wSaIO3IRTk4YNL1VBZurxSohSooYKt+MZDAk26WXVvzdvsrwoGsBhdMd
+	 Pm3IC4mjJvWL/NfWRcYm6yjawnhweBEyQchoAIf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbfKJCvE (ORCPT
+        id S1729891AbfKJCvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34580 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:51:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbfKJCun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:43 -0500
+        id S1729802AbfKJCus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B109B22790;
-        Sun, 10 Nov 2019 02:50:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D5D22790;
+        Sun, 10 Nov 2019 02:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354242;
-        bh=f2b0CWoNoQ9ioQs7219fTotOnawLUs/soilupI9ggGI=;
+        s=default; t=1573354248;
+        bh=lUApIQgyqmtoaBWAhlKzMgO5iOXa89CIZ9PudXst4ZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsHFi5ynj2FGKdcWDGKksww5h35OFaEltf+TobHtScsMJAHXxkIdYRYGGq2wb9fOv
-         /eAZeth1eIEsM0kP2qhpJBijAQFLU7O69nFnE04W18QxF65M0/7p6TkM+0dVClfFJE
-         bddc621N0sQotfA9zX2rOUYd8vA+eCxpfMlFBCe0=
+        b=r53JiNpynCCiuZB/gTAMOaU7n84gAa+3BC9P6WWm5+ZKClZYDK0MxRvrwLSn58kk5
+         Hg8pXMeY3AsIv1CJI5AQwwzFzTiWtyweYY7767r/RrhfBLUpGjzYU9YZz107J40b2I
+         E3R/Sz23uB2kjSxJNw/nmfgET2WoAL79Gc5PFw20=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 06/40] powerpc/pseries: Disable CPU hotplug across migrations
-Date:   Sat,  9 Nov 2019 21:49:58 -0500
-Message-Id: <20191110025032.827-6-sashal@kernel.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 08/40] power: supply: twl4030_charger: fix charging current out-of-bounds
+Date:   Sat,  9 Nov 2019 21:50:00 -0500
+Message-Id: <20191110025032.827-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
@@ -60,51 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 85a88cabad57d26d826dd94ea34d3a785824d802 ]
+[ Upstream commit 8314c212f995bc0d06b54ad02ef0ab4089781540 ]
 
-When performing partition migrations all present CPUs must be online
-as all present CPUs must make the H_JOIN call as part of the migration
-process. Once all present CPUs make the H_JOIN call, one CPU is returned
-to make the rtas call to perform the migration to the destination system.
+the charging current uses unsigned int variables, if we step back
+if the current is still low, we would run into negative which
+means setting the target to a huge value.
+Better add checks here.
 
-During testing of migration and changing the SMT state we have found
-instances where CPUs are offlined, as part of the SMT state change,
-before they make the H_JOIN call. This results in a hung system where
-every CPU is either in H_JOIN or offline.
-
-To prevent this this patch disables CPU hotplug during the migration
-process.
-
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/power/twl4030_charger.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 0c42e872d548b..4fcaa7d3d544f 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -967,6 +967,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		goto out;
- 	}
+diff --git a/drivers/power/twl4030_charger.c b/drivers/power/twl4030_charger.c
+index bcd4dc304f270..14fed11e8f6e3 100644
+--- a/drivers/power/twl4030_charger.c
++++ b/drivers/power/twl4030_charger.c
+@@ -449,7 +449,8 @@ static void twl4030_current_worker(struct work_struct *data)
  
-+	cpu_hotplug_disable();
- 	stop_topology_update();
- 
- 	/* Call function on all CPUs.  One of us will make the
-@@ -981,6 +982,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		printk(KERN_ERR "Error doing global join\n");
- 
- 	start_topology_update();
-+	cpu_hotplug_enable();
- 
- 	/* Take down CPUs not online prior to suspend */
- 	cpuret = rtas_offline_cpus_mask(offline_mask);
+ 	if (v < USB_MIN_VOLT) {
+ 		/* Back up and stop adjusting. */
+-		bci->usb_cur -= USB_CUR_STEP;
++		if (bci->usb_cur >= USB_CUR_STEP)
++			bci->usb_cur -= USB_CUR_STEP;
+ 		bci->usb_cur_target = bci->usb_cur;
+ 	} else if (bci->usb_cur >= bci->usb_cur_target ||
+ 		   bci->usb_cur + USB_CUR_STEP > USB_MAX_CURRENT) {
 -- 
 2.20.1
 
