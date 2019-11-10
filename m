@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A799FC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7210DC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7120322795
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394BE22573
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354248;
-	bh=pdvAvsejs+m9ghYz4ndlfv1HwItb8YLYK5+SNO/7GAg=;
+	s=default; t=1573354257;
+	bh=iuc+CW/MwNh7Z3Nj4jlGrhbfNy6HZQZso3XrQC80OqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jcc69qUIiBYQF4y3FYEvPqamrkgH/b06XtXLBnelqVIx/czv7dNLk+YKzy5NQmBky
-	 QO9ZsqN/MVwhkzo4IrVU/XFS+L+C8A6k4IJwGYTFtNHs51jyLf5FeXKXFDb0YK5ZHZ
-	 +FVQnwIOBNuq89P0VAQ07A9A76XXV/RAo0iwnSks=
+	b=2rAJ4If7DM1yv0uEnYIuyk37d7eYOuNCd8IKQwhBBE36tgzjnkUu6NhtPyXJjhD1M
+	 QYEdhz9Ma1zZmsW+dZSXvZp3lw/nACmXoTBoZBx08sA+g58GynZXxQ8c4KWZvMEvVp
+	 J0czHDA6enMnrsBuHEj0FN+pGNPUses4cM74FtCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfKJCur (ORCPT
+        id S1729847AbfKJCuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:50:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729572AbfKJCuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:18 -0500
+        id S1729746AbfKJCug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C41422581;
-        Sun, 10 Nov 2019 02:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9F4122790;
+        Sun, 10 Nov 2019 02:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354216;
-        bh=pdvAvsejs+m9ghYz4ndlfv1HwItb8YLYK5+SNO/7GAg=;
+        s=default; t=1573354235;
+        bh=iuc+CW/MwNh7Z3Nj4jlGrhbfNy6HZQZso3XrQC80OqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tm+nWBQXp0B3oftZRz4Vtt/6RBi1yKcivmfn0An//gtAOkwrpf4PtpwscfyyTbJej
-         hwvk6if8GwgoGo/CE2xhOdEuTFjJcqlAKPNAO8rzdHYd1zgpk+v85WjItiDdmAA7g8
-         aTCPwxsEacRNHIGzukqNd4wPgHGdxo8nEy1rCg0s=
+        b=QdiMwsVZwVePbsIIxtX07h1/sFJa3PlQg1l0aPPZZs6Q0zjMK+/5L5YWXNxDA7Z8s
+         oidI/vC7Ie2cE3ZtIHEpD9Hema8iQpbTFbj5s2hWiVae7CEhvwHORMcPmhkKr30sL3
+         eyDG94AyWaup14X5O2VOVH5DlcgSYYC0gf7rsB7E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ondrey Zary <linux@rainbow-software.org>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 55/66] scsi: NCR5380: Clear all unissued commands on host reset
-Date:   Sat,  9 Nov 2019 21:48:34 -0500
-Message-Id: <20191110024846.32598-55-sashal@kernel.org>
+Cc:     Sinan Kaya <okaya@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/40] PCI/ACPI: Correct error message for ASPM disabling
+Date:   Sat,  9 Nov 2019 21:49:54 -0500
+Message-Id: <20191110025032.827-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
-References: <20191110024846.32598-1-sashal@kernel.org>
+In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
+References: <20191110025032.827-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,53 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+From: Sinan Kaya <okaya@kernel.org>
 
-[ Upstream commit 1aeeeed7f03c576f096eede7b0384f99a98f588c ]
+[ Upstream commit 1ad61b612b95980a4d970c52022aa01dfc0f6068 ]
 
-When doing a host reset we should be clearing all outstanding commands, not
-just the command triggering the reset.
+If _OSC execution fails today for platforms without an _OSC entry, code is
+printing a misleading message saying disabling ASPM as follows:
 
-[mkp: adjusted Hannes' SoB address]
+  acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
 
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Ondrey Zary <linux@rainbow-software.org>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+We need to ensure that platform supports ASPM to begin with.
+
+Reported-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/acpi/pci_root.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 3cfab8868c989..ba7b3aef3ef0b 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -2392,7 +2392,7 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
- 	spin_lock_irqsave(&hostdata->lock, flags);
- 
- #if (NDEBUG & NDEBUG_ANY)
--	scmd_printk(KERN_INFO, cmd, __func__);
-+	shost_printk(KERN_INFO, instance, __func__);
- #endif
- 	NCR5380_dprint(NDEBUG_ANY, instance);
- 	NCR5380_dprint_phase(NDEBUG_ANY, instance);
-@@ -2410,10 +2410,13 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
- 	 * commands!
- 	 */
- 
--	if (list_del_cmd(&hostdata->unissued, cmd)) {
-+	list_for_each_entry(ncmd, &hostdata->unissued, list) {
-+		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
-+
- 		cmd->result = DID_RESET << 16;
- 		cmd->scsi_done(cmd);
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 3b0b4bd67b71b..4031ec8024cee 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -454,8 +454,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
+ 	decode_osc_support(root, "OS supports", support);
+ 	status = acpi_pci_osc_support(root, support);
+ 	if (ACPI_FAILURE(status)) {
+-		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
+-			 acpi_format_exception(status));
++		dev_info(&device->dev, "_OSC failed (%s)%s\n",
++			 acpi_format_exception(status),
++			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
+ 		*no_aspm = 1;
+ 		return;
  	}
-+	INIT_LIST_HEAD(&hostdata->unissued);
- 
- 	if (hostdata->selecting) {
- 		hostdata->selecting->result = DID_RESET << 16;
 -- 
 2.20.1
 
