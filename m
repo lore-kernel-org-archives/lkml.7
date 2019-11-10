@@ -2,117 +2,120 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FB0C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876F1C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0352080F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573420263;
-	bh=iWZwTfYgxn8ONPQ9TtbJkN/r5joAryjZhtfnsnBXHS0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KdEyWCBbUsL7o7zTLT5AHwQhlLV+LquyX0HrFkOAzGn9DmACqSL9V88ycvzj822s+
-	 PxVq5dz19YT9py7H8QhFKpJMxIcmE+2juNXbN/Gb/vXEE/yvrx6Uq2VrtSA8NqzUoH
-	 osRdW/0OgzXhgoP+ApAnbjLkvH0ifu4y2gTwbKTw=
+	by mail.kernel.org (Postfix) with ESMTP id 5AF7020659
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKJVLC (ORCPT
+        id S1727030AbfKJVWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 16:11:02 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33007 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfKJVLB (ORCPT
+        Sun, 10 Nov 2019 16:22:00 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55043 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbfKJVV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 16:11:01 -0500
-Received: by mail-lj1-f194.google.com with SMTP id t5so11612293ljk.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 13:11:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sw0pGWOp+H0Cc/o3nartd+rrdu30v5KC8Ks0EukSTW0=;
-        b=RAfCRzWXqkBygzjvTQF7B/q3F9bZcWhNFKa+vgcKxcPhwpgR7QOlK6Eii8RWszMJSj
-         /GKxKFp6PJbUk5mDWk1Rs08zEWAX5Km6Ng5cuqqTumC+Wxu94ZiBemBAFzFqqkBvwDF2
-         D0F/g+SzyQvat+TyfcmfcY6DipCQs83wis1FY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sw0pGWOp+H0Cc/o3nartd+rrdu30v5KC8Ks0EukSTW0=;
-        b=A49Dho0UMSVLkQuQ3hbiVNu4CRJVCR6rv0uroUpJFUNY4ei6Ll1YXE67NEqsZTlo5a
-         KTfiUmkwUKW+olpbLHAKwMFJWO9BN8yKcKtm4xY61mP3eOHWRnPfnU6ET3YqReGBNt7H
-         CvADslccT3kxiS07c9qeUOy4QnBBwdp1EkV6qE8IjPziCJortPXjIWz077JdehL4ySn9
-         RGkp7lWKqW4rIQ3uw50lQijDiUNyR0/bmiAYhmUX0PFXqM9o7T/TzWBHswgWdNMMy6yl
-         r2mj1BCM+vYlx9yuXJ0AJAZ9l56A/WA666tzMjx2JCORIF/gv8wsNw4nFnx7XAZqE/p8
-         j6HA==
-X-Gm-Message-State: APjAAAUgCgAzW7X9b91efotPAZJGpENWp9J4tR6Xwg0SH4ZiPXJrRT8q
-        d68RCYxmZndaLH/XUgNFz2O5XUFLh+c=
-X-Google-Smtp-Source: APXvYqxaIkM/1M9CjQZbYkfFuN289ZoIiU20DYO/vOkizEnMzllUgfvEc0IfZwvHoA/Itd/1OuFaSA==
-X-Received: by 2002:a2e:b4eb:: with SMTP id s11mr13566744ljm.38.1573420258326;
-        Sun, 10 Nov 2019 13:10:58 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id u2sm11915600ljg.34.2019.11.10.13.10.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 13:10:56 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id e9so11543348ljp.13
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 13:10:56 -0800 (PST)
-X-Received: by 2002:a2e:8809:: with SMTP id x9mr13861151ljh.82.1573420256107;
- Sun, 10 Nov 2019 13:10:56 -0800 (PST)
+        Sun, 10 Nov 2019 16:21:59 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iTuef-0003aT-RX; Sun, 10 Nov 2019 22:21:54 +0100
+Date:   Sun, 10 Nov 2019 22:21:52 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [patch 7/9] x86/iopl: Restrict iopl() permission scope
+In-Reply-To: <CALCETrXLNub_pTMKvVQiq26=8VQPnx865+w0e-ZnHEg9a397_A@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1911102214250.12583@nanos.tec.linutronix.de>
+References: <20191106193459.581614484@linutronix.de> <20191106202806.425388355@linutronix.de> <a1afc4bb-c90e-db58-42f2-da91a50b1872@kernel.org> <alpine.DEB.2.21.1911102125110.12583@nanos.tec.linutronix.de>
+ <CALCETrXLNub_pTMKvVQiq26=8VQPnx865+w0e-ZnHEg9a397_A@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CAHk-=wjB61GNmqpX0BLA5tpL4tsjWV7akaTc2Roth7uGgax+mw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911101034180.29192-100000@netrider.rowland.org>
- <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
- <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com> <20191110204442.GA2865@paulmck-ThinkPad-P72>
-In-Reply-To: <20191110204442.GA2865@paulmck-ThinkPad-P72>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 10 Nov 2019 13:10:39 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjm40mcf7tk9DZQXd=dftZw_VpmE837c7pTZ1_cR+t4Mw@mail.gmail.com>
-Message-ID: <CAHk-=wjm40mcf7tk9DZQXd=dftZw_VpmE837c7pTZ1_cR+t4Mw@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Marco Elver <elver@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 12:44 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> But will "one size fits all" be practical and useful?
+On Sun, 10 Nov 2019, Andy Lutomirski wrote:
+> On Sun, Nov 10, 2019 at 12:31 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Sun, 10 Nov 2019, Andy Lutomirski wrote:
+> > > On 11/6/19 11:35 AM, Thomas Gleixner wrote:
+> > > > +
+> > > > +   if (IS_ENABLED(CONFIG_X86_IOPL_EMULATION)) {
+> > > > +           struct tss_struct *tss;
+> > > > +           unsigned int tss_base;
+> > > > +
+> > > > +           /* Prevent racing against a task switch */
+> > > > +           preempt_disable();
+> > > > +           tss = this_cpu_ptr(&cpu_tss_rw);
+> > > > +           if (level == 3) {
+> > > > +                   /* Grant access to all I/O ports */
+> > > > +                   set_thread_flag(TIF_IO_BITMAP);
+> > > > +                   tss_base = IO_BITMAP_OFFSET_VALID_ALL;
+> > >
+> > > Where is the actual TSS updated?
+> >
+> > Here. It sets the offset to the all zero bitmap. That's all it needs.
+> 
+> Ah, I see.
+> 
+> > > I think what you need to do is have a single function, called by
+> > > exit_thread(), switch_to(), and here, that updates the TSS to match a
+> > > given task's IO bitmap state.  This is probably switch_to_bitmap() or
+> > > similar.
+> >
+> > Well, no. exit_thread() and this here actually fiddle with the TIF bit
+> > which is not what the switch to case does. There is some stuff which can be
+> > shared.
+> 
+> I was thinking that the code that read iopl_emul and t->io_bitmap_ptr
+> and updated x86_tss.io_bitmap_base could be factored out of
+> switch_to().  Suppose you call that tss_update_io_bitmap().  And you
+> could have another tiny helper:
+> 
+> static void update_tif_io_bitmap(void)
+> {
+>   if (...->iopl_emul || ...->io_bitmap_ptr)
+>     set_thread_flag(TIF_IO_BITMAP);
+>   else
+>     clear_thread_flag(TIF_IO_BITMAP);
+> }
+> 
+> Then the whole iopl emulation path becomes:
 
-Oh, I do agree that if KCSAN has some mode where it says "I'll ignore
-repeated writes with the same value" (or whatever), it could/should
-likely be behind some flag.
+Yes. I'm almost done with that already :)
+> > It's in that very same patch:
+> >
+> > > -static void tss_update_io_bitmap(struct tss_struct *tss,
+> > > -                                struct thread_struct *thread)
+> 
+> But where did the line you just deleted come from?  I'm obviously just
+> bad at reading emails somewhere.
 
-I don't think it should be a subsystem flag, though. More of a "I'm
-willing to actually analyze and ignore false positives" flag. Because
-I don't think it's so much about the code, as it is about the person
-who looks at the results.
+patch 5/9 :)
+ 
+Let me finish that stuff and send out another version which has that reuse
+of the switch to code in a separate patch.
 
-For example, we're already getting push-back from people on some of
-the KCSAN-inspired patches. If we have people sending patches to add
-READ_ONCE/WRITE_ONCE to random places to shut up KCSAN reports, I
-don't think that's good.
+There is another new detail in the series. I split out all the io bitmap
+data into a separate data struct, which also allows me to stick a refcount
+into it which removes the kmemdup() from the fork path.
 
-But if we have people who _work_ on memory ordering issues etc, and
-want to see a strict mode, knowing there are false positives and able
-to handle them, that's a completely different thing..
+Thanks,
 
-No?
-
-              Linus
+	tglx
