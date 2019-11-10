@@ -2,96 +2,133 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB47C17442
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B365DC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E016A20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911D22085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfKJN4D (ORCPT
+        id S1726925AbfKJN4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 08:56:03 -0500
-Received: from vps-vb.mhejs.net ([37.28.154.113]:51690 "EHLO vps-vb.mhejs.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfKJN4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 08:56:03 -0500
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1iTngz-0000Y5-23; Sun, 10 Nov 2019 14:55:49 +0100
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To:     "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Keerthy <j-keerthy@ti.com>, Stephen Boyd <swboyd@chromium.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] random: Don't freeze in add_hwgenerator_randomness() if stopping kthread
-Date:   Sun, 10 Nov 2019 14:55:42 +0100
-Message-Id: <20191110135543.3476097-1-mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.23.0
+        Sun, 10 Nov 2019 08:56:09 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:34405 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfKJN4J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 08:56:09 -0500
+Received: by mail-il1-f197.google.com with SMTP id m12so10820747ilq.1
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 05:56:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=nlS1l9MxSuED0ZlOb4RmmDwaqDvte1G/YuN8sqrxTd8=;
+        b=EDxkCH8C4fwJfd5jH+MFj8aoy/arBJiirN1pWmqORcAWKlW3JM6VofPk2ELVNFyAaI
+         EO4bJ097DO1JlGmTA3A4IjqlvgyTeiwyr/s+mSG6wM559L9RiWtn2KWaZLR9S9QRVX/y
+         KrV10UZ/7eQNwExAYK9YlcXQJwk5Mlqxn+tybSBMLthKEvDcjdnS95b4pDt3goGEXAxP
+         4OK9shjFn223e7sD0EIBi/po6lo/HMTSlokKZLCCs79NyeXORMAbkmD2XPZm6r1SSPuU
+         dNe8S7SxpMgQjqMmsK9Wmu1giIMQo0OKxUxE6bjtj9yIiOvWkU/3eS42xU64sx5MKLtI
+         1mIg==
+X-Gm-Message-State: APjAAAXklC3Qi/HVD1Jq3w+u2feYd3VEH+EyhnXsg3AQLyZTKU/dHryx
+        sV51PxDhf185dI5q+vQKcTe+6IjLILJGhdLaAcmg8zHSLtbj
+X-Google-Smtp-Source: APXvYqzjUaZ1vBw/aECJNlYHarHMpT5CKXFoXHsOtvfHE48QPYL4ftY0c8+9y7EBOUvMhXfRNId2GDEmvFwRFD/3S6l3q6VpMHK9
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:25c9:: with SMTP id l192mr25430816ill.84.1573394167932;
+ Sun, 10 Nov 2019 05:56:07 -0800 (PST)
+Date:   Sun, 10 Nov 2019 05:56:07 -0800
+In-Reply-To: <000000000000be219705967f9963@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000078b1710596fe60a3@google.com>
+Subject: Re: general protection fault in kvm_coalesced_mmio_init
+From:   syzbot <syzbot+e27e7027eb2b80e44225@syzkaller.appspotmail.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 59b569480dc8
-("random: Use wait_event_freezable() in add_hwgenerator_randomness()")
-there is a race in add_hwgenerator_randomness() between freezing and
-stopping the calling kthread.
+syzbot has found a reproducer for the following crash on:
 
-This commit changed wait_event_interruptible() call with
-kthread_freezable_should_stop() as a condition into wait_event_freezable()
-with just kthread_should_stop() as a condition to fix a warning that
-kthread_freezable_should_stop() might sleep inside the wait.
+HEAD commit:    00aff683 Merge tag 'for-5.4-rc6-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1777fb52e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
+dashboard link: https://syzkaller.appspot.com/bug?extid=e27e7027eb2b80e44225
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ed65aae00000
 
-wait_event_freezable() ultimately calls __refrigerator() with its
-check_kthr_stop argument set to false, which causes it to keep the kthread
-frozen even if somebody calls kthread_stop() on it.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e27e7027eb2b80e44225@syzkaller.appspotmail.com
 
-Calling wait_event_freezable() with kthread_should_stop() as a condition
-is racy because it doesn't take into account the situation where this
-condition becomes true on a kthread marked for freezing only after this
-condition has already been checked.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 20263 Comm: syz-executor.2 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:kvm_coalesced_mmio_init+0x59/0xf0  
+arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
+Code: 00 00 00 fc ff df e8 46 7d 6b 00 48 c1 e3 06 49 be 00 00 00 00 80 08  
+05 00 49 01 de 49 8d bf d8 96 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00  
+74 05 e8 bb bb a4 00 4d 89 b7 d8 96 00 00 49 8d bf
+RSP: 0018:ffff888091647d10 EFLAGS: 00010206
+RAX: 00000000000012db RBX: fffa80009cb1b000 RCX: ffff8880a42d21c0
+RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 00000000000096d8
+RBP: ffff888091647d30 R08: ffffffff83486eda R09: ffffed1015d46b05
+R10: ffffed1015d46b05 R11: 0000000000000000 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88809cb1b000 R15: 0000000000000000
+FS:  00007fb51eb61700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa986fb7000 CR3: 000000009c69d000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3448  
+[inline]
+  kvm_dev_ioctl+0x18fa/0x1fd0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3496
+  do_vfs_ioctl+0x744/0x1730 fs/ioctl.c:46
+  ksys_ioctl fs/ioctl.c:713 [inline]
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:718
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a219
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb51eb60c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a219
+RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 0000000000000004
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb51eb616d4
+R13: 00000000004c348b R14: 00000000004d7708 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace 15ab0f35a80c9e5d ]---
+RIP: 0010:kvm_coalesced_mmio_init+0x59/0xf0  
+arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
+Code: 00 00 00 fc ff df e8 46 7d 6b 00 48 c1 e3 06 49 be 00 00 00 00 80 08  
+05 00 49 01 de 49 8d bf d8 96 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00  
+74 05 e8 bb bb a4 00 4d 89 b7 d8 96 00 00 49 8d bf
+RSP: 0018:ffff888091647d10 EFLAGS: 00010206
+RAX: 00000000000012db RBX: fffa80009cb1b000 RCX: ffff8880a42d21c0
+RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 00000000000096d8
+RBP: ffff888091647d30 R08: ffffffff83486eda R09: ffffed1015d46b05
+R10: ffffed1015d46b05 R11: 0000000000000000 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffff88809cb1b000 R15: 0000000000000000
+FS:  00007fb51eb61700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000625208 CR3: 000000009c69d000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Calling freezing() should avoid the issue that the commit 59b569480dc8 has
-fixed, as it is only a checking function, it doesn't actually do the
-freezing.
-
-add_hwgenerator_randomness() has two post-boot users: in khwrng the
-kthread will be frozen anyway by call to kthread_freezable_should_stop()
-in its main loop, while its second user (ath9k-hwrng) is not freezable at
-all.
-
-This change allows a VM with virtio-rng loaded to write s2disk image
-successfully.
-
-Fixes: 59b569480dc8 ("random: Use wait_event_freezable() in add_hwgenerator_randomness()")
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
----
- drivers/char/random.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index de434feb873a..2f87910dd498 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2500,8 +2500,8 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
- 	 * We'll be woken up again once below random_write_wakeup_thresh,
- 	 * or when the calling thread is about to terminate.
- 	 */
--	wait_event_freezable(random_write_wait,
--			kthread_should_stop() ||
-+	wait_event_interruptible(random_write_wait,
-+			kthread_should_stop() || freezing(current) ||
- 			ENTROPY_BITS(&input_pool) <= random_write_wakeup_bits);
- 	mix_pool_bytes(poolp, buffer, count);
- 	credit_entropy_bits(poolp, entropy);
