@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB6DC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2518AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD9721019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF90D214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354489;
-	bh=pxt1YofAycmysn7tu9QwKJyk9fK/iiHWj7DixH23XiM=;
+	s=default; t=1573354493;
+	bh=8iD2RbErPWDnc+352S6Dt9T6EhXU+MLXptMB07sJbVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gHWFzzFEAaYlH0coGllThHA0ZluPHw5UaH3YyDhjmbVNWTYUBLmnwhfd3BrDX/wSZ
-	 dDUm/+A+IxqXlJ+uWavA935qxxYFNFFiDVAb5SR1v26xHVt6ud0TqKl2t8ek7e0O+K
-	 kbJYpSTj12zotgWsQvO3qofGyE6xq3eWhNSV1lv0=
+	b=YgTixXz8HhChiwHM4TIvXaYYI4axPPcOMtaRnxbOA6zuo9njybKvkhYjYztiF08KO
+	 gQ+CqGYVK1+Jj4xtMoBQ76wF9Oe4jCqdoDaMOoBUkVJbxN7zmV9r6+bXU/UVaZ8CrF
+	 V0szsJlLGL8MaK92uje+i6uikrMpHWF+AqvGyM/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfKJCys (ORCPT
+        id S1728957AbfKJCyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:54:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:54:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbfKJCua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:30 -0500
+        id S1729731AbfKJCu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFCC522594;
-        Sun, 10 Nov 2019 02:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E9F22595;
+        Sun, 10 Nov 2019 02:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354229;
-        bh=pxt1YofAycmysn7tu9QwKJyk9fK/iiHWj7DixH23XiM=;
+        s=default; t=1573354228;
+        bh=8iD2RbErPWDnc+352S6Dt9T6EhXU+MLXptMB07sJbVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIXDJeeLx5Qhbj8fzTYTocgihy1dSvx3dKT3vb1l99k17RpG9UUqMQA8FwazqAdNF
-         MwOGcfwzYtdCu7wXizZTkiZuYRcC5H3QHd8/kw304pH5Tx3akWuYJ3SYevEyRtStVE
-         IfrxINz1D1sl7nCVR4HpRGJ33f4fklpVfRlwESug=
+        b=DnmQeHc6IogblKyeWpewmp6+phaNEuJt+XQwpHFeoocRZIwEso+havvX0J4nEUfj8
+         9rp9EeGGVDGEzYDMVnoOMkkkOrRa7V5En0myDFpr9Whi5XBCM7mjqH9XibbaEZR3sw
+         UNy+b1AkwuqKenYd8wX5aExYQBMhEG1ISYzDmpu0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 66/66] IB/iser: Fix possible NULL deref at iser_inv_desc()
-Date:   Sat,  9 Nov 2019 21:48:45 -0500
-Message-Id: <20191110024846.32598-66-sashal@kernel.org>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 65/66] fuse: use READ_ONCE on congestion_threshold and max_background
+Date:   Sat,  9 Nov 2019 21:48:44 -0500
+Message-Id: <20191110024846.32598-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -61,69 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Israel Rukshin <israelr@mellanox.com>
+From: Kirill Tkhai <ktkhai@virtuozzo.com>
 
-[ Upstream commit 65f07f5a09dacf3b60619f196f096ea3671a5eda ]
+[ Upstream commit 2a23f2b8adbe4bd584f936f7ac17a99750eed9d7 ]
 
-In case target remote invalidates bogus rkey and signature is not used,
-pi_ctx is NULL deref.
+Since they are of unsigned int type, it's allowed to read them
+unlocked during reporting to userspace. Let's underline this fact
+with READ_ONCE() macroses.
 
-The commit also fails the connection on bogus remote invalidation.
-
-Fixes: 59caaed7a72a ("IB/iser: Support the remote invalidation exception")
-Signed-off-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iser_initiator.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ fs/fuse/control.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/iser/iser_initiator.c b/drivers/infiniband/ulp/iser/iser_initiator.c
-index 81ae2e30dd125..27a7e4406f343 100644
---- a/drivers/infiniband/ulp/iser/iser_initiator.c
-+++ b/drivers/infiniband/ulp/iser/iser_initiator.c
-@@ -590,13 +590,19 @@ void iser_login_rsp(struct ib_cq *cq, struct ib_wc *wc)
- 	ib_conn->post_recv_buf_count--;
- }
+diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+index e25c40c10f4fa..97ac2f5843fcc 100644
+--- a/fs/fuse/control.c
++++ b/fs/fuse/control.c
+@@ -107,7 +107,7 @@ static ssize_t fuse_conn_max_background_read(struct file *file,
+ 	if (!fc)
+ 		return 0;
  
--static inline void
-+static inline int
- iser_inv_desc(struct iser_fr_desc *desc, u32 rkey)
- {
--	if (likely(rkey == desc->rsc.mr->rkey))
-+	if (likely(rkey == desc->rsc.mr->rkey)) {
- 		desc->rsc.mr_valid = 0;
--	else if (likely(rkey == desc->pi_ctx->sig_mr->rkey))
-+	} else if (likely(desc->pi_ctx && rkey == desc->pi_ctx->sig_mr->rkey)) {
- 		desc->pi_ctx->sig_mr_valid = 0;
-+	} else {
-+		iser_err("Bogus remote invalidation for rkey %#x\n", rkey);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
- }
+-	val = fc->max_background;
++	val = READ_ONCE(fc->max_background);
+ 	fuse_conn_put(fc);
  
- static int
-@@ -624,12 +630,14 @@ iser_check_remote_inv(struct iser_conn *iser_conn,
+ 	return fuse_conn_limit_read(file, buf, len, ppos, val);
+@@ -144,7 +144,7 @@ static ssize_t fuse_conn_congestion_threshold_read(struct file *file,
+ 	if (!fc)
+ 		return 0;
  
- 			if (iser_task->dir[ISER_DIR_IN]) {
- 				desc = iser_task->rdma_reg[ISER_DIR_IN].mem_h;
--				iser_inv_desc(desc, rkey);
-+				if (unlikely(iser_inv_desc(desc, rkey)))
-+					return -EINVAL;
- 			}
+-	val = fc->congestion_threshold;
++	val = READ_ONCE(fc->congestion_threshold);
+ 	fuse_conn_put(fc);
  
- 			if (iser_task->dir[ISER_DIR_OUT]) {
- 				desc = iser_task->rdma_reg[ISER_DIR_OUT].mem_h;
--				iser_inv_desc(desc, rkey);
-+				if (unlikely(iser_inv_desc(desc, rkey)))
-+					return -EINVAL;
- 			}
- 		} else {
- 			iser_err("failed to get task for itt=%d\n", hdr->itt);
+ 	return fuse_conn_limit_read(file, buf, len, ppos, val);
 -- 
 2.20.1
 
