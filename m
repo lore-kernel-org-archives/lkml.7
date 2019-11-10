@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40979C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11973C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076B221848
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D034721848
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355325;
-	bh=1NofNetifklNsULoKa8iBoNhHM8w7x2djmZ0FjMFPW8=;
+	s=default; t=1573355333;
+	bh=YnD9x+eja6JGX98NJrMj97iJQaEMDMj5uSFc7nwljo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ws6exUC/iW+P7wbe+83RR0EN/8/m2ljIeFrmgyesgasMuutZzGjbsqHYZ5MpjstAZ
-	 T1S88ZlweMUI0M5DT9aZ/LxrRlrBI09mRnDTStzJWcAU8Tthjsfjo/XMFDWKkkMhEa
-	 iX5ob5HD00+k5ACsXuM+jjO0aW+nvuLiSGOZtNeI=
+	b=jKLi3rCBjJpC+kl5dDA8sX/daxvL0t4DNx9zS0NRSMmWUW9f/Uge5kYxUMDUXRjIG
+	 SXeQBxZ6gGgDSwOdEYrPEF3cfkvkmlLZO9RSU1xl4Bs22PUpmkAA50gpieVx5rG0ro
+	 hNN72amNH4bdw9haxfvLf/dRgG0zKqWDIOexvBvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfKJDIn (ORCPT
+        id S1728688AbfKJCow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:08:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45200 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727642AbfKJCoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:54 -0500
+        id S1727296AbfKJCo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CFFC215EA;
-        Sun, 10 Nov 2019 02:44:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5BE521924;
+        Sun, 10 Nov 2019 02:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353894;
-        bh=1NofNetifklNsULoKa8iBoNhHM8w7x2djmZ0FjMFPW8=;
+        s=default; t=1573353867;
+        bh=YnD9x+eja6JGX98NJrMj97iJQaEMDMj5uSFc7nwljo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=weVQxyEL4SXere2AdwwwRbyiZwU4Z0pHu0/rGkARLerrAYSBXWijpCbcM28roBx8F
-         E4vXazI29gYtkFHYzQnthnUF6MoPMDfsN/BdPMkNuWVPttLHtHU9e9tkv+L0L3h8Lu
-         VNoGRq+6QokVvL1Qdk34iGPa6C9gB7u83UQk7GRY=
+        b=wwlYO+DgP7TyRTyP30S8cd9CTuWDrDxHkANE3nigL1lu2bWhEF1hgWPAumOWxIh4W
+         IR3K84zZk7wZ094rEU+Ac+/A/3iTmkpJw2cRE9nqgGu7PpeDBRRiNrVs2mdU9iggJw
+         viBl7LkpASA7aKgaXJAzbB0ZEWuh55+HMHwX6qhk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 164/191] iwlwifi: pcie: gen2: build A-MSDU only for GSO
-Date:   Sat,  9 Nov 2019 21:39:46 -0500
-Message-Id: <20191110024013.29782-164-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 147/191] f2fs: fix to recover inode's project id during POR
+Date:   Sat,  9 Nov 2019 21:39:29 -0500
+Message-Id: <20191110024013.29782-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,41 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 53f474e6a8d74d5dc0c3a015d889471f9a157685 ]
+[ Upstream commit f4474aa6e5e901ee4af21f39f1b9115aaaaec503 ]
 
-If the incoming frame should be an A-MSDU, it may already be one,
-for example in the case of NAN multicast being encapsulated in an
-A-MSDU. Thus, use the GSO algorithm to build A-MSDU only if the
-skb actually contains GSO data.
+Testcase to reproduce this bug:
+1. mkfs.f2fs -O extra_attr -O project_quota /dev/sdd
+2. mount -t f2fs /dev/sdd /mnt/f2fs
+3. touch /mnt/f2fs/file
+4. sync
+5. chattr -p 1 /mnt/f2fs/file
+6. xfs_io -f /mnt/f2fs/file -c "fsync"
+7. godown /mnt/f2fs
+8. umount /mnt/f2fs
+9. mount -t f2fs /dev/sdd /mnt/f2fs
+10. lsattr -p /mnt/f2fs/file
 
-Fixes: 6ffe5de35b05 ("iwlwifi: pcie: add AMSDU to gen2")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+    0 -----------------N- /mnt/f2fs/file
+
+But actually, we expect the correct result is:
+
+    1 -----------------N- /mnt/f2fs/file
+
+The reason is we didn't recover inode.i_projid field during mount,
+fix it.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/f2fs/recovery.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-index b99f33ff91230..61ffa1d1a00d7 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-@@ -526,7 +526,12 @@ struct iwl_tfh_tfd *iwl_pcie_gen2_build_tfd(struct iwl_trans *trans,
- 
- 	hdr_len = ieee80211_hdrlen(hdr->frame_control);
- 
--	if (amsdu)
-+	/*
-+	 * Only build A-MSDUs here if doing so by GSO, otherwise it may be
-+	 * an A-MSDU for other reasons, e.g. NAN or an A-MSDU having been
-+	 * built in the higher layers already.
-+	 */
-+	if (amsdu && skb_shinfo(skb)->gso_size)
- 		return iwl_pcie_gen2_build_tx_amsdu(trans, txq, dev_cmd, skb,
- 						    out_meta, hdr_len, len);
- 
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 2c5d2c25d37e3..01636d996ba41 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -218,6 +218,19 @@ static void recover_inode(struct inode *inode, struct page *page)
+ 	inode->i_mode = le16_to_cpu(raw->i_mode);
+ 	i_uid_write(inode, le32_to_cpu(raw->i_uid));
+ 	i_gid_write(inode, le32_to_cpu(raw->i_gid));
++
++	if (raw->i_inline & F2FS_EXTRA_ATTR) {
++		if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)->sb) &&
++			F2FS_FITS_IN_INODE(raw, le16_to_cpu(raw->i_extra_isize),
++								i_projid)) {
++			projid_t i_projid;
++
++			i_projid = (projid_t)le32_to_cpu(raw->i_projid);
++			F2FS_I(inode)->i_projid =
++				make_kprojid(&init_user_ns, i_projid);
++		}
++	}
++
+ 	f2fs_i_size_write(inode, le64_to_cpu(raw->i_size));
+ 	inode->i_atime.tv_sec = le64_to_cpu(raw->i_atime);
+ 	inode->i_ctime.tv_sec = le64_to_cpu(raw->i_ctime);
 -- 
 2.20.1
 
