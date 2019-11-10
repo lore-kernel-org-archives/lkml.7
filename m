@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF47C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF2FC17444
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8265215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80F8215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355200;
-	bh=oDKOZKsGlOSOwbHZ/0xDL00iTc9xm4wYxZZxvU1I6Pc=;
+	s=default; t=1573355206;
+	bh=RRoVybARuoCg+kCC3+TjStz3qLWGD7rDOiQeSGC0dmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jbh4JQVolKSaUg4hi3MnAzX4e5InaZLVNmJmUN3XDCBO69UbS+/hrbpLPrXjwCrCt
-	 zwcaSv30S7/V4Nh/PWM9cSFyosUBBrVLE/27Q5bJ+X2ufPp/ibXgeEreItRm0ZiMVF
-	 d0YraMcuQrURgGQobRZ1F5ealbbLNcETT23HipQE=
+	b=ceGXPL4myl9uFlDSc0WM2jymAdTzawlY565s0oxtHeVuE/0sKO1GiZ0Cs/tHrydw/
+	 UnYqZrU7KYcWeLApguuyfRYvtSVNY2i5S1RWmvn8EHd4W5gT6Y/E5yjKAUdxSrsvtr
+	 HMysSEPplx965jqbgvc+jD8ZCWAQL4VV7WWxtk3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfKJDGk (ORCPT
+        id S1728898AbfKJCpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:06:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728784AbfKJCps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:48 -0500
+        id S1728779AbfKJCpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD90B2085B;
-        Sun, 10 Nov 2019 02:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB8BD21D7F;
+        Sun, 10 Nov 2019 02:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353947;
-        bh=oDKOZKsGlOSOwbHZ/0xDL00iTc9xm4wYxZZxvU1I6Pc=;
+        s=default; t=1573353917;
+        bh=RRoVybARuoCg+kCC3+TjStz3qLWGD7rDOiQeSGC0dmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IHKHNiuaha/Zg8i/x5zBJUqfcVPsns89kxR5k59R39uLFWF8WwEwPHZFbKRM9nDjk
-         Vp886a/y9nDoiK85sjKCMgeASa2QnNwzgmPsRo46bS9c4h4INllNAjDhnTGJv978T2
-         PyVrxMQ18weirXZyROv34R/sC/vNe6b0s/ze/xzs=
+        b=n3XerMSuQxmtIiwIW1TXJlIqo6mq0bY0I4IUz8lNdbNHCzXC8rzp4iGe9LKmwy4QV
+         G2ksM5J/jDI8C1kPqUraUUJEtyyVhgQEkl6ai4cJLjQYCK1HWVtUhEFpzQMk2SKOCi
+         mejhBneoBNx7Zq2wQq/j1lHLbFZVkWiOHc2U5v1s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Vasilyev <vasilyev@ispras.ru>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 005/109] serial: mxs-auart: Fix potential infinite loop
-Date:   Sat,  9 Nov 2019 21:43:57 -0500
-Message-Id: <20191110024541.31567-5-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Denis Osterland <Denis.Osterland@diehl.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 180/191] rtc: isl1208: avoid possible sysfs race
+Date:   Sat,  9 Nov 2019 21:40:02 -0500
+Message-Id: <20191110024013.29782-180-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
-References: <20191110024541.31567-1-sashal@kernel.org>
+In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
+References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,42 +59,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Vasilyev <vasilyev@ispras.ru>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 5963e8a3122471cadfe0eba41c4ceaeaa5c8bb4d ]
+[ Upstream commit 1b4c794fda583edabe864ac466e9cd43c707be80 ]
 
-On the error path of mxs_auart_request_gpio_irq() is performed
-backward iterating with index i of enum type. Underline enum type
-may be unsigned char. In this case check (--i >= 0) will be always
-true and error handling goes into infinite loop.
+Use rtc_add_group to add the common sysfs group to avoid a possible race
+condition.
 
-The patch changes the check so that it is valid for signed and unsigned
-types.
+[Denis.Osterland@diehl.com: use to_i2c_client(dev->parent)]
+Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Found by Linux Driver Verification project (linuxtesting.org).
+The move of atrim, dtrim usr sysfs properties from i2c device
+to rtc device require to access them via dev->parent.
+This patch also aligns timestamp0.
 
-Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/mxs-auart.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-isl1208.c | 27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index 673c8fd7e34f6..e83750831f15e 100644
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -1638,8 +1638,9 @@ static int mxs_auart_request_gpio_irq(struct mxs_auart_port *s)
+diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
+index ea18a8f4bce06..033f65aef5788 100644
+--- a/drivers/rtc/rtc-isl1208.c
++++ b/drivers/rtc/rtc-isl1208.c
+@@ -518,7 +518,7 @@ static ssize_t timestamp0_store(struct device *dev,
+ 				struct device_attribute *attr,
+ 				const char *buf, size_t count)
+ {
+-	struct i2c_client *client = dev_get_drvdata(dev);
++	struct i2c_client *client = to_i2c_client(dev->parent);
+ 	int sr;
  
- 	/*
- 	 * If something went wrong, rollback.
-+	 * Be careful: i may be unsigned.
- 	 */
--	while (err && (--i >= 0))
-+	while (err && (i-- > 0))
- 		if (irq[i] >= 0)
- 			free_irq(irq[i], s);
+ 	sr = isl1208_i2c_get_sr(client);
+@@ -540,7 +540,7 @@ static ssize_t timestamp0_store(struct device *dev,
+ static ssize_t timestamp0_show(struct device *dev,
+ 			       struct device_attribute *attr, char *buf)
+ {
+-	struct i2c_client *client = dev_get_drvdata(dev);
++	struct i2c_client *client = to_i2c_client(dev->parent);
+ 	u8 regs[ISL1219_EVT_SECTION_LEN] = { 0, };
+ 	struct rtc_time tm;
+ 	int sr;
+@@ -650,7 +650,7 @@ static ssize_t
+ isl1208_sysfs_show_atrim(struct device *dev,
+ 			 struct device_attribute *attr, char *buf)
+ {
+-	int atr = isl1208_i2c_get_atr(to_i2c_client(dev));
++	int atr = isl1208_i2c_get_atr(to_i2c_client(dev->parent));
+ 	if (atr < 0)
+ 		return atr;
+ 
+@@ -663,7 +663,7 @@ static ssize_t
+ isl1208_sysfs_show_dtrim(struct device *dev,
+ 			 struct device_attribute *attr, char *buf)
+ {
+-	int dtr = isl1208_i2c_get_dtr(to_i2c_client(dev));
++	int dtr = isl1208_i2c_get_dtr(to_i2c_client(dev->parent));
+ 	if (dtr < 0)
+ 		return dtr;
+ 
+@@ -676,7 +676,7 @@ static ssize_t
+ isl1208_sysfs_show_usr(struct device *dev,
+ 		       struct device_attribute *attr, char *buf)
+ {
+-	int usr = isl1208_i2c_get_usr(to_i2c_client(dev));
++	int usr = isl1208_i2c_get_usr(to_i2c_client(dev->parent));
+ 	if (usr < 0)
+ 		return usr;
+ 
+@@ -701,7 +701,10 @@ isl1208_sysfs_store_usr(struct device *dev,
+ 	if (usr < 0 || usr > 0xffff)
+ 		return -EINVAL;
+ 
+-	return isl1208_i2c_set_usr(to_i2c_client(dev), usr) ? -EIO : count;
++	if (isl1208_i2c_set_usr(to_i2c_client(dev->parent), usr))
++		return -EIO;
++
++	return count;
+ }
+ 
+ static DEVICE_ATTR(usr, S_IRUGO | S_IWUSR, isl1208_sysfs_show_usr,
+@@ -765,7 +768,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	rtc->ops = &isl1208_rtc_ops;
+ 
+ 	i2c_set_clientdata(client, rtc);
+-	dev_set_drvdata(&rtc->dev, client);
+ 
+ 	rc = isl1208_i2c_get_sr(client);
+ 	if (rc < 0) {
+@@ -804,7 +806,7 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		evdet_irq = of_irq_get_byname(np, "evdet");
+ 	}
+ 
+-	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
++	rc = rtc_add_group(rtc, &isl1208_rtc_sysfs_files);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -821,14 +823,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	return rtc_register_device(rtc);
+ }
+ 
+-static int
+-isl1208_remove(struct i2c_client *client)
+-{
+-	sysfs_remove_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
+-
+-	return 0;
+-}
+-
+ static const struct i2c_device_id isl1208_id[] = {
+ 	{ "isl1208", TYPE_ISL1208 },
+ 	{ "isl1218", TYPE_ISL1218 },
+@@ -851,7 +845,6 @@ static struct i2c_driver isl1208_driver = {
+ 		.of_match_table = of_match_ptr(isl1208_of_match),
+ 	},
+ 	.probe = isl1208_probe,
+-	.remove = isl1208_remove,
+ 	.id_table = isl1208_id,
+ };
  
 -- 
 2.20.1
