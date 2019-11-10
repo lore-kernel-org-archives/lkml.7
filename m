@@ -7,58 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1624C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70479C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E33214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B5C21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354656;
-	bh=XnRIcdZVlp6No/mC06k2e6r9GyXH2JlTE8agqW0ry2g=;
+	s=default; t=1573354659;
+	bh=5WJiAT5XHNPt7tsfOK7uUb9wu5fkg7bQm1JKF/rfFXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPr4kEEAYiUmzyuOluQ2CSsf95CKn08CofF8HpRshKdsXszIzWzlFXmIMTk8W+dh9
-	 hLxP/zIeuycGq0pFbVI0Ioocg2bq6vMpXJ4OWTVaCme8XzXo3SySOqo0rd2iiAqKqf
-	 i3fp6u5oAMiQMfY8Ol2mvCvimunDsc22tUT2kCls=
+	b=O7QMQ9tkL79kVMqDDDGZxJIwfzqB7fnM4/99UJa91An2YPqgTlBCmIg8mpKhnQm/Z
+	 EkYZfB1kEObi6sz1PCdSSm+ZClKBJs2+rdi/5y8apYddGHmDf+JtUhRMFG4cXpsx05
+	 67ZdfFmKzFVdVjv8Lr2Syh01+Zzm0SNYFOanfcFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbfKJC5f (ORCPT
+        id S1729535AbfKJC5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:57:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729439AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729454AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B42224A1;
-        Sun, 10 Nov 2019 02:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9275821D7E;
+        Sun, 10 Nov 2019 02:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354089;
-        bh=XnRIcdZVlp6No/mC06k2e6r9GyXH2JlTE8agqW0ry2g=;
+        s=default; t=1573354047;
+        bh=5WJiAT5XHNPt7tsfOK7uUb9wu5fkg7bQm1JKF/rfFXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IpKpujuGz23sL4v2yY4XKsg/TLIWLb8uBEn65eT82kAm5UP1/SajJK2xTPXHxbIBr
-         SEvIUgdZdlb9dbZ/rheejE5aJzbqfnAtIYtw9+Gcc/QJZmdncZlmw0KxQLRnA9KArd
-         ZI71tupIo8I3UOtmDGfPGbdSdhvXdD6IzkKBjs9c=
+        b=htae9CG/V8tU01e40/ry287Av2FeYnUsnglYFokD7+pyVYTQyYFSFTQORu1QHrrXG
+         cwSQJBfx9lMBpGx/DotzNv6I+WFxkVSPXHrTzPWFFQs/cfU2nZe1HPGsud9nhzvCnR
+         aN5ufz8xYYGMnZ/2AfBjbOC/KBpUbvuN+p+VYI/s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
-        Olaf Aepfle <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Marcelo Cerri <marcelo.cerri@canonical.com>,
-        Josh Poulson <jopoulso@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 085/109] x86/hyperv: Suppress "PCI: Fatal: No config space access function found"
-Date:   Sat,  9 Nov 2019 21:45:17 -0500
-Message-Id: <20191110024541.31567-85-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 058/109] phy: renesas: rcar-gen3-usb2: fix vbus_ctrl for role sysfs
+Date:   Sat,  9 Nov 2019 21:44:50 -0500
+Message-Id: <20191110024541.31567-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -71,79 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 2f285f46240d67060061d153786740d4df53cd78 ]
+[ Upstream commit 09938ea9d136243e8d1fed6d4d7a257764f28f6d ]
 
-A Generation-2 Linux VM on Hyper-V doesn't have the legacy PCI bus, and
-users always see the scary warning, which is actually harmless.
+This patch fixes and issue that the vbus_ctrl is disabled by
+rcar_gen3_init_from_a_peri_to_a_host(), so a usb host cannot
+supply the vbus.
 
-Suppress it.
+Note that this condition will exit when the otg irq happens
+even if we don't apply this patch.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: KY Srinivasan <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>
-Cc: Olaf Aepfle <olaf@aepfle.de>
-Cc: Andy Whitcroft <apw@canonical.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Marcelo Cerri <marcelo.cerri@canonical.com>
-Cc: Josh Poulson <jopoulso@microsoft.com>
-Link: https://lkml.kernel.org/r/ <KU1P153MB0166D977DC930996C4BF538ABF1D0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+Fixes: 9bb86777fb71 ("phy: rcar-gen3-usb2: add sysfs for usb role swap")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 2e9d58cc371e6..2653b7b25d176 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -17,6 +17,7 @@
-  *
-  */
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index e8fe80312820d..7f5e36bfeee8d 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -195,7 +195,7 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
+ 	val = readl(usb2_base + USB2_OBINTEN);
+ 	writel(val & ~USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
  
-+#include <linux/efi.h>
- #include <linux/types.h>
- #include <asm/hypervisor.h>
- #include <asm/hyperv.h>
-@@ -101,6 +102,22 @@ static int hv_cpu_init(unsigned int cpu)
- 	return 0;
- }
+-	rcar_gen3_enable_vbus_ctrl(ch, 0);
++	rcar_gen3_enable_vbus_ctrl(ch, 1);
+ 	rcar_gen3_init_for_host(ch);
  
-+static int __init hv_pci_init(void)
-+{
-+	int gen2vm = efi_enabled(EFI_BOOT);
-+
-+	/*
-+	 * For Generation-2 VM, we exit from pci_arch_init() by returning 0.
-+	 * The purpose is to suppress the harmless warning:
-+	 * "PCI: Fatal: No config space access function found"
-+	 */
-+	if (gen2vm)
-+		return 0;
-+
-+	/* For Generation-1 VM, we'll proceed in pci_arch_init().  */
-+	return 1;
-+}
-+
- /*
-  * This function is to be invoked early in the boot sequence after the
-  * hypervisor has been detected.
-@@ -154,6 +171,8 @@ void hyperv_init(void)
- 
- 	hyper_alloc_mmu();
- 
-+	x86_init.pci.arch_init = hv_pci_init;
-+
- 	/*
- 	 * Register Hyper-V specific clocksource.
- 	 */
+ 	writel(val | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
 -- 
 2.20.1
 
