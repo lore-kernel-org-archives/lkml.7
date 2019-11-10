@@ -2,208 +2,96 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90A6C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2144C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720AC206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758F62075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 22:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WtlaAoKE"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VLhVfkZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKJWCc (ORCPT
+        id S1727185AbfKJWJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 17:02:32 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43641 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfKJWCb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 17:02:31 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n1so12525089wra.10
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 14:02:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XiZ3YYvjZNzRtqsEDX9KtMzE3FSNUK/E0+y+ayqaNl8=;
-        b=WtlaAoKErXP6oWh9i1Y6e6ZRKTHN70XjeRLT416hN1ckMpqtDzYCh+sR89mKX21gf/
-         UDGPs7klFvQmfC2EAAEFjL5vS/p3ehYtYldNJeRbr/WD6n5UDaIfuAsJ84tzUJXOVNnW
-         G3Abu0CUUlai+X19pH9le4z/OxWuKC8BmsSPo0G7gupdv5mRhUPE+X1bM2dOfcbu3Ws7
-         QNytQroxH332qqmKc4uwHRCLX/hsRbWdu5DGiuagbPOTsYRrgKAipm2I72VJeTp3jlsE
-         z4fjNZQrUd2PeXyAnKiCGzcAOeoYJynZd+8WoCvCk8xMv2Lxy5hFQakBkCZbSrZ1L0BV
-         ypfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XiZ3YYvjZNzRtqsEDX9KtMzE3FSNUK/E0+y+ayqaNl8=;
-        b=e28+QQT3a9wxBmXZAZQSqJMnzvGoa2NXXncP716mWojXkdV1V+O2VWGkgrSSJ9Vy3y
-         JmzNNQZVDmFbGx7ATgzB7oPupEyq8RwQJ0bLnPo0W9hYZjROMwjErUS7a1Xup4J7M0m8
-         /PG097asjNXs2sCQmdOyoz6TQZdsCxD0+ckRBEM/11Q8iSAFeR4AkL/SPvR1EWmFlm8Q
-         scYCi6DDW9zf3GujDISS74dXpcumxJd2vCYJIgqIIsfK8ZMcz+mlCfllKTNPaPmb2+oQ
-         nBx7se/LbglkWPWBQujZPx786BTXdzvMfRLhp0VyLDjDs4ScdBMO8vHbI0kLBNSmIB3I
-         an3g==
-X-Gm-Message-State: APjAAAW5vDTtrdD2tU3RNRM4s4YJddfXgd815rfcC6Q8io+vD4lNZGtW
-        lUuvvQaifaGzyjwpwqyC4/dmX5vUTla1C/Suq3sAmA==
-X-Google-Smtp-Source: APXvYqxjTkVDpprPp4u4gnSTrHGrGKSEdluo8CwAzRvVSQ7VsQh1BJztEPLmWj5IOX9NHLA5GKd8dD9AIl8B0r+SNc8=
-X-Received: by 2002:a5d:678c:: with SMTP id v12mr6403180wru.116.1573423348179;
- Sun, 10 Nov 2019 14:02:28 -0800 (PST)
+        Sun, 10 Nov 2019 17:09:34 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59077 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbfKJWJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 17:09:34 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47B7TR20Kgz9sPc;
+        Mon, 11 Nov 2019 09:09:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573423771;
+        bh=Cv6z+i429pmCjXeqpUNY4ZeWKmN6N+qlc45P2WoyOWU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VLhVfkZs7Eff6ZEjFo/mHKqqIh5Zbc/VwQyJWYdkMQsVLo1NktLrJyf+8PGuh3/nj
+         q86z9Xn34RQEJ6ooFM0LPJcY37QU5ltrI1x03YJjpYrQJfL/+XDXFpF7SB9uOD13sL
+         XAvdFDzrA80PX3e5ZNZx74zn7SPQWQOIIc3HUSfDRGqlc43324rY6IVqO5tWWxWdQQ
+         cDfPx1Ky5SqgPwwAGtg+1Y4uDPuaVdcq8GulL3Io9DajonmCQ8HK0MEB3GS7kiqmYb
+         5rZue05VzG1Knu8vgojz6lWoKT92FCDalik5bQGfyNJD9VrMvMLOWaSRnj+Xjf8B5U
+         Vr3reKF5dvKMA==
+Date:   Mon, 11 Nov 2019 09:09:17 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the vfs-fixes tree
+Message-ID: <20191111090917.0203cb82@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-2-hannes@cmpxchg.org>
-In-Reply-To: <20191107205334.158354-2-hannes@cmpxchg.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Sun, 10 Nov 2019 14:02:17 -0800
-Message-ID: <CAJuCfpGCoPoMAMTkjvJEAxvSG+3ttcpVyoOd48c=69qS=7Pa0Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mm: vmscan: move file exhaustion detection to the
- node level
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
-        cgroups mailinglist <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/kJsyl2GzuYj7XNgOOmgIbP.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> When file pages are lower than the watermark on a node, we try to
-> force scan anonymous pages to counter-act the balancing algorithms
-> preference for new file pages when they are likely thrashing. This is
-> a node-level decision, but it's currently made each time we look at an
-> lruvec. This is unnecessarily expensive and also a layering violation
-> that makes the code harder to understand.
->
-> Clean this up by making the check once per node and setting a flag in
-> the scan_control.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
-> ---
->  mm/vmscan.c | 80 ++++++++++++++++++++++++++++-------------------------
->  1 file changed, 42 insertions(+), 38 deletions(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index d97985262dda..e8dd601e1fad 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -101,6 +101,9 @@ struct scan_control {
->         /* One of the zones is ready for compaction */
->         unsigned int compaction_ready:1;
->
-> +       /* The file pages on the current node are dangerously low */
-> +       unsigned int file_is_tiny:1;
-> +
->         /* Allocation order */
->         s8 order;
->
-> @@ -2289,45 +2292,16 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
->         }
->
->         /*
-> -        * Prevent the reclaimer from falling into the cache trap: as
-> -        * cache pages start out inactive, every cache fault will tip
-> -        * the scan balance towards the file LRU.  And as the file LRU
-> -        * shrinks, so does the window for rotation from references.
-> -        * This means we have a runaway feedback loop where a tiny
-> -        * thrashing file LRU becomes infinitely more attractive than
-> -        * anon pages.  Try to detect this based on file LRU size.
-> +        * If the system is almost out of file pages, force-scan anon.
-> +        * But only if there are enough inactive anonymous pages on
-> +        * the LRU. Otherwise, the small LRU gets thrashed.
->          */
-> -       if (!cgroup_reclaim(sc)) {
-> -               unsigned long pgdatfile;
-> -               unsigned long pgdatfree;
-> -               int z;
-> -               unsigned long total_high_wmark = 0;
-> -
-> -               pgdatfree = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
-> -               pgdatfile = node_page_state(pgdat, NR_ACTIVE_FILE) +
-> -                          node_page_state(pgdat, NR_INACTIVE_FILE);
-> -
-> -               for (z = 0; z < MAX_NR_ZONES; z++) {
-> -                       struct zone *zone = &pgdat->node_zones[z];
-> -                       if (!managed_zone(zone))
-> -                               continue;
-> -
-> -                       total_high_wmark += high_wmark_pages(zone);
-> -               }
-> -
-> -               if (unlikely(pgdatfile + pgdatfree <= total_high_wmark)) {
-> -                       /*
-> -                        * Force SCAN_ANON if there are enough inactive
-> -                        * anonymous pages on the LRU in eligible zones.
-> -                        * Otherwise, the small LRU gets thrashed.
-> -                        */
-> -                       if (!inactive_list_is_low(lruvec, false, sc, false) &&
-> -                           lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, sc->reclaim_idx)
-> -                                       >> sc->priority) {
-> -                               scan_balance = SCAN_ANON;
-> -                               goto out;
-> -                       }
-> -               }
-> +       if (sc->file_is_tiny &&
-> +           !inactive_list_is_low(lruvec, false, sc, false) &&
-> +           lruvec_lru_size(lruvec, LRU_INACTIVE_ANON,
-> +                           sc->reclaim_idx) >> sc->priority) {
-> +               scan_balance = SCAN_ANON;
-> +               goto out;
->         }
->
->         /*
-> @@ -2754,6 +2728,36 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->         nr_reclaimed = sc->nr_reclaimed;
->         nr_scanned = sc->nr_scanned;
->
-> +       /*
-> +        * Prevent the reclaimer from falling into the cache trap: as
-> +        * cache pages start out inactive, every cache fault will tip
-> +        * the scan balance towards the file LRU.  And as the file LRU
-> +        * shrinks, so does the window for rotation from references.
-> +        * This means we have a runaway feedback loop where a tiny
-> +        * thrashing file LRU becomes infinitely more attractive than
-> +        * anon pages.  Try to detect this based on file LRU size.
-> +        */
-> +       if (!cgroup_reclaim(sc)) {
-> +               unsigned long file;
-> +               unsigned long free;
-> +               int z;
-> +               unsigned long total_high_wmark = 0;
-> +
-> +               free = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
-> +               file = node_page_state(pgdat, NR_ACTIVE_FILE) +
-> +                          node_page_state(pgdat, NR_INACTIVE_FILE);
-> +
-> +               for (z = 0; z < MAX_NR_ZONES; z++) {
-> +                       struct zone *zone = &pgdat->node_zones[z];
-> +                       if (!managed_zone(zone))
-> +                               continue;
-> +
-> +                       total_high_wmark += high_wmark_pages(zone);
-> +               }
-> +
-> +               sc->file_is_tiny = file + free <= total_high_wmark;
-> +       }
-> +
->         shrink_node_memcgs(pgdat, sc);
->
->         if (reclaim_state) {
-> --
-> 2.24.0
->
+--Sig_/kJsyl2GzuYj7XNgOOmgIbP.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Johannes,
-Thanks for working on this! On Android reclaim regression caused by
-memcgs is a known issue and I'll try to test your patcheset next week.
+Hi all,
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+In commit
+
+  bcf0d9d4b769 ("ecryptfs: fix unlink and rmdir in face of underlying fs mo=
+difications")
+
+Fixes tag
+
+  Fixes: 74dd7c97ea2 "ecryptfs_rename(): verify that lower dentries are sti=
+ll OK after lock_rename()"
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kJsyl2GzuYj7XNgOOmgIbP.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3Iio0ACgkQAVBC80lX
+0GyAIQf+ODtJOklQGHdIbk2I33vNr9uuYoT+GNpqjJlI1yTi+EgeZiRf71e+AJt6
+ik0dnr6gdjPBAPo2u8CQVYncJgxHHre748zWvwj8xNlnYUhu/nfSDNUI/MRAhM6Q
+SxWh27Cs/ixpucWioJRO67lM4J8xoBIdb3pMgoXcoFTFznMT5ZzReglexhT+EGZr
+AMihw4YQPtcaTaiUPx35aDcXWSM8kmfXhOG3lyZGLtv8015KsYzbobIqvwihwpB9
+3/q85fq5nSZN0uwM4o5u4B89IPz7BlWdaM6cFDfwsjG8POM3PeWzXM5MjJ6PbBY2
+Oi4ONw2ARk4sjsXjadqjd6Evx6oFGw==
+=gbwi
+-----END PGP SIGNATURE-----
+
+--Sig_/kJsyl2GzuYj7XNgOOmgIbP.--
