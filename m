@@ -2,128 +2,410 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B28C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620FEC17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AEF206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="QP7GK7An"
+	by mail.kernel.org (Postfix) with ESMTP id 26D132085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573403177;
+	bh=p6NUH2GFWSSWxKqAf6LKwGLZgtIr9Y6I8XmXKcLLfxg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=c1zx8rzsHZaeemJU5T6wxJlzcixxHDwRxt2aHC6DA2tydu1rVMtYMlJLThykG6Nqj
+	 n28r4yCgk5l9MAjDhbNJjfzreBQRJvZY+0Qg2TOMQWH9ctli0v0LlTBGT7+RL/inWV
+	 B/SDvf0Yrd2nmCcqQ4h3eTXvS5xgmMJ2qQMsfaXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKJQVs (ORCPT
+        id S1726995AbfKJQ0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:21:48 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:33181 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfKJQVs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:21:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573402906;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=69FfUeSqb2fedNCohVljQrRWHmyf/9ZXSdgsxjOGuNI=;
-        b=QP7GK7AnnTwE7wadEIXRoRKYUu8exR2EBMevCsa3NncBQ7zn1WDdr7At+oy8ppyIcl
-        GEitvgsbTf1Un9xGH/z1DbqiOyTUNHVyLD+BNVtfRHA5lVvTHa8mHbWhIQEj9O5Z98WZ
-        OK7p3eLlcjp6h+O9qLSy0H+CARqXFbHEM2cqEl6bg1AOqw/y5SnowFvWv2/NRGnPUKuo
-        BeZkre9Qr79u/ea7yVC/BsqxJBsgVcSx04cBZHegTwbN32toupHAS6LNardq8iIkdh2s
-        vj/di3ujOI40fLdc875qYDCoTXxF0RLUs9iYrUmnjIk1aSwnxtoMmTN3DkrpZg0Ke9LV
-        s3IQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXt8PvtxJQng=="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAAGLQywV
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 10 Nov 2019 17:21:26 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     =?UTF-8?q?Cl=C3=A9ment=20Perrochaud?= 
-        <clement.perrochaud@effinnov.com>,
-        Charles Gorand <charles.gorand@effinnov.com>,
-        linux-nfc@lists.01.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sedat Dilek <sedat.dilek@credativ.de>,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
-Date:   Sun, 10 Nov 2019 17:19:15 +0100
-Message-Id: <20191110161915.11059-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.23.0
+        Sun, 10 Nov 2019 11:26:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbfKJQ0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 11:26:15 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC16520854;
+        Sun, 10 Nov 2019 16:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573403174;
+        bh=p6NUH2GFWSSWxKqAf6LKwGLZgtIr9Y6I8XmXKcLLfxg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OEqvq5xNaKPIK8kb1vLP9p2hqt2Q6kVgKYRkjX2mDZuaDe4UeRdNNdZsRBsuZ3yhG
+         PM2wzzIgr4LISQuWgplBEpay1ws+hJwxuAjoOD8eRc1d0VIVSMOrw7VFlaFtH9r1JH
+         yGR2waiYGzpxmcchOHs09P1QFPPkHXpsCcdEz6EA=
+Date:   Sun, 10 Nov 2019 16:26:08 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Song Qiang <songqiang1304521@gmail.com>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
+        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: add support for AD5940
+Message-ID: <20191110162608.21b40714@archlinux>
+In-Reply-To: <20191108130946.14740-1-songqiang1304521@gmail.com>
+References: <20191108130946.14740-1-songqiang1304521@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
-result in a NULL pointer dereference at the moment:
+On Fri,  8 Nov 2019 21:09:44 +0800
+Song Qiang <songqiang1304521@gmail.com> wrote:
 
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    Oops: 0002 [#1] PREEMPT SMP NOPTI
-    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
-    RIP: 0010:skb_queue_tail+0x25/0x50
-    Call Trace:
-     nci_recv_frame+0x36/0x90 [nci]
-     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
-     ? preempt_count_add+0x68/0xa0
-     ? irq_forced_thread_fn+0x80/0x80
-     irq_thread_fn+0x20/0x60
-     irq_thread+0xee/0x180
-     ? wake_threads_waitq+0x30/0x30
-     kthread+0xfb/0x130
-     ? irq_thread_check_affinity+0xd0/0xd0
-     ? kthread_park+0x90/0x90
-     ret_from_fork+0x1f/0x40
+> Add yaml devicetree description file and a header file for
+> helping configure positive and negtive input of AD5940.
+> 
+> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+Ouch. This is a very complex device, so I'm guessing this is the tip
+of the iceberg when it comes to the eventual binding.
+For reference of others this has a similarly complex DAC and
+TIA + some excitation voltage generators (DDS).
 
-Afterward the kernel must be rebooted to work properly again.
+Anyhow, a few comments inline but I'll definitely be looking for
+a dt maintainer input on this one.
 
-This happens because it attempts to call nci_recv_frame() with skb == NULL.
-However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
-NULL checks for skb, causing the NULL pointer dereference.
+Thanks,
 
-Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
-Make sure to log it so it is obvious that a communication error occurred.
-The error above then becomes:
+Jonathan
 
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
-    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+> ---
+>  .../bindings/iio/adc/adi,ad5940.yaml          | 240 ++++++++++++++++++
+>  include/dt-bindings/iio/adc/adi,ad5940.h      |  52 ++++
+>  2 files changed, 292 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+>  create mode 100644 include/dt-bindings/iio/adc/adi,ad5940.h
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+> new file mode 100644
+> index 000000000000..f7f034fdd8ec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+> @@ -0,0 +1,240 @@
+> +# SPDX-License-Identifier: GPL-2.0
+For new bindings, preference is to include a dual license
+(GPL-2.0-only OR BSD-2-Clause)
 
-Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
-Note: Not sure why NFC is broken on this laptop (a Lenovo ThinkPad L490).
-It runs into the I2C communication errors immediately when enabling NFC.
-This patch fixes the NULL pointer dereference at least.
----
- drivers/nfc/nxp-nci/i2c.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+If Analog is fine doing this that would be great.
 
-diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
-index 307bd2afbe05..4d1909aecd6c 100644
---- a/drivers/nfc/nxp-nci/i2c.c
-+++ b/drivers/nfc/nxp-nci/i2c.c
-@@ -220,8 +220,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
- 
- 	if (r == -EREMOTEIO) {
- 		phy->hard_fault = r;
--		skb = NULL;
--	} else if (r < 0) {
-+		if (info->mode == NXP_NCI_MODE_FW)
-+			nxp_nci_fw_recv_frame(phy->ndev, NULL);
-+	}
-+	if (r < 0) {
- 		nfc_err(&client->dev, "Read failed with error %d\n", r);
- 		goto exit_irq_handled;
- 	}
--- 
-2.23.0
+> +# Copyright 2019 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5940.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD5940 Device Tree Bindings
+> +
+> +maintainers:
+> +  - Song Qiang <songqiang1304521@gmail.com>
+> +
+> +description: |
+> +  Analog Devices AD5940 High Precision, Impedance, and Electrochemical Front End.
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5940.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad5940
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vref-supply:
+> +    description:
+> +      The regulator to be used to supply the reference voltage.
+> +    maxItems: 1
+
+It's worth taking a look at similar patch reviews to pick up on things
+that are common issues.  Rob has pointed out a few times recently that
+vref-supply can only ever have one item, so no need for maxItems.
+
+> +
+> +  adi,interrupt-io:
+> +    description:
+> +      Output GPIO index of interrupt controller of AD5940.
+> +    maxItems: 1
+
+I'm fairly sure an enum can only have one entry so don't think this is
+needed.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [0, 3, 6, 7]
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - adi,interrupt-io
+> +
+> +patternProperties:
+> +  # 'channel@0-255'
+
+Really?  That is a lot of channels.  Superficially it looks like a much
+smaller number of possibilities from the datasheet.
+
+> +  "^channel@([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$":
+> +    type: object
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> +    properties:
+> +      reg:
+> +        description:
+> +          Index of this channel, must be starting from 0.
+> +        maxItems: 1
+> +
+> +      diff-channels:
+> +        description:
+> +          Positive input and negtive input of the ADC buffer of this channel.
+> +          Input candidates are defined in include/dt-bindings/iio/adc/adi,ad5940.h.
+> +        minItems: 2
+> +        maxItems: 2
+> +        items:
+> +          - description: Positive input channel
+> +          - enum:
+> +            - AD5940_ADC_INPUTP_EXCITATION
+> +            - AD5940_ADC_INPUTP_FLOATING
+> +            - AD5940_ADC_INPUTP_HSTIA
+> +            - AD5940_ADC_INPUTP_LPTIA_LP
+> +            - AD5940_ADC_INPUTP_AIN0
+> +            - AD5940_ADC_INPUTP_AIN1
+> +            - AD5940_ADC_INPUTP_AIN2
+> +            - AD5940_ADC_INPUTP_AIN3
+> +            - AD5940_ADC_INPUTP_AVDD_2
+> +            - AD5940_ADC_INPUTP_DVDD_2
+> +            - AD5940_ADC_INPUTP_AVDD_REG_2
+> +            - AD5940_ADC_INPUTP_TEMP
+> +            - AD5940_ADC_INPUTP_VBIAS_CAP
+> +            - AD5940_ADC_INPUTP_DE0
+> +            - AD5940_ADC_INPUTP_SE0
+> +            - AD5940_ADC_INPUTP_VREF_2V5_2
+> +            - AD5940_ADC_INPUTP_VREF_1V82
+> +            - AD5940_ADC_INPUTP_P_TEMP_N
+> +            - AD5940_ADC_INPUTP_AIN4
+> +            - AD5940_ADC_INPUTP_AIN6
+> +            - AD5940_ADC_INPUTP_VZERO
+> +            - AD5940_ADC_INPUTP_VBIAS0
+> +            - AD5940_ADC_INPUTP_VCE0
+> +            - AD5940_ADC_INPUTP_VRE0
+> +            - AD5940_ADC_INPUTP_VCE0_2
+> +            - AD5940_ADC_INPUTP_LPTIA
+> +            - AD5940_ADC_INPUTP_AGND_REF
+> +
+> +          - description: Negtive input channel
+> +          - enum:
+> +              # Negtive input candidates
+> +              - AD5940_ADC_INPUTN_FLOATING
+> +              - AD5940_ADC_INPUTN_HSTIA
+> +              - AD5940_ADC_INPUTN_LPTIA
+> +              - AD5940_ADC_INPUTN_AIN0
+> +              - AD5940_ADC_INPUTN_AIN1
+> +              - AD5940_ADC_INPUTN_AIN2
+> +              - AD5940_ADC_INPUTN_AIN3
+> +              - AD5940_ADC_INPUTN_VBIAS_CA8
+> +              - AD5940_ADC_INPUTN_TEMP_N
+> +              - AD5940_ADC_INPUTN_AIN4
+> +              - AD5940_ADC_INPUTN_AIN6
+> +              - AD5940_ADC_INPUTN_VZERO
+> +              - AD5940_ADC_INPUTN_VBIAS0
+> +              - AD5940_ADC_INPUTN_EXCITATION
+> +
+> +      channel-name:
+> +        description:
+> +          Any string format name you would like to assign to this channel.
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +      - diff-channels
+> +      - channel-name
+> +
+> +examples:
+> +  - |
+> +    ad5940: ad5940@0 {
+> +      compatible = "adi,ad5940";
+> +      reg = <0>;
+> +      spi-max-frequency = <16000000>;
+> +      vref-supply = <&adc_vref>;
+> +      interrupt-parent = <&gpio>;
+> +      interrupts = <24 2>;
+> +
+> +      adi,interrupt-io = <0>;
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      channel@0 {
+> +        reg = <0>;
+> +        diff-channels = <AD5940_ADC_INPUTP_VCE0
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "Vce-Vbias";
+> +      };
+> +
+> +      channel@1 {
+> +        reg = <1>;
+> +        diff-channels = <AD5940_ADC_INPUTP_VRE0
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "Vre-Vbias";
+> +      };
+> +
+> +      channel@2 {
+> +        reg = <2>;
+> +        diff-channels = <AD5940_ADC_INPUTP_SE0
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "Vse-Vbias";
+> +      };
+> +
+> +      channel@3 {
+> +        reg = <3>;
+> +        diff-channels = <AD5940_ADC_INPUTP_DE0
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "Vde-Vbias";
+> +      };
+> +
+> +      channel@4 {
+> +        reg = <4>;
+> +        diff-channels = <AD5940_ADC_INPUTP_AIN0
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "ain0-Vbias";
+> +      };
+> +
+> +      channel@5 {
+> +        reg = <5>;
+> +        diff-channels = <AD5940_ADC_INPUTP_AIN1
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "ain1-Vbias";
+> +      };
+> +
+> +      channel@6 {
+> +        reg = <6>;
+> +        diff-channels = <AD5940_ADC_INPUTP_AIN2
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "ain2-Vbias";
+> +      };
+> +
+> +      channel@7 {
+> +        reg = <7>;
+> +        diff-channels = <AD5940_ADC_INPUTP_AIN3
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "ain3-Vbias";
+> +      };
+> +
+> +      channel@8 {
+> +        reg = <8>;
+> +        diff-channels = <AD5940_ADC_INPUTP_AIN4
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "ain4-Vbias";
+> +      };
+> +
+> +      channel@9 {
+> +        reg = <9>;
+> +        diff-channels = <AD5940_ADC_INPUTP_AIN6
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "ain6-Vbias";
+> +      };
+> +
+> +      channel@10 {
+> +        reg = <10>;
+> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA_LP
+> +                         AD5940_ADC_INPUTN_LPTIA>;
+> +        channel-name = "Low power TIA DC";
+> +      };
+> +
+> +      channel@11 {
+> +        reg = <11>;
+> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA
+> +                         AD5940_ADC_INPUTN_LPTIA>;
+> +        channel-name = "Low power TIA AC";
+> +      };
+> +
+> +      channel@12 {
+> +        reg = <12>;
+> +        diff-channels = <AD5940_ADC_INPUTP_HSTIA
+> +                         AD5940_ADC_INPUTN_HSTIA>;
+> +        channel-name = "High Speed TIA";
+> +      };
+> +
+> +      channel@13 {
+> +        reg = <13>;
+> +        diff-channels = <AD5940_ADC_INPUTP_TEMP
+> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> +        channel-name = "Temperature";
+> +      };
+> +    };
+> diff --git a/include/dt-bindings/iio/adc/adi,ad5940.h b/include/dt-bindings/iio/adc/adi,ad5940.h
+> new file mode 100644
+> index 000000000000..c17826f2f654
+> --- /dev/null
+> +++ b/include/dt-bindings/iio/adc/adi,ad5940.h
+> @@ -0,0 +1,52 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides constants for configuring the AD5940 AFE
+> + */
+> +
+> +#ifndef _DT_BINDINGS_IIO_ADC_AD5940_H
+> +#define _DT_BINDINGS_IIO_ADC_AD5940_H
+> +
+> +#define AD5940_ADC_INPUTN_FLOATING	0
+> +#define AD5940_ADC_INPUTN_HSTIA		1
+> +#define AD5940_ADC_INPUTN_LPTIA		2
+> +#define AD5940_ADC_INPUTN_AIN0		4
+> +#define AD5940_ADC_INPUTN_AIN1		5
+> +#define AD5940_ADC_INPUTN_AIN2		6
+> +#define AD5940_ADC_INPUTN_AIN3		7
+> +#define AD5940_ADC_INPUTN_VBIAS_CA8	10
+> +#define AD5940_ADC_INPUTN_TEMP_N	11
+> +#define AD5940_ADC_INPUTN_AIN4		12
+> +#define AD5940_ADC_INPUTN_AIN6		14
+> +#define AD5940_ADC_INPUTN_VZERO		16
+> +#define AD5940_ADC_INPUTN_VBIAS0	17
+> +#define AD5940_ADC_INPUTN_EXCITATION	20
+> +
+> +#define AD5940_ADC_INPUTP_FLOATING	0
+> +#define AD5940_ADC_INPUTP_HSTIA		1
+> +#define AD5940_ADC_INPUTP_LPTIA_LP	2
+> +#define AD5940_ADC_INPUTP_AIN0		4
+> +#define AD5940_ADC_INPUTP_AIN1		5
+> +#define AD5940_ADC_INPUTP_AIN2		6
+> +#define AD5940_ADC_INPUTP_AIN3		7
+> +#define AD5940_ADC_INPUTP_AVDD_2	8
+> +#define AD5940_ADC_INPUTP_DVDD_2	9
+> +#define AD5940_ADC_INPUTP_AVDD_REG_2	10
+> +#define AD5940_ADC_INPUTP_TEMP		11
+> +#define AD5940_ADC_INPUTP_VBIAS_CAP	12
+> +#define AD5940_ADC_INPUTP_DE0		13
+> +#define AD5940_ADC_INPUTP_SE0		14
+> +#define AD5940_ADC_INPUTP_VREF_2V5_2	16
+> +#define AD5940_ADC_INPUTP_VREF_1V82	18
+> +#define AD5940_ADC_INPUTP_P_TEMP_N	19
+> +#define AD5940_ADC_INPUTP_AIN4		20
+> +#define AD5940_ADC_INPUTP_AIN6		22
+> +#define AD5940_ADC_INPUTP_VZERO		23
+> +#define AD5940_ADC_INPUTP_VBIAS0	24
+> +#define AD5940_ADC_INPUTP_VCE0		25
+> +#define AD5940_ADC_INPUTP_VRE0		26
+> +#define AD5940_ADC_INPUTP_VCE0_2	31
+> +#define AD5940_ADC_INPUTP_LPTIA		33
+> +#define AD5940_ADC_INPUTP_AGND_REF	35
+> +#define AD5940_ADC_INPUTP_EXCITATION	36
+> +
+> +#endif /* _DT_BINDINGS_IIO_ADC_AD5940 */
 
