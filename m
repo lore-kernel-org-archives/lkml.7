@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C15C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121F8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5F321019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA85521019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354872;
-	bh=BIKvivTgbhJmyqsY0AFtQ/h+1Vep9bWqDEIZO2zDLAM=;
+	s=default; t=1573354875;
+	bh=xOH+ix3LhRxkW9EZ3qVwZJdXRhikzraxle2sk20ZrZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnQ7O8mvOkrFft7XcZjzUFm+LQcxqCGF1Lhpp932n/xaroo6/bQhuTcWuSIDZcC1t
-	 34n9kumuzDhM07xW7Dkwr63Atq3R6E3Ss5JslerYGrCCJEthTgoAdTRRUYfUAkA6Zm
-	 pVbn1nfZk/MVKKCKoj5Pld7HpymhZ0t9iZl2WTIY=
+	b=a2dWk7e/58CKbePkLHioleKGfmkY0tvpzb2jKSF0vEfDaW3dKaoa70fZvnvk5/dUN
+	 D4RJjPS6korEzDoIVR2eYCIKbyeEe/zkLSYDbsWiYYXIVaHpWkLk5pAgA2HbJtgWvi
+	 K4YgGk8NZDZsR+8D2/l52HmV9F94py4CTjBf/UsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfKJDBK (ORCPT
+        id S1729792AbfKJDBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:01:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:01:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729240AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B2E7224B8;
-        Sun, 10 Nov 2019 02:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D318A222C2;
+        Sun, 10 Nov 2019 02:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354091;
-        bh=BIKvivTgbhJmyqsY0AFtQ/h+1Vep9bWqDEIZO2zDLAM=;
+        s=default; t=1573354069;
+        bh=xOH+ix3LhRxkW9EZ3qVwZJdXRhikzraxle2sk20ZrZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTnzitFwU+qsS41Ld/cmBtE38VYB55bLroDHW5U3lFO/tJhuh6aLieiZUc9luE92P
-         YxUaNvfTU3yZBih5Esdz1jpopET1HiqabhYxWp+i5u94RV/5GlFNXnVA/EpT0ssu8p
-         gdzfheQQGluTfQBJmqV+4nybuKfXbguNPCio+Zjo=
+        b=C4gAE5BNRk/vw47KeattMvkGaJP9AztOEeY33dTpPuOv2eDToAZcTAQWsWPAnDik5
+         zXsPSQseTiOJqDGI5OUqf6eC7ATzQCJ/7YucSVLmu+bi/SPCzfW6CvhN4Ff00mH5NU
+         gyCkLToK/0VtM6ra0t7vwtjuxfiZx9m54fkpRgmE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Manszewski <c.manszewski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 086/109] crypto: s5p-sss: Fix Fix argument list alignment
-Date:   Sat,  9 Nov 2019 21:45:18 -0500
-Message-Id: <20191110024541.31567-86-sashal@kernel.org>
+Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 072/109] phy: lantiq: Fix compile warning
+Date:   Sat,  9 Nov 2019 21:45:04 -0500
+Message-Id: <20191110024541.31567-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -62,43 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Manszewski <c.manszewski@samsung.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
 
-[ Upstream commit 6c12b6ba45490eeb820fdceccf5a53f42a26799c ]
+[ Upstream commit 3a00dae006623d799266d85f28b5f76ef07d6b6c ]
 
-Fix misalignment of continued argument list.
+This local variable is unused, remove it.
 
-Signed-off-by: Christoph Manszewski <c.manszewski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: dea54fbad332 ("phy: Add an USB PHY driver for the Lantiq SoCs using the RCU module")
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/s5p-sss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/phy/lantiq/phy-lantiq-rcu-usb2.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-index aec66159566dd..9a5213cbcbe18 100644
---- a/drivers/crypto/s5p-sss.c
-+++ b/drivers/crypto/s5p-sss.c
-@@ -323,7 +323,7 @@ static void s5p_unset_indata(struct s5p_aes_dev *dev)
- }
- 
- static int s5p_make_sg_cpy(struct s5p_aes_dev *dev, struct scatterlist *src,
--			    struct scatterlist **dst)
-+			   struct scatterlist **dst)
+diff --git a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+index 986224fca9e91..5a180f71d8d4d 100644
+--- a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
++++ b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+@@ -156,7 +156,6 @@ static int ltq_rcu_usb2_of_parse(struct ltq_rcu_usb2_priv *priv,
  {
- 	void *pages;
- 	int len;
-@@ -569,7 +569,7 @@ static int s5p_set_indata_start(struct s5p_aes_dev *dev,
- }
+ 	struct device *dev = priv->dev;
+ 	const __be32 *offset;
+-	int ret;
  
- static int s5p_set_outdata_start(struct s5p_aes_dev *dev,
--				struct ablkcipher_request *req)
-+				 struct ablkcipher_request *req)
- {
- 	struct scatterlist *sg;
- 	int err;
+ 	priv->reg_bits = of_device_get_match_data(dev);
+ 
 -- 
 2.20.1
 
