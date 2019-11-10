@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C53C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C09C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938AA215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1AD208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355158;
-	bh=kTmw3R8+zKRRIwrPUJUV0U38l6kOeVwDG9DIZ2NKL4s=;
+	s=default; t=1573355163;
+	bh=srycieWXSGszwVJ8ASQMK8t1Lxk8Er2ie0ADMyYiDBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ikzH4AeaWHWTXpuIimYVTdNZfljXIkrO8jwBH+uKU5dnFd/lB1CWeXZIazhBiRlcp
-	 xnQIJAlePBXlL8OfPfYAfghkJrKaULj88a1XSpkQJ49gu6rq12FEGEZA7NUcQ3RKDm
-	 E6P0keGaRsmbd2uji7vkxSU4hmtNdEVvHR/DBQVA=
+	b=qnTHQIgMktexd3Z86to8qT9rpPCXdiGLndat8h0rFgUo5TmpBNPpkYzI/I3/3pOXQ
+	 6J+MNoZVzh6hQnrYaiXoq39NMaPhb8L/i4Zuuy/CQIUh27LSBtby+0b/28JcnF14bH
+	 V15teDFMf+XLMekKaMZ8CuBHkPEKhxeYCXk9pvlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfKJDF5 (ORCPT
+        id S1729001AbfKJCqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:05:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49364 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbfKJCqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:46:14 -0500
+        id S1728913AbfKJCpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F75F21D7B;
-        Sun, 10 Nov 2019 02:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A752D21850;
+        Sun, 10 Nov 2019 02:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353972;
-        bh=kTmw3R8+zKRRIwrPUJUV0U38l6kOeVwDG9DIZ2NKL4s=;
+        s=default; t=1573353946;
+        bh=srycieWXSGszwVJ8ASQMK8t1Lxk8Er2ie0ADMyYiDBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hYc9mZP/ceva3Yz8EovnXZhtfIvh6UzexRMYRxYxVXysWBS5oQrdenw1IhdZvZNEE
-         MAkZfjeOpU6sIW+ha5FL0+Huy3tNSU3VfTwmvmD885CgussvvkB9K9ZqXpT7WwMpXv
-         idn2/ycKpB6Z9Z2EryWa3CuiU/96qz46FLr3Rjcc=
+        b=sG5rDt7uJYHMnS+fkf34ybJdZdjo8Ml+IMX9Il5bk/D0bRE3tf53w77b1EGnYljwB
+         JgapFapLnTBKSHL8uRVnCGXF/0+UKIQzNjYhFr56hD4QimSZLxi5ej6GucXRYhb15E
+         tqJP0aCvTntj4ngv6QiaE1Ctod38eqPXDDd5mTDE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 019/109] net: toshiba: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:44:11 -0500
-Message-Id: <20191110024541.31567-19-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 004/109] serial: samsung: Enable baud clock for UART reset procedure in resume
+Date:   Sat,  9 Nov 2019 21:43:56 -0500
+Message-Id: <20191110024541.31567-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,96 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit bacade822524e02f662d88f784d2ae821a5546fb ]
+[ Upstream commit 1ff3652bc7111df26b5807037f624be294cf69d5 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+Ensure that the baud clock is also enabled for UART register writes in
+driver resume. On Exynos5433 SoC this is needed to avoid external abort
+issue.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/toshiba/ps3_gelic_net.c | 4 ++--
- drivers/net/ethernet/toshiba/ps3_gelic_net.h | 2 +-
- drivers/net/ethernet/toshiba/spider_net.c    | 4 ++--
- drivers/net/ethernet/toshiba/tc35815.c       | 6 ++++--
- 4 files changed, 9 insertions(+), 7 deletions(-)
+ drivers/tty/serial/samsung.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.c b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-index 88d74aef218a2..75237c81c63d6 100644
---- a/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-+++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-@@ -845,9 +845,9 @@ static int gelic_card_kick_txdma(struct gelic_card *card,
-  * @skb: packet to send out
-  * @netdev: interface device structure
-  *
-- * returns 0 on success, <0 on failure
-+ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
-  */
--int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
-+netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	struct gelic_card *card = netdev_card(netdev);
- 	struct gelic_descr *descr;
-diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.h b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-index 003d0452d9cb1..fbbf9b54b173b 100644
---- a/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-+++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-@@ -370,7 +370,7 @@ void gelic_card_up(struct gelic_card *card);
- void gelic_card_down(struct gelic_card *card);
- int gelic_net_open(struct net_device *netdev);
- int gelic_net_stop(struct net_device *netdev);
--int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
-+netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
- void gelic_net_set_multi(struct net_device *netdev);
- void gelic_net_tx_timeout(struct net_device *netdev);
- int gelic_net_setup_netdev(struct net_device *netdev, struct gelic_card *card);
-diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-index cec9e70ab9955..da136b8843dd9 100644
---- a/drivers/net/ethernet/toshiba/spider_net.c
-+++ b/drivers/net/ethernet/toshiba/spider_net.c
-@@ -880,9 +880,9 @@ spider_net_kick_tx_dma(struct spider_net_card *card)
-  * @skb: packet to send out
-  * @netdev: interface device structure
-  *
-- * returns 0 on success, !0 on failure
-+ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
-  */
--static int
-+static netdev_tx_t
- spider_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	int cnt;
-diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
-index 9146068979d2c..03afc4d8c3ec1 100644
---- a/drivers/net/ethernet/toshiba/tc35815.c
-+++ b/drivers/net/ethernet/toshiba/tc35815.c
-@@ -474,7 +474,8 @@ static void free_rxbuf_skb(struct pci_dev *hwdev, struct sk_buff *skb, dma_addr_
- /* Index to functions, as function prototypes. */
+diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
+index f4b8e4e17a868..808373d4e37a6 100644
+--- a/drivers/tty/serial/samsung.c
++++ b/drivers/tty/serial/samsung.c
+@@ -1922,7 +1922,11 @@ static int s3c24xx_serial_resume(struct device *dev)
  
- static int	tc35815_open(struct net_device *dev);
--static int	tc35815_send_packet(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t	tc35815_send_packet(struct sk_buff *skb,
-+					    struct net_device *dev);
- static irqreturn_t	tc35815_interrupt(int irq, void *dev_id);
- static int	tc35815_rx(struct net_device *dev, int limit);
- static int	tc35815_poll(struct napi_struct *napi, int budget);
-@@ -1248,7 +1249,8 @@ tc35815_open(struct net_device *dev)
-  * invariant will hold if you make sure that the netif_*_queue()
-  * calls are done at the proper times.
-  */
--static int tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct tc35815_local *lp = netdev_priv(dev);
- 	struct TxFD *txfd;
+ 	if (port) {
+ 		clk_prepare_enable(ourport->clk);
++		if (!IS_ERR(ourport->baudclk))
++			clk_prepare_enable(ourport->baudclk);
+ 		s3c24xx_serial_resetport(port, s3c24xx_port_to_cfg(port));
++		if (!IS_ERR(ourport->baudclk))
++			clk_disable_unprepare(ourport->baudclk);
+ 		clk_disable_unprepare(ourport->clk);
+ 
+ 		uart_resume_port(&s3c24xx_uart_drv, port);
+@@ -1945,7 +1949,11 @@ static int s3c24xx_serial_resume_noirq(struct device *dev)
+ 			if (rx_enabled(port))
+ 				uintm &= ~S3C64XX_UINTM_RXD_MSK;
+ 			clk_prepare_enable(ourport->clk);
++			if (!IS_ERR(ourport->baudclk))
++				clk_prepare_enable(ourport->baudclk);
+ 			wr_regl(port, S3C64XX_UINTM, uintm);
++			if (!IS_ERR(ourport->baudclk))
++				clk_disable_unprepare(ourport->baudclk);
+ 			clk_disable_unprepare(ourport->clk);
+ 		}
+ 	}
 -- 
 2.20.1
 
