@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADCAC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A6EC17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A02CC21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F9121019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354860;
-	bh=qX0frf5V4JFJGYGpyYcZ1RuX4317DQq5x9AahDUvJEM=;
+	s=default; t=1573354861;
+	bh=fg91nLDGVt3w607YoMYtnBvNOU3I7TSwxUy5GAjZX40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3SdPjUwX2H9p1xrGrsQOwv2/FdOnhunVH/e/LcW5NFCTPHw2JI06YOXfEjEItB70
-	 LruLd41ehYgeEHzFjJQeecxT5B6ijaqXXd13WdIBzhVwyon/mA9E5pA8ol9p351Eh4
-	 CgFBFYvgyTZXfN8C8bm9j8ycl8LW2jkGzWlGyhkA=
+	b=nQx54wWzITZsiWn4QD5sgA3PZibHtvJTKCrPBW3d0Azx6AE3M7p/a/dJWlSEr0vQx
+	 aLW6a4DzOrOqE1fqiUE9pqPAMux6/EcSmWHvtBQYGhicfiMLJY9gMGQx75oBWK3W59
+	 Th+zC3RbdU8+IAQqsn3AZhEL+I+XfahX+gl0vvZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbfKJDA7 (ORCPT
+        id S1729517AbfKJDAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:00:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:00:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729205AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3621E224D3;
-        Sun, 10 Nov 2019 02:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2FD32249E;
+        Sun, 10 Nov 2019 02:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354099;
-        bh=qX0frf5V4JFJGYGpyYcZ1RuX4317DQq5x9AahDUvJEM=;
+        s=default; t=1573354086;
+        bh=fg91nLDGVt3w607YoMYtnBvNOU3I7TSwxUy5GAjZX40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cU8e3hl8kaCUzfJ1j/+0oVHea2Ht55HA0Q7z5Pxl5PLFOErMzce12xiAlV3QPhr8b
-         Wf2QiGh6DLH4UyDwFLx79n/sTI03BD+2CcMfTy3ZgoZogh0eXOI1KPgtnp27jmc2eA
-         2D1X0Kuma24+e6VtO5SUb8089AUZrR7TYmUWGxI0=
+        b=qS/T/2YY7VCsxIfv9Z2e/PUJRRLWSi3KpaCCxepIgvuKyAKBYpkBTT1rKTWirGS0H
+         BCgY9/nKavdmbqRchHu++cg0cJgxium5zApat8uF2fg/N+ymPxQIv/46JUTXWjdXiu
+         LQ5S0aqlp9QTk6wQYOeihCJ4qiXPy8iO8IPnaX/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilan Peer <ilan.peer@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 090/109] iwlwifi: mvm: Allow TKIP for AP mode
-Date:   Sat,  9 Nov 2019 21:45:22 -0500
-Message-Id: <20191110024541.31567-90-sashal@kernel.org>
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 083/109] Bluetooth: hci_serdev: clear HCI_UART_PROTO_READY to avoid closing proto races
+Date:   Sat,  9 Nov 2019 21:45:15 -0500
+Message-Id: <20191110024541.31567-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,36 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Peer <ilan.peer@intel.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
-[ Upstream commit 6f3df8c1192c873a6ad9a76328920f6f85af90a8 ]
+[ Upstream commit 7cf7846d27bfc9731e449857db3eec5e0e9701ba ]
 
-Support for setting keys for TKIP cipher suite was mistakenly removed
-for AP mode. Fix this.
+Clearing HCI_UART_PROTO_READY will avoid usage of proto function pointers
+before running the proto close function pointer. There is chance of kernel
+crash, due to usage of non proto close function pointers after proto close.
 
-Fixes: 85aeb58cec1a ("iwlwifi: mvm: Enable security on new TX API")
-Signed-off-by: Ilan Peer <ilan.peer@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/bluetooth/hci_serdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index d31d84eebc5d0..d16e2ed4419fe 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -3067,10 +3067,6 @@ static int __iwl_mvm_set_sta_key(struct iwl_mvm *mvm,
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 52e6d4d1608e3..69c00a3db5382 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -360,6 +360,7 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ {
+ 	struct hci_dev *hdev = hu->hdev;
  
- 	switch (keyconf->cipher) {
- 	case WLAN_CIPHER_SUITE_TKIP:
--		if (vif->type == NL80211_IFTYPE_AP) {
--			ret = -EINVAL;
--			break;
--		}
- 		addr = iwl_mvm_get_mac_addr(mvm, vif, sta);
- 		/* get phase 1 key from mac80211 */
- 		ieee80211_get_key_rx_seq(keyconf, 0, &seq);
++	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 	hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
+ 
 -- 
 2.20.1
 
