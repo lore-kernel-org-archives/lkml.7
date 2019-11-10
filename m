@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A2EC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86077C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C01214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCE421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354755;
-	bh=BBDr5XZmvudqT38/n9AWNa+7cdhu3U138aHUBryPFtE=;
+	s=default; t=1573354758;
+	bh=cj5u95BnEoI4lNCshidUefaPX9ljRH1R6f9BmPwhev4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KBdwnAJQKqNcNao0bi8orImzuLxJmysrGcKobl+EcMLTka6/D63qQ7zmFqailrZ8P
-	 EuF2vlOCMqRqToDHOidQ8oA2KiIx+SuhyE3a8BvO9NiyTMa5xhROxM9lMAuHKg5vrn
-	 XJjfEPQ89/ZvcYRRKFwuc8m40wrUf1ll+dFSkcLs=
+	b=WbSIP42vVjJElDT5B+82Uosfthq3ghXlpryCStF7VYxXElgl7NhPwUQh64dyAYDjE
+	 B6x8oYRq4V2oFICciQk5P/Fg2vJSf/XBz26vWqdM286kuq5DtARRoGlnQyd7JtIGZT
+	 jlicia0KTKc6flJoSrSj9bmXtWgjO7Y6QSSKFEsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfKJC7B (ORCPT
+        id S1728922AbfKJC7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:59:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:59:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729372AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729393AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B22122516;
-        Sun, 10 Nov 2019 02:48:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C3E1222D4;
+        Sun, 10 Nov 2019 02:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354108;
-        bh=BBDr5XZmvudqT38/n9AWNa+7cdhu3U138aHUBryPFtE=;
+        s=default; t=1573354052;
+        bh=cj5u95BnEoI4lNCshidUefaPX9ljRH1R6f9BmPwhev4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zEb8sIdv3CE4tzwj0FFfj/kdlatc9dJAd9eSWBwbkH7kX6zHB/PbhpRv9QP1KDOyC
-         gqJCWKvl6djh32giogcG6vyV+GQImdW2dHqXklg1p5uhT5Rv1dj9YqANmN7ZqL8Vza
-         onJnyGejxO+YAD4SJICJih9ZL32y79YZi7Cuednk=
+        b=n7u/IrwF9F3aOaMjqSwwpH99Q+BCxgdx+e3FOtBQwLeSml6GpureNTbTQVySmmzs7
+         eT3lQbRQtfV1lZExwR3bp1tNH9RhklZT8BjJP19osm9koOS7n6Z2ZTSIEw1Dx1/TRi
+         Gzmyi/ygtK4u547GIk2z9tGJkRl+ri3uXv2ANeIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 098/109] scsi: NCR5380: Handle BUS FREE during reselection
-Date:   Sat,  9 Nov 2019 21:45:30 -0500
-Message-Id: <20191110024541.31567-98-sashal@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 062/109] coresight: Fix handling of sinks
+Date:   Sat,  9 Nov 2019 21:44:54 -0500
+Message-Id: <20191110024541.31567-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,38 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit ca694afad707cb3ae2fdef3b28454444d9ac726e ]
+[ Upstream commit c71369de02b285d9da526a526d8f2affc7b17c59 ]
 
-The X3T9.2 specification (draft) says, under "6.1.4.2 RESELECTION time-out
-procedure", that a target may assert RST or go to BUS FREE phase if the
-initiator does not respond within 200 us. Something like this has been
-observed with AztecMonster II target. When it happens, all we can do is wait
-for the target to try again.
+The coresight components could be operated either in sysfs mode or in perf
+mode. For some of the components, the mode of operation doesn't matter as
+they simply relay the data to the next component in the trace path. But for
+sinks, they need to be able to provide the trace data back to the user.
+Thus we need to make sure that "mode" is handled appropriately. e.g,
+the sysfs mode could have multiple sources driving the trace data, while
+perf mode doesn't allow sharing the sink.
 
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The coresight_enable_sink() however doesn't really allow this check to
+trigger as it skips the "enable_sink" callback if the component is
+already enabled, irrespective of the mode. This could cause mixing
+of data from different modes or even same mode (in perf), if the
+sources are different. Also, if we fail to enable the sink while
+enabling a path (where sink is the first component enabled),
+we could end up in disabling the components in the "entire"
+path which were not enabled in this trial, causing disruptions
+in the existing trace paths.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hwtracing/coresight/coresight.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 48f123601f575..a85c5155fcf40 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -2045,6 +2045,9 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index e571e4010dff0..366c1d493af35 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -140,12 +140,14 @@ static int coresight_enable_sink(struct coresight_device *csdev, u32 mode)
+ {
+ 	int ret;
  
- 	if (NCR5380_poll_politely(hostdata,
- 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
-+		if ((NCR5380_read(STATUS_REG) & (SR_BSY | SR_SEL)) == 0)
-+			/* BUS FREE phase */
-+			return;
- 		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
- 		do_abort(instance);
- 		return;
+-	if (!csdev->enable) {
+-		if (sink_ops(csdev)->enable) {
+-			ret = sink_ops(csdev)->enable(csdev, mode);
+-			if (ret)
+-				return ret;
+-		}
++	/*
++	 * We need to make sure the "new" session is compatible with the
++	 * existing "mode" of operation.
++	 */
++	if (sink_ops(csdev)->enable) {
++		ret = sink_ops(csdev)->enable(csdev, mode);
++		if (ret)
++			return ret;
+ 		csdev->enable = true;
+ 	}
+ 
+@@ -347,8 +349,14 @@ int coresight_enable_path(struct list_head *path, u32 mode)
+ 		switch (type) {
+ 		case CORESIGHT_DEV_TYPE_SINK:
+ 			ret = coresight_enable_sink(csdev, mode);
++			/*
++			 * Sink is the first component turned on. If we
++			 * failed to enable the sink, there are no components
++			 * that need disabling. Disabling the path here
++			 * would mean we could disrupt an existing session.
++			 */
+ 			if (ret)
+-				goto err;
++				goto out;
+ 			break;
+ 		case CORESIGHT_DEV_TYPE_SOURCE:
+ 			/* sources are enabled from either sysFS or Perf */
 -- 
 2.20.1
 
