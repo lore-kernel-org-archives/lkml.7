@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0462AC17444
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B106FC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9ED21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85AC121655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353625;
-	bh=Qm0LlYR6QOexdgjcFK6pfnyQ30ddksaltJsl7gtvWFc=;
+	s=default; t=1573353628;
+	bh=5jKDS4f6adCK47ipLVZiaAL1ffsI2Sc6gz7VkiAQEZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vyysT2ROK7stY+Z+0bghOHCvQ1zDodQYrbUjdu7Pt4pAPZg3v4wQeDt2NiTolM5AL
-	 7sPDk6Cw14EDnD0YNdxKXZNWm6JLcZC9bvSeNWqNHpN2J81tmKNVzDhTlmd6ljBgs+
-	 ODgL1gPTWxDdOcbXOhjxryHriVkZhLDkPMO7ZsuY=
+	b=b5hCrLfYLAQeHpUBVzK9BrSYw8QTCvazoh5YvSKRaNaDUZ6ODypcrqy2cZiFsptoa
+	 jFaeA3LmVUXm9yJpeulnbLuLGyujPGiuTESXLg1Woc4Uej/xtF2Soet8SHd1ArISko
+	 9vfgrEEbdRx0M6wCCkaybk3GkY5USK1oq8QkpFLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfKJCkY (ORCPT
+        id S1726878AbfKJCk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:40:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:40:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbfKJCkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:22 -0500
+        id S1726789AbfKJCkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A25A821882;
-        Sun, 10 Nov 2019 02:40:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D659D214E0;
+        Sun, 10 Nov 2019 02:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353621;
-        bh=Qm0LlYR6QOexdgjcFK6pfnyQ30ddksaltJsl7gtvWFc=;
+        s=default; t=1573353622;
+        bh=5jKDS4f6adCK47ipLVZiaAL1ffsI2Sc6gz7VkiAQEZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wOow2KplG4BUYD4wL6cpragRj5tipDaUWpGvAChwUmAtw7jRNS7jBBcoUYltCtp3w
-         sDF+X4Tp2vo1E+nkr4/h24qbA/y2PHpKgQ58OTr4UfmHmGZhgwy8tXt9/kbE6eEXe9
-         PtQIzUflT5GMOaeBGhjpe4zfTx+VFBYTxUer1lmc=
+        b=fuNV6S7B3PZ3UFd4wCL9Sfn1Q0ewkTT9q8AZ3iBQDbXG/giCTQESQez1/yIWTXK23
+         //X4PcYOXADO/SCf7fvA2nW3I5OXpFneudErsfj+HuYmXuJ/d6RmJCW+V2YIhZABYZ
+         BnCItkMLGPpPJDk+5bpQ5mY531o9IN3v/X8esA40=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sinan Kaya <okaya@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 006/191] PCI/ACPI: Correct error message for ASPM disabling
-Date:   Sat,  9 Nov 2019 21:37:08 -0500
-Message-Id: <20191110024013.29782-6-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 007/191] net: socionext: Fix two sleep-in-atomic-context bugs in ave_rxfifo_reset()
+Date:   Sat,  9 Nov 2019 21:37:09 -0500
+Message-Id: <20191110024013.29782-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,41 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sinan Kaya <okaya@kernel.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 1ad61b612b95980a4d970c52022aa01dfc0f6068 ]
+[ Upstream commit 0020f5c807ef67954d9210eea0ba17a6134cdf7d ]
 
-If _OSC execution fails today for platforms without an _OSC entry, code is
-printing a misleading message saying disabling ASPM as follows:
+The driver may sleep with holding a spinlock.
+The function call paths (from bottom to top) in Linux-4.17 are:
 
-  acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+[FUNC] usleep_range
+drivers/net/ethernet/socionext/sni_ave.c, 892:
+	usleep_range in ave_rxfifo_reset
+drivers/net/ethernet/socionext/sni_ave.c, 932:
+	ave_rxfifo_reset in ave_irq_handler
 
-We need to ensure that platform supports ASPM to begin with.
+[FUNC] usleep_range
+drivers/net/ethernet/socionext/sni_ave.c, 888:
+	usleep_range in ave_rxfifo_reset
+drivers/net/ethernet/socionext/sni_ave.c, 932:
+	ave_rxfifo_reset in ave_irq_handler
 
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+To fix these bugs, usleep_range() is replaced with udelay().
+
+These bugs are found by my static analysis tool DSAC.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/pci_root.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/socionext/sni_ave.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 7433035ded955..e465e720eab20 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -455,8 +455,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
- 	decode_osc_support(root, "OS supports", support);
- 	status = acpi_pci_osc_support(root, support);
- 	if (ACPI_FAILURE(status)) {
--		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
--			 acpi_format_exception(status));
-+		dev_info(&device->dev, "_OSC failed (%s)%s\n",
-+			 acpi_format_exception(status),
-+			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
- 		*no_aspm = 1;
- 		return;
- 	}
+diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
+index f27d67a4d3045..09d25b87cf7c0 100644
+--- a/drivers/net/ethernet/socionext/sni_ave.c
++++ b/drivers/net/ethernet/socionext/sni_ave.c
+@@ -906,11 +906,11 @@ static void ave_rxfifo_reset(struct net_device *ndev)
+ 
+ 	/* assert reset */
+ 	writel(AVE_GRR_RXFFR, priv->base + AVE_GRR);
+-	usleep_range(40, 50);
++	udelay(50);
+ 
+ 	/* negate reset */
+ 	writel(0, priv->base + AVE_GRR);
+-	usleep_range(10, 20);
++	udelay(20);
+ 
+ 	/* negate interrupt status */
+ 	writel(AVE_GI_RXOVF, priv->base + AVE_GISR);
 -- 
 2.20.1
 
