@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E73C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4AAC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C023217D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4356920854
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355696;
-	bh=UfS95GJysZRLmUAshqxkU0vPr30zhIK/rGe4ZYB1oZA=;
+	s=default; t=1573355705;
+	bh=8a5AlZCsb1Xf90Q9T0DttIH8Ll4wN+BtclWVVTiNXeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d7Falc4B4Ih4xfGiFvbGLLHvKDquV4JoZM8er/wWjIgoTv7cQTq8EROp/T1HecoZv
-	 /C12t1FwcFXvWRqVmIFzmM+Jt7vETSvB8vaGdDnm1GJXCreNglbKeNDSPMgoJeWu69
-	 uavKOZi29CwftjNB1db26XD+FjGMZuX99IM0G8/E=
+	b=XJNkp8IFHtLjfiH+rS5jBbpAPZAULqos4BQQ1qBE9H7gVrR9XPapD+yB5pjnho3MD
+	 2B+9kvbewlFmYtZP7d70Li95rshF3kvvu43AN21LitFKhRPY41AQQAh/T5A2XLnRIA
+	 tBpBQiuDceNJ60S/a0Hn0yeMnORyCfssD9BrTxyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfKJDOy (ORCPT
+        id S1728839AbfKJDPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:14:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:15:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727719AbfKJCmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:03 -0500
+        id S1727675AbfKJCl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E455E20650;
-        Sun, 10 Nov 2019 02:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 654AC21D7B;
+        Sun, 10 Nov 2019 02:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353722;
-        bh=UfS95GJysZRLmUAshqxkU0vPr30zhIK/rGe4ZYB1oZA=;
+        s=default; t=1573353718;
+        bh=8a5AlZCsb1Xf90Q9T0DttIH8Ll4wN+BtclWVVTiNXeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uu+Jo06soYQTVtxpXeuBCrWPusSIpe6S3r0NCHGzIGeiGoRasSNbJGBu3q0A7TNw1
-         4Dplj3rVbGUC/zUHtjxQ1HEnaUyxViDOY81TOeCiSptCEBXmtAintMro/zTNxca1IO
-         OyR86PQGongpQ/DvFhCAUOnjyI7PUmOrI48OyiQE=
+        b=T4xIv7nSR64xVwUiIoMylWqpK5uwqGMH810pmuJYHsgGkkiAGr2mE6PC+mytTMvPm
+         qKBW8HuXyCimNjIASNTAHWg8om1o4P1R3p0SIa9+CqEbwMqrGHYWdRhFk0vM872d6E
+         VCPp69jg38wq2eTY+DE1cEKnlW/Uyd4b+bpO3pmc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guido Kiener <guido@kiener-muenchen.de>,
-        Guido Kiener <guido.kiener@rohde-schwarz.com>,
-        Steve Bayless <steve_bayless@keysight.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 054/191] usb: usbtmc: Fix ioctl USBTMC_IOCTL_ABORT_BULK_OUT
-Date:   Sat,  9 Nov 2019 21:37:56 -0500
-Message-Id: <20191110024013.29782-54-sashal@kernel.org>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/191] nfp: provide a better warning when ring allocation fails
+Date:   Sat,  9 Nov 2019 21:37:53 -0500
+Message-Id: <20191110024013.29782-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,83 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guido Kiener <guido@kiener-muenchen.de>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 0e59088e7ff7aeda49dedadbf0e967761b909ad8 ]
+[ Upstream commit 23d9f5531c7c28546954b0bf332134a9b8a38c0a ]
 
-Add parameter 'tag' to function usbtmc_ioctl_abort_bulk_out_tag()
-for future versions.
+NFP supports fairly enormous ring sizes (up to 256k descriptors).
+In commit 466271703867 ("nfp: use kvcalloc() to allocate SW buffer
+descriptor arrays") we have started using kvcalloc() functions to
+make sure the allocation of software state arrays doesn't hit
+the MAX_ORDER limit.  Unfortunately, we can't use virtual mappings
+for the DMA region holding HW descriptors.  In case this allocation
+fails instead of the generic (and fairly scary) warning/splat in
+the logs print a helpful message explaining what happened and
+suggesting how to fix it.
 
-Use USBTMC_BUFSIZE (4k) instead of USBTMC_SIZE_IOBUFFER (2k).
-Using USBTMC_SIZE_IOBUFFER is deprecated.
-
-Insert a sleep of 50 ms between subsequent
-CHECK_ABORT_BULK_OUT_STATUS control requests to avoid stressing
-the instrument with repeated requests.
-
-Use common macro USB_CTRL_GET_TIMEOUT instead of USBTMC_TIMEOUT.
-
-Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
-Reviewed-by: Steve Bayless <steve_bayless@keysight.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/usbtmc.c | 16 ++++++++++++----
+ .../net/ethernet/netronome/nfp/nfp_net_common.c  | 16 ++++++++++++----
  1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/class/usbtmc.c b/drivers/usb/class/usbtmc.c
-index 83ffa5a14c3db..3ce45c9e9d20d 100644
---- a/drivers/usb/class/usbtmc.c
-+++ b/drivers/usb/class/usbtmc.c
-@@ -342,7 +342,8 @@ static int usbtmc_ioctl_abort_bulk_in(struct usbtmc_device_data *data)
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+index c6d29fdbb880f..d288c7eebacd8 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+@@ -2187,9 +2187,13 @@ nfp_net_tx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_tx_ring *tx_ring)
  
- }
+ 	tx_ring->size = array_size(tx_ring->cnt, sizeof(*tx_ring->txds));
+ 	tx_ring->txds = dma_zalloc_coherent(dp->dev, tx_ring->size,
+-					    &tx_ring->dma, GFP_KERNEL);
+-	if (!tx_ring->txds)
++					    &tx_ring->dma,
++					    GFP_KERNEL | __GFP_NOWARN);
++	if (!tx_ring->txds) {
++		netdev_warn(dp->netdev, "failed to allocate TX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
++			    tx_ring->cnt);
+ 		goto err_alloc;
++	}
  
--static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
-+static int usbtmc_ioctl_abort_bulk_out_tag(struct usbtmc_device_data *data,
-+					   u8 tag)
- {
- 	struct device *dev;
- 	u8 *buffer;
-@@ -359,8 +360,8 @@ static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
- 			     usb_rcvctrlpipe(data->usb_dev, 0),
- 			     USBTMC_REQUEST_INITIATE_ABORT_BULK_OUT,
- 			     USB_DIR_IN | USB_TYPE_CLASS | USB_RECIP_ENDPOINT,
--			     data->bTag_last_write, data->bulk_out,
--			     buffer, 2, USBTMC_TIMEOUT);
-+			     tag, data->bulk_out,
-+			     buffer, 2, USB_CTRL_GET_TIMEOUT);
+ 	tx_ring->txbufs = kvcalloc(tx_ring->cnt, sizeof(*tx_ring->txbufs),
+ 				   GFP_KERNEL);
+@@ -2341,9 +2345,13 @@ nfp_net_rx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_rx_ring *rx_ring)
+ 	rx_ring->cnt = dp->rxd_cnt;
+ 	rx_ring->size = array_size(rx_ring->cnt, sizeof(*rx_ring->rxds));
+ 	rx_ring->rxds = dma_zalloc_coherent(dp->dev, rx_ring->size,
+-					    &rx_ring->dma, GFP_KERNEL);
+-	if (!rx_ring->rxds)
++					    &rx_ring->dma,
++					    GFP_KERNEL | __GFP_NOWARN);
++	if (!rx_ring->rxds) {
++		netdev_warn(dp->netdev, "failed to allocate RX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
++			    rx_ring->cnt);
+ 		goto err_alloc;
++	}
  
- 	if (rv < 0) {
- 		dev_err(dev, "usb_control_msg returned %d\n", rv);
-@@ -379,12 +380,14 @@ static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
- 	n = 0;
- 
- usbtmc_abort_bulk_out_check_status:
-+	/* do not stress device with subsequent requests */
-+	msleep(50);
- 	rv = usb_control_msg(data->usb_dev,
- 			     usb_rcvctrlpipe(data->usb_dev, 0),
- 			     USBTMC_REQUEST_CHECK_ABORT_BULK_OUT_STATUS,
- 			     USB_DIR_IN | USB_TYPE_CLASS | USB_RECIP_ENDPOINT,
- 			     0, data->bulk_out, buffer, 0x08,
--			     USBTMC_TIMEOUT);
-+			     USB_CTRL_GET_TIMEOUT);
- 	n++;
- 	if (rv < 0) {
- 		dev_err(dev, "usb_control_msg returned %d\n", rv);
-@@ -418,6 +421,11 @@ static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
- 	return rv;
- }
- 
-+static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
-+{
-+	return usbtmc_ioctl_abort_bulk_out_tag(data, data->bTag_last_write);
-+}
-+
- static int usbtmc488_ioctl_read_stb(struct usbtmc_file_data *file_data,
- 				void __user *arg)
- {
+ 	rx_ring->rxbufs = kvcalloc(rx_ring->cnt, sizeof(*rx_ring->rxbufs),
+ 				   GFP_KERNEL);
 -- 
 2.20.1
 
