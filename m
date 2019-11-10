@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01903C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FEBC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C076522581
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F7622581
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354359;
-	bh=sYb0kI6xjNmTi/Z3GcNdyHBUYvIrv95pkcRwyTj4ySM=;
+	s=default; t=1573354363;
+	bh=RN5s4WwjmeKO7kh5V7ierCiAzxj8M84zs8kaJC64wO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEc10j9NAthypSDxfJDi6Qng23zLC91XDIcXduQxAMqWfUm466C2M7tFkxgBTewZa
-	 hLMNCDCa05xxh2p6D+8obwSdFZvWQcZevl/f6mm5JxckrASxQHf86beou5o+I+LBp7
-	 lqQhYsyf+5S8sDzzd2O6jmfwCJOalXH5nh+oStw8=
+	b=jYmk/h6iaV9AI+OfHSsXm5ld2NcavKYmSfEcoUc4OsCPzvXgHFpvVQXVujywpUBXk
+	 ZsuXjK/ID0P4F/gdcIAUvfBy/ZFwc3NCFm0VHlO0a+KvxpY8HtXntfeEH4ysxvGYzE
+	 XLNnQUqZT4/gG5ODEoESsGnT4hQ694hyW4C2A6Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbfKJCvg (ORCPT
+        id S1728468AbfKJCwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:52:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbfKJCvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:51:21 -0500
+        id S1727829AbfKJCvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:51:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1AE22595;
-        Sun, 10 Nov 2019 02:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D3F522594;
+        Sun, 10 Nov 2019 02:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354280;
-        bh=sYb0kI6xjNmTi/Z3GcNdyHBUYvIrv95pkcRwyTj4ySM=;
+        s=default; t=1573354294;
+        bh=RN5s4WwjmeKO7kh5V7ierCiAzxj8M84zs8kaJC64wO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yrYOtEsccg/XgIsUophuhn8LZmmYOJScg/NXlFQP6O28nlAGDbmfAXP6dVK6sFwcP
-         yhlB03kVS7bjftBCOtHGMevclIXiJ7EiEKUg2+VfB8sFj1qaP8aNOC/R3UTjZQZPtX
-         7Da6zv6BRYEghBS/ILXSdNeRb4yHmWpNeZfC+/TM=
+        b=q7Ml2J5kKlYaUNioANv+Ppg7Vv7P2db63OAI2otb69MGRzYP12vM42j9/XxwGNNvH
+         G9lUZkyIEOAQ6vhs7URLjWCkMIiLYvVlB+Gca9boVppsN8vYAF4Dc7w3VFIAhlxcXS
+         sZjNpkV0WDNLvEPFqGdakAKFCWc+HGu6BiuWZsQ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dengcheng Zhu <dzhu@wavecomp.com>,
-        Rachel Mozes <rachel.mozes@intel.com>,
-        Paul Burton <paul.burton@mips.com>, pburton@wavecomp.com,
-        ralf@linux-mips.org, linux-mips@linux-mips.org,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 23/40] MIPS: kexec: Relax memory restriction
-Date:   Sat,  9 Nov 2019 21:50:15 -0500
-Message-Id: <20191110025032.827-23-sashal@kernel.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        chenxiang <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Tomas Henzl <thenzl@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 33/40] scsi: libsas: always unregister the old device if going to discover new
+Date:   Sat,  9 Nov 2019 21:50:25 -0500
+Message-Id: <20191110025032.827-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
@@ -61,48 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dengcheng Zhu <dzhu@wavecomp.com>
+From: Jason Yan <yanaijie@huawei.com>
 
-[ Upstream commit a6da4d6fdf8bd512c98d3ac7f1d16bc4bb282919 ]
+[ Upstream commit 32c850bf587f993b2620b91e5af8a64a7813f504 ]
 
-We can rely on the system kernel and the dump capture kernel themselves in
-memory usage.
+If we went into sas_rediscover_dev() the attached_sas_addr was already insured
+not to be zero. So it's unnecessary to check if the attached_sas_addr is zero.
 
-Being restrictive with 512MB limit may cause kexec tool failure on some
-platforms.
+And although if the sas address is not changed, we always have to unregister
+the old device when we are going to register a new one. We cannot just leave
+the device there and bring up the new.
 
-Tested-by: Rachel Mozes <rachel.mozes@intel.com>
-Reported-by: Rachel Mozes <rachel.mozes@intel.com>
-Signed-off-by: Dengcheng Zhu <dzhu@wavecomp.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20568/
-Cc: pburton@wavecomp.com
-Cc: ralf@linux-mips.org
-Cc: linux-mips@linux-mips.org
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+CC: chenxiang <chenxiang66@hisilicon.com>
+CC: John Garry <john.garry@huawei.com>
+CC: Johannes Thumshirn <jthumshirn@suse.de>
+CC: Ewan Milne <emilne@redhat.com>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Tomas Henzl <thenzl@redhat.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/kexec.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
-index ee25ebbf2a288..b6a4d4aa548f5 100644
---- a/arch/mips/include/asm/kexec.h
-+++ b/arch/mips/include/asm/kexec.h
-@@ -12,11 +12,11 @@
- #include <asm/stacktrace.h>
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 400eee9d77832..d44f18f773c0f 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -2049,14 +2049,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
+ 		return res;
+ 	}
  
- /* Maximum physical address we can use pages from */
--#define KEXEC_SOURCE_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
- /* Maximum address we can reach in physical address mode */
--#define KEXEC_DESTINATION_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
-  /* Maximum address we can use for the control code buffer */
--#define KEXEC_CONTROL_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
- /* Reserve 3*4096 bytes for board-specific info */
- #define KEXEC_CONTROL_PAGE_SIZE (4096 + 3*4096)
+-	/* delete the old link */
+-	if (SAS_ADDR(phy->attached_sas_addr) &&
+-	    SAS_ADDR(sas_addr) != SAS_ADDR(phy->attached_sas_addr)) {
+-		SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
+-			    SAS_ADDR(dev->sas_addr), phy_id,
+-			    SAS_ADDR(phy->attached_sas_addr));
+-		sas_unregister_devs_sas_addr(dev, phy_id, last);
+-	}
++	/* we always have to delete the old device when we went here */
++	SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
++		    SAS_ADDR(dev->sas_addr), phy_id,
++		    SAS_ADDR(phy->attached_sas_addr));
++	sas_unregister_devs_sas_addr(dev, phy_id, last);
  
+ 	return sas_discover_new(dev, phy_id);
+ }
 -- 
 2.20.1
 
