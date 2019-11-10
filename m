@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12115C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5C8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F3A208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133A8208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354932;
-	bh=DvC0D0QxehONCjbsilXKY7Bm0ptoTdza56kz4LCrfTo=;
+	s=default; t=1573354937;
+	bh=hPCzig74fT8Qr+a6ZmQjOQUngro2H+1RdsElSjjB0i0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSKbeBKBuFmIuw6Kt50KxkNhViwHYblwinjDbC/7/OeAIF5lbPMd0jcu2qIy5oPKF
-	 frwgRNclmF0Zq+foMRhR8m2jSmynGz6csF/t02AvovcQWdA8PO1Sm088UJNHh8dCjR
-	 ugbu6vx3kJ613OX34xeKKWRF8VltyhFNjxg9XqfI=
+	b=XWSUaI7HjRPtIkT24ZUtRhcrgUuz4QXRuFDUDHRrlUVV+fteS5lWlGK2MemuIbeho
+	 PwxIDn9ELTQRPH9zq6BUxUnIHVAuNkZxqLFCyY0nFzW9pZNDEFg118eOxZHNzjeuxe
+	 gM9DzGo7sWC1PCGovHNkLMRlLSgv6INckVp9K8No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfKJDCL (ORCPT
+        id S1729438AbfKJCt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:02:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58932 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:49:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbfKJCtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:31 -0500
+        id S1728495AbfKJCtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF7322583;
-        Sun, 10 Nov 2019 02:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 535B622593;
+        Sun, 10 Nov 2019 02:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354170;
-        bh=DvC0D0QxehONCjbsilXKY7Bm0ptoTdza56kz4LCrfTo=;
+        s=default; t=1573354157;
+        bh=hPCzig74fT8Qr+a6ZmQjOQUngro2H+1RdsElSjjB0i0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMatkWaEJxsWIteDS4JKfnoQ9S5mTOGyNPJL4QQl9Y2wjA7hOJk2mRwos4NK54YQJ
-         wPbnCgxhNKEgDw+tgHINXHUFOcoNIeOBB0yAHzud3Pr6C4Nt3H/Sw/CJGrppnheazO
-         NrV1XxAL6arqPIWgZzZQAlqTHH7c63de29GvDbaA=
+        b=WH6oNsP/ITtkxLrMvRyXqfklw4qM7x3WlXoCc9xRZ5jFQTZin9azNJQkimtcCXZfI
+         HbpVS5X7wRsQxER5UsDpdK3SRIz1agOKPNM8E0RAtDcLafW8lVGOqqun1Nk/8U5KAy
+         UeA0eDub1IK8kUZWhSTblPSf+1dVT8b6ZfIUPcNY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 25/66] ARM: dts: marvell: Fix SPI and I2C bus warnings
-Date:   Sat,  9 Nov 2019 21:48:04 -0500
-Message-Id: <20191110024846.32598-25-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 14/66] net: amd: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:47:53 -0500
+Message-Id: <20191110024846.32598-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -61,95 +59,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit cf680cc5251487b9a39919c3cda31a108af19cf8 ]
+[ Upstream commit fe72352e37ae8478f4c97975a9831f0c50f22e73 ]
 
-dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-and unit-addresses.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-arch/arm/boot/dts/dove-cubox.dtb: Warning (i2c_bus_reg): /i2c-mux/i2c@0/clock-generator: I2C bus unit address format error, expected "60"
-arch/arm/boot/dts/dove-cubox-es.dtb: Warning (i2c_bus_reg): /i2c-mux/i2c@0/clock-generator: I2C bus unit address format error, expected "60"
-arch/arm/boot/dts/dove-cubox.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-cubox-es.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-dove-db.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-sbc-a510.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@10600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dove-sbc-a510.dtb: Warning (spi_bus_bridge): /mbus/internal-regs/spi-ctrl@14600: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/orion5x-kuroboxpro.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
-arch/arm/boot/dts/orion5x-linkstation-lschl.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
-arch/arm/boot/dts/orion5x-linkstation-lsgl.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
-arch/arm/boot/dts/orion5x-linkstation-lswtgl.dtb: Warning (i2c_bus_reg): /soc/internal-regs/i2c@11000/rtc: I2C bus unit address format error, expected "32"
+Found by coccinelle.
 
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dove-cubox.dts           | 2 +-
- arch/arm/boot/dts/dove.dtsi                | 6 +++---
- arch/arm/boot/dts/orion5x-linkstation.dtsi | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/amd/am79c961a.c     | 2 +-
+ drivers/net/ethernet/amd/atarilance.c    | 6 ++++--
+ drivers/net/ethernet/amd/declance.c      | 2 +-
+ drivers/net/ethernet/amd/sun3lance.c     | 6 ++++--
+ drivers/net/ethernet/amd/sunlance.c      | 2 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c | 4 ++--
+ 6 files changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
-index af3cb633135fc..ee32315e3d3af 100644
---- a/arch/arm/boot/dts/dove-cubox.dts
-+++ b/arch/arm/boot/dts/dove-cubox.dts
-@@ -86,7 +86,7 @@
- 	status = "okay";
- 	clock-frequency = <100000>;
+diff --git a/drivers/net/ethernet/amd/am79c961a.c b/drivers/net/ethernet/amd/am79c961a.c
+index fcdf5dda448f9..77d99c532917c 100644
+--- a/drivers/net/ethernet/amd/am79c961a.c
++++ b/drivers/net/ethernet/amd/am79c961a.c
+@@ -440,7 +440,7 @@ static void am79c961_timeout(struct net_device *dev)
+ /*
+  * Transmit a packet
+  */
+-static int
++static netdev_tx_t
+ am79c961_sendpacket(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct dev_priv *priv = netdev_priv(dev);
+diff --git a/drivers/net/ethernet/amd/atarilance.c b/drivers/net/ethernet/amd/atarilance.c
+index d2bc8e5dcd23b..35a9f252ceb6c 100644
+--- a/drivers/net/ethernet/amd/atarilance.c
++++ b/drivers/net/ethernet/amd/atarilance.c
+@@ -339,7 +339,8 @@ static unsigned long lance_probe1( struct net_device *dev, struct lance_addr
+                                    *init_rec );
+ static int lance_open( struct net_device *dev );
+ static void lance_init_ring( struct net_device *dev );
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev );
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb,
++				    struct net_device *dev);
+ static irqreturn_t lance_interrupt( int irq, void *dev_id );
+ static int lance_rx( struct net_device *dev );
+ static int lance_close( struct net_device *dev );
+@@ -770,7 +771,8 @@ static void lance_tx_timeout (struct net_device *dev)
  
--	si5351: clock-generator {
-+	si5351: clock-generator@60 {
- 		compatible = "silabs,si5351a-msop";
- 		reg = <0x60>;
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 698d58cea20d2..11342aeccb73a 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -152,7 +152,7 @@
- 				  0xffffe000 MBUS_ID(0x03, 0x01) 0 0x0000800   /* CESA SRAM  2k */
- 				  0xfffff000 MBUS_ID(0x0d, 0x00) 0 0x0000800>; /* PMU  SRAM  2k */
+ /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
  
--			spi0: spi-ctrl@10600 {
-+			spi0: spi@10600 {
- 				compatible = "marvell,orion-spi";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -165,7 +165,7 @@
- 				status = "disabled";
- 			};
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev )
++static netdev_tx_t
++lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	struct lance_ioreg	 *IO = lp->iobase;
+diff --git a/drivers/net/ethernet/amd/declance.c b/drivers/net/ethernet/amd/declance.c
+index 9e80a76c3dfe1..76393ae4cf0aa 100644
+--- a/drivers/net/ethernet/amd/declance.c
++++ b/drivers/net/ethernet/amd/declance.c
+@@ -893,7 +893,7 @@ static void lance_tx_timeout(struct net_device *dev)
+ 	netif_wake_queue(dev);
+ }
  
--			i2c: i2c-ctrl@11000 {
-+			i2c: i2c@11000 {
- 				compatible = "marvell,mv64xxx-i2c";
- 				reg = <0x11000 0x20>;
- 				#address-cells = <1>;
-@@ -215,7 +215,7 @@
- 				status = "disabled";
- 			};
+-static int lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	volatile struct lance_regs *ll = lp->ll;
+diff --git a/drivers/net/ethernet/amd/sun3lance.c b/drivers/net/ethernet/amd/sun3lance.c
+index 3d8c6b2cdea4c..09271665712da 100644
+--- a/drivers/net/ethernet/amd/sun3lance.c
++++ b/drivers/net/ethernet/amd/sun3lance.c
+@@ -235,7 +235,8 @@ struct lance_private {
+ static int lance_probe( struct net_device *dev);
+ static int lance_open( struct net_device *dev );
+ static void lance_init_ring( struct net_device *dev );
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev );
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb,
++				    struct net_device *dev);
+ static irqreturn_t lance_interrupt( int irq, void *dev_id);
+ static int lance_rx( struct net_device *dev );
+ static int lance_close( struct net_device *dev );
+@@ -511,7 +512,8 @@ static void lance_init_ring( struct net_device *dev )
+ }
  
--			spi1: spi-ctrl@14600 {
-+			spi1: spi@14600 {
- 				compatible = "marvell,orion-spi";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/orion5x-linkstation.dtsi b/arch/arm/boot/dts/orion5x-linkstation.dtsi
-index ed456ab35fd84..c1bc8376d4eb0 100644
---- a/arch/arm/boot/dts/orion5x-linkstation.dtsi
-+++ b/arch/arm/boot/dts/orion5x-linkstation.dtsi
-@@ -156,7 +156,7 @@
- &i2c {
- 	status = "okay";
  
--	rtc {
-+	rtc@32 {
- 		compatible = "ricoh,rs5c372a";
- 		reg = <0x32>;
- 	};
+-static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev )
++static netdev_tx_t
++lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	int entry, len;
+diff --git a/drivers/net/ethernet/amd/sunlance.c b/drivers/net/ethernet/amd/sunlance.c
+index 3153465d4d02f..acbbe4e5a2f8c 100644
+--- a/drivers/net/ethernet/amd/sunlance.c
++++ b/drivers/net/ethernet/amd/sunlance.c
+@@ -1106,7 +1106,7 @@ static void lance_tx_timeout(struct net_device *dev)
+ 	netif_wake_queue(dev);
+ }
+ 
+-static int lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct lance_private *lp = netdev_priv(dev);
+ 	int entry, skblen, len;
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+index 1e4e8b245cd55..1df7f5da8411f 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+@@ -1390,7 +1390,7 @@ static int xgbe_close(struct net_device *netdev)
+ 	return 0;
+ }
+ 
+-static int xgbe_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t xgbe_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct xgbe_prv_data *pdata = netdev_priv(netdev);
+ 	struct xgbe_hw_if *hw_if = &pdata->hw_if;
+@@ -1399,7 +1399,7 @@ static int xgbe_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	struct xgbe_ring *ring;
+ 	struct xgbe_packet_data *packet;
+ 	struct netdev_queue *txq;
+-	int ret;
++	netdev_tx_t ret;
+ 
+ 	DBGPR("-->xgbe_xmit: skb->len = %d\n", skb->len);
+ 
 -- 
 2.20.1
 
