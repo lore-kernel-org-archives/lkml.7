@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262FCC17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F4C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF98C215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF3021655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355837;
-	bh=o/TOvQIheBmK4/IOoKUhlIn3DScWwrc2sRd+jGer1Oo=;
+	s=default; t=1573355848;
+	bh=AoDNuKQXbiefCOInJ5AY2FFn7JlFLLag6G8EitqjtWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dj4tGrlP8d00d51GfUbCzEVErN5cHTiHw3BOlfb/RaQV+cabMBo0bZ+2+RcFCVXdC
-	 qmu0ncs+zzgYSuR2jMUJay4wHQ1Hdc6uv9GUVxlUGpIs+/iHN0k/zxoKhHPVOq0yPZ
-	 EkcjBuFXFwhLclFDWr8Bd3739gAtwe45p6NS1LgI=
+	b=sCLO83zTOITtReSYY1iSlHM5+rfxuK4XXUgWP681cDevWDP7hJyAGhzmn23+9hEi2
+	 zR8W7bWIchKHTtKONNNjyNtEo3HKcG9nw4fz0A1PpEi5ckJuvy9yPAm1CFrnCHYq1v
+	 ySkkrrAVP4CXn8KzdU7jZR4kX/t3Oe6se8eAF1G4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfKJDRQ (ORCPT
+        id S1726773AbfKJDR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:17:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:17:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfKJCkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:24 -0500
+        id S1726749AbfKJCkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12FF21924;
-        Sun, 10 Nov 2019 02:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F072184C;
+        Sun, 10 Nov 2019 02:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353623;
-        bh=o/TOvQIheBmK4/IOoKUhlIn3DScWwrc2sRd+jGer1Oo=;
+        s=default; t=1573353620;
+        bh=AoDNuKQXbiefCOInJ5AY2FFn7JlFLLag6G8EitqjtWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NyltAoaciBfm5ddlZwsGAxCOEh8U8735I6GlCmx4d+8DSKJtHPqTR8doth6yzdO4s
-         zS/9eFgoH7jk570QZyHvB+np+Q4m+OjFYTpVdtHohnnHyfnbcTOPLt/mSVHTyA8qRR
-         qt05YafNZSNAmX9fxwtILOZlHGv3bOidE9O8zGVA=
+        b=UZn7h5MhahZg5ixdurmOo049YTGV3P30WiVPxOrX/AsSZ+UcjCQj5yPft1UBli6Mi
+         5o95F/CmGFgU2qoG5gIJQQJNRbIKPbE33oe4CYEe7n1xmm3Tu67xMY+fQlpNaR5S1r
+         yaFKaxI+BGUHDfLotC5wxud0pdg6Mn6JWLJ1zeR8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Honghui Zhang <honghui.zhang@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 008/191] PCI: mediatek: Fix unchecked return value
-Date:   Sat,  9 Nov 2019 21:37:10 -0500
-Message-Id: <20191110024013.29782-8-sashal@kernel.org>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 005/191] media: ov2680: don't register the v4l2 subdevice before checking chip ID
+Date:   Sat,  9 Nov 2019 21:37:07 -0500
+Message-Id: <20191110024013.29782-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,36 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Javier Martinez Canillas <javierm@redhat.com>
 
-[ Upstream commit 17a0a1e5f6c4bd6df17834312ff577c1373d87b8 ]
+[ Upstream commit b7a417628abf49dae98cb80a272dc133b0e4d1a3 ]
 
-Check return value of devm_pci_remap_iospace().
+The driver registers the v4l2 subdevice before attempting to power on the
+chip and checking its ID. This means that a media device driver that it's
+waiting for this subdevice to be bound, will prematurely expose its media
+device node to userspace because if something goes wrong the media entity
+will be cleaned up again on the ov2680 probe function.
 
-Addresses-Coverity-ID: 1471965 ("Unchecked return value")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Honghui Zhang <honghui.zhang@mediatek.com>
+This also simplifies the probe function error path since no initialization
+is made before attempting to enable the resources or checking the chip ID.
+
+Fixes: 3ee47cad3e69 ("media: ov2680: Add Omnivision OV2680 sensor driver")
+
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mediatek.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov2680.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index c5ff6ca65eab2..0d100f56cb884 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -1120,7 +1120,9 @@ static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
- 	if (err < 0)
- 		return err;
+diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
+index f753a1c333ef9..3ccd584568fb5 100644
+--- a/drivers/media/i2c/ov2680.c
++++ b/drivers/media/i2c/ov2680.c
+@@ -1088,26 +1088,20 @@ static int ov2680_probe(struct i2c_client *client)
  
--	devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
-+	err = devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
-+	if (err)
-+		return err;
+ 	mutex_init(&sensor->lock);
+ 
+-	ret = ov2680_v4l2_init(sensor);
++	ret = ov2680_check_id(sensor);
+ 	if (ret < 0)
+ 		goto lock_destroy;
+ 
+-	ret = ov2680_check_id(sensor);
++	ret = ov2680_v4l2_init(sensor);
+ 	if (ret < 0)
+-		goto error_cleanup;
++		goto lock_destroy;
+ 
+ 	dev_info(dev, "ov2680 init correctly\n");
  
  	return 0;
- }
+ 
+-error_cleanup:
+-	dev_err(dev, "ov2680 init fail: %d\n", ret);
+-
+-	media_entity_cleanup(&sensor->sd.entity);
+-	v4l2_async_unregister_subdev(&sensor->sd);
+-	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
+-
+ lock_destroy:
++	dev_err(dev, "ov2680 init fail: %d\n", ret);
+ 	mutex_destroy(&sensor->lock);
+ 
+ 	return ret;
 -- 
 2.20.1
 
