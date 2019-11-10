@@ -2,79 +2,152 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9020C17442
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB73C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D12320B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A185721897
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 14:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Defp8JuE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="djFNIcLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfKJORC (ORCPT
+        id S1726887AbfKJORK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 09:17:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39494 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfKJORC (ORCPT
+        Sun, 10 Nov 2019 09:17:10 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46704 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfKJORK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 09:17:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fVmVEbEUawJP+2+xjtt5g4dGUc3Ync4wEewM8s7BWYg=; b=Defp8JuExBSKtlwz0CPfQZaKbN
-        ECVZJJwBIck+9HoH/47uXa7BCHZvfMr6ro9WerGEs/hAEkw1gDHjTJGZWD+pDBh/zU6vkglLdbQjs
-        aHzce1pNwwbpyA0UMUiZpsYBkY62oXLUmNGyeKYuN91eFqP1wt9JDXcKNQp9R/XmgfHT8KhkYkH5m
-        Ck1KAV6whVlG9yQpMPv93uMCuY6KgQrj/XuGg8bqMhtlknqt8egsYY6ETe0e8GBgjS2uIzsWGBmKc
-        43V9Bva4yQKCJHuPylo++WYbUgop14fU23xqX2QyVxKR4gnCu5SB6i8K4Y+5s2p/TNQyWm9zQZ2cv
-        3lWNwnfg==;
-Received: from [2001:4bb8:184:e48:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iTo1V-0005HE-Ge; Sun, 10 Nov 2019 14:17:01 +0000
-Date:   Sun, 10 Nov 2019 15:16:48 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] configfs regression fix for 5.4-rc
-Message-ID: <20191110141648.GA23526@infradead.org>
+        Sun, 10 Nov 2019 09:17:10 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b3so11827153wrs.13
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 06:17:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/gsTXRLdcmbPIrBJTR08AIIElFXvOM/gj2w8ksdg+3s=;
+        b=djFNIcLYJniF/kYHxazOvCnVViSEFx4WGm/DB+qje56mYNRO8twZ9tLgT9WLxztVa+
+         BKPqIChCQR9Vav8VB6mCUq6J6MO5Jy+kpO9aNa9sPINL30kxsqyQeDXO9PYhVANtbgoN
+         +FrPlMSkaEKIsvsQJnkTjdWbnlGqowPQFt751T5qEe8ew0nLCxSI3tVjuO5BzVfQyuDQ
+         hm4wXJXS2qEm06KaqjgY5Sl/nBfEktp5cocsUIIoqEWvEsbBGIste8jc/hUCwiOV8jkm
+         2LExVIbO4w05YBNX2b06COaaAEK/KgjXmaD6+Zo451e9xEZOyDxcEdNV1hOGVqOidkxf
+         oLFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/gsTXRLdcmbPIrBJTR08AIIElFXvOM/gj2w8ksdg+3s=;
+        b=J9TpVmCRhBrhtLG67tHnHpKMZoFIR+yZ/SLaSo7bTufUtfay4bcfv393IQ70eDo00W
+         CW3HkeyJP3Tvi/rFecyDbwZDtcH0sD4B/zDj/oUujLW7+/wsIcm9okRlkCDKu0kD9+Cs
+         tQUoI+ZX3IFF7W/yY7PFVf8wd4YJZn/nvn0B0ILV93JCr5T4gxSyU7J8g3thXWgsxOYI
+         /+2iqtGSQwpEuHC/7SKEWGxWeAucMtOe1QGhLw4DGJfFE0Nhn0uFS7EYEPaCKwc7AZHl
+         3pXHxy48GmMTYwSeuJH7kxIVowZO2TdfXLjO0uZQYrVOpzN7aMB1bqjef1+Xt2BSPX2e
+         a88Q==
+X-Gm-Message-State: APjAAAVpuasLvlltkHCAb3RvDCw0+7zor6FFvVKaxMZ+qTjZmErsL0qn
+        l7wf/tvUZCDmKSh6QzwIhaPuTNbqMTKxnh5FKQZBrg==
+X-Google-Smtp-Source: APXvYqyUUQm4IaolEARn85QDGFZgvuBIQiiwRvhvum1THFJXOyDlniXRJB2WjCnc4uJIqhA7FspZXrAt/zP0vHsgflY=
+X-Received: by 2002:adf:ec42:: with SMTP id w2mr15841958wrn.32.1573395428010;
+ Sun, 10 Nov 2019 06:17:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20191110024013.29782-1-sashal@kernel.org> <20191110024013.29782-133-sashal@kernel.org>
+ <CAKv+Gu-PawCS_Wq3Hm+gm_f=6-ihXarkQqP9prkj4CLt=pAnvg@mail.gmail.com> <20191110132726.GN4787@sasha-vm>
+In-Reply-To: <20191110132726.GN4787@sasha-vm>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sun, 10 Nov 2019 14:16:57 +0000
+Message-ID: <CAKv+Gu_Pg-j6C0iRqa8wSr+=vk3rMQ=KHFykZGNGWMfcYfAjtg@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 133/191] efi: honour memory reservations
+ passed via a linux specific config table
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 26bc672134241a080a83b2ab9aa8abede8d30e1c:
+On Sun, 10 Nov 2019 at 13:27, Sasha Levin <sashal@kernel.org> wrote:
+>
+> On Sun, Nov 10, 2019 at 08:33:47AM +0100, Ard Biesheuvel wrote:
+> >On Sun, 10 Nov 2019 at 03:44, Sasha Levin <sashal@kernel.org> wrote:
+> >>
+> >> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >>
+> >> [ Upstream commit 71e0940d52e107748b270213a01d3b1546657d74 ]
+> >>
+> >> In order to allow the OS to reserve memory persistently across a
+> >> kexec, introduce a Linux-specific UEFI configuration table that
+> >> points to the head of a linked list in memory, allowing each kernel
+> >> to add list items describing memory regions that the next kernel
+> >> should treat as reserved.
+> >>
+> >> This is useful, e.g., for GICv3 based ARM systems that cannot disable
+> >> DMA access to the LPI tables, forcing them to reuse the same memory
+> >> region again after a kexec reboot.
+> >>
+> >> Tested-by: Jeremy Linton <jeremy.linton@arm.com>
+> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> >
+> >NAK
+> >
+> >This doesn't belong in -stable, and I'd be interested in understanding
+> >how this got autoselected, and how I can prevent this from happening
+> >again in the future.
+>
+> It was selected because it's part of a fix for a real issue reported by
+> users:
+>
 
-  Merge tag 'for-linus-2019-11-05' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux (2019-11-05 09:44:02 -0800)
+For my understanding, are you saying your AI is reading launchpad bug
+reports etc? Because it is marked AUTOSEL.
 
-are available in the Git repository at:
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1806766
+>
 
-  git://git.infradead.org/users/hch/configfs.git tags/configfs-for-5.4-2
+That pages mentions
 
-for you to fetch changes up to e2f238f7d5a1fa69ff1884d37acf9a2a3a01b308:
+"""
+2 upstream patch series are required to fix this:
+ https://<email address hidden>/msg10328.html
+Which provides an EFI facility consumed by:
+ https://lkml.org/lkml/2018/9/21/1066
+There were also some follow-on fixes to deal with ARM-specific
+problems associated with this usage:
+ https://www.spinics.net/lists/arm-kernel/msg685751.html
+"""
 
-  configfs: calculate the depth of parent item (2019-11-06 18:36:01 +0100)
+and without the other patches, we only add bugs and don't fix any.
 
-----------------------------------------------------------------
-configfs regression fix for 5.4-rc
+> Besides ubuntu, it is also carried by:
+>
+> SUSE: https://www.suse.com/support/update/announcement/2019/suse-su-20191530-1/
+> CentOS: https://koji.mbox.centos.org/koji/buildinfo?buildID=4558
+>
+> As a way to resolve the reported bug.
+>
 
- - fix a regression from this merge window in the configfs
-   symlink handling (Honggang Li)
+Backporting a feature/fix like this requires careful consideration of
+the patches involved, and doing actual testing on hardware.
 
-----------------------------------------------------------------
-Honggang Li (1):
-      configfs: calculate the depth of parent item
+> Any reason this *shouldn't* be in stable?
 
- fs/configfs/symlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes. By itself, it causes crashes at early boot and does not actually
+solve the problem.
+
+> I'm aware that there might be
+> dependencies that are not obvious to me, but the solution here is to
+> take those dependencies as well rather than ignore the process
+> completely.
+>
+
+This is not a bugfix. kexec/kdump never worked correctly on the
+hardware involved, and backporting a feature like that goes way beyond
+what I am willing to accept for stable backports affecting the EFI
+subsystem.
