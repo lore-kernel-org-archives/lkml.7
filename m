@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C47C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4054C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF2D21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D0D214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354820;
-	bh=TPrIXpFHMn6cXPFaNNnmHnpk5EEQhbToYpDBo9dmzzw=;
+	s=default; t=1573354830;
+	bh=HXKXCfTe/YWivqt2/XHI9qBijHiI9BV3Ng/MsU6Ayxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZebS64HH8+izESWWZpoimnZU2o71uSzmSg4VV5a6qgnlKi/Yv1F9/gPsVfL2X6mm1
-	 TMlVo/GIRfnc6bI6sbqaMcBelr3v0PGsbptxJfTGVTgyeqHwOG7TaMJvCub/kvUM2S
-	 8p/NajlYXCDwCLUzK9qJBjtbCuiPZPtxfYXW80Yk=
+	b=r8pEifZl9aaPAFctH+U6IbggRE4mBlKLzrczQqDBtdTHaAOKVP9b4ziV3Fi8kDNA3
+	 fkvmJgK5e1a9hsm/vM0TnXlqImE4j7rj9b6GubxpyZ4idZKCvSqL0Pa97rQ/G6fTmJ
+	 PC3Pf0mzILv3eEEXp54VPMdzCYIzy81oqbWSRo5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbfKJDAE (ORCPT
+        id S1728371AbfKJDA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:00:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47262 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:00:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729288AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729244AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630172255F;
-        Sun, 10 Nov 2019 02:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FE5422509;
+        Sun, 10 Nov 2019 02:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354118;
-        bh=TPrIXpFHMn6cXPFaNNnmHnpk5EEQhbToYpDBo9dmzzw=;
+        s=default; t=1573354107;
+        bh=HXKXCfTe/YWivqt2/XHI9qBijHiI9BV3Ng/MsU6Ayxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2q0wbxTdXATB9vCDz585YWfQDRVYeA2An/Gsnf6AQIEYi0aJNOMn0fts315n7dNY/
-         u83MOlkLcPW+DnZ1mYa1TUi361MaG8qNXVLwd5OQgVSkI9B9OvsMmAtkK+38hK1oRG
-         9PZyhkwa8Rv175gvcxL+2xRVoYNGJMGJ3nygtt54=
+        b=Csx1Bj5xMGsN0SfKndzbebT8EGWLgtYSvnY6aRTo2qa/YW5Bi4OOLe38k1x9okavv
+         PC9n8nDtBkC2olPYlOr44/wHHH9QOyDBXYq0NSz7JhqiLwTS14GKanDrHKsS+Fu8pK
+         /QZcjlxpjPgj44BKcp508N5HnNmymzccz5vAChFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 106/109] usb: xhci-mtk: fix ISOC error when interval is zero
-Date:   Sat,  9 Nov 2019 21:45:38 -0500
-Message-Id: <20191110024541.31567-106-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 097/109] scsi: NCR5380: Don't call dsprintk() following reselection interrupt
+Date:   Sat,  9 Nov 2019 21:45:29 -0500
+Message-Id: <20191110024541.31567-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,36 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 87173acc0d8f0987bda8827da35fff67f52ad15d ]
+[ Upstream commit 08267216b3f8aa5adc204bdccf8deb72c1cd7665 ]
 
-If the interval equal zero, needn't round up to power of two
-for the number of packets in each ESIT, so fix it.
+The X3T9.2 specification (draft) says, under "6.1.4.1 RESELECTION",
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    ... The reselected initiator shall then assert the BSY signal
+    within a selection abort time of its most recent detection of being
+    reselected; this is required for correct operation of the time-out
+    procedure.
+
+The selection abort time is only 200 us which may be insufficient time for a
+printk() call. Move the diagnostics to the error paths.
+
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-mtk-sch.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/NCR5380.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
-index 6e7ddf6cafae1..defaf950e6314 100644
---- a/drivers/usb/host/xhci-mtk-sch.c
-+++ b/drivers/usb/host/xhci-mtk-sch.c
-@@ -122,7 +122,9 @@ static void setup_sch_info(struct usb_device *udev,
- 		}
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index b13290b3e5d38..48f123601f575 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2021,8 +2021,6 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+ 		return;
+ 	}
  
- 		if (ep_type == ISOC_IN_EP || ep_type == ISOC_OUT_EP) {
--			if (esit_pkts <= sch_ep->esit)
-+			if (sch_ep->esit == 1)
-+				sch_ep->pkts = esit_pkts;
-+			else if (esit_pkts <= sch_ep->esit)
- 				sch_ep->pkts = 1;
- 			else
- 				sch_ep->pkts = roundup_pow_of_two(esit_pkts)
+-	dsprintk(NDEBUG_RESELECTION, instance, "reselect\n");
+-
+ 	/*
+ 	 * At this point, we have detected that our SCSI ID is on the bus,
+ 	 * SEL is true and BSY was false for at least one bus settle delay
+@@ -2035,6 +2033,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+ 	NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE | ICR_ASSERT_BSY);
+ 	if (NCR5380_poll_politely(hostdata,
+ 	                          STATUS_REG, SR_SEL, 0, 2 * HZ) < 0) {
++		shost_printk(KERN_ERR, instance, "reselect: !SEL timeout\n");
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+ 		return;
+ 	}
+@@ -2046,6 +2045,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+ 
+ 	if (NCR5380_poll_politely(hostdata,
+ 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
++		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
+ 		do_abort(instance);
+ 		return;
+ 	}
 -- 
 2.20.1
 
