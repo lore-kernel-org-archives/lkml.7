@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264A4C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E80C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB324208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C58208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355230;
-	bh=8cx90xcuJ2/7+XJQJkGSC6D0S1sN5k36Nt1id3Is/8Q=;
+	s=default; t=1573355235;
+	bh=rUWE+gCpVtyvviHYp6lEwaLES4+niP2PfE8w5mXRyp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wUDX1nLzct+dWwKs2G7iKepSmDuQWUHt0ZStoQIoIyDGM1MUG5gyPAXttrfpn4ZuS
-	 NvX591Oiy64XrbaFee0hKmh9eb3aLJg5erOlCSHces+kmf6q+d9rmnAoW6wKz//M3v
-	 4+ctUiVl7cqbrpDlZh94eMZvA/OY4uD1sDz+MR9Y=
+	b=GUC14h45cNM8FOu31wvmaO0uT3krViliJ6j914ygSQcFxHyHp4u/7dflboVB1KNCd
+	 raVDZqKgGrDUynTZE3STVVfUEkFwk4ZVHpcs2wvJfb1PiQoQyhMMAYN6YtvtO0ncbp
+	 1swIowLbIQ1ENw4CgfbDXZ/UbJ99DJjCA/723++Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfKJDHI (ORCPT
+        id S1729134AbfKJDHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:07:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:07:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbfKJCpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:30 -0500
+        id S1726927AbfKJCp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7959C21655;
-        Sun, 10 Nov 2019 02:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D1A6222BE;
+        Sun, 10 Nov 2019 02:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353930;
-        bh=8cx90xcuJ2/7+XJQJkGSC6D0S1sN5k36Nt1id3Is/8Q=;
+        s=default; t=1573353926;
+        bh=rUWE+gCpVtyvviHYp6lEwaLES4+niP2PfE8w5mXRyp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1K65DHbupnEqxUrXaiKapvy+BjWikOUZBYIZcYntgsX9y+38WzlQuxEw60mG9szV
-         PNR2s90ibtEFLMhu/4KcTiHRXNzPyG34xgIhPR+p9iNHKckGtiKeK5YGiB8wubI3Dn
-         5GcdG9hBam1X/T7syt7pTOYFNiHuZ70C7+uOl+Q8=
+        b=CzHEndCmfNr+gQOfabqjAdPxDWom2yz3sVW4GRxL7R7fY7ZtMUj3HKS5WWqhInNd4
+         B8MMS7B8WhfNyr1auYIUvVF0j29t7HvBl/XNppHCiXndHbyp3bQ6bHviVa+BRTtgK1
+         xtLelJglcOtF3ILRH9xauAsGNWL9FU5KC3Etxv2Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Stefan Liebler <stli@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 189/191] s390/vdso: correct vdso mapping for compat tasks
-Date:   Sat,  9 Nov 2019 21:40:11 -0500
-Message-Id: <20191110024013.29782-189-sashal@kernel.org>
+Cc:     Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 187/191] IB/iser: Fix possible NULL deref at iser_inv_desc()
+Date:   Sat,  9 Nov 2019 21:40:09 -0500
+Message-Id: <20191110024013.29782-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,61 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Israel Rukshin <israelr@mellanox.com>
 
-[ Upstream commit 190f056fba230abee80712eb810939ef9a8c462f ]
+[ Upstream commit 65f07f5a09dacf3b60619f196f096ea3671a5eda ]
 
-While "s390/vdso: avoid 64-bit vdso mapping for compat tasks" fixed
-64-bit vdso mapping for compat tasks under gdb it introduced another
-problem. "compat_mm" flag is not inherited during fork and when
-31-bit process forks a child (but does not perform exec) it ends up
-with 64-bit vdso. To address that, init_new_context (which is called
-during fork and exec) now initialize compat_mm based on thread TIF_31BIT
-flag. Later compat_mm is adjusted in arch_setup_additional_pages, which
-is called during exec.
+In case target remote invalidates bogus rkey and signature is not used,
+pi_ctx is NULL deref.
 
-Fixes: d1befa65823e ("s390/vdso: avoid 64-bit vdso mapping for compat tasks")
-Reported-by: Stefan Liebler <stli@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+The commit also fails the connection on bogus remote invalidation.
+
+Fixes: 59caaed7a72a ("IB/iser: Support the remote invalidation exception")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/mmu_context.h | 2 +-
- arch/s390/kernel/vdso.c             | 5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/infiniband/ulp/iser/iser_initiator.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
-index e4462202200d7..8d04e6f3f7964 100644
---- a/arch/s390/include/asm/mmu_context.h
-+++ b/arch/s390/include/asm/mmu_context.h
-@@ -25,7 +25,7 @@ static inline int init_new_context(struct task_struct *tsk,
- 	atomic_set(&mm->context.flush_count, 0);
- 	mm->context.gmap_asce = 0;
- 	mm->context.flush_mm = 0;
--	mm->context.compat_mm = 0;
-+	mm->context.compat_mm = test_thread_flag(TIF_31BIT);
- #ifdef CONFIG_PGSTE
- 	mm->context.alloc_pgste = page_table_allocate_pgste ||
- 		test_thread_flag(TIF_PGSTE) ||
-diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
-index ec31b48a42a52..7ab7d256d1eb7 100644
---- a/arch/s390/kernel/vdso.c
-+++ b/arch/s390/kernel/vdso.c
-@@ -224,10 +224,9 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+diff --git a/drivers/infiniband/ulp/iser/iser_initiator.c b/drivers/infiniband/ulp/iser/iser_initiator.c
+index 2f6388596f886..96af06cfe0afd 100644
+--- a/drivers/infiniband/ulp/iser/iser_initiator.c
++++ b/drivers/infiniband/ulp/iser/iser_initiator.c
+@@ -589,13 +589,19 @@ void iser_login_rsp(struct ib_cq *cq, struct ib_wc *wc)
+ 	ib_conn->post_recv_buf_count--;
+ }
  
- 	vdso_pages = vdso64_pages;
- #ifdef CONFIG_COMPAT
--	if (is_compat_task()) {
-+	mm->context.compat_mm = is_compat_task();
-+	if (mm->context.compat_mm)
- 		vdso_pages = vdso32_pages;
--		mm->context.compat_mm = 1;
--	}
- #endif
- 	/*
- 	 * vDSO has a problem and was disabled, just don't "enable" it for
+-static inline void
++static inline int
+ iser_inv_desc(struct iser_fr_desc *desc, u32 rkey)
+ {
+-	if (likely(rkey == desc->rsc.mr->rkey))
++	if (likely(rkey == desc->rsc.mr->rkey)) {
+ 		desc->rsc.mr_valid = 0;
+-	else if (likely(rkey == desc->pi_ctx->sig_mr->rkey))
++	} else if (likely(desc->pi_ctx && rkey == desc->pi_ctx->sig_mr->rkey)) {
+ 		desc->pi_ctx->sig_mr_valid = 0;
++	} else {
++		iser_err("Bogus remote invalidation for rkey %#x\n", rkey);
++		return -EINVAL;
++	}
++
++	return 0;
+ }
+ 
+ static int
+@@ -623,12 +629,14 @@ iser_check_remote_inv(struct iser_conn *iser_conn,
+ 
+ 			if (iser_task->dir[ISER_DIR_IN]) {
+ 				desc = iser_task->rdma_reg[ISER_DIR_IN].mem_h;
+-				iser_inv_desc(desc, rkey);
++				if (unlikely(iser_inv_desc(desc, rkey)))
++					return -EINVAL;
+ 			}
+ 
+ 			if (iser_task->dir[ISER_DIR_OUT]) {
+ 				desc = iser_task->rdma_reg[ISER_DIR_OUT].mem_h;
+-				iser_inv_desc(desc, rkey);
++				if (unlikely(iser_inv_desc(desc, rkey)))
++					return -EINVAL;
+ 			}
+ 		} else {
+ 			iser_err("failed to get task for itt=%d\n", hdr->itt);
 -- 
 2.20.1
 
