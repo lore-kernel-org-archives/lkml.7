@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68ADBC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56AD208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A561208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355183;
-	bh=kVIWzxKGEP+C3bOY8Q6CeEoA/CoYkqse9JetYoX1jYE=;
+	s=default; t=1573355191;
+	bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bRun7SpkVJP7qt3HB2tCceU9cdLL85laUXc1R7X0KQ8Y3risMf8xzV4+Qbljs9hrC
-	 RqdXqXjj6hr0xsimnZsWoxtwqUyMB/ms3slBS5LVhJ9RznWgpU9tqAB8oJ4/iSbOv9
-	 D+Bg4GKJTPdvBF5ugBRzUAED4rSYiR97rdShl4s4=
+	b=G10kpkXzv6OqTAyPv+RFmUvLgDmOK/n3x/MHH4y9hPx7/VdIctlaKZWTrFDpiKuSt
+	 GVhEBHop8x8j4/XEP+xIHvtItjOUo5Qzv0kfercU5IVXYIFwEkkWFy6vnTxzwKuwtm
+	 ElhE4HPwROcfhIk53h91kv5AkpZjAA0J9wVyg1mI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfKJDGW (ORCPT
+        id S1729247AbfKJDG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:06:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:06:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfKJCpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:52 -0500
+        id S1728016AbfKJCpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 082A42085B;
-        Sun, 10 Nov 2019 02:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144C721850;
+        Sun, 10 Nov 2019 02:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353951;
-        bh=kVIWzxKGEP+C3bOY8Q6CeEoA/CoYkqse9JetYoX1jYE=;
+        s=default; t=1573353949;
+        bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBNLboJimbdxeGmRVLdk60OdOWGzySGd+uVUGLQz/0XIwb86cY/15/QR/ssafDwJU
-         uRVbK9PqTDXFJ0lv6ZcjN9BWLPrfpbYcKXhgFAyAraUQbDtFGhsQIp1NGGIpp0UwC1
-         vHlhTrfEVE3bCQkgHjKKE2QDDy2DVcYkX2I2eKpg=
+        b=eEqk8GXFJebo2GNPwcMhw+baY8F0kBH/mKQyDdptznvjuO/rFbRrozCgrSEov7Ddz
+         tRMiWJZXjIpMqUm7ofPe1iOVNpFBgBJc7Sohvz/VUfhiZdg8nY7aaDxvf3Gk7acMqD
+         yZncVw//MuH1lZh86+Zibvp/GrUJjDc5/5Y8+vII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 009/109] net: hns3: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:44:01 -0500
-Message-Id: <20191110024541.31567-9-sashal@kernel.org>
+Cc:     Peter Shih <pihsun@chromium.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 007/109] spi: mediatek: Don't modify spi_transfer when transfer.
+Date:   Sat,  9 Nov 2019 21:43:59 -0500
+Message-Id: <20191110024541.31567-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -59,52 +58,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Peter Shih <pihsun@chromium.org>
 
-[ Upstream commit c9c3941186c5637caed131c4f4064411d6882299 ]
+[ Upstream commit 00bca73bfca4fb0ab089b94cad0fc83d8b49c25f ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, also the implementation in this
-driver has returns 'netdev_tx_t' value, so just change the function
-return type to netdev_tx_t.
+Mediatek SPI driver modifies some fields (tx_buf, rx_buf, len, tx_dma,
+rx_dma) of the spi_transfer* passed in when doing transfer_one and in
+interrupt handler. This is somewhat unexpected, and there are some
+caller (e.g. Cr50 spi driver) that reuse the spi_transfer for multiple
+messages. Add a field to record how many bytes have been transferred,
+and calculate the right len / buffer based on it instead.
 
-Found by coccinelle.
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Change-Id: I23e218cd964f16c0b2b26127d4a5ca6529867673
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c    | 3 ++-
- drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/spi/spi-mt65xx.c | 37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 1bfe9544b3c10..57e24f312ca68 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -423,7 +423,8 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 			       ns, HRTIMER_MODE_REL);
- }
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 86bf45667a040..3dc31627c6558 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -98,6 +98,7 @@ struct mtk_spi {
+ 	struct clk *parent_clk, *sel_clk, *spi_clk;
+ 	struct spi_transfer *cur_transfer;
+ 	u32 xfer_len;
++	u32 num_xfered;
+ 	struct scatterlist *tx_sgl, *rx_sgl;
+ 	u32 tx_sgl_len, rx_sgl_len;
+ 	const struct mtk_spi_compatible *dev_comp;
+@@ -385,6 +386,7 @@ static int mtk_spi_fifo_transfer(struct spi_master *master,
  
--static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t
-+hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	struct hip04_priv *priv = netdev_priv(ndev);
- 	struct net_device_stats *stats = &ndev->stats;
-diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-index 25a6c8722ecac..aab6fb10af94a 100644
---- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-+++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-@@ -736,7 +736,7 @@ static int hix5hd2_fill_sg_desc(struct hix5hd2_priv *priv,
- 	return 0;
- }
+ 	mdata->cur_transfer = xfer;
+ 	mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, xfer->len);
++	mdata->num_xfered = 0;
+ 	mtk_spi_prepare_transfer(master, xfer);
+ 	mtk_spi_setup_packet(master);
  
--static int hix5hd2_net_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t hix5hd2_net_xmit(struct sk_buff *skb, struct net_device *dev)
+@@ -415,6 +417,7 @@ static int mtk_spi_dma_transfer(struct spi_master *master,
+ 	mdata->tx_sgl_len = 0;
+ 	mdata->rx_sgl_len = 0;
+ 	mdata->cur_transfer = xfer;
++	mdata->num_xfered = 0;
+ 
+ 	mtk_spi_prepare_transfer(master, xfer);
+ 
+@@ -482,7 +485,7 @@ static int mtk_spi_setup(struct spi_device *spi)
+ 
+ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
  {
- 	struct hix5hd2_priv *priv = netdev_priv(dev);
- 	struct hix5hd2_desc *desc;
+-	u32 cmd, reg_val, cnt, remainder;
++	u32 cmd, reg_val, cnt, remainder, len;
+ 	struct spi_master *master = dev_id;
+ 	struct mtk_spi *mdata = spi_master_get_devdata(master);
+ 	struct spi_transfer *trans = mdata->cur_transfer;
+@@ -497,36 +500,38 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+ 		if (trans->rx_buf) {
+ 			cnt = mdata->xfer_len / 4;
+ 			ioread32_rep(mdata->base + SPI_RX_DATA_REG,
+-				     trans->rx_buf, cnt);
++				     trans->rx_buf + mdata->num_xfered, cnt);
+ 			remainder = mdata->xfer_len % 4;
+ 			if (remainder > 0) {
+ 				reg_val = readl(mdata->base + SPI_RX_DATA_REG);
+-				memcpy(trans->rx_buf + (cnt * 4),
+-					&reg_val, remainder);
++				memcpy(trans->rx_buf +
++					mdata->num_xfered +
++					(cnt * 4),
++					&reg_val,
++					remainder);
+ 			}
+ 		}
+ 
+-		trans->len -= mdata->xfer_len;
+-		if (!trans->len) {
++		mdata->num_xfered += mdata->xfer_len;
++		if (mdata->num_xfered == trans->len) {
+ 			spi_finalize_current_transfer(master);
+ 			return IRQ_HANDLED;
+ 		}
+ 
+-		if (trans->tx_buf)
+-			trans->tx_buf += mdata->xfer_len;
+-		if (trans->rx_buf)
+-			trans->rx_buf += mdata->xfer_len;
+-
+-		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, trans->len);
++		len = trans->len - mdata->num_xfered;
++		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
+ 		mtk_spi_setup_packet(master);
+ 
+-		cnt = trans->len / 4;
+-		iowrite32_rep(mdata->base + SPI_TX_DATA_REG, trans->tx_buf, cnt);
++		cnt = len / 4;
++		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
++				trans->tx_buf + mdata->num_xfered, cnt);
+ 
+-		remainder = trans->len % 4;
++		remainder = len % 4;
+ 		if (remainder > 0) {
+ 			reg_val = 0;
+-			memcpy(&reg_val, trans->tx_buf + (cnt * 4), remainder);
++			memcpy(&reg_val,
++				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
++				remainder);
+ 			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
+ 		}
+ 
 -- 
 2.20.1
 
