@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B402C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB1C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D6A206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA84C206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354325;
-	bh=OQxAjtgjoRmh71w/KKY3w4GztgCDEsVjgMRHOe26tms=;
+	s=default; t=1573354331;
+	bh=mpnD1p0KP4BOslkv4vlEJkovyvNqqsZASE1Gajsr6Ts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zSiAgQm2DOZyICloro4Cp3G1uUa8sJfQVvTv8/67ysWfgf23mluxIiql59Vz71FOp
-	 QByTR4X/qvIB9H5qrhzrr7RttNl/kUhhjWF7tt/Keru7JhV2Ob94xY26EwtBwUWdqw
-	 c8wfsYMQQJLJckTyIgwJNlWqPcAWwjbQw7HANo/M=
+	b=XtP01wpNXiRzRL37pQtNG/hBLWuQuyJMNaTbY+GXiKREYEOMRJvI/mwmGF23HaO0K
+	 3Im6hZ6AvL7WLsU5or7oTPDRTwNsjhSzqQX6WIXgM8oQUnDB1tqs9z0QyCRcp1q9Fe
+	 bMdu44Fg68U3KRQ4tecx4iGb9pOcJcZ3oLCNyN5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfKJCvs (ORCPT
+        id S1728776AbfKJCwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36094 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:52:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729991AbfKJCv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:51:28 -0500
+        id S1728257AbfKJCvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:51:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF8F22794;
-        Sun, 10 Nov 2019 02:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8C22794;
+        Sun, 10 Nov 2019 02:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354287;
-        bh=OQxAjtgjoRmh71w/KKY3w4GztgCDEsVjgMRHOe26tms=;
+        s=default; t=1573354304;
+        bh=mpnD1p0KP4BOslkv4vlEJkovyvNqqsZASE1Gajsr6Ts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1VcWbhDzXd88Vjrw2hxfKWy5/Nnng8PHKsETbX46icpbFWeqgYCqmK/gD6yXcizfq
-         VBX+VgBFd7zS4jkB+ciTHJKkn2j6J7xdQBs8ea5AnF01DdOTmB4LV1AGq6WuLKxgo2
-         hY7yJi94VjCalrWcSkYBqisSztHwLLFpnk17cduQ=
+        b=cbX3c4TKiNYM9b6CG4DXw/fSw4rzBJAnyxDc7gQzhTQLgCKalVNDSoBQbd8DhBuMo
+         hxfxdpyQ0TFRAKPUCIqTbewxfNC+oxcxxw8BLDTT5jQ0unNVHxyjdtraOv9IVCfmj/
+         jDcuC8tbO6E6LFrymGFIZNJh/biPgXCDKW+rSbKg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Elder <paul.elder@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 29/40] usb: gadget: uvc: Only halt video streaming endpoint in bulk mode
-Date:   Sat,  9 Nov 2019 21:50:21 -0500
-Message-Id: <20191110025032.827-29-sashal@kernel.org>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 40/40] fuse: use READ_ONCE on congestion_threshold and max_background
+Date:   Sat,  9 Nov 2019 21:50:32 -0500
+Message-Id: <20191110025032.827-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
@@ -60,42 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Kirill Tkhai <ktkhai@virtuozzo.com>
 
-[ Upstream commit 8dbf9c7abefd5c1434a956d5c6b25e11183061a3 ]
+[ Upstream commit 2a23f2b8adbe4bd584f936f7ac17a99750eed9d7 ]
 
-When USB requests for video data fail to be submitted, the driver
-signals a problem to the host by halting the video streaming endpoint.
-This is only valid in bulk mode, as isochronous transfers have no
-handshake phase and can't thus report a stall. The usb_ep_set_halt()
-call returns an error when using isochronous endpoints, which we happily
-ignore, but some UDCs complain in the kernel log. Fix this by only
-trying to halt the endpoint in bulk mode.
+Since they are of unsigned int type, it's allowed to read them
+unlocked during reporting to userspace. Let's underline this fact
+with READ_ONCE() macroses.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
-Tested-by: Paul Elder <paul.elder@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_video.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/fuse/control.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index 540917f54506a..d6bab12b0b47d 100644
---- a/drivers/usb/gadget/function/uvc_video.c
-+++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -136,7 +136,9 @@ static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
- 	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
- 	if (ret < 0) {
- 		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
--		usb_ep_set_halt(video->ep);
-+		/* Isochronous endpoints can't be halted. */
-+		if (usb_endpoint_xfer_bulk(video->ep->desc))
-+			usb_ep_set_halt(video->ep);
- 	}
+diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+index 89a4b231e79cb..bb56c6a58fa76 100644
+--- a/fs/fuse/control.c
++++ b/fs/fuse/control.c
+@@ -107,7 +107,7 @@ static ssize_t fuse_conn_max_background_read(struct file *file,
+ 	if (!fc)
+ 		return 0;
  
- 	return ret;
+-	val = fc->max_background;
++	val = READ_ONCE(fc->max_background);
+ 	fuse_conn_put(fc);
+ 
+ 	return fuse_conn_limit_read(file, buf, len, ppos, val);
+@@ -144,7 +144,7 @@ static ssize_t fuse_conn_congestion_threshold_read(struct file *file,
+ 	if (!fc)
+ 		return 0;
+ 
+-	val = fc->congestion_threshold;
++	val = READ_ONCE(fc->congestion_threshold);
+ 	fuse_conn_put(fc);
+ 
+ 	return fuse_conn_limit_read(file, buf, len, ppos, val);
 -- 
 2.20.1
 
