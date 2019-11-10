@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84784C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A2EC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BC021019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C01214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354750;
-	bh=ZymKRHFBH5fnM7kbEWRV6nZyVFEMsP3Qo4tBlcJZExc=;
+	s=default; t=1573354755;
+	bh=BBDr5XZmvudqT38/n9AWNa+7cdhu3U138aHUBryPFtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/ubUVW1nzE/FYPaRwSVJarXpMrse1qt/LTi3TaW2ROSWhIwzzUeS27ypgN7Y1NdN
-	 XSxPNDl6KeWzAALehogKJKEPmF7cs4Db8CQPbtvYxIit7gmSEnihK+2niJHb+6OJmC
-	 uyE9pB5YfkiJZgGI5bwbmiO1t79mmyl3jCJT0pZw=
+	b=KBdwnAJQKqNcNao0bi8orImzuLxJmysrGcKobl+EcMLTka6/D63qQ7zmFqailrZ8P
+	 EuF2vlOCMqRqToDHOidQ8oA2KiIx+SuhyE3a8BvO9NiyTMa5xhROxM9lMAuHKg5vrn
+	 XJjfEPQ89/ZvcYRRKFwuc8m40wrUf1ll+dFSkcLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKJC7I (ORCPT
+        id S1729565AbfKJC7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:59:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47212 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:59:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729372AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB2C22499;
-        Sun, 10 Nov 2019 02:48:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B22122516;
+        Sun, 10 Nov 2019 02:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354085;
-        bh=ZymKRHFBH5fnM7kbEWRV6nZyVFEMsP3Qo4tBlcJZExc=;
+        s=default; t=1573354108;
+        bh=BBDr5XZmvudqT38/n9AWNa+7cdhu3U138aHUBryPFtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3fZBM4fUfu8ADckt3tirKTtRutwB7lBxsJmz1hpKUIfietGdbI5gLEKph1q/Z0mJ
-         pqTpbX5V4YBr5+iEz7O5AKO4IOyCEOSITguVemtVnccYWVABxt8UozEOtSEnOYb9al
-         5lo8/GRuW0Na3OTTQo7SKQ1BW81pe/ZkD4aYmXZg=
+        b=zEb8sIdv3CE4tzwj0FFfj/kdlatc9dJAd9eSWBwbkH7kX6zHB/PbhpRv9QP1KDOyC
+         gqJCWKvl6djh32giogcG6vyV+GQImdW2dHqXklg1p5uhT5Rv1dj9YqANmN7ZqL8Vza
+         onJnyGejxO+YAD4SJICJih9ZL32y79YZi7Cuednk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 082/109] firmware: dell_rbu: Make payload memory uncachable
-Date:   Sat,  9 Nov 2019 21:45:14 -0500
-Message-Id: <20191110024541.31567-82-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 098/109] scsi: NCR5380: Handle BUS FREE during reselection
+Date:   Sat,  9 Nov 2019 21:45:30 -0500
+Message-Id: <20191110024541.31567-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -59,59 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 6aecee6ad41cf97c0270f72da032c10eef025bf0 ]
+[ Upstream commit ca694afad707cb3ae2fdef3b28454444d9ac726e ]
 
-The dell_rbu driver takes firmware update payloads and puts them in memory so
-the system BIOS can find them after a reboot.  This sometimes fails (though
-rarely), because the memory containing the payload is in the CPU cache but
-never gets written back to main memory before the system is rebooted (CPU
-cache contents are lost on reboot).
+The X3T9.2 specification (draft) says, under "6.1.4.2 RESELECTION time-out
+procedure", that a target may assert RST or go to BUS FREE phase if the
+initiator does not respond within 200 us. Something like this has been
+observed with AztecMonster II target. When it happens, all we can do is wait
+for the target to try again.
 
-With this patch, the payload memory will be changed to uncachable to ensure
-that the payload is actually in main memory before the system is rebooted.
-
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/dell_rbu.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/scsi/NCR5380.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/firmware/dell_rbu.c b/drivers/firmware/dell_rbu.c
-index 2f452f1f7c8a0..53f27a6e2d761 100644
---- a/drivers/firmware/dell_rbu.c
-+++ b/drivers/firmware/dell_rbu.c
-@@ -45,6 +45,7 @@
- #include <linux/moduleparam.h>
- #include <linux/firmware.h>
- #include <linux/dma-mapping.h>
-+#include <asm/set_memory.h>
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 48f123601f575..a85c5155fcf40 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2045,6 +2045,9 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
  
- MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
- MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
-@@ -181,6 +182,11 @@ static int create_packet(void *data, size_t length)
- 			packet_data_temp_buf = NULL;
- 		}
- 	}
-+	/*
-+	 * set to uncachable or it may never get written back before reboot
-+	 */
-+	set_memory_uc((unsigned long)packet_data_temp_buf, 1 << ordernum);
-+
- 	spin_lock(&rbu_data.lock);
- 
- 	newpacket->data = packet_data_temp_buf;
-@@ -349,6 +355,8 @@ static void packet_empty_list(void)
- 		 * to make sure there are no stale RBU packets left in memory
- 		 */
- 		memset(newpacket->data, 0, rbu_data.packetsize);
-+		set_memory_wb((unsigned long)newpacket->data,
-+			1 << newpacket->ordernum);
- 		free_pages((unsigned long) newpacket->data,
- 			newpacket->ordernum);
- 		kfree(newpacket);
+ 	if (NCR5380_poll_politely(hostdata,
+ 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
++		if ((NCR5380_read(STATUS_REG) & (SR_BSY | SR_SEL)) == 0)
++			/* BUS FREE phase */
++			return;
+ 		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
+ 		do_abort(instance);
+ 		return;
 -- 
 2.20.1
 
