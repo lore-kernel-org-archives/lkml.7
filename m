@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D37BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF066C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45731215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B69215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355302;
-	bh=ISeaOKmHnavx9pYDCueLskqxWV5BjW6cNJIyazddgCs=;
+	s=default; t=1573355305;
+	bh=8YwN1mIPCq0li5Fv10AaqXAk7tANchOV30SvSfyabI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+hM1WdX6oTV33B0jmOyt3tCNlR88YbyDGyL44GNRHJvI13N8cXHBIFLK7mAKQknb
-	 TzMiQC3CqfkhK5OGoPUCgTQziKeMvvK+wf0B8mlVSCh1Wz58ruKEOdhPMKMHMfHuta
-	 77TTtpwcA313ST18T0A2cYy0xL/Ru3Ipue2CxDkg=
+	b=qFd8bOD1VIZJ0+RgW+TvMA5hNQbGGMIwR5zM7J0LUrSeL4KC0skjYjltvt/FgkQiK
+	 IcZD5BsCkNOC1quex0ieJPYIlYaKnB9+Y3uM5o+Sf4MF57zRZKVZ4bztICOZFKRKBp
+	 XifONvtLlyCmzcYmFIzr+nbPxHRCXa9ZfZ/tk/JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfKJDIU (ORCPT
+        id S1728716AbfKJCpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:08:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45736 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728715AbfKJCpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:04 -0500
+        id S1727549AbfKJCob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1CBE2245A;
-        Sun, 10 Nov 2019 02:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE29D21848;
+        Sun, 10 Nov 2019 02:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353903;
-        bh=ISeaOKmHnavx9pYDCueLskqxWV5BjW6cNJIyazddgCs=;
+        s=default; t=1573353870;
+        bh=8YwN1mIPCq0li5Fv10AaqXAk7tANchOV30SvSfyabI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t6cBarKj464VcNj09l3f0gQgl4PyDmVfKUOBuEZJutFJpvTkszuts+80y+yoPS3qu
-         3HPustHJjUObIGAonAlzL3QafSC7rBAjlHdrfWxyspcezGcYNppes/lVwo5wLqPmkx
-         cmNwZoPY4gANynMmYVHdf0BFS/OfgOv6qNmkQTuU=
+        b=JHG3rCPgP6Pk3voZK1r4IQ8tSdJI3+Cf9Z6EkTuM98PvbZStLr/wGO50T7q4gGJyG
+         3sV86Qlvt+nHgse103iyN7x4TufnqgsNOIircR3W6QVlHeGiwSl9lztgQL9ZbUTVyq
+         /Ow/zeAdxIjHwtocmuG0BkoysJYo7FYHbyWfzXjo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ondrey Zary <linux@rainbow-software.org>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 168/191] scsi: NCR5380: Clear all unissued commands on host reset
-Date:   Sat,  9 Nov 2019 21:39:50 -0500
-Message-Id: <20191110024013.29782-168-sashal@kernel.org>
+Cc:     Justin Ernst <justin.ernst@hpe.com>, Borislav Petkov <bp@suse.de>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 150/191] EDAC: Raise the maximum number of memory controllers
+Date:   Sat,  9 Nov 2019 21:39:32 -0500
+Message-Id: <20191110024013.29782-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -62,53 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+From: Justin Ernst <justin.ernst@hpe.com>
 
-[ Upstream commit 1aeeeed7f03c576f096eede7b0384f99a98f588c ]
+[ Upstream commit 6b58859419554fb824e09cfdd73151a195473cbc ]
 
-When doing a host reset we should be clearing all outstanding commands, not
-just the command triggering the reset.
+We observe an oops in the skx_edac module during boot:
 
-[mkp: adjusted Hannes' SoB address]
+  EDAC MC0: Giving out device to module skx_edac controller Skylake Socket#0 IMC#0
+  EDAC MC1: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
+  EDAC MC2: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
+  ...
+  EDAC MC13: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
+  EDAC MC14: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
+  EDAC MC15: Giving out device to module skx_edac controller Skylake Socket#1 IMC#1
+  Too many memory controllers: 16
+  EDAC MC: Removed device 0 for skx_edac Skylake Socket#0 IMC#0
 
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Ondrey Zary <linux@rainbow-software.org>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+We observe there are two memory controllers per socket, with a limit
+of 16. Raise the maximum number of memory controllers from 16 to 2 *
+MAX_NUMNODES (1024).
+
+[ bp: This is just a band-aid fix until we've sorted out the whole issue
+  with the bus_type association and handling in EDAC and can get rid of
+  this arbitrary limit. ]
+
+Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Russ Anderson <russ.anderson@hpe.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac@vger.kernel.org
+Link: https://lkml.kernel.org/r/20180925143449.284634-1-justin.ernst@hpe.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/edac.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 5160d6214a36b..d0bbb20518048 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -2303,7 +2303,7 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
- 	spin_lock_irqsave(&hostdata->lock, flags);
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index bffb97828ed67..958d69332c1d5 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -17,6 +17,7 @@
+ #include <linux/completion.h>
+ #include <linux/workqueue.h>
+ #include <linux/debugfs.h>
++#include <linux/numa.h>
  
- #if (NDEBUG & NDEBUG_ANY)
--	scmd_printk(KERN_INFO, cmd, __func__);
-+	shost_printk(KERN_INFO, instance, __func__);
+ #define EDAC_DEVICE_NAME_LEN	31
+ 
+@@ -670,6 +671,6 @@ struct mem_ctl_info {
+ /*
+  * Maximum number of memory controllers in the coherent fabric.
+  */
+-#define EDAC_MAX_MCS	16
++#define EDAC_MAX_MCS	2 * MAX_NUMNODES
+ 
  #endif
- 	NCR5380_dprint(NDEBUG_ANY, instance);
- 	NCR5380_dprint_phase(NDEBUG_ANY, instance);
-@@ -2321,10 +2321,13 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
- 	 * commands!
- 	 */
- 
--	if (list_del_cmd(&hostdata->unissued, cmd)) {
-+	list_for_each_entry(ncmd, &hostdata->unissued, list) {
-+		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
-+
- 		cmd->result = DID_RESET << 16;
- 		cmd->scsi_done(cmd);
- 	}
-+	INIT_LIST_HEAD(&hostdata->unissued);
- 
- 	if (hostdata->selecting) {
- 		hostdata->selecting->result = DID_RESET << 16;
 -- 
 2.20.1
 
