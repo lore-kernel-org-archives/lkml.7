@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2E5C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D66AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B65C215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FA2215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355129;
-	bh=dXwGSVy2f4webg2pIqE4lfGrrBVZiKD7bgSeg6fIUSc=;
+	s=default; t=1573355135;
+	bh=yd/2s7NgD5N/H4tCXDGVVAgmUhkj7AtVXMSL9P/ctck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQVceqVRtGT/NZh/Upj7IZDv6961QLKrLYgY3SCDZT6k9+iaSym/QbgFawm0bkwlY
-	 4kNbAhAnXpr4YRD1jPHa5lcFdpG46CShUkH6F4jZH4GuZ6CCZ/xOZVmoYKkw8hcs+O
-	 0E0WLvRMOtDo96f0QpnwtFG2uYgRg1liK/kwaZFg=
+	b=Ec7VUO4CijtyR34OB/hC5kBDjXhPSMqf01HLNDbkczD5hZaOnTu1yviH8Nfj2E/N0
+	 HZe8ZQGMnveVm5/6ZekuxNdgfsccC9qoQQCpOHAKVefI1hyLSRDkT9eM2NeC0gbLfb
+	 ikJkn34rj1W9IZv3ZSEiEiKmtNAF7OewFmXduLxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfKJDF1 (ORCPT
+        id S1729076AbfKJCqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:05:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50290 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727578AbfKJCqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:46:34 -0500
+        id S1728230AbfKJCqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E132215EA;
-        Sun, 10 Nov 2019 02:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5809F2085B;
+        Sun, 10 Nov 2019 02:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353992;
-        bh=dXwGSVy2f4webg2pIqE4lfGrrBVZiKD7bgSeg6fIUSc=;
+        s=default; t=1573353968;
+        bh=yd/2s7NgD5N/H4tCXDGVVAgmUhkj7AtVXMSL9P/ctck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPQp2UKDmdCz6I12ufslvsmoDtBydbxIlujSYubv5rNn2IFnLGs/o6FojZggaXnhr
-         1hrdT9SB9knKojS4Y4z+qbfZX2aYVh1ve9WmdRJmztAmX+lUvAurxJ+cImGiIKjNDj
-         ag0OA2z5SZn4k4f92YAC84FXechhGOsVM22owkYE=
+        b=NLo+7FU5KSHjF2/4vfa2EImOP+gR3NUxgn6KkezdbSMoVkUzpykfZ42y090ObMvBp
+         7F46CbwP2upAvhF46h6pdbAuiSwWK4HHTK8mI+4ZmQK72vLzFiiZjjAsmOdHMMAChG
+         N7W0iBcZihpoDdLBiVqVyyPCi8qzuvAcS2Q/FA0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Shannon Nelson <shannon.nelson@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 023/109] net: sun: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:44:15 -0500
-Message-Id: <20191110024541.31567-23-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 016/109] libfdt: Ensure INT_MAX is defined in libfdt_env.h
+Date:   Sat,  9 Nov 2019 21:44:08 -0500
+Message-Id: <20191110024541.31567-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,132 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 0e0cc31f6999df18bb5cfd0bd83c892ed5633975 ]
+[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, but the implementation in this
-driver returns an 'int'.
+The next update of libfdt has a new dependency on INT_MAX. Update the
+instances of libfdt_env.h in the kernel to either include the necessary
+header with the definition or define it locally.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Shannon Nelson <shannon.nelson@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sun/ldmvsw.c         |  2 +-
- drivers/net/ethernet/sun/sunbmac.c        |  3 ++-
- drivers/net/ethernet/sun/sunqe.c          |  2 +-
- drivers/net/ethernet/sun/sunvnet.c        |  2 +-
- drivers/net/ethernet/sun/sunvnet_common.c | 14 ++++++++------
- drivers/net/ethernet/sun/sunvnet_common.h |  7 ++++---
- 6 files changed, 17 insertions(+), 13 deletions(-)
+ arch/arm/boot/compressed/libfdt_env.h | 2 ++
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/sun/ldmvsw.c b/drivers/net/ethernet/sun/ldmvsw.c
-index 5b56c24b6ed2e..e6b96c2989b22 100644
---- a/drivers/net/ethernet/sun/ldmvsw.c
-+++ b/drivers/net/ethernet/sun/ldmvsw.c
-@@ -111,7 +111,7 @@ static u16 vsw_select_queue(struct net_device *dev, struct sk_buff *skb,
- }
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 07437816e0986..b36c0289a308e 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -6,6 +6,8 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
  
- /* Wrappers to common functions */
--static int vsw_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t vsw_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	return sunvnet_start_xmit_common(skb, dev, vsw_tx_port_find);
- }
-diff --git a/drivers/net/ethernet/sun/sunbmac.c b/drivers/net/ethernet/sun/sunbmac.c
-index 3189722110c26..9a60fb2b4e9dc 100644
---- a/drivers/net/ethernet/sun/sunbmac.c
-+++ b/drivers/net/ethernet/sun/sunbmac.c
-@@ -951,7 +951,8 @@ static void bigmac_tx_timeout(struct net_device *dev)
- }
++#define INT_MAX			((int)(~0U>>1))
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index f52c31b1f48fa..39155d3b2cefa 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <types.h>
+ #include <string.h>
  
- /* Put a packet on the wire. */
--static int bigmac_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+bigmac_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct bigmac *bp = netdev_priv(dev);
- 	int len, entry;
-diff --git a/drivers/net/ethernet/sun/sunqe.c b/drivers/net/ethernet/sun/sunqe.c
-index a6bcdcdd947e3..82386a375bd26 100644
---- a/drivers/net/ethernet/sun/sunqe.c
-+++ b/drivers/net/ethernet/sun/sunqe.c
-@@ -569,7 +569,7 @@ static void qe_tx_timeout(struct net_device *dev)
- }
++#define INT_MAX			((int)(~0U>>1))
++
+ #include "of.h"
  
- /* Get a packet queued to go onto the wire. */
--static int qe_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t qe_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct sunqe *qep = netdev_priv(dev);
- 	struct sunqe_buffers *qbufs = qep->buffers;
-diff --git a/drivers/net/ethernet/sun/sunvnet.c b/drivers/net/ethernet/sun/sunvnet.c
-index 65347d2f139b7..02ebbe74d93de 100644
---- a/drivers/net/ethernet/sun/sunvnet.c
-+++ b/drivers/net/ethernet/sun/sunvnet.c
-@@ -245,7 +245,7 @@ static u16 vnet_select_queue(struct net_device *dev, struct sk_buff *skb,
- }
+ typedef u32 uint32_t;
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 14997285e53d3..1aa707ab19bbf 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -2,6 +2,7 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
  
- /* Wrappers to common functions */
--static int vnet_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t vnet_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	return sunvnet_start_xmit_common(skb, dev, vnet_tx_port_find);
- }
-diff --git a/drivers/net/ethernet/sun/sunvnet_common.c b/drivers/net/ethernet/sun/sunvnet_common.c
-index ecf456c7b6d14..fd84ff8bba31a 100644
---- a/drivers/net/ethernet/sun/sunvnet_common.c
-+++ b/drivers/net/ethernet/sun/sunvnet_common.c
-@@ -1215,9 +1215,10 @@ static inline struct sk_buff *vnet_skb_shape(struct sk_buff *skb, int ncookies)
- 	return skb;
- }
++#include <linux/kernel.h>	/* For INT_MAX */
+ #include <linux/string.h>
  
--static int vnet_handle_offloads(struct vnet_port *port, struct sk_buff *skb,
--				struct vnet_port *(*vnet_tx_port)
--				(struct sk_buff *, struct net_device *))
-+static netdev_tx_t
-+vnet_handle_offloads(struct vnet_port *port, struct sk_buff *skb,
-+		     struct vnet_port *(*vnet_tx_port)
-+		     (struct sk_buff *, struct net_device *))
- {
- 	struct net_device *dev = VNET_PORT_TO_NET_DEVICE(port);
- 	struct vio_dring_state *dr = &port->vio.drings[VIO_DRIVER_TX_RING];
-@@ -1320,9 +1321,10 @@ static int vnet_handle_offloads(struct vnet_port *port, struct sk_buff *skb,
- 	return NETDEV_TX_OK;
- }
- 
--int sunvnet_start_xmit_common(struct sk_buff *skb, struct net_device *dev,
--			      struct vnet_port *(*vnet_tx_port)
--			      (struct sk_buff *, struct net_device *))
-+netdev_tx_t
-+sunvnet_start_xmit_common(struct sk_buff *skb, struct net_device *dev,
-+			  struct vnet_port *(*vnet_tx_port)
-+			  (struct sk_buff *, struct net_device *))
- {
- 	struct vnet_port *port = NULL;
- 	struct vio_dring_state *dr;
-diff --git a/drivers/net/ethernet/sun/sunvnet_common.h b/drivers/net/ethernet/sun/sunvnet_common.h
-index 6a4dd1fb19bf6..3fcb608fbbb31 100644
---- a/drivers/net/ethernet/sun/sunvnet_common.h
-+++ b/drivers/net/ethernet/sun/sunvnet_common.h
-@@ -136,9 +136,10 @@ int sunvnet_close_common(struct net_device *dev);
- void sunvnet_set_rx_mode_common(struct net_device *dev, struct vnet *vp);
- int sunvnet_set_mac_addr_common(struct net_device *dev, void *p);
- void sunvnet_tx_timeout_common(struct net_device *dev);
--int sunvnet_start_xmit_common(struct sk_buff *skb, struct net_device *dev,
--			   struct vnet_port *(*vnet_tx_port)
--			   (struct sk_buff *, struct net_device *));
-+netdev_tx_t
-+sunvnet_start_xmit_common(struct sk_buff *skb, struct net_device *dev,
-+			  struct vnet_port *(*vnet_tx_port)
-+			  (struct sk_buff *, struct net_device *));
- #ifdef CONFIG_NET_POLL_CONTROLLER
- void sunvnet_poll_controller_common(struct net_device *dev, struct vnet *vp);
- #endif
+ #include <asm/byteorder.h>
 -- 
 2.20.1
 
