@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DB1C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7340921848
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3136E21924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355441;
-	bh=DirF3562ki04v3whOy7FclNbip8VciH5wUPKy5FLgs4=;
+	s=default; t=1573355445;
+	bh=D3c4QNkcyVqlFOZhnDcJ9OHruFT4RFcZq54k2LzNZLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EiNLbR1TZNFYrXY6bMisACVOVe9QOev+VSQgcDG4bVIw5d3xTbR152Y88JF7lyUsV
-	 BjroeJbhwTepPyMYb3csdg/pLNOh2wcRYT5M4amWjMusJaLNLB/58zJGswUyojtZrH
-	 mRj0fZcMYd0DM8X8l0zHcBEdpZpEd2tetp50VTKE=
+	b=m0l/kYSU+TiMc+NRMygpb3uvDty7ILUr5948GGAeTFmNhN8A09sys7oN/Sgt7BcN2
+	 SyMSwsWvIFIFSYh7G1O2997bEsSCU02A7xx8yQhiSH6562SLTx5HlPCieBym4VQ+oS
+	 h+pjwps2FYQW58H+6I6pgjcD6/A+nVA9zhH+ANg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfKJDKk (ORCPT
+        id S1728441AbfKJCnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:10:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbfKJCn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:56 -0500
+        id S1728354AbfKJCno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 698AA21655;
-        Sun, 10 Nov 2019 02:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63F4021D7E;
+        Sun, 10 Nov 2019 02:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353835;
-        bh=DirF3562ki04v3whOy7FclNbip8VciH5wUPKy5FLgs4=;
+        s=default; t=1573353824;
+        bh=D3c4QNkcyVqlFOZhnDcJ9OHruFT4RFcZq54k2LzNZLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iec/aUPwi3HQ0mAUm4gYEl/kua9d7yQZOmuH4HQ5fxDBaevKKe327OTKuMGxaqZNU
-         HxUFIUgeHqeEiH3oiLAQuyCUvMNz5xGXFybsZWamP5JS9dIHbXTaE1VM8Qv2QB9Sgx
-         mz9F/JKM3mAYvuDJzftsTQ0LjLnTvCQaCqnrxeYw=
+        b=DBIlQZXBuIUO5Pci4K0+z1tBw7fDi8cFblj9iGn1QseKmTpfWgYNhCbI78AEp0xRW
+         AlUxoQWFIBIztXxiUh1xkhmBQ6jjD03s+6PyU+PYxsJS71joZs7t13zkNabY7IIn0q
+         UHcPCBP13TaOLnpFG8G/NoznpzxmLtoxMspOvTAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 126/191] iw_cxgb4: Use proper enumerated type in c4iw_bar2_addrs
-Date:   Sat,  9 Nov 2019 21:39:08 -0500
-Message-Id: <20191110024013.29782-126-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 119/191] slimbus: ngd: return proper error code instead of zero
+Date:   Sat,  9 Nov 2019 21:39:01 -0500
+Message-Id: <20191110024013.29782-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -62,77 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 1b571086e869395b6a11ab24186b0104fe05c057 ]
+[ Upstream commit 9652e6aa62a1836494ebb8dbd402587c083b568c ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+It looks like there is a typo in probe return. Fix it.
 
-drivers/infiniband/hw/cxgb4/qp.c:287:8: warning: implicit conversion
-from enumeration type 'enum t4_bar2_qtype' to different enumeration type
-'enum cxgb4_bar2_qtype' [-Wenum-conversion]
-                                                 T4_BAR2_QTYPE_EGRESS,
-                                                 ^~~~~~~~~~~~~~~~~~~~
-
-c4iw_bar2_addrs expects a value from enum cxgb4_bar2_qtype so use the
-corresponding values from that type so Clang is satisfied without changing
-the meaning of the code.
-
-T4_BAR2_QTYPE_EGRESS = CXGB4_BAR2_QTYPE_EGRESS = 0
-T4_BAR2_QTYPE_INGRESS = CXGB4_BAR2_QTYPE_INGRESS = 1
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Steve Wise <swise@opengridcomputing.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cq.c | 2 +-
- drivers/infiniband/hw/cxgb4/qp.c | 7 ++++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/slimbus/qcom-ngd-ctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
-index 6d30427940942..1fd8798d91a73 100644
---- a/drivers/infiniband/hw/cxgb4/cq.c
-+++ b/drivers/infiniband/hw/cxgb4/cq.c
-@@ -161,7 +161,7 @@ static int create_cq(struct c4iw_rdev *rdev, struct t4_cq *cq,
- 	cq->gts = rdev->lldi.gts_reg;
- 	cq->rdev = rdev;
+diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+index a9abde2f4088b..e587be9064e74 100644
+--- a/drivers/slimbus/qcom-ngd-ctrl.c
++++ b/drivers/slimbus/qcom-ngd-ctrl.c
+@@ -1393,7 +1393,7 @@ static int qcom_slim_ngd_probe(struct platform_device *pdev)
+ 	if (ctrl->mwq)
+ 		destroy_workqueue(ctrl->mwq);
  
--	cq->bar2_va = c4iw_bar2_addrs(rdev, cq->cqid, T4_BAR2_QTYPE_INGRESS,
-+	cq->bar2_va = c4iw_bar2_addrs(rdev, cq->cqid, CXGB4_BAR2_QTYPE_INGRESS,
- 				      &cq->bar2_qid,
- 				      user ? &cq->bar2_pa : NULL);
- 	if (user && !cq->bar2_pa) {
-diff --git a/drivers/infiniband/hw/cxgb4/qp.c b/drivers/infiniband/hw/cxgb4/qp.c
-index 347fe18b1a41c..a9e3a11bea54a 100644
---- a/drivers/infiniband/hw/cxgb4/qp.c
-+++ b/drivers/infiniband/hw/cxgb4/qp.c
-@@ -279,12 +279,13 @@ static int create_qp(struct c4iw_rdev *rdev, struct t4_wq *wq,
+-	return 0;
++	return ret;
+ }
  
- 	wq->db = rdev->lldi.db_reg;
- 
--	wq->sq.bar2_va = c4iw_bar2_addrs(rdev, wq->sq.qid, T4_BAR2_QTYPE_EGRESS,
-+	wq->sq.bar2_va = c4iw_bar2_addrs(rdev, wq->sq.qid,
-+					 CXGB4_BAR2_QTYPE_EGRESS,
- 					 &wq->sq.bar2_qid,
- 					 user ? &wq->sq.bar2_pa : NULL);
- 	if (need_rq)
- 		wq->rq.bar2_va = c4iw_bar2_addrs(rdev, wq->rq.qid,
--						 T4_BAR2_QTYPE_EGRESS,
-+						 CXGB4_BAR2_QTYPE_EGRESS,
- 						 &wq->rq.bar2_qid,
- 						 user ? &wq->rq.bar2_pa : NULL);
- 
-@@ -2572,7 +2573,7 @@ static int alloc_srq_queue(struct c4iw_srq *srq, struct c4iw_dev_ucontext *uctx,
- 	memset(wq->queue, 0, wq->memsize);
- 	pci_unmap_addr_set(wq, mapping, wq->dma_addr);
- 
--	wq->bar2_va = c4iw_bar2_addrs(rdev, wq->qid, T4_BAR2_QTYPE_EGRESS,
-+	wq->bar2_va = c4iw_bar2_addrs(rdev, wq->qid, CXGB4_BAR2_QTYPE_EGRESS,
- 				      &wq->bar2_qid,
- 			user ? &wq->bar2_pa : NULL);
- 
+ static int qcom_slim_ngd_ctrl_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
