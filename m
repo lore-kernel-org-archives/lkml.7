@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31F7C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73839C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F44521848
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5CB215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355384;
-	bh=8biejw0ri68N+IXHHoIx/vMlktrcCZCWOLin0abQT2E=;
+	s=default; t=1573355391;
+	bh=Ths97q+qE2uN8VtqEniJVy9I5rsNu3PZl7dyEi1Iplw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=077K2C+mIzUJEfeTFSrOrx42KjESSCGRcnBr7gR3vMdYxc6uMdrA9o+U466A68Gcp
-	 WNtA1vnZDdY8dIMLxK34QudgOWfHJpMSmvvc/kaFmk6cQ0p3t8NPKLsKYadYPi/okQ
-	 KehbjWnP3tum32qQi0a1kQdfL5HsIvjDd63/dc+k=
+	b=OrToBEK3dMqNGECKsrKBdjN0a4FFLGQuNDmsiXAb53ReKfy9SmCRKHZMMtqvxwdQJ
+	 lSu4T+QTKYh9g89D9D7nIJmYU5/M4ytOTTamnD0vFgsB47Y8gSraV/UOldHU4SCxj9
+	 y0s13aKEYX3I5pu33LjZOJ13vDyFyWzv06FeVzDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfKJCo1 (ORCPT
+        id S1729062AbfKJDJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:44:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43190 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:09:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfKJCoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:10 -0500
+        id S1727133AbfKJCo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B06A5215EA;
-        Sun, 10 Nov 2019 02:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED1F21848;
+        Sun, 10 Nov 2019 02:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353848;
-        bh=8biejw0ri68N+IXHHoIx/vMlktrcCZCWOLin0abQT2E=;
+        s=default; t=1573353865;
+        bh=Ths97q+qE2uN8VtqEniJVy9I5rsNu3PZl7dyEi1Iplw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIHwlobrFWUab1zmjiwdz9flyHwUIVNbWoJ5R9XLHIgnBkhx9rdXkvGbGyGZ8GLDL
-         5eDVsb5BR9i9laps0X2a+nSVM77N1pPQYrKwyi2CqSkiqJzp3G1rFF8RY1ovpeFzcY
-         BeZUuGKvFi/U4X5FiFSXXUOeARMpL5v4u8HBEeDs=
+        b=KukGrOqUICyiJSbW/pQWDH84grI1aIFC2B2qwPumaZEtS8YS45ycgm+pu09ctTyD7
+         otADzKyAZkvMx/2h8LrFPmJlIXLis/yAguktAowUtGGkjGUJSDOAa3Z0uTSHAjjo09
+         1p/HBZ4ki4xx64wE5PfnzOxL2jtYm8TkpQg822lw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sai Praneeth <sai.praneeth.prakhya@intel.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 135/191] efi/x86: Handle page faults occurring while running EFI runtime services
-Date:   Sat,  9 Nov 2019 21:39:17 -0500
-Message-Id: <20191110024013.29782-135-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sinan Kaya <okaya@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 145/191] PCI/ERR: Run error recovery callbacks for all affected devices
+Date:   Sat,  9 Nov 2019 21:39:27 -0500
+Message-Id: <20191110024013.29782-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -63,245 +60,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Praneeth <sai.praneeth.prakhya@intel.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit 3425d934fc0312f62024163736a7afe4de20c10f ]
+[ Upstream commit bfcb79fca19d267712e425af1dd48812c40dec0c ]
 
-Memory accesses performed by UEFI runtime services should be limited to:
-- reading/executing from EFI_RUNTIME_SERVICES_CODE memory regions
-- reading/writing from/to EFI_RUNTIME_SERVICES_DATA memory regions
-- reading/writing by-ref arguments
-- reading/writing from/to the stack.
+If an Endpoint reported an error with ERR_FATAL, we previously ran driver
+error recovery callbacks only for the Endpoint's driver.  But if we reset a
+Link to recover from the error, all downstream components are affected,
+including the Endpoint, any multi-function peers, and children of those
+peers.
 
-Accesses outside these regions may cause the kernel to hang because the
-memory region requested by the firmware isn't mapped in efi_pgd, which
-causes a page fault in ring 0 and the kernel fails to handle it, leading
-to die(). To save kernel from hanging, add an EFI specific page fault
-handler which recovers from such faults by
-1. If the efi runtime service is efi_reset_system(), reboot the machine
-   through BIOS.
-2. If the efi runtime service is _not_ efi_reset_system(), then freeze
-   efi_rts_wq and schedule a new process.
+Initiate the Link reset from the deepest Downstream Port that is
+reliable, and call the error recovery callbacks for all its children.
 
-The EFI page fault handler offers us two advantages:
-1. Avoid potential hangs caused by buggy firmware.
-2. Shout loud that the firmware is buggy and hence is not a kernel bug.
+If a Downstream Port (including a Root Port) reports an error, we assume
+the Port itself is reliable and we need to reset its downstream Link.  In
+all other cases (Switch Upstream Ports, Endpoints, Bridges, etc), we assume
+the Link leading to the component needs to be reset, so we initiate the
+reset at the parent Downstream Port.
 
-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-Suggested-by: Matt Fleming <matt@codeblueprint.co.uk>
-Based-on-code-from: Ricardo Neri <ricardo.neri@intel.com>
-Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-[ardb: clarify commit log]
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+This allows two other clean-ups.  First, we currently only use a Link
+reset, which can only be initiated using a Downstream Port, so we can
+remove checks for Endpoints.  Second, the Downstream Port where we initiate
+the Link reset is reliable (unlike components downstream from it), so the
+special cases for error detect and resume are no longer necessary.
+
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+[bhelgaas: changelog]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/efi.h              |  1 +
- arch/x86/mm/fault.c                     |  9 +++
- arch/x86/platform/efi/quirks.c          | 78 +++++++++++++++++++++++++
- drivers/firmware/efi/runtime-wrappers.c |  8 +++
- include/linux/efi.h                     |  8 ++-
- 5 files changed, 103 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/err.c | 85 +++++++++++-------------------------------
+ 1 file changed, 21 insertions(+), 64 deletions(-)
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index baa549f8e9188..45864898f7e50 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -138,6 +138,7 @@ extern void __init efi_apply_memmap_quirks(void);
- extern int __init efi_reuse_config(u64 tables, int nr_tables);
- extern void efi_delete_dummy_variable(void);
- extern void efi_switch_mm(struct mm_struct *mm);
-+extern void efi_recover_from_page_fault(unsigned long phys_addr);
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 12c1205e1d804..2c3b5bd59b18f 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -63,30 +63,12 @@ static int report_error_detected(struct pci_dev *dev, void *data)
+ 	if (!dev->driver ||
+ 		!dev->driver->err_handler ||
+ 		!dev->driver->err_handler->error_detected) {
+-		if (result_data->state == pci_channel_io_frozen &&
+-			dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+-			/*
+-			 * In case of fatal recovery, if one of down-
+-			 * stream device has no driver. We might be
+-			 * unable to recover because a later insmod
+-			 * of a driver for this device is unaware of
+-			 * its hw state.
+-			 */
+-			pci_printk(KERN_DEBUG, dev, "device has %s\n",
+-				   dev->driver ?
+-				   "no AER-aware driver" : "no driver");
+-		}
+-
+ 		/*
+-		 * If there's any device in the subtree that does not
+-		 * have an error_detected callback, returning
+-		 * PCI_ERS_RESULT_NO_AER_DRIVER prevents calling of
+-		 * the subsequent mmio_enabled/slot_reset/resume
+-		 * callbacks of "any" device in the subtree. All the
+-		 * devices in the subtree are left in the error state
+-		 * without recovery.
++		 * If any device in the subtree does not have an error_detected
++		 * callback, PCI_ERS_RESULT_NO_AER_DRIVER prevents subsequent
++		 * error callbacks of "any" device in the subtree, and will
++		 * exit in the disconnected error state.
+ 		 */
+-
+ 		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+ 			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+ 		else
+@@ -184,34 +166,23 @@ static pci_ers_result_t default_reset_link(struct pci_dev *dev)
  
- struct efi_setup_data {
- 	u64 fw_vendor;
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 1bcb7242ad79a..53e69c7c5cd18 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -16,6 +16,7 @@
- #include <linux/prefetch.h>		/* prefetchw			*/
- #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
- #include <linux/uaccess.h>		/* faulthandler_disabled()	*/
-+#include <linux/efi.h>			/* efi_recover_from_page_fault()*/
- #include <linux/mm_types.h>
+ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+ {
+-	struct pci_dev *udev;
+ 	pci_ers_result_t status;
+ 	struct pcie_port_service_driver *driver = NULL;
  
- #include <asm/cpufeature.h>		/* boot_cpu_has, ...		*/
-@@ -25,6 +26,7 @@
- #include <asm/vsyscall.h>		/* emulate_vsyscall		*/
- #include <asm/vm86.h>			/* struct vm86			*/
- #include <asm/mmu_context.h>		/* vma_pkey()			*/
-+#include <asm/efi.h>			/* efi_recover_from_page_fault()*/
- 
- #define CREATE_TRACE_POINTS
- #include <asm/trace/exceptions.h>
-@@ -783,6 +785,13 @@ no_context(struct pt_regs *regs, unsigned long error_code,
- 	if (is_errata93(regs, address))
- 		return;
- 
-+	/*
-+	 * Buggy firmware could access regions which might page fault, try to
-+	 * recover from such faults.
-+	 */
-+	if (IS_ENABLED(CONFIG_EFI))
-+		efi_recover_from_page_fault(address);
-+
- 	/*
- 	 * Oops. The kernel tried to access some bad page. We'll have to
- 	 * terminate things with extreme prejudice:
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 844d31cb8a0c7..669babcaf245a 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -16,6 +16,7 @@
- #include <asm/efi.h>
- #include <asm/uv/uv.h>
- #include <asm/cpu_device_id.h>
-+#include <asm/reboot.h>
- 
- #define EFI_MIN_RESERVE 5120
- 
-@@ -654,3 +655,80 @@ int efi_capsule_setup_info(struct capsule_info *cap_info, void *kbuff,
- }
- 
- #endif
-+
-+/*
-+ * If any access by any efi runtime service causes a page fault, then,
-+ * 1. If it's efi_reset_system(), reboot through BIOS.
-+ * 2. If any other efi runtime service, then
-+ *    a. Return error status to the efi caller process.
-+ *    b. Disable EFI Runtime Services forever and
-+ *    c. Freeze efi_rts_wq and schedule new process.
-+ *
-+ * @return: Returns, if the page fault is not handled. This function
-+ * will never return if the page fault is handled successfully.
-+ */
-+void efi_recover_from_page_fault(unsigned long phys_addr)
-+{
-+	if (!IS_ENABLED(CONFIG_X86_64))
-+		return;
-+
-+	/*
-+	 * Make sure that an efi runtime service caused the page fault.
-+	 * "efi_mm" cannot be used to check if the page fault had occurred
-+	 * in the firmware context because efi=old_map doesn't use efi_pgd.
-+	 */
-+	if (efi_rts_work.efi_rts_id == NONE)
-+		return;
-+
-+	/*
-+	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
-+	 * page faulting on these addresses isn't expected.
-+	 */
-+	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
-+		return;
-+
-+	/*
-+	 * Print stack trace as it might be useful to know which EFI Runtime
-+	 * Service is buggy.
-+	 */
-+	WARN(1, FW_BUG "Page fault caused by firmware at PA: 0x%lx\n",
-+	     phys_addr);
-+
-+	/*
-+	 * Buggy efi_reset_system() is handled differently from other EFI
-+	 * Runtime Services as it doesn't use efi_rts_wq. Although,
-+	 * native_machine_emergency_restart() says that machine_real_restart()
-+	 * could fail, it's better not to compilcate this fault handler
-+	 * because this case occurs *very* rarely and hence could be improved
-+	 * on a need by basis.
-+	 */
-+	if (efi_rts_work.efi_rts_id == RESET_SYSTEM) {
-+		pr_info("efi_reset_system() buggy! Reboot through BIOS\n");
-+		machine_real_restart(MRR_BIOS);
-+		return;
-+	}
-+
-+	/*
-+	 * Before calling EFI Runtime Service, the kernel has switched the
-+	 * calling process to efi_mm. Hence, switch back to task_mm.
-+	 */
-+	arch_efi_call_virt_teardown();
-+
-+	/* Signal error status to the efi caller process */
-+	efi_rts_work.status = EFI_ABORTED;
-+	complete(&efi_rts_work.efi_rts_comp);
-+
-+	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
-+	pr_info("Froze efi_rts_wq and disabled EFI Runtime Services\n");
-+
-+	/*
-+	 * Call schedule() in an infinite loop, so that any spurious wake ups
-+	 * will never run efi_rts_wq again.
-+	 */
-+	for (;;) {
-+		set_current_state(TASK_IDLE);
-+		schedule();
-+	}
-+
-+	return;
-+}
-diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
-index b31e3d3729a6d..e2abfdb5cee6a 100644
---- a/drivers/firmware/efi/runtime-wrappers.c
-+++ b/drivers/firmware/efi/runtime-wrappers.c
-@@ -61,6 +61,11 @@ struct efi_runtime_work efi_rts_work;
- ({									\
- 	efi_rts_work.status = EFI_ABORTED;				\
- 									\
-+	if (!efi_enabled(EFI_RUNTIME_SERVICES)) {			\
-+		pr_warn_once("EFI Runtime Services are disabled!\n");	\
-+		goto exit;						\
-+	}								\
-+									\
- 	init_completion(&efi_rts_work.efi_rts_comp);			\
- 	INIT_WORK(&efi_rts_work.work, efi_call_rts);			\
- 	efi_rts_work.arg1 = _arg1;					\
-@@ -79,6 +84,8 @@ struct efi_runtime_work efi_rts_work;
- 	else								\
- 		pr_err("Failed to queue work to efi_rts_wq.\n");	\
- 									\
-+exit:									\
-+	efi_rts_work.efi_rts_id = NONE;					\
- 	efi_rts_work.status;						\
- })
- 
-@@ -400,6 +407,7 @@ static void virt_efi_reset_system(int reset_type,
- 			"could not get exclusive access to the firmware\n");
- 		return;
+-	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+-		/* Reset this port for all subordinates */
+-		udev = dev;
+-	} else {
+-		/* Reset the upstream component (likely downstream port) */
+-		udev = dev->bus->self;
+-	}
+-
+-	/* Use the aer driver of the component firstly */
+-	driver = pcie_port_find_service(udev, service);
+-
++	driver = pcie_port_find_service(dev, service);
+ 	if (driver && driver->reset_link) {
+-		status = driver->reset_link(udev);
+-	} else if (udev->has_secondary_link) {
+-		status = default_reset_link(udev);
++		status = driver->reset_link(dev);
++	} else if (dev->has_secondary_link) {
++		status = default_reset_link(dev);
+ 	} else {
+ 		pci_printk(KERN_DEBUG, dev, "no link-reset support at upstream device %s\n",
+-			pci_name(udev));
++			pci_name(dev));
+ 		return PCI_ERS_RESULT_DISCONNECT;
  	}
-+	efi_rts_work.efi_rts_id = RESET_SYSTEM;
- 	__efi_call_virt(reset_system, reset_type, status, data_size, data);
- 	up(&efi_runtime_lock);
+ 
+ 	if (status != PCI_ERS_RESULT_RECOVERED) {
+ 		pci_printk(KERN_DEBUG, dev, "link reset at upstream device %s failed\n",
+-			pci_name(udev));
++			pci_name(dev));
+ 		return PCI_ERS_RESULT_DISCONNECT;
+ 	}
+ 
+@@ -243,31 +214,7 @@ static pci_ers_result_t broadcast_error_message(struct pci_dev *dev,
+ 	else
+ 		result_data.result = PCI_ERS_RESULT_RECOVERED;
+ 
+-	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+-		/*
+-		 * If the error is reported by a bridge, we think this error
+-		 * is related to the downstream link of the bridge, so we
+-		 * do error recovery on all subordinates of the bridge instead
+-		 * of the bridge and clear the error status of the bridge.
+-		 */
+-		if (cb == report_error_detected)
+-			dev->error_state = state;
+-		pci_walk_bus(dev->subordinate, cb, &result_data);
+-		if (cb == report_resume) {
+-			pci_aer_clear_device_status(dev);
+-			pci_cleanup_aer_uncorrect_error_status(dev);
+-			dev->error_state = pci_channel_io_normal;
+-		}
+-	} else {
+-		/*
+-		 * If the error is reported by an end point, we think this
+-		 * error is related to the upstream link of the end point.
+-		 * The error is non fatal so the bus is ok; just invoke
+-		 * the callback for the function that logged the error.
+-		 */
+-		cb(dev, &result_data);
+-	}
+-
++	pci_walk_bus(dev->subordinate, cb, &result_data);
+ 	return result_data.result;
  }
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 9d4c25090fd04..9a86f467b8911 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1666,8 +1666,13 @@ struct linux_efi_tpm_eventlog {
  
- extern int efi_tpm_eventlog_init(void);
+@@ -347,6 +294,14 @@ void pcie_do_nonfatal_recovery(struct pci_dev *dev)
  
--/* efi_runtime_service() function identifiers */
-+/*
-+ * efi_runtime_service() function identifiers.
-+ * "NONE" is used by efi_recover_from_page_fault() to check if the page
-+ * fault happened while executing an efi runtime service.
-+ */
- enum efi_rts_ids {
-+	NONE,
- 	GET_TIME,
- 	SET_TIME,
- 	GET_WAKEUP_TIME,
-@@ -1677,6 +1682,7 @@ enum efi_rts_ids {
- 	SET_VARIABLE,
- 	QUERY_VARIABLE_INFO,
- 	GET_NEXT_HIGH_MONO_COUNT,
-+	RESET_SYSTEM,
- 	UPDATE_CAPSULE,
- 	QUERY_CAPSULE_CAPS,
- };
+ 	state = pci_channel_io_normal;
+ 
++	/*
++	 * Error recovery runs on all subordinates of the first downstream port.
++	 * If the downstream port detected the error, it is cleared at the end.
++	 */
++	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
++	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
++		dev = dev->bus->self;
++
+ 	status = broadcast_error_message(dev,
+ 			state,
+ 			"error_detected",
+@@ -378,6 +333,8 @@ void pcie_do_nonfatal_recovery(struct pci_dev *dev)
+ 				"resume",
+ 				report_resume);
+ 
++	pci_aer_clear_device_status(dev);
++	pci_cleanup_aer_uncorrect_error_status(dev);
+ 	pci_info(dev, "AER: Device recovery successful\n");
+ 	return;
+ 
 -- 
 2.20.1
 
