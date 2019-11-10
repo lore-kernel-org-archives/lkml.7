@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10471C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5DFC17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEB0215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97130215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353967;
-	bh=63nU4fdCgX2p8UUb5OJm+yB5Xgb0CqU3zNEb9oVmn4Y=;
+	s=default; t=1573353971;
+	bh=2Ryiu54J7RjdKSMXF03LaKQ2DIslLnR9lwAhh7kigR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRqeTg301KpC8HFXCLbaZvvOmY7j6/Vh2tse5iFHGRa4Ae1HfyQaOuAMiQxX5zrKr
-	 O22OofChnDVnEH68aRc4Gv9vnmjNd230uI6Q+o/j114HvVG2E35UZGbK1w04FJ6Xw5
-	 W3NvdA0iR2a7Xj1TVWn5mYKGf+bm1z7SujndeO00=
+	b=PGo6HBis+vJQwyc59MG+y6sygtvRjGlG3CcFctlsYU2YSPZMEFP2fsgNY1O4wHt7m
+	 YhYfiZdNrc/b6czDV8g3K648t4LMnxtpsAkNnW59YUOqXuUIMBUb0qAJ9QEiJ9IcEh
+	 AfHFf2H2jiErHizFyZGFQ2k4uSbm27rOM9luQuq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfKJCqG (ORCPT
+        id S1728992AbfKJCqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47854 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbfKJCpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:44 -0500
+        id S1727960AbfKJCpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 431D421D7F;
-        Sun, 10 Nov 2019 02:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75303222BE;
+        Sun, 10 Nov 2019 02:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353944;
-        bh=63nU4fdCgX2p8UUb5OJm+yB5Xgb0CqU3zNEb9oVmn4Y=;
+        s=default; t=1573353945;
+        bh=2Ryiu54J7RjdKSMXF03LaKQ2DIslLnR9lwAhh7kigR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ULg3zxWEHUW58PIhgr0ocODVJZU/+KQp4VvUTmb3UR3/iFNxZ/ziHBQIRiA/jVEdr
-         RRjIBsEOV9O6fWm4/8FAY/2Xf9J/t+JtquY+fEJ9WwrQV1RRbpvKJjXNpZCit3B1zU
-         Tfh4VzMCEAkaUdm1UUw+b1P+2+rBUxhBHPqHbGTg=
+        b=HoZn1n1vVQVitiSRBGinfcaNZPb0gHaO0DO2O4BW3goI5qeTje/E99cF02MwNo+Jh
+         2MOvBFqs3VDjY+8D/6ZcYSfnWqYnXLgncORU9dPKWE1hS4lTqK6u+q9wzDDj1Dj4RG
+         Vqrg/jht19+NlpMGlqqmXjsQl6uszL9VKsUqn7jQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sinan Kaya <okaya@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 002/109] PCI/ACPI: Correct error message for ASPM disabling
-Date:   Sat,  9 Nov 2019 21:43:54 -0500
-Message-Id: <20191110024541.31567-2-sashal@kernel.org>
+Cc:     Nava kishore Manne <nava.manne@xilinx.com>,
+        Nava kishore Manne <navam@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 003/109] serial: uartps: Fix suspend functionality
+Date:   Sat,  9 Nov 2019 21:43:55 -0500
+Message-Id: <20191110024541.31567-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -61,41 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sinan Kaya <okaya@kernel.org>
+From: Nava kishore Manne <nava.manne@xilinx.com>
 
-[ Upstream commit 1ad61b612b95980a4d970c52022aa01dfc0f6068 ]
+[ Upstream commit 4b9d33c6a30688344a3e95179654ea31b07f59b7 ]
 
-If _OSC execution fails today for platforms without an _OSC entry, code is
-printing a misleading message saying disabling ASPM as follows:
+The driver's suspend/resume functions were buggy.
+If UART node contains any child node in the DT and
+the child is established a communication path with
+the parent UART. The relevant /dev/ttyPS* node will
+be not available for other operations.
+If the driver is trying to do any operations like
+suspend/resume without checking the tty->dev status
+it leads to the kernel crash/hang.
 
-  acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+This patch fix this issue by call the device_may_wake()
+with the generic parameter of type struct device.
+in the uart suspend and resume paths.
 
-We need to ensure that platform supports ASPM to begin with.
+It also fixes a race condition in the uart suspend
+path(i.e uart_suspend_port() should be called at the
+end of cdns_uart_suspend API this path updates the same)
 
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/pci_root.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c | 41 +++++++++---------------------
+ 1 file changed, 12 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index eb857d6ea1fef..96911360a28e7 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -454,8 +454,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
- 	decode_osc_support(root, "OS supports", support);
- 	status = acpi_pci_osc_support(root, support);
- 	if (ACPI_FAILURE(status)) {
--		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
--			 acpi_format_exception(status));
-+		dev_info(&device->dev, "_OSC failed (%s)%s\n",
-+			 acpi_format_exception(status),
-+			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
- 		*no_aspm = 1;
- 		return;
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index b0da63737aa19..0dbfd02e3b196 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1342,24 +1342,11 @@ static struct uart_driver cdns_uart_uart_driver = {
+ static int cdns_uart_suspend(struct device *device)
+ {
+ 	struct uart_port *port = dev_get_drvdata(device);
+-	struct tty_struct *tty;
+-	struct device *tty_dev;
+-	int may_wake = 0;
+-
+-	/* Get the tty which could be NULL so don't assume it's valid */
+-	tty = tty_port_tty_get(&port->state->port);
+-	if (tty) {
+-		tty_dev = tty->dev;
+-		may_wake = device_may_wakeup(tty_dev);
+-		tty_kref_put(tty);
+-	}
++	int may_wake;
+ 
+-	/*
+-	 * Call the API provided in serial_core.c file which handles
+-	 * the suspend.
+-	 */
+-	uart_suspend_port(&cdns_uart_uart_driver, port);
+-	if (!(console_suspend_enabled && !may_wake)) {
++	may_wake = device_may_wakeup(device);
++
++	if (console_suspend_enabled && may_wake) {
+ 		unsigned long flags = 0;
+ 
+ 		spin_lock_irqsave(&port->lock, flags);
+@@ -1374,7 +1361,11 @@ static int cdns_uart_suspend(struct device *device)
+ 		spin_unlock_irqrestore(&port->lock, flags);
  	}
+ 
+-	return 0;
++	/*
++	 * Call the API provided in serial_core.c file which handles
++	 * the suspend.
++	 */
++	return uart_suspend_port(&cdns_uart_uart_driver, port);
+ }
+ 
+ /**
+@@ -1388,17 +1379,9 @@ static int cdns_uart_resume(struct device *device)
+ 	struct uart_port *port = dev_get_drvdata(device);
+ 	unsigned long flags = 0;
+ 	u32 ctrl_reg;
+-	struct tty_struct *tty;
+-	struct device *tty_dev;
+-	int may_wake = 0;
+-
+-	/* Get the tty which could be NULL so don't assume it's valid */
+-	tty = tty_port_tty_get(&port->state->port);
+-	if (tty) {
+-		tty_dev = tty->dev;
+-		may_wake = device_may_wakeup(tty_dev);
+-		tty_kref_put(tty);
+-	}
++	int may_wake;
++
++	may_wake = device_may_wakeup(device);
+ 
+ 	if (console_suspend_enabled && !may_wake) {
+ 		struct cdns_uart *cdns_uart = port->private_data;
 -- 
 2.20.1
 
