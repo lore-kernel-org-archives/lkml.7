@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDA9C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86605C17448
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F2F215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5174C21783
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355668;
-	bh=S8irZjjcVwZbHUEYCPydOOO1jUtQJw/MSB50Tu1i7fE=;
+	s=default; t=1573355675;
+	bh=uGWYfVg65/HzkdeuzxNxaCvqxmyX3trBbFNbZSXOU/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B+1ulBdA7ll6ZUyRjXPxMxFuY6vbOQPEbrJr4mr4kzNAeWMoBMEYpdbiEunOl5yWp
-	 spGncdm27Gd3qrDUnR35hZrLc25IjUEFr2s4rmJxKzYtwPR5aKmHrY7Sq/wDmDZ4FM
-	 8u+rDBdm2gbN1yhdPgkyvF2Xknp99s1L5LYsNbs4=
+	b=HW1KVVforvtNNY8kWbPckoIkOp8Bsem/wm/OtZBFlYbSGVuyzP25LsAK067AH6WRH
+	 6pAwb+ujtT2N+7juskhedeW0EURb8aNZ2OX5VyVCAGtSFqqiGkOCjTDrz4LttLt74a
+	 ge1hQjUjo117236iI35To0Y/gYPL2v2rREhdhdQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfKJDO1 (ORCPT
+        id S1727803AbfKJCmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38332 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727855AbfKJCm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:28 -0500
+        id S1727764AbfKJCmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E474214E0;
-        Sun, 10 Nov 2019 02:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94AE920650;
+        Sun, 10 Nov 2019 02:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353747;
-        bh=S8irZjjcVwZbHUEYCPydOOO1jUtQJw/MSB50Tu1i7fE=;
+        s=default; t=1573353732;
+        bh=uGWYfVg65/HzkdeuzxNxaCvqxmyX3trBbFNbZSXOU/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFUfLMx9nFOxqSadCo+BJobs8URXBNKDSGivIKHzq4JOk4iago4JVBY0L6kGUlEzr
-         0/zEKymYzPfE2SuvdTuvbJUGdhRIesPAxNQ/PmU8srGasogENiVyJt7BuhbAtJmU47
-         kDXhE/LE7KzWYsYKat/ECgE46CkqQ9jGdOZzxB+E=
+        b=dgk5jNlcQMO8XnF7ktkRW1S0HMKZFanO4X+WygyeGF691mcGvj12KpQ09bW+puWNj
+         1MByuBZutz3HdWZQgERi9vdmxVjer2oQD/3mVUqpWKmWxZ5oyurK4XtSgH4ySddArO
+         1+uh2p+1/Cgeog0miXaiHBsW0r/utoj5WwevIn0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-omap@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 063/191] ARM: dts: ti: Fix SPI and I2C bus warnings
-Date:   Sat,  9 Nov 2019 21:38:05 -0500
-Message-Id: <20191110024013.29782-63-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 057/191] s390/vdso: correct CFI annotations of vDSO functions
+Date:   Sat,  9 Nov 2019 21:37:59 -0500
+Message-Id: <20191110024013.29782-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,194 +60,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit cc893871f092be9ac1184a78f9ae1e76b85d5317 ]
+[ Upstream commit 26f4414a45b808f83d42d6fd2fbf4a59ef25e84b ]
 
-dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-and unit-addresses.
+Correct stack frame overhead for 31-bit vdso, which should be 96 rather
+then 160. This is done by reusing STACK_FRAME_OVERHEAD definition which
+contains correct value based on build flags. This fixes stack unwinding
+within vdso code for 31-bit processes. While at it replace all hard coded
+stack frame overhead values with the same definition in vdso64 as well.
 
-arch/arm/boot/dts/am437x-idk-evm.dtb: Warning (spi_bus_bridge): /ocp@44000000/qspi@47900000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/am437x-sk-evm.dtb: Warning (spi_bus_bridge): /ocp@44000000/qspi@47900000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/am43x-epos-evm.dtb: Warning (spi_bus_bridge): /ocp@44000000/qspi@47900000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/omap3-n9.dtb: Warning (i2c_bus_reg): /ocp@68000000/i2c@48060000/ak8975@0f: I2C bus unit address format error, expected "f"
-arch/arm/boot/dts/am335x-osd3358-sm-red.dtb: Warning (i2c_bus_reg): /ocp/i2c@44e0b000/pressure@78: I2C bus unit address format error, expected "76"
-arch/arm/boot/dts/am335x-boneblack.dtb: Warning (i2c_bus_reg): /ocp/i2c@44e0b000/tda19988: I2C bus unit address format error, expected "70"
-arch/arm/boot/dts/am335x-boneblack-wireless.dtb: Warning (i2c_bus_reg): /ocp/i2c@44e0b000/tda19988: I2C bus unit address format error, expected "70"
-arch/arm/boot/dts/am335x-sancloud-bbe.dtb: Warning (i2c_bus_reg): /ocp/i2c@44e0b000/tda19988: I2C bus unit address format error, expected "70"
-arch/arm/boot/dts/am571x-idk.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/am572x-idk.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/am574x-idk.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/am57xx-cl-som-am57x.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/am57xx-sbc-am57x.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dra72-evm.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dra72-evm-revc.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dra76-evm.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/dra7-evm.dtb: Warning (spi_bus_bridge): /ocp/qspi@4b300000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/am335x-pdu001.dtb: Warning (spi_bus_reg): /ocp/spi@481a0000/cfaf240320a032t: SPI bus unit address format error, expected "0"
-arch/arm/boot/dts/keystone-k2g-evm.dtb: Warning (spi_bus_bridge): /soc@0/qspi@2940000: node name for SPI buses should be 'spi'
-arch/arm/boot/dts/keystone-k2g-ice.dtb: Warning (spi_bus_bridge): /soc@0/qspi@2940000: node name for SPI buses should be 'spi'
-
-Cc: "Benoît Cousson" <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: linux-omap@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-[tony@atomide.com: fixed mode to 644 for am335x-osd3358-sm-red.dts while at it]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-boneblack-common.dtsi | 2 +-
- arch/arm/boot/dts/am335x-osd3358-sm-red.dts    | 2 +-
- arch/arm/boot/dts/am335x-pdu001.dts            | 2 +-
- arch/arm/boot/dts/am4372.dtsi                  | 2 +-
- arch/arm/boot/dts/am57xx-cl-som-am57x.dts      | 2 +-
- arch/arm/boot/dts/dra7.dtsi                    | 2 +-
- arch/arm/boot/dts/keystone-k2g.dtsi            | 2 +-
- arch/arm/boot/dts/omap2.dtsi                   | 4 ++--
- arch/arm/boot/dts/omap2430.dtsi                | 2 +-
- arch/arm/boot/dts/omap3-n9.dts                 | 2 +-
- 10 files changed, 11 insertions(+), 11 deletions(-)
+ arch/s390/kernel/vdso32/clock_gettime.S | 19 ++++++++++---------
+ arch/s390/kernel/vdso32/gettimeofday.S  |  3 ++-
+ arch/s390/kernel/vdso64/clock_gettime.S | 25 +++++++++++++------------
+ arch/s390/kernel/vdso64/gettimeofday.S  |  3 ++-
+ 4 files changed, 27 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-index 325daae40278a..21bc1173fa6b9 100644
---- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-@@ -88,7 +88,7 @@
- };
+diff --git a/arch/s390/kernel/vdso32/clock_gettime.S b/arch/s390/kernel/vdso32/clock_gettime.S
+index a9418bf975db5..ada5c11a16e5a 100644
+--- a/arch/s390/kernel/vdso32/clock_gettime.S
++++ b/arch/s390/kernel/vdso32/clock_gettime.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
- &i2c0 {
--	tda19988: tda19988 {
-+	tda19988: tda19988@70 {
- 		compatible = "nxp,tda998x";
- 		reg = <0x70>;
+ 	.text
+ 	.align 4
+@@ -18,8 +19,8 @@
+ __kernel_clock_gettime:
+ 	CFI_STARTPROC
+ 	ahi	%r15,-16
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	basr	%r5,0
+ 0:	al	%r5,21f-0b(%r5)			/* get &_vdso_data */
+ 	chi	%r2,__CLOCK_REALTIME_COARSE
+@@ -72,13 +73,13 @@ __kernel_clock_gettime:
+ 	st	%r1,4(%r3)			/* store tp->tv_nsec */
+ 	lhi	%r2,0
+ 	ahi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
-diff --git a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
-index 4d969013f99a6..d9e92671055bd 100644
---- a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
-+++ b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
-@@ -161,7 +161,7 @@
- 		invensense,key = [4e cc 7e eb f6 1e 35 22 00 34 0d 65 32 e9 94 89];*/
- 	};
+ 	/* CLOCK_MONOTONIC_COARSE */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 9:	l	%r4,__VDSO_UPD_COUNT+4(%r5)	/* load update counter */
+ 	tml	%r4,0x0001			/* pending update ? loop */
+ 	jnz	9b
+@@ -158,17 +159,17 @@ __kernel_clock_gettime:
+ 	st	%r1,4(%r3)			/* store tp->tv_nsec */
+ 	lhi	%r2,0
+ 	ahi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
--	bmp280: pressure@78 {
-+	bmp280: pressure@76 {
- 		compatible = "bosch,bmp280";
- 		reg = <0x76>;
- 	};
-diff --git a/arch/arm/boot/dts/am335x-pdu001.dts b/arch/arm/boot/dts/am335x-pdu001.dts
-index 1ad530a39a957..34fb63ef420f5 100644
---- a/arch/arm/boot/dts/am335x-pdu001.dts
-+++ b/arch/arm/boot/dts/am335x-pdu001.dts
-@@ -373,7 +373,7 @@
- 	ti,pindir-d0-out-d1-in;
- 	status = "okay";
+ 	/* Fallback to system call */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 19:	lhi	%r1,__NR_clock_gettime
+ 	svc	0
+ 	ahi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
+ 	CFI_ENDPROC
+diff --git a/arch/s390/kernel/vdso32/gettimeofday.S b/arch/s390/kernel/vdso32/gettimeofday.S
+index 3c0db0fa6ad90..b23063fbc892c 100644
+--- a/arch/s390/kernel/vdso32/gettimeofday.S
++++ b/arch/s390/kernel/vdso32/gettimeofday.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
--	cfaf240320a032t {
-+	display-controller@0 {
- 		compatible = "orisetech,otm3225a";
- 		reg = <0>;
- 		spi-max-frequency = <1000000>;
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index cf1e4f747242f..09e58fb810d95 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -1101,7 +1101,7 @@
- 			};
- 		};
+ 	.text
+ 	.align 4
+@@ -19,7 +20,7 @@ __kernel_gettimeofday:
+ 	CFI_STARTPROC
+ 	ahi	%r15,-16
+ 	CFI_ADJUST_CFA_OFFSET 16
+-	CFI_VAL_OFFSET 15, -160
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	basr	%r5,0
+ 0:	al	%r5,13f-0b(%r5)			/* get &_vdso_data */
+ 1:	ltr	%r3,%r3				/* check if tz is NULL */
+diff --git a/arch/s390/kernel/vdso64/clock_gettime.S b/arch/s390/kernel/vdso64/clock_gettime.S
+index fac3ab5ec83a9..9d2ee79b90f25 100644
+--- a/arch/s390/kernel/vdso64/clock_gettime.S
++++ b/arch/s390/kernel/vdso64/clock_gettime.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
--		qspi: qspi@47900000 {
-+		qspi: spi@47900000 {
- 			compatible = "ti,am4372-qspi";
- 			reg = <0x47900000 0x100>,
- 			      <0x30000000 0x4000000>;
-diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-index 203266f884807..52ae8eef60fc3 100644
---- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-+++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-@@ -518,7 +518,7 @@
- 	};
+ 	.text
+ 	.align 4
+@@ -18,8 +19,8 @@
+ __kernel_clock_gettime:
+ 	CFI_STARTPROC
+ 	aghi	%r15,-16
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	larl	%r5,_vdso_data
+ 	cghi	%r2,__CLOCK_REALTIME_COARSE
+ 	je	4f
+@@ -56,13 +57,13 @@ __kernel_clock_gettime:
+ 	stg	%r1,8(%r3)			/* store tp->tv_nsec */
+ 	lghi	%r2,0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
- 	/* touch controller */
--	ads7846@0 {
-+	touchscreen@1 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&ads7846_pins>;
+ 	/* CLOCK_MONOTONIC_COARSE */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 3:	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
+ 	tmll	%r4,0x0001			/* pending update ? loop */
+ 	jnz	3b
+@@ -115,13 +116,13 @@ __kernel_clock_gettime:
+ 	stg	%r1,8(%r3)			/* store tp->tv_nsec */
+ 	lghi	%r2,0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 2cb45ddd2ae3b..9136b3cf9a2ce 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1369,7 +1369,7 @@
- 			status = "disabled";
- 		};
+ 	/* CPUCLOCK_VIRT for this thread */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 9:	lghi	%r4,0
+ 	icm	%r0,15,__VDSO_ECTG_OK(%r5)
+ 	jz	12f
+@@ -142,17 +143,17 @@ __kernel_clock_gettime:
+ 	stg	%r4,8(%r3)
+ 	lghi	%r2,0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
--		qspi: qspi@4b300000 {
-+		qspi: spi@4b300000 {
- 			compatible = "ti,dra7xxx-qspi";
- 			reg = <0x4b300000 0x100>,
- 			      <0x5c000000 0x4000000>;
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 738b44cf2b0bb..1c833105d6c54 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -416,7 +416,7 @@
- 			clock-names = "fck", "mmchsdb_fck";
- 		};
+ 	/* Fallback to system call */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 12:	lghi	%r1,__NR_clock_gettime
+ 	svc	0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
+ 	CFI_ENDPROC
+diff --git a/arch/s390/kernel/vdso64/gettimeofday.S b/arch/s390/kernel/vdso64/gettimeofday.S
+index 6e1f0b421695a..aebe10dc7c99a 100644
+--- a/arch/s390/kernel/vdso64/gettimeofday.S
++++ b/arch/s390/kernel/vdso64/gettimeofday.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
--		qspi: qspi@2940000 {
-+		qspi: spi@2940000 {
- 			compatible = "ti,k2g-qspi", "cdns,qspi-nor";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-index f1d6de8b3c193..000bf16de6517 100644
---- a/arch/arm/boot/dts/omap2.dtsi
-+++ b/arch/arm/boot/dts/omap2.dtsi
-@@ -114,7 +114,7 @@
- 			dma-names = "tx", "rx";
- 		};
- 
--		mcspi1: mcspi@48098000 {
-+		mcspi1: spi@48098000 {
- 			compatible = "ti,omap2-mcspi";
- 			ti,hwmods = "mcspi1";
- 			reg = <0x48098000 0x100>;
-@@ -125,7 +125,7 @@
- 				    "tx2", "rx2", "tx3", "rx3";
- 		};
- 
--		mcspi2: mcspi@4809a000 {
-+		mcspi2: spi@4809a000 {
- 			compatible = "ti,omap2-mcspi";
- 			ti,hwmods = "mcspi2";
- 			reg = <0x4809a000 0x100>;
-diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
-index 84635eeb99cd4..7f57af2f10acb 100644
---- a/arch/arm/boot/dts/omap2430.dtsi
-+++ b/arch/arm/boot/dts/omap2430.dtsi
-@@ -285,7 +285,7 @@
- 			ti,timer-alwon;
- 		};
- 
--		mcspi3: mcspi@480b8000 {
-+		mcspi3: spi@480b8000 {
- 			compatible = "ti,omap2-mcspi";
- 			ti,hwmods = "mcspi3";
- 			reg = <0x480b8000 0x100>;
-diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-index ded5fcf084eb7..1f91646b89516 100644
---- a/arch/arm/boot/dts/omap3-n9.dts
-+++ b/arch/arm/boot/dts/omap3-n9.dts
-@@ -40,7 +40,7 @@
- };
- 
- &i2c3 {
--	ak8975@0f {
-+	ak8975@f {
- 		compatible = "asahi-kasei,ak8975";
- 		reg = <0x0f>;
- 	};
+ 	.text
+ 	.align 4
+@@ -19,7 +20,7 @@ __kernel_gettimeofday:
+ 	CFI_STARTPROC
+ 	aghi	%r15,-16
+ 	CFI_ADJUST_CFA_OFFSET 16
+-	CFI_VAL_OFFSET 15, -160
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	larl	%r5,_vdso_data
+ 0:	ltgr	%r3,%r3				/* check if tz is NULL */
+ 	je	1f
 -- 
 2.20.1
 
