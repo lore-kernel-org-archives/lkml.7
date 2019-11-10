@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA279C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C76C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BDB208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81B6208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355084;
-	bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+	s=default; t=1573355088;
+	bh=SYK3cbFOH5p92qBycnjfraI6rejI7ktNpDJLkusLl1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u674Fi18vucDcS4QrJf6dos8xv4hPNO2q5m20d7C/j+xX6l0TCb0Dqxw2t4khAdy/
-	 5OF89T/68kH3F/CGCRRtfIE74Vre7ZOfOgLyclygjSqoLQnA9BU/FlTii79lYIdDbf
-	 cgO8KLHaBPxwR7p2YpBEH2sz0i1nnr3dgqgnugyg=
+	b=yNHPXnJ7+QcJFPRikEAEOSofGqhlFC6W+1/GzcH8wFU1QpLfDt8vNmPZbj+ij7gPu
+	 sOSGPMvDvR4Mhln1dINX2ffUUeULAdhLKuYUruzw2xiID9oXWzo9qW+hmu+xmDpSgk
+	 5+aRYR/8GpiyOkdvObic/VIiLVLYSXwGVuH6ERrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfKJDEn (ORCPT
+        id S1729442AbfKJDEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:04:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51020 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:04:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729167AbfKJCqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:46:47 -0500
+        id S1729161AbfKJCqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DEC12184C;
-        Sun, 10 Nov 2019 02:46:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50E5D21848;
+        Sun, 10 Nov 2019 02:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1573354006;
-        bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+        bh=SYK3cbFOH5p92qBycnjfraI6rejI7ktNpDJLkusLl1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D3g/gIeOLJQbSyK632lPjok8x4o4AB7GRqdhLhNwrPs63bs+6Is8pE8hnoR351TSM
-         C4hc/F/rCkQpwr6DcHPM9rNYWD/xdRPkgIuONMGcEnJaGbVn7yzwYgwozMGql6bXw1
-         QHauj68ogxGk9E+3HOA9LyKhohF3xML2IqW8NkPM=
+        b=jhMtATYKTDhJKh2bHVQ4+J3usOhUGKR+sGA0nX+Kg9cVHQiI/E9TPrr/h3jq04TRO
+         PNHoEpT7A+sLtSxeLFCt3GnlYI+zQnvSuXFsYDVh4Glta9A6cicDjq0Z20twd9nXYv
+         n8a+QJVKLJnzC87pjRHBqkIzcsRF48dIV5N/5XJw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 033/109] ARM: dts: ux500: Fix LCDA clock line muxing
-Date:   Sat,  9 Nov 2019 21:44:25 -0500
-Message-Id: <20191110024541.31567-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 032/109] ARM: dts: ux500: Correct SCU unit address
+Date:   Sat,  9 Nov 2019 21:44:24 -0500
+Message-Id: <20191110024541.31567-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -58,47 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit ecde29569e3484e1d0a032bf4074449bce4d4a03 ]
+[ Upstream commit 2f217d24ecaec2012e628d21e244eef0608656a4 ]
 
-The "lcdaclk_b_1" group is muxed with the function "lcd"
-but needs a separate entry to be muxed in with "lcda"
-rather than "lcd".
+The unit address of the Cortex-A9 SCU device node contains one zero too
+many.  Remove it.
 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ste-href-family-pinctrl.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ste-dbx5x0.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-index 5c5cea232743d..1ec193b0c5065 100644
---- a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-@@ -607,16 +607,20 @@
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 2310a4e97768c..3dc0028e108b3 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -197,7 +197,7 @@
+ 			      <0xa0410100 0x100>;
+ 		};
  
- 			mcde {
- 				lcd_default_mode: lcd_default {
--					default_mux {
-+					default_mux1 {
- 						/* Mux in VSI0 and all the data lines */
- 						function = "lcd";
- 						groups =
- 						"lcdvsi0_a_1", /* VSI0 for LCD */
- 						"lcd_d0_d7_a_1", /* Data lines */
- 						"lcd_d8_d11_a_1", /* TV-out */
--						"lcdaclk_b_1", /* Clock line for TV-out */
- 						"lcdvsi1_a_1"; /* VSI1 for HDMI */
- 					};
-+					default_mux2 {
-+						function = "lcda";
-+						groups =
-+						"lcdaclk_b_1"; /* Clock line for TV-out */
-+					};
- 					default_cfg1 {
- 						pins =
- 						"GPIO68_E1", /* VSI0 */
+-		scu@a04100000 {
++		scu@a0410000 {
+ 			compatible = "arm,cortex-a9-scu";
+ 			reg = <0xa0410000 0x100>;
+ 		};
 -- 
 2.20.1
 
