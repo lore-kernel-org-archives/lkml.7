@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB9CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2119C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6238822790
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B55D22794
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354276;
-	bh=ujhPlnlerUbVFby2mytHtPwSpm/UGTUI8gqoX3sAceo=;
+	s=default; t=1573354281;
+	bh=/NIyCPyZeLdBwZL2f6/XlX7dwDQA8o09yF4PJxAG3WA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=moBnlvX1zgK/ECRNIsVsiDXMvBNeVQK1jPYVGdO4BLCwXgjjFDd0XilzK35JK29/e
-	 j7jvgD5irm+tU6izLHg/LKBo21cKMju1uerPSbJAB4YO6yPSZ/Wt7mJzmVAR9Vew6L
-	 IkiINpQhllmdbnj2WqCFlwwjgdqyMBbOieAB7B8Q=
+	b=c1iyYLBsyfGBgqPcAsqasjrJp3XeSYo2bhjTOpwLRyJvty5IzVR4ilct4ydhu+/8n
+	 ja697SmJjr+h4mDuHMvH2+uDk0lYVnhseFHH1AGDL+SLGrGqzmHiP9WDw4UCIrjY+n
+	 RdwRd5eWZb42tZiVLsGRLhbPGS+FMBnvAIutXkXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfKJCvO (ORCPT
+        id S1729945AbfKJCvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35004 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:51:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbfKJCux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:53 -0500
+        id S1729877AbfKJCvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:51:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9DD922790;
-        Sun, 10 Nov 2019 02:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C31C522794;
+        Sun, 10 Nov 2019 02:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354252;
-        bh=ujhPlnlerUbVFby2mytHtPwSpm/UGTUI8gqoX3sAceo=;
+        s=default; t=1573354265;
+        bh=/NIyCPyZeLdBwZL2f6/XlX7dwDQA8o09yF4PJxAG3WA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VEry+ysNwStVVVkzZK+SFDE4BG+8mKvOPNeJ7j3ktHb4N/qt6bEMtFon+e9VZSEWt
-         BrCGbm1yy0GGxHQogdqCP1w13wJbkplRMSjIf+uawXXN3rolaGnnqCuHWWbsBU+u1t
-         YrLXe2hH0IqOVR4z4sH2WDGYg8gCz9teaIHJ++Xs=
+        b=wK7VOwEMNMcPo3yQVH8MzWYB+SUVRdNywLnuF2IMpPatHL8MYqHv85TDBFUUsmGrj
+         0dvvXMKeOThX9SQHqAxxwbq0+CpPwSr/yyCIR2Y8NiIgoEBqzhRw6BaNe1vVWZFcni
+         6Kx3OmAtAe5sJHfrNdCSbnpWcizYfZt9Ms1Y6yHw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 10/40] net: toshiba: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:50:02 -0500
-Message-Id: <20191110025032.827-10-sashal@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Peter Chen <peter.chen@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 14/40] usb: chipidea: Fix otg event handler
+Date:   Sat,  9 Nov 2019 21:50:06 -0500
+Message-Id: <20191110025032.827-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
@@ -60,96 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit bacade822524e02f662d88f784d2ae821a5546fb ]
+[ Upstream commit 59739131e0ca06db7560f9073fff2fb83f6bc2a5 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+At OTG work running time, it's possible that several events need to be
+addressed (e.g. ID and VBUS events). The current implementation handles
+only one event at a time which leads to ignoring the other one. Fix it.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/toshiba/ps3_gelic_net.c | 4 ++--
- drivers/net/ethernet/toshiba/ps3_gelic_net.h | 2 +-
- drivers/net/ethernet/toshiba/spider_net.c    | 4 ++--
- drivers/net/ethernet/toshiba/tc35815.c       | 6 ++++--
- 4 files changed, 9 insertions(+), 7 deletions(-)
+ drivers/usb/chipidea/otg.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.c b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-index 79f0ec4e51ace..964df98b54ea1 100644
---- a/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-+++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-@@ -845,9 +845,9 @@ static int gelic_card_kick_txdma(struct gelic_card *card,
-  * @skb: packet to send out
-  * @netdev: interface device structure
-  *
-- * returns 0 on success, <0 on failure
-+ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
-  */
--int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
-+netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	struct gelic_card *card = netdev_card(netdev);
- 	struct gelic_descr *descr;
-diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.h b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-index 8505196be9f52..d123644bd720b 100644
---- a/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-+++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
-@@ -370,7 +370,7 @@ void gelic_card_up(struct gelic_card *card);
- void gelic_card_down(struct gelic_card *card);
- int gelic_net_open(struct net_device *netdev);
- int gelic_net_stop(struct net_device *netdev);
--int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
-+netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
- void gelic_net_set_multi(struct net_device *netdev);
- void gelic_net_tx_timeout(struct net_device *netdev);
- int gelic_net_change_mtu(struct net_device *netdev, int new_mtu);
-diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-index 3c54a2cae5dfd..8e53211aedd82 100644
---- a/drivers/net/ethernet/toshiba/spider_net.c
-+++ b/drivers/net/ethernet/toshiba/spider_net.c
-@@ -881,9 +881,9 @@ spider_net_kick_tx_dma(struct spider_net_card *card)
-  * @skb: packet to send out
-  * @netdev: interface device structure
-  *
-- * returns 0 on success, !0 on failure
-+ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
-  */
--static int
-+static netdev_tx_t
- spider_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	int cnt;
-diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
-index 868fb6306df02..3e33c165a4278 100644
---- a/drivers/net/ethernet/toshiba/tc35815.c
-+++ b/drivers/net/ethernet/toshiba/tc35815.c
-@@ -475,7 +475,8 @@ static void free_rxbuf_skb(struct pci_dev *hwdev, struct sk_buff *skb, dma_addr_
- /* Index to functions, as function prototypes. */
+diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
+index f36a1ac3bfbdf..b8650210be0f7 100644
+--- a/drivers/usb/chipidea/otg.c
++++ b/drivers/usb/chipidea/otg.c
+@@ -206,14 +206,17 @@ static void ci_otg_work(struct work_struct *work)
+ 	}
  
- static int	tc35815_open(struct net_device *dev);
--static int	tc35815_send_packet(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t	tc35815_send_packet(struct sk_buff *skb,
-+					    struct net_device *dev);
- static irqreturn_t	tc35815_interrupt(int irq, void *dev_id);
- static int	tc35815_rx(struct net_device *dev, int limit);
- static int	tc35815_poll(struct napi_struct *napi, int budget);
-@@ -1279,7 +1280,8 @@ tc35815_open(struct net_device *dev)
-  * invariant will hold if you make sure that the netif_*_queue()
-  * calls are done at the proper times.
-  */
--static int tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct tc35815_local *lp = netdev_priv(dev);
- 	struct TxFD *txfd;
+ 	pm_runtime_get_sync(ci->dev);
++
+ 	if (ci->id_event) {
+ 		ci->id_event = false;
+ 		ci_handle_id_switch(ci);
+-	} else if (ci->b_sess_valid_event) {
++	}
++
++	if (ci->b_sess_valid_event) {
+ 		ci->b_sess_valid_event = false;
+ 		ci_handle_vbus_change(ci);
+-	} else
+-		dev_err(ci->dev, "unexpected event occurs at %s\n", __func__);
++	}
++
+ 	pm_runtime_put_sync(ci->dev);
+ 
+ 	enable_irq(ci->irq);
 -- 
 2.20.1
 
