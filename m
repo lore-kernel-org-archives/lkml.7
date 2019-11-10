@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAF9C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BD1C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD90215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA02421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354717;
-	bh=kiO9wqUjASzmMINbaT3sESNlTQfAAWLNzXtu9pP1MHU=;
+	s=default; t=1573354721;
+	bh=gFH7RF9kjuycd1v3SceNDYD8T8HQ4LSITu6INg04wGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPejVNM/EGRU/5R7EceeZa8Yli3zKL7QpkhUKm8a/SY7TGoczXq8vHPkPirme110p
-	 7C+BLc4S4cmaPFv6qMmBtARkpOV5BpCb8oX2MFSN8iO7f2ZPzgFRpq/KJqAFj9DbHl
-	 04sQpxI2q0vHMHSWLe51UovNAbXlZMR4PxMyhhR8=
+	b=ozmCxQgxMplhxGzylq6Hd62KwuPs96aGHtk8zq0HhpuNH8nUpG0ElmmXhjV21+v93
+	 wv8FsjIQx+xfXOZeFh9X8IoyF5DcHOhBhoEcj0RDeIqshaAdAR+BgpvXja+nwzafII
+	 hgL+ZU3IchQBjx+WZbcZ/vHy2ExCmD/VGIeK13hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbfKJC6f (ORCPT
+        id S1729366AbfKJC6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:58:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47238 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:58:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729385AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A610A22519;
-        Sun, 10 Nov 2019 02:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F798224FF;
+        Sun, 10 Nov 2019 02:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354110;
-        bh=kiO9wqUjASzmMINbaT3sESNlTQfAAWLNzXtu9pP1MHU=;
+        s=default; t=1573354104;
+        bh=gFH7RF9kjuycd1v3SceNDYD8T8HQ4LSITu6INg04wGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LyLnYoQSTSBSGIR57IPI3dEAhOIFKPyF5buVXsv2BZXBWjjwZquWaDbkngm6868GM
-         9G3FjGyPzXGrw/EYclI7hcmX+w6rkZlSq7gGmrvo4THllUV0xaqEwkfDd8YJbruMJd
-         /Q9Up4zuI24t35gl09fq0hQKJ0XidnJCYc06NUS8=
+        b=AOnViOCdETl/tBMFJc5mLdmlILhmff5PPpJIv1q13k5hWSD/Zw12QCi56jn4A3e/d
+         r683kwUL/UZhLulnHbHkpkImwmq8YP+Dw+WlaDYfUNnwgJarFGzs1qX+naUotDYaJj
+         uWR9QDZm7Vk5U6j3aKamdwoYJRwpCqAnGQGd7/ZI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Brijesh Singh <brijeshkumar.singh@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 100/109] arm64: dts: amd: Fix SPI bus warnings
-Date:   Sat,  9 Nov 2019 21:45:32 -0500
-Message-Id: <20191110024541.31567-100-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 095/109] scsi: NCR5380: Check for invalid reselection target
+Date:   Sat,  9 Nov 2019 21:45:27 -0500
+Message-Id: <20191110024541.31567-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -62,48 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit e9f0878c4b2004ac19581274c1ae4c61ae3ca70e ]
+[ Upstream commit 7ef55f6744c45e3d7c85a3f74ada39b67ac741dd ]
 
-dtc has new checks for SPI buses. Fix the warnings in node names.
+The X3T9.2 specification (draft) says, under "6.1.4.1 RESELECTION", that "the
+initiator shall not respond to a RESELECTION phase if other than two SCSI ID
+bits are on the DATA BUS." This issue (too many bits set) has been observed in
+the wild, so add a check.
 
-arch/arm64/boot/dts/amd/amd-overdrive.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-
-Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/NCR5380.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index 125f4deb52fe9..b664e7af74eb3 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -107,7 +107,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 00397e89d652d..a290ec632248e 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2014,6 +2014,11 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+ 	NCR5380_write(MODE_REG, MR_BASE);
  
--		spi0: ssp@e1020000 {
-+		spi0: spi@e1020000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1020000 0 0x1000>;
-@@ -117,7 +117,7 @@
- 			clock-names = "apb_pclk";
- 		};
+ 	target_mask = NCR5380_read(CURRENT_SCSI_DATA_REG) & ~(hostdata->id_mask);
++	if (!target_mask || target_mask & (target_mask - 1)) {
++		shost_printk(KERN_WARNING, instance,
++			     "reselect: bad target_mask 0x%02x\n", target_mask);
++		return;
++	}
  
--		spi1: ssp@e1030000 {
-+		spi1: spi@e1030000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1030000 0 0x1000>;
+ 	dsprintk(NDEBUG_RESELECTION, instance, "reselect\n");
+ 
 -- 
 2.20.1
 
