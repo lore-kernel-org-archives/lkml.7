@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF93C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81846C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C3A21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB3421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354464;
-	bh=42CYjEfByef5fyj2v+6dXNq1j0eelE7rbuPTQ5RZEIk=;
+	s=default; t=1573354470;
+	bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfUwpGFbmdXd3pK2IV4GvgKoZXWmLvimX3RN1DmeEgXsYSI8koU2RZZW4xZKMoXMb
-	 91hbE66Qe+kaRtTj2L9etTIKQHiOVDFwRifMQbOEYYLneTSEvII+JXrnUQjXv8xRVb
-	 39loxVx02ZZpk8e6Rd+aodxeC1pcU17w0efdjMJ8=
+	b=BpNMibAgYXtwTrKBcHMJc4zCYhM0242nHEf7Tu4BqrMRwaN3yYD9bQsrbxaNjRTGN
+	 9JImLSRkZ9RG1V9BQI6A7DRWWRPXdsUpAgjinnFFLlv+7a7I2PqqlnuBm3Xok77IUv
+	 jDfCV2MSRntqaDz602sMNdDDbnEqlWs15KZjvRaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfKJCuu (ORCPT
+        id S1728464AbfKJCy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33500 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:54:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727771AbfKJCuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:19 -0500
+        id S1729793AbfKJCur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F27C22790;
-        Sun, 10 Nov 2019 02:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 752D622583;
+        Sun, 10 Nov 2019 02:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354219;
-        bh=42CYjEfByef5fyj2v+6dXNq1j0eelE7rbuPTQ5RZEIk=;
+        s=default; t=1573354246;
+        bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMreHRQtLlqKWLjAwHvorzuR2LvVGoFK62PSFscpEKg7q8abMtc5o+b4uj98YVcAy
-         2LJcOkM1EylCT1rmFwP9IMyO6cDC0YhwhEOKv4+sF9eskIjMXHxENb5+18gP6z5phg
-         MAl+eV+acA5ORULURNSiWZg2NgSk4h9vK/Y3lgxM=
+        b=l7YKZ+UEa8YCzk9LgdCmrh8s71NSYeAiNhXDpFUGvujfMw4uDAhvHRdJ71tG4vLBg
+         rLmnQ7EgQZctkJxHiom+aNcY9KZPZ1FPw8df7AB4QSynlznp5MstSErV5dsiTlxdv8
+         yPUNOLWSWtixTy8Lvu+pIWmmzGKg7Gh6Tr1x+Fuk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 57/66] scsi: NCR5380: Check for invalid reselection target
-Date:   Sat,  9 Nov 2019 21:48:36 -0500
-Message-Id: <20191110024846.32598-57-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 07/40] libfdt: Ensure INT_MAX is defined in libfdt_env.h
+Date:   Sat,  9 Nov 2019 21:49:59 -0500
+Message-Id: <20191110025032.827-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
-References: <20191110024846.32598-1-sashal@kernel.org>
+In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
+References: <20191110025032.827-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 7ef55f6744c45e3d7c85a3f74ada39b67ac741dd ]
+[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
 
-The X3T9.2 specification (draft) says, under "6.1.4.1 RESELECTION", that "the
-initiator shall not respond to a RESELECTION phase if other than two SCSI ID
-bits are on the DATA BUS." This issue (too many bits set) has been observed in
-the wild, so add a check.
+The next update of libfdt has a new dependency on INT_MAX. Update the
+instances of libfdt_env.h in the kernel to either include the necessary
+header with the definition or define it locally.
 
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/compressed/libfdt_env.h | 2 ++
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 35419ba32c467..15c0fff7519be 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -2102,6 +2102,11 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
- 	NCR5380_write(MODE_REG, MR_BASE);
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 17ae0f3efac8e..005bf4ff1b4cb 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
  
- 	target_mask = NCR5380_read(CURRENT_SCSI_DATA_REG) & ~(hostdata->id_mask);
-+	if (!target_mask || target_mask & (target_mask - 1)) {
-+		shost_printk(KERN_WARNING, instance,
-+			     "reselect: bad target_mask 0x%02x\n", target_mask);
-+		return;
-+	}
++#define INT_MAX			((int)(~0U>>1))
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 7e3789ea396b8..0b3db6322c793 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -4,6 +4,8 @@
+ #include <types.h>
+ #include <string.h>
  
- 	dsprintk(NDEBUG_RESELECTION, instance, "reselect\n");
++#define INT_MAX			((int)(~0U>>1))
++
+ #include "of.h"
  
+ typedef u32 uint32_t;
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 2a663c6bb4285..8850e243c9406 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -1,6 +1,7 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
+ 
++#include <linux/kernel.h>	/* For INT_MAX */
+ #include <linux/string.h>
+ 
+ #include <asm/byteorder.h>
 -- 
 2.20.1
 
