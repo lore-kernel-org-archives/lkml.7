@@ -2,202 +2,286 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86375C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05AFC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5270F2080F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40D92080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573404569;
-	bh=IaXEgDreolxql+OnLwDbTike/4OS7jtVgJGn4rCxdyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xvXc28NNIirZWWMLoY4a4bXcbqDe8QDD3MG1hGo5WIWAOJc2F7yIGyFr/bo63mnOS
-	 rQ8ICVAy8fqPmO1ocz7RHB1xmVoYWR0K6ugbhSjcVtvIP3md3IIjDB2aAekgUXskwD
-	 2snaEzGOQpa5vaNtc/aG3n+OjNE1IbOhKIBtrfs0=
+	s=default; t=1573404608;
+	bh=TUxbmXteAyuys1U1R92N8dKsQyLQg2136wURsEbnFuA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=0aMUzM2oUAA/YTC8NFspLA0CaqCVlN/GjI0yI0sghCQAUJiOnTQKdNJEpWVkNYmxP
+	 5myZk2oI3h69fPZ4RDG1fy9y3l1sBl8UlF5qwDKUdkx1z0aXrX1I9An88ZDHsoUlRc
+	 Ivcets+sHirPJVTtq7rxvusJF0/A87Ct0W5L+D9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKJQt1 (ORCPT
+        id S1727005AbfKJQuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:49:27 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37905 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbfKJQt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:49:27 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a14so9502040oid.5;
-        Sun, 10 Nov 2019 08:49:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hF4gcvRLoFI5GEISKxekVetVmnJbmxGGWorHkggFZtA=;
-        b=sXVjINRN6dWhI1jhVw8iTzaoBt/EPUnV57oeUIVJaRdcEmnSNIDufKV0S0RCdGu0HH
-         5J+mzPvPYN6SPsPphDDhY/Q8gjftn1NOgJDBMUOYKq4sVEegCq+PcXA3P7li3FpN6HJW
-         zIgkm0CzkYGvNH524H2AsU/WDd/EUYnZFSqBU2yJABgRkl5Lw4PQjBngetigI2dBNMxk
-         A3HUmb8ut/oPwQpK2JbBG9Y7uE3fcVcUS0XgKzPzdymyizsm4KmtfRW34o1Ox2E2T7MX
-         IV5eeccJZeSgD0uU6mA4M8d0NGhC1BRXBTD5DbiTPLKRXjH4aGUFKtY4cmkFtBLq3/IM
-         88wg==
-X-Gm-Message-State: APjAAAW67e0RqwhcNv10TaUyWUMdBl0PIl4w4fQhspffBHVsEdolzWuF
-        LKlpbjNiBjdjmcKqJeMiYUwV5CQ1xB+v/Rb0H7s=
-X-Google-Smtp-Source: APXvYqwocqyArLhnCTnNgpL3WAP1SlQIayKttbriLtJ/Bn6+a1Gk2C0XMzoFr6MqDTM+6calLN3MF5baVVqrCEI7law=
-X-Received: by 2002:aca:d4c6:: with SMTP id l189mr19566038oig.68.1573404565469;
- Sun, 10 Nov 2019 08:49:25 -0800 (PST)
+        Sun, 10 Nov 2019 11:50:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbfKJQuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 11:50:07 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7C3A2080F;
+        Sun, 10 Nov 2019 16:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573404605;
+        bh=TUxbmXteAyuys1U1R92N8dKsQyLQg2136wURsEbnFuA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=g3EQpZ+MI93LJPNWw+gwVGIZtcrTz/lOTcS5xm6FHKkcEjHL5lSVvoclPvyeLO8IP
+         Dcqj1mPQAoHgGjYAjgMIiMN7EW5Nq7CfUV89+s5kY1C73H3OIdqFAs8yh3AajbEMFE
+         KX0sx3SVmbZcOU0NhjfVVY+mlhwki3gWd2br54wc=
+Date:   Sun, 10 Nov 2019 17:50:01 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.200
+Message-ID: <20191110165001.GA2872916@kroah.com>
 MIME-Version: 1.0
-References: <20191030075141.1039-1-daniel.lezcano@linaro.org>
- <20191030075141.1039-2-daniel.lezcano@linaro.org> <143021538.HHUP3Pj7i7@kreacher>
- <9dfe3bd3-1903-4dc4-0605-27cc867d87ad@linaro.org> <CAJZ5v0hLZ9O=QtZ+ktc-_Dk7aJjgD9BRLyYKw1g9Ze2n8KZyVQ@mail.gmail.com>
- <59f10030-cef0-4d75-5135-9d0590385fda@linaro.org>
-In-Reply-To: <59f10030-cef0-4d75-5135-9d0590385fda@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 10 Nov 2019 17:49:10 +0100
-Message-ID: <CAJZ5v0hEYPbvbW6SErsd=uPsty9pC-4cLhCt2TiZx=JSVWLdsQ@mail.gmail.com>
-Subject: Re: [PATCH V6 2/3] cpuidle: play_idle: Specify play_idle with an idle state
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 2:33 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> On 08/11/2019 11:56, Rafael J. Wysocki wrote:
-> > On Fri, Nov 8, 2019 at 11:47 AM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> On 08/11/2019 02:20, Rafael J. Wysocki wrote:
-> >>> On Wednesday, October 30, 2019 8:51:40 AM CET Daniel Lezcano wrote:
-> >>>> Currently, the play_idle function does not allow to tell which idle
-> >>>> state we want to go. Improve this by passing the idle state as
-> >>>> parameter to the function.
-> >>>>
-> >>>> Export cpuidle_find_deepest_state() symbol as it is used from the
-> >>>> intel_powerclamp driver as a module.
-> >>>>
-> >>>> There is no functional changes, the cpuidle state is the deepest one.
-> >>>>
-> >>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >>>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >>>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> >>>> ---
-> >>>>   V6:
-> >>>>    - Change variable name 'state' -> 'index':
-> >>>>      https://lkml.org/lkml/2019/10/28/874
-> >>>>   V4:
-> >>>>    - Add EXPORT_SYMBOL_GPL(cpuidle_find_deepest_state) for the
-> >>>>      intel_powerclamp driver when this one is compiled as a module
-> >>>>   V3:
-> >>>>    - Add missing cpuidle.h header
-> >>>> ---
-> >>>>  drivers/cpuidle/cpuidle.c                | 1 +
-> >>>>  drivers/powercap/idle_inject.c           | 4 +++-
-> >>>>  drivers/thermal/intel/intel_powerclamp.c | 4 +++-
-> >>>>  include/linux/cpu.h                      | 2 +-
-> >>>>  kernel/sched/idle.c                      | 4 ++--
-> >>>>  5 files changed, 10 insertions(+), 5 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> >>>> index 18523ea6b11b..b871fc2e8e67 100644
-> >>>> --- a/drivers/cpuidle/cpuidle.c
-> >>>> +++ b/drivers/cpuidle/cpuidle.c
-> >>>> @@ -126,6 +126,7 @@ int cpuidle_find_deepest_state(void)
-> >>>>
-> >>>>      return find_deepest_state(drv, dev, UINT_MAX, 0, false);
-> >>>>  }
-> >>>> +EXPORT_SYMBOL_GPL(cpuidle_find_deepest_state);
-> >>>
-> >>> That doesn't appear to be really necessary to me.
-> >>>
-> >>>>
-> >>>>  #ifdef CONFIG_SUSPEND
-> >>>>  static void enter_s2idle_proper(struct cpuidle_driver *drv,
-> >>>> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-> >>>> index cd1270614cc6..233c878cbf46 100644
-> >>>> --- a/drivers/powercap/idle_inject.c
-> >>>> +++ b/drivers/powercap/idle_inject.c
-> >>>> @@ -38,6 +38,7 @@
-> >>>>  #define pr_fmt(fmt) "ii_dev: " fmt
-> >>>>
-> >>>>  #include <linux/cpu.h>
-> >>>> +#include <linux/cpuidle.h>
-> >>>>  #include <linux/hrtimer.h>
-> >>>>  #include <linux/kthread.h>
-> >>>>  #include <linux/sched.h>
-> >>>> @@ -138,7 +139,8 @@ static void idle_inject_fn(unsigned int cpu)
-> >>>>       */
-> >>>>      iit->should_run = 0;
-> >>>>
-> >>>> -    play_idle(READ_ONCE(ii_dev->idle_duration_us));
-> >>>> +    play_idle(READ_ONCE(ii_dev->idle_duration_us),
-> >>>> +              cpuidle_find_deepest_state());
-> >>>
-> >>> The next patch changes this again and I'm not sure why this intermediate
-> >>> change is useful.
-> >>>
-> >>>>  }
-> >>>>
-> >>>>  /**
-> >>>> diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
-> >>>> index 53216dcbe173..b55786c169ae 100644
-> >>>> --- a/drivers/thermal/intel/intel_powerclamp.c
-> >>>> +++ b/drivers/thermal/intel/intel_powerclamp.c
-> >>>> @@ -29,6 +29,7 @@
-> >>>>  #include <linux/delay.h>
-> >>>>  #include <linux/kthread.h>
-> >>>>  #include <linux/cpu.h>
-> >>>> +#include <linux/cpuidle.h>
-> >>>>  #include <linux/thermal.h>
-> >>>>  #include <linux/slab.h>
-> >>>>  #include <linux/tick.h>
-> >>>> @@ -430,7 +431,8 @@ static void clamp_idle_injection_func(struct kthread_work *work)
-> >>>>      if (should_skip)
-> >>>>              goto balance;
-> >>>>
-> >>>> -    play_idle(jiffies_to_usecs(w_data->duration_jiffies));
-> >>>> +    play_idle(jiffies_to_usecs(w_data->duration_jiffies),
-> >>>> +              cpuidle_find_deepest_state());
-> >>>
-> >>> I don't see a reason for changing the code here like this.
-> >>>
-> >>> What you really need is to have a way to set a limit on the idle
-> >>> state exit latency for idle injection on ARM.
-> >>
-> >> Mmh, yes you are right. The idle state number is part of the internals
-> >> of the cpuidle framework while the exit latency is an input (from user
-> >> or kernel).
-> >>
-> >>> For that you can pass the exit latency limit to play_idle(), but then
-> >>> you need to change powerclamp to pass UNIT_MAX or similar which is
-> >>> ugly, or you can redefine cpuidle_use_deepest_state() to take the
-> >>> exit latency limit as the arg (with 0 meaning use_deepest_state == false).
-> >>
-> >> Should it make sense to just get the resume latency in
-> >> cpuidle_use_deepest_state() and pass the value to find_deepest_state()?
-> >
-> > Yes, I would change cpuidle_use_deepest_state() to take the max exit
-> > latency as the arg (maybe with 0 meaning "don't use the deepest state
-> > only any more").
->
-> Why not simply ?
->
-> int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->                                 struct cpuidle_device *dev)
-> {
->         int latency = cpuidle_governor_latency_req(dev->cpu);
->
->         return find_deepest_state(drv, dev, latency_req, 0, false);
-> }
+I'm announcing the release of the 4.4.200 kernel.
 
-Because, AFAICS, that doesn't work for powerclamp.
+All users of the 4.4 kernel series must upgrade.
+
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                              |    8 
+ arch/arm/Kconfig                                      |    3 
+ arch/arm/boot/dts/logicpd-torpedo-som.dtsi            |    4 
+ arch/arm/include/asm/arch_gicv3.h                     |   27 -
+ arch/arm/include/asm/assembler.h                      |   23 +
+ arch/arm/include/asm/barrier.h                        |   34 ++
+ arch/arm/include/asm/bugs.h                           |    6 
+ arch/arm/include/asm/cp15.h                           |   18 +
+ arch/arm/include/asm/cputype.h                        |    9 
+ arch/arm/include/asm/proc-fns.h                       |   65 +++-
+ arch/arm/include/asm/system_misc.h                    |   15 
+ arch/arm/include/asm/thread_info.h                    |    8 
+ arch/arm/include/asm/uaccess.h                        |  177 ++++++-----
+ arch/arm/kernel/Makefile                              |    4 
+ arch/arm/kernel/armksyms.c                            |    6 
+ arch/arm/kernel/bugs.c                                |   18 +
+ arch/arm/kernel/entry-common.S                        |   18 -
+ arch/arm/kernel/entry-header.S                        |   25 +
+ arch/arm/kernel/head-common.S                         |    6 
+ arch/arm/kernel/psci-call.S                           |   31 -
+ arch/arm/kernel/setup.c                               |   40 +-
+ arch/arm/kernel/signal.c                              |  125 ++++---
+ arch/arm/kernel/smccc-call.S                          |   62 +++
+ arch/arm/kernel/smp.c                                 |   36 ++
+ arch/arm/kernel/suspend.c                             |    2 
+ arch/arm/kernel/sys_oabi-compat.c                     |   16 -
+ arch/arm/lib/copy_from_user.S                         |    5 
+ arch/arm/mm/Kconfig                                   |   23 +
+ arch/arm/mm/Makefile                                  |    2 
+ arch/arm/mm/alignment.c                               |   44 ++
+ arch/arm/mm/fault.c                                   |    3 
+ arch/arm/mm/proc-macros.S                             |   13 
+ arch/arm/mm/proc-v7-2level.S                          |    6 
+ arch/arm/mm/proc-v7-bugs.c                            |  161 ++++++++++
+ arch/arm/mm/proc-v7.S                                 |  154 +++++++--
+ arch/arm/vfp/vfpmodule.c                              |   37 --
+ arch/arm64/Kconfig                                    |    1 
+ arch/arm64/kernel/Makefile                            |    4 
+ arch/arm64/kernel/arm64ksyms.c                        |    5 
+ arch/arm64/kernel/asm-offsets.c                       |    3 
+ arch/arm64/kernel/psci-call.S                         |   28 -
+ arch/arm64/kernel/smccc-call.S                        |   43 ++
+ arch/mips/bcm63xx/prom.c                              |    2 
+ arch/mips/include/asm/bmips.h                         |   10 
+ arch/mips/kernel/smp-bmips.c                          |    8 
+ drivers/dma/qcom_bam_dma.c                            |   14 
+ drivers/firmware/Kconfig                              |    3 
+ drivers/firmware/psci.c                               |   78 ++++
+ drivers/net/ethernet/hisilicon/hip04_eth.c            |   15 
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |   42 +-
+ drivers/net/vxlan.c                                   |    5 
+ drivers/of/unittest.c                                 |    1 
+ drivers/regulator/pfuze100-regulator.c                |    8 
+ drivers/regulator/ti-abb-regulator.c                  |   26 -
+ drivers/scsi/Kconfig                                  |    2 
+ drivers/scsi/sni_53c710.c                             |    4 
+ drivers/target/target_core_device.c                   |   21 -
+ fs/cifs/cifsglob.h                                    |    5 
+ fs/cifs/cifsproto.h                                   |    1 
+ fs/cifs/file.c                                        |   23 -
+ fs/cifs/smb2file.c                                    |    2 
+ fs/dcache.c                                           |    2 
+ include/linux/arm-smccc.h                             |  283 ++++++++++++++++++
+ include/linux/gfp.h                                   |   23 +
+ include/linux/psci.h                                  |   13 
+ include/linux/skbuff.h                                |    3 
+ include/net/flow_dissector.h                          |    3 
+ include/net/sock.h                                    |   11 
+ kernel/time/alarmtimer.c                              |    4 
+ net/core/datagram.c                                   |    2 
+ net/core/ethtool.c                                    |    4 
+ net/core/flow_dissector.c                             |   48 +--
+ net/dccp/ipv4.c                                       |    4 
+ net/ipv4/datagram.c                                   |    2 
+ net/ipv4/tcp_ipv4.c                                   |    4 
+ net/sched/sch_fq_codel.c                              |    6 
+ net/sched/sch_hhf.c                                   |    8 
+ net/sched/sch_sfb.c                                   |   13 
+ net/sched/sch_sfq.c                                   |   14 
+ net/sctp/socket.c                                     |    2 
+ sound/soc/rockchip/rockchip_i2s.c                     |    2 
+ tools/perf/builtin-kmem.c                             |    1 
+ 82 files changed, 1555 insertions(+), 485 deletions(-)
+
+Adam Ford (1):
+      ARM: dts: logicpd-torpedo-som: Remove twl_keypad
+
+Andrey Ryabinin (1):
+      ARM: 8051/1: put_user: fix possible data corruption in put_user
+
+Axel Lin (1):
+      regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
+
+Bodo Stroesser (1):
+      scsi: target: core: Do not overwrite CDB byte 1
+
+Dave Wysochanski (1):
+      cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
+
+Eran Ben Elisha (1):
+      net/mlx4_core: Dynamically set guaranteed amount of counters per VF
+
+Eric Dumazet (4):
+      dccp: do not leak jiffies on the wire
+      net: add READ_ONCE() annotation in __skb_wait_for_more_packets()
+      inet: stop leaking jiffies on the wire
+      net/flow_dissector: switch to siphash
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.200
+
+Jeffrey Hugo (1):
+      dmaengine: qcom: bam_dma: Fix resource leak
+
+Jens Wiklander (4):
+      ARM: 8478/2: arm/arm64: add arm-smccc
+      ARM: 8479/2: add implementation for arm-smccc
+      ARM: 8480/2: arm64: add implementation for arm-smccc
+      ARM: 8481/2: drivers: psci: replace psci firmware calls
+
+Jiangfeng Xiao (1):
+      net: hisilicon: Fix ping latency when deal with high throughput
+
+Jonas Gorski (1):
+      MIPS: bmips: mark exception vectors as char arrays
+
+Julien Thierry (8):
+      ARM: 8789/1: signal: copy registers using __copy_to_user()
+      ARM: 8791/1: vfp: use __copy_to_user() when saving VFP state
+      ARM: 8792/1: oabi-compat: copy oabi events using __copy_to_user()
+      ARM: 8793/1: signal: replace __put_user_error with __put_user
+      ARM: 8794/1: uaccess: Prevent speculative use of the current addr_limit
+      ARM: 8795/1: spectre-v1.1: use put_user() for __put_user()
+      ARM: 8796/1: spectre-v1,v1.1: provide helpers for address sanitization
+      ARM: 8810/1: vfp: Fix wrong assignement to ufp_exc
+
+Marc Zyngier (9):
+      arm/arm64: KVM: Advertise SMCCC v1.1
+      arm64: KVM: Report SMCCC_ARCH_WORKAROUND_1 BP hardening support
+      firmware/psci: Expose PSCI conduit
+      firmware/psci: Expose SMCCC version through psci_ops
+      arm/arm64: smccc: Make function identifiers an unsigned quantity
+      arm/arm64: smccc: Implement SMCCC v1.1 inline primitive
+      arm/arm64: smccc: Add SMCCC-specific return codes
+      arm/arm64: smccc-1.1: Make return values unsigned long
+      arm/arm64: smccc-1.1: Handle function result as parameters
+
+Navid Emamdoost (1):
+      of: unittest: fix memory leak in unittest_data_add
+
+Petr Vorel (1):
+      alarmtimer: Change remaining ENOTSUPP to EOPNOTSUPP
+
+Robin Murphy (1):
+      ASoc: rockchip: i2s: Fix RPM imbalance
+
+Russell King (28):
+      ARM: mm: fix alignment handler faults under memory pressure
+      ARM: uaccess: remove put_user() code duplication
+      ARM: add more CPU part numbers for Cortex and Brahma B15 CPUs
+      ARM: bugs: prepare processor bug infrastructure
+      ARM: bugs: hook processor bug checking into SMP and suspend paths
+      ARM: bugs: add support for per-processor bug checking
+      ARM: spectre: add Kconfig symbol for CPUs vulnerable to Spectre
+      ARM: spectre-v2: harden branch predictor on context switches
+      ARM: spectre-v2: add Cortex A8 and A15 validation of the IBE bit
+      ARM: spectre-v2: harden user aborts in kernel space
+      ARM: spectre-v2: add firmware based hardening
+      ARM: spectre-v2: warn about incorrect context switching functions
+      ARM: spectre-v1: add speculation barrier (csdb) macros
+      ARM: spectre-v1: add array_index_mask_nospec() implementation
+      ARM: spectre-v1: fix syscall entry
+      ARM: signal: copy registers using __copy_from_user()
+      ARM: vfp: use __copy_from_user() when restoring VFP state
+      ARM: oabi-compat: copy semops using __copy_from_user()
+      ARM: use __inttype() in get_user()
+      ARM: spectre-v1: use get_user() for __get_user()
+      ARM: spectre-v1: mitigate user accesses
+      ARM: make lookup_processor_type() non-__init
+      ARM: split out processor lookup
+      ARM: clean up per-processor check_bugs method call
+      ARM: add PROC_VTABLE and PROC_TABLE macros
+      ARM: spectre-v2: per-CPU vtables to work around big.Little systems
+      ARM: ensure that processor vtables is not lost after boot
+      ARM: fix the cockup in the previous patch
+
+Seth Forshee (1):
+      kbuild: add -fcf-protection=none when using retpoline flags
+
+Tejun Heo (1):
+      net: fix sk_page_frag() recursion from memory reclaim
+
+Thomas Bogendoerfer (2):
+      scsi: sni_53c710: fix compilation error
+      scsi: fix kconfig dependency warning related to 53C700_LE_ON_BE
+
+Vladimir Murzin (1):
+      ARM: Move system register accessors to asm/cp15.h
+
+Xin Long (1):
+      vxlan: check tun_info options_len properly
+
+Yizhuo (1):
+      regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
+
+Yunfeng Ye (1):
+      perf kmem: Fix memory leak in compact_gfp_flags()
+
+zhanglin (1):
+      net: Zeroing the structure ethtool_wolinfo in ethtool_get_wol()
+
+zhangyi (F) (1):
+      fs/dcache: move security_d_instantiate() behind attaching dentry to inode
+
