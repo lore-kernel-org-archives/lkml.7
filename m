@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DEFC17444
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798D6C17443
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1042122582
+	by mail.kernel.org (Postfix) with ESMTP id 450FB22583
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1573354135;
-	bh=DP1jfNu4aHL5M50qkZNBYtOAk/jdIlmo3e5Knv60bf8=;
+	bh=kL6FU9R5156ffI4nRNa+Oy0TifVNeORlwgtnvFjve3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swsQCPwaYQu1McBp4QlIzVQawEv3z0YyjuaqklKPtOeN67XtR2IwjcC0z/Z83BtVB
-	 Xc4aFLGZMoLFVrfCA3xKFiDMmqwGmmSd/ips56WKwoXa/6iOfbCdMaSY6aVL4OzIhI
-	 vWMoPzGdrVVsNqX1AcD67gMX04yzLjUQDzXlhaIg=
+	b=EYwC/Lsi36caedxvLP2mYh087JWCStpxDMOZS2tsBrCjQrOiUIXT2V9R52XAdgz0h
+	 TYco3RM2LqDil36GPgjPAr3bqieGBY9RxkJqrHvqOgWwqlGfQZBaWDXDxV3x1X/naM
+	 bWI3DJCLI3UEKR7fOOPynIJjTlSTdv2HCgdAzKHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfKJCsu (ORCPT
+        id S1729350AbfKJCsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:48:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:48:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727452AbfKJCrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:47:20 -0500
+        id S1729327AbfKJCsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:48:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F281B2085B;
-        Sun, 10 Nov 2019 02:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 760CC22583;
+        Sun, 10 Nov 2019 02:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354039;
-        bh=DP1jfNu4aHL5M50qkZNBYtOAk/jdIlmo3e5Knv60bf8=;
+        s=default; t=1573354130;
+        bh=kL6FU9R5156ffI4nRNa+Oy0TifVNeORlwgtnvFjve3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=im9s+0uQy1f5RXtpmvLtRscHN4IjBJMlfavSrP922eyJ/rI72PXxh9D4oQvhBN8on
-         7nGobhuaN2iDrbRu1rgdfClPAJ1z0s6WO1ycjPULUogfVW4evbYDCX2iDyOiVXpFNb
-         2v6HXVKQaEeJZ7Auh6z1f1LrR6bS+vnCt8ROQs3U=
+        b=KxyDu0MZ57EF4QLeITtSXLiTVnxXkbS5qMg9N6GGhMtDYWz00eo/B1sFFooXMaxq5
+         K3+lfhG3bETRnqde4JTIIOUqPFr63hpOuig6KqVBmq4Koiqiik8AICirFCJ5Ytyw4R
+         g1mtqQLxzQjd/fDl7V/E2HqTV2YwH1CU6wDBxgXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 052/109] media: davinci: Fix implicit enum conversion warning
-Date:   Sat,  9 Nov 2019 21:44:44 -0500
-Message-Id: <20191110024541.31567-52-sashal@kernel.org>
+Cc:     Anton Vasilyev <vasilyev@ispras.ru>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/66] serial: mxs-auart: Fix potential infinite loop
+Date:   Sat,  9 Nov 2019 21:47:42 -0500
+Message-Id: <20191110024846.32598-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
-References: <20191110024541.31567-1-sashal@kernel.org>
+In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
+References: <20191110024846.32598-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,45 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Anton Vasilyev <vasilyev@ispras.ru>
 
-[ Upstream commit 4158757395b300b6eb308fc20b96d1d231484413 ]
+[ Upstream commit 5963e8a3122471cadfe0eba41c4ceaeaa5c8bb4d ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+On the error path of mxs_auart_request_gpio_irq() is performed
+backward iterating with index i of enum type. Underline enum type
+may be unsigned char. In this case check (--i >= 0) will be always
+true and error handling goes into infinite loop.
 
-drivers/media/platform/davinci/vpbe_display.c:524:24: warning: implicit
-conversion from enumeration type 'enum osd_v_exp_ratio' to different
-enumeration type 'enum osd_h_exp_ratio' [-Wenum-conversion]
-                        layer_info->h_exp = V_EXP_6_OVER_5;
-                                          ~ ^~~~~~~~~~~~~~
-1 warning generated.
+The patch changes the check so that it is valid for signed and unsigned
+types.
 
-This appears to be a copy and paste error judging from the couple of
-lines directly above this statement and the way that height is handled
-in the if block above this one.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpbe_display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/mxs-auart.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
-index 13d027031ff04..82b06cc48bd16 100644
---- a/drivers/media/platform/davinci/vpbe_display.c
-+++ b/drivers/media/platform/davinci/vpbe_display.c
-@@ -518,7 +518,7 @@ vpbe_disp_calculate_scale_factor(struct vpbe_display *disp_dev,
- 		else if (v_scale == 4)
- 			layer_info->v_zoom = ZOOM_X4;
- 		if (v_exp)
--			layer_info->h_exp = V_EXP_6_OVER_5;
-+			layer_info->v_exp = V_EXP_6_OVER_5;
- 	} else {
- 		/* no scaling, only cropping. Set display area to crop area */
- 		cfg->ysize = expected_ysize;
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 1d9d778828bae..515bf18c82943 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1635,8 +1635,9 @@ static int mxs_auart_request_gpio_irq(struct mxs_auart_port *s)
+ 
+ 	/*
+ 	 * If something went wrong, rollback.
++	 * Be careful: i may be unsigned.
+ 	 */
+-	while (err && (--i >= 0))
++	while (err && (i-- > 0))
+ 		if (irq[i] >= 0)
+ 			free_irq(irq[i], s);
+ 
 -- 
 2.20.1
 
