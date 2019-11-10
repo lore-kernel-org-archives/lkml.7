@@ -2,85 +2,192 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC24C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C94C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0372085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FAC2085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfKJCAr (ORCPT
+        id S1726738AbfKJCCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:00:47 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23928 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbfKJCAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:00:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Nov 2019 18:00:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,286,1569308400"; 
-   d="scan'208";a="197296366"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 09 Nov 2019 18:00:44 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iTcWy-000AP2-8Q; Sun, 10 Nov 2019 10:00:44 +0800
-Date:   Sun, 10 Nov 2019 09:59:56 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
-Message-ID: <201911100903.YIxR3HeI%lkp@intel.com>
-References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
+        Sat, 9 Nov 2019 21:02:15 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:43019 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726537AbfKJCCP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:02:15 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0ThbLYBI_1573351320;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0ThbLYBI_1573351320)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 10 Nov 2019 10:02:09 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     davem@davemloft.net
+Cc:     zhiche.yy@alibaba-inc.com, xlpang@linux.alibaba.com,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Kevin Athey <kda@google.com>,
+        Xiaotian Pei <xiaotian@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: core: fix unbalanced qdisc_run_begin/qdisc_run_end
+Date:   Sun, 10 Nov 2019 10:01:49 +0800
+Message-Id: <20191110020149.65307-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wanpeng,
+3598 static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+3599                                  struct net_device *dev,
+3600                                  struct netdev_queue *txq)
+3601 {
+...
+3650         } else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
+3651                    qdisc_run_begin(q)) {
 
-I love your patch! Perhaps something to improve:
+---> Those multiple *and conditions* in this if statement are not
+     necessarily executed sequentially. If the qdisc_run_begin(q)
+     statement is executed first and the other conditions are not
+     satisfied, qdisc_run_end will have no chance to be executed,
+     and the lowest bit of q->running will always be 1.
+     This may lead to a softlockup:
+     https://bugzilla.kernel.org/show_bug.cgi?id=205427
+...
+3657
+3658                 qdisc_bstats_update(q, skb);
+...
+3661                         if (unlikely(contended)) {
+3662                                 spin_unlock(&q->busylock);
+3663                                 contended = false;
+3664                         }
+3665                         __qdisc_run(q);
+3666                 }
+3667
+3668                 qdisc_run_end(q);
+3669                 rc = NET_XMIT_SUCCESS;
+3670         }
+...
 
-[auto build test WARNING on kvm/linux-next]
-[also build test WARNING on v5.4-rc6 next-20191108]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Wanpeng-Li/KVM-X86-Single-target-IPI-fastpath/20191110-081303
-base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> arch/x86/kvm/vmx/vmx.c:6509:3-4: Unneeded semicolon
-   arch/x86/kvm/vmx/vmx.c:6510:2-3: Unneeded semicolon
-
-Please review and possibly fold the followup patch.
-
+We ensure the correct execution order by explicitly
+specifying those dependencies.
+Fixes: edb09eb17ed8 ("net: sched: do not acquire qdisc spinlock in qdisc/class stats dump")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Kevin Athey <kda@google.com>
+Cc: Xiaotian Pei <xiaotian@google.com>
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ net/core/dev.c | 63 ++++++++++++++++++++++++++++++----------------------------
+ 1 file changed, 33 insertions(+), 30 deletions(-)
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 20c7a67..d2690ee 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3602,27 +3602,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+ 	spinlock_t *root_lock = qdisc_lock(q);
+ 	struct sk_buff *to_free = NULL;
+ 	bool contended;
+-	int rc;
++	int rc = NET_XMIT_SUCCESS;
+ 
+ 	qdisc_calculate_pkt_len(skb, q);
+ 
+ 	if (q->flags & TCQ_F_NOLOCK) {
+-		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty &&
+-		    qdisc_run_begin(q)) {
+-			if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
+-					      &q->state))) {
+-				__qdisc_drop(skb, &to_free);
+-				rc = NET_XMIT_DROP;
+-				goto end_run;
+-			}
+-			qdisc_bstats_cpu_update(q, skb);
++		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty) {
++			if (qdisc_run_begin(q)) {
++				if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
++						      &q->state))) {
++					__qdisc_drop(skb, &to_free);
++					rc = NET_XMIT_DROP;
++					goto end_run;
++				}
++				qdisc_bstats_cpu_update(q, skb);
+ 
+-			rc = NET_XMIT_SUCCESS;
+-			if (sch_direct_xmit(skb, q, dev, txq, NULL, true))
+-				__qdisc_run(q);
++				if (sch_direct_xmit(skb, q, dev, txq, NULL,
++						    true))
++					__qdisc_run(q);
+ 
+ end_run:
+-			qdisc_run_end(q);
++				qdisc_run_end(q);
++			}
+ 		} else {
+ 			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+ 			qdisc_run(q);
+@@ -3647,26 +3648,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+ 	if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
+ 		__qdisc_drop(skb, &to_free);
+ 		rc = NET_XMIT_DROP;
+-	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
+-		   qdisc_run_begin(q)) {
+-		/*
+-		 * This is a work-conserving queue; there are no old skbs
+-		 * waiting to be sent out; and the qdisc is not running -
+-		 * xmit the skb directly.
+-		 */
++	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q)) {
++		if (qdisc_run_begin(q)) {
++			/* This is a work-conserving queue;
++			 * there are no old skbs waiting to be sent out;
++			 * and the qdisc is not running -
++			 * xmit the skb directly.
++			 */
+ 
+-		qdisc_bstats_update(q, skb);
++			qdisc_bstats_update(q, skb);
+ 
+-		if (sch_direct_xmit(skb, q, dev, txq, root_lock, true)) {
+-			if (unlikely(contended)) {
+-				spin_unlock(&q->busylock);
+-				contended = false;
++			if (sch_direct_xmit(skb, q, dev, txq, root_lock,
++					    true)) {
++				if (unlikely(contended)) {
++					spin_unlock(&q->busylock);
++					contended = false;
++				}
++				__qdisc_run(q);
+ 			}
+-			__qdisc_run(q);
+-		}
+ 
+-		qdisc_run_end(q);
+-		rc = NET_XMIT_SUCCESS;
++			qdisc_run_end(q);
++			rc = NET_XMIT_SUCCESS;
++		}
+ 	} else {
+ 		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+ 		if (qdisc_run_begin(q)) {
+-- 
+1.8.3.1
+
