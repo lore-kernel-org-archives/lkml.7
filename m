@@ -2,102 +2,155 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE7C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69BFC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378D120842
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F042077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVmU9oeM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0LpdoVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfKJR43 (ORCPT
+        id S1726965AbfKJSAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 12:56:29 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35909 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbfKJR42 (ORCPT
+        Sun, 10 Nov 2019 13:00:19 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53740 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726800AbfKJSAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 12:56:28 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k13so7748245pgh.3
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 09:56:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=PtqYt1fGL7WFdKH+RvL3PePfXJx2mou2pQEcrG9jbZU=;
-        b=eVmU9oeMjmQDjIG/u141aHB4siTpgnOngq2Vm7FyIX5/WuPm6g8wB7QIkf6tc8DFZe
-         TaZN211+gXNsTlie89ha1k3T7BEvzB5lOtuOoyDyISrPE/wyOPU3vKxPZoq7QVVTcsQG
-         bbvVZtDkfVGV5GI76doDZTkUyYZoXgkIzs6R/+nHgc1LxIuKuHHwnG+lnuNyQPV1YtqU
-         fmt4wtEWVthRJYtyvnbxaGzBPTMl4QDwd7L0JuqVHKuN4zavs3K0ZmTUaXPMn8hV/rHB
-         TFnWY5PtwWQZRD9ulOPkIKIOzylqEoDf7q+YDkbfHt3PZTU2oHZq5tIqu8oPiMnHePcy
-         7F0w==
+        Sun, 10 Nov 2019 13:00:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573408817;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Hixz/IzNhB0JpEt6Ya+nzMEp0JX0n9HHRljmP2H+u7k=;
+        b=D0LpdoVmmNrPKpfZoR/SlXNnE1+S9dMHjULcfWQ96A+BwAirOWXABHgDyDVUmyqZ/UnhFz
+        LOQndWPDiwTZsnycNdkpEYdcZjZnfEv5tuZ24kDoaaKP6iaL2KrWEQomQouXUO/ZKXsfmX
+        fGCLF6jODld2OeBHgYGT/e4y+vIcwZ0=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-jlxO3uNUNXaIlyT9tSvhCw-1; Sun, 10 Nov 2019 13:00:13 -0500
+Received: by mail-pl1-f199.google.com with SMTP id a11so8880186plp.21
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 10:00:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=PtqYt1fGL7WFdKH+RvL3PePfXJx2mou2pQEcrG9jbZU=;
-        b=jXBGCaKUBfDz/S2RrUTQR+LPocNX8CtML70RjwbiHvFtBP9ZqQqf7xrD0UtS8GT7wI
-         tjb47qsX9J9Jwn7mmXYr4XUz6pzFcPjh6Nd0h2k637R/Nbl2yPjVF7WOz07ScJxZjlI6
-         xdokt9VI1ACrBqdBIyiSaef2Emy/xrgMUvAzaiwDT8VYCGIModsyV1DO4CdIBTr7yST6
-         mvLbBvLuD7U4ssCRFJZ7pnY3yMLGX4DaRTo+A81tyWQC53+SkPZtAqAmy7o9Q+DaNNIk
-         aY+CDMVUKWb+MmgNwqLtLmHcr7erADzY192Tr+wpMAdV0LIYj5VL/eoUW2/hMSFowUdh
-         oAmw==
-X-Gm-Message-State: APjAAAXjCUuO5q0imM8DtuGGHaeu+njqyg187SNgdStppnd7bnVeBSdh
-        M6Dy/Er5FKhV8+vX09/A9uvRi0FV
-X-Google-Smtp-Source: APXvYqxcsOvCIMeB2vwv7Hk4q37bewW4KNu4hwZ+1YEdJWYKPnUYyheC3m5dhgqu8IxOz6admeV8xw==
-X-Received: by 2002:a63:5b1d:: with SMTP id p29mr24023814pgb.209.1573408588139;
-        Sun, 10 Nov 2019 09:56:28 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z14sm15104414pfq.66.2019.11.10.09.56.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 10 Nov 2019 09:56:27 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH] staging/octeon: Fix test build on MIPS
-Date:   Sun, 10 Nov 2019 09:56:20 -0800
-Message-Id: <20191110175620.20290-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=Um2+4ViHEGLtX+G0u5WhQV8LmjxfVLK7h3RGaAChVEk=;
+        b=fi8HqtVwUXpvCFHIgOWQGuwWTG+H/M315QkSkCbORra+M17uNxoJ/C9UrLvwIMtFY3
+         aJclJ/zHIPED10h/oo9KWDXa03Sh2wNUFLvn9Pgj0mLf4eKpHn9ByZE+z1msHqGmXu9E
+         XzO0m7MH2u6ULO9qrXyG6fgULHBJU6EbXCbP4fdd9K/+x6Zbp4iSxc7Q5EhQUx8qp9X9
+         80V9dwCwjq7bpixXLay4j0OubYLcSZCxITuohWqwaTnzcWtMscueFbMJ+B2oco7jxizc
+         RHn1cPDN3QLxdzyqlRle/chIIZjU5I4fswIhEaJUXysXeFASPRq6VVI3G8ehAE64zTL4
+         STHg==
+X-Gm-Message-State: APjAAAWGLlxEmIfNyO6SOfLh2XJjmojz2tQm2m1UzGcealmOo07lNLXY
+        j8eGXgs2dSuWsms33zeFO98KNbdc+7KNcAQFL/yYVPOh5XCP3AuQEnRoqdNoXC+M16lj0XDkV+C
+        Ib77c/9b5XCfq0S4JmyG3okVn
+X-Received: by 2002:a17:902:b20b:: with SMTP id t11mr22199287plr.211.1573408812856;
+        Sun, 10 Nov 2019 10:00:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyfWm4OglYklA+A7wQRUWJBtP0mHnD6YYVjbFQFg9Q6GxMN0YxEL0MKIhZn8HxYbk8Q0luQ3A==
+X-Received: by 2002:a17:902:b20b:: with SMTP id t11mr22199248plr.211.1573408812514;
+        Sun, 10 Nov 2019 10:00:12 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id 27sm12289493pgx.23.2019.11.10.10.00.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Nov 2019 10:00:11 -0800 (PST)
+Date:   Sun, 10 Nov 2019 11:00:10 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     amirmizi6@gmail.comg, Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
+        amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v1 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
+Message-ID: <20191110180010.xyvv4gf6jiqyrac3@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: amirmizi6@gmail.comg,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>, Eyal.Cohen@nuvoton.com,
+        jarkko.sakkinen@linux.intel.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
+        amir.mizinski@nuvoton.com
+References: <20191110162137.230913-1-amirmizi6@gmail.com>
+ <20191110162137.230913-4-amirmizi6@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <20191110162137.230913-4-amirmizi6@gmail.com>
+X-MC-Unique: jlxO3uNUNXaIlyT9tSvhCw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mips:allmodconfig fails to build.
+On Sun Nov 10 19, amirmizi6@gmail.com wrote:
+>From: Amir Mizinski <amirmizi6@gmail.com>
+>
+>using this function while read/write data resulted in aborted operation.
+>after investigating according to TCG TPM Profile (PTP) Specifications,
+>i found cancel should happen only if TPM_STS.commandReady bit is lit
+>and couldn't find a case when the current condition is valid.
+>also only cmdReady bit need to be compared instead of the full lower statu=
+s register byte.
+>
+>Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+>---
+> drivers/char/tpm/tpm_tis_core.c | 12 +-----------
+> 1 file changed, 1 insertion(+), 11 deletions(-)
+>
+>diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_co=
+re.c
+>index ce7f8a1..9016f06 100644
+>--- a/drivers/char/tpm/tpm_tis_core.c
+>+++ b/drivers/char/tpm/tpm_tis_core.c
+>@@ -627,17 +627,7 @@ static int probe_itpm(struct tpm_chip *chip)
+>
+> static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
+> {
+>-=09struct tpm_tis_data *priv =3D dev_get_drvdata(&chip->dev);
+>-
+>-=09switch (priv->manufacturer_id) {
+>-=09case TPM_VID_WINBOND:
+>-=09=09return ((status =3D=3D TPM_STS_VALID) ||
+>-=09=09=09(status =3D=3D (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
+>-=09case TPM_VID_STM:
+>-=09=09return (status =3D=3D (TPM_STS_VALID | TPM_STS_COMMAND_READY));
 
-drivers/staging/octeon/ethernet-rx.c: In function 'cvm_oct_poll':
-drivers/staging/octeon/ethernet-defines.h:30:38: error:
-	'CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE' undeclared
+Stefan were these cases you found that were deviating from the spec? Wonder=
+ing
+if dropping these will cause issues for these devices.
 
-Octeon defines are only available if CONFIG_CPU_CAVIUM_OCTEON
-is enabled. Since the driver uses those defines, we have to use
-the dummy defines if this flag is not enabled.
-
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Fixes: 171a9bae68c7 ("staging/octeon: Allow test build on !MIPS")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/staging/octeon/octeon-ethernet.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/octeon/octeon-ethernet.h b/drivers/staging/octeon/octeon-ethernet.h
-index a8a864b40913..70848c6c86ec 100644
---- a/drivers/staging/octeon/octeon-ethernet.h
-+++ b/drivers/staging/octeon/octeon-ethernet.h
-@@ -14,7 +14,7 @@
- #include <linux/of.h>
- #include <linux/phy.h>
- 
--#ifdef CONFIG_MIPS
-+#ifdef CONFIG_CPU_CAVIUM_OCTEON
- 
- #include <asm/octeon/octeon.h>
- 
--- 
-2.17.1
+>-=09default:
+>-=09=09return (status =3D=3D TPM_STS_COMMAND_READY);
+>-=09}
+>+=09return ((status & TPM_STS_COMMAND_READY) =3D=3D TPM_STS_COMMAND_READY)=
+;
+> }
+>
+> static irqreturn_t tis_int_handler(int dummy, void *dev_id)
+>--=20
+>2.7.4
+>
 
