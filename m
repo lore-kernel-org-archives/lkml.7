@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529B1C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B2CC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6B721848
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F376721924
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355552;
-	bh=462SlDLPYOjKpbBMqwLyNlPFzdHH8Ky0vEUzOdx8woE=;
+	s=default; t=1573355558;
+	bh=QBninmn1N0bnodZPUNG5LFWIH1SXzGqrLbKpZ9NwMJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O38TcAYfyeozn22Rt1heGb3hYh9w4ewwfLbC6Jmlosh2CEw5Y5dllQGmZ+a/n5o+2
-	 L7G6NIBpUGcCxyrwbvtTB9IFTak5mR2ZSMefOMVCKIMvSUAtv6JDQp8TgaoGSaSwnW
-	 wDlJ4gB4buEtbJtd/xKuh6Ev/gn4tgdhFUHmNfcM=
+	b=FhnYzK1oMWsiYRlGay/Mg83/3TqKqcewCazKBfcoXYNMXCu3dOjOkx4ke3KBg0/yP
+	 H3phnh+WQvHx4thx25ZOjd2BqvgOGhq2EWINQRnfzEsEwO3339Rt+ntBUIBpK626g5
+	 TWCmHSBxz0g4Nk1cF63seLuwaXAYzcK9pb2Mqz3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfKJDMb (ORCPT
+        id S1728228AbfKJCnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:12:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40952 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:43:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbfKJCnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:17 -0500
+        id S1728191AbfKJCnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B05B222C4;
-        Sun, 10 Nov 2019 02:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6CEB21D82;
+        Sun, 10 Nov 2019 02:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353796;
-        bh=462SlDLPYOjKpbBMqwLyNlPFzdHH8Ky0vEUzOdx8woE=;
+        s=default; t=1573353790;
+        bh=QBninmn1N0bnodZPUNG5LFWIH1SXzGqrLbKpZ9NwMJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JYdv/CipkzOtgFP3mRD8WZ8iB99+eaFFKzRCoK01n1+mJh1xUtoNxIiJ8Wcsba0/3
-         e3ozWvNddo1cCH7sjBCxToAobOHe3GRJHoYG6ge+o5NwQ0c5JqzyY/kSgMhXTBhz9U
-         kB4ddpflrMughw5EBbiEIhN4SIzAu9b0db7FcGow=
+        b=r9AygsUkmvWFQPwintV9fYBXWmrhYceVdTxHoAUj0FHfLH/pk5gvGiEBvO9hhU65U
+         KkFU4qsamBWzxYF8TIHGZGfmdjXjrY1BfnO/dWX4VDjh6GFKr2aSyNGZYmTQ1yyH/U
+         uO9DjAEaqngPmJJUmD15a3NbU6Mrgexch7I7kHIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 095/191] media: davinci: Fix implicit enum conversion warning
-Date:   Sat,  9 Nov 2019 21:38:37 -0500
-Message-Id: <20191110024013.29782-95-sashal@kernel.org>
+Cc:     Petr Machata <petrm@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 091/191] mlxsw: Make MLXSW_SP1_FWREV_MINOR a hard requirement
+Date:   Sat,  9 Nov 2019 21:38:33 -0500
+Message-Id: <20191110024013.29782-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -62,45 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 4158757395b300b6eb308fc20b96d1d231484413 ]
+[ Upstream commit 12ba7e1045521ec9f251c93ae0a6735cc3f42337 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+Up until now, mlxsw tolerated firmware versions that weren't exactly
+matching the required version, if the branch number matched. That
+allowed the users to test various firmware versions as long as they were
+on the right branch.
 
-drivers/media/platform/davinci/vpbe_display.c:524:24: warning: implicit
-conversion from enumeration type 'enum osd_v_exp_ratio' to different
-enumeration type 'enum osd_h_exp_ratio' [-Wenum-conversion]
-                        layer_info->h_exp = V_EXP_6_OVER_5;
-                                          ~ ^~~~~~~~~~~~~~
-1 warning generated.
+On the other hand, it made it impossible for mlxsw to put a hard lower
+bound on a version that fixes all problems known to date. If a user had
+a somewhat older FW version installed, mlxsw would start up just fine,
+possibly performing non-optimally as it would use features that trigger
+problematic behavior.
 
-This appears to be a copy and paste error judging from the couple of
-lines directly above this statement and the way that height is handled
-in the if block above this one.
+Therefore tweak the check to accept any FW version that is:
 
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+- on the same branch as the preferred version, and
+- the same as or newer than the preferred version.
+
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpbe_display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
-index b0eb3d899eb44..6f82693524331 100644
---- a/drivers/media/platform/davinci/vpbe_display.c
-+++ b/drivers/media/platform/davinci/vpbe_display.c
-@@ -521,7 +521,7 @@ vpbe_disp_calculate_scale_factor(struct vpbe_display *disp_dev,
- 		else if (v_scale == 4)
- 			layer_info->v_zoom = ZOOM_X4;
- 		if (v_exp)
--			layer_info->h_exp = V_EXP_6_OVER_5;
-+			layer_info->v_exp = V_EXP_6_OVER_5;
- 	} else {
- 		/* no scaling, only cropping. Set display area to crop area */
- 		cfg->ysize = expected_ysize;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 1c170a0fd2cc9..e498ee95bacab 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -336,7 +336,10 @@ static int mlxsw_sp_fw_rev_validate(struct mlxsw_sp *mlxsw_sp)
+ 		return -EINVAL;
+ 	}
+ 	if (MLXSW_SP_FWREV_MINOR_TO_BRANCH(rev->minor) ==
+-	    MLXSW_SP_FWREV_MINOR_TO_BRANCH(req_rev->minor))
++	    MLXSW_SP_FWREV_MINOR_TO_BRANCH(req_rev->minor) &&
++	    (rev->minor > req_rev->minor ||
++	     (rev->minor == req_rev->minor &&
++	      rev->subminor >= req_rev->subminor)))
+ 		return 0;
+ 
+ 	dev_info(mlxsw_sp->bus_info->dev, "The firmware version %d.%d.%d is incompatible with the driver\n",
 -- 
 2.20.1
 
