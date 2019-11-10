@@ -2,192 +2,239 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C94C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC64C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60FAC2085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C0F21655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573353619;
+	bh=qb2GIUFEwa4pCictKGureubfmT4D4gr9I87skM+8uVM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ntguTG3wHwqGCstxMC+FzVyOzawEZqvq5YKsi/Z/15R1zCcJnA+Ih+WLO5t7QCYkr
+	 faPhyqrq5okvLQNqO8bqP9lpbAOCVMPzIW5pgHZBAscmwkuSfke/Pil3STaBzQmMq4
+	 qpwaXozcTgIO9dP8OULsC2ayzN/4kEEgj/kSWcD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfKJCCP (ORCPT
+        id S1726612AbfKJCkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:02:15 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:43019 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726537AbfKJCCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:02:15 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0ThbLYBI_1573351320;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0ThbLYBI_1573351320)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 10 Nov 2019 10:02:09 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     davem@davemloft.net
-Cc:     zhiche.yy@alibaba-inc.com, xlpang@linux.alibaba.com,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Kevin Athey <kda@google.com>,
-        Xiaotian Pei <xiaotian@google.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: core: fix unbalanced qdisc_run_begin/qdisc_run_end
-Date:   Sun, 10 Nov 2019 10:01:49 +0800
-Message-Id: <20191110020149.65307-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Sat, 9 Nov 2019 21:40:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbfKJCkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:16 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E3B721019;
+        Sun, 10 Nov 2019 02:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573353615;
+        bh=qb2GIUFEwa4pCictKGureubfmT4D4gr9I87skM+8uVM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tx4jZw2wzmSPL3zQb2HjD/XC6qUjh5bJp3GfTd4PzVX0nZKaeX4NXAu/KDFJRdrhK
+         VrpC0iB8tLKZ75MMom4g/2FtRGwI/QLNgkeS31y87tHvkWYseOyJPwmfYYkZUh060i
+         M6KQ3jGeFX4HQZAL9jx6v76Eswix+vVorDxPjlkY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 001/191] s390/qeth: uninstall IRQ handler on device removal
+Date:   Sat,  9 Nov 2019 21:37:03 -0500
+Message-Id: <20191110024013.29782-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3598 static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
-3599                                  struct net_device *dev,
-3600                                  struct netdev_queue *txq)
-3601 {
-...
-3650         } else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
-3651                    qdisc_run_begin(q)) {
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
----> Those multiple *and conditions* in this if statement are not
-     necessarily executed sequentially. If the qdisc_run_begin(q)
-     statement is executed first and the other conditions are not
-     satisfied, qdisc_run_end will have no chance to be executed,
-     and the lowest bit of q->running will always be 1.
-     This may lead to a softlockup:
-     https://bugzilla.kernel.org/show_bug.cgi?id=205427
-...
-3657
-3658                 qdisc_bstats_update(q, skb);
-...
-3661                         if (unlikely(contended)) {
-3662                                 spin_unlock(&q->busylock);
-3663                                 contended = false;
-3664                         }
-3665                         __qdisc_run(q);
-3666                 }
-3667
-3668                 qdisc_run_end(q);
-3669                 rc = NET_XMIT_SUCCESS;
-3670         }
-...
+[ Upstream commit 121ca39aa5585def682a2c8592983442438b84dc ]
 
-We ensure the correct execution order by explicitly
-specifying those dependencies.
-Fixes: edb09eb17ed8 ("net: sched: do not acquire qdisc spinlock in qdisc/class stats dump")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Kevin Athey <kda@google.com>
-Cc: Xiaotian Pei <xiaotian@google.com>
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+When setting up, qeth installs its IRQ handler on the ccw devices. But
+the IRQ handler is not cleared on removal - so even after qeth yields
+control of the ccw devices, spurious interrupts would still be presented
+to us.
+
+Make (de-)installation of the IRQ handler part of the ccw channel
+setup/removal helpers, and while at it also add the appropriate locking.
+Shift around qeth_setup_channel() to avoid a forward declaration for
+qeth_irq().
+
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 63 ++++++++++++++++++++++++++++++----------------------------
- 1 file changed, 33 insertions(+), 30 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 102 ++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 48 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 20c7a67..d2690ee 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3602,27 +3602,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
- 	spinlock_t *root_lock = qdisc_lock(q);
- 	struct sk_buff *to_free = NULL;
- 	bool contended;
--	int rc;
-+	int rc = NET_XMIT_SUCCESS;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 461afc276db72..81e2c591acb0b 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -901,44 +901,6 @@ static void qeth_send_control_data_cb(struct qeth_channel *channel,
+ 	qeth_release_buffer(channel, iob);
+ }
  
- 	qdisc_calculate_pkt_len(skb, q);
+-static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
+-{
+-	int cnt;
+-
+-	QETH_DBF_TEXT(SETUP, 2, "setupch");
+-
+-	channel->ccw = kmalloc(sizeof(struct ccw1), GFP_KERNEL | GFP_DMA);
+-	if (!channel->ccw)
+-		return -ENOMEM;
+-	channel->state = CH_STATE_DOWN;
+-	atomic_set(&channel->irq_pending, 0);
+-	init_waitqueue_head(&channel->wait_q);
+-
+-	if (!alloc_buffers)
+-		return 0;
+-
+-	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++) {
+-		channel->iob[cnt].data =
+-			kzalloc(QETH_BUFSIZE, GFP_DMA|GFP_KERNEL);
+-		if (channel->iob[cnt].data == NULL)
+-			break;
+-		channel->iob[cnt].state = BUF_STATE_FREE;
+-		channel->iob[cnt].channel = channel;
+-		channel->iob[cnt].callback = qeth_send_control_data_cb;
+-		channel->iob[cnt].rc = 0;
+-	}
+-	if (cnt < QETH_CMD_BUFFER_NO) {
+-		kfree(channel->ccw);
+-		while (cnt-- > 0)
+-			kfree(channel->iob[cnt].data);
+-		return -ENOMEM;
+-	}
+-	channel->io_buf_no = 0;
+-	spin_lock_init(&channel->iob_lock);
+-
+-	return 0;
+-}
+-
+ static int qeth_set_thread_start_bit(struct qeth_card *card,
+ 		unsigned long thread)
+ {
+@@ -1339,14 +1301,61 @@ static void qeth_free_buffer_pool(struct qeth_card *card)
  
- 	if (q->flags & TCQ_F_NOLOCK) {
--		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty &&
--		    qdisc_run_begin(q)) {
--			if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
--					      &q->state))) {
--				__qdisc_drop(skb, &to_free);
--				rc = NET_XMIT_DROP;
--				goto end_run;
--			}
--			qdisc_bstats_cpu_update(q, skb);
-+		if ((q->flags & TCQ_F_CAN_BYPASS) && q->empty) {
-+			if (qdisc_run_begin(q)) {
-+				if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
-+						      &q->state))) {
-+					__qdisc_drop(skb, &to_free);
-+					rc = NET_XMIT_DROP;
-+					goto end_run;
-+				}
-+				qdisc_bstats_cpu_update(q, skb);
+ static void qeth_clean_channel(struct qeth_channel *channel)
+ {
++	struct ccw_device *cdev = channel->ccwdev;
+ 	int cnt;
  
--			rc = NET_XMIT_SUCCESS;
--			if (sch_direct_xmit(skb, q, dev, txq, NULL, true))
--				__qdisc_run(q);
-+				if (sch_direct_xmit(skb, q, dev, txq, NULL,
-+						    true))
-+					__qdisc_run(q);
+ 	QETH_DBF_TEXT(SETUP, 2, "freech");
++
++	spin_lock_irq(get_ccwdev_lock(cdev));
++	cdev->handler = NULL;
++	spin_unlock_irq(get_ccwdev_lock(cdev));
++
+ 	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++)
+ 		kfree(channel->iob[cnt].data);
+ 	kfree(channel->ccw);
+ }
  
- end_run:
--			qdisc_run_end(q);
-+				qdisc_run_end(q);
-+			}
- 		} else {
- 			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
- 			qdisc_run(q);
-@@ -3647,26 +3648,28 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
- 	if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
- 		__qdisc_drop(skb, &to_free);
- 		rc = NET_XMIT_DROP;
--	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q) &&
--		   qdisc_run_begin(q)) {
--		/*
--		 * This is a work-conserving queue; there are no old skbs
--		 * waiting to be sent out; and the qdisc is not running -
--		 * xmit the skb directly.
--		 */
-+	} else if ((q->flags & TCQ_F_CAN_BYPASS) && !qdisc_qlen(q)) {
-+		if (qdisc_run_begin(q)) {
-+			/* This is a work-conserving queue;
-+			 * there are no old skbs waiting to be sent out;
-+			 * and the qdisc is not running -
-+			 * xmit the skb directly.
-+			 */
++static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
++{
++	struct ccw_device *cdev = channel->ccwdev;
++	int cnt;
++
++	QETH_DBF_TEXT(SETUP, 2, "setupch");
++
++	channel->ccw = kmalloc(sizeof(struct ccw1), GFP_KERNEL | GFP_DMA);
++	if (!channel->ccw)
++		return -ENOMEM;
++	channel->state = CH_STATE_DOWN;
++	atomic_set(&channel->irq_pending, 0);
++	init_waitqueue_head(&channel->wait_q);
++
++	spin_lock_irq(get_ccwdev_lock(cdev));
++	cdev->handler = qeth_irq;
++	spin_unlock_irq(get_ccwdev_lock(cdev));
++
++	if (!alloc_buffers)
++		return 0;
++
++	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++) {
++		channel->iob[cnt].data =
++			kzalloc(QETH_BUFSIZE, GFP_DMA|GFP_KERNEL);
++		if (channel->iob[cnt].data == NULL)
++			break;
++		channel->iob[cnt].state = BUF_STATE_FREE;
++		channel->iob[cnt].channel = channel;
++		channel->iob[cnt].callback = qeth_send_control_data_cb;
++		channel->iob[cnt].rc = 0;
++	}
++	if (cnt < QETH_CMD_BUFFER_NO) {
++		qeth_clean_channel(channel);
++		return -ENOMEM;
++	}
++	channel->io_buf_no = 0;
++	spin_lock_init(&channel->iob_lock);
++
++	return 0;
++}
++
+ static void qeth_set_single_write_queues(struct qeth_card *card)
+ {
+ 	if ((atomic_read(&card->qdio.state) != QETH_QDIO_UNINITIALIZED) &&
+@@ -1498,7 +1507,7 @@ static void qeth_core_sl_print(struct seq_file *m, struct service_level *slr)
+ 			CARD_BUS_ID(card), card->info.mcl_level);
+ }
  
--		qdisc_bstats_update(q, skb);
-+			qdisc_bstats_update(q, skb);
+-static struct qeth_card *qeth_alloc_card(void)
++static struct qeth_card *qeth_alloc_card(struct ccwgroup_device *gdev)
+ {
+ 	struct qeth_card *card;
  
--		if (sch_direct_xmit(skb, q, dev, txq, root_lock, true)) {
--			if (unlikely(contended)) {
--				spin_unlock(&q->busylock);
--				contended = false;
-+			if (sch_direct_xmit(skb, q, dev, txq, root_lock,
-+					    true)) {
-+				if (unlikely(contended)) {
-+					spin_unlock(&q->busylock);
-+					contended = false;
-+				}
-+				__qdisc_run(q);
- 			}
--			__qdisc_run(q);
--		}
+@@ -1507,6 +1516,11 @@ static struct qeth_card *qeth_alloc_card(void)
+ 	if (!card)
+ 		goto out;
+ 	QETH_DBF_HEX(SETUP, 2, &card, sizeof(void *));
++
++	card->gdev = gdev;
++	CARD_RDEV(card) = gdev->cdev[0];
++	CARD_WDEV(card) = gdev->cdev[1];
++	CARD_DDEV(card) = gdev->cdev[2];
+ 	if (qeth_setup_channel(&card->read, true))
+ 		goto out_ip;
+ 	if (qeth_setup_channel(&card->write, true))
+@@ -5745,7 +5759,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
  
--		qdisc_run_end(q);
--		rc = NET_XMIT_SUCCESS;
-+			qdisc_run_end(q);
-+			rc = NET_XMIT_SUCCESS;
-+		}
- 	} else {
- 		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
- 		if (qdisc_run_begin(q)) {
+ 	QETH_DBF_TEXT_(SETUP, 2, "%s", dev_name(&gdev->dev));
+ 
+-	card = qeth_alloc_card();
++	card = qeth_alloc_card(gdev);
+ 	if (!card) {
+ 		QETH_DBF_TEXT_(SETUP, 2, "1err%d", -ENOMEM);
+ 		rc = -ENOMEM;
+@@ -5761,15 +5775,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
+ 			goto err_card;
+ 	}
+ 
+-	card->read.ccwdev  = gdev->cdev[0];
+-	card->write.ccwdev = gdev->cdev[1];
+-	card->data.ccwdev  = gdev->cdev[2];
+ 	dev_set_drvdata(&gdev->dev, card);
+-	card->gdev = gdev;
+-	gdev->cdev[0]->handler = qeth_irq;
+-	gdev->cdev[1]->handler = qeth_irq;
+-	gdev->cdev[2]->handler = qeth_irq;
+-
+ 	qeth_setup_card(card);
+ 	rc = qeth_update_from_chp_desc(card);
+ 	if (rc)
 -- 
-1.8.3.1
+2.20.1
 
