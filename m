@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D119C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72924C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5E621D7B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA1B21882
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353723;
-	bh=UcedAKmJKOMClQiJe28VF5OGfa6QxtsLch4F49QvOxk=;
+	s=default; t=1573353727;
+	bh=A8kyb2hX5fNoWsEQow3qiFHYpIqrMrW8S0UxFL6m/bM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXWyS6+Qgy1xReBDkSdVX6kPlapIo44QCHlAo/JOQpViHP+10QiOm2tocdlwPk+Dj
-	 C9KQkeSysJRhrYI60nwdAJWwOr0NbfZeW6b8+4V9c+LTWT3yDon2VQWn+BzYHXGwYy
-	 BgG2O0mDstoNoiCNfLk5BG5CQkXhA1cKI3ihWQGQ=
+	b=ZE2UekvtjkuhquNwCpWgCVfi3GS33O0hdiXRJsHeLjtisedBDkSK981wm2KqiiEhQ
+	 HVKMzZOue7CHe211f0843GrY+9FjVjx+f5IDJ+HveIZ0W1e+qJ2axxPtDiO7QsN+yD
+	 dfF8XhDkGUjdEarRink1bbj7w+nRNSh//UZO+7HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfKJCmB (ORCPT
+        id S1727728AbfKJCmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36936 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:42:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfKJCl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:56 -0500
+        id S1727640AbfKJCl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19742214E0;
-        Sun, 10 Nov 2019 02:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C04621882;
+        Sun, 10 Nov 2019 02:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353715;
-        bh=UcedAKmJKOMClQiJe28VF5OGfa6QxtsLch4F49QvOxk=;
+        s=default; t=1573353719;
+        bh=A8kyb2hX5fNoWsEQow3qiFHYpIqrMrW8S0UxFL6m/bM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHudNbIz1OuZMo5SlwvBlnptuYOwG/supxD/zKadvyaiJJvVj9Qd/e8ctRx+iP6Qb
-         VYz550OpVho+2666j8mYteE+hAeWxWA7N9A/tPfbFP73HZJeg1/Ura1ZT1eYW+qbue
-         VAn0yJdZNC+6ZEMhElOOUR5ZeiKla3koxagRY1I8=
+        b=quwiUm4nH1gK1st+dkfEyD50Mvgdt1rIEHldNFlRy4mojtr8wM6xICxHy+3hdMd8a
+         j59Gpxbp64VXVSNV0qrwtqXQxGwv4l9lw4R4pzg0bL0TpoKKlDs9rp3DQEzt4FEQ0G
+         25VPvj05S77OGXoqnT02b9odXTBM+4V587PBvvqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian Shen <shenjian15@huawei.com>, Peng Li <lipeng321@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 050/191] net: hns3: Fix parameter type for q_id in hclge_tm_q_to_qs_map_cfg()
-Date:   Sat,  9 Nov 2019 21:37:52 -0500
-Message-Id: <20191110024013.29782-50-sashal@kernel.org>
+Cc:     Nicolas Adell <nicolas.adell@actia.fr>,
+        Peter Chen <peter.chen@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 052/191] usb: chipidea: imx: enable OTG overcurrent in case USB subsystem is already started
+Date:   Sat,  9 Nov 2019 21:37:54 -0500
+Message-Id: <20191110024013.29782-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,40 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Nicolas Adell <nicolas.adell@actia.fr>
 
-[ Upstream commit 32c7fbc8ffd752c6aa05d2dd7c13b0f0aa00ddaa ]
+[ Upstream commit 1dedbdf2bbb1ede8d96f35f9845ecae179dc1988 ]
 
-So far all the places calling hclge_tm_q_to_qs_map_cfg() are assigning
-an u16 type value to "q_id", and in the processing of
-hclge_tm_q_to_qs_map_cfg(), it also converts the "q_id" to le16.
+When initializing the USB subsystem before starting the kernel,
+OTG overcurrent detection is disabled. In case the OTG polarity of
+overcurrent is low active, the overcurrent detection is never enabled
+again and events cannot be reported as expected. Because imx usb
+overcurrent polarity is low active by default, only detection needs
+to be enable in usbmisc init function.
 
-The max tqp number for pf can be more than 256, we should use "u16" to
-store the queue id, instead of "u8", which may cause data lost.
-
-Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicolas Adell <nicolas.adell@actia.fr>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/chipidea/usbmisc_imx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-index 11e9259ca0407..0d45d045706c7 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-@@ -298,7 +298,7 @@ static int hclge_tm_qs_to_pri_map_cfg(struct hclge_dev *hdev,
- }
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+index 34ad5bf8acd8d..424ecb1f003fe 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -343,6 +343,8 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
+ 	} else if (data->oc_polarity == 1) {
+ 		/* High active */
+ 		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
++	} else {
++		reg &= ~(MX6_BM_OVER_CUR_DIS);
+ 	}
+ 	writel(reg, usbmisc->base + data->index * 4);
  
- static int hclge_tm_q_to_qs_map_cfg(struct hclge_dev *hdev,
--				    u8 q_id, u16 qs_id)
-+				    u16 q_id, u16 qs_id)
- {
- 	struct hclge_nq_to_qs_link_cmd *map;
- 	struct hclge_desc desc;
 -- 
 2.20.1
 
