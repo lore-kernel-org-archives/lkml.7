@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2E1C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CD7C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0509214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0EA214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354775;
-	bh=bVMv+VSCtv3ibr0RRhSJn4llcPqadPJWMmNcIO/xb9Y=;
+	s=default; t=1573354780;
+	bh=pO5pmzQOyp9GLT9o5dmrVktyAYTGz8KB29rC+2x5vqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmqD982IU0IRHOG5USZIGaLGoDIBfxUZSOJ6Lgq8jvoJ4zBl1e45xj+/M/qciy/Jf
-	 z5vtNymAhoPlfTwyv5eEnCYGSa5+2BBp8SL6UCTfz49wvXs5+mTNg1ljtZQZa/9Z0I
-	 /2evxU71MAEOg0ZWyI1zwa6yIplkC1i6Bt99Sksc=
+	b=N6WnRwewuOhuhu74ecXCuFxV/AG9jZK/Vc12GEUoE6Hcc9U1LMGquT3qqHqpWNmpF
+	 EDheI69pelIHa2piO7J7v8tMhhkBd3ETnarCQWJySw4mSdNpZ6fR3/Cw2L7Xo3R6Cx
+	 uq2FEvl7RKrVFA02vzWKhjBvbnCe+FNFi4Tnm5Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfKJC7e (ORCPT
+        id S1729660AbfKJC7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:59:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:59:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729379AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D782248B;
-        Sun, 10 Nov 2019 02:47:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15DB22245A;
+        Sun, 10 Nov 2019 02:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354080;
-        bh=bVMv+VSCtv3ibr0RRhSJn4llcPqadPJWMmNcIO/xb9Y=;
+        s=default; t=1573354053;
+        bh=pO5pmzQOyp9GLT9o5dmrVktyAYTGz8KB29rC+2x5vqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EsvfKzBDxQQZrEo2AkP8R+rKObrU2pXqzzj9OPoyhj2SYV2N9i6DaxRhpu7ERsvFR
-         TqpgdufAkJfIEWe5VogHErVB3V/0YC299QnKkVzj+k99/O8fCoYhPKjl7M9varKO20
-         zbpqGo+0+1a00T7pAGNZO9HGe4gavsvsVyWkXBic=
+        b=Vw7kENkdDJ7uqXqvoFGcjFrhs1lVAetdLhPAt0GJIFXhQLTZ85NVGnGd2KDhJdwsv
+         5G8RuXQoQwG2E06TAbafBrfmdhs8wTUyN6J8aBAkEtOC+5oPnbGkhd3agOKIBMMaLS
+         MIyOpYUmaLX2pf5U6nwi/1n215iFWxW7mAAR7JOo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 078/109] f2fs: fix to recover inode's project id during POR
-Date:   Sat,  9 Nov 2019 21:45:10 -0500
-Message-Id: <20191110024541.31567-78-sashal@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 063/109] coresight: perf: Fix per cpu path management
+Date:   Sat,  9 Nov 2019 21:44:55 -0500
+Message-Id: <20191110024541.31567-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -59,62 +60,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit f4474aa6e5e901ee4af21f39f1b9115aaaaec503 ]
+[ Upstream commit 5ecabe4a76e8cdb61fa3e24862d9ca240a1c4ddf ]
 
-Testcase to reproduce this bug:
-1. mkfs.f2fs -O extra_attr -O project_quota /dev/sdd
-2. mount -t f2fs /dev/sdd /mnt/f2fs
-3. touch /mnt/f2fs/file
-4. sync
-5. chattr -p 1 /mnt/f2fs/file
-6. xfs_io -f /mnt/f2fs/file -c "fsync"
-7. godown /mnt/f2fs
-8. umount /mnt/f2fs
-9. mount -t f2fs /dev/sdd /mnt/f2fs
-10. lsattr -p /mnt/f2fs/file
+We create a coresight trace path for each online CPU when
+we start the event. We rely on the number of online CPUs
+and then go on to allocate an array matching the "number of
+online CPUs" for holding the path and then uses normal
+CPU id as the index to the array. This is problematic as
+we could have some offline CPUs causing us to access beyond
+the actual array size (e.g, on a dual SMP system, if CPU0 is
+offline, CPU1 could be really accessing beyond the array).
+The solution is to switch to per-cpu array for holding the path.
 
-    0 -----------------N- /mnt/f2fs/file
-
-But actually, we expect the correct result is:
-
-    1 -----------------N- /mnt/f2fs/file
-
-The reason is we didn't recover inode.i_projid field during mount,
-fix it.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ .../hwtracing/coresight/coresight-etm-perf.c  | 55 ++++++++++++++-----
+ 1 file changed, 40 insertions(+), 15 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index adbf2600c0908..87942cf2afe1f 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -203,6 +203,19 @@ static void recover_inode(struct inode *inode, struct page *page)
- 	inode->i_mode = le16_to_cpu(raw->i_mode);
- 	i_uid_write(inode, le32_to_cpu(raw->i_uid));
- 	i_gid_write(inode, le32_to_cpu(raw->i_gid));
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 8a0ad77574e73..99cbf5d5d1c1f 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -23,6 +23,7 @@
+ #include <linux/mm.h>
+ #include <linux/init.h>
+ #include <linux/perf_event.h>
++#include <linux/percpu-defs.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
+@@ -44,7 +45,7 @@ struct etm_event_data {
+ 	struct work_struct work;
+ 	cpumask_t mask;
+ 	void *snk_config;
+-	struct list_head **path;
++	struct list_head * __percpu *path;
+ };
+ 
+ static DEFINE_PER_CPU(struct perf_output_handle, ctx_handle);
+@@ -72,6 +73,18 @@ static const struct attribute_group *etm_pmu_attr_groups[] = {
+ 	NULL,
+ };
+ 
++static inline struct list_head **
++etm_event_cpu_path_ptr(struct etm_event_data *data, int cpu)
++{
++	return per_cpu_ptr(data->path, cpu);
++}
 +
-+	if (raw->i_inline & F2FS_EXTRA_ATTR) {
-+		if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)->sb) &&
-+			F2FS_FITS_IN_INODE(raw, le16_to_cpu(raw->i_extra_isize),
-+								i_projid)) {
-+			projid_t i_projid;
++static inline struct list_head *
++etm_event_cpu_path(struct etm_event_data *data, int cpu)
++{
++	return *etm_event_cpu_path_ptr(data, cpu);
++}
 +
-+			i_projid = (projid_t)le32_to_cpu(raw->i_projid);
-+			F2FS_I(inode)->i_projid =
-+				make_kprojid(&init_user_ns, i_projid);
-+		}
-+	}
+ static void etm_event_read(struct perf_event *event) {}
+ 
+ static int etm_addr_filters_alloc(struct perf_event *event)
+@@ -131,23 +144,26 @@ static void free_event_data(struct work_struct *work)
+ 	 */
+ 	if (event_data->snk_config) {
+ 		cpu = cpumask_first(mask);
+-		sink = coresight_get_sink(event_data->path[cpu]);
++		sink = coresight_get_sink(etm_event_cpu_path(event_data, cpu));
+ 		if (sink_ops(sink)->free_buffer)
+ 			sink_ops(sink)->free_buffer(event_data->snk_config);
+ 	}
+ 
+ 	for_each_cpu(cpu, mask) {
+-		if (!(IS_ERR_OR_NULL(event_data->path[cpu])))
+-			coresight_release_path(event_data->path[cpu]);
++		struct list_head **ppath;
 +
- 	f2fs_i_size_write(inode, le64_to_cpu(raw->i_size));
- 	inode->i_atime.tv_sec = le64_to_cpu(raw->i_atime);
- 	inode->i_ctime.tv_sec = le64_to_cpu(raw->i_ctime);
++		ppath = etm_event_cpu_path_ptr(event_data, cpu);
++		if (!(IS_ERR_OR_NULL(*ppath)))
++			coresight_release_path(*ppath);
++		*ppath = NULL;
+ 	}
+ 
+-	kfree(event_data->path);
++	free_percpu(event_data->path);
+ 	kfree(event_data);
+ }
+ 
+ static void *alloc_event_data(int cpu)
+ {
+-	int size;
+ 	cpumask_t *mask;
+ 	struct etm_event_data *event_data;
+ 
+@@ -158,7 +174,6 @@ static void *alloc_event_data(int cpu)
+ 
+ 	/* Make sure nothing disappears under us */
+ 	get_online_cpus();
+-	size = num_online_cpus();
+ 
+ 	mask = &event_data->mask;
+ 	if (cpu != -1)
+@@ -175,8 +190,8 @@ static void *alloc_event_data(int cpu)
+ 	 * unused memory when dealing with single CPU trace scenarios is small
+ 	 * compared to the cost of searching through an optimized array.
+ 	 */
+-	event_data->path = kcalloc(size,
+-				   sizeof(struct list_head *), GFP_KERNEL);
++	event_data->path = alloc_percpu(struct list_head *);
++
+ 	if (!event_data->path) {
+ 		kfree(event_data);
+ 		return NULL;
+@@ -224,6 +239,7 @@ static void *etm_setup_aux(int event_cpu, void **pages,
+ 
+ 	/* Setup the path for each CPU in a trace session */
+ 	for_each_cpu(cpu, mask) {
++		struct list_head *path;
+ 		struct coresight_device *csdev;
+ 
+ 		csdev = per_cpu(csdev_src, cpu);
+@@ -235,9 +251,11 @@ static void *etm_setup_aux(int event_cpu, void **pages,
+ 		 * list of devices from source to sink that can be
+ 		 * referenced later when the path is actually needed.
+ 		 */
+-		event_data->path[cpu] = coresight_build_path(csdev, sink);
+-		if (IS_ERR(event_data->path[cpu]))
++		path = coresight_build_path(csdev, sink);
++		if (IS_ERR(path))
+ 			goto err;
++
++		*etm_event_cpu_path_ptr(event_data, cpu) = path;
+ 	}
+ 
+ 	if (!sink_ops(sink)->alloc_buffer)
+@@ -266,6 +284,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	struct etm_event_data *event_data;
+ 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
+ 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
++	struct list_head *path;
+ 
+ 	if (!csdev)
+ 		goto fail;
+@@ -278,8 +297,9 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	if (!event_data)
+ 		goto fail;
+ 
++	path = etm_event_cpu_path(event_data, cpu);
+ 	/* We need a sink, no need to continue without one */
+-	sink = coresight_get_sink(event_data->path[cpu]);
++	sink = coresight_get_sink(path);
+ 	if (WARN_ON_ONCE(!sink || !sink_ops(sink)->set_buffer))
+ 		goto fail_end_stop;
+ 
+@@ -289,7 +309,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 		goto fail_end_stop;
+ 
+ 	/* Nothing will happen without a path */
+-	if (coresight_enable_path(event_data->path[cpu], CS_MODE_PERF))
++	if (coresight_enable_path(path, CS_MODE_PERF))
+ 		goto fail_end_stop;
+ 
+ 	/* Tell the perf core the event is alive */
+@@ -317,6 +337,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+ 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
+ 	struct etm_event_data *event_data = perf_get_aux(handle);
++	struct list_head *path;
+ 
+ 	if (event->hw.state == PERF_HES_STOPPED)
+ 		return;
+@@ -324,7 +345,11 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	if (!csdev)
+ 		return;
+ 
+-	sink = coresight_get_sink(event_data->path[cpu]);
++	path = etm_event_cpu_path(event_data, cpu);
++	if (!path)
++		return;
++
++	sink = coresight_get_sink(path);
+ 	if (!sink)
+ 		return;
+ 
+@@ -355,7 +380,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	}
+ 
+ 	/* Disabling the path make its elements available to other sessions */
+-	coresight_disable_path(event_data->path[cpu]);
++	coresight_disable_path(path);
+ }
+ 
+ static int etm_event_add(struct perf_event *event, int mode)
 -- 
 2.20.1
 
