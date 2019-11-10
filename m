@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751D1C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035DCC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CE8208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC534208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355458;
-	bh=yJZQW5BnUSHbWHbhWh0m2DBiRAjsbY+dArtTZdzFv70=;
+	s=default; t=1573355461;
+	bh=laLOVN9b3e7blkEA0eFOdsXXjtlukZsyKhx2FPSNf5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jxh3MZSTq+RuqxaAmudk3XAz01QFppcmUiheKqsae+pCoY4uX4JOtxMANSbPnFTDk
-	 N9DizDhPlpFkzgxTBsYjoCH2pmytbkcfN+MAfH5BTIa0AU2r55gzVzqsyEy6ObvWNu
-	 r08M4TRjb3MDY/vKhD3gTi0ZxdQO5Z2RWOrBP4Ko=
+	b=hoVzO3csvInqeem/R44mg7VSPUkXNzmarF6iiMknsO3ckofL6T32p1EiN2c66IAmv
+	 6Rnv+ZlYKZ3uRP0rhCXTDdkuDkGSZ6bFBoo26N0ncgiPBBZ6PaMwYi6ScW5OZxk3xl
+	 dnDQLFfXeAqzHReDs7w24vynDgqzwFtmoGRB3GPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfKJCnv (ORCPT
+        id S1728575AbfKJDLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42322 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:11:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbfKJCnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:43 -0500
+        id S1727101AbfKJCnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B9521D7B;
-        Sun, 10 Nov 2019 02:43:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE65521655;
+        Sun, 10 Nov 2019 02:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353823;
-        bh=yJZQW5BnUSHbWHbhWh0m2DBiRAjsbY+dArtTZdzFv70=;
+        s=default; t=1573353830;
+        bh=laLOVN9b3e7blkEA0eFOdsXXjtlukZsyKhx2FPSNf5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AjdNejalTs//1VKK3PBgV4ZXWue8z+CD9LLq73PUieGVoWo5K6gzybYIMaJVstzoo
-         T8jZoU5FepB4IgRg3r9K4a2r2zco5aCwSs0Faw5pntxQMuRgM7DE6ttQD5U8j1OvVt
-         vzkToVqdFNrq1XpbmgxoWdwfmExWIk7Fy0j02dhM=
+        b=tVAzBJckyHeOEq9xdD/lzGtv2NNPLuQYRWS7FubzWDzwYPv/B1K8ojQ+GdlnGFhu3
+         fodhgy+NZ5kuAPfpNK6BXOg5F1QbpnTJnrFpdv2pK/K2/1m2J87PMxDPKGEJ3dsLSM
+         YDoaDndvrcszq7Bo1WdFGDYa9oIiXp4++gTCsZyc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 118/191] slimbus: ngd: register ngd driver only once.
-Date:   Sat,  9 Nov 2019 21:39:00 -0500
-Message-Id: <20191110024013.29782-118-sashal@kernel.org>
+Cc:     Li Qiang <liq3ea@gmail.com>, Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 124/191] vfio/pci: Fix potential memory leak in vfio_msi_cap_len
+Date:   Sat,  9 Nov 2019 21:39:06 -0500
+Message-Id: <20191110024013.29782-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,39 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Li Qiang <liq3ea@gmail.com>
 
-[ Upstream commit 1830dad34c070161fda2ff1db77b39ffa78aa380 ]
+[ Upstream commit 30ea32ab1951c80c6113f300fce2c70cd12659e4 ]
 
-Move ngd platform driver out of loop so that it registers only once.
+Free allocated vdev->msi_perm in error path.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Li Qiang <liq3ea@gmail.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/slimbus/qcom-ngd-ctrl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/pci/vfio_pci_config.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index f63d1b8a09335..a9abde2f4088b 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1346,7 +1346,6 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 		ngd->base = ctrl->base + ngd->id * data->offset +
- 					(ngd->id - 1) * data->size;
- 		ctrl->ngd = ngd;
--		platform_driver_register(&qcom_slim_ngd_driver);
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index 115a36f6f4039..62023b4a373b4 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1180,8 +1180,10 @@ static int vfio_msi_cap_len(struct vfio_pci_device *vdev, u8 pos)
+ 		return -ENOMEM;
  
- 		return 0;
- 	}
-@@ -1445,6 +1444,7 @@ static int qcom_slim_ngd_ctrl_probe(struct platform_device *pdev)
- 	init_completion(&ctrl->reconf);
- 	init_completion(&ctrl->qmi.qmi_comp);
+ 	ret = init_pci_cap_msi_perm(vdev->msi_perm, len, flags);
+-	if (ret)
++	if (ret) {
++		kfree(vdev->msi_perm);
+ 		return ret;
++	}
  
-+	platform_driver_register(&qcom_slim_ngd_driver);
- 	return of_qcom_slim_ngd_register(dev, ctrl);
+ 	return len;
  }
- 
 -- 
 2.20.1
 
