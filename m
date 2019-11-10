@@ -2,113 +2,144 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210ABC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDD4C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70EA20842
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DB120842
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573405025;
-	bh=XFmIm5uNvCalb775ps81pVPYZuxiMQbAhHtu7PlPR+c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kLZHno6Wlg4MLEtaYJS/x8F3/vE+W5S6lRPJGM+Ctvwd16bQXpqpzaemb2pO7dsU7
-	 vF5XTs9ySyf54pTP145Q4Cd/3Tsj8PEA1Qy/aU+3CjciSW92a9DsTS4oMPT+PJNZf2
-	 2n/iPf5HHM9PjKQ0dCm0+bjbxbAxvLyljitUvtII=
+	s=default; t=1573405188;
+	bh=8dVT8BgeHXIXHuCYidGlWKtrVnbHRYVwt7D/0lF4UqM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FQFYAQE99aF34fWD9Ve6qVQcN2BAZbVuWOV+4brxFypJMw/y4gU9Zzslr3Y5ydgrV
+	 tPR9Ei1aftv7lRNSZ8uIuxTp1atZd2T82vLscKdaU3y/Hy1M4Fw3qhJAxNnPawvWO2
+	 xXi0jlvHaVXj+WBpz6HWvcqt0oJi9E+tckOUKi9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKJQ5E (ORCPT
+        id S1726983AbfKJQ7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 11:59:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfKJQ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:57:03 -0500
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726616AbfKJQ7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 11:59:47 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CBD42184C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 16:57:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 219EC2080F;
+        Sun, 10 Nov 2019 16:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573405023;
-        bh=XFmIm5uNvCalb775ps81pVPYZuxiMQbAhHtu7PlPR+c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=leqBJyp5JSFCuHY5dycHA6PMCwGu8BYjxRWH1XXSvPvGLVy7yhfjxREl05eP9xL3x
-         UxFOeyb/3fyTArAADZeZ7EHLketIeHRa0LUQUB/bVOwKbuFHbBngHoEj4pABJXHJ6h
-         1pK2YnoyfXg9m+A5VzHzydOHxknTwBxlBs0iumfk=
-Received: by mail-wr1-f48.google.com with SMTP id i12so5189704wro.5
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 08:57:02 -0800 (PST)
-X-Gm-Message-State: APjAAAVMUE3ZaSXI4R6gSdoALPl0AoRWQ+p4ihFaREAjLyB1I+pkFidR
-        RLiS7ZqB6n0fNn41vBCjFpTtEfShb8d3rYrCDIkLpw==
-X-Google-Smtp-Source: APXvYqzbWSh9ofYRjVtXX3r5+2bk3bNvV8uFhLNht3HCNwsg7R5DMwvreaEHXLNz0u+rZEOUEjMLTZhXa4YxFxvFC1U=
-X-Received: by 2002:a5d:490b:: with SMTP id x11mr14742143wrq.111.1573405021467;
- Sun, 10 Nov 2019 08:57:01 -0800 (PST)
+        s=default; t=1573405185;
+        bh=8dVT8BgeHXIXHuCYidGlWKtrVnbHRYVwt7D/0lF4UqM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cAZB9iDmmdLS89j9z//pZ9Z8hMZk1r84WbUMT1qH9+F74bsmXo09l6eyVAFtol2bA
+         BDc92NAtFU5YlZXYELx9VsUxcfFPyCv+DU2cmUoGNj17kGfEMwNdNk2uuW53qgvsZR
+         oly/jhLhS489GJFLLcHRnxkB47UHD/JLawiajj1s=
+Date:   Sun, 10 Nov 2019 16:59:38 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
+        shawnguo@kernel.org, heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        christophe.jaillet@wanadoo.fr, tglx@linutronix.de,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        paulmck@linux.ibm.com, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] dt-bindings: add parallax ping sensors
+Message-ID: <20191110165938.2f680803@archlinux>
+In-Reply-To: <20191107130027.k2uo547xrfiuxgb7@arbad>
+References: <20191107130027.k2uo547xrfiuxgb7@arbad>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191106193459.581614484@linutronix.de> <20191106202805.948064985@linutronix.de>
- <53a6f346-fca1-ac04-ee34-6d472a0d4408@kernel.org> <alpine.DEB.2.21.1911090040520.2605@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911101332490.12583@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911101332490.12583@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 10 Nov 2019 08:56:50 -0800
-X-Gmail-Original-Message-ID: <CALCETrXqP2SfhM83diqS9xr+Zso8rhsfmF8G-DQBBHAY3UU0dw@mail.gmail.com>
-Message-ID: <CALCETrXqP2SfhM83diqS9xr+Zso8rhsfmF8G-DQBBHAY3UU0dw@mail.gmail.com>
-Subject: Re: [patch 2/9] x86/process: Unify copy_thread_tls()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 4:36 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sat, 9 Nov 2019, Thomas Gleixner wrote:
-> > On Fri, 8 Nov 2019, Andy Lutomirski wrote:
-> > > On 11/6/19 11:35 AM, Thomas Gleixner wrote:
-> > > > +static inline int copy_io_bitmap(struct task_struct *tsk)
-> > > > +{
-> > > > + if (likely(!test_tsk_thread_flag(current, TIF_IO_BITMAP)))
-> > > > +         return 0;
-> > > > +
-> > > > + tsk->thread.io_bitmap_ptr = kmemdup(current->thread.io_bitmap_ptr,
-> > > > +                                     IO_BITMAP_BYTES, GFP_KERNEL);
-> > >
-> > > tsk->thread.io_bitmap_max = current->thread.io_bitmap_max?
-> > >
-> > > I realize you inherited this from the code you're refactoring, but it
-> > > does seem to be missing.
-> >
-> > It already got copied with the task struct :)
-> >
-> > > > +#ifdef CONFIG_X86_64
-> > > > + savesegment(gs, p->thread.gsindex);
-> > > > + p->thread.gsbase = p->thread.gsindex ? 0 : current->thread.gsbase;
-> > > > + savesegment(fs, p->thread.fsindex);
-> > > > + p->thread.fsbase = p->thread.fsindex ? 0 : current->thread.fsbase;
-> > > > + savesegment(es, p->thread.es);
-> > > > + savesegment(ds, p->thread.ds);
-> > > > +#else
-> > > > + /* Clear all status flags including IF and set fixed bit. */
-> > > > + frame->flags = X86_EFLAGS_FIXED;
-> > > > +#endif
-> > >
-> > > Want to do another commit to make the eflags fixup unconditional?  I'm
-> > > wondering if we have a bug.
-> >
-> > Let me look at that.
->
-> 64bit does not have flags in the inactive_task_frame ...
->
+On Thu, 7 Nov 2019 14:00:29 +0100
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-Hmm.  One more thing to unify, I guess.
+> Add dt-bindings for parallax PING))) and LaserPING iio sensors, which
+> are used for measuring distances.
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../bindings/iio/proximity/parallax-ping.yaml      | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
+> new file mode 100644
+> index 000000000000..ab8dbdf4f04a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
 
---Andy
+Rob has been asking people if they mind adding a BSD-2-CLAUSE as an
+and additional license on new bindings they have the copyright on.
+
+Otherwise seems fine to me.
+
+Thanks,
+
+Jonathan
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/parallax-ping.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Parallax PING))) and LaserPING range finder
+> +
+> +maintainers:
+> +  - Andreas Klinger <ak@it-klinger.de>
+> +
+> +description: |
+> +  Bit-banging driver using one GPIO:
+> +  - ping-gpio is raised by the driver to start measurement
+> +  - direction of ping-gpio is then switched into input with an interrupt
+> +    for receiving distance value as PWM signal
+> +
+> +  Specifications about the devices can be found at:
+> +  http://parallax.com/sites/default/files/downloads/28041-LaserPING-2m-Rangefinder-Guide.pdf
+> +  http://parallax.com/sites/default/files/downloads/28015-PING-Documentation-v1.6.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - parallax,ping
+> +      - parallax,laserping
+> +
+> +  ping-gpios:
+> +    description:
+> +      Definition of the GPIO for the triggering and echo (output and input)
+> +      This GPIO is set for about 5 us by the driver to tell the device it
+> +      should initiate the measurement cycle. Afterwards the GPIO is switched
+> +      to input direction with an interrupt. The device sets it and the
+> +      length of the input signal corresponds to the measured distance.
+> +      It needs to be an GPIO which is able to deliver an interrupt because
+> +      the time between two interrupts is measured in the driver.
+> +      See Documentation/devicetree/bindings/gpio/gpio.txt for information
+> +      on how to specify a consumer gpio.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - ping-gpios
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    proximity {
+> +        compatible = "parallax,laserping";
+> +        ping-gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
+> +    };
+
