@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300B7C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0E9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DD9208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61361215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355176;
-	bh=H7Djb+n3qjxbE2dVJgW6kUOuIo0sOoojYsnEGEwGFNE=;
+	s=default; t=1573355178;
+	bh=Kp/Eu11Lwj/6ezzthePY2DchczQanvDiubDrKEivNAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=chW/EL+HQIBEY1dyvNgW4APdWASEFyKGrVXVBR1FZLieu1KrOk84j9pkG1gsEAl3u
-	 0dCZmu40pcRWau6+i2ZPRIs5lCEsD0uGeNSjathKzyBE30DUGQ1A85M+k+RI/6ln1e
-	 VzUVWyY+BOL4ge8G+OuXwK60QcHa4qtAkcMGbqrQ=
+	b=QpHd/53Wkpgu8tv2gox/r7Faf+0B/2ZAQrmATPZUtcVFUNScODVpROk1LcV/D5Rvg
+	 m6mAr0i/XmmCkuXjN6YZfKkti3nB/juXES5m6VG8k8py3yBQIM5RLeQ92TU+4YRnpB
+	 OpbXrB0umHmu9xg/8uxrFYMUrpP7OiZIlbEel9hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbfKJCp6 (ORCPT
+        id S1728939AbfKJCpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46988 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:45:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbfKJCp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:28 -0500
+        id S1727481AbfKJCpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:45:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 923F8214E0;
-        Sun, 10 Nov 2019 02:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C2EE21655;
+        Sun, 10 Nov 2019 02:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353927;
-        bh=H7Djb+n3qjxbE2dVJgW6kUOuIo0sOoojYsnEGEwGFNE=;
+        s=default; t=1573353924;
+        bh=Kp/Eu11Lwj/6ezzthePY2DchczQanvDiubDrKEivNAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Grj27dbWIntNjgj74K+I5jR4G1ELH7heHYghfcgYPTMsIFncdACUEWGZBHQi/Ze3a
-         QU2OP9PWZEedD9UfOKPVkUlOo8UwlU3cwFMZgAqgljVUEY4yWJdw1bAH6qPm8lD60C
-         Z5OMvRlb/sytNVVgRzrT/X7m2jMvMtCclu7kHaLM=
+        b=Vj4LKPpKsfmhgTNORmA8diwLqWEi3pg7hajGwKz/NPyAjDn9un10C8rWmaXKBhQ3q
+         OfjCAqFwr60nn6DHAwazvaSgGGvGV1mFvFlKyUYmrmVfjGiFki3QxcNyqSiFvQYz6j
+         ErdD9MkoGVqP/hLUJ1kGbw0qyDoZrYw/CPW5uNds=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rui Miguel Silva <rui.silva@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 188/191] media: ov2680: fix null dereference at power on
-Date:   Sat,  9 Nov 2019 21:40:10 -0500
-Message-Id: <20191110024013.29782-188-sashal@kernel.org>
+Cc:     Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 185/191] usb: usbtmc: uninitialized symbol 'actual' in usbtmc_ioctl_clear
+Date:   Sat,  9 Nov 2019 21:40:07 -0500
+Message-Id: <20191110024013.29782-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,65 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rui Miguel Silva <rui.silva@linaro.org>
+From: Guido Kiener <guido.kiener@rohde-schwarz.com>
 
-[ Upstream commit c45fbdf24c61a7b7a37f1b3bbd46f054637a3627 ]
+[ Upstream commit 9a83190300867fb024d53f47c31088e34188efc1 ]
 
-Swapping the order between v4l2 subdevice registration and checking chip
-id in b7a417628abf ("media: ov2680: don't register the v4l2 subdevice
-before checking chip ID") makes the mode restore to use the sensor
-controls before they are set, so move the mode restore call to s_power
-after the handler setup for controls is done.
+Fix uninitialized symbol 'actual' in function usbtmc_ioctl_clear.
 
-This remove also the need for the error code path in power on function.
+When symbol 'actual' is not initialized and usb_bulk_msg() fails,
+the subsequent kernel debug message shows a random value.
 
-Fixes: b7a417628abf ("media: ov2680: don't register the v4l2 subdevice before checking chip ID")
-
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Fixes: dfee02ac4bce ("usb: usbtmc: Fix ioctl USBTMC_IOCTL_CLEAR")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2680.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/usb/class/usbtmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
-index 3ccd584568fb5..d8798fb714ba8 100644
---- a/drivers/media/i2c/ov2680.c
-+++ b/drivers/media/i2c/ov2680.c
-@@ -568,10 +568,6 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/usb/class/usbtmc.c b/drivers/usb/class/usbtmc.c
+index 3ce45c9e9d20d..e6a7c86b70f25 100644
+--- a/drivers/usb/class/usbtmc.c
++++ b/drivers/usb/class/usbtmc.c
+@@ -1016,6 +1016,7 @@ static int usbtmc_ioctl_clear(struct usbtmc_device_data *data)
+ 		do {
+ 			dev_dbg(dev, "Reading from bulk in EP\n");
  
--	ret = ov2680_mode_restore(sensor);
--	if (ret < 0)
--		goto disable;
--
- 	sensor->is_enabled = true;
- 
- 	/* Set clock lane into LP-11 state */
-@@ -580,12 +576,6 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
- 	ov2680_stream_disable(sensor);
- 
- 	return 0;
--
--disable:
--	dev_err(dev, "failed to enable sensor: %d\n", ret);
--	ov2680_power_off(sensor);
--
--	return ret;
- }
- 
- static int ov2680_s_power(struct v4l2_subdev *sd, int on)
-@@ -606,6 +596,8 @@ static int ov2680_s_power(struct v4l2_subdev *sd, int on)
- 		ret = v4l2_ctrl_handler_setup(&sensor->ctrls.handler);
- 		if (ret < 0)
- 			return ret;
-+
-+		ret = ov2680_mode_restore(sensor);
- 	}
- 
- 	return ret;
++			actual = 0;
+ 			rv = usb_bulk_msg(data->usb_dev,
+ 					  usb_rcvbulkpipe(data->usb_dev,
+ 							  data->bulk_in),
 -- 
 2.20.1
 
