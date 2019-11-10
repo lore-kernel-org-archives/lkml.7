@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0B9C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC79C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9001B222C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5CA9206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354616;
-	bh=l2juZTLHselRSV+UkyHgPIziKlXPN/x9vhH96gkWGgo=;
+	s=default; t=1573354620;
+	bh=zruDnVJMljDs/bDjpZySQhScOXxkBULXSigdRF4c80A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W2kBUfsJOCV3cypH+B6R3OGRBMOfDz+HEclP427nD9eecDIG+7+9WdcQzARvSF737
-	 s16Qq6i4PGxlBZ0w4izwYiyyq1nlZJBkcCzDn7RZT86deNagf69wFPqDqWeLhTcn1p
-	 XZq704Xl5R4jhwq0DQUIv9tYd8sA11AIPKB4jpL8=
+	b=esmMCaeTRjA66q9Yg1sEbRCUJByePC7f+6r3TUmLWFaF9F7mDlmwOot/RqZs2yKGF
+	 7OIu35FbMGizIJFa+db8cGcAH1e75McsDxl9ToeGGaQjHKLF0tzuI7rhaQxhbFfbsp
+	 ZnY4ezl7+bp2LWNVMWd7+qCRu8by6xz2B8bP9XwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfKJC4z (ORCPT
+        id S1729580AbfKJC47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:56:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47172 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:56:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbfKJC4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:56:45 -0500
+        id S1727641AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:56:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 064962247A;
-        Sun, 10 Nov 2019 02:47:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEBDA2248C;
+        Sun, 10 Nov 2019 02:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354067;
-        bh=l2juZTLHselRSV+UkyHgPIziKlXPN/x9vhH96gkWGgo=;
+        s=default; t=1573354081;
+        bh=zruDnVJMljDs/bDjpZySQhScOXxkBULXSigdRF4c80A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zmkq+J9uk8XBtf+yasAvBbbDeiDxRfgAGomp+KEEOMuXclEB5GyccTQ4M10GVEdft
-         I/slpvWtN/Xx9XS/xqlHrFkSLFYPocI7NSe0BdZhmm8oQtjdr8xjIT6thR8FHOPm9m
-         XjFz65H39Fjy0VQRXnIrqvA1ZJQPRJfW1vWxm61c=
+        b=F6Zx5j377IUXjtoUIMI7oHLaFuODYa31y+d1ivEWxmowaCoB9jPlzpP8K13Pb4ml9
+         XRjol1jeoH43kgfrpoP/HYu0qLPS6A9NhG2oGeWpgNg585rdhL0SDg4upnPqgzQ1c0
+         Z8HRnfncFexUVGnrb4YPBF3okROlRvEsAlqMjs8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 071/109] scsi: libsas: always unregister the old device if going to discover new
-Date:   Sat,  9 Nov 2019 21:45:03 -0500
-Message-Id: <20191110024541.31567-71-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 079/109] f2fs: mark inode dirty explicitly in recover_inode()
+Date:   Sat,  9 Nov 2019 21:45:11 -0500
+Message-Id: <20191110024541.31567-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -66,58 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 32c850bf587f993b2620b91e5af8a64a7813f504 ]
+[ Upstream commit 4a1728cad6340bfbe17bd17fd158b2165cd99508 ]
 
-If we went into sas_rediscover_dev() the attached_sas_addr was already insured
-not to be zero. So it's unnecessary to check if the attached_sas_addr is zero.
+Mark inode dirty explicitly in the end of recover_inode() to make sure
+that all recoverable fields can be persisted later.
 
-And although if the sas address is not changed, we always have to unregister
-the old device when we are going to register a new one. We cannot just leave
-the device there and bring up the new.
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: chenxiang <chenxiang66@hisilicon.com>
-CC: John Garry <john.garry@huawei.com>
-CC: Johannes Thumshirn <jthumshirn@suse.de>
-CC: Ewan Milne <emilne@redhat.com>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Tomas Henzl <thenzl@redhat.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ fs/f2fs/recovery.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index 259ee0d3c3e61..7f2d00354a850 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -2060,14 +2060,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
- 		return res;
- 	}
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 87942cf2afe1f..2eef266b656b5 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -227,6 +227,8 @@ static void recover_inode(struct inode *inode, struct page *page)
+ 	F2FS_I(inode)->i_advise = raw->i_advise;
+ 	F2FS_I(inode)->i_flags = le32_to_cpu(raw->i_flags);
  
--	/* delete the old link */
--	if (SAS_ADDR(phy->attached_sas_addr) &&
--	    SAS_ADDR(sas_addr) != SAS_ADDR(phy->attached_sas_addr)) {
--		SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
--			    SAS_ADDR(dev->sas_addr), phy_id,
--			    SAS_ADDR(phy->attached_sas_addr));
--		sas_unregister_devs_sas_addr(dev, phy_id, last);
--	}
-+	/* we always have to delete the old device when we went here */
-+	SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
-+		    SAS_ADDR(dev->sas_addr), phy_id,
-+		    SAS_ADDR(phy->attached_sas_addr));
-+	sas_unregister_devs_sas_addr(dev, phy_id, last);
- 
- 	return sas_discover_new(dev, phy_id);
- }
++	f2fs_mark_inode_dirty_sync(inode, true);
++
+ 	if (file_enc_name(inode))
+ 		name = "<encrypted>";
+ 	else
 -- 
 2.20.1
 
