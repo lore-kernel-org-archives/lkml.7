@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93894C17440
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79138C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694F521882
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E67221882
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353714;
-	bh=ojGzov/r6HgGqt/xSkwiBfoEhkdH/13yhhdnWmF9/OE=;
+	s=default; t=1573353717;
+	bh=E6NZP6ynkriCsftnvRMiOdDW/QfXQMjf7r0Z3bIB+9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TOLijEqaqL/GYspUdLmSSz/McQ3uTyLd5GEWjI3yQhy/055tb9hKelcrZAnrnO/Fk
-	 /BrzIp1qbGRJQ5re2P49g9VYB2Bu5fJqCJ80PuES0OHjmGplwc2/goIdHD8wad1Yj6
-	 pLKrNtLDAwaC32cAY9zHdBpaZ5E3BtEjl/Qq/5J4=
+	b=BXU0Eei3XLtF2bgSlvvHMJxiOLBJ2gX+JEiWniq2jZKdVWna94b4GZErWGTRJ6GTz
+	 cHikXK+Uk0GxA7VpRoODXFTfJFlvxbw+4WVJGnNxIjUHYmUElR6oj97RCHjb+exxQo
+	 tp+3C5C2Wue8i6qFoxPWOFbv6h1XMEH4chA9Qus4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfKJClx (ORCPT
+        id S1727653AbfKJCl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbfKJClo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:44 -0500
+        id S1727611AbfKJClu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6414215EA;
-        Sun, 10 Nov 2019 02:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2E4A20650;
+        Sun, 10 Nov 2019 02:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353703;
-        bh=ojGzov/r6HgGqt/xSkwiBfoEhkdH/13yhhdnWmF9/OE=;
+        s=default; t=1573353709;
+        bh=E6NZP6ynkriCsftnvRMiOdDW/QfXQMjf7r0Z3bIB+9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1tpS4AyyYWc1zzBe4l5ffu9u5mpcyDijnPfODzdBdxy1MMJNVnB3Ip3OIFD/GqkV
-         0SS/6rW4WYP9KRW5L1WdMEXHCzEFuzbj+GNKVYsEWpI+lN39Q/MhapKV5NSyjYnXFJ
-         X9n7Y0mmQmBoe/O3ND4C0nh4k1NXkjrscTSts0Zo=
+        b=lwcQ2ZmnyJep36azdb+xgyGzOSYgjkGOnrff6NIGU/QHnQFHXU81AAHAWe/rCsneM
+         oQ0NkfaMCvnFOXyVAkDRIW7qYSAUbcvITQ25Fuhkbwfb43hmH981ANIswhegZ+AjBL
+         HLCgYVoCK+ykD7Vvo5z09nMSz5LhJZXRTzMeOpk0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fuyun Liang <liangfuyun1@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+Cc:     Jian Shen <shenjian15@huawei.com>, Peng Li <lipeng321@huawei.com>,
         Salil Mehta <salil.mehta@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 046/191] net: hns3: Fix for setting speed for phy failed problem
-Date:   Sat,  9 Nov 2019 21:37:48 -0500
-Message-Id: <20191110024013.29782-46-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 048/191] net: hns3: Clear client pointer when initialize client failed or unintialize finished
+Date:   Sat,  9 Nov 2019 21:37:50 -0500
+Message-Id: <20191110024013.29782-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,48 +60,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fuyun Liang <liangfuyun1@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit fd8133148eb6a733f9cfdaecd4d99f378e21d582 ]
+[ Upstream commit 49dd80541c75c2f21c28bbbdd958e993b55bf97b ]
 
-The function of genphy_read_status is that reading phy information
-from HW and using these information to update SW variable. If user
-is using ethtool to setting the speed of phy and service task is calling
-by hclge_get_mac_phy_link, the result of speed setting is uncertain.
-Because ethtool cmd will modified phydev and hclge_get_mac_phy_link also
-will modified phydev.
-
-Because phy state machine will update phy link periodically, we can
-just use phydev->link to check the link status. This patch removes
-function call of genphy_read_status. To ensure accuracy, this patch
-adds a phy state check. If phy state is not PHY_RUNNING, we consider
-link is down. Because in some scenarios, phydev->link may be link up,
-but phy state is not PHY_RUNNING. This is just an intermediate state.
-In fact, the link is not ready yet.
+If initialize client failed or finish uninitializing client, we should
+clear the client pointer. It may cause unexpected result when use
+uninitialized client. Meanwhile, we also should check whether client
+exist when uninitialize it.
 
 Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
-Signed-off-by: Fuyun Liang <liangfuyun1@huawei.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../hisilicon/hns3/hns3pf/hclge_main.c        | 25 +++++++++-----
+ .../hisilicon/hns3/hns3vf/hclgevf_main.c      | 33 ++++++++++++++-----
+ 2 files changed, 41 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 89ca69fa2b97b..6907280d316fb 100644
+index 6907280d316fb..671144d1f14ac 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2367,7 +2367,7 @@ static int hclge_get_mac_phy_link(struct hclge_dev *hdev)
- 	mac_state = hclge_get_mac_link_status(hdev);
+@@ -5467,13 +5467,13 @@ static int hclge_init_client_instance(struct hnae3_client *client,
+ 			vport->nic.client = client;
+ 			ret = client->ops->init_instance(&vport->nic);
+ 			if (ret)
+-				return ret;
++				goto clear_nic;
  
- 	if (hdev->hw.mac.phydev) {
--		if (!genphy_read_status(hdev->hw.mac.phydev))
-+		if (hdev->hw.mac.phydev->state == PHY_RUNNING)
- 			link_stat = mac_state &
- 				hdev->hw.mac.phydev->link;
- 		else
+ 			ret = hclge_init_instance_hw(hdev);
+ 			if (ret) {
+ 			        client->ops->uninit_instance(&vport->nic,
+ 			                                     0);
+-			        return ret;
++				goto clear_nic;
+ 			}
+ 
+ 			if (hdev->roce_client &&
+@@ -5482,11 +5482,11 @@ static int hclge_init_client_instance(struct hnae3_client *client,
+ 
+ 				ret = hclge_init_roce_base_info(vport);
+ 				if (ret)
+-					return ret;
++					goto clear_roce;
+ 
+ 				ret = rc->ops->init_instance(&vport->roce);
+ 				if (ret)
+-					return ret;
++					goto clear_roce;
+ 			}
+ 
+ 			break;
+@@ -5496,7 +5496,7 @@ static int hclge_init_client_instance(struct hnae3_client *client,
+ 
+ 			ret = client->ops->init_instance(&vport->nic);
+ 			if (ret)
+-				return ret;
++				goto clear_nic;
+ 
+ 			break;
+ 		case HNAE3_CLIENT_ROCE:
+@@ -5508,16 +5508,25 @@ static int hclge_init_client_instance(struct hnae3_client *client,
+ 			if (hdev->roce_client && hdev->nic_client) {
+ 				ret = hclge_init_roce_base_info(vport);
+ 				if (ret)
+-					return ret;
++					goto clear_roce;
+ 
+ 				ret = client->ops->init_instance(&vport->roce);
+ 				if (ret)
+-					return ret;
++					goto clear_roce;
+ 			}
+ 		}
+ 	}
+ 
+ 	return 0;
++
++clear_nic:
++	hdev->nic_client = NULL;
++	vport->nic.client = NULL;
++	return ret;
++clear_roce:
++	hdev->roce_client = NULL;
++	vport->roce.client = NULL;
++	return ret;
+ }
+ 
+ static void hclge_uninit_client_instance(struct hnae3_client *client,
+@@ -5537,7 +5546,7 @@ static void hclge_uninit_client_instance(struct hnae3_client *client,
+ 		}
+ 		if (client->type == HNAE3_CLIENT_ROCE)
+ 			return;
+-		if (client->ops->uninit_instance) {
++		if (hdev->nic_client && client->ops->uninit_instance) {
+ 			hclge_uninit_instance_hw(hdev);
+ 			client->ops->uninit_instance(&vport->nic, 0);
+ 			hdev->nic_client = NULL;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 5570fb5dc2eb4..83fcdd326de71 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1629,17 +1629,17 @@ static int hclgevf_init_client_instance(struct hnae3_client *client,
+ 
+ 		ret = client->ops->init_instance(&hdev->nic);
+ 		if (ret)
+-			return ret;
++			goto clear_nic;
+ 
+ 		if (hdev->roce_client && hnae3_dev_roce_supported(hdev)) {
+ 			struct hnae3_client *rc = hdev->roce_client;
+ 
+ 			ret = hclgevf_init_roce_base_info(hdev);
+ 			if (ret)
+-				return ret;
++				goto clear_roce;
+ 			ret = rc->ops->init_instance(&hdev->roce);
+ 			if (ret)
+-				return ret;
++				goto clear_roce;
+ 		}
+ 		break;
+ 	case HNAE3_CLIENT_UNIC:
+@@ -1648,7 +1648,7 @@ static int hclgevf_init_client_instance(struct hnae3_client *client,
+ 
+ 		ret = client->ops->init_instance(&hdev->nic);
+ 		if (ret)
+-			return ret;
++			goto clear_nic;
+ 		break;
+ 	case HNAE3_CLIENT_ROCE:
+ 		if (hnae3_dev_roce_supported(hdev)) {
+@@ -1659,15 +1659,24 @@ static int hclgevf_init_client_instance(struct hnae3_client *client,
+ 		if (hdev->roce_client && hdev->nic_client) {
+ 			ret = hclgevf_init_roce_base_info(hdev);
+ 			if (ret)
+-				return ret;
++				goto clear_roce;
+ 
+ 			ret = client->ops->init_instance(&hdev->roce);
+ 			if (ret)
+-				return ret;
++				goto clear_roce;
+ 		}
+ 	}
+ 
+ 	return 0;
++
++clear_nic:
++	hdev->nic_client = NULL;
++	hdev->nic.client = NULL;
++	return ret;
++clear_roce:
++	hdev->roce_client = NULL;
++	hdev->roce.client = NULL;
++	return ret;
+ }
+ 
+ static void hclgevf_uninit_client_instance(struct hnae3_client *client,
+@@ -1676,13 +1685,19 @@ static void hclgevf_uninit_client_instance(struct hnae3_client *client,
+ 	struct hclgevf_dev *hdev = ae_dev->priv;
+ 
+ 	/* un-init roce, if it exists */
+-	if (hdev->roce_client)
++	if (hdev->roce_client) {
+ 		hdev->roce_client->ops->uninit_instance(&hdev->roce, 0);
++		hdev->roce_client = NULL;
++		hdev->roce.client = NULL;
++	}
+ 
+ 	/* un-init nic/unic, if this was not called by roce client */
+-	if ((client->ops->uninit_instance) &&
+-	    (client->type != HNAE3_CLIENT_ROCE))
++	if (client->ops->uninit_instance && hdev->nic_client &&
++	    client->type != HNAE3_CLIENT_ROCE) {
+ 		client->ops->uninit_instance(&hdev->nic, 0);
++		hdev->nic_client = NULL;
++		hdev->nic.client = NULL;
++	}
+ }
+ 
+ static int hclgevf_pci_init(struct hclgevf_dev *hdev)
 -- 
 2.20.1
 
