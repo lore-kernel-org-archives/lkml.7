@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34883C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA2C17444
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9E8208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2A721848
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354969;
-	bh=V4x9S+RffWZW9SkrU3gO6jgfU04aB9QwG/YsZYVbTL4=;
+	s=default; t=1573354975;
+	bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CDl0ex0kTSJIqYj80RF7alDY1KqbKqAIRO1cY/QEFxxXKyLNQxTJVgYPxYOg2xtTj
-	 Qxasi1ol6/oHHcy1qeTke0TdzR4praTNeGxQ+HhZfNilD+3YOms9mvY7epY3GY1BQZ
-	 9eqZggM3jlYJdEV8hxAA6ZKM2thapJ261gYOa3r8=
+	b=WyA2R8ejHPatsGYIRXrl5WBjMTtmOrpUyBnCtBSdGWaZmXjxXCiWH3VxNVWIz2S8J
+	 DfOZrAxQ78vFEMxWaU3fZK/n4q04Cw6aq3dpUk4OREonCp9NE50KBTipt8VJEH1gVN
+	 spPJvG4VPHQAlIGokR/KDDhcyc3zbVBIOWlZiFl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbfKJDCl (ORCPT
+        id S1727021AbfKJCtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:02:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57966 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:49:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbfKJCtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:12 -0500
+        id S1726670AbfKJCtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 056DC22573;
-        Sun, 10 Nov 2019 02:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF41D22573;
+        Sun, 10 Nov 2019 02:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354151;
-        bh=V4x9S+RffWZW9SkrU3gO6jgfU04aB9QwG/YsZYVbTL4=;
+        s=default; t=1573354141;
+        bh=0K5Le4/yUVvQ+7LVnDH2eIxwNTpwnAm+e6EkDjNqOyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EzjzomvDdrbP/mjVF9IJfzrcQrKvw0IsbmyfqiG7USZxJkmWG/EPnzqcK0VYx6BO+
-         EUHL6Mgfdnj1KPjW5ZuyhKqdJ+NFd9AtRyc2sSDItclawoSjm6vZY0gHrg6aVt0LS9
-         wBGVlNl4i3ycqa9+rTgGntPvMrj3NUgYGt/m9FoA=
+        b=g2RJBZ66mQDsskJ+rDjDxUCkvBqwkyEtIsRevJ88BWQCD0UE9MdpPLdVGjpN36pje
+         qWPSTWdxlfU46JLZ/QoYqbSFqMiQL83CQJSMYlUUxRTbob90JA+bTuf5Zximo4l62U
+         rQ3w0LTfOoyMXQwjnTczwbu1WFYeO8988W1ks3Ho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/66] net: broadcom: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:47:52 -0500
-Message-Id: <20191110024846.32598-13-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 08/66] libfdt: Ensure INT_MAX is defined in libfdt_env.h
+Date:   Sat,  9 Nov 2019 21:47:47 -0500
+Message-Id: <20191110024846.32598-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -59,67 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
+[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+The next update of libfdt has a new dependency on INT_MAX. Update the
+instances of libfdt_env.h in the kernel to either include the necessary
+header with the definition or define it locally.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
- drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/boot/compressed/libfdt_env.h | 2 ++
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-index c4078401b7ded..900f2f706cbc7 100644
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-@@ -571,12 +571,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
- /*
-  * tx request callback
-  */
--static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct bcm_enet_priv *priv;
- 	struct bcm_enet_desc *desc;
- 	u32 len_stat;
--	int ret;
-+	netdev_tx_t ret;
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 17ae0f3efac8e..005bf4ff1b4cb 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
  
- 	priv = netdev_priv(dev);
++#define INT_MAX			((int)(~0U>>1))
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 7e3789ea396b8..0b3db6322c793 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -4,6 +4,8 @@
+ #include <types.h>
+ #include <string.h>
  
-diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
-index f1b81187a2010..dc7953894c351 100644
---- a/drivers/net/ethernet/broadcom/sb1250-mac.c
-+++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
-@@ -299,7 +299,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
- static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
- static uint64_t sbmac_addr2reg(unsigned char *ptr);
- static irqreturn_t sbmac_intr(int irq, void *dev_instance);
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
- static void sbmac_setmulti(struct sbmac_softc *sc);
- static int sbmac_init(struct platform_device *pldev, long long base);
- static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
-@@ -2032,7 +2032,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
-  *  Return value:
-  *  	   nothing
-  ********************************************************************* */
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct sbmac_softc *sc = netdev_priv(dev);
- 	unsigned long flags;
++#define INT_MAX			((int)(~0U>>1))
++
+ #include "of.h"
+ 
+ typedef u32 uint32_t;
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 2a663c6bb4285..8850e243c9406 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -1,6 +1,7 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
+ 
++#include <linux/kernel.h>	/* For INT_MAX */
+ #include <linux/string.h>
+ 
+ #include <asm/byteorder.h>
 -- 
 2.20.1
 
