@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86601C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F3DC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4B121019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759BF214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354698;
-	bh=v1U9l228jWqtWhwzn9ffmWZreUwxYYHeC5kYUpJ+idU=;
+	s=default; t=1573354702;
+	bh=+n7iVh86RQOyMDJvHXT6SEMYYRji/+S9KG4f4GoUtnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2IRPxOUSpGOpH4RLYamB5eBr9YuQ+nlX+ra8CFfhb2tbbBBPLgdgw3foZqPP0wBD6
-	 yXdfWAI58GAGovI6X/8mFXbWYy1N35HVDw7vwnsPxCkofLf3Q1JwTUuRhTAsKFtVt/
-	 aGHfBq3P8efGVAe7sbJIzamJ7wFL/ZEym4WS2Ew4=
+	b=PK3VSjf9Ri4f0y8ilWWI3FiQEy3lxja4MRqBVRAcA+zTIqTMux26SkWgs7aBGAZDg
+	 elqkzG+NZgMw5MYme+CucvRKMTF7fHTP9Y+lUj3Ec6s1c8czqR05570LYiV2e2FpF/
+	 W5oTdL1SqnblF5IdZ+SKZCzdAAVBCmy8+526r2Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfKJC6Q (ORCPT
+        id S1727122AbfKJC6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:58:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47198 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:58:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729427AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729449AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB0E2245B;
-        Sun, 10 Nov 2019 02:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1495224D5;
+        Sun, 10 Nov 2019 02:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354054;
-        bh=v1U9l228jWqtWhwzn9ffmWZreUwxYYHeC5kYUpJ+idU=;
+        s=default; t=1573354094;
+        bh=+n7iVh86RQOyMDJvHXT6SEMYYRji/+S9KG4f4GoUtnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pb3m+jbj7EmdjgdHMnkbStKES7G3U0f4jsx9u2Ckl4bew3kdfhrPZ9nBuHDUtN43E
-         00K+HLs2KBuETHifmRfk3oTaFH1o48YXq3FiShRi0YZmaGtcc+eW8p3yLfiMH4dtSW
-         Ffe50T2fMgt63Kc5sIgwxxZAlEvRlVzC0idmRPOQ=
+        b=NRbsaftyHu5+cXCQwxZQlp1YdLrvCUJbvog8Jt3VX7fKIu11Xaae6uGxwBB27ER8P
+         K+N68k9ngCWfn4nbT6ldnKwBl2wupAZPoNwKG/fJfaHVCgW8mQlO75ZLK4ykrUX+r6
+         RiQkD8XGKgQWmnHMh3WTvew6iidphtY8YYdIFmso=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 064/109] coresight: perf: Disable trace path upon source error
-Date:   Sat,  9 Nov 2019 21:44:56 -0500
-Message-Id: <20191110024541.31567-64-sashal@kernel.org>
+Cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/109] iwlwifi: dbg: don't crash if the firmware crashes in the middle of a debug dump
+Date:   Sat,  9 Nov 2019 21:45:20 -0500
+Message-Id: <20191110024541.31567-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,42 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-[ Upstream commit 4f8ef21007531c3d7cb5b826e7b2c8999b65ecae ]
+[ Upstream commit 79f25b10c9da3dbc953e47033d0494e51580ac3b ]
 
-We enable the trace path, before activating the source.
-If we fail to enable the source, we must disable the path
-to make sure it is available for another session.
+We can dump data from the firmware either when it crashes,
+or when the firmware is alive.
+Not all the data is available if the firmware is running
+(like the Tx / Rx FIFOs which are available only when the
+firmware is halted), so we first check that the firmware
+is alive to compute the required size for the dump and then
+fill the buffer with the data.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+When we allocate the buffer, we test the STATUS_FW_ERROR
+bit to check if the firmware is alive or not. This bit
+can be changed during the course of the dump since it is
+modified in the interrupt handler.
+
+We hit a case where we allocate the buffer while the
+firmware is sill working, and while we start to fill the
+buffer, the firmware crashes. Then we test STATUS_FW_ERROR
+again and decide to fill the buffer with data like the
+FIFOs even if no room was allocated for this data in the
+buffer. This means that we overflow the buffer that was
+allocated leading to memory corruption.
+
+To fix this, test the STATUS_FW_ERROR bit only once and
+rely on local variables to check if we should dump fifos
+or other firmware components.
+
+Fixes: 04fd2c28226f ("iwlwifi: mvm: add rxf and txf to dump data")
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm-perf.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 99cbf5d5d1c1f..69349b93e8741 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -317,11 +317,13 @@ static void etm_event_start(struct perf_event *event, int flags)
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+index 8390104172410..414dc34f3f3bd 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -775,7 +775,7 @@ void iwl_fw_error_dump(struct iwl_fw_runtime *fwrt)
+ 	dump_data = iwl_fw_error_next_data(dump_data);
  
- 	/* Finally enable the tracer */
- 	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
--		goto fail_end_stop;
-+		goto fail_disable_path;
- 
- out:
- 	return;
- 
-+fail_disable_path:
-+	coresight_disable_path(path);
- fail_end_stop:
- 	perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED);
- 	perf_aux_output_end(handle, 0);
+ 	/* We only dump the FIFOs if the FW is in error state */
+-	if (test_bit(STATUS_FW_ERROR, &fwrt->trans->status)) {
++	if (fifo_data_len) {
+ 		iwl_fw_dump_fifos(fwrt, &dump_data);
+ 		if (radio_len)
+ 			iwl_read_radio_regs(fwrt, &dump_data);
 -- 
 2.20.1
 
