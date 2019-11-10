@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF209C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FC9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946C3215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D629215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353890;
-	bh=3ru+fbk/QufQ0XE+ob/8DRC3fwJaVsL7W6sXvD+nWdI=;
+	s=default; t=1573353898;
+	bh=CtT6uTW0IPM2Nq6HBc1wilGUrLZyI4sUEyoHHr7e/+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcwpP+2sJJKmRWQ1O9IMc3OXwhVp04QvbWpPjH1ST/qgsZBTyap1u4H4w5jfadJpz
-	 Np9zbYy4+5KvKm3+t5o2GAuUh1+xq/lyQaGYrlSQDgS5Th66M1qlXwoj886T4r2yTx
-	 ODOXavyp5FynbLuvxSWBagIp98SORWmaPCKeNbzE=
+	b=DYMFMlB0QL4wn21e/SrnjxljXyv8wCwfcG8fi8aMqDXtjJ/iUThcVRzA7t9Z/nJBn
+	 dnNz2YyMKQgBl5u6RYfBSzMbkixPLwvqRtk7G7fzr+3hslflyPssSUU6mfsGdekUJA
+	 iOCNmNJ9LHJ6C7SQOxSlqwcI/Olfy2aAc8/YqYWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfKJCot (ORCPT
+        id S1727296AbfKJCo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:44:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43660 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbfKJCoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:24 -0500
+        id S1728558AbfKJCo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C612215EA;
-        Sun, 10 Nov 2019 02:44:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B49CC21D7E;
+        Sun, 10 Nov 2019 02:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353864;
-        bh=3ru+fbk/QufQ0XE+ob/8DRC3fwJaVsL7W6sXvD+nWdI=;
+        s=default; t=1573353868;
+        bh=CtT6uTW0IPM2Nq6HBc1wilGUrLZyI4sUEyoHHr7e/+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vTneBXWIyZ6l63Y94mJGrUHds7iXltE01h36VcEW+ae8tURh+k2mYzT/95DLOYc//
-         iynlYtdB9cjIli+GETqdZEU3jpsWGDtN+iUQvbWDC/L80jTTsAsjdFlyDJuS79Ro4/
-         zhnSiKUJ8ep4kTvys1/ZQfYf2noAPyR4+zf3g2Hw=
+        b=hp/tn0Tc9sQassthkEyE/CIEDFZ5oRVgov07rDa/jsa/E1yGzi16GxrJR8VFBlqjr
+         amJZGto+zW8Fdo+yWSMeseI42fJ+tVCSgmQG/bSdmnswapO/lYEdB4BWF6ldAvK7qc
+         +TgiqG2rryOkPRIB0fkyJW4pZw9dytrlT09eFWk4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 144/191] net: faraday: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:39:26 -0500
-Message-Id: <20191110024013.29782-144-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 148/191] f2fs: mark inode dirty explicitly in recover_inode()
+Date:   Sat,  9 Nov 2019 21:39:30 -0500
+Message-Id: <20191110024013.29782-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,65 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 0a715156656bddf4aa92d9868f850aeeb0465fd0 ]
+[ Upstream commit 4a1728cad6340bfbe17bd17fd158b2165cd99508 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+Mark inode dirty explicitly in the end of recover_inode() to make sure
+that all recoverable fields can be persisted later.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/faraday/ftgmac100.c | 4 ++--
- drivers/net/ethernet/faraday/ftmac100.c  | 7 ++++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ fs/f2fs/recovery.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-index ed6c76d20b45b..4f49825d41ea5 100644
---- a/drivers/net/ethernet/faraday/ftgmac100.c
-+++ b/drivers/net/ethernet/faraday/ftgmac100.c
-@@ -712,8 +712,8 @@ static bool ftgmac100_prep_tx_csum(struct sk_buff *skb, u32 *csum_vlan)
- 	return skb_checksum_help(skb) == 0;
- }
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 01636d996ba41..733f005b85d65 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -247,6 +247,8 @@ static void recover_inode(struct inode *inode, struct page *page)
  
--static int ftgmac100_hard_start_xmit(struct sk_buff *skb,
--				     struct net_device *netdev)
-+static netdev_tx_t ftgmac100_hard_start_xmit(struct sk_buff *skb,
-+					     struct net_device *netdev)
- {
- 	struct ftgmac100 *priv = netdev_priv(netdev);
- 	struct ftgmac100_txdes *txdes, *first;
-diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
-index 9015bd911bee9..084f24daf2b5a 100644
---- a/drivers/net/ethernet/faraday/ftmac100.c
-+++ b/drivers/net/ethernet/faraday/ftmac100.c
-@@ -634,8 +634,8 @@ static void ftmac100_tx_complete(struct ftmac100 *priv)
- 		;
- }
+ 	recover_inline_flags(inode, raw);
  
--static int ftmac100_xmit(struct ftmac100 *priv, struct sk_buff *skb,
--			 dma_addr_t map)
-+static netdev_tx_t ftmac100_xmit(struct ftmac100 *priv, struct sk_buff *skb,
-+				 dma_addr_t map)
- {
- 	struct net_device *netdev = priv->netdev;
- 	struct ftmac100_txdes *txdes;
-@@ -1015,7 +1015,8 @@ static int ftmac100_stop(struct net_device *netdev)
- 	return 0;
- }
- 
--static int ftmac100_hard_start_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t
-+ftmac100_hard_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	struct ftmac100 *priv = netdev_priv(netdev);
- 	dma_addr_t map;
++	f2fs_mark_inode_dirty_sync(inode, true);
++
+ 	if (file_enc_name(inode))
+ 		name = "<encrypted>";
+ 	else
 -- 
 2.20.1
 
