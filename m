@@ -2,92 +2,84 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95A6C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B226C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A56520854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:28:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ddfLyy7a"
+	by mail.kernel.org (Postfix) with ESMTP id 630802184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfKJQ2M (ORCPT
+        id S1727053AbfKJQdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:28:12 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50998 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfKJQ2M (ORCPT
+        Sun, 10 Nov 2019 11:33:16 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:44397 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726832AbfKJQdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:28:12 -0500
-Received: by mail-wm1-f66.google.com with SMTP id l17so10066195wmh.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 08:28:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=uDYzPbc8kFGMl90TtuXpm0Vw0nr287sWY4H2QuIPHWw=;
-        b=ddfLyy7aXWXAdGPxrcmEoISI8Z2gbsV4c+Mx0xLpGhfValfXwlA44mkT+yDYctfBPP
-         qqOvAz6cGNsIq1nrvZx9YN8ofsuhtPMgDdVsgf0xJflKerALAzbGoa25gLiUHX9jz6nm
-         ipEp43Z2I5ftE1gICOn3cjsEmkYnfCLELGyuAQpNP5ldSRqZlBPXSrOhlxYi5ypguQkK
-         j4aH3dHdmNGkmuHXqFMXPooddYwnPl2F/weO+pGmD2svnNxdhKucfi5/clvYc0XGBoN+
-         J1vWVAi7Wdbz8DKFbjJ6/t31t2RlgKojoqR8G4ce99EeJBhyxdwPn5TWAlpSncm06oD/
-         qV2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uDYzPbc8kFGMl90TtuXpm0Vw0nr287sWY4H2QuIPHWw=;
-        b=O9nxEBG9OfVAqjgqQfg2E/ymcze+GqAyWcrbcCXyn+ZoEVnERpDkFIrfbMZmri8z6j
-         yiR1wD7ku98OPx+eJ0yfSEJGvM9W0Sw+Aywn8jAsOogMeuhRO/l1zHuptUgGHqGgsYL3
-         tV1m57RG79/S6Y5eH96OkB1QlI6LbkWeKhyBVPoJLhDemlaWID6EqxK4gqMiFoFjlTFq
-         5wfjW2AURhkTZQPBGQUIua0yjogE1b9KWIcalmg8GhvGMi2S2MKrm2B5zCnHuIqEQCWx
-         prc7v4NI62cKuts4HUzGAVLtPXdNUBkQiceKOX7MCDMUq8gTuWy37KDCaF47rKIbq7m9
-         aAEQ==
-X-Gm-Message-State: APjAAAUBeHjeow1kGBFxVs0TKWCa0gNf2qNHtwjGGLCNTDHithc1b9tt
-        /4TniPJuoHc+0V1Cd7LCq5KXjN2112Y=
-X-Google-Smtp-Source: APXvYqzaGdss0v0PWzY3jcMXRcDJ5/5ChUfRzgIevfnYj5rYCAr29Rt3E1EdUSXG7l6GXPoEYSa9cA==
-X-Received: by 2002:a1c:7215:: with SMTP id n21mr13065322wmc.129.1573403289391;
-        Sun, 10 Nov 2019 08:28:09 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id m25sm10920096wmi.46.2019.11.10.08.28.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 10 Nov 2019 08:28:08 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     robh@kernel.org, torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH RESEND] lib: Remove select of inexistant GENERIC_IO
-Date:   Sun, 10 Nov 2019 16:27:54 +0000
-Message-Id: <1573403274-3374-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 10 Nov 2019 11:33:16 -0500
+X-Greylist: delayed 642 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 Nov 2019 11:33:15 EST
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xAAGLhXP013894;
+        Sun, 10 Nov 2019 18:21:43 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id 613EA60275; Sun, 10 Nov 2019 18:21:43 +0200 (IST)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
+        amir.mizinski@nuvoton.com, Amir Mizinski <amirmizi6@gmail.com>
+Subject: [PATCH v1 0/5] add tpm i2c ptp driver
+Date:   Sun, 10 Nov 2019 18:21:32 +0200
+Message-Id: <20191110162137.230913-1-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-config option GENERIC_IO was removed but still selected by lib/kconfig
-This patch finish the cleaning.
+From: Amir Mizinski <amirmizi6@gmail.com>
 
-Fixes: 9de8da47742b ("kconfig: kill off GENERIC_IO option")
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- lib/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+*This patch set adds support for TPM devices that implement the I2C
+interface defined by TCG PTP specification:
+https://trustedcomputinggroup.org/wp-content/uploads/TCG_PC_Client_Platform_TPM_Profile_PTP_2.0_r1.03_v22.pdf
 
-diff --git a/lib/Kconfig b/lib/Kconfig
-index afc78aaf2b25..cb571767d080 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -447,7 +447,6 @@ config ASSOCIATIVE_ARRAY
- config HAS_IOMEM
- 	bool
- 	depends on !NO_IOMEM
--	select GENERIC_IO
- 	default y
- 
- config HAS_IOPORT_MAP
+The driver was tested on Raspberry-Pie 3, using Nuvoton NPCT75X TPM.
+
+interupts are not implemented yet, preparing it for the next patch.
+this patch is based on initial work by oshri Alkoby, Alexander Steffen and Christophe Ricard
+
+Amir Mizinski (5):
+  char: tpm: Make implementation of read16 read32 write32 optional
+  char: tpm: Add check_data handle to tpm_tis_phy_ops in order to check
+    data integrity
+  char: tpm: rewrite "tpm_tis_req_canceled()"
+  dt-bindings: tpm: Add the TPM TIS I2C device tree binding documentaion
+  char: tpm: add tpm_tis_i2c driver
+
+ .../bindings/security/tpm/tpm_tis_i2c.txt          |  24 ++
+ drivers/char/tpm/Kconfig                           |  12 +
+ drivers/char/tpm/Makefile                          |   1 +
+ drivers/char/tpm/tpm_tis_core.c                    | 109 +++++----
+ drivers/char/tpm/tpm_tis_core.h                    |  41 +++-
+ drivers/char/tpm/tpm_tis_i2c.c                     | 272 +++++++++++++++++++++
+ drivers/char/tpm/tpm_tis_spi.c                     |  41 ----
+ 7 files changed, 407 insertions(+), 93 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
+ create mode 100644 drivers/char/tpm/tpm_tis_i2c.c
+
 -- 
-2.23.0
+2.7.4
 
