@@ -8,60 +8,59 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F1C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744FDC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604442075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41009207FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 20:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nc3+0FJt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKQpSFu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfKJUPB (ORCPT
+        id S1727058AbfKJUP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 15:15:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42796 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfKJUPB (ORCPT
+        Sun, 10 Nov 2019 15:15:28 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38075 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfKJUP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 15:15:01 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a15so12386447wrf.9;
-        Sun, 10 Nov 2019 12:14:58 -0800 (PST)
+        Sun, 10 Nov 2019 15:15:27 -0500
+Received: by mail-wr1-f66.google.com with SMTP id i12so5502462wro.5;
+        Sun, 10 Nov 2019 12:15:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=quKcGUOxBX/EpAZRL1w9/S/Fbg+9kzJyGXf32cZprXs=;
-        b=nc3+0FJt/Z4B79GZFUL46cFs/E6csANbAwdtqzP1SFZTtM21B3r5MniiROvwgulfQp
-         SJlmishPqPCYwFxkiT1S1+mW0wlQle+yw07MDqyl7m2KFo3M6NJpdsS50Lu9eXauvz8g
-         qhRdjgEjYpO6I0g7+Q4llvv/9KRRCWJbl026RhURdkj7o5r8h/vOQ0NRjE48ZJA8L1uw
-         pJ60vkpLhJPlcj31FwCBbvnp+2dAh1N8uJJz4DQcQocWan6qTDPnF0+GbYG/2S8W8GGQ
-         AbfsncpZgbEDzT9yy2KAzPXXFDDWjLMrcqJUx8Wdlbuw+LnH0XFZi6ALi1btivkwxsVJ
-         p/cQ==
+        bh=hnA+DGRSH+UJ48bHZH8NzolNWEJgQsv7XrV6s0qnF/M=;
+        b=WKQpSFu5bTmtvP4e2tCMap23TVwRZZzxnziApAFk1JaLkwMWETka988iSGf7B6iY8p
+         W4vozok0bIUDzPPW9PaOW0lpv3JFQ6sN3gZvhXt9Vo7mWFaKBUbQWCKY8r8KT1JS0rX4
+         mqcwMQ/GtsZsraRYSpG/O97TKehxT6iDpFJzW9+ITl/teseEfOXhPR//3z5J4GgiaZI0
+         53SsAGNuz2rB6+L1ZgCtOm7iovf0Y7WUxRfWw6KQFVtckMTTPvPj59h0TTPo7xzzhAkz
+         p5n2z5vDpDBBKFDq+/xVPCz/f8DpkRlmd87kB9l1+c39JQUFWW1XF1th8Prx5mCEg7jl
+         S05Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=quKcGUOxBX/EpAZRL1w9/S/Fbg+9kzJyGXf32cZprXs=;
-        b=q8rwOGjYWLWO8YooVWaabsCH+xlZcpPrxXYwqvMgohuzrg4uP9hVtUxAj4IR8LMCvL
-         Ne7nPGT3OV6iCged8Fc8KQJD2HQ1Gsg7ksLaDgcWYAZOGeD9tn1yZJ5yveFuhR8qAu9U
-         GH020jo96oH5gVdIgiGdTKBggmj1HVFjQRDvFuxEnCGrjR3S24e7UkbGj7BE9Mf0HQiT
-         GGefGw5vHbDbC1NP68EsmgcTOEXCfHGrJjBT0vDxRZBRbD86l3NkDa2+yyZQr0CsR2ka
-         LuRvKKb0o4Thd2Doig+h8NtuBlmUFpq2GBT+q+fBlvzl0YZXnsIYs8VjRTSyavLKbxU1
-         /9hQ==
-X-Gm-Message-State: APjAAAXTufxZKVA35Z7uvid9fDJtiGRq6bHTI0O4wZO16URn+2uCsP8N
-        +Jjy+mlxI9aDWeWE8P1P2Pw=
-X-Google-Smtp-Source: APXvYqzzVfvoGrxeL/ZrXA4zG4dubPqDHPgl8238wrVlxG2TLmM1QxC379GshQ6MY5gAbu9hTs6EUg==
-X-Received: by 2002:a5d:570a:: with SMTP id a10mr12343444wrv.107.1573416897732;
-        Sun, 10 Nov 2019 12:14:57 -0800 (PST)
+        bh=hnA+DGRSH+UJ48bHZH8NzolNWEJgQsv7XrV6s0qnF/M=;
+        b=SnFG+LIzM/Jrd/67MsOZ9JszOGXBzkUcii7I1Ne4Z0nvW3DbEx2XG9memcm8NxavFc
+         9RjzX+XVc9XYonOV+0tC5tkqNVuYPNAtTfN9Tn6H89jTGiRT5d/siqk3iYhsAdnbb75l
+         ZWNDb529fKKJYlLIiLc7w3Jj4gdLNOJVdFrh4QzQo1ICiJsViaPSIpQy8gAgO1xVwfnN
+         0vKpgnB0usWf74hmefbFw419jI5/sEZd7RzZJLzTYk7syyQFTnrJTZlIez8IXAePN5Jx
+         atT18zXWyBlzOoNNEfOGCTAh+6TiLIIJzA8/zPKBgdaO06DAQYzB52izhXeJq2RShiFt
+         Uzbw==
+X-Gm-Message-State: APjAAAWzwUhluhF3j+nGVMFrn7zxnpeCYK1g4o3h8STxjizzMs9EslV6
+        l1nwOKYH7zLU5OomIvdwKGM=
+X-Google-Smtp-Source: APXvYqwwdBnAls0tUi6VQ5lXIPAsQMsuAKpE/eOrUpd+D4s1gXdKbzJp//o6c6Jq1rWfJm36322gig==
+X-Received: by 2002:adf:f743:: with SMTP id z3mr17107172wrp.200.1573416923118;
+        Sun, 10 Nov 2019 12:15:23 -0800 (PST)
 Received: from ziggy.stardust ([95.169.226.39])
-        by smtp.gmail.com with ESMTPSA id z189sm19599662wmc.25.2019.11.10.12.14.55
+        by smtp.gmail.com with ESMTPSA id j22sm22467428wrd.41.2019.11.10.12.15.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 12:14:56 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] dt-bindings: mediatek: update bindings for MT8183
- systimer
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Dehui Sun <dehui.sun@mediatek.com>,
+        Sun, 10 Nov 2019 12:15:22 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] arm64: dts: mt8183: add systimer0 device node
+To:     Dehui Sun <dehui.sun@mediatek.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -70,8 +69,7 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
         erin.lo@mediatek.com, weiyi.lu@mediatek.com
 References: <1572242984-30460-1-git-send-email-dehui.sun@mediatek.com>
- <1572242984-30460-2-git-send-email-dehui.sun@mediatek.com>
- <e28e1419-a259-45d9-fd23-32ccc9aa8021@linaro.org>
+ <1572242984-30460-3-git-send-email-dehui.sun@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -146,12 +144,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  Y1aFdU79pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlI
  FZ6fsEKIAN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+
  r2JwH1CJjrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <a9682f28-1ea0-efb3-c2f2-bb0e2173c827@gmail.com>
-Date:   Sun, 10 Nov 2019 21:14:55 +0100
+Message-ID: <18a0f55b-9371-f741-52a3-cff4eced55f9@gmail.com>
+Date:   Sun, 10 Nov 2019 21:15:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <e28e1419-a259-45d9-fd23-32ccc9aa8021@linaro.org>
+In-Reply-To: <1572242984-30460-3-git-send-email-dehui.sun@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -162,34 +160,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 28/10/2019 10:34, Daniel Lezcano wrote:
-> On 28/10/2019 07:09, Dehui Sun wrote:
->> This commit adds mt8183 compatible node in mtk-timer binding document.
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Dehui Sun <dehui.sun@mediatek.com>
-> 
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> 
+On 28/10/2019 07:09, Dehui Sun wrote:
+> Add systimer0 device node for MT8183.
 
-Applied
+I renamed systemer0 to systimer.
 
->> ---
->>  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
->> index 74c3ead..0d25648 100644
->> --- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
->> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
->> @@ -21,6 +21,7 @@ Required properties:
->>  	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers (GPT)
->>  
->>  	For those SoCs that use SYST
->> +	* "mediatek,mt8183-timer" for MT8183 compatible timers (SYST)
->>  	* "mediatek,mt7629-timer" for MT7629 compatible timers (SYST)
->>  	* "mediatek,mt6765-timer" for MT6765 and all above compatible timers (SYST)
->>  
->>
+Applied, thanks!
+
 > 
+> Signed-off-by: Dehui Sun <dehui.sun@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 7e23179..40145dc 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -326,6 +326,15 @@
+>  			clock-names = "spi", "wrap";
+>  		};
+>  
+> +		systimer: timer@10017000 {
+> +			compatible = "mediatek,mt8183-timer",
+> +				     "mediatek,mt6765-timer";
+> +			reg = <0 0x10017000 0 0x1000>;
+> +			interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&topckgen CLK_TOP_CLK13M>;
+> +			clock-names = "clk13m";
+> +		};
+> +
+>  		auxadc: auxadc@11001000 {
+>  			compatible = "mediatek,mt8183-auxadc",
+>  				     "mediatek,mt8173-auxadc";
 > 
