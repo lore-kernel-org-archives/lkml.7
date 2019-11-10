@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC79C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B28EC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CA9206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9D4215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354620;
-	bh=zruDnVJMljDs/bDjpZySQhScOXxkBULXSigdRF4c80A=;
+	s=default; t=1573354623;
+	bh=yNy5f3Bw3KkD7wJrL+SQzTMJT5C/90GVEYL0GQQQ3zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=esmMCaeTRjA66q9Yg1sEbRCUJByePC7f+6r3TUmLWFaF9F7mDlmwOot/RqZs2yKGF
-	 7OIu35FbMGizIJFa+db8cGcAH1e75McsDxl9ToeGGaQjHKLF0tzuI7rhaQxhbFfbsp
-	 ZnY4ezl7+bp2LWNVMWd7+qCRu8by6xz2B8bP9XwE=
+	b=LXYN+qhJnDHNU3sE5C2y184IKX7YPTQSO3yNMMpQQ9L8MPz84KmP13cXfQ96rvZtd
+	 c9xuLs+zHS/Td7gzQm3UYZNJzEmgL1dFt+9CbVb9/1wkUjRf06l98o97TYK+wz8RXu
+	 eKjYVy9u2C77Hy1pxAcKxgwHwbkOvkcG9BQVXvqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfKJC47 (ORCPT
+        id S1729597AbfKJC5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:56:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47198 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:57:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:56:46 -0500
+        id S1729432AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEBDA2248C;
-        Sun, 10 Nov 2019 02:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87037224BD;
+        Sun, 10 Nov 2019 02:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354081;
-        bh=zruDnVJMljDs/bDjpZySQhScOXxkBULXSigdRF4c80A=;
+        s=default; t=1573354092;
+        bh=yNy5f3Bw3KkD7wJrL+SQzTMJT5C/90GVEYL0GQQQ3zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6Zx5j377IUXjtoUIMI7oHLaFuODYa31y+d1ivEWxmowaCoB9jPlzpP8K13Pb4ml9
-         XRjol1jeoH43kgfrpoP/HYu0qLPS6A9NhG2oGeWpgNg585rdhL0SDg4upnPqgzQ1c0
-         Z8HRnfncFexUVGnrb4YPBF3okROlRvEsAlqMjs8A=
+        b=bt4baJuhfbcLsBNC2TpXD4jAMaMETTBhfbeekqCL0T9fRwGrLB0dzxgZJ2Gd+6syG
+         /TKrSbkdLJI3xhmag5YjVTW4xa1M15bwBQIy7ik6numb9K7dHzjfcgaDYVO8avO96p
+         NBKSjacOU8fIrMb5IiAyV1k9hYBEiOD0F2tcHisc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 079/109] f2fs: mark inode dirty explicitly in recover_inode()
-Date:   Sat,  9 Nov 2019 21:45:11 -0500
-Message-Id: <20191110024541.31567-79-sashal@kernel.org>
+Cc:     Dan Aloni <dan@kernelim.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 087/109] crypto: fix a memory leak in rsa-kcs1pad's encryption mode
+Date:   Sat,  9 Nov 2019 21:45:19 -0500
+Message-Id: <20191110024541.31567-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -59,33 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Dan Aloni <dan@kernelim.com>
 
-[ Upstream commit 4a1728cad6340bfbe17bd17fd158b2165cd99508 ]
+[ Upstream commit 3944f139d5592790b70bc64f197162e643a8512b ]
 
-Mark inode dirty explicitly in the end of recover_inode() to make sure
-that all recoverable fields can be persisted later.
+The encryption mode of pkcs1pad never uses out_sg and out_buf, so
+there's no need to allocate the buffer, which presently is not even
+being freed.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+CC: Herbert Xu <herbert@gondor.apana.org.au>
+CC: linux-crypto@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>
+Signed-off-by: Dan Aloni <dan@kernelim.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 2 ++
- 1 file changed, 2 insertions(+)
+ crypto/rsa-pkcs1pad.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 87942cf2afe1f..2eef266b656b5 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -227,6 +227,8 @@ static void recover_inode(struct inode *inode, struct page *page)
- 	F2FS_I(inode)->i_advise = raw->i_advise;
- 	F2FS_I(inode)->i_flags = le32_to_cpu(raw->i_flags);
+diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
+index 407c64bdcdd9a..3279b457c4ede 100644
+--- a/crypto/rsa-pkcs1pad.c
++++ b/crypto/rsa-pkcs1pad.c
+@@ -261,15 +261,6 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
+ 	pkcs1pad_sg_set_buf(req_ctx->in_sg, req_ctx->in_buf,
+ 			ctx->key_size - 1 - req->src_len, req->src);
  
-+	f2fs_mark_inode_dirty_sync(inode, true);
-+
- 	if (file_enc_name(inode))
- 		name = "<encrypted>";
- 	else
+-	req_ctx->out_buf = kmalloc(ctx->key_size, GFP_KERNEL);
+-	if (!req_ctx->out_buf) {
+-		kfree(req_ctx->in_buf);
+-		return -ENOMEM;
+-	}
+-
+-	pkcs1pad_sg_set_buf(req_ctx->out_sg, req_ctx->out_buf,
+-			ctx->key_size, NULL);
+-
+ 	akcipher_request_set_tfm(&req_ctx->child_req, ctx->child);
+ 	akcipher_request_set_callback(&req_ctx->child_req, req->base.flags,
+ 			pkcs1pad_encrypt_sign_complete_cb, req);
 -- 
 2.20.1
 
