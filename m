@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F507C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E9C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2682521019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B03C21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354681;
-	bh=sL0SKLEML4Y9k9kz/zU2jbjo+8R+OhLdgvLoi8HegYo=;
+	s=default; t=1573354683;
+	bh=355OjtmtRv93XyHT/1hfDWzGXWO13YE85GdtD4/dVCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvI3VPVDT+gGH7tdBwGM0yW/BJfzH3DU2gjA2wpuvxmXpFhx6ZyufCFxsiZ+8ExH5
-	 dTynI1cnrWqyENeUaLP2T3nXSGcq72xPB6vzC7ToChm0ukvZ7l2KUV4ckzgyvRIm3U
-	 CnCW1bEF6+naDqUNcotpihE2qzmsJHM0JEKXGhko=
+	b=IHuHcd52CK2lOR0b0roXQSTxghB/TKxsS6nxqm3t9jtzhTcY23+FcAcWZYkPD2QI0
+	 YLoPFqkO2cszgbEJQnU389HMNrGk7IxwMqOnKUNd5trf4PKtbNIZFTcRvVSvF3h7/z
+	 6SHM5yWZIsgXNLhtAUHvcoUwlXA/NL/uCHZqxR5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfKJC5u (ORCPT
+        id S1729694AbfKJC5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:57:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47202 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:57:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729415AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729421AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 095E22249A;
-        Sun, 10 Nov 2019 02:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C71D1224F1;
+        Sun, 10 Nov 2019 02:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354087;
-        bh=sL0SKLEML4Y9k9kz/zU2jbjo+8R+OhLdgvLoi8HegYo=;
+        s=default; t=1573354102;
+        bh=355OjtmtRv93XyHT/1hfDWzGXWO13YE85GdtD4/dVCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0q3KAQVWkrGgyKRZE7mAWbYRcpduLqIZO79Gfxt/t0vf/lcYKVYkK7y2oPHyMaRd
-         Kr7uT0H5yXfPy5e+N7xLi4EPh0FActD5okLflp/IWzSmGb6jiQ5fH8EElRyuHl/cH1
-         SOzilgatMbAQwkleXsBRIC6mifYE//BwHsugd+j8=
+        b=oyyGPJ/uLhmta7aHH1IQUUMUVxDniA8iShhmv1RZy0pVWf0Df/T23uxHHPz6bcE8m
+         qTXWXxJvVIFM4xuSbTSzue9hAL3szNxg2tmNjnMVfv8YJfrsmsPgynSN+m/VWyb6jw
+         bH9kyU3/sY9h1sLpxqkXxw6aka2fCBln1oraEV1A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 084/109] Bluetooth: L2CAP: Detect if remote is not able to use the whole MPS
-Date:   Sat,  9 Nov 2019 21:45:16 -0500
-Message-Id: <20191110024541.31567-84-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 093/109] scsi: NCR5380: Withhold disconnect privilege for REQUEST SENSE
+Date:   Sat,  9 Nov 2019 21:45:25 -0500
+Message-Id: <20191110024541.31567-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,42 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit a5c3021bb62b970713550db3f7fd08aa70665d7e ]
+[ Upstream commit 7c8ed783c2faa1e3f741844ffac41340338ea0f4 ]
 
-If the remote is not able to fully utilize the MPS choosen recalculate
-the credits based on the actual amount it is sending that way it can
-still send packets of MTU size without credits dropping to 0.
+This is mostly needed because an AztecMonster II target has been observed
+disconnecting REQUEST SENSE commands and then failing to reselect properly.
 
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Suggested-by: Michael Schmitz <schmitzmic@gmail.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/l2cap_core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/scsi/NCR5380.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 0c2219f483d70..f63d9918b15ad 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -6819,6 +6819,16 @@ static int l2cap_le_data_rcv(struct l2cap_chan *chan, struct sk_buff *skb)
- 		chan->sdu_len = sdu_len;
- 		chan->sdu_last_frag = skb;
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 60e051c249a6f..5f26aa2875bd9 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -938,6 +938,8 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+ 	int len;
+ 	int err;
+ 	bool ret = true;
++	bool can_disconnect = instance->irq != NO_IRQ &&
++			      cmd->cmnd[0] != REQUEST_SENSE;
  
-+		/* Detect if remote is not able to use the selected MPS */
-+		if (skb->len + L2CAP_SDULEN_SIZE < chan->mps) {
-+			u16 mps_len = skb->len + L2CAP_SDULEN_SIZE;
-+
-+			/* Adjust the number of credits */
-+			BT_DBG("chan->mps %u -> %u", chan->mps, mps_len);
-+			chan->mps = mps_len;
-+			l2cap_chan_le_send_credits(chan);
-+		}
-+
- 		return 0;
- 	}
+ 	NCR5380_dprint(NDEBUG_ARBITRATION, instance);
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "starting arbitration, id = %d\n",
+@@ -1157,7 +1159,7 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
  
+ 	dsprintk(NDEBUG_SELECTION, instance, "target %d selected, going into MESSAGE OUT phase.\n",
+ 	         scmd_id(cmd));
+-	tmp[0] = IDENTIFY(((instance->irq == NO_IRQ) ? 0 : 1), cmd->device->lun);
++	tmp[0] = IDENTIFY(can_disconnect, cmd->device->lun);
+ 
+ 	len = 1;
+ 	data = tmp;
 -- 
 2.20.1
 
