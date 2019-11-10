@@ -2,105 +2,96 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0C5C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C86C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119162080F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="n4ghcpQ+"
+	by mail.kernel.org (Postfix) with ESMTP id A88312080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573404524;
+	bh=X+Hr26sKlbLNkFabRdYHJh0Vikgffq61go87PtY2UhY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=trA80lFmJYLqsAljctzLY7leTz7AIosjYnQJr0G9pgr5OlAx8IdZ/MzvucKe8dk5A
+	 gFHW9iZHDNBKBgiyARE2DXBafX17DTA2I/za6rXbffbBGSTcdnlXr5r9Hbt8d7v7rQ
+	 TlePnNAIIF3SS8oFtfvk5liRUN3D4MhtpsH01fcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfKJQfh (ORCPT
+        id S1726900AbfKJQsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:35:37 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34513 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfKJQfh (ORCPT
+        Sun, 10 Nov 2019 11:48:38 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34157 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbfKJQsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:35:37 -0500
-Received: by mail-wm1-f68.google.com with SMTP id j18so1432356wmk.1
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 08:35:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=owmOt9b7tYyOuPmCrpO23kXbaPycy+c3ErN7Myu9vJ8=;
-        b=n4ghcpQ+kUtASUT7p4B1mEvCnLKqmdXuPMt1w/2DeBtAqzo4WFbQCPVLK6dA4oJ7TU
-         UdTnOOQ3goDtumYpf2ojJb62lrlQD6SL4y8UVl1SV6HuQwkQ77v8SWLH/b2SgOlNE7jD
-         bha4HDFgsSOO+9VNuaH1OL+snm06Es2jrgGsnwx4R9DJKFZsKSyMrsR7eM/YCRlaiCs/
-         qRL/Dpkgx0fq/dtQDYRfK+01h1UpXYPCaEB8x82grpK278GBfw7ohvDiDBKZN9BCHG4G
-         lRgo7tfVVh6wVyk878+MUQ2MPd/BVQppiXt6p//32S9yn9o+86OetyCNSO6/UjHMY9xN
-         NJmA==
+        Sun, 10 Nov 2019 11:48:38 -0500
+Received: by mail-ot1-f65.google.com with SMTP id t4so9382833otr.1;
+        Sun, 10 Nov 2019 08:48:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=owmOt9b7tYyOuPmCrpO23kXbaPycy+c3ErN7Myu9vJ8=;
-        b=NyHLGwK5dlvAlzzvbYDefI9C89PaX/KPRbWnFWfc4VQak9hF5dYb5VfAoaujy2m48s
-         QVTEsKjF5Sgg0Ef9xfmnvbbHa89EQeu+aQb/2+dKufMMnMARKGWN1J/Kyyin2K5IoEWV
-         HHbDg2k3SFlVpQxSKTtA/sZxG/nTtOTTb/1QeazghA/o9ErL2nCXIvUZUt9QOxuSnFMt
-         pYX1UfIU7ClQz6OCxzkwLIB2BP3WLTLSgO458bol8iGetIRxSzezKQSU86Tqt38x0YHl
-         WNjnPTTnincm3vpd98mxpT7nwD4bzAKpDXY8Nx1KABYNtPzv/3v1hmFUoT2+RpJ8Q/JF
-         ox8Q==
-X-Gm-Message-State: APjAAAUGgc1W/OsX1Q+U3DPX+RSpaFRMtvvZqDflkLcdAoAnX5qOtP77
-        YRpYXajaBrxBr125R3K3uhhWxA==
-X-Google-Smtp-Source: APXvYqwVeZd0eFX2219nHb63noQDwm/1ZxRMPzw/Q8ktBro8sKumFEwgosCRDkkly22/ZmbDVN6v7Q==
-X-Received: by 2002:a1c:7d16:: with SMTP id y22mr16288764wmc.106.1573403735405;
-        Sun, 10 Nov 2019 08:35:35 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id a6sm13008230wrh.69.2019.11.10.08.35.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 10 Nov 2019 08:35:34 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     emilio@elopez.com.ar, mripard@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] clk: sunxi: use of_device_get_match_data
-Date:   Sun, 10 Nov 2019 16:35:20 +0000
-Message-Id: <1573403720-7916-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X+Hr26sKlbLNkFabRdYHJh0Vikgffq61go87PtY2UhY=;
+        b=WkiBwAkeGj3UN+no84lM+DuSqJW8lTahaG6c8SnsN13trd8K6AUtiblhRV7MUlu2CW
+         uwoejGjXbAd2YwBNbYjv9JGtNzVv1VrBzGzuIay6NEoecVWcDvdsCd7RcsBJHBcJmGi+
+         0U9zhqbiYMIgDam2E9gKbo0lqLTpwsdTmvdxs1VAvsWBx4BBJD7v7qpK52GepldhyYPd
+         D5aJjXo9zSkrYRvUwYz9a42NZ/RHhIQwlxb7vFOedHQoLcMbj5QPbtTbZQwByU9iaWqk
+         NEodSVVRpfCxv4xJr3rrLrTi2J8oLCyr59sOVqhFrCBgrz2Kk4aFdbLHfzve9yJxZ0jI
+         CToA==
+X-Gm-Message-State: APjAAAXV+tXPBDI2C/9OdZPxBnlDFDCDB0pYJ3v95irWIR2gBr81LQmk
+        RaMtCUJppZYo22UMX4yET7o0R+WKE1SeLC04w/4=
+X-Google-Smtp-Source: APXvYqxuVzOnIt2l3F8NIGk/yDQJdv9j9+oZHfSr+qXwah8ELqgiaaMixwOSIRXvdrhjma0/WrY8jCGcq1ir1wGunhI=
+X-Received: by 2002:a9d:590f:: with SMTP id t15mr17448636oth.118.1573404515975;
+ Sun, 10 Nov 2019 08:48:35 -0800 (PST)
+MIME-Version: 1.0
+References: <10494959.bKODIZ00nm@kreacher> <3269796.AzLOQfDnpo@kreacher>
+ <CAJZ5v0jM3+qMvO6dx=FmK-xF0q3YKOwBf-yUPXSBfRjxJ59Cpg@mail.gmail.com>
+ <000701d59610$e0b3caa0$a21b5fe0$@net> <CAJZ5v0gsK0OmqAvw2BVGvajPmCTrRGFVVZ0+Y99ZkbbUcWYGOg@mail.gmail.com>
+ <000a01d59656$99798710$cc6c9530$@net>
+In-Reply-To: <000a01d59656$99798710$cc6c9530$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 10 Nov 2019 17:48:21 +0100
+Message-ID: <CAJZ5v0gZDJ2=PiiGw2mcCcVKBM2OyM1G9nRvJ+iWLFUQcXqZuw@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle: Use nanoseconds as the unit of time
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage of of_device_get_match_data reduce the code size a bit.
+On Fri, Nov 8, 2019 at 6:04 PM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.11.08 01:45 Rafael J. Wysocki wrote:
+> > On Fri, Nov 8, 2019 at 9:45 AM Doug Smythies <dsmythies@telus.net> wrote:
+> >
+> ...
+> >> I have been running this v2 today, with both menu and teo
+> >> governors. Acquiring some baseline reference data to compare
+> >> to now. The menu governor response seems different (Supporting
+> >> information/graphs will come later).
+> >
+> > That may be good or bad, depending in what way it is different. :-)
+>
+> My thinking was that the differences should be minimal between
+> the baseline (linux-next as of 2019.11.07) and plus your two patches.
+> Because this was a change of units, but not functionality.
+> Such is the case with the teo governor, but not the menu governor.
+> I have not tried the ladder or haltpoll governors, and don't intend to.
+>
+> Now to attempt to isolate the issue in the code, which might take
+> considerable time.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/clk/sunxi/clk-sun6i-apb0-gates.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Thanks!
 
-diff --git a/drivers/clk/sunxi/clk-sun6i-apb0-gates.c b/drivers/clk/sunxi/clk-sun6i-apb0-gates.c
-index a165e7172346..4c75b0770c74 100644
---- a/drivers/clk/sunxi/clk-sun6i-apb0-gates.c
-+++ b/drivers/clk/sunxi/clk-sun6i-apb0-gates.c
-@@ -37,7 +37,6 @@ static int sun6i_a31_apb0_gates_clk_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct clk_onecell_data *clk_data;
--	const struct of_device_id *device;
- 	const struct gates_data *data;
- 	const char *clk_parent;
- 	const char *clk_name;
-@@ -50,10 +49,9 @@ static int sun6i_a31_apb0_gates_clk_probe(struct platform_device *pdev)
- 	if (!np)
- 		return -ENODEV;
- 
--	device = of_match_device(sun6i_a31_apb0_gates_clk_dt_ids, &pdev->dev);
--	if (!device)
-+	data = of_device_get_match_data(&pdev->dev);
-+	if (!data)
- 		return -ENODEV;
--	data = device->data;
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	reg = devm_ioremap_resource(&pdev->dev, r);
--- 
-2.23.0
-
+It looks like I have overlooked a unit conversion in menu or done a
+unit conversion twice somewhere.
