@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D66AC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A913C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3FA2215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7FD215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355135;
-	bh=yd/2s7NgD5N/H4tCXDGVVAgmUhkj7AtVXMSL9P/ctck=;
+	s=default; t=1573355139;
+	bh=2nG+f6/8R2SGBJCEGEqoz1aBXB5qp42nEOs/chALn5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ec7VUO4CijtyR34OB/hC5kBDjXhPSMqf01HLNDbkczD5hZaOnTu1yviH8Nfj2E/N0
-	 HZe8ZQGMnveVm5/6ZekuxNdgfsccC9qoQQCpOHAKVefI1hyLSRDkT9eM2NeC0gbLfb
-	 ikJkn34rj1W9IZv3ZSEiEiKmtNAF7OewFmXduLxc=
+	b=t7D18e54CXaqX+nte0X82tmIU/sT+sW2PoBumECDqFrGnHVJj5TIJuJYwE6K6zp8W
+	 1eVAGMdOedyuq4ils7TiEibR5tJ9XV2uhv9sWkRJ306S1u4EzoGzPz4ARSVTZ8+hAd
+	 FTBE7mgkgidcko/UWHNmy4ruQNYBKjRwt2QQ96Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbfKJCqd (ORCPT
+        id S1728389AbfKJCq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:46:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbfKJCqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:46:09 -0500
+        id S1728172AbfKJCqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5809F2085B;
-        Sun, 10 Nov 2019 02:46:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6A2E2085B;
+        Sun, 10 Nov 2019 02:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353968;
-        bh=yd/2s7NgD5N/H4tCXDGVVAgmUhkj7AtVXMSL9P/ctck=;
+        s=default; t=1573353960;
+        bh=2nG+f6/8R2SGBJCEGEqoz1aBXB5qp42nEOs/chALn5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NLo+7FU5KSHjF2/4vfa2EImOP+gR3NUxgn6KkezdbSMoVkUzpykfZ42y090ObMvBp
-         7F46CbwP2upAvhF46h6pdbAuiSwWK4HHTK8mI+4ZmQK72vLzFiiZjjAsmOdHMMAChG
-         N7W0iBcZihpoDdLBiVqVyyPCi8qzuvAcS2Q/FA0o=
+        b=St736J5rjWNZsmsMD9S6YwrQt/fx2JUfe2bv7q2sn5oNfZCFcc2YKYxpy9OISuKjg
+         8tqFLEJIUlJ3KYpK1DEJ21YKAHXoU3HSoEpI+tTxYheTSjcw/iyVsGdnSNnh1wAz8h
+         LDkWf3Zsinei4txSaHP32DaOA7kOLJ2tFyHU8RR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 016/109] libfdt: Ensure INT_MAX is defined in libfdt_env.h
-Date:   Sat,  9 Nov 2019 21:44:08 -0500
-Message-Id: <20191110024541.31567-16-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <Haakon.Bugge@oracle.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 014/109] RDMA/i40iw: Fix incorrect iterator type
+Date:   Sat,  9 Nov 2019 21:44:06 -0500
+Message-Id: <20191110024541.31567-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,66 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Håkon Bugge <Haakon.Bugge@oracle.com>
 
-[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
+[ Upstream commit 802fa45cd320de319e86c93bca72abec028ba059 ]
 
-The next update of libfdt has a new dependency on INT_MAX. Update the
-instances of libfdt_env.h in the kernel to either include the necessary
-header with the definition or define it locally.
+Commit f27b4746f378 ("i40iw: add connection management code") uses an
+incorrect rcu iterator, whilst holding the rtnl_lock. Since the
+critical region invokes i40iw_manage_qhash(), which is a sleeping
+function, the rcu locking and traversal cannot be used.
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/libfdt_env.h | 2 ++
- arch/powerpc/boot/libfdt_env.h        | 2 ++
- include/linux/libfdt_env.h            | 1 +
- 3 files changed, 5 insertions(+)
+ drivers/infiniband/hw/i40iw/i40iw_cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-index 07437816e0986..b36c0289a308e 100644
---- a/arch/arm/boot/compressed/libfdt_env.h
-+++ b/arch/arm/boot/compressed/libfdt_env.h
-@@ -6,6 +6,8 @@
- #include <linux/string.h>
- #include <asm/byteorder.h>
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index b7f1ce5333cb8..880c63579ba88 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -1667,7 +1667,7 @@ static enum i40iw_status_code i40iw_add_mqh_6(struct i40iw_device *iwdev,
+ 	unsigned long flags;
  
-+#define INT_MAX			((int)(~0U>>1))
-+
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
- typedef __be64 fdt64_t;
-diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-index f52c31b1f48fa..39155d3b2cefa 100644
---- a/arch/powerpc/boot/libfdt_env.h
-+++ b/arch/powerpc/boot/libfdt_env.h
-@@ -5,6 +5,8 @@
- #include <types.h>
- #include <string.h>
- 
-+#define INT_MAX			((int)(~0U>>1))
-+
- #include "of.h"
- 
- typedef u32 uint32_t;
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-index 14997285e53d3..1aa707ab19bbf 100644
---- a/include/linux/libfdt_env.h
-+++ b/include/linux/libfdt_env.h
-@@ -2,6 +2,7 @@
- #ifndef _LIBFDT_ENV_H
- #define _LIBFDT_ENV_H
- 
-+#include <linux/kernel.h>	/* For INT_MAX */
- #include <linux/string.h>
- 
- #include <asm/byteorder.h>
+ 	rtnl_lock();
+-	for_each_netdev_rcu(&init_net, ip_dev) {
++	for_each_netdev(&init_net, ip_dev) {
+ 		if ((((rdma_vlan_dev_vlan_id(ip_dev) < I40IW_NO_VLAN) &&
+ 		      (rdma_vlan_dev_real_dev(ip_dev) == iwdev->netdev)) ||
+ 		     (ip_dev == iwdev->netdev)) && (ip_dev->flags & IFF_UP)) {
 -- 
 2.20.1
 
