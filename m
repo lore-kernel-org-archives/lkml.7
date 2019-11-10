@@ -2,165 +2,181 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A95C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3216AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6382080F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573419920;
-	bh=BiMOa7BVbdDsJpnGBQ+dlgWZV0phrTRJm8NQ8hGPUjI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=R2FgL1EhOiduTYPaKFIXbKTP1HqGDj8jcvU8FCdgZRq/vyAVk/o2ISPW51vb9on2F
-	 8W/XCB9dBWmiKoNxDAu/lk0UTJHfd4L2ZrE583FMI9MauQ1Wj94Y10ALFp2+YBBJtP
-	 +vkNjkZ/hUe9uIw2uMHEigQJvghIm+mBtVCKflNI=
+	by mail.kernel.org (Postfix) with ESMTP id 93B642080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="GXUH/Zuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfKJVFU (ORCPT
+        id S1727080AbfKJVKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 16:05:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47282 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 16:10:50 -0500
+Received: from ozlabs.org ([203.11.71.1]:47885 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbfKJVFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 16:05:19 -0500
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96C5F2085B
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 21:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573419918;
-        bh=BiMOa7BVbdDsJpnGBQ+dlgWZV0phrTRJm8NQ8hGPUjI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lit8Iot77iV2m7g9crnRYkCdYRUbiWTJa8v2jP/oXy2LnVqMoI77kOzseCejvLSFt
-         ym2nQbVpnEsk0t0XMy96z/JBpH7GeG2IBjbhhfpowisiSuD/3NYuCNLtw3BVbwYHcU
-         xRUsxXNehgaQG3yKkUwBBAsniPmVqg0atovEl/74=
-Received: by mail-wm1-f48.google.com with SMTP id u18so3615201wmc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 13:05:18 -0800 (PST)
-X-Gm-Message-State: APjAAAUkQJ+aNvS6mO4GiW4wWkPHyNtcYa409O319+hCWOvT189OV1hl
-        XE8tE4wvKLhvJfXSUXOfcDakoFJafO+6hTETA6nTww==
-X-Google-Smtp-Source: APXvYqxzCf7oNyiVNbpysNqNTAvbbJ6LTMktOnPu2KporXXemX5yXNQqGMLUQWX3ULVTSTVlBLEq44uERvdx6B2bF2s=
-X-Received: by 2002:a7b:c1ca:: with SMTP id a10mr18936242wmj.161.1573419917046;
- Sun, 10 Nov 2019 13:05:17 -0800 (PST)
+        id S1726856AbfKJVKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 16:10:50 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 47B69g21Jbz9sPK; Mon, 11 Nov 2019 08:10:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1573420247;
+        bh=sgl6XwaqQKuWwNLFcxgCVCJd1ny8a3Y5WhLWIZgRB+w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GXUH/ZucMTSO8lUMwgX4o1MuQVS9+ZQ/DD/1O8usLKlRKOyhuj/4hI8/57w/C9XLP
+         SnmdxtnIbeEhqXifQjE5gJSakdwrJwzIk2m0e2GOxJZ7fI2ctXgvC+WP6SVSAFn6M4
+         Rwg/wedGqEhGy8Ca+ER2oTOv+sJZHGOBeMj9j3os=
+Date:   Sun, 10 Nov 2019 19:40:06 +0000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
+        hch@lst.de, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com,
+        mst@redhat.com, ram.n.pai@gmail.com, aik@ozlabs.ru, cai@lca.pw,
+        tglx@linutronix.de, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
+ with the hypervisor.
+Message-ID: <20191110194006.GQ2461@umbus.Home>
+References: <1573254011-1604-1-git-send-email-linuxram@us.ibm.com>
+ <1573254011-1604-2-git-send-email-linuxram@us.ibm.com>
 MIME-Version: 1.0
-References: <20191106193459.581614484@linutronix.de> <20191106202806.425388355@linutronix.de>
- <a1afc4bb-c90e-db58-42f2-da91a50b1872@kernel.org> <alpine.DEB.2.21.1911102125110.12583@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911102125110.12583@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 10 Nov 2019 13:05:05 -0800
-X-Gmail-Original-Message-ID: <CALCETrXLNub_pTMKvVQiq26=8VQPnx865+w0e-ZnHEg9a397_A@mail.gmail.com>
-Message-ID: <CALCETrXLNub_pTMKvVQiq26=8VQPnx865+w0e-ZnHEg9a397_A@mail.gmail.com>
-Subject: Re: [patch 7/9] x86/iopl: Restrict iopl() permission scope
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="63aIh6YiuHX+oBFP"
+Content-Disposition: inline
+In-Reply-To: <1573254011-1604-2-git-send-email-linuxram@us.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 12:31 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sun, 10 Nov 2019, Andy Lutomirski wrote:
-> > On 11/6/19 11:35 AM, Thomas Gleixner wrote:
-> > > +
-> > > +   if (IS_ENABLED(CONFIG_X86_IOPL_EMULATION)) {
-> > > +           struct tss_struct *tss;
-> > > +           unsigned int tss_base;
-> > > +
-> > > +           /* Prevent racing against a task switch */
-> > > +           preempt_disable();
-> > > +           tss = this_cpu_ptr(&cpu_tss_rw);
-> > > +           if (level == 3) {
-> > > +                   /* Grant access to all I/O ports */
-> > > +                   set_thread_flag(TIF_IO_BITMAP);
-> > > +                   tss_base = IO_BITMAP_OFFSET_VALID_ALL;
-> >
-> > Where is the actual TSS updated?
->
-> Here. It sets the offset to the all zero bitmap. That's all it needs.
 
-Ah, I see.
+--63aIh6YiuHX+oBFP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > I think what you need to do is have a single function, called by
-> > exit_thread(), switch_to(), and here, that updates the TSS to match a
-> > given task's IO bitmap state.  This is probably switch_to_bitmap() or
-> > similar.
->
-> Well, no. exit_thread() and this here actually fiddle with the TIF bit
-> which is not what the switch to case does. There is some stuff which can be
-> shared.
+On Fri, Nov 08, 2019 at 03:00:10PM -0800, Ram Pai wrote:
+> The hypervisor needs to access the contents of the page holding the TCE
+> entries while setting up the TCE entries in the IOMMU's TCE table.
+>=20
+> For SecureVMs, since this page is encrypted, the hypervisor cannot
+> access valid entries. Share the page with the hypervisor. This ensures
+> that the hypervisor sees those valid entries.
+>=20
+> Why is this safe?
+>    The page contains only TCE entries; not any sensitive data
+>    belonging to the Secure VM. The hypervisor has a genuine need to know
+>    the value of the TCE entries, without which it will not be able to
+>    DMA to/from the pages pointed to by the TCE entries. In a Secure
+>    VM the TCE entries point to pages that are also shared with the
+>    hypervisor; example: pages containing bounce buffers.
 
-I was thinking that the code that read iopl_emul and t->io_bitmap_ptr
-and updated x86_tss.io_bitmap_base could be factored out of
-switch_to().  Suppose you call that tss_update_io_bitmap().  And you
-could have another tiny helper:
+The bit that may not be obvious to reviewers from the above is this:
 
-static void update_tif_io_bitmap(void)
-{
-  if (...->iopl_emul || ...->io_bitmap_ptr)
-    set_thread_flag(TIF_IO_BITMAP);
-  else
-    clear_thread_flag(TIF_IO_BITMAP);
-}
+This is *not* a page of "live" TCEs which are actively used for
+translation.  Instead this is just a transient buffer with a batch of
+TCEs to set, passed to the hypervisor with the H_PUT_TCE_INDIRECT call.
 
-Then the whole iopl emulation path becomes:
+>=20
+> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+> ---
+>  arch/powerpc/platforms/pseries/iommu.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platfo=
+rms/pseries/iommu.c
+> index 8d9c2b1..a302aaa 100644
+> --- a/arch/powerpc/platforms/pseries/iommu.c
+> +++ b/arch/powerpc/platforms/pseries/iommu.c
+> @@ -37,6 +37,7 @@
+>  #include <asm/mmzone.h>
+>  #include <asm/plpar_wrappers.h>
+>  #include <asm/svm.h>
+> +#include <asm/ultravisor.h>
+> =20
+>  #include "pseries.h"
+> =20
+> @@ -179,6 +180,23 @@ static int tce_build_pSeriesLP(struct iommu_table *t=
+bl, long tcenum,
+> =20
+>  static DEFINE_PER_CPU(__be64 *, tce_page);
+> =20
+> +/*
+> + * Allocate a tce page.  If secure VM, share the page with the hyperviso=
+r.
+> + *
+> + * NOTE: the TCE page is shared with the hypervisor explicitly and remai=
+ns
+> + * shared for the lifetime of the kernel. It is implicitly unshared at k=
+ernel
+> + * shutdown through a UV_UNSHARE_ALL_PAGES ucall.
+> + */
+> +static __be64 *alloc_tce_page(void)
+> +{
+> +	__be64 *tcep =3D (__be64 *)__get_free_page(GFP_ATOMIC);
+> +
+> +	if (tcep && is_secure_guest())
+> +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
+> +
+> +	return tcep;
+> +}
+> +
+>  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+>  				     long npages, unsigned long uaddr,
+>  				     enum dma_data_direction direction,
+> @@ -206,8 +224,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_tabl=
+e *tbl, long tcenum,
+>  	 * from iommu_alloc{,_sg}()
+>  	 */
+>  	if (!tcep) {
+> -		tcep =3D (__be64 *)__get_free_page(GFP_ATOMIC);
+> -		/* If allocation fails, fall back to the loop implementation */
+> +		tcep =3D alloc_tce_page();
+>  		if (!tcep) {
+>  			local_irq_restore(flags);
+>  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
+> @@ -405,7 +422,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long=
+ start_pfn,
+>  	tcep =3D __this_cpu_read(tce_page);
+> =20
+>  	if (!tcep) {
+> -		tcep =3D (__be64 *)__get_free_page(GFP_ATOMIC);
+> +		tcep =3D alloc_tce_page();
+>  		if (!tcep) {
+>  			local_irq_enable();
+>  			return -ENOMEM;
 
-preempt_disable();
-...->iopl_emul = iopl;
-update_tif_io_bitmap();
-tss_update_io_bitmap();
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-and switch_to() does
+--63aIh6YiuHX+oBFP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-if (new or prev has TIF_IO_BITMAP)
-  tss_update_io_bitmap();
+-----BEGIN PGP SIGNATURE-----
 
-and exit_thread() does:
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl3IZ5MACgkQbDjKyiDZ
+s5K+kQ/+PKlvYDKC8LlZl7hGJs9oVVlDQG/Q3tWSAsQWzhygYK+NhJxNT1t0AF0I
+0HnXRPw673myMED+6+j/cIS6zKg3N9GoOwBnaIxh+CzpsbzGtG+4XpCPcrAVO5+k
+9vBX6Bhr+UmvI4V1tfW6Q3c7MEMEtH4VX57ZSZe9Poq5p39NVyX3nggrIZxlsgjC
+SI90Vj/iGgfs3lyT+bIq9TU9N7pduaW6+JvNArThePpmUMgwc+EbVSGEh851wsGe
+Uav8B7Axg8ZlKsA1XSf+WfHU4Z+/fsYYOBMSfecs1SvyxizGaWoGXayKe1aaGWSj
+amPV9YZYecLkDPZG558cvT20KGnJ6JpJwebhVVzKIv8b/oLOzIjrHEku7Jy1OR+o
+PfYzfpt2Ddc2NGQjsq8ppB6FuAAMRcn5FXtXnxWqS0AbIo+nJ7r9R2gYk1TD+VF7
+S/7LmPh1Cd/xBZyxJFruj0qL21lGA9J0ff1MY7/qZ/8tySd0qJ4ehfQElJAFGSQC
+4JFQFXrC6GLyHdAgF3jCr7AVIcSEy7Zwt4ueNYtPoFFXYqR29UXzGngVUXSb1+90
+nZ9AJDRbFwtQo0ySgMYrchZw9ZOcRkDVuU730lwznf9+n0XpEdBjCauCuV0AK4PY
+yrrBbg8WWdqOYmtgafVuQmUQhX2NFMVYx98wTFJWLT9FaJVBoo4=
+=zGQn
+-----END PGP SIGNATURE-----
 
-...->iopl_emul = 0;
-kfree(...);
-...->io_bitmap_ptr = 0;
-clear_thread_flag(TIF_IO_BITMAP) or update_tif_io_bitmap();
-tss_update_io_bitmap();
-
-and ioperm() does:
-
-kmalloc (if needed);
-update the thread_struct copy of the bitmap.
-set_thread_flag(TIF_IO_BITMAP) or update_tif_io_bitmap();
-tss_update_io_bitmap();
-
-Does that make sense?
-
->
-> > (Maybe it already is, but I swear I checked all the patches in the
-> > series and I can't find the body of tss_update_io_bitmap().  But you
-> > should call it in all branches of this if-else thing.)
->
-> It's in that very same patch:
->
-> > -static void tss_update_io_bitmap(struct tss_struct *tss,
-> > -                                struct thread_struct *thread)
-
-But where did the line you just deleted come from?  I'm obviously just
-bad at reading emails somewhere.
-
-> > +void tss_update_io_bitmap(struct tss_struct *tss, struct thread_struct *thread)
-> >  {
->
-> Let me try to get a bit more reuse. Which still leaves the TIF bit fiddling
-> in this code path.
->
-> Thanks,
->
->         tglx
+--63aIh6YiuHX+oBFP--
