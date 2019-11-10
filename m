@@ -2,182 +2,432 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8089C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D35FC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85033214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36BE2085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 18:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="hoFYnGwW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF4fnKo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfKJSZT (ORCPT
+        id S1727044AbfKJSdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 13:25:19 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35524 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbfKJSZS (ORCPT
+        Sun, 10 Nov 2019 13:33:35 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42745 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfKJSde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 13:25:18 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y6so8128003lfj.2
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 10:25:17 -0800 (PST)
+        Sun, 10 Nov 2019 13:33:34 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m4so9391285qke.9;
+        Sun, 10 Nov 2019 10:33:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=l2BnyD6N7ZcbJ6rXM8fCOY30NMfgyP+0HNQN729Mi1M=;
-        b=hoFYnGwWiIlUN79CfL1458Egx86yn2011W1GbOz5KrvnM+68zPmerizl6c27zU79q9
-         7n0GedelUIbzBdRggt+hAxMWuT1tVEMv++FfCsIB0czxM6TS/zSFXUyti11NHc7proty
-         uQugtzsHn1TlhwejQPZSmCvLu0tD9MXwI75/XorbCseKy8Exzo6vT/aII06OnG9vGZad
-         PHxdG7FfuUzozixoup5LSmM8P4GK5s3K4owAlPINjwSEkpQIMEenbqKGxbIPzu9O+W6H
-         sPIyVbQcVTQ0yYd5N2sOT86jUZBk9p3+tzpEfNQr2bk2kbbz9mDlGmKqfpgZHUU1MNJy
-         KdqA==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e5BqxWoG9689o7tlizwTw2GSpJ0BZd5QftUdl66Fe2A=;
+        b=fF4fnKo1N6s+AGYUbCPETGoRtaXKlEov9kb2p4KmZJbiDfsz12nkc/MWegoMiK+IRu
+         IwIvCJnX84OJHWW5EPCNg5zE4oeZ9602SB3Z1g07RjuA1G2qvsr8dAgtTuEhlUYIDn7D
+         kcfxmvfmRQ+Px47QoXZvNBhUft7e4nnX5n3xxg6A+H0HKR/WAOj8NKeRkpVKoJy8QTGS
+         +HKzcBRjpV9h1XJBrWI9NO62xHFRknHXGpA//qJNtMqCW2S3zkyIL7UpmHHtGT/NKDOf
+         EJuux/vtn5ZvpSZ97WAmKB4ddZYBMFOUVPUPsmKhxver1JzqAJZ8jYzBt1cFiNplGT0c
+         HuJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=l2BnyD6N7ZcbJ6rXM8fCOY30NMfgyP+0HNQN729Mi1M=;
-        b=J7ZUyyetctnSqGfry8ox0rt+XrUmBuZwY7OB3blDRrITVLfjGdzE6cFkRluCTTUhRJ
-         v1fXyWr6VIJXBvCQIO3zaczzmMFXyLoRmgIYL4P8plZkegEiiIgyU9wU3234i/xtDmVh
-         Bv45v3Ipm6X+rzSck8OS26mcs/y5horoOT35iiLq2K4VEIJ3ueyMDak/Z6tiP58CbwVR
-         TKx1RVkjdSAu/XeZ94tc7R0rFzfRAba6oCM8VWABtXFhehVG37JF+F98FTAzZXxUBInb
-         zyyO658hF2RSnKSkrJE2ASR4YIEArkB0mt+XKQ6/5LHFWo1wd1cEjHdtf81yCleqo3Ks
-         grGw==
-X-Gm-Message-State: APjAAAUVuYH/HqTOXSIj0INY/gPT6vdHS5iotwfO9t7UAh3XutjAvSWl
-        ug0PkQfWJROKtu/mPGzt75Smm/1Lszs=
-X-Google-Smtp-Source: APXvYqwhFDigIoPYPsuWKDxPKZk3mKzC2RO5M2X+XFqlY4s6hgEwbqTFAyQMm45l/PT3t2RvOUgUzw==
-X-Received: by 2002:a19:ca13:: with SMTP id a19mr12852250lfg.133.1573410316179;
-        Sun, 10 Nov 2019 10:25:16 -0800 (PST)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id k19sm6879114ljg.18.2019.11.10.10.25.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 10 Nov 2019 10:25:14 -0800 (PST)
-Date:   Sun, 10 Nov 2019 10:25:06 -0800
-From:   Olof Johansson <olof@lixom.net>
-To:     torvalds@linux-foundation.org
-Cc:     olof@lixom.net, arm@kernel.org, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: SoC fixes
-Message-ID: <20191110182506.a2o7r5nyoqaz27gc@localhost>
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e5BqxWoG9689o7tlizwTw2GSpJ0BZd5QftUdl66Fe2A=;
+        b=WkaneI2ndDhdDv4SyVpBYNcJo+JpFZH2czw+6EnxubUnX4T1a/2doIff4l4aLZtC6V
+         wAc2fNk2+zdgrcxKZ0CTa+CREnvS2QVcTyBirau1m/jGcu9E0dXpuvTsxIcU82e/+1+l
+         JcF41mr2ilMbuk9zQI8zZoUb+T0IsdsnPM3z2ANFAxN+oBrVW8PumXvv+oEwWIeo4+t+
+         cIcy7Q/kq3YjaP2Ee4v/wKGbnL8QESNmtUWQ+4uzKxMiOtXQ9p70KAHoMt3+qi++Y/Ym
+         h4MBhTE+j9tEjZjn/FCyGs3E2le3CgqUuzggW2A4MwyskxHh2yQSXqZ+rW7jebptPTXt
+         oSCg==
+X-Gm-Message-State: APjAAAVuJtgAaUc+b01l7BEfwPq5Qb5xoaXrHdC+93zZzqW8rbk6w0vc
+        X5ljQEtHpqToM5ZRICcoFQY=
+X-Google-Smtp-Source: APXvYqzhJG49OG421Zx+UDwz8e2x5MoOaZ0udVaXFgVmz8Prj48HMHUFMe3auNNVDk33txHq1MzflQ==
+X-Received: by 2002:a37:9083:: with SMTP id s125mr7431222qkd.192.1573410811410;
+        Sun, 10 Nov 2019 10:33:31 -0800 (PST)
+Received: from localhost.localdomain ([2804:431:c7d2:34d:4541:a49a:bab2:a597])
+        by smtp.gmail.com with ESMTPSA id f185sm4778469qkd.110.2019.11.10.10.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Nov 2019 10:33:30 -0800 (PST)
+From:   Guilherme Alcarde Gallo <gagallo7@gmail.com>
+To:     helen.koike@collabora.com, drocha.figueiredo@gmail.com,
+        skhan@linuxfoundation.org, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hverkuil-cisco@xs4all.nl, lkcamp@lists.libreplanetbr.org,
+        kieran.bingham@ideasonboard.com, jacopo@jmondi.org,
+        laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se,
+        gabrielabittencourt00@gmail.com, pedro@terraco.de
+Subject: [PATCH v5] media: vimc: Implement get/set selection in sink
+Date:   Sun, 10 Nov 2019 15:33:21 -0300
+Message-Id: <20191110183321.8859-1-gagallo7@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Add support for the sink pad of scaler subdevice to respond
+VIDIOC_G_SELECTION and VIDIOC_S_SELECTION ioctls with the following
+targets: V4L2_SEL_TGT_COMPOSE_BOUNDS and V4L2_SEL_TGT_CROP.
 
-The following changes since commit 86ec2e1739aa1d6565888b4b2059fa47354e1a89:
+* Add new const struct crop_rect_default to initialize subdev scaler
+  properly.
+* Make changes in sink pad format reflect to the crop rectangle. E.g.
+  changing the frame format to a smaller size one can make the former
+  crop rectangle selects a non existing frame area. To solve this
+  situation the crop rectangle is clamped to the frame boundaries.
+* Clamp crop rectangle respecting the sink bounds during set_selection
+  ioctl.
 
-  ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157 (2019-10-25 08:18:23 -0700)
+Signed-off-by: Guilherme Alcarde Gallo <gagallo7@gmail.com>
+Co-developed-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
+Signed-off-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
+Acked-by: Helen Koike <helen.koike@collabora.com>
 
-are available in the Git repository at:
+---
+Changes in V5:
+* Remove an unused variable from vimc_sca_set_selection function.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
+Changes in V4:
+* Revert an unnecessary change in headers include order.
+* Sort the declaration order for local variables in function by the size
+  descending.
 
-for you to fetch changes up to 002d3c65ee81a604430da61e20de7a5b32a0afd5:
+Changes in V3:
+* Sort the headers in alphabetical order.
+* Change all functions prefix to 'vimc_sca_'.
+* Remove useless case.
+* Change commit message subject.
 
-  MAINTAINERS: update Cavium ThunderX2 maintainers (2019-11-06 07:43:19 -0800)
+Changes in V2:
+* Use v4l2_rect_map_inside to clamp the crop rectangle.
+* Do the crop rectangle clamping after changing sink format.
+* Implement try ioctls for selection with CROP* targets.
+* Treat tiny rectangles with area smaller than minimal dimensions of
+  vimc frames.
+* Allow user to get selection when the streaming is on.
+* Reuse bound rectangle generation in a static function.
+* Disable get_selection for Source pads as we did before with
+  set_selection.
+---
+ drivers/media/platform/vimc/vimc-scaler.c | 166 ++++++++++++++++++++--
+ 1 file changed, 151 insertions(+), 15 deletions(-)
 
-----------------------------------------------------------------
-ARM: SoC fixes
+diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+index 2f88a7d9d67b..e2e551bc3ded 100644
+--- a/drivers/media/platform/vimc/vimc-scaler.c
++++ b/drivers/media/platform/vimc/vimc-scaler.c
+@@ -8,6 +8,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/vmalloc.h>
+ #include <linux/v4l2-mediabus.h>
++#include <media/v4l2-rect.h>
+ #include <media/v4l2-subdev.h>
+ 
+ #include "vimc-common.h"
+@@ -18,6 +19,9 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+ 
+ #define MAX_ZOOM	8
+ 
++#define VIMC_SCA_FMT_WIDTH_DEFAULT  640
++#define VIMC_SCA_FMT_HEIGHT_DEFAULT 480
++
+ struct vimc_sca_device {
+ 	struct vimc_ent_device ved;
+ 	struct v4l2_subdev sd;
+@@ -25,6 +29,7 @@ struct vimc_sca_device {
+ 	 * with the width and hight multiplied by mult
+ 	 */
+ 	struct v4l2_mbus_framefmt sink_fmt;
++	struct v4l2_rect crop_rect;
+ 	/* Values calculated when the stream starts */
+ 	u8 *src_frame;
+ 	unsigned int src_line_size;
+@@ -33,22 +38,64 @@ struct vimc_sca_device {
+ };
+ 
+ static const struct v4l2_mbus_framefmt sink_fmt_default = {
+-	.width = 640,
+-	.height = 480,
++	.width = VIMC_SCA_FMT_WIDTH_DEFAULT,
++	.height = VIMC_SCA_FMT_HEIGHT_DEFAULT,
+ 	.code = MEDIA_BUS_FMT_RGB888_1X24,
+ 	.field = V4L2_FIELD_NONE,
+ 	.colorspace = V4L2_COLORSPACE_DEFAULT,
+ };
+ 
++static const struct v4l2_rect crop_rect_default = {
++	.width = VIMC_SCA_FMT_WIDTH_DEFAULT,
++	.height = VIMC_SCA_FMT_HEIGHT_DEFAULT,
++	.top = 0,
++	.left = 0,
++};
++
++static const struct v4l2_rect crop_rect_min = {
++	.width = VIMC_FRAME_MIN_WIDTH,
++	.height = VIMC_FRAME_MIN_HEIGHT,
++	.top = 0,
++	.left = 0,
++};
++
++static struct v4l2_rect
++vimc_sca_get_crop_bound_sink(const struct v4l2_mbus_framefmt *sink_fmt)
++{
++	/* Get the crop bounds to clamp the crop rectangle correctly */
++	struct v4l2_rect r = {
++		.left = 0,
++		.top = 0,
++		.width = sink_fmt->width,
++		.height = sink_fmt->height,
++	};
++	return r;
++}
++
++static void vimc_sca_adjust_sink_crop(struct v4l2_rect *r,
++				      const struct v4l2_mbus_framefmt *sink_fmt)
++{
++	const struct v4l2_rect sink_rect =
++		vimc_sca_get_crop_bound_sink(sink_fmt);
++
++	/* Disallow rectangles smaller than the minimal one. */
++	v4l2_rect_set_min_size(r, &crop_rect_min);
++	v4l2_rect_map_inside(r, &sink_rect);
++}
++
+ static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
+ 			     struct v4l2_subdev_pad_config *cfg)
+ {
+ 	struct v4l2_mbus_framefmt *mf;
++	struct v4l2_rect *r;
+ 	unsigned int i;
+ 
+ 	mf = v4l2_subdev_get_try_format(sd, cfg, 0);
+ 	*mf = sink_fmt_default;
+ 
++	r = v4l2_subdev_get_try_crop(sd, cfg, 0);
++	*r = crop_rect_default;
++
+ 	for (i = 1; i < sd->entity.num_pads; i++) {
+ 		mf = v4l2_subdev_get_try_format(sd, cfg, i);
+ 		*mf = sink_fmt_default;
+@@ -107,16 +154,21 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
+ 			    struct v4l2_subdev_format *format)
+ {
+ 	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
++	struct v4l2_rect *crop_rect;
+ 
+ 	/* Get the current sink format */
+-	format->format = (format->which == V4L2_SUBDEV_FORMAT_TRY) ?
+-			 *v4l2_subdev_get_try_format(sd, cfg, 0) :
+-			 vsca->sink_fmt;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		format->format = *v4l2_subdev_get_try_format(sd, cfg, 0);
++		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
++	} else {
++		format->format = vsca->sink_fmt;
++		crop_rect = &vsca->crop_rect;
++	}
+ 
+ 	/* Scale the frame size for the source pad */
+ 	if (VIMC_IS_SRC(format->pad)) {
+-		format->format.width = vsca->sink_fmt.width * sca_mult;
+-		format->format.height = vsca->sink_fmt.height * sca_mult;
++		format->format.width = crop_rect->width * sca_mult;
++		format->format.height = crop_rect->height * sca_mult;
+ 	}
+ 
+ 	return 0;
+@@ -148,6 +200,7 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
+ {
+ 	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+ 	struct v4l2_mbus_framefmt *sink_fmt;
++	struct v4l2_rect *crop_rect;
+ 
+ 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		/* Do not change the format while stream is on */
+@@ -155,8 +208,10 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
+ 			return -EBUSY;
+ 
+ 		sink_fmt = &vsca->sink_fmt;
++		crop_rect = &vsca->crop_rect;
+ 	} else {
+ 		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
++		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
+ 	}
+ 
+ 	/*
+@@ -165,8 +220,8 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
+ 	 */
+ 	if (VIMC_IS_SRC(fmt->pad)) {
+ 		fmt->format = *sink_fmt;
+-		fmt->format.width = sink_fmt->width * sca_mult;
+-		fmt->format.height = sink_fmt->height * sca_mult;
++		fmt->format.width = crop_rect->width * sca_mult;
++		fmt->format.height = crop_rect->height * sca_mult;
+ 	} else {
+ 		/* Set the new format in the sink pad */
+ 		vimc_sca_adjust_sink_fmt(&fmt->format);
+@@ -184,6 +239,78 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
+ 			fmt->format.xfer_func, fmt->format.ycbcr_enc);
+ 
+ 		*sink_fmt = fmt->format;
++
++		/* Do the crop, but respect the current bounds */
++		vimc_sca_adjust_sink_crop(crop_rect, sink_fmt);
++	}
++
++	return 0;
++}
++
++static int vimc_sca_get_selection(struct v4l2_subdev *sd,
++				  struct v4l2_subdev_pad_config *cfg,
++				  struct v4l2_subdev_selection *sel)
++{
++	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
++	struct v4l2_mbus_framefmt *sink_fmt;
++	struct v4l2_rect *crop_rect;
++
++	if (VIMC_IS_SRC(sel->pad))
++		return -EINVAL;
++
++	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
++		sink_fmt = &vsca->sink_fmt;
++		crop_rect = &vsca->crop_rect;
++	} else {
++		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
++		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
++	}
++
++	switch (sel->target) {
++	case V4L2_SEL_TGT_CROP:
++		sel->r = *crop_rect;
++		break;
++	case V4L2_SEL_TGT_CROP_BOUNDS:
++		sel->r = vimc_sca_get_crop_bound_sink(sink_fmt);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int vimc_sca_set_selection(struct v4l2_subdev *sd,
++				  struct v4l2_subdev_pad_config *cfg,
++				  struct v4l2_subdev_selection *sel)
++{
++	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
++	struct v4l2_mbus_framefmt *sink_fmt;
++	struct v4l2_rect *crop_rect;
++
++	if (VIMC_IS_SRC(sel->pad))
++		return -EINVAL;
++
++	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
++		/* Do not change the format while stream is on */
++		if (vsca->src_frame)
++			return -EBUSY;
++
++		crop_rect = &vsca->crop_rect;
++		sink_fmt = &vsca->sink_fmt;
++	} else {
++		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
++		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
++	}
++
++	switch (sel->target) {
++	case V4L2_SEL_TGT_CROP:
++		/* Do the crop, but respect the current bounds */
++		vimc_sca_adjust_sink_crop(&sel->r, sink_fmt);
++		*crop_rect = sel->r;
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 
+ 	return 0;
+@@ -195,6 +322,8 @@ static const struct v4l2_subdev_pad_ops vimc_sca_pad_ops = {
+ 	.enum_frame_size	= vimc_sca_enum_frame_size,
+ 	.get_fmt		= vimc_sca_get_fmt,
+ 	.set_fmt		= vimc_sca_set_fmt,
++	.get_selection		= vimc_sca_get_selection,
++	.set_selection		= vimc_sca_set_selection,
+ };
+ 
+ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+@@ -213,11 +342,11 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+ 		vsca->bpp = vpix->bpp;
+ 
+ 		/* Calculate the width in bytes of the src frame */
+-		vsca->src_line_size = vsca->sink_fmt.width *
++		vsca->src_line_size = vsca->crop_rect.width *
+ 				      sca_mult * vsca->bpp;
+ 
+ 		/* Calculate the frame size of the source pad */
+-		frame_size = vsca->src_line_size * vsca->sink_fmt.height *
++		frame_size = vsca->src_line_size * vsca->crop_rect.height *
+ 			     sca_mult;
+ 
+ 		/* Allocate the frame buffer. Use vmalloc to be able to
+@@ -259,9 +388,10 @@ static void vimc_sca_fill_pix(u8 *const ptr,
+ }
+ 
+ static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
+-			       const unsigned int lin, const unsigned int col,
++			       unsigned int lin, unsigned int col,
+ 			       const u8 *const sink_frame)
+ {
++	const struct v4l2_rect crop_rect = vsca->crop_rect;
+ 	unsigned int i, j, index;
+ 	const u8 *pixel;
+ 
+@@ -278,8 +408,10 @@ static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
+ 	/* point to the place we are going to put the first pixel
+ 	 * in the scaled src frame
+ 	 */
++	lin -= crop_rect.top;
++	col -= crop_rect.left;
+ 	index = VIMC_FRAME_INDEX(lin * sca_mult, col * sca_mult,
+-				 vsca->sink_fmt.width * sca_mult, vsca->bpp);
++				 crop_rect.width * sca_mult, vsca->bpp);
+ 
+ 	dev_dbg(vsca->ved.dev, "sca: %s: scale_pix src pos %dx%d, index %d\n",
+ 		vsca->sd.name, lin * sca_mult, col * sca_mult, index);
+@@ -307,12 +439,13 @@ static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
+ static void vimc_sca_fill_src_frame(const struct vimc_sca_device *const vsca,
+ 				    const u8 *const sink_frame)
+ {
++	const struct v4l2_rect r = vsca->crop_rect;
+ 	unsigned int i, j;
+ 
+ 	/* Scale each pixel from the original sink frame */
+ 	/* TODO: implement scale down, only scale up is supported for now */
+-	for (i = 0; i < vsca->sink_fmt.height; i++)
+-		for (j = 0; j < vsca->sink_fmt.width; j++)
++	for (i = r.top; i < r.top + r.height; i++)
++		for (j = r.left; j < r.left + r.width; j++)
+ 			vimc_sca_scale_pix(vsca, i, j, sink_frame);
+ }
+ 
+@@ -384,5 +517,8 @@ struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
+ 	/* Initialize the frame format */
+ 	vsca->sink_fmt = sink_fmt_default;
+ 
++	/* Initialize the crop selection */
++	vsca->crop_rect = crop_rect_default;
++
+ 	return &vsca->ved;
+ }
+-- 
+2.21.0
 
-A set of fixes that have trickled in over the last couple of weeks:
-
- - MAINTAINER update for Cavium/Marvell ThunderX2
-
- - stm32 tweaks to pinmux for Joystick/Camera, and RAM allocation for CAN
-   interfaces
-
- - i.MX fixes for voltage regulator GPIO mappings, fixes voltage scaling
-   issues
-
- - More i.MX fixes for various issues on i.MX eval boards: interrupt
-   storm due to u-boot leaving pins in new states, fixing power button
-   config, a couple of compatible-string corrections.
-
- - Powerdown and Suspend/Resume fixes for Allwinner A83-based tablets
-
- - A few documentation tweaks and a fix of a memory leak in the reset
-   subsystem
-
-----------------------------------------------------------------
-Adam Ford (1):
-      ARM: dts: imx6-logicpd: Re-enable SNVS power key
-
-Amelie Delaunay (2):
-      ARM: dts: stm32: remove OV5640 pinctrl definition on stm32mp157c-ev1
-      ARM: dts: stm32: change joystick pinctrl definition on stm32mp157c-ev1
-
-Ben Dooks (1):
-      soc: imx: gpc: fix initialiser format
-
-Christophe Roullier (1):
-      ARM: dts: stm32: Fix CAN RAM mapping on stm32mp157c
-
-Fabio Estevam (1):
-      ARM: dts: imx6qdl-sabreauto: Fix storm of accelerometer interrupts
-
-Jayachandran C (1):
-      MAINTAINERS: update Cavium ThunderX2 maintainers
-
-Kishon Vijay Abraham I (1):
-      reset: Fix memory leak in reset_control_array_put()
-
-Lucas Stach (1):
-      arm64: dts: zii-ultra: fix ARM regulator GPIO handle
-
-Olof Johansson (5):
-      Merge tag 'reset-fixes-for-v5.5' of git://git.pengutronix.de/git/pza/linux into arm/fixes
-      Merge tag 'imx-fixes-5.4-2' of git://git.kernel.org/.../shawnguo/linux into arm/fixes
-      Merge tag 'sunxi-fixes-for-5.4-2' of https://git.kernel.org/.../sunxi/linux into arm/fixes
-      Merge tag 'imx-fixes-5.4-3' of git://git.kernel.org/.../shawnguo/linux into arm/fixes
-      Merge tag 'stm32-dt-for-v5.4-fixes-2' of git://git.kernel.org/.../atorgue/stm32 into arm/fixes
-
-Ondrej Jirman (2):
-      ARM: dts: sun8i-a83t-tbs-a711: Fix WiFi resume from suspend
-      ARM: sunxi: Fix CPU powerdown on A83T
-
-Patrice Chotard (1):
-      ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157
-
-Philipp Zabel (4):
-      reset: fix of_reset_simple_xlate kerneldoc comment
-      reset: fix of_reset_control_get_count kerneldoc comment
-      reset: fix reset_control_lookup kerneldoc comment
-      reset: fix reset_control_get_exclusive kerneldoc comment
-
-Randy Dunlap (1):
-      reset: fix reset_control_ops kerneldoc comment
-
-Shengjiu Wang (2):
-      arm64: dts: imx8mm: fix compatible string for sdma
-      arm64: dts: imx8mn: fix compatible string for sdma
-
-Yuantian Tang (1):
-      arm64: dts: ls1028a: fix a compatible issue
-
- .mailmap                                            |  4 ++++
- MAINTAINERS                                         |  1 -
- arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi       |  4 ++++
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi            |  8 ++++++++
- arch/arm/boot/dts/stm32mp157c-ev1.dts               | 13 ++-----------
- arch/arm/boot/dts/stm32mp157c.dtsi                  |  4 ++--
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts           |  1 +
- arch/arm/mach-sunxi/mc_smp.c                        |  6 +++++-
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts   |  2 +-
- arch/arm64/boot/dts/freescale/imx8mm.dtsi           |  6 +++---
- arch/arm64/boot/dts/freescale/imx8mn.dtsi           |  6 +++---
- arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi |  2 +-
- drivers/reset/core.c                                |  5 +++--
- drivers/soc/imx/gpc.c                               |  8 ++++----
- include/linux/reset-controller.h                    |  4 ++--
- include/linux/reset.h                               |  2 +-
- 16 files changed, 44 insertions(+), 32 deletions(-)
