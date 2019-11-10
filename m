@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF63C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A5AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C9322573
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F7B22573
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354437;
-	bh=NYn043bx4MnFOiz3nSb2ma/6pRSTOnBpZQfujKJhvyA=;
+	s=default; t=1573354440;
+	bh=J1TfCkGGjmKJvfH1ogXdHfv9dUz/lNqn2N2wwhcvuC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjNNfjMu++NVrQWh8ogPB8kgViB0beaLA66rnqkxBMnVEuLMLxn1rvkw2KcWF20cI
-	 G2ICuWGabYJO17f4tG6Lx651QL40rjxG+4Mt0875Ni4+BBjoK5GV1PWwR8YFJUknQU
-	 aabAOpq4fO0Ql4Vi1zFxnqJ1THWCM3UJc1li7WJ8=
+	b=nyk35xKbfCmJZcMeG9FrM7PfKAFSeHKlmqXC2fbB5EMs0WHns33+36/N9b7ILYp0L
+	 ObjUP4IYOn7si8tzGN7PAEMcKNMZjHoIvHuyBlzQ9lZ0OM1IMv2B50373vv0U8qdw/
+	 3ZH53WJskpoT1leHFz0Bl8X90sC3uTHBFaAzoNUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfKJCvA (ORCPT
+        id S1729855AbfKJCu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34390 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729766AbfKJCuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:39 -0500
+        id S1728456AbfKJCuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07F6F227C3;
-        Sun, 10 Nov 2019 02:50:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16A98229F0;
+        Sun, 10 Nov 2019 02:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354238;
-        bh=NYn043bx4MnFOiz3nSb2ma/6pRSTOnBpZQfujKJhvyA=;
+        s=default; t=1573354236;
+        bh=J1TfCkGGjmKJvfH1ogXdHfv9dUz/lNqn2N2wwhcvuC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A53NGpYuwwk60bwX3J0kZ3rPF9+UszahT2QOQOVkcngSlX4ZfdV5dnWtZIEXVCgfk
-         Bl7uBPYSmh/KFPh6z8cSqhnW2qGUetVM4bWX7A5VuJcnv5FwwUm9O9v3gAwxoHsLZ0
-         2+p/mnDnoMIGRTXx5ixR9M52a6n15bBqhC/iogkM=
+        b=gq69cPTgj/xD9uAIHM79hygoPS+7tpb5OER35kGBAZ2yQnDuzuCsIexPPpuhdzS2T
+         pA37rFR7NWyurlLzNzOAFf9n6Imr7JhNfjIZOHT1qm5NCWgjoMEeotanza7noVnkaf
+         ykcyQuUL3LIsNjbL5KbwKaMUl8MEB180R0QjvyGc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Breno Leitao <leitao@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 04/40] powerpc/iommu: Avoid derefence before pointer check
-Date:   Sat,  9 Nov 2019 21:49:56 -0500
-Message-Id: <20191110025032.827-4-sashal@kernel.org>
+Cc:     Anton Vasilyev <vasilyev@ispras.ru>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/40] serial: mxs-auart: Fix potential infinite loop
+Date:   Sat,  9 Nov 2019 21:49:55 -0500
+Message-Id: <20191110025032.827-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
 References: <20191110025032.827-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,38 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Breno Leitao <leitao@debian.org>
+From: Anton Vasilyev <vasilyev@ispras.ru>
 
-[ Upstream commit 984ecdd68de0fa1f63ce205d6c19ef5a7bc67b40 ]
+[ Upstream commit 5963e8a3122471cadfe0eba41c4ceaeaa5c8bb4d ]
 
-The tbl pointer is being derefenced by IOMMU_PAGE_SIZE prior the check
-if it is not NULL.
+On the error path of mxs_auart_request_gpio_irq() is performed
+backward iterating with index i of enum type. Underline enum type
+may be unsigned char. In this case check (--i >= 0) will be always
+true and error handling goes into infinite loop.
 
-Just moving the dereference code to after the check, where there will
-be guarantee that 'tbl' will not be NULL.
+The patch changes the check so that it is valid for signed and unsigned
+types.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/mxs-auart.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-index a8e3490b54e3b..4c9b5970af371 100644
---- a/arch/powerpc/kernel/iommu.c
-+++ b/arch/powerpc/kernel/iommu.c
-@@ -764,9 +764,9 @@ dma_addr_t iommu_map_page(struct device *dev, struct iommu_table *tbl,
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index daa4a65ef6ffc..fe870170db74a 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1248,8 +1248,9 @@ static int mxs_auart_request_gpio_irq(struct mxs_auart_port *s)
  
- 	vaddr = page_address(page) + offset;
- 	uaddr = (unsigned long)vaddr;
--	npages = iommu_num_pages(uaddr, size, IOMMU_PAGE_SIZE(tbl));
+ 	/*
+ 	 * If something went wrong, rollback.
++	 * Be careful: i may be unsigned.
+ 	 */
+-	while (err && (--i >= 0))
++	while (err && (i-- > 0))
+ 		if (irq[i] >= 0)
+ 			free_irq(irq[i], s);
  
- 	if (tbl) {
-+		npages = iommu_num_pages(uaddr, size, IOMMU_PAGE_SIZE(tbl));
- 		align = 0;
- 		if (tbl->it_page_shift < PAGE_SHIFT && size >= PAGE_SIZE &&
- 		    ((unsigned long)vaddr & ~PAGE_MASK) == 0)
 -- 
 2.20.1
 
