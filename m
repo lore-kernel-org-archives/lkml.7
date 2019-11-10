@@ -2,50 +2,52 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C33DC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B5AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F404422593
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6924122583
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354182;
-	bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+	s=default; t=1573354187;
+	bh=aVKmmzuDZ5QTQRCW128cpPdiooGGRAKbQA6riTvUBew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+C3zZHBjYAlIXxk+Pk/LB8QXLMKFdmkDgPz5V29tZXakj2K+pGGfWiL3o/EAsoq/
-	 OJAtc0vgfLuZ9Hr7jnfK6jEgwJeEI5LBKRmw1AXSmYt7B1kEHUfGrvvTNFVuzxRTm9
-	 7wHxF6VNBod0+rLSiMdE9k7ZPeHeG8IoZJ6kLUbw=
+	b=rgxcKzfaXSEca/2E50j0PLdu/WjAt9Dcde078+7r/JNzg3gcqlUAS7fg4smwtmQPa
+	 MFW3+KooxgR6TcvJN2gaTInzp74qkKwW35hwfldMuc3uB0CIvX0NzRNe3uDTpAaGTc
+	 PJ54C7sGyF2Bu/CnQKe3Eh8/2TrTWdv/+cRFZ3es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfKJCtk (ORCPT
+        id S1729539AbfKJCtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:49:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58572 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:49:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbfKJCtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:25 -0500
+        id S1729443AbfKJCt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCD6522582;
-        Sun, 10 Nov 2019 02:49:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E55FF22582;
+        Sun, 10 Nov 2019 02:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354164;
-        bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+        s=default; t=1573354166;
+        bh=aVKmmzuDZ5QTQRCW128cpPdiooGGRAKbQA6riTvUBew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NcSMUzHFUpHvDZBregxmYGzzukMs+5xoJbaqGC09hQhQVyebRD6fud9sfHMHX+giA
-         YFUmWM2/OQ3CQDpKLK+TUlnTQgcrtnwEN6LAdop4pL88FytqoWQiHFM4GUsnaqPOd0
-         We0iu66Bx0KabkUayX+WLjD4HVceeIAi/3tsA2kQ=
+        b=aiXePIOc5+cZRgZIxrOeJ6Ap3RoFpUv2qZHOeCRTaNIsgtW5iRoVThC7mT/5YMVez
+         y8oWFAxhC6za0ma1987nr7FxeCrRXJLdk4NNEfqMunLWiR2xM4LrZtRr6V486hTwJW
+         cissVaaVuY/TyMKryogOKE56/JRwSzpk/dRZbkxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 21/66] ARM: dts: ux500: Fix LCDA clock line muxing
-Date:   Sat,  9 Nov 2019 21:48:00 -0500
-Message-Id: <20191110024846.32598-21-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 23/66] spi: pic32: Use proper enum in dmaengine_prep_slave_rg
+Date:   Sat,  9 Nov 2019 21:48:02 -0500
+Message-Id: <20191110024846.32598-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -58,47 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit ecde29569e3484e1d0a032bf4074449bce4d4a03 ]
+[ Upstream commit 8cfde7847d5ed0bb77bace41519572963e43cd17 ]
 
-The "lcdaclk_b_1" group is muxed with the function "lcd"
-but needs a separate entry to be muxed in with "lcda"
-rather than "lcd".
+Clang warns when one enumerated type is converted implicitly to another:
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+drivers/spi/spi-pic32.c:323:8: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+                                          DMA_FROM_DEVICE,
+                                          ^~~~~~~~~~~~~~~
+drivers/spi/spi-pic32.c:333:8: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+                                          DMA_TO_DEVICE,
+                                          ^~~~~~~~~~~~~
+2 warnings generated.
+
+Use the proper enums from dma_transfer_direction (DMA_FROM_DEVICE =
+DMA_DEV_TO_MEM = 2, DMA_TO_DEVICE = DMA_MEM_TO_DEV = 1) to satify Clang.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/159
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ste-href-family-pinctrl.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/spi/spi-pic32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-index 5c5cea232743d..1ec193b0c5065 100644
---- a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-@@ -607,16 +607,20 @@
- 
- 			mcde {
- 				lcd_default_mode: lcd_default {
--					default_mux {
-+					default_mux1 {
- 						/* Mux in VSI0 and all the data lines */
- 						function = "lcd";
- 						groups =
- 						"lcdvsi0_a_1", /* VSI0 for LCD */
- 						"lcd_d0_d7_a_1", /* Data lines */
- 						"lcd_d8_d11_a_1", /* TV-out */
--						"lcdaclk_b_1", /* Clock line for TV-out */
- 						"lcdvsi1_a_1"; /* VSI1 for HDMI */
- 					};
-+					default_mux2 {
-+						function = "lcda";
-+						groups =
-+						"lcdaclk_b_1"; /* Clock line for TV-out */
-+					};
- 					default_cfg1 {
- 						pins =
- 						"GPIO68_E1", /* VSI0 */
+diff --git a/drivers/spi/spi-pic32.c b/drivers/spi/spi-pic32.c
+index fefb688a34328..2f4df804c4d80 100644
+--- a/drivers/spi/spi-pic32.c
++++ b/drivers/spi/spi-pic32.c
+@@ -320,7 +320,7 @@ static int pic32_spi_dma_transfer(struct pic32_spi *pic32s,
+ 	desc_rx = dmaengine_prep_slave_sg(master->dma_rx,
+ 					  xfer->rx_sg.sgl,
+ 					  xfer->rx_sg.nents,
+-					  DMA_FROM_DEVICE,
++					  DMA_DEV_TO_MEM,
+ 					  DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc_rx) {
+ 		ret = -EINVAL;
+@@ -330,7 +330,7 @@ static int pic32_spi_dma_transfer(struct pic32_spi *pic32s,
+ 	desc_tx = dmaengine_prep_slave_sg(master->dma_tx,
+ 					  xfer->tx_sg.sgl,
+ 					  xfer->tx_sg.nents,
+-					  DMA_TO_DEVICE,
++					  DMA_MEM_TO_DEV,
+ 					  DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc_tx) {
+ 		ret = -EINVAL;
 -- 
 2.20.1
 
