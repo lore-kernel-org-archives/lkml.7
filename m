@@ -2,145 +2,117 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC33C17444
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEBFC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D380207FA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E6D2085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573380864;
+	bh=I8uBTdBu6y3d7ebGvaS+Jksj8GBV3jRw44ugdooGv6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zvl1U3xVAf4GysVnbIthP3GnCTMjT3EDOho7jdnrse/fRlvzc8uy1zgTobNTIEddX
+	 HrjtFe41FD5DNKv12iIuCb80dL0kJvVYeoRys25W9MP2mn21WmhPqqi0aQrqVcGilE
+	 vpY8etfNjzsYheg3cIxgxFn6B4r3DY26By/9htB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfKJKLy (ORCPT
+        id S1726733AbfKJKOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 05:11:54 -0500
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:36361 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726653AbfKJKLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 05:11:53 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id TkCAiNAD3QBsYTkCDi1SAO; Sun, 10 Nov 2019 11:11:50 +0100
-Subject: Re: [PATCH v2 13/18] media/v4l2-core: pin_longterm_pages (FOLL_PIN)
- and put_user_page() conversion
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-14-jhubbard@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <6d21391e-01c4-0605-0d0d-15f574cc3ed4@xs4all.nl>
-Date:   Sun, 10 Nov 2019 11:11:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 10 Nov 2019 05:14:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726610AbfKJKOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 05:14:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E71207FA;
+        Sun, 10 Nov 2019 10:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573380862;
+        bh=I8uBTdBu6y3d7ebGvaS+Jksj8GBV3jRw44ugdooGv6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WFkq0L70MN7yEadD6XEv0rZ/ogssi+tDsA90t3Z4xy2h9nocWlOnZHrXaOBeISL8L
+         JX/yhEWR8eIE1pxEjWN2Xk1GON5l/JLt+VMspZh3HifclGJ4GZb7edSNpxaZr4mD8k
+         EHWXbQsyYQhr0OqAqTC/yR7tv/r+aFXHrO0lzOYg=
+Date:   Sun, 10 Nov 2019 11:14:18 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: "statsfs" API design
+Message-ID: <20191110101418.GA1441328@kroah.com>
+References: <20191109184441.GA5092@avx2>
+ <20191110091435.GC1435668@kroah.com>
+ <20191110100913.GA5064@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <20191103211813.213227-14-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFSTukyJqfxV4HrGGQ0j5/iKKr13OkEzy05WqAOfOSWrg/qEYKz7zmsSLuZTQBp28yCz+dvkf6VRv+kw027uNzPdnpP1TG1MNl/DxEey7uZK5/xalM5y
- 5mek2ggN11NHCI9OB51pAxH9HazB5AMpcNYWMTjkyDZlvUJtbfWW4ZUZq85nxiyCH9Wkwv75NaxcyvTMitOA+o4+U5rJjg8sA8gvfV9NbRRVFg3M6alu0IKv
- kyfdjDFwuG4F6JKpbt9v3E049Xx0YF8ppWdgVnIjGfusfyNaLb+90K4NGhzfPU11L+2UeV4HzuHSmBSjFWbsZNO99HRrZoUYxfZil98flfM0I4Tl92e2ZZ6T
- oLNGV585kbb26i0UwqgRbX0qClJpOQIX8JPemeIZHsAISH4A6EIzai79YkaAZrrdJDqsHcU/g5pBk7M+m8f1h0UhG93G+VP07un/zdrM5krNUgUcOHqWl6c8
- yg5UitZLkuZJeoj3AZIHtptGajhOljPiqFe3qrME7yIGvxpfurp6646fJOQdrdhgQ99ZW5ZVLjxCYcB39QCEQQpm6CL4XMXAsAilPNdyDqQvU26KgyC+BY4C
- EfgFzK7XJbQ28t/ACJ7DTyyH14NWDMPJXEZyBEirCE+SenjaNpo1ArEbqixnm5RCT+dULYmvp/soWFNQsgosWPukS+PH1BUonrmmMVLsT7pZ55bv6EkNWDl4
- 9ypHPyVuYZBeyd/QB3263NKtG9W94IRv7gkIMIXqe+gaZqosCCZGLoQ/R3NrX+UELfTllPBXIEjGQ6GcqW4vDLnC6e5LObzBu95S05AVd/j5Z489creqnOqz
- al1X+EBLb7SCFjH5bT0l7XPwxsPFls2nYnNC2VvjaojW5EGzj+P9FMGrDMXQYA5CwZYMR9jVieofsVzZROWuyWgzGX0IWmVMrVJ+O9Cd6w+r38l2u6VzMDO3
- vrKP72jlsDujiCNkz8SZOuEiycTOpqK7FnQXWC0vHy8ZQ5kE+5U3ZOrlf3bE5a7YMuwWWgEf1wyekRKSE5FPwRln1aFBkEu6RfHldiY5r6mScJHM0Hmz3L1G
- jmpevDng1F0dM0khzD8Rn/xNHOQmjygIoT2XjmtiT+xp1E4E+mkPp1qzmYUhF73no8Ws5q3/bDKWOdGuUrZQjRZdQtb3gNeBRaDBFMdPnfgT4QkU99ovX9La
- 0JO93Bw0hzkTQPZYGAQEEyZ5mT+kT8y0hQD80773+KE9/qHPFnhe80tvkU1RdNM3L33ptC7eREOqMAmdRO6tk0ZlucAIUVw5MRfKAm2acO9sl5to+l22CFB1
- ACY3IoeSiNIkXxalh1O2DqvLWJh0AapBIq9krEjBZouKIfbQ+FRgwsFcvPJZJS2eW70SQX+omUmZZ5xpSWDV1lpAjnprcaVW+xX7OhGfCCj2gQOCd9Q=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191110100913.GA5064@onstation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/3/19 10:18 PM, John Hubbard wrote:
-> 1. Change v4l2 from get_user_pages(FOLL_LONGTERM), to
-> pin_longterm_pages(), which sets both FOLL_LONGTERM and FOLL_PIN.
+On Sun, Nov 10, 2019 at 05:09:13AM -0500, Brian Masney wrote:
+> On Sun, Nov 10, 2019 at 10:14:35AM +0100, Greg KH wrote:
+> > On Sat, Nov 09, 2019 at 09:44:41PM +0300, Alexey Dobriyan wrote:
+> > > > statsfs is a proposal for a new Linux kernel synthetic filesystem,
+> > > > to be mounted in /sys/kernel/stats
+> > > 
+> > > I think /proc experiment teaches pretty convincingly that dressing
+> > > things into a filesystem can be done but ultimately is a stupid idea.
+> > > It adds so much overhead for small-to-medium systems.
+> > > 
+> > > > The first user of statsfs would be KVM, which is currently exposing
+> > > > its stats in debugfs
+> > > 
+> > > > Google has KVM patches to gather statistics in a binary format
+> > > 
+> > > Which is a right thing to do.
+> > 
+> > It's always "simpler" to just take binary data and suck it in.  That
+> > works for a year or so until another value needs to be supported.  Or
+> > removed.  Or features are backported.
+> > 
+> > The reason text values in individual files work is they are "self
+> > describable" and "self discoverable".  You "know" what the value is and
+> > that it is supported because the file is there or not.  With binary
+> > values in a single file you do not know any of that.
+> > 
+> > So you need some way of describing the data to userspace in order for
+> > this to work properly over the next 20+ years.
+> > 
+> > Maybe something like varlink which describes the data coming from the
+> > kernel in an easy-to-handle format?  Or something else, but just using
+> > blobs does not work over the long-term, sorry.
 > 
-> 2. Because all FOLL_PIN-acquired pages must be released via
-> put_user_page(), also convert the put_page() call over to
-> put_user_pages_dirty_lock().
+> What about using a text format like YAML? Here's some benefits:
 > 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>   - The fields are self describing based on the key name.
+>   - New fields can be easily added without breaking compatibility.
+>   - Allows for a script to easily parse the contents while keeping
+>     human readability.
+>   - Would work for systems that run busybox as their userspace without
+>     having to install additional tools.
+>   - Allows for a nested data structure.
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+varlink was created to solve the issues that people have had with YAML
+over time, so you might want to look into that :)
+	https://varlink.org/
 
-Looks good, thanks!
+> The downside is that the output would be larger than a binary interface
+> but it's more maintainable in my opinion.
 
-	Hans
+binary interfaces are unmaintainable over time, especially when you do
+not control both sides of the interface (unlike Google and their use of
+this for KVM stats.)
 
+thanks,
 
-> ---
->  drivers/media/v4l2-core/videobuf-dma-sg.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2-core/videobuf-dma-sg.c
-> index 28262190c3ab..9b9c5b37bf59 100644
-> --- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-> +++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-> @@ -183,12 +183,12 @@ static int videobuf_dma_init_user_locked(struct videobuf_dmabuf *dma,
->  	dprintk(1, "init user [0x%lx+0x%lx => %d pages]\n",
->  		data, size, dma->nr_pages);
->  
-> -	err = get_user_pages(data & PAGE_MASK, dma->nr_pages,
-> -			     flags | FOLL_LONGTERM, dma->pages, NULL);
-> +	err = pin_longterm_pages(data & PAGE_MASK, dma->nr_pages,
-> +				 flags, dma->pages, NULL);
->  
->  	if (err != dma->nr_pages) {
->  		dma->nr_pages = (err >= 0) ? err : 0;
-> -		dprintk(1, "get_user_pages: err=%d [%d]\n", err,
-> +		dprintk(1, "pin_longterm_pages: err=%d [%d]\n", err,
->  			dma->nr_pages);
->  		return err < 0 ? err : -EINVAL;
->  	}
-> @@ -349,11 +349,8 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
->  	BUG_ON(dma->sglen);
->  
->  	if (dma->pages) {
-> -		for (i = 0; i < dma->nr_pages; i++) {
-> -			if (dma->direction == DMA_FROM_DEVICE)
-> -				set_page_dirty_lock(dma->pages[i]);
-> -			put_page(dma->pages[i]);
-> -		}
-> +		put_user_pages_dirty_lock(dma->pages, dma->nr_pages,
-> +					  dma->direction == DMA_FROM_DEVICE);
->  		kfree(dma->pages);
->  		dma->pages = NULL;
->  	}
-> 
-
+greg k-h
