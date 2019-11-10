@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AC5C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31948C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6D1215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCB2215EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355598;
-	bh=MxlgPNIfRZUc8+XjXZZznbftC8zjMG5AwsiChYigWyQ=;
+	s=default; t=1573355603;
+	bh=AaJ/mLERXI2BGShxQaRJWcyC7zaq2lLv8vFC69G+pfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/LQGyxM5IEzzGnCv888SlzrhfKn7A8Efy7Tzu5JbcKbgrR0XiLbwlqgfEFNznr6p
-	 FNHp1l5gWdQd7OboG2h8ZzjUyFj0vcfb3sXDPpYJE/nmh6PubBdlYB0v9NuUqEjCfA
-	 OOT3TwTUpgs955Uqw4oZ32Lx557VHQ71drjsJNvg=
+	b=ODc5oHxyG7E/P9RYow6tkuQrKRQbtCYsI47FGOs09WFelQJbc/1Ie1CleghNOay7L
+	 2FSRrmj+/K9KEUft0JzgkeFNJp50tUYEjqReUaLXURRZAwiL72kpgc5UbB07v9HH/Z
+	 k+qAQ7NLTafW8FfIeUPB7CVgL3VShQK2Aix1LWmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfKJCmt (ORCPT
+        id S1728605AbfKJDNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39210 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:13:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727984AbfKJCmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:44 -0500
+        id S1728025AbfKJCmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C7E21924;
-        Sun, 10 Nov 2019 02:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B5DF21655;
+        Sun, 10 Nov 2019 02:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353764;
-        bh=MxlgPNIfRZUc8+XjXZZznbftC8zjMG5AwsiChYigWyQ=;
+        s=default; t=1573353769;
+        bh=AaJ/mLERXI2BGShxQaRJWcyC7zaq2lLv8vFC69G+pfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZ4o2iniO4wfPDVdgE4kQgxnEt7tiHFQW3Z12eiSihtYv+QfgDRzPuVtzS5TRmnNz
-         V+63z686kMw4OnQ9uB8dc+7zkTYEHRKpWtb0aW/iklKGhsHzw2SAtdqJwvEyARUlqY
-         Dx8UI07L8/rx5OqEAk8Rylej5VBbMnnHIXxciWI0=
+        b=u6I/M2HCzhECfnvb54W8gn3qSm8JtGPXKY2Ma6XPbmHaau5ndejYWVvgv1V1oH3tF
+         JoAal4m1aw5OqsHvva/pP5UsbAlkOF2kILwTZeVrYjpiq57wJpW2QlcgpAVQft3ytU
+         ZoIPx9xZtFq7t0oxOykdD2RzLTOkEuHUdVIZbgdc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Baruch Siach <baruch@tkos.co.il>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 076/191] ARM: dts: clearfog: fix sdhci supply property name
-Date:   Sat,  9 Nov 2019 21:38:18 -0500
-Message-Id: <20191110024013.29782-76-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sinan Kaya <okaya@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 080/191] PCI/AER: Don't read upstream ports below fatal errors
+Date:   Sat,  9 Nov 2019 21:38:22 -0500
+Message-Id: <20191110024013.29782-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,33 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit e807f0298144c06740022a2f900d86b7f115595e ]
+[ Upstream commit 9d938ea53b265ed6df6cdd1715d971f0235fdbfc ]
 
-The vmmc phandle, like all power supply property names, must have the
-'-supply' suffix.
+The AER driver has never read the config space of an endpoint that reported
+a fatal error because the link to that device is considered unreliable.
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+An ERR_FATAL from an upstream port almost certainly indicates an error on
+its upstream link, so we can't expect to reliably read its config space for
+the same reason.
+
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/armada-388-clearfog.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/aer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-index 7c6ad2afb0947..1b0d0680c8b62 100644
---- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
-+++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-@@ -48,7 +48,7 @@
- 					     &clearfog_sdhci_cd_pins>;
- 				pinctrl-names = "default";
- 				status = "okay";
--				vmmc = <&reg_3p3v>;
-+				vmmc-supply = <&reg_3p3v>;
- 				wp-inverted;
- 			};
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index ffbbd759683c5..5c3ea7254c6ae 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1116,8 +1116,9 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+ 			&info->mask);
+ 		if (!(info->status & ~info->mask))
+ 			return 0;
+-	} else if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE ||
+-		info->severity == AER_NONFATAL) {
++	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
++	           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
++		   info->severity == AER_NONFATAL) {
  
+ 		/* Link is still healthy for IO reads */
+ 		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS,
 -- 
 2.20.1
 
