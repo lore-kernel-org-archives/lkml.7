@@ -2,127 +2,182 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35886C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF20C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0575C206DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7548B20869
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 00:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hiJmGSln"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klj75VtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfKJAak (ORCPT
+        id S1726608AbfKJAoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 19:30:40 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37884 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfKJAaj (ORCPT
+        Sat, 9 Nov 2019 19:44:20 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33301 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfKJAoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 19:30:39 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z24so6609828pgu.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Nov 2019 16:30:37 -0800 (PST)
+        Sat, 9 Nov 2019 19:44:20 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a17so9362513wmb.0;
+        Sat, 09 Nov 2019 16:44:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=FxRt4BUNwVB8zpfl5d2aejL9uK6mBbXTP9pbXJEAVIA=;
-        b=hiJmGSlnDpaF08YRgBaxyr5f68zjU/4xnmI2rZb2yHXrJ1OZXYRrhl8+qkrr+c1C+l
-         EbOMxgoRmtBsn2DjinkASy5uaaEf4N42L3g9V6T33JIv8OsXTEb0pvk7bbZQUMjbclEW
-         XxXWO9yFY8Cc0Rkr0nqGX0uMnF5CBJyvOav2c0wtaH1l3MVAV2yngr/8YpOjwN2GYOoX
-         qtHMUzLYJ1DUO2kBPcErJTGREA+ykx7mVZZbuwcK2g0qOlPdimrE2jtAmteGys5e0mhe
-         Ux5OkTsaK+1mLq1wmj6ricPdwe4/SfZS7Jdbbbaz2RnCccIxpR4iKPOc3NBU9/wiPycj
-         M0lg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hxpVc6VloLtI21c23qGZC1El6cBTlpdM4jZz6yMTkmA=;
+        b=klj75VtANyXUMxZErrb+Mrj6v8k+DtfwnCvpdajSa7kRe7jaiH6o6gMQsX9pS3gDy6
+         i0HB/SHbrlpjZCS0bRAXKCLDoqcd+gXCTvS5zn/Ag1RkVgcfXjGlzRn8nI44Xw51J8HW
+         dARN/2sPEW8/up0yAVe66llPjlu2f5I0XEnlr6zi738ichmXj/zgamVaCQAQ4xfK8spi
+         1Uv8tBX4Kke00rVka2a9RHAfYDYuLtnXuhNn98UEYjyr3XpwDV/K/aW5CC6I9CUMyP+2
+         5j0xp5iuYduQCTmUQ4hcVOOw6DvMTOnsVyzeIgs8e4PNs0qOpUlf9FSyBX5U/rQyQQJ4
+         MWmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=FxRt4BUNwVB8zpfl5d2aejL9uK6mBbXTP9pbXJEAVIA=;
-        b=QfdAf4tpTe3pWMe3KtK6fVcMdbBQdlqavi/3z/QdjeaeosQ2J3ZsFJB1zvHc4tuwba
-         qlbk4r1DlWSMcd4TcS6T42eXO/fUzTcVCw1uhUV1KWpqorrXlYWzg5O+kqW8msgHxSov
-         UdQ67smLsT4RlQ5rLC+jx7MyXp+YFtzyIqFoXJ+iqemRBwAIeYlFH2sdMfbUSOjmXzXd
-         5QFhaT3R4pMA8HGJHNn9llgKIiTgYdIWhrr4rdvrReqip4azEip1ymsMHDniUmzXu0AV
-         VVOobaXCIIL6u8ELC1I1oEGwqKvPxqTAuw1drCzaYjlpnsgyxc7TnPmfdQBgYadAOHR3
-         uhyg==
-X-Gm-Message-State: APjAAAVNlkf0sVQxvcLDbdiT1g5mpLsq4ib9XSkBTGCLLY9AQoS6ci4B
-        nnnzNe2N3UMt9ey7i4vv8b2oAah1DzS0uQ==
-X-Google-Smtp-Source: APXvYqwts4OUgpJJOzYRq313xaamUKaByPW6r3ZrRxsi3tbQNzWseZBolyT2WkJLe0WrONs9SgepGA==
-X-Received: by 2002:a63:6b82:: with SMTP id g124mr20819408pgc.178.1573345837340;
-        Sat, 09 Nov 2019 16:30:37 -0800 (PST)
-Received: from localhost ([2601:602:9200:a1a5:7c60:912:1380:6df8])
-        by smtp.gmail.com with ESMTPSA id f19sm4460187pfk.109.2019.11.09.16.30.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hxpVc6VloLtI21c23qGZC1El6cBTlpdM4jZz6yMTkmA=;
+        b=BbN2jxCsSdsyBCMqagtYl6x8vggGyD7wp0R9olvpej+CTRLeAnSkDgIo5KXD7cjduy
+         NqxFacF+2dH0+l4nkT//Sh4BNwvZgIKKhFQSqv291V/2hUoVRYG5aYVck6tSoq1osDSo
+         qYszmjrVzVe/j6xWja0E6uCoxtqiqFLbSDJMgIJF816Sc6rMq3SUs4z/e6I826y/P5xU
+         eIun9VPiVePscnZ8I0fR8tD1sXZCIqmG1X7j3tHT9fS9iKxdp/F9e4WFPCL6C5cOlii3
+         +n600T9rY1shEna942it5yeukNGiHXLytKODlTRI8T0GzhhBMdQelDo0CpUKIzEIWA1z
+         VvEg==
+X-Gm-Message-State: APjAAAU5qNn5rimAEswCb1+/HIGWBG0vOEdL9rvDkGbhD8MdsX5VeF6b
+        lqP8S1Z56sM8OX683OpaR6bvfE4I
+X-Google-Smtp-Source: APXvYqwCGkgs1w71x4U/Gfuc46BuGATIUbwMW2VpkWaVLv+PUFVhtG87xExa7Hyl1Tk7My+8JCmGcQ==
+X-Received: by 2002:a7b:c0c3:: with SMTP id s3mr13941059wmh.20.1573346656935;
+        Sat, 09 Nov 2019 16:44:16 -0800 (PST)
+Received: from debian (host-78-144-219-162.as13285.net. [78.144.219.162])
+        by smtp.gmail.com with ESMTPSA id l10sm18361739wrg.90.2019.11.09.16.44.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 09 Nov 2019 16:30:36 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v4 2/4] firmware: meson_sm: Add secure power domain support
-In-Reply-To: <1572868028-73076-3-git-send-email-jianxin.pan@amlogic.com>
-References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com> <1572868028-73076-3-git-send-email-jianxin.pan@amlogic.com>
-Date:   Sat, 09 Nov 2019 21:11:09 +0100
-Message-ID: <7hk188stcy.fsf@baylibre.com>
+        Sat, 09 Nov 2019 16:44:15 -0800 (PST)
+Date:   Sun, 10 Nov 2019 00:44:13 +0000
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Subject: Re: libtraceevent installing in wrong folder
+Message-ID: <20191110004413.6pnyivofpjdvwj6b@debian>
+References: <20191108161157.g5aadocnfvragqb2@debian>
+ <20191108120548.4118879a@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/mixed; boundary="ldmoq22qh3rkwm2q"
+Content-Disposition: inline
+In-Reply-To: <20191108120548.4118879a@gandalf.local.home>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jianxin Pan <jianxin.pan@amlogic.com> writes:
 
-> The Amlogic Meson A1/C1 Secure Monitor implements calls to control power
-> domain.
->
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  drivers/firmware/meson/meson_sm.c       | 2 ++
->  include/linux/firmware/meson/meson_sm.h | 2 ++
->  2 files changed, 4 insertions(+)
->
-> diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
-> index 1d5b4d7..7ec09f5 100644
-> --- a/drivers/firmware/meson/meson_sm.c
-> +++ b/drivers/firmware/meson/meson_sm.c
-> @@ -44,6 +44,8 @@ static const struct meson_sm_chip gxbb_chip = {
->  		CMD(SM_EFUSE_WRITE,	0x82000031),
->  		CMD(SM_EFUSE_USER_MAX,	0x82000033),
->  		CMD(SM_GET_CHIP_ID,	0x82000044),
-> +		CMD(SM_PWRC_SET,	0x82000093),
-> +		CMD(SM_PWRC_GET,	0x82000095),
->  		{ /* sentinel */ },
->  	},
->  };
-> diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
-> index 6669e2a..4ed3989 100644
-> --- a/include/linux/firmware/meson/meson_sm.h
-> +++ b/include/linux/firmware/meson/meson_sm.h
-> @@ -12,6 +12,8 @@ enum {
->  	SM_EFUSE_WRITE,
->  	SM_EFUSE_USER_MAX,
->  	SM_GET_CHIP_ID,
-> +	SM_PWRC_SET,
-> +	SM_PWRC_GET,
+--ldmoq22qh3rkwm2q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-These new IDs are unique to the A1/C1 family.  Maybe we should add a
-prefix to better indicate that.  Maybe:
+On Fri, Nov 08, 2019 at 12:05:48PM -0500, Steven Rostedt wrote:
+> 
+> [ I also added linux-trace-devel, but it was good to Cc LKML too ]
+> 
+> On Fri, 8 Nov 2019 16:11:57 +0000
+> Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
+> 
+> > Hi Steve,
+> > 
+> > I tried to install libtraceevent. and I used the command:
+> > "make DESTDIR=/home/sudip/test prefix=/usr install" from tool/lib/traceevent
+> > 
 
-       SM_A1_PWRC_SET,
-       SM_A1_PWRC_GET,
+<snip>
 
-Thoughts?
+> > 
+> > I am seeing two problems:
+> > 1) It created another home/sudip/test folder inside /home/sudip/test and
+> > the header files are installed in /home/sudip/test/home/sudip/test/usr/include folder.
+> > They should have been in /home/sudip/test/usr/include.
+> > 
+> > 2) I used prefix=/usr but the 'pkgconfig' still went to /usr/local
+> > 
+> > Did I do something wrong?
+> 
+> No, but you showed that the installation part is poorly tested. I
+> mostly tested just the code from trace-cmd, and even the installation
+> paths from that repo. I should have tested the kernel repo as well, but
+> failed to do this.
+> 
+> Thanks for reporting, I need to take a look, or if you want to have a go
+> at it, that would be great too :-)
 
-Kevin
+Attached is a patch for the wrong installation of header files.
+For the pkgconfig, the problem is at:
+pkgconfig_dir ?= $(word 1,$(shell $(PKG_CONFIG)                 \
+                        --variable pc_path pkg-config | tr ":" " "))
+
+This is checking 'pc_path' which is the search path used by pkg-config
+and then its taking the first path from that list and using in pkgconfig_dir,
+which can be wrong.
+A reliable way to get the pkg-config location is if I use:
+
+pkg=$(pkg-config --list-all | head -1 | cut -d ' ' -f 1)
+pkg-config --variable=pcfiledir $pkg
+
+But I will need to see how I can use this in a Makefile, will send this
+patch later, or if you can find a better way before me that will be great.
+
+--
+Regards
+Sudip
+
+--ldmoq22qh3rkwm2q
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-libtraceevent-fix-header-installation.patch"
+
+From 1ff159997d1dd299bb0e612baeb573aac45eac03 Mon Sep 17 00:00:00 2001
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date: Sat, 9 Nov 2019 23:33:54 +0000
+Subject: [PATCH] libtraceevent: fix header installation
+
+When we passed some location in DESTDIR, install_headers called
+do_install with DESTDIR as part of the second argument. But do_install
+is again using '$(DESTDIR_SQ)$2', so as a result the headers were
+installed in a location $DESTDIR/$DESTDIR. In my testing I passed
+DESTDIR=/home/sudip/test and the headers were installed in:
+/home/sudip/test/home/sudip/test/usr/include/traceevent.
+Lets remove DESTDIR from the second argument of do_install so that the
+headers are installed in the correct location.
+
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ tools/lib/traceevent/Makefile | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 5315f3787f8d..cbb429f55062 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -232,10 +232,10 @@ install_pkgconfig:
+ 
+ install_headers:
+ 	$(call QUIET_INSTALL, headers) \
+-		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
+-		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
+-		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
+-		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
++		$(call do_install,event-parse.h,$(includedir_SQ),644); \
++		$(call do_install,event-utils.h,$(includedir_SQ),644); \
++		$(call do_install,trace-seq.h,$(includedir_SQ),644); \
++		$(call do_install,kbuffer.h,$(includedir_SQ),644)
+ 
+ install: install_lib
+ 
+-- 
+2.11.0
+
+
+--ldmoq22qh3rkwm2q--
