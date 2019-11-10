@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5567DC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D04C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256BD206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF5120869
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573421714;
-	bh=xZqUAhBa1XJbuk1g9QivLxHkD4LDzfnm732PnGqJ76I=;
+	s=default; t=1573422308;
+	bh=6ztCkRLgUdLXLrPFiMrkTkRl+X/swTXQkXHriYk06lo=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tnEY9TB5+gneLzMUt7p6td84Reo00+gTJLW+vPuL0o40i+XnRrHhyaqb6CvHM4Q0u
-	 apPlMGdrur0eWTzGrj00MrpbuoxHbH4lTPp5pytAfNzzwtVVVRG6oBLAnhIhaYg0ke
-	 VpcqfMtT5Dl/ea4/kJARN1spdjB+kfYGvvmf6GRM=
+	b=2Ijw5DeCgp9j3JW9y/TL6O6vc/6cN5aD1Mwq0P4zhET1dzcGkxRklvv7kqD/1sEjC
+	 tzWGt0vWTEUtjVnoMdeOM1hm9V7LzWzaNjh5nXDGxWWfuYzP1hWpW6BlUO5zHrVHrS
+	 95xcgTAX9gG5j5y3xvU+Ri9ejt7bBHHayzmeIMcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfKJVfM (ORCPT
+        id S1727176AbfKJVpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 16:35:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 16:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfKJVfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 16:35:08 -0500
-Subject: Re: [GIT PULL] IIO fixes / Staging driver for 5.4-rc7
+        id S1727116AbfKJVpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 16:45:06 -0500
+Subject: Re: [GIT PULL] ARM: SoC fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573421708;
-        bh=xZqUAhBa1XJbuk1g9QivLxHkD4LDzfnm732PnGqJ76I=;
+        s=default; t=1573422306;
+        bh=6ztCkRLgUdLXLrPFiMrkTkRl+X/swTXQkXHriYk06lo=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=G8tkBXql3Zze2mTheCxmgaVokjdRIhG20I2GFRvhtYP5xPct/zMZucKZBbfGmxqtP
-         O5PL51caVKgd4TOcRzHPN1KYQDCtVGoPfIjPSDD0c7oWaB7FDKqadz9Mzm95W4Kyqs
-         W2ne4SVjl41V5f08V8csV9zpVXeN7on7Fmdm3Npo=
+        b=wnKx7IGC6AE9osQ8BEpJ34GvsqZJi8eoE0y9hVGUIYpGEe27tpp34kNLtWon9pDYn
+         LYCUZh2LiGhDxKm1hV2s5bghEFGwcsD98ewKZyjBap47EXftTps6M2R/9Qr1DW/yQg
+         p5dr1phjUYHMGBdrRHWVE5NzHjuS6hcn/pl/JNO4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191110154303.GA2867499@kroah.com>
-References: <20191110154303.GA2867499@kroah.com>
+In-Reply-To: <20191110182506.a2o7r5nyoqaz27gc@localhost>
+References: <20191110182506.a2o7r5nyoqaz27gc@localhost>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191110154303.GA2867499@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
- tags/staging-5.4-rc7
-X-PR-Tracked-Commit-Id: e39fcaef7ed993950af74a584f8246022b551971
+X-PR-Tracked-Message-Id: <20191110182506.a2o7r5nyoqaz27gc@localhost>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
+X-PR-Tracked-Commit-Id: 002d3c65ee81a604430da61e20de7a5b32a0afd5
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dd892625d0e252d967387d0a2af6dd6a864b3fdf
-Message-Id: <157342170813.28901.805337468261635748.pr-tracker-bot@kernel.org>
-Date:   Sun, 10 Nov 2019 21:35:08 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 44866956804eb0904f733d8436bfb56245578870
+Message-Id: <157342230601.7021.10139790143615521649.pr-tracker-bot@kernel.org>
+Date:   Sun, 10 Nov 2019 21:45:06 +0000
+To:     Olof Johansson <olof@lixom.net>
+Cc:     torvalds@linux-foundation.org, olof@lixom.net, arm@kernel.org,
+        soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 10 Nov 2019 16:43:03 +0100:
+The pull request you sent on Sun, 10 Nov 2019 10:25:06 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.4-rc7
+> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dd892625d0e252d967387d0a2af6dd6a864b3fdf
+https://git.kernel.org/torvalds/c/44866956804eb0904f733d8436bfb56245578870
 
 Thank you!
 
