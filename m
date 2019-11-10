@@ -2,103 +2,128 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9565C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB243C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4CF20818
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:32:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0kwJ4ih0"
+	by mail.kernel.org (Postfix) with ESMTP id AD6B320818
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 11:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfKJLcO (ORCPT
+        id S1726763AbfKJLfh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 06:32:14 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43222 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfKJLcN (ORCPT
+        Sun, 10 Nov 2019 06:35:37 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52722 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfKJLfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 06:32:13 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so11598479wra.10
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 03:32:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=eqtZaRSTf6xIkwuPq1/HFHXXUlATMq/NHIIuhCWeknE=;
-        b=0kwJ4ih0MBW94wtyqcnSiEUWwf7e4nSsn7yZjt1Ih7C14XjKqudwbSRuNuRXNwioYK
-         yRsvj0cK1ELFBUaF6SP4LZ36SsDk8pgOVRo2dUc2h/mtmUckG1TbphQzWu6iYxj6aT2A
-         GJS8Ps8Dbc9bT4z6oFAVtpKz7/qzKzbeeSxpWG1SND6foE6Vm4K9uUQtECf4P+G0C1vw
-         oaJr6SdzCoLyCX4D8NIhIexfeRZWjPJGzTN+O5wiPRpzLhCokFbACXrvkbaR/okV2KKU
-         XwI3jRTFPtsnCNh9E8fx/T9UmSXGX75Ws1ZDqOIVD39sT16TArR4eJqBukqx2bFlF5Kt
-         O1Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eqtZaRSTf6xIkwuPq1/HFHXXUlATMq/NHIIuhCWeknE=;
-        b=LKjad2eQSHZVujczfFW3xkwMycSL1Kr34a+Jpf5aFBijB4I5e7NvoVUBRSlDeLUE7c
-         rjmZOx0nAvehpJd/iW3D8ehYYPXTaROKISbEqFTG6DT4OtlVPOV8LU+7N+7gy1ctRJfs
-         RrP/CEcEA55CqU2a8TCT2f5hEhGdoOEVtcLbt1EYkm3ko7CJ5CsyOb9sXEpLclXyKrVp
-         z6yaQ5cKMlTxno63Rm061KpRG7UnbcVJvV2dVvOiGMYuDRuxewKw9YciFoCs4616+TdK
-         7Ns/kxuchVe0kvsBIT+mVvj9P4NTIrfm2+6YpNnogI4PJGsbJNw8CXkIts4eU8ksUkjr
-         pC5A==
-X-Gm-Message-State: APjAAAVogtax0KwBGXgg19hD4G2odnpSaQqoUxqEebZSle41FXEDHe1X
-        kUTrgb6utMZBo2l1zF6YjcVZoQ==
-X-Google-Smtp-Source: APXvYqwVMKPltIJcxfYK5pX/jgL4O+v5P+oIZIcn6bHiA4cAV1wqJtXljV3PMLaASgLhKqeraItTfg==
-X-Received: by 2002:adf:fe8d:: with SMTP id l13mr172966wrr.287.1573385530196;
-        Sun, 10 Nov 2019 03:32:10 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id p4sm13440238wrx.71.2019.11.10.03.32.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 10 Nov 2019 03:32:09 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
-        mripard@kernel.org, peppe.cavallaro@st.com, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>,
-        "# v4 . 15+" <stable@vger.kernel.org>
-Subject: [PATCH] net: ethernet: dwmac-sun8i: Use the correct function in exit path
-Date:   Sun, 10 Nov 2019 11:30:48 +0000
-Message-Id: <1573385448-30282-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 10 Nov 2019 06:35:37 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E02CE28A10C;
+        Sun, 10 Nov 2019 11:35:34 +0000 (GMT)
+Date:   Sun, 10 Nov 2019 12:35:31 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     =?UTF-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+Cc:     gerg@kernel.org, devel@driverdev.osuosl.org,
+        Weijie Gao <hackpascal@gmail.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        DENG Qingfang <dengqf6@mail2.sysu.edu.cn>,
+        linux-mediatek@lists.infradead.org, neil@brown.name,
+        linux-mtd@lists.infradead.org, Chuanhong Guo <gch981213@gmail.com>,
+        blogic@openwrt.org, Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH] mtd: rawnand: driver for Mediatek MT7621 SoC NAND flash
+ controller
+Message-ID: <20191110123531.5a27206a@collabora.com>
+In-Reply-To: <20191107092053.Horde.i3MVcW9RqZDOQBMADZX9fuc@www.vdorst.com>
+References: <20191107073521.11413-1-gerg@kernel.org>
+        <20191107092053.Horde.i3MVcW9RqZDOQBMADZX9fuc@www.vdorst.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When PHY is not powered, the probe function fail and some resource are
-still unallocated.
-Furthermore some BUG happens:
-dwmac-sun8i 5020000.ethernet: EMAC reset timeout
-------------[ cut here ]------------
-kernel BUG at /linux-next/net/core/dev.c:9844!
++Richard and Miquel
 
-So let's use the right function (stmmac_pltfr_remove) in the error path.
+On Thu, 07 Nov 2019 09:20:53 +0000
+René van Dorst <opensource@vdorst.com> wrote:
 
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-Cc: <stable@vger.kernel.org> # v4.15+
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Quoting gerg@kernel.org:
+> 
+> > From: Greg Ungerer <gerg@kernel.org>
+> >
+> > Add a driver to support the NAND flash controller of the MediaTek MT7621
+> > System-on-Chip device. (This one is the MIPS based parts from Mediatek).
+> >
+> > This code is a re-working of the earlier patches for this hardware that
+> > have been floating around the internet for years:
+> >
+> > https://github.com/ReclaimYourPrivacy/cloak/blob/master/target/linux/ramips/patches-3.18/0045-mtd-add-mt7621-nand-support.patch
+> >
+> > This is a much cleaned up version, put in staging to start with.
+> > It does still have some problems, mainly that it still uses a lot of the
+> > mtd raw nand legacy support.
+> >
+> > The driver not only compiles, but it works well on the small range of
+> > hardware platforms that it has been used on so far. I have been using
+> > for quite a while now, cleaning up as I get time.
+> >
+> > So... I am looking for comments on the best approach forward with this.
+> > At least in staging it can get some more eyeballs going over it.
+> >
+> > There is a mediatek nand driver already, mtk_nand.c, for their ARM based
+> > System-on-Chip devices. That hardware module looks to have some hardware
+> > similarities with this one. At this point I don't know if that can be
+> > used on the 7621 based devices. (I tried a quick and dirty setup and had
+> > no success using it on the 7621).
+> >
+> > Thoughts?  
+> 
+> +CC DENG Qingfang, Chuanhong Guo, Weijie Gao to the list.
+> 
+> Hi Greg,
+> 
+> Thanks for posting this driver.
+> 
+> But I would like to mention that the openwrt community is currently  
+> working on a
+> new version which is based a newer version of the MediaTek vendor driver.
+> That version is currently targeted for the openwrt 4.19 kernel.
+> See full pull request [1] and NAND driver patch [2]
+> 
+> It would be a shame if duplicate work has been done.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index eefb06d918c8..1c8d84ed8410 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -1227,7 +1227,7 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- dwmac_mux:
- 	sun8i_dwmac_unset_syscon(gmac);
- dwmac_exit:
--	sun8i_dwmac_exit(pdev, plat_dat->bsp_priv);
-+	stmmac_pltfr_remove(pdev);
- return ret;
- }
- 
--- 
-2.23.0
+Sorry, but if there's duplicate effort that's kinda your (OpenWRT folks)
+fault: since when OpenWRT is the central point for kernel drivers?
+Correct me if I'm wrong, but I don't remember seeing this driver posted
+to the MTD ML. Plus, the driver you're pointing to still implements the
+legacy hooks and is based on 4.19, and it has been decided that all new
+NAND controller drivers should implement the new ->exec_op() hook
+instead.
+
+> 
+> Greats,
+> 
+> René
+> 
+> [1]: https://github.com/openwrt/openwrt/pull/2385
+> [2]:  
+> https://github.com/openwrt/openwrt/pull/2385/commits/b2569c0a5943fe8f94ba07c9540ecd14006d729a
+> 
+> <snip>
+> 
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
