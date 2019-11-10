@@ -2,116 +2,110 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67EBC17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12A7C17444
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD84C2085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABCC214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 13:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573392437;
-	bh=4gBDujHHAOpGpaUZUSbRIfz6nvgA9ClvVnBskRh9zE0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=S7L8WKMVaans9BcaQOYfLu3aCSDABa2J2zBt35B6Iw3K/N6rlTWmIW7cMQv4vdhzF
-	 r0oi27gteOJPS2Op3ghYTYVM+OuScvRBTnvFIkUOq317iu7+aJWtgDAFlTyjUwV3oP
-	 rbP2TUOU0DsUwPduHvXsv6mundudRHDeKgGjskxI=
+	s=default; t=1573392449;
+	bh=/aAS81CjOifeeNA7ZvXi+dQlY4r367Vx/Fui8g6nnew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vEl2q+4+ehPQLwbxfsHE2X6kjpfAscv9Ud3Vm93qjwIOy7ZwwGMtxu3vKEM/kfN5p
+	 MihRYg6n0i2QQska0aO7rFUqGyrHNfDCSwD0vLBKllnR2KaAVQuikQMk1KGdYKVOXl
+	 wx9aGZ5oOgkEkd14Y8NnPcp4muJVX/Kn/ncOjIew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfKJN1Q (ORCPT
+        id S1726902AbfKJN12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 08:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 08:27:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbfKJN1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 08:27:16 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726301AbfKJN12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 08:27:28 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7540220842;
-        Sun, 10 Nov 2019 13:27:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 677D520842;
+        Sun, 10 Nov 2019 13:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573392435;
-        bh=4gBDujHHAOpGpaUZUSbRIfz6nvgA9ClvVnBskRh9zE0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dAJgmTY6XUDmcBXRdE2CM4pzNAUzAo2858X3WLg8vaXtlEaSzh3wv5uBfqj4hsNw2
-         UvOxe3zPV5v4fKi3tTf2K/ZdHy2G5nmqQHDdr22yXK+PUyHOBos9lZkZIEp5r36tas
-         QpshVRZlBvOY8MFMUOAVuEJAop7fyMZvuZKcLANU=
-Date:   Sun, 10 Nov 2019 13:27:10 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Pedro Ortega <portega.kernel@gmx.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: iio: adc: ad7280: Add spaces around math
- operator
-Message-ID: <20191110132710.0e9300dc@archlinux>
-In-Reply-To: <20191109151729.3792-1-portega.kernel@gmx.com>
-References: <20191109151729.3792-1-portega.kernel@gmx.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1573392447;
+        bh=/aAS81CjOifeeNA7ZvXi+dQlY4r367Vx/Fui8g6nnew=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q/r7veqmNQjQpaVc+WLTgjr2c63Q8DL1hSvU/TMHMleHzyEaVQhKfmxI3t56bhNNs
+         4eZOl0MFODsSVIn5sDEbYOYgwqPd7gVVrMa6BmWsCOFB/kw3E22HNhz6ppfvVgg/jR
+         xVBiu2JTKm3uari2Ta08NEXKeelqZVnVGZHCnINY=
+Date:   Sun, 10 Nov 2019 08:27:26 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.19 133/191] efi: honour memory reservations
+ passed via a linux specific config table
+Message-ID: <20191110132726.GN4787@sasha-vm>
+References: <20191110024013.29782-1-sashal@kernel.org>
+ <20191110024013.29782-133-sashal@kernel.org>
+ <CAKv+Gu-PawCS_Wq3Hm+gm_f=6-ihXarkQqP9prkj4CLt=pAnvg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu-PawCS_Wq3Hm+gm_f=6-ihXarkQqP9prkj4CLt=pAnvg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  9 Nov 2019 16:17:28 +0100
-Pedro Ortega <portega.kernel@gmx.com> wrote:
+On Sun, Nov 10, 2019 at 08:33:47AM +0100, Ard Biesheuvel wrote:
+>On Sun, 10 Nov 2019 at 03:44, Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>>
+>> [ Upstream commit 71e0940d52e107748b270213a01d3b1546657d74 ]
+>>
+>> In order to allow the OS to reserve memory persistently across a
+>> kexec, introduce a Linux-specific UEFI configuration table that
+>> points to the head of a linked list in memory, allowing each kernel
+>> to add list items describing memory regions that the next kernel
+>> should treat as reserved.
+>>
+>> This is useful, e.g., for GICv3 based ARM systems that cannot disable
+>> DMA access to the LPI tables, forcing them to reuse the same memory
+>> region again after a kexec reboot.
+>>
+>> Tested-by: Jeremy Linton <jeremy.linton@arm.com>
+>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>NAK
+>
+>This doesn't belong in -stable, and I'd be interested in understanding
+>how this got autoselected, and how I can prevent this from happening
+>again in the future.
 
-> Add spaces around the minus math operator to increase readability.
-> 
-> Signed-off-by: Pedro Ortega <portega.kernel@gmx.com>
-Hi Pedro,
+It was selected because it's part of a fix for a real issue reported by
+users:
 
-Afraid not.  Look at what that macro is actually doing.  That's not a maths
-operator at all.  I'm fairly sure we had a plan to actually hide these
-examples away as we get a few people suggesting this 'fix' ever year.
-Not sure what happened to them though, I'll have to check back.
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1806766
 
-Sorry about this, but it is a good lesson in making sure you check
-that the suggestion from checkpatch is actually correct.  It's a
-pattern matcher, it can't always know enough to be able to tell what
-is going on.
+Besides ubuntu, it is also carried by:
 
+SUSE: https://www.suse.com/support/update/announcement/2019/suse-su-20191530-1/
+CentOS: https://koji.mbox.centos.org/koji/buildinfo?buildID=4558
+
+As a way to resolve the reported bug.
+
+Any reason this *shouldn't* be in stable? I'm aware that there might be
+dependencies that are not obvious to me, but the solution here is to
+take those dependencies as well rather than ignore the process
+completely.
+
+-- 
 Thanks,
-
-Jonathan
-
-> ---
->  drivers/staging/iio/adc/ad7280a.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-> index 19a5f244dcae..34ca0d09db85 100644
-> --- a/drivers/staging/iio/adc/ad7280a.c
-> +++ b/drivers/staging/iio/adc/ad7280a.c
-> @@ -825,14 +825,14 @@ static irqreturn_t ad7280_event_handler(int irq, void *private)
->  }
-> 
->  static IIO_DEVICE_ATTR_NAMED(in_thresh_low_value,
-> -			     in_voltage-voltage_thresh_low_value,
-> +			     in_voltage - voltage_thresh_low_value,
->  			     0644,
->  			     ad7280_read_channel_config,
->  			     ad7280_write_channel_config,
->  			     AD7280A_CELL_UNDERVOLTAGE);
-> 
->  static IIO_DEVICE_ATTR_NAMED(in_thresh_high_value,
-> -			     in_voltage-voltage_thresh_high_value,
-> +			     in_voltage - voltage_thresh_high_value,
->  			     0644,
->  			     ad7280_read_channel_config,
->  			     ad7280_write_channel_config,
-> --
-> 2.17.1
-> 
-
+Sasha
