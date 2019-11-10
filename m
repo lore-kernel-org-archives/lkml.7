@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AE0C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04B8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C343320854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D2D20854
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355801;
-	bh=A3cExw9CqJgzdtqRXjlxgfhaTlG665RQFAEildQhG8M=;
+	s=default; t=1573355807;
+	bh=H6WRcRF4jr5TKpnkFhGUjOIpidjg4AoHJXVq/R2DmTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tTRlgb2Gn5C7mmniIJWshtmsfy6vaZBveoKGqH75I56JvzYsG2e+AnhnuJM0FdM+M
-	 Hxu1nHxsDVoBdJXLUZxwN5w5hWo9aw1Dl/ZXQDC7gs4YjXI0aPb/GjwcAVAJKzykts
-	 OctHeJ/Q8zOH8ou7X17czQEzlZseUogKaCh2a7zE=
+	b=C+VgBe8Ytzj4eEGeItteUbYdFax9WH7e6wTVNBsuhcBau/dD3tKjv8a17qEKfureU
+	 x4XTd6xXv9NoDhbsSiedPKrLh0xJW1478L5v7Nc+F6dAhcZQuRgjs5viOerqCS1CIZ
+	 2iBdrhB+s0qfrF4peap2SJDU3KBTr0d5KWoaKqe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfKJDQk (ORCPT
+        id S1727053AbfKJCkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:16:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34426 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:40:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbfKJCkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:52 -0500
+        id S1726925AbfKJCkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30773215EA;
-        Sun, 10 Nov 2019 02:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FCA9222C4;
+        Sun, 10 Nov 2019 02:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353651;
-        bh=A3cExw9CqJgzdtqRXjlxgfhaTlG665RQFAEildQhG8M=;
+        s=default; t=1573353632;
+        bh=H6WRcRF4jr5TKpnkFhGUjOIpidjg4AoHJXVq/R2DmTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5tO56TKNw7ugYAGN3t64/4wf3RzO5uSc0WxSLehrxIr1XSHus7L2cwFJ0KSJNKPF
-         9RN6o+wx2j6VOBxHWDrQ/Lt+kBO5Q54gs70kvjtv2d5YTpNpsX2RB+9f2vdMjO8itP
-         0vmlCUNLHEQfqRYDu0u/mVBeTHTm0CSouzRKaMI4=
+        b=kPWZWmrs+U37S2EQ+w7t2vNPp8zy+H/dH3PkgYDFUBhNQl3MOr6VYqZo2yoJ+cmJK
+         ykmg8D5xfixo3cXW3DFP5/b+26RJkaHhmSna6r7Y4bDU6Y1N4Y/HP4wxnwoQ/ZpoGW
+         yek4PuVvtbePeG8OrOQ9EjPhXwyNVx+4pNdzsnD4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 028/191] powerpc/64s/hash: Fix stab_rr off by one initialization
-Date:   Sat,  9 Nov 2019 21:37:30 -0500
-Message-Id: <20191110024013.29782-28-sashal@kernel.org>
+Cc:     Yonghong Song <yhs@fb.com>, Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 015/191] samples/bpf: fix a compilation failure
+Date:   Sat,  9 Nov 2019 21:37:17 -0500
+Message-Id: <20191110024013.29782-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,34 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Yonghong Song <yhs@fb.com>
 
-[ Upstream commit 09b4438db13fa83b6219aee5993711a2aa2a0c64 ]
+[ Upstream commit 534e0e52bc23de588e81b5a6f75e10c8c4b189fc ]
 
-This causes SLB alloation to start 1 beyond the start of the SLB.
-There is no real problem because after it wraps it stats behaving
-properly, it's just surprisig to see when looking at SLB traces.
+samples/bpf build failed with the following errors:
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+  $ make samples/bpf/
+  ...
+  HOSTCC  samples/bpf/sockex3_user.o
+  /data/users/yhs/work/net-next/samples/bpf/sockex3_user.c:16:8: error: redefinition of ‘struct bpf_flow_keys’
+   struct bpf_flow_keys {
+          ^
+  In file included from /data/users/yhs/work/net-next/samples/bpf/sockex3_user.c:4:0:
+  ./usr/include/linux/bpf.h:2338:9: note: originally defined here
+    struct bpf_flow_keys *flow_keys;
+           ^
+  make[3]: *** [samples/bpf/sockex3_user.o] Error 1
+
+Commit d58e468b1112d ("flow_dissector: implements flow dissector BPF hook")
+introduced struct bpf_flow_keys in include/uapi/linux/bpf.h and hence
+caused the naming conflict with samples/bpf/sockex3_user.c.
+
+The fix is to rename struct bpf_flow_keys in samples/bpf/sockex3_user.c
+to flow_keys to avoid the conflict.
+
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/slb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ samples/bpf/sockex3_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/slb.c b/arch/powerpc/mm/slb.c
-index 9f574e59d1786..2f162c6e52d4f 100644
---- a/arch/powerpc/mm/slb.c
-+++ b/arch/powerpc/mm/slb.c
-@@ -355,7 +355,7 @@ void slb_initialize(void)
- #endif
- 	}
+diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
+index 5ba3ae9d180ba..22f74d0e14934 100644
+--- a/samples/bpf/sockex3_user.c
++++ b/samples/bpf/sockex3_user.c
+@@ -13,7 +13,7 @@
+ #define PARSE_IP_PROG_FD (prog_fd[0])
+ #define PROG_ARRAY_FD (map_fd[0])
  
--	get_paca()->stab_rr = SLB_NUM_BOLTED;
-+	get_paca()->stab_rr = SLB_NUM_BOLTED - 1;
+-struct bpf_flow_keys {
++struct flow_keys {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -64,7 +64,7 @@ int main(int argc, char **argv)
+ 	(void) f;
  
- 	lflags = SLB_VSID_KERNEL | linear_llp;
- 	vflags = SLB_VSID_KERNEL | vmalloc_llp;
+ 	for (i = 0; i < 5; i++) {
+-		struct bpf_flow_keys key = {}, next_key;
++		struct flow_keys key = {}, next_key;
+ 		struct pair value;
+ 
+ 		sleep(1);
 -- 
 2.20.1
 
