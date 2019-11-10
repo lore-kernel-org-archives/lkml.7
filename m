@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9601C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A31CC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C50521019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F66021019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354731;
-	bh=SJgM5lnoSsKMqTXorMM97fCNVXFdbc3dHn/7MZUJn+0=;
+	s=default; t=1573354737;
+	bh=ToBINYNxZf0/G8tKbyJuc5TqDI6FpJiRLAhYijE7A3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FVOmGqsldfhshPCa8tPWJAvJVjEds4jcXJmuGjRXdNV9/UDs1lZgtfdsxWpDe9WpL
-	 FFyuAfnxNozKwqE2XTYHkI9G5gt+2P9LIv1F2N2YJbx359pcxu0NwNiH89PWed/H/a
-	 bWD/JYL0YdGzsuLumYswfosKc+WG0uW6mixbEndY=
+	b=TsnzYnmPYAlg2x+CNRywXogrb2ALlf5zK6Tdzwhbg0tesw5dGg8mYa16Dr0IQxxIK
+	 Rba+wERDpwQbQ9AwkrX1I3GM9i+gtkNnPy5l6frXiNp8RzSs7ubWG8PizpLyVec/EB
+	 dpIt6T1O5DGytrSWaAt9X6nzmSHhKmoImadnU3eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbfKJC6q (ORCPT
+        id S1728230AbfKJC64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:58:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47240 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:58:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729330AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729386AbfKJC4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7DE122480;
-        Sun, 10 Nov 2019 02:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25FC72253A;
+        Sun, 10 Nov 2019 02:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354070;
-        bh=SJgM5lnoSsKMqTXorMM97fCNVXFdbc3dHn/7MZUJn+0=;
+        s=default; t=1573354113;
+        bh=ToBINYNxZf0/G8tKbyJuc5TqDI6FpJiRLAhYijE7A3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJrVOJdzGvIsoP7h7bYu2jureSRVjVluaSF1b30b2rcZtlIQiJQm0UXOUtOCvmwFH
-         zD5+J9AEnMZdBeLvxoPGdQ500T7HK6WbYLczma7E+yaS6f/id3LuRTFM2GBhG/9bk1
-         +EX8qhYcfQaeGWoNsz+ubKT26YQAdG8EE+t7uM4U=
+        b=bhz/hMbjoJxGi1jA7AfkF5BeicxYflM5p2ADV7dzGuhf8E6SFkjclxCMc6PRlg6p3
+         52flGISkxthNB2Vw0UQt4qIW779EC71Yd4O47u5cemDC2GmwDDFNNypHRWainUIU/d
+         Wgqzu7KbiWF9Nkb2VPgIuDp1D8BTr5hNwmczaWYI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 073/109] ARM: dts: tegra30: fix xcvr-setup-use-fuses
-Date:   Sat,  9 Nov 2019 21:45:05 -0500
-Message-Id: <20191110024541.31567-73-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 102/109] ARM: dts: lpc32xx: Fix SPI controller node names
+Date:   Sat,  9 Nov 2019 21:45:34 -0500
+Message-Id: <20191110024541.31567-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,50 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 564706f65cda3de52b09e51feb423a43940fe661 ]
+[ Upstream commit 11236ef582b8d66290bb3b3710e03ca1d85d8ad8 ]
 
-There was a dot instead of a comma. Fix this.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Cc: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra30.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index c3e9f1e847db8..cb5b76e958131 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -840,7 +840,7 @@
- 		nvidia,elastic-limit = <16>;
- 		nvidia,term-range-adj = <6>;
- 		nvidia,xcvr-setup = <51>;
--		nvidia.xcvr-setup-use-fuses;
-+		nvidia,xcvr-setup-use-fuses;
- 		nvidia,xcvr-lsfslew = <1>;
- 		nvidia,xcvr-lsrslew = <1>;
- 		nvidia,xcvr-hsslew = <32>;
-@@ -877,7 +877,7 @@
- 		nvidia,elastic-limit = <16>;
- 		nvidia,term-range-adj = <6>;
- 		nvidia,xcvr-setup = <51>;
--		nvidia.xcvr-setup-use-fuses;
-+		nvidia,xcvr-setup-use-fuses;
- 		nvidia,xcvr-lsfslew = <2>;
- 		nvidia,xcvr-lsrslew = <2>;
- 		nvidia,xcvr-hsslew = <32>;
-@@ -913,7 +913,7 @@
- 		nvidia,elastic-limit = <16>;
- 		nvidia,term-range-adj = <6>;
- 		nvidia,xcvr-setup = <51>;
--		nvidia.xcvr-setup-use-fuses;
-+		nvidia,xcvr-setup-use-fuses;
- 		nvidia,xcvr-lsfslew = <2>;
- 		nvidia,xcvr-lsrslew = <2>;
- 		nvidia,xcvr-hsslew = <32>;
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index f22a33a018199..d077bd2b9583e 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -179,7 +179,7 @@
+ 			 * ssp0 and spi1 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp0: ssp@20084000 {
++			ssp0: spi@20084000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x20084000 0x1000>;
+ 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+@@ -199,7 +199,7 @@
+ 			 * ssp1 and spi2 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp1: ssp@2008c000 {
++			ssp1: spi@2008c000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x2008c000 0x1000>;
+ 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.20.1
 
