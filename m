@@ -2,144 +2,157 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDD4C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F29C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DB120842
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5502E2080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573405188;
-	bh=8dVT8BgeHXIXHuCYidGlWKtrVnbHRYVwt7D/0lF4UqM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FQFYAQE99aF34fWD9Ve6qVQcN2BAZbVuWOV+4brxFypJMw/y4gU9Zzslr3Y5ydgrV
-	 tPR9Ei1aftv7lRNSZ8uIuxTp1atZd2T82vLscKdaU3y/Hy1M4Fw3qhJAxNnPawvWO2
-	 xXi0jlvHaVXj+WBpz6HWvcqt0oJi9E+tckOUKi9g=
+	s=default; t=1573405381;
+	bh=pSeXm6yKPXM8KICy539nNqlx3ZoB9BmuMvt3DzyzaJg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0MfP1zMR8S5v4vL5V1pvNDVTefQXFH0IdqBRItbFWgImiCd06ya/S+hBTWrFax2Ai
+	 5xRp5f4kQ+kAcy9EpmJdDOJb3Ttx99rznfNxG4VNNnHT/zIFC6aBN/xK48rUdx0k/K
+	 9Ys36Tz0AkcbEKbBi2Es7XqLI/oajZPrxrzhWslE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKJQ7r (ORCPT
+        id S1726950AbfKJRDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:59:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50166 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 12:03:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfKJQ7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:59:47 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726651AbfKJRDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 12:03:00 -0500
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 219EC2080F;
-        Sun, 10 Nov 2019 16:59:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CF3021783
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 17:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573405185;
-        bh=8dVT8BgeHXIXHuCYidGlWKtrVnbHRYVwt7D/0lF4UqM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cAZB9iDmmdLS89j9z//pZ9Z8hMZk1r84WbUMT1qH9+F74bsmXo09l6eyVAFtol2bA
-         BDc92NAtFU5YlZXYELx9VsUxcfFPyCv+DU2cmUoGNj17kGfEMwNdNk2uuW53qgvsZR
-         oly/jhLhS489GJFLLcHRnxkB47UHD/JLawiajj1s=
-Date:   Sun, 10 Nov 2019 16:59:38 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        shawnguo@kernel.org, heiko@sntech.de, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        christophe.jaillet@wanadoo.fr, tglx@linutronix.de,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        paulmck@linux.ibm.com, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] dt-bindings: add parallax ping sensors
-Message-ID: <20191110165938.2f680803@archlinux>
-In-Reply-To: <20191107130027.k2uo547xrfiuxgb7@arbad>
-References: <20191107130027.k2uo547xrfiuxgb7@arbad>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1573405378;
+        bh=pSeXm6yKPXM8KICy539nNqlx3ZoB9BmuMvt3DzyzaJg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pNmP89t6/3UltSEaHmzEQcrSsB8eq0QVowXgCBrc3HTK67lAI9Ph5+ymiuklkhBpS
+         OIJi/bNCyvWlF2k1fqGYjLZidYsNDT0jzTKP2sxTKR2nn3TCQQDdfgL8m7BmHo+0XP
+         53CgO/Rnm+lCwF8CnomAZYLoJJ1K9jEHVwHEJrrI=
+Received: by mail-wr1-f43.google.com with SMTP id r10so12137281wrx.3
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 09:02:58 -0800 (PST)
+X-Gm-Message-State: APjAAAXyWY36Q3jhftgf9Q6rleoapQADRlI7Eg+L4YHTgXeb7DfO1meW
+        i9dNYu2s1v1W//MgAjJPHYTfvAkj11Qe0Cnq8bwx1A==
+X-Google-Smtp-Source: APXvYqyYzUPhiqfXwzcPJTU6zTkbgbymZq2AhGrblxV8kTPlAwr0NyntKs90KtD5lBqiESCXkhnTuV2LAbz8I2ffWxg=
+X-Received: by 2002:a5d:490b:: with SMTP id x11mr14759004wrq.111.1573405376752;
+ Sun, 10 Nov 2019 09:02:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <20191105162424.GH30717@redhat.com> <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
+ <20191107083902.GB3247@linux.ibm.com> <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
+ <20191107153801.GF17896@redhat.com> <CAKOZueuKttjyRBgMkaBknzn+fzufZA+gJcd5wnKgiwmO37yN1g@mail.gmail.com>
+ <20191107182259.GK17896@redhat.com>
+In-Reply-To: <20191107182259.GK17896@redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 10 Nov 2019 09:02:45 -0800
+X-Gmail-Original-Message-ID: <CALCETrWxkzp5mzoqq28cbZLmwYh-k_er-8ocVoLPXXUk66Yprg@mail.gmail.com>
+Message-ID: <CALCETrWxkzp5mzoqq28cbZLmwYh-k_er-8ocVoLPXXUk66Yprg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 14:00:29 +0100
-Andreas Klinger <ak@it-klinger.de> wrote:
+On Thu, Nov 7, 2019 at 10:23 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
+>
+> On Thu, Nov 07, 2019 at 08:15:53AM -0800, Daniel Colascione wrote:
+> > You're already paying for bounds checking. Receiving a message via a
+> > datagram socket is basically the same thing as what UFFD's read is
+> > doing anyway.
+>
+> Except it's synchronous and there are no dynamic allocations required
+> in uffd, while af_netlink and af_unix both all deal with queue of
+> events in skbs dynamically allocated.
+>
+> Ultimately if we strip away the skbs for performance reasons, there
+> wouldn't be much code to share, so if the only benefit would be to
+> call recvmsg which would still be as insecure as read for the "worse"
+> case than suid, so I don't see the point.
 
-> Add dt-bindings for parallax PING))) and LaserPING iio sensors, which
-> are used for measuring distances.
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../bindings/iio/proximity/parallax-ping.yaml      | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-> new file mode 100644
-> index 000000000000..ab8dbdf4f04a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
+Not sure what you mean.
 
-Rob has been asking people if they mind adding a BSD-2-CLAUSE as an
-and additional license on new bindings they have the copyright on.
+>
+> And should then eventfd also become a netlink then? I mean uffd was
+> supposed to work like eventfd except it requires specialized events.
 
-Otherwise seems fine to me.
+No. None of this even means that these objects should be sockets per
+se.  The point is that anyone who calls recvmsg() and passes a control
+buf *must* handle SCM_RIGHTS because even very old Unixes can
+materialize file descriptors.  The only exception is if the program
+knows a priori that the fd refers to a socket that can't use
+SCM_RIGHTS.
 
-Thanks,
+In other words, failing to handle file descriptors returned by
+recvmsg() is an application bug.  Failing to handle file descriptors
+returned by read() is not an application bug -- it's a kernel bug.
 
-Jonathan
+> > If you call it with a non-empty ancillary data buffer, you know to
+> > react to what you get. You're *opting into* the possibility of getting
+> > file descriptors. Sure, it's theoretically possible that a program
+> > calls recvmsg on random FDs it gets from unknown sources, sees
+> > SCM_RIGHTS unexpectedly, and just the SCM_RIGHTS message and its FD
+> > payload, but that's an outright bug, while calling read() on stdin is
+> > no bug.
+>
+> I'm not talking about stdin and suid. recvmsg might mitigate the
+> concern for suid (not certain, depends on the suid, if it's generally
+> doing what you expect most suid to be doing or not), I was talking
+> about the SCM_RIGHTS receiving daemon instead, the "worse" more
+> concerning case than the suid.
+>
+> I quote below Andy's relevant email:
+>
+> ======
+> It's worse if SCM_RIGHTS is involved.
+> ======
+>
+> Not all software will do this after calling recvmsg:
+>
+>     if (cmsg->cmsg_type == SCM_RIGHTS) {
+>       /* oops we got attacked and an fd was involountarily installed
+>          because we received another AF_UNIX from a malicious attacker
+>          in control of the other end of the SCM_RIGHTS-receiving
+>          AF_UNIX connection instead of our expected socket family
+>          which doesn't even support SCM_RIGHTS so we would never have
+>          noticed an fd was installed after recvmsg */
+>     }
+>
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/parallax-ping.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Parallax PING))) and LaserPING range finder
-> +
-> +maintainers:
-> +  - Andreas Klinger <ak@it-klinger.de>
-> +
-> +description: |
-> +  Bit-banging driver using one GPIO:
-> +  - ping-gpio is raised by the driver to start measurement
-> +  - direction of ping-gpio is then switched into input with an interrupt
-> +    for receiving distance value as PWM signal
-> +
-> +  Specifications about the devices can be found at:
-> +  http://parallax.com/sites/default/files/downloads/28041-LaserPING-2m-Rangefinder-Guide.pdf
-> +  http://parallax.com/sites/default/files/downloads/28015-PING-Documentation-v1.6.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - parallax,ping
-> +      - parallax,laserping
-> +
-> +  ping-gpios:
-> +    description:
-> +      Definition of the GPIO for the triggering and echo (output and input)
-> +      This GPIO is set for about 5 us by the driver to tell the device it
-> +      should initiate the measurement cycle. Afterwards the GPIO is switched
-> +      to input direction with an interrupt. The device sets it and the
-> +      length of the input signal corresponds to the measured distance.
-> +      It needs to be an GPIO which is able to deliver an interrupt because
-> +      the time between two interrupts is measured in the driver.
-> +      See Documentation/devicetree/bindings/gpio/gpio.txt for information
-> +      on how to specify a consumer gpio.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - ping-gpios
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    proximity {
-> +        compatible = "parallax,laserping";
-> +        ping-gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-> +    };
+You've misunderstood what you're quoting me as saying.  I'm saying
+that the issue is worse if you pass the userfaultfd via SCM_RIGHTS to
+an unsuspecting program.  It is perfectly valid to receive a file
+descriptor via SCM_RIGHTS and then call read(), at least so long as
+you are okay with potentially blocking.
 
+If you receive a fd to a socket using SCM_RIGHTS and then you fail to
+check cmsg_type as above, then you have a bug regardless of
+userfaultfd.
+
+--Andy
