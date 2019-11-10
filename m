@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42247C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDB6C17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E50022573
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0367E22573
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354533;
-	bh=ht9seQUWdx8eONxgqfbYtB6UPmAj53mK765ewWByYfQ=;
+	s=default; t=1573354539;
+	bh=C/p5ffkx9IEH3kI+wV1/WForkf/HV3MApMb1oJBFRpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBEj9vjQlYsgo7xd1MrpeLh7wjVC5JqrFbzYr+mORtsoKArrQcuiX7wLnWOJkOzXX
-	 AfcSKDljxAlmPe1pK/VG+O0PBDn+0FBkiokzQrRsVniU2/GI/SG19ZZG24y9qWjcm0
-	 YnYPaS3YZNwkQROygQWtn15xdbIsctqTFE/pLbR4=
+	b=VOCshYsjCmD0hcLBvqGWFefkCh7aMPkqVUufLD/SbpS2Niul2nzc8AgDnujuGxunJ
+	 ViBQR9Os6ehMcEN38iaiW0l/xMQ/gWPlehpOjbWQZwv/kMTN2vxCfmrZxqmuiJf2f3
+	 UqZ9dD0Gu8NerSRbiWcuQpbVDwAHKbj9SgnpMncY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfKJCzb (ORCPT
+        id S1729658AbfKJCuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:55:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33450 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbfKJCuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:19 -0500
+        id S1729572AbfKJCtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5275322595;
-        Sun, 10 Nov 2019 02:50:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81A7022581;
+        Sun, 10 Nov 2019 02:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354218;
-        bh=ht9seQUWdx8eONxgqfbYtB6UPmAj53mK765ewWByYfQ=;
+        s=default; t=1573354192;
+        bh=C/p5ffkx9IEH3kI+wV1/WForkf/HV3MApMb1oJBFRpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rsk06Xg8/wJK4dqjz5dSJ019/1E3iFRRuoIRCtTJcuN5YmUofabTFhaLVq5qouyc4
-         5N9t0XZHsWuoyWe41seO0BkSWFPMpoIeJ5UZDQwsX7CV01zVxoztgsqJj2rvvJuKFC
-         NlRD3CvFR6oShU+GOAwxKiDkzTBT80+oCOeu3arE=
+        b=hUsPTCdfTyb5wnmJvfw2byxvW3QaTqwurTrpUhcXEYz3cOvRhlDmATfdJ9vcTw6dm
+         tMOkkM9bdvco+cJB68AF3F+gLdxpwZmFwgJx85jbQsqJEkgFXOtFZskfFOiW2QhiEF
+         UE+5YtPCy9MBsjlYhCTkcOmzykMGTSWbz1Vzjbzg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 56/66] scsi: NCR5380: Use DRIVER_SENSE to indicate valid sense data
-Date:   Sat,  9 Nov 2019 21:48:35 -0500
-Message-Id: <20191110024846.32598-56-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 40/66] coresight: tmc: Fix byte-address alignment for RRP
+Date:   Sat,  9 Nov 2019 21:48:19 -0500
+Message-Id: <20191110024846.32598-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -60,58 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 070356513963be6196142acff56acc8359069fa1 ]
+[ Upstream commit e7753f3937610633a540f2be81be87531f96ff04 ]
 
-When sense data is valid, call set_driver_byte(cmd, DRIVER_SENSE).  Otherwise
-some callers of scsi_execute() will ignore sense data.  Don't set DID_ERROR or
-DID_RESET just because sense data is missing.
+>From the comment in the code, it claims the requirement for byte-address
+alignment for RRP register: 'for 32-bit, 64-bit and 128-bit wide trace
+memory, the four LSBs must be 0s. For 256-bit wide trace memory, the
+five LSBs must be 0s'.  This isn't consistent with the program, the
+program sets five LSBs as zeros for 32/64/128-bit wide trace memory and
+set six LSBs zeros for 256-bit wide trace memory.
 
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+After checking with the CoreSight Trace Memory Controller technical
+reference manual (ARM DDI 0461B, section 3.3.4 RAM Read Pointer
+Register), it proves the comment is right and the program does wrong
+setting.
+
+This patch fixes byte-address alignment for RRP by following correct
+definition in the technical reference manual.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index ba7b3aef3ef0b..35419ba32c467 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -617,11 +617,12 @@ static void complete_cmd(struct Scsi_Host *instance,
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index d6941ea24d8df..14df4e34c21cf 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -425,10 +425,10 @@ static void tmc_update_etf_buffer(struct coresight_device *csdev,
+ 		case TMC_MEM_INTF_WIDTH_32BITS:
+ 		case TMC_MEM_INTF_WIDTH_64BITS:
+ 		case TMC_MEM_INTF_WIDTH_128BITS:
+-			mask = GENMASK(31, 5);
++			mask = GENMASK(31, 4);
+ 			break;
+ 		case TMC_MEM_INTF_WIDTH_256BITS:
+-			mask = GENMASK(31, 6);
++			mask = GENMASK(31, 5);
+ 			break;
+ 		}
  
- 	if (hostdata->sensing == cmd) {
- 		/* Autosense processing ends here */
--		if ((cmd->result & 0xff) != SAM_STAT_GOOD) {
-+		if (status_byte(cmd->result) != GOOD) {
- 			scsi_eh_restore_cmnd(cmd, &hostdata->ses);
--			set_host_byte(cmd, DID_ERROR);
--		} else
-+		} else {
- 			scsi_eh_restore_cmnd(cmd, &hostdata->ses);
-+			set_driver_byte(cmd, DRIVER_SENSE);
-+		}
- 		hostdata->sensing = NULL;
- 	}
- 
-@@ -2356,7 +2357,6 @@ static int NCR5380_abort(struct scsi_cmnd *cmd)
- 	if (list_del_cmd(&hostdata->autosense, cmd)) {
- 		dsprintk(NDEBUG_ABORT, instance,
- 		         "abort: removed %p from sense queue\n", cmd);
--		set_host_byte(cmd, DID_ERROR);
- 		complete_cmd(instance, cmd);
- 	}
- 
-@@ -2435,7 +2435,6 @@ static int NCR5380_bus_reset(struct scsi_cmnd *cmd)
- 	list_for_each_entry(ncmd, &hostdata->autosense, list) {
- 		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
- 
--		set_host_byte(cmd, DID_RESET);
- 		cmd->scsi_done(cmd);
- 	}
- 	INIT_LIST_HEAD(&hostdata->autosense);
 -- 
 2.20.1
 
