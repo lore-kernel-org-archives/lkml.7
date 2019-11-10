@@ -2,157 +2,447 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F29C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA371C17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5502E2080F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E052196F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 17:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573405381;
-	bh=pSeXm6yKPXM8KICy539nNqlx3ZoB9BmuMvt3DzyzaJg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0MfP1zMR8S5v4vL5V1pvNDVTefQXFH0IdqBRItbFWgImiCd06ya/S+hBTWrFax2Ai
-	 5xRp5f4kQ+kAcy9EpmJdDOJb3Ttx99rznfNxG4VNNnHT/zIFC6aBN/xK48rUdx0k/K
-	 9Ys36Tz0AkcbEKbBi2Es7XqLI/oajZPrxrzhWslE=
+	s=default; t=1573405621;
+	bh=n/BiM1E8ZXsluLZfm12h4hltMo394SVhR38J8VlFgbg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pKOgWD32FedtWsh4dVQe0ziuKHoUOWpmNTt8qW1uIhkBhSQWRyA5XrV3rvBCmE7bY
+	 msXydVwVpuDZlb/1PQaGwB59WEstFOMrmk9YbmcxOA0r+UM/JNVG+Bc7LP2xY4PHWH
+	 pbTvJGsNHgPA8GsKAD2ZisplaRfF+uN0w4vE/qhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfKJRDA (ORCPT
+        id S1726953AbfKJRHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 12:03:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51260 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 12:07:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbfKJRDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 12:03:00 -0500
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726651AbfKJRG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 12:06:59 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CF3021783
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 17:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ADC02080F;
+        Sun, 10 Nov 2019 17:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573405378;
-        bh=pSeXm6yKPXM8KICy539nNqlx3ZoB9BmuMvt3DzyzaJg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pNmP89t6/3UltSEaHmzEQcrSsB8eq0QVowXgCBrc3HTK67lAI9Ph5+ymiuklkhBpS
-         OIJi/bNCyvWlF2k1fqGYjLZidYsNDT0jzTKP2sxTKR2nn3TCQQDdfgL8m7BmHo+0XP
-         53CgO/Rnm+lCwF8CnomAZYLoJJ1K9jEHVwHEJrrI=
-Received: by mail-wr1-f43.google.com with SMTP id r10so12137281wrx.3
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 09:02:58 -0800 (PST)
-X-Gm-Message-State: APjAAAXyWY36Q3jhftgf9Q6rleoapQADRlI7Eg+L4YHTgXeb7DfO1meW
-        i9dNYu2s1v1W//MgAjJPHYTfvAkj11Qe0Cnq8bwx1A==
-X-Google-Smtp-Source: APXvYqyYzUPhiqfXwzcPJTU6zTkbgbymZq2AhGrblxV8kTPlAwr0NyntKs90KtD5lBqiESCXkhnTuV2LAbz8I2ffWxg=
-X-Received: by 2002:a5d:490b:: with SMTP id x11mr14759004wrq.111.1573405376752;
- Sun, 10 Nov 2019 09:02:56 -0800 (PST)
+        s=default; t=1573405618;
+        bh=n/BiM1E8ZXsluLZfm12h4hltMo394SVhR38J8VlFgbg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uycH3j7l0q4cHH0j3QMmr3ECUZLNfEwqZqiUg3PNhyVtivnVlm7+6UJYdrptmM/bN
+         PH5fo38JPI5tfliaSQGZo8kij3G+z1hregr/zqg3gtj0cxXkaX2xcMlVz+ttRAiANH
+         vc5/zZSNfR9kwPtNP1I1s7+OoScMfMvIinXSsfC4=
+Date:   Sun, 10 Nov 2019 17:06:50 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
+        shawnguo@kernel.org, heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        christophe.jaillet@wanadoo.fr, tglx@linutronix.de,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        paulmck@linux.ibm.com, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] iio: ping: add parallax ping sensors
+Message-ID: <20191110170650.00527b8b@archlinux>
+In-Reply-To: <20191107130045.rt3ix2atyjd3gekr@arbad>
+References: <20191107130045.rt3ix2atyjd3gekr@arbad>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
- <20191105162424.GH30717@redhat.com> <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
- <20191107083902.GB3247@linux.ibm.com> <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
- <20191107153801.GF17896@redhat.com> <CAKOZueuKttjyRBgMkaBknzn+fzufZA+gJcd5wnKgiwmO37yN1g@mail.gmail.com>
- <20191107182259.GK17896@redhat.com>
-In-Reply-To: <20191107182259.GK17896@redhat.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 10 Nov 2019 09:02:45 -0800
-X-Gmail-Original-Message-ID: <CALCETrWxkzp5mzoqq28cbZLmwYh-k_er-8ocVoLPXXUk66Yprg@mail.gmail.com>
-Message-ID: <CALCETrWxkzp5mzoqq28cbZLmwYh-k_er-8ocVoLPXXUk66Yprg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 10:23 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
->
-> On Thu, Nov 07, 2019 at 08:15:53AM -0800, Daniel Colascione wrote:
-> > You're already paying for bounds checking. Receiving a message via a
-> > datagram socket is basically the same thing as what UFFD's read is
-> > doing anyway.
->
-> Except it's synchronous and there are no dynamic allocations required
-> in uffd, while af_netlink and af_unix both all deal with queue of
-> events in skbs dynamically allocated.
->
-> Ultimately if we strip away the skbs for performance reasons, there
-> wouldn't be much code to share, so if the only benefit would be to
-> call recvmsg which would still be as insecure as read for the "worse"
-> case than suid, so I don't see the point.
+On Thu, 7 Nov 2019 14:00:47 +0100
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-Not sure what you mean.
+> add support for parallax ping and laser ping sensors with just one pin
+> for trigger and echo signal.
+>=20
+> This driver is based on srf04. In contrast to it it's necessary to
+> change direction of the pin and to request the irq just for the period
+> when the echo is rising and falling. Because this adds a lot of cases
+> there is this individual driver for handling this type of sensors.
+>=20
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+A few really minor things inline.
 
->
-> And should then eventfd also become a netlink then? I mean uffd was
-> supposed to work like eventfd except it requires specialized events.
+thanks,
 
-No. None of this even means that these objects should be sockets per
-se.  The point is that anyone who calls recvmsg() and passes a control
-buf *must* handle SCM_RIGHTS because even very old Unixes can
-materialize file descriptors.  The only exception is if the program
-knows a priori that the fd refers to a socket that can't use
-SCM_RIGHTS.
+Jonathan
 
-In other words, failing to handle file descriptors returned by
-recvmsg() is an application bug.  Failing to handle file descriptors
-returned by read() is not an application bug -- it's a kernel bug.
+> ---
+>  drivers/iio/proximity/ping.c | 336 +++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 336 insertions(+)
+>  create mode 100644 drivers/iio/proximity/ping.c
+>=20
+> diff --git a/drivers/iio/proximity/ping.c b/drivers/iio/proximity/ping.c
+> new file mode 100644
+> index 000000000000..1a1fbb8ab0c2
+> --- /dev/null
+> +++ b/drivers/iio/proximity/ping.c
+> @@ -0,0 +1,336 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * PING: ultrasonic sensor for distance measuring by using only one GPIOs
+> + *
+> + * Copyright (c) 2019 Andreas Klinger <ak@it-klinger.de>
+> + *
+> + * For details about the devices see:
+> + * http://parallax.com/sites/default/files/downloads/28041-LaserPING-2m-=
+Rangefinder-Guide.pdf
+> + * http://parallax.com/sites/default/files/downloads/28015-PING-Document=
+ation-v1.6.pdf
+> + *
+> + * the measurement cycle as timing diagram looks like:
+> + *
+> + *          +---+            +------------------------+
+> + * GPIO     |   |            |                        |
+> + * ping:  --+   +------------+                        +----------------
+> + *          ^   ^            ^                        ^
+> + *          |<->|            interrupt                interrupt
+> + *         udelay(5)         (ts_rising)              (ts_falling)
+> + *                           |<---------------------->|
+> + *                           .  pulse time measured
+> + *                           .  --> one round trip of ultra sonic waves
+> + *                           .                        .
+> + * ultra           +-+ +-+ +-+                        .
+> + * sonic           | | | | | |                        .
+> + * burst: ---------+ +-+ +-+ +-----------------------------------------
+> + *                                                    .
+> + * ultra                                    +-+ +-+ +-+
+> + * sonic                                    | | | | | |
+> + * echo:  ----------------------------------+ +-+ +-+ +----------------
 
-> > If you call it with a non-empty ancillary data buffer, you know to
-> > react to what you get. You're *opting into* the possibility of getting
-> > file descriptors. Sure, it's theoretically possible that a program
-> > calls recvmsg on random FDs it gets from unknown sources, sees
-> > SCM_RIGHTS unexpectedly, and just the SCM_RIGHTS message and its FD
-> > payload, but that's an outright bug, while calling read() on stdin is
-> > no bug.
->
-> I'm not talking about stdin and suid. recvmsg might mitigate the
-> concern for suid (not certain, depends on the suid, if it's generally
-> doing what you expect most suid to be doing or not), I was talking
-> about the SCM_RIGHTS receiving daemon instead, the "worse" more
-> concerning case than the suid.
->
-> I quote below Andy's relevant email:
->
-> ======
-> It's worse if SCM_RIGHTS is involved.
-> ======
->
-> Not all software will do this after calling recvmsg:
->
->     if (cmsg->cmsg_type == SCM_RIGHTS) {
->       /* oops we got attacked and an fd was involountarily installed
->          because we received another AF_UNIX from a malicious attacker
->          in control of the other end of the SCM_RIGHTS-receiving
->          AF_UNIX connection instead of our expected socket family
->          which doesn't even support SCM_RIGHTS so we would never have
->          noticed an fd was installed after recvmsg */
->     }
->
+Nice diagram ;)
 
-You've misunderstood what you're quoting me as saying.  I'm saying
-that the issue is worse if you pass the userfaultfd via SCM_RIGHTS to
-an unsuspecting program.  It is perfectly valid to receive a file
-descriptor via SCM_RIGHTS and then call read(), at least so long as
-you are okay with potentially blocking.
+> + */
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/sched.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +struct ping_cfg {
+> +	unsigned long	trigger_pulse_us;	/* length of trigger pulse */
+> +	int		laserping_error;	/* support error code in */
+> +						/*   pulse width of laser */
+> +						/*   ping sensors */
+> +	s64		timeout_ns;		/* timeout in ns */
+> +};
+> +
+> +struct ping_data {
+> +	struct device		*dev;
+> +	struct gpio_desc	*gpiod_ping;
+> +	struct mutex		lock;
+> +	int			irqnr;
+> +	ktime_t			ts_rising;
+> +	ktime_t			ts_falling;
+> +	struct completion	rising;
+> +	struct completion	falling;
+> +	const struct ping_cfg	*cfg;
+> +};
+> +
+> +static const struct ping_cfg pa_ping_cfg =3D {
+> +	.trigger_pulse_us	=3D 5,
+> +	.laserping_error	=3D 0,
+> +	.timeout_ns		=3D 18500000,	/* 3 meters */
+> +};
+> +
+> +static const struct ping_cfg pa_laser_ping_cfg =3D {
+> +	.trigger_pulse_us =3D 5,
+> +	.laserping_error =3D 1,
+> +	.timeout_ns		=3D 15500000,	/* 2 meters plus error codes */
 
-If you receive a fd to a socket using SCM_RIGHTS and then you fail to
-check cmsg_type as above, then you have a bug regardless of
-userfaultfd.
+Odd spacing?
 
---Andy
+> +};
+> +
+> +static irqreturn_t ping_handle_irq(int irq, void *dev_id)
+> +{
+> +	struct iio_dev *indio_dev =3D dev_id;
+> +	struct ping_data *data =3D iio_priv(indio_dev);
+> +	ktime_t now =3D ktime_get();
+> +
+> +	if (gpiod_get_value(data->gpiod_ping)) {
+> +		data->ts_rising =3D now;
+> +		complete(&data->rising);
+> +	} else {
+> +		data->ts_falling =3D now;
+> +		complete(&data->falling);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ping_read(struct ping_data *data)
+> +{
+> +	int ret;
+> +	ktime_t ktime_dt;
+> +	s64 dt_ns;
+> +	u32 time_ns, distance_mm;
+> +	struct platform_device *pdev =3D container_of(data->dev,
+> +						struct platform_device, dev);
+
+to_platform_device()
+
+> +	struct iio_dev *indio_dev =3D iio_priv_to_dev(data);
+> +
+> +	/*
+> +	 * just one read-echo-cycle can take place at a time
+> +	 * =3D=3D> lock against concurrent reading calls
+> +	 */
+> +	mutex_lock(&data->lock);
+> +
+> +	reinit_completion(&data->rising);
+> +	reinit_completion(&data->falling);
+> +
+> +	gpiod_set_value(data->gpiod_ping, 1);
+> +	udelay(data->cfg->trigger_pulse_us);
+> +	gpiod_set_value(data->gpiod_ping, 0);
+> +
+> +	ret =3D gpiod_direction_input(data->gpiod_ping);
+> +	if (ret < 0) {
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	data->irqnr =3D gpiod_to_irq(data->gpiod_ping);
+> +	if (data->irqnr < 0) {
+> +		dev_err(data->dev, "gpiod_to_irq: %d\n", data->irqnr);
+> +		return data->irqnr;
+> +	}
+> +
+> +	ret =3D devm_request_irq(data->dev, data->irqnr, ping_handle_irq,
+> +				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> +							pdev->name, indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(data->dev, "request_irq: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* it should not take more than 20 ms until echo is rising */
+> +	ret =3D wait_for_completion_killable_timeout(&data->rising, HZ/50);
+> +	if (ret < 0)
+> +		goto err_reset_direction;
+> +	else if (ret =3D=3D 0) {
+> +		ret =3D -ETIMEDOUT;
+> +		goto err_reset_direction;
+> +	}
+> +
+> +	/* it cannot take more than 50 ms until echo is falling */
+> +	ret =3D wait_for_completion_killable_timeout(&data->falling, HZ/20);
+> +	if (ret < 0)
+> +		goto err_reset_direction;
+> +	else if (ret =3D=3D 0) {
+> +		ret =3D -ETIMEDOUT;
+> +		goto err_reset_direction;
+> +	}
+> +
+> +	ktime_dt =3D ktime_sub(data->ts_falling, data->ts_rising);
+> +
+> +	free_irq(data->irqnr, indio_dev);
+> +
+> +	ret =3D gpiod_direction_output(data->gpiod_ping, GPIOD_OUT_LOW);
+> +	if (ret < 0) {
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	mutex_unlock(&data->lock);
+> +
+> +	dt_ns =3D ktime_to_ns(ktime_dt);
+> +	if (dt_ns > data->cfg->timeout_ns) {
+> +		dev_dbg(data->dev, "distance out of range: dt=3D%lldns\n",
+> +								dt_ns);
+> +		return -EIO;
+> +	}
+> +
+> +	time_ns =3D dt_ns;
+> +
+> +	/*
+> +	 * read error code of laser ping sensor and give users chance to
+> +	 * figure out error by using dynamic debuggging
+> +	 */
+> +	if (data->cfg->laserping_error) {
+> +		if ((time_ns > 12500000) && (time_ns <=3D 13500000)) {
+> +			dev_dbg(data->dev, "target too close or to far\n");
+> +			return -EIO;
+> +		}
+> +		if ((time_ns > 13500000) && (time_ns <=3D 14500000)) {
+> +			dev_dbg(data->dev, "internal sensor error\n");
+> +			return -EIO;
+> +		}
+> +		if ((time_ns > 14500000) && (time_ns <=3D 15500000)) {
+> +			dev_dbg(data->dev, "internal sensor timeout\n");
+> +			return -EIO;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * the speed as function of the temperature is approximately:
+> +	 *
+> +	 * speed =3D 331,5 + 0,6 * Temp
+> +	 *   with Temp in =C2=B0C
+> +	 *   and speed in m/s
+> +	 *
+> +	 * use 343,5 m/s as ultrasonic speed at 20 =C2=B0C here in absence of t=
+he
+> +	 * temperature
+> +	 *
+> +	 * therefore:
+> +	 *             time     343,5     time * 232
+> +	 * distance =3D ------ * ------- =3D ------------
+> +	 *             10^6         2        1350800
+> +	 *   with time in ns
+> +	 *   and distance in mm (one way)
+> +	 *
+> +	 * because we limit to 3 meters the multiplication with 232 just
+> +	 * fits into 32 bit
+> +	 */
+> +	distance_mm =3D time_ns * 232 / 1350800;
+> +
+> +	return distance_mm;
+> +
+> +err_reset_direction:
+> +	mutex_unlock(&data->lock);
+> +	free_irq(data->irqnr, indio_dev);
+> +
+> +	if (gpiod_direction_output(data->gpiod_ping, GPIOD_OUT_LOW))
+> +		dev_dbg(data->dev, "error in gpiod_direction_output\n");
+> +	return ret;
+> +}
+> +
+> +static int ping_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *channel, int *val,
+> +			    int *val2, long info)
+> +{
+> +	struct ping_data *data =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (channel->type !=3D IIO_DISTANCE)
+> +		return -EINVAL;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret =3D ping_read(data);
+> +		if (ret < 0)
+> +			return ret;
+> +		*val =3D ret;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		/*
+> +		 * maximum resolution in datasheet is 1 mm
+> +		 * 1 LSB is 1 mm
+> +		 */
+> +		*val =3D 0;
+> +		*val2 =3D 1000;
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info ping_iio_info =3D {
+> +	.read_raw		=3D ping_read_raw,
+> +};
+> +
+> +static const struct iio_chan_spec ping_chan_spec[] =3D {
+> +	{
+> +		.type =3D IIO_DISTANCE,
+> +		.info_mask_separate =3D
+> +				BIT(IIO_CHAN_INFO_RAW) |
+> +				BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +};
+> +
+> +static const struct of_device_id of_ping_match[] =3D {
+> +	{ .compatible =3D "parallax,ping", .data =3D &pa_ping_cfg},
+> +	{ .compatible =3D "parallax,laserping", .data =3D &pa_ping_cfg},
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_ping_match);
+> +
+> +static int ping_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct ping_data *data;
+> +	struct iio_dev *indio_dev;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(struct ping_data));
+> +	if (!indio_dev) {
+> +		dev_err(dev, "failed to allocate IIO device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	data =3D iio_priv(indio_dev);
+> +	data->dev =3D dev;
+> +	data->cfg =3D of_match_device(of_ping_match, dev)->data;
+
+of_device_get_match_data
+
+> +
+> +	mutex_init(&data->lock);
+> +	init_completion(&data->rising);
+> +	init_completion(&data->falling);
+> +
+> +	data->gpiod_ping =3D devm_gpiod_get(dev, "ping", GPIOD_OUT_LOW);
+> +	if (IS_ERR(data->gpiod_ping)) {
+> +		dev_err(dev, "failed to get ping-gpios: err=3D%ld\n",
+> +						PTR_ERR(data->gpiod_ping));
+> +		return PTR_ERR(data->gpiod_ping);
+> +	}
+> +
+> +	if (gpiod_cansleep(data->gpiod_ping)) {
+> +		dev_err(data->dev, "cansleep-GPIOs not supported\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	indio_dev->name =3D "ping";
+> +	indio_dev->dev.parent =3D &pdev->dev;
+> +	indio_dev->info =3D &ping_iio_info;
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +	indio_dev->channels =3D ping_chan_spec;
+> +	indio_dev->num_channels =3D ARRAY_SIZE(ping_chan_spec);
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static struct platform_driver ping_driver =3D {
+> +	.probe		=3D ping_probe,
+> +	.driver		=3D {
+> +		.name		=3D "ping-gpio",
+> +		.of_match_table	=3D of_ping_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(ping_driver);
+> +
+> +MODULE_AUTHOR("Andreas Klinger <ak@it-klinger.de>");
+> +MODULE_DESCRIPTION("PING sensors for distance measuring using one GPIOs"=
+);
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:ping");
+
