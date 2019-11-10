@@ -2,86 +2,107 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191EBC43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC6BC17444
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E566320B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF0921D7B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 12:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5tCu1Q/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfKJMnx (ORCPT
+        id S1726793AbfKJMoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 07:43:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54559 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfKJMnw (ORCPT
+        Sun, 10 Nov 2019 07:44:04 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45594 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfKJMoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 07:43:52 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iTmZI-0005Vb-8n; Sun, 10 Nov 2019 13:43:48 +0100
-Date:   Sun, 10 Nov 2019 13:43:46 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <JGross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch 4/9] x86/io: Speedup schedule out of I/O bitmap user
-In-Reply-To: <53B49BD3-6F9C-4A78-B203-1BD53034014D@amacapital.net>
-Message-ID: <alpine.DEB.2.21.1911101341430.12583@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1911090043430.2605@nanos.tec.linutronix.de> <53B49BD3-6F9C-4A78-B203-1BD53034014D@amacapital.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 10 Nov 2019 07:44:04 -0500
+Received: by mail-lj1-f196.google.com with SMTP id n21so10831819ljg.12;
+        Sun, 10 Nov 2019 04:44:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=y83C4uV1+CMS9qXxIDGEDkXZDlFcKiUT+tBB2iKcZ/8=;
+        b=S5tCu1Q/bUWUzoqui0dPCRpuzi6ZO6mnhyySQUfJ8Wq0Sw21KjmuAhUeqMLtXFQIgp
+         /CuDTn6oX6LgJcIkQQW5NO0JEqDaHfh8mS2lOf/KCLK8EERkNsE44C3on2wsOQ6pOjYl
+         H1P/W6x5qGi+QAJOrQOiqlj/I9dcvNEwyBzIkvDXGk66zCb0DfYWInfROuSUe+q3W1+o
+         0Q6umV52sYXfDemaam8ueHnzdPNcWnEbzjGUDisxUgqNSmQ86L8i1l5CrRSN926q04c/
+         CAzAkuvfZm0OCMYchvxZJG7l7F2PDMbngOIXDx+prmkP2nYs6q7J7LhtafWXJgC2yANx
+         RzPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y83C4uV1+CMS9qXxIDGEDkXZDlFcKiUT+tBB2iKcZ/8=;
+        b=hxDvxlEfA9bIwJ640waOgPV46swpFjoWfDd9IE/5EDLWrnO0yFZt7Cug0+B1l0E4Hb
+         MQgtDhZw3bD5NkjLEYaB/So8yw3mf81nd9971qWnR3LDAr43qJUmyg62xAqAlft2Rn7M
+         kn+D+CQHocqIP3ZUr2yqchYUKQwlWhxxkHxbg5tpRTlnW9q4wQyVXyfQpsxseoEKMUvu
+         ok0901P0rLV6bcO4x1568TEkyDKwUc5nVDUlIMb4eoNVGplhKU7Ya2c6MmEpKWNy7iLQ
+         Posr/8gNEJGxanDivckszyA4ZMon72eVSvce+K9/zCQHRUCv++6IncKFKJ0vhbHnL3PE
+         nyUA==
+X-Gm-Message-State: APjAAAWhdLdnf9lSlztgxxYlbSkEYJlLvbzIJ3orrWe0JGFzhSC7CiML
+        THOOxPSvC35hxR/G42M7n6U=
+X-Google-Smtp-Source: APXvYqxUIUlp45THMZfcuhEJlbzNkjAeA1+yMttaZdWaX6nYzo2jbjepxuvD6mbt0FR9mIQCgtKtxA==
+X-Received: by 2002:a2e:98d4:: with SMTP id s20mr13111304ljj.128.1573389841582;
+        Sun, 10 Nov 2019 04:44:01 -0800 (PST)
+Received: from localhost.localdomain (h-98-128-228-153.NA.cust.bahnhof.se. [98.128.228.153])
+        by smtp.gmail.com with ESMTPSA id r7sm5377486ljc.74.2019.11.10.04.43.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Nov 2019 04:44:00 -0800 (PST)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     megous@megous.com
+Cc:     arnd@arndb.de, devicetree@vger.kernel.org,
+        gregkh@linuxfoundation.org, icenowy@aosc.io, kishon@ti.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, mark.rutland@arm.com,
+        mripard@kernel.org, paul.kocialkowski@bootlin.com,
+        robh+dt@kernel.org, tglx@linutronix.de, wens@csie.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH v2] phy: allwinner: Fix GENMASK misuse
+Date:   Sun, 10 Nov 2019 13:43:55 +0100
+Message-Id: <20191110124355.1569-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191020134229.1216351-3-megous@megous.com>
+References: <20191020134229.1216351-3-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-894609131-1573389828=:12583"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Arguments are supposed to be ordered high then low.
 
---8323329-894609131-1573389828=:12583
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Fixes: a228890f9458 ("phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC")
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Tested-by: Ondrej Jirman <megous@megous.com>
+---
+v1->v2: Add fixes tax. Add Ondrejs Tested-by. No functional change.
 
-On Fri, 8 Nov 2019, Andy Lutomirski wrote:
-> > On Nov 8, 2019, at 3:45 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > ﻿On Fri, 8 Nov 2019, Andy Lutomirski wrote:
-> >> SDM vol 3 27.5.2 says the BUILD_BUG_ON is right.  Or am I
-> >> misunderstanding you?
-> >> 
-> >> I'm reasonably confident that the TSS limit is indeed 0x67 after VM
-> >> exit, and I wrote the existing code that tries to optimize this to avoid
-> >> LTR when not needed.
-> > 
-> > The BUILD_BUG_ON(IO_BITMAP_OFFSET - 1 == 0x67) in the VMX code is bogus in
-> > two aspects:
-> > 
-> > 1) This wants to be in generic x86 code
-> 
-> I think disagree. The only thing special about 0x67 is that VMX hard
-> codes it. It’s specifically a VMX-ism. So I think the VMX code should
-> indeed assert that 0x67 is a safe value.
+ drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, it is a VMX specific issue, but I really prefer the build to fail in
-the common code without having to enable VMX if something changes the
-TSS layout in incompatible ways.
+diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
+index 1169f3e83a6f..b1c04f71a31d 100644
+--- a/drivers/phy/allwinner/phy-sun50i-usb3.c
++++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
+@@ -49,7 +49,7 @@
+ #define SUNXI_LOS_BIAS(n)		((n) << 3)
+ #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
+ #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
+-#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
++#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
+ 
+ struct sun50i_usb3_phy {
+ 	struct phy *phy;
+-- 
+2.24.0
 
-Thanks,
-
-	tglx
---8323329-894609131-1573389828=:12583--
