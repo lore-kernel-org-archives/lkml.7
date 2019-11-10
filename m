@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E37C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC05C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466BB214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E851421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354593;
-	bh=xfI8/dPVmCK1BenNrBBdSQzPPGYrx8ypbcs/wGBHDaw=;
+	s=default; t=1573354605;
+	bh=rYpbs0dKw7NuXQPuiS1JlwOkFwEBEGYINd5c/qDq/JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Pam+k2iNA6Q0j6FlsNaokNiUKJ25O3C08jA3XYX/Dmtm16eFts0bSmczZs5pAJFN
-	 VCP+DFzdt6bIdZEv6+nKLqwrl2JQvC4vpzG0My2bX/9hMqCZSzMkeOY4iOY5jHmTIj
-	 uJuPbu4ixCAa+tWgX9OKssJZmwGj8LBDuChbOEJA=
+	b=ThYDwyW104Vv0krHOPXJyGhzBHR2Jepn0R7bY7YK+ofE9PbwE1LQd10T5L1wPrVBe
+	 NklgWI8xEKPsgjiD+vAet0tWICMwn+ltlc3Pg1ZDN95vQxbsJZ6HLI+S1mZtQtTQ2g
+	 J+OzIdbV3vSVtAJ4skBaXJjeTVQedu3xmIEjjEt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbfKJC4b (ORCPT
+        id S1728828AbfKJC4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:56:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:56:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbfKJCtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:51 -0500
+        id S1729531AbfKJCtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EE8E22582;
-        Sun, 10 Nov 2019 02:49:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7C822595;
+        Sun, 10 Nov 2019 02:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354190;
-        bh=xfI8/dPVmCK1BenNrBBdSQzPPGYrx8ypbcs/wGBHDaw=;
+        s=default; t=1573354184;
+        bh=rYpbs0dKw7NuXQPuiS1JlwOkFwEBEGYINd5c/qDq/JM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRHBDm8wxYtmbrTZbmk/Q4FyCd/JfttTPV+IQBhKpCFzO+/lru9LzyD+koRr7Wxmm
-         ExxYpJHkRwgOTdskQCHEeODbw4Zv3uTGzpTBHp5mzjVeVRy8oYqrJpd7kT1JJdNsW+
-         NnJU3giy6vkVn8fY6fpQ5OTJSK+LEbo6cjLPI4o0=
+        b=1wOdY7priKmOwnQsCIxsz7B3RGXOtXrVCNR0FGfoRpe49GkA/1QPtLweJYuLqP29u
+         8M/FgNKjcWLdVvrKo2Y9v3JrTpaag895fpC84+3GpCeA/BeZoQznogCa+KTg+S8LWP
+         bvWjnoBjafZDIvn+hEs7rzGvyNCrhSq/LqCjHe7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 38/66] coresight: Fix handling of sinks
-Date:   Sat,  9 Nov 2019 21:48:17 -0500
-Message-Id: <20191110024846.32598-38-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 33/66] usb: gadget: uvc: configfs: Drop leaked references to config items
+Date:   Sat,  9 Nov 2019 21:48:12 -0500
+Message-Id: <20191110024846.32598-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -60,78 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit c71369de02b285d9da526a526d8f2affc7b17c59 ]
+[ Upstream commit 86f3daed59bceb4fa7981d85e89f63ebbae1d561 ]
 
-The coresight components could be operated either in sysfs mode or in perf
-mode. For some of the components, the mode of operation doesn't matter as
-they simply relay the data to the next component in the trace path. But for
-sinks, they need to be able to provide the trace data back to the user.
-Thus we need to make sure that "mode" is handled appropriately. e.g,
-the sysfs mode could have multiple sources driving the trace data, while
-perf mode doesn't allow sharing the sink.
+Some of the .allow_link() and .drop_link() operations implementations
+call config_group_find_item() and then leak the reference to the
+returned item. Fix this by dropping those references where needed.
 
-The coresight_enable_sink() however doesn't really allow this check to
-trigger as it skips the "enable_sink" callback if the component is
-already enabled, irrespective of the mode. This could cause mixing
-of data from different modes or even same mode (in perf), if the
-sources are different. Also, if we fail to enable the sink while
-enabling a path (where sink is the first component enabled),
-we could end up in disabling the components in the "entire"
-path which were not enabled in this trial, causing disruptions
-in the existing trace paths.
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/usb/gadget/function/uvc_configfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 398e44a9ec45d..5ffabc388630e 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -132,12 +132,14 @@ static int coresight_enable_sink(struct coresight_device *csdev, u32 mode)
- {
- 	int ret;
- 
--	if (!csdev->enable) {
--		if (sink_ops(csdev)->enable) {
--			ret = sink_ops(csdev)->enable(csdev, mode);
--			if (ret)
--				return ret;
--		}
-+	/*
-+	 * We need to make sure the "new" session is compatible with the
-+	 * existing "mode" of operation.
-+	 */
-+	if (sink_ops(csdev)->enable) {
-+		ret = sink_ops(csdev)->enable(csdev, mode);
-+		if (ret)
-+			return ret;
- 		csdev->enable = true;
- 	}
- 
-@@ -331,8 +333,14 @@ int coresight_enable_path(struct list_head *path, u32 mode)
- 		switch (type) {
- 		case CORESIGHT_DEV_TYPE_SINK:
- 			ret = coresight_enable_sink(csdev, mode);
-+			/*
-+			 * Sink is the first component turned on. If we
-+			 * failed to enable the sink, there are no components
-+			 * that need disabling. Disabling the path here
-+			 * would mean we could disrupt an existing session.
-+			 */
- 			if (ret)
--				goto err;
-+				goto out;
- 			break;
- 		case CORESIGHT_DEV_TYPE_SOURCE:
- 			/* sources are enabled from either sysFS or Perf */
+diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
+index d7dcd39fe12cb..3803dda54666b 100644
+--- a/drivers/usb/gadget/function/uvc_configfs.c
++++ b/drivers/usb/gadget/function/uvc_configfs.c
+@@ -543,6 +543,7 @@ static int uvcg_control_class_allow_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
+@@ -584,6 +585,7 @@ static int uvcg_control_class_drop_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
+@@ -2047,6 +2049,7 @@ static int uvcg_streaming_class_allow_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
+@@ -2091,6 +2094,7 @@ static int uvcg_streaming_class_drop_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
 -- 
 2.20.1
 
