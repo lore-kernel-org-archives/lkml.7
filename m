@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C051FC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3635C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C75D208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A576A21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354885;
-	bh=SgPrO7ugVJyhINURkWlDfRVDXn1Vdmrw7OE7L8HeNAA=;
+	s=default; t=1573354890;
+	bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MbOTk+JqiVAkBdZ5iRdiOLJu1x/3qXI+YNW2UKMbw30vLEEMlYFW62Kg+qVMTJ/fu
-	 ut4+FqIk1RdY+xeDJ79naXUcgN7zJn6Gg16KEGxtd+P/odMWYqYCRgT6dDgUwhXCI4
-	 M0P0amrdt+XkgI3DaxkC6szYw+JOvjLwBCDrNBtI=
+	b=DPTJ6EeQi9IbV6x2ikUW4pt63Pws0MBG46ZKNHNE0iN7zoiJ6J72xCUOWImg3+0Wx
+	 SmWI8DOkB0xnOUMPp6gGQG38tTcesVRm3D2A4yH+VDRq6EoR1nxXI5F4OhCjb3ADAx
+	 JTmWslK/JHxT95MZG7CRXFjl8ePcixles+P0qNEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfKJDBX (ORCPT
+        id S1729932AbfKJDB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:01:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47196 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:01:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728946AbfKJC4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F6A621850;
-        Sun, 10 Nov 2019 02:47:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C40A3222CB;
+        Sun, 10 Nov 2019 02:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354044;
-        bh=SgPrO7ugVJyhINURkWlDfRVDXn1Vdmrw7OE7L8HeNAA=;
+        s=default; t=1573354050;
+        bh=cWDR+bK9eieHFdL6aHLtdxeVnto+yzXb3nykupc4aDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/Y6jtQXPgXkb220n66zAwcP/Ulte24dmjbutmoBdLdkGdgDTgFJHsU+DD35H+dRB
-         DCYWDYPHJwF9ykM1vf07VmAOnFdBcCL7vChqSWUsvN5D00OvV60RoUN8npcoy3NHeQ
-         XLTF0BVdFgOM5weEMyzwpGhcB3Jo0v6Ds6kHulWI=
+        b=gnISEUGN/D0N4m22eMtUUK9QwIa8cZUg3yQNZ397Iu+9rwQpn5HvHfD1mIjVb+d97
+         M2UblNad/iPOnS1y/2ECycqEAtV5hfeQRdt2dZSRMwYSEWMFzfAsSGB/NsLbSzX7Xz
+         Exuq99bbSlcik9rFOoOSiTdMF/Q7kudCgh2LRv9w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 056/109] i2c: aspeed: fix invalid clock parameters for very large divisors
-Date:   Sat,  9 Nov 2019 21:44:48 -0500
-Message-Id: <20191110024541.31567-56-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Paul Elder <paul.elder@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 060/109] usb: gadget: uvc: Factor out video USB request queueing
+Date:   Sat,  9 Nov 2019 21:44:52 -0500
+Message-Id: <20191110024541.31567-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,164 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 17ccba67109cd0631f206cf49e17986218b47854 ]
+[ Upstream commit 9d1ff5dcb3cd3390b1e56f1c24ae42c72257c4a3 ]
 
-The function that computes clock parameters from divisors did not
-respect the maximum size of the bitfields that the parameters were
-written to. This fixes the bug.
+USB requests for video data are queued from two different locations in
+the driver, with the same code block occurring twice. Factor it out to a
+function.
 
-This bug can be reproduced with (and this fix verified with) the test
-at: https://kunit-review.googlesource.com/c/linux/+/1035/
-
-Discovered-by-KUnit: https://kunit-review.googlesource.com/c/linux/+/1035/
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
+Tested-by: Paul Elder <paul.elder@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-aspeed.c | 65 +++++++++++++++++++++++----------
- 1 file changed, 45 insertions(+), 20 deletions(-)
+ drivers/usb/gadget/function/uvc_video.c | 30 ++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-index a074735456bc7..29574b9075fd7 100644
---- a/drivers/i2c/busses/i2c-aspeed.c
-+++ b/drivers/i2c/busses/i2c-aspeed.c
-@@ -135,7 +135,8 @@ struct aspeed_i2c_bus {
- 	/* Synchronizes I/O mem access to base. */
- 	spinlock_t			lock;
- 	struct completion		cmd_complete;
--	u32				(*get_clk_reg_val)(u32 divisor);
-+	u32				(*get_clk_reg_val)(struct device *dev,
-+							   u32 divisor);
- 	unsigned long			parent_clk_frequency;
- 	u32				bus_frequency;
- 	/* Transaction state. */
-@@ -679,16 +680,27 @@ static const struct i2c_algorithm aspeed_i2c_algo = {
- #endif /* CONFIG_I2C_SLAVE */
- };
+diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
+index 0f01c04d7cbd8..540917f54506a 100644
+--- a/drivers/usb/gadget/function/uvc_video.c
++++ b/drivers/usb/gadget/function/uvc_video.c
+@@ -129,6 +129,19 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
+  * Request handling
+  */
  
--static u32 aspeed_i2c_get_clk_reg_val(u32 clk_high_low_max, u32 divisor)
-+static u32 aspeed_i2c_get_clk_reg_val(struct device *dev,
-+				      u32 clk_high_low_mask,
-+				      u32 divisor)
- {
--	u32 base_clk, clk_high, clk_low, tmp;
-+	u32 base_clk_divisor, clk_high_low_max, clk_high, clk_low, tmp;
++static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
++{
++	int ret;
 +
-+	/*
-+	 * SCL_high and SCL_low represent a value 1 greater than what is stored
-+	 * since a zero divider is meaningless. Thus, the max value each can
-+	 * store is every bit set + 1. Since SCL_high and SCL_low are added
-+	 * together (see below), the max value of both is the max value of one
-+	 * them times two.
-+	 */
-+	clk_high_low_max = (clk_high_low_mask + 1) * 2;
- 
- 	/*
- 	 * The actual clock frequency of SCL is:
- 	 *	SCL_freq = APB_freq / (base_freq * (SCL_high + SCL_low))
- 	 *		 = APB_freq / divisor
- 	 * where base_freq is a programmable clock divider; its value is
--	 *	base_freq = 1 << base_clk
-+	 *	base_freq = 1 << base_clk_divisor
- 	 * SCL_high is the number of base_freq clock cycles that SCL stays high
- 	 * and SCL_low is the number of base_freq clock cycles that SCL stays
- 	 * low for a period of SCL.
-@@ -698,47 +710,59 @@ static u32 aspeed_i2c_get_clk_reg_val(u32 clk_high_low_max, u32 divisor)
- 	 *	SCL_low	 = clk_low + 1
- 	 * Thus,
- 	 *	SCL_freq = APB_freq /
--	 *		((1 << base_clk) * (clk_high + 1 + clk_low + 1))
-+	 *		((1 << base_clk_divisor) * (clk_high + 1 + clk_low + 1))
- 	 * The documentation recommends clk_high >= clk_high_max / 2 and
- 	 * clk_low >= clk_low_max / 2 - 1 when possible; this last constraint
- 	 * gives us the following solution:
- 	 */
--	base_clk = divisor > clk_high_low_max ?
-+	base_clk_divisor = divisor > clk_high_low_max ?
- 			ilog2((divisor - 1) / clk_high_low_max) + 1 : 0;
--	tmp = (divisor + (1 << base_clk) - 1) >> base_clk;
--	clk_low = tmp / 2;
--	clk_high = tmp - clk_low;
- 
--	if (clk_high)
--		clk_high--;
-+	if (base_clk_divisor > ASPEED_I2CD_TIME_BASE_DIVISOR_MASK) {
-+		base_clk_divisor = ASPEED_I2CD_TIME_BASE_DIVISOR_MASK;
-+		clk_low = clk_high_low_mask;
-+		clk_high = clk_high_low_mask;
-+		dev_err(dev,
-+			"clamping clock divider: divider requested, %u, is greater than largest possible divider, %u.\n",
-+			divisor, (1 << base_clk_divisor) * clk_high_low_max);
-+	} else {
-+		tmp = (divisor + (1 << base_clk_divisor) - 1)
-+				>> base_clk_divisor;
-+		clk_low = tmp / 2;
-+		clk_high = tmp - clk_low;
-+
-+		if (clk_high)
-+			clk_high--;
- 
--	if (clk_low)
--		clk_low--;
-+		if (clk_low)
-+			clk_low--;
++	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
++	if (ret < 0) {
++		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
++		usb_ep_set_halt(video->ep);
 +	}
++
++	return ret;
++}
++
+ /*
+  * I somehow feel that synchronisation won't be easy to achieve here. We have
+  * three events that control USB requests submission:
+@@ -193,14 +206,13 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
  
+ 	video->encode(req, video, buf);
  
- 	return ((clk_high << ASPEED_I2CD_TIME_SCL_HIGH_SHIFT)
- 		& ASPEED_I2CD_TIME_SCL_HIGH_MASK)
- 			| ((clk_low << ASPEED_I2CD_TIME_SCL_LOW_SHIFT)
- 			   & ASPEED_I2CD_TIME_SCL_LOW_MASK)
--			| (base_clk & ASPEED_I2CD_TIME_BASE_DIVISOR_MASK);
-+			| (base_clk_divisor
-+			   & ASPEED_I2CD_TIME_BASE_DIVISOR_MASK);
- }
+-	if ((ret = usb_ep_queue(ep, req, GFP_ATOMIC)) < 0) {
+-		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
+-		usb_ep_set_halt(ep);
+-		spin_unlock_irqrestore(&video->queue.irqlock, flags);
++	ret = uvcg_video_ep_queue(video, req);
++	spin_unlock_irqrestore(&video->queue.irqlock, flags);
++
++	if (ret < 0) {
+ 		uvcg_queue_cancel(queue, 0);
+ 		goto requeue;
+ 	}
+-	spin_unlock_irqrestore(&video->queue.irqlock, flags);
  
--static u32 aspeed_i2c_24xx_get_clk_reg_val(u32 divisor)
-+static u32 aspeed_i2c_24xx_get_clk_reg_val(struct device *dev, u32 divisor)
- {
- 	/*
- 	 * clk_high and clk_low are each 3 bits wide, so each can hold a max
- 	 * value of 8 giving a clk_high_low_max of 16.
- 	 */
--	return aspeed_i2c_get_clk_reg_val(16, divisor);
-+	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(2, 0), divisor);
- }
+ 	return;
  
--static u32 aspeed_i2c_25xx_get_clk_reg_val(u32 divisor)
-+static u32 aspeed_i2c_25xx_get_clk_reg_val(struct device *dev, u32 divisor)
- {
- 	/*
- 	 * clk_high and clk_low are each 4 bits wide, so each can hold a max
- 	 * value of 16 giving a clk_high_low_max of 32.
- 	 */
--	return aspeed_i2c_get_clk_reg_val(32, divisor);
-+	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(3, 0), divisor);
- }
+@@ -320,15 +332,13 @@ int uvcg_video_pump(struct uvc_video *video)
+ 		video->encode(req, video, buf);
  
- /* precondition: bus.lock has been acquired. */
-@@ -751,7 +775,7 @@ static int aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus)
- 	clk_reg_val &= (ASPEED_I2CD_TIME_TBUF_MASK |
- 			ASPEED_I2CD_TIME_THDSTA_MASK |
- 			ASPEED_I2CD_TIME_TACST_MASK);
--	clk_reg_val |= bus->get_clk_reg_val(divisor);
-+	clk_reg_val |= bus->get_clk_reg_val(bus->dev, divisor);
- 	writel(clk_reg_val, bus->base + ASPEED_I2C_AC_TIMING_REG1);
- 	writel(ASPEED_NO_TIMEOUT_CTRL, bus->base + ASPEED_I2C_AC_TIMING_REG2);
+ 		/* Queue the USB request */
+-		ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
++		ret = uvcg_video_ep_queue(video, req);
++		spin_unlock_irqrestore(&queue->irqlock, flags);
++
+ 		if (ret < 0) {
+-			printk(KERN_INFO "Failed to queue request (%d)\n", ret);
+-			usb_ep_set_halt(video->ep);
+-			spin_unlock_irqrestore(&queue->irqlock, flags);
+ 			uvcg_queue_cancel(queue, 0);
+ 			break;
+ 		}
+-		spin_unlock_irqrestore(&queue->irqlock, flags);
+ 	}
  
-@@ -859,7 +883,8 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
- 	if (!match)
- 		bus->get_clk_reg_val = aspeed_i2c_24xx_get_clk_reg_val;
- 	else
--		bus->get_clk_reg_val = (u32 (*)(u32))match->data;
-+		bus->get_clk_reg_val = (u32 (*)(struct device *, u32))
-+				match->data;
- 
- 	/* Initialize the I2C adapter */
- 	spin_lock_init(&bus->lock);
+ 	spin_lock_irqsave(&video->req_lock, flags);
 -- 
 2.20.1
 
