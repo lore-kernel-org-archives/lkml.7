@@ -2,95 +2,127 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FADFC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7D5C17442
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE8320869
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="EvR+n8YQ"
+	by mail.kernel.org (Postfix) with ESMTP id 7F52C20869
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 10:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfKJKLF (ORCPT
+        id S1726651AbfKJKLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 05:11:05 -0500
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:46512 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726604AbfKJKLF (ORCPT
+        Sun, 10 Nov 2019 05:11:31 -0500
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:36361 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726604AbfKJKLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 05:11:05 -0500
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 0A5F72E0AFB;
-        Sun, 10 Nov 2019 13:11:02 +0300 (MSK)
-Received: from vla1-5826f599457c.qloud-c.yandex.net (vla1-5826f599457c.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:5826:f599])
-        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id ufELG9Uhqi-B1A4JkDe;
-        Sun, 10 Nov 2019 13:11:01 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1573380661; bh=118Ya5YU895aT4nYO/kh6q7oC2jIJWTHCPfcXWmapWc=;
-        h=Message-ID:Date:To:From:Subject;
-        b=EvR+n8YQfb/QNUBIB4cGNDXvO6K6TPsKflXlhpOlksH8skTMFkR1YR2d+LoNw4kpA
-         1P8t7pyAmmeWWwdmvMYtKA1SdSkkaKHBFup7AhR1sPDo0pYRCzJjtwz2vP4VwSL3Nv
-         6fnJqXsZal5jATd0PfbyxH78MvF/EKRZn4Dt8PUQ=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8554:53c0:3d75:2e8a])
-        by vla1-5826f599457c.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id B6bc5NkSSF-B1WSjArq;
-        Sun, 10 Nov 2019 13:11:01 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH resend] libtraceevent: fix parsing event argument types
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Date:   Sun, 10 Nov 2019 13:11:01 +0300
-Message-ID: <157338066113.6548.11461421296091086041.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Sun, 10 Nov 2019 05:11:30 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id TkAciN9jLQBsYTkAfi1RpK; Sun, 10 Nov 2019 11:11:26 +0100
+Subject: Re: [PATCH v2 04/18] media/v4l2-core: set pages dirty upon releasing
+ DMA buffers
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-5-jhubbard@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <4b2337f6-102d-ae9d-e690-4331d77660c4@xs4all.nl>
+Date:   Sun, 10 Nov 2019 11:10:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191103211813.213227-5-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAPpy2vpeOFs77rW2iUKK+bPb2VYuB427ajEzGyts3W1VRlRd8q2KZmpOE3DFif2hs9tSjpFG2MDGUxoUwQm+z0hf/YaqIsd4KJq73ThxOO7jqnMZVh0
+ 5s2Ci3kaB1equdumf2oCd5xzPIVouOW1/6UWWZgdj5tXsUmXU+r/YvhgWiD4A5B5WBtqZIjcpZHv6EKsqhHvOz6pIIbA7OldOWD2+iHEV3rVaUTKb6Lt3vRw
+ SSXpeck8t+iVDTfehAnk4OCQknEuuW7biYsmpQFqR+21Z4qbrYGAJFWwZGcx5l1O9Nb+oL+1R7wh7rczhsKkATyoeyEbJh7U5bWdVqvWfIRcf2W7EU+qBTBa
+ X7Uir4ix/M0Vc8kPKcpvtanUB7BwbBsdTwpfWZs6MGGivJgNeWJTOg0pJ8/lJLpxYEgYT1my4VIi7msLPk5NPAhRKjmUqSeBdgx8a5QxjgigbuB7AzOfHnKq
+ ZzakHL1ulDMamAJ5G9YZZjwCB+lOMOUp5M3CZNRpUz5w7sRFxqShtLzNOamqMbdo1uYqNd0vcjOgiKZR8d9Ghp29rh44/i+M6byEp/mDuO8hkUsi6jHOl0Jc
+ 2AsL8S7dTnmRvpiwGny5VVVHzqw5VaucvjDIrC7g1GMNCVRVQGn6eqGLBi9r+KmU9xgLz4PEaJs8ezN37s2nqlRHMEUZEcp+0+DGahQQuCOB5ZtIgcZI4RLV
+ GtvowA/PQOkGTxubmHrxAhc6A75jhab02NbtNvCE8y9gMwelrINTjlClQk3w4e+mbQFNkFV2ECg9betDwH8/aIdQ08eLbeJlRT9VV2RlzufdbZT8WYUKa3rQ
+ XrzXyEWlNgLgdhKTXh0gLOMN1fnBuGnwvPLE+9dloH9gj5/ahIl1DJ1yC5bX8YaUgYefoKylCBFkllnRgj55soXCdEpByoyvoOtA9cLY+8HPuv8yFz30DCRl
+ loaEV8FCCffWUFnYyblWEO9HjL7sGDOb3AgMAMj1WfnDClDQ3Ke+QmqrIUPJAob7r+3lZrpzd80clijb4adwOWHUw9h2hzLNp12Jtuxf7rCNBDN9d0d3xcJP
+ CQUt8WSeOsrapke/lCNSISw8IUFdRqcP8SBDphkMHZ6Ufy4ivENOjdpqmPgmUlDt2yDks5tyJ8p+63Ohr5N9kCcaLw8ePN4eY8/i2Yefol6FpRFwDf50/E0y
+ I/X+ZEgsPHX0dVwFtL9IEqmHiSQY81IjgKYkJL1PhteOJmC92UP+QNn6ZPsWLuZ/haHv+miyWHADTl/qLfH38B3y6M4Pmjva6VM7WmQ6DOw1MqUxuJT/v53v
+ D98Je6z4yf0/L93nJ/iKmgOFto/kGOYI7cTtA+aiGH69QjtEjUslbWgWW5DA4lVL/fi/uIVNVbhElR2trAv8SoZoOAGF53v4D0PPvVLo+05K//bIQbQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing "%o" and "%X". Ext4 events use "%o" for printing i_mode.
+On 11/3/19 10:17 PM, John Hubbard wrote:
+> After DMA is complete, and the device and CPU caches are synchronized,
+> it's still required to mark the CPU pages as dirty, if the data was
+> coming from the device. However, this driver was just issuing a
+> bare put_page() call, without any set_page_dirty*() call.
+> 
+> Fix the problem, by calling set_page_dirty_lock() if the CPU pages
+> were potentially receiving data from the device.
+> 
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- tools/lib/traceevent/event-parse.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index d948475585ce..beaa8b8c08ff 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -4395,8 +4395,10 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
- 				/* fall through */
- 			case 'd':
- 			case 'u':
--			case 'x':
- 			case 'i':
-+			case 'x':
-+			case 'X':
-+			case 'o':
- 				switch (ls) {
- 				case 0:
- 					vsize = 4;
-@@ -5078,10 +5080,11 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
- 
- 				/* fall through */
- 			case 'd':
-+			case 'u':
- 			case 'i':
- 			case 'x':
- 			case 'X':
--			case 'u':
-+			case 'o':
- 				if (!arg) {
- 					do_warning_event(event, "no argument match");
- 					event->flags |= TEP_EVENT_FL_FAILED;
+Looks good, thanks!
+
+	Hans
+
+> ---
+>  drivers/media/v4l2-core/videobuf-dma-sg.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2-core/videobuf-dma-sg.c
+> index 66a6c6c236a7..28262190c3ab 100644
+> --- a/drivers/media/v4l2-core/videobuf-dma-sg.c
+> +++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+> @@ -349,8 +349,11 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
+>  	BUG_ON(dma->sglen);
+>  
+>  	if (dma->pages) {
+> -		for (i = 0; i < dma->nr_pages; i++)
+> +		for (i = 0; i < dma->nr_pages; i++) {
+> +			if (dma->direction == DMA_FROM_DEVICE)
+> +				set_page_dirty_lock(dma->pages[i]);
+>  			put_page(dma->pages[i]);
+> +		}
+>  		kfree(dma->pages);
+>  		dma->pages = NULL;
+>  	}
+> 
 
