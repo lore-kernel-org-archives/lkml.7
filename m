@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D24C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7426C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA65621019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BDD21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354673;
-	bh=FgAEuwJeq6bU+l6jFE4Y9bLsRENUulQAqRtrvdYS76E=;
+	s=default; t=1573354675;
+	bh=FTJPCXRcxDMOJSToYEtqeq6c2U9ZZgf1fojkXraSZa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iINusjyd1Omde0KnkXzbCLNRAslFG6jkdcJMYEMV/9/qbYltt0z17vmwXQjzmhX7
-	 059C1wGUswfLtohNsCInXZLkbJt1aDlyIF6s8dXmSulmWGcRlXFt0v9Krqa15Gyo9Q
-	 5QCs5W6388PwxNRi1ekz7Dv7oZxFK7p6uiW8OzEg=
+	b=mLkEXkx9ZN6ypFcUI5IUokUms6yPaQYSXS+vrNtA1dMkQtnB6uQIngBxLFV3GXkHZ
+	 7tusf0LmQP7WEUf2h9V7P3phlcw4Kuqoc+fTTCUqP+Yt9jcTgAEzcq10bHgjbKXgy3
+	 mDZR0PuGRhFzXY5H8jkkWhS/b23uaHigsr1Aauig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfKJC5w (ORCPT
+        id S1729730AbfKJC5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:57:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47260 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:57:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729405AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729400AbfKJC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C492222BE;
-        Sun, 10 Nov 2019 02:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5425621D82;
+        Sun, 10 Nov 2019 02:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354058;
-        bh=FgAEuwJeq6bU+l6jFE4Y9bLsRENUulQAqRtrvdYS76E=;
+        s=default; t=1573354042;
+        bh=FTJPCXRcxDMOJSToYEtqeq6c2U9ZZgf1fojkXraSZa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NBzci+iwFFmE7/niY853YDYqPaM1y8yg0ElTDyGml36qQj0yiJ27gpAjybgPAg/fq
-         O9kA8kylNlKGobKitkork0Ehr7L3zxynQEC3s5VsbA0tsTcD9Z2UH38ctihRzKxY3T
-         HWCsk+td03Q137ycBVo7miBjfGt2/UjH2X3cvprY=
+        b=tYyDDN4Gkq7VhvlbKkoFee632hy7LO4/lsthpccbMIaw1eNdplslwnpcSWCEGySx2
+         nh/VJOduTv7yTNfKxml5KEHuyw0y1AnC50akeJcxGbZNaVwUugzJaAqgcoqgDCryVk
+         jaJo4h2z8qCPPrAGK/zOoGXmfAD0ngzX7mDJ+P+8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laura Abbott <labbott@redhat.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 067/109] misc: kgdbts: Fix restrict error
-Date:   Sat,  9 Nov 2019 21:44:59 -0500
-Message-Id: <20191110024541.31567-67-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 054/109] usb: gadget: uvc: configfs: Drop leaked references to config items
+Date:   Sat,  9 Nov 2019 21:44:46 -0500
+Message-Id: <20191110024541.31567-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,70 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit fa0218ef733e6f247a1a3986e3eb12460064ac77 ]
+[ Upstream commit 86f3daed59bceb4fa7981d85e89f63ebbae1d561 ]
 
-kgdbts current fails when compiled with restrict:
+Some of the .allow_link() and .drop_link() operations implementations
+call config_group_find_item() and then leak the reference to the
+returned item. Fix this by dropping those references where needed.
 
-drivers/misc/kgdbts.c: In function ‘configure_kgdbts’:
-drivers/misc/kgdbts.c:1070:2: error: ‘strcpy’ source argument is the same as destination [-Werror=restrict]
-  strcpy(config, opt);
-  ^~~~~~~~~~~~~~~~~~~
-
-As the error says, config is being used in both the source and destination.
-Refactor the code to avoid the extra copy and put the parsing closer to
-the actual location.
-
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/kgdbts.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/usb/gadget/function/uvc_configfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index 94cbc5c98cae6..05824ff6b9168 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -981,6 +981,12 @@ static void kgdbts_run_tests(void)
- 	int nmi_sleep = 0;
- 	int i;
- 
-+	verbose = 0;
-+	if (strstr(config, "V1"))
-+		verbose = 1;
-+	if (strstr(config, "V2"))
-+		verbose = 2;
-+
- 	ptr = strchr(config, 'F');
- 	if (ptr)
- 		fork_test = simple_strtol(ptr + 1, NULL, 10);
-@@ -1064,13 +1070,6 @@ static int kgdbts_option_setup(char *opt)
- 		return -ENOSPC;
- 	}
- 	strcpy(config, opt);
--
--	verbose = 0;
--	if (strstr(config, "V1"))
--		verbose = 1;
--	if (strstr(config, "V2"))
--		verbose = 2;
--
- 	return 0;
+diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
+index 844cb738bafd0..fc604439b25a1 100644
+--- a/drivers/usb/gadget/function/uvc_configfs.c
++++ b/drivers/usb/gadget/function/uvc_configfs.c
+@@ -543,6 +543,7 @@ static int uvcg_control_class_allow_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
+@@ -578,6 +579,7 @@ static void uvcg_control_class_drop_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
  }
  
-@@ -1082,9 +1081,6 @@ static int configure_kgdbts(void)
+@@ -2037,6 +2039,7 @@ static int uvcg_streaming_class_allow_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ 	return ret;
+ }
+@@ -2077,6 +2080,7 @@ static void uvcg_streaming_class_drop_link(struct config_item *src,
+ unlock:
+ 	mutex_unlock(&opts->lock);
+ out:
++	config_item_put(header);
+ 	mutex_unlock(su_mutex);
+ }
  
- 	if (!strlen(config) || isspace(config[0]))
- 		goto noconfig;
--	err = kgdbts_option_setup(config);
--	if (err)
--		goto noconfig;
- 
- 	final_ack = 0;
- 	run_plant_and_detach_test(1);
 -- 
 2.20.1
 
