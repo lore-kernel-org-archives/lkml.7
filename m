@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3907CC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635C8C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6F221019
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3332321019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354555;
-	bh=0TzDo2o1u8nxxb/Sq/KXyMi+SDVIeTDpEFCStzh3eEk=;
+	s=default; t=1573354558;
+	bh=W0mfyXlOQJc8EOdIZJoXJvWy43HYarysZdwefjnP4tY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PAlKt+LXnH0DluMsGCHsS6XQT4daN6+z8lnYsTN4wXx6p2zruyPPP+k8zqRep4jlD
-	 dC0IqTLK6G6QDmcAMHCnnNZEo46NEUOWI5tjtHteJXhXMi3iqNSx1wUp93tFforPMj
-	 D0fKUg9sQlyaOBwr6PkquFJ/NlWmr8jimpg+HfNI=
+	b=TZ7LMeqP/i0d0KKneRVUTeS03IBbHOFiN3nk2uxtjSVUGlLDYRulFL6RumBFNR5wl
+	 lhuvrlMnSw9k7v5exlX8Q8D7pZZxB6/R7t1ZoDHBVPqr/ea71VOj2+4qfjqi+JvWsu
+	 h6SbyH7BRADZnJLQOiF78o2UOo0iblKaC58YnN0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfKJCzx (ORCPT
+        id S1728272AbfKJCuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:55:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbfKJCuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:11 -0500
+        id S1729545AbfKJCtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:49:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9880225AD;
-        Sun, 10 Nov 2019 02:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 382B122593;
+        Sun, 10 Nov 2019 02:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354210;
-        bh=0TzDo2o1u8nxxb/Sq/KXyMi+SDVIeTDpEFCStzh3eEk=;
+        s=default; t=1573354186;
+        bh=W0mfyXlOQJc8EOdIZJoXJvWy43HYarysZdwefjnP4tY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7j8hhBJqNPebKejfF6P7bz669i+q1YRZxfMKoUlySjzRyU7vuVJgEkR3HhW7FT3Y
-         bpXHmlWCfLqcsbqFpuO7+GFbUePj/IWm8a3jZyI2U1qA7u+hE1vhIIF46byAiwKZpF
-         Mj7zYk5TA8T3F9dq7nhHq+w/i5wurYebLEbgk7AM=
+        b=S8hwVNMZC+GfZmJyHs1U27XPE9GDCMnRDanIgNX8MQkd4XrLw7SUzFIqPEAtedjY8
+         nG2W/E6ckUW3PdBUdybz0MLX7xGacGMoq7UnvePliSOvooy4PK1N83+bO6Yeyyr3YB
+         8pu4tg+ETP5cDSiaia+McTEiNzJfmRQ96TNajTVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Justin Ernst <justin.ernst@hpe.com>, Borislav Petkov <bp@suse.de>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 50/66] EDAC: Raise the maximum number of memory controllers
-Date:   Sat,  9 Nov 2019 21:48:29 -0500
-Message-Id: <20191110024846.32598-50-sashal@kernel.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 35/66] phy: phy-twl4030-usb: fix denied runtime access
+Date:   Sat,  9 Nov 2019 21:48:14 -0500
+Message-Id: <20191110024846.32598-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -60,61 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Ernst <justin.ernst@hpe.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 6b58859419554fb824e09cfdd73151a195473cbc ]
+[ Upstream commit 6c7103aa026094a4ee2c2708ec6977a6dfc5331d ]
 
-We observe an oops in the skx_edac module during boot:
+When runtime is not enabled, pm_runtime_get_sync() returns -EACCESS,
+the counter will be incremented but the resume callback not called,
+so enumeration and charging will not start properly.
+To avoid that happen, disable irq on suspend and recheck on resume.
 
-  EDAC MC0: Giving out device to module skx_edac controller Skylake Socket#0 IMC#0
-  EDAC MC1: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC2: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  ...
-  EDAC MC13: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC14: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  EDAC MC15: Giving out device to module skx_edac controller Skylake Socket#1 IMC#1
-  Too many memory controllers: 16
-  EDAC MC: Removed device 0 for skx_edac Skylake Socket#0 IMC#0
+Practically this happens when the device is woken up from suspend by
+plugging in usb.
 
-We observe there are two memory controllers per socket, with a limit
-of 16. Raise the maximum number of memory controllers from 16 to 2 *
-MAX_NUMNODES (1024).
-
-[ bp: This is just a band-aid fix until we've sorted out the whole issue
-  with the bus_type association and handling in EDAC and can get rid of
-  this arbitrary limit. ]
-
-Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Russ Anderson <russ.anderson@hpe.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac@vger.kernel.org
-Link: https://lkml.kernel.org/r/20180925143449.284634-1-justin.ernst@hpe.com
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/edac.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/phy/phy-twl4030-usb.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index 9e0d78966552c..c6233227720c7 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -17,6 +17,7 @@
- #include <linux/completion.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
-+#include <linux/numa.h>
+diff --git a/drivers/phy/phy-twl4030-usb.c b/drivers/phy/phy-twl4030-usb.c
+index 547ca7b3f0985..ddb530ee2255c 100644
+--- a/drivers/phy/phy-twl4030-usb.c
++++ b/drivers/phy/phy-twl4030-usb.c
+@@ -144,6 +144,7 @@
+ #define PMBR1				0x0D
+ #define GPIO_USB_4PIN_ULPI_2430C	(3 << 0)
  
- struct device;
- 
-@@ -778,6 +779,6 @@ struct mem_ctl_info {
++static irqreturn_t twl4030_usb_irq(int irq, void *_twl);
  /*
-  * Maximum number of memory controllers in the coherent fabric.
-  */
--#define EDAC_MAX_MCS	16
-+#define EDAC_MAX_MCS	2 * MAX_NUMNODES
+  * If VBUS is valid or ID is ground, then we know a
+  * cable is present and we need to be runtime-enabled
+@@ -392,6 +393,33 @@ static void __twl4030_phy_power(struct twl4030_usb *twl, int on)
+ 	WARN_ON(twl4030_usb_write_verify(twl, PHY_PWR_CTRL, pwr) < 0);
+ }
  
- #endif
++static int __maybe_unused twl4030_usb_suspend(struct device *dev)
++{
++	struct twl4030_usb *twl = dev_get_drvdata(dev);
++
++	/*
++	 * we need enabled runtime on resume,
++	 * so turn irq off here, so we do not get it early
++	 * note: wakeup on usb plug works independently of this
++	 */
++	dev_dbg(twl->dev, "%s\n", __func__);
++	disable_irq(twl->irq);
++
++	return 0;
++}
++
++static int __maybe_unused twl4030_usb_resume(struct device *dev)
++{
++	struct twl4030_usb *twl = dev_get_drvdata(dev);
++
++	dev_dbg(twl->dev, "%s\n", __func__);
++	enable_irq(twl->irq);
++	/* check whether cable status changed */
++	twl4030_usb_irq(0, twl);
++
++	return 0;
++}
++
+ static int __maybe_unused twl4030_usb_runtime_suspend(struct device *dev)
+ {
+ 	struct twl4030_usb *twl = dev_get_drvdata(dev);
+@@ -652,6 +680,7 @@ static const struct phy_ops ops = {
+ static const struct dev_pm_ops twl4030_usb_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(twl4030_usb_runtime_suspend,
+ 			   twl4030_usb_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(twl4030_usb_suspend, twl4030_usb_resume)
+ };
+ 
+ static int twl4030_usb_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
