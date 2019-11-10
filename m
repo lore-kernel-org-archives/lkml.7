@@ -2,213 +2,92 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3159C17442
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95A6C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA5F20854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A56520854
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:28:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAulYa8Q"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ddfLyy7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKJQ0b (ORCPT
+        id S1727046AbfKJQ2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:26:31 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39228 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbfKJQ0b (ORCPT
+        Sun, 10 Nov 2019 11:28:12 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50998 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfKJQ2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:26:31 -0500
-Received: by mail-wr1-f66.google.com with SMTP id l7so478302wrp.6
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 08:26:28 -0800 (PST)
+        Sun, 10 Nov 2019 11:28:12 -0500
+Received: by mail-wm1-f66.google.com with SMTP id l17so10066195wmh.0
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Nov 2019 08:28:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EnozZYgq48Ub7OErRTAS6opwPFw2ErTB4hRiw3ntfu8=;
-        b=cAulYa8QWiLTC+LYVwikv9Xp1DhQdoEHRTmBbVMBcK/Q60V2ZXtiiA4Un15UQ0gACg
-         3k7UZ1IX9aHV8oMhci+9UWIYl+pv1bbNWsL+MNDoC5NOGhSq4CfmiiMMxLQEl624gCDc
-         c7ZGX4OfFLckujkKjO3PTUvTBelBdqcakvQzqSiPf7qtlCyQT/3+KlSqaqlpgsxOGNFK
-         1jF6JcZT7t7faoB1aMYHsE5DBWB/nB3VB1zXCPc+bT8pH6rEOiSNZSGC30sh3w6Oocdy
-         /Xoin/AIElFI07xPeTkPOkLQz5z/3SPjGyWMkN+KohtSlJdRj/aeB9/+QMh8kLFlRJ1k
-         Fsgg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=uDYzPbc8kFGMl90TtuXpm0Vw0nr287sWY4H2QuIPHWw=;
+        b=ddfLyy7aXWXAdGPxrcmEoISI8Z2gbsV4c+Mx0xLpGhfValfXwlA44mkT+yDYctfBPP
+         qqOvAz6cGNsIq1nrvZx9YN8ofsuhtPMgDdVsgf0xJflKerALAzbGoa25gLiUHX9jz6nm
+         ipEp43Z2I5ftE1gICOn3cjsEmkYnfCLELGyuAQpNP5ldSRqZlBPXSrOhlxYi5ypguQkK
+         j4aH3dHdmNGkmuHXqFMXPooddYwnPl2F/weO+pGmD2svnNxdhKucfi5/clvYc0XGBoN+
+         J1vWVAi7Wdbz8DKFbjJ6/t31t2RlgKojoqR8G4ce99EeJBhyxdwPn5TWAlpSncm06oD/
+         qV2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EnozZYgq48Ub7OErRTAS6opwPFw2ErTB4hRiw3ntfu8=;
-        b=PMswAm9RIR6ZX0qNuNpQTexG4OT54jLlWCorMkbA8VIXtaAHDAnxB5+jZ7CfgpxYPw
-         RPAJwlZAA6z+Dt+Bdxodl+BXvjME2DLiUpmty3hzjTJZG9z1ULr/RIgKMjrpKkAgALU0
-         I2xeIDymL7BXsPX7MS/Bd0cseuv6RH01tKVL2Xi6n7eaqGKNojlJFl8McBaXt8PYOUk/
-         mHu5XfK9a4wKbwdJZodHLRVNsCIXYkXgiTV42tcomesIo1cQEJREcoRJuBCl+CZTkXfU
-         pt/UmgJiWbscI/y0FyQYdz/D65xGtktQUmeh1CcYejZemkYpOUS5fI+MG9a7OnsJ8taR
-         H1+g==
-X-Gm-Message-State: APjAAAWRHy3F1jWUEMCOw2ux4wmAAdsi4obdYZz5slflITj0ay0RnJ7U
-        FFb9JDThW4dP5xUJGvDhJ/fofNFIwpJ/uYHUXbbTqQ==
-X-Google-Smtp-Source: APXvYqz/qVyZzKKEiMD5Kn0/CYQ5KiLilJu8C+o/QOePighWGP9/mMPGB5cxpk0QCuszSvTL/cE/a/1ffSaZ3SoYRWs=
-X-Received: by 2002:adf:f743:: with SMTP id z3mr16510655wrp.200.1573403187573;
- Sun, 10 Nov 2019 08:26:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20191110024013.29782-1-sashal@kernel.org> <20191110024013.29782-133-sashal@kernel.org>
- <CAKv+Gu-PawCS_Wq3Hm+gm_f=6-ihXarkQqP9prkj4CLt=pAnvg@mail.gmail.com>
- <20191110132726.GN4787@sasha-vm> <CAKv+Gu_Pg-j6C0iRqa8wSr+=vk3rMQ=KHFykZGNGWMfcYfAjtg@mail.gmail.com>
- <20191110155655.GO4787@sasha-vm>
-In-Reply-To: <20191110155655.GO4787@sasha-vm>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sun, 10 Nov 2019 16:26:15 +0000
-Message-ID: <CAKv+Gu_uGKKQrkvHXhoKCY6dqEWka6qVpjXBit5Ggjbk6+_c7A@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 133/191] efi: honour memory reservations
- passed via a linux specific config table
-To:     Sasha Levin <sashal@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uDYzPbc8kFGMl90TtuXpm0Vw0nr287sWY4H2QuIPHWw=;
+        b=O9nxEBG9OfVAqjgqQfg2E/ymcze+GqAyWcrbcCXyn+ZoEVnERpDkFIrfbMZmri8z6j
+         yiR1wD7ku98OPx+eJ0yfSEJGvM9W0Sw+Aywn8jAsOogMeuhRO/l1zHuptUgGHqGgsYL3
+         tV1m57RG79/S6Y5eH96OkB1QlI6LbkWeKhyBVPoJLhDemlaWID6EqxK4gqMiFoFjlTFq
+         5wfjW2AURhkTZQPBGQUIua0yjogE1b9KWIcalmg8GhvGMi2S2MKrm2B5zCnHuIqEQCWx
+         prc7v4NI62cKuts4HUzGAVLtPXdNUBkQiceKOX7MCDMUq8gTuWy37KDCaF47rKIbq7m9
+         aAEQ==
+X-Gm-Message-State: APjAAAUBeHjeow1kGBFxVs0TKWCa0gNf2qNHtwjGGLCNTDHithc1b9tt
+        /4TniPJuoHc+0V1Cd7LCq5KXjN2112Y=
+X-Google-Smtp-Source: APXvYqzaGdss0v0PWzY3jcMXRcDJ5/5ChUfRzgIevfnYj5rYCAr29Rt3E1EdUSXG7l6GXPoEYSa9cA==
+X-Received: by 2002:a1c:7215:: with SMTP id n21mr13065322wmc.129.1573403289391;
+        Sun, 10 Nov 2019 08:28:09 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id m25sm10920096wmi.46.2019.11.10.08.28.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 10 Nov 2019 08:28:08 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     robh@kernel.org, torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH RESEND] lib: Remove select of inexistant GENERIC_IO
+Date:   Sun, 10 Nov 2019 16:27:54 +0000
+Message-Id: <1573403274-3374-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(adding Marc, the GIC maintainer)
+config option GENERIC_IO was removed but still selected by lib/kconfig
+This patch finish the cleaning.
 
-On Sun, 10 Nov 2019 at 15:57, Sasha Levin <sashal@kernel.org> wrote:
->
-> On Sun, Nov 10, 2019 at 02:16:57PM +0000, Ard Biesheuvel wrote:
-> >On Sun, 10 Nov 2019 at 13:27, Sasha Levin <sashal@kernel.org> wrote:
-> >>
-> >> On Sun, Nov 10, 2019 at 08:33:47AM +0100, Ard Biesheuvel wrote:
-> >> >On Sun, 10 Nov 2019 at 03:44, Sasha Levin <sashal@kernel.org> wrote:
-> >> >>
-> >> >> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >> >>
-> >> >> [ Upstream commit 71e0940d52e107748b270213a01d3b1546657d74 ]
-> >> >>
-> >> >> In order to allow the OS to reserve memory persistently across a
-> >> >> kexec, introduce a Linux-specific UEFI configuration table that
-> >> >> points to the head of a linked list in memory, allowing each kernel
-> >> >> to add list items describing memory regions that the next kernel
-> >> >> should treat as reserved.
-> >> >>
-> >> >> This is useful, e.g., for GICv3 based ARM systems that cannot disable
-> >> >> DMA access to the LPI tables, forcing them to reuse the same memory
-> >> >> region again after a kexec reboot.
-> >> >>
-> >> >> Tested-by: Jeremy Linton <jeremy.linton@arm.com>
-> >> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >> >
-> >> >NAK
-> >> >
-> >> >This doesn't belong in -stable, and I'd be interested in understanding
-> >> >how this got autoselected, and how I can prevent this from happening
-> >> >again in the future.
-> >>
-> >> It was selected because it's part of a fix for a real issue reported by
-> >> users:
-> >>
-> >
-> >For my understanding, are you saying your AI is reading launchpad bug
-> >reports etc? Because it is marked AUTOSEL.
->
-> Not quite. This review set was me feeding all the patches Ubuntu has on
-> top of stable trees into AUTOSEL, and sending out the output for review.
-> I doesn't look into launchpad bug reports on it's own, but in my
-> experience one can find a bug report for mostly everything AUTOSEL
-> considers to be a bug.
->
+Fixes: 9de8da47742b ("kconfig: kill off GENERIC_IO option")
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ lib/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-So the assumption is that taking an arbitrary subset of what Ubuntu
-backported (and tested extensively), and letting that subset be chosen
-by a bot is a process that improves the quality of stable trees? I'm
-rather skeptical of that tbh.
+diff --git a/lib/Kconfig b/lib/Kconfig
+index afc78aaf2b25..cb571767d080 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -447,7 +447,6 @@ config ASSOCIATIVE_ARRAY
+ config HAS_IOMEM
+ 	bool
+ 	depends on !NO_IOMEM
+-	select GENERIC_IO
+ 	default y
+ 
+ config HAS_IOPORT_MAP
+-- 
+2.23.0
 
-> >> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1806766
-> >>
-> >
-> >That pages mentions
-> >
-> >"""
-> >2 upstream patch series are required to fix this:
-> > https://<email address hidden>/msg10328.html
-> >Which provides an EFI facility consumed by:
-> > https://lkml.org/lkml/2018/9/21/1066
-> >There were also some follow-on fixes to deal with ARM-specific
-> >problems associated with this usage:
-> > https://www.spinics.net/lists/arm-kernel/msg685751.html
-> >"""
-> >
-> >and without the other patches, we only add bugs and don't fix any.
-> >
-> >> Besides ubuntu, it is also carried by:
-> >>
-> >> SUSE: https://www.suse.com/support/update/announcement/2019/suse-su-20191530-1/
-> >> CentOS: https://koji.mbox.centos.org/koji/buildinfo?buildID=4558
-> >>
-> >> As a way to resolve the reported bug.
-> >>
-> >
-> >Backporting a feature/fix like this requires careful consideration of
-> >the patches involved, and doing actual testing on hardware.
-> >
-> >> Any reason this *shouldn't* be in stable?
-> >
-> >Yes. By itself, it causes crashes at early boot and does not actually
-> >solve the problem.
->
-> Sure, let's work on gathering all the needed patches then and testing it
-> out.
->
-
-No, let's not. This is a feature that was introduced to address a
-shortcoming in some hardware that makes kexec/kdump problematic on
-them. If you want kexec/kdump on that hardware, use a newer kernel.
-
-> >> I'm aware that there might be
-> >> dependencies that are not obvious to me, but the solution here is to
-> >> take those dependencies as well rather than ignore the process
-> >> completely.
-> >>
-> >
-> >This is not a bugfix. kexec/kdump never worked correctly on the
-> >hardware involved, and backporting a feature like that goes way beyond
-> >what I am willing to accept for stable backports affecting the EFI
-> >subsystem.
->
-> I'm a bit confused. The bug report starts with:
->
->         [Impact]
->         kdump support isn't usable on HiSilicon D05 systems. This
->         previously worked in bionic.
->
-> So it seems like it did use to work, but not anymore?
->
-
-I have no idea what Ubuntu shipped in the previous kernel, but
-labelling this as a software regression is dubious at least, and
-wholly inaccurate for upstream.
-
-> Either way, I understand that you want to keep the stable tree
-> conservative, but keep in mind that the flip side of not taking fixes
-> that users ask for means that distros end up having to carry them
-> anyway, which means that they don't get the review and testing they
-> need.
->
-
-I'd say it is the opposite. At least the distros test their backports
-on actual hardware. Taking any part of this set without testing it by
-doing kexec/kdump on an affected ARM system, and regression testing it
-on the hardware that got broken by it (with hundreds of cores IIRC) is
-totally irresponsible, and I don't have the time or the hardware to do
-the testing.
-
-> We can argue all we want around whether it's a fix or not, but if most
-> distros carry it then I think our argument is moot.
->
-
-If someone cares enough to backport these as a coherent set, with boot
-tests on the affected hardware etc, then I am not going to object.
