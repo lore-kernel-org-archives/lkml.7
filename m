@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE9BC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628BCC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451912077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A63206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 21:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573421704;
-	bh=pv05HTXYV/pLlLfrFsJsfYgT/cv28uXADDSGjyyqJo8=;
+	s=default; t=1573421710;
+	bh=8aVicyz4gI+/WbuXxzRSFdIX9oSRVc4kFkhWPnZEBjQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=yphjBJot+86Niyqh3YxU/rGSpT4/g2BPpdPWLMo2aQkEmmaaOaMb+vS6vrdSSmFZ+
-	 mZw2O3pIELFG2YLBPp7teDzKl6L0BsXv5kp/2udDOzB0DO3ssLSCmKpSHwZej2rqOL
-	 q8/Dmtkzze6sDfQXSBEH+HhvxxCRGQHl2fJ5Bc9Y=
+	b=D8oW/sQTmwkRF4sngMALcIPc1A6Qf8mKm+1XxbNCCp93n1HGJJAupzPyI/x1J2L0H
+	 a8AiRZJ6aM4GgJQ0KTw+fiT/L9k/SJPJJeUs3/T67+R/H43Me7yS13kt+/FRzWNIEZ
+	 b22fqqwuM/04ZxWlScF6WHsJ3gFnv5dAxSMuSV1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKJVfD (ORCPT
+        id S1727162AbfKJVfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 16:35:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 16:35:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbfKJVfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 16:35:02 -0500
-Subject: Re: [GIT PULL] configfs regression fix for 5.4-rc
+        id S1726878AbfKJVfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Nov 2019 16:35:07 -0500
+Subject: Re: [GIT PULL] Char/Misc driver fixes for 5.4-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573421702;
-        bh=pv05HTXYV/pLlLfrFsJsfYgT/cv28uXADDSGjyyqJo8=;
+        s=default; t=1573421707;
+        bh=8aVicyz4gI+/WbuXxzRSFdIX9oSRVc4kFkhWPnZEBjQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DAPN5Bx5fVB1cW11jeTNe03kEtCicWmeKIm3q3HBXw7M8rWuSFtZrDsc9dcCfMZZc
-         5lAFfaNdMgzaUBSLKMEny0Sa6dfvRJR0vC1UCLbmxZeCJpq+7jeR4Xh/uXhYuBukfq
-         qDeG8sARWUHJqRB0eTZqv0BzZBFnfHv3L0yiYEy4=
+        b=mv6U3jc2HN3Hl9ynwB+CxT0oXjBdbtavYUMs/+mBKrTWdRN8hdbOaQLQglYi9w3kV
+         /Ty+DO31eluw3n85QZqn0cbqZjk1+a9OAqY+zsW6GJmXQWS4QsUenbnLg/ROQJ4pkT
+         kOinJkPZhSexoBno5wZ7gaeSZp5m58vuPU5k4NkI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191110141648.GA23526@infradead.org>
-References: <20191110141648.GA23526@infradead.org>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191110141648.GA23526@infradead.org>
-X-PR-Tracked-Remote: git://git.infradead.org/users/hch/configfs.git
- tags/configfs-for-5.4-2
-X-PR-Tracked-Commit-Id: e2f238f7d5a1fa69ff1884d37acf9a2a3a01b308
+In-Reply-To: <20191110154228.GA2867363@kroah.com>
+References: <20191110154228.GA2867363@kroah.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191110154228.GA2867363@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
+ tags/char-misc-5.4-rc7
+X-PR-Tracked-Commit-Id: 9d55499d8da49e9261e95a490f3fda41d955f505
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a5871fcba46edcf7380d9d86e6a07b3366c3c2f6
-Message-Id: <157342170229.28901.17480806844972872966.pr-tracker-bot@kernel.org>
-Date:   Sun, 10 Nov 2019 21:35:02 +0000
-To:     Christoph Hellwig <hch@infradead.org>
+X-PR-Merge-Commit-Id: 3de2a3e93700eb5df2abfe8b7ca9d5c813381a4e
+Message-Id: <157342170732.28901.3630821457991676938.pr-tracker-bot@kernel.org>
+Date:   Sun, 10 Nov 2019 21:35:07 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 10 Nov 2019 15:16:48 +0100:
+The pull request you sent on Sun, 10 Nov 2019 16:42:28 +0100:
 
-> git://git.infradead.org/users/hch/configfs.git tags/configfs-for-5.4-2
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.4-rc7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a5871fcba46edcf7380d9d86e6a07b3366c3c2f6
+https://git.kernel.org/torvalds/c/3de2a3e93700eb5df2abfe8b7ca9d5c813381a4e
 
 Thank you!
 
