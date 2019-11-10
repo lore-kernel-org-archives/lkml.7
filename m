@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661D4C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8837BC17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CDA215EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFE021D7B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353839;
-	bh=6QOu04gevsHMOBxWy6PWqmiXuBC1YuqReUNHXNe1Ai4=;
+	s=default; t=1573353843;
+	bh=mGjPsR67NsH8i4TW2u6yaW2jdVFRvrQWuhjdjIqqxIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+K4Oq7gq6NS8yrFmbANk7fR/6Wx/GL4v7Ad/KiJ64GBTpP47xkIg/vY6RsMy2qBQ
-	 bBr+O5GokZfHDB55TiC47bna+IWjkFNotEqMKCdhZJH/QhF/kIwcEkpfc5wd8b6rCY
-	 4bwx6DizJwcYlFbc1Bm5YuuvpS//ankvRh0LcDNs=
+	b=q+3rVGG+tDzKPAagEA9AXyBL1rRkpgG3R1KriOHTHLE4GYtfHfc3z924z75TsjLDS
+	 pFHimYhxi1vblDmmTVGOLC38+IXWqwMNeokiI1OGAVuznefRZ7OIn1j9O21bJwlr9p
+	 3Nt/7cEWtZfcqnRJ6ZjNdfHMmHBruIU7fG3XiA2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfKJCn5 (ORCPT
+        id S1728471AbfKJCoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:43:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42488 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728417AbfKJCns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:48 -0500
+        id S1727290AbfKJCny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:43:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93AAB21D7E;
-        Sun, 10 Nov 2019 02:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41CE2215EA;
+        Sun, 10 Nov 2019 02:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353827;
-        bh=6QOu04gevsHMOBxWy6PWqmiXuBC1YuqReUNHXNe1Ai4=;
+        s=default; t=1573353834;
+        bh=mGjPsR67NsH8i4TW2u6yaW2jdVFRvrQWuhjdjIqqxIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0iC4JpUeJKiD+FY4MqinLp2bWnWJ9ZlzfpEpS5LjawaImZimLZ2GQKXnvK6lDKFSa
-         i6lxYrjepVLwnRdxPqo/t2DixG449ZPvjvXYO98Ek9Opu2GpwLrDleY6hbZPp/KRW5
-         8RwI9Ofe2kVWr4Xes3hVVx+17/kZKEdikcqfFfxw=
+        b=ZTO9vBME27ucsKQ5qovG6cH4YJcgcoqId2QdDfKhMhghZW+qp7x4ckNAaKxo52mwk
+         iHyNEZfR00c63adv2F0+DFfh9vlyH0wxMY/cdUnKr8EDoCLqkD7wazrWgwqjXEGjUP
+         O2TUscUajaN7gwGIYMZnK4F3qVxTALq0E8Go/UHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhong jiang <zhongjiang@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 122/191] misc: genwqe: should return proper error value.
-Date:   Sat,  9 Nov 2019 21:39:04 -0500
-Message-Id: <20191110024013.29782-122-sashal@kernel.org>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Gage Eads <gage.eads@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 125/191] vfio/pci: Mask buggy SR-IOV VF INTx support
+Date:   Sat,  9 Nov 2019 21:39:07 -0500
+Message-Id: <20191110024013.29782-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -59,80 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 02241995b004faa7d9ff628e97f24056190853f8 ]
+[ Upstream commit db04264fe9bc0f2b62e036629f9afb530324b693 ]
 
-The function should return -EFAULT when copy_from_user fails. Even
-though the caller does not distinguish them. but we should keep backward
-compatibility.
+The SR-IOV spec requires that VFs must report zero for the INTx pin
+register as VFs are precluded from INTx support.  It's much easier for
+the host kernel to understand whether a device is a VF and therefore
+whether a non-zero pin register value is bogus than it is to do the
+same in userspace.  Override the INTx count for such devices and
+virtualize the pin register to provide a consistent view of the device
+to the user.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As this is clearly a spec violation, warn about it to support hardware
+validation, but also provide a known whitelist as it doesn't do much
+good to continue complaining if the hardware vendor doesn't plan to
+fix it.
+
+Known devices with this issue: 8086:270c
+
+Tested-by: Gage Eads <gage.eads@intel.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/genwqe/card_utils.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/vfio/pci/vfio_pci.c        |  8 ++++++--
+ drivers/vfio/pci/vfio_pci_config.c | 27 +++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/genwqe/card_utils.c b/drivers/misc/genwqe/card_utils.c
-index f68435df76d48..22301bba8c495 100644
---- a/drivers/misc/genwqe/card_utils.c
-+++ b/drivers/misc/genwqe/card_utils.c
-@@ -298,7 +298,7 @@ static int genwqe_sgl_size(int num_pages)
- int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 			  void __user *user_addr, size_t user_size, int write)
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index a92c2868d9021..0a6eb53e79fbf 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -443,10 +443,14 @@ static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
  {
--	int rc;
-+	int ret = -ENOMEM;
- 	struct pci_dev *pci_dev = cd->pci_dev;
- 
- 	sgl->fpage_offs = offset_in_page((unsigned long)user_addr);
-@@ -318,7 +318,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	if (get_order(sgl->sgl_size) > MAX_ORDER) {
- 		dev_err(&pci_dev->dev,
- 			"[%s] err: too much memory requested!\n", __func__);
--		return -ENOMEM;
-+		return ret;
- 	}
- 
- 	sgl->sgl = __genwqe_alloc_consistent(cd, sgl->sgl_size,
-@@ -326,7 +326,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	if (sgl->sgl == NULL) {
- 		dev_err(&pci_dev->dev,
- 			"[%s] err: no memory available!\n", __func__);
--		return -ENOMEM;
-+		return ret;
- 	}
- 
- 	/* Only use buffering on incomplete pages */
-@@ -339,7 +339,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 		/* Sync with user memory */
- 		if (copy_from_user(sgl->fpage + sgl->fpage_offs,
- 				   user_addr, sgl->fpage_size)) {
--			rc = -EFAULT;
-+			ret = -EFAULT;
- 			goto err_out;
- 		}
- 	}
-@@ -352,7 +352,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 		/* Sync with user memory */
- 		if (copy_from_user(sgl->lpage, user_addr + user_size -
- 				   sgl->lpage_size, sgl->lpage_size)) {
--			rc = -EFAULT;
-+			ret = -EFAULT;
- 			goto err_out2;
- 		}
- 	}
-@@ -374,7 +374,8 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	sgl->sgl = NULL;
- 	sgl->sgl_dma_addr = 0;
- 	sgl->sgl_size = 0;
--	return -ENOMEM;
+ 	if (irq_type == VFIO_PCI_INTX_IRQ_INDEX) {
+ 		u8 pin;
 +
-+	return ret;
++		if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) ||
++		    vdev->nointx || vdev->pdev->is_virtfn)
++			return 0;
++
+ 		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+-		if (IS_ENABLED(CONFIG_VFIO_PCI_INTX) && !vdev->nointx && pin)
+-			return 1;
+ 
++		return pin ? 1 : 0;
+ 	} else if (irq_type == VFIO_PCI_MSI_IRQ_INDEX) {
+ 		u8 pos;
+ 		u16 flags;
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index 62023b4a373b4..423ea1f98441a 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1611,6 +1611,15 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
+ 	return 0;
  }
  
- int genwqe_setup_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
++/*
++ * Nag about hardware bugs, hopefully to have vendors fix them, but at least
++ * to collect a list of dependencies for the VF INTx pin quirk below.
++ */
++static const struct pci_device_id known_bogus_vf_intx_pin[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x270c) },
++	{}
++};
++
+ /*
+  * For each device we allocate a pci_config_map that indicates the
+  * capability occupying each dword and thus the struct perm_bits we
+@@ -1676,6 +1685,24 @@ int vfio_config_init(struct vfio_pci_device *vdev)
+ 	if (pdev->is_virtfn) {
+ 		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
+ 		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
++
++		/*
++		 * Per SR-IOV spec rev 1.1, 3.4.1.18 the interrupt pin register
++		 * does not apply to VFs and VFs must implement this register
++		 * as read-only with value zero.  Userspace is not readily able
++		 * to identify whether a device is a VF and thus that the pin
++		 * definition on the device is bogus should it violate this
++		 * requirement.  We already virtualize the pin register for
++		 * other purposes, so we simply need to replace the bogus value
++		 * and consider VFs when we determine INTx IRQ count.
++		 */
++		if (vconfig[PCI_INTERRUPT_PIN] &&
++		    !pci_match_id(known_bogus_vf_intx_pin, pdev))
++			pci_warn(pdev,
++				 "Hardware bug: VF reports bogus INTx pin %d\n",
++				 vconfig[PCI_INTERRUPT_PIN]);
++
++		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
+ 	}
+ 
+ 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
 -- 
 2.20.1
 
