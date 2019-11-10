@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEAAC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DB6C17440
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A58122594
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED83F22795
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354234;
-	bh=ChGD2ngo7hWVlif2s8Gwz2uOlVS8L+USK1NJnQkRaCE=;
+	s=default; t=1573354239;
+	bh=sbePzzQan0qJ7i3IEwqAf5vzUm2j7iCFP8XVjEA5+2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lOTV7kL1xNIFf0p4x5sNrTVNIDpeu7Hm4wqc0j8VdohxwFf3nntjnr0mAp2qgn1Kl
-	 evAsFw1AWspzYsCILMzUflxtQzqVRPEd18hFDI8rOkrXmt2LhV6KK7OklJ8rQSTDL6
-	 jzatgBzZvVpTOlH06UyGiSmcWN6sjMmwT9DkKdAY=
+	b=TyLfsylbuCr4DqhDTMX4tSSJR8B8N0oE0IyYJXkn38dEehxQ4reC6wXIF1pLrkI5S
+	 zLk7Eae88muz+cEgx7Ba9XrwxqCcNfPIvHVdpXGoLwC4cOc/OGhqmiffBYE2KCD/8O
+	 B6PAkwNh1FZrArjRMRmc2i8zqMI0+mgmABf+3kkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfKJCud (ORCPT
+        id S1729758AbfKJCuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:50:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60984 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729519AbfKJCuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:05 -0500
+        id S1729643AbfKJCuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E306229F0;
-        Sun, 10 Nov 2019 02:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AF0322595;
+        Sun, 10 Nov 2019 02:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354204;
-        bh=ChGD2ngo7hWVlif2s8Gwz2uOlVS8L+USK1NJnQkRaCE=;
+        s=default; t=1573354212;
+        bh=sbePzzQan0qJ7i3IEwqAf5vzUm2j7iCFP8XVjEA5+2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVeDrKREjOeJ2jlCWeFa7do3BHHsX0mQNYIlxaAg+9Q3gsyFGO+vw2V7MkQFBhRFm
-         Bgb0TguRgc4PBMr7hmCIk1r3bJmb20yuydzwNBUNZFJQBpSI7vw4ZQPz+WqKE1zlMm
-         GefTq1BrC9vo6ynsDVut0bAyqBCub4t2JtLCHHgc=
+        b=reoCoXokIIYpo76CkV6KvJdpcYhfGF0mCnEnOVaiUpmdenJ8FxZgjRS6ck6/SHA3D
+         mooNRP2NEV2yXds8xWrzUODbSL3O6/6rYW3lDhOFErG6QX3vSk9D9vbjgz0J9SlgnA
+         Rl5Z8sPZMxGvC0LBpm6DQo8BABR4mR+Oyzt843WE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 47/66] ARM: tegra: apalis_t30: fix mmc1 cmd pull-up
-Date:   Sat,  9 Nov 2019 21:48:26 -0500
-Message-Id: <20191110024846.32598-47-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 51/66] ARM: dts: realview: Fix SPI controller node names
+Date:   Sat,  9 Nov 2019 21:48:30 -0500
+Message-Id: <20191110024846.32598-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -60,42 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 1c997fe4becdc6fcbc06e23982ceb65621e6572a ]
+[ Upstream commit 016add12977bcc30f77d7e48fc9a3a024cb46645 ]
 
-Fix MMC1 cmd pin pull-up causing issues on carrier boards without
-external pull-up.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra30-apalis.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/arm-realview-eb.dtsi    | 2 +-
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pbx.dtsi   | 2 +-
+ arch/arm/boot/dts/versatile-ab.dts        | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 192b95177aac3..826bdd0b8a257 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -147,14 +147,14 @@
+diff --git a/arch/arm/boot/dts/arm-realview-eb.dtsi b/arch/arm/boot/dts/arm-realview-eb.dtsi
+index e2e9599596e25..05379b6c1c13b 100644
+--- a/arch/arm/boot/dts/arm-realview-eb.dtsi
++++ b/arch/arm/boot/dts/arm-realview-eb.dtsi
+@@ -334,7 +334,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
- 			/* Apalis MMC1 */
- 			sdmmc3_clk_pa6 {
--				nvidia,pins = "sdmmc3_clk_pa6",
--					      "sdmmc3_cmd_pa7";
-+				nvidia,pins = "sdmmc3_clk_pa6";
- 				nvidia,function = "sdmmc3";
- 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 			};
- 			sdmmc3_dat0_pb7 {
--				nvidia,pins = "sdmmc3_dat0_pb7",
-+				nvidia,pins = "sdmmc3_cmd_pa7",
-+					      "sdmmc3_dat0_pb7",
- 					      "sdmmc3_dat1_pb6",
- 					      "sdmmc3_dat2_pb5",
- 					      "sdmmc3_dat3_pb4",
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index c789564f28033..c1fd5615ddfe3 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -343,7 +343,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
+ 
+-		pb1176_ssp: ssp@1010b000 {
++		pb1176_ssp: spi@1010b000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1010b000 0x1000>;
+ 			interrupt-parent = <&intc_dc1176>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+index 3944765ac4b06..e306f1cceb4ec 100644
+--- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
++++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+@@ -480,7 +480,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
+ 
+-		ssp@1000d000 {
++		spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			interrupt-parent = <&intc_pb11mp>;
+diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+index aeb49c4bd773f..2bf3958b2e6b9 100644
+--- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
++++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+@@ -318,7 +318,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
+ 
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index 409e069b3a845..00d7d28e86f0b 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -303,7 +303,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
+ 
+-		ssp@101f4000 {
++		spi@101f4000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x101f4000 0x1000>;
+ 			interrupts = <11>;
 -- 
 2.20.1
 
