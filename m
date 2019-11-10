@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E692C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1BBC17443
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21023214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61AC521848
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353675;
-	bh=s64GRie63AvxpCh2Q6I1WlA90S7QTrxx/6sBq6jqZvQ=;
+	s=default; t=1573353680;
+	bh=ffidVs99+EyIN0h+Yg+AdhgsEgNhtwcYak5FUzTui/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VkBWg1Fpn+f2lpG9yqjFFoNVI5HSrQCLgR8Xg1Y7enkKXu/7JGknlIoDUBp+NuDpK
-	 FadCKLIbfKh4rJcnOeYrSjFxktlZ1+v7XkLOqoiN5l+jstUfC3MO1o046T6LAO++y5
-	 4cpFn/qBoZfNUhYnJy6p3L8VFJ7tWme1DBeRrPUE=
+	b=e1qzaYW/j6I25TEpBcDkHDOC/pZrLap7aI2n/Ub7pdl503cxmhDG+oVjFCNj3Xv3f
+	 Q8Ip4HHLbl9FXbslqo1wyTX//3Zyd6oc3C81Y8UUlAdw6USfmDABmB9yBMMm1CtGfN
+	 K4wn7YOLYtwllHUJ+ZWu5uOzRAxMGotRVrcbGmFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfKJClN (ORCPT
+        id S1727338AbfKJClR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34126 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbfKJCko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:44 -0500
+        id S1727034AbfKJCkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9B8A214E0;
-        Sun, 10 Nov 2019 02:40:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4297221848;
+        Sun, 10 Nov 2019 02:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353642;
-        bh=s64GRie63AvxpCh2Q6I1WlA90S7QTrxx/6sBq6jqZvQ=;
+        s=default; t=1573353645;
+        bh=ffidVs99+EyIN0h+Yg+AdhgsEgNhtwcYak5FUzTui/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYwrobiatQhejy9OcAZ+ptyeHgIB446T92lUcV9XUYAM05k5RjOlnPaR2Q50B9Zfk
-         MM2XXTQzKPtKn6CPIBNII+/djmJqlGc6mIPTb0RK2b7yg5uv8MqIyzzZhLLX5Sz4fZ
-         F7YrGrZLLYxy6diDFHZr8st7h9I4UhUJNIkPeo6c=
+        b=lwJgwA/9yF7UOXVi+AjFvRQ8jnfqAPkduSwf/yCJnczWNp4B4Q9NpPOTIFeNqvng0
+         nYtpAc6HWSsPEZJOZJQUrYsvWGunH8djWx8JpOPS2eU2FAtMItgP5jLJmCTli7bskn
+         sKwo06cwi3Th82/fikGcf1cN8EHtvHGQQN3wfANs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     YueHaibing <yuehaibing@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/191] net: cavium: fix return type of ndo_start_xmit function
-Date:   Sat,  9 Nov 2019 21:37:26 -0500
-Message-Id: <20191110024013.29782-24-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 025/191] net: ibm: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:37:27 -0500
+Message-Id: <20191110024013.29782-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ac1172dea10b6ba51de9346d3130db688b5196c5 ]
+[ Upstream commit 94b2bb28dbb43fcb943d5275ab19fd5a4972bedb ]
 
 The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
 which is a typedef for an enum type, so make sure the implementation in
@@ -74,81 +75,78 @@ Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/lio_main.c    | 2 +-
- drivers/net/ethernet/cavium/liquidio/lio_vf_main.c | 2 +-
- drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c  | 5 +++--
- drivers/net/ethernet/cavium/octeon/octeon_mgmt.c   | 5 +++--
- 4 files changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
+ drivers/net/ethernet/ibm/emac/core.c      | 7 ++++---
+ drivers/net/ethernet/ibm/ibmvnic.c        | 4 ++--
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-index 6fb13fa73b271..304e4b9436276 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-@@ -2324,7 +2324,7 @@ static inline int send_nic_timestamp_pkt(struct octeon_device *oct,
-  * @returns whether the packet was transmitted to the device okay or not
-  *             (NETDEV_TX_OK or NETDEV_TX_BUSY)
-  */
--static int liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	struct lio *lio;
- 	struct octnet_buf_free_info *finfo;
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-index b77835724dc84..d83773bc0dd7f 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-@@ -1390,7 +1390,7 @@ static int send_nic_timestamp_pkt(struct octeon_device *oct,
-  * @returns whether the packet was transmitted to the device okay or not
-  *             (NETDEV_TX_OK or NETDEV_TX_BUSY)
-  */
--static int liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	struct octnet_buf_free_info *finfo;
- 	union octnic_cmd_setup cmdsetup;
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
-index c99b59fe4c8fb..a1bda1683ebfc 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
-@@ -31,7 +31,8 @@
- 
- static int lio_vf_rep_open(struct net_device *ndev);
- static int lio_vf_rep_stop(struct net_device *ndev);
--static int lio_vf_rep_pkt_xmit(struct sk_buff *skb, struct net_device *ndev);
-+static netdev_tx_t lio_vf_rep_pkt_xmit(struct sk_buff *skb,
-+				       struct net_device *ndev);
- static void lio_vf_rep_tx_timeout(struct net_device *netdev);
- static int lio_vf_rep_phys_port_name(struct net_device *dev,
- 				     char *buf, size_t len);
-@@ -382,7 +383,7 @@ lio_vf_rep_packet_sent_callback(struct octeon_device *oct,
- 		netif_wake_queue(ndev);
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 506f78322d741..e8ee69d4e4d34 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -2027,7 +2027,7 @@ static void ehea_xmit3(struct sk_buff *skb, struct net_device *dev,
+ 	dev_consume_skb_any(skb);
  }
  
--static int
-+static netdev_tx_t
- lio_vf_rep_pkt_xmit(struct sk_buff *skb, struct net_device *ndev)
+-static int ehea_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t ehea_start_xmit(struct sk_buff *skb, struct net_device *dev)
  {
- 	struct lio_vf_rep_desc *vf_rep = netdev_priv(ndev);
-diff --git a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-index bb43ddb7539e7..4b3aecf98f2af 100644
---- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-+++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-@@ -1268,12 +1268,13 @@ static int octeon_mgmt_stop(struct net_device *netdev)
+ 	struct ehea_port *port = netdev_priv(dev);
+ 	struct ehea_swqe *swqe;
+diff --git a/drivers/net/ethernet/ibm/emac/core.c b/drivers/net/ethernet/ibm/emac/core.c
+index 129f4e9f38dac..a96f501813ff7 100644
+--- a/drivers/net/ethernet/ibm/emac/core.c
++++ b/drivers/net/ethernet/ibm/emac/core.c
+@@ -1409,7 +1409,7 @@ static inline u16 emac_tx_csum(struct emac_instance *dev,
  	return 0;
  }
  
--static int octeon_mgmt_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t
-+octeon_mgmt_xmit(struct sk_buff *skb, struct net_device *netdev)
+-static inline int emac_xmit_finish(struct emac_instance *dev, int len)
++static inline netdev_tx_t emac_xmit_finish(struct emac_instance *dev, int len)
  {
- 	struct octeon_mgmt *p = netdev_priv(netdev);
- 	union mgmt_port_ring_entry re;
- 	unsigned long flags;
--	int rv = NETDEV_TX_BUSY;
-+	netdev_tx_t rv = NETDEV_TX_BUSY;
+ 	struct emac_regs __iomem *p = dev->emacp;
+ 	struct net_device *ndev = dev->ndev;
+@@ -1436,7 +1436,7 @@ static inline int emac_xmit_finish(struct emac_instance *dev, int len)
+ }
  
- 	re.d64 = 0;
- 	re.s.tstamp = ((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) != 0);
+ /* Tx lock BH */
+-static int emac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct emac_instance *dev = netdev_priv(ndev);
+ 	unsigned int len = skb->len;
+@@ -1494,7 +1494,8 @@ static inline int emac_xmit_split(struct emac_instance *dev, int slot,
+ }
+ 
+ /* Tx lock BH disabled (SG version for TAH equipped EMACs) */
+-static int emac_start_xmit_sg(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t
++emac_start_xmit_sg(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct emac_instance *dev = netdev_priv(ndev);
+ 	int nr_frags = skb_shinfo(skb)->nr_frags;
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 8fa14736449bc..8a1916443235a 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1420,7 +1420,7 @@ static int ibmvnic_xmit_workarounds(struct sk_buff *skb,
+ 	return 0;
+ }
+ 
+-static int ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
+ 	int queue_num = skb_get_queue_mapping(skb);
+@@ -1444,7 +1444,7 @@ static int ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	u64 *handle_array;
+ 	int index = 0;
+ 	u8 proto = 0;
+-	int ret = 0;
++	netdev_tx_t ret = NETDEV_TX_OK;
+ 
+ 	if (adapter->resetting) {
+ 		if (!netif_subqueue_stopped(netdev, skb))
 -- 
 2.20.1
 
