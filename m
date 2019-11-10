@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1446C43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A4AC43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703CC22581
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF44421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354473;
-	bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
+	s=default; t=1573354479;
+	bh=l2m3Bh9vF4Mn39FY35Lc/9YluNkiD+znKwgEkD5vbu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oU8qgGwB82mirkFOiDHLp4BbILVAadxGd6YhWB0tkcWRwD/e3xjG8OnhyDI3JSk7k
-	 tLNFDTFh6Vm2qQjtAQAW9FoVJ53HJNDz1bvw0YGLPpE2KWkPkEhjxx3UDZecyA5Nw1
-	 3+MzJG6uTHzwGwsjN8EyMr6Yj8fHHRD7Q3BrKby0=
+	b=I2ME1mxz5XloCh5ok0/ECBUaA/f8o5iYCDKm4uJFSXuOBQewdo2PGufItN1eBD+AY
+	 atqMF1N8aB3+NslpGO2VYO6POR2NVd5svE4xonUiuxgzOYn/ccdy3kEyETFWEn/cdL
+	 uQJF7dE2xkWZY+lfynM/H7XaLbBGQbock6ubwk2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfKJCup (ORCPT
+        id S1729744AbfKJCuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:50:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728517AbfKJCuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:16 -0500
+        id S1729545AbfKJCuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA0E229EF;
-        Sun, 10 Nov 2019 02:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACEEC22581;
+        Sun, 10 Nov 2019 02:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354215;
-        bh=SbUN0yYZmzZAvFPcXi0mVND1v/e7vZHcGEaSQBWDqX8=;
+        s=default; t=1573354209;
+        bh=l2m3Bh9vF4Mn39FY35Lc/9YluNkiD+znKwgEkD5vbu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IsCsycMFTxQPXQpaGzznz1cSjrDPjJxtohI52dLmsrzVgAve+qRvpkhmMok3hu6Rk
-         bTaWxwD3pvCSZ0GNG6pLFwrzDD9+Xwliuv5G0N7jbbZm0wj/9MqdmLWxsGH9j9GT7i
-         qmNXEtSSmm3c7w7JwdrA6ySoL30geJSOLyn6Uccw=
+        b=VTJP6wHzh5+C07f4p+OpTbtOEW5aHaZZpfreu0AWk+mNNipZgzUoGrzBtwrpGFVDP
+         yiTyOPWn0XSt52DgZHr/eBEljSMbq+DvBQ1BkovkkQjIwJ5NWbR+bnwEmezeT9h7ms
+         orwFeBtCwnWBCtMrzmQZ2y0cK1zT+CfNINuKkaRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Aloni <dan@kernelim.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 54/66] crypto: fix a memory leak in rsa-kcs1pad's encryption mode
-Date:   Sat,  9 Nov 2019 21:48:33 -0500
-Message-Id: <20191110024846.32598-54-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 49/66] net: smsc: fix return type of ndo_start_xmit function
+Date:   Sat,  9 Nov 2019 21:48:28 -0500
+Message-Id: <20191110024846.32598-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -61,44 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Aloni <dan@kernelim.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 3944f139d5592790b70bc64f197162e643a8512b ]
+[ Upstream commit 6323d57f335ce1490d025cacc83fc10b07792130 ]
 
-The encryption mode of pkcs1pad never uses out_sg and out_buf, so
-there's no need to allocate the buffer, which presently is not even
-being freed.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-CC: Herbert Xu <herbert@gondor.apana.org.au>
-CC: linux-crypto@vger.kernel.org
-CC: "David S. Miller" <davem@davemloft.net>
-Signed-off-by: Dan Aloni <dan@kernelim.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/rsa-pkcs1pad.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/net/ethernet/smsc/smc911x.c  | 3 ++-
+ drivers/net/ethernet/smsc/smc91x.c   | 3 ++-
+ drivers/net/ethernet/smsc/smsc911x.c | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
-index 7830d304dff6f..d58224d808675 100644
---- a/crypto/rsa-pkcs1pad.c
-+++ b/crypto/rsa-pkcs1pad.c
-@@ -267,15 +267,6 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
- 	pkcs1pad_sg_set_buf(req_ctx->in_sg, req_ctx->in_buf,
- 			ctx->key_size - 1 - req->src_len, req->src);
+diff --git a/drivers/net/ethernet/smsc/smc911x.c b/drivers/net/ethernet/smsc/smc911x.c
+index cb49c9654f0a7..323b3ac16bc0e 100644
+--- a/drivers/net/ethernet/smsc/smc911x.c
++++ b/drivers/net/ethernet/smsc/smc911x.c
+@@ -514,7 +514,8 @@ static void smc911x_hardware_send_pkt(struct net_device *dev)
+  * now, or set the card to generates an interrupt when ready
+  * for the packet.
+  */
+-static int smc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++smc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct smc911x_local *lp = netdev_priv(dev);
+ 	unsigned int free;
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 73212590d04a3..b0c72167badec 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -637,7 +637,8 @@ done:	if (!THROTTLE_TX_PKTS)
+  * now, or set the card to generates an interrupt when ready
+  * for the packet.
+  */
+-static int smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+ 	void __iomem *ioaddr = lp->base;
+diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
+index 734caa7a557be..4143659615e10 100644
+--- a/drivers/net/ethernet/smsc/smsc911x.c
++++ b/drivers/net/ethernet/smsc/smsc911x.c
+@@ -1776,7 +1776,8 @@ static int smsc911x_stop(struct net_device *dev)
+ }
  
--	req_ctx->out_buf = kmalloc(ctx->key_size, GFP_KERNEL);
--	if (!req_ctx->out_buf) {
--		kfree(req_ctx->in_buf);
--		return -ENOMEM;
--	}
--
--	pkcs1pad_sg_set_buf(req_ctx->out_sg, req_ctx->out_buf,
--			ctx->key_size, NULL);
--
- 	akcipher_request_set_tfm(&req_ctx->child_req, ctx->child);
- 	akcipher_request_set_callback(&req_ctx->child_req, req->base.flags,
- 			pkcs1pad_encrypt_sign_complete_cb, req);
+ /* Entry point for transmitting a packet */
+-static int smsc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++smsc911x_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct smsc911x_data *pdata = netdev_priv(dev);
+ 	unsigned int freespace;
 -- 
 2.20.1
 
