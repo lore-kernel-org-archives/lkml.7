@@ -2,31 +2,31 @@ Return-Path: <SRS0=U1ji=ZC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B226C17443
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729D1C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630802184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FE82080F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 16:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfKJQdQ (ORCPT
+        id S1727076AbfKJQdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Nov 2019 11:33:16 -0500
+        Sun, 10 Nov 2019 11:33:20 -0500
 Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:44397 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726832AbfKJQdQ (ORCPT
+        with ESMTP id S1726832AbfKJQdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Nov 2019 11:33:16 -0500
+        Sun, 10 Nov 2019 11:33:19 -0500
 X-Greylist: delayed 642 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 Nov 2019 11:33:15 EST
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xAAGLhXP013894;
-        Sun, 10 Nov 2019 18:21:43 +0200
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xAAGMNgb013906;
+        Sun, 10 Nov 2019 18:22:23 +0200
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 613EA60275; Sun, 10 Nov 2019 18:21:43 +0200 (IST)
+        id 9E0C560275; Sun, 10 Nov 2019 18:22:23 +0200 (IST)
 From:   amirmizi6@gmail.com
 To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
         oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
@@ -38,12 +38,13 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
         oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
         amir.mizinski@nuvoton.com, Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v1 0/5] add tpm i2c ptp driver
-Date:   Sun, 10 Nov 2019 18:21:32 +0200
-Message-Id: <20191110162137.230913-1-amirmizi6@gmail.com>
+Subject: [PATCH v1 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
+Date:   Sun, 10 Nov 2019 18:21:35 +0200
+Message-Id: <20191110162137.230913-4-amirmizi6@gmail.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191110162137.230913-1-amirmizi6@gmail.com>
+References: <20191110162137.230913-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,34 +53,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amir Mizinski <amirmizi6@gmail.com>
 
-*This patch set adds support for TPM devices that implement the I2C
-interface defined by TCG PTP specification:
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_PC_Client_Platform_TPM_Profile_PTP_2.0_r1.03_v22.pdf
+using this function while read/write data resulted in aborted operation.
+after investigating according to TCG TPM Profile (PTP) Specifications,
+i found cancel should happen only if TPM_STS.commandReady bit is lit
+and couldn't find a case when the current condition is valid.
+also only cmdReady bit need to be compared instead of the full lower status register byte.
 
-The driver was tested on Raspberry-Pie 3, using Nuvoton NPCT75X TPM.
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+---
+ drivers/char/tpm/tpm_tis_core.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-interupts are not implemented yet, preparing it for the next patch.
-this patch is based on initial work by oshri Alkoby, Alexander Steffen and Christophe Ricard
-
-Amir Mizinski (5):
-  char: tpm: Make implementation of read16 read32 write32 optional
-  char: tpm: Add check_data handle to tpm_tis_phy_ops in order to check
-    data integrity
-  char: tpm: rewrite "tpm_tis_req_canceled()"
-  dt-bindings: tpm: Add the TPM TIS I2C device tree binding documentaion
-  char: tpm: add tpm_tis_i2c driver
-
- .../bindings/security/tpm/tpm_tis_i2c.txt          |  24 ++
- drivers/char/tpm/Kconfig                           |  12 +
- drivers/char/tpm/Makefile                          |   1 +
- drivers/char/tpm/tpm_tis_core.c                    | 109 +++++----
- drivers/char/tpm/tpm_tis_core.h                    |  41 +++-
- drivers/char/tpm/tpm_tis_i2c.c                     | 272 +++++++++++++++++++++
- drivers/char/tpm/tpm_tis_spi.c                     |  41 ----
- 7 files changed, 407 insertions(+), 93 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
- create mode 100644 drivers/char/tpm/tpm_tis_i2c.c
-
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index ce7f8a1..9016f06 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -627,17 +627,7 @@ static int probe_itpm(struct tpm_chip *chip)
+ 
+ static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
+ {
+-	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+-
+-	switch (priv->manufacturer_id) {
+-	case TPM_VID_WINBOND:
+-		return ((status == TPM_STS_VALID) ||
+-			(status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
+-	case TPM_VID_STM:
+-		return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+-	default:
+-		return (status == TPM_STS_COMMAND_READY);
+-	}
++	return ((status & TPM_STS_COMMAND_READY) == TPM_STS_COMMAND_READY);
+ }
+ 
+ static irqreturn_t tis_int_handler(int dummy, void *dev_id)
 -- 
 2.7.4
 
