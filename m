@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBFCC43331
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39F6C43331
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D8820854
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B912A21655
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355817;
-	bh=t3smQKcjjFBjbreDgVg9JggXSHRt1WbmMzRz6EoMzU0=;
+	s=default; t=1573355826;
+	bh=LOoFyHqdtFlQI7thHL/oKGR6t8lo4GqLDvCdzHE5FfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XMGEUd4KM2+rZU2QgnDBpvQRL8kOKDLB56g7+mUG94t+d7hrgQc8Ik3GWXsrsL6bz
-	 Il82kLIJdsuIDBkidTlxAyzPHu4aHANGj9SIGjL2VX2mcp76BBwENZ9AizxeTk38J9
-	 oI+zb+xXU7MT4Ho8vye/hAMhhJfYAPfPiJaNfU3A=
+	b=bAanxQ71aG98dmFO24T8zmCfrIpyOvQXVEI8uxsFhbuRbjHw0mlpjcYDWQQ0l2BQb
+	 238LutbYG7L9GOxtRfePNIu1mAWoSNLG/Oi021eSowwt8kVNyt5cP4+7Jv1+EFBlbz
+	 oV+AKX2hjWwCjvpFRAmGwJAzs9NVXx5Q9VWrZiVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfKJDQ4 (ORCPT
+        id S1728334AbfKJDRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:16:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:17:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbfKJCkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:39 -0500
+        id S1726889AbfKJCk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DB2021019;
-        Sun, 10 Nov 2019 02:40:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9771F21019;
+        Sun, 10 Nov 2019 02:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353638;
-        bh=t3smQKcjjFBjbreDgVg9JggXSHRt1WbmMzRz6EoMzU0=;
+        s=default; t=1573353628;
+        bh=LOoFyHqdtFlQI7thHL/oKGR6t8lo4GqLDvCdzHE5FfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPPN1/wsZjB3i942wFJSZQjIdspbwFmKeQ4L25zvJ5zK/oLg40Jjqq5sHzjM1QT7i
-         zqfoQwuAFackYSeWGaqGuMbQLE4USZJRMc9BnpYiEQ0Ey6yVgdR6ifDR1ZDkyftBJc
-         Q8+1tvNR11Gd2BZPnnScqB9hV822YNsPnwQEEYHk=
+        b=uLsPjiy537BMp0wQCkeZpuV6/lRb4qcAX5s1AJoPZ9e+tN6+Bb4EL+7ndoNJZ8oLo
+         11i48UX9cnjwOyKFYOlhjH9NyYC/bs5ePXdkPJRK3BDGxiDbzvVyCuSEHNE1+4SJcZ
+         e6jLM0tJ3I5QwBo5gaVJFGQ1H935r3eni/z13r50=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 022/191] ipmi: fix return value of ipmi_set_my_LUN
-Date:   Sat,  9 Nov 2019 21:37:24 -0500
-Message-Id: <20191110024013.29782-22-sashal@kernel.org>
+Cc:     Anton Vasilyev <vasilyev@ispras.ru>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 012/191] serial: mxs-auart: Fix potential infinite loop
+Date:   Sat,  9 Nov 2019 21:37:14 -0500
+Message-Id: <20191110024013.29782-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,39 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Anton Vasilyev <vasilyev@ispras.ru>
 
-[ Upstream commit 060e8fb53fe3455568982d10ab8c3dd605565049 ]
+[ Upstream commit 5963e8a3122471cadfe0eba41c4ceaeaa5c8bb4d ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On the error path of mxs_auart_request_gpio_irq() is performed
+backward iterating with index i of enum type. Underline enum type
+may be unsigned char. In this case check (--i >= 0) will be always
+true and error handling goes into infinite loop.
 
-drivers/char/ipmi/ipmi_msghandler.c: In function 'ipmi_set_my_LUN':
-drivers/char/ipmi/ipmi_msghandler.c:1335:13: warning:
- variable 'rv' set but not used [-Wunused-but-set-variable]
-  int index, rv = 0;
+The patch changes the check so that it is valid for signed and unsigned
+types.
 
-'rv' should be the correct return value.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Fixes: 048f7c3e352e ("ipmi: Properly release srcu locks on error conditions")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/mxs-auart.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 3fb297b5fb176..84c17f936c09c 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -1365,7 +1365,7 @@ int ipmi_set_my_LUN(struct ipmi_user *user,
- 	}
- 	release_ipmi_user(user, index);
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 34acdf29713d7..4c188f4079b3e 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1634,8 +1634,9 @@ static int mxs_auart_request_gpio_irq(struct mxs_auart_port *s)
  
--	return 0;
-+	return rv;
- }
- EXPORT_SYMBOL(ipmi_set_my_LUN);
+ 	/*
+ 	 * If something went wrong, rollback.
++	 * Be careful: i may be unsigned.
+ 	 */
+-	while (err && (--i >= 0))
++	while (err && (i-- > 0))
+ 		if (irq[i] >= 0)
+ 			free_irq(irq[i], s);
  
 -- 
 2.20.1
